@@ -92,7 +92,7 @@ prev_clone_id = ui_oligo.getCloneId (); %>
 <td bgcolor='<%= row_color %>'><%= OligoContainer.getStatusAsString( ui_oligo.getPlateStatus ()) %></td>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOrderDate ().substring(0,10) %></td>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getUserId () %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoID () %></td>
+<td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoDesignType () %><%= ui_oligo.getOligoID () %></td>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoName () %></td>
 
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoSequence () %></td>

@@ -31,34 +31,36 @@ public class UI_GeneOligo
     private int         m_plate_status = -1;
     private String      m_order_date = null;
     private String         m_user_id  = null;
+    private String         m_oligo_design_type  = null;// S for designed for stretch collection, R - designed for refsequence
     /** Creates a new instance of UI_GeneOligo */
     public UI_GeneOligo() {    }
     
     
     
-    public int      getOligoID (){ return m_id ; }
-     public String      getOligoName (){ return m_oligo_name ; }
-    public int      getCloneId (){ return m_clone_id  ; }
-    public String      getOligoSequence (){ return m_oligo_sequence ; }
-    public int         getOligoPosition (){ return m_oligo_position ; }
-    public String      getPlateLabel (){ return m_plate_label ; }
-    public int         getWell (){ return m_well ; }
-    public int         getPlateStatus (){ return m_plate_status ; }
-    public String      getOrderDate (){ return m_order_date ; }
-    public String         getUserId (){ return m_user_id ; }
-    
-    
-    public void      setOligoID (int v){   m_id = v ; }
-       public void      setOligoName (String v){  m_oligo_name =v ; }
-    public void      setCloneId (int v){   m_clone_id  = v ; }
-    public void      setOligoSequence ( String v){   m_oligo_sequence = v ; }
-    public void         setOligoPosition (int v){   m_oligo_position = v ; }
-    public void      setPlateLabel (String v){   m_plate_label = v ; }
-    public void         setWell (int v){   m_well = v ; }
-    public void         setPlateStatus (int v){   m_plate_status = v ; }
-    public void      setOrderDate (String v){   m_order_date = v ; }
-    public void         setUserId (String v){   m_user_id = v ; }
-    
+   public int			getOligoID (){ return m_id ; }
+    public String		getOligoName (){ return m_oligo_name ; }
+    public int			getCloneId (){ return m_clone_id  ; }
+    public String		getOligoSequence (){ return m_oligo_sequence ; }
+    public int			getOligoPosition (){ return m_oligo_position ; }
+    public String		getPlateLabel (){ return m_plate_label ; }
+    public int			getWell (){ return m_well ; }
+    public int			getPlateStatus (){ return m_plate_status ; }
+    public String		getOrderDate (){ return m_order_date ; }
+    public String		getUserId (){ return m_user_id ; }
+    public String		getOligoDesignType(){ return m_oligo_design_type ;}
+
+    public void			setOligoID (int v){   m_id = v ; }
+    public void			setOligoName (String v){  m_oligo_name =v ; }
+    public void			setCloneId (int v){   m_clone_id  = v ; }
+    public void			setOligoSequence ( String v){   m_oligo_sequence = v ; }
+    public void			setOligoPosition (int v){   m_oligo_position = v ; }
+    public void			setPlateLabel (String v){   m_plate_label = v ; }
+    public void			setWell (int v){   m_well = v ; }
+    public void			setPlateStatus (int v){   m_plate_status = v ; }
+    public void			setOrderDate (String v){   m_order_date = v ; }
+    public void			setUserId (String v){   m_user_id = v ; }
+    public void			setOligoDesignType(String v){  m_oligo_design_type = v;}
+
    public static ArrayList getByCloneId(ArrayList clone_ids) throws Exception
    {
         ArrayList result = new ArrayList();
@@ -69,10 +71,10 @@ public class UI_GeneOligo
             ids += clone_ids.get(count)+",";
         }
         ids = ids + clone_ids.get(clone_ids.size() - 1);
-        String sql = "select g.oligoid, name, cloneid,sequence, g.position as OLIGO_POSITION, "
+        String sql = "select g.oligoid, stretchcollectionid, name, cloneid,sequence, g.position as OLIGO_POSITION, "
         +" label, s.position as position , o.status as status, orderdate, "
-        +" username as userid from geneoligo g, oligosample s, oligocontainer o, userprofile u "
-        +" where u.userid=o.userid and g.oligoid=s.oligoid and s.oligocontainerid = o.OLIGOCONTAINERId and cloneid in ("
+        +" username as userid from geneoligo g, oligo_calculation ol, oligosample s, oligocontainer o, userprofile u "
+        +" where ol.oligocalculationid = g.oligocalculationid and u.userid=o.userid and g.oligoid=s.oligoid and s.oligocontainerid = o.OLIGOCONTAINERId and cloneid in ("
         + ids +") order by cloneid , orderdate ";
  
         UI_GeneOligo ui_oligo= null;
@@ -92,6 +94,10 @@ public class UI_GeneOligo
                 ui_oligo.setPlateStatus (rs.getInt("STATUS"));
                 ui_oligo.setOrderDate (rs.getString("orderdate"));
                 ui_oligo.setUserId (rs.getString("USERID"));
+                if (  rs.getInt("stretchcollectionid") > 1)
+                    ui_oligo.setOligoDesignType("S");
+                else
+                    ui_oligo.setOligoDesignType("R");
                 result.add(ui_oligo);
                
             }
@@ -111,7 +117,7 @@ public class UI_GeneOligo
         try
         {
             
-             ArrayList clone_ids = Algorithms.splitString(ProcessRunner.cleanUpItems( Constants.ITEM_TYPE_CLONEID,  "133913 133894"));
+             ArrayList clone_ids = Algorithms.splitString(ProcessRunner.cleanUpItems( Constants.ITEM_TYPE_CLONEID,  "133913 133894   794 1199"));
                item_descriptions = UI_GeneOligo.getByCloneId(clone_ids);
                    
         }catch(Exception e){}
