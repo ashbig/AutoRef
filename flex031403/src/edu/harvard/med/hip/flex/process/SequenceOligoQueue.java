@@ -15,11 +15,24 @@ import java.util.*;
  * @date  5/30/01
  * @author  Wendy Mar
  * @version
+ * @modified 1/24/02 by Wendy
  */
 public class SequenceOligoQueue {
     
+    private Project project = null;
+    private Workflow workflow = null;
+    
     /** Creates new SequenceOligoQueue */
     public SequenceOligoQueue() {
+    }
+    
+    /** Constructor
+     * @project The project that the oligo manager work with.
+     * @workflow The workflow that the oligo manager work with.
+     */
+    public SequenceOligoQueue(Project project, Workflow workflow) {
+        this.project = project;
+        this.workflow = workflow;
     }
     
     /**
@@ -49,6 +62,7 @@ public class SequenceOligoQueue {
     /**
      * Retrieve all the queued sequences which are waiting for
      * oligo primer calculation (construct design)
+     * All of the sequences should belong to the same project and workflow
      *
      * @param protocol The process protocol.
      * @cdsSizeLowerLimit The integer indicates the lower limit of the cds size class
@@ -63,6 +77,8 @@ public class SequenceOligoQueue {
         String sql = "SELECT s.sequenceid as seqid, s.cdsstart, s.cdsstop \n"+
         "FROM FLEXSEQUENCE s, QUEUE q\n" +
         "WHERE s.sequenceid = q.sequenceid\n" +
+        "AND q.projectId =" + project.getId() + "\n" +
+        "AND q.workflowId =" + workflow.getId() + "\n" +
         "AND q.protocolid = "+ protocol.getId() + "\n" +
         "AND s.cdslength >= " + cdsSizeLowerLimit + "\n" +
         "AND s.cdslength < " + cdsSizeUpperLimit;
@@ -139,6 +155,8 @@ public class SequenceOligoQueue {
         
         String sql = "DELETE FROM queue\n" +
         "WHERE protocolid = "+ protocol.getId()  + "\n" +
+        "AND projectid = "+ project.getId()  + "\n" +
+        "AND workflowid = "+ workflow.getId()  + "\n" +
         "AND sequenceid = ?";
         PreparedStatement stmt = null;
         try {

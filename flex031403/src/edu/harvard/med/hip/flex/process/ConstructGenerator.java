@@ -16,6 +16,8 @@
  *
  * Revision:    07-01-2001  [wmar]
  *              removed the setPlatesetId method and the platsetId data member
+ * Revision:    01-28-2002  [wmar]
+ *              The 5p and 3p tag added to oligos are project specific
  */
 
 package edu.harvard.med.hip.flex.process;
@@ -109,14 +111,21 @@ public class ConstructGenerator {
             //System.out.println("Calculate oligos for sequence count: " + count);
             //System.out.println("SequenceID: " + seqId + "   " + cdsLength);
             // calculate all three types of oligos for each sequence
-            // and insert oligo infor into the oligo table
+            // and insert oligo info into the oligo table
             try{
                 result_5p = pc.calculateFivepOligo(seq);
-                result_5p.insert(conn, "5p");
-                result_3s = pc.calculateThreepCloseOligo(seq);
-                result_3s.insert(conn, "3p");
+                result_5p.setTagSequence_5p(project, workflow);
+                result_5p.insert(conn);
+                
+                //all 3p close oligos have universal stop from the add on tag
+                result_3s = pc.calculateThreepOpenOligo(seq);
+                result_3s.setTagSequence_3p_Close(project, workflow);
+                result_3s.insert(conn);
+                
+                //all 3p fusion oligos mutated their stop codon to lysine: CAA
                 result_3op = pc.calculateThreepOpenOligo(seq);
-                result_3op.insert(conn,"3p");
+                result_3op.setTagSequence_3p_Fusion(project, workflow);
+                result_3op.insert(conn);
             } catch(FlexDatabaseException sqlex){
                 throw new FlexDatabaseException(sqlex);
             }
@@ -144,7 +153,7 @@ public class ConstructGenerator {
             
             //create the OligoPattern object and store it in a linked list
             pattern = new OligoPattern(oligoID_5p, oligoID_3s, oligoID_3op,
-            result_5p.getGatewayOligoSequence("5p"), result_3s.getGatewayOligoSequence("3p"), result_3op.getGatewayOligoSequence("3p"),
+            result_5p.getTagOligoSequence(), result_3s.getTagOligoSequence(), result_3op.getTagOligoSequence(),
             close.getId(), open.getId(), cdsLength);
             oligoPatternList.add(pattern);
         } //while

@@ -68,8 +68,8 @@ public class OligoPlateManager {
     }
     
     /**
-     * Check the total number of sequences in the Queue table which are
-     * waiting for Design_Construct protocol
+     * Check the total number of sequences in the Queue table belong to the
+     * same project and workflow waiting for Design_Construct protocol. 
      * @return The total number of sequences.
      */
     protected int totalSeqQueue(int cdsSizeGroup) throws FlexDatabaseException {
@@ -83,7 +83,9 @@ public class OligoPlateManager {
         String sql = "SELECT COUNT(q.sequenceid) " +
         "FROM queue q, flexsequence s \n" +
         "WHERE q.sequenceid = s.sequenceid \n" +
-        "AND protocolId =" + protocolId + "\n" +
+        "AND q.projectId =" + project.getId() + "\n" +
+        "AND q.workflowId =" + workflow.getId() + "\n" +
+        "AND q.protocolId =" + protocolId + "\n" +
         "AND s.cdslength <= " + cdsSizeGroup;
         
         try {
@@ -101,7 +103,7 @@ public class OligoPlateManager {
     } //
     
     /**
-     * retrieve queue records and related sequence records
+     * retrieve queue records and related sequence records of the same project
      * where protocol = 'design construct'
      * @return LinkedList A list of sequence objects
      */
@@ -115,13 +117,19 @@ public class OligoPlateManager {
         return seqList;
     }
     
+    /**
+     * retrieve queue records and related sequence records of the same project
+     * and workflow where protocol = 'design construct'
+     * @return LinkedList A list of sequence objects
+     */
+    
     private LinkedList getQueueSequence(int cdsSizeGroupLowerLimit,
     int cdsSizeGroupUpperLimit) throws FlexDatabaseException {
         
         Protocol protocol = new Protocol(DESIGN_CONSTRUCTS);
         LinkedList seqList = new LinkedList();
-        SequenceOligoQueue seqQueue = new SequenceOligoQueue();
-        seqList = seqQueue.getQueueItems(protocol, project, workflow, cdsSizeGroupLowerLimit,
+        SequenceOligoQueue seqQueue = new SequenceOligoQueue(project, workflow);
+        seqList = seqQueue.getQueueItems(protocol, cdsSizeGroupLowerLimit,
         cdsSizeGroupUpperLimit);
         
         return seqList;
@@ -129,8 +137,8 @@ public class OligoPlateManager {
     
     private void removeQueueSequence(LinkedList seqList) throws FlexDatabaseException{
         Protocol protocol = new Protocol(DESIGN_CONSTRUCTS);
-        SequenceOligoQueue seqQueue = new SequenceOligoQueue();
-        seqQueue.removeQueueItems(seqList, protocol, project, workflow, conn);
+        SequenceOligoQueue seqQueue = new SequenceOligoQueue(project, workflow);
+        seqQueue.removeQueueItems(seqList, protocol, conn);
     }
     
     public void createOligoPlates(LinkedList seqList) throws FlexDatabaseException, FlexCoreException, IOException{
