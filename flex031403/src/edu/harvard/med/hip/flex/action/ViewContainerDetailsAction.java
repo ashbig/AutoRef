@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-29 12:59:29 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.3 $
+ * $Date: 2001-07-10 14:58:05 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -57,8 +57,8 @@ import org.apache.struts.action.*;
  * Finds the container(s) speficied by the id or the label, and puts it into
  * the request to display the details of a container.
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-29 12:59:29 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.3 $ $Date: 2001-07-10 14:58:05 $
  */
 
 public class ViewContainerDetailsAction extends ResearcherAction {
@@ -133,7 +133,6 @@ public class ViewContainerDetailsAction extends ResearcherAction {
         
         if(! errors.empty()) {
             saveErrors(request,errors);
-            System.out.println("errors found: " + errors);
             return new ActionForward(mapping.getInput());
         } else {
             retForward=mapping.findForward("success");

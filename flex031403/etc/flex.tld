@@ -115,5 +115,42 @@
 
   </tag>
 
+  <tag>
+
+    <name>linkSample</name>
+
+    <tagclass>edu.harvard.med.hip.flex.tag.LinkSampleTag</tagclass>
+
+    <info>
+
+      Generate a URL-encoded hyperlink to view the details about a Sample
+
+
+
+      
+
+    </info>
+
+    
+    <attribute>
+        <name>name</name>
+        <required>true</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    
+    <attribute>
+        <name>property</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+
+     <attribute>
+        <name>process</name>
+        <required>true</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+
+  </tag>
+
 </taglib>
 

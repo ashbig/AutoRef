@@ -10,10 +10,21 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
+
+
 <html>
 <head><title>Sequence Process History</title></head>
 <body>
-    <h3>Sequence Process History</h3>
+    <h2>Sequence Process History</h2>
+    <p>
+    <logic:present name="<%=Constants.FLEX_SEQUENCE_KEY%>"/>
+        <bean:define name="<%=Constants.FLEX_SEQUENCE_KEY%>" id="sequence"/>    
+        Process history shown for sequence
+        <flex:linkFlexSequence sequenceName="sequence">
+            <bean:write name="sequence" property="id"/>
+        </flex:linkFlexSequence>
+    </logic:present>
+    </p>
     <br>
     <table>
     <tr>
@@ -23,11 +34,7 @@
         <th><CENTER>Researcher</CENTER></th>
         <th><CENTER>Notes</CENTER></th>
         <th><CENTER>Container</CENTER></th>
-        <th><CENTER>Position</CENTER></th>
         <th><CENTER>Sample</CENTER></th>
-        <th><CENTER>Sample Type</CENTER></th>
-        <th><CENTER>Sample Status</CENTER></th>
-        <th><CENTER>Result</CENTER></th>
     </tr>
  
     <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
@@ -47,19 +54,12 @@
                             <bean:write name="container" property="label"/>
                         </flex:linkContainer>
                 </CENTER></td>
-            <td><CENTER><bean:write name="sample" property="position"/></CENTER></td>
-            <td><CENTER><bean:write name="sample" property="id"/></CENTER></td>
-            <td><CENTER><bean:write name="sample" property="type"/></CENTER></td>
-            <td><CENTER><bean:write name="sample" property="status"/></CENTER></td>
-            <td><CENTER><%
-                   Result result = 
-                        Result.findResult((Sample)sample,(Process)process);
-                  if(result == null) {
-                    out.println("&nbsp;");
-                  } else {
-                        out.println(result);
-                   }
-                %></CENTER></td>
+           
+            <td><CENTER>
+                    <flex:linkSample name="sample" process="process">
+                        <bean:write name="sample" property="id"/>
+                    </flex:linkSample>
+                </CENTER></td>
         </tr>
     </logic:iterate>
     </table>

@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-07-03 17:12:57 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.5 $
+ * $Date: 2001-07-10 14:58:05 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -56,8 +56,8 @@ import org.apache.struts.action.*;
  * Prepares info to display the process history of a sequence.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-07-03 17:12:57 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.5 $ $Date: 2001-07-10 14:58:05 $
  */
 
 public class ViewSequenceProcessHistory extends ResearcherAction{
@@ -89,10 +89,11 @@ public class ViewSequenceProcessHistory extends ResearcherAction{
         String flexId = request.getParameter(Constants.FLEX_SEQUENCE_ID_KEY);
         String search = ((SequenceHistoryForm)form).getSearchParam();
         String value = ((SequenceHistoryForm)form).getParamValue();
+        FlexSequence sequence = null;
         if(search.equals(Constants.FLEX_SEQUENCE_ID_KEY)) {
             flexId = value;
         }
-        if(value!=null && ! value.equals("") && ! 
+        if(value!=null && ! value.equals("") && !
         search.equals(Constants.FLEX_SEQUENCE_ID_KEY)) {
             SequenceHistoryForm historyForm = (SequenceHistoryForm) form;
             try {
@@ -102,6 +103,7 @@ public class ViewSequenceProcessHistory extends ResearcherAction{
                 return mapping.findForward("error");
             } catch(FlexCoreException fce) {
                 errors.add("paramValue",new ActionError("error.sequence.not.found"));
+                
             }
         } else if(flexId == null || flexId.equals("")) {
             
@@ -123,8 +125,26 @@ public class ViewSequenceProcessHistory extends ResearcherAction{
             }
         }
         
+        
+        // make sure we found something
+        if(thread.getElementCount() < 1) {
+            errors.add("paramValue", new ActionError("error.thread.none.found", search, value));
+        }
+        
         if(errors.empty()) {
+            try {
+                
+                
+                ThreadElement elem = (ThreadElement)thread.getElements().get(0);
+                sequence = ((Sample)elem.getObject()).getFlexSequence();
+                
+            } catch (FlexDatabaseException fde) {
+                request.setAttribute(Action.EXCEPTION_KEY, fde);
+                retForward = mapping.findForward("error");
+                return retForward;
+            }
             request.setAttribute(Constants.THREAD_KEY, thread);
+            request.setAttribute(Constants.FLEX_SEQUENCE_KEY, sequence);
             retForward = mapping.findForward("success");
         } else {
             saveErrors(request,errors);
