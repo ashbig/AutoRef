@@ -124,6 +124,7 @@ public class CloneSequence extends AnalyzedScoredSequence
         sql += " order by submissiondate ";
         return getByRule(sql);
     }
+    
      
    public String getCodingSequence()
    {
@@ -187,12 +188,12 @@ public class CloneSequence extends AnalyzedScoredSequence
          //create sequence
          try
          {
+           
             Result result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,     process_id,
                                         sampleid,       null,
                                         result_type,
-                                        BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
+                                        BecIDGenerator.BEC_OBJECT_ID_NOTSET );
             result.insert(conn, process_id );
-
 
             CloneSequence clone_seq = new CloneSequence( contig.getSequence(),  contig.getScores(), refseq_id);
             clone_seq.setResultId( result.getId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
@@ -202,8 +203,9 @@ public class CloneSequence extends AnalyzedScoredSequence
             clone_seq.setCdsStart( contig.getCdsStart() );
             clone_seq.setCdsStop( contig.getCdsStop() );
             clone_seq.insert(conn);
-
-
+            
+            Result.updateResultValueId( result.getId(),clone_seq.getId(),  conn);
+            
             return clone_seq.getId();
          }
          catch(Exception e)
