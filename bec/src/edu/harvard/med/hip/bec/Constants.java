@@ -211,7 +211,7 @@ public class Constants {
     public static final int PROCESS_RUN_ASSEMBLER_FOR_ALL_READS = 53;//run assembly wrapper
       public static final int PROCESS_RUNPOLYMORPHISM_FINDER= 54; //run polymorphism finder
       public static final int PROCESS_RUN_DISCREPANCY_FINDER= 55;//run discrepancy finder
-      public static final int PROCESS_RUN_DESIGION_TOOL = 56;//run decision tool
+      public static final int PROCESS_RUN_DECISION_TOOL = 56;//run decision tool
       
       public static final int PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 57;//run decision tool
        public static final int PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
