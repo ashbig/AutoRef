@@ -82,6 +82,11 @@ public class ConstructGenerator {
      * @return A linkedlist of 94 OligoPattern objects
      */
     protected void generateOligoAndConstructs()throws FlexDatabaseException {
+        if(Project.PSEUDOMONAS == project.getId()) {
+            generatePMOligoAndConstructs();
+            return;
+        }
+        
         Sequence seq = null;
         Oligo result_5p = null;
         Oligo result_3s = null;
@@ -158,6 +163,72 @@ public class ConstructGenerator {
             oligoPatternList.add(pattern);
         } //while
     } //generateOligoAndConstructs
+
+    public void generatePMOligoAndConstructs() throws FlexDatabaseException {
+        Sequence seq = null;
+        Oligo result_5p = null;
+        Oligo result_3op = null;
+        OligoPattern pattern = null;
+        Construct open = null;
+        int seqId = 0;
+        int cdsLength = 0;
+        int oligoID_5p = 0;
+        int oligoID_3op = 0;
+        int pairId = 0; //construct pairID
+        int count = 0;
+        
+        // insert design constructs protocl process execution
+        // insertProcessExecution();
+        PMNNPrimerCalculator pc = new PMNNPrimerCalculator();
+        ListIterator iter = seqList.listIterator();
+        
+        while (iter.hasNext()) {
+            seq = (Sequence) iter.next(); //retrieves one sequence from the list
+            seqId = seq.getId();
+            cdsLength = seq.getCDSLength();
+            count++;
+            
+            //System.out.println("Calculate oligos for sequence count: " + count);
+            //System.out.println("SequenceID: " + seqId + "   " + cdsLength);
+            // calculate all three types of oligos for each sequence
+            // and insert oligo info into the oligo table
+            try{
+                result_5p = pc.calculateFivepOligo(seq);
+                result_5p.setTagSequence_5p(project, workflow);
+                result_5p.insert(conn);
+                
+                //all 3p fusion oligos mutated their stop codon to lysine: CAA
+                result_3op = pc.calculateThreepOpenOligo(seq);
+                result_3op.setTagSequence_3p_Fusion(project, workflow);
+                result_3op.insert(conn);
+            } catch(FlexDatabaseException sqlex){
+                throw new FlexDatabaseException(sqlex);
+            }
+            
+            //get the group of three oligoIds derived from the same sequence
+            oligoID_5p = result_5p.getOligoID();
+            oligoID_3op = result_3op.getOligoID();
+            
+            //generate construct pairID: a open and a close construct derived from
+            //the same sequence have the same pair id.
+            pairId = setPairId(); //not working!!!
+            
+            // create two new constructs: open and close form and insert them
+            // to the ConstructDesign table
+            open = new Construct(seq,result_5p,result_3op, "FUSION", pairId, project, workflow);
+            constructList.add(open);
+            //System.out.println("inserting constructs: ");
+            open.insert(conn);
+            //System.out.println("close construct ID: " + close.getId());
+            //System.out.println("open construct ID: " + open.getId());
+            
+            //create the OligoPattern object and store it in a linked list
+            pattern = new OligoPattern(oligoID_5p, -1, oligoID_3op,
+            result_5p.getTagOligoSequence(), null, result_3op.getTagOligoSequence(),
+            -1, open.getId(), cdsLength);
+            oligoPatternList.add(pattern);
+        } //while
+    }   
     
     /**
      * @return The list of oligoPattern objects

@@ -102,6 +102,8 @@ public class SelectProtocolAction extends FlexAction {
         //remove the attributes from the session.
         if(request.getSession().getAttribute("SelectProtocolAction.queueItems") != null)
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+
+        request.getSession().removeAttribute("SelectProtocolAction.protocol");  
         
         if(items.size() > 0) {
             request.getSession().setAttribute("SelectProtocolAction.queueItems", items);

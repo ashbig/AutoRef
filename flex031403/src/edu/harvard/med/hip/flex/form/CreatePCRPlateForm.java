@@ -244,11 +244,11 @@ public class CreatePCRPlateForm extends ProjectWorkflowForm {
         if((threepOpenPlate == null) || (threepOpenPlate.trim().length()<1)) {
             errors.add("threepOpenPlate", new ActionError("error.plate.invalid.barcode", threepOpenPlate));
         }
-        
+/*        
         if((threepClosedPlate == null) || (threepClosedPlate.trim().length()<1)) {
             errors.add("threepClosedPlate", new ActionError("error.plate.invalid.barcode", threepClosedPlate));
         }       
-        
+*/        
         return errors;
     }       
 }

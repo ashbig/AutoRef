@@ -72,7 +72,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
             researcher = new Researcher(barcode);
         } catch (FlexProcessException ex) {
             request.setAttribute("workflowid", new Integer(workflowid));
-            request.setAttribute("projectid", new Integer(projectid));            
+            request.setAttribute("projectid", new Integer(projectid));
             
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
@@ -88,21 +88,34 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
         Container fivep = (Container)request.getSession().getAttribute("EnterOligoPlateAction.fivep");
         Container threepOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepOpen");
         Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
-
-        if(fivepOligoD == null || threepOpenD == null ||
-        threepClosedD == null || fivep == null || threepOpen == null ||
-        threepClosed == null) {
-            return (mapping.findForward("fail"));
-        }
         
+        if(projectid == Project.PSEUDOMONAS) {
+            if(fivepOligoD == null || threepOpenD == null ||
+            fivep == null || threepOpen == null) {
+                return (mapping.findForward("fail"));
+            }
+        } else {
+            if(fivepOligoD == null || threepOpenD == null ||
+            threepClosedD == null || fivep == null || threepOpen == null ||
+            threepClosed == null) {
+                return (mapping.findForward("fail"));
+            }
+        }
         Vector oldContainers = new Vector();
         oldContainers.addElement(fivep);
         oldContainers.addElement(threepOpen);
-        oldContainers.addElement(threepClosed);
+        
+        if(threepClosed != null) {
+            oldContainers.addElement(threepClosed);
+        }
+        
         Vector newContainers = new Vector();
         newContainers.addElement(fivepOligoD);
         newContainers.addElement(threepOpenD);
-        newContainers.addElement(threepClosedD);
+        
+        if(threepClosedD != null) {
+            newContainers.addElement(threepClosedD);
+        }
         
         QueueItem items = (QueueItem)request.getSession().getAttribute("EnterOligoPlateAction.item");
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
@@ -126,11 +139,16 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
                 Container newContainer = (Container)newContainers.elementAt(i);
                 newContainer.insert(conn);
             }
-
+            
             // Crate the plateset record for the new oligo containers.
-            Plateset pset = new Plateset(fivepOligoD.getId(), threepOpenD.getId(), threepClosedD.getId());
+            int threepClosedDid = -1;
+            if(threepClosedD != null) {
+                threepClosedDid = threepClosedD.getId();
+            }
+            
+            Plateset pset = new Plateset(fivepOligoD.getId(), threepOpenD.getId(), threepClosedDid);
             pset.insert(conn);
- 
+            
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
             WorkflowManager manager = new WorkflowManager(project, workflow, "ProcessPlateManager");
@@ -146,7 +164,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
             oldItems.addLast(items);
             q.removeQueueItems(oldItems, conn);
             
-            LinkedList newItems = new LinkedList();            
+            LinkedList newItems = new LinkedList();
             for(int i=0; i<nextProtocols.size(); i++) {
                 newItems.clear();
                 newItems.addLast(new QueueItem(pset, (Protocol)nextProtocols.elementAt(i), project, workflow));

@@ -63,6 +63,15 @@ public class EnterSourcePlateAction extends ResearcherAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
+        
+        //clean up the session attributes
+        request.getSession().removeAttribute("EnterSourcePlateAction.oldContainers");
+        request.getSession().removeAttribute("EnterSourcePlateAction.locations");
+        request.getSession().removeAttribute("EnterSourcePlateAction.items");
+        request.getSession().removeAttribute("EnterSourcePlateAction.sampleLineageSet");
+        request.getSession().removeAttribute("EnterSourcePlateAction.subprotocol");
+        request.getSession().removeAttribute("EnterSourcePlateAction.newContainers");
+        
         int projectid = getProjectid(form);
         int workflowid = getWorkflowid(form);
         

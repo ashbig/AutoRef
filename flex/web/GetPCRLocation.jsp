@@ -56,6 +56,7 @@
         </html:select></td>
     </tr>
 
+    <logic:present name="EnterOligoPlateAction.threepClosed">
     <tr>
     <td class="label">3P closed oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepClosed" property="label"/></td>
@@ -68,6 +69,7 @@
         />
         </html:select></td>
     </tr>
+    </logic:present>
 
     <tr>
     <td class="label">Fusion PCR plate barcode:</td>
@@ -82,6 +84,7 @@
         </html:select></td>
     </tr>
 
+    <logic:present name="EnterOligoPlateAction.pcrClosed">
     <tr>
     <td class="label">Closed PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrClosed" property="label"/></td>
@@ -94,6 +97,7 @@
         />
         </html:select></td>
     </tr>
+    </logic:present>
 
     <tr>
     <td></td><td><html:submit property="submit" value="Continue"/></td>

@@ -34,7 +34,7 @@ import edu.harvard.med.hip.flex.util.PrintLabel;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class PrintPCRBarcodeAction extends ResearcherAction {
     /**
@@ -59,14 +59,16 @@ public class PrintPCRBarcodeAction extends ResearcherAction {
     throws ServletException, IOException {
         Container pcrOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrOpen");
         Container pcrClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrClosed");
-
+        
         String status = PrintLabel.execute(pcrOpen.getLabel());
         //System.out.println("Printing barcode: "+status);
         
-        status = PrintLabel.execute(pcrClosed.getLabel());
-        //System.out.println("Printing barcode: "+status);
+        if (pcrClosed != null) {
+            status = PrintLabel.execute(pcrClosed.getLabel());
+            //System.out.println("Printing barcode: "+status);
+        }
         
-        return (mapping.findForward("success"));   
+        return (mapping.findForward("success"));
     }
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.11 2001-12-13 21:19:38 wendy Exp $
+ * $Id: NNPrimerCalculator.java,v 1.12 2002-03-15 17:07:15 dzuo Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * modified 12/13/01 All of the stop (close) oligos now use the universal stop
@@ -20,7 +20,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 	private static final double R = 1.9872;     // Gas Constant
 	private static final double InitH = 0.6;    // Initial H value
 	private static final double InitS = -9.0;   // Initial S value 
-	private static double DesiredTM = 60.0;  // The desired Tm is around 60 C
+	private static double DESIREDTM = 60.0;  // The desired Tm is around 60 C
         private static final String  UniversalStop = "CTA"; //used for the Pseudomonas project
 
 	private double[][] paramH;
@@ -132,7 +132,8 @@ public class NNPrimerCalculator implements PrimerCalculator
 		int indexOne = 0; // the first index for the two-dimensional array paramH and paramS
 		int indexTwo = 0; // the second index for the two-dimensional array paramH and ParamS
 		Oligo oligo = null;		
-
+                double DesiredTM = getDesiredTM();
+                
 		while (Tm < DesiredTM)
 		{
                     if (pos+2 >= subSeq.length()) {
@@ -187,6 +188,8 @@ public class NNPrimerCalculator implements PrimerCalculator
 			pos = 18;
 		}
 
+                pos = adjustPosition(pos);
+                
 		// Tm calculation for oligos more than 38 bases seem to be underestimated
 		// Also, longer primers tend to form internal loops
 		// All the oligos should be no more 42 bases long
@@ -194,9 +197,15 @@ public class NNPrimerCalculator implements PrimerCalculator
 			pos = 38;
 		}
 
-		// The oligo sequence is the substring of parameter seq50
-		oligoSeq = subSeq.substring(0, pos+1);
-	
+		// The oligo sequence is the substring of parameter seq50	
+                // Always replace the first three chars with ATG if it is 5p
+                if("5p".equals(oligoType)) {
+                    oligoSeq = subSeq.substring(3, pos+1);
+                    oligoSeq = "ATG"+oligoSeq;
+                } else {
+                    oligoSeq = subSeq.substring(0, pos+1);
+                }
+                
 		oligo = new Oligo(oligoType, oligoSeq, Tm);
                    
                 //testing...
@@ -386,6 +395,14 @@ public class NNPrimerCalculator implements PrimerCalculator
                   System.out.println(e.getMessage());  
                 }
 	}
+
+        public double getDesiredTM() {
+            return DESIREDTM;
+        }
+ 
+        public int adjustPosition(int pos) {
+            return pos;
+        }        
         
         public static void main(String [] args) {
             NNPrimerCalculator calculator = new NNPrimerCalculator();

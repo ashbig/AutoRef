@@ -18,14 +18,16 @@
 <h3>The following containers are available:</h3>
 <TABLE border="1" cellpadding="2" cellspacing="0">
 <tr class="headerRow">
-    <th>5P Oligo Plate</th><th>3P Open Oligo Plate</th><th>3P Fusion Oligo Plate</th>
+    <th>5P Oligo Plate</th><th>3P Fusion Oligo Plate</th><th>3P Closed Oligo Plate</th>
 </tr>
 
 <logic:iterate id="queueItem" name="SelectProtocolAction.queueItems">
 <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
     <td><bean:write name="queueItem" property="item.fivepContainer.label"/></td>
     <td><bean:write name="queueItem" property="item.threepOpenContainer.label"/></td>
+    <logic:present name="queueItem" property="item.threepClosedContainer">
     <td><bean:write name="queueItem" property="item.threepClosedContainer.label"/></td>
+    </logic:present>
 </flex:row>
 </logic:iterate>
 </table>

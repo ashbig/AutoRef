@@ -137,7 +137,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         }
         
         request.getSession().removeAttribute("ReceiveOligoPlatesAction.queueItems");
-//        request.getSession().removeAttribute("containerList");
+        //        request.getSession().removeAttribute("containerList");
         
         return (mapping.findForward("success"));
     }
@@ -149,10 +149,22 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         
         boolean complete = true;
         
-        if(Location.UNAVAILABLE.equals(fivep.getLocation().getType()) ||
-        Location.UNAVAILABLE.equals(threepFusion.getLocation().getType()) ||
-        Location.UNAVAILABLE.equals(threepClosed.getLocation().getType())) {
-            complete = false;
+        if(threepFusion == null) {
+            if(Location.UNAVAILABLE.equals(fivep.getLocation().getType()) ||
+            Location.UNAVAILABLE.equals(threepClosed.getLocation().getType())) {
+                complete = false;
+            }
+        } else if(threepClosed == null) {
+            if(Location.UNAVAILABLE.equals(fivep.getLocation().getType()) ||
+            Location.UNAVAILABLE.equals(threepFusion.getLocation().getType())) {
+                complete = false;
+            }
+        } else {            
+            if(Location.UNAVAILABLE.equals(fivep.getLocation().getType()) ||
+            Location.UNAVAILABLE.equals(threepFusion.getLocation().getType()) ||
+            Location.UNAVAILABLE.equals(threepClosed.getLocation().getType())) {
+                complete = false;
+            }
         }
         
         return complete;
@@ -186,7 +198,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
                 Protocol nextProtocol = (Protocol)iter.next();
                 LinkedList platesetQueueItemList = new LinkedList();
                 QueueItem queueItem = new QueueItem(plateset, nextProtocol, project, workflow);
-                platesetQueueItemList.add(queueItem);                
+                platesetQueueItemList.add(queueItem);
                 platesetQueue.addQueueItems(platesetQueueItemList, conn);
             }
         } catch(FlexDatabaseException sqlE) {

@@ -37,7 +37,7 @@ import edu.harvard.med.hip.flex.util.PrintLabel;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class GetPCRResearcherAction extends ResearcherAction {
     /**
@@ -62,7 +62,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String barcode = ((GetResearcherBarcodeForm)form).getResearcherBarcode();
-        Researcher researcher = null;        
+        Researcher researcher = null;
         int workflowid = ((GetResearcherBarcodeForm)form).getWorkflowid();
         int projectid = ((GetResearcherBarcodeForm)form).getProjectid();
         
@@ -71,31 +71,40 @@ public class GetPCRResearcherAction extends ResearcherAction {
             researcher = new Researcher(barcode);
         } catch (FlexProcessException ex) {
             request.setAttribute("workflowid", new Integer(workflowid));
-            request.setAttribute("projectid", new Integer(projectid));            
+            request.setAttribute("projectid", new Integer(projectid));
             
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
-        } catch (FlexDatabaseException ex) {           
+        } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
-
+        
         Container fivep = (Container)request.getSession().getAttribute("EnterOligoPlateAction.fivep");
         Container threepOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepOpen");
-        Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed"); 
+        Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
         Container pcrOpenContainer = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrOpen");
         Container pcrClosedContainer = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrClosed");
         QueueItem item = (QueueItem)request.getSession().getAttribute("EnterOligoPlateAction.item");
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterOligoPlateAction.sampleLineageSet");
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterOligoPlateAction.subprotocol");
-
-        if(fivep == null || threepOpen == null || threepClosed == null ||
-        pcrOpenContainer == null || pcrClosedContainer == null ||
-        item == null || protocol == null || sampleLineageSet == null ||
-        subprotocol == null) {
-            return (mapping.findForward("fail"));
+        
+        if(projectid == Project.PSEUDOMONAS) {
+            if(fivep == null || threepOpen == null ||
+            pcrOpenContainer == null ||
+            item == null || protocol == null || sampleLineageSet == null ||
+            subprotocol == null) {
+                return (mapping.findForward("fail"));
+            }
+        } else {
+            if(fivep == null || threepOpen == null || threepClosed == null ||
+            pcrOpenContainer == null || pcrClosedContainer == null ||
+            item == null || protocol == null || sampleLineageSet == null ||
+            subprotocol == null) {
+                return (mapping.findForward("fail"));
+            }
         }
         
         Connection conn = null;
@@ -106,62 +115,89 @@ public class GetPCRResearcherAction extends ResearcherAction {
             // update the location of the old containers.
             fivep.updateLocation(fivep.getLocation().getId(), conn);
             threepOpen.updateLocation(threepOpen.getLocation().getId(), conn);
-            threepClosed.updateLocation(threepClosed.getLocation().getId(), conn);
+            
+            if(threepClosed != null) {
+                threepClosed.updateLocation(threepClosed.getLocation().getId(), conn);
+            }
             
             // Insert the new container and samples into database.
             pcrOpenContainer.insert(conn);
-            pcrClosedContainer.insert(conn);
+            
+            if(pcrClosedContainer != null) {
+                pcrClosedContainer.insert(conn);
+            }
             
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
             
             // Create a process, process object and sample lineage record.
-            Process process = new Process(protocol, 
+            Process process = new Process(protocol,
             edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher,
             project, workflow);
             process.setSubprotocol(subprotocol.getName());
-            ContainerProcessObject fivepInputContainer = 
-                new ContainerProcessObject(fivep.getId(), 
-                process.getExecutionid(), 
+            ContainerProcessObject fivepInputContainer =
+            new ContainerProcessObject(fivep.getId(),
+            process.getExecutionid(),
+            edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
+            ContainerProcessObject threepOpenInputContainer =
+            new ContainerProcessObject(threepOpen.getId(),
+            process.getExecutionid(),
+            edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
+            
+            ContainerProcessObject threepClosedInputContainer = null;
+            if(threepClosed != null) {
+                threepClosedInputContainer =
+                new ContainerProcessObject(threepClosed.getId(),
+                process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            ContainerProcessObject threepOpenInputContainer = 
-                new ContainerProcessObject(threepOpen.getId(), 
-                process.getExecutionid(), 
-                edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            ContainerProcessObject threepClosedInputContainer = 
-                new ContainerProcessObject(threepClosed.getId(), 
-                process.getExecutionid(), 
-                edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            ContainerProcessObject pcrOpenOutputContainer = 
-                new ContainerProcessObject(pcrOpenContainer.getId(), 
+            }
+            
+            ContainerProcessObject pcrOpenOutputContainer =
+            new ContainerProcessObject(pcrOpenContainer.getId(),
+            process.getExecutionid(),
+            edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
+            
+            ContainerProcessObject pcrClosedOutputContainer = null;
+            if(pcrClosedContainer != null) {
+                pcrClosedOutputContainer =
+                new ContainerProcessObject(pcrClosedContainer.getId(),
                 process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
-            ContainerProcessObject pcrClosedOutputContainer = 
-                new ContainerProcessObject(pcrClosedContainer.getId(), 
-                process.getExecutionid(),
-                edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
+            }
+            
             process.addProcessObject(fivepInputContainer);
             process.addProcessObject(threepOpenInputContainer);
-            process.addProcessObject(threepClosedInputContainer);
+            
+            if(threepClosedInputContainer != null) {
+                process.addProcessObject(threepClosedInputContainer);
+            }
+            
             process.addProcessObject(pcrOpenOutputContainer);
-            process.addProcessObject(pcrClosedOutputContainer);    
-            process.setSampleLineageSet(sampleLineageSet);                           
+            
+            if(pcrClosedOutputContainer != null) {
+                process.addProcessObject(pcrClosedOutputContainer);
+            }
+            
+            process.setSampleLineageSet(sampleLineageSet);
             
             // Insert the process and process objects into database.
             process.insert(conn);
-
+            
             // Update the plateset id for three input objects.
             Plateset ps = (Plateset)item.getItem();
             fivepInputContainer.updatePlateset(ps.getId(), conn);
             threepOpenInputContainer.updatePlateset(ps.getId(), conn);
-            threepClosedInputContainer.updatePlateset(ps.getId(), conn);
+            
+            if(threepClosedInputContainer != null) {
+                threepClosedInputContainer.updatePlateset(ps.getId(), conn);
+            }
             
             // Remove the container from the queue.
             LinkedList newItems = new LinkedList();
             newItems.addLast(item);
             PlatesetProcessQueue queue = new PlatesetProcessQueue();
             queue.removeQueueItems(newItems, conn);
-
+            
             // Get the next protocols from the workflow.
             Vector nextProtocols = workflow.getNextProtocol(protocol);
             
@@ -170,17 +206,24 @@ public class GetPCRResearcherAction extends ResearcherAction {
             for(int i=0; i<nextProtocols.size(); i++) {
                 newItems.clear();
                 newItems.addLast(new QueueItem(pcrOpenContainer, (Protocol)nextProtocols.elementAt(i), project, workflow));
-                newItems.addLast(new QueueItem(pcrClosedContainer, (Protocol)nextProtocols.elementAt(i), project, workflow));
+                
+                if(pcrClosedContainer != null) {
+                    newItems.addLast(new QueueItem(pcrClosedContainer, (Protocol)nextProtocols.elementAt(i), project, workflow));
+                }
+                
                 q.addQueueItems(newItems, conn);
             }
-        
+            
             // Print the barcode
             String status = PrintLabel.execute(pcrOpenContainer.getLabel());
             //System.out.println("Printing barcode: "+status);
-            status = PrintLabel.execute(pcrClosedContainer.getLabel());
-            //System.out.println("Printing barcode: "+status);
-
-             // Commit the changes to the database.
+            
+            if(pcrClosedContainer != null) {
+                status = PrintLabel.execute(pcrClosedContainer.getLabel());
+                //System.out.println("Printing barcode: "+status);
+            }
+            
+            // Commit the changes to the database.
             DatabaseTransaction.commit(conn);
             
             // Remove everything from the session.
@@ -193,8 +236,8 @@ public class GetPCRResearcherAction extends ResearcherAction {
             request.getSession().removeAttribute("EnterOligoPlateAction.item");
             request.getSession().removeAttribute("EnterOligoPlateAction.sampleLineageSet");
             request.getSession().removeAttribute("EnterOligoPlateAction.subprotocol");
-
-            return (mapping.findForward("success"));            
+            
+            return (mapping.findForward("success"));
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
@@ -203,4 +246,4 @@ public class GetPCRResearcherAction extends ResearcherAction {
             DatabaseTransaction.closeConnection(conn);
         }
     }
-} 
+}

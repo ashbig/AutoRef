@@ -78,7 +78,11 @@ public class OligoPlater {
         // generateControlSamples();
         // generateOligoOrder();
         container_5p.insert(conn);
-        container_3s.insert(conn);
+        
+        if(project.getId() != Project.PSEUDOMONAS) {
+            container_3s.insert(conn);
+        }
+        
         container_3op.insert(conn);
         plateset.insert(conn);
         
@@ -168,17 +172,29 @@ public class OligoPlater {
             
             //prepare files for oligo order
             plateOutFileName1 = filePath + container_5p.getLabel();
-            plateOutFileName2 = filePath + container_3s.getLabel();
+            
+            if(project.getId() != Project.PSEUDOMONAS) {
+                plateOutFileName2 = filePath + container_3s.getLabel();
+            }
+            
             plateOutFileName3 = filePath + container_3op.getLabel();
             
             plateWriter_5p = new FileWriter(plateOutFileName1);
-            plateWriter_3s = new FileWriter(plateOutFileName2);
+            
+            if(project.getId() != Project.PSEUDOMONAS) {
+                plateWriter_3s = new FileWriter(plateOutFileName2);
+            }
+            
             plateWriter_3op = new FileWriter(plateOutFileName3);
             createOligoFileHeader();
             
             //adding file names to the list
             fileNameList.add(plateOutFileName1);
-            fileNameList.add(plateOutFileName2);
+            
+            if(project.getId() != Project.PSEUDOMONAS) {
+                fileNameList.add(plateOutFileName2);
+            }
+            
             fileNameList.add(plateOutFileName3);
             
             //gene array index starts at 0
@@ -241,17 +257,19 @@ public class OligoPlater {
                 plateWriter_5p.write(currentGene.getOligoId_5p()+"\t");
                 plateWriter_5p.write(currentGene.getOligoseq_5p()+"\t");
                 plateWriter_5p.write(oligoSample_5p.getPosition()+"\n");
+            
+                if(project.getId() != Project.PSEUDOMONAS) {
+                    oligoSample_3s = generateOligoSample(currentGene,"3s", container_3s.getId(), well);
+                    //System.out.println("PlateID: "+container_3s.getId()+"; " + "3s lower oligo well: "+ well + "; "
+                    //+ "sampleID: "+ oligoSample_3s.getId() +"; "+oligoSample_3s.getConstructid()+"; " + currentGene.getCDSLength());
                 
-                oligoSample_3s = generateOligoSample(currentGene,"3s", container_3s.getId(), well);
-                //System.out.println("PlateID: "+container_3s.getId()+"; " + "3s lower oligo well: "+ well + "; "
-                //+ "sampleID: "+ oligoSample_3s.getId() +"; "+oligoSample_3s.getConstructid()+"; " + currentGene.getCDSLength());
+                    container_3s.addSample(oligoSample_3s);
                 
-                container_3s.addSample(oligoSample_3s);
-                
-                plateWriter_3s.write(container_3s.getLabel()+"\t");
-                plateWriter_3s.write(currentGene.getOligoId_3s()+"\t");
-                plateWriter_3s.write(currentGene.getOligoseq_3s()+"\t");
-                plateWriter_3s.write(oligoSample_3s.getPosition()+"\n");
+                    plateWriter_3s.write(container_3s.getLabel()+"\t");
+                    plateWriter_3s.write(currentGene.getOligoId_3s()+"\t");
+                    plateWriter_3s.write(currentGene.getOligoseq_3s()+"\t");
+                    plateWriter_3s.write(oligoSample_3s.getPosition()+"\n");
+                }
                 
                 oligoSample_3op = generateOligoSample(currentGene,"3op", container_3op.getId(), well);
                 //System.out.println("PlateID: "+container_3op.getId()+"; " + "3op lower oligo well: "+ well + "; "
@@ -292,16 +310,18 @@ public class OligoPlater {
                 plateWriter_5p.write(currentGene.getOligoseq_5p()+"\t");
                 plateWriter_5p.write(oligoSample_5p.getPosition()+"\n");
                 
-                oligoSample_3s = generateOligoSample(currentGene,"3s", container_3s.getId(), well);
-                //System.out.println("PlateID: "+container_3s.getId()+"; " + "3s upper oligo well: "+ well + "; "
-                //+ "sampleID: "+ oligoSample_3s.getId() +"; " + currentGene.getCDSLength());
+                if(project.getId() != Project.PSEUDOMONAS) {
+                    oligoSample_3s = generateOligoSample(currentGene,"3s", container_3s.getId(), well);
+                    //System.out.println("PlateID: "+container_3s.getId()+"; " + "3s upper oligo well: "+ well + "; "
+                    //+ "sampleID: "+ oligoSample_3s.getId() +"; " + currentGene.getCDSLength());
                 
-                container_3s.addSample(oligoSample_3s);
+                    container_3s.addSample(oligoSample_3s);
                 
-                plateWriter_3s.write(container_3s.getLabel()+"\t");
-                plateWriter_3s.write(currentGene.getOligoId_3s()+"\t");
-                plateWriter_3s.write(currentGene.getOligoseq_3s()+"\t");
-                plateWriter_3s.write(oligoSample_3s.getPosition()+"\n");
+                    plateWriter_3s.write(container_3s.getLabel()+"\t");
+                    plateWriter_3s.write(currentGene.getOligoId_3s()+"\t");
+                    plateWriter_3s.write(currentGene.getOligoseq_3s()+"\t");
+                    plateWriter_3s.write(oligoSample_3s.getPosition()+"\n");
+                }
                 
                 oligoSample_3op = generateOligoSample(currentGene,"3op", container_3op.getId(), well);
                 //System.out.println("PlateID: "+container_3op.getId()+"; " + "3op upper oligo well: "+ well + "; "
@@ -321,8 +341,12 @@ public class OligoPlater {
             
             plateWriter_5p.flush();
             plateWriter_5p.close();
-            plateWriter_3s.flush();
-            plateWriter_3s.close();
+            
+            if(project.getId() != Project.PSEUDOMONAS) {
+                plateWriter_3s.flush();
+                plateWriter_3s.close();
+            }
+            
             plateWriter_3op.flush();
             plateWriter_3op.close();
             
@@ -346,10 +370,12 @@ public class OligoPlater {
         plateWriter_5p.write("OligoSequence"+"\t");
         plateWriter_5p.write("Well"+"\n");
         
-        plateWriter_3s.write("Label"+"\t");
-        plateWriter_3s.write("OligoID"+"\t");
-        plateWriter_3s.write("OligoSequence"+"\t");
-        plateWriter_3s.write("Well"+"\n");
+        if(project.getId() != Project.PSEUDOMONAS) {
+            plateWriter_3s.write("Label"+"\t");
+            plateWriter_3s.write("OligoID"+"\t");
+            plateWriter_3s.write("OligoSequence"+"\t");
+            plateWriter_3s.write("Well"+"\n");
+        }
         
         plateWriter_3op.write("Label"+"\t");
         plateWriter_3op.write("OligoID"+"\t");
@@ -378,31 +404,49 @@ public class OligoPlater {
         container_5p = new Container(plateType, location,label_5p);
         //System.out.println("Created the 5p oligo plate: "+ container_5p.getId());
         
-        container_3s = new Container(plateType, location,label_3s);
-        //System.out.println("Created the 3s oligo plate: "+ container_3s.getId());
+        if(project.getId() != Project.PSEUDOMONAS) {
+            container_3s = new Container(plateType, location,label_3s);
+            //System.out.println("Created the 3s oligo plate: "+ container_3s.getId());
+        }
         
         container_3op = new Container(plateType, location,label_3op);
         //System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
         
-        plateset = new Plateset(container_5p.getId(), container_3op.getId(),container_3s.getId());
-
-        String projectCode = "";        
-        Workflow wf = project.getWorkflow(workflow);        
+        if(project.getId() == Project.PSEUDOMONAS) {
+            plateset = new Plateset(container_5p.getId(), container_3op.getId(),-1);
+        } else {
+            plateset = new Plateset(container_5p.getId(), container_3op.getId(),container_3s.getId());
+        }
+        
+        String projectCode = "";
+        Workflow wf = project.getWorkflow(workflow);
         if(wf != null) {
             projectCode = ((ProjectWorkflow)wf).getCode();
-        }        
+        }
         int threadid = FlexIDGenerator.getID("threadid");
         label_5p = Container.getLabel(projectCode, oligoFivePrefix, threadid, null); //upstream
-        label_3s = Container.getLabel(projectCode, oligoClosePrefix, threadid, null); //closed
+        
+        if(project.getId() != Project.PSEUDOMONAS) {
+            label_3s = Container.getLabel(projectCode, oligoClosePrefix, threadid, null); //closed
+        }
+        
         label_3op = Container.getLabel(projectCode, oligoFusionPrefix, threadid, null); //fusion
         
         container_5p.setLabel(label_5p);
-        container_3s.setLabel(label_3s);
+        
+        if(project.getId() != Project.PSEUDOMONAS) {
+            container_3s.setLabel(label_3s);
+        }
+        
         container_3op.setLabel(label_3op);
         
         // Update the threadid for each container.
         container_5p.setThreadid(threadid);
-        container_3s.setThreadid(threadid);
+        
+        if(project.getId() != Project.PSEUDOMONAS) {
+            container_3s.setThreadid(threadid);
+        }
+        
         container_3op.setThreadid(threadid);
         
         //System.out.println("5p oligo plate label: "+ label_5p);
@@ -450,16 +494,24 @@ public class OligoPlater {
         //add positive control samples
         control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_5p.getId());
         container_5p.addSample(control_positive);
-        control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3s.getId());
-        container_3s.addSample(control_positive);
+        
+        if(project.getId() != Project.PSEUDOMONAS) {
+            control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3s.getId());
+            container_3s.addSample(control_positive);
+        }
+        
         control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3op.getId());
         container_3op.addSample(control_positive);
         
         //add negative samples
         control_negative = new Sample(NegativeControlSampleType,negativeControlPosition,container_5p.getId());
         container_5p.addSample(control_negative);
-        control_negative = new Sample(NegativeControlSampleType,negativeControlPosition,container_3s.getId());
-        container_3s.addSample(control_negative);
+        
+        if(project.getId() != Project.PSEUDOMONAS) {
+            control_negative = new Sample(NegativeControlSampleType,negativeControlPosition,container_3s.getId());
+            container_3s.addSample(control_negative);
+        }
+        
         control_negative = new Sample(NegativeControlSampleType,negativeControlPosition,container_3op.getId());
         container_3op.addSample(control_negative);
         
@@ -510,9 +562,13 @@ public class OligoPlater {
         ContainerProcessObject platepo_5p =
         new ContainerProcessObject(container_5p.getId(),process.getExecutionid(),ioType);
         platepo_5p.insert(conn);
-        ContainerProcessObject platepo_3s =
-        new ContainerProcessObject(container_3s.getId(),process.getExecutionid(),ioType);
-        platepo_3s.insert(conn);
+        
+        if(project.getId() != Project.PSEUDOMONAS) {
+            ContainerProcessObject platepo_3s =
+            new ContainerProcessObject(container_3s.getId(),process.getExecutionid(),ioType);
+            platepo_3s.insert(conn);
+        }
+        
         ContainerProcessObject platepo_3op =
         new ContainerProcessObject(container_3op.getId(),process.getExecutionid(),ioType);
         platepo_3op.insert(conn);
@@ -536,8 +592,12 @@ public class OligoPlater {
             QueueItem queueItem = null;
             queueItem = new QueueItem(container_5p, nextProtocol, project, workflow);
             containerQueueItemList.add(queueItem);
-            queueItem = new QueueItem(container_3s, nextProtocol, project, workflow);
-            containerQueueItemList.add(queueItem);
+            
+            if(project.getId() != Project.PSEUDOMONAS) {
+                queueItem = new QueueItem(container_3s, nextProtocol, project, workflow);
+                containerQueueItemList.add(queueItem);
+            }
+            
             queueItem = new QueueItem(container_3op, nextProtocol, project, workflow);
             containerQueueItemList.add(queueItem);
             

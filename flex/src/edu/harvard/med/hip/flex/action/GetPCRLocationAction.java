@@ -38,7 +38,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class GetPCRLocationAction extends ResearcherAction{
     /**
@@ -63,40 +63,54 @@ public class GetPCRLocationAction extends ResearcherAction{
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         
-        int fivepSourceLocation = ((CreatePCRPlateForm)form).getFivepSourceLocation();        
+        int fivepSourceLocation = ((CreatePCRPlateForm)form).getFivepSourceLocation();
         int threepOpenSourceLocation = ((CreatePCRPlateForm)form).getThreepOpenSourceLocation();
-        int threepClosedSourceLocation = ((CreatePCRPlateForm)form).getThreepClosedSourceLocation();        
-        int pcrOpenLocation = ((CreatePCRPlateForm)form).getPcrOpenLocation();  
-        int pcrClosedLocation = ((CreatePCRPlateForm)form).getPcrClosedLocation();  
+        int threepClosedSourceLocation = ((CreatePCRPlateForm)form).getThreepClosedSourceLocation();
+        int pcrOpenLocation = ((CreatePCRPlateForm)form).getPcrOpenLocation();
+        int pcrClosedLocation = ((CreatePCRPlateForm)form).getPcrClosedLocation();
         
         // Get the workflow and project from the form and store in request.
         int workflowid = ((CreatePCRPlateForm)form).getWorkflowid();
         int projectid = ((CreatePCRPlateForm)form).getProjectid();
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
-          
+        
         try {
-
-            // Set the location for the containers.   
+            
+            // Set the location for the containers.
             Location pcrOpen = new Location(pcrOpenLocation);
-            Location pcrClose = new Location(pcrClosedLocation);
+            Location pcrClose = null;
+            if(pcrClosedLocation != 0) {
+                pcrClose = new Location(pcrClosedLocation);
+            }
+            
             Location fivepLocation = new Location(fivepSourceLocation);
             Location threepOpenLocation = new Location(threepOpenSourceLocation);
-            Location threepClosedLocation = new Location(threepClosedSourceLocation);
+            Location threepClosedLocation = null;
+            if(threepClosedSourceLocation != 0) {
+                threepClosedLocation = new Location(threepClosedSourceLocation);
+            }
             
             Container pcrOpenContainer = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrOpen");
             Container pcrClosedContainer = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrClosed");
             Container fivep = (Container)request.getSession().getAttribute("EnterOligoPlateAction.fivep");
             Container threepOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepOpen");
-            Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");            
-
-            pcrOpenContainer.setLocation(pcrOpen);            
-            pcrClosedContainer.setLocation(pcrClose); 
-            fivep.setLocation(fivepLocation);            
-            threepOpen.setLocation(threepOpenLocation);       
-            threepClosed.setLocation(threepClosedLocation); 
-           
-            return (mapping.findForward("success"));            
+            Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
+            
+            pcrOpenContainer.setLocation(pcrOpen);
+            
+            if(pcrClosedContainer != null) {
+                pcrClosedContainer.setLocation(pcrClose);
+            }
+            
+            fivep.setLocation(fivepLocation);
+            threepOpen.setLocation(threepOpenLocation);
+            
+            if(threepClosed != null) {
+                threepClosed.setLocation(threepClosedLocation);
+            }
+            
+            return (mapping.findForward("success"));
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));

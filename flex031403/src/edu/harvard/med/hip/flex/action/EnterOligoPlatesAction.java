@@ -63,6 +63,19 @@ public class EnterOligoPlatesAction extends ResearcherAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         
+        request.getSession().removeAttribute("EnterOligoPlateAction.fivep");
+        request.getSession().removeAttribute("EnterOligoPlateAction.threepOpen");
+        request.getSession().removeAttribute("EnterOligoPlateAction.threepClosed");
+        request.getSession().removeAttribute("EnterOligoPlateAction.locations");
+        request.getSession().removeAttribute("EnterOligoPlateAction.item");
+        request.getSession().removeAttribute("EnterOligoPlateAction.sampleLineageSet");
+        request.getSession().removeAttribute("EnterOligoPlateAction.subprotocol");
+        request.getSession().removeAttribute("EnterOligoPlateAction.pcrOpen");
+        request.getSession().removeAttribute("EnterOligoPlateAction.pcrClosed");
+        request.getSession().removeAttribute("EnterOligoPlateAction.fivepOligoD");
+        request.getSession().removeAttribute("EnterOligoPlateAction.threepOpenD");
+        request.getSession().removeAttribute("EnterOligoPlateAction.threepClosedD");
+        
         // Get the workflow and project from the form and store in request.
         int workflowid = ((CreatePCRPlateForm)form).getWorkflowid();
         int projectid = ((CreatePCRPlateForm)form).getProjectid();
@@ -73,7 +86,15 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             // Validate container label.
             String fivepPlate = ((CreatePCRPlateForm)form).getFivepPlate();
             String threepOpenPlate = ((CreatePCRPlateForm)form).getThreepOpenPlate();
-            String threepClosedPlate = ((CreatePCRPlateForm)form).getThreepClosedPlate();
+            String threepClosedPlate = null;
+            if(projectid != Project.PSEUDOMONAS) {
+                threepClosedPlate = ((CreatePCRPlateForm)form).getThreepClosedPlate();
+                
+                if((threepClosedPlate == null) || (threepClosedPlate.trim().length()<1)) {
+                    errors.add("threepClosedPlate", new ActionError("error.plate.invalid.barcode", threepClosedPlate));
+                }
+            }
+            
             String subProtocolName = ((CreatePCRPlateForm)form).getSubProtocolName();
             Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
             SubProtocol subprotocol = new SubProtocol(subProtocolName);
@@ -88,17 +109,29 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             Plateset ps = (Plateset)item.getItem();
             Container fivep = ps.getFivepContainer();
             Container threepOpen = ps.getThreepOpenContainer();
-            Container threepClosed = ps.getThreepClosedContainer();
+            Container threepClosed = null;
+            
+            if(projectid != Project.PSEUDOMONAS) {
+                threepClosed = ps.getThreepClosedContainer();
+            }
+            
             ((CreatePCRPlateForm)form).setFivepSourceLocation(fivep.getLocation().getId());
             ((CreatePCRPlateForm)form).setThreepOpenSourceLocation(threepOpen.getLocation().getId());
-            ((CreatePCRPlateForm)form).setThreepClosedSourceLocation(threepClosed.getLocation().getId());
+            
+            if(projectid != Project.PSEUDOMONAS) {
+                ((CreatePCRPlateForm)form).setThreepClosedSourceLocation(threepClosed.getLocation().getId());
+            }
             
             // Get all the locations.
             Vector locations = Location.getLocations();
             
             request.getSession().setAttribute("EnterOligoPlateAction.fivep", fivep);
             request.getSession().setAttribute("EnterOligoPlateAction.threepOpen", threepOpen);
-            request.getSession().setAttribute("EnterOligoPlateAction.threepClosed", threepClosed);
+            
+            if(threepClosed != null) {
+                request.getSession().setAttribute("EnterOligoPlateAction.threepClosed", threepClosed);
+            }
+            
             request.getSession().setAttribute("EnterOligoPlateAction.locations", locations);
             request.getSession().setAttribute("EnterOligoPlateAction.item", item);
             request.getSession().setAttribute("EnterOligoPlateAction.subprotocol", subprotocol);
@@ -113,12 +146,20 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 Vector oligoPlates = new Vector();
                 oligoPlates.addElement(fivep);
                 oligoPlates.addElement(threepOpen);
-                oligoPlates.addElement(threepClosed);
+                
+                if(threepClosed != null) {
+                    oligoPlates.addElement(threepClosed);
+                }
+                
                 Vector newOligoPlates = mp.doMapping(oligoPlates, protocol, project, workflow);
                 sampleLineageSet = mp.getSampleLineageSet();
                 request.getSession().setAttribute("EnterOligoPlateAction.fivepOligoD", (Container)newOligoPlates.elementAt(0));
                 request.getSession().setAttribute("EnterOligoPlateAction.threepOpenD", (Container)newOligoPlates.elementAt(1));
-                request.getSession().setAttribute("EnterOligoPlateAction.threepClosedD", (Container)newOligoPlates.elementAt(2));
+                
+                if(newOligoPlates.size() > 2) {
+                    request.getSession().setAttribute("EnterOligoPlateAction.threepClosedD", (Container)newOligoPlates.elementAt(2));
+                }
+                
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
                 return (mapping.findForward("success_oligo_dilute"));
             } else {
@@ -132,16 +173,21 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
                 Container pcrOpen = (Container)newContainers.elementAt(0);
                 
-                //map the 3p closed oligo plate.
-                oldContainers = new Vector();
-                oldContainers.addElement(fivep);
-                oldContainers.addElement(threepClosed);
-                Vector newContainers2 = mapper.doMapping(oldContainers, protocol, project, workflow);
-                Container pcrClosed = (Container)newContainers2.elementAt(0);
+                Container pcrClosed = null;
+                if(projectid != Project.PSEUDOMONAS) {
+                    //map the 3p closed oligo plate.
+                    oldContainers = new Vector();
+                    oldContainers.addElement(fivep);
+                    oldContainers.addElement(threepClosed);
+                    Vector newContainers2 = mapper.doMapping(oldContainers, protocol, project, workflow);
+                    pcrClosed = (Container)newContainers2.elementAt(0);
+                }
                 
                 sampleLineageSet = mapper.getSampleLineageSet();
                 request.getSession().setAttribute("EnterOligoPlateAction.pcrOpen", pcrOpen);
-                request.getSession().setAttribute("EnterOligoPlateAction.pcrClosed", pcrClosed);
+                if(pcrClosed != null) {
+                    request.getSession().setAttribute("EnterOligoPlateAction.pcrClosed", pcrClosed);
+                }
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
                 
                 return (mapping.findForward("success"));
@@ -169,8 +215,15 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             Container fivep = ps.getFivepContainer();
             Container threepOpen = ps.getThreepOpenContainer();
             Container threepClosed = ps.getThreepClosedContainer();
-            if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate) && threepClosed.isSame(threepClosedPlate)) {
-                found = item;
+            
+            if(threepClosed == null) {
+                if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)) {
+                    found = item;
+                }
+            } else {
+                if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate) && threepClosed.isSame(threepClosedPlate)) {
+                    found = item;
+                }
             }
         }
         

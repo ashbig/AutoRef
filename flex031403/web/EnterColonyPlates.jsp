@@ -40,9 +40,19 @@
     </tr>
 
     <tr>
+    <logic:equal name="projectid" value="3">
+    <td class="prompt">Enter the first fusion agar plate barcode:</td>
+    </logic:equal>
+    <logic:notEqual name="projectid" value="3">
     <td class="prompt">Enter the fusion agar plate barcode:</td>
+    </logic:notEqual>
     <td><html:text property="agarPlateF1" size="20"/></td>
+    <logic:equal name="projectid" value="3">
+    <td class="prompt">Enter the second fusion agar plate barcode:</td>
+    </logic:equal>
+    <logic:notEqual name="projectid" value="3">
     <td class="prompt">Enter the corresponding closed agar plate barcode:</td>
+    </logic:notEqual>
     <td><html:text property="agarPlateC1" size="20"/></td>
     </tr>
 

@@ -36,10 +36,12 @@
     <td><html:text property="threepOpenPlate" size="40"/></td>
     </tr>
 
+    <logic:notEqual name="projectid" value="3">
     <tr>
     <td class="prompt">Enter 3P closed oligo plate barcode:</td>
     <td><html:text property="threepClosedPlate" size="40"/></td>
     </tr>
+    </logic:notEqual>
 
     <tr>
     <td class="prompt">Select protocol:</td>

@@ -56,6 +56,7 @@
         </html:select></td>
     </tr>
 
+    <logic:present name="EnterOligoPlateAction.threepClosed">
     <tr>
     <td class="label">3P closed oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepClosed" property="label"/></td>
@@ -68,6 +69,7 @@
         />
         </html:select></td>
     </tr>
+    </logic:present>
 
     <tr>
     <td class="label">5P oligo daughter plate barcode:</td>
@@ -95,6 +97,7 @@
         </html:select></td>
     </tr>
 
+    <logic:present name="EnterOligoPlateAction.threepClosedD">
     <tr>
     <td class="label">3P closed oligo daughter plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepClosedD" property="label"/></td>
@@ -107,6 +110,7 @@
         />
         </html:select></td>
     </tr>
+    </logic:present>
 
     <tr>
     <td></td><td><html:submit property="submit" value="Continue"/></td>
