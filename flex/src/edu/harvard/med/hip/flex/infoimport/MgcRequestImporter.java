@@ -37,9 +37,11 @@ public class MgcRequestImporter
 {
     public static final String DILIM = "\t!";
     public static final String DEFAULT = "NA";
-
-    public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
- //   public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";    
+    
+    public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
+    public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
+    public static final String BLASTABLE_DATABASE_NAME = BLAST_BASE_DIR+BLAST_DB_DIR+"MGC/genes";
+    //public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";    
     //public static final String BLASTABLE_DATABASE_NAME = "e:\\Users\\HIP\\HTaycher\\MGC\\genes";
 
     private Project             m_Project = null;
