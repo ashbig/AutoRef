@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.27 2001-10-11 17:28:42 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.28 2002-05-24 16:53:46 Elena Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -27,7 +27,7 @@ public class FlexSeqAnalyzer {
     private static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     private static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
     
-//    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
+    //    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
     public static final double PERCENTIDENTITY = 0.95;
@@ -131,6 +131,48 @@ public class FlexSeqAnalyzer {
         return isHomolog;
     }
     
+    
+    
+    /**
+     * Return the matched sequence id  from the flex database.
+     *
+     *@param dbFileName - file name for the blastable db
+     * @return sequence id for the matched sequence from the flex database;
+     * @exception FlexUtilException, FlexDatabaseException, ParseException.
+     */
+    public int findExactCdsMatch(String dbFileName) throws FlexUtilException, FlexDatabaseException, ParseException {
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        
+        String queryFile = makeQueryFile();//set sequence for this
+        Blaster blaster = new Blaster();
+        blaster.setHits(1);
+        
+        blaster.setDBPath(BLAST_BASE_DIR+BLAST_DB_DIR + dbFileName);
+        
+        blaster.blast(queryFile+".in", queryFile+".out");
+        BlastParser parser = new BlastParser(queryFile+".out");
+        parser.parseBlast();
+        ArrayList homologs = parser.getHomologList();
+        
+        BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(0);
+        int homologid = Integer.parseInt((homologItem.getSubID()).trim());
+        
+        BlastParser.Alignment y = (BlastParser.Alignment)homologItem.getAlignItem(0);
+        String identity = y.getIdentity();
+        StringTokenizer st = new StringTokenizer(identity);
+        int numerator = Integer.parseInt((st.nextToken(" /")).trim());
+        int denomenator = Integer.parseInt((st.nextToken(" /")).trim());
+        int start = y.getQryStart();
+        int end = y.getQryEnd();
+        int cdslength = sequence.getCdslength();
+        
+        if(numerator ==  denomenator && (end - start +1) == cdslength ) {
+            return homologid;
+        }
+        
+        return -1;
+    }
+    
     /**
      * Return the same sequences as a Vector including this sequence.
      *
@@ -158,6 +200,7 @@ public class FlexSeqAnalyzer {
         return blastResults;
     }
     
+    
     //**********************************************************************//
     //                          Private methods                             //
     //**********************************************************************//
@@ -172,7 +215,7 @@ public class FlexSeqAnalyzer {
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         try {
-            while(rs.next()) {                
+            while(rs.next()) {
                 int id = rs.getInt("SEQUENCEID");
                 v.addElement(new Integer(id));
             }
@@ -264,7 +307,7 @@ public class FlexSeqAnalyzer {
     }
     
     //Print the sequence cds to a file in a fasta format.
-    private String makeQueryFile() throws FlexUtilException {
+    private  String makeQueryFile() throws FlexUtilException {
         java.util.Date d = new java.util.Date();
         java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM_dd_yyyy");
         String fileName = INPUT+sequence.getGi()+"_" + f.format(d);
