@@ -37,10 +37,9 @@ public class MgcRequestImporter
 {
     public static final String DILIM = "\t!";
     public static final String DEFAULT = "NA";
-
     public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
     //public static final String BLASTABLE_DATABASE_NAME = "E:\\flexDev\\MGC\\genes";    
-    //public static final String BLASTABLE_DATABASE_NAME = "e:\\Users\\HIP\\HTaycher\\MGC\\genes";
+    //public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";
 
     private Project             m_Project = null;
     private Workflow                 m_workflow = null;
@@ -101,32 +100,35 @@ public class MgcRequestImporter
         ArrayList notMatchedGI = new ArrayList();
         if (prev_step ) prev_step = matchGINumbersToMgcClones(requestGI, sequencesMatchedByGI, notMatchedGI);
         //get sequence for not matching GI
-        System.out.println("matched GI");
+        System.out.println("status " + prev_step +" matched GI");
         Hashtable sequencesToBlat = new Hashtable();
         if (prev_step) prev_step = readSequences(notMatchedGI, sequencesToBlat, sequenceNotFound) ;
         //blast sequences for not matching GI;
-        System.out.println("get sequences");
+        System.out.println("status " + prev_step + " get sequences");
         if (prev_step) prev_step = blastSequences(sequencesToBlat, sequencesMatchedByBlast,
-        sequencesNotMatchedByBlast,  errorsOnBlastGI);
+                                                    sequencesNotMatchedByBlast,  errorsOnBlastGI);
         //save request to db
-        m_Request.insert(conn);
-        DatabaseTransaction.commit(conn);
-        System.out.println("inserted request");
-        
-        m_Request = new Request(m_Request.getId());
-        ArrayList contNames = new ArrayList();
-        if (prev_step) prev_step = putOnQueue(conn, contNames)  ;
-        
-        DatabaseTransaction.commit(conn);
-        try
+        if (prev_step)
         {
-            Vector ms = messages(requestGI, sequencesMatchedByGI, sequencesMatchedByBlast,
-            sequencesNotMatchedByBlast, sequenceNotFound, errorsOnBlastGI, contNames);
-            Mailer.notifyUser(m_UserName,"importMGC.log","Import MGC request report",
-            "Import MGC request report",ms);
-            
-        }catch(Exception e)
-        {}
+            m_Request.insert(conn);
+            DatabaseTransaction.commit(conn);
+            System.out.println("inserted request");
+
+            m_Request = new Request(m_Request.getId());
+            ArrayList contNames = new ArrayList();
+            if (prev_step) prev_step = putOnQueue(conn, contNames)  ;
+
+            DatabaseTransaction.commit(conn);
+            try
+            {
+                Vector ms = messages(requestGI, sequencesMatchedByGI, sequencesMatchedByBlast,
+                sequencesNotMatchedByBlast, sequenceNotFound, errorsOnBlastGI, contNames);
+                Mailer.notifyUser(m_UserName,"importMGC.log","Import MGC request report",
+                "Import MGC request report",ms);
+
+            }catch(Exception e)
+            {}
+        }
         //somthing went wrong notify user and myself
         if (! prev_step)
             try
