@@ -45,7 +45,16 @@ public class SequenceManipulation
     }
     
    
-    
+    public static int[]    complimentScores( int[] quality_scores_query )
+    {
+        int res[] = new int[quality_scores_query.length];
+        int elements = quality_scores_query.length-1;
+        for (int count = elements; count >= 0; count--)
+        {
+            res[elements - count] = quality_scores_query[count];
+        }
+        return res;
+    }
     //function creates complimentary strend for the given one
     public static String getCompliment(String old)
     {
@@ -322,6 +331,10 @@ public class SequenceManipulation
         System.out.println( (int) Math.round(Math.ceil(3/3)));
         System.out.println( (int) Math.round(Math.ceil(2/3)));
         System.out.println( (int) Math.round(Math.ceil(1/3)));
-        System.out.println(SequenceManipulation.getTranslation("aaatattcaaataaaattccattaattccattgtcggttataataaaaaccttatcgcta",ONE_LETTER_TRANSLATION_NO_SPACE));
+        int[] arr={0,1,2,3,4,5,6,7,8,9};
+        int as[] = SequenceManipulation.complimentScores(arr);
+        for (int c = 0; c < as.length;c++){
+            System.out.println(as[c]);
+        }
     }
 }

@@ -31,14 +31,16 @@ public class IsolateTrackingEngine
     
      
      //process status for isolate
-     public static final int            PROCESS_STATUS_NOT_DEFINED = -1;
-     public static final int            PROCESS_STATUS_DOES_NOT_MATCH_REQUEST = -2;
+     // process status < 0 and has a value 100 * process_status - is 
+     //deactivated clone
+     public static final int            PROCESS_STATUS_NOT_DEFINED = 30;
+     public static final int            PROCESS_STATUS_DOES_NOT_MATCH_REQUEST = 31;
      
      public static final int           PROCESS_STATUS_SUBMITTED_FOR_ER = 0;
     public static final int            PROCESS_STATUS_SUBMITTED_FOR_FULLSEQUENCING = 1;
     public static final int            PROCESS_STATUS_SUBMITTED_FOR_ER_AND_FULL_SEQUENCING = 17;
     public static final int            PROCESS_STATUS_SUBMITTED_FOR_ER_SEQUENCING = 20;
-    public static final int            PROCESS_STATUS_SUBMITTED_EMPTY = -4;
+    public static final int            PROCESS_STATUS_SUBMITTED_EMPTY = 29;
     
     public static final int            PROCESS_STATUS_ER_INITIATED = 2;
     public static final int            PROCESS_STATUS_ER_PHRED_RUN = 3;
@@ -62,7 +64,8 @@ public class IsolateTrackingEngine
     public static final int            PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED = 15;
    
     public static final int            PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED = 16;
-   
+    
+    
     
     private	int     m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private     int     m_score = Constants.SCORE_NOT_CALCULATED;// result of the end read analysis (function of end reads scores
@@ -555,8 +558,9 @@ public class IsolateTrackingEngine
            for (int count =0; count < m_endreads.size(); count++)
            {
                Read read = (Read)m_endreads.get(count);
+                
                if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
-                                 read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH)
+                                 read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH)
                {
                    m_status = PROCESS_STATUS_ER_ANALYZED_NO_MATCH;
                    return;
@@ -571,6 +575,7 @@ public class IsolateTrackingEngine
             if ( m_endreads.size() > 0 && count_short_reads == m_endreads.size())
             {
                 m_status = PROCESS_STATUS_ER_NO_LONG_READS;
+                return;
             }
            //set default status 
            if (default_status != PROCESS_STATUS_NOT_DEFINED)
@@ -699,6 +704,13 @@ public class IsolateTrackingEngine
         for (int read_count = 0; read_count < m_endreads.size(); read_count++)
         {
             Read cur_read = (Read) m_endreads.get(read_count);
+            if ( cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL ||
+                    cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH ||
+                   cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT ||
+                    cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT ||
+                    cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
+                    cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL )
+                continue;
            if (cur_read.isPassAmbiquoutyTest(cutoff_spec) )
            {
                reads.add(cur_read);

@@ -268,7 +268,7 @@ public class RNAMutation extends Mutation {
          else if( m_codon_ori != m_codon_mut && SequenceManipulation.isStopCodon(m_codon_mut)
             && !SequenceManipulation.isStopCodon(m_codon_ori))
          {
-             return Mutation.TYPE_RNA_TRANCATION;
+             return Mutation.TYPE_RNA_NONSENSE;
          }
          else 
          {
@@ -284,10 +284,8 @@ public class RNAMutation extends Mutation {
                 return Mutation.TYPE_RNA_SILENT;
              }
              else
-            {
-               if ( edu.harvard.med.hip.bec.bioutil.BioConstants.getScore(aa_ori.charAt(0),aa_mut.charAt(0)) > 0 )
-                    return Mutation.TYPE_RNA_NONSENSE;
-                else
+             {
+              
                     return Mutation.TYPE_RNA_MISSENSE;
              }
          }

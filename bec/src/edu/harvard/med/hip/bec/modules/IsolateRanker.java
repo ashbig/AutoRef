@@ -232,7 +232,7 @@ public class IsolateRanker
         {
    //prepare detectors
             DiscrepancyFinder df = new DiscrepancyFinder();
-            df.setNeedleGapOpen(40.0);
+            df.setNeedleGapOpen(10.0);
             df.setNeedleGapExt(0.05);
             df.setQualityCutOff(m_cutoff_score);
             df.setIdentityCutoff(60.0);
@@ -253,6 +253,7 @@ public class IsolateRanker
             {
                  e.printStackTrace();
                 System.out.println("Can not get trimmed sequence; readid " + read.getId());
+               throw new BecUtilException("Can not get trimmed sequence; readid " + read.getId());
             }
     //run read
 

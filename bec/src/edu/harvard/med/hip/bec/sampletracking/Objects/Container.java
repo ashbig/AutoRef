@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.10 2003-07-18 19:41:05 Elena Exp $
+ * $Id: Container.java,v 1.11 2003-08-04 17:39:19 Elena Exp $
  *
  * File     	: Container.java
 
@@ -401,23 +401,33 @@ public class Container
      *
      * @exception BecDatabaseException.
      */
-    public void restoreSampleIsolate() throws BecDatabaseException
+    public void restoreSampleIsolate(boolean isConstructInfo, boolean isRefSequenceInfo) throws BecDatabaseException
     {
         
         m_samples.clear();
-        
-        String sql = "select s.sampleid as sampleid, position, constructid, sampletype,rank,score, status, "
+        String sql = null;
+        if (!isRefSequenceInfo && !isConstructInfo)
+        {
+         sql = "select s.sampleid as sampleid, position, constructid, sampletype,rank,score, status, "
         +" iso.isolatetrackingid as isolatetrackingid,id,flexconstructid,flexsampleid,flexsequencingplateid,"
         +" flexsequenceid,flexcloneid from flexinfo f, isolatetracking iso, sample s  "
         +" where f.isolatetrackingid=iso.isolatetrackingid and iso.sampleid=s.sampleid "
         +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
-        
-   
+        }
+        if (isRefSequenceInfo)
+        {
+            sql="select s.sampleid as sampleid, position, iso.constructid as constructid, sampletype,rank,score, status,refsequenceid,  "
+        +" iso.isolatetrackingid as isolatetrackingid,id,flexconstructid,flexsampleid,flexsequencingplateid, "
+        +"  flexsequenceid,flexcloneid from flexinfo f, isolatetracking iso, sample s, sequencingconstruct c  "
+        +"  where f.isolatetrackingid=iso.isolatetrackingid and iso.sampleid=s.sampleid "
++" and c.constructid=iso.constructid  and s.sampleid in ( select sampleid from sample where containerid = "+m_id+" ) order by POSITION";
+        }
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         CachedRowSet crs = t.executeQuery(sql);
          Sample s = null; IsolateTrackingEngine isolatetracking = null;FlexInfo fl = null;
-        try
+        int refseqid = -1;
+         try
         {
             while(crs.next())
             {
@@ -427,6 +437,11 @@ public class Container
                  int sampleid = crs.getInt("sampleid");
                 String sampletype = crs.getString("sampletype");
                 s = new Sample(  sampleid, sampletype, position, m_id);
+                if (isRefSequenceInfo)
+                {
+                    refseqid = crs.getInt("refsequenceid");
+                    s.setRefSequenceId(refseqid);
+                }
                 // create isolate tracking for sample
                 if ( crs.getInt("isolatetrackingid") != -1)
                 {
@@ -1590,7 +1605,7 @@ public class Container
         {
               container = Container.findContainerDescriptionFromLabel("YGS000361-3");
             
-             container.restoreSampleIsolateNoFlexInfo();
+             container.restoreSampleIsolate(false,true);
              
              int i=container.getCloningStrategyId();
              

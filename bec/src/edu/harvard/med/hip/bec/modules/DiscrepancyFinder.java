@@ -141,26 +141,25 @@ public class DiscrepancyFinder
         m_aligmentFiles.add(res_needle.getFileName());
                 //run blast n
         res_needle.recalculateIdentity();
-        if (res_needle.getIdentity() != 100.0)
+        if ( res_needle.getIdentity() <= m_identitycutoff)
         {
-            if ( res_needle.getIdentity() <= m_identitycutoff)
-            {
-                pair.getQuerySequence().setStatus(BaseSequence.STATUS_NOMATCH);
-               
-            }
-            else// not 100 on nucleotide level
-            {
-                int[] quality_scores_query = pair.getQuerySequence().getScoresAsArray();
-                mutations = run_analysis(res_needle, quality_scores_query, pair.getQuerySequence().getId(), pair.getRefSequence().getId() );
-                pair.getQuerySequence().setDiscrepancies(mutations);
-                pair.getQuerySequence().setStatus(BaseSequence.STATUS_ANALIZED_YES_DISCREPANCIES);
-            }
+            pair.getQuerySequence().setStatus(BaseSequence.STATUS_NOMATCH);
+
         }
-        else//identity 100%
+        else// not 100 on nucleotide level
         {
-            pair.getQuerySequence().setStatus(BaseSequence.STATUS_ANALIZED_NO_DISCREPANCIES);
+            int[] quality_scores_query = pair.getQuerySequence().getScoresAsArray();
+            if (m_isRunCompliment )
+            {
+                 quality_scores_query = SequenceManipulation.complimentScores( quality_scores_query );
+            }
+            mutations = run_analysis(res_needle, quality_scores_query, pair.getQuerySequence().getId(), pair.getRefSequence().getId() );
+            pair.getQuerySequence().setDiscrepancies(mutations);
+            if ( mutations != null && mutations.size() > 0)
+                 pair.getQuerySequence().setStatus(BaseSequence.STATUS_ANALIZED_YES_DISCREPANCIES);
+            else
+                pair.getQuerySequence().setStatus(BaseSequence.STATUS_ANALIZED_NO_DISCREPANCIES);
         }
-        
         
     }
     
@@ -226,7 +225,490 @@ public class DiscrepancyFinder
     }
     
      //function runs needle and parse output
-    /*
+   
+    public ArrayList  run_analysis(NeedleResult res_needle, int[] quality_scores_query, int exper_sequence_id, int refseq_id)
+    throws BecUtilException
+    {
+        ArrayList res = new ArrayList();
+        
+        int length = 0;
+        //check output of needle
+        if (res_needle.getQuery() == null || res_needle.getSubject() == null) return null;
+        char[] sequence_query_n = res_needle.getQuery().toUpperCase().toCharArray();
+        char[] sequence_subject_n = res_needle.getSubject().toUpperCase().toCharArray();
+        //prepare sequence elements
+        SequenceElement[] elements = prepareSequenceElements(sequence_query_n,sequence_subject_n,quality_scores_query);
+     
+    
+        boolean isInMutation = false;
+        boolean isAlignmentStarted = false;
+        boolean isDefineQuality = ( quality_scores_query != null && quality_scores_query.length > 0);
+        AAMutation cur_aa_mutation = null;        RNAMutation cur_rna_mutation = null;
+        int number_of_rna_discrepancies = -1;
+        int mut_number = 0;int mut_start = -1;
+        try{
+        for (int count = 0; count < elements.length; count++ )
+        {
+   //check if alignment already started
+               if (!isAlignmentStarted)
+               {
+                   if (elements[count].getQueryChar() != ' ' &&  elements[count].getSubjectChar() !=' ')
+                   {
+                       isAlignmentStarted = true;
+                   }
+                   else
+                   {
+                         continue;
+                   }
+               }//end if for aligment start
+       // inside alignment         
+               if ( elements[count].getQueryChar()  == elements[count].getSubjectChar()  ||
+                    ( elements[count].getQueryChar()  != elements[count].getSubjectChar()  &&
+                    ( elements[count].getQueryChar()  == 'N' || sequence_query_n[count] == 'n' 
+                    || elements[count].getSubjectChar()  =='N' || elements[count].getSubjectChar() =='n' )))
+               {
+        // if either empty - get out - aligment finished - force last mutation to close up
+                   
+                    // do nothing
+                    if (isInMutation)//mutation finished
+                    {
+                         createMutations( res,   number_of_rna_discrepancies, 
+                             isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id);
+                        mut_start = -1;
+                        isInMutation =false;
+                        //forse get out if max number of discrepancies reached
+                        if (m_max_number_of_mutations_to_detect < number_of_rna_discrepancies)
+                            return res;
+                      
+                    }
+                }  
+               else //not equal
+                {
+ //System.out.print(" "+elements[count].getSubjectChar() +" "+ elements[count].getQueryChar()+";");
+                     if (elements[count].getSubjectChar() == ' ' || elements[count].getQueryChar() == ' ' )
+                    {
+                        //forse to close last mutation
+                        if (isInMutation)
+                        {
+                            createMutations( res,   number_of_rna_discrepancies, 
+                             isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id);
+                        }
+                        break;
+                    }
+                     //forse to close if multipal substitution
+                     if (isInMutation && elements[count].getSubjectChar() != elements[count].getQueryChar()
+                     &&  !(elements[count].getSubjectChar() == '-' || elements[count].getQueryChar() == '-'))
+                    {
+                         createMutations( res,   number_of_rna_discrepancies, 
+                         isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id);
+                         mut_start = -1;
+                       
+                    }
+                    isInMutation = true;
+                    if (mut_start == -1)    mut_start = count ;
+                    
+                 }
+                
+            }
+            return res;
+       }
+        catch(Exception e)
+        {
+             e.printStackTrace();
+            System.out.println(e.getMessage());
+            throw new BecUtilException(e.getMessage());
+        }
+       
+      
+    }
+        
+    private void createMutations(ArrayList res,  int number_of_rna_discrepancies, 
+            boolean isDefineQuality, SequenceElement[] elements,  
+            int count, int mut_start, int exper_sequence_id)
+    {
+        AAMutation cur_aa_mutation = null;        RNAMutation cur_rna_mutation = null;
+        int  mut_number = 0;
+        if (res != null && res.size() > 0)
+        {
+            mut_number = ((Mutation) res.get(res.size() - 1)).getNumber();
+        }
+        mut_number++;
+        cur_rna_mutation = createRNADiscrepancy( isDefineQuality,elements,  count, mut_number,mut_start, exper_sequence_id);
+        res.add(cur_rna_mutation);
+// System.out.println("\t\t\t New Mutation\n\n\t\t\t "+cur_rna_mutation.toString());
+        number_of_rna_discrepancies++;
+        if (    cur_rna_mutation.getType() != Mutation.TYPE_RNA_SILENT )
+        {
+           cur_aa_mutation= createAADiscrepancy( cur_rna_mutation.getCodonMut(), 
+                        cur_rna_mutation.getCodonOri(),
+                        elements[count], cur_rna_mutation.getQuality(), 
+                        mut_number ,exper_sequence_id);
+
+   
+                      
+//System.out.println("\t\t\t "+ cur_aa_mutation.toString());
+            res.add(cur_aa_mutation);
+        }
+                                
+    }
+    
+    private SequenceElement[] prepareSequenceElements(char[] sequence_query_n,
+                                        char[] sequence_subject_n,
+                                        int[] quality_scores)
+    {
+        int length = ( sequence_query_n.length  >= sequence_subject_n.length ) ?
+                sequence_subject_n.length -1  :   sequence_query_n.length -1 ;
+        SequenceElement[] elements = new SequenceElement[length];  
+        SequenceElement element = null;
+        int q_index = 0;
+        int s_index = 0;
+        int q_score = 0;
+        for (int count = 0; count < length; count++)
+        {
+            if ( sequence_subject_n[count] !=' ' && sequence_subject_n[count] != '-')
+            {
+                s_index++;
+            }
+            if (sequence_query_n[count] != ' ' && sequence_query_n[count] != '-')
+            {
+                q_index ++;
+                if (quality_scores != null && quality_scores.length != 0)
+                {
+                    q_score = quality_scores[q_index - 1];
+                }
+            }
+            
+            element = new SequenceElement(  q_index  , s_index , q_score, sequence_query_n[count],sequence_subject_n[count]);
+            elements[count]=element;
+            
+            //set up cds start && stop
+            if (s_index == 1 && q_index > 0 && m_cds_start == 0)
+            { 
+                m_cds_start = q_index;
+            }
+            if ( (s_index > 1 && ( sequence_subject_n[count] == ' ' && sequence_query_n[count] != ' '))
+            || (s_index > 1 && ( sequence_subject_n[count] != ' ' && sequence_query_n[count] == ' '))
+                || (s_index > 1 && (count == sequence_query_n.length -1 && 
+                ( sequence_subject_n[count] != ' ' && sequence_subject_n[count] != '-' && sequence_query_n[count] != ' ' && sequence_query_n[count] != '-'))))
+            { 
+                m_cds_stop = q_index;
+            }
+        }
+        return elements;
+    }
+    
+    
+    private RNAMutation createRNADiscrepancy( boolean isDefineQuality,SequenceElement[] elements, int current_element_count,
+    int mut_number,  int mut_start, int sequence_id)
+    {
+ 
+         StringBuffer up = new StringBuffer(); ; StringBuffer dn = new StringBuffer(); 
+         if ( mut_start > 10 )
+         {
+            for (int count = mut_start - 1; count > mut_start - RNAMutation.RNA_STREAM_RANGE;)
+            {
+              
+                if ( ! isWrongChar( elements[count].getQueryChar() ))
+                {
+                     dn.append( elements[count].getQueryChar()) ;
+                }
+                count--;
+                if (count == 0 || elements[count].getQueryChar() == ' ') break;
+            }
+         }
+         if ( current_element_count < elements.length + 10 )
+         {
+            for (int count = current_element_count - 1; count < current_element_count + RNAMutation.RNA_STREAM_RANGE;)
+            {
+                  if ( elements[count].getQueryChar() == ' ') break;
+                if ( ! isWrongChar( elements[count].getQueryChar() ))
+                {
+                     up.append( elements[count].getQueryChar()) ;
+                }
+                  count++;
+                    if (count == (elements.length -1)  ) break;
+            }
+         }
+         
+   //     int codon_start_mutation = (int) Math.ceil( s_position / 3);
+        
+        String cori = "";
+        String corm = ""; //codon mutant
+        int current_base =0; int start_codon_pos = 0;
+        if  ( !isWrongChar(elements[mut_start].getSubjectChar() ))
+        {
+            current_base  = elements[mut_start].getSubjectIndex();
+            start_codon_pos = mut_start;
+       }
+       else
+       {
+            current_base = elements[current_element_count].getSubjectIndex();
+            start_codon_pos = mut_start;
+        }
+        
+        switch (current_base % 3 )
+        {
+            case 1:
+            {
+                while (cori.length() < 3)
+                {
+                    if (start_codon_pos > elements.length-1) break;
+                        cori+=elements[start_codon_pos].getSubjectChar();
+                   corm +=elements[start_codon_pos].getQueryChar();
+                    start_codon_pos++;
+                }
+                
+                   break;
+            }
+            case 2 :
+            {
+               
+                int keep_codon_start_search_position = start_codon_pos;
+                while (cori.length() < 2)
+                {
+                    if (start_codon_pos > elements.length) break;
+                    cori+=elements[start_codon_pos].getSubjectChar();
+                    corm +=elements[start_codon_pos].getQueryChar();
+                    start_codon_pos++;
+                }
+                while (cori.length() < 3)
+                {
+                    if ( keep_codon_start_search_position - 1 < 0)break;
+                        cori=elements[--keep_codon_start_search_position].getSubjectChar()+cori;
+                    corm =elements[keep_codon_start_search_position].getQueryChar()+corm;
+                }
+                break;
+            }
+        
+          case 0:
+        {
+            
+            while (cori.length() < 3)
+            {
+             //   if ( !isWrongChar(elements[start_codon_pos].getSubjectChar()))
+             //   {
+                if (start_codon_pos < 0)break;
+                    cori=elements[start_codon_pos].getSubjectChar()+cori;
+              //  }
+                corm =elements[start_codon_pos].getQueryChar()+corm;
+                start_codon_pos--;
+            }
+          }
+        }
+        String q_allel = ""; String s_allel =""; int quality = RNAMutation.QUALITY_NOTKNOWN;
+        for (int count = mut_start; count < current_element_count ;count++)
+        {
+            if (!isWrongChar(elements[count].getQueryChar()) )q_allel += elements[count].getQueryChar();
+            if (!isWrongChar(elements[count].getSubjectChar()) )s_allel += elements[count].getSubjectChar();
+        }
+         
+        if (isDefineQuality )
+        {
+            int base_count = 0;
+            for (int count = mut_start - 2 ; count < s_allel.length() + 2 + mut_start; count++)
+            {
+                if (count < 0) continue;
+                if (count > elements.length -1 ) break;
+                quality += elements[count].getBaseScore();
+                base_count++;
+            }
+            quality = (int) quality / base_count;
+            if ( quality < 20)
+                quality = RNAMutation.QUALITY_LOW;
+            else
+                quality = RNAMutation.QUALITY_HIGH;
+        }
+        
+        RNAMutation cur_rna_mutation = new RNAMutation();
+        cur_rna_mutation.setPolymFlag(RNAMutation.FLAG_POLYM_NOKNOWN);
+        cur_rna_mutation.setUpstream(up.toString());
+        cur_rna_mutation.setDownStream(dn.toString());
+        cur_rna_mutation.setCodonOri( cori );
+        cur_rna_mutation.setCodonMut(corm);
+        cur_rna_mutation.setCodonPos( elements[mut_start].getSubjectIndex()  % 3 );
+        cur_rna_mutation.setPosition ( elements[mut_start].getSubjectIndex());// start of mutation (on object sequence)
+        cur_rna_mutation.setLength ( s_allel.length());
+        cur_rna_mutation.setChangeMut ( q_allel);
+        cur_rna_mutation.setChangeOri ( s_allel);
+        cur_rna_mutation.setSequenceId ( sequence_id) ;
+        cur_rna_mutation.setNumber (mut_number) ;
+        cur_rna_mutation.getChangeType ( ) ;
+        cur_rna_mutation.setQuality( quality );
+        return cur_rna_mutation;
+
+    }
+    
+    private AAMutation createAADiscrepancy(String cor_mut, String cor_ori,   SequenceElement element,
+          int quality ,   int mutation_number,   int sequence_id)
+    {
+                           
+        AAMutation cur_aa_mutation = null;
+        
+        
+        String atr =  SequenceManipulation.getTranslation( cor_mut, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
+        String am =  SequenceManipulation.getTranslation(cor_ori, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
+        
+        cur_aa_mutation =  new AAMutation();
+        cur_aa_mutation.setPosition ( (int)Math.floor(element.getSubjectIndex() / 3) + 1 );// start of mutation (on object sequence)
+        cur_aa_mutation.setLength ( (int) Math.ceil(cor_ori.length() / 3) );
+        cur_aa_mutation.setChangeMut ( atr);
+        cur_aa_mutation.setChangeOri ( am);
+        cur_aa_mutation.setSequenceId ( sequence_id) ;
+        cur_aa_mutation.setNumber ( mutation_number) ;
+        cur_aa_mutation.getChangeType ( ) ;
+        cur_aa_mutation.setQuality( quality );
+        return cur_aa_mutation;
+                            
+    }
+    
+    
+    private  boolean isWrongChar(char ch)
+    {
+        if (ch == '-' || ch =='['  || ch ==' ')
+            return true;
+        else
+            return false;
+    }
+    
+    
+    class SequenceElement
+    {
+        private int i_query_index = -1;
+        private int i_subject_index = -1;
+        private int i_base_score = 0;
+        private char i_query_base ;
+        private char i_subject_base;
+        
+        public SequenceElement( int query_index  ,int subject_index ,int base_score,char query_base,char subject_base)
+        {
+            i_query_index = query_index;
+            i_subject_index = subject_index;
+            i_base_score = base_score;
+            i_query_base = query_base;
+            i_subject_base = subject_base;
+
+        }
+         public SequenceElement(){}
+        
+         public int getQueryIndex (){ return i_query_index    ; }
+        public int getSubjectIndex (){ return i_subject_index    ; }
+        public int getBaseScore (){ return i_base_score    ; }
+        public char getQueryChar (){ return i_query_base   ; }
+        public char getSubjectChar (){ return i_subject_base   ; }
+        
+         public void setQueryIndex (int v){  i_query_index    = v; }
+        public void setSubjectIndex (int v){  i_subject_index    = v; }
+        public void setBaseScore (int v){  i_base_score    = v; }
+        public void setQueryChar (char v){  i_query_base   = v; }
+        public void setSubjectChar (char v){  i_subject_base   = v; }
+    }
+  //******************************************
+    public static void main(String args[])
+    {
+        
+        String seq = "TTTTTTTTTTTTTTGAATTTGATAATCCTCCTTTTATTcCATATTAAACTTTAAAATTTGTACCACATTATTAAAGTATTACTTTTACTCACAGTAGTATTATACATAGACTTAACACAATTTTTAAAAATGTGTTTACTTAAAACAATATAATTCTCCTTTACAAAAGCAACTTTATATAAAATGTTTGGCTTAAGACTGTCATTGCTATTATGCCTTTGAATGAAATTCCACTCTTTCGCCTCCATTGTCCAGAAACAGGCACATATCAGCTTGTTTTCTTTAATGAATATTCTGTAACAAGTTCCTGAAGTTTTCTAATTCTTTCACACTTGTAGAAATTCTTCCAAATGCGTTGAATAATGATACTATTTCTTGTCTGGTTAGATGGAATTCATAACTAGGTCCACTTTCTGGCATATTTGCTATCAATTTCTCAGAAAATAAGATCTTCAGAGCAGTGCCCAAACCCTGAGTCTGAAGCTTTCCCCACAGACGACATTTAAAACAACCAACACAATCCATAATT";
+        // String seq="GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTATCAGTCGACACCATGCGCGAGATCGTGCACATCCAGGCGGGCCAGTGCGGCAACCAGATCGGCGCCAAGTTTTGGGAGGTCATCAGTGATGAGCATGGGATTGACCCCACTGGCAGTTACCATGGAGACAGTGATTTGCAGCTGGAGAGAATCAATGTTTACTACAATGAAGCCACTGGTAACAAATATGTTCCTCGGGCCATCCTCGTGGATCTGGAGCCAGGCACGATGGATTCGGTTAGGTCTGGACCATTCGGCCAGATCTTCAGACCAGACAATTTCGTGTTTGGCCAGAGTGGAGCCGGGAATAACTGGGCCAAGGGCCACTACACAGAGGGAGCCGAGCTGGTCGACTCGGTCCTGGATGTGGTGAGGAAGGAGTCAGAGAGCTGTGACTGTCTCCAGGGCTTCCAGCTGACCCACTCTCTGGGGGGCGGCACGGGGTCCGGGATGGGCACCCTGCTCATCAGCAAGATCCGGGAAGAGTACCCAGACCGCATCATGAACACCTTCAGCGTCATGCCCTCACCCAAGGTGTCAGACACGGTGGTGGAGCCCTACAACGCCACCCTCTCGGTCCACCAGCTGGTGGAAAACACAGATGAAACCTACTGCATTGACAACGAGGCCCTGTATGACATCTGCTTCCGCACCCTGAAGCTGACCACCCCCACCTACGGGGACCTCAACCACCTGGTGTCGGCCACCATGAGCGGGGTCACCACCTGCCTGCGCTTCCCGGGCCAGCTGAACGCAGACCTGCGCAAGCTGGCGGTGAACATGGTGCCCTTCCCTCGCCTGCACTTCTTCATGCCCGGCTTCGCGCCCCTGACCAGCCGGGGCAGCCAGCAGTACCGGGCGCTCACGGTGCCCGAGCTCACCCAGCAGATGTTCGACTCCAAGAACATGATGGCCGCCTGCGACCCGCGCCACGGCCGCTACCTGACGGTGGCTGCCATCTTCCGGGGCCGCATGTCCATGAAGGAGGTGGACGAGCAGATGCTCAACGTGCAGAACAAGAACAGCAGCTACTTCGTGGAGTGGATCCCCAACAACGTGAAGACGGCCGTGTGCGACATCCCGCCCCGCGGCCTGAAGATGTCGGCCACCTTCATCGGCAACAGCACGGCCATCCAGGAGCTGTTCAAGCGCATCTCCGAGCAGTTCACGGCCATGTTCCGGCGCAAGGCCTTCCTGCACTGGTACACGGGCGAGGGCATGGACGAGATGGAGTTCACCGAGGCCGAGAGCAACATGAACGACCTGGTGTCCGAGTACCAGCAGTACCAGGACGCCACGGCCGACGAACAAGGGGAGTTCGAGGAGGAGGAGGGCGAGGACGAGGCTTTGGGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC";
+         // String queryFile = "c:\\needleoutput\\needle3600_2808.out";
+       SequencePair pair = null;
+       int refseqid = -1;
+       String refseq = null;BaseSequence  refsequence =null;
+       String cloneseq=null;AnalyzedScoredSequence clonesequence = null;String line = null;
+       ArrayList pairs = new ArrayList();
+       try
+        {
+           /* 
+            NeedleResult res = new NeedleResult();
+            
+            ArrayList files = new ArrayList();
+            BufferedReader reader = new BufferedReader(new FileReader("c:\\kinez-test.txt"));
+          
+            while((line = reader.readLine()) != null)
+            {
+                StringTokenizer st = new StringTokenizer(line, "\t");
+                String [] info = new String[3];
+                int i = 0;
+                
+                while(st.hasMoreTokens())
+                {
+                    info[i] = st.nextToken();
+                    i++;
+                }
+                cloneseq = info[1];
+                if (cloneseq.startsWith("'") )cloneseq.substring(1);
+                
+                refseq=info[2];
+                refseq = refseq.substring(0, refseq.length()-3);
+                refseqid = Integer.parseInt(info[0]);
+                clonesequence = new AnalyzedScoredSequence(cloneseq,   refseqid);
+                clonesequence.setId(-refseqid);
+                refsequence = new BaseSequence(refseq,BaseSequence.BASE_SEQUENCE); 
+                refsequence.setId(refseqid);
+                pair = new SequencePair(clonesequence ,  refsequence );
+                pairs.add(pair);
+                 DiscrepancyFinder d =new DiscrepancyFinder(pair);
+                   d.setInputDirectory("/tmp/");
+                      
+                 d.run();
+                   files.add( d.getAligmentFileNames() );
+                   File n = new File( (String)files.get(0));
+                  if ( clonesequence.getDiscrepancies() == null || 
+                                clonesequence.getDiscrepancies().size() == 0)
+                 {
+                     System.out.println("\t\t No discrepancies have been detected\n\n");
+                 }
+                 else
+                 {
+                           //write down mutations
+                    int discrepancy_number = 1;Mutation discr=null;
+                     for (int count = 0; count < clonesequence.getDiscrepancies().size(); count++)
+                     {
+                         discr = (Mutation) clonesequence.getDiscrepancies().get(count);
+                         if ( discrepancy_number != discr.getNumber())
+                         {
+                            System.out.println("\n\t\t New Discrepancy ");
+                            discrepancy_number = discr.getNumber();
+                         }
+                        System.out.println( discr.toString() );
+
+                     }
+                 }
+              
+            }
+            
+            reader.close();
+            
+            */
+            
+           NeedleResult res = new NeedleResult();
+          String queryFile ="c:\\needleoutput\\needle2917_189.out";
+            //  String queryFile = "c:\\needleATG.out";
+             NeedleParser.parse(queryFile,res);
+             
+            // edu.harvard.med.hip.bec.coreobjects.endreads.Read read =  edu.harvard.med.hip.bec.coreobjects.endreads.Read.getReadById(1154);
+            // int[] trimmed_scores = read.getTrimmedScoresAsArray();
+             DiscrepancyFinder d =new DiscrepancyFinder(pair);
+         //    int[]scores=null;//{10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,10,10,30,30,30,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,30,30,34,34,24,56,43,45,10,10,10,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30};
+          ArrayList   m = d.run_analysis( res,  null,1188, 1203);
+          System.out.println(d.getCdsStart()+" "+d.getCdsStop());
+         
+            
+            /*
+             refsequence = new RefSequence(374);
+            Read read =  Read.getReadById(2529);
+            
+        pair = new SequencePair(read.getSequence() ,  (BaseSequence)refsequence );
+        pairs.add(pair);
+        DiscrepancyFinder d =new DiscrepancyFinder(pair);
+        d.run();
+             **/
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());}
+          System.exit(0);
+    }
+    
+    
+     /*
     private BlastResult runBlast(SequencePair pair) throws BecUtilException
     {
         //run needle
@@ -776,482 +1258,5 @@ public class DiscrepancyFinder
     }
     
     */
-    public ArrayList  run_analysis(NeedleResult res_needle, int[] quality_scores_query, int exper_sequence_id, int refseq_id)
-    
-    {
-        ArrayList res = new ArrayList();
-        
-        int length = 0;
-        //check output of needle
-        if (res_needle.getQuery() == null || res_needle.getSubject() == null) return null;
-        char[] sequence_query_n = res_needle.getQuery().toUpperCase().toCharArray();
-        char[] sequence_subject_n = res_needle.getSubject().toUpperCase().toCharArray();
-        //prepare sequence elements
-        SequenceElement[] elements = prepareSequenceElements(sequence_query_n,sequence_subject_n,quality_scores_query);
-     
-    
-        boolean isInMutation = false;
-        boolean isAlignmentStarted = false;
-        boolean isDefineQuality = ( quality_scores_query != null && quality_scores_query.length > 0);
-        AAMutation cur_aa_mutation = null;        RNAMutation cur_rna_mutation = null;
-        int number_of_rna_discrepancies = -1;
-        int mut_number = 0;int mut_start = -1;
-        try{
-        for (int count = 0; count < elements.length; count++ )
-        {
-   //check if alignment already started
-               if (!isAlignmentStarted)
-               {
-                   if (elements[count].getQueryChar() != ' ' &&  elements[count].getSubjectChar() !=' ')
-                   {
-                       isAlignmentStarted = true;
-                   }
-                   else
-                   {
-                         continue;
-                   }
-               }//end if for aligment start
-       // inside alignment         
-               if ( elements[count].getQueryChar()  == elements[count].getSubjectChar()  ||
-                    ( elements[count].getQueryChar()  != elements[count].getSubjectChar()  &&
-                    ( elements[count].getQueryChar()  == 'N' || sequence_query_n[count] == 'n' 
-                    || elements[count].getSubjectChar()  =='N' || elements[count].getSubjectChar() =='n' )))
-               {
-        // if either empty - get out - aligment finished - force last mutation to close up
-                   
-                    // do nothing
-                    if (isInMutation)//mutation finished
-                    {
-                         createMutations( res,   number_of_rna_discrepancies, 
-                             isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id);
-                        mut_start = -1;
-                        isInMutation =false;
-                        //forse get out if max number of discrepancies reached
-                        if (m_max_number_of_mutations_to_detect < number_of_rna_discrepancies)
-                            return res;
-                      
-                    }
-                }  
-               else //not equal
-                {
-                     if (elements[count].getSubjectChar() == ' ' || elements[count].getQueryChar() == ' ' )
-                    {
-                        //forse to close last mutation
-                        if (isInMutation)
-                        {
-                            createMutations( res,   number_of_rna_discrepancies, 
-                             isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id);
-                        }
-                        break;
-                    }
-                     //forse to close if multipal substitution
-                     if (isInMutation && elements[count].getSubjectChar() != elements[count].getQueryChar()
-                     &&  !(elements[count].getSubjectChar() == '-' || elements[count].getQueryChar() == '-'))
-                    {
-                         createMutations( res,   number_of_rna_discrepancies, 
-                         isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id);
-                         mut_start = -1;
-                       
-                    }
-                    isInMutation = true;
-                    if (mut_start == -1)    mut_start = count ;
-                    
-                 }
-                
-            }
-            return res;
-        }
-        catch(Exception e)
-        {
-             e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-        return res;
-      
-    }
-        
-    private void createMutations(ArrayList res,  int number_of_rna_discrepancies, 
-            boolean isDefineQuality, SequenceElement[] elements,  
-            int count, int mut_start, int exper_sequence_id)
-    {
-        AAMutation cur_aa_mutation = null;        RNAMutation cur_rna_mutation = null;
-        int  mut_number = 0;
-        if (res != null && res.size() > 0)
-        {
-            mut_number = ((Mutation) res.get(res.size() - 1)).getNumber();
-        }
-        mut_number++;
-        cur_rna_mutation = createRNADiscrepancy( isDefineQuality,elements,  count, mut_number,mut_start, exper_sequence_id);
-        res.add(cur_rna_mutation);
- System.out.println("\t\t\t New Mutation\n\n\t\t\t "+cur_rna_mutation.toString());
-        number_of_rna_discrepancies++;
-        if (    cur_rna_mutation.getType() != Mutation.TYPE_RNA_SILENT )
-        {
-           cur_aa_mutation= createAADiscrepancy( cur_rna_mutation.getCodonMut(), 
-                        cur_rna_mutation.getCodonOri(),
-                        elements[count], cur_rna_mutation.getQuality(), 
-                        mut_number ,exper_sequence_id);
-
-   
-                      
-System.out.println("\t\t\t "+ cur_aa_mutation.toString());
-            res.add(cur_aa_mutation);
-        }
-                                
-    }
-    
-    private SequenceElement[] prepareSequenceElements(char[] sequence_query_n,
-                                        char[] sequence_subject_n,
-                                        int[] quality_scores)
-    {
-        int length = ( sequence_query_n.length  >= sequence_subject_n.length ) ?
-                sequence_subject_n.length -1  :   sequence_query_n.length -1 ;
-        SequenceElement[] elements = new SequenceElement[length];  
-        SequenceElement element = null;
-        int q_index = 0;
-        int s_index = 0;
-        int q_score = 0;
-        for (int count = 0; count < length; count++)
-        {
-            if ( sequence_subject_n[count] !=' ' && sequence_subject_n[count] != '-')
-            {
-                s_index++;
-            }
-            if (sequence_query_n[count] != ' ' && sequence_query_n[count] != '-')
-            {
-                q_index ++;
-                if (quality_scores != null && quality_scores.length != 0)
-                {
-                    q_score = quality_scores[q_index - 1];
-                }
-            }
-            
-            element = new SequenceElement(  q_index  , s_index , q_score, sequence_query_n[count],sequence_subject_n[count]);
-            elements[count]=element;
-            
-            //set up cds start && stop
-            if (s_index == 1 && q_index > 0 && m_cds_start == 0)
-            { 
-                m_cds_start = q_index;
-            }
-            if ( (s_index > 1 && ( sequence_subject_n[count] == ' ' && sequence_query_n[count] != ' '))
-                || (s_index > 1 && (count == sequence_query_n.length -1 && 
-                ( sequence_subject_n[count] != ' ' && sequence_subject_n[count] != '-' && sequence_query_n[count] != ' ' && sequence_query_n[count] != '-'))))
-            { 
-                m_cds_stop = q_index;
-            }
-        }
-        return elements;
-    }
-    
-    
-    private RNAMutation createRNADiscrepancy( boolean isDefineQuality,SequenceElement[] elements, int current_element_count,
-    int mut_number,  int mut_start, int sequence_id)
-    {
- 
-         StringBuffer up = new StringBuffer(); ; StringBuffer dn = new StringBuffer(); 
-         if ( mut_start > 10 )
-         {
-            for (int count = mut_start - 1; count > mut_start - RNAMutation.RNA_STREAM_RANGE;)
-            {
-              
-                if ( ! isWrongChar( elements[count].getQueryChar() ))
-                {
-                     dn.append( elements[count].getQueryChar()) ;
-                }
-                count--;
-                if (count == 0 || elements[count].getQueryChar() == ' ') break;
-            }
-         }
-         if ( current_element_count < elements.length + 10 )
-         {
-            for (int count = current_element_count - 1; count < current_element_count + RNAMutation.RNA_STREAM_RANGE;)
-            {
-                  if ( elements[count].getQueryChar() == ' ') break;
-                if ( ! isWrongChar( elements[count].getQueryChar() ))
-                {
-                     up.append( elements[count].getQueryChar()) ;
-                }
-                  count++;
-                    if (count == (elements.length -1)  ) break;
-            }
-         }
-         
-   //     int codon_start_mutation = (int) Math.ceil( s_position / 3);
-        
-        String cori = "";
-        String corm = ""; //codon mutant
-        int current_base =0; int start_codon_pos = 0;
-        if  ( !isWrongChar(elements[mut_start].getSubjectChar() ))
-        {
-            current_base  = elements[mut_start].getSubjectIndex();
-            start_codon_pos = mut_start;
-       }
-       else
-       {
-            current_base = elements[current_element_count].getSubjectIndex();
-            start_codon_pos = mut_start;
-        }
-        
-        switch (current_base % 3 )
-        {
-            case 1:
-            {
-                while (cori.length() < 3)
-                {
-                    if (start_codon_pos > elements.length-1) break;
-                        cori+=elements[start_codon_pos].getSubjectChar();
-                   corm +=elements[start_codon_pos].getQueryChar();
-                    start_codon_pos++;
-                }
-                
-                   break;
-            }
-            case 2 :
-            {
-               
-                int keep_codon_start_search_position = start_codon_pos;
-                while (cori.length() < 2)
-                {
-                    if (start_codon_pos > elements.length) break;
-                    cori+=elements[start_codon_pos].getSubjectChar();
-                    corm +=elements[start_codon_pos].getQueryChar();
-                    start_codon_pos++;
-                }
-                while (cori.length() < 3)
-                {
-                    if ( keep_codon_start_search_position - 1 < 0)break;
-                        cori=elements[--keep_codon_start_search_position].getSubjectChar()+cori;
-                    corm =elements[keep_codon_start_search_position].getQueryChar()+corm;
-                }
-                break;
-            }
-        
-          case 0:
-        {
-            
-            while (cori.length() < 3)
-            {
-             //   if ( !isWrongChar(elements[start_codon_pos].getSubjectChar()))
-             //   {
-                if (start_codon_pos < 0)break;
-                    cori=elements[start_codon_pos].getSubjectChar()+cori;
-              //  }
-                corm =elements[start_codon_pos].getQueryChar()+corm;
-                start_codon_pos--;
-            }
-          }
-        }
-        String q_allel = ""; String s_allel =""; int quality = RNAMutation.QUALITY_NOTKNOWN;
-        for (int count = mut_start; count < current_element_count ;count++)
-        {
-            if (!isWrongChar(elements[count].getQueryChar()) )q_allel += elements[count].getQueryChar();
-            if (!isWrongChar(elements[count].getSubjectChar()) )s_allel += elements[count].getSubjectChar();
-        }
-         
-        if (isDefineQuality )
-        {
-            int base_count = 0;
-            for (int count = mut_start - 2 ; count < s_allel.length() + 2 + mut_start; count++)
-            {
-                if (count < 0) continue;
-                if (count > elements.length -1 ) break;
-                quality += elements[count].getBaseScore();
-                base_count++;
-            }
-            quality = (int) quality / base_count;
-            if ( quality < 20)
-                quality = RNAMutation.QUALITY_LOW;
-            else
-                quality = RNAMutation.QUALITY_HIGH;
-        }
-        
-        RNAMutation cur_rna_mutation = new RNAMutation();
-        cur_rna_mutation.setPolymFlag(RNAMutation.FLAG_POLYM_NOKNOWN);
-        cur_rna_mutation.setUpstream(up.toString());
-        cur_rna_mutation.setDownStream(dn.toString());
-        cur_rna_mutation.setCodonOri( cori );
-        cur_rna_mutation.setCodonMut(corm);
-        cur_rna_mutation.setCodonPos( elements[mut_start].getSubjectIndex()  % 3 );
-        cur_rna_mutation.setPosition ( elements[mut_start].getSubjectIndex());// start of mutation (on object sequence)
-        cur_rna_mutation.setLength ( s_allel.length());
-        cur_rna_mutation.setChangeMut ( q_allel);
-        cur_rna_mutation.setChangeOri ( s_allel);
-        cur_rna_mutation.setSequenceId ( sequence_id) ;
-        cur_rna_mutation.setNumber (mut_number) ;
-        cur_rna_mutation.getChangeType ( ) ;
-        cur_rna_mutation.setQuality( quality );
-        return cur_rna_mutation;
-
-    }
-    
-    private AAMutation createAADiscrepancy(String cor_mut, String cor_ori,   SequenceElement element,
-          int quality ,   int mutation_number,   int sequence_id)
-    {
-                           
-        AAMutation cur_aa_mutation = null;
-        
-        
-        String atr =  SequenceManipulation.getTranslation( cor_mut, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
-        String am =  SequenceManipulation.getTranslation(cor_ori, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
-        
-        cur_aa_mutation =  new AAMutation();
-        cur_aa_mutation.setPosition ( (int)Math.floor(element.getSubjectIndex() / 3) + 1 );// start of mutation (on object sequence)
-        cur_aa_mutation.setLength ( (int) Math.ceil(cor_ori.length() / 3) );
-        cur_aa_mutation.setChangeMut ( atr);
-        cur_aa_mutation.setChangeOri ( am);
-        cur_aa_mutation.setSequenceId ( sequence_id) ;
-        cur_aa_mutation.setNumber ( mutation_number) ;
-        cur_aa_mutation.getChangeType ( ) ;
-        cur_aa_mutation.setQuality( quality );
-        return cur_aa_mutation;
-                            
-    }
-    
-    
-    private  boolean isWrongChar(char ch)
-    {
-        if (ch == '-' || ch =='['  || ch ==' ')
-            return true;
-        else
-            return false;
-    }
-    
-    
-    class SequenceElement
-    {
-        private int i_query_index = -1;
-        private int i_subject_index = -1;
-        private int i_base_score = 0;
-        private char i_query_base ;
-        private char i_subject_base;
-        
-        public SequenceElement( int query_index  ,int subject_index ,int base_score,char query_base,char subject_base)
-        {
-            i_query_index = query_index;
-            i_subject_index = subject_index;
-            i_base_score = base_score;
-            i_query_base = query_base;
-            i_subject_base = subject_base;
-
-        }
-         public SequenceElement(){}
-        
-         public int getQueryIndex (){ return i_query_index    ; }
-        public int getSubjectIndex (){ return i_subject_index    ; }
-        public int getBaseScore (){ return i_base_score    ; }
-        public char getQueryChar (){ return i_query_base   ; }
-        public char getSubjectChar (){ return i_subject_base   ; }
-        
-         public void setQueryIndex (int v){  i_query_index    = v; }
-        public void setSubjectIndex (int v){  i_subject_index    = v; }
-        public void setBaseScore (int v){  i_base_score    = v; }
-        public void setQueryChar (char v){  i_query_base   = v; }
-        public void setSubjectChar (char v){  i_subject_base   = v; }
-    }
-  //******************************************
-    public static void main(String args[])
-    {
-        
-        String seq = "TTTTTTTTTTTTTTGAATTTGATAATCCTCCTTTTATTcCATATTAAACTTTAAAATTTGTACCACATTATTAAAGTATTACTTTTACTCACAGTAGTATTATACATAGACTTAACACAATTTTTAAAAATGTGTTTACTTAAAACAATATAATTCTCCTTTACAAAAGCAACTTTATATAAAATGTTTGGCTTAAGACTGTCATTGCTATTATGCCTTTGAATGAAATTCCACTCTTTCGCCTCCATTGTCCAGAAACAGGCACATATCAGCTTGTTTTCTTTAATGAATATTCTGTAACAAGTTCCTGAAGTTTTCTAATTCTTTCACACTTGTAGAAATTCTTCCAAATGCGTTGAATAATGATACTATTTCTTGTCTGGTTAGATGGAATTCATAACTAGGTCCACTTTCTGGCATATTTGCTATCAATTTCTCAGAAAATAAGATCTTCAGAGCAGTGCCCAAACCCTGAGTCTGAAGCTTTCCCCACAGACGACATTTAAAACAACCAACACAATCCATAATT";
-        // String seq="GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTATCAGTCGACACCATGCGCGAGATCGTGCACATCCAGGCGGGCCAGTGCGGCAACCAGATCGGCGCCAAGTTTTGGGAGGTCATCAGTGATGAGCATGGGATTGACCCCACTGGCAGTTACCATGGAGACAGTGATTTGCAGCTGGAGAGAATCAATGTTTACTACAATGAAGCCACTGGTAACAAATATGTTCCTCGGGCCATCCTCGTGGATCTGGAGCCAGGCACGATGGATTCGGTTAGGTCTGGACCATTCGGCCAGATCTTCAGACCAGACAATTTCGTGTTTGGCCAGAGTGGAGCCGGGAATAACTGGGCCAAGGGCCACTACACAGAGGGAGCCGAGCTGGTCGACTCGGTCCTGGATGTGGTGAGGAAGGAGTCAGAGAGCTGTGACTGTCTCCAGGGCTTCCAGCTGACCCACTCTCTGGGGGGCGGCACGGGGTCCGGGATGGGCACCCTGCTCATCAGCAAGATCCGGGAAGAGTACCCAGACCGCATCATGAACACCTTCAGCGTCATGCCCTCACCCAAGGTGTCAGACACGGTGGTGGAGCCCTACAACGCCACCCTCTCGGTCCACCAGCTGGTGGAAAACACAGATGAAACCTACTGCATTGACAACGAGGCCCTGTATGACATCTGCTTCCGCACCCTGAAGCTGACCACCCCCACCTACGGGGACCTCAACCACCTGGTGTCGGCCACCATGAGCGGGGTCACCACCTGCCTGCGCTTCCCGGGCCAGCTGAACGCAGACCTGCGCAAGCTGGCGGTGAACATGGTGCCCTTCCCTCGCCTGCACTTCTTCATGCCCGGCTTCGCGCCCCTGACCAGCCGGGGCAGCCAGCAGTACCGGGCGCTCACGGTGCCCGAGCTCACCCAGCAGATGTTCGACTCCAAGAACATGATGGCCGCCTGCGACCCGCGCCACGGCCGCTACCTGACGGTGGCTGCCATCTTCCGGGGCCGCATGTCCATGAAGGAGGTGGACGAGCAGATGCTCAACGTGCAGAACAAGAACAGCAGCTACTTCGTGGAGTGGATCCCCAACAACGTGAAGACGGCCGTGTGCGACATCCCGCCCCGCGGCCTGAAGATGTCGGCCACCTTCATCGGCAACAGCACGGCCATCCAGGAGCTGTTCAAGCGCATCTCCGAGCAGTTCACGGCCATGTTCCGGCGCAAGGCCTTCCTGCACTGGTACACGGGCGAGGGCATGGACGAGATGGAGTTCACCGAGGCCGAGAGCAACATGAACGACCTGGTGTCCGAGTACCAGCAGTACCAGGACGCCACGGCCGACGAACAAGGGGAGTTCGAGGAGGAGGAGGGCGAGGACGAGGCTTTGGGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC";
-         // String queryFile = "c:\\needleoutput\\needle3600_2808.out";
-       SequencePair pair = null;
-       int refseqid = -1;
-       String refseq = null;BaseSequence  refsequence =null;
-       String cloneseq=null;AnalyzedScoredSequence clonesequence = null;String line = null;
-       ArrayList pairs = new ArrayList();
-       try
-        {
-            
-            // NeedleResult res = new NeedleResult();
-            /*
-            ArrayList files = new ArrayList();
-            BufferedReader reader = new BufferedReader(new FileReader("c:\\kinez-test.txt"));
-          
-            while((line = reader.readLine()) != null)
-            {
-                StringTokenizer st = new StringTokenizer(line, "\t");
-                String [] info = new String[3];
-                int i = 0;
-                
-                while(st.hasMoreTokens())
-                {
-                    info[i] = st.nextToken();
-                    i++;
-                }
-                cloneseq = info[1];
-                if (cloneseq.startsWith("'") )cloneseq.substring(1);
-                
-                refseq=info[2];
-                refseq = refseq.substring(0, refseq.length()-3);
-                refseqid = Integer.parseInt(info[0]);
-                clonesequence = new AnalyzedScoredSequence(cloneseq,   refseqid);
-                clonesequence.setId(-refseqid);
-                refsequence = new BaseSequence(refseq,BaseSequence.BASE_SEQUENCE); 
-                refsequence.setId(refseqid);
-                pair = new SequencePair(clonesequence ,  refsequence );
-                pairs.add(pair);
-                 DiscrepancyFinder d =new DiscrepancyFinder(pair);
-                   d.setInputDirectory("/tmp/");
-                      
-                 d.run();
-                   files.add( d.getAligmentFileNames() );
-                   File n = new File( (String)files.get(0));
-                  if ( clonesequence.getDiscrepancies() == null || 
-                                clonesequence.getDiscrepancies().size() == 0)
-                 {
-                     System.out.println("\t\t No discrepancies have been detected\n\n");
-                 }
-                 else
-                 {
-                           //write down mutations
-                    int discrepancy_number = 1;Mutation discr=null;
-                     for (int count = 0; count < clonesequence.getDiscrepancies().size(); count++)
-                     {
-                         discr = (Mutation) clonesequence.getDiscrepancies().get(count);
-                         if ( discrepancy_number != discr.getNumber())
-                         {
-                            System.out.println("\n\t\t New Discrepancy ");
-                            discrepancy_number = discr.getNumber();
-                         }
-                        System.out.println( discr.toString() );
-
-                     }
-                 }
-              
-            }
-            
-            reader.close();
-            
-            */
-            
-           NeedleResult res = new NeedleResult();
-          String queryFile = "c:\\needleoutput\\needle4092_411.out";
-            //  String queryFile = "c:\\needleATG.out";
-             NeedleParser.parse(queryFile,res);
-            // edu.harvard.med.hip.bec.coreobjects.endreads.Read read =  edu.harvard.med.hip.bec.coreobjects.endreads.Read.getReadById(1154);
-            // int[] trimmed_scores = read.getTrimmedScoresAsArray();
-             DiscrepancyFinder d =new DiscrepancyFinder(pair);
-             int[]scores={10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,10,10,30,30,30,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,30,30,34,34,24,56,43,45,10,10,10,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30};
-          ArrayList   m = d.run_analysis( res,  scores,1188, 1203);
-          System.out.println("mutations "+m.size());
-         
-            
-            /*
-             refsequence = new RefSequence(374);
-            Read read =  Read.getReadById(2529);
-            
-        pair = new SequencePair(read.getSequence() ,  (BaseSequence)refsequence );
-        pairs.add(pair);
-        DiscrepancyFinder d =new DiscrepancyFinder(pair);
-        d.run();
-             **/
-        }catch(Exception e)
-        {
-            System.out.println(e.getMessage());}
-          System.exit(0);
-    }
-    
   
 }

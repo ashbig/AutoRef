@@ -446,7 +446,7 @@ public class PlateUploader
                                         sample_info.getPosition(),   
                                         container.getId());
           
-            sample.setIsolaterTracking(istr);
+            sample.setIsolaterTrackingEngine(istr);
      //link isolate tracking with sample
             istr.setSampleId( sample.getId() );
             
