@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.3 2003-04-16 17:49:40 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.4 2003-04-25 20:19:55 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -11,7 +11,9 @@ package edu.harvard.med.hip.bec.sampletracking.objects;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import java.util.*;
+import sun.jdbc.rowset.*;
 import java.sql.*;
+import javax.sql.*;
 
 /**
  * This class represents a process.
@@ -23,7 +25,7 @@ public class ProcessDefinition
     public static final     String    RUN_ENDREADS_EVALUATION = "Run End Reads Evaluation";
     public static final     String    RUN_ENDREADS_CONFIRM_RANK = "Confirm clone rank";
     
-    private int             m_id = -1;
+    private int             m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private String          m_process_name = null;
     private ArrayList       m_spectype_ids = null;
     
@@ -50,9 +52,24 @@ public class ProcessDefinition
     }
     
     
-    public int      ProcessIdFromProcessName(String name)
+    public static int      ProcessIdFromProcessName(String name)throws BecDatabaseException
     {
-        return 0;
+        String sql = "select  processdefinitionid from processdefinition "+
+            "where processname = "+name;
+        CachedRowSet crs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            return crs.getInt("processdefinitionid");
+        
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while initializing processdefinition with name: "+name+"\n");
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
     }
     
     /**

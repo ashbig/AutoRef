@@ -37,10 +37,10 @@ public class RunEndReadsRequestAction extends ResearcherAction
     
     
     public ActionForward becPerform(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException
+                                    ActionForm form,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response)
+                                    throws ServletException, IOException
     {
         // place to store errors
         ActionErrors errors = new ActionErrors();
@@ -117,8 +117,11 @@ public class RunEndReadsRequestAction extends ResearcherAction
                                                         actionrequest.getId(),
                                                         specids,
                                                         Constants.TYPE_ID) ;
+                //patch here
+                 process.insertConnectorToVectorPrimer(conn, Spec.VECTORPRIMER_SPEC_INT);
                  processes.add(process);
-                
+                 //finally we must insert request
+                actionrequest.insert(conn);
                 
                 //get master plates from db
                 Container container = null;Sample smp = null;
@@ -152,8 +155,7 @@ public class RunEndReadsRequestAction extends ResearcherAction
                 Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
                 "elena_taycher@hms.harvard.edu", "Request for end reads sequencing", "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates, file_list);
                 
-                //finally we must insert request
-                actionrequest.insert(conn);
+               
                 // commit the transaction
                 conn.commit();
               

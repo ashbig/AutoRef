@@ -23,10 +23,14 @@ public class RearrayFileEntry
         private String  m_dest_plate_label = null;
         private int     m_org_well = -1;
         private int     m_dest_well = -1;
+        private int     m_clone_id = -1;
+        
+        
         private static String  m_filePath = null;
        
-        public RearrayFileEntry(String org,int  orgwellid,  String dest, int destwellid)
+        public RearrayFileEntry(int cloneid,String org,int  orgwellid,  String dest, int destwellid)
         {
+            m_clone_id= cloneid;
             m_org_plate_label = org;
             m_dest_plate_label = dest;
             m_org_well = orgwellid;
@@ -38,9 +42,10 @@ public class RearrayFileEntry
         public int              getOrgWellId(){ return m_org_well;}
         public String           getDestPlateLabel(){ return m_dest_plate_label;}
         public int              getDestWellId(){ return m_dest_well;}
+        public int              getCloneId(){ return m_clone_id;}
         public String           toString(String delim)
         {
-            return m_org_plate_label+delim+m_org_well+delim+m_dest_plate_label+delim+m_dest_well;
+            return m_clone_id + delim+m_org_plate_label+delim+m_org_well+delim+m_dest_plate_label+delim+m_dest_well;
         }
   
         

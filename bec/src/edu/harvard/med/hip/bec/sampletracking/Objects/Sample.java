@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.3 2003-04-16 17:49:40 Elena Exp $
+ * $Id: Sample.java,v 1.4 2003-04-25 20:19:47 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -12,6 +12,7 @@ package edu.harvard.med.hip.bec.sampletracking.objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -43,14 +44,8 @@ public class Sample
     private int           m_containerid = -1;
     private int           m_position = -1;
     private int           m_isolatetracking_id = -1;
-    private int           m_clone_id = -1;
-    private int           m_refseq_id = -1; //artifax for connection to FLEX and creation of naming files
-    private int             m_cloneid = -1; //clone id from flex uniqe for clone identification
-    private Result          m_result = null;
-    
+    private IsolateTrackingEngine           m_isolatetracking = null;
    
-    
-      
     /**
      * Constructor.
      *
@@ -64,8 +59,7 @@ public class Sample
      *
      * @return A Sample object.
      */
-    public Sample(int id, String type, int position, 
-            int containerid)
+    public Sample(int id, String type, int position,      int containerid)
             throws BecDatabaseException
     {
         if ( id == BecIDGenerator.BEC_OBJECT_ID_NOTSET) 
@@ -92,7 +86,7 @@ public class Sample
     {
         m_id = id;
         
-        String sql = "select * from sample where sampleid = "+id;
+        String sql = "select containerid, position,sampletype from sample where sampleid = "+id;
         RowSet rs = null;
         ResultSet newRs = null;
         try
@@ -103,39 +97,9 @@ public class Sample
             while(rs.next())
             {
                 
-               /* type = rs.getString("SAMPLETYPE");
-                containerid = rs.getInt("CONTAINERID");
-                m_position = rs.getInt("CONTAINERPOSITION");
-                
-                Object construct = rs.getObject("CONSTRUCTID");
-                if(construct != null)
-                    constructid = ((BigDecimal)construct).intValue();
-                else
-                    constructid = -1;
-                
-                Object oligo = rs.getObject("OLIGOID");
-                if(oligo != null)
-                    oligoid = ((BigDecimal)oligo).intValue();
-                else
-                    oligoid = -1;
-                
-                status = rs.getString("STATUS_GB");
-                
-                String newSql = "select distinct f.cdslength as cdslength from flexsequence f, "+
-                "constructdesign c, sample s where f.sequenceid = "+
-                "c.sequenceid and (s.constructid = c.constructid "+
-                "or s.oligoid=c.oligoid_5p) and s.sampleid = "+id;
-                newRs = t.executeQuery(newSql);
-                if(newRs.next())
-                {
-                    cdslength = newRs.getInt("CDSLENGTH");
-                }
-                
-                //exstract isolate id for master plate only
-                *
-                *exstract refseqid for master plate
-                
-                **/
+                m_type = rs.getString("SAMPLETYPE");
+                m_containerid = rs.getInt("CONTAINERID");
+                m_position = rs.getInt("POSITION");
             }
         } catch (NullPointerException e)
         {
@@ -181,11 +145,11 @@ public class Sample
      * @return The construct id.
      */
     public int getIsolateTrackingid()    {        return m_isolatetracking_id;    }
-    public int getRefSequenceId()    {        return m_refseq_id;}
+    public IsolateTrackingEngine        getIsolateTrackingEngine(){ return m_isolatetracking;}
+ 
     public void setIsolateTrackingid(int v)    {         m_isolatetracking_id = v;    }
-    public void setRefSequenceId(int v)    {         m_refseq_id = v;}
-    public void setCloneId(int v)    {         m_clone_id = v;    }
-    public int getCloneId()    {      return   m_clone_id ;}
+    public void setIsolaterTracking(IsolateTrackingEngine id)    {        m_isolatetracking = id;    }
+   
    
    
     /**
@@ -236,28 +200,13 @@ public class Sample
      *
      * @return <Container> this sample is in
      */
-    public Container getContainer()
-    throws BecDatabaseException, BecUtilException
+    public Container getContainer()    throws BecDatabaseException, BecUtilException
     {
         Container container = new Container(getContainerid());
         return container;
     }
     
-    /**
-     * Set the construct id to the given value.
-     *
-     * @param id The value to be set to.
-     */
-    public void setIsolaterTrackingid(int id)    {        m_isolatetracking_id = id;    }
-    
-    
-    /**
-     * Set the cdslength to the given value.
-     *
-     * @param cdslength The value to be set to.
-     */
-   // public void setCdslength(int cdslength)    {        m_cdslength = cdslength;    }
-    
+   
     /**
      * Return true if the sample is empty; false otherwise.
      *
@@ -270,24 +219,16 @@ public class Sample
      *
      * @return True if the sample is control sample; false otherwise.
      */
-    public boolean isControl()    {        return (m_type.equals("CONTROL"));    }
-    
-    /**
-     * Set the sample result to the given result.
-     *
-     * @param result The result that the sample result will be set to.
-     */
-    public void setResult(Result result)    {        m_result = result;    }
-    
-    /**
-     * Returns true if the given sample is the same; returns false otherwise.
-     *
-     * @param sample The given sample for comparison.
-     *
-     * @return True if the given sample is the same, false otherwise.
-     */
-    public boolean isSame(Sample sample)    {        return (m_id == sample.getId());    }
-    
+    public boolean isControl()    {        return (m_type.startsWith("CONTROL"));    }
+    public boolean isClone()  
+    {      
+        boolean res = true;
+        if (m_type.startsWith("CONTROL")) res = false;
+        if (m_type.equals("EMPTY")) res = false;
+        return res;
+    }
+   
+   
    
     
     //function returns all history tree for the sample with/without results (optional)
@@ -308,40 +249,20 @@ public class Sample
      */
     public void insert(Connection conn) throws BecDatabaseException
     {
-        /*
-        String sql = "insert into sample\n"+
-        "(sampleid, sampletype, containerid, containerm_position";
-        String valuesql = "values ("+id +",'"+ type +"',"+containerid+","+m_position;
         
-        if(constructid != -1)
-        {
-            sql = sql + ",constructid";
-            valuesql = valuesql + ","+constructid;
-        }
+        String sql = "insert into sample " +
+        " (SAMPLEID  ,CONTAINERID  ,POSITION ,SAMPLETYPE)"
+        +"values ("+m_id +","+ m_containerid+"," +m_position +",'"+m_type +"')";
         
-        if(oligoid != -1)
-        {
-            sql = sql + ",oligoid";
-            valuesql = valuesql + ","+oligoid;
-        }
-        
-        if(status != null)
-        {
-            sql = sql + ",status_gb";
-            valuesql = valuesql + ",'"+status+"'";
-        }
+       
         Statement stmt = null;
         try
         {
             stmt = conn.createStatement();
-            
-            sql = sql + ")\n"+valuesql + ")";
             stmt.executeUpdate(sql);
-            
-            sql = "insert into containercell " +
-            "(containerid, m_position, sampleid) " +
-            "values(" + containerid + ","+m_position+","+id+")";
-            stmt.executeUpdate(sql);
+            if (m_isolatetracking != null)
+                m_isolatetracking.insert(conn);
+           
         } catch (SQLException sqlE)
         {
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
@@ -349,13 +270,11 @@ public class Sample
         {
             DatabaseTransaction.closeStatement(stmt);
         }
-         *
-         *
-         **/
+        
     }
     
     
-    
+   
     //******************************************************//
     //			Testing				//
     //******************************************************//

@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.3 2003-04-16 17:49:40 Elena Exp $
+ * $Id: Container.java,v 1.4 2003-04-25 20:20:00 Elena Exp $
  *
  * File     	: Container.java
 
@@ -15,6 +15,7 @@ import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.user.*;
+import  edu.harvard.med.hip.bec.coreobjects.endreads.*;
 
 import sun.jdbc.rowset.*;
 
@@ -26,22 +27,11 @@ public class Container
    // public static final String TYPE_ER_REVERSE_CONTAINER = "ER_REVERSE_CONTAINER";
   //  public static final String TYPE_ER_FORWARD_CONTAINER = "ER_FORWARD_CONTAINER";
   //  public static final String TYPE_ER_CONTAINER = "ER_CONTAINER";
-    public static final String TYPE_SEQUENCING_CONTAINER = "MASTER_CONTAINER";
+    public static final String TYPE_SEQUENCING_CONTAINER = "SEQUENCING_CONTAINER";
    
-    //status for master plate
-    public static final int STATUS_SUBMITTED = 0;
-    public static final int STATUS_ANALYSIS_FINISHED = 1;
-  //  public static final int STATUS_ER_FINISH = 2;
-    public static final int STATUS_ANALYSIS_INPROCESS = 3;
-   
+  
     
-    
-    
-  //  public static final String SUF_ER_REVERSE_CONTAINER = "R";
-  //  public static final String SUF_ER_FORWARD_CONTAINER = "F";
-    
-    
-    private int         m_id = -1;
+    private int         m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private String      m_type = null;
     private String      m_label = null;
     private ArrayList   m_samples = new ArrayList();
@@ -294,6 +284,74 @@ public class Container
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(crs);
+        }
+         
+    }
+    
+     /**
+     * Get the data from Sample table.
+     *
+     * @exception BecDatabaseException.
+     */
+    public void restoreSampleIsolate() throws BecDatabaseException
+    {
+        
+        m_samples.clear();
+        
+        String sql = "select s.sampleid, position, sampletype,rank,score, status, "
+    + "iso.isolatetrackingid,flexconstructid,flexsampleid,flexsequencingplateid,flexsequenceid,flexcloneid "
+    + "from flexinfo, isolatetracking iso, sample s "
+    +" where flexinfo.isolatetrackingid=iso.isolatetrackingid and iso.sampleid(+)=s.sampleid"
+    +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
+        
+   
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        CachedRowSet crs = t.executeQuery(sql);
+   
+        try
+        {
+            while(crs.next())
+            {
+                
+                int sampleid = crs.getInt("SAMPLEID");
+                String sampletype = crs.getString("SAMPLETYPE");
+                int position = crs.getInt("position");
+                Sample s = new Sample(  sampleid, sampletype, position, m_id);
+                // create isolate tracking for sample
+                if ( crs.getInt("isolatetrackingid") != -1)
+                {
+                    int isolatetracking_id = crs.getInt("isolatetrackingid");
+                    IsolateTrackingEngine isolatetracking = new IsolateTrackingEngine();
+                    isolatetracking.setRank(crs.getInt("rank")) ;// results of the end read analysis
+                    isolatetracking.setScore(crs.getInt("scored"));// results of the end read analysis
+                    isolatetracking.setStatus(crs.getInt("status"));
+                    isolatetracking.setSampleId(sampleid);
+                    isolatetracking.setId(isolatetracking_id);
+                    isolatetracking.setFlexInfoId(crs.getInt("flexid") );// sample id of the first sample of this isolate
+                    isolatetracking.setConstructId(crs.getInt("constructid") );// identifies the agar; several (four) isolates will have the same id
+    //create flex info for isolate tracxking
+                    FlexInfo fl = new FlexInfo();
+                    fl.setId ( crs.getInt("flexid"));
+                    fl.setIsolateTrackingId ( crs.getInt("isolatetrackingid"));
+                     fl.setFlexSampleId ( crs.getInt("flexsampleid"));
+                     fl.setFlexConstructId ( crs.getInt("flexconstructid"));
+                     fl.setFlexPlateId ( crs.getInt("flexplateid"));
+                     fl.setFlexSequenceId ( crs.getInt("flexsequenceid"));
+                    fl.setFlexCloneId ( crs.getInt("flexcloneid")) ;
+
+                    isolatetracking.setFlexInfo(fl);
+                    s.setIsolaterTracking(isolatetracking);
+                    m_samples.add(s);
+                }
+            }
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while initializing sample\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
             DatabaseTransaction.closeResultSet(crs);
         }
          

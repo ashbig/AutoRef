@@ -25,6 +25,7 @@ import java.util.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 
 /**
  * Represents the result of a process execution for a sample.
@@ -36,27 +37,36 @@ public class Result
 {
     
     // result type for a GEL
-    public static final int RESULT_TYPE_GEL = 1;
-    public static final int RESULT_TYPE_ENDREAD_REVERSE = 7;   
-    public static final int RESULT_TYPE_OLIGO_CALCULATION=2;
-     // result type for DNA GEL
-    public static final int RESULT_TYPE_ASSEMBLED_SEQUENCE_PASS =3;
-    public static final int RESULT_TYPE_ENDREAD_FORWRD=4;
-    public static final int RESULT_TYPE_FINAL_CLONE_SEQUENCE =5;
-    public static final int RESULT_TYPE_ASSEMBLED_SEQUENCE_FAIL =6;
+    public static final int RESULT_TYPE_GEL = 11;
+    
+    public static final int RESULT_TYPE_ENDREAD_FORWARD= 12;
+    public static final int RESULT_TYPE_ENDREAD_FORWARD_PASS=Read.TYPE_ENDREAD_FORWARD;
+    public static final int RESULT_TYPE_ENDREAD_FORWARD_FAIL=Read.TYPE_ENDREAD_FORWARD_FAIL;
+    
+    public static final int RESULT_TYPE_ENDREAD_REVERSE_FAIL = Read.TYPE_ENDREAD_REVERSE_FAIL;  
+    public static final int RESULT_TYPE_ENDREAD_REVERSE_PASS = Read.TYPE_ENDREAD_REVERSE; 
+    public static final int RESULT_TYPE_ENDREAD_REVERSE = 13;  
+    
+    
+    public static final int RESULT_TYPE_OLIGO_CALCULATION=14;
+
+    public static final int RESULT_TYPE_ASSEMBLED_SEQUENCE_PASS =15;
+    public static final int RESULT_TYPE_ASSEMBLED_SEQUENCE_FAIL =16;
+    
+    public static final int RESULT_TYPE_FINAL_CLONE_SEQUENCE =17;
+    
     
  
     // id for this result
-    private int         m_id = -1;
-    // The process used to generate this result
-    private int m_process_id = -1;
+    private int         m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private int         m_process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
       // The sample used to generate this result
-    private int     m_sample_id = -1;
+    private int     m_sample_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     
     // The type of the result.
     private int     m_type = -1;
      // The value of the result
-    private int m_value_id = -1;
+    private int m_value_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
   
     //if result not string but object - object (read, sequence ..)
     //or array of objects
@@ -108,21 +118,28 @@ public class Result
      *
      * @param conn The connection to use when doing the insert.
      */
-    public void insert(Connection conn) throws BecDatabaseException
+    public void insert(Connection conn, int process_id) throws BecDatabaseException
     {
         PreparedStatement ps = null;
+        String sql =null;
         try
         {
             DatabaseTransaction dt = DatabaseTransaction.getInstance();
-            String sql = "insert into result values(?,?,?,?,?)";
+            if (m_value_id != BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+                sql = "insert into result  values(?,?,?,?)";
+            else
+                sql = "insert into result values(?,?,?)";
             ps = conn.prepareStatement(sql);
-            m_id = BecIDGenerator.getID("RESULTID");
+            
             ps.setInt(1,m_id);
             ps.setInt(2,m_sample_id);
-            ps.setInt(3, m_process_id);
-            ps.setInt(4,m_type);
-            ps.setInt(5,m_value_id);
+            ps.setInt(3,m_type);
+            if (m_value_id != BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+               ps.setInt(4,m_value_id);
             dt.executeUpdate(ps);
+            sql = "insert into processresult (processid,resultid) values("+process_id+","+m_id+")";
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
             
         } catch (SQLException sqlE)
         {
@@ -132,6 +149,32 @@ public class Result
             DatabaseTransaction.closeStatement(ps);
         }
     }
+    
+    
+     public void updateType(int type, Connection c) throws BecDatabaseException
+    {
+        String sql = "update result set resulttype="+ type +
+        " where resultid="+m_id;
+        m_type = type;
+        DatabaseTransaction.executeUpdate(sql, c);
+    }
+     
+    public static void updateType(int resultid,int type, Connection c) throws BecDatabaseException
+    {
+        String sql = "update result set resulttype="+ type +
+        " where resultid="+resultid;
+       
+        DatabaseTransaction.executeUpdate(sql, c);
+    }
+     
+    public static void updateResultValueId(int resultid,int resultvalueid, Connection c) throws BecDatabaseException
+    {
+        String sql = "update result set resultvalueid="+ resultvalueid +
+        " where resultid="+resultid;
+        DatabaseTransaction.executeUpdate(sql, c);
+    }
+     
+     
     
     /**
      * Find the process result for a given sample and a process.

@@ -126,14 +126,23 @@ public class PhredWrapper
             {
                 PhredResult pr = new PhredResult();
                 read = pr.parsePhredOutputIntoRead( qualOutputFileName, seqOutputFileName);
-                read.setTraceFileName(tracefile) ;
+                read.setTraceFileName(traceDir + File.separator + traceFileName) ;
+                //if file noise - set it to fail
+                if (read.getTrimStart() == 0 && read.getTrimEnd() == 0)
+                {
+                    if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
+                        read.setType(Read.TYPE_ENDREAD_REVERSE_FAIL);
+                    else if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
+                        read.setType(Read.TYPE_ENDREAD_FORWARD_FAIL);
+                }
             }
             else
             {   
                 read = new Read();
               //  
                 PhredOutputFileName prfn = new PhredOutputFileName(qualOutputFileName, PhredOutputFileName.FORMAT_OURS);
-                read.setTraceFileName(tracefile) ;
+               // read.setTraceFileName(traceDir + File.separator + traceFileName) ;
+                
                 //read.setMachine(prfn.get) ;
                 //read.setCapilarity(String v)  ;
                 read.setFLEXReadInfo(prfn.getCloneidNumber(), prfn.getSequenceidNumber(), prfn.getPlateidNumber(), prfn.getWellidNumber());

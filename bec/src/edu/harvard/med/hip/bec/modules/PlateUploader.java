@@ -144,8 +144,17 @@ public class PlateUploader
       
         int plate_id  = -1;
         SampleInfo sample ;
-        String sql = "select   from view_flexsampleinfo " +
-        " where label ='" + platename +"' ";
+        String sql = "select sampleid, sampletype, containerid,"+
+        " containerposition as position, cd.constructtype as format, cd.constructid as constructid, cd.sequenceid as sequenceid, cloneid"+
+        " from clonesequencing c, sample s, constructdesign cd"+
+        " where s.containerid = "+
+        " (select distinct sequencingcontainerid"+
+        " from clonesequencing"+
+        " where sequencingcontainerlabel='" + platename +"')"+
+        " and c.sequencingsampleid(+)=s.sampleid"+
+        " and s.constructid=cd.constructid(+)"+
+        " order by containerposition";
+ 
         ResultSet rs = null;
         try
         {
@@ -156,21 +165,21 @@ public class PlateUploader
             {
                 sample = new SampleInfo();
                 sample.setId ( rs.getInt("sampleid") );
-                sample.setPlateId( rs.getInt("plateid") );
+                sample.setPlateId( rs.getInt("containerid") );
                 sample.setPosition ( rs.getInt("position") );
                 
                 sample.setType ( rs.getString("sampletype") );
-                //control
-                if (sample.getType().indexOf("CONTROL_") == -1)
+                //not control
+                if ( !sample.isControl() )
                 {
                     sample.setConstructId ( rs.getInt("constructid") );
                     sample.setSequenceId (rs.getInt("sequenceid") );
-                    sample.setFormat (rs.getString("formatd") );
+                    sample.setFormat (rs.getString("format") );
                     
                     flex_sequence_ids.put(new Integer(sample.getSequenceId () ), null);
                 }
-                //empty sample
-                if ( !sample.getType().equalsIgnoreCase("EMPTY") )
+                //not empty sample
+                if ( !sample.isEmpty() )
                 {
                     sample.setCloneId (rs.getInt("cloneid"));
                 }
@@ -194,14 +203,18 @@ public class PlateUploader
                                                 throws BecDatabaseException
     {
         //construct query string
-        String sql = "select flexsequenceid, sequenceid from view_flexbecsequenceid where flexsequenceid in (";
         StringBuffer stb = new StringBuffer();
         for (Enumeration e = flex_sequence_ids.keys(); e.hasMoreElements() ;)
         {
             stb.append( ( (Integer)e.nextElement()).intValue() );
             if ( e.hasMoreElements() )stb.append(",");
         }
-        sql += stb.toString() +")";
+       
+          String sql = "select distinct flexsequenceid, refsequenceid "+
+            " from flexinfo, isolatetracking iso, sequencingconstruct sc "+
+            " where flexinfo.isolatetrackingid=iso.isolatetrackingid and iso.constructid=sc.constructid "+
+            " and flexinfo.flexsequenceid in "+
+            "(select  flexsequenceid from flexinfo where flexsequenceid in ("+stb.toString() +"))";
         
         //get data from database
         ResultSet rs = null;
@@ -213,7 +226,7 @@ public class PlateUploader
             while(rs.next())
             {
                 flex_sequence_ids.put( new Integer(rs.getInt("flexsequenceid") ),
-                                        new Integer(rs.getInt("sequenceid")));
+                                        new Integer(rs.getInt("refsequenceid")));
             }
            
         } catch (Exception sqlE)
@@ -444,117 +457,7 @@ public class PlateUploader
     
     
     
-    
-    
-    /*
-     
-    private   Container findContainer(String plate_param, Connection conn) throws     BecDatabaseException
-    {
-        String sql = null;Container newBecContainer = null;
-        if ( m_array_type == PLATE_NAMES)
-        {
-            sql = "select containerid , containertype , label" +
-            "from containerheader  where label = '"+ plate_param+"'";
-        }
-        else if (m_array_type == PLATE_IDS)
-        {
-            sql = "select containerid , containertype , label" +
-            "from containerheader  where containerid = '"+ plate_param+"'";
-        }
-        if (sql == null) return null; //not proper call was made
-        ArrayList samples = null;
-        ResultSet rs = null;
-        try
-        {
-         //   rs = DatabaseTransaction.getInstance().executeQuery(sql, conn);
-            while(rs.next())
-            {
-                int id = rs.getInt("CONTAINERID");
-                String label = rs.getString("LABEL");
-                newBecContainer = new Container( -1, Container.TYPE_SEQUENCING_CONTAINER,   label, Container.STATUS_SUBMITTED);
-                newBecContainer.setSamples( restoreFLEXSample(id, conn) );
-            }
-            return newBecContainer;
-        }
-        catch (NullPointerException ex)
-        {
-            throw new BecDatabaseException("Error occured while initializing container with plate param: "+plate_param+"\n"+ex.getMessage());
-        }
-        catch (SQLException sqlE)
-        {
-            throw new BecDatabaseException("Error occured while initializing container from plate param: "+plate_param+"\n"+"\nSQL: "+sqlE);
-        }
-        finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-     
-    }
-     
-     
-    //get samples from FLEX
-    private ArrayList restoreFLEXSample(int id, Connection conn) throws BecDatabaseException
-    {
-        String sql =  "select containerid , containertype , label" +
-        "from containerheader  where label = '"+ id+"'";
-     
-        ArrayList samples = new ArrayList();
-        ResultSet rs = null;
-        try
-        {
-            //rs = DatabaseTransaction.getInstance().executeQuery(sql, conn);
-            while(rs.next())
-            {
-     
-            }
-            return samples;
-        }
-        catch (Exception sqlE)
-        {
-            throw new BecDatabaseException("Error occured while initializing container from plate parameter: "+id+"\n"+"\nSQL: "+sqlE);
-        }
-        finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-     
-    }
-     
-     
-    //             prevent uploading of the same sequence several times
-     
-    //get all refseq from BEC so that we won't upload the same sequence several times
-    private Hashtable   getAllRefSequences (Connection conn)throws BecDatabaseException
-    {
-        Hashtable refseq = new Hashtable();
-         String sql = "select i.flexsequenceid as flexsequenceid, c.refsequenceid as becsequenceid "+
-        "from  construct c, isolatetracking i " +
-        "where c.constructid = i.constructid   ";
-     
-        CachedRowSet crs = null;
-        int refid = -1; int becid = -1;
-        try
-        {
-           // crs = DatabaseTransaction.getInstance().executeQuery(sql,m_bec_connection);
-     
-            while(crs.next())
-            {
-                refid = crs.getInt("refSEQUENCEID");
-                becid = crs.getInt("becsequenceid");
-                refseq.put( new Integer(refid), new UploadedRefSequence( refid, becid));
-            }
-            return refseq;
-     
-        } catch (Exception e)
-        {
-            throw new  BecDatabaseException("Can not get refsequences from database");
-     
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(crs);
-        }
-    }
-     */
+   
     
    // constructid / sequenceid / constructtype / sample array / containerid
     // sample - sampleid / position / sampletype / cloneid
@@ -600,6 +503,9 @@ public class PlateUploader
             else
                 i_format = Construct.FORMAT_OPEN;
         }
+        
+        public boolean isEmpty()    {        return (i_type.equals("EMPTY"));    }
+        public boolean isControl()    {        return (i_type.startsWith("CONTROL"));} 
     }
     
     class UploadedRefSequence
@@ -613,9 +519,7 @@ public class PlateUploader
             i_bec_ref_seq_id = becid;
         }
         
-        public int  getFlexRefseqid()
-        { return i_flex_ref_seq_id;}
-        public int  getBecRefseqid()
-        { return i_bec_ref_seq_id;}
+        public int  getFlexRefseqid()        { return i_flex_ref_seq_id;}
+        public int  getBecRefseqid()        { return i_bec_ref_seq_id;}
     }
 }
