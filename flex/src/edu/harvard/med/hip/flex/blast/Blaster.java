@@ -210,10 +210,10 @@ public class Blaster extends java.lang.Object {
     public boolean blast_bl2seq(String query, String output) {
         String blastcmd = null;
        
-        blastcmd = "c:\\blast\\bl2seq " + program + " " + expect + " " + m_gapped +          
-           " -j " + m_subjectfile + " -i " + query +  " -o " + output ; 
+        //blastcmd = "c:\\blast\\bl2seq " + program + " " + expect + " " + m_gapped +          
+        //   " -j " + m_subjectfile + " -i " + query +  " -o " + output ; 
         
-        //blastcmd = "/kotel/data/blast/bl2seq ";
+        blastcmd = "/kotel/data/blast/bl2seq ";
         
         try {
             Runtime r = Runtime.getRuntime();
@@ -243,7 +243,7 @@ public class Blaster extends java.lang.Object {
          String blastcmd = null;
         if (executable.equals(Blaster.BLAST_EXEC_BLASTALL))
         {
-     /*
+     
           blastcmd = "/kotel/data/blast/blastall " +                    
                           program + " " +                
                           "-d" + dbPath +  " " +                
@@ -254,8 +254,8 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits;                    
-*/
-    
+
+    /*
           blastcmd = "c:\\Program Files\\blast\\blastall "    +            
                           program + " " +                
                           "-d " + dbPath +  " " +                
@@ -266,31 +266,29 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits; 
+     */
         }
         else
             if (executable.equals("bl2seq") &&  m_subjectfile != null) 
             {
-                /*
+                
       //bl2seq -p blastn -e 10e-50 -i plt1_A01 -j plt1_A01.seq -o plt1_A01.n
 
-         String blastcmd = "/kotel/data/blast/bl2seq " +                    
-                          program + " " +                
-                          "-j" + m_subjectfile +  " " +                
-                          "-i" + query + " "  +         
-                          "-o" + output + " "  +         
-                          expect ;               
-*/
-    
+          blastcmd = "/kotel/data/blast/bl2seq " +                    
+                          "-p " + program + " " +                
+                          "-j " + m_subjectfile +  " " +                
+                          "-i " + query + " "  +         
+                          "-o " + output;               
+
+/*    
           blastcmd = "c:\\blast\\bl2seq "   +              
                           program + " " + expect + " " + m_gapped +          
                           " -j " + m_subjectfile +                 
                           " -i " + query +     
-                          " -o " + output 
-                           
-                          ; 
-        
+                          " -o " + output; 
+*/        
             }
-System.out.println(blastcmd);
+         
          return blastcmd;
     }
     
