@@ -6,6 +6,10 @@
 
 package edu.harvard.med.hip.bec.bioutil;
 
+
+
+import edu.harvard.med.hip.bec.util.*;
+import java.io.*;
 /**
  *
  * @author  htaycher
@@ -274,6 +278,28 @@ public class SequenceManipulation
         105.09F, 119.12F, 204.22F, 181.19F, 117.15F,
         0.0F,    0.0F,    0.0F,    0.0F,    334.1F
     };
+    
+    
+    
+     //Print the sequence cds to a file in a fasta format.
+    public static String makeQueryFileInFASTAFormat(String dirname,String text, String prefics, String id) throws BecUtilException
+    {
+        java.util.Date d = new java.util.Date();
+        java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM_dd_yyyy");
+        String fileName = dirname+prefics+id;//System.currentTimeMillis();
+        try
+        {
+            PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(fileName+".in")));
+            pr.print( ">"+id);
+            pr.println(edu.harvard.med.hip.bec.bioutil.SequenceManipulation.convertToFasta(text));
+            pr.close();
+            
+            return fileName;
+        }catch (IOException e)
+        {
+            throw new BecUtilException("Cannot make query file for "+fileName+"\n"+e.getMessage());
+        }
+    }
     //************************************************************************
     
     
