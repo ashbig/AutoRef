@@ -543,7 +543,7 @@ public class RearrayManager {
         } else {
             String projectCode = pw.getCode();
             String processCode = protocol.getProcesscode();
-            label = Container.getLabel(projectCode, processCode, threadid, "1");
+            label = Container.getLabel(projectCode, processCode, threadid, null);
         }
         
         return label;
@@ -686,6 +686,9 @@ public class RearrayManager {
             Sample s = (Sample)samples.get(i);
             if(s.getCloneid() > 0) {
                 CloneStorage cloneStorage = new CloneStorage(s.getId(), destStorageType, destStorageForm, s.getCloneid());
+                cloneStorage.setContainerid(c.getId());
+                cloneStorage.setLabel(c.getLabel());
+                cloneStorage.setPosition(s.getPosition());
                 cs.add(cloneStorage);
             }
         }

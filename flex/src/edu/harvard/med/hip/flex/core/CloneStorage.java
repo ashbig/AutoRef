@@ -16,12 +16,22 @@ public class CloneStorage {
     protected String storageType;
     protected String storageForm;
     protected int cloneid;
+    protected int position;
+    protected String label;
+    protected int containerid;
     
     public int getStorageid() {return storageid;}
     public int getSampleid() {return sampleid;}
     public String getStorageType() {return storageType;}
     public String getStorageForm() {return storageForm;}
     public int getCloneid() {return cloneid;}
+    public int getPosition() {return position;}
+    public String getLabel() {return label;}
+    public int getContainerid() {return containerid;}
+    
+    public void setPosition(int i) {this.position = i;}
+    public void setLabel(String s) {this.label = s;}
+    public void setContainerid(int i) {this.containerid = i;}
     
     /** Creates a new instance of CloneStorage */
     public CloneStorage() {

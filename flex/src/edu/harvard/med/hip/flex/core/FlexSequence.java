@@ -1,5 +1,5 @@
 /**
- * $Id: FlexSequence.java,v 1.2 2003-06-03 15:28:49 dzuo Exp $
+ * $Id: FlexSequence.java,v 1.3 2003-07-07 13:07:40 dzuo Exp $
  *
  * File     : FlexSequence.java
  * Date     : 05022001
@@ -49,6 +49,11 @@ public class FlexSequence extends CDNASequence
     public static final String GENE_NAME    = "GENE_NAME";       
     public static final String MGC_ID     = "MGC_ID";         
     public static final String IMAGE_ID = "IMAGE_ID";
+    
+    public static final String HUMAN = "Homo sapiens";
+    public static final String YEAST = "Saccharomyces cerevisiae";
+    public static final String PSEUDOMONAS = "Pseudomonas aeruginosa";
+    public static final String MOUSE = "Mus musculus";
     
     protected int id = -1;
     protected String flexstatus;
