@@ -93,8 +93,9 @@ public class MgcRequestImporter
         ArrayList  sequenceNotFound = new ArrayList();
         boolean prev_step = true;
         //parse file and fill list of GI;
+         System.out.println("status " + prev_step +" start to read file");
         prev_step =  parseRequestFile( requestInput  , requestGI) ;
-        
+         System.out.println("status " + prev_step +" finished to read file");
         //search db for the sequences of MgcClones;
         //add matching sequences to request GI numbers;
         ArrayList notMatchedGI = new ArrayList();
@@ -362,7 +363,7 @@ public class MgcRequestImporter
                     seqData = gb.searchDetail(current_gi);
                     if (((String)seqData.get("species")).indexOf("sapiens") != -1)
                     {
-                        fs = ms.createFlexSequence( seqData, genBankSeq);
+                        fs = ms.createFlexSequence( seqData,(GenbankSequence) genBankSeq.get(0));
                         if (fs.getAccession() != null )
                         {
                             if ( !fs.getAccession().substring(0,2).equals("BC") )
