@@ -173,6 +173,17 @@ public class PickColonyForm extends ProjectWorkflowForm {
     }
     
     /**
+     * Reset all properties to their default values.
+     */
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        processname = null;
+        agarPlateF1 = null;
+        agarPlateC1 = null;
+        subProtocolName = null;
+        pickingMethod = "interleaved";
+    }
+    
+    /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any
      * validation errors that have been found.  If no errors are found, return
@@ -227,7 +238,7 @@ public class PickColonyForm extends ProjectWorkflowForm {
             if(isReturn) {
                 return errors;
             }
-        
+            
             // Check whether the two pairs matching with each other.
             if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE) {
                 if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11) {
