@@ -8,13 +8,14 @@
     <head>
         <title>METAGENE : Gene Search</title>
     </head>
-    <body> 
-    <table width="80%" align="center"><tr><td> 
+    <body>
+
     <center>
     <h1>Diseases Associated with Gene(s)</h1>
-    <html:errors/>
     </center>
 
+    <table width="80%" align="center" border="0"> 
+    <html:errors/>
     <p>Following are the corresponding gene symbol(s). Please choose one:</p>
 
     <html:form action="SearchGenes.do">  
@@ -52,8 +53,7 @@
 
     </html:form>
 
-    </td></tr></table>
-
+<p>
 <jsp:include page="links.jsp" flush="true"/>
-</body>
+</td></tr></table></body>
 </html>

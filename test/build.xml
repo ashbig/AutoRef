@@ -20,6 +20,7 @@
   <property name="dist.src" value="${app.name}.jar"/>
   <property name="dist.war" value="${app.name}.war"/>
   <property name="javadoc.home" value="${deploy.home}/javadoc"/>
+  <property name="classpath" value="${deploy.home}/WEB-INF"/>
   
 
 <!-- The "prepare" target is used to construct the deployment home                  directory structure (if necessary), and to copy in static files                  as required.  In the example below, Ant is instructed to create                  the deployment directory, copy the contents of the "web/" source                   hierarchy, and set up the WEB-INF subdirectory appropriately. -->
@@ -55,7 +56,15 @@
 <!-- The "compile" target is used to compile (or recompile) the Java classes           that make up this web application.  The recommended source code directory           structure makes this very easy because the <javac> task automatically                 works its way down a source code hierarchy and compiles any class that                 has not yet been compiled, or where the source file is newer than the           class file.                  Feel free to adjust the compilation option parameters (debug,                 optimize, and deprecation) to suit your requirements.  It is also                 possible to base them on properties, so that you can adjust this                 behavior at runtime.                  The "compile" task depends on the "prepare" task, so the deployment                 home directory structure will be created if needed the first time. -->
 
   <target depends="prepare" name="compile">
-    <javac classpath="${deploy.home}/WEB-INF/lib" debug="off" deprecation="off" destdir="${deploy.home}/WEB-INF/classes" optimize="on" srcdir="src"/>
+    <javac debug="off" deprecation="off" destdir="${deploy.home}/WEB-INF/classes" optimize="on" srcdir="src"/>
+    <classpath>
+      <pathelement path="${classpath}"/>
+      <fileset dir="lib">
+        <include name="**/*.jar"/>
+      </fileset>
+      <pathelement location="classes"/>
+    </classpath>
+
     <copy todir="${deploy.home}/WEB-INF/classes">
       <fileset dir="src" includes="**/*.properties"/>
     </copy>

@@ -9,14 +9,16 @@
     <head>
         <title>METAGENE : Disease Search</title>
     </head>
-    <body> 
+    <body>
     <center>
     <h1>Related Links</h1>
-    <html:errors/>
     </center>
 
-    <p>
+    
     <TABLE width="80%" align="center" border="0"><tr><td>
+    <html:errors/>
+
+    <p>
     <ul>
     <logic:iterate id="info" name="infos"> 
     <logic:equal name="info" property="type" value="BUTTON">
@@ -26,8 +28,7 @@
     </logic:equal>
     </logic:iterate> 
     </ul>
-</td></tr></TABLE>
-
+<p>
 <jsp:include page="links.jsp" flush="true"/>
-</body>
+</td></tr></table></body>
 </html>

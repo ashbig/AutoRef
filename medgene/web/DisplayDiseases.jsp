@@ -9,12 +9,13 @@
     <head>
         <title>METAGENE : Gene Search</title>
     </head>
-    <body> 
+    <body>
     <center>
-    <h1>Disease List</h1>
-    <html:errors/>
+    <h1>Disease List</h1>    
     </center>
 
+    <table width="80%" align="center" border="0"> 
+    <html:errors/>
     <p>
     <TABLE border="1" cellpadding="2" cellspacing="0" width=80% align=center>
     <TR bgcolor="gray">
@@ -29,7 +30,7 @@
         </tr>
     </logic:iterate> 
 </TABLE>
-
+<p>
 <jsp:include page="links.jsp" flush="true"/>
-</body>
+</td></tr></table></body>
 </html>

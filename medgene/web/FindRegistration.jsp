@@ -11,9 +11,9 @@
 </head>
 <body>
 
-<center><h2>Find Registration</h2></center>
-<hr>
+<h1><center>Find Registration</center></h1>
 
+<table width="80%" align="center" border="0">
 <html:errors/>
 <p>
 
@@ -40,6 +40,6 @@
 <%-- <jsp:useBean id="beanInstanceName" scope="session" class="package.class" /> --%>
 <%-- <jsp:getProperty name="beanInstanceName"  property="propertyName" /> --%>
 
-</body>
+</td></tr></table></body>
 </html>
  

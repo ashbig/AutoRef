@@ -9,13 +9,14 @@
     <head>
         <title>METAGENE : Disease Search</title>
     </head>
-    <body> 
-    <table width="80%" align="center"><tr><td>
+    <body>
 
     <center>
     <h1>Genes Associated with Disease(s)</h1>
-    <html:errors/>
     </center>
+
+    <table width="80%" align="center" border="0"> 
+    <html:errors/>
 
     <p>Following are the correspondng MeSH term(s). Please choose one:</p>
 
@@ -50,9 +51,7 @@
     <html:submit property="submit" value="Get Genes"/>
     <html:submit property="submit" value="New Search"/>
     </html:form>
-
-    </td></tr></table>
-
+<p>
 <jsp:include page="links.jsp" flush="true"/>
-</body>
+</td></tr></table></body>
 </html>

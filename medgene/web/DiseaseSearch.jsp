@@ -8,11 +8,12 @@
     <head>
         <title>METAGENE : Disease Search</title>
     </head>
-    <body> 
+    <body>
     <center>
     <h1>Genes Associated with Disease(s)</h1>
     </center>
 
+    <table width="80%" align="center" border="0">
     <html:errors/>
     <p>Please type in a disease name. You may type in any term you like and 
     will be confirmed with the corresponding MeSH term(s).</p>
@@ -30,6 +31,7 @@
     </table>
     </html:form>
 
+<p>
 <jsp:include page="links.jsp" flush="true"/>
-</body>
+</td></tr></table></body>
 </html>

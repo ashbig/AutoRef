@@ -10,8 +10,10 @@
 <head><title>Error</title></head>
 <body>
 <center>
-    <h2>METAGENE : Error</h2>
-    <hr>
+    <h1>METAGENE : Error</h1>
+</center>
+
+    <table width="80%" align="center" border="0">
     <html:errors/>
     <p>
     <h3>An error has occured and been logged</h3>
@@ -20,7 +22,7 @@
     <logic:present name="exception">
         <bean:write name="exception"/>
     </logic:present>
-</center>
+<p>
 <jsp:include page="links.jsp" flush="true"/>
-</body>
+</td></tr></table></body>
 </html>
