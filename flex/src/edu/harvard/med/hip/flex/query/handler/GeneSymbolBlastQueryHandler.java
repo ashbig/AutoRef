@@ -132,9 +132,7 @@ public class GeneSymbolBlastQueryHandler extends QueryHandler {
     
     public static void main(String args[]) {
         List symbols = new ArrayList();
-        symbols.add("BCR1");
-        symbols.add("CDK2");
-        symbols.add("ABCDE");
+        symbols.add("ADRB2");
         
         List params = new ArrayList();
         

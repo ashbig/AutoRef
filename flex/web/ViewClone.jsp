@@ -4,6 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="edu.harvard.med.hip.flex.Constants" %>
 
 <html>
 <head>
@@ -75,7 +76,7 @@
         <td><bean:write name="clone" property="matchexpect"/></TD>
     </TR>
     <TR>
-        <TD class="label">Genbank Hit:</td>
+        <TD class="label">Alternative Genbank Match:</td>
         <td><bean:write name="clone" property="pubhit"/></TD>
         <TD class="label">Result Against Genbank Sequence:</td>
         <td><bean:write name="clone" property="resultpubhit"/></TD>
@@ -86,7 +87,7 @@
     </TR>
 </TABLE>
 
-<logic:equal name="isCloneStorageDisplay" value="1">
+<logic:equal name="<%=Constants.ISDISPLAY%>" value="1">
 <p>
 <b>Available Clones:</b>
     <bean:define id="allstorages" name="clone" property="storages"/>

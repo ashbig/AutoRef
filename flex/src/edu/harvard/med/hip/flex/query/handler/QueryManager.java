@@ -554,17 +554,19 @@ public class QueryManager {
                                         for(int l=0; l<clones.size(); l++) {
                                             CloneInfo clone = (CloneInfo)clones.get(l);
 
-                                            String s = result.getSearchResultid()+","+mgr.getMatchGenbankId()+","+
+                                            String s1 = result.getSearchResultid()+","+mgr.getMatchGenbankId()+","+
                                                         mfs.getMatchFlexId()+","+info.getConstructid()+","+clone.getCloneid()+
                                                         "!"+result.getSearchTerm()+"!"+mgr.getGanbankAccession()+
                                                         "!"+mgr.getGi()+"!"+mgr.getLocusid()+
                                                         "!"+mfs.getFlexsequenceid()+"!"+mfs.getFlexSequence().getFlexstatus()+
-                                                        "!"+info.getConstructType()+"!"+info.getProjectName()+
-                                                        "!"+info.getWorkflowName()+"!"+info.getStatus()+
+                                                        "!"+info.getConstructType();
+                                            String s2 = "!"+info.getProjectName()+"!"+info.getWorkflowName();
+                                            String s3 = "!"+info.getStatus()+
                                                         "!"+clone.getCloneid()+"!"+clone.getClonename()+
                                                         "!"+clone.getClonetype()+"!"+clone.getCloningstrategy().getName()+
                                                         "!"+clone.getCloningstrategy().getClonevector().getName()+"!"+clone.getStatus();
-                                            clone.setExportId(s);
+                                            clone.setExportId(s1+s2+s3);
+                                            clone.setLimitedExportId(s1+s3);
                                         }
                                     }
                                 }

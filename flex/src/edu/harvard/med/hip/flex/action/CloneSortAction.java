@@ -125,9 +125,9 @@ public class CloneSortAction extends FlexAction {
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
         if(retValue) {
-            request.setAttribute("isCloneStorageDisplay", new Integer(1));
+            request.setAttribute(Constants.ISDISPLAY, new Integer(1));
         } else {
-            request.setAttribute("isCloneStorageDisplay", new Integer(0));
+            request.setAttribute(Constants.ISDISPLAY, new Integer(0));
         }
         
         return (mapping.findForward("success"));

@@ -8,6 +8,8 @@
 <%@ page import="edu.harvard.med.hip.flex.query.handler.QueryManager" %>
 <%@ page import="edu.harvard.med.hip.flex.form.QueryFlexForm" %>
 <%@ page import="java.util.*" %>
+<%@ page import="edu.harvard.med.hip.flex.core.CloneInfo" %>
+<%@ page import="edu.harvard.med.hip.flex.Constants" %>
 
 <html>
 <head>
@@ -65,10 +67,14 @@
     <tr bgcolor="#9bbad6">
     <th rowspan="2">Search Term</th><th rowspan="2">Match Genbank</th>
     <th rowspan="2">Locus ID</th><th rowspan="2">Match FLEXGene</th>
-    <th rowspan="2">Status</th><th rowspan="2">Found By</th>
-    <th rowspan="2">Alignments</th><th rowspan="2">Search Method</th>
-    <th rowspan="2">Version</th><th rowspan="2">Project</th>
-    <th rowspan="2">Workflow</th><th rowspan="2">Status</th>
+    <th rowspan="2">Clone Status</th><th rowspan="2">Found By</th>
+    <th rowspan="2">Alignments</th>
+    <th rowspan="2">Version</th>
+    <logic:equal name="<%=Constants.ISDISPLAY%>" value="1">   
+    <th rowspan="2">Project</th>
+    <th rowspan="2">Workflow</th>
+    </logic:equal>
+    <th rowspan="2">Status</th>
     <th colspan="6">Available Clones</th>
     </tr>
     <tr bgcolor="#9bbad6">
@@ -119,12 +125,14 @@
                 <logic:notEqual name="mfs" property="isMatchByGi" value="F">
                 <td rowspan="<bean:write name="mfs" property="numOfClones"/>">NA</td>
                 </logic:notEqual>
-                <td rowspan="<bean:write name="mfs" property="numOfClones"/>"><flex:write name="mgr" property="searchMethod"/></td>
+                <!--<td rowspan="<bean:write name="mfs" property="numOfClones"/>"><flex:write name="mgr" property="searchMethod"/></td>-->
                                     
                 <logic:equal name="mfs" property="hasClones" value="0">
                     <td>NA</td>
+                    <logic:equal name="<%=Constants.ISDISPLAY%>" value="1">
                     <td>NA</td>
                     <td>NA</td>
+                    </logic:equal>
                     <td>NA</td>
                     <td>NA</td>
                     <td>NA</td>
@@ -136,8 +144,10 @@
 
                 <logic:iterate name="mfs" property="constructInfos" id="constructInfo">
                     <td rowspan="<bean:write name="constructInfo" property="numOfClones"/>"><flex:write name="constructInfo" property="constructType"/></td>
+                    <logic:equal name="<%=Constants.ISDISPLAY%>" value="1">  
                     <td rowspan="<bean:write name="constructInfo" property="numOfClones"/>"><flex:write name="constructInfo" property="projectName"/></td>
                     <td rowspan="<bean:write name="constructInfo" property="numOfClones"/>"><flex:write name="constructInfo" property="workflowName"/></td>
+                    </logic:equal>
                     <td rowspan="<bean:write name="constructInfo" property="numOfClones"/>"><flex:write name="constructInfo" property="status"/></td>
             
                     <logic:equal name="constructInfo" property="numOfClones" value="0">
@@ -151,12 +161,24 @@
 
                     <logic:iterate name="constructInfo" property="clones" id="clone">
                         <td>
-                            <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&isCloneStorageDisplay=1">
+                            <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&isCloneStorageDisplay=<bean:write name="<%=Constants.ISDISPLAY%>"/>">
                             <flex:write name="clone" property="cloneid"/>
                             </A>
-                            <bean:define id="selectedClone" name="clone" property="exportId"/>
                             <bean:define id="form" name="queryFlexForm"/>
-                            <input type="checkbox" name="checkedClone[<%=index%>]" value="<bean:write name="clone" property="exportId"/>" <%
+
+                            <logic:equal name="<%=Constants.ISDISPLAY%>" value="1">
+                                <input type="checkbox" name="checkedClone[<%=index%>]" value="<bean:write name="clone" property="exportId"/>"
+                            </logic:equal>
+                            <logic:equal name="<%=Constants.ISDISPLAY%>" value="0"> 
+                                <input type="checkbox" name="checkedClone[<%=index%>]" value="<bean:write name="clone" property="limitedExportId"/>"
+                            </logic:equal> <%
+                                    int isDisplay = ((Integer)request.getAttribute(Constants.ISDISPLAY)).intValue();
+                                    String selectedClone;
+                                    if(isDisplay == 1) {
+                                        selectedClone = ((CloneInfo)clone).getExportId();
+                                    } else {
+                                        selectedClone = ((CloneInfo)clone).getLimitedExportId();
+                                    }
                                     List selectedClones = ((QueryFlexForm)form).getSelectedClones();
                                     if(selectedClones != null) {
                                         for(int i=0; i<selectedClones.size(); i++) {
@@ -168,7 +190,12 @@
                                         }
                                     }%>>
                         </td>
-                            <input type="hidden" name="allClone[<%=index%>]" value="<bean:write name="clone" property="exportId"/>">
+                            <logic:equal name="<%=Constants.ISDISPLAY%>" value="1"> 
+                                <input type="hidden" name="allClone[<%=index%>]" value="<bean:write name="clone" property="exportId"/>">
+                            </logic:equal>
+                            <logic:equal name="<%=Constants.ISDISPLAY%>" value="0">
+                                <input type="hidden" name="allClone[<%=index%>]" value="<bean:write name="clone" property="limitedExportId"/>">
+                            </logic:equal>
                             <% index++; %>
                         <td><flex:write name="clone" property="clonename"/></td>
                         <td><flex:write name="clone" property="clonetype"/></td>

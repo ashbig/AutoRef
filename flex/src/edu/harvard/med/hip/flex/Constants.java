@@ -198,6 +198,8 @@ public class Constants {
     
     public static final String TMPDIR = FlexProperties.getInstance().getProperty("tmp"); 
   
+    public static final String ISDISPLAY = "isDisplay";
+    
     /** Creates new Constants */
     private Constants() {
     }

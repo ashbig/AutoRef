@@ -25,6 +25,8 @@ import org.apache.struts.util.MessageResources;
 import edu.harvard.med.hip.flex.form.QueryFlexForm;
 import edu.harvard.med.hip.flex.query.handler.*;
 import edu.harvard.med.hip.flex.query.bean.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.Constants;
 
 /**
  *
@@ -53,11 +55,19 @@ public class ExportSearchResultsAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        
+                
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
+             
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment;filename=cloneinfo.xls");
         PrintWriter out = response.getWriter();
-        out.println("Search Term\tMatch Genbank Accession\tMatch Genbank GI\tLocus ID\tMatch FLEXGene\tClone Status\tVersion\tProject\tWorkflow\tConstruct Status\tClone ID\tClone Name\tClone Type\tCloning Strategy\tVector\tStatus");
+        
+        if(retValue) {
+            out.println("Search Term\tMatch Genbank Accession\tMatch Genbank GI\tLocus ID\tMatch FLEXGene\tClone Status\tVersion\tProject\tWorkflow\tConstruct Status\tClone ID\tClone Name\tClone Type\tCloning Strategy\tVector\tStatus");
+        } else {
+            out.println("Search Term\tMatch Genbank Accession\tMatch Genbank GI\tLocus ID\tMatch FLEXGene\tClone Status\tVersion\tConstruct Status\tClone ID\tClone Name\tClone Type\tCloning Strategy\tVector\tStatus");
+        }
         
         List clones = (ArrayList)request.getAttribute("selectedClones");
         for(int i=0; i<clones.size(); i++) {

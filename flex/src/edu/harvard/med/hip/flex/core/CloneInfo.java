@@ -51,6 +51,7 @@ public class CloneInfo extends CDNASequence {
     protected String keyword;
     
     protected String exportId;
+    protected String limitedExportId;
     
     /** Creates a new instance of CloneInfo */
     public CloneInfo() {
@@ -121,12 +122,19 @@ public class CloneInfo extends CDNASequence {
     public String getMatchpubhit() {return matchpubhit;}
     public String getKeyword() {return keyword;}
     public String getFlexstatus() {return flexstatus;}
+    
     public String getExportId() {
         if(exportId != null)
             exportId = exportId.replace(' ', '|');
         return exportId;
     }
-
+    
+    public String getLimitedExportId() {
+        if(limitedExportId != null)
+            limitedExportId = limitedExportId.replace(' ', '|');
+        return limitedExportId;
+    }
+    
     public void setCloneid(int cloneid) {this.cloneid=cloneid;}
     public void setClonename(String clonename) {this.clonename=clonename;}
     public void setClonetype(String clonetype) {this.clonetype=clonetype;}
@@ -152,6 +160,7 @@ public class CloneInfo extends CDNASequence {
     public void setKeyword(String s) {keyword=s;}
     public void setFlexstatus(String s) {this.flexstatus = s;}
     public void setExportId(String s) {this.exportId = s;}
+    public void setLimitedExportId(String s) {this.limitedExportId = s;}
     
     public void restoreClone(int id) throws Exception {
         String sql = "select c.cloneid, c.clonename, c.clonetype, c.mastercloneid, c.comments, c.status,"+

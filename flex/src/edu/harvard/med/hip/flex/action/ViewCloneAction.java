@@ -25,6 +25,8 @@ import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.form.ViewCloneForm;
 import edu.harvard.med.hip.flex.core.CloneInfo;
+import edu.harvard.med.hip.flex.Constants;
+import edu.harvard.med.hip.flex.user.*;
 
 /**
  *
@@ -52,8 +54,16 @@ public class ViewCloneAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        int cloneid = ((ViewCloneForm)form).getCloneid();
-        int isDisplay = ((ViewCloneForm)form).getIsCloneStorageDisplay();
+        int cloneid = ((ViewCloneForm)form).getCloneid();        
+        
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
+        if(retValue) {
+            request.setAttribute(Constants.ISDISPLAY, new Integer(1));
+        } else {
+            request.setAttribute(Constants.ISDISPLAY, new Integer(0));
+        }
+        
         ActionErrors errors = new ActionErrors();
 
         try {
@@ -61,7 +71,11 @@ public class ViewCloneAction extends FlexAction {
             clone.restoreClone(cloneid);
             List storages = clone.getStorages();
             request.setAttribute("clone", clone);
-            request.setAttribute("isCloneStorageDisplay", new Integer(isDisplay));
+            if(retValue) {
+                request.setAttribute(Constants.ISDISPLAY, new Integer(1));
+            } else {
+                request.setAttribute(Constants.ISDISPLAY, new Integer(0));
+            }
             return mapping.findForward("success");
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);

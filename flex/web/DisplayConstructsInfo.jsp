@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
+<%@ page import="edu.harvard.med.hip.flex.Constants" %>
 
 <html>
 <head>
@@ -21,7 +22,11 @@
 
 <TABLE border=1>
     <tr bgcolor="#9bbad6">
-    <th rowspan="2">Sequence ID</th><th rowspan="2">Version</th><th rowspan="2">Project</th><th rowspan="2">Workflow</th><th rowspan="2">Status</th><th colspan="6">Available Clones</th>
+    <th rowspan="2">Sequence ID</th><th rowspan="2">Version</th>
+    <logic:equal name="<%=Constants.ISDISPLAY%>" value="1">
+    <th rowspan="2">Project</th><th rowspan="2">Workflow</th>
+    </logic:equal>
+    <th rowspan="2">Status</th><th colspan="6">Available Clones</th>
     </tr>
     <tr bgcolor="#9bbad6">
     <th>Clone ID</th><th>Clone Name</th><th>Clone Type</th><th>Cloning Strategy</th><th>Vector</th><th>Status</th>
@@ -33,8 +38,10 @@
     
         <logic:iterate name="infoBean" property="constructInfos" id="constructInfo">
         <td rowspan="<bean:write name="constructInfo" property="numOfClones"/>"><flex:write name="constructInfo" property="constructType"/></td>
+        <logic:equal name="<%=Constants.ISDISPLAY%>" value="1">
         <td rowspan="<bean:write name="constructInfo" property="numOfClones"/>"><flex:write name="constructInfo" property="projectName"/></td>
         <td rowspan="<bean:write name="constructInfo" property="numOfClones"/>"><flex:write name="constructInfo" property="workflowName"/></td>
+        </logic:equal>
         <td rowspan="<bean:write name="constructInfo" property="numOfClones"/>"><flex:write name="constructInfo" property="status"/></td>
             
         <logic:equal name="constructInfo" property="numOfClones" value="0">

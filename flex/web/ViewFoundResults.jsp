@@ -56,7 +56,7 @@
 <p>
 <TABLE border=1>
     <tr bgcolor="#9bbad6">
-    <th>Search Term</th><th>Match Genbank</th><th>Locus ID</th><th>Match FLEXGene</th><th>Status</th><th>Found By</th><th>Alignments</th><th>Search Method</th>
+    <th>Search Term</th><th>Match Genbank</th><th>Locus ID</th><th>Match FLEXGene</th><th>Clone Status</th><th>Found By</th><th>Alignments</th>
     </tr>
     <logic:iterate name="results" id="result">
     <tr>
@@ -101,7 +101,6 @@
                 <logic:notEqual name="mfs" property="isMatchByGi" value="F">
                 <td>NA</td>
                 </logic:notEqual>
-                <td><flex:write name="mgr" property="searchMethod"/></td>
                 </tr>
             </logic:iterate>
         </logic:iterate>    

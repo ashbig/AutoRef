@@ -24,6 +24,8 @@ import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.form.QueryFlexForm;
 import edu.harvard.med.hip.flex.query.handler.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.Constants;
 
 /**
  *
@@ -51,7 +53,16 @@ public class ViewConstructsInfoAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
+        ActionErrors errors = new ActionErrors();     
+        
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
+        if(retValue) {
+            request.setAttribute(Constants.ISDISPLAY, new Integer(1));
+        } else {
+            request.setAttribute(Constants.ISDISPLAY, new Integer(0));
+        }
+        
         int sequenceid = ((QueryFlexForm)form).getSequenceid();
         List seqids = new ArrayList();
         seqids.add((new Integer(sequenceid)).toString());

@@ -60,8 +60,22 @@ public class GetSearchTermsAction extends FlexAction {
         searchTerms.add(new SearchTerm(SearchTerm.LOCUS, "Locus ID"));
         
         List databases = new ArrayList();
-        databases.add(new SearchDatabase(SearchDatabase.HUMAN, SearchDatabase.HUMAN, SearchDatabase.HUMAN_DB));
-        databases.add(new SearchDatabase(SearchDatabase.HUMAN_FINISHED, SearchDatabase.HUMAN_FINISHED, SearchDatabase.HUMAN_FINISHED_DB));
+        databases.add(new SearchDatabase(SearchDatabase.HUMAN, SearchDatabase.HUMAN));
+        databases.add(new SearchDatabase(SearchDatabase.ALLDB, SearchDatabase.ALLDB));
+        databases.add(new SearchDatabase(SearchDatabase.BCDB, SearchDatabase.BCDB));
+        databases.add(new SearchDatabase(SearchDatabase.CLONTECHDB, SearchDatabase.CLONTECHDB));
+        databases.add(new SearchDatabase(SearchDatabase.FTDB, SearchDatabase.FTDB));
+        databases.add(new SearchDatabase(SearchDatabase.KINASEDB, SearchDatabase.KINASEDB));
+        databases.add(new SearchDatabase(SearchDatabase.MGCDB, SearchDatabase.MGCDB));
+        databases.add(new SearchDatabase(SearchDatabase.NIDDKDB, SearchDatabase.NIDDKDB));
+        databases.add(new SearchDatabase(SearchDatabase.PSEUDOMONASDB, SearchDatabase.PSEUDOMONASDB));
+        databases.add(new SearchDatabase(SearchDatabase.RZPDWALLDB, SearchDatabase.RZPDWALLDB));
+        databases.add(new SearchDatabase(SearchDatabase.VERIFIEDBCDB, SearchDatabase.VERIFIEDBCDB));
+        databases.add(new SearchDatabase(SearchDatabase.VERIFIEDDB, SearchDatabase.VERIFIEDDB));
+        databases.add(new SearchDatabase(SearchDatabase.VERIFIEDHUMANDB, SearchDatabase.VERIFIEDHUMANDB));
+        databases.add(new SearchDatabase(SearchDatabase.VERIFIEDKINASEDB, SearchDatabase.VERIFIEDKINASEDB));
+        databases.add(new SearchDatabase(SearchDatabase.YEASTDB, SearchDatabase.YEASTDB));
+        databases.add(new SearchDatabase(SearchDatabase.YPDB, SearchDatabase.YPDB));
         
         request.setAttribute("searchTerms", searchTerms);
         request.setAttribute("searchDatabases", databases);     

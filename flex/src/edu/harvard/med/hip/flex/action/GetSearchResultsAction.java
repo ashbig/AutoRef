@@ -25,6 +25,8 @@ import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.form.QueryFlexForm;
 import edu.harvard.med.hip.flex.query.handler.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.query.bean.*;
 
 /**
@@ -54,6 +56,14 @@ public class GetSearchResultsAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
+                
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
+        if(retValue) {
+            request.setAttribute(Constants.ISDISPLAY, new Integer(1));
+        } else {
+            request.setAttribute(Constants.ISDISPLAY, new Integer(0));
+        }
         
         int searchid = ((QueryFlexForm)form).getSearchid();
         String condition = ((QueryFlexForm)form).getCondition();
@@ -96,7 +106,6 @@ public class GetSearchResultsAction extends FlexAction {
                     changeCloneList(selectedClones, clone, false);
                 }
                 
-                System.out.println("size of checkedClones: "+checkedClones.size());
                 for(int i=0; i<checkedClones.size(); i++) {
                     String clone = (String)checkedClones.get(i);
                     changeCloneList(selectedClones, clone, true);
