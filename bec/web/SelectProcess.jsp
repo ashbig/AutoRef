@@ -239,6 +239,34 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
 </tr>
 <%}%>
 <tr> 
+    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Delete Options</font></b></td>
+</tr>
+
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_PLATE %>>
+      Delete plate</font></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_READS %>>
+      Delete clone end reads (forward and reverse)</font></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_FORWARD_READ  %>>
+      Delete clone forward end reads</font></td>
+</tr><tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_REVERSE_READ  %>>
+      Delete clone reverse end reads</font></td>
+</tr><tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_SEQUENCE %>>
+      Delete clone sequence</font></td>
+</tr>
+ 
+<tr> 
     <td> <br> <b><font color="#1145A6">Please make a selection and submit.</font></b> </center> 
       <p align="left">     <input type="submit" value="continue" name="submit">    <br>
     </td>

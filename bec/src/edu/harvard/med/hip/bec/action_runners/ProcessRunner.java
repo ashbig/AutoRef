@@ -64,37 +64,21 @@ public abstract class ProcessRunner implements Runnable
      {
          
          if (this instanceof PrimerDesignerRunner)
-             {
-                      ((PrimerDesignerRunner)this).run();
-                   //   m_title = "Request for primer designer execution";
-             }
-             else if  (this instanceof PolymorphismFinderRunner)
-             {
-
-                  ((PolymorphismFinderRunner)this).run();
-                //  m_title = "Request for polymorphism finder run";
-             }//run polymorphism finder
-            else if (this instanceof DiscrepancyFinderRunner)
-            {
-                ((DiscrepancyFinderRunner)this).run();
-               // m_title = "Request for discrepancy finder run";
-            }
-             else if (this instanceof ReportRunner)
-            {
-                ((ReportRunner)this).run();
-               // m_title = "Request for report generator";
-
-            }
+         {  ((PrimerDesignerRunner)this).run(); }
+         else if  (this instanceof PolymorphismFinderRunner)
+             { ((PolymorphismFinderRunner)this).run();         }//run polymorphism finder
+         else if (this instanceof DiscrepancyFinderRunner)
+            {  ((DiscrepancyFinderRunner)this).run();   }
+          else if (this instanceof ReportRunner)
+            { ((ReportRunner)this).run();   }
           else if (this instanceof AssemblyRunner)
-            {
-                ((AssemblyRunner)this).run();
-               // m_title = "Request for report generator";
-
-            }
+            { ((AssemblyRunner)this).run();     }
           else if (this instanceof NoMatchReportRunner)
               ((NoMatchReportRunner)this).run();
            else if (this instanceof SpecialReportsRunner)
               ((SpecialReportsRunner)this).run();
+           else if (this instanceof DeleteObjectRunner)
+              ((DeleteObjectRunner)this).run();
          
    
      }

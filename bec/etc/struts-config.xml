@@ -176,7 +176,7 @@
             <forward name="submit_data_file" path="/SubmitDataFile.jsp"/>
             <forward name="select_plates" path="/SelectPlatesForProcess.jsp"/>
             <forward name="processing" path="/ConfirmProcess.jsp"/>
-
+            <forward name="run_report" path="/RunReport.jsp"/>
     </action>
 
 <!-- Process run discrepancy finder as stand aloan -->

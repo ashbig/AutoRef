@@ -66,6 +66,9 @@ public class SelectProcessAction extends ResearcherAction
             request.setAttribute("forwardName", new Integer(forwardName));
             switch  (forwardName)
             {
+                case Constants.PROCESS_CREATE_REPORT:
+                    return (mapping.findForward("run_report"));
+
                 case Constants.PROCESS_UPLOAD_PLATES://upload plates
                 {
                     ArrayList biolinkers = BioLinker.getAllLinkers();
@@ -208,7 +211,11 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
-  
+                case Constants.PROCESS_DELETE_PLATE :
+                case Constants.PROCESS_DELETE_CLONE_READS :
+                case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :
+                case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
+                case Constants.PROCESS_DELETE_CLONE_SEQUENCE ://
                 {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
@@ -217,17 +224,16 @@ public class SelectProcessAction extends ResearcherAction
                      StringBuffer additional_jsp = new StringBuffer();
                     switch( forwardName)
                     {
-                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
-                             {title="get Order List for resequencing of End Reads";break; }
-                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
-                            {title="get Order List for resequencing of Internal Reads";break; }
-  
-                        case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
-                                  {title="run End Reads Wrapper";break; }
-                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper
-                                {title="run Assembler for End Reads";break; }
-                        case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :
-                            {title="add new Internal Primer";break; }
+                        case Constants.PROCESS_DELETE_PLATE :  {title="delete Plates";break; }
+                        case Constants.PROCESS_DELETE_CLONE_READS : {title="delete Clone End Reads (forward and reverse";break; }
+                        case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : {title="delete Clone forward End Reads";break; }
+                        case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : {title="delete Clone reverse End Reads";break; }
+                        case Constants.PROCESS_DELETE_CLONE_SEQUENCE : {title="delete Clone sequences";break; }
+                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  {title="get Order List for resequencing of End Reads";break; }
+                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : {title="get Order List for resequencing of Internal Reads";break; }
+                        case Constants.PROCESS_RUN_END_READS_WRAPPER: {title="run End Reads Wrapper";break; }
+                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: {title="run Assembler for End Reads";break; }
+                        case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{title="add new Internal Primer";break; }
                         case Constants.PROCESS_RUN_PRIMER3:
                         {
                             spec_collection.add( Primer3Spec.getAllSpecNames() );
@@ -249,14 +255,10 @@ public class SelectProcessAction extends ResearcherAction
                             control_names.add(Spec.POLYMORPHISM_SPEC);
                             title = "run Polymorphism Finder for the set of clones";break;
                          }
-                        case Constants.PROCESS_RUN_DISCREPANCY_FINDER:
-                        {  title = "run Discrepancy Finder for the set of clones";break;         }
-                        case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:
-                        {title="approve Internal Primers";break; }
-                        case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:
-                        {  title="view Internal Primers";break; }
-                        case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
-                        {title="order Internal Primers";break; }
+                        case Constants.PROCESS_RUN_DISCREPANCY_FINDER:   {  title = "run Discrepancy Finder for the set of clones";break;         }
+                        case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:{title="approve Internal Primers";break; }
+                        case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:     {  title="view Internal Primers";break; }
+                        case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:  {title="order Internal Primers";break; }
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
                         {
                             title="assemble Clone Sequences";
@@ -283,8 +285,7 @@ public class SelectProcessAction extends ResearcherAction
                         case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
                         { title="view Contigs for Clone";break; } 
                         
-                        case Constants.LQR_COLLECTION_REPORT_INT:
-                        { title="view Low Quality Regions for clone sequences";break; } 
+                        case Constants.LQR_COLLECTION_REPORT_INT:    { title="view Low Quality Regions for clone sequences";break; } 
                          case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
                          case Constants.PROCESS_FIND_GAPS:
                          {

@@ -80,29 +80,48 @@ case Constants.PROCESS_RUN_PRIMER3 :{ isPlateLabel = true; isPlateLabelChecked=t
 case Constants.PROCESS_CREATE_REPORT:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true;  isACESequenceId = true;break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :{ isPlateLabel = true;isPlateLabelChecked=true; break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :{ isCloneId = true; isCloneIdChecked= true; break;}
-  
+case Constants.PROCESS_DELETE_PLATE :{ isPlateLabel = true;isPlateLabelChecked=true; break;}
+case Constants.PROCESS_DELETE_CLONE_READS  :{ isPlateLabel = true;isPlateLabelChecked=true;isCloneId = true;   break;}
+case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{ isPlateLabel = true;isPlateLabelChecked=true; isCloneId = true;  break;}
+case Constants.PROCESS_DELETE_CLONE_REVERSE_READ  :{ isPlateLabel = true;isPlateLabelChecked=true; isCloneId = true;  break;}
+case Constants.PROCESS_DELETE_CLONE_SEQUENCE: { isCloneId = true; isCloneIdChecked= true;isACESequenceId = true;break;}
+}
+String[] cells = new String[4]; cells[0]="&nbsp;";cells[1]="&nbsp;";cells[2]="&nbsp;";cells[3]="&nbsp;";int current_entity = 0;
+if ( isPlateLabel )
+{ 
+    cells[current_entity] = "<strong><input type='radio' name='item_type' value='"+ Constants.ITEM_TYPE_PLATE_LABELS +"'";
+    if (isPlateLabelChecked) cells[current_entity] += "checked";
+    cells[current_entity++] += ">Container Labels</strong>";
+}
+ if ( isCloneId)
+{
+    cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_CLONEID+"'";
+    if (isCloneIdChecked)cells[current_entity] += "checked";
+    cells[current_entity++] += ">Clone Id </strong>";
+}
+ if ( isACESequenceId )
+{
+    cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_BECSEQUENCE_ID+"'";
+    if (isACESequenceIdChecked) cells[current_entity] += "checked";
+    cells[current_entity++] += ">ACE Sequence Id </strong>";
+}
+ if ( isFLEXSequenceId )
+{
+    cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_FLEXSEQUENCE_ID+"'";
+    if (isFLEXSequenceIdChecked) cells[current_entity] += "checked";
+    cells[current_entity++] += ">FLEX Sequence Id</strong>";
 }
 %>
 
 
+
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
-  <tr> 
-    <td colspan=2 bgColor="#1145A6"> <font color="#FFFFFF"><strong>Select Items Type: </strong></font></td>
-  </tr>
-  <tr>  
-<% if ( isPlateLabel ){%> <td><strong><input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_PLATE_LABELS%>" <% if (isPlateLabelChecked){%>checked<%}%>>Container Labels</strong></td>
-<%} else {%> <td>&nbsp;</td> <%}%>
+<tr> 
+<td colspan=2 bgColor="#1145A6"> <font color="#FFFFFF"><strong>Select Items Type: </strong></font></td>
+</tr>
+<tr>  <td> <%=cells[0] %> </td><td>  <%=cells[2] %>  </td></tr>
+<tr> <td>  <%=cells[1] %>  </td><td>   <%=cells[3] %>   </td></tr>
 
-<% if ( isACESequenceId ) {%>   <td><strong><input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_BECSEQUENCE_ID%>" <% if (isACESequenceIdChecked){%>checked<%}%>>ACE Sequence ID(clone sequence id)</strong></td>
-<%} else {%> <td>&nbsp;</td> <%}%>
-
- </tr>
-<tr>
-<% if ( isCloneId){%>  <td><strong>  <input type="radio" name="item_type" value="<%=Constants.ITEM_TYPE_CLONEID%>" <% if (isCloneIdChecked){%>checked<%}%>> CloneId </strong></td>
-<%} else {%> <td>&nbsp;</td> <%}%>
-<% if ( isFLEXSequenceId ){%> <td><strong>  <input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_FLEXSEQUENCE_ID %>" <% if (isFLEXSequenceIdChecked){%>checked<%}%>>FLEX Sequence Ids</strong></td>
-<%} else {%> <td>&nbsp;</td> <%}%>
- </tr>
   <tr> 
     <td bgColor="#1145A6" colspan=2> <font color="#FFFFFF"><strong>Enter All search Items</strong></font></td>
     

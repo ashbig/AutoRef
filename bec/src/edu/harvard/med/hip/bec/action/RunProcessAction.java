@@ -425,12 +425,32 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:    
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
-  
+                case Constants.PROCESS_DELETE_PLATE :
+                case Constants.PROCESS_DELETE_CLONE_READS://
+                case Constants.PROCESS_DELETE_CLONE_FORWARD_READ ://
+                case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
+                case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
                 {
                     String title = "";
                     ProcessRunner runner = null;
                     switch (forwardName)
                     {
+                          case Constants.PROCESS_DELETE_PLATE :
+                        case Constants.PROCESS_DELETE_CLONE_READS://
+                        case Constants.PROCESS_DELETE_CLONE_FORWARD_READ ://
+                        case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
+                        case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
+                         {
+                              runner = new DeleteObjectRunner();
+                              switch(forwardName)
+                              { 
+                                  case Constants.PROCESS_DELETE_PLATE :{title = "request for Plate deletion"; break;}
+                                    case Constants.PROCESS_DELETE_CLONE_READS:{title = "request for Clone end reads deletion"; break;}
+                                    case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{title = "request for Clone forward end reads deletion"; break;}
+                                    case Constants.PROCESS_DELETE_CLONE_REVERSE_READ :{title = "request for Clone reverse end reads deletion"; break;}
+                                    case Constants.PROCESS_DELETE_CLONE_SEQUENCE:{title = "request for Clone sequences deletion"; break;}
+                              }
+                        }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
                         {

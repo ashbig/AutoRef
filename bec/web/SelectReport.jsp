@@ -40,7 +40,7 @@
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
 <tr><td>
-<input type="radio" name="forwardName" value="<%=Constants.PROCESS_CREATE_REPORT%>" ><strong>Genral Report </strong><br>
+<input type="radio" name="forwardName" value="<%=Constants.PROCESS_CREATE_REPORT%>" checked><strong>Genral Report </strong><br>
 <P>
 <input type="radio" name="forwardName" value="<%=  Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING%>" ><strong>Order list for End Reads repeat </strong><br>
 <input type="radio" name="forwardName" value="<%= Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING%>"> <strong> Order list for Internal Reads rerun</strong>  <br>
