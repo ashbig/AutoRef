@@ -1,5 +1,5 @@
 /*
- *	$Id: Handler.java,v 1.3 2001-05-24 14:49:04 dongmei_zuo Exp $ 
+ *	$Id: Handler.java,v 1.4 2001-05-25 12:27:46 dongmei_zuo Exp $ 
  *
  *	File	: Handler.java
  *	Date	: 05042001
@@ -63,7 +63,7 @@ public class Handler {
 			return false;
 			
 		AccessManager manager = AccessManager.getInstance();
-		boolean b = manager.authenticate(username, password, t);
+		boolean b = manager.authenticate(username, password);
 		
 		return b;
 	}
