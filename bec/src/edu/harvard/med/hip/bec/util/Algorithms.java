@@ -131,7 +131,18 @@ public class Algorithms
         return res;
     }
     
-    
+    public static int[] getConvertStringToIntArray(String scores, String delim)
+    {
+        if ( scores == null ) return null;
+        ArrayList arr_scores = Algorithms.splitString(scores,delim);
+        int[] scores_numbers = new int[arr_scores.size()];
+        for (int count = 0; count < arr_scores.size(); count++)
+        {
+            scores_numbers[count] =  (Integer.parseInt( (String) arr_scores.get(count)));
+        }
+        
+        return scores_numbers;
+    }
    
      // used to create quevery where parameter in range
     public static  String convertArrayToString(int[] arr, String delim)
@@ -256,9 +267,9 @@ public class Algorithms
     }
     public static void main(String args[])
     {
-        String g = "E:\\Sequences for BEC\\files_to_transfer\\7388_H6_11923_52186_R0.T0.scf";
-     File f= new File(g);
-        System.out.println(f.getName().substring( 0,f.getName().indexOf('.')));
+       
+       System.out.println(convertWellFromA8_12toInt("A1"));
+       System.exit(0);
     }
     
     

@@ -113,7 +113,31 @@ public class CloneSequence extends AnalyzedScoredSequence
         return null;
     }
     
-    
+    public static boolean isAssembledSequenceExists( int clone_id)throws Exception
+    {
+        ResultSet rs = null;
+        ArrayList sequences = new ArrayList();
+        String sql = "select sequenceid from assembledsequence where isolatetrackingid in "
+        +" (select isolatetrackingid from flexinfo where flexcloneid ="+clone_id+")";
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next())
+            {
+                return true;
+            }
+            return false;
+        }
+         catch(Exception e)
+         {
+             throw new BecDatabaseException("Cannot extract sequence \nsql "+sql);
+         }
+        finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
      public static ArrayList getAllByIsolateTrackingId(int is_id, String clone_sequence_analysis_status, String clone_sequence_type) throws BecDatabaseException
     {
         String sql = "select sequenceid from assembledsequence where isolatetrackingid = "+is_id;
@@ -374,6 +398,10 @@ public class CloneSequence extends AnalyzedScoredSequence
          {
              throw new BecDatabaseException("Cannot extract sequence \nsql "+sql);
          }
+        finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
      }
     private char formatForLinkerCds(char a, int pos)
     {
@@ -394,18 +422,13 @@ public class CloneSequence extends AnalyzedScoredSequence
     {
         try
         {
-             CloneSequence cl = new CloneSequence(14800);
+             CloneSequence cl = new CloneSequence(37365);
            
-            System.out.println( cl.toHTMLString());
-           // DatabaseTransaction t = DatabaseTransaction.getInstance();
-           // TheoreticalSequence theoretical_sequence = TheoreticalSequence.findSequenceByGi(4503092);
-            //int refseqid = theoretical_sequence.getId();
-       
-            //String query="ATGGAGCTACGTGTGGGGAACAAGTACCGCCTGGGACGGAAGATCGGGAGCGGGTCCTTCGGAGATATCTACCTGGGTGCCAACATCGCCTCTGGTGAGGAAGTCGCCATCAAGCTGGAGTGTGTGAAGACAAAGCACCCCCAGCTGCACATCGAGAGCAAGTTCTACAAGATGATGCAGGGTGGCGTGGGGATCCCGTCCATCAAGTGGTGCGGAGCTGAGGGCGACTACAACGTGATGGTCATGGAGCTGCTGGGGCCTAGCCTCGAGGACCTGTTCAACTTCTGTTCCCGCAAATTCAGCCTCAAGACGGTGCTGCTCTTGGCCGACCAGATGATCAGCCGCATCGAGTATATCCACTCCAAGAACTTCATCCACCGGGACGTCAAGCCCGACAACTTCCTCATGGGGCTGGGGAAGAAGGGCAACCTGGTCTACATCATCGACTTCGGCCTGGCCAAGAAGTACCGGGACGCCCGCACCCACCAGCACATTCCCTACCGGGAAAACAAGAACCTGACCGGCACGGCCCGCTACGCTTCCATCAACACGCACCTGGGCATTGAGCAAAGCCGTCGAGATGACCTGGAGAGCCTGGGCTACGTGCTCATGTACTTCAACCTGGGCTCCCTGCCCTGGCAGGGGCTCAAAGCAGCCACCAAGCGCCAGAAGTATGAACGGATCAGCGAGAAGAAGATGTCAACGCCCATCGAGGTCCTCTGCAAAGGCTATCCCTCCGAATTCTCAACATACCTCAACTTCTGCCGCTCCCTGCGGTTTGACGACAAGCCCGACTACTCTTACCTACGTCAGCTCTTCCGCAACCTCTTCCACCGGCAGGGCTTCTCCTATGACTACGTCTTTGACTGGAACATGCTGAAATTCGGTGCAGCCCGGAATCCCGAGGATGTGGACCGGGAGCGGCGAGAACACGAACGCGAGGAGAGGATGGGGCAGCTACGGGGGTCCGCGACCCGAGCCCTGCCCCCTGGCCCACCCACGGGGGCCACTGCCAACCGGCTCCGCAGTGCCGCCGAGCCCGTGGCTTCCACGCCAGCCTCCCGCATCCAGCCGGCTGGCAATACTTCTCCCAGAGCGATCTCGCGGGTCGACCGGGAGAGGAAGGTGAGTATGAGGCTGCACAGGGGTGCGCCCGCCAACGTCTCCTCCTCAGACCTCACTGGGCGGCAAGAGGTCTCCCGGATCCCAGCCTCACAGACAAGTGTGCCATTTGACCATCTCGGGAAGTTGG";
-        
-             //CloneSequence s = CloneSequence.getOneByIsolateTrackingId(988, "0,1,2","0,1,2");
-             // ArrayList s1 = CloneSequence.getAllByIsolateTrackingId(988, "0,1,2","0,1,2");
-             //System.out.print( s.getCodingSequence());
+            ArrayList discrepancies = cl.getDiscrepancies() ;
+            String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.LINKER_5P, true);
+            discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+             discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.LINKER_3P, true);
+             
         } catch (Exception e)
         {
             System.out.println(e);

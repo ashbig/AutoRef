@@ -22,6 +22,8 @@ public class UIRead
     private boolean         m_isDiscrepancy = false;
     private int             m_trim_start = -1;
     private int             m_trim_stop = -1;
+    private String          m_name = null;
+    
     
     
     /** Creates a new instance of UIRead */
@@ -36,7 +38,7 @@ public class UIRead
     public boolean         isDiscrepancies (){ return m_isDiscrepancy  ;}
     public int             getTrimStart (){ return m_trim_start;}
     public int             getTrimStop (){ return m_trim_stop;}
-    
+    public String          getName(){ return m_name;}
     
     public void             setId (int v){ m_id  = v;} 
     public void             setSequenceId (int v){ m_sequence_id  = v;}
@@ -45,4 +47,5 @@ public class UIRead
     public void             setIsDiscrepancies (boolean v){ m_isDiscrepancy  = v;}
     public void             setTrimStart (int v){  m_trim_start = v;}
     public void            setTrimStop (int v){  m_trim_stop =v;}
+    public void             setName(String v){ m_name = v;}
 }

@@ -148,7 +148,7 @@ public class Constants {
     public static final int            PROCESS_OBJECT_TYPE_RESULT = 1;
     public static final int            PROCESS_OBJECT_TYPE_CONTAINER = 0;
     public static final int            PROCESS_OBJECT_TYPE_CONSTRUCT = 2;
-   // public static final int            PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE = 3;
+    public static final int            PROCESS_OBJECT_TYPE_STRETCH_COLLECTION = 3;
     public static final int            PROCESS_OBJECT_TYPE_REFSEQUENCE = 4;
     public static final int            PROCESS_OBJECT_TYPE_CLONE_SEQUENCE = 5;
     public static final int            PROCESS_OBJECT_TYPE_OLIGO_ID = 6;
@@ -218,8 +218,10 @@ public class Constants {
      
      public static final int            PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER = 67;
      public static final int            PROCESS_INITIATE_TRACEFILES_TRANSFER = 68;
-     public static final int            PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER = 70;
      public static final int            PROCESS_NOMATCH_REPORT  = 69;
+     public static final int            PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER = 70;
+
+     public static final int            PROCESS_FIND_GAPS  = 71;
        //69
        
     //items for display 1-40
@@ -246,13 +248,15 @@ public class Constants {
     public static final int CONSTRUCT_DEFINITION_REPORT = 19;
     public static final int CLONE_SEQUENCE_DEFINITION_REPORT_INT = 20;
     public static final int AVAILABLE_CONTAINERS_INT = 21;
-    
+    public static final int STRETCH_REPORT_INT = 22;
+    public static final int STRETCH_COLLECTION_REPORT_INT = 23;
     
     //type of items submitted for action : 1-4
     public static final int ITEM_TYPE_CLONEID = 1;
     public static final int ITEM_TYPE_PLATE_LABELS = 2;
     public static final int ITEM_TYPE_BECSEQUENCE_ID = 3;
     public static final int ITEM_TYPE_FLEXSEQUENCE_ID = 4;
+     public static final int ITEM_TYPE_ISOLATETRASCKING_ID =-2;
    
     // for checking sequence identity
     public static final double MIN_IDENTITY_CUTOFF = 60.0;
@@ -268,6 +272,14 @@ public class Constants {
     public static final int    READ_TYPE_ENDREAD = 1;
     public static final int    READ_TYPE_INTERNAL = -1;
     
+    
+    
+    public static String       getOrientationAsStringFullName(int v) 
+    { 
+        if ( v == Constants.ORIENTATION_FORWARD)      return "Forward";
+        if ( v == Constants.ORIENTATION_REVERSE)     return "Reverse";
+        return "Not known";
+    }
     /**
      * get today's date in dd-mmm-yy format
      */

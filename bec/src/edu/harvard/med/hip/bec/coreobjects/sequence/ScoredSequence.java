@@ -48,7 +48,7 @@ public class ScoredSequence extends BaseSequence
     
     public int          getTotalScore()
     { 
-        if (m_totalscore == 0) 
+        if (m_totalscore ==-1) 
         {
              m_totalscore = calculateTotalScore();
         }
@@ -101,7 +101,7 @@ public class ScoredSequence extends BaseSequence
         ArrayList scores = Algorithms.splitString(m_scores," ");
         for (int count = 0; count < scores.size(); count++)
         {
-            res+=  ((Integer) scores.get(count)).intValue();
+            res+= Integer.parseInt( (String)scores.get(count));
         }
         return res;
     }
@@ -109,16 +109,8 @@ public class ScoredSequence extends BaseSequence
     //function parse out scores string
     public int[] getScoresAsArray()
     {
-        if ( m_scores == null ) return null;
-        if (m_scores_numbers != null) return m_scores_numbers;       
-        ArrayList scores = Algorithms.splitString(m_scores," ");
-        m_scores_numbers = new int[scores.size()];
-        for (int count = 0; count < scores.size(); count++)
-        {
-            m_scores_numbers[count] =  (Integer.parseInt( (String) scores.get(count)));
-        }
-        
-        return m_scores_numbers;
+       m_scores_numbers =Algorithms.getConvertStringToIntArray(m_scores," ");
+       return m_scores_numbers;
     }
      
     

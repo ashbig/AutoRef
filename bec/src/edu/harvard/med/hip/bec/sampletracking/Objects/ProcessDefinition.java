@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.15 2004-03-30 17:19:51 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.16 2004-05-26 20:03:38 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -39,7 +39,9 @@ public class ProcessDefinition
     public static final     String    RUN_OLIGO_PLATE_USED_FOR_SEQUENCING = "Oligo plate used for sequencing";
     public static final     String    RUN_DISCREPANCY_FINDER = "Run discrepancy finder";
     
-    
+    public static final     String    RUN_GAP_MAPPER_FOR_LOWQUALITY_SEQUENCE = "Run Gap Mapper to identify Low Quality Regions";
+    public static final     String    RUN_GAP_MAPPER = "Run Gap Mapper";
+  
     private int             m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private String          m_process_name = null;
     private ArrayList       m_spectype_ids = null;

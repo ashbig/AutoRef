@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.programs.blast.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
@@ -139,65 +140,9 @@ public class AnalyzedScoredSequence extends ScoredSequence
          m_discrepancies = new ArrayList();
          m_discrepancies = Mutation.getDiscrepanciesBySequenceId(m_id);
          return m_discrepancies;
-        /*
-        String sql = "select discrepancyid,type from discrepancy  where sequenceid="+m_id +" order by discrnumber, type";
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        ResultSet rs = null;
-        try
-        {
-            rs = t.executeQuery(sql);
-            while(rs.next())
-            {
-                int mid =rs.getInt("discrepancyid"); //obtained/analyzed/mutations cleared/final
-                int mtype = rs.getInt("type");//ready for storage or not
-                if (mtype == Mutation.RNA)
-                {
-                    RNAMutation rmut = new RNAMutation(mid);
-                    m_discrepancies.add(rmut);
-                }
-                else if (mtype == Mutation.AA)
-                {
-                    AAMutation amut = new AAMutation(mid);
-                    m_discrepancies.add(amut);
-                }
-                else if (mtype == Mutation.LINKER_5P || mtype == Mutation.LINKER_3P )
-                {
-                    LinkerMutation amut = new LinkerMutation(mid);
-                    m_discrepancies.add(amut);
-                }
-            }
-            
-             return m_discrepancies;
-        } catch (Exception sqlE)
-        {
-            throw new BecDatabaseException("Error occured while restoring sequence with id "+sqlE+"\nSQL: "+sql);
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-       */
-       
     }
     
-    
-    //function returns number of discrepancies of 
-    //define type (RNA AA)
-    //define change type, 
-    // quality , if quality set to UNknown , function do not separate by quality,
-    //          not_set qualified as high
-    // isPolym - specifie include polymorphic change as discrepancy or not
-   /*(
-    public int getDiscrepancyNumberByParameters(int dicrepancy_type, int change_type, int quality, int polym_flag)
-                                           
-    {
-        return Mutation.getDiscrepancyNumberByParameters(m_discrepancies,dicrepancy_type, change_type, quality,  polym_flag);
-    }
-    
-    public int getDiscrepancyNumberByParameters(int dicrepancy_type, int change_type, int quality)
-    {
-        return Mutation.getDiscrepancyNumberByParameters(m_discrepancies, dicrepancy_type,  change_type,  quality);
-    }
-    */
+  
     public ArrayList getDiscrepanciesByType(int dicrepancy_type)  throws BecDatabaseException
     {
         ArrayList discrepancies = new ArrayList();
@@ -224,6 +169,18 @@ public class AnalyzedScoredSequence extends ScoredSequence
     
    
    
+    public static int calculatedScore(AnalyzedScoredSequence sequence, EndReadsSpec spec)throws BecDatabaseException,BecUtilException
+    {
+        if (sequence.getDiscrepancies() == null || sequence.getDiscrepancies().size() == 0)
+            return 0;
+        int score = Constants.SCORE_NOT_CALCULATED; 
+        int dtype = -1; int dquality = -1; int penalty = 0;
+        
+        ArrayList discrepancy_definitions = DiscrepancyDescription.assembleDiscrepancyDefinitions(
+                                                sequence.getDiscrepancies());
+        score = DiscrepancyDescription.getPenalty( discrepancy_definitions, spec);
+        return score;
+    }
     
     
   
