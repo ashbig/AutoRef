@@ -102,14 +102,14 @@ public class SummaryTablePopulator {
     
     public int populateCloningprogressTable(List samples, Connection conn) throws FlexDatabaseException, SQLException {
         String sqlQuery = "select statusid, constructid from cloningprogress"+
-                        " where constructid in"+
-                        " (select constructid from sample where sampleid=?)";
+        " where constructid in"+
+        " (select constructid from sample where sampleid=?)";
         String sql = "insert into cloningprogress"+
-                    " select distinct constructid, 1"+
-                    " from sample where sampleid=?";
+        " select distinct constructid, 1"+
+        " from sample where sampleid=?";
         String sqlUpdate = "update cloningprogress"+
-                        " set statusid="+ConstructInfo.CLONE_OBTAINED_ID+
-                        " where constructid=?";
+        " set statusid="+ConstructInfo.CLONE_OBTAINED_ID+
+        " where constructid=?";
         
         PreparedStatement stmt = conn.prepareStatement(sql);
         PreparedStatement stmtQuery = conn.prepareStatement(sqlQuery);
@@ -130,11 +130,11 @@ public class SummaryTablePopulator {
                     stmtUpdate.setInt(1, constructid);
                     DatabaseTransaction.executeUpdate(stmtUpdate);
                     ret ++;
-                } else {
-                    stmt.setInt(1, sampleid);
-                    int num = DatabaseTransaction.executeUpdate(stmt);
-                    ret += num;
                 }
+            } else {
+                stmt.setInt(1, sampleid);
+                int num = DatabaseTransaction.executeUpdate(stmt);
+                ret += num;
             }
         }
         
@@ -244,14 +244,14 @@ public class SummaryTablePopulator {
     
     public int updateSequenceTable(List samples, Connection conn) throws FlexDatabaseException, SQLException {
         String sql = "update flexsequence set flexstatus='"+FlexSequence.CLONE_OBTAINED+"'"+
-                    " where sequenceid in (select distinct sequenceid"+
-                    " from constructdesign where constructid in ("+
-                    " select distinct constructid from sample where sampleid=?))"+
-                    " and (flexstatus='"+FlexSequence.INPROCESS+"'"+
-                    " or flexstatus='"+FlexSequence.FAILED+"'"+
-                    " or flexstatus='"+FlexSequence.FAILED_CLONING+"'"+
-                    " or flexstatus='"+FlexSequence.PENDING+"'"+
-                    " or flexstatus='"+FlexSequence.REJECTED+"')";
+        " where sequenceid in (select distinct sequenceid"+
+        " from constructdesign where constructid in ("+
+        " select distinct constructid from sample where sampleid=?))"+
+        " and (flexstatus='"+FlexSequence.INPROCESS+"'"+
+        " or flexstatus='"+FlexSequence.FAILED+"'"+
+        " or flexstatus='"+FlexSequence.FAILED_CLONING+"'"+
+        " or flexstatus='"+FlexSequence.PENDING+"'"+
+        " or flexstatus='"+FlexSequence.REJECTED+"')";
         
         PreparedStatement stmt = conn.prepareStatement(sql);
         int ret = 0;
@@ -314,20 +314,20 @@ public class SummaryTablePopulator {
             System.out.println(ex);
         }
     }
-   
+    
     public void populateFailedConstructs(List containers) {
         String sql = "select distinct constructid from sample"+
-                    " where sampletype='EMPTY'"+
-                    " and containerid=?"+
-                    " and constructid not in ("+
-                    " select distinct constructid from sample"+
-                    " where sampletype='ISOLATE'"+
-                    " and containerid=?)";
+        " where sampletype='EMPTY'"+
+        " and containerid=?"+
+        " and constructid not in ("+
+        " select distinct constructid from sample"+
+        " where sampletype='ISOLATE'"+
+        " and containerid=?)";
         String sql2 = "select count(*) from cloningprogress where constructid=?";
         String sql3 = "select sequenceid, flexstatus from flexsequence"+
-                    " where sequenceid in ("+
-                    " select distinct sequenceid from constructdesign"+
-                    " where constructid=?)";
+        " where sequenceid in ("+
+        " select distinct sequenceid from constructdesign"+
+        " where constructid=?)";
         String sql4 = "insert into cloningprogress values(?, "+ConstructInfo.FAILED_CLONING_ID+")";
         String sql5 = "update flexsequence set flexstatus='"+FlexSequence.FAILED_CLONING+"' where sequenceid=?";
         
@@ -374,7 +374,7 @@ public class SummaryTablePopulator {
                             System.out.println("insert failed construct: "+constructid);
                             
                             stmt3.setInt(1, constructid);
-                            rs3 = DatabaseTransaction.executeQuery(stmt3);                            
+                            rs3 = DatabaseTransaction.executeQuery(stmt3);
                             
                             if(rs3.next()) {
                                 int sequenceid = rs3.getInt(1);
@@ -401,10 +401,10 @@ public class SummaryTablePopulator {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeResultSet(rs2);
             DatabaseTransaction.closeResultSet(rs3);
-            DatabaseTransaction.closeStatement(stmt); 
-            DatabaseTransaction.closeStatement(stmt2); 
-            DatabaseTransaction.closeStatement(stmt3); 
-            DatabaseTransaction.closeStatement(stmt4); 
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmt2);
+            DatabaseTransaction.closeStatement(stmt3);
+            DatabaseTransaction.closeStatement(stmt4);
             DatabaseTransaction.closeStatement(stmt5);
             DatabaseTransaction.closeConnection(conn);
         }
@@ -413,23 +413,16 @@ public class SummaryTablePopulator {
     public static void main(String args[]) {
         //List containers = getContainers();
         List containers = new ArrayList();
-        containers.add(new Integer(3109));
-        //containers.add(new Integer(8299));
-        //containers.add(new Integer(8300));
-        //containers.add(new Integer(7150));
-        //containers.add(new Integer(7151));
-        //containers.add(new Integer(7152));
-        //containers.add(new Integer(7153));
+        containers.add(new Integer(8446));
+        containers.add(new Integer(8447));
+        containers.add(new Integer(8448));
+        containers.add(new Integer(8449));
+        containers.add(new Integer(8440));
+        containers.add(new Integer(8437));
+        containers.add(new Integer(8438));
+        containers.add(new Integer(8439));
         
-        //containers.add(new Integer(8214));
-        //containers.add(new Integer(8215));
-        //containers.add(new Integer(8216));
-        //containers.add(new Integer(8217));        
-        //containers.add(new Integer(8219));       
-        //containers.add(new Integer(8220));       
-        //containers.add(new Integer(8221));       
-        //containers.add(new Integer(8222));
-       /**
+        /**
         List samples = new ArrayList();
         samples.add(new Integer(100271));
         samples.add(new Integer(100276));
@@ -441,25 +434,25 @@ public class SummaryTablePopulator {
         samples.add(new Integer(123262));
         samples.add(new Integer(123371));
         samples.add(new Integer(123316));
-        */
+         */
         /**
-         List samples = getSamples();
-        
-        if(samples == null) {
-            System.out.println("failed");
-            System.exit(0);
-        }
-        */
+         * List samples = getSamples();
+         *
+         * if(samples == null) {
+         * System.out.println("failed");
+         * System.exit(0);
+         * }
+         */
         
         //change cloning strategy accordingly.
-        int cloningStrategyid = 2;
+        int cloningStrategyid = 8;
         String cloneType = CloneInfo.MASTER_CLONE;
         
         SummaryTablePopulator populator = new SummaryTablePopulator();
         
         if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
-        //if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {            
-            populator.sendEmail(true, containers);            
+            //if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {
+            populator.sendEmail(true, containers);
         } else {
             populator.sendEmail(false, containers);
         }
@@ -487,12 +480,12 @@ public class SummaryTablePopulator {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }
-    }     
+    }
     
     public static List getSamples() {
         String sql="select sampleid_to from samplelineage"+
-                " where sampleid_from in ("+
-                " select sampleid from sample where containerid in (8299, 8300))";
+        " where sampleid_from in ("+
+        " select sampleid from sample where containerid in (8299, 8300))";
         DatabaseTransaction t = null;
         ResultSet rs = null;
         List sampleids = new ArrayList();
@@ -510,7 +503,7 @@ public class SummaryTablePopulator {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }
-    }     
+    }
 }
 
 
