@@ -36,14 +36,14 @@ public class ProcessPlateManager implements TaskManager {
     public void processQueue(List removedItems, List containers, Protocol protocol, Connection conn, Workflow workflow) throws FlexDatabaseException {
         // Remove the container from the queue.
         ContainerProcessQueue queue = new ContainerProcessQueue();
-        queue.removeQueueItems((LinkedList)removedItems, conn);
+        queue.removeQueueItems(removedItems, conn);
         
         // Get the next protocols from the workflow.
         Vector nextProtocols = workflow.getNextProtocol(protocol.getProcessname());
         
         // Add the new containers to the queue for each protocol.
         for(int i=0; i<nextProtocols.size(); i++) {
-            LinkedList newItems = new LinkedList();
+            List newItems = new LinkedList();
             Iterator iter = containers.iterator();
             while(iter.hasNext()) {
                 Container newContainer = (Container)iter.next();
