@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.9 2003-12-08 19:16:59 Elena Exp $
+ * $Id: Oligo.java,v 1.10 2003-12-17 20:56:33 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -292,7 +292,7 @@ public class Oligo
       
         String sql = "select  oligoid,sequence,  tm,  submissiontype, " +
             "position, status, orientation, name,oligocalculationid,submitterid "+
-            " from geneoligo where  oligocalid = "+oligoid ;
+            " from geneoligo where  oligoid = "+oligoid ;
         ArrayList oligos = getOligoByRule(sql);
         if ( oligos != null && oligos.size() > 0)
             return (Oligo)oligos.get(0);
