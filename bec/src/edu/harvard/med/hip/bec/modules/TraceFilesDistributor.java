@@ -341,8 +341,7 @@ public class TraceFilesDistributor
         {
             public boolean accept(File dir, String name)
             {
-                File fn = new File(dir.getAbsolutePath()+File.separatorChar +name);
-                if (fn.isFile() && !name.endsWith(".ab1") )
+                if (   !name.endsWith(".ab1") )
                 {
                     return true;
                 }
