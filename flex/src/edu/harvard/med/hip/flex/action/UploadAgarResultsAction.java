@@ -57,10 +57,7 @@ public class UploadAgarResultsAction extends ResearcherAction {
         LinkedList queueItems =
         (LinkedList)(request.getSession().getAttribute("SelectProtocolAction.queueItems"));
         String protocolName = (String)(request.getSession().getAttribute(Constants.PROTOCOL_NAME_KEY));
-        
-        request.getSession().removeAttribute("SelectProtocolAction.queueItems");
-        request.getSession().removeAttribute(Constants.PROTOCOL_NAME_KEY);
-        
+       
         // make sure we can continue
         if(protocolName == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
@@ -135,6 +132,8 @@ public class UploadAgarResultsAction extends ResearcherAction {
         }
                
         Enumeration enum = info.keys();
+        Vector processedContainers = new Vector();
+        
         while(enum.hasMoreElements()) {
             String barcode = (String)enum.nextElement();
             
@@ -149,6 +148,8 @@ public class UploadAgarResultsAction extends ResearcherAction {
             }
             
             Container container = (Container)queueItem.getItem();
+            processedContainers.addElement(container);
+            
             try {
                 container.restoreSample();
             } catch (FlexDatabaseException ex) {
@@ -157,7 +158,7 @@ public class UploadAgarResultsAction extends ResearcherAction {
                 saveErrors(request, errors);
                 return new ActionForward(mapping.getInput());
             }
-            
+           
             // get the linages
             Vector lineages = this.getSampleLineages(container);
             
@@ -250,6 +251,11 @@ public class UploadAgarResultsAction extends ResearcherAction {
         // finally we commit all our changes.
         DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
+        
+        request.setAttribute("processedContainers", processedContainers);        
+        request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+        request.getSession().removeAttribute(Constants.PROTOCOL_NAME_KEY);
+         
         return mapping.findForward("success");
     }
     
