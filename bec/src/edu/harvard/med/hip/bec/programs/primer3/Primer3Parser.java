@@ -101,18 +101,20 @@ public class Primer3Parser
         int seq_id = -1;
         int subseq_count = -1;
         int l_start = -1; int r_start = -1;
-         int _AURL = -1;
-        int _ARL = -1;
+         int _AURL = 1;
+        int adjusted_read_length = -1;
         try
         {
-            int  UL = spec.getParameterByNameInt("P_UPSTREAM_DISTANCE");  //length between upstream universal primer and start codon of target sequence
-            int DL = spec.getParameterByNameInt("P_DOWNSTREAM_DISTANCE");  //length between downstream universal primer and stop codon of target sequence
-            int PHD = spec.getParameterByNameInt("P_EST_SEQ");  //distance between sequencing primer and start of high quality read length
-            int ERL = spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");  //estimated high quality read length
-            int W = spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN");
+            int  UPSTREAM_DISTANCE = spec.getParameterByNameInt("P_UPSTREAM_DISTANCE");  //length between upstream universal primer and start codon of target sequence
+            int DOWNSTREAM_DISTANCE = spec.getParameterByNameInt("P_DOWNSTREAM_DISTANCE");  //length between downstream universal primer and stop codon of target sequence
+            int EST_SEQ = spec.getParameterByNameInt("P_EST_SEQ");  //distance between sequencing primer and start of high quality read length
+            int SINGLE_READ_LENGTH = spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");  //estimated high quality read length
+            int BUFFER_WINDOW_LEN = spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN");
 
-             _AURL = ERL - UL - W - PHD;
-             _ARL = ERL - W - PHD;
+            //adjusted upstream universal primer read length
+            if ( UPSTREAM_DISTANCE != 0)
+                _AURL = SINGLE_READ_LENGTH - UPSTREAM_DISTANCE - BUFFER_WINDOW_LEN - EST_SEQ;
+            adjusted_read_length = SINGLE_READ_LENGTH - BUFFER_WINDOW_LEN - EST_SEQ;
             boolean [] add = isAddPrimer(runner_type);
             isAddRightPrimer = add[1]; isAddLeftPrimer = add[0];
             
@@ -126,7 +128,7 @@ public class Primer3Parser
             fin = new BufferedReader(new FileReader(queryFile));
             while ((line = fin.readLine()) != null)
             {
-             // System.out.println(line);
+       //     System.out.println(line);
            // new sequence started
                if ( p_primer_sequence_id.match(line) ) 
                {
@@ -164,13 +166,13 @@ public class Primer3Parser
                if ( p_left.match(line) ) 
                {
                    l_start = Integer.parseInt(p_left.getParen(1));
-                    oligo_left.setPosition(_AURL + _ARL * (subseq_count - 1) + l_start + 1);
+                    oligo_left.setPosition(_AURL + adjusted_read_length * (subseq_count - 1) + l_start + 1);
                }
                if (  p_right.match(line) )
                 {
                    r_start = Integer.parseInt(p_right.getParen(1));
                     if ( runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND )
-                        oligo_right.setPosition(_AURL + _ARL * (subseq_count - 1) + r_start + 1);
+                        oligo_right.setPosition(_AURL + adjusted_read_length * (subseq_count - 1) + r_start + 1);
                    else
                        oligo_right.setPosition(r_start + 1);
                }
@@ -212,7 +214,8 @@ public class Primer3Parser
          for (int oligo_counter = 0; oligo_counter < olcalc.getOligos().size();oligo_counter++)
          {
              oligo = (Oligo) olcalc.getOligos().get(oligo_counter);
-             if ( oligo.getSequence() == null ) return false;
+             if ( oligo.getSequence() == null )
+                 return false;
          }
          return true;
     }
@@ -223,9 +226,9 @@ public class Primer3Parser
         boolean[] isPrimer = {true, true};
         switch(runner_type)
         {
-            case   Primer3Wrapper.WALKING_TYPE_ONE_STRAND_FORWARD : { isPrimer[1]= false; break;};
+            case   Primer3Wrapper.WALKING_TYPE_ONE_STRAND_FORWARD : { isPrimer[1]= false; break;}
             case Primer3Wrapper.WALKING_TYPE_BOTH_STRAND : break;
-            case Primer3Wrapper.WALKING_TYPE_ONE_STRAND_REVERSE : { isPrimer[0] = false; break;};
+            case Primer3Wrapper.WALKING_TYPE_ONE_STRAND_REVERSE : { isPrimer[0] = false; break;}
             case Primer3Wrapper.WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE : break;
         }
         return isPrimer;
@@ -264,11 +267,22 @@ ht.put("P_PRIMER_TM_OPT","58");
 ht.put("P_SINGLE_READ_LENGTH","400");
 ht.put("P_UPSTREAM_DISTANCE","120");
 
-              Primer3Spec ps =  new Primer3Spec(ht,"",-1);//(Primer3Spec)Spec.getSpecById(7);
+             // Primer3Spec ps =  new Primer3Spec(ht,"",-1);//(Primer3Spec)Spec.getSpecById(7);
         
+           Primer3Spec ps =  (Primer3Spec) Spec.getSpecById(7);
            
              re = Primer3Parser.parse(queryFile,ps);
-             System.out.println(re.size());
+               System.out.println(re.size());
+                for (int c = 0; c < re.size(); c++)
+             {
+                 ArrayList oligos = ((edu.harvard.med.hip.bec.coreobjects.oligo.OligoCalculation)re.get(c)).getOligos();
+                  System.out.println("_____");
+                 for (int count = 0; count < oligos.size(); count++)
+                 {
+                     System.out.println( ((edu.harvard.med.hip.bec.coreobjects.oligo.Oligo) oligos.get(count)).toString() );
+                 }
+             }
+           
         }catch(Exception e){}
         System.exit(0);
     }
