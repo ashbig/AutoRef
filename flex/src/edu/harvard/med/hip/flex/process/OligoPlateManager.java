@@ -47,6 +47,10 @@ public class OligoPlateManager {
     protected boolean isOpenOnly = false;
     protected boolean isCloseOnly = false;
     
+    protected OligoPlater plater = null;
+    
+    public OligoPlater getOligoPlater() {return plater;}
+    
     /**
      * Constructor
      * Creates new OligoPlateManager
@@ -286,7 +290,7 @@ public class OligoPlateManager {
     protected  void createOligoPlate(LinkedList seqList, int mgcContainerId)
     throws FlexDatabaseException, FlexCoreException, IOException, Exception {
         ConstructGenerator cg = null;
-        OligoPlater plater = null;
+        plater = null;
         
         try{
             cg = new ConstructGenerator(seqList,conn, project, workflow, protocol);
