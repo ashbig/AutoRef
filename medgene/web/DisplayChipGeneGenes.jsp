@@ -48,13 +48,13 @@
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
             <TD align="center">
-                <bean:write name="directChipGene" property="locus_id"/>&nbsp
+                <bean:write name="directChipGene" property="locus_id"/>
             </TD>
             <TD align="center">
-                <bean:write name="directChipGene" property="gene_symbol"/>&nbsp
+                <bean:write name="directChipGene" property="gene_symbol"/>
             </TD>
             <TD align="center">
-                <bean:write name="directChipGene" property="score"/>&nbsp
+                <bean:write name="directChipGene" property="score"/>
             </TD>
         </tr>
     </logic:iterate> 
@@ -77,13 +77,13 @@
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
             <TD align="center">
-                <bean:write name="indirectChipGene" property="locus_id"/>&nbsp
+                <bean:write name="indirectChipGene" property="locus_id"/>
             </TD>
             <TD align="center">
-                <bean:write name="indirectChipGene" property="gene_symbol"/>&nbsp
+                <bean:write name="indirectChipGene" property="gene_symbol"/>
             </TD>
             <TD align="center">
-                <bean:write name="indirectChipGene" property="score"/>&nbsp
+                <bean:write name="indirectChipGene" property="score"/>
             </TD>
         </tr>
     </logic:iterate> 

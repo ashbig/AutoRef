@@ -63,9 +63,21 @@
             <TD align="center"> 
                 <bean:write name="association" property="target_gene.symbol"/>&nbsp
             </TD>
+
+            <logic:equal name="association" property="target_gene.type" value="GENE">
             <TD>
                 <bean:write name="association" property="target_gene.nicknamesString"/>&nbsp
             </TD>
+            </logic:equal>
+            <logic:equal name="association" property="target_gene.type" value="FAMILY">
+            <TD>
+                <logic:iterate id="child" name="association" property="target_gene.nicknames"> 
+                    <a href="DisplayLinks.do?geneSymbol=<bean:write name="child"/>">
+                    <bean:write name="child"/></a>&nbsp
+                </logic:iterate>
+            </TD>
+            </logic:equal>
+
             <TD>
                 <bean:write name="association" property="target_gene.gosString"/>&nbsp
             </TD>
