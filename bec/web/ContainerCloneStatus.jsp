@@ -42,7 +42,7 @@
 </div>
 <p></p>
 <% Container container = (Container)request.getAttribute("container") ;
-System.out.println(container.getLabel());%>
+//System.out.println(container.getLabel());%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
     <td width="19%"><strong>Label:</strong></td>
@@ -92,14 +92,14 @@ String forward_read_status = "";String reverse_read_status = "";
     for (int count = 0; count < container.getSamples().size(); count ++)
 	{
 		sample = (Sample)container.getSamples().get(count);
-System.out.println("position"+sample.getPosition());
+//System.out.println("position"+sample.getPosition());
                  forward_read_status = "&nbsp"; reverse_read_status = "&nbsp";
 if (sample.getResults() != null)
 {
                 for (int result_count = 0; result_count < sample.getResults().size(); result_count++)
                 {
                         result = (Result)sample.getResults().get(result_count);
-System.out.println(result.getType());
+//System.out.println(result.getType());
                         switch (result.getType())
                         {
                             case Result.RESULT_TYPE_ENDREAD_FORWARD:{ forward_read_status = "NOT PROCESSED"; break;}
