@@ -161,7 +161,7 @@
              <forward name="display_oligo_container" path  = "/Display_OligoContainer.jsp"/>
             <forward name="display_stretch_report" path  = "/Display_Stretch.jsp"/>
             <forward name="display_stretch_collections" path  = "/Display_StretchCollections.jsp"/>   
-       
+             <forward name="choose_spec" path  = "/SelectSpecToDisplay.jsp"/>  
 </action>
 
  
@@ -234,7 +234,17 @@
 input ="/TraceFileProcessing.jsp"
                 type="edu.harvard.med.hip.bec.action.TraceFileProcessingAction">
            <forward name="processing" path="/ConfirmProcess.jsp"/>
-        
+      </action>   
+   
+      
+      <action      path="/DirectDatabaseCommunications"
+                name="submitDataFileForm"
+input ="/SelectDatabaseConfigurationOption.jsp"
+                type="edu.harvard.med.hip.bec.action.DirectDatabaseCommunicationsAction">
+          <forward name="processing" path="/ConfirmProcess.jsp"/>
+          <forward name="display_items" path="/Display_ArrayOfItems.jsp"/>
+          <forward name="selecting_process" path="/InitiateDirectDatabaseSubmission.jsp"/>
+          
 </action>
 
 
