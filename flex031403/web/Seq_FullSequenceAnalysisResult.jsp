@@ -82,7 +82,7 @@ else
           String key = (String)keys.nextElement();
           String val = (String)full_seq.getMutationSummary().get(key);
           %>
-          <tr><td>key</td><td>val</td></tr>
+          <tr><td><%= key %></td><td><%=val %></td></tr>
          <%}
 
      %>
@@ -99,9 +99,10 @@ else
 <td align="CENTER">
  
     <SELECT NAME="status">
+        <OPTION VALUE="<%= FullSequence.QUALITY_NOT_DEFINED %>" >Not Defined
         <OPTION VALUE="<%= FullSequence.QUALITY_STORAGE %>">Storage
         <OPTION VALUE="<%= FullSequence.QUALITY_BAD %>">Bad
-        <OPTION VALUE="<%= FullSequence.QUALITY_NOT_DEFINED %>" >Not Defined
+        
     </SELECT>
 
 </td>

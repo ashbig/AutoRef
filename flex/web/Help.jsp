@@ -6,11 +6,11 @@
 <TABLE border="0" cellpadding="2" cellspacing="2">
 
 <tr><td></td><td>
-<a href = "/Help_ContainerLabels.jsp"  > 
+<a href = "/FLEX/Help_ContainerLabels.jsp"  > 
 Container Labels</a>
 </td>
 <tr><td></td><td>
-<a href = "/Help_FullSequenceAnalysis.html"  > 
+<a href = "/FLEX/Help_FullSequenceAnalysis.html"  > 
 Full Sequence Analysis</a>  </td>
 </table>
 </body>

@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page import="edu.harvard.med.hip.flex.Constants"%>
 <%@ page import="edu.harvard.med.hip.flex.seqprocess.core.sequence.*" %>
+<%@ page import="edu.harvard.med.hip.flex.seqprocess.core.feature.*" %>
 <%@ page import="java.util.*" %>
 
 
@@ -74,14 +75,47 @@
     
         <table border='1'>
              <tr class="headerRow">
-                 <th>&nbsp;Number;&nbsp;</th> 
-                 <th>&nbsp;RNA Mutation;&nbsp;</th>
-                 <th>&nbsp;Amino Acid Mutation;&nbsp;</th>
+                 <th>Number</th> 
+                 <th>RNA Mutation</th>
+                 <th>Amino Acid Mutation</th>
             </tr>
-            <tr>
-            <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+            
+            
+            <% ArrayList muts= fl.getAllMutations() ;
+              
+               int cur_number = 0;
+               Mutation mut = null;
+               RNAMutation rm = null;
+               AAMutation am = null;
+               for (int count = 0; count < muts.size();count++)
+                {
+                     mut = (Mutation)muts.get(count);
+                     System.out.println(mut.toString());
+                    if (cur_number != mut.getNumber())
+                    {%></tr><%}
+                    if (mut.getType() == Mutation.RNA)
+                    {
 
-            </flex:row>
+                        rm = (RNAMutation)muts.get(count);
+                        cur_number++;
+                        
+                        %>
+                        <tr>
+                        <td><%= cur_number %></td>
+                        <td><%= rm.toHTMLString()%></td>
+                     <%}
+                     else
+                    {
+                        am = (AAMutation)muts.get(count);
+                        
+                        %>
+                        <td><%= am.toHTMLString()%></td>
+                   
+                    <%}
+                        
+                     
+
+        }%>
         </table>
     
 <%}
