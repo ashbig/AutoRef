@@ -148,6 +148,7 @@ public class RunProcessAction extends ResearcherAction
                         {
                             master_container_labels.add(labels[i] );
                             plate_names += labels[i] + "\n";
+                            System.out.println(labels[i]);
                         }
                     }
                     
@@ -165,6 +166,7 @@ public class RunProcessAction extends ResearcherAction
                     if (polymorphism_spec_id != -1)
                         runner.setPolymorphismSpec((PolymorphismSpec)Spec.getSpecById(polymorphism_spec_id, Spec.POLYMORPHISM_SPEC_INT));
                     runner.setUser(user);
+                    System.out.println(bioeval_spec_id+" "+endread_spec_id+" "+polymorphism_spec_id);
                     t = new Thread(runner);           t.start();
                     break;
                 }
@@ -467,8 +469,9 @@ public class RunProcessAction extends ResearcherAction
                     
                     int process_id = Request.createProcessHistory( conn, process_description, new ArrayList(),user) ;
                     DatabaseTransaction.executeUpdate("insert into process_object (processid,objectid,objecttype) values("+process_id+","+containerid+","+Constants.PROCESS_OBJECT_TYPE_CONTAINER+")",conn);
-System.out.println("L");                        
+                
                      OligoContainer oligo_container = OligoContainer.getById( containerid);
+                    oligo_container.restoreSamples();
    System.out.println("L1");                    
                     request.setAttribute(Constants.JSP_TITLE,"oligo Container has been processed");
                     request.setAttribute("container",oligo_container);

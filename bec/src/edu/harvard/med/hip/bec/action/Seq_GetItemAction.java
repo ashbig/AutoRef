@@ -448,6 +448,8 @@ public class Seq_GetItemAction extends ResearcherAction
                 case Constants.PROCESS_VIEW_OLIGO_PLATE:
                 {
                      label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
+                     label =label.toUpperCase().trim();
+         //  System.out.println(label +" getitem "+ forwardName);
                      ArrayList oligo_containers = OligoContainer.findContainersInfoFromLabel(label.toUpperCase().trim(), OligoContainer.MODE_NOTRESTORE_SAMPLES);
                      OligoContainer oligo_container = null;
                     if ( oligo_containers != null && oligo_containers.size() == 1)
@@ -458,6 +460,11 @@ public class Seq_GetItemAction extends ResearcherAction
                         saveErrors(request,errors);
                         return new ActionForward(mapping.getInput());
                     }
+                     if (forwardName == Constants.PROCESS_VIEW_OLIGO_PLATE)
+                     {
+                         oligo_container.restoreSamples();
+                     }
+ //  System.out.println(label+oligo_container.getId());
                     request.setAttribute(Constants.JSP_TITLE,"process Oligo Container");
                     request.setAttribute("container",oligo_container);
                     request.setAttribute("forwardName", new Integer(forwardName));

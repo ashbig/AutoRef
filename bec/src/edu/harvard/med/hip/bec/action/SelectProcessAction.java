@@ -153,8 +153,8 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_PROCESS_OLIGO_PLATE:
                 case Constants.PROCESS_VIEW_OLIGO_PLATE:
                 {
-                     request.setAttribute("forwardName", new Integer(Constants.PROCESS_PROCESS_OLIGO_PLATE));
-                    request.setAttribute(Constants.JSP_TITLE,"select Oligo Plates to process");
+                     request.setAttribute("forwardName", new Integer(forwardName));
+                    request.setAttribute(Constants.JSP_TITLE,"select Oligo Plate to process");
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
