@@ -64,6 +64,7 @@ public class CustomerRequestAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        ActionErrors errors = new ActionErrors();
         
         try {
             Vector requests = user.getRequests();
@@ -74,8 +75,10 @@ public class CustomerRequestAction extends FlexAction {
  
             request.setAttribute("species", FlexDefPopulator.getData("species"));
             return (mapping.findForward("success"));
-        } catch (FlexDatabaseException ex) {            
-            return (mapping.findForward("success"));
+        } catch (FlexDatabaseException ex) {                       
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.database.error",ex));
+            return (mapping.findForward("error"));
         }
     }
 }
