@@ -49,7 +49,8 @@ if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)fo
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
 boolean isCloneIdOnly = false;
 if ( forwardName_int == Constants.PROCESS_SHOW_CLONE_HISTORY 
-|| forwardName_int == Constants.PROCESS_ORDER_INTERNAL_PRIMERS)
+|| forwardName_int == Constants.PROCESS_ORDER_INTERNAL_PRIMERS
+|| forwardName_int == Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS)
 {
 isCloneIdOnly = true;
 }

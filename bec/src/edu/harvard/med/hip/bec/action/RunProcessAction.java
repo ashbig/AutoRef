@@ -191,9 +191,7 @@ public class RunProcessAction extends ResearcherAction
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing "+clone_number +"  clones");
                     break;
                 }
-                case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
-                {
-                }
+             
       //primer design items
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER : // add new internal primer
                 {
@@ -280,18 +278,18 @@ public class RunProcessAction extends ResearcherAction
                         
                         for (int i = 0; i < primers.length; i ++)
                         {
-                            System.out.println("item "+primers[i]);
+                           // System.out.println("item "+primers[i]);
                             if (arr_old_approved_primers != null && arr_old_approved_primers.contains(primers[i]))
                             {
                                 arr_old_approved_primers.remove(primers[i]);
-                                System.out.println("remove "+primers[i]);
+                              //  System.out.println("remove "+primers[i]);
                                 continue;
                             }
                             primer_id = Integer.parseInt( primers[i]);
                             primer_ids_report += primers[i] + "\n";
                             try
                             {
-                               System.out.println("approve "+primer_id);
+                              // System.out.println("approve "+primer_id);
                                 pst_update_primer_status.setInt(2,primer_id);
                                 pst_update_primer_status.setInt(1,Oligo.STATUS_APPROVED);
                                 DatabaseTransaction.executeUpdate(pst_update_primer_status);
@@ -312,7 +310,7 @@ public class RunProcessAction extends ResearcherAction
                        try
                        {
                             primer_id = Integer.parseInt( (String)arr_old_approved_primers.get(i));
-                            System.out.println("disapprove "+primer_id);
+                          //  System.out.println("disapprove "+primer_id);
                             pst_update_primer_status.setInt(2,primer_id);
                             pst_update_primer_status.setInt(1,Oligo.STATUS_DESIGNED);
                             DatabaseTransaction.executeUpdate(pst_update_primer_status);
@@ -338,6 +336,7 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_PRIMER3: //run primer3
                 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder                
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER: //run discrepancy finder
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
                 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
                 {
                     String title = "";
@@ -364,6 +363,13 @@ public class RunProcessAction extends ResearcherAction
                              if ( request.getParameter("isTryMode") != null )
                                  ((PrimerOrderRunner)runner).setIsTryMode(true  );
                             break;
+                        }
+                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
+                        {
+                             runner = new AssemblyRunner();
+                             ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
+                             title = "request for Clone sequence assembly";
+                             break;
                         }
                         case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:
                          {

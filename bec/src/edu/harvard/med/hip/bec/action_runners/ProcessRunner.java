@@ -92,6 +92,12 @@ public abstract class ProcessRunner implements Runnable
                // m_title = "Request for report generator";
 
             }
+          else if (this instanceof AssemblyRunner)
+            {
+                ((AssemblyRunner)this).run();
+               // m_title = "Request for report generator";
+
+            }
    
      }
      
@@ -107,6 +113,8 @@ public abstract class ProcessRunner implements Runnable
             return "Request for discrepancy finder run";
           else if (this instanceof ReportRunner)
             return "Request for report generator";
+         else if (this instanceof AssemblyRunner)
+            return "Request for sequence assembler run";
          return "";
      }
      

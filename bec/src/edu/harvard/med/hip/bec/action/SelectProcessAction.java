@@ -134,14 +134,15 @@ public class SelectProcessAction extends ResearcherAction
                     t = new Thread(runner);                   t.start();
                     return mapping.findForward("processing");
                 }
+                
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper
                 {
                     AssemblyRunner runner = new AssemblyRunner();
                     runner.setUser(user);
                     runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
                     request.setAttribute(Constants.JSP_TITLE,"Request for end read assembler invocation." );
-                    request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
-                     t = new Thread(runner);                    t.start();
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finished.");
+                    t = new Thread(runner);                    t.start();
                    return mapping.findForward("processing");
                 }
                 case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY:
@@ -209,6 +210,7 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER: // add new internal primer
                 {
                 }
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS :
                 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
                 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
@@ -227,8 +229,12 @@ public class SelectProcessAction extends ResearcherAction
                         case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
                         {
                             title="order Internal Primers";break;
-                           
                         }
+                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
+                        {
+                            title="assemble Clone Sequences";break;
+                        }
+                            
                     }
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("initiate_process"));
@@ -306,7 +312,7 @@ public class SelectProcessAction extends ResearcherAction
                 request.setAttribute(Constants.JSP_TITLE, "activate Clones");
                 return (mapping.findForward("scan_label"));
             }
-           
+            
             }
         }
         catch (Exception e)
