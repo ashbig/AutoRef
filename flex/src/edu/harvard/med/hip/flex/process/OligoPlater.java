@@ -26,15 +26,20 @@ public class OligoPlater
 {
     
     protected static final String filePath = "/tmp/";
+    //protected static final String filePath = "G:\\";
     //protected static final String filePath = "H:\\Dev\\OligoOrder\\";
     
     protected static final int positiveControlPosition = 1;
     
     protected static final String PositiveControlSampleType = Sample.CONTROL_POSITIVE;
     protected static final String NegativeControlSampleType = Sample.CONTROL_NEGATIVE;
-    protected static final String oligoFivePrefix = "OU";
-    protected static final String oligoClosePrefix = "OC";
-    protected static final String oligoFusionPrefix = "OF";
+    public static final String oligoFivePrefix = "OU";
+    public static final String oligoClosePrefix = "OC";
+    public static final String oligoFusionPrefix = "OF";
+    public static final String DEFAULTCONTAINERTYPE = "96 WELL OLIGO PLATE";
+    public static final String OLIGO_5P = "OLIGO_5P";
+    public static final String OLIGO_3C = "OLIGO_3C";
+    public static final String OLIGO_3F = "OLIGO_3F";
     
     protected LinkedList oligoPatternList = null;
     protected LinkedList constructList = null;
@@ -61,11 +66,15 @@ public class OligoPlater
     private int         m_totalWells = 94;
     
     private boolean     m_isReorderSequences = true;
-    private boolean     m_isPseudomonas = false;
-    private String      m_plateType = "96 WELL OLIGO PLATE";
+    //private boolean     m_isPseudomonas = false;
+    private String      m_plateType = DEFAULTCONTAINERTYPE;
     
     private boolean     m_isOnlyClose = false;
+    private boolean     m_isOnlyOpen = false;
     protected int       m_mgcContainerId = -1;
+    
+    public void setIsOnlyClose(boolean b) {this.m_isOnlyClose = b;}
+    public void setIsOnlyOpen(boolean b) {this.m_isOnlyOpen = b;}
     
     /**
      * Creates new OligoPlater
@@ -79,10 +88,10 @@ public class OligoPlater
         this.conn = c;
         this.project = project;
         this.workflow = workflow;
-        if (project.getId() == Project.PSEUDOMONAS  )
-            m_isPseudomonas = true;
-        if ( project.getId() == Project.YEAST)
-            m_isOnlyClose = true;
+//        if (project.getId() == Project.PSEUDOMONAS  )
+//            m_isPseudomonas = true;
+//        if ( project.getId() == Project.YEAST)
+//            m_isOnlyClose = true;
         m_protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
         m_nextProtocols = workflow.getNextProtocol(m_protocol);
     }
@@ -136,7 +145,7 @@ public class OligoPlater
     {
         container_5p.insert(conn);
         
-        if( ! m_isPseudomonas)        {  container_3s.insert(conn);     }
+        if( ! m_isOnlyOpen)        {  container_3s.insert(conn);     }
         if ( !m_isOnlyClose) { container_3op.insert(conn);}
         plateset.insert(conn);
         //insert process output: oligo containers
@@ -243,7 +252,7 @@ public class OligoPlater
                 plateWriter_5p.flush();
                 plateWriter_5p.close();
                 
-                if( ! m_isPseudomonas )
+                if( ! m_isOnlyOpen )
                 {
                     plateWriter_3s.flush();
                     plateWriter_3s.close();
@@ -280,7 +289,7 @@ public class OligoPlater
         cont += currentGene.getOligoseq_5p()+"\t" + oligoSample_5p.getPosition()+"\n";
         plateWriter_5p.write(cont);
         
-        if(  ! m_isPseudomonas )
+        if(  ! m_isOnlyOpen )
         {
             oligoSample_3s = generateOligoSample(currentGene,"3s", container_3s.getId(), well);
             //System.out.println("PlateID: "+container_3s.getId()+"; " + "3s lower oligo well: "+ well + "; "
@@ -308,7 +317,7 @@ public class OligoPlater
     {
         plateWriter_5p.write("Label \t OligoID \t OligoSequence \t Well \n");
         
-        if( ! m_isPseudomonas )
+        if( ! m_isOnlyOpen )
         {
             plateWriter_3s.write("Label \t OligoID \t OligoSequence \t Well \n");
         }
@@ -329,7 +338,7 @@ public class OligoPlater
         plateWriter_5p = new FileWriter(plateOutFileName1);
         fileNameList.add(plateOutFileName1);
         
-        if( ! m_isPseudomonas )
+        if( ! m_isOnlyOpen )
         {
             plateOutFileName2 = filePath + container_3s.getLabel();
             plateWriter_3s = new FileWriter(plateOutFileName2);
@@ -366,7 +375,7 @@ public class OligoPlater
         container_5p = new Container(m_plateType, location,label_5p);
         //System.out.println("Created the 5p oligo plate: "+ container_5p.getId());
         
-        if(! m_isPseudomonas)
+        if(! m_isOnlyOpen)
         {
             container_3s = new Container(m_plateType, location,label_3s);
             //System.out.println("Created the 3s oligo plate: "+ container_3s.getId());
@@ -377,7 +386,7 @@ public class OligoPlater
         //System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
         }
         
-        if(m_isPseudomonas)
+        if(m_isOnlyOpen)
         {
             plateset = generatePlateset(container_5p.getId(), container_3op.getId(), -1, m_mgcContainerId);
         } 
@@ -403,7 +412,7 @@ public class OligoPlater
          // Update the threadid for each container.
         container_5p.setThreadid(threadid);
         
-        if( ! m_isPseudomonas )
+        if( ! m_isOnlyOpen )
         {
             label_3s = Container.getLabel(projectCode, oligoClosePrefix, threadid, null); //closed
             container_3s.setLabel(label_3s);
@@ -427,7 +436,7 @@ public class OligoPlater
     {
         Plateset plateset = null;
         
-        if( m_isPseudomonas )
+        if( m_isOnlyOpen )
         {
             plateset = new Plateset(fivepId, threepOpenId, -1);
         } 
@@ -455,21 +464,21 @@ public class OligoPlater
         if (oligoType.equals("5p"))
         {
             oligoId = currentOligo.getOligoId_5p();
-            sampleType = "OLIGO_5P";
+            sampleType = OLIGO_5P;
             sample = new Sample(sampleType, wellId, plateId, oligoId, status);
         }
         else if (oligoType.equals("3s"))
         {
             oligoId = currentOligo.getOligoId_3s();
             constructid = currentOligo.getCloseConstructid();
-            sampleType = "OLIGO_3C";
+            sampleType = OLIGO_3C;
             sample = new Sample(sampleType, wellId, plateId, constructid, oligoId, status);
         }
         else
         {
             oligoId = currentOligo.getOligoId_3op();
             constructid = currentOligo.getOpenConstructid();
-            sampleType = "OLIGO_3F";
+            sampleType = OLIGO_3F;
             sample = new Sample(sampleType, wellId, plateId, constructid, oligoId, status);
         }
         
@@ -488,7 +497,7 @@ public class OligoPlater
         control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_5p.getId());
         container_5p.addSample(control_positive);
         
-        if( ! m_isPseudomonas )
+        if( ! m_isOnlyOpen )
         {
             control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3s.getId());
             container_3s.addSample(control_positive);
@@ -503,7 +512,7 @@ public class OligoPlater
         control_negative = new Sample(NegativeControlSampleType,negativeControl,container_5p.getId());
         container_5p.addSample(control_negative);
         
-        if( ! m_isPseudomonas )
+        if( ! m_isOnlyOpen )
         {
             control_negative = new Sample(NegativeControlSampleType,negativeControl,container_3s.getId());
             container_3s.addSample(control_negative);
@@ -565,7 +574,7 @@ public class OligoPlater
         new ContainerProcessObject(container_5p.getId(),process.getExecutionid(),ioType);
         platepo_5p.insert(conn);
         
-        if( ! m_isPseudomonas )
+        if( ! m_isOnlyOpen )
         {
             ContainerProcessObject platepo_3s =
             new ContainerProcessObject(container_3s.getId(),process.getExecutionid(),ioType);
@@ -597,7 +606,7 @@ public class OligoPlater
             queueItem = new QueueItem(container_5p, nextProtocol, project, workflow);
             containerQueueItemList.add(queueItem);
             
-            if(! m_isPseudomonas)
+            if(! m_isOnlyOpen)
             {
                 queueItem = new QueueItem(container_3s, nextProtocol, project, workflow);
                 containerQueueItemList.add(queueItem);
