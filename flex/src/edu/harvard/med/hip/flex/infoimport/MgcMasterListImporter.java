@@ -158,7 +158,8 @@ public class MgcMasterListImporter
                     
                     cont = new MgcContainer( -1,fileName, new Location(Location.FREEZER) ,
                     current_container,
-                    MgcContainer.getLabel(prev_mgc_containers +  current_container_number++));
+                    MgcContainer.getLabel(prev_mgc_containers +  current_container_number++),
+                    info[9]);
                     containerCol.add(cont);
                     last_container = current_container;
                     
