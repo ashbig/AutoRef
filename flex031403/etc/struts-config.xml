@@ -114,6 +114,14 @@
     <form-bean      name="pickColonyForm"
                     type="edu.harvard.med.hip.flex.form.PickColonyForm"/>
 
+    <!-- Form used to save the container details to a file -->
+    <form-bean      name="saveContainerDetailForm"
+                    type="edu.harvard.med.hip.flex.form.SaveContainerDetailForm"/>
+
+    <!-- Form used to save the container details to a file -->
+    <form-bean      name="saveContainerInfoForm"
+                    type="edu.harvard.med.hip.flex.form.SaveContainerInfoForm"/>
+
     </form-beans>
     
    
@@ -623,6 +631,23 @@
             input="/AddResearcher.jsp">
       <forward name="success" path="/DisplayResearcher.jsp"/>
       <forward name="fail" path="/DisplayFailResearcher.jsp"/>
+    </action>
+
+    <!-- Export container detail information to a file -->
+    <action path="/SaveContainerDetail"
+            name="saveContainerDetailForm"
+            type="edu.harvard.med.hip.flex.action.SaveContainerDetailAction"
+            input="/ContainerDetails.jsp">
+      <forward name="success" path="/SaveContainerDetail.jsp"/>
+    </action>
+
+    <!-- Export container detail information to a file -->
+    <action path="/SaveContainerInfo"
+            name="saveContainerInfoForm"
+            type="edu.harvard.med.hip.flex.action.SaveContainerInfoAction"
+            input="/SaveContaierDetail.jsp">
+      <forward name="success" path="/SaveContainerInfo.jsp"/>
+      <forward name="fail" path="/SaveContainerInfoFail.jsp"/>
     </action>
 
     <!-- The standard administrative actions available with Struts -->
