@@ -131,7 +131,7 @@ public class NeedleWrapper
             cmd = m_needle_path+" /c" + q_name+ " /c"+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile /c" + output_name;
         else
             cmd = m_needle_path+q_name+ " "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
-        System.out.println(cmd);
+        //System.out.println(cmd);
         //blastcmd = "/usr/local/emboss/bin/needle "+q_name+ ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile "+.out ";
         
         try
