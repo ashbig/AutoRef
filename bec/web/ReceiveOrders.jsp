@@ -8,7 +8,7 @@
 <html>
 <head>
     <title><bean:message key="bec.name"/> : Order Receiving Form</title>
-    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+    <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 <h2><bean:message key="bec.name"/> : Order Receiving Form</h2>

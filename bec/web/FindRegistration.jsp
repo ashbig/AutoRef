@@ -8,7 +8,7 @@
 <html>
 <head>
     <title><bean:message key="bec.name"/> : Find Registration</title>
-    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+    <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 

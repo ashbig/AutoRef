@@ -146,6 +146,40 @@ st.append("<option value = '" + Oligo.TYPE_VECTORSPECIFIC+"'>Vector specific</se
 page_html = st.toString();
 break;
         }
+    
+    case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:
+    {
+          StringBuffer st = new StringBuffer();
+          ArrayList linkers = (ArrayList ) request.getAttribute(Constants.LINKER_COL_KEY);
+          ArrayList vectors = (ArrayList ) request.getAttribute(Constants.VECTOR_COL_KEY);
+st.append( "<tr><td  bgColor='#b8c6ed'>Name</td> <TD bgColor='#b8c6ed' > ");
+st.append( "<input type='text' NAME='csname'></td> </tr>");
+st.append( "<tr><td  bgColor='#e4e9f8'>Start Codon</td> <TD bgColor='#e4e9f8' > ");
+st.append( "<SELECT NAME='start_codon'><OPTION VALUE='ATG' selected>ATG <OPTION VALUE='NON'>Natural</SELECT>");
+st.append( "</td> </tr>");
+st.append( "<tr>   <td  bgColor='#b8c6ed'>Fusion Stop Codon</td>    <TD bgColor='#b8c6ed' > ");
+st.append( "<SELECT NAME='fusion_stop_codon'> <OPTION VALUE='GGA'>GGA <OPTION VALUE='TTG' selected>TTG</td>  </tr>");
+st.append( "<tr>     <td  bgColor='#e4e9f8'>Closed Stop Codon</td>    <TD bgColor='#e4e9f8' > ");
+st.append( "<SELECT NAME='closed_stop_codon'><OPTION VALUE='TAG' >TAG<OPTION VALUE='TGA' >TGA<OPTION VALUE='TAA' >TAA  <OPTION VALUE='NON' selected>Natural");
+st.append( "</SELECT>     </td>  </tr><tr><TD colspan='2'>&nbsp;</TD></TR>  <tr> ");
+st.append( "<td  bgcolor='#e4e9f8' width='50%'> Vector  </td>    <TD bgcolor='#e4e9f8' > ");
+st.append( "<SELECT NAME='"+Constants.VECTOR_ID_KEY+"' ID='"+Constants.VECTOR_ID_KEY+"'>");
+for (int count = 0; count < vectors.size(); count++)
+{BioVector vector = (BioVector)vectors.get(count);
+st.append( "<OPTION VALUE='"+vector.getId()+"'>"+vector.getName());
+}
+st.append( "</SELECT></td></tr>");
+st.append( "<tr> <td  bgColor='#b8c6ed'>5' clone linker segment</td><TD bgColor='#b8c6ed'> ");
+st.append( "<SELECT NAME='5LINKERID'>");
+for (int count = 0; count < linkers.size(); count++)
+{BioLinker linker = (BioLinker)linkers.get(count);st.append( "<OPTION VALUE='"+ linker.getId()+"'>"+linker.getName());}
+st.append( "</SELECT></td></tr><tr> <td  bgcolor='#e4e9f8'> 3' clone linker segment</td>");
+st.append( "<TD bgcolor='#e4e9f8' ><SELECT NAME='3LINKERID'>");
+for (int count = 0; count < linkers.size(); count++)
+{BioLinker linker = (BioLinker)linkers.get(count);st.append( "<OPTION VALUE='"+linker.getId()+"'>"+linker.getName());}
+st.append( "</SELECT></td></tr>");page_html = st.toString();
+break;
+        }
    // outside submission
    case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  : 
    {
@@ -165,7 +199,17 @@ st.append("     [<a href='Help_SequenceSampleFile.jsp'>sample file</a>]</td></tr
    }
    case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
        {
-        
+          StringBuffer st = new StringBuffer();
+st.append("<tr><td>This page allows you to upload the<i> clone collection information </i>from XML file. ");
+st.append("The <b>sequence element</b> contains sequence id, species, CDS start, CDS stop, ");
+//st.append("cDNA source, chromosome and sequence properties. The sequence id is the unique identifier");
+//st.append(" for each sequence and will be used as 'user reference sequence id'. ");
+//st.append("Each sequence can be discribed by features. <b>Feature element</b> description contains  feature name type ('GenBank Accession'), feature name value (the GenBank accession number for 'GenBank Accession' name type), feature url and description. ");
+//st.append(" The name type field must be valid name types in the database. Please submit all name types prior to reference sequence submission.");
+st.append("</td></tr> <tr>   <td  bgColor='#b8c6ed'>Please select the clone collection file:");
+st.append(" <input type='file' name='fileName' id='fileName' value=''>");
+st.append("     [<a href='Help_CloneCollectionFile.jsp'>sample file</a>]</td></tr></table>");
+    page_html = st.toString();	
 
 break;}
 }

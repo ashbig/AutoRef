@@ -91,7 +91,7 @@ if (  forwardName_int== Constants.CONTAINER_RESULTS_VIEW)
 <tr><td><input type=radio name=show_action value="IR" checked>Show Isolate Ranker Output</td></tr>
 <%}%>
  		
-       <tr><td>&nbsp; <P></P><input type="SUBMIT"/></td></tr>
+       <tr><td>&nbsp; <P></P> <input type="submit" value="Submit" name="B1"></td></tr>
    
    
     

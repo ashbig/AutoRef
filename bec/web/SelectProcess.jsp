@@ -17,7 +17,7 @@
 
 <title>Primer Calculating Parameters</title>
 
-<link href="FlexStyle.css" rel="stylesheet" type="text/css">
+<link href="application_styles.css" rel="stylesheet" type="text/css">
 </head>
 
 <body >

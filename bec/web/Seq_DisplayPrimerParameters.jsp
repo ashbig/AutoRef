@@ -13,8 +13,8 @@
 <head>
 
 <title>Primer Calculating Parameters</title>
-<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
-<link href="FlexStyle.css" rel="stylesheet" type="text/css">
+<LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
+<link href="application_styles.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>

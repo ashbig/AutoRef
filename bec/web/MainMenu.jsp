@@ -10,7 +10,7 @@
 
 <html>
 <head>
-    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+    <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body bgcolor="#9bbad6">
 <center>

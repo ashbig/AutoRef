@@ -69,8 +69,8 @@
 
 		//--> <p>This page is best viewed with a JavaScript-capable browser. It appears that your browser does not support JavaScript.<p>
 		</script>
-<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
-<link href="FlexStyle.css" rel="stylesheet" type="text/css">
+<LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
+<link href="application_styles.css" rel="stylesheet" type="text/css">
 </head>
 
 <body >
