@@ -57,31 +57,31 @@
 
             <logic:equal name="association" property="gene.type" value="GENE">
             <TD>
-                <a href="DisplayLinks.do?hipGeneId=<bean:write name="association" property="gene.hipGeneId"/>"><bean:write name="association" property="gene.name"/>&nbsp</a>                          
+                <a href="DisplayLinks.do?hipGeneId=<bean:write name="association" property="gene.hipGeneId"/>"><bean:write name="association" property="gene.name"/></a>                          
             </TD>
             </logic:equal>
             <logic:equal name="association" property="gene.type" value="FAMILY">
             <TD>
-                <bean:write name="association" property="gene.name"/>&nbsp                          
+                <bean:write name="association" property="gene.name"/>                          
             </TD>
             </logic:equal>
             <TD>
-                <bean:write name="association" property="geneIndex.searchType"/>&nbsp
+                <bean:write name="association" property="geneIndex.searchType"/>
             </TD>
             <TD align="center">
-                <bean:write name="association" property="gene.symbol"/>&nbsp
+                <bean:write name="association" property="gene.symbol"/>
             </TD>
             <TD>
-                <bean:write name="association" property="gene.nicknamesString"/>&nbsp
+                <bean:write name="association" property="gene.nicknamesString"/>
             </TD>
             <TD>
-                <bean:write name="association" property="gene.gosString"/>&nbsp
+                <bean:write name="association" property="gene.gosString"/>
             </TD>
             <TD align="center">
-                <bean:write name="association" property="stat.score"/>&nbsp
+                <bean:write name="association" property="stat.score"/>
             </TD>
             <TD align="center">
-                <bean:write name="association" property="data.doublehit"/>&nbsp
+                <bean:write name="association" property="data.doublehit"/>
             </TD>
         </tr>
     </logic:iterate> 
