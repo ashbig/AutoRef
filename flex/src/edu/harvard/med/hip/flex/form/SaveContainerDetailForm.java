@@ -21,6 +21,7 @@ import org.apache.struts.action.*;
  */
 public class SaveContainerDetailForm extends ActionForm {
     private int id;
+    private int executionid;
     
     /** Creates new SaveContaierDetailForm */
     public SaveContainerDetailForm() {
@@ -32,5 +33,13 @@ public class SaveContainerDetailForm extends ActionForm {
     
     public int getId() {
         return id;
+    }
+    
+    public void setExecutionid(int executionid) {
+        this.executionid = executionid;
+    }
+    
+    public int getExecutionid() {
+        return executionid;
     }
 }

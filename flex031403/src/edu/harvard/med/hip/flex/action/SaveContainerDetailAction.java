@@ -39,7 +39,9 @@ public class SaveContainerDetailAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
         
         int id = ((SaveContainerDetailForm)form).getId();
+        int executionid = ((SaveContainerDetailForm)form).getExecutionid();
         request.setAttribute("id", new Integer(id));
+        request.setAttribute("executionid", new Integer(executionid));
         
         return mapping.findForward("success");        
     }

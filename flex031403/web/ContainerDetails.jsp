@@ -70,6 +70,7 @@
         <td>
             <html:form action="/SaveContainerDetail.do">
                 <html:hidden name="container" property="id"/>
+                <html:hidden name="process" property="executionid"/>
                 <html:submit value="Export Data"/>
             </html:form>
         </td>

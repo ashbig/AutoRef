@@ -8,6 +8,8 @@ package edu.harvard.med.hip.flex.export;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.process.Process;
+import edu.harvard.med.hip.flex.process.Result;
 
 import java.util.*;
 import java.io.*;
@@ -22,6 +24,7 @@ public class ContainerInfoExporter {
     private boolean type = false;
     private boolean position = false;
     private boolean status = false;
+    private boolean result = false;
     private boolean sequenceid = false;
     private boolean cdsstart = false;
     private boolean cdsstop = false;
@@ -36,12 +39,13 @@ public class ContainerInfoExporter {
     }
     
     public ContainerInfoExporter(boolean sampleid, boolean type, boolean position,
-    boolean status, boolean sequenceid, boolean cdsstart, boolean cdsstop,
+    boolean status, boolean result, boolean sequenceid, boolean cdsstart, boolean cdsstop,
     boolean cdslength, boolean gccontent, boolean sequencetext, boolean cds, boolean isEmpty) {
         this.sampleid = sampleid;
         this.type = type;
         this.position = position;
         this.status = status;
+        this.result = result;
         this.sequenceid = sequenceid;
         this.cdsstart = cdsstart;
         this.cdsstop = cdsstop;
@@ -52,7 +56,7 @@ public class ContainerInfoExporter {
         this.isEmpty = isEmpty;
     }
     
-    public boolean doExport(int id, PrintWriter out) {
+    public boolean doExport(int id, int executionid, PrintWriter out) {
         try {
             Container container = new Container(id);
             container.restoreSample();
@@ -69,6 +73,8 @@ public class ContainerInfoExporter {
                 out.print("Sample Position\t");
             if(status)
                 out.print("Sample Status\t");
+            if(result)
+                out.print("Sample Result\t");
             if(sequenceid)
                 out.print("Sequence ID\t");
             if(cdsstart)
@@ -96,6 +102,16 @@ public class ContainerInfoExporter {
                     out.print(sample.getPosition()+"\t");
                 if(status)
                     out.print(sample.getStatus()+"\t");
+                
+                if(result) {
+                    try {
+                        Process process = Process.findProcess(executionid);
+                        Result res = Result.findResult(sample,process);
+                        out.print(res.getValue()+"\t");
+                    } catch (Exception ex) {
+                        out.print("\t");
+                    }
+                }
                 
                 if(Sample.CONTROL_POSITIVE.equals(sample.getType()) ||
                 Sample.CONTROL_NEGATIVE.equals(sample.getType())){

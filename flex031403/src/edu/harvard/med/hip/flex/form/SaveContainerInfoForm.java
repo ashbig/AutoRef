@@ -21,10 +21,12 @@ import org.apache.struts.action.*;
  */
 public class SaveContainerInfoForm extends ActionForm {
     private int id;
+    private int executionid;
     private boolean sampleid = false;
     private boolean type = false;
     private boolean position = false;
     private boolean status = false;
+    private boolean result = false;
     private boolean sequenceid = false;
     private boolean cdsstart = false;
     private boolean cdsstop = false;
@@ -44,6 +46,14 @@ public class SaveContainerInfoForm extends ActionForm {
     
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public void setExecutionid(int executionid) {
+        this.executionid = executionid;
+    }
+    
+    public int getExecutionid() {
+        return executionid;
     }
     
     public boolean getSampleid() {
@@ -76,6 +86,14 @@ public class SaveContainerInfoForm extends ActionForm {
     
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public boolean getResult() {
+        return result;
+    }
+    
+    public void setResult(boolean result) {
+        this.result = result;
     }
     
     public boolean getSequenceid() {
@@ -147,6 +165,7 @@ public class SaveContainerInfoForm extends ActionForm {
         type = false;
         position = false;
         status = false;
+        result = false;
         sequenceid = false;
         cdsstart = false;
         cdsstop = false;

@@ -41,10 +41,12 @@ public class SaveContainerInfoAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
         
         int id = ((SaveContainerInfoForm)form).getId();
+        int executionid = ((SaveContainerInfoForm)form).getExecutionid();
         boolean sampleid = ((SaveContainerInfoForm)form).getSampleid();
         boolean type = ((SaveContainerInfoForm)form).getType();
         boolean position = ((SaveContainerInfoForm)form).getPosition();
         boolean status = ((SaveContainerInfoForm)form).getStatus();
+        boolean result = ((SaveContainerInfoForm)form).getResult();
         boolean sequenceid = ((SaveContainerInfoForm)form).getSequenceid();
         boolean cdsstart = ((SaveContainerInfoForm)form).getCdsstart();
         boolean cdsstop = ((SaveContainerInfoForm)form).getCdsstop();
@@ -59,15 +61,16 @@ public class SaveContainerInfoAction extends ResearcherAction {
         
         try {
             PrintWriter out = response.getWriter();
-            ContainerInfoExporter exporter = new ContainerInfoExporter(sampleid, type, position, status, sequenceid, cdsstart, cdsstop, cdslength, gccontent, sequencetext, cds, isEmpty);
-            ret = exporter.doExport(id, out);
+            ContainerInfoExporter exporter = new ContainerInfoExporter(sampleid, type, position, status, result, sequenceid, cdsstart, cdsstop, cdslength, gccontent, sequencetext, cds, isEmpty);
+            ret = exporter.doExport(id, executionid, out);
             out.close();
         } catch (IOException ex) {
             return mapping.findForward("fail");
         }
         
         if(ret) {
-            return mapping.findForward("success");
+//            return mapping.findForward("success");
+            return null;
         } else {
             return mapping.findForward("fail");
         }

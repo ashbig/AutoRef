@@ -21,6 +21,7 @@
 
 <html:form action="/SaveContainerInfo.do" method="POST" enctype="multipart/form-data"> 
 <input type="hidden" name="id" value=<bean:write name="id"/>>
+<input type="hidden" name="executionid" value=<bean:write name="executionid"/>>
 
 <h3>Please check the fields to be exported:</h3>
 <table>
@@ -39,6 +40,10 @@
 <tr>
     <td><html:checkbox property="status" /></td>
     <td>Sample Status</td>
+</tr>
+<tr>
+    <td><html:checkbox property="result" /></td>
+    <td>Sample Result</td>
 </tr>
 <tr>
     <td><html:checkbox property="sequenceid" /></td>
