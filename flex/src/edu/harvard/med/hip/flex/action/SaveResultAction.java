@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.12 $
- * $Date: 2001-07-30 21:42:58 $
+ * $Revision: 1.13 $
+ * $Date: 2001-07-30 22:09:26 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.12 $ $Date: 2001-07-30 21:42:58 $
+ * @version    $Revision: 1.13 $ $Date: 2001-07-30 22:09:26 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -101,6 +101,8 @@ public class SaveResultAction extends ResearcherAction {
         String protocolName = (String)session.getAttribute(Constants.PROTOCOL_NAME_KEY);
         
         Protocol protocol =null;
+        
+        String researcherBarcode = (String) session.getAttribute(Constants.RESEARCHER_BARCODE_KEY);
         
         if(queueItem == null || protocolName == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
@@ -167,7 +169,7 @@ public class SaveResultAction extends ResearcherAction {
         try {
             conn = DatabaseTransaction.getInstance().requestConnection();
             
-            Researcher researcher = new Researcher();
+            Researcher researcher = new Researcher(researcherBarcode);
             
             protocol = new Protocol(protocolName);
             

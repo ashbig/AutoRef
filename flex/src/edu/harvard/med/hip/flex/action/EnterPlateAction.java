@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.15 $
- * $Date: 2001-07-30 21:42:58 $
+ * $Revision: 1.16 $
+ * $Date: 2001-07-30 22:09:26 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.15 $ $Date: 2001-07-30 21:42:58 $
+ * @version    $Revision: 1.16 $ $Date: 2001-07-30 22:09:26 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -178,9 +178,12 @@ public class EnterPlateAction extends ResearcherAction {
         
         // put Queue item in the session
         session.setAttribute(Constants.QUEUE_ITEM_KEY, queueItem);
+        
         // put the protocol string into the session
         session.setAttribute(Constants.PROTOCOL_NAME_KEY, protocolName);
         
+         // put the researcher barcode into the session
+        session.setAttribute(Constants.RESEARCHER_BARCODE_KEY, researcherBarcode);
         return retForward;
     }
     
