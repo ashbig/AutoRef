@@ -52,6 +52,7 @@ public class FastaFileGenerator {
     public static final String VERIFIEDKINASEDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Sequence_Verified_Kinase/genes";
     public static final String VERIFIEDHUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Sequence_Verified_Human/genes";
     public static final String ALLDB=BLAST_BASE_DIR+BLAST_DB_DIR+"BlastDB/genes";
+    public static final String VCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"VC/genes";
         
     public static final String LOGFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/blastdb.log";
     public static final String SEQUENCEIDFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/sequenceid.txt";
@@ -61,6 +62,7 @@ public class FastaFileGenerator {
     public static final String PSEUDOMONAS = "'Pseudomonas aeruginosa'";
     public static final String YP = "'Yersinia pestis'";
     public static final String FT = "'Francisella tularensis'";
+    public static final String VC = "'Vibrio cholerae'";
     
     public static final String SPECIES = "Species";
     public static final String MGCPROJECT = "MGC Project";
@@ -201,7 +203,15 @@ public class FastaFileGenerator {
             logAndMail(log, "Error occured when generate entire database file.");
             return;
         }
-                                      
+                      
+        // Generate FASTA file for all VC genes.
+        log.logging("Generate Vibrio cholerae database");
+        int maxid17 = generateFile(log, VCDB, VC, lastSequence, SPECIES);
+        if(maxid17 == -1) {
+            logAndMail(log, "Error occured when generate Vibrio cholerae database file.");
+            return;
+        }
+        
         int newLastSequence = maxid2;
         if(maxid1 > maxid2) {
             newLastSequence = maxid1;
@@ -263,6 +273,10 @@ public class FastaFileGenerator {
             newLastSequence = maxid16;
         }
      
+        if(maxid17 > newLastSequence) {
+            newLastSequence = maxid17;
+        }
+        
         if(!writeLastSequence(newLastSequence, log)) {
             logAndMail(log, "Error occured while writting to sequence file");
             return;
