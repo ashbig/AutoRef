@@ -24,13 +24,14 @@ public class PhredWrapper
     public static final int            TRIMMING_TYPE_PHRED = 0;
     public static final int            TRIMMING_TYPE_PHRED_ALT = 1;
     public static final int            TRIMMING_TYPE_NOT_TRIMMED = -1;
-    
+
   //quality constants
     public static final int             MIN_SEQ_LEN	=20;
     public static final int             MAX_ENZ_POS	=100;
     public static final double             MIN_PRB_VAL=0.05;
     public static final double             MIN_AVG_QUAL	=20.0;
    //run phred options   
+
       public static final String SEQUENCE_DIR_NAME = "sequence_dir";
      public static final String QUALITY_DIR_NAME = "quality_dir";
      public static final String CHROMAT_DIR_NAME = "chromat_dir";
@@ -141,7 +142,7 @@ public class PhredWrapper
         {
             String seqOutputFileName = seqFileDir+File.separator+traceFileName+SEQ_FILE_EXT ;
             String qualOutputFileName =qualFileDir+File.separator+traceFileName+QUAL_FILE_EXT;
-	
+	System.out.println(seqOutputFileName);
             //check whether the Phred output sequence file and quality file exist
             //if not, the trace file failed the base calling step.
             boolean fileExist = (new File(seqOutputFileName)).exists();
@@ -216,14 +217,44 @@ public class PhredWrapper
         {
             Runtime r = Runtime.getRuntime();
             r.traceMethodCalls(true);
-            Process p = r.exec(cmd);
+             Process p = r.exec(cmd);
             BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
-     
-            int x;
-            while ((x = berr.read()) != -1)
+            BufferedInputStream binput = new BufferedInputStream(p.getInputStream());
+            int x = 0;int y = 0;
+            
+            boolean    isFinished = false;
+            boolean    isErrDone = false;
+            boolean    isOutDone = false;
+            byte[]      buff = new byte[255];
+            
+            while (!isFinished)
             {
-               // System.out.write(x);
-               // System.out.println(x);
+                if (berr.available() == 0 && binput.available() == 0)
+                {
+                    //System.out.println("Check if done");
+                    try
+                    {
+                        p.exitValue();
+                        isFinished = true;
+                        break;
+                    }
+                    catch (IllegalThreadStateException e)
+                    {
+                        Thread.currentThread().sleep(100);
+                    }
+                    catch(Exception e)
+                    {
+                        throw new BecUtilException("Cannot run phred");
+                    }
+                }
+                else
+                {
+                   
+                    berr.read(buff, 0, Math.min(255, berr.available()));
+                    binput.read(buff, 0, Math.min(255, binput.available()));
+//                    System.out.println("Read stuff");
+                }
+
             }
             p.waitFor();
             if (p.exitValue() != 0)
@@ -231,7 +262,6 @@ public class PhredWrapper
                 System.err.println("phred call failed" + p.exitValue());
                 return false;
             }
-            p.destroy();
         } catch (IOException e)
         {
             
