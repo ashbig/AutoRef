@@ -157,10 +157,13 @@ public class GiRecordPopulator {
                 rs1 = DatabaseTransaction.executeQuery(stmt);
                 String locusid = null;
                 while(rs1.next()) {
-                    if(locusid == null) {
-                        locusid = rs1.getString(1);
-                    } else {
-                        locusid = locusid + "," + rs1.getString(1);
+                    String currentLocusid = rs1.getString(1);
+                    if(currentLocusid != null && currentLocusid.length() > 0) {
+                        if(locusid == null) {
+                            locusid = currentLocusid;
+                        } else {
+                            locusid = locusid + "," + currentLocusid;
+                        }
                     }
                 }
                 
@@ -187,7 +190,8 @@ public class GiRecordPopulator {
     public void updateUnigene() {
         String sqlUpdate="update girecord set unigene=? where gi=?";
         String sql = "select distinct unigeneid from generecord where locusid in (select distinct locusid from sequencerecord where gi=?)";
-        String sqlQuery="select gi from girecord where unigene is null";
+        String sqlQuery="select gi from girecord";
+        //String sqlQuery="select gi from girecord where unigene is null";
         
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -201,6 +205,7 @@ public class GiRecordPopulator {
             stmt = conn.prepareStatement(sql);
             stmtUpdate = conn.prepareStatement(sqlUpdate);
             rs = t.executeQuery(sqlQuery);
+            int n=0;
             while(rs.next()) {
                 String gi = rs.getString(1);
                 stmt.setString(1, gi);
@@ -208,10 +213,13 @@ public class GiRecordPopulator {
                 rs1 = DatabaseTransaction.executeQuery(stmt);
                 String unigeneid = null;
                 while(rs1.next()) {
-                    if(unigeneid == null) {
-                        unigeneid = rs1.getString(1);
-                    } else {
-                        unigeneid = unigeneid + "," + rs1.getString(1);
+                    String currentUnigene = rs1.getString(1);
+                    if(currentUnigene != null && currentUnigene.length() > 0) {
+                        if(unigeneid == null) {
+                            unigeneid = currentUnigene;
+                        } else {
+                            unigeneid = unigeneid + "," + currentUnigene;
+                        }
                     }
                 }
                 
@@ -221,6 +229,12 @@ public class GiRecordPopulator {
                     DatabaseTransaction.executeUpdate(stmtUpdate);
                     
                     System.out.println("update: "+gi+" - "+unigeneid);
+                }
+                
+                n++;
+                if(n==200) {
+                    DatabaseTransaction.commit(conn);
+                    n = 0;
                 }
             }
             
@@ -239,29 +253,29 @@ public class GiRecordPopulator {
     
     public static void main(String args[]) {
         /**   List giList = new ArrayList();
-        giList.add("32450632");
-        giList.add("21961206");
-        giList.add("33869456");
-        giList.add("33469967");
-        giList.add("33469918");
-        giList.add("33469916");
-        giList.add("16936529");
-        giList.add("37550355");
-        giList.add("16923985");
-        giList.add("34851998");
-      
-        SeqBatchRetriever retriever = new GenbankSeqBatchRetriever(giList);
-        try {
-            retriever.retrieveSequence();
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-        ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((Collection)(retriever.getFoundList().values()));
-        populator.persistRecords();
+         * giList.add("32450632");
+         * giList.add("21961206");
+         * giList.add("33869456");
+         * giList.add("33469967");
+         * giList.add("33469918");
+         * giList.add("33469916");
+         * giList.add("16936529");
+         * giList.add("37550355");
+         * giList.add("16923985");
+         * giList.add("34851998");
+         *
+         * SeqBatchRetriever retriever = new GenbankSeqBatchRetriever(giList);
+         * try {
+         * retriever.retrieveSequence();
+         * } catch (Exception ex) {
+         * System.out.println(ex);
+         * }
+         * ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((Collection)(retriever.getFoundList().values()));
+         * populator.persistRecords();
          **/
         GiRecordPopulator populator = new GiRecordPopulator();
         //populator.updateAccession();
-        populator.updateLocus();
+        //populator.updateLocus();
         populator.updateUnigene();
     }
 }

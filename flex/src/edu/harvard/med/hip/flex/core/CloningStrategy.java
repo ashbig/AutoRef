@@ -174,7 +174,7 @@ public class CloningStrategy {
         
         if(workflowid == Workflow.STANDARD_WORKFLOW || workflowid == Workflow.PSEUDOMONAS_WORKFLOW
         || workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.GATEWAY_WORKFLOW) {
-            if(projectid == Project.HUMAN) 
+            if(projectid == Project.HUMAN || projectid == Project.BREASTCANCER || projectid == Project.KINASE) 
                 return HUMAN_GATEWAY;
             if(projectid == Project.YEAST)
                 return YEAST_GATEWAY;
