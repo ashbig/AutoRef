@@ -56,7 +56,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
             pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE+")");
-            pst_check_clone_sequence = conn.prepareStatement("select sequenceid from assembledsequence where sequenceid = ? and sequencetype ="+BaseSequence.CLONE_SEQUENCE_TYPE_FINAL+" and analysisstatus ="+BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
+            pst_check_clone_sequence = conn.prepareStatement("select sequenceid from assembledsequence where sequenceid = ? and analysisstatus ="+BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
             
             sql = getQueryString(-1, BaseSequence.CLONE_SEQUENCE_TYPE_FINAL, BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
             if ( sql == null)        { return ; }
@@ -86,7 +86,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                                 pst_insert_process_object.setInt(2, clone_sequence.getId());
                                 DatabaseTransaction.executeUpdate(pst_insert_process_object);
 
-                                conn.commit();
+                             //   conn.commit();
                             }
                             catch(Exception e)
                             {
@@ -224,6 +224,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
     private CloneSequence            processSequence(CloneDescription clone) throws Exception
     {
         CloneSequence clonesequence = new CloneSequence( clone.getCloneSequenceId());
+  System.out.println(clonesequence.getText());
         int[] cds_start_stop = new int[2];
         BaseSequence  refsequence = prepareRefSequence(clone,  cds_start_stop);
         DiscrepancyFinder df = new DiscrepancyFinder();
@@ -355,15 +356,15 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         User user  = null;
         try
         {
-            user = AccessManager.getInstance().getUser("htaycher1","htaycher");
+            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
         }
         catch(Exception e){}
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
-        String  item_ids = "CGS000073-5";
+        String  item_ids = "156336";
 
         runner.setItems(item_ids.toUpperCase().trim());
-        runner.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
+        runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
         runner.setUser(user);
         //Thread t = new Thread(runner);    
        // t.start();
