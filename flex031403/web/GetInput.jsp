@@ -11,10 +11,8 @@
 
 <h2>FlexGene : Create Process Plate</h2>
 <hr>
-
 <html:errors/>
-
-<html:form action="/GetInput.do" focus="sourcePlate">
+<html:form action="/GetInput.do" focus="researcherBarcode">
 <table>
     <tr>
     <td><b>Enter your ID:</b></td>
@@ -28,7 +26,7 @@
 
     <tr>
     <td><b>Select new location for the source plate:</b></td>
-    <td><select name="location">
+    <td><select name="sourceLocation">
         <logic:iterate id="location" name="locations" scope="request">
             <option value="<bean:write name="location" property="id"/>"><bean:write name="location" property="type"/>
         </logic:iterate>
@@ -36,7 +34,7 @@
 
     <tr>
     <td><b>Select new location for the destination plate:</b></td>
-    <td><select name="location">
+    <td><select name="destLocation">
         <logic:iterate id="location" name="locations" scope="request">
             <option value="<bean:write name="location" property="id"/>"><bean:write name="location" property="type"/>
         </logic:iterate>
@@ -47,7 +45,6 @@
     </tr>
 </table>
 </html:form>
-
 <logic:present name="queueItems">
 <p>
 <b>The following containers are available:</b>
@@ -55,6 +52,7 @@
 <tr>
     <th>ID</th><th>Label</th>
 </tr>
+
 <logic:iterate id="queueItem" name="queueItems" scope="request">
 <tr>
     <td><bean:write name="queueItem" property="item.id"/></td>
