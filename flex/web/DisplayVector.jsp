@@ -30,6 +30,18 @@
         <td class="prompt">Vector Source:</td>
         <td><bean:write name="vector" property="source"/></td>
         </tr>
+        <tr>
+        <td class="prompt">HIP Name:</td>
+        <td><bean:write name="vector" property="hipname"/></td>
+        </tr>
+        <tr>
+        <td class="prompt">Restriction:</td>
+        <td><bean:write name="vector" property="restriction"/></td>
+        </tr>
+        <tr>
+        <td class="prompt">Description:</td>
+        <td><bean:write name="vector" property="description"/></td>
+        </tr>
     </table>
 
 <p>

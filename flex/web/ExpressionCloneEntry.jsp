@@ -18,7 +18,7 @@
 
 <p>
 <ul>
-    <li><a href="GetStrategy.do">Create Expression Plate</a>
+    <li><a href="EnterMasterPlateBarcode.jsp">Create Expression Plate</a>
     <li><a href="EnterExpressionPlateBarcode.jsp">Enter Expression Plate Result</a>
 </ul>
 

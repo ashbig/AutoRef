@@ -26,7 +26,7 @@ public class MasterToExpressionContainerMapper {
  
     public Vector getSampleLineageSet() {return sampleLineageSet;}
     
-    public Container doMapping(Container c, String label, String containertype, Location l, int threadid, String sampletype, int strategyid) throws FlexDatabaseException {
+    public Container doMapping(Container c, String label, String containertype, Location l, int threadid, String sampletype, String vectorname) throws FlexDatabaseException {
         if(containertype == null || containertype.trim().equals("")) {
             containertype = "96 WELL PLATE";
         }
@@ -72,6 +72,8 @@ public class MasterToExpressionContainerMapper {
                 type = sampletype;
             }
             
+            CloningStrategy cs = CloningStrategy.findStrategyById(s.getStrategyid());
+            CloningStrategy expStrategy = CloningStrategy.findStrategyByVectorAndLinker(vectorname, cs.getLinker5p().getId(), cs.getLinker3p().getId());
             ExpressionCloneSample newSample = new ExpressionCloneSample(type, s.getPosition(), newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD, 0);
             newSample.setCdslength(s.getCdslength());
             newSample.setGenbank(s.getGenbank());
@@ -83,7 +85,7 @@ public class MasterToExpressionContainerMapper {
             newSample.setMastercloneid(s.getMastercloneid());
             newSample.setSequenceid(s.getSequenceid());
             newSample.setConstructid(s.getConstructid());
-            newSample.setStrategyid(strategyid);
+            newSample.setStrategyid(expStrategy.getId());
             newSample.setClonestatus(CloneInfo.IN_PROCESS);     
             newSample.setPcrresult(CloneSample.NOT_DONE);
             newSample.setFloresult(CloneSample.NOT_DONE);

@@ -21,7 +21,7 @@ import edu.harvard.med.hip.flex.core.ExpressionCloneSample;
  */
 public class CreateExpressionPlateForm extends ActionForm {
     protected String sourcePlate = null;
-    protected int cloningStrategy;
+    protected String vectorname = null;
     protected String project;
     protected String researcherBarcode = null;
     
@@ -30,12 +30,12 @@ public class CreateExpressionPlateForm extends ActionForm {
     }
     
     public void setSourcePlate(String s) {this.sourcePlate = s;}
-    public void setCloningStrategy(int s) {this.cloningStrategy = s;}
+    public void setVectorname(String s) {this.vectorname = s;}
     public void setProject(String s) {this.project = s;}
     public void setResearcherBarcode(String s) {this.researcherBarcode = s;}
    
     public String getSourcePlate() {return sourcePlate;}
-    public int getCloningStrategy() {return cloningStrategy;}
+    public String getVectorname() {return vectorname;}
     public String getProject() {return project;}
     public String getResearcherBarcode() {return researcherBarcode;}
 
@@ -65,14 +65,6 @@ public class CreateExpressionPlateForm extends ActionForm {
     HttpServletRequest request) {
         
         ActionErrors errors = new ActionErrors();
-        
-        if ((sourcePlate == null) || (sourcePlate.trim().length() < 1)) {
-            errors.add("sourcePlate", new ActionError("error.plate.invalid.master", sourcePlate));
-        } else {
-            if(!sourcePlate.substring(1, 3).equals("MG")) {
-                errors.add("sourcePlate", new ActionError("error.plate.invalid.master", sourcePlate));
-            }
-        }
         
         if((researcherBarcode == null) || (researcherBarcode.trim().length() < 1)) {
             errors.add("researcher", new ActionError("error.researcherBarcode.required"));

@@ -62,23 +62,23 @@ public class CreateExpressionPlateAction extends ResearcherAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String sourcePlate = ((CreateExpressionPlateForm)form).getSourcePlate();
-        int cloningStrategy = ((CreateExpressionPlateForm)form).getCloningStrategy();
-        String project = ((CreateExpressionPlateForm)form).getProject();
+        String name = ((CreateExpressionPlateForm)form).getVectorname();
         String researcherBarcode = ((CreateExpressionPlateForm)form).getResearcherBarcode();
         
+        String vectorname = name.substring(0, name.indexOf("!"));
+        int vectorid = Integer.parseInt(name.substring(name.indexOf("!")+1));
+       
         List containers = null;
         try {
             containers = CloneContainer.findContainers(sourcePlate);
         } catch (Exception ex) {
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", sourcePlate));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
         }
         
         if(containers == null || containers.size()==0) {
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", sourcePlate));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
+            request.setAttribute(Action.EXCEPTION_KEY, "Source plate doesn't exist");
+            return (mapping.findForward("error"));
         }
         
         // Validate the researcher barcode.
@@ -100,16 +100,20 @@ public class CreateExpressionPlateAction extends ResearcherAction {
         int threadid = container.getThreadid();
         String labelPrefix = null;
         String oldLabel = container.getLabel();
-        if(Constants.HUMAN.equals(project)) {
+        String species = oldLabel.substring(0, 1);
+        
+        if("H".equals(species)) {
             labelPrefix = "HsxXG";
-        } else if(Constants.YEAST.equals(project)) {
+        } else if("Y".equals(species)) {
             labelPrefix = "ScxXG";
-        } else if(Constants.PSEUDOMONAS.equals(project)) {
+        } else if("P".equals(species)) {
             labelPrefix = "PaxXG";
-        } else if(Constants.MOUSE.equals(project)) {
+        } else if("M".equals(species)) {
             labelPrefix = "MmxXG";
         } else {
-            labelPrefix = oldLabel.substring(0,2)+"x"+"XG";
+            errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
         }
         
         java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
@@ -117,7 +121,7 @@ public class CreateExpressionPlateAction extends ResearcherAction {
         fmt.setMinimumIntegerDigits(3);
         fmt.setGroupingUsed(false);
         
-        String label = labelPrefix+oldLabel.substring(3)+"."+fmt.format(cloningStrategy);
+        String label = labelPrefix+oldLabel.substring(3)+"."+fmt.format(vectorid);
         
         //If the new label already exists in the database, return to user.
         try {
@@ -142,7 +146,7 @@ public class CreateExpressionPlateAction extends ResearcherAction {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            newContainer = mapper.doMapping(container, label, null, null, threadid, null, cloningStrategy);
+            newContainer = mapper.doMapping(container, label, null, null, threadid, null, vectorname);
             
             Vector newSamples = newContainer.getSamples();
             for(int i=0; i<newSamples.size(); i++) {

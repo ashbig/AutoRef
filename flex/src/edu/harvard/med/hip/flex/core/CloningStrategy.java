@@ -34,6 +34,10 @@ public class CloningStrategy {
         this.linker3p = linker3p;
     }
     
+    public CloningStrategy(int id) {
+        this.id = id;
+    }
+    
     public int getId() {return id;}
     public String getName() {return name;}
     public CloneVector getClonevector() {return clonevector;}
@@ -60,6 +64,68 @@ public class CloningStrategy {
             System.out.println(ex);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return s;
+    }
+    
+    public static CloningStrategy findStrategyById(int strategyid) throws FlexDatabaseException {
+        String sql = "Select * from cloningstrategy where strategyid="+strategyid;
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        CloningStrategy s = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                String name = rs.getString("STRATEGYNAME");
+                int linkerid5p = rs.getInt("LINKERID_5P");
+                int linkerid3p = rs.getInt("LINKERID_3P");
+                String vectorname = rs.getString("VECTORNAME");
+                String type = rs.getString("TYPE");
+                s = new CloningStrategy(strategyid, name, new CloneVector(vectorname), new CloneLinker(linkerid5p), new CloneLinker(linkerid3p));
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+            throw new FlexDatabaseException(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return s;
+    }
+    
+    public static CloningStrategy findStrategyByVectorAndLinker(String vectorname, int linkerid5p, int linkerid3p) throws FlexDatabaseException {
+        String sql = "Select * from cloningstrategy"+
+        " where linkerid_5p=?"+
+        " and linkerid_3p=?"+
+        " and vectorname=?";
+        DatabaseTransaction t = null;
+        Connection c = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        CloningStrategy s = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            stmt = c.prepareStatement(sql);
+            stmt.setInt(1, linkerid5p);
+            stmt.setInt(2, linkerid3p);
+            stmt.setString(3, vectorname);
+            rs = t.executeQuery(stmt);
+            if(rs.next()) {
+                int strategyid = rs.getInt("STRATEGYID");
+                String name = rs.getString("STRATEGYNAME");
+                String type = rs.getString("TYPE");
+                s = new CloningStrategy(strategyid, name, new CloneVector(vectorname), new CloneLinker(linkerid5p), new CloneLinker(linkerid3p));
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+            throw new FlexDatabaseException(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
         }
         
         return s;

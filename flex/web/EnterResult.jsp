@@ -86,7 +86,7 @@ function put5()
 <hr>
 <html:errors/>
 <p>
-<html:form action="/EnterExpressionResult.do" focus="sourcePlate"  enctype="multipart/form-data">
+<html:form action="/EnterExpressionResult.do" enctype="multipart/form-data">
 <html:hidden property="newPlate"/>
 <table>
     <tr>

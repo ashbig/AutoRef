@@ -22,10 +22,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.flex.core.CloningStrategy;
+import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.workflow.Project;
 import edu.harvard.med.hip.flex.database.FlexDatabaseException;
 import edu.harvard.med.hip.flex.Constants;
+import edu.harvard.med.hip.flex.form.CreateExpressionPlateForm;
 
 /**
  *
@@ -54,16 +55,65 @@ public class GetStrategyAction extends ResearcherAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        List strategy = CloningStrategy.getAllDestStrategy();
         
-        List projects = new ArrayList();
-        projects.add(Constants.HUMAN);
-        projects.add(Constants.MOUSE);
-        projects.add(Constants.YEAST);
-        projects.add(Constants.PSEUDOMONAS);
-
-        request.setAttribute("cloningStrategies", strategy);
-        request.setAttribute("projects", projects);
+        String sourcePlate = ((CreateExpressionPlateForm)form).getSourcePlate();
+         
+        if ((sourcePlate == null) || (sourcePlate.trim().length() < 1)) {
+            errors.add("sourcePlate", new ActionError("error.plate.invalid.master", sourcePlate));
+        } else {
+            if(!sourcePlate.substring(1, 3).equals("MG")) {
+                errors.add("sourcePlate", new ActionError("error.plate.invalid.master", sourcePlate));
+            }
+        }       
+                
+        List containers = null;
+        try {
+            containers = CloneContainer.findContainers(sourcePlate);
+        } catch (Exception ex) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", sourcePlate));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+        
+        if(containers == null || containers.size()==0) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", sourcePlate));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+        
+        Vector samples = ((CloneContainer)containers.get(0)).getSamples();
+        CloneSample sample = (CloneSample)samples.get(0);
+        int strategyid = sample.getStrategyid();
+        CloningStrategy strategy = null;
+        try {
+            strategy = CloningStrategy.findStrategyById(strategyid);
+        } catch (Exception ex) {            
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
+        }
+        
+        if(strategy == null) {          
+            request.setAttribute(Action.EXCEPTION_KEY, "strategy is null");
+            return (mapping.findForward("error"));
+        }
+            
+        String sourceVector = strategy.getClonevector().getName();
+        List destVectors = null;
+        try {
+            destVectors = CloneVector.findDestVectors(sourceVector);
+        } catch (FlexDatabaseException ex) {
+            request.setAttribute(Action.EXCEPTION_KEY, "strategy is null");
+            return (mapping.findForward("error"));
+        }
+        
+        if(destVectors == null || destVectors.size() == 0) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.expression.novector", sourcePlate));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }            
+            
+        request.setAttribute("vectors", destVectors);
+        request.setAttribute("sourcePlate", sourcePlate);
         
         return (mapping.findForward("success"));
     }

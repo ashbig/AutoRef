@@ -1113,8 +1113,10 @@
   
     <action    path="/GetStrategy"
                type="edu.harvard.med.hip.flex.action.GetStrategyAction"
+               name="createExpressionPlateForm"
                scope="request"
-               input="/GetStrategy.do">
+               validate="false"
+               input="/EnterMasterPlateBarcode.jsp">
       <forward  name="success"   path="/SelectExpressionVector.jsp"/>
     </action>    
     
@@ -1142,7 +1144,7 @@
                scope="session"
                validate="false"
                input="/EnterResult.jsp">
-      <forward  name="success"   path="/GetStrategy.do"/>
+      <forward  name="success"   path="/EnterMasterPlateBarcode.jsp"/>
       <forward  name="success_result"   path="/EnterExpressionPlateBarcode.jsp"/>
       <forward  name="fail"     path="/NoPlateInSession.jsp"/>
     </action> 
