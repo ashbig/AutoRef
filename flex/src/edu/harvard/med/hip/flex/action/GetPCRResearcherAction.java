@@ -70,7 +70,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
         boolean isClosedOnly = false;
         boolean isOpenOnly = false;
         if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE || projectid == Project.YP || projectid == Project.FT || workflowid == Workflow.MGC_GATEWAY_CLOSED)    isClosedOnly = true;
-        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION) isOpenOnly = true;
+        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION || projectid == Project.VC || projectid == Project.KINASE_MUT) isOpenOnly = true;
         
         
         // Validate the researcher barcode.

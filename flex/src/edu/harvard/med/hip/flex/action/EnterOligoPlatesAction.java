@@ -90,7 +90,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
         boolean isOnlyClosed = false;
         boolean isOnlyOpen = false;
         if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE || projectid == Project.YP || projectid == Project.FT || workflowid == Workflow.MGC_GATEWAY_CLOSED)    isOnlyClosed = true;
-        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION) isOnlyOpen = true;
+        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION || projectid == Project.VC || projectid == Project.KINASE_MUT) isOnlyOpen = true;
         
         try {
             

@@ -32,6 +32,8 @@ public class Project {
     public final static int RZPD_WALL = 13;
     public final static int FT = 14;
     public final static int AVENTIS = 15;
+    public final static int VC = 16;
+    public final static int KINASE_MUT = 17;
     
     public final static String HUMANSTRING = "Human";
     public final static String YEASTSTRING = "Yeast";
