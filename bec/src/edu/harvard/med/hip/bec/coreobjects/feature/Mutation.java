@@ -222,6 +222,8 @@ public abstract class Mutation
             case DNA : return "DNA";
             case AA: return "AA";
             case  RNA : return "RNA";
+            case  LINKER_3P : return "Linker 3'";
+            case  LINKER_5P : return "Linker 5'";
             default: return "not known";
         }
     }
