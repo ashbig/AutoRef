@@ -79,6 +79,7 @@ public class MgcRequestImporter {
         blastSequences(sequencesToBlat, sequencesMatchedByBlast, sequencesNotMatchedByBlast);
         //save request to db
         m_Request.insert(conn);
+        m_Request = new Request(m_Request.getId());
         notifyUser(requestGI, sequencesMatchedByBlast, sequencesNotMatchedByBlast);
         //parse results for not matching GI
         return m_Request.getSequences();
