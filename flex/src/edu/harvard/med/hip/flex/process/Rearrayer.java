@@ -181,15 +181,16 @@ public class Rearrayer
         {
             public int compare(Object cont1, Object cont2)
             {
-                if ( !(cont1 instanceof MgcContainer) || !(cont2 instanceof MgcContainer)) return 0;
                 
-                MgcContainer mc1 = (MgcContainer) cont1;
-                MgcContainer mc2 = (MgcContainer) cont2;
+                MgcContainerForRearray mrc1 =(MgcContainerForRearray) cont1;
+                MgcContainerForRearray mrc2 = (MgcContainerForRearray) cont2;
+                Container mc1 = mrc1.getContainer();
+                Container mc2 = mrc2.getContainer();
+                if ( !(mc1 instanceof MgcContainer) || !(mc2 instanceof MgcContainer)) return 0;
                 
-                int res = (mc1.getMarker().compareToIgnoreCase(mc2.getMarker())) ;
+                int res = (((MgcContainer)mc1).getMarker().compareToIgnoreCase(((MgcContainer)mc2).getMarker())) ;
                 if (res == 0)//same marker
-                    return ((MgcContainerForRearray)cont1).numberOfSequences() -
-                            ((MgcContainerForRearray)cont2).numberOfSequences();
+                    return    -(mrc1.numberOfSequences() - mrc2.numberOfSequences());
                 else
                         return res;
                 
@@ -298,9 +299,13 @@ class MgcContainerForRearray
             Request m_Request = new Request(108);
           
              Rearrayer re = new Rearrayer( new ArrayList(m_Request.getSequences()) );
-                ArrayList mgc_containers = null;
-               re.findMgcContainers( );
-            mgc_containers = re.getContainers();
+             //   ArrayList mgc_containers = null;
+            //   re.findMgcContainers( );
+            //mgc_containers = re.getContainers();
+            re.findOriginalMgcContainers();
+            ArrayList orderedSeq = re.getSequencesOrderedByMarkerContainerSTP(94);
+            
+            
         }catch(Exception e){}
   }
             
