@@ -50,7 +50,17 @@ public class Request
          if (mode == Constants.TYPE_ID)
             m_process_ids  = pr;
          else if (mode == Constants.TYPE_OBJECTS)
+         {
+             m_process_ids = new ArrayList();
             m_processes  =pr;
+            ProcessExecution pre = null;
+            for(int i = 0; i < m_processes.size(); i++)
+            {
+                pre = (ProcessExecution) m_processes.get(i);
+                m_process_ids.add( new Integer( pre.getId()));
+            }
+           
+         }
     }
     
     public Request(int id,  java.util.Date d, int u, ArrayList pr, int mode) throws BecDatabaseException
@@ -65,7 +75,16 @@ public class Request
         if (mode == Constants.TYPE_ID)
             m_process_ids  = pr;
          else if (mode == Constants.TYPE_OBJECTS)
+         {
+             m_process_ids = new ArrayList();
             m_processes  =pr;
+            ProcessExecution pre = null;
+            for(int i = 0; i < m_processes.size(); i++)
+            {
+                pre = (ProcessExecution) m_processes.get(i);
+                m_process_ids.add( new Integer( pre.getId()));
+            }
+        }
     }
     
     //getters
@@ -100,9 +119,10 @@ public class Request
     
     public void insert(Connection conn) throws BecDatabaseException
     {
-         
-        String sql = "insert into request(requestid, submittiondate, userid)"+
-        " values ("+m_id +","+ m_submissiondate +","+m_submitter_id + ")";
+        if (  m_processes == null)
+            throw new BecDatabaseException("No process attached to the request");
+        String sql = "insert into request(requestid, submissiondate, researcherid)"+
+        " values ("+m_id +",sysdate,"+m_submitter_id + ")";
         
       
         Statement stmt = null;
@@ -110,19 +130,24 @@ public class Request
         {
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
-            
             for (int ind = 0 ; ind < m_processes.size() ;ind++)
             {
                 ProcessExecution pr = (ProcessExecution)m_processes.get(ind);
+                System.out.print("l-"+ind);
                 pr.insert(conn);
+                System.out.print(ind);
             }
+            
            
-        } catch (SQLException sqlE)
+        } 
+        catch (Exception sqlE)
         {
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
-        } finally
+        } 
+        finally
         {
-            DatabaseTransaction.closeStatement(stmt);
+          DatabaseTransaction.closeStatement(stmt);
+          
         }
     }
     

@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.4 2003-04-25 20:20:00 Elena Exp $
+ * $Id: Container.java,v 1.5 2003-05-09 19:53:14 Elena Exp $
  *
  * File     	: Container.java
 
@@ -266,7 +266,7 @@ public class Container
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         CachedRowSet crs = t.executeQuery(sql);
-        ResultSet rs = null;
+        
         try
         {
             while(crs.next())
@@ -283,7 +283,7 @@ public class Container
             throw new BecDatabaseException("Error occured while initializing sample\n"+sqlE+"\nSQL: "+sql);
         } finally
         {
-            DatabaseTransaction.closeResultSet(rs);
+           
             DatabaseTransaction.closeResultSet(crs);
         }
          
@@ -299,51 +299,53 @@ public class Container
         
         m_samples.clear();
         
-        String sql = "select s.sampleid, position, sampletype,rank,score, status, "
-    + "iso.isolatetrackingid,flexconstructid,flexsampleid,flexsequencingplateid,flexsequenceid,flexcloneid "
-    + "from flexinfo, isolatetracking iso, sample s "
-    +" where flexinfo.isolatetrackingid=iso.isolatetrackingid and iso.sampleid(+)=s.sampleid"
-    +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
+        String sql = "select s.sampleid as sampleid, position, constructid, sampletype,rank,score, status, "
+        +" iso.isolatetrackingid as isolatetrackingid,id,flexconstructid,flexsampleid,flexsequencingplateid,"
+        +" flexsequenceid,flexcloneid from flexinfo f, isolatetracking iso, sample s  "
+        +" where f.isolatetrackingid=iso.isolatetrackingid and iso.sampleid=s.sampleid "
+        +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
         
    
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         CachedRowSet crs = t.executeQuery(sql);
-   
+         Sample s = null; IsolateTrackingEngine isolatetracking = null;FlexInfo fl = null;
         try
         {
             while(crs.next())
             {
                 
-                int sampleid = crs.getInt("SAMPLEID");
-                String sampletype = crs.getString("SAMPLETYPE");
+               
                 int position = crs.getInt("position");
-                Sample s = new Sample(  sampleid, sampletype, position, m_id);
+                 int sampleid = crs.getInt("sampleid");
+                String sampletype = crs.getString("sampletype");
+                s = new Sample(  sampleid, sampletype, position, m_id);
                 // create isolate tracking for sample
                 if ( crs.getInt("isolatetrackingid") != -1)
                 {
                     int isolatetracking_id = crs.getInt("isolatetrackingid");
-                    IsolateTrackingEngine isolatetracking = new IsolateTrackingEngine();
+                    isolatetracking = new IsolateTrackingEngine();
                     isolatetracking.setRank(crs.getInt("rank")) ;// results of the end read analysis
-                    isolatetracking.setScore(crs.getInt("scored"));// results of the end read analysis
+                    isolatetracking.setScore(crs.getInt("score"));// results of the end read analysis
                     isolatetracking.setStatus(crs.getInt("status"));
                     isolatetracking.setSampleId(sampleid);
                     isolatetracking.setId(isolatetracking_id);
-                    isolatetracking.setFlexInfoId(crs.getInt("flexid") );// sample id of the first sample of this isolate
+                    isolatetracking.setFlexInfoId(crs.getInt("id") );// sample id of the first sample of this isolate
                     isolatetracking.setConstructId(crs.getInt("constructid") );// identifies the agar; several (four) isolates will have the same id
     //create flex info for isolate tracxking
-                    FlexInfo fl = new FlexInfo();
-                    fl.setId ( crs.getInt("flexid"));
-                    fl.setIsolateTrackingId ( crs.getInt("isolatetrackingid"));
+                     fl = new FlexInfo();
+                    fl.setId ( crs.getInt("id"));
+                    fl.setIsolateTrackingId ( isolatetracking_id );
                      fl.setFlexSampleId ( crs.getInt("flexsampleid"));
                      fl.setFlexConstructId ( crs.getInt("flexconstructid"));
-                     fl.setFlexPlateId ( crs.getInt("flexplateid"));
+                     fl.setFlexPlateId ( crs.getInt("flexsequencingplateid"));
                      fl.setFlexSequenceId ( crs.getInt("flexsequenceid"));
                     fl.setFlexCloneId ( crs.getInt("flexcloneid")) ;
 
                     isolatetracking.setFlexInfo(fl);
                     s.setIsolaterTracking(isolatetracking);
                     m_samples.add(s);
+                    System.out.println(s.getId());
                 }
             }
         } catch (SQLException sqlE)
@@ -351,7 +353,7 @@ public class Container
             throw new BecDatabaseException("Error occured while initializing sample\n"+sqlE+"\nSQL: "+sql);
         } finally
         {
-            DatabaseTransaction.closeResultSet(crs);
+            
             DatabaseTransaction.closeResultSet(crs);
         }
          
@@ -367,15 +369,19 @@ public class Container
         String sql = 	"insert into containerheader " +
         "(containerid, containertype,  label, status) "+
         "values ("+m_id+",'"+m_type+"','"+m_label+"',"+m_status+")";
-        
+        Sample s = null;
         DatabaseTransaction.executeUpdate(sql,conn);
         
         //foreach sample, insert record into containercell and sample table
         for (int ind = 0; ind < m_samples.size(); ind++)
        
         {
-            Sample s = (Sample)m_samples.get(ind);
+            
+            s = (Sample)m_samples.get(ind);
+            if (s.getType().equals("EMPTY"))
+                System.out.print(s.getPosition()+" ");
             s.insert(conn);
+            System.out.println("insert "+s.getPosition());
         }
     }
     
@@ -496,6 +502,44 @@ public class Container
             
          }
         return null;
+    }
+    
+       //function checkes wether at least one sample has result of type end-read attached
+        //returns true if yes
+   public boolean checkForResultTypes(int[] result_types) throws BecDatabaseException
+   {
+       String sql = "";
+       for (int ind = 0; ind < result_types.length; ind++)
+       {
+           sql +=result_types[ind];
+           if (ind != result_types.length - 1) sql +=",";
+       }
+  
+       sql = "select count(*) from  result where sampleid in "
+       + " (select sampleid  from sample where containerid = " + m_id
+       + " ) and resulttype in ( "+ sql + ")";
+       
+        
+        CachedRowSet crs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            crs.next();
+            if(crs.next())
+            {
+                return true;
+            }
+            return false;
+        } catch (Exception e)
+        {
+            throw new BecDatabaseException("Error while checking for result types for container with id: "+m_id+"\n"+e+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+       
     }
     /*
       // function returns array of containers of define type 
@@ -946,15 +990,14 @@ public class Container
     {
         try
         {
-            System.out.println(System.currentTimeMillis());
-           // Container.findContainers("MAB000206-F");
-           // System.out.println(System.currentTimeMillis());
-           // Container.findContainersFromView("MAB000206-F");
-           // System.out.println(System.currentTimeMillis());
+          Container container = new Container( 16);
+         
+            container.restoreSampleIsolate();
         }
         catch(Exception e)
         {
         }
+        System.exit(0);
         /*
         System.out.println("\nCreate new container with label = CPL10.3");
         Container c = new Container("CPL10.3");

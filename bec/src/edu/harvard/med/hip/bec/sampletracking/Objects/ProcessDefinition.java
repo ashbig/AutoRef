@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.4 2003-04-25 20:19:55 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.5 2003-05-09 19:53:14 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -55,13 +55,16 @@ public class ProcessDefinition
     public static int      ProcessIdFromProcessName(String name)throws BecDatabaseException
     {
         String sql = "select  processdefinitionid from processdefinition "+
-            "where processname = "+name;
+            "where processname = '"+name +"'";
         CachedRowSet crs = null;
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             crs = t.executeQuery(sql);
-            return crs.getInt("processdefinitionid");
+            if (crs.next())
+                return crs.getInt("processdefinitionid");
+            else 
+                return -1;
         
         } catch (Exception sqlE)
         {

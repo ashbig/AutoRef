@@ -120,33 +120,30 @@ public class Result
      */
     public void insert(Connection conn, int process_id) throws BecDatabaseException
     {
-        PreparedStatement ps = null;
+        Statement stmt = null;
         String sql =null;
         try
         {
             DatabaseTransaction dt = DatabaseTransaction.getInstance();
             if (m_value_id != BecIDGenerator.BEC_OBJECT_ID_NOTSET)
-                sql = "insert into result  values(?,?,?,?)";
+                sql = "insert into result  (resultid, sampleid, resulttype, resultvalueid)"+
+                " values("+m_id+","+m_sample_id+","+m_type+","+m_value_id+")";
             else
-                sql = "insert into result values(?,?,?)";
-            ps = conn.prepareStatement(sql);
+                sql = "insert into result (resultid, sampleid, resulttype)"
+                +" values("+m_id+","+m_sample_id+","+m_type+")";
             
-            ps.setInt(1,m_id);
-            ps.setInt(2,m_sample_id);
-            ps.setInt(3,m_type);
-            if (m_value_id != BecIDGenerator.BEC_OBJECT_ID_NOTSET)
-               ps.setInt(4,m_value_id);
-            dt.executeUpdate(ps);
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+    
             sql = "insert into processresult (processid,resultid) values("+process_id+","+m_id+")";
-            Statement stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             
         } catch (SQLException sqlE)
         {
-            throw new BecDatabaseException(sqlE);
+            throw new BecDatabaseException("Cannot insert result "+sqlE);
         } finally
         {
-            DatabaseTransaction.closeStatement(ps);
+            DatabaseTransaction.closeStatement(stmt);
         }
     }
     

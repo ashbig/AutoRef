@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessExecution.java,v 1.3 2003-04-25 20:19:55 Elena Exp $
+ * $Id: ProcessExecution.java,v 1.4 2003-05-09 19:53:14 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -51,14 +51,18 @@ public class ProcessExecution
         else
             m_id = id;
        //m_date = ;
-      
+       m_request_id = requestid;
        m_processdefinition_id = processdef;
+       
+       Spec spec = null;
        if (mode == Constants.TYPE_OBJECTS)
         {
+            m_spec_ids = new ArrayList();
             m_specs = specar;
             for(int i = 0; i < m_specs.size(); i++)
             {
-                m_spec_ids.add( new Integer( ((Spec) m_specs.get(i)).getId()));
+                spec = (Spec) m_specs.get(i);
+                m_spec_ids.add( new Integer( spec.getId()));
             }
         }
         else if (mode == Constants.TYPE_ID)
@@ -86,7 +90,7 @@ public class ProcessExecution
         Statement stmt = null; Spec spec = null; String sql = null;
         try
         {
-            
+             stmt = conn.createStatement();
             for (int i = 0; i < m_spec_ids.size(); i++)
             {
                 int spec_id = ((Integer)m_spec_ids.get(i)).intValue();
@@ -101,39 +105,44 @@ public class ProcessExecution
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
         } finally
         {
-            DatabaseTransaction.closeStatement(stmt);
+                DatabaseTransaction.closeStatement(stmt);
         }
         
     }
     public void insert (Connection conn) throws BecDatabaseException
     {
        // private ArrayList       m_spec_ids;
-        String sql ;
-        sql = "insert into process "+
-            "(processid,  requestid, processdefinitionid, executiondate, status)"+
-            " values ("+m_id +","+m_request_id 
-            +","+ m_processdefinition_id +","+m_date +","+ m_status  +")";
+        String sql = "insert into process (processid,  requestid, processdefinitionid, executiondate, status)"+
+            " values ("+m_id +","+m_request_id +","+ m_processdefinition_id +",sysdate,"+ m_status  +")";
        
-        Statement stmt = null; Spec spec = null;
+        Statement st = null; Spec spec = null;
         try
         {
-            stmt = conn.createStatement();
-            stmt.executeUpdate(sql);
-            for (int i = 0; i < m_specs.size(); i++)
+            st = conn.createStatement();
+            System.out.print("1l");
+            st.executeUpdate(sql);
+            System.out.print("2l");
+            if (m_specs != null)
             {
-                spec = (Spec) m_specs.get(i);
-                sql = "insert into processconfig "+
-                "(processid,  configid, configtype)"+
-                " values ("+ m_id +","+ spec.getId()+","+spec.getType()+")";
-                stmt.executeUpdate(sql);
+                System.out.print("l");
+                for (int i = 0; i < m_specs.size(); i++)
+                {
+                    spec = (Spec) m_specs.get(i);
+                    sql = "insert into processconfig (processid,  configid, configtype)"+
+                    " values ("+ m_id +","+ spec.getId()+","+spec.getType()+")";
+                    st.executeUpdate(sql);
+                }
             }
                     
-        } catch (SQLException sqlE)
+        } 
+        catch (Exception sqlE)
         {
+            System.out.print(sqlE.getMessage() +"|"+sql);
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
-        } finally
+        } 
+        finally
         {
-            DatabaseTransaction.closeStatement(stmt);
+           DatabaseTransaction.closeStatement(st);
         }
     
     }
