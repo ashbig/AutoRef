@@ -17,16 +17,14 @@
 <html:errors/>
 <p>
 
-<input name="projectid" type="hidden" value="<bean:write name="projectid" />" >
-<input name="workflowid" type="hidden" value="<bean:write name="workflowid" />" >
-<input name="projectname" type="hidden" value="<bean:write name="projectname" />" >
-<input name="workflowname" type="hidden" value="<bean:write name="workflowname" />" >
+
 
 
 <table>
     <tr>
     <td class="prompt">Project name:</td>
     <td><bean:write name="projectname" /></td>
+
     </tr>
 
     <tr>
@@ -49,6 +47,11 @@ e-mail notification will be sent to the user.
 <p>
 <html:form action="/MgcImportRequest.do" enctype="multipart/form-data"> 
 <p>
+
+<input name="projectid" type="hidden" value="<bean:write name="projectid" />" >
+<input name="workflowid" type="hidden" value="<bean:write name="workflowid" />" >
+<input name="projectname" type="hidden" value="<bean:write name="projectname" />" >
+<input name="workflowname" type="hidden" value="<bean:write name="workflowname" />" >
 <table>
 <tr>
     <td class="prompt">Please select the request file:</td>
