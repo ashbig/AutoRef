@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.23 2001-07-26 22:44:36 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.24 2001-08-03 15:18:51 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -81,7 +81,7 @@ public class FlexSeqAnalyzer {
         
         String queryFile = makeQueryFile();
         Blaster blaster = new Blaster();
-        blaster.setHits(5);
+        blaster.setHits(1);
         blaster.setDBPath(BLASTDB);
         blaster.blast(queryFile+".in", queryFile+".out");
         BlastParser parser = new BlastParser(queryFile+".out");

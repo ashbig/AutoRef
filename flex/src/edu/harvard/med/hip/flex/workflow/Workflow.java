@@ -36,19 +36,19 @@ public class Workflow {
         
         next = new Vector();
         next.addElement(Protocol.GENERATE_OLIGO_ORDERS);        
-        flow.addElement(new FlowRecord(Protocol.DESIGN_CONSTRUCTS, next));
-                
-        next = new Vector();
-        next.addElement(Protocol.GENERATE_OLIGO_ORDERS);        
-        flow.addElement(new FlowRecord(Protocol.DESIGN_CONSTRUCTS, next));
+        flow.addElement(new FlowRecord(Protocol.DESIGN_CONSTRUCTS, next));                
         
         next = new Vector();
         next.addElement(Protocol.RECEIVE_OLIGO_PLATES);        
         flow.addElement(new FlowRecord(Protocol.GENERATE_OLIGO_ORDERS, next));
-  
+
+        next = new Vector();
+        next.addElement(Protocol.DILUTE_OLIGO_PLATE);        
+        flow.addElement(new FlowRecord(Protocol.RECEIVE_OLIGO_PLATES, next));
+        
         next = new Vector();
         next.addElement(Protocol.GENERATE_PCR_PLATES);        
-        flow.addElement(new FlowRecord(Protocol.RECEIVE_OLIGO_PLATES, next)); 
+        flow.addElement(new FlowRecord(Protocol.DILUTE_OLIGO_PLATE, next)); 
         
         next = new Vector();
         next.addElement(Protocol.RUN_PCR_GEL);        
