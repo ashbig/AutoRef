@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2002-04-02 21:02:31 $
+ * $Revision: 1.6 $
+ * $Date: 2002-06-17 21:28:25 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -47,13 +47,14 @@ import org.apache.struts.action.*;
 
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class will put a collection of queue items into the request based
  * on the protocol it is passed.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.5 $ $Date: 2002-04-02 21:02:31 $
+ * @version    $Revision: 1.6 $ $Date: 2002-06-17 21:28:25 $
  */
 
 public class GetQueueItemsAction extends ResearcherAction {
@@ -83,14 +84,22 @@ public class GetQueueItemsAction extends ResearcherAction {
         String nextForward = 
             (String)request.getParameter(Constants.FORWARD_KEY);
         
+        int projectid = Integer.parseInt((String)request.getParameter("projectid"));
+        int workflowid = Integer.parseInt((String)request.getParameter("workflowid"));
+        
+        request.setAttribute("projectid", new Integer(projectid));
+        request.setAttribute("workflowid", new Integer(workflowid));
+        
         try {
             // convert the string into the action protocol
             Protocol protocol = new Protocol(protocolName);
+            Project project = new Project(projectid);
+            Workflow workflow = new Workflow(workflowid);
             
             // find all the items in the queue with that protocol
             StaticQueueFactory queueFactory = new StaticQueueFactory();
             ProcessQueue queue = queueFactory.makeQueue("ContainerProcessQueue");
-            List queueItems = queue.getQueueItems(protocol);
+            List queueItems = queue.getQueueItems(protocol, project, workflow);
             
             // first remove items from the session.
             if(request.getSession().getAttribute("SelectProtocolAction.queueItems") !=null) {

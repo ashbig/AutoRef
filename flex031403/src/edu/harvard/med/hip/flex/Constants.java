@@ -162,6 +162,9 @@ public class Constants {
     //forward name for mgc request import
     public static final String SPECIAL_OLIGO_ORDER = "SPECIAL_OLIGO_ORDER";
     
+    //forward name for enter result
+    public static final String ENTER_RESULT = "ENTER_RESULT";
+    
     /** Creates new Constants */
     private Constants() {
     }

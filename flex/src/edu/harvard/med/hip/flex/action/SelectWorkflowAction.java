@@ -91,6 +91,10 @@ public class SelectWorkflowAction extends ResearcherAction {
                 return mapping.findForward("success_mgc_request_import");
             }
             
+            if(Constants.ENTER_RESULT.equals(forwardName)) {
+                return mapping.findForward("success_result_entry");
+            }
+            
             if(Constants.SPECIAL_OLIGO_ORDER.equals(forwardName)) {
                 Project project = new Project(projectid);
                 Protocol protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);

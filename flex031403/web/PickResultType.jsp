@@ -45,6 +45,8 @@ Select the type of result you wish to enter.
     <br>
     <input type="submit">
     <input type="hidden" name="<%=Constants.FORWARD_KEY%>" value="enterProcessResults"/>
+    <input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+    <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 </form>
 </body>
 </html>
