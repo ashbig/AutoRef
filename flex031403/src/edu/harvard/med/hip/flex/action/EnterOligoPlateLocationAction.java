@@ -95,6 +95,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             boolean complete = checkPlateset(platesetid);
             //System.out.println("The plateset is ready for PCR: "+ complete);
             if (complete) {
+                System.out.println("inserting generate PCR plate queue...");
                 insertPCRQueue(platesetid, conn);
                 removeReceiveOligoQueue(containerList, conn);
                 DatabaseTransaction.commit(conn);
@@ -120,7 +121,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            //check the location. Unavaiable means not received yet
+            //check the location. Unavaiable means oligoplate not received yet
             while(rs.next()) {
                 ++count;
                 int locationid = rs.getInt("LOCATIONID");
