@@ -61,7 +61,8 @@ public static LinkedList rearangeSawToothPatternInOligoPattern(LinkedList sequen
             // compare
         } );
         //get middle element
-        int middle = (int)Math.ceil((double)sequences.size() / 2)- 1;
+       
+        int middle = sequences.size() / 2;
         for (int count = 0; count < middle; count++)
         {
             result.add(sequences.get(count));
@@ -80,6 +81,7 @@ public static LinkedList rearangeSawToothPatternInOligoPattern(LinkedList sequen
 
 public static void main(String args[])
     {
+     
       
         
 }
