@@ -44,7 +44,7 @@ public class PrintLabel {
                 * Execute the command using the Runtime object and get the 
                 * Process which controls this command 
                 **/
-               String cmd = "perl /usr/local/jakarta-tomcat-3.2.1/webapps/FLEX/WEB-INF/perl/print_label.pl " 
+               String cmd = "perl /usr/local/jakarta-tomcat-4.0.6/webapps/FLEX/WEB-INF/perl/print_label.pl " 
                             + label + " " 
                             + printerName + " " 
                             + labelWidth + " " 
