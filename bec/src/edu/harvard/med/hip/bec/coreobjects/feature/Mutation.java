@@ -22,8 +22,10 @@ import java.sql.*;
  */
 public abstract class Mutation
 {
-    
-  
+    //gene regions
+   public static final int REGION_CDS = 1;
+    public static final int REGION_LINKER_3P = 3;
+    public static final int REGION_LINKER_5P = 4;
     //mutation type
     public static final int DNA = 0;
     public static final int AA = 2;
@@ -42,14 +44,7 @@ public abstract class Mutation
     
     //mutation types(0,23)
     public static final int TYPE_NOT_DEFINE = 0;
-     public static final int TYPE_NOTRESOLVED=23;
-    //aa mutation type (1-14, 30-34)
-    public static final int TYPE_AA_INFRAME = 30;
-    public static final int TYPE_AA_INFRAME_INSERTION =31;
-    public static final int TYPE_AA_INFRAME_DELETION =32;
-    public static final int TYPE_AA_FRAMESHIFT_INSERTION =34;
-    public static final int TYPE_AA_FRAMESHIFT_DELETION = 33;
-
+     
       
     public static final int TYPE_AA_NO_TRANSLATION = 1;
     public static final int TYPE_AA_OUT_OF_FRAME_TRANSLATION = 2;
@@ -77,19 +72,29 @@ public abstract class Mutation
     public static final int TYPE_RNA_FRAMESHIFT_INSERTION=21;
     public static final int TYPE_RNA_FRAMESHIFT_STOP_CODON=22;
     
+    public static final int TYPE_NOTRESOLVED=23;
+    
     public static final int TYPE_RNA_SILENT= 24;
     public static final int TYPE_RNA_NONSENSE= 25;
     public static final int TYPE_RNA_MISSENSE = 26;
     public static final int TYPE_RNA_NO_TRANSLATION = 27;
     public static final int TYPE_RNA_POST_ELONGATION = 28;
      public static final int TYPE_RNA_TRANCATION = 29;
-     public static final int TYPE_RNA_SUBSTITUTION= 35;
+     
+     //aa mutation type (1-14, 30-34)
+    public static final int TYPE_AA_INFRAME = 30;
+    public static final int TYPE_AA_INFRAME_INSERTION =31;
+    public static final int TYPE_AA_INFRAME_DELETION =32;
+    public static final int TYPE_AA_FRAMESHIFT_DELETION = 33;
+    public static final int TYPE_AA_FRAMESHIFT_INSERTION =34;
+   
+    public static final int TYPE_RNA_SUBSTITUTION= 35;
      
      //linker mutation type (40-43)
-      public static final int TYPE_LINKER_5_SUBSTITUTION = 40;
+        public static final int TYPE_LINKER_5_SUBSTITUTION = 40;
         public static final int TYPE_LINKER_3_SUBSTITUTION = 41;
         public static final int TYPE_LINKER_5_INS_DEL = 42;
-       public static final int TYPE_LINKER_3_INS_DEL = 43;
+        public static final int TYPE_LINKER_3_INS_DEL = 43;
     //ambiquos base discrepancies (50 - 60)
        
        public static final int TYPE_N_SUBSTITUTION_CDS = 50;//N substitution – gene region
@@ -102,10 +107,7 @@ public abstract class Mutation
         public static final int TYPE_N_SUBSTITUTION_STOP_CODON = 56;//N substitution stop codon
         public static final int TYPE_N_FRAMESHIFT_INSERTION = 58;// N frameshift (introduced only by N)
         public static final int TYPE_N_INFRAME_INSERTION = 60;
-        
-                   // |
-                   // |
-                    //update
+     //update
          public static final int MAXIMUM_CHANGE_TYPE = 61;
    
    // global mutation types used for spec query
@@ -291,69 +293,8 @@ public abstract class Mutation
     
     public String       getMutationTypeAsString()
     {
-        
-        switch (m_change_type)
-        {
-            case TYPE_AA_NO_TRANSLATION : return  "No Translation";
-            case TYPE_AA_OUT_OF_FRAME_TRANSLATION : return  "OUT_OF_FRAME_TRANSLATION";
-            case TYPE_AA_FRAMESHIFT : return  "Frameshift";
-            case TYPE_AA_INSERTION : return  "Insertion";
-            case TYPE_AA_INSERTION_COMPLEX : return  "Insertion complex";
-            case TYPE_AA_SILENT : return  "Silent";
-            case TYPE_AA_POST_ELONGATION : return  "Post Elongation";
-            case TYPE_AA_SILENT_CONSERVATIVE : return  "Silent Conservative";
-            case TYPE_AA_TRUNCATION : return  "Truncation";
-            case TYPE_AA_DELETION : return  "Deletion";
-            case TYPE_AA_DELETION_COMPLEX : return  "Deletion Complex";
-            case TYPE_AA_SUBSTITUTION : return  "Substitution";
-            case TYPE_AA_CONSERVATIVE : return  "Conservative Substitution";
-            case TYPE_AA_NONCONSERVATIVE : return  "Non-Conservative Substitution";
-           case TYPE_AA_INFRAME  : return "Inframe";
-            case TYPE_AA_INFRAME_INSERTION : return "Inframe Insertion";
-            case TYPE_AA_INFRAME_DELETION : return "Inframe Deletion";
-            case TYPE_AA_FRAMESHIFT_INSERTION : return "Frameshift Insertion";
-            case TYPE_AA_FRAMESHIFT_DELETION  :return "Frameshift Deletion";
-
-            
-            //rna mutastion type
-            case TYPE_RNA_INFRAME: return  "Inframe";
-            case TYPE_RNA_FRAMESHIFT: return  "Frameshift";
-            case TYPE_RNA_INFRAME_DELETION: return "Inframe: Deletion";
-            case TYPE_RNA_INFRAME_INSERTION: return "Inframe: Insertion";
-            
-            case TYPE_RNA_INFRAME_STOP_CODON: return "Inframe: Stop Codon";
-            case TYPE_RNA_FRAMESHIFT_DELETION: return "Frameshift: Deletion";
-            case TYPE_RNA_FRAMESHIFT_INSERTION: return "Frameshift: Insertion";
-            
-            case TYPE_RNA_FRAMESHIFT_STOP_CODON: return "Frameshift: Stop Codon";
-            case TYPE_RNA_SILENT: return "Silent";
-            case TYPE_RNA_NONSENSE: return "Nonsense";
-            case TYPE_RNA_MISSENSE: return "Missense";
-            case  TYPE_RNA_NO_TRANSLATION: return "No Translation";
-            case  TYPE_RNA_POST_ELONGATION : return "Post Elongation";
-             case  TYPE_RNA_TRANCATION : return "Trancation";
-            case TYPE_RNA_SUBSTITUTION: return "Substitution";
-            
-            case TYPE_LINKER_5_SUBSTITUTION : return "5' substitution";
-            case TYPE_LINKER_3_SUBSTITUTION: return "3' substitution";
-            case TYPE_LINKER_5_INS_DEL : return "5' insertion/deletion";
-            case TYPE_LINKER_3_INS_DEL : return "3' insertion/deletion";
-            
-            case TYPE_N_SUBSTITUTION_CDS : return "Amb. substitution";//N substitution – gene region
-            case TYPE_N_SUBSTITUTION_LINKER5 : return "Amb. linker 5 substitution";//N substitution – linker region
-            case TYPE_N_SUBSTITUTION_LINKER3 : return "Amb. linker 3 substitution";
-            case TYPE_N_INSERTION_LINKER5 : return "Amb. linker 5 insertion";//N substitution – linker region
-            case TYPE_N_INSERTION_LINKER3 : return "Amb. linker 3 insertion";
-
-            case TYPE_N_SUBSTITUTION_START_CODON : return "Amb. start codon substitution";//N substitution start codon
-            case TYPE_N_SUBSTITUTION_STOP_CODON : return "Amb. stop codon substitution";//N substitution stop codon
-            case TYPE_N_FRAMESHIFT_INSERTION : return "Amb. frameshift insertion";// N frameshift (introduced only by N)
-            case TYPE_N_INFRAME_INSERTION : return "Amb. inframe insertion";
-            default  : return "Not known";
-        }
-        
-        
-    }
+        return Mutation.getMutationTypeAsString(m_change_type);
+     }
     
     
      public static String       getMutationTypeAsString(int change_type)
@@ -420,7 +361,78 @@ public abstract class Mutation
         
         
     }
-    
+     
+     
+     public static String getMacroMutationTypeAsString(int change_type)
+     {
+         switch(change_type)
+         {
+             case Mutation.MACRO_SPECTYPE_SILENT   : return    "Silent Substitution";
+            case Mutation.MACRO_SPECTYPE_INFRAME  : return   "Inframe" ;
+            case Mutation.MACRO_SPECTYPE_CONSERVATIVE   : return  "Conservative Substitution"  ;
+            case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE   : return   "Nonconservative Substitution" ;
+            case Mutation.MACRO_SPECTYPE_FRAMESHIFT   : return  "Frameshift"  ;
+            case Mutation.MACRO_SPECTYPE_INFRAME_DELETION  : return "Inframe Deletion"   ;
+             case Mutation.MACRO_SPECTYPE_TRANCATION   : return  "Trancation"  ;
+            case Mutation.MACRO_SPECTYPE_NO_TRANSLATION  : return  "No translation"  ;
+            case Mutation.MACRO_SPECTYPE_POST_ELONGATION   : return   "Post-elongation" ;
+            case Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION    : return  "5' substitution"  ; 
+            case Mutation.MACRO_SPECTYPE_LINKER_3_SUBSTITUTION    : return  "3' substitution"  ;  
+            case Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL    : return   "5' deletion/insertion" ;
+            case Mutation.MACRO_SPECTYPE_LINKER_3_INS_DEL    : return   "3' deletion/insertion" ;   
+
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_CDS   : return  "Amb. substitution"  ;//N substitution – gene region
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER5   : return   "Amb. linker 5 substitution" ;//N substitution – linker region
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER3   : return  "Amb. linker 3 substitution"  ;
+            case Mutation.MACRO_SPECTYPE_N_INSERTION_LINKER5   : return  "Amb. linker 5 insertion"  ;//N substitution – linker region
+            case Mutation.MACRO_SPECTYPE_N_INSERTION_LINKER3   : return "Amb. linker 3 insertion"   ;
+
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_START_CODON   : return  "Amb. start codon substitution"  ;//N substitution start codon
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_STOP_CODON   : return "Amb. stop codon substitution"    ;//N substitution stop codon
+            case Mutation.MACRO_SPECTYPE_N_FRAMESHIFT_INSERTION   : return   "Amb. frameshift insertion" ;// N frameshift (introduced only by N)
+            case Mutation.MACRO_SPECTYPE_N_INFRAME_INSERTION   : return "Amb. inframe insertion"   ;
+             
+             default: return "Not known";
+         }
+    }
+     
+     public static boolean isMacroMutationTypeInGeneRegion(int region_type, int change_type)
+     {
+         switch(change_type)
+         {
+             case Mutation.MACRO_SPECTYPE_SILENT   :            case Mutation.MACRO_SPECTYPE_INFRAME  : 
+            case Mutation.MACRO_SPECTYPE_CONSERVATIVE   :             case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE   : 
+            case Mutation.MACRO_SPECTYPE_FRAMESHIFT   :             case Mutation.MACRO_SPECTYPE_INFRAME_DELETION  : 
+             case Mutation.MACRO_SPECTYPE_TRANCATION   :            case Mutation.MACRO_SPECTYPE_NO_TRANSLATION  :
+            case Mutation.MACRO_SPECTYPE_POST_ELONGATION   :             case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_CDS   : 
+             case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_START_CODON   : 
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_STOP_CODON   : //N substitution stop codon
+            case Mutation.MACRO_SPECTYPE_N_FRAMESHIFT_INSERTION   : // N frameshift (introduced only by N)
+            case Mutation.MACRO_SPECTYPE_N_INFRAME_INSERTION   : 
+            {
+                if ( region_type == Mutation.REGION_CDS) return true; else return false;
+            }
+            case Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION    : 
+            case Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL    : 
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER5   : //N substitution – linker region
+             case Mutation.MACRO_SPECTYPE_N_INSERTION_LINKER5   : //N substitution – linker region
+            {
+                if ( region_type == Mutation.REGION_LINKER_5P) return true; else return false;
+            }
+            case Mutation.MACRO_SPECTYPE_LINKER_3_SUBSTITUTION    :
+            case Mutation.MACRO_SPECTYPE_LINKER_3_INS_DEL    : 
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER3   : 
+            case Mutation.MACRO_SPECTYPE_N_INSERTION_LINKER3   :
+            {
+                if ( region_type == Mutation.REGION_LINKER_3P) return true; else return false;
+            }
+             
+             default: return false;
+         }
+    }
+     
+     
+     
     public String toString()
     {
         String res= "\n\n\t\t\tMutation desc.\n id: " +  m_id +
@@ -678,6 +690,8 @@ public abstract class Mutation
         return report.toString();
     }
     
+    
+    //input mutation objects
     public static String discrepancyTypeQualityReport(ArrayList discrepancies, int discrepancy_type, boolean isSeparateByQuality, boolean isHighQuality)
     {
         if (discrepancies == null || discrepancies.size()==0) return "";
@@ -685,7 +699,7 @@ public abstract class Mutation
         String line = "";boolean isExists = false;
         String quality  ;int i;
         int[][] discrepancy_count  = getDiscrepanciesSeparatedByType( discrepancies,  discrepancy_type,  isSeparateByQuality);
-        for (int j=0; j< 45;j++)
+        for (int j=0; j< MAXIMUM_CHANGE_TYPE;j++)
         {
             if (isHighQuality)
             {
@@ -712,6 +726,10 @@ public abstract class Mutation
         }
         return report.toString();
     }
+    
+    
+    
+   
     
     public static ArrayList   getDiscrepanciesBySequenceId(int seq_id) throws BecDatabaseException
     {
@@ -794,17 +812,10 @@ public abstract class Mutation
               case Mutation.TYPE_RNA_POST_ELONGATION:
                     return Mutation.MACRO_SPECTYPE_POST_ELONGATION;
              
-             case Mutation.TYPE_LINKER_5_SUBSTITUTION  : 
-                    return Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION;
-             
-             case Mutation.TYPE_LINKER_3_SUBSTITUTION  :  
-                    return Mutation.MACRO_SPECTYPE_LINKER_3_SUBSTITUTION;
-             
-             case Mutation.TYPE_LINKER_5_INS_DEL  : 
-                    return Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL;
-             
-             case Mutation.TYPE_LINKER_3_INS_DEL  : 
-                    return Mutation.MACRO_SPECTYPE_LINKER_3_INS_DEL;
+             case Mutation.TYPE_LINKER_5_SUBSTITUTION  :return Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION;
+             case Mutation.TYPE_LINKER_3_SUBSTITUTION  :   return Mutation.MACRO_SPECTYPE_LINKER_3_SUBSTITUTION;
+             case Mutation.TYPE_LINKER_5_INS_DEL  :  return Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL;
+             case Mutation.TYPE_LINKER_3_INS_DEL  :  return Mutation.MACRO_SPECTYPE_LINKER_3_INS_DEL;
                     
              case TYPE_N_SUBSTITUTION_CDS : return Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_CDS ;//N substitution – gene region
             case TYPE_N_SUBSTITUTION_LINKER5 : return Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER5;//N substitution – linker region
@@ -843,122 +854,7 @@ public abstract class Mutation
     }
     
     
-    //function returns number of discrepancies of
-    //define type (RNA AA)
-    //define change type,
-    // quality , if quality set to UNknown , function do not separate by quality,
-    //          not_set qualified as high
-    /*
-    public static int getDiscrepancyNumberByParameters(
-                ArrayList discrepancies,
-                int dicrepancy_type, 
-                int change_type, 
-                int quality
-                )
     
-    {
-        
-        Mutation mut = null;
-        int res = 0;
-        if (discrepancies == null) return res;
-        boolean isType = false;
-        boolean isQuality = false;
-        int mut_quality ;
-        DiscrepancyDescription discr_description = null;
-        for(int count = 0; count < discrepancies.size(); count++)
-        {
-            if ( discrepancies.get(count) instanceof DiscrepancyDescription)
-            {
-                discr_description = (DiscrepancyDescription)discrepancies.get(count);
-                switch (discr_description.getDiscrepancyDefintionType() )
-                {
-                    case DiscrepancyDescription.TYPE_AA:
-                    {
-                        mut = discr_description.getAADefinition();
-                        break;
-                    }
-                    case DiscrepancyDescription.TYPE_NOT_AA_LINKER:
-                    {
-                        mut =  discr_description.getRNADefinition();
-                        break;
-                    }
-                   
-                }
-            }
-            else
-                mut = (Mutation)discrepancies.get(count);
-            mut_quality = mut.getQuality();
-            isType = (mut.getType() == dicrepancy_type && mut.getChangeType() == change_type   );
-            if  (quality == QUALITY_NOTKNOWN || quality == QUALITY_HIGH)
-            {
-                isQuality = (mut_quality == QUALITY_NOTKNOWN || mut_quality == QUALITY_HIGH);
-            }
-            else if (quality == QUALITY_LOW)
-            {
-                isQuality = (quality== QUALITY_LOW);
-            }
-            if (isType && isQuality) res++;  
-        }
-        return res;
-        
-    }
-    
-    
-   
-     
-        
-     //function returns number of discrepancies of
-    //define type (RNA AA)
-    //define change type,
-    // quality , if quality set to UNknown , function do not separate by quality,
-    //          not_set qualified as high
-    // isPolym - specifie include polymorphic change as discrepancy or not
-    
-    // input can be array of discrepancyPairs or array of mutations
-     public static int getDiscrepancyNumberByParameters(
-                ArrayList discrepancies,
-                int dicrepancy_type, 
-                int change_type, 
-                int quality, 
-                int polym_flag)
-    
-    {
-        RNAMutation mut = null;
-        LinkerMutation mut_linker =null;
-        int res = -1;
-        if (discrepancies == null) return res;
-        boolean isType = false;
-        boolean isQuality = false;
-        boolean isPolym = false;
-        for(int i = 0; i < discrepancies.size(); i++)
-
-
-        {
-            if (mut.getType() == Mutation.AA) continue;
-            else if(mut.getType() == Mutation.RNA)
-            {
-                mut = (RNAMutation)discrepancies.get(i);
-                isType = (mut.getType() == dicrepancy_type && mut.getChangeType() == change_type   );
-                isQuality = ( (quality == QUALITY_HIGH && ( mut.getQuality() == QUALITY_HIGH || mut.getQuality()== QUALITY_NOTKNOWN))
-                    || (quality == QUALITY_LOW &&  mut.getQuality() == QUALITY_LOW));
-                isPolym = ( polym_flag == RNAMutation.FLAG_POLYM_YES && ( mut.getPolymorphismFlag() == RNAMutation.FLAG_POLYM_YES || mut.getPolymorphismFlag()== RNAMutation.FLAG_POLYM_NOKNOWN))
-                    || (polym_flag == RNAMutation.FLAG_POLYM_NO &&  mut.getPolymorphismFlag() == RNAMutation.FLAG_POLYM_NO)
-                    ||(polym_flag == RNAMutation.FLAG_POLYM_NOKNOWN);
-
-                if (isType && isQuality && isPolym) res++;  
-            }
-            else if(mut.getType() == Mutation.LINKER_3P || mut.getType() == LINKER_5P)
-            {
-                mut_linker = (LinkerMutation)discrepancies.get(i);
-                isType = (mut_linker.getType() == dicrepancy_type && mut_linker.getChangeType() == change_type   );
-                isQuality = ( (quality == QUALITY_HIGH && ( mut_linker.getQuality() == QUALITY_HIGH || mut_linker.getQuality()== QUALITY_NOTKNOWN))
-                    || (quality == QUALITY_LOW &&  mut_linker.getQuality() == QUALITY_LOW));
-                if (isType && isQuality ) res++;  
-            }
-          }
-        return res;
-    }
- */
     //function counts number of discrepancies of each type
     public static int[][] getDiscrepanciesSeparatedByType(ArrayList discr, int discrepancy_type, boolean isSeparateByType)
     {
@@ -967,24 +863,30 @@ public abstract class Mutation
         int res[][] = new int[MAXIMUM_CHANGE_TYPE][2] ;
         for (int count = 0; count < discr.size(); count++)
         {
-            Mutation mut = (Mutation) discr.get(count);
-            if (discrepancy_type != TYPE_NOT_DEFINE && mut.getType() != discrepancy_type ) continue;
-            if (isSeparateByType)
+            try
             {
-                if (mut.getQuality() == Mutation.QUALITY_HIGH || mut.getQuality() == Mutation.QUALITY_NOTKNOWN)
+                Mutation mut = (Mutation) discr.get(count);
+                if (discrepancy_type != TYPE_NOT_DEFINE && mut.getType() != discrepancy_type ) continue;
+                if (isSeparateByType)
                 {
-                    res[ mut.getChangeType() ][0]++;
+                    if (mut.getQuality() == Mutation.QUALITY_HIGH || mut.getQuality() == Mutation.QUALITY_NOTKNOWN)
+                    {
+                        res[ mut.getChangeType() ][0]++;
+                    }
+                    else
+                    {
+                        res[ mut.getChangeType() ][1]++;
+                    }
                 }
                 else
                 {
-                    res[ mut.getChangeType() ][1]++;
+                    res[ mut.getChangeType() ][0]++;
                 }
             }
-            else
+            catch(Exception e)
             {
-                res[ mut.getChangeType() ][0]++;
+                System.out.println(e.getMessage());
             }
-             
         }
         return res;
     }
@@ -1143,6 +1045,50 @@ public abstract class Mutation
          else 
              return "Gene region";
      }
+     
+     public  static String     getDescription(Mutation discr)
+     {
+         String temp = null;int length = 0;
+         //insertion deletion
+         if ( discr.getSubjectStr() == null || discr.getSubjectStr().trim().length() == 0 )
+         {
+               return "ins@" + discr.getPosition()+ "," + discr.getQueryStr().trim().length();
+         }
+         else   if (  discr.getQueryStr() == null || discr.getQueryStr().trim().length() == 0)
+         {
+              return "del@" + discr.getPosition()+ "," + discr.getSubjectStr().trim().length();
+         }
+         switch (discr.getChangeType() )
+         {
+             
+         //linker mutation type (  -  )
+                 case	TYPE_LINKER_3_SUBSTITUTION: case	TYPE_LINKER_5_SUBSTITUTION:
+                // case	TYPE_LINKER_3_INS_DEL: case	TYPE_LINKER_5_INS_DEL:
+                 case	TYPE_N_SUBSTITUTION_LINKER3 : case	TYPE_N_SUBSTITUTION_LINKER5 :
+               //  case	TYPE_N_INSERTION_LINKER3 : case	TYPE_N_INSERTION_LINKER5 :
+                 {
+                     return discr.getSubjectStr()+discr.getPosition() + discr.getQueryStr();
+                 }
+                 //substitution
+                 case	TYPE_AA_NO_TRANSLATION:                case	TYPE_AA_OUT_OF_FRAME_TRANSLATION:
+                case	TYPE_AA_POST_ELONGATION:                case	TYPE_AA_SILENT_CONSERVATIVE:
+                case	TYPE_AA_TRUNCATION:
+                case	TYPE_AA_SILENT: case	TYPE_AA_SUBSTITUTION:
+                case	TYPE_AA_CONSERVATIVE: case	TYPE_AA_NONCONSERVATIVE:
+                case	TYPE_RNA_SILENT:case	TYPE_RNA_SUBSTITUTION:
+                case	TYPE_RNA_NONSENSE:                case	TYPE_RNA_MISSENSE:
+                case	TYPE_RNA_NO_TRANSLATION:                case	TYPE_RNA_POST_ELONGATION:
+                case	TYPE_RNA_TRANCATION:
+                case	TYPE_N_SUBSTITUTION_CDS://N substitution – gene region
+                case	TYPE_N_SUBSTITUTION_START_CODON:                case	TYPE_N_SUBSTITUTION_STOP_CODON://N substitution stop codon
+                {
+                    return discr.getSubjectStr()+discr.getPosition() + discr.getQueryStr();
+                }
+         }
+         return "";
+     }
+     
+    
   /* 
      public static ArrayList sortDiscrepanciesByChangeTypeAndQuality(ArrayList discrepancies)
     {
@@ -1198,26 +1144,10 @@ public abstract class Mutation
         NeedleResult res_needle = null;
         try
         {
-            Read read = Read.getReadById( 25638);
-            String str = Mutation.toHTMLString(read.getSequence().getDiscrepancies() ) ;
+             AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(80597);
+            String str = Mutation.toHTMLString(sequence.getDiscrepancies() ) ;
              System.out.println(str);
-             
-             read = Read.getReadById( 25639);
-             str = Mutation.toHTMLString(read.getSequence().getDiscrepancies() ) ;
-               System.out.println(str);
-               read = Read.getReadById( 25640);
-             str = Mutation.toHTMLString(read.getSequence().getDiscrepancies() ) ;
-         //String r =HTMLReport(read.getSequence().getDiscrepancies(), Mutation.RNA, true);  
-         System.out.println(str);
-         read = Read.getReadById( 25641);
-             str = Mutation.toHTMLString(read.getSequence().getDiscrepancies() ) ;
-              System.out.println(str);
-               read = Read.getReadById( 25643);
-             str = Mutation.toHTMLString(read.getSequence().getDiscrepancies() ) ;
-              System.out.println(str);
-               read = Read.getReadById( 25645);
-             str = Mutation.toHTMLString(read.getSequence().getDiscrepancies() ) ;
-              System.out.println(str);
+           
         } catch (Exception e)
         {
             System.out.println(e);

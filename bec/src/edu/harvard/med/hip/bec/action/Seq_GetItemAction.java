@@ -56,7 +56,7 @@ public class Seq_GetItemAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         String label = null;int id = -1;Container container = null;
- 
+        String title = "";
      
         try
         {
@@ -431,7 +431,6 @@ public class Seq_GetItemAction extends ResearcherAction
                 {
                  //show label scan form  
                    
-                    String title = null;
                     if ( forwardName == Constants.PROCESS_PUT_CLONES_ON_HOLD )
                     {
                         
@@ -484,13 +483,13 @@ public class Seq_GetItemAction extends ResearcherAction
 
                     }
                      request.setAttribute("container",container);
-                    String title = "clone Data for container " + label;
+                     title = "clone Data for container " + label;
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("show_clone_status_list"));
                 }
                 case Constants.AVAILABLE_CONTAINERS_INT:
                 {
-                    String title = "available Containers";
+                    title = "available Containers";
                    ArrayList labels = Container.findAllContainerLabels();
                      StringBuffer container_names= new StringBuffer();
                     int cur_column=1;String cur_label = null;String prev_label = null;
@@ -537,7 +536,6 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("display_info"));
                 }
-                case Constants.PROCESS_PROCESS_OLIGO_PLATE:
                 case Constants.PROCESS_VIEW_OLIGO_PLATE:
                 {
                      label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
@@ -557,8 +555,10 @@ public class Seq_GetItemAction extends ResearcherAction
                      {
                          oligo_container.restoreSamples();
                      }
+                     //set title
+                     title="view Oligo Plate";
  //  System.out.println(label+oligo_container.getId());
-                    request.setAttribute(Constants.JSP_TITLE,"process Oligo Container");
+                    request.setAttribute(Constants.JSP_TITLE,title);
                     request.setAttribute("container",oligo_container);
                     request.setAttribute("forwardName", new Integer(forwardName));
                     return (mapping.findForward("display_oligo_container"));

@@ -172,7 +172,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                 clone_description.setCloningStrategyId(rs.getInt("cloningstrategyid"));
                 clone_description.setCloneSequenceId (rs.getInt("clonesequenceid"));
                 clone_description.setCloneSequenceType (rs.getInt("clonesequencetype"));
-                clone_description.setCloneSequenceStatus (rs.getInt("clonesequencestatus"));
+                clone_description.setCloneSequenceAnalysisStatus (rs.getInt("clonesequencestatus"));
                 sequence_descriptions.add(clone_description);
                
             }
@@ -263,7 +263,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
     {
         try
         {
-           if ( clone.getCloneSequenceStatus() != BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ) return;
+           if ( clone.getCloneSequenceAnalysisStatus() != BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ) return;
             CloneSequence clonesequence = new CloneSequence( clone.getCloneSequenceId());
             int[] cds_start_stop = new int[2];
             BaseSequence  refsequence = prepareRefSequence(clone,  cds_start_stop);

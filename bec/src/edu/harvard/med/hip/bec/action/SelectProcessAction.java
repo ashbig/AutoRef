@@ -108,7 +108,7 @@ public class SelectProcessAction extends ResearcherAction
                     //allow to select not to run this end read
                     Oligo ol = new Oligo();
                     ol.setId(-1)   ;
-                    ol.setName("NONE") ;
+                    ol.setName("-----") ;
                
                     primers.add(ol);
                     spec_collection.add( primers);
@@ -136,11 +136,10 @@ public class SelectProcessAction extends ResearcherAction
                     request.setAttribute(Constants.JSP_TITLE,"select Plate to Check Clone Status");
                      return (mapping.findForward("scan_label"));
                 }
-                case Constants.PROCESS_PROCESS_OLIGO_PLATE:
                 case Constants.PROCESS_VIEW_OLIGO_PLATE:
                 {
                      request.setAttribute("forwardName", new Integer(forwardName));
-                    request.setAttribute(Constants.JSP_TITLE,"select Oligo Plate to process");
+                    request.setAttribute(Constants.JSP_TITLE,"select Oligo Plate");
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
@@ -230,6 +229,7 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER://run discrepancy finder
                 case Constants.PROCESS_NOMATCH_REPORT:
                 case Constants.PROCESS_RUN_DECISION_TOOL:
+                case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
                 case Constants.PROCESS_FIND_GAPS:
                 case Constants.STRETCH_COLLECTION_REPORT_INT:
                 case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
@@ -246,6 +246,8 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_DELETE_CLONE_SEQUENCE ://
                 case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
                 case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:
+                case Constants.PROCESS_PROCESS_OLIGO_PLATE:
+                
                {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
@@ -265,7 +267,7 @@ public class SelectProcessAction extends ResearcherAction
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: {title="run Assembler for End Reads";break; }
                         case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{title="add new Internal Primer";break; }
                         case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:{title="view Gene Specific Oligos ordered for Clone";break; }
-                        
+                        case Constants.PROCESS_PROCESS_OLIGO_PLATE:{title = "update Oligo Plates status"; break;}
                         case Constants.PROCESS_RUN_PRIMER3:
                         {
                             spec_collection.add( Primer3Spec.getAllSpecNames() );
@@ -273,7 +275,8 @@ public class SelectProcessAction extends ResearcherAction
                             control_names.add(Spec.PRIMER3_SPEC);
                             title = "run Primer Designer for the set of clones";break;
                          }
-                         case Constants.PROCESS_RUN_DECISION_TOOL:
+                        case Constants.PROCESS_RUN_DECISION_TOOL:
+                        case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
                         {
                             spec_collection.add( FullSeqSpec.getAllSpecNames()  );
                             spec_names.add("Bio Evaluation of Clones: ");
@@ -347,6 +350,7 @@ public class SelectProcessAction extends ResearcherAction
                         request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
                     }
                     request.setAttribute(Constants.JSP_TITLE,title);
+                    
                     return (mapping.findForward("initiate_process"));
                 }
                 

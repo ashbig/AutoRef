@@ -432,7 +432,8 @@ public class RunProcessAction extends ResearcherAction
                 }
                 
              // three go togeteher : donot separate
-    
+                case Constants.PROCESS_PROCESS_OLIGO_PLATE:
+               
                 case Constants.PROCESS_RUN_PRIMER3: //run primer3
                 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder                
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER: //run discrepancy finder
@@ -532,8 +533,8 @@ public class RunProcessAction extends ResearcherAction
                              runner = new PrimerOrderRunner();
                              title = "request for Primer Order";
                             ((PrimerOrderRunner)runner).setPrimerPlacementFormat( Integer.parseInt(request.getParameter("oligo_placement_format") ));
-                             ((PrimerOrderRunner)runner).setPrimerPlacementFormat( Integer.parseInt(request.getParameter("primer_number") ));
-                             
+                             ((PrimerOrderRunner)runner).setPrimerNumber( Integer.parseInt(request.getParameter("primer_number") ));
+                             ((PrimerOrderRunner)runner).setPrimersSelectionRule(Integer.parseInt(request.getParameter("oligo_grouping_rule") ));
                              if ( request.getParameter("isTryMode") != null )
                                  ((PrimerOrderRunner)runner).setIsTryMode(true  );
                             break;
@@ -601,6 +602,15 @@ public class RunProcessAction extends ResearcherAction
                                 title = "request for LQR Finder for clone sequence";
                               break;
                         } 
+                        case Constants.PROCESS_PROCESS_OLIGO_PLATE:
+                        {
+                            runner = new OligoPlateProcessor_Runner();
+                            (( OligoPlateProcessor_Runner) runner).setOrderComment( (String)request.getParameter("order_comments"));
+                            (( OligoPlateProcessor_Runner)runner).setSequencingComment( (String)request.getParameter("sequencing_comments") );
+                            ((OligoPlateProcessor_Runner)runner).setPlateStatus(Integer.parseInt( (String)request.getParameter("status")));
+
+                            break;
+                        }
                         
                     }
                     
@@ -645,8 +655,6 @@ public class RunProcessAction extends ResearcherAction
                     DecisionToolRunner ds = new DecisionToolRunner();
                     ds.setSpecId(bioeval_spec_id);
                     String  item_ids = (String) request.getParameter("items");
-                   // ds.setItems(item_ids.toUpperCase().trim());
-                   // ds.setItemsType( Integer.parseInt(request.getParameter("item_type")));
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                     ds.setInputData(items_type,items);
@@ -657,7 +665,7 @@ public class RunProcessAction extends ResearcherAction
                     ArrayList clone_data = ds.getClones();
                     request.setAttribute(Constants.JSP_TITLE,"report Clone Sequence Qualities" );
                     request.setAttribute("clone_data",clone_data );
-                    return mapping.findForward("desicion_tool_report");
+                    return mapping.findForward("decision_tool_report");
                 }
                 
   //two go together : donot separate           
@@ -728,46 +736,54 @@ public class RunProcessAction extends ResearcherAction
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
                     break;
                 }
-                case Constants.PROCESS_PROCESS_OLIGO_PLATE:
+                 case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
                 {
+                    String  item_ids = (String) request.getParameter("items");
+                    DecisionToolRunner_New runner = new DecisionToolRunner_New();
+                    String items = item_ids.toUpperCase().trim();
+                    int items_type =  Integer.parseInt(request.getParameter("item_type"));
+                    runner.setInputData(items_type,items);
+                    runner.setUser(user);
+                    int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
+                    runner.setSpecId(bioeval_spec_id);
+                    runner.setUserComment(request.getParameter("user_comment"));
+                    runner.setNumberOfOutputFiles(Integer.parseInt( (String) request.getParameter("output_format")));
+                    // value="2"//Clone Ids</strong//
+                    runner.setFields(
+                        request.getParameter("plate_label" ),//    Plate Label</td>
+                        request.getParameter("sample_type" ),//    Sample Type</td>
+                        request.getParameter("position" ),//    Well</td>
+                        request.getParameter("ref_sequence_id" ),//    Sequence ID</td>
+                        request.getParameter("clone_seq_id" ),//    Clone Sequence Id</td>
+                        request.getParameter("ref_cds_start" ),//    CDS Start</td>
+                        request.getParameter("clone_sequence_assembly_status" ),//    Clone Sequence assembly attempt status    </td>
+                        request.getParameter("ref_cds_stop" ),//    CDS Stop</td>
+                        request.getParameter("clone_sequence_analysis_status" ),//Clone Sequence Analysis Status  </td>
+                        request.getParameter("ref_cds_length" ),//    CDS Length</td>
+                        request.getParameter("clone_sequence_cds_start" ),//Cds Start</td>
+                        request.getParameter("ref_seq_text" ),//   Sequence Text</td>
+                        request.getParameter("clone_seq_text" ),// Cds Stop </td>
+                        
+                        request.getParameter("ref_seq_cds" ),//    CDS</td>
+                        request.getParameter("clone_sequence_text" ),//Clone Sequence  </td>
+                        request.getParameter("clone_sequence_cds"),
+                        request.getParameter("ref_gene_symbol" ),// Gene Symbol</td>
+                        request.getParameter("clone_sequence_disc_high" ),// Discrepancies High Quality (separated by type)</td>
+                        request.getParameter("ref_gi" ),//    GI Number</td>
+                        request.getParameter("clone_sequence_disc_low"),
+                        request.getParameter("ref_5_linker" ),//5' linker sequence    </td>
+                        request.getParameter("clone_sequence_disc_det"), //Detailed Discrepancy Report </td>
+                        request.getParameter("ref_3_linker" ),//   3' linker sequence</td>
+                        request.getParameter("ref_species_id" ),//Species specific ID</td>
+                        request.getParameter("ref_ids" )//All available identifiers</td>
+                        );
                     
-                    int     containerid = Integer.parseInt( (String)request.getParameter("containerid"));//get from form
-                    int     status = Integer.parseInt( (String)request.getParameter("status"));//get from form
-                    String    order_comment =  (String)request.getParameter("order_comments");//get from form
-                    String    seq_comment =  (String)request.getParameter("sequencing_comments");//get from form
-                    
-                    if ( order_comment!= null && order_comment.trim().length() != 0)
-                        OligoContainer.updateOrderComents(order_comment.trim(),  containerid,conn) ;
-                    if ( seq_comment!= null && seq_comment.trim().length() != 0)
-                        OligoContainer.updateSequencingComents(seq_comment.trim(),  containerid,conn) ;
-                    OligoContainer.updateStatus(status,  containerid,conn) ;
-                    DatabaseTransaction.commit(conn);
-                    String process_description = null;
-                    if ( status == OligoContainer.STATUS_ORDER_SENT )
-                    {
-                        process_description = ProcessDefinition.RUN_OLIGO_ORDER_SEND;
-                    }
-                    else if ( status == OligoContainer.STATUS_RECIEVED)
-                    {
-                        process_description = ProcessDefinition.RUN_OLIGO_ORDER_RECIEVED;
-                    }
-                    else if (status == OligoContainer.STATUS_SENT_FOR_SEQUENCING)
-                    {
-                        process_description = ProcessDefinition.RUN_OLIGO_PLATE_USED_FOR_SEQUENCING;
-                    }
-                    
-                    int process_id = Request.createProcessHistory( conn, process_description, new ArrayList(),user) ;
-                    DatabaseTransaction.executeUpdate("insert into process_object (processid,objectid,objecttype) values("+process_id+","+containerid+","+Constants.PROCESS_OBJECT_TYPE_CONTAINER+")",conn);
-                
-                     OligoContainer oligo_container = OligoContainer.getById( containerid);
-                    oligo_container.restoreSamples();
-                    
-                    request.setAttribute(Constants.JSP_TITLE,"oligo Container has been processed");
-                    request.setAttribute("container",oligo_container);
-                    request.setAttribute("forwardName", new Integer(Constants.PROCESS_VIEW_OLIGO_PLATE));
-              
-                    return (mapping.findForward("display_oligo_container"));
+                    t = new Thread( runner);                    t.start();
+                    request.setAttribute(Constants.JSP_TITLE,"processing Decision Tool request");
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
+                    break;
                 }
+               
             }
             
             return mapping.findForward("processing");

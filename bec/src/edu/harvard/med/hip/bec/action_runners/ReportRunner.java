@@ -172,7 +172,7 @@ public class ReportRunner extends ProcessRunner
     {
         ArrayList clones = new ArrayList();
         String sql = null;
-        UICloneSample clone = null;UICloneSample previous_clone = null;
+        UICloneSample clone = null;
         Hashtable processed_clone_ids = new Hashtable();
         Integer current_clone_id = null;
         ResultSet rs = null;
@@ -515,32 +515,29 @@ public class ReportRunner extends ProcessRunner
         }
         cloneinfo.append(seqtext+"\t");
     }
-       
-    if(  m_clone_discr_high)
-    { 
-        try
-        {
-           cloneinfo.append( getDiscrepancyReport(discrepancies, clone, true));
-        }
-        catch(Exception e){}
-        cloneinfo.append("\t");           
-        //clone_sequence = 
-       // cloneinfo.append(+"\t");
-    }//    Discrepancies High Quality (separated by type)
-    if(  m_clone_disc_low)
-    { 
-        try
-        {
-            cloneinfo.append( getDiscrepancyReport(discrepancies, clone, false));
-        }
-        catch(Exception e){}
-        cloneinfo.append("\t"); 
-    } //   Discrepancies Low Quality (separated by type)
-//clone.setSequenceAnalisysStatus (rs.getInt("analysisSTATUS"));
   
-      //           clone.setConstructId (rs.getInt("CONSTRUCTID"));
-     //            clone.setIsolateTrackingId (rs.getInt("ISOLATETRACKINGID"));
-  //  clone.setRank(rs.getInt("RANK"));
+        
+        
+        int[][] discrepancy_count  = null;
+    if(  m_clone_discr_high || m_clone_disc_low )
+    {     
+        discrepancies = getCloneDiscrepancies(discrepancies ,clone);
+        discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(discrepancies,true);
+    }
+    if(  m_clone_discr_high )
+    {
+        cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_5P, true, false));
+        cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_CDS, true, false));
+        cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_3P, true, false));
+        cloneinfo.append(Constants.TAB_DELIMETER ); 
+    }
+    if(  m_clone_disc_low  )
+    {
+        cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_5P, false, false));
+        cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_CDS, false, false));
+        cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_3P, false, false));
+        cloneinfo.append(Constants.TAB_DELIMETER ); 
+    }
      return  cloneinfo.toString();
              
   }
@@ -571,43 +568,79 @@ public class ReportRunner extends ProcessRunner
        return null;
     }
   
-    private String              getDiscrepancyReport(ArrayList clone_discrepancies, 
-                            UICloneSample clone, boolean quality)
-                            throws Exception
+   
+    
+    private  ArrayList          getCloneDiscrepancies(ArrayList clone_discrepancies, 
+                            UICloneSample clone ) 
     {
-        Stretch stretch = null; ArrayList contigs = null;
-        if ( clone_discrepancies != null ) return getDiscrepancySummaryReport(  quality, clone_discrepancies);
-       
-        clone_discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
-            //if clone sequence exists
-        if ( clone.getSequenceId() > 1 ) clone_discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
-        else 
-        {    
-            contigs = IsolateTrackingEngine.getStretches( clone.getIsolateTrackingId(), Stretch.GAP_TYPE_CONTIG  );
-            if (contigs != null && contigs.size() > 0)
+        ArrayList discrepancies = new ArrayList();
+        ArrayList contigs = null; Stretch stretch = null;
+        Read read = null;
+        boolean is_cds_start_set = false;
+        try
+        {
+            if ( clone.getSequenceId() > 0 )
             {
-                for (int count = 0; count < contigs.size(); count++)
+                 discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
+                 discrepancies = DiscrepancyDescription.assembleDiscrepancyDefinitions( discrepancies);
+            }
+            else 
+            {    
+                contigs = IsolateTrackingEngine.getStretches( clone.getIsolateTrackingId(), Stretch.GAP_TYPE_CONTIG  );
+                contigs = Stretch.sortByPosition(contigs);
+                if (contigs != null && contigs.size() > 0)
                 {
-                    stretch = (Stretch) contigs.get(count);
-                    if ( stretch.getAnalysisStatus() == -1) { return "Contig data have not been analized for the clone";}
-                    clone_discrepancies.addAll( stretch.getSequence().getDiscrepancies()); 
+                    for (int count = 0; count < contigs.size(); count++)
+                    {
+                        stretch = (Stretch) contigs.get(count);
+                        if ( stretch.getAnalysisStatus() == -1) break;
+                        discrepancies.addAll( stretch.getSequence().getDiscrepancies()); 
+                    }
+                    discrepancies = DiscrepancyDescription.assembleDiscrepancyDefinitions( discrepancies);
+                }
+                else
+                {
+                    contigs = Read.getReadByIsolateTrackingId( clone.getIsolateTrackingId() );
+                    if (contigs != null && contigs.size() > 0 )
+                    {
+                        ArrayList read_1_discrepancies = null;ArrayList read_2_discrepancies = null;
+                        for (int count_read = 0; count_read < contigs.size(); count_read++)
+                        {
+                            read = (Read) contigs.get(count_read);
+                            if ( count_read == 0 ) read_1_discrepancies = read.getSequence().getDiscrepancies();
+                            if (count_read == 1)read_2_discrepancies= read.getSequence().getDiscrepancies();
+                        }
+                        if ( ( read_1_discrepancies != null && read_1_discrepancies.size() > 0 ) &&
+                            ( read_2_discrepancies != null && read_2_discrepancies.size() > 0 ))
+                        {
+                            discrepancies = DiscrepancyDescription.getDiscrepancyDescriptionsNoDuplicates(
+                                                            read_1_discrepancies,read_2_discrepancies);
+                        }
+                        else if ( read_1_discrepancies != null && read_1_discrepancies.size() > 0 )
+                        {
+                            discrepancies = read_1_discrepancies;
+                        }
+                        else if ( read_2_discrepancies != null && read_2_discrepancies.size() > 0 )
+                        {
+                            discrepancies = read_2_discrepancies;
+                        }
+                        discrepancies = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_discrepancies);
+                 
+                    }
                 }
             }
-            else
-            {
-               }
+             
         }
-        return getDiscrepancySummaryReport( quality, clone_discrepancies);
+        catch(Exception e)
+        {
+            m_error_messages.add("Cannot extract discrepancies for clone : "+clone.getCloneId());
+        }
+        return discrepancies ;
     }
     
-    private String     getDiscrepancySummaryReport(boolean quality, ArrayList discrepancies)
-    {
-            String discrepancy_report_html = Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_5P, true,quality);
-            discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.RNA, true,quality);
-            discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_3P, true,quality);
-
-            return discrepancy_report_html;
-    }
+   
+    
+    //------------------------------------------
      public static void main(String args[]) 
      
     {
@@ -616,42 +649,50 @@ public class ReportRunner extends ProcessRunner
         User user  = null;
         try
         {
+                   BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+            sysProps.verifyApplicationSettings();
+      
              
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             input = new ReportRunner();
-          //  input.setItems("  BSA000865   BSA000863");
-            
-           // input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
-     //       input.setFields(
-      //              "clone_id");
-            /*, //    Clone Id
-                    "dir_name", // Directory Name
-                    "sample_id", //      Sample Id
-                    "plate_label", //      Plate Label
-                    "sample_type", //      Sample Type
-                    "position", //      Sample Position
-                    "ref_sequence_id", //      Sequence ID
-                    "clone_seq_id", //      Clone Sequence Id
-                    "ref_cds_start", //      CDS Start
-                    "clone_status",//      Clone Sequence Analysis Status
-                    "ref_cds_stop", //      CDS Stop
-                    "clone_discr_high", //    Discrepancies High Quality (separated by type
-                    "ref_cds_length", //      CDS Length
-                    "clone_disc_low", //   Discrepancies Low Quality (separated by type
-                    "ref_gc", //     GC Content
-                    "ref_seq_text", //      Sequence Text
-                    "ref_cds", //     CDS
-                    "ref_gi", //      GI Number
-                    "ref_gene_symbol", //      Gene Symbol
-                    "ref_panum", //      PA Number (for Pseudomonas project only
-                    "ref_sga", //      SGA Number (for Yeast project only
-                    "rank" ,
-                    "read_length", //      end reads length
-                    "score", 
-                    "clone_seq_cds_start",
-                    "clone_seq_cds_stop",
-                    "clone_seq_text");
-             **/
+             input.setInputData(Constants.ITEM_TYPE_CLONEID,  "172126	172214	172308	172420	172448	172170	172178	172364	172460	");
+   
+             
+             
+             
+             
+             
+             input. setFields(
+	    "clone_id", //    Clone Id
+	    null,//dir_name, // Directory Name
+	    null,//sample_id, //      Sample Id
+	    "plate_label", //      Plate Label
+	    null,//sample_type, //      Sample Type
+	    "position", //      Sample Position
+	    null,//ref_sequence_id, //      Sequence ID
+	    "clone_seq_id", //      Clone Sequence Id
+	    null,//ref_cds_start, //      CDS Start
+	    null,//clone_status,//      Clone Sequence Analysis Status
+	    null,//ref_cds_stop, //      CDS Stop
+	    "clone_discr_high", //    Discrepancies High Quality (separated by type)
+	    null,//ref_cds_length, //      CDS Length
+	    "clone_disc_low", //   Discrepancies Low Quality (separated by type)
+	    null,//ref_gc, //     GC Content
+	    null,//ref_seq_text, //      Sequence Text
+	    null,//ref_cds, //     CDS
+	    null,//ref_gi, //      GI Number
+	    null,//ref_gene_symbol, //      Gene Symbol
+	    null,//ref_panum, //      PA Number (for Pseudomonas project only)
+	    null,//ref_sga, //      SGA Number (for Yeast project only)
+	    null,//rank ,//      Leave Sequence Info Empty for Empty Well
+	    null,//read_length,
+	    null,//score,
+	     null,//clone_seq_cds_start ,
+	    null,//clone_seq_cds_stop ,
+	    null,//clone_seq_text ,
+	    null//assembly_attempt_status
+                 );
+             
            input.run();
         }
         catch(Exception e){}

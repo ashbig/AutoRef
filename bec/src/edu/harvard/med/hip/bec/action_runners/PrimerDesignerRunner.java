@@ -43,7 +43,14 @@ public class PrimerDesignerRunner extends ProcessRunner
      public  static final int        LQR_COVERAGE_TYPE_ANY_LQR = 1;
      public  static final int        LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY = 2;
      public  static final int        LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS = 3;
+     public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY = 4;
+     public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY = 5;
+     
+     
+     //public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY_IN_LQR = 6;
+     //public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY_IN_LQR = 7;
     
+ 
     
      
      public  static final String    STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE = "typeSequenceCoverage";
@@ -431,7 +438,16 @@ public class PrimerDesignerRunner extends ProcessRunner
         if (  m_type_of_sequence_coverage == COVERAGE_TYPE_REFERENCE_CDS ) 
             return getOligoCalculationsForRefSequence( id,  pst_check_oligo_cloning,  primer3);
         else 
+        {
+            /*if ( m_type_of_lqr_coverage == LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY || 
+                    m_type_of_lqr_coverage == LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY     )
+            {
+                //check if the clone sequence exists
+                
+            }
+             **/
             return getOligoCalculationsForStretchCollection(  id,  pst_check_oligo_cloning_for_stretches,  primer3);
+        }
     }
     
     private ArrayList           getOligoCalculationsForRefSequence( int refsequenceid, PreparedStatement pst_check_oligo_cloning, Primer3Wrapper primer3)throws Exception
@@ -479,11 +495,9 @@ public class PrimerDesignerRunner extends ProcessRunner
        
    //get bondaries of refsequence stretches to be resequenced
         // format collection of int[2]
-        boolean isStartFromFirstDiscrepancy = true;
        ArrayList boundaries = stretch_collection.getStretchBoundaries(stretch_collection.getCloneId(),
                     cds_length,  
-                    m_type_of_lqr_coverage,
-                    isStartFromFirstDiscrepancy);
+                    m_type_of_lqr_coverage);
 
        if ( boundaries == null || boundaries.size() == 0) return oligo_calculations;
    // extend them to the right and to the left by spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN")
@@ -523,7 +537,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             return oligo_calculations;
         }   
       // recalculate start position of each primer based on cds start of the stretch
-        oligo_calculations = recalcultaPrimerStartPosition(refsequence.getId(),stretch_collection.getId(), oligo_calculations);
+        oligo_calculations = recalcultePrimerStartPosition(refsequence.getId(),stretch_collection.getId(), oligo_calculations);
         
         return oligo_calculations;
     }
@@ -618,7 +632,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         {
             stretch_boundaries = (int[])boundaries.get(count);
             // check weather make sence to create primer for the stretch
-            if (stretch_boundaries[1] - window_size - m_number_of_bases_to_start_stop_requier_er < 0 )
+            if (stretch_boundaries[0] < m_number_of_bases_to_start_stop_requier_er  )
             {
                 if ( cloneid == 0) cloneid = StretchCollection.getCloneIdByStretchCollectionId(stretchcollectionid);
                 m_error_messages.add("Clone "+ cloneid +" needs Forward End read. First stretch has boundaries "+stretch_boundaries[0] + " - "+ stretch_boundaries[1] );
@@ -639,7 +653,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             }
                 
             
-            if (stretch_boundaries[0] + window_size > refsequence_length - m_number_of_bases_to_start_stop_requier_er) 
+            if (stretch_boundaries[1] < refsequence_length - m_number_of_bases_to_start_stop_requier_er) 
             {
                 if ( cloneid == 0) cloneid = StretchCollection.getCloneIdByStretchCollectionId(stretchcollectionid);
                 m_error_messages.add("Clone "+cloneid+" needs Reverse End read. Last stretch has boundaries "+stretch_boundaries[0] + " - "+ stretch_boundaries[1] );
@@ -724,7 +738,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         return base_sequences_for_design;
     }
    
-    private ArrayList recalcultaPrimerStartPosition(int refsequence_id, int stretch_collection_id, ArrayList oligo_calculations)
+    private ArrayList recalcultePrimerStartPosition(int refsequence_id, int stretch_collection_id, ArrayList oligo_calculations)
     {
         ArrayList result = new ArrayList();
         OligoCalculation olc = null; Oligo oligo = null;
@@ -783,17 +797,20 @@ public class PrimerDesignerRunner extends ProcessRunner
         User user  = null;
         try
         {// 3558           775       776       884       638      6947 
-            input = new PrimerDesignerRunner();
-            user = AccessManager.getInstance().getUser("lena","htaycher");
-          //  input.setItems("   1085 1269 ");
-           input.setInputData( Constants.ITEM_TYPE_CLONEID," 134377    134389 134377");
+            //  input.setItems("   1085 1269 ");
+            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+      input = new PrimerDesignerRunner();
+            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+          
+           input.setInputData( Constants.ITEM_TYPE_CLONEID,"  521 979 ");
          //   input.setInputData( Constants.ITEM_TYPE_CLONEID,"145895");
             input.setUser(user);
-            input.setSpecId(37);
+            input.setSpecId(61);
             input.setIsTryMode(true);
-            input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_REFERENCE_CDS);
-            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR);
-            input.setMinDistanceBetweenStretchesToBeCombined(20);
+            input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_GAP_LQR);
+            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY);
+            input.setMinDistanceBetweenStretchesToBeCombined(50);
    
             input.run();
           
@@ -802,7 +819,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         catch(Exception e){}
      
         
-       
+         
         System.exit(0);
      }
     
