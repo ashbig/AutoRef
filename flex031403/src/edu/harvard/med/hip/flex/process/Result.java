@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.18 $ $Date: 2002-04-02 21:04:59 $
+ * @version    $Revision: 1.19 $ $Date: 2002-04-18 20:48:02 $
  */
 
 public class Result {
@@ -138,7 +138,15 @@ public class Result {
         this.type = type;
         this.value= value;
     }
-    
+
+    /**
+     * Return the result type.
+     *
+     * @return The result type.
+     */
+     public String getType() {
+         return type;
+     }
     
     /**
      * Return the result value.
