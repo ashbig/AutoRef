@@ -11,15 +11,10 @@ package edu.harvard.med.hip.bec.action;
  * @author  htaycher
  */
 import java.util.*;
-import java.io.*;
-
 import java.sql.*;
-import java.io.IOException;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 
@@ -28,6 +23,7 @@ import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.programs.blast.*;
 import edu.harvard.med.hip.bec.export.*;
+import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 //import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.database.*;
@@ -37,6 +33,7 @@ import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
 import  edu.harvard.med.hip.bec.modules.*;
+import  edu.harvard.med.hip.bec.action_runners.*;
 
 import org.apache.struts.action.*;
 import org.apache.struts.upload.*;
@@ -57,7 +54,7 @@ public class SubmitDataFileAction extends ResearcherAction
         FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
      
         //check if can get input stream
-        InputStream input = null;
+        InputStream input = null;Thread t = null;
         try
         {
             input = requestFile.getInputStream();
@@ -90,13 +87,20 @@ public class SubmitDataFileAction extends ResearcherAction
                      {  isSendNeedleFiles = true;}
                     
                     RunDiscrepancyFinder df= new RunDiscrepancyFinder(input,isSendNeedleFiles, user.getUserEmail());
-                    Thread t = new Thread(df);
+                    t = new Thread(df);
                     t.start();
-                   
-                  
                     String str="The following process was initiated by user: <i>Run Discrepancy Finder as stand-alone application</i>.<P>The report will be send to user by e-mail.";
                     request.setAttribute(Constants.JSP_TITLE,str);
                      return (mapping.findForward("response"));
+                }
+                case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE:
+                {
+                    SequenceDataUploadRunner sd= new SequenceDataUploadRunner(input, user);
+                    t = new Thread(sd);
+                    t.start();
+                    String str="The following process was initiated by user: <i>Submit sequence data</i>.<P>Report will be send to user by e-mail.";
+                    request.setAttribute(Constants.JSP_TITLE,str);
+                    return (mapping.findForward("response"));
                 }
             }
         }

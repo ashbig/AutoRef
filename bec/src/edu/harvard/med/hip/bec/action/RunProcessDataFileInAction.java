@@ -51,36 +51,63 @@ public class RunProcessDataFileInAction extends ResearcherAction
         // place to store errors
         ActionErrors errors = new ActionErrors();
         Thread t = null;
-         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
-         Connection conn = null;
-         
-        FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
-     
-        //check if can get input stream
+        Connection conn = null;
+        FormFile requestFile = null; String sequence_ids = null;
+        ArrayList sequence_id_items = new ArrayList();
         InputStream input = null;
-         try
+        
+        
+         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
+         String sequence_id_type = (String)request.getAttribute("searchType");
+         String searchSubmissionType = (String)request.getAttribute("searchSubmissionType");
+         
+         if ( searchSubmissionType.equalsIgnoreCase("nonfile"))
+         {
+            sequence_ids = (String)request.getAttribute("searchTerm");
+            //parse plate names
+            sequence_id_items = Algorithms.splitString(sequence_ids);
+            
+         }
+         else if ( searchSubmissionType.equalsIgnoreCase("file"))
+         {
+             requestFile = ((SubmitDataFileForm)form).getFileName();
+             if(requestFile == null)
+             {
+                errors.add("filename", new ActionError("error.query.nofile"));
+                saveErrors(request,errors);
+                return new ActionForward(mapping.getInput());
+            }
+             try
+            {
+                input = requestFile.getInputStream();
+                BufferedReader in = new BufferedReader(new InputStreamReader(input));
+                String line = null;
+                while((line = in.readLine()) != null)
+                {
+                    line +=line+"\n";
+                }
+                sequence_id_items = Algorithms.splitString(line);
+            } catch (Exception ex)
+            {
+                errors.add("fileName", new ActionError("bec.infoimport.file", ex.getMessage()));
+                saveErrors(request,errors);
+                return new ActionForward(mapping.getInput());
+            }
+        }
+         //check if any sequence id was submitted
+        if (sequence_id_items.size() < 1)
         {
-            input = requestFile.getInputStream();
-        } catch (FileNotFoundException ex)
-        {
-            errors.add("fileName", new ActionError("bec.infoimport.file", ex.getMessage()));
-            saveErrors(request,errors);
-            return new ActionForward(mapping.getInput());
-        } catch (IOException ex)
-        {
-            errors.add("fileName", new ActionError("bec.infoimport.file", ex.getMessage()));
+            errors.add("error", new ActionError("error while submitting data ", "no sequence id submitted"));
             saveErrors(request,errors);
             return new ActionForward(mapping.getInput());
         }
-       
+         //start processing 
         try
         {
-            
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
             DatabaseTransaction dt = DatabaseTransaction.getInstance();
             conn = dt.requestConnection();
-        
-    
+   
             switch (forwardName)
             {
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER : // add new internal primer
@@ -89,6 +116,15 @@ public class RunProcessDataFileInAction extends ResearcherAction
 
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS : //view internal primers
                 {
+                    ArrayList oligo_calculation = new ArrayList();
+                    ArrayList oligo_calc_for_sequence = null;
+                    String refseqid = null;
+                    for (int seq_count = 0; seq_count < sequence_id_items.size(); seq_count++)
+                    {
+                       refseqid = (String) sequence_id_items.get(seq_count);
+                       oligo_calc_for_sequence = OligoCalculation.getOligoCalculations(Integer.parseInt(refseqid), OligoCalculation.QUERYTYPE_REFSEQUENCEID);
+                       oligo_calculation.add(oligo_calc_for_sequence);
+                    }
                 }
 
                 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS : //approve internal primers
