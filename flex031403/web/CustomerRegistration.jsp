@@ -5,7 +5,7 @@
 
 <html>
 <head><title><bean:message key="flex.name"/> : Customer Registration</title></head>
-<body bgcolor="white">
+<body>
 
 <h2><bean:message key="flex.name"/> : Customer Registration</h2>
 <hr>

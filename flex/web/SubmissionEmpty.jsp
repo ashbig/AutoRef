@@ -1,3 +1,8 @@
+<%@ page language="java" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Cloning Request</title>
@@ -5,6 +10,7 @@
 <body>
 <h2><bean:message key="flex.name"/> : Cloning Request : Confirm Selection</h2>
 <hr>
+<html:erros/>
 <p>
 No sequence has been submitted.
 </body>

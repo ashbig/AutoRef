@@ -9,6 +9,7 @@
     <h2>Welcome to <bean:message key="flex.name"/></h2>
     <hr>
     <html:errors/>
+    <p>
     <center>
   
 

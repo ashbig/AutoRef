@@ -8,7 +8,7 @@
 <head>
 <title><bean:message key="flex.name"/> : Cloning Request</title>
 </head>
-<body bgcolor="white">
+<body>
 
 <h2><bean:message key="flex.name"/> : Cloning Request : Confirm Selection</h2>
 <hr>
