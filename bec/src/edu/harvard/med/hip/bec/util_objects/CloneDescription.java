@@ -19,28 +19,54 @@ import  edu.harvard.med.hip.bec.action_runners.*;
 public class CloneDescription
 {
     
+     public   final  static  int CLONE_ANALYSIS_STATUS_NOT_ANALYZED = 0;
+     public   final  static  int CLONE_ANALYSIS_STATUS_ANALYZED_SEQUENCE = 1;
+     public   final  static  int CLONE_ANALYSIS_STATUS_ANALYZED_CONTIGS = 2;
+     public   final  static  int CLONE_ANALYSIS_STATUS_ANALYZED_READS = 3;
    
-         private int        m_flex_sequenceid = -1;
-         private int        m_cloneid = -1;
-         private int        m_resultid = -1;
-         private String     m_read_filepath = null;
-         private int        m_becrefsequenceid = -1;
-         private int        m_isolatetrackingid = -1;
-         private int        m_isolate_status = -1;
-         private int        m_containerid    = -1;
-         private int        m_sampleid = -1;
-         private int        m_position = -1;
-         private int        m_constructid = -1;
-         private int        m_construct_format = -1;
-         private int        m_clone_status = -1;
-         private int        m_cloning_strategy_id = -1;
-         private int        m_clone_sequence_id = -1;
-         private int        m_clone_sequence_type = -1;
-         private int        m_clone_sequence_status = -1;
-         private String     m_plate_name = null;
+        private String     m_plate_name = null;
+        private int        m_containerid    = -1;
+        private int        m_sampleid = -1;
+        private String     m_sample_type = null;
+        private int        m_position = -1;
+
+        private int        m_resultid = -1;
+        private int        m_constructid = -1;
+        private int        m_isolatetrackingid = -1;
+        private int        m_construct_format = -1;
+        private int        m_isolate_status = -1;
+
+
+        private int        m_flex_sequenceid = -1;
+        private int        m_refsequenceid = -1;
+
+        private String     m_read_filepath = null;
+        private int        m_cloning_strategy_id = -1;
+
+
+        private int        m_cloneid = -1;
+        private int        m_clone_status = -1;
+
+        private int        m_clone_sequence_id = -1;
+        private int        m_clone_sequence_type = -1;//(assembled, submitted)
+        private int        m_clone_sequence_analysis_status = -1;
+        private int         m_clone_sequence_cds_start = -1;
+        private int        m_clone_sequence_cds_stop = -1;
+        private int         m_clone_sequence_linker5_start = -1;
+        private int        m_clone_sequence_cds_linker3_stop = -1;
+        private String          m_clone_sequence_text = null;
+        private ArrayList       m_clone_discrepancies = null;
+        private int             m_clone_assembly_status = -1;
+
+        private int             m_analysis_rank = - 1;
+        private String          m_next_step_recomendation = null; 
+         private int        m_clone_analysis_status = -1;
+       
+         
+         
          
          public CloneDescription(){}
-         public CloneDescription(int v1, int v2, int v3, int v4, int v5, 
+         /*public CloneDescription(int v1, int v2, int v3, int v4, int v5, 
          int v7, int v8, String v6, int v10,int v11, int v12, int v13,int v14,int v15, int v16,int v17)
          {
              m_flex_sequenceid = v1;
@@ -59,47 +85,70 @@ public class CloneDescription
              m_clone_sequence_status = v15;
              m_isolate_status = v16;
              m_position = v17;
-         }
+         }*/
          
-         public int        getCloneSequenceId (){ return m_clone_sequence_id  ;}
-        public int        getCloneSequenceType (){ return m_clone_sequence_type  ;}
-        public int        getCloneSequenceStatus (){ return m_clone_sequence_status  ;}
-         public int        getFlexSequenceId (){ return m_flex_sequenceid   ;}
-         public int        getCloneId (){ return m_cloneid   ;}
-         public int        getResultId (){ return m_resultid   ;}
-         public int        getBecRefSequenceId (){ return m_becrefsequenceid   ;}
-         public int        getIsolateTrackingId (){ return m_isolatetrackingid   ;}
-         public int         getContainerId(){ return m_containerid;}
-         public String      getReadFilePath(){ return m_read_filepath;}
-         public int         getSampleId(){ return m_sampleid;}
-           public int       getConstructId(){ return m_constructid ;}
-         public int        getConstructFormat(){ return m_construct_format ;}
-         public int        getCloningStrategyId(){ return m_cloning_strategy_id;}
-         public int         getIsolateStatus(){ return m_isolate_status;}
-         public int         getPosition(){ return m_position;}
-          public String      getPlateName(){ return m_plate_name;}
-          public int            getCloneStatus(){ return m_clone_status;}
-          
-          
-          public void      setPlateName(String v){  m_plate_name = v;} 
-         public void        setReadFilePath(String c){ m_read_filepath=c;}
-         public void        setFlexSequenceId  ( int v){  m_flex_sequenceid =v  ;}
-         public void        setCloneId ( int v){  m_cloneid   =v;}
-         public void        setResultId ( int v){  m_resultid =v  ;}
-          public void        setBecRefSequenceId (int v){  m_becrefsequenceid =v  ;}
-         public void          setIsolateTrackingId (int v){  m_isolatetrackingid =v  ;}
-         public void        setContainerId(int v){ m_containerid = v;}
-         public void        setSampleId(int v){ m_sampleid = v;}
-           public void       setConstructId(int v){ m_constructid = v;}
-         public void        setConstructFormat(int v){ m_construct_format = v;}
-         public void        setCloningStrategyId(int v){ m_cloning_strategy_id= v;}
-        public void        setCloneSequenceId (int v){   m_clone_sequence_id  = v ;}
-        public void        setCloneSequenceType (int v){   m_clone_sequence_type  = v ;}
-        public void        setCloneSequenceStatus (int v){   m_clone_sequence_status  = v ;}
-        public void        setIsolateStatus(int v){ m_isolate_status = v;}
-        public void         setPosition(int v){  m_position =v;}
-        public void         setCloneStatus(int v){ m_clone_status = v;}
-
+        public int			getCloneSequenceId (){ return m_clone_sequence_id  ;}
+        public int			getCloneSequenceType (){ return m_clone_sequence_type  ;}
+        public int			getCloneSequenceAnalysisStatus (){ return m_clone_sequence_analysis_status  ;}
+        public int			getFlexSequenceId (){ return m_flex_sequenceid   ;}
+        public int			getCloneId (){ return m_cloneid   ;}
+        public int			getResultId (){ return m_resultid   ;}
+        public int			getBecRefSequenceId (){ return m_refsequenceid   ;}
+        public int			getIsolateTrackingId (){ return m_isolatetrackingid   ;}
+        public int			getContainerId(){ return m_containerid;}
+        public String			getReadFilePath(){ return m_read_filepath;}
+        public int			getSampleId(){ return m_sampleid;}
+        public int			getConstructId(){ return m_constructid ;}
+        public int			getConstructFormat(){ return m_construct_format ;}
+        public int			getCloningStrategyId(){ return m_cloning_strategy_id;}
+        public int			getIsolateStatus(){ return m_isolate_status;}
+        public int			getPosition(){ return m_position;}
+        public String			getPlateName(){ return m_plate_name;}
+        public int			getCloneStatus(){ return m_clone_status;}
+        public String			getCloneSequenceText(){ return m_clone_sequence_text ;}
+        public ArrayList		getCloneDiscrepancies(){ return m_clone_discrepancies ;}
+        public int			getCloneAssemblyStatus(){ return m_clone_assembly_status;}
+        public String			getSampleType(){ return m_sample_type;}
+        public int			getCloneSequenceCdsStart (){ return m_clone_sequence_cds_start ;}
+        public int			getCloneSequenceCdsStop (){ return m_clone_sequence_cds_stop ;}
+        public int			getRank(){ return m_analysis_rank;}
+        public String			getNextStepRecomendation(){ return m_next_step_recomendation;}
+        public int			getCloneSequence5LinkerStart(){ return  m_clone_sequence_linker5_start ;}
+        public int			getCloneSequence3LinkerStop (){ return m_clone_sequence_cds_linker3_stop ;}
+        public int                      getCloneAnalysisStatus(){ return m_clone_analysis_status;}
+ 
+ 
+        public void                  setPlateName(String v){  m_plate_name = v;} 
+        public void                  setReadFilePath(String c){ m_read_filepath=c;}
+        public void                  setFlexSequenceId  ( int v){  m_flex_sequenceid =v  ;}
+        public void                  setCloneId ( int v){  m_cloneid   =v;}
+        public void                  setResultId ( int v){  m_resultid =v  ;}
+        public void                  setBecRefSequenceId (int v){  m_refsequenceid =v  ;}
+        public void                  setIsolateTrackingId (int v){  m_isolatetrackingid =v  ;}
+        public void                  setContainerId(int v){ m_containerid = v;}
+        public void                  setSampleId(int v){ m_sampleid = v;}
+        public void                  setConstructId(int v){ m_constructid = v;}
+        public void                  setConstructFormat(int v){ m_construct_format = v;}
+        public void                  setCloningStrategyId(int v){ m_cloning_strategy_id= v;}
+        public void                  setCloneSequenceId (int v){   m_clone_sequence_id  = v ;}
+        public void                  setCloneSequenceType (int v){   m_clone_sequence_type  = v ;}
+        public void                  setCloneSequenceAnalysisStatus (int v){   m_clone_sequence_analysis_status  = v ;}
+        public void                  setIsolateStatus(int v){ m_isolate_status = v;}
+        public void                  setPosition(int v){  m_position =v;}
+        public void                  setCloneStatus(int v){ m_clone_status = v;}
+        public void                  setCloneSequenceText(String v){  m_clone_sequence_text = v;}
+        public void                  setCloneDiscrepancies(ArrayList v){  m_clone_discrepancies = v;}
+        public void                  setCloneAssemblyStatus(int v){  m_clone_assembly_status = v;}
+        public void                  setSampleType(String v) { m_sample_type = v;}
+        public void                  setCloneSequenceCdsStart (int v){ m_clone_sequence_cds_start = v;}
+        public void                  setCloneSequenceCdsStop (int v){ m_clone_sequence_cds_stop = v;}
+        public void                  setRank(int v){ m_analysis_rank = v;}
+        public void                  setNextStepRecomendation(String v){  m_next_step_recomendation = v;}
+        public void			setCloneSequence5LinkerStart(int v){   m_clone_sequence_linker5_start = v;}
+        public void			setCloneSequence3LinkerStop (int v){  m_clone_sequence_cds_linker3_stop = v;}
+        public void                      setCloneAnalysisStatus(int v){  m_clone_analysis_status = v;}
+ 
+        
         
         public static ArrayList getClonesDescription( ArrayList clones_to_process)throws BecDatabaseException
         {

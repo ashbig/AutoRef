@@ -1,4 +1,5 @@
 <%@ page import="edu.harvard.med.hip.bec.*" %>
+<%@ page import="java.util.*" %>
 <script defer="defer" type="text/javascript"><!--
   
 /*Start of form validation: items not empty*/
@@ -52,12 +53,20 @@ boolean isCloneId = false;boolean isFLEXSequenceId = false;
 boolean isPlateLabel = false;boolean isACESequenceId = false;
 boolean isCloneIdChecked = false;boolean isFLEXSequenceIdChecked = false;
 boolean isPlateLabelChecked = false;boolean isACESequenceIdChecked = false;
+boolean isProjectList = false;boolean isProjectListChecked = false;
 switch( forwardName_int)
 {
 case Constants.PROCESS_SHOW_CLONE_HISTORY :{ isCloneId = true; isCloneIdChecked= true;break;}
 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:{ isCloneId = true; isCloneIdChecked= true;break;}
 case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:{ isCloneId = true; isCloneIdChecked= true;break;}
+
+
 case Constants.PROCESS_RUN_DECISION_TOOL:{ isCloneId = true;isPlateLabel = true; isPlateLabelChecked=true;break;}
+case Constants.PROCESS_RUN_DECISION_TOOL_NEW:{ isCloneId = true;isPlateLabel = true; isProjectList= true; isPlateLabelChecked=true;break;}
+
+case Constants.PROCESS_PROCESS_OLIGO_PLATE:{ isPlateLabel = true;  isPlateLabelChecked=true;break;}
+
+
 case Constants.PROCESS_FIND_GAPS:{ isCloneId = true; isCloneIdChecked= true;break;}
 case Constants.STRETCH_COLLECTION_REPORT_INT:{ isCloneId = true; isCloneIdChecked= true;break;}
 case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:{ isCloneId = true;isCloneIdChecked= true; break;}
@@ -88,33 +97,51 @@ case Constants.PROCESS_DELETE_CLONE_SEQUENCE: { isCloneId = true; isCloneIdCheck
 case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{ isCloneId = true; isCloneIdChecked= true;break;}
 case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:{ isCloneId = true; isCloneIdChecked= true;break;}
 case  Constants.PROCESS_DELETE_TRACE_FILES :{ break;}
- case Constants.PROCESS_MOVE_TRACE_FILES  :{ break;}                    
+ case Constants.PROCESS_MOVE_TRACE_FILES  :{ break;}     
+               
 }
-String[] cells = new String[4]; cells[0]="&nbsp;";cells[1]="&nbsp;";cells[2]="&nbsp;";cells[3]="&nbsp;";int current_entity = 0;
+String[] cells = new String[6]; 
+cells[0]="&nbsp;";cells[1]="&nbsp;";
+cells[2]="&nbsp;";cells[3]="&nbsp;";
+cells[4]="&nbsp;";cells[5]="&nbsp;";
+int current_entity = 0;
+
 if ( isPlateLabel )
 { 
     cells[current_entity] = "<strong><input type='radio' name='item_type' value='"+ Constants.ITEM_TYPE_PLATE_LABELS +"'";
     if (isPlateLabelChecked) cells[current_entity] += "checked";
-    cells[current_entity++] += ">Container Labels</strong>";
+cells[current_entity++] += ">Container Labels</strong>";
+
 }
  if ( isCloneId)
 {
     cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_CLONEID+"'";
     if (isCloneIdChecked)cells[current_entity] += "checked";
     cells[current_entity++] += ">Clone Id </strong>";
+
 }
  if ( isACESequenceId )
 {
     cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_BECSEQUENCE_ID+"'";
     if (isACESequenceIdChecked) cells[current_entity] += "checked";
     cells[current_entity++] += ">ACE Sequence Id </strong>";
+
 }
  if ( isFLEXSequenceId )
 {
     cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_FLEXSEQUENCE_ID+"'";
     if (isFLEXSequenceIdChecked) cells[current_entity] += "checked";
     cells[current_entity++] += ">FLEX Sequence Id</strong>";
+
 }
+if ( isProjectList )
+ {
+    cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_PROJECT_NAME+"'";
+    if (isProjectListChecked) cells[current_entity] += "checked";
+  cells[current_entity++] += ">Project Name</strong>";
+
+}   
+
 %>
 
 
@@ -123,8 +150,10 @@ if ( isPlateLabel )
 <tr> 
 <td colspan=2 bgColor="#1145A6"> <font color="#FFFFFF"><strong>Select Items Type: </strong></font></td>
 </tr>
-<tr>  <td> <%=cells[0] %> </td><td>  <%=cells[2] %>  </td></tr>
+ <tr>  <td> <%=cells[0] %> </td><td>  <%=cells[2] %>  </td></tr>
 <tr> <td>  <%=cells[1] %>  </td><td>   <%=cells[3] %>   </td></tr>
+<% if ( !cells[4].equals("&nbsp;" )){%><tr> <td>  <%=cells[4] %>  </td><td>   <%=cells[5] %>   </td></tr><%}%> 
+
 
   <tr> 
     <td bgColor="#1145A6" colspan=2> <font color="#FFFFFF"><strong>Enter All search Items</strong></font></td>

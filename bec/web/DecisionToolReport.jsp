@@ -64,7 +64,8 @@
 <%  
     String row_colorB = " bgColor='#e4e9f8'"; String row_colorA =" bgColor='#b8c6ed'";
 	String row_color = " bgColor='#e4e9f8'";
-	
+if ( clone_info != null )
+	{
 	int constructid = -1;
         UICloneSample clone = null;
     for (int count = 0; count < clone_info.size(); count ++)
@@ -117,7 +118,7 @@
 <%}else{%><%=BaseSequence.getSequenceQualityAsString(clone.getCloneQuality()) %> <%}%></td>
 
 	</tr>
-	<%}%>
+	<%}}%>
     </table>
 <P><P>
 <!--<div align="center"> <input type="SUBMIT"/></DIV> -->

@@ -5,6 +5,7 @@
 <%@ page import="edu.harvard.med.hip.bec.action_runners.*" %>
 <%@ page import="edu.harvard.med.hip.bec.programs.assembler.*" %>
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
+<%@ page import="edu.harvard.med.hip.bec.util_objects.*" %>
 <%@ page import="java.util.*" %>
  <%
 Object forwardName = null;
@@ -30,9 +31,19 @@ case Constants.PROCESS_SHOW_CLONE_HISTORY :{ break;}
 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:{
 
 additional_jsp = "<tr><td colspan='2'><table border =0 width='100%'>"
-+"<tr><td colspan=2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Oligo placement format </strong></font> </td></tr>"
-+"<tr><td> <input type=RADIO name='oligo_placement_format' value="+ PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER+"> checked><b>All primers for clone together </td></tr>"
-+"<tr><td>  <input type=RADIO name='oligo_placement_format' value="+ PrimerOrderRunner.PLACEMENT_FORMAT_N_PRIMER+" ><b><i>Nth</i> primer for clone. Primer number (ordered by position from 5p end)"
+
+
++"<tr><td  bgColor='#1145A6' ><font color='#FFFFFF'><strong>Primers selection rule  </strong></font> </td></tr>"
++"<tr><td> <input checked type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COOLECTION_ONLY+"> <b>Only primers designed for Stretch Collections</td></tr>"
++"<tr><td>  <input  type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_REFSEQ_ONLY+" ><b> Only primers designed for Refernce Sequence</td></tr> "
++"<tr><td>  <input  type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COLLECTION_REFSEQ+" ><b> Primers designed for Stretch Collections and Reference Sequence</td></tr>"
++"<tr><td>&nbsp</td></tr></table>";
+
+additional_jsp += "<tr><td colspan='2'><table border =0 width='100%'>"
+
++"<tr><td colspan=2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Primers placement format </strong></font> </td></tr>"
++"<tr><td> <input  type=RADIO name='oligo_placement_format' value="+ PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER+" checked><b>All primers for clone together </td></tr>"
++"<tr><td>  <input disabled type=RADIO name='oligo_placement_format' value="+ PrimerOrderRunner.PLACEMENT_FORMAT_N_PRIMER+" ><b><i>Nth</i> primer for clone. Primer number (ordered by position from 5p end)"
 +"  <input type=text value='1' name='primer_number'  ></td></tr></table></td></tr>";
 isTryMode = true; break;}
 case Constants.PROCESS_RUN_DECISION_TOOL:{break;}
@@ -121,12 +132,24 @@ for (Enumeration e = BecProperties.getInstance().getBlastableDatabases().keys() 
 additional_jsp_buffer.append("</SELECT></td> </tr>");
 additional_jsp_buffer.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
 additional_jsp_buffer.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
-additional_jsp_buffer.append("<OPTION VALUE='NONE'> None");
+additional_jsp_buffer.append("<OPTION VALUE=' '> None");
 additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.GI +"'>"+ PublicInfoItem.GI);
-additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.PANUMBER +"'>"+ PublicInfoItem.PANUMBER );
-additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.SGD +"'>"+ PublicInfoItem.SGD );
+SpeciesDefinition sd = null;
+for (Enumeration e = DatabaseToApplicationDataLoader.getSpecies().keys() ; e.hasMoreElements() ;)
+{
+	sd = (SpeciesDefinition) DatabaseToApplicationDataLoader.getSpecies().get( e.nextElement());
+        if ( sd.getIdName() != null && sd.getIdName().trim().length() > 0)
+            {
+	additional_jsp_buffer.append(" <OPTION VALUE='" + sd.getIdName() +"'>"+sd.getIdName());
+        }
+}
+
+//additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.PANUMBER +"'>"+ PublicInfoItem.PANUMBER );
+//additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.SGD +"'>"+ PublicInfoItem.SGD );
+
 additional_jsp_buffer.append("</SELECT></td> </tr>");
-  additional_jsp = additional_jsp_buffer.toString();
+  
+additional_jsp = additional_jsp_buffer.toString();
 break;}
 
 case Constants.PROCESS_RUN_PRIMER3 :
@@ -194,4 +217,11 @@ if ( isTryMode )
     additional_jsp += "<tr><td colspan='2'>"+line_padding+"<input type='checkbox' name='isTryMode' checked value=1><b>Run in try mode?</b></td></tr>";
    }
 %>
+
+
  <%= additional_jsp %>
+ 
+ <!-- special case -->
+ 
+ <% if ( forwardName_int == Constants.PROCESS_RUN_DECISION_TOOL_NEW)
+     { %> <jsp:include page="decision_tool_input.jsp" />  <%}%>
