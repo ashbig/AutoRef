@@ -56,13 +56,13 @@ public class MgcOligoPlateManager extends OligoPlateManager
     }
     
     public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow,
-    int totalWells, boolean isFull, Protocol protocol) throws FlexDatabaseException
+    int totalWells, boolean isFull, Protocol protocol)  throws FlexDatabaseException
     {
         super(conn,project,workflow,totalWells,isFull,false,protocol);
     }
     
    public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow,
-                 boolean isFull, Protocol protocol) 
+                 boolean isFull, Protocol protocol)  throws FlexDatabaseException
    {
           this(conn, project,  workflow, 94,  isFull,  protocol);
    }
