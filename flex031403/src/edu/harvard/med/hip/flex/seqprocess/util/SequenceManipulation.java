@@ -72,11 +72,26 @@ public class SequenceManipulation
                                                 old.charAt(chPos++),
                                                 old.charAt(chPos++)
                                                 , mode) ;
+            if (res.equals("")) return "";
             newSeq.append(res );
         }
         return newSeq.toString();
     }
 
+    
+    
+     public static  String translateCodonToAminoAcid(String codon)
+    {
+        if (codon.length() != 3) return "";
+        int first_index = getIndexOfBase (codon.charAt(0));
+        int second_index = getIndexOfBase (codon.charAt(1));
+        int third_index = getIndexOfBase (codon.charAt(2));
+            
+        int codon_index = first_index * 16 + second_index * 4 + third_index;
+       
+        return  "" + amino_acid_symbol_names[codon_index];
+     
+    }
 
  //***************************************************************************
     
@@ -85,13 +100,13 @@ public class SequenceManipulation
                                                 char thirdCh, int mode)
     {
         int first_index = getIndexOfBase (firstCh);
-        if (first_index >= 4) {        return " . ";        }
+        if (first_index >= 4) {        return "";        }
 
         int second_index = getIndexOfBase (secondCh);
-        if (second_index >= 4) {        return " . ";        }
+        if (second_index >= 4) {        return "";        }
 
         int third_index = getIndexOfBase (thirdCh);
-        if (third_index >= 4) {        return " . ";        }
+        if (third_index >= 4) {        return "";        }
         
         int codon_index = first_index * 16 + second_index * 4 + third_index;
         if (mode == THREE_LETTER_TRANSLATION)
@@ -228,6 +243,11 @@ public class SequenceManipulation
     
     
      public static void main(String [] args) {
+         
+       System.out.println( (int) Math.round(Math.ceil(4/3)));
+       System.out.println( (int) Math.round(Math.ceil(3/3)));
+       System.out.println( (int) Math.round(Math.ceil(2/3)));
+       System.out.println( (int) Math.round(Math.ceil(1/3)));
          System.out.println(SequenceManipulation.getTranslation("aaatattcaaataaaattccattaattccattgtcggttataataaaaaccttatcgcta",ONE_LETTER_TRANSLATION_NO_SPACE));
      }
 }

@@ -112,7 +112,7 @@ public class Blast2seqParser
             fin = new BufferedReader(new FileReader(queryFile));
             while ((line = fin.readLine()) != null)
             {
-                System.out.println(line);
+                //System.out.println(line);
                 //finished read hits - exit
                 if ( line.indexOf("Lambda") != -1)
                 {
