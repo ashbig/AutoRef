@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.12 $
- * $Date: 2001-07-16 15:25:00 $
+ * $Revision: 1.13 $
+ * $Date: 2001-07-16 19:35:27 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.12 $ $Date: 2001-07-16 15:25:00 $
+ * @version    $Revision: 1.13 $ $Date: 2001-07-16 19:35:27 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -155,8 +155,8 @@ public class EnterPlateAction extends ResearcherAction {
         // if no process is found, then the container can't be processed
         if(process == null) {
             errors.add(ActionErrors.GLOBAL_ERROR, 
-                new ActionError("error.process.notfound", 
-                    container.getLabel(), protocol.getProcessname()));
+                new ActionError("error.queue.notready", 
+                    container.getLabel()));
             retForward = new ActionForward(mapping.getInput());
             saveErrors(request,errors);
             return retForward;
