@@ -72,6 +72,38 @@ public class AccessManager {
         return isExist;
     }
     
+    /**
+     * This method query the userprofile table to determine
+     * whether a reminder text is unique.
+     *
+     * @param name The reminder text as String.
+     * @return boolean An Yes or No to indicate whether the reminder
+     * text is unique in the userprofile table.
+     */
+    public boolean reminderUnique(String reminder) throws FlexDatabaseException {
+        boolean isUnique = false;
+        String sql;
+        ResultSet rs = null;
+        int count = 0;
+        sql = "SELECT count(PASSWORDREMINDERSTRING) FROM Userprofile"
+        + " WHERE PASSWORDREMINDERSTRING = '" + reminder+"'";
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                count = rs.getInt(1);
+            }
+        }catch (SQLException sqlex) {
+            sqlex.printStackTrace();
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        if ((count ==1)|| (count==0)) isUnique = true;
+        return isUnique;
+    }
+    
+    
    /**
      * Determins if the logged in user is authorized to execute this action
      * based on his/her group membership.
