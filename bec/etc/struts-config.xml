@@ -157,6 +157,7 @@
              <forward name="construct_report" path="/ConstructReport.jsp"/>
               <forward name="display_clone_sequence" path="/Display_CloneSequence.jsp"/>
              <forward name="display_info" path="/ConfirmProcess.jsp"/>
+             <forward name="display_oligocontainer" path  = "/Display_OligoContainer.jsp"/>
 </action>
 
  
@@ -197,6 +198,7 @@
             <forward name="desicion_tool_report" path="/DesicionToolReport.jsp"/>
             <forward name="display_item_history" path="/Display_ItemHistory.jsp"/>
             <forward name="display_oligo_calculations" path="/Display_OligoCalculation.jsp"/>
+<forward name="display_oligo_container" path  = "/Display_OligoContainer.jsp"/>
             
     </action>
 

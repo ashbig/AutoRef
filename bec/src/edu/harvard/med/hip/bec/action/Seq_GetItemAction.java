@@ -67,7 +67,8 @@ public class Seq_GetItemAction extends ResearcherAction
                 forwardName ==Constants.PROCESS_PUT_CLONES_ON_HOLD ||
                  forwardName == Constants.PROCESS_ACTIVATE_CLONES ||
                  forwardName == Constants.PROCESS_CHECK_READS_AVAILABILITY 
-                 || forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER)//rocessing from container label
+                 || forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER
+                 )//rocessing from container label
                {
                      
                     label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
@@ -443,6 +444,25 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("display_info"));
                 }
+                case Constants.PROCESS_PROCESS_OLIGO_PLATE:
+                case Constants.PROCESS_VIEW_OLIGO_PLATE:
+                {
+                     label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
+                     ArrayList oligo_containers = OligoContainer.findContainersInfoFromLabel(label.toUpperCase().trim(), OligoContainer.MODE_NOTRESTORE_SAMPLES);
+                     OligoContainer oligo_container = null;
+                    if ( oligo_containers != null && oligo_containers.size() == 1)
+                        oligo_container = (OligoContainer)oligo_containers.get(0);
+                     if (oligo_container == null)
+                    {
+                        errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.container.querry.parameter",  "Unable to find oligo container with label "+label));
+                        saveErrors(request,errors);
+                        return new ActionForward(mapping.getInput());
+                    }
+                    request.setAttribute(Constants.JSP_TITLE,"process Oligo Container");
+                    request.setAttribute("container",oligo_container);
+                    request.setAttribute("forwardName", new Integer(forwardName));
+                    return (mapping.findForward("display_oligo_container"));
+                }
              
             }
             
@@ -560,6 +580,5 @@ public class Seq_GetItemAction extends ResearcherAction
         
     }
                    
-    
-    
+  
 }

@@ -150,6 +150,13 @@ public class SelectProcessAction extends ResearcherAction
                     request.setAttribute(Constants.JSP_TITLE,"select Plate to Check Clone Status");
                      return (mapping.findForward("scan_label"));
                 }
+                case Constants.PROCESS_PROCESS_OLIGO_PLATE:
+                case Constants.PROCESS_VIEW_OLIGO_PLATE:
+                {
+                     request.setAttribute("forwardName", new Integer(Constants.PROCESS_PROCESS_OLIGO_PLATE));
+                    request.setAttribute(Constants.JSP_TITLE,"select Oligo Plates to process");
+                     return (mapping.findForward("scan_label"));
+                }
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
                 {
                     //get all specs for each of the three types and all plates where
