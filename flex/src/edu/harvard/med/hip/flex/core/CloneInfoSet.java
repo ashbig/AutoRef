@@ -206,7 +206,7 @@ public class CloneInfoSet {
         clones.add("110893");
         clones.add("110894");
         clones.add("110891");
-        clones.add("110900");
+        clones.add("111103");
         
         List seqids = new ArrayList();
         seqids.add("17918");
@@ -216,8 +216,8 @@ public class CloneInfoSet {
         
         CloneInfoSet info = new CloneInfoSet();
         try {
-            //info.restoreByCloneid(clones);
-            info.restoreBySequenceid(seqids);
+            info.restoreByCloneid(clones);
+            //info.restoreBySequenceid(seqids);
             List allClones = info.getAllCloneInfo();
             printAllClones(allClones);
         } catch (Exception ex) {
@@ -252,6 +252,13 @@ public class CloneInfoSet {
             System.out.println("getGenbank:\t"+clone.getNameinfo().getGenbank());
             System.out.println("getLocusid:\t"+clone.getNameinfo().getLocusid());
             System.out.println("-----");
+                        
+            clone.restoreClonestorage();
+            List storages = clone.getStorages();
+            for(int k=0; k<storages.size(); k++) {
+                CloneStorage storage = (CloneStorage)storages.get(k);
+                System.out.println(storage.getSampleid());
+            }
         }
     }
 }

@@ -260,6 +260,7 @@ public class CloneInfo extends CDNASequence {
             
             setStorages(clonestorages);
         } catch (Exception ex) {
+            System.out.println(ex);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

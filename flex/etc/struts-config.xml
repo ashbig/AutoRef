@@ -241,6 +241,9 @@
                      
     <form-bean      name="enterSrcPlatesForm"
                     type="edu.harvard.med.hip.flex.form.EnterSrcPlatesForm"/> 
+                    
+    <form-bean      name="queryStorageCloneForm"
+                    type="edu.harvard.med.hip.flex.form.QueryStorageCloneForm"/> 
                                               
  </form-beans>
 
@@ -277,6 +280,7 @@
     <forward    name="queryFlex" path="/GetSearchTerms.do"/>   
     <forward    name="queryHistory" path="/GetAllSearchRecords.do"/>
     <forward    name="helpExternal" path="/tmp.jsp"/>
+    <forward    name="queryCloneStorage" path="/QueryStorageCloneInput.jsp"/>
 
   </global-forwards>
   
@@ -1353,7 +1357,18 @@
                input="/GetLocations.jsp">
       <forward  name="success"   path="/GetResearcher.jsp"/>
     </action> 
-             
+    
+     <!-- Process the location selection -->
+    <action    path="/QueryStorageCloneInput"
+               type="edu.harvard.med.hip.flex.action.QueryStorageCloneInputAction"
+               name="queryStorageCloneForm"
+               scope="request"
+               validate="true"
+               input="/QueryStorageCloneInput.jsp">
+      <forward  name="success"   path="/QueryStorageCloneOutput.jsp"/>
+      <forward  name="fail"   path="/QueryStorageCloneOutputFail.jsp"/>
+    </action>     
+           
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
