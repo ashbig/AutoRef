@@ -16,8 +16,20 @@
 <H2><bean:message key="flex.name"/> : Query Results</h2>
 <hr>
 <html:errors/>
-<p>
 
+<p>
+<html:form action="/GetSearchResults.do">
+    Total pages: <bean:write name="pages"/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+    Page   <html:select property="currentPage">
+            <html:options collection="allPages" property="name" labelProperty="value"/>  
+            </html:select>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+    Display <html:select property="pageSize">
+            <html:options collection="pageSizes" property="name" labelProperty="value"/>  
+            </html:select>
+<html:hidden property="searchid"/>
+<html:hidden property="condition"/>
+<html:submit value="Go"/>
+</html:form>
 <TABLE border=1>
     <tr bgcolor="#9bbad6">
     <th>Search Term</th><th>Match Genbank</th><th>Match FLEXGene</th><th>Status</th><th>Found By</th><th>Alignments</th><th>Search Method</th>

@@ -25,6 +25,7 @@ import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.form.QueryFlexForm;
 import edu.harvard.med.hip.flex.query.handler.*;
+import edu.harvard.med.hip.flex.query.bean.*;
 
 /**
  *
@@ -55,11 +56,13 @@ public class GetSearchResultsAction extends FlexAction {
         ActionErrors errors = new ActionErrors();
         int searchid = ((QueryFlexForm)form).getSearchid();
         String condition = ((QueryFlexForm)form).getCondition();
-        
+        int currentPage = ((QueryFlexForm)form).getCurrentPage();
+        int pageSize = ((QueryFlexForm)form).getPageSize();
+
         QueryManager manager = new QueryManager();
      
         if("found".equals(condition)) {
-            List founds = manager.getFounds(searchid);
+            List founds = manager.getFounds(searchid, (currentPage-1)*pageSize, (currentPage)*pageSize);
             
             if(founds == null) {
                 String error = manager.getError();
@@ -71,7 +74,31 @@ public class GetSearchResultsAction extends FlexAction {
                 return (mapping.findForward("empty"));
             }
             
+            int number = manager.getNumOfFounds(searchid);
+            int pages = number/pageSize;
+            if(number%pageSize>0) {
+                pages += 1;
+            }
+            
+            List allPages = new ArrayList();
+            for(int i=0; i<pages; i++) {
+                allPages.add(new PageInfo(i+1, i+1));
+            }
+            
+            List pageSizes = new ArrayList();
+            pageSizes.add(new PageSize(10, 10));
+            pageSizes.add(new PageSize(25, 25));
+            pageSizes.add(new PageSize(50, 50));
+            pageSizes.add(new PageSize(100, 100));
+            
+            request.setAttribute("pageSizes", pageSizes);
+            request.setAttribute("pageSize", new Integer(pageSize));
+            request.setAttribute("currentPage", new Integer(currentPage));
+            request.setAttribute("allPages", allPages);
+            request.setAttribute("pages", new Integer(pages));
             request.setAttribute("results", founds);
+            request.setAttribute("searchid", new Integer(searchid));
+            request.setAttribute("condition", condition);
             return (mapping.findForward("success_found"));
         } else if("nofound".equals(condition)) {
             List nofounds = manager.getNoFounds(searchid);

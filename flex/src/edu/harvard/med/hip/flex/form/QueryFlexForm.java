@@ -25,14 +25,20 @@ public class QueryFlexForm extends ActionForm {
     protected int searchid;
     protected String condition;
     protected String outputFile;
+    protected int currentPage = 1;
+    protected int pageSize = 10;
     
     public void setSearchid(int i) {this.searchid = i;}
     public void setCondition(String s) {this.condition = s;}
     public void setOutputFile(String s) {this.outputFile = s;}
+    public void setCurrentPage(int i) {this.currentPage = i;}
+    public void setPageSize(int i) {this.pageSize = i;}
     
     public int getSearchid() {return searchid;}
     public String getCondition() {return condition;}
     public String getOutputFile() {return outputFile;}
+    public int getCurrentPage() {return currentPage;}
+    public int getPageSize() {return pageSize;}
     
     /** Creates a new instance of QueryFlexForm */
     public QueryFlexForm() {
