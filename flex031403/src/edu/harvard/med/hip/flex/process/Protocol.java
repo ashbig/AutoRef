@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.3 2001-05-24 14:49:04 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.4 2001-06-11 14:29:41 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -77,7 +77,7 @@ public class Protocol {
                 
                 this.processcode = protocolRowSet.getString("PROCESSCODE");
             } catch(SQLException sqlE) {
-                throw new FlexDatabaseException(sqlE);
+                throw new FlexDatabaseException("Cannot initialize protocol with process name: "+processname+"\n"+sqlE+"\nSQL: "+sql);
             } finally {
                 DatabaseTransaction.closeResultSet(protocolRowSet);
             }
@@ -108,7 +108,7 @@ public class Protocol {
                 subprotocol.addElement(name);
             }
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException("Cannot populate subprotocol.\n"+sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

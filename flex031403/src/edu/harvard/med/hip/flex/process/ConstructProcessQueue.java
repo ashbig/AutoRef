@@ -123,7 +123,7 @@ public class ConstructProcessQueue implements ProcessQueue {
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
@@ -167,7 +167,7 @@ public class ConstructProcessQueue implements ProcessQueue {
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
@@ -209,7 +209,7 @@ public class ConstructProcessQueue implements ProcessQueue {
         
         return items;
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

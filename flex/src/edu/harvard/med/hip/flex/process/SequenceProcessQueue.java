@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.7 2001-05-29 15:30:36 dongmei_zuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.8 2001-06-11 14:36:56 dongmei_zuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -101,7 +101,7 @@ public class SequenceProcessQueue implements ProcessQueue {
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
@@ -145,7 +145,7 @@ public class SequenceProcessQueue implements ProcessQueue {
             
             
         } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
@@ -180,7 +180,7 @@ public class SequenceProcessQueue implements ProcessQueue {
             }
             return items;
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

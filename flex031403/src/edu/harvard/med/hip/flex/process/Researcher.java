@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.4 2001-06-07 19:43:30 wenhong_mar Exp $
+ * $Id: Researcher.java,v 1.5 2001-06-11 14:34:05 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -73,7 +73,7 @@ public class Researcher {
                 isActive = crs.getString("ACTIVEFLAG_YN").trim();
             }
         } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(crs);
         }
@@ -134,7 +134,7 @@ public class Researcher {
                 return Id;
             }
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-05-23 15:40:06 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-11 14:14:43 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -40,7 +40,7 @@ package edu.harvard.med.hip.flex.database;
  * This class builds the exception for a given error message.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-05-23 15:40:06 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-11 14:14:43 $
  */
 public class FlexDatabaseException extends Exception {
 
@@ -51,7 +51,7 @@ public class FlexDatabaseException extends Exception {
      */
 	public FlexDatabaseException(String s) {
 
-		super(s);
+		super("FlexDatabaseException: "+s);
 
 	} // end constructor
 

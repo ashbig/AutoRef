@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.6 2001-05-29 15:31:03 dongmei_zuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.7 2001-06-11 14:21:31 dongmei_zuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -121,7 +121,7 @@ public class ContainerProcessQueue implements ProcessQueue {
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
@@ -165,7 +165,7 @@ public class ContainerProcessQueue implements ProcessQueue {
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
@@ -207,7 +207,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         
         return items;
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

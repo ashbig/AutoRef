@@ -1,6 +1,6 @@
 /**
 
- * $Id: FlexProcessException.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $
+ * $Id: FlexProcessException.java,v 1.2 2001-06-11 14:22:43 dongmei_zuo Exp $
 
  *
 
@@ -28,7 +28,7 @@ public class FlexProcessException extends Exception {
 
 	public FlexProcessException(String s) {
 
-		super(s);
+		super("FlexProcessException: "+s);
 
 	}
 

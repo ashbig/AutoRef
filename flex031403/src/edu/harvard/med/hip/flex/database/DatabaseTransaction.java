@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-05-29 15:57:54 $
+ * $Revision: 1.5 $
+ * $Date: 2001-06-11 14:13:39 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-05-29 15:57:54 $
+ * @version    $Revision: 1.5 $ $Date: 2001-06-11 14:13:39 $
  */
 
 public class DatabaseTransaction {
@@ -80,7 +80,7 @@ public class DatabaseTransaction {
                 e2.printStackTrace();
             }
             FlexDatabaseException fde =
-            new FlexDatabaseException(e.getMessage());
+            new FlexDatabaseException("Cannot instantiate DatabaseTransaction object.\n"+e.getMessage());
             
             throw fde;
         }
@@ -124,7 +124,7 @@ public class DatabaseTransaction {
             return conn;
         } catch(SQLException sqlE) {
             DatabaseTransaction.closeConnection(conn);
-            throw new FlexDatabaseException(sqlE.getMessage());
+            throw new FlexDatabaseException("Cannot get Connection.\n"+sqlE.getMessage());
             
         } 
         
@@ -159,7 +159,7 @@ public class DatabaseTransaction {
         try {
             return ps.executeUpdate();
         } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE.getMessage());
+            throw new FlexDatabaseException(sqlE.getMessage()+"\nSQL: "+ps);
         }
     } // end executeUpdate()
     
@@ -181,7 +181,7 @@ public class DatabaseTransaction {
             stmt = conn.createStatement();
             retVal = stmt.executeUpdate(sql);
         } catch (Exception e) {
-            throw new FlexDatabaseException(e.getMessage());
+            throw new FlexDatabaseException(e.getMessage()+"\nSQL: "+sql);
         } finally {
             closeStatement(stmt);
         }
@@ -219,7 +219,7 @@ public class DatabaseTransaction {
             return crs;
             
         } catch (SQLException e) {
-            throw new FlexDatabaseException(e.getMessage());
+            throw new FlexDatabaseException(e.getMessage()+"\nSQL: "+sql);
         } finally {
             // release database resources
             closeResultSet(rs);
@@ -251,7 +251,7 @@ public class DatabaseTransaction {
             
             
         } catch (SQLException e) {
-            throw new FlexDatabaseException(e.getMessage());
+            throw new FlexDatabaseException(e.getMessage()+"\nSQL: "+stmt);
         } finally {
             closeResultSet(results);
         }

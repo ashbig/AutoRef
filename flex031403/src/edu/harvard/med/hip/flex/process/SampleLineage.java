@@ -67,7 +67,7 @@ public class SampleLineage {
             stmt = conn.prepareStatement(sql);
             DatabaseTransaction.executeUpdate(stmt);
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }

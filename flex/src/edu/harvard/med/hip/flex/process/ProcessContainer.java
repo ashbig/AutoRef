@@ -44,7 +44,7 @@ public class ProcessContainer extends ProcessObject {
             conn.prepareStatement(sql);
             DatabaseTransaction.executeUpdate(sql, conn);
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }
