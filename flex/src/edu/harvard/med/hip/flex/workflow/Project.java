@@ -28,6 +28,7 @@ public class Project {
     public final static int KINASE = 6;
     public final static int MGC_PROJECT = 7;
     public final static int NIDDK = 10;
+    public final static int YP = 11;
     public final static String HUMANSTRING = "Human";
     public final static String YEASTSTRING = "Yeast";
     public final static String PSEUDOMONASSTRING = "Pseudomonas";
