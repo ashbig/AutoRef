@@ -19,7 +19,7 @@
 <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
 <p><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="newContainer" property="id"/>"><bean:write name="newContainer" property="label"/></a>
 </logic:iterate>
-<p><html:submit property="submit" value="Print Barcode"/></td>
+<p><html:submit property="submit" value="Reprint Barcode"/></td>
 </center>
 </html:form>
 </body>

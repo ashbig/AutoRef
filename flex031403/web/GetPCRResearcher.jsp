@@ -61,7 +61,7 @@
 </table>
 
     <Center>
-    <p><b>Please enter your barcode:</b>
+    <p><b><bean:message key="flex.researcher.barcode.prompt"/>:</b>
     <html:text property="researcherBarcode" size="40"/>
     <p>
     <html:submit property="submit" value="Create PCR Plates"/>
