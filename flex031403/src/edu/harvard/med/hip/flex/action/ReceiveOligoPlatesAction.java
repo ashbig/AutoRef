@@ -116,8 +116,8 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
                 System.out.println("process created");
                 System.out.println("containerid is: "+ containerId);
                 
-                ProcessContainer ioContainer =
-                new ProcessContainer(containerId,
+                ContainerProcessObject ioContainer =
+                new ContainerProcessObject(containerId,
                 process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.IO);
                 System.out.println("process object created");

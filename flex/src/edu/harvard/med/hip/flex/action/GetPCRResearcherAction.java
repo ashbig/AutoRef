@@ -103,24 +103,24 @@ public class GetPCRResearcherAction extends ResearcherAction {
             Process process = new Process(protocol, 
             edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
             process.setExtrainfo(cdnaLibrary);
-            ProcessContainer fivepInputContainer = 
-                new ProcessContainer(fivep.getId(), 
+            ContainerProcessObject fivepInputContainer = 
+                new ContainerProcessObject(fivep.getId(), 
                 process.getExecutionid(), 
                 edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            ProcessContainer threepOpenInputContainer = 
-                new ProcessContainer(threepOpen.getId(), 
+            ContainerProcessObject threepOpenInputContainer = 
+                new ContainerProcessObject(threepOpen.getId(), 
                 process.getExecutionid(), 
                 edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            ProcessContainer threepClosedInputContainer = 
-                new ProcessContainer(threepClosed.getId(), 
+            ContainerProcessObject threepClosedInputContainer = 
+                new ContainerProcessObject(threepClosed.getId(), 
                 process.getExecutionid(), 
                 edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            ProcessContainer pcrOpenOutputContainer = 
-                new ProcessContainer(pcrOpenContainer.getId(), 
+            ContainerProcessObject pcrOpenOutputContainer = 
+                new ContainerProcessObject(pcrOpenContainer.getId(), 
                 process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
-            ProcessContainer pcrClosedOutputContainer = 
-                new ProcessContainer(pcrClosedContainer.getId(), 
+            ContainerProcessObject pcrClosedOutputContainer = 
+                new ContainerProcessObject(pcrClosedContainer.getId(), 
                 process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
             process.addProcessObject(fivepInputContainer);
@@ -128,10 +128,16 @@ public class GetPCRResearcherAction extends ResearcherAction {
             process.addProcessObject(threepClosedInputContainer);
             process.addProcessObject(pcrOpenOutputContainer);
             process.addProcessObject(pcrClosedOutputContainer);    
-            process.setSampleLineageSet(sampleLineageSet);            
+            process.setSampleLineageSet(sampleLineageSet);                           
             
             // Insert the process and process objects into database.
             process.insert(conn);
+
+            // Update the plateset id for three input objects.
+            Plateset ps = (Plateset)item.getItem();
+            fivepInputContainer.updatePlateset(ps.getId(), conn);
+            threepOpenInputContainer.updatePlateset(ps.getId(), conn);
+            threepClosedInputContainer.updatePlateset(ps.getId(), conn);
             
             // Remove the container from the queue.
             LinkedList newItems = new LinkedList();

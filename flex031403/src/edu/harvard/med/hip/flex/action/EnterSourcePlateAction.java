@@ -34,6 +34,7 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.CreateProcessPlateForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
+
 /**
  *
  * @author  dzuo
@@ -103,7 +104,7 @@ public class EnterSourcePlateAction extends ResearcherAction {
     }
  
     // Validate the source plate barcode.
-    private QueueItem getValidPlate(LinkedList queueItems, String sourcePlate) { 
+    protected QueueItem getValidPlate(LinkedList queueItems, String sourcePlate) { 
         if(queueItems == null) {
             return null;
         }

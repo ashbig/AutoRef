@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.23 2001-06-29 12:43:42 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.24 2001-06-29 12:50:19 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -482,7 +482,7 @@ public class Process {
                 System.out.println("Insert into containerheader:");
                 String sql = "insert into containerheader values("+containerid+", 'test', 1, 'AB0000', null)";
                 DatabaseTransaction.executeUpdate(sql, c);
-                ProcessObject pobject = new ProcessContainer(containerid, id, "I");
+                ContainerProcessObject pobject = new ContainerProcessObject(containerid, id, "I");
                 p.addProcessObject(pobject);
             }
             

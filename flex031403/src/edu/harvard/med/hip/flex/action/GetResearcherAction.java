@@ -94,12 +94,12 @@ public class GetResearcherAction extends ResearcherAction{
             // Create a process, process object and sample lineage record.
             Process process = new Process(protocol, 
             edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
-            ProcessContainer inputContainer = 
-                new ProcessContainer(container.getId(), 
+            ContainerProcessObject inputContainer = 
+                new ContainerProcessObject(container.getId(), 
                 process.getExecutionid(), 
                 edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            ProcessContainer outputContainer = 
-                new ProcessContainer(newContainer.getId(), 
+            ContainerProcessObject outputContainer = 
+                new ContainerProcessObject(newContainer.getId(), 
                 process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
             process.addProcessObject(inputContainer);
