@@ -25,12 +25,12 @@ public class Primer3Spec extends Spec
     
     /** Creates a new instance of EndReadsSpec */
    
-    public Primer3Spec(Hashtable p, String na, int id) throws FlexDatabaseException
+    public Primer3Spec(Hashtable p, String na, int id) 
     {
          super( p,  na, PRIMER3_SPEC, id);
     }
     
-    public Primer3Spec(Hashtable p, String na) throws FlexDatabaseException
+    public Primer3Spec(Hashtable p, String na) 
     {
          super( p,  na, PRIMER3_SPEC);
     }

@@ -20,14 +20,22 @@ public class FullSeqSpec extends Spec
     public static final String FULL_SEQ_SPEC = "FULL_SEQ_SPEC";
     public static final int FULL_SEQ_SPEC_INT = 1;
     
+    //values
+    public static final String FS_SILENT= "FS_SILENT";
+     public static final String FS_CONSERVATIVE= "FS_CONSERVATIVE";
+     public static final String FS_NON_CONSERVATIVE= "FS_NUN_CONSERVATIVE"; 
+     public static final String FS_FRAMESHIFT= "FS_FRAMESHIFT";
+     public static final String FS_STOP= "FS_STOP";
+     public static final String FS_N_100= "FS_N_100";
+    public static final String FS_N_ROW= "FS_N_ROW";
     /** Creates a new instance of EndReadsSpec */
    
-    public FullSeqSpec(Hashtable p, String na) throws FlexDatabaseException
+    public FullSeqSpec(Hashtable p, String na)
     {
          super( p,  na, FULL_SEQ_SPEC);
     }
     
-     public FullSeqSpec(Hashtable p, String na,int id) throws FlexDatabaseException
+     public FullSeqSpec(Hashtable p, String na,int id) 
     {
          super( p,  na, FULL_SEQ_SPEC,id);
     }

@@ -24,7 +24,7 @@ public abstract class Spec
     
     /** Creates a new instance of EndReadsSpec */
   
-    public Spec(Hashtable p, String na, String t) throws FlexDatabaseException
+    public Spec(Hashtable p, String na, String t) 
     {
         m_name = na;
         m_params = new Hashtable();
@@ -32,7 +32,7 @@ public abstract class Spec
         m_type = t;
         
     }
-     public Spec(Hashtable p, String na, String t, int id) throws FlexDatabaseException
+     public Spec(Hashtable p, String na, String t, int id) 
     {
         m_name = na;
         m_params = new Hashtable();
@@ -180,10 +180,17 @@ public abstract class Spec
     public Hashtable getParameters()    { return m_params;}
     public String    getName(){ return m_name;}
     public int       getId(){return m_id;}
-    public int       getParameterByNameInt(String param_name)
+    public int       getParameterByNameInt(String param_name) throws FlexDatabaseException
     { 
-        Integer param = (Integer)m_params.get(param_name);
-        return ( param == null) ? -1: param.intValue();
+        
+        try
+        {
+            return Integer.parseInt( (String) m_params.get(param_name));
+        }
+        catch(Exception e)
+        {
+            throw new FlexDatabaseException("Cannot convert parameter "+param_name);
+        }
     }
      public String       getParameterByNameString(String param_name)
     { 

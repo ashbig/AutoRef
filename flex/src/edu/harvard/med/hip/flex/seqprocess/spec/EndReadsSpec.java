@@ -23,12 +23,12 @@ public class EndReadsSpec extends Spec
     
     /** Creates a new instance of EndReadsSpec */
    
-    public EndReadsSpec(Hashtable p, String na) throws FlexDatabaseException
+    public EndReadsSpec(Hashtable p, String na) 
     {
          super( p,  na, END_READS_SPEC);
     }
     
-     public EndReadsSpec(Hashtable p, String na, int id) throws FlexDatabaseException
+     public EndReadsSpec(Hashtable p, String na, int id) 
     {
          super( p,  na, END_READS_SPEC, id);
     }
@@ -45,7 +45,7 @@ public class EndReadsSpec extends Spec
          return getAllSpecs(END_READS_SPEC);
      }
      
-     public String getPhredParams()
+     public String getPhredParams() throws FlexDatabaseException
      {
          String res = "";
          res += super.getParameterByNameInt("PHRED_CUTOFF");
