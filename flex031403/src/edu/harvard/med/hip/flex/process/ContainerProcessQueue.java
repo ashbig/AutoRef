@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.4 2001-05-24 12:13:05 dongmei_zuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.5 2001-05-25 18:36:20 dongmei_zuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -221,20 +221,21 @@ public class ContainerProcessQueue implements ProcessQueue {
         try {
             QueueFactory factory = new StaticQueueFactory();
             ContainerProcessQueue queue = (ContainerProcessQueue)factory.makeQueue("ContainerProcessQueue");
-            Protocol protocol = new Protocol(10, "test", "test");
+            Protocol protocol = new Protocol(1, null, "identify sequences from unigene");
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection c = t.requestConnection();
-            DatabaseTransaction.executeUpdate("insert into containerlocation values (1, 'test',null)", c);
-            DatabaseTransaction.executeUpdate("insert into containertype values ('PCR')", c);
-            for(int i=1; i<6; i++)
-                DatabaseTransaction.executeUpdate("insert into containerheader values ("+i+",'PCR', 1, 'PCR1')", c);
-            DatabaseTransaction.executeUpdate("insert into processprotocol values (10, 'test', 'test', null)", c);
+            //DatabaseTransaction.executeUpdate("insert into containerlocation values (1, 'test',null)", c);
+            //DatabaseTransaction.executeUpdate("insert into containertype values ('PCR')", c);
+            //for(int i=1; i<6; i++)
+            //     DatabaseTransaction.executeUpdate("insert into containerheader values ("+i+",'PCR', 1, 'PCR1')", c);
+            //DatabaseTransaction.executeUpdate("insert into processprotocol values (1, 'test', 'test', null)", c);
             
             System.out.println("Insert into queue:");
             for(int i=1; i<6; i++) {
                 System.out.println("Container ID: "+i);
-                DatabaseTransaction.executeUpdate("insert into queue values(10, sysdate, null, null, null,"+i+")", c);
+                DatabaseTransaction.executeUpdate("insert into queue values(1, sysdate, null, null, null,"+i+")", c);
+                c.commit();
             }
             
             LinkedList items = queue.getQueueItems(protocol);
@@ -249,6 +250,7 @@ public class ContainerProcessQueue implements ProcessQueue {
             
             System.out.println("Remove items from queue:");
             queue.removeQueueItems(items, c);
+            c.commit();
             
             System.out.println("Get items from queue:");
             LinkedList newitems = queue.getQueueItems(protocol);
@@ -261,6 +263,8 @@ public class ContainerProcessQueue implements ProcessQueue {
             
             System.out.println("Add items to queue:");
             queue.addQueueItems(items, c);
+            c.commit();
+            
             System.out.println("Get items from queue:");
             newitems = queue.getQueueItems(protocol);
             iter = newitems.listIterator();
@@ -270,12 +274,24 @@ public class ContainerProcessQueue implements ProcessQueue {
                 System.out.println("Container ID: "+contain.getId());
             }
             
-            c.rollback();
+            System.out.println("Remove items from queue:");
+            queue.removeQueueItems(items, c);
+            c.commit();   
+            
+            System.out.println("Get items from queue:");
+            while (iter.hasNext()) {
+                QueueItem item = (QueueItem) iter.next();
+                Container contain = (Container)item.getItem();
+                System.out.println("Container ID: "+contain.getId());
+            }
+             
             c.close();
         } catch (FlexDatabaseException exception) {
             System.out.println(exception.getMessage());
         } catch (FlexProcessException exception) {
             System.out.println(exception.getMessage());
+        } finally {
+            System.exit(0);
         }
     }
 }
