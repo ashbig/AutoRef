@@ -55,7 +55,7 @@
       <forward  name="failure"  path="/login.jsp"/>
     </action>
     
-    <action     path="/ProccessError"
+    <action     path="/ProcessError"
                 type="edu.harvard.med.hip.flex.action.ProcessErrorAction">
        <forward name="displayError" path="/FlexError.jsp"/>
                 

@@ -9,8 +9,10 @@
 <html>
 <head><title><bean:message key="flex.name"/> Error</title></head>
 <body>
-    
-
-
+    <h3>An error has occured and been logged</h3>
+    <html:errors/>
+    <logic:exists name="exception">
+        <bean:write name="exception"/>
+    </logic:exists>
 </body>
 </html>
