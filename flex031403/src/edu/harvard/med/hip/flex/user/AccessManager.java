@@ -131,7 +131,7 @@ public class AccessManager {
             //array of groups with the correct privilages
             
             String[] groupArray =
-            {Constants.CUSTOMER_GROUP, Constants.RESEARCHER_GROUP,
+            {Constants.CUSTOMER_GROUP, Constants.COLLABORATOR_GROUP, Constants.RESEARCHER_GROUP,
              Constants.WORKFLOW_GROUP, Constants.SYSTEM_ADMIN_GROUP};
              
              List groupList = Arrays.asList(groupArray);
