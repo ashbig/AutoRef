@@ -69,7 +69,7 @@ public class GiRecordPopulator {
         }
     }
     
-    private String writeFile(int gi, String sf) throws Exception {
+    private String writeFile(String gi, String sf) throws Exception {
         String file = FlexSeqAnalyzer.BLAST_BASE_DIR+BLAST_FILE_DIR+gi;
         PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(file)));
         pr.print(">gi|"+gi);
@@ -86,7 +86,7 @@ public class GiRecordPopulator {
         
         for(int i=0; i<records.size(); i++) {
             GiRecord gr = (GiRecord)records.get(i);
-            stmt.setInt(1, gr.getGi());
+            stmt.setString(1, gr.getGi());
             stmt.setString(2, gr.getGenbankAccession());
             stmt.setInt(3, gr.getCdsStart());
             stmt.setInt(4, gr.getCdsStop());
@@ -112,9 +112,9 @@ public class GiRecordPopulator {
             stmt = conn.prepareStatement(sql);
             rs = t.executeQuery(sqlQuery);
             while(rs.next()) {
-                int gi = rs.getInt(1);
-                stmt.setInt(1, gi);
-                stmt.setInt(2, gi);
+                String gi = rs.getString(1);
+                stmt.setString(1, gi);
+                stmt.setString(2, gi);
                 DatabaseTransaction.executeUpdate(stmt);
                 System.out.println("update: "+gi);
             }
