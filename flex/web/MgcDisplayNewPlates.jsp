@@ -1,5 +1,5 @@
 <%--
-        $Id: MgcDisplayNewPlates.jsp,v 1.3 2002-06-13 20:54:03 Elena Exp $ 
+        $Id: MgcDisplayNewPlates.jsp,v 1.4 2002-06-26 15:56:48 Elena Exp $ 
 
        
         Author  : htaycher
@@ -92,9 +92,9 @@ function SetChecked(e, val) {
      
      <tr class="headerRow">
         
-        <TH>FLEX Id</TH>
-        <TH>Original Mgc Plate Label</TH>
-        <TH>Flex Mgc Plate Label</TH>
+        <TH>&nbsp;&nbsp;FLEX Id&nbsp;&nbsp;</TH>
+        <TH>&nbsp;&nbsp;Original Mgc Plate Label&nbsp;&nbsp;</TH>
+        <TH>&nbsp;&nbsp;Flex Mgc Plate Label&nbsp;&nbsp;</TH>
         <TH><input type="checkbox" name="all" value="All" onclick="SetChecked(this, this.checked)">&nbsp&nbspPrint&nbsp&nbsp</TH>
       </TR>
 
