@@ -65,7 +65,7 @@ public class MgcRequestImporter
      * @param conn The Connection object for insert.
      * @return vector of sequences from request.
      */
-    public Vector performImport(InputStream requestInput, Connection conn)
+    public ArrayList performImport(InputStream requestInput, Connection conn)
     throws Exception
     {
         
@@ -82,11 +82,15 @@ public class MgcRequestImporter
         //blast sequences for not matching GI;
         blastSequences(sequencesToBlat, sequencesMatchedByBlast, sequencesNotMatchedByBlast);
         //save request to db
-        m_Request.insert(conn);
+        
+        
+            m_Request.insert(conn);
+        
+        
         m_Request = new Request(m_Request.getId());
         notifyUser(requestGI, sequencesMatchedByBlast, sequencesNotMatchedByBlast);
         //parse results for not matching GI
-        return m_Request.getSequences();
+        return new ArrayList(m_Request.getSequences());
         
     }
     
@@ -109,9 +113,14 @@ public class MgcRequestImporter
                     gi_numbers.add( st.nextToken().trim() );
                 }
             }
+            requestInput.close();
         }
         catch(Exception e)
-        {}
+        {
+            try   { requestInput.close(); }catch(Exception e1)  { return null;}
+            return null;  
+        }
+        
         m_TotalCountRequests = gi_numbers.size();
         return gi_numbers;
     }
@@ -148,6 +157,7 @@ public class MgcRequestImporter
                 if ( requestGI.contains( Integer.toString(current_gi)) )
                 {//create dummy flexsequence and add it to request
                     FlexSequence fc = new FlexSequence( current_seq_id, FlexSequence.GOOD, null, null, null, 0, 0, 0, 0, null, null, null);
+                    
                     m_Request.addSequence(fc);
                     temp.add( Integer.toString(current_gi) );
                     requestGI.remove( requestGI.indexOf( Integer.toString(current_gi) ) );
@@ -196,6 +206,7 @@ public class MgcRequestImporter
                     FlexSequence fs = ml.createFlexSequence( seqData, genBankSeq);
                     //if fs == null something was bad with ncbi query
                     if (fs == null) continue;
+                    
                     sequences.put( current_gi, fs );
                     current_gi = null;
                 }
@@ -228,8 +239,8 @@ public class MgcRequestImporter
                 seq_id = fanalyzer.findExactCdsMatch( BLASTABLE_DATABASE_NAME );
                 if (seq_id != -1)//match found
                 {
-                    fc.setId(seq_id);
-                    m_Request.addSequence(fc);
+                    FlexSequence fc_restored = new FlexSequence(seq_id);
+                    m_Request.addSequence(fc_restored);
                     sequencesMatchedByBlast.add(fc.getGi());
                 }
                 else
@@ -299,10 +310,11 @@ public class MgcRequestImporter
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             MgcRequestImporter importer = new MgcRequestImporter(null,"dzuo");
-            importer.performImport(input, conn) ;
+            importer.performImport(input,conn) ;
         }
-        catch(Exception e)
-        {}
+         
+            catch (Exception e) {}
+            finally { DatabaseTransaction.closeConnection(conn); }
         System.exit(0);
     }
     
