@@ -67,7 +67,7 @@ case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:{ isCloneId = true; isCloneId
 case Constants.PROCESS_RUN_END_READS_WRAPPER:{ isPlateLabel = true; isPlateLabelChecked=true;break;}
 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:{ isPlateLabel = true; isPlateLabelChecked=true;break;}
 
-case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{ isFLEXSequenceId = true;isFLEXSequenceIdChecked=true; isACESequenceId = true;break;}
+case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{ isPlateLabel = true; isCloneId = true; isFLEXSequenceId = true;isPlateLabelChecked=true; isACESequenceId = true;break;}
 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :{ isPlateLabel = true;isPlateLabelChecked=true;  isCloneId = true; isACESequenceId = true;break;}
             
 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isACESequenceId = true;break;}            

@@ -1,6 +1,7 @@
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.programs.blast.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 <%@ page import="edu.harvard.med.hip.bec.action_runners.*" %>
 <%@ page import="edu.harvard.med.hip.bec.programs.assembler.*" %>
 
@@ -97,8 +98,7 @@ break;
 }
 
 
-case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{ break;}
-case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :{break;}
+
             
 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:{ break;}            
 case Constants.PROCESS_RUN_DISCREPANCY_FINDER:{ break;}
@@ -151,7 +151,22 @@ additional_jsp = additional_jsp_buffer.toString();
 isTryMode = true; break;}
  
 
-case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:{ break;}
+case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:
+case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :
+case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :
+{
+additional_jsp_buffer.append("<tr><td colspan = 2><table width='100%' border='0' cellspacing='2' cellpadding='2'><tr><td ><strong>");
+additional_jsp_buffer.append("<input type='radio' name='"+ PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE+"' value='"+ OligoCalculation.TYPE_OF_OLIGO_CALCULATION_REFSEQUENCE+ "' checked>");
+additional_jsp_buffer.append("Display primers for Reference Sequence</strong> </td></tr><tr><td><strong>");
+additional_jsp_buffer.append("<input type='radio' name='"+PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE +"' value='"+ OligoCalculation.TYPE_OF_OLIGO_CALCULATION_STRETCH_COLLECTION +"'>");
+additional_jsp_buffer.append("Display primers for Stretch Collection</strong></td></tr><tr>");
+additional_jsp = additional_jsp_buffer.toString();  
+
+ break;
+}
+
+
+
 case Constants.PROCESS_CREATE_REPORT:{break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :{ break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :{ break;}
