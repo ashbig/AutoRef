@@ -255,9 +255,11 @@
       <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action> 
 
-     <!-- Process the researcher barcode input -->
+     <!-- Print more barcodes -->
     <action    path="/PrintBarcode"
                type="edu.harvard.med.hip.flex.action.PrintBarcodeAction"
+               name="createProcessPlateForm"
+               validate="false"
                input="/PrintBarcode.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action> 
