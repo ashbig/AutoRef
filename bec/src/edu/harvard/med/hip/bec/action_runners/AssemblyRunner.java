@@ -142,6 +142,7 @@ public class AssemblyRunner implements Runnable
                             }
 
                            clone_sequence_id = -1;
+                          
                            clone_assembly = assembleSequence( clone_definition );
                            if (clone_assembly == null )
                            {
@@ -251,10 +252,14 @@ public class AssemblyRunner implements Runnable
              //replace to c drive
             trace_files_directory_path = trace_files_directory_path.substring(0,trace_files_directory_path.lastIndexOf(File.separator));
          //   trace_files_directory_path =   "c"+trace_files_directory_path;
+          
             //call phredphrap
             PhredPhrap pp = new PhredPhrap();
             if (m_vector_file_name != null)pp.setVectorFileName(m_vector_file_name);
             String output_file_name =  sequence_definition.getFlexCloneId()+ ".fasta.screen.ace.1";
+            //delete quality and sequence files from end read processing
+            deleteTrimmedFiles(trace_files_directory_path);
+            
              pp.run(trace_files_directory_path, output_file_name );
 
             //get phrdphrap output
@@ -268,7 +273,40 @@ public class AssemblyRunner implements Runnable
              throw new BecDatabaseException("Error while trying to assemble sequence for isolte: "+ sequence_definition.getIsolateTrackingId()+"\n error "+ e.getMessage());
          }
      }
-
+  //delete quality and sequence files from end read processing
+     private void  deleteTrimmedFiles(String trace_files_directory_path)
+     {
+         try
+         {
+              File sourceDir = new File(trace_files_directory_path + File.separator +"quality_dir");
+              File [] sourceFiles = sourceDir.listFiles();
+              if ( sourceFiles == null ) return;
+                 if ( sourceFiles.length > 0)
+                 {
+                     for (int count = 0; count < sourceFiles.length;count++)
+                     {
+                         sourceFiles[count].delete();
+                     }
+                 }
+                 sourceDir = new File(trace_files_directory_path + File.separator +"sequence_dir");
+                sourceFiles = sourceDir.listFiles();
+                 if (   sourceFiles.length > 0)
+                 {
+                     for (int count = 0; count < sourceFiles.length;count++)
+                     {
+                         sourceFiles[count].delete();
+                     }
+                 }
+         }
+         catch(Exception e)
+         {
+             System.out.println("Cannot delete files "+e.getMessage());
+         }
+     }
+            
+     
+     
+     
      private ArrayList getExspectedSequenceDescriptions(Connection conn, String status, int min_result_id)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
@@ -448,7 +486,17 @@ public class AssemblyRunner implements Runnable
 
 */
 
-
+public static void main(String args[]) 
+{
+    AssemblyRunner runner = new AssemblyRunner();
+    try
+    {
+                    runner.setUser( AccessManager.getInstance().getUser("htaycher1","htaycher"));
+                    runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
+                     runner.run();
+    }catch(Exception e){}
+    System.exit(0);
+}
 }
 
 
