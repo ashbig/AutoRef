@@ -123,6 +123,10 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 type = getGelSampleType(container, s, protocol);
             } else if(Sample.ISOLATE.equals(s.getType())) {
                 type = getCultureSampleType(container, s, protocol);
+                
+                if(type == null) {
+                    type = Sample.getType(protocol.getProcessname());
+                }
             } else if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                 type = s.getType();
             } else {
@@ -157,6 +161,11 @@ public class OneToOneContainerMapper implements ContainerMapper {
         String type = null;
         edu.harvard.med.hip.flex.process.Process p =
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
+
+        if(p == null) {
+            return null;
+        }
+        
         Result result = Result.findResult(s, p);
         if(Result.GROW.equals(result.getValue())) {
             type = Sample.getType(newProtocol.getProcessname());
