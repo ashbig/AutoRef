@@ -14,7 +14,9 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 
-
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.database.*;
@@ -49,11 +51,12 @@ public class tester_run_assembler
         private ArrayList   i_error_messages = null;
         private String      i_result_type = null;
         private User        i_user = null;
-        
+         private String      i_vector_file_name = null;
         
         
         public  void        setUser(User v){i_user=v;}
         public void         setResultType(String v){ i_result_type=v;}
+        public void         setVectorFileName(String v){i_vector_file_name = v;}
         
         public void run()
         {
@@ -64,6 +67,10 @@ public class tester_run_assembler
             i_error_messages = new ArrayList();
             int min_result_id = 1;
             boolean isLastRecord = false;
+            RefSequence refsequence = null;BaseSequence base_refsequence = null;
+            BioLinker   linker5 = null; int cds_start = 0; int cds_stop = 0;
+            BioLinker   linker3 = null;
+            int cur_containerid = -1;
             try
             {
                 // conncection to use for transactions
@@ -74,22 +81,61 @@ public class tester_run_assembler
                 {
                     ArrayList expected_sequence_definition = getExspectedSequenceDescriptions(conn, i_result_type, min_result_id);
 
-                    if (expected_sequence_definition.size() == 0)      return ;
-                    CloneAssembly clone_data = null;
+                    if (expected_sequence_definition.size() == 0 )      return ;
+                    CloneAssembly clone_assembly = null;
                     SequenceDescription sequence_definition = null;
-                    CloneSequence clone_sequence = null;
+                    int clone_sequence_id = -1;
                     for (int count = 0; count < expected_sequence_definition.size(); count ++)
                     {
                         sequence_definition= ( SequenceDescription)expected_sequence_definition.get(count);
+                        //get linker info
                         try
                         {
-                           clone_data = assembleSequence( sequence_definition );
-                           clone_sequence = insertSequence(sequence_definition, clone_data, conn );
-                           IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_WITH_SUCESS,
-                                                                sequence_definition.getIsolateTrackingId(),  conn );
+                            if ((linker5 == null || linker3 == null) || sequence_definition.getContainerId() != cur_containerid )
+                            {
+                                CloningStrategy container_cloning_strategy = Container.getCloningStrategy(sequence_definition.getContainerId());
+                                if (container_cloning_strategy != null)
+                                 {
+                                     linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
+                                     linker5 = BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() );
+                                 }
+                            }
+                        
+                        //get refsequence if needed
+                            if (base_refsequence == null || base_refsequence.getId() != sequence_definition.getBecRefSequenceId())
+                            {
+                                refsequence = new RefSequence( sequence_definition.getBecRefSequenceId());
+                                base_refsequence =  new BaseSequence(refsequence.getCodingSequence(), BaseSequence.BASE_SEQUENCE );
+                                if (base_refsequence.getText().length() >1500) continue;
+                                cds_start = linker5.getSequence().length();
+                                cds_stop = linker5.getSequence().length() +  base_refsequence.getText().length() -2;
+                                base_refsequence.setText( linker5.getSequence() + base_refsequence.getText()+linker3.getSequence());
+                            }
+                            
+                           clone_sequence_id = -1;
+                           clone_assembly = assembleSequence( sequence_definition );
+                           if (clone_assembly == null )
+                           {
+                               clone_assembly.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_NO_CONTIGS);
+                           }
+                           else if( clone_assembly.getContigs().size() != 1)
+                           {
+                               clone_assembly.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_N_CONTIGS);
+                           }
+                           else
+                           {
+                               //check coverage
+                               Contig contig = (Contig) clone_assembly.getContigs().get(0);
+                               contig.checkForCoverage(sequence_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
+                               if ( clone_assembly.getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_PASS)
+                               {
+                                        clone_sequence_id = insertSequence(sequence_definition, clone_assembly, conn );
+                               }
+                           }
+                           IsolateTrackingEngine.updateStatus(clone_assembly.getStatus(),
+                                     sequence_definition.getIsolateTrackingId(),  conn );
                            conn.commit();
-                           process_clones.add( new Integer( clone_sequence.getId() ));
-                           
+                           if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
                         }
                         catch(Exception e)
                         {
@@ -170,7 +216,21 @@ public class tester_run_assembler
          CloneAssembly clone_assembly = null;
          try
          {
-             return clone_assembly;
+             //f:\clone_files\546\626\chromat_di     contig_dir
+            String trace_files_directory_path =  sequence_definition.getReadFilePath()  ;
+            trace_files_directory_path = trace_files_directory_path.substring(1,trace_files_directory_path.lastIndexOf(File.pathSeparatorChar));
+            //call phredphrap
+            PhredPhrap pp = new PhredPhrap();
+            if (i_vector_file_name != null)pp.setVectorFileName(i_vector_file_name);
+            String output_file_name = sequence_definition.getFlexCloneId()+ ".fasta.screen.ace.1";
+           
+            pp.run(trace_files_directory_path, output_file_name );
+        
+            //get phrdphrap output
+            PhredPhrapParser pparser = new PhredPhrapParser();
+            clone_assembly = pparser.parse(trace_files_directory_path+output_file_name);
+        
+            return clone_assembly;
          }
          catch(Exception e)
          {
@@ -178,17 +238,17 @@ public class tester_run_assembler
          }
      }
      
-     private ArrayList getExspectedSequenceDescriptions(Connection conn, String result_type, int min_result_id)throws BecDatabaseException
+     private ArrayList getExspectedSequenceDescriptions(Connection conn, String status, int min_result_id)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
-        String sql = "select  FLEXSEQUENCEID ,FLEXCLONEID , r.resultid as resultid, refsequenceid, iso.isolatetrackingid as isolatetrackingid "
-        +" from flexinfo f, isolatetracking iso, result r, sample s, sequencingconstruct  constr "
-        +" where constr.constructid = iso.constructid and f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
-        +" and iso.sampleid=s.sampleid and iso.sampleid in"
-        +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
-        result_type +")) and rownum = " + MAX_NUMBER_OF_ROWS_TO_RETURN + " and resultid > "+ min_result_id +" order by resultid";
+        String sql = "select   refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
++ " from isolatetracking iso,  sample s, sequencingconstruct  constr "
++" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid "
++" and status in "+ status +" and rownum < "+MAX_NUMBER_OF_ROWS_TO_RETURN+"  order by containerid ,refsequenceid";
+ 
+      
         
-        ResultSet rs = null;
+        ResultSet rs = null;ResultSet rs_ref = null;String sql_sample = null;
       SequenceDescription seq_desc = null;
         try
         {
@@ -197,11 +257,30 @@ public class tester_run_assembler
             
             while(rs.next())
             {
-                seq_desc = new SequenceDescription(rs.getInt("FLEXSEQUENCEID"),
-                                 rs.getInt("FLEXCLONEID"), rs.getInt("resultid")
-                                ,rs.getInt("refsequenceID"), rs.getInt("isolatetrackingid"));
+                seq_desc = new SequenceDescription();
+               
+                seq_desc.setBecRefSequenceId(rs.getInt("refsequenceID"));
+                seq_desc.setIsolateTrackingId( rs.getInt("isolatetrackingid"));
+                seq_desc.setContainerId(rs.getInt("containerid"));
+                seq_desc.setSampleId(rs.getInt("sampleid"));
+               
+                if (seq_desc.getSampleId() != -1)
+                {
+                    sql_sample = "select distinct localpath from filereference where filereferenceid in "
+                    +" (select filereferenceid from resultfilereference "
+                    +" where resultid in (select resultid from result where sampleid="+seq_desc.getSampleId()+"))";
+                    rs_ref = DatabaseTransaction.executeQuery(sql_sample, conn);
+                     seq_desc.setReadFilePath("localpath");
+                     // reparse f:\clone_files\5968\560\chromat_di
+                     ArrayList data = Algorithms.splitString(seq_desc.getReadFilePath(),  String.valueOf(File.pathSeparatorChar));
+                     
+                     seq_desc.setFlexSequenceId(rs.getInt( Integer.parseInt( (String) data.get(data.size() - 3))));
+                    seq_desc.setFlexCloneId(  rs.getInt(Integer.parseInt( (String) data.get(data.size() - 2))));
+                    res.add( seq_desc );
+                
+                }
                // System.out.println(entry.toString());
-                res.add( seq_desc );
+                
             }
             return res;
         } catch (Exception sqlE)
@@ -214,18 +293,10 @@ public class tester_run_assembler
     }
      
      
-     private   CloneAssembly runAssemblerandParseOutput(
-                         SequenceDescription sequence_definition
-                        )throws BecUtilException
-     {
-         CloneAssembly res = null;
-         
-         return res;
-     }
+    
      
      
-     
-     private   CloneSequence insertSequence(
+     private   int insertSequence(
                          SequenceDescription sequence_definition, 
                          CloneAssembly clone_data,
                          Connection conn)throws BecDatabaseException
@@ -233,12 +304,13 @@ public class tester_run_assembler
          //create sequence 
          try
          {
-             CloneSequence clone_seq = new CloneSequence( clone_data.getSequence(),  clone_data.getScores(), sequence_definition.getBecRefSequenceId());
-             clone_seq.setResultId( sequence_definition.getResultId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+            Contig contig = (Contig)clone_data.getContigs().get(0);
+            CloneSequence clone_seq = new CloneSequence( contig.getSequence(),  contig.getScores(), sequence_definition.getBecRefSequenceId());
+            clone_seq.setResultId( sequence_definition.getResultId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
             clone_seq.setIsolatetrackingId ( sequence_definition.getIsolateTrackingId() );//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
             clone_seq.setStatus (BaseSequence.ASSEMBLY_STATUS_ASSESMBLED);
             clone_seq.insert(conn);
-            return clone_seq;
+            return clone_seq.getId();
          }
          catch(Exception e)
          {
@@ -255,17 +327,23 @@ public class tester_run_assembler
          private int        i_flex_sequenceid = -1;
          private int        i_flex_cloneid = -1;
          private int        i_resultid = -1;
+         private String     i_read_filepath = null;
          private int        i_becrefsequenceid = -1;
          private int        i_isolatetrackingid = -1;
+         private int        i_containerid    = -1;
+         private int        i_sampleid = -1;
          
          public SequenceDescription(){}
-         public SequenceDescription(int v1, int v2, int v3, int v4, int v5)
+         public SequenceDescription(int v1, int v2, int v3, int v4, int v5, int v7,int v8,String v6)
          {
              i_flex_sequenceid = v1;
              i_flex_cloneid = v2;
              i_resultid = v3;
               i_becrefsequenceid = v4;
              i_isolatetrackingid = v5;
+             i_read_filepath = v6;
+             i_containerid = v7;
+             i_sampleid = v8;
          }
          
          public int        getFlexSequenceId (){ return i_flex_sequenceid   ;}
@@ -273,12 +351,18 @@ public class tester_run_assembler
          public int        getResultId (){ return i_resultid   ;}
          public int        getBecRefSequenceId (){ return i_becrefsequenceid   ;}
          public int        getIsolateTrackingId (){ return i_isolatetrackingid   ;}
+         public int         getContainerId(){ return i_containerid;}
+         public String      getReadFilePath(){ return i_read_filepath;}
+         public int         getSampleId(){ return i_sampleid;}
          
+         public void        setReadFilePath(String c){ i_read_filepath=c;}
          public void        setFlexSequenceId  ( int v){  i_flex_sequenceid =v  ;}
          public void        setFlexCloneId ( int v){  i_flex_cloneid   =v;}
          public void        setResultId ( int v){  i_resultid =v  ;}
           public void        setBecRefSequenceId (int v){  i_becrefsequenceid =v  ;}
          public void          setIsolateTrackingId (int v){  i_isolatetrackingid =v  ;}
+         public void        setContainerId(int v){ i_containerid = v;}
+         public void        setSampleId(int v){ i_sampleid = v;}
      }
      
      

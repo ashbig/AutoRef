@@ -33,16 +33,15 @@ public class CloneAssembly
             m_contigs = new ArrayList();
         m_contigs.add(c);
     }
-    public void             setNumOfReads(int i){m_number_of_reads = i;}
+    public void             setNumOfReads(int v){m_number_of_reads = v;}
     public void             setContigs(ArrayList a){  m_contigs = a;}
+    public void             setStatus(int v){     m_contig_coverage =v ;}
     
     public int              getNumberOfReads(){ return m_number_of_reads;}
     public ArrayList        getContigs(){ return m_contigs;}
     public int              getStatus(){ return             m_contig_coverage ;}
     
-    public void checkForCoverage(int cds_start, int cds_stop, BaseSequence refsequence)
-    {
-    }
+   
     
     
 }

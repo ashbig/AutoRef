@@ -46,20 +46,7 @@ public class PhredPhrap
     }
     public void         setVectorFileName(String s){ m_vector_file_name = s;}
     public String       getVectorFileName(){ return m_vector_file_name ;}
-/*
-    public void         setGapOpen(double s){ m_gapopen = s;}
-    public  void        setGapExtend(double s){ m_gapext = s;}
-    public void         setQueryId(int id){ m_query_id = id;}
-    public void         setReferenceId(int id){ m_ref_id = id;}
-    public void         setQuerySeq(String s){ m_query = s;}
-    public void         setRefSeq(String s){ m_reference = s;}
-    public void         setOutputFileDir(String s){m_output_file_dir = s;}
-    public String       getOutputFileDir(){return m_output_file_dir ;}
 
-
-    public double          getGapOpen(){ return m_gapopen;}
-    public double          getGapExtend(){ return m_gapext;}
-*/
     /*
     public  NeedleResult runNeedle() throws BecUtilException
     {
@@ -125,18 +112,17 @@ public class PhredPhrap
         return m_needle;
     }
     */
-    public boolean run(String clone_path)throws BecUtilException
-    {
-        return run (clone_path, m_vector_file_name);
-    }
-    
-    public boolean run(String clone_path, String vector_file_name)throws BecUtilException
+   
+    public boolean run(String clone_path, String output_file_name)throws BecUtilException
     {
         String cmd = null;
         
         // for windows /c/file_name
         if (isWindows)
-            cmd =  m_phredphrap_path + " --clonepath " + clone_path +" --vectorfile " + vector_file_name;
+        {
+            cmd =  m_phredphrap_path + " --clonepath " + clone_path  + " --outputfilename "+ output_file_name;
+            if (m_vector_file_name != null && !m_vector_file_name.equals("")) cmd += " --vectorfile " + m_vector_file_name;
+        }
         else
             //cmd =  "perl "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
         System.out.println(cmd);
