@@ -72,7 +72,14 @@ public class BlastParser implements BlastParserConstants {
             e.printStackTrace();
         }
     }
-
+    
+    /** Constructor takes a file name which then open the file as a
+     *  FileInputStream instance and construct the parser
+     */
+    public BlastParser(String fname, int hits) {
+        this(fname);
+        this.hits = hits;
+    }
     /** To access query information which returns a Properties object */
     public  Hashtable getQuryInfo()      { return qryInfoHT;     }
 
@@ -228,7 +235,7 @@ public class BlastParser implements BlastParserConstants {
 
     public static void main(String args[]) throws ParseException {
         //BlastParser parser = new BlastParser(System.in, 10);
-        BlastParser parser = new BlastParser(args[0]);
+        BlastParser parser = new BlastParser("c:\\bio\\blastex_pr.txt");
         parser.parseBlast();
         parser.displayParsed();
     }
