@@ -34,6 +34,13 @@ import edu.harvard.med.hip.bec.ui_objects.*;
  */
 public abstract class ProcessRunner implements Runnable
 {
+    protected  static String FILE_PATH = null;
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+            FILE_PATH = "d:\\tmp\\";
+        else
+            FILE_PATH = "c:\\tmp\\";
+    }
     protected ArrayList   m_error_messages = null;
     protected String      m_items = null;
     protected int         m_items_type = -1;
@@ -108,13 +115,15 @@ public abstract class ProcessRunner implements Runnable
          try
          {
  //send errors
+            String title = getTitle();
             if (m_error_messages.size()>0)
             {
                  Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", getTitle()+": error messages.", "Errors\n " ,m_error_messages);
+                "elena_taycher@hms.harvard.edu", 
+               title+": error messages.", "Errors\n " ,m_error_messages);
 
             }
-            if (m_file_list_reports != null && m_file_list_reports.size()>0 && this instanceof ReportRunner)
+            if (m_file_list_reports != null && m_file_list_reports.size()>0 )//&& this instanceof ReportRunner)
             {
                 Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
                 "elena_taycher@hms.harvard.edu"," Request for report", 
@@ -124,7 +133,13 @@ public abstract class ProcessRunner implements Runnable
             if (m_error_messages.size()==0 && !(this instanceof ReportRunner))
             {
                  Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", getTitle()+", "+getTitle()+ " \n Items processed:\n"+m_items);
+                "elena_taycher@hms.harvard.edu", title, title+ " \n Items processed:\n"+m_items);
+
+            }
+            if (m_error_messages.size()!=0 && !(this instanceof ReportRunner))
+            {
+                 Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                "elena_taycher@hms.harvard.edu", title,title+ " \n Items processed:\n"+m_items +"\nSee another e-mail for error messages.");
 
             }
 

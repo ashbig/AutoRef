@@ -84,12 +84,12 @@ public class Primer3Parser
     public static ArrayList parse(String queryFile, Primer3Spec spec) throws Exception
     {
         if (m_instance == null)  m_instance = new Primer3Parser();
-        
+        int runner_type = spec.getParameterByNameInt("P_NUMBER_OF_STRANDS");
         boolean isNewRecord = false;
        
         String line = null;
         BufferedReader  fin = null;
-       
+        int oligo_count =1;
         
       
         OligoCalculation olcalc = null;
@@ -130,34 +130,49 @@ public class Primer3Parser
                if ( seq_id == -1 )
                {
                    oligo_left = new Oligo();
-                   oligo_left.setType(Oligo.TYPE_GENESEPECIFIC_CALCULATED);
+                   oligo_left.setType(Oligo.TYPE_GENESPECIFIC_CALCULATED);
+                   
                    oligo_left.setOrientation(Oligo.ORIENTATION_FORWARD);
-                   oligo_right = new Oligo();
-                   oligo_right.setType(Oligo.TYPE_GENESEPECIFIC_CALCULATED);
-                   oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
-                    
+                   oligo_left.setName("F"+oligo_count);
+                   if ( runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND)
+                   {
+                       oligo_right = new Oligo();
+                       oligo_right.setType(Oligo.TYPE_GENESPECIFIC_CALCULATED);
+                       oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
+                       oligo_right.setName("R"+oligo_count);
+                   }
+                    oligo_count++;
                }
                if ( seq_id != -1 &&  p_new_record.match(line)  ) //new record
                {
-                   oligo_left.setStart(_AURL + _ARL * (subseq_count - 1) + l_start + 1);
-                   oligo_right.setStart(_AURL + _ARL * (subseq_count - 1) + r_start + 1);
+                   oligo_left.setPosition(_AURL + _ARL * (subseq_count - 1) + l_start + 1);
+                   if (runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND)
+                       oligo_right.setPosition(_AURL + _ARL * (subseq_count - 1) + r_start + 1);
                     //check if its another sequence
                    if ( olcalc.getSequenceId() != seq_id)
                    {
-                      // oligo_set = new OligoPairSet(null, spec, seq_id);
                        olcalc = new OligoCalculation();
                        olcalc.setPrimer3SpecId(spec.getId());
                        olcalc.setSequenceId(seq_id);
+                       res.add(olcalc);
                    }
-                   if (oligo_left != null) olcalc.addOligo(oligo_left);
-                     if (oligo_right != null)  olcalc.addOligo(oligo_right);
+                   if ( oligo_left.getSequence() != null) olcalc.addOligo(oligo_left);
+                   if (runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND && oligo_right.getSequence() != null) 
+                       olcalc.addOligo(oligo_right);
                        
                    oligo_left = new Oligo();
-                   oligo_left.setType(Oligo.TYPE_GENESEPECIFIC_CALCULATED);
-                   oligo_left.setOrientation(Oligo.ORIENTATION_REVERSE);
-                   oligo_right = new Oligo();
-                   oligo_right.setType(Oligo.TYPE_GENESEPECIFIC_CALCULATED);
-                   oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
+                   oligo_left.setType(Oligo.TYPE_GENESPECIFIC_CALCULATED);
+                   oligo_left.setOrientation(Oligo.ORIENTATION_FORWARD);
+                   oligo_left.setName("F"+oligo_count);
+                    if ( runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND)
+                   {
+                       
+                       oligo_right = new Oligo();
+                       oligo_right.setType(Oligo.TYPE_GENESPECIFIC_CALCULATED);
+                       oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
+                       oligo_right.setName("R"+oligo_count);
+                    }
+                   oligo_count++;
                }
                    //read subject
                if ( p_primer_sequence_id.match(line) ) 
@@ -165,11 +180,9 @@ public class Primer3Parser
                    int new_seq_id = Integer.parseInt(p_primer_sequence_id.getParen(1));
                    if (seq_id == -1)
                    {
-                      //  oligo_set = new OligoPairSet(null, spec, new_seq_id);
                         olcalc = new OligoCalculation();
-                     
-                       olcalc.setPrimer3SpecId(spec.getId());
-                       olcalc.setSequenceId(new_seq_id);
+                        olcalc.setPrimer3SpecId(spec.getId());
+                        olcalc.setSequenceId(new_seq_id);
                         res.add(olcalc);
                    }
                     seq_id = new_seq_id;
@@ -178,23 +191,23 @@ public class Primer3Parser
                }
                if (p_left_sequence.match(line) )
                     oligo_left.setSequence(p_left_sequence.getParen(1));
-               if ( p_right_sequence.match(line) ) 
+               if ( (runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND) && p_right_sequence.match(line) ) 
                     oligo_right.setSequence(p_right_sequence.getParen(1));
                if ( p_left.match(line) ) 
                {
                    l_start = Integer.parseInt(p_left.getParen(1));
                }
-               if ( p_right.match(line) )
+               if ( (runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND) && p_right.match(line) )
                 {
                    r_start = Integer.parseInt(p_right.getParen(1));
                }
                if ( p_left_tm.match(line) ) 
                     oligo_left.setTm( Integer.parseInt(p_left_tm.getParen(1)));
-               if ( p_right_tm.match(line) ) 
+               if ((runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND) && p_right_tm.match(line) ) 
                    oligo_right.setTm( Integer.parseInt(p_right_tm.getParen(1)));
                if (p_left_gc.match(line) ) 
                    oligo_left.setGCContent( Integer.parseInt(p_left_gc.getParen(1)));
-               if (p_right_gc.match(line) ) 
+               if ((runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND) && p_right_gc.match(line) ) 
                    oligo_right.setGCContent( Integer.parseInt(p_right_gc.getParen(1)));
                if (p_error.match(line))
                {
@@ -208,8 +221,14 @@ public class Primer3Parser
                }
              
            }
- //  System.out.println("oligo parsed "+res.size());
-            return res;
+           ArrayList result = new ArrayList();
+           for (int index = 0; index < res.size(); index++)
+           {
+                 olcalc = (OligoCalculation) res.get(index);
+                 if (olcalc.getOligos() != null && olcalc.getOligos().size()>0)
+                     result.add(olcalc);
+           }
+            return result;
         }
         catch(Exception e)
         {
@@ -236,7 +255,7 @@ public class Primer3Parser
         }
      */
         ArrayList re = null;
-        String queryFile = "c:\\tmp\\primer3output.txt";
+        String queryFile = "c:\\bio\\primer3out.txt";
         try
         {
             Hashtable ht = new Hashtable();
@@ -244,7 +263,7 @@ public class Primer3Parser
             ht.put("P_PRIMER_OPT","21");
             ht.put("P_DOWNSTREAM_DISTANCE","120");
             ht.put("P_PRIMER_TM_OPT","60");
-            ht.put("P_NUMBER_OF_STRANDS","2");
+            ht.put("P_NUMBER_OF_STRANDS","1");
             ht.put("P_SINGLE_READ_LENGTH","400");
             ht.put("P_PRIMER_MIN","18");
             ht.put("P_PRIMER_GC_MAX","80");
@@ -257,7 +276,7 @@ public class Primer3Parser
             ht.put("P_EST_SEQ","50");
 
             
-            Primer3Spec ps = new Primer3Spec(ht,null,1);
+            Primer3Spec ps =  (Primer3Spec)Spec.getSpecById(3);
              re = Primer3Parser.parse(queryFile,ps);
         }catch(Exception e){}
         System.exit(0);

@@ -101,6 +101,12 @@ public class SelectProcessAction extends ResearcherAction
                             request.setAttribute("forwardName", new Integer(Constants.PROCESS_SELECT_PLATES_FOR_END_READS));
                             return (mapping.findForward("select_vector"));
                     }
+                    //allow to select not to run this end read
+                    Oligo ol = new Oligo();
+                    ol.setId(-1)   ;
+                    ol.setName("NONE") ;
+               
+                    primers.add(ol);
                     spec_collection.add( primers);
                     spec_names.add("5p primer");
                     control_names.add("5p_primerid");
@@ -194,12 +200,27 @@ public class SelectProcessAction extends ResearcherAction
                     
                 }
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER: // add new internal primer
+                {
+                }
+                case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
                 {
-                     request.setAttribute(Constants.JSP_TITLE,"view Internal Primers");
-                   return (mapping.findForward("initiate_process"));
+                    String title="";
+                    switch ( forwardName)
+                    {
+                        case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:
+                        {
+                            title="approve Internal Primers";break;
+                        }
+                        case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:
+                        {
+                            title="view Internal Primers";break;
+                        }
+                    }
+                    request.setAttribute(Constants.JSP_TITLE,title);
+                    return (mapping.findForward("initiate_process"));
                 }
-                case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS://approve internal primers
+               //approve internal primers
                 {
                 }
                 case Constants.PROCESS_RUN_PRIMER3://run primer3

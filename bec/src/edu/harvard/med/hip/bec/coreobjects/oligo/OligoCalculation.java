@@ -1,6 +1,7 @@
 package edu.harvard.med.hip.bec.coreobjects.oligo;
 
 import  edu.harvard.med.hip.bec.util.*;
+import  edu.harvard.med.hip.bec.*;
 import  edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
@@ -15,9 +16,7 @@ import java.util.*;
  */
 public class OligoCalculation
 {
-    public static final int     QUERYTYPE_RESULTID = 0;
-    public static final int     QUERYTYPE_REFSEQUENCEID = 1;
-    
+   
     private ArrayList           m_oligos = null;
     private Primer3Spec         m_primer3_spec = null;
     private int         m_primer3_spec_id = -1;
@@ -72,50 +71,41 @@ public class OligoCalculation
    public void         setOligos(ArrayList v){  m_oligos = v;}
     
     //function gets all oligo calculations from db for the provided id
-    public static ArrayList       getOligoCalculations(int id, int id_type) throws BecDatabaseException
+    public static ArrayList       getOligoCalculations(String item_ids,int item_type)                     throws BecDatabaseException
     {
         String sql = null;
-        if (id_type == QUERYTYPE_RESULTID)
+        ArrayList oligo_calculations = new ArrayList();
+        ArrayList items = Algorithms.splitString(item_ids);
+        if (items == null || items.size() < 1) return oligo_calculations;
+        for (int index = 0; index < items.size(); index++)
         {
-           sql =  "select oligocalculationid, sequenceid, primer3configid, dateadded,resultid from oligospec where resultid = "+id;
-        }
-        else if (id_type == QUERYTYPE_REFSEQUENCEID)
-        {
-             sql =  "select oligocalculationid, sequenceid, primer3configid, dateadded,resultid from oligospec where sequenceid = "+id;
-        }
-        
-        ArrayList oligos = new ArrayList();
-        ArrayList res = new ArrayList();
-        RefSequence seq =null;
-        ResultSet rs = null;
-        
-        try
-        {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            
-            while(rs.next())
+            switch (item_type)
             {
-                OligoCalculation ol = new OligoCalculation();
-                ol.setId(rs.getInt("oligocalculationid"));
-                ol.setDate( rs.getDate("dateadded"));
-                ol.setPrimer3SpecId(rs.getInt("primer3configid"));
-                ol.setResultId(rs.getInt("resultid"));
-                ol.setSequenceId(rs.getInt("sequenceid"));
-                ol.setOligos(Oligo.getOligosByCalculationId( ol.getId() ) );
-                res.add(ol);
-                
+                case  Constants.ITEM_TYPE_CLONEID:
+                {
+                    oligo_calculations.addAll(getByCloneId(Integer.parseInt( (String)items.get(index) )));
+                    break;
+                }
+                case Constants.ITEM_TYPE_PLATE_LABELS :
+                {   
+                    oligo_calculations.addAll(getByPlateLabel((String) items.get( index)));
+                    break;
+                }
+                case Constants.ITEM_TYPE_BECSEQUENCE_ID :
+                {   
+                    oligo_calculations.addAll(getByRefSequenceId(Integer.parseInt( (String)items.get( index))));
+                    break;
+                }
+                case Constants.ITEM_TYPE_FLEXSEQUENCE_ID:
+                {   
+                    oligo_calculations.addAll(getByFlexSequenceId(Integer.parseInt( (String)items.get(index))));
+                    break;
+                }
             }
-            return res;
-        } 
-        catch (Exception sqlE)
-        {
-            throw new BecDatabaseException("Error occured while initializing OligoCalculation with id: "+id+"\n"+sqlE+"\nSQL: "+sql);
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-           
         }
+        
+        return oligo_calculations;
+        
     }
    
     
@@ -128,16 +118,17 @@ public class OligoCalculation
          String sql = null;
         try
         {
+            if ( m_oligos == null || m_oligos.size() <1) return;
           if (m_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
                  m_id = BecIDGenerator.getID("oligoid");
              sql = "INSERT INTO oligo_calculation (oligocalculationid, sequenceid, primer3configid, dateadded,resultid) "+
             " VALUES("+ m_id+"," + m_refsequence_id +","+m_primer3_spec_id +",sysdate,"+m_result_id +")";
- 
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             for (int count = 0; count < m_oligos.size(); count++)
             {
                Oligo op = (Oligo)m_oligos.get(count);
+               op.setOligoCalculationId( m_id);
                op.insert(conn);
             }
         } catch (Exception sqlE)
@@ -150,7 +141,82 @@ public class OligoCalculation
         }
     } //insertOligo
     
-  
+   public static ArrayList getByOligoCalculationId(int oligocalcid)throws BecDatabaseException
+    {
+        String sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded "+
+            " from oligo_calculation where oligocalculationid = "+oligocalcid;
+        return getByRule(sql);
+   }
+    
+    //can return sets calculated ander different configs for Primer3
+   public static ArrayList getByRefSequenceId(int refsequenceid)throws BecDatabaseException
+   {
+        String sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded  "+
+            " from oligo_calculation where sequenceid = "+refsequenceid +" order by oligocalculationid";
+        return getByRule(sql);
+   }
+    //can return sets calculated ander different configs for Primer3
+   public static ArrayList getByFlexSequenceId(int flexsequenceid)throws BecDatabaseException
+   {
+        String sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded   "
++" from  oligo_calculation where sequenceid = "
++" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
++" (select isolatetrackingid from flexinfo where flexsequenceid="+flexsequenceid+"))) order by oligocalculationid";
+        return getByRule(sql);
+   }
+   
+   
+    //can return sets calculated ander different configs for Primer3
+   public static ArrayList getByCloneId(int cloneid)throws BecDatabaseException
+   {
+        String sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded   "
++" from  oligo_calculation where sequenceid = "
++" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
++" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+"))) order by oligocalculationid";
+        return getByRule(sql);
+   }
+     //can return sets calculated ander different configs for Primer3
+   public static ArrayList getByPlateLabel(String label)throws BecDatabaseException
+   {
+        String sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded    "
++" from  oligo_calculation where sequenceid in "
++" (select refsequenceid from sequencingconstruct where constructid in  (select constructid from isolatetracking where sampleid in"
++" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid";
+        return getByRule(sql);
+   }
+    
+    private static ArrayList getByRule(String sql)throws BecDatabaseException
+    {
+        ArrayList res = new ArrayList();
+        ResultSet rs = null;
+         OligoCalculation oc = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+
+            while(rs.next())
+            {
+                oc = new  OligoCalculation();
+                oc.setPrimer3SpecId(rs.getInt("primer3configid"));
+                oc.setSequenceId(rs.getInt("sequenceid"));
+                oc.setDate(rs.getDate("dateadded"));
+                oc.setId(rs.getInt("oligocalculationid"));
+                oc.setOligos(Oligo.getByOligoCalculationId(oc.getId()));
+                res.add(oc);
+            }
+            return res;
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while "+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+
+
+    }
+   
   //*********************************************************************
     
     public static void main(String [] args)
@@ -160,10 +226,15 @@ public class OligoCalculation
         
         try
         {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            c = t.requestConnection();
-            
-            
+             ArrayList oligo_calculations = new ArrayList();
+             String item_ids = "9972\n9966\n9949\n9954\n581\n9990\n9938\n9929\n";
+             ArrayList items = Algorithms.splitString(item_ids);
+             ArrayList oligo_calculations_per_item = new ArrayList();
+             for (int index = 0; index < items.size();index++)
+             {
+                oligo_calculations_per_item = OligoCalculation.getOligoCalculations((String)items.get(index),Constants.ITEM_TYPE_CLONEID);
+                oligo_calculations.add( oligo_calculations_per_item);
+             }
         }
         catch (BecDatabaseException exception)
         {

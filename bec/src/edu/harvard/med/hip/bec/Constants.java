@@ -15,6 +15,8 @@ import java.text.*;
  */
 public class Constants {
    
+    public static String       LINE_SEPARATOR = System.getProperty("line.separator") ;
+    
     public static final String DELIM_WHITE_SPACE = " ";
     
     // constant for workflow (queue) admin group

@@ -34,20 +34,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
  */
 public class ReportRunner extends ProcessRunner 
 {
-    
-    private  static String FILE_PATH = null;
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-            FILE_PATH = "d:\\tmp\\";
-        else
-            FILE_PATH = "c:\\tmp\\";
-    }
-    
-    
-    // private ArrayList   m_error_messages = null;
-   // private String      m_items = null;
-   // private int         m_items_type = -1;
-   // private User        m_user = null;
+  
     private boolean    m_clone_id= false; //    Clone Id
 	private boolean    m_dir_name= false; // Directory Name
 	private boolean    m_sample_id= false; //      Sample Id

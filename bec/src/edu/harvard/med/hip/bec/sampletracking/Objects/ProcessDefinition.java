@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.11 2003-10-30 16:15:23 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.12 2003-11-14 19:20:07 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -31,7 +31,7 @@ public class ProcessDefinition
     public static final     String    RUN_ASSEMBLY_FROM_END_READS = "Run sequence assembly from end reads";
     public static final     String    RUN_SEQUENCE_SUBMISSION = "Run sequence data submission";
     
-    public static final     String    RUN_DESIGN_OLIGO = "Run design oligo";
+    public static final     String    RUN_DESIGN_OLIGO = "Run oligo design";
     public static final     String    RUN_DISCREPANCY_FINDER = "Run discrepancy finder";
     
     private int             m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;

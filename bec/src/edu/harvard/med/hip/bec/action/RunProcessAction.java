@@ -128,8 +128,8 @@ public class RunProcessAction extends ResearcherAction
                     
                     EndReadsRequestRunner runner = new EndReadsRequestRunner();
                     runner.setContainerIds(master_container_ids );
-                    runner.setForwardPrimerId( forward_primer_id );
-                    runner.setRevercePrimerId(reverse_primer_id);
+                    if ( forward_primer_id != -1) runner.setForwardPrimerId( forward_primer_id );
+                    if ( reverse_primer_id != -1)runner.setRevercePrimerId(reverse_primer_id);
                     runner.setUser(user);
                     t = new Thread(runner);           t.start();
                     
@@ -197,22 +197,39 @@ public class RunProcessAction extends ResearcherAction
                 {
                 }
                 
+                case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS : //view internal primers
                 {
-                    /*
-                    ArrayList oligo_calculation = new ArrayList();
-                    ArrayList oligo_calc_for_sequence = null;
-                    String refseqid = null;
-                    for (int seq_count = 0; seq_count < sequence_id_items.size(); seq_count++)
+                    String  item_ids = (String) request.getParameter("items");
+                    item_ids = item_ids.toUpperCase().trim();
+                    int item_type = Integer.parseInt(request.getParameter("item_type"));
+                    
+                    ArrayList oligo_calculations = new ArrayList();
+                     ArrayList items = Algorithms.splitString(item_ids);
+                     ArrayList oligo_calculations_per_item = new ArrayList();
+                     for (int index = 0; index < items.size();index++)
+                     {
+                        oligo_calculations_per_item = OligoCalculation.getOligoCalculations((String)items.get(index),item_type);
+                        oligo_calculations.add( oligo_calculations_per_item);
+                     }
+                    String title="";
+                    if ( forwardName == Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
                     {
-                       refseqid = (String) sequence_id_items.get(seq_count);
-                       oligo_calc_for_sequence = OligoCalculation.getOligoCalculations(Integer.parseInt(refseqid), OligoCalculation.QUERYTYPE_REFSEQUENCEID);
-                       oligo_calculation.add(oligo_calc_for_sequence);
+                       request.setAttribute(Constants.JSP_TITLE,"approve Internal Primers");
+                       request.setAttribute("forwardName",new Integer(-forwardName));
                     }
-                     **/
+                    else if ( forwardName == Constants.PROCESS_VIEW_INTERNAL_PRIMERS)
+                    {
+                       request.setAttribute(Constants.JSP_TITLE,"view Internal Primers");
+                    }
+                   
+                    request.setAttribute("oligo_calculations",oligo_calculations);
+                    request.setAttribute("items",items);
+                    request.setAttribute("item_type",request.getParameter("item_type"));
+                    return mapping.findForward("display_oligo_calculations");
                 }
-                
-                case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS : //approve internal primers
+                // approve primer
+                case -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :
                 {
                 }
                 
@@ -230,13 +247,16 @@ public class RunProcessAction extends ResearcherAction
                      {
                           runner = new PrimerDesignerRunner();
                           title = "request for Primer Designer";
-                          ((PrimerDesignerRunner)runner).setSpecId(Integer.parseInt( (String)request.getAttribute("PRIMER3_SPEC")));
+                          int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
+                          ((PrimerDesignerRunner)runner).setSpecId(spec_id);
+                          if ( request.getParameter("isTryMode") != null )
+                            ((PrimerDesignerRunner)runner).setIsTryMode( true );
                      }
                      else if  (forwardName == Constants.PROCESS_RUNPOLYMORPHISM_FINDER)
                      {
                           runner = new PolymorphismFinderRunner();
                            title = "request for Polymorphism Finder";
-                          ((PolymorphismFinderRunner)runner).setSpecId(Integer.parseInt( (String)request.getAttribute("POLYMORPHISM_SPEC")));
+                          ((PolymorphismFinderRunner)runner).setSpecId(Integer.parseInt( (String)request.getParameter("POLYMORPHISM_SPEC")));
                      }//run polymorphism finder
                     else if (forwardName == Constants.PROCESS_RUN_DISCREPANCY_FINDER)
                     {
@@ -246,8 +266,8 @@ public class RunProcessAction extends ResearcherAction
                     String  item_ids = (String) request.getParameter("items");
                
                     runner.setItems(item_ids.toUpperCase().trim());
-                    runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
-                    runner.setUser(user);
+                   runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                   runner.setUser(user);
                     t = new Thread(runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,title);
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);

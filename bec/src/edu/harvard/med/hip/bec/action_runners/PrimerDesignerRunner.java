@@ -38,9 +38,11 @@ public class PrimerDesignerRunner extends ProcessRunner
     
     private int                     m_spec_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private Primer3Spec             m_spec = null;
+    private boolean                 m_isTryMode = false;
    
     /** Creates a new instance of PolymorphismFinderRunner */
     public void         setSpecId(int v){m_spec_id = v;}
+    public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
     public void run()
     {
          int id = -1; int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -50,6 +52,7 @@ public class PrimerDesignerRunner extends ProcessRunner
          Statement stmt = null;
          PreparedStatement pst_check_oligo_cloning = null;
           PreparedStatement pst_insert_process_object = null;
+           FileWriter reportFileWriter = null;
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
@@ -66,7 +69,15 @@ public class PrimerDesignerRunner extends ProcessRunner
             ArrayList specs =new ArrayList();
             specs.add(m_spec);
             process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DESIGN_OLIGO,specs,m_user) ;
-             for (int index =  0;  index < ids.size(); index++)
+           
+            if ( m_isTryMode )
+            {
+                File reportFile = new File(FILE_PATH + "primer3Report.txt");
+                m_file_list_reports.add(reportFile);
+                reportFileWriter =  new FileWriter(reportFile);
+                
+            }
+            for (int index =  0;  index < ids.size(); index++)
              {
                 synchronized(this)
                 {
@@ -74,23 +85,48 @@ public class PrimerDesignerRunner extends ProcessRunner
                         {
 
                             id = ((Integer) ids.get(index)).intValue();
-                            if (isPrimersDesignedForRefsequence(id, pst_check_oligo_cloning) )
+                            if (  isPrimersDesignedForRefsequence(id, pst_check_oligo_cloning) )
                             {
-                                m_error_messages.add("Primers have been designed for refsequence with id "+id +" and this spec");
-                                continue;
+                                m_error_messages.add("Primers for refsequence with id "+id +"and this spec already designed.");
+                                if ( !m_isTryMode  ) continue;
                             }
                         //get reference sequence to process
                             BaseSequence refsequence = getRefsequence(id);
                         //run primer3 with specified spec
                             Primer3Wrapper primer3 = new Primer3Wrapper(m_spec,  refsequence);
                             ArrayList oligo_calculations = primer3.run();
+     
+                            if ( primer3.getFailedSequences() != null && primer3.getFailedSequences().size() >0)
+                                m_error_messages.addAll(primer3.getFailedSequences());
+                            if ( oligo_calculations == null || oligo_calculations.size() < 1)
+                            {
+                                m_error_messages.add("Cannot design primers for refsequence with id: "+refsequence.getId());
+                                continue;
+                            }
                             oligo_calculation = (OligoCalculation)oligo_calculations.get(0);
-                            oligo_calculation.insert(conn);
+
+                            if ( ! m_isTryMode )
+                                oligo_calculation.insert(conn);
+                            else
+                            {
+                                
+                                StringBuffer buf = new StringBuffer();
+                                buf.append(Constants.LINE_SEPARATOR );
+                                buf.append("RefSequence Id: "+oligo_calculation.getSequenceId()+Constants.LINE_SEPARATOR);
+                                buf.append("Primer3 Spec Id: "+oligo_calculation.getPrimer3SpecId()+Constants.LINE_SEPARATOR);
+                                for (int oligo_index = 0; oligo_index < oligo_calculation.getOligos().size();oligo_index ++)
+                                {
+                                    buf.append( ((Oligo)oligo_calculation.getOligos().get(oligo_index)).geneSpecificOligotoString()+Constants.LINE_SEPARATOR);
+                                }
+                                reportFileWriter.write( buf.toString() );
+                                reportFileWriter.flush();
+                               
+                            }
                             //insert process_object
                             pst_insert_process_object.setInt(1,process_id);
                             pst_insert_process_object.setInt(2, id);
                             DatabaseTransaction.executeUpdate(pst_insert_process_object);
-                           // conn.commit();
+                            conn.commit();
                         }
                         catch(Exception e)
                         {
@@ -106,6 +142,11 @@ public class PrimerDesignerRunner extends ProcessRunner
         }
         finally
         {
+            if ( m_isTryMode )
+            {
+                try {reportFileWriter.close();}catch(Exception e){ try { reportFileWriter.close();}catch(Exception n){} }
+            }
+        
             sendEMails();
         }
 
@@ -280,8 +321,8 @@ public class PrimerDesignerRunner extends ProcessRunner
         {
             input = new PrimerDesignerRunner();
             user = AccessManager.getInstance().getUser("htaycher1","htaycher");
-            input.setItems("9972\n9966\n9949\n9954\n581\n9990\n9938\n9929\n");
-            input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+            input.setItems("PGS000121-1");
+            input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
             input.setUser(user);
             input.setSpecId(3);
             input.run();

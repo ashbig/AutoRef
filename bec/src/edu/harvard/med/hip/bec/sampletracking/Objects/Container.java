@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.23 2003-11-04 22:43:53 Elena Exp $
+ * $Id: Container.java,v 1.24 2003-11-14 19:20:00 Elena Exp $
  *
  * File     	: Container.java
 
@@ -1620,7 +1620,7 @@ public class Container
                     forward = new Oligo();
                     forward.setId(crs.getInt("primerid") );
                     forward.setType(crs.getInt("type"));//primer type: 5p-pcr, 5p-universal, 5p-full_set_n ?
-                    forward.setStart(position); // for full sequencing, start of the prime regarding sequence start
+                    forward.setPosition(position); // for full sequencing, start of the prime regarding sequence start
                     forward.setName(crs.getString("name") );
                     forward.setSequence(crs.getString("sequence"));
                     forward.setOrientation(crs.getInt("orientation")) ;
@@ -1633,7 +1633,7 @@ public class Container
                     reverse = new Oligo();
                     reverse.setId(crs.getInt("primerid") );
                     reverse.setType(crs.getInt("type"));//primer type: 5p-pcr, 5p-universal, 5p-full_set_n ?
-                    reverse.setStart(position); // for full sequencing, start of the prime regarding sequence start
+                    reverse.setPosition(position); // for full sequencing, start of the prime regarding sequence start
                     reverse.setName(crs.getString("name") );
                     reverse.setSequence(crs.getString("sequence"));
                     reverse.setOrientation(crs.getInt("orientation")) ;
