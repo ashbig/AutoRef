@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.19 2001-06-26 17:10:13 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.20 2001-06-29 12:17:52 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -81,6 +81,40 @@ public class Process {
     }
     
     /**
+     * Finds a process based on the process execution id.
+     *
+     * @param executionId The execution id
+     *
+     * @return the process object with the specified id.
+     *
+     * @exception FlexDatabaseException When a database error occurs.
+     * @exception FlexProcessException When the process cannot be found.
+     */
+    public Process findProcess(int executionId)
+    throws FlexDatabaseException, FlexProcessException{
+        String sql = "Select * from processexecution";
+        ResultSet rs = DatabaseTransaction.getInstance().executeQuery(sql);
+        Process retProcess = null;
+        try {
+            if(rs.next()) {
+                
+                retProcess =
+                new Process(executionid, new Protocol(rs.getInt("PROTOCOLID")),
+                rs.getString("EXECUTIONSTATUS"),
+                new Researcher(rs.getInt("RESEARCHERID")),
+                rs.getString("PROCESSDATE"),rs.getString("SUBPROTOCALNAME"),
+                rs.getString("EXTRAINFORMATION"));
+                
+            } else {
+                throw new FlexProcessException("Process with id " + executionId + " not found");
+            }
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        }
+        return retProcess;
+    }
+    
+    /**
      * Find the process execution with the provided container and protocol.
      *
      * @param container The container of the process we want.
@@ -137,10 +171,10 @@ public class Process {
     }
     
     
-
+    
     /**
      * Find the process execution with the provided container and protocol.
-     * The process has been completed and the records are removed from 
+     * The process has been completed and the records are removed from
      * queue to processobject.
      *
      * @param container The container of the process we want.
@@ -193,8 +227,8 @@ public class Process {
             
         }
         return retProcess;
-    }    
-
+    }
+    
     
     /**
      * Set the subprotocol field to the given value.
@@ -325,7 +359,7 @@ public class Process {
         s.setExecutionid(executionid);
         sampleLineageSet.addElement(s);
     }
- 
+    
     /**
      * Set the sample lineage field.
      *
