@@ -102,6 +102,45 @@ public class TraceFilesDistributor
       * inputTraceDir specify the directory where the trace files get dumped from sequencer
       * errorDir specify where the error log is stored for trace files failed Phred run
       */
+    public void distributeInternalReadsChromatFiles(String inputTraceDir, String outputBaseDir)
+    {
+       PhredOutputFileName pr = null;
+        //obtain file path for base directory for trace file distribution
+        File baseDir = new File(outputBaseDir);
+        //obtain trace file list from source trace file directory
+        File sourceDir = new File(inputTraceDir); //trace file directory
+        File [] sourceFiles = sourceDir.listFiles();
+        //call file transfer and Phred moduels for each trace file
+        //Phred output sequence and trace files are parsed and saved to reads.
+        File destinationFile = null; //destination trace file dir after file transfer
+        File traceFile = null;
+        boolean isError_directory_exists = false;
+        String destinationFileName  ; String destination_dir = null;
+        for (int count = 0; count < sourceFiles.length; count++)
+        {
+            traceFile = sourceFiles[count];
+              // check this file shoud be distibuted
+           try
+            {
+                //create file structure and distribute trace file into chromat_dir
+                pr = new PhredOutputFileName(traceFile.getName(),PhredOutputFileName.FORMAT_OURS );
+               //end read
+                if ( pr.getReadNumber() == -1) continue;
+                destination_dir = pr.getSequenceid() +File.separator+pr.getCloneid();
+                destinationFileName = distributeFile(traceFile,outputBaseDir,destination_dir, true,true);//baseDir);//distributor.distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                m_error_messages.add("Cannot distribute file "+traceFile.getName());
+            }
+        } // for
+     }//processPipeline
+
+      /* outputBaseDir specify the base directory for trace file distribution
+      * inputTraceDir specify the directory where the trace files get dumped from sequencer
+      * errorDir specify where the error log is stored for trace files failed Phred run
+      */
     public void distributeNotActiveChromatFiles(String inputTraceDir,  String wrongformatfiles, String emptysamples_directory, String control_samples)
     {
         ArrayList chromat_files = new ArrayList();
@@ -213,7 +252,16 @@ public class TraceFilesDistributor
         return chromatfilepath;
 
     } // distributeFiles
+    public  String distributeFile(File file, String base_directory, String destination_dir, boolean isOverwrite, boolean isDelete) throws BecUtilException,Exception
+    {
 
+        //create clone file distirution tree : each clone has 7 dir
+        createDirectories(base_directory + File.separator+ destination_dir);
+        //move trace file into chromat directory
+        String chromatfilepath = base_directory +File.separator+destination_dir +File.separator+PhredWrapper.CHROMAT_DIR_NAME+File.separator+ file.getName();
+        FileOperations.moveFile(file, new File(chromatfilepath), isOverwrite,isDelete);
+        return chromatfilepath;
+    } // distributeFiles
 
     //__________________________________________
 

@@ -43,8 +43,8 @@ public class EndReadsWrapperRunner implements Runnable
             
         else
         {
-           OUTPUT_BASE_ROOT = "c:/bio/plate_analysis/";
-           INPUT_BASE_DIR = "C:/bio/plate_analysis/";
+           OUTPUT_BASE_ROOT = "c:\\bio\\plate_analysis\\";
+           INPUT_BASE_DIR = "C:\\bio\\plate_dump\\";
         }
     }
   
@@ -70,7 +70,7 @@ public class EndReadsWrapperRunner implements Runnable
     private User        m_user = null;
     
     
-    private int         m_min_clone_id = -1;
+    private int         m_min_clone_id = 1;
     
     /** Creates a new instance of EndReadsWrapperRunner */
     public EndReadsWrapperRunner()
@@ -111,19 +111,23 @@ public class EndReadsWrapperRunner implements Runnable
                  
                 tfb.distributeNotActiveChromatFiles(m_inputTraceDir,  m_outputBaseDir_wrongformatfiles, m_empty_samples_directory,m_control_samples_directory);
                 m_error_messages.addAll( tfb.getErrorMesages());
+                
+                tfb.distributeInternalReadsChromatFiles(m_inputTraceDir, m_outputBaseDir);
+                m_error_messages.addAll( tfb.getErrorMesages());
+                
                 tfb.setIsInnerReads(false); 
                 //run clones
                    //process only end reads that are exspected
-                while (true)
-                {
+              //  while (true)
+               // {
                     ArrayList expected_chromat_file_names = getExspectedChromatFileNames(conn, m_min_clone_id);
-                     if (expected_chromat_file_names.size() == 0)   break; 
+                     //if (expected_chromat_file_names.size() == 0)   break; 
                       //distribute chromat files 
                     tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
                     ArrayList chromat_files_names = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir);
                     m_error_messages.addAll( tfb.getErrorMesages());
                     runPhredandParseOutput( chromat_files_names,   conn);
-                }
+                //}
                 
           } 
         catch(Exception e)  
@@ -157,10 +161,20 @@ public class EndReadsWrapperRunner implements Runnable
       private ArrayList getExspectedChromatFileNames(Connection conn, int min_clone_id)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
-        String sql = "select  FLEXSEQUENCINGPLATEID as plateid ,FLEXSEQUENCEID as sequenceid "
+     /*   String sql = "select  FLEXSEQUENCINGPLATEID as plateid ,FLEXSEQUENCEID as sequenceid "
          +",FLEXCLONEID as cloneid,position,resulttype as orientation"
         +" from flexinfo f, isolatetracking iso, result r, sample s "
-        +" where FLEXCLONEID  > "+min_clone_id+"and rownum < "+MAX_ROW_NUMBER +" and f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
+        +" where FLEXCLONEID  > "+min_clone_id+" and rownum < "+MAX_ROW_NUMBER +" and f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
+        +" and iso.sampleid=s.sampleid and iso.sampleid in"
+        +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
+        Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE +")) order by FLEXCLONEID ";
+     */   
+        
+        
+         String sql = "select  FLEXSEQUENCINGPLATEID as plateid ,FLEXSEQUENCEID as sequenceid "
+         +",FLEXCLONEID as cloneid,position,resulttype as orientation"
+        +" from flexinfo f, isolatetracking iso, result r, sample s "
+        +" where  f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
         +" and iso.sampleid=s.sampleid and iso.sampleid in"
         +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
         Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE +")) order by FLEXCLONEID ";
@@ -283,7 +297,7 @@ public class EndReadsWrapperRunner implements Runnable
         {
          EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
         runner.setUser( AccessManager.getInstance().getUser("htaycher1","htaycher"));
-     // runner.run();
+      runner.run();
         }catch(Exception e){}
         System.exit(0);
      }
