@@ -87,7 +87,9 @@ public class SequenceSelectionAction extends FlexAction {
                 
                 //for the new sequences, need more info from genbank.
                 if(sequence.getFlexstatus().equals(FlexSequence.NEW)) {
-                    sequence.setSequenceInfo(gi);
+                    GenbankGeneFinder finder = new GenbankGeneFinder();
+                    Hashtable seqInfo = finder.searchDetail(gi);
+                    sequence.setSequenceInfo(seqInfo);
                     //if the sequence quality is questionable, put it aside.
                     if(FlexSequence.QUESTIONABLE.equals(sequence.getQuality())) {
                         badSequences.addElement(sequence);
