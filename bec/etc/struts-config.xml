@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_0.dtd">
+
+<!--
+     This is the Struts configuration file for the example application,
+     using the proposed new syntax.
+
+     NOTE:  You would only flesh out the details in the "form-bean"
+     declarations if you had a generator tool that used them to create
+     the corresponding Java classes for you.  Otherwise, you would
+     need only the "form-bean" element itself, with the corresponding
+     "name" and "type" attributes.
+-->
+
+
+<struts-config>
+
+
+ 
+  <!-- ========== Form Bean Definitions =================================== -->
+  <form-beans>
+
+    <!-- Logon form bean -->
+    <form-bean      name="logonForm"
+                    type="edu.harvard.med.hip.bec.form.LogonForm"/>
+      <!-- Customer registration form bean -->
+    <form-bean      name="customerRegistrationForm"
+                    type="edu.harvard.med.hip.bec.form.CustomerRegistrationForm"/>
+     <!-- Find registration form bean -->
+    <form-bean      name="findRegistrationForm"
+                    type="edu.harvard.med.hip.bec.form.FindRegistrationForm"/>           
+ <!-- Form used to do the sequencing project -->
+    <form-bean      name="seqGetSpecForm"
+                    type="edu.harvard.med.hip.bec.form.Seq_GetSpecForm"/>
+    <!-- Form used to do the sequencing project -->
+    <form-bean      name="seqSequenceAnalysisRequestForm"
+                    type="edu.harvard.med.hip.bec.form.Seq_SequenceAnalysisRequestForm"/>
+  <!-- Form used to run a process  -->
+    <form-bean      name="seqRunProcessForm"
+                    type="edu.harvard.med.hip.bec.form.RunProcessForm"/>
+ <!-- Customer receive  orders form bean -->
+    <form-bean      name="ReceiveOrdersForm"
+                    type="edu.harvard.med.hip.bec.form.ReceiveOrdersForm"/>
+ </form-beans>
+
+  <!-- ========== Global Forward Definitions ============================== -->
+  <global-forwards>
+    <forward    name="help"         path="/Help.jsp"/>
+    <forward    name="login"        path="/login.jsp"/>
+    <forward    name="logout"       path="/Logout.do"/>
+    <forward    name="home"         path="/overview.jsp"/>
+    <forward    name="error"        path="/ProcessError.do"/>
+   <forward    name="register"     path="/CustomerRegistration.jsp"/>
+    <forward    name="findRegistration" path="/FindRegistration.jsp"/>
+ 
+
+    <forward    name="seqEnterParams" path="/Seq_Parameters.jsp"/>
+    <forward    name="seqSelectProcess" path="/SelectProcess.jsp"/>
+    <forward    name="seqSequenceAnalysis" path="/Seq_FullSequenceAnalysisRequest.jsp"/>
+
+  </global-forwards>
+  
+
+  <!-- ========== Action Mapping Definitions ============================== -->
+  <action-mappings type="org.apache.struts.action.ActionMapping">
+
+    
+    <!-- Process a user logon -->
+    <action    path="/logon"
+               type="edu.harvard.med.hip.bec.action.LogonAction"
+               name="logonForm"
+              scope="request"
+              input="/login.jsp">
+      <forward  name="success"   path="/main.jsp"/>
+      <forward  name="failure"  path="/login.jsp"/>
+    </action>
+
+    <!-- process a user logout -->
+    <action     path="/Logout"
+                type="edu.harvard.med.hip.bec.action.LogoutAction">
+      <forward  name="success"  path="/login.jsp"/>
+   </action>
+
+   
+
+    <action     path="/ProcessError"
+                type="edu.harvard.med.hip.bec.action.ProcessErrorAction">
+       <forward name="displayError" path="/BecError.jsp"/>
+                
+    </action>
+
+
+     <!-- Process a find registration -->
+    <action    path="/FindRegistration"
+               type="edu.harvard.med.hip.bec.action.FindRegistrationAction"
+               name="findRegistrationForm"
+              input="/FindRegistration.jsp">
+      <forward  name="success"   path="/FindRegistrationConfirm.jsp"/>
+      <forward  name="failure"  path="/FindRegistration.jsp"/>
+    </action>
+
+ <!-- Process a customer registration -->
+    <action    path="/CustomerRegistration"
+               type="edu.harvard.med.hip.bec.action.CustomerRegistrationAction"
+               name="customerRegistrationForm"
+              input="/CustomerRegistration.jsp">
+      <forward  name="success"   path="/RegistrationConfirm.jsp"/>
+      <forward  name="failure"  path="/CustomerRegistration.jsp"/>
+    </action>
+  
+    
+ <!-- Process display specs -->
+    <action      path="/Seq_GetSpec"
+                name="seqGetSpecForm"
+                type="edu.harvard.med.hip.bec.action.Seq_GetSpecAction">
+            <forward name="end_reads_spec" path="/Seq_DisplayEndReadsParameters.jsp"/>
+            <forward name="full_seq_spec" path="/Seq_DisplayFullSeqParameters.jsp"/>
+             <forward name="primer3_spec" path="/Seq_DisplayPrimerParameters.jsp"/>
+             <forward name="polymorphism_spec" path="/Seq_DisplayPolymorphismParameters.jsp"/>
+            <forward name="universal_pair" path="/Seq_DisplayUniversalPrimerParameters.jsp"/>
+    </action>
+
+<!-- Process select process to run -->
+    <action      path="/SelectProcess"
+                name="seqGetSpecForm"
+                type="edu.harvard.med.hip.bec.action.SelectProcessAction">
+            <forward name="upload_plates" path="/RunUploadPlates.jsp"/>
+            <forward name="run_process" path="/RunProcess.jsp"/>
+        <forward name="recieve_orders" path="/RecieveOrders.jsp"/>
+
+    </action>
+
+<!-- Process  run a process-->
+    <action      path="/RunProcess"
+                name="seqRunProcessForm"
+                type="edu.harvard.med.hip.bec.action.RunProcessAction">
+            <forward name="sucess" path="/ConfirmProcess.jsp"/>
+            
+    </action>
+
+  <!-- Process the receiving of new  plates -->
+    <action    path="/ReceivePlates"
+               type="edu.harvard.med.hip.flex.action.ReceivePlatesAction"
+               name="ReceiveOrdersForm"
+               scope="request"
+               input="/ReceiveOrders.jsp">
+     <!-- <forward  name="success"   path="/EnterPlateLocation.jsp"/>-->
+    </action>
+
+<!-- Process create specs specs -->
+    <action      path="/Seq_SubmitSpec"
+                name="seqGetSpecForm"
+                type="edu.harvard.med.hip.bec.action.Seq_SubmitSpecAction">
+            <forward name="end_reads_spec" path="/Seq_DisplayEndReadsParameters.jsp"/>
+            <forward name="full_seq_spec" path="/Seq_DisplayFullSeqParameters.jsp"/>
+             <forward name="primer3_spec" path="/Seq_DisplayPrimerParameters.jsp"/>
+             <forward name="polymorphism_spec" path="/Seq_DisplayPolymorphismParameters.jsp"/>
+            <forward name="universal_pair" path="/Seq_DisplayUniversalPrimerParameters.jsp"/>
+        
+    </action>
+
+
+
+
+
+    <!-- The standard administrative actions available with Struts -->
+    <!-- These would be either omitted or protected by security -->
+    <!-- in a real application deployment -->
+    <action    path="/admin/addFormBean"
+               type="org.apache.struts.actions.AddFormBeanAction"/>
+    <action    path="/admin/addForward"
+               type="org.apache.struts.actions.AddForwardAction"/>
+    <action    path="/admin/addMapping"
+               type="org.apache.struts.actions.AddMappingAction"/>
+    <action    path="/admin/reload"
+               type="org.apache.struts.actions.ReloadAction"/>
+    <action    path="/admin/removeFormBean"
+               type="org.apache.struts.actions.RemoveFormBeanAction"/>
+    <action    path="/admin/removeForward"
+               type="org.apache.struts.actions.RemoveForwardAction"/>
+    <action    path="/admin/removeMapping"
+               type="org.apache.struts.actions.RemoveMappingAction"/>
+
+
+  </action-mappings>
+
+</struts-config>
