@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-15 19:20:51 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-18 15:07:27 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -57,7 +57,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-15 19:20:51 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-18 15:07:27 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -140,8 +140,8 @@ public class EnterPlateAction extends ResearcherAction {
         }
         
         // create the form with default values
-        TransformDetailsForm detailForm = new TransformDetailsForm();
-        detailForm.reset(container);
+        TransformDetailsForm detailForm = new TransformDetailsForm(container);
+        
         request.getSession().setAttribute("transformEntryForm",detailForm);
         request.setAttribute(Constants.SAMPLES_KEY ,samples);
         request.setAttribute(Constants.CONTAINER_KEY, container);

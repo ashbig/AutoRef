@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-18 11:42:29 $
+ * $Revision: 1.3 $
+ * $Date: 2001-06-18 15:07:27 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -54,7 +54,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-18 11:42:29 $
+ * @version    $Revision: 1.3 $ $Date: 2001-06-18 15:07:27 $
  */
 
 public class EnterTransformDetailsAction extends ResearcherAction {
@@ -83,17 +83,24 @@ public class EnterTransformDetailsAction extends ResearcherAction {
         ActionForward retForward = null;
         TransformDetailsForm transForm = (TransformDetailsForm) form;
         Vector samples = transForm.getContainer().getSamples();
+        
         Connection conn = null;
+        
+        
+        
         try {
+            // Crete the protocol for the transform plates
+            Protocol transformProtocol = 
+                new Protocol("enter transformation results");
+            
+            
+            
             conn = DatabaseTransaction.getInstance().requestConnection();
             for(int i = 0; transForm != null &&i <transForm.size() ;i++) {
                 Sample curSample = (Sample)samples.get(i);
                 curSample.setStatus(transForm.getStatus(i));
-               
+                curSample.setResult(transForm.getResult(i));
                 curSample.update(conn);
-                
-                System.out.println(i+ ": status: " + transForm.getStatus(i));
-                System.out.println(i+ ": result: " + transForm.getResult(i));
             }
             DatabaseTransaction.commit(conn);
         } catch (FlexDatabaseException fde) {

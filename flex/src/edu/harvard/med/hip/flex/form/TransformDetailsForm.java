@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-18 11:42:29 $
+ * $Revision: 1.3 $
+ * $Date: 2001-06-18 15:07:27 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -55,7 +55,7 @@ import edu.harvard.med.hip.flex.core.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-18 11:42:29 $
+ * @version    $Revision: 1.3 $ $Date: 2001-06-18 15:07:27 $
  */
 
 public class TransformDetailsForm extends ActionForm{
@@ -83,13 +83,14 @@ public class TransformDetailsForm extends ActionForm{
      */
     public TransformDetailsForm(Container container) {
         this.container = container;
+        statusList = new LinkedList();
+        resultList = new LinkedList();
         
         // set values in the form, if the container is not null.
         if(container != null) {
             reset(container);
         }
-        statusList = new LinkedList();
-        resultList = new LinkedList();
+        
     }
     
     

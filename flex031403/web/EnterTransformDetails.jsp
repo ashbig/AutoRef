@@ -1,6 +1,7 @@
 <%@page contentType="text/html"%>
 <%@ page language="java" %>
 <%@ page import="edu.harvard.med.hip.flex.*" %>
+<%@ page import="edu.harvard.med.hip.flex.core.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -39,8 +40,8 @@ java.util.Date date = new java.util.Date();
         <td><bean:write name="curSample" property="position"/></td>
         <td>
             <html:select property='<%="status["+i+"]" %>'>
-                <html:option value="Good">Good</html:option>
-                <html:option value="Bad">Bad</html:option>
+                <html:option value="<%=Sample.GOOD%>">Good</html:option>
+                <html:option value="<%=Sample.BAD%>">Bad</html:option>
             </html:select>
         </td>
         <td>
