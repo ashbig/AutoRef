@@ -29,7 +29,8 @@ import java.sql.*;
 import java.util.*;
 
 
-public class ConstructGenerator {
+public class ConstructGenerator
+{
     private LinkedList seqList;
     private Connection conn = null;
     private LinkedList oligoPatternList;
@@ -42,13 +43,16 @@ public class ConstructGenerator {
      * Constructor
      * Creates new ConstructGenerator
      */
-    public ConstructGenerator(LinkedList seqList, Connection c) throws FlexDatabaseException {
+    public ConstructGenerator(LinkedList seqList, Connection c) throws FlexDatabaseException
+    {
         this.seqList = seqList;
         this.conn = c;
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
         m_protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);
     }
+    
+     
     
     /**
      * Constructor.
@@ -61,7 +65,8 @@ public class ConstructGenerator {
      * @return The ConstructGenerator object.
      */
     public ConstructGenerator(LinkedList seqList, Connection c, Project project,
-    Workflow workflow) throws FlexDatabaseException {
+    Workflow workflow) throws FlexDatabaseException
+    {
         this(seqList,c );
         this.project = project;
         this.workflow = workflow;
@@ -79,7 +84,8 @@ public class ConstructGenerator {
      * @return The ConstructGenerator object.
      */
     public ConstructGenerator(LinkedList seqList, Connection c, Project project,
-    Workflow workflow, Protocol protocol) throws FlexDatabaseException {
+    Workflow workflow, Protocol protocol) throws FlexDatabaseException
+    {
         this(  seqList,  c,  project, workflow);
         m_protocol = protocol;
         this.oligoPatternList = new LinkedList();
@@ -97,8 +103,10 @@ public class ConstructGenerator {
      *
      * @return A linkedlist of 94 OligoPattern objects
      */
-    protected void generateOligoAndConstructs()throws FlexDatabaseException {
-        if(Project.PSEUDOMONAS == project.getId()) {
+    protected void generateOligoAndConstructs()throws FlexDatabaseException
+    {
+        if(Project.PSEUDOMONAS == project.getId())
+        {
             generatePMOligoAndConstructs();
             return;
         }
@@ -123,7 +131,8 @@ public class ConstructGenerator {
         NNPrimerCalculator pc = new NNPrimerCalculator();
         ListIterator iter = seqList.listIterator();
         
-        while (iter.hasNext()) {
+        while (iter.hasNext())
+        {
             seq = (Sequence) iter.next(); //retrieves one sequence from the list
             seqId = seq.getId();
             cdsLength = seq.getCDSLength();
@@ -133,7 +142,8 @@ public class ConstructGenerator {
             //System.out.println("SequenceID: " + seqId + "   " + cdsLength);
             // calculate all three types of oligos for each sequence
             // and insert oligo info into the oligo table
-            try{
+            try
+            {
                 result_5p = pc.calculateFivepOligo(seq);
                 result_5p.setTagSequence_5p(project, workflow);
                 result_5p.insert(conn);
@@ -147,7 +157,8 @@ public class ConstructGenerator {
                 result_3op = pc.calculateThreepOpenOligo(seq);
                 result_3op.setTagSequence_3p_Fusion(project, workflow);
                 result_3op.insert(conn);
-            } catch(FlexDatabaseException sqlex){
+            } catch(FlexDatabaseException sqlex)
+            {
                 throw new FlexDatabaseException(sqlex);
             }
             
@@ -179,8 +190,9 @@ public class ConstructGenerator {
             oligoPatternList.add(pattern);
         } //while
     } //generateOligoAndConstructs
-
-    public void generatePMOligoAndConstructs() throws FlexDatabaseException {
+    
+    public void generatePMOligoAndConstructs() throws FlexDatabaseException
+    {
         Sequence seq = null;
         Oligo result_5p = null;
         Oligo result_3op = null;
@@ -198,7 +210,8 @@ public class ConstructGenerator {
         PMNNPrimerCalculator pc = new PMNNPrimerCalculator();
         ListIterator iter = seqList.listIterator();
         
-        while (iter.hasNext()) {
+        while (iter.hasNext())
+        {
             seq = (Sequence) iter.next(); //retrieves one sequence from the list
             seqId = seq.getId();
             cdsLength = seq.getCDSLength();
@@ -208,7 +221,8 @@ public class ConstructGenerator {
             //System.out.println("SequenceID: " + seqId + "   " + cdsLength);
             // calculate all three types of oligos for each sequence
             // and insert oligo info into the oligo table
-            try{
+            try
+            {
                 result_5p = pc.calculateFivepOligo(seq);
                 result_5p.setTagSequence_5p(project, workflow);
                 result_5p.insert(conn);
@@ -217,7 +231,8 @@ public class ConstructGenerator {
                 result_3op = pc.calculateThreepOpenOligo(seq);
                 result_3op.setTagSequence_3p_Fusion(project, workflow);
                 result_3op.insert(conn);
-            } catch(FlexDatabaseException sqlex){
+            } catch(FlexDatabaseException sqlex)
+            {
                 throw new FlexDatabaseException(sqlex);
             }
             
@@ -244,19 +259,21 @@ public class ConstructGenerator {
             -1, open.getId(), cdsLength);
             oligoPatternList.add(pattern);
         } //while
-    }   
+    }
     
     /**
      * @return The list of oligoPattern objects
      */
-    public LinkedList getOligoPatternList() {
+    public LinkedList getOligoPatternList()
+    {
         return oligoPatternList;
     }
     
     /**
      * @return The list of newly generated constructs
      */
-    public LinkedList getConstructList(){
+    public LinkedList getConstructList()
+    {
         return this.constructList;
     }
     
@@ -264,7 +281,8 @@ public class ConstructGenerator {
      * Insert Process Execution record for Design Construct protocol
      * Insert one process object input record for each input sequence
      */
-    protected void insertProcessInputOutput() throws FlexDatabaseException {
+    protected void insertProcessInputOutput() throws FlexDatabaseException
+    {
         Process process = null;
         
         Researcher r = new Researcher();
@@ -287,7 +305,8 @@ public class ConstructGenerator {
         int seqId = -1;
         
         //System.out.println("Inserting sequence input object...");
-        while (iter.hasNext()) {
+        while (iter.hasNext())
+        {
             seq = (Sequence) iter.next(); //retrieves one sequence from the list
             seqId = seq.getId();
             spo = new SequenceProcessObject(seqId,executionId,ioFlag);
@@ -302,7 +321,8 @@ public class ConstructGenerator {
         ConstructProcessObject cpo = null;
         int constructId = -1;
         //System.out.println("Inserting construct process output object...");
-        while (iter.hasNext()){
+        while (iter.hasNext())
+        {
             construct = (Construct)iter.next();
             constructId = construct.getId();
             cpo = new ConstructProcessObject(constructId,executionId,ioType);
@@ -311,10 +331,17 @@ public class ConstructGenerator {
         
     }
     
-    protected void insertConstructQueue() throws FlexDatabaseException {
-        Protocol protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);
-        Vector nextProtocols = workflow.getNextProtocol(protocol);
-        
+    protected void insertConstructQueue() throws FlexDatabaseException
+    {
+       // Protocol protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);
+        Vector nextProtocols = null;
+        if (  m_protocol.getProcessname() == Protocol.DESIGN_CONSTRUCTS )//design constructs
+            nextProtocols = workflow.getNextProtocol(m_protocol);
+        else if (  m_protocol.getProcessname() == Protocol.MGC_DESIGN_CONSTRUCTS )
+        {
+            nextProtocols = new Vector();
+            nextProtocols.add(new Protocol(Protocol.GENERATE_OLIGO_ORDERS)  );
+        }
         
         ListIterator iter = constructList.listIterator();
         ConstructProcessQueue constructQueue = new ConstructProcessQueue();
@@ -323,12 +350,14 @@ public class ConstructGenerator {
         
         
         Iterator protocolIter = nextProtocols.iterator();
-        while(protocolIter.hasNext()) {
+        while(protocolIter.hasNext())
+        {
             Protocol nextProtocol = (Protocol)protocolIter.next();
             
             //form a linkedlist of construct queue items
             LinkedList constructQueueItemList = new LinkedList();
-            while (iter.hasNext()){
+            while (iter.hasNext())
+            {
                 construct = (Construct)iter.next();
                 queueItem = new QueueItem(construct, nextProtocol, project, workflow);
                 constructQueueItemList.add(queueItem);
@@ -339,11 +368,14 @@ public class ConstructGenerator {
         }
     }
     
-    private int setPairId() throws FlexDatabaseException {
-        try{
+    private int setPairId() throws FlexDatabaseException
+    {
+        try
+        {
             int    pairId = FlexIDGenerator.getID("constructpairid");
             return pairId;
-        }catch(FlexDatabaseException sqlex){
+        }catch(FlexDatabaseException sqlex)
+        {
             throw new FlexDatabaseException(sqlex);
         }
     }
