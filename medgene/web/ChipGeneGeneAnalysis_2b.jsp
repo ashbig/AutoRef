@@ -97,7 +97,7 @@
                if (i != 1) { %>
                The maxium input size is <b>2000</b>. If there are more than 2000 genes, only the first 2000 will be processed.<br>
             <% } %>
-            You can paste your gene list here. &nbsp;&nbsp;  [<a href="ChipGeneInputSample2.jsp" target="_blank">sample input</a>]<BR>
+            You can paste your gene list here. &nbsp;&nbsp;  [<a href="ChipGeneInputSample3.jsp" target="_blank">sample input</a>]<BR>
             We currently support the following delimiters: new line(\n), tab(\t).<BR><BR>
             <html:textarea property="chipGeneInput" rows="15" cols="50"/><BR>
             <br><b>OR</b><br><br>
@@ -110,7 +110,7 @@
         <tr>
             <td>Please select the sequence file:</td>
             <td><html:file property="chipGeneInputFile" /></td>
-            <td>[<a href="ChipGeneInputSample2.jsp" target="_blank">sample file</a>]</td>
+            <td>[<a href="ChipGeneInputSample3.jsp" target="_blank">sample file</a>]</td>
         </tr>
     </table>
 
