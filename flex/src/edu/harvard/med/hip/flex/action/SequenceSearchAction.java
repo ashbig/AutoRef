@@ -8,9 +8,7 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -61,33 +59,33 @@ public class SequenceSearchAction extends FlexAction {
         String searchString = ((CustomerRequestForm)form).getSearchString(); 
         String species = ((CustomerRequestForm)form).getSpecies();
         if(!"all".equals(species)) {
-            searchString = searchString + "+" + species;
+            searchString = searchString + "+AND+" + species;
         }
-        
-        //Hashtable searchResult = ((CustomerRequestForm)form).getSearchResult();       
-        Hashtable searchResult = new Hashtable();
         
         try {
             GenbankGeneFinder finder = new GenbankGeneFinder();
-            Vector sequences = finder.search(searchString);
-            
-            if(sequences.size()==0) {
-                return (mapping.findForward("emptysearchresult"));
-            }
-            
-            Enumeration e = sequences.elements();
-            while(e.hasMoreElements()) {
-                GenbankSequence sequence = (GenbankSequence)e.nextElement();
+            Vector returnedSequences = finder.search(searchString);
+            Vector sequences = new Vector();
+            Enumeration enum = returnedSequences.elements();
+            while(enum.hasMoreElements()) {
+                GenbankSequence sequence = (GenbankSequence)enum.nextElement();
                 String accession = sequence.getAccession();
                 String gi = sequence.getGi();
                 String desc = sequence.getDescription();
                 FlexSequence newSequence = sequence.toFlexSequence();
-                searchResult.put(gi, newSequence);
-            }        
+                sequences.addElement(newSequence);
+            }
             
+            //Sort the sequences based on the flex status.
+            Collections.sort(sequences, new FlexSeqStatusComparator());
+            
+            if(sequences.size()==0) {
+                return (mapping.findForward("emptysearchresult"));
+            }
+                               
             HttpSession session = request.getSession();
-            session.setAttribute("searchResult", searchResult);
-            //((CustomerRequestForm)form).setSearchResult(searchResult);
+            session.setAttribute("searchResult", sequences);
+            
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);

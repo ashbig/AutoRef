@@ -30,6 +30,7 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.database.*;
+import java.util.Collections;
 
 /**
  *
@@ -58,13 +59,19 @@ public class SequenceSelectionAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        Hashtable searchResult = (Hashtable)request.getSession().getAttribute("searchResult");
+        Vector seqs = (Vector)request.getSession().getAttribute("searchResult");
+        Hashtable searchResult = new Hashtable();
+        for(int i=0; i<seqs.size(); i++) {
+            FlexSequence seq = (FlexSequence)seqs.elementAt(i);
+            searchResult.put(seq.getGi(), seq);
+        }
+        
         String [] selections = ((CustomerRequestForm)form).getCheckOrder();
         if(selections == null) {         
             return (mapping.findForward("empty"));
         }
              
-        Hashtable goodSequences = new Hashtable();
+        Vector goodSequences = new Vector();
         Hashtable badSequences = new Hashtable();
         Hashtable sameSequence = new Hashtable();
         Hashtable homologs = new Hashtable();
@@ -104,20 +111,25 @@ public class SequenceSelectionAction extends FlexAction {
                                     sequences.put(seq.getGi(), seq);
                                 }
                             } else {
-                                goodSequences.put(gi, sequence);
+                                goodSequences.addElement(sequence);
                                 sequences.put(gi, sequence);
                             }
                         }
                     }
                 } else {
-                    goodSequences.put(gi, sequence);
-                    sequences.put(gi, sequence);
+                    if("QUESTIONABLE".equals(sequence.getQuality())) {
+                        badSequences.put(gi, sequence);
+                    } else {
+                        goodSequences.addElement(sequence);
+                        sequences.put(gi, sequence);
+                    }
                 }
             }
             
             int count = 0;
             
             if(goodSequences.size() > 0) {
+                Collections.sort(goodSequences, new FlexSeqStatusComparator());
                 request.setAttribute("goodSequences", goodSequences);
                 count++;
             }

@@ -24,18 +24,18 @@
 </tr>
 <logic:iterate id="gs" name="goodSequences">
 <tr>
-<logic:equal name="gs" property="value.species" value="Homo sapiens">
-<td><input name="selection" type="checkbox" value="<bean:write name="gs" property="key"/>"></td>
+<logic:equal name="gs" property="species" value="Homo sapiens">
+<td><input name="selection" type="checkbox" value="<bean:write name="gs" property="gi"/>"></td>
 </logic:equal>
-<logic:notEqual name="gs" property="value.species" value="Homo sapiens">
+<logic:notEqual name="gs" property="species" value="Homo sapiens">
 <td></td>
 </logic:notEqual>
-<td><a target=_new href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="gs" property="key"/>&dopt=GenBank"><bean:write name="gs" property="value.accession"/></a></td>
-<td><bean:write name="gs" property="value.description"/></td>
-<td><bean:write name="gs" property="value.gi"/></td>
-<td><bean:write name="gs" property="value.species"/></td>
-<td><bean:write name="gs" property="value.flexstatus"/></td>
-<td><bean:write name="gs" property="value.quality"/></td>
+<td><a target=_new href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="gs" property="gi"/>&dopt=GenBank"><bean:write name="gs" property="accession"/></a></td>
+<td><bean:write name="gs" property="description"/></td>
+<td><bean:write name="gs" property="gi"/></td>
+<td><bean:write name="gs" property="species"/></td>
+<td><bean:write name="gs" property="flexstatus"/></td>
+<td><bean:write name="gs" property="quality"/></td>
 </tr>
 </logic:iterate>
 </table>
@@ -80,10 +80,6 @@
 <b>Evalue</b>: <bean:write name="homo" property="value.blastResults.evalue"/><br>
 <b>Identity</b>: <bean:write name="homo" property="value.blastResults.identity"/><br>
 <b>Query CDS length</b>: <bean:write name="homo" property="value.blastResults.cdslength"/>      
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp

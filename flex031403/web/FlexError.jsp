@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%@page isErrorPage="true"%>
 
@@ -10,8 +11,8 @@
 <body>
     <h3>An error has occured and been logged</h3>
     <html:errors/>
-    <logic:exists name="exception">
+    <logic:present name="exception">
         <bean:write name="exception"/>
-    </logic:exists>
+    </logic:present>
 </body>
 </html>

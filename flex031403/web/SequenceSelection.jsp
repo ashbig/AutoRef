@@ -18,14 +18,14 @@
 <logic:iterate id="sr" name="searchResult">
 <tr>
 <td>
-<input name="checkOrder" type="checkbox" value="<bean:write name="sr" property="value.gi"/>"</td>
-<td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="sr" property="value.gi"/>&dopt=GenBank"><bean:write name="sr" property="value.accession"/><a> | <b>Flex Status: <font color="red"><bean:write name="sr" property="value.flexstatus"/></font></b>
+<input name="checkOrder" type="checkbox" value="<bean:write name="sr" property="gi"/>"</td>
+<td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="sr" property="gi"/>&dopt=GenBank"><bean:write name="sr" property="accession"/><a> | <b>Flex Status: <font color="red"><bean:write name="sr" property="flexstatus"/></font></b>
 </td>
 <tr>
-<td></td><td><bean:write name="sr" property="value.description"/></td>
+<td></td><td><bean:write name="sr" property="description"/></td>
 </tr>
 <tr>
-<td></td><td><bean:write name="sr" property="value.accession"/>| GI: <bean:write name="sr" property="value.gi"/></td>
+<td></td><td><bean:write name="sr" property="accession"/>| GI: <bean:write name="sr" property="gi"/></td>
 </tr>
 </logic:iterate> 
 </table>

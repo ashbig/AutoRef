@@ -176,14 +176,14 @@ public class User {
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Vector requests = new Vector();
         String sql = "select requestid, username, "+
-        "to_char(requestdate, 'fmYYYY-MM-DD') as requestdate\n"+
+        "to_char(requestdate, 'fmYYYY-MM-DD') as rdate\n"+
         "from request where username='"+name+"' order by requestdate desc";
         RowSet requestRs = t.executeQuery(sql);
         try {
             while(requestRs.next()) {
                 int id = requestRs.getInt("REQUESTID");
                 String username = requestRs.getString("USERNAME");
-                String requestdate = requestRs.getString("REQUESTDATE");
+                String requestdate = requestRs.getString("RDATE");
                 
                 sql = "select sequenceid from requestsequence\n"+
                 "where requestid = "+id;
