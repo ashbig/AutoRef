@@ -25,8 +25,8 @@ import java.io.*;
 public class OligoPlater
 {
     
-    //protected static final String filePath = "/tmp/";
-    protected static final String filePath = "G:\\";
+    protected static final String filePath = "/tmp/";
+   // protected static final String filePath = "G:\\";
     //protected static final String filePath = "H:\\Dev\\OligoOrder\\";
     
     protected static final int positiveControlPosition = 1;
