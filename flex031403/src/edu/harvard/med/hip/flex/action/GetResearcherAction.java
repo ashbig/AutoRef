@@ -11,7 +11,7 @@ import java.util.MissingResourceException;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.sql.*;
-import java.io.IOException;
+import java.io.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,14 +32,18 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.GetResearcherBarcodeForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
-import edu.harvard.med.hip.flex.util.PrintLabel;
+import edu.harvard.med.hip.flex.util.*;
 
 /**
  *
  * @author  dzuo
  * @version
  */
-public class GetResearcherAction extends ResearcherAction{
+public class GetResearcherAction extends ResearcherAction{        
+    public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
+    public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
+//    public final static String BARCODEFILE = "/tmp/barcode.txt";
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -64,6 +68,7 @@ public class GetResearcherAction extends ResearcherAction{
         String barcode = ((GetResearcherBarcodeForm)form).getResearcherBarcode();
         int workflowid = ((GetResearcherBarcodeForm)form).getWorkflowid();
         int projectid = ((GetResearcherBarcodeForm)form).getProjectid();
+        int writeBarcode = ((GetResearcherBarcodeForm)form).getWriteBarcode();
         
         Researcher researcher = null;
         
@@ -121,15 +126,34 @@ public class GetResearcherAction extends ResearcherAction{
             null, sampleLineageSet, conn);
             manager.processQueue(items, newContainers, protocol, conn);
             
-            // Commit the changes to the database.
-            DatabaseTransaction.commit(conn);
-            
             // Print the barcode
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
                 String status = PrintLabel.execute(newContainer.getLabel());
                 //System.out.println("Printing barcode: "+status);
             }
+            
+            //Print the barcode to the file.
+            if(writeBarcode == 1) {
+                PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(BARCODEFILE)));
+
+                for(int i=0; i<oldContainers.size(); i++) {
+                    Container oldContainer = (Container)oldContainers.elementAt(i);
+                    pr.println(oldContainer.getLabel());
+                }
+                
+                for(int i=0; i<newContainers.size(); i++) {
+                    Container newContainer = (Container)newContainers.elementAt(i);
+                    pr.println(newContainer.getLabel());
+                }   
+                
+                pr.close();
+                request.setAttribute("writeBarcode", new Integer(1));
+            }
+            
+            // Commit the changes to the database.
+            DatabaseTransaction.commit(conn);
+            //DatabaseTransaction.rollback(conn);
             
             // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");

@@ -24,7 +24,27 @@ import edu.harvard.med.hip.flex.core.Location;
  */
 public class GetResearcherBarcodeForm extends ProjectWorkflowForm {
     private String researcherBarcode = null;
-
+    
+    private int writeBarcode = 0;
+    
+    /**
+     * Set the flag to the given value.
+     *
+     * @param writeBarcode The flag indicating whether to write the barcode to the file.
+     */
+    public void setWriteBarcode(int writeBarcode) {
+        this.writeBarcode = writeBarcode;
+    }
+    
+    /**
+     * Return the flag.
+     *
+     * @return The flag whether to write the barcode to the file.
+     */
+    public int getWriteBarcode() {
+        return writeBarcode;
+    }
+    
     /**
      * Set the researcher barcode to the given value.
      *
@@ -42,7 +62,7 @@ public class GetResearcherBarcodeForm extends ProjectWorkflowForm {
     public String getResearcherBarcode() {
         return researcherBarcode;
     }
-    
+      
     /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any

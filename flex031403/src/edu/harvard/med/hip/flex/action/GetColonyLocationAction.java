@@ -73,5 +73,6 @@ public class GetColonyLocationAction extends GetLocationAction {
         int projectid = ((PickColonyForm)form).getProjectid();
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
+        request.setAttribute("writeBarcode", new Integer(1));
     }     
 }
