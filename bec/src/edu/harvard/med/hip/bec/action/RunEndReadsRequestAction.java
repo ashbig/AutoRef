@@ -125,10 +125,17 @@ public class RunEndReadsRequestAction extends ResearcherAction
                 
                 //get master plates from db
                 Container container = null;Sample smp = null;
+                    int[] result_types = {Result.RESULT_TYPE_ENDREAD_FORWARD,Result.RESULT_TYPE_ENDREAD_REVERSE};
                 for (int count =0; count < i_master_container_ids.size(); count++)
                 {
                     container = new Container(( (Integer)i_master_container_ids.get(count)).intValue());
                     requested_plates += container.getLabel();
+                     //check wether this plate has end read results already
+                    if (container.checkForResultTypes(result_types))
+                    {
+                        i_error_messages.add("Plate "+container.getLabel()+" has enr read result - it wont be processed");
+                        continue;
+                    }
                     container.restoreSampleIsolate();
                     master_plates.add(container);
                 }
@@ -151,11 +158,20 @@ public class RunEndReadsRequestAction extends ResearcherAction
                     catch(Exception e)
                     {}
                 }
-                //send email to user
+                 //send email to user
+                if (file_list != null && file_list.size()>0)
+                {
+                    Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                    "elena_taycher@hms.harvard.edu", "Request for end reads sequencing", "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates, file_list);
+                }
+               //send errors
+                String errors = "";
+                for (int ind = 0; ind < i_error_messages.size(); ind++)
+                {
+                    errors += "\n"+(String) i_error_messages.get(ind);
+                }
                 Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", "Request for end reads sequencing", "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates, file_list);
-                
-               
+                    "elena_taycher@hms.harvard.edu", "Request for end reads sequencing: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates + errors);
                 // commit the transaction
                 conn.commit();
               
@@ -209,15 +225,15 @@ public class RunEndReadsRequestAction extends ResearcherAction
                                                 BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
                         result.insert(conn, process_id );
                         cloneid = istrk.getFlexInfo().getFlexCloneId();
+                         //change isolate status
+                        if ( !isStatusUpdated) 
+                        {
 
+                            IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
+                             isStatusUpdated = true;
+                        }
                     }
-                       //change isolate status
-                    if ( !isStatusUpdated) 
-                    {
-                       
-                        IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
-                         isStatusUpdated = true;
-                    }
+                      
                     naming_file_entries_forward.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_FORWARD)  );
                     rearray_file_entries_forward.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-F", smp.getPosition()));
                 }
@@ -232,18 +248,18 @@ public class RunEndReadsRequestAction extends ResearcherAction
                                             istrk.getSampleId(),     null,
                                             Result.RESULT_TYPE_ENDREAD_REVERSE,     
                                             BecIDGenerator.BEC_OBJECT_ID_NOTSET
-                                            );
-                        result.insert(conn, process_id);
-                        
+                                            );      
+                        result.insert(conn, process_id);         
+                         //change isolate status
+                         if ( !isStatusUpdated) 
+                        {
+                             IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
+                             isStatusUpdated = true;
+                         }
                     }
                     naming_file_entries_reverse.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_REVERSE )  );
                     rearray_file_entries_reverse.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-R", smp.getPosition()));
-                    //change isolate status
-                     if ( !isStatusUpdated) 
-                    {
-                         IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
-                         isStatusUpdated = true;
-                     }
+                   
                 }
            }
                     
@@ -270,7 +286,7 @@ public class RunEndReadsRequestAction extends ResearcherAction
             NamingFileEntry entry =new  NamingFileEntry(smp.getIsolateTrackingEngine().getFlexInfo().getFlexCloneId()
                         , orientation,
                         smp.getIsolateTrackingEngine().getFlexInfo().getFlexPlateId(),
-                        smp.getPosition(), 
+                        Algorithms.convertWellFromInttoA8_12( smp.getPosition()), 
                         smp.getIsolateTrackingEngine().getFlexInfo().getFlexSequenceId(),
                         0);
             return entry;
