@@ -180,14 +180,14 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         {
             if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
             {
-                IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH, clone.getIsolateTrackingId(),conn);
+                IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH, clone.getIsolateTrackingId(),conn);
                 clonesequence.updateCloneSequenceStatus(clonesequence.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH,conn);
                 // update rank??????
             }
             else
             {
                 //update isolate status for sequences submitted as text
-                if ( clone.getIsolateStatus() == IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_SEQUENCE_ANALYSIS)
+                if ( clone.getIsolateStatus() == IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE)
                 {
                     IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED, clone.getIsolateTrackingId(),conn);
                 }

@@ -167,7 +167,8 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
                 {
                       cell_data[row][col] =" <td class='empty' style="+ borders[border_index]+" ><div align=center>"+sample.getPosition()+"</div></td>";
                 }
-                else if ( sample.getIsolateTrackingEngine().getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH)
+                else if ( sample.getIsolateTrackingEngine().getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH ||
+                            sample.getIsolateTrackingEngine().getStatus() == IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH)
                     {
                         cell_data[row][col] =" <td class='nomatch' style="+ borders[border_index]+" >"+ anchor + "</td>";
                     }

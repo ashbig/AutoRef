@@ -52,15 +52,24 @@ public class IsolateTrackingEngine
     public static final int            PROCESS_STATUS_ER_NO_LONG_READS = 21;
     public static final int            PROCESS_STATUS_ER_ISOLATERANKING_RESULTS_CONFIRMED = 5;
     
+    
+    //internal reads
     public static final int            PROCESS_STATUS_READY_FOR_ASSEMBLY = 6;
     public static final int            PROCESS_STATUS_READY_FOR_INTERNAL_READS = 7;
     public static final int            PROCESS_STATUS_OLIGODESIGNER_RUN = 8;
     public static final int            PROCESS_STATUS_OLIGODESIGNER_CONFIRMED = 9;
     public static final int            PROCESS_STATUS_INTERNAL_READS_FINISHED = 10;
    
+    //sequence submitted from outside
+     public static final int            PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE = 11;
+    //sequence analysis
     public static final int            PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED = 14;
     public static final int            PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED = 15;
+    public static final int            PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH = 12;
    
+    
+    
+    //finished ready go to flex
     public static final int            PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED = 41;
    
     public static final int            ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED = -3;
@@ -215,7 +224,8 @@ public class IsolateTrackingEngine
 
             case PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED : return "Discrepancy finder finished";
             case PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED : return "Polymorphism finder finished";
-
+            case  PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE :return "Sequence submitted from outside facility";
+            case PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH : return "Sequence no match";
             case PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED : return "Sequencing process finished";
             default  : return "Not defined";
     

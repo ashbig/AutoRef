@@ -164,7 +164,7 @@ public class SequenceDataUploadRunner implements Runnable
                          BaseSequence.CLONE_SEQUENCE_TYPE_FINAL, contig, process_id, conn);
             
             //update isolatetracking 
-                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED,
+                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE,
                                                        sequence_definition.getIsolateTrackingId(), 
                                                        conn );
                  IsolateTrackingEngine.updateAssemblyStatus( 
