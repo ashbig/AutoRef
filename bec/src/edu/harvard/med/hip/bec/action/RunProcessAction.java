@@ -518,9 +518,9 @@ public class RunProcessAction extends ResearcherAction
       if ( request.getParameter("isTryMode") != null )  
           ((PrimerDesignerRunner)runner).setIsTryMode( true );
                              // System.out.println(Integer.parseInt(request.getParameter("typeSequenceCoverage")) );
-      ((PrimerDesignerRunner)runner).setTypeOfSequenceCoverage( Integer.parseInt(request.getParameter("typeSequenceCoverage"))  );
-     ((PrimerDesignerRunner)runner).setIsLQRCoverageType( Integer.parseInt(request.getParameter("typeLQRCoverage")) );
-     ((PrimerDesignerRunner)runner).setMinDistanceBetweenStretchesToBeCombined( Integer.parseInt(request.getParameter("minDistanceBetweenStretchesToBeCombined")) ); 
+      ((PrimerDesignerRunner)runner).setTypeOfSequenceCoverage( Integer.parseInt(request.getParameter(PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE))  );
+     ((PrimerDesignerRunner)runner).setIsLQRCoverageType( Integer.parseInt(request.getParameter(PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_LQR_COVERAGE_TYPE)) );
+     ((PrimerDesignerRunner)runner).setMinDistanceBetweenStretchesToBeCombined( Integer.parseInt(request.getParameter(PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_MIN_DISTANCE_BETWEEN_STRETCHES)) ); 
                               break;
                          }
                         case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
@@ -576,14 +576,16 @@ public class RunProcessAction extends ResearcherAction
                               runner = new GapMapperRunner();
                               int spec_id = Integer.parseInt( request.getParameter("SLIDING_WINDOW_SPEC"));
                               ((GapMapperRunner)runner).setSpecId(spec_id);
-                              if ( request.getParameter("isTryMode") != null )
-                                ((GapMapperRunner)runner).setIsTryMode( true );
+                              if ( request.getParameter("isTryMode") != null )  ((GapMapperRunner)runner).setIsTryMode( true );
+                              
                               ((GapMapperRunner)runner).setProcessType( forwardName ) ;
-                              ((GapMapperRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
-                              ((GapMapperRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
-                                ((GapMapperRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
-                               ((GapMapperRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
-   
+                              if ( forwardName == Constants.PROCESS_FIND_GAPS)
+                              {
+                                  ((GapMapperRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
+                                  ((GapMapperRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
+                                    ((GapMapperRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
+                                   ((GapMapperRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
+                              }
                               
                               if ( forwardName == Constants.PROCESS_FIND_GAPS)
                               {
