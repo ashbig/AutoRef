@@ -82,7 +82,8 @@ public class Rearrayer
         findMgcContainersFromDB(sequence_ids, sequences);
           
         //check for culture block availability
-        m_messages = checkForCultureBlocks();
+        //m_messages = checkForCultureBlocks();
+        m_messages = checkForDNA();
             //sort sequences by marker/ number of sequences by plate
         sortSequencesByContainerDescription();
         return  getArrangedPlates();
@@ -113,7 +114,8 @@ public class Rearrayer
                                                 mgc_container.getMarker(),
                                                 mgc_container.getId(),
                                                 mgc_container.getGlycerolContainerid(),
-                                                mgc_container.getCultureContainerid()
+                                                mgc_container.getCultureContainerid(),
+                                                mgc_container.getDnaContainerid()
                                                 );
             //check if any other sequence in request come from the same container
             for (int count = 0; count < mgc_container.getSamples().size(); count++)
@@ -177,7 +179,40 @@ public class Rearrayer
      }
     
 
-   
+    /* 
+      Function check availability of DNA plates requered to process request 
+      print message for each plate that should be on queue but missing
+    */
+     private ArrayList  checkForDNA() throws Exception
+     {
+       int cont_id = -1;
+       ContainerDescription cont_desc = null;
+       ArrayList messages = new ArrayList();
+       Container dnaContainer = null;
+       boolean isAvailable = false;
+       
+       for (int container_count = 0; container_count < m_container_descriptions.size(); container_count++)
+       {
+           cont_desc = (ContainerDescription)m_container_descriptions.get(container_count);
+           //cont_id = cont_desc.getCultureId() == -1 ? cont_desc.getId(): cont_desc.getCultureId() ;
+           cont_id = cont_desc.getDnaId() ;
+           //fresh created MGC container will have -1 culture/gly id if no culture have been created
+           dnaContainer = null;
+           if (cont_id != -1) dnaContainer = new Container(cont_id);
+          
+         //  culture_container =  Container.findNextContainerFromPrevious(cont_id, Protocol.CREATE_CULTURE_FROM_MGC);
+           if (  dnaContainer != null && dnaContainer.getLocation().getId() != Location.CODE_DESTROYED)
+           {
+               cont_desc.setStatus(true);
+           }
+           else
+           {
+               cont_desc.setStatus(false);
+               messages.add("DNA plate from container " + cont_desc.getId() +" not available.\n");
+           }
+       }
+       return messages;
+     }   
     
     /*function sort sequence descriptions by 
             MGC container marker / 

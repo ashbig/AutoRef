@@ -83,7 +83,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
             if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                 newBarcode = projectCode+DAUGHTER_OLIGO_PLATE+container.getLabel().substring(2);
             } else if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname()) ||
-                Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname())) {
+                Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname()) ||
+                Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(protocol.getProcessname())) {
                 newBarcode = projectCode+protocol.getProcesscode()+container.getLabel().substring(3);
             } else {
                 newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));

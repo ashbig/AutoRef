@@ -39,9 +39,9 @@ public class MgcRequestImporter
     public static final String DEFAULT = "NA";
 
     public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
-    //public static final String BLASTABLE_DATABASE_NAME = "E:\\flexDev\\MGC\\genes";    
-  // public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";
- 
+    //public static final String BLASTABLE_DATABASE_NAME = "E:\\tmp\\MGC\\genes";    
+    //public static final String BLASTABLE_DATABASE_NAME = "e:\\Users\\HIP\\HTaycher\\MGC\\genes";
+
     private Project             m_Project = null;
     private Workflow            m_workflow = null;
     private String              m_UserName = null;
@@ -131,7 +131,9 @@ public class MgcRequestImporter
                 "Import MGC request report",ms);
 
             }catch(Exception e)
-            {}
+            {
+                System.out.println(e);
+            }
         }
         //somthing went wrong notify user and myself
         if (! prev_step)
@@ -171,29 +173,39 @@ public class MgcRequestImporter
             }
         } catch (Exception e)
         {
+            System.out.println(e);
             return false;
         }    
 //put mgc containers on queue
-        Protocol protocol = null;
+        /**
+         * cultures are created after import the master plate, so will not be put on queue here.
+         * - dzuo 7-28-02
+         **/
+        //Protocol protocol = null;
         Protocol protocolSeq = null;
+        System.out.println("1");
         try{
-            protocol = new Protocol(  Protocol.CREATE_CULTURE_FROM_MGC);
+            System.out.println("2");
+            //protocol = new Protocol(  Protocol.CREATE_CULTURE_FROM_MGC);
             protocolSeq = new Protocol(  Protocol.MGC_DESIGN_CONSTRUCTS);
         }catch(FlexDatabaseException ex)
         {
             m_messages.add("Can not get protocol for CREATE_CULTURE_FROM_MGC");
+            System.out.println("ex");
             return false;
         }
        // Protocol nextProtocol = workflow.getNextProtocol(protocol).get(0);
 
         QueueItem queueItem = null;
         LinkedList queueItems = new LinkedList();
+        
+        /**
         ContainerProcessQueue containerQueue = new ContainerProcessQueue();
         
         Project mgcProject = null;
         Workflow mgcPlateHandleWorkflow = null;
         try {
-            mgcProject = new Project(Project.MGC_PROJECT);
+           mgcProject = new Project(Project.MGC_PROJECT);
             mgcPlateHandleWorkflow = new Workflow(Workflow.MGC_PLATE_HANDLE_WORKFLOW);
         } catch (Exception e) {}
         
@@ -218,19 +230,21 @@ public class MgcRequestImporter
             return false;
         }
         queueItems.clear();
-        
+        */
         
         //put sequences for oligo design on queue
-        
+        System.out.println("3");
         SequenceProcessQueue cloneQueue = new SequenceProcessQueue();
-        
+        System.out.println("before put on queue");
         for (int clone_count = 0; clone_count < m_Request.getSequences().size(); clone_count++)
         {
             queueItem = new QueueItem((FlexSequence) m_Request.getSequences().get(clone_count),protocolSeq, m_Project, m_workflow);
             queueItems.add(queueItem);
         }
+        System.out.println("after put on queue");
          try{
              cloneQueue.addQueueItems(queueItems, conn);
+             System.out.println("put on queue finished");
         }
         catch(Exception e)
         {
@@ -531,7 +545,8 @@ public class MgcRequestImporter
         ArrayList mgc_containers = null;
         if ( flex_seq == null || flex_seq.size() == 0) return mgc_containers;
         mgc_containers = findMgcContainersFromDB(flex_seq);
-        return checkForGlycerolStock(mgc_containers);
+        //return checkForGlycerolStock(mgc_containers);
+        return mgc_containers;
     }
       /*function finds all containers that contain samples with these sequences.
     @param vector of FlexSequences

@@ -41,8 +41,8 @@ import edu.harvard.med.hip.flex.util.*;
  */
 public class GetResearcherAction extends ResearcherAction{
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
-    //public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
-    public final static String BARCODEFILE = "/tmp/barcode.txt";
+    public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
+    //public final static String BARCODEFILE = "/tmp/barcode.txt";
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -111,7 +111,7 @@ public class GetResearcherAction extends ResearcherAction{
                 Container newContainer = (Container)newContainers.elementAt(i);
                 newContainer.insert(conn);
             }
-            
+
             if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname())) {
                 Container c = (Container)oldContainers.elementAt(0);                  
                 MgcContainer mgcContainer = MgcContainer.findMGCContainerWithThread(c.getLabel().substring(3));
@@ -125,13 +125,15 @@ public class GetResearcherAction extends ResearcherAction{
                     return (new ActionForward(mapping.getInput()));
                 }        
                 
-                mgcContainer.updateCultureAndGlycerolContainer(((Container)newContainers.elementAt(0)).getId(), ((Container)newContainers.elementAt(1)).getId(), conn);
+                mgcContainer.updateCultureAndGlycerolAndDnaContainer(((Container)newContainers.elementAt(0)).getId(), ((Container)newContainers.elementAt(1)).getId(), ((Container)newContainers.elementAt(2)).getId(), conn);
 
+                /**
                 if("MGS".equals(c.getLabel().substring(0, 3))) {  
                     ((Container)oldContainers.elementAt(0)).setLocation(new Location(Location.DESTROYED));
                 }
-            }
-            
+                 */
+            }                
+                
             // update the location of the old container.
             for(int i=0; i<oldContainers.size(); i++) {
                 Container oldContainer = (Container)oldContainers.elementAt(i);
@@ -148,14 +150,23 @@ public class GetResearcherAction extends ResearcherAction{
                 in.addElement((Container)newContainers.elementAt(0));
                 out.addElement((Container)newContainers.elementAt(1));
                 
+                // insert process record for creating culture from MGC
                 manager.createProcessRecord(executionStatus, protocol, researcher,
                 subprotocol, oldContainers, in, null, sampleLineageSet, conn);
                 
+                // insert process record for creating glycerol from culture
                 Protocol p = new Protocol(Protocol.CREATE_GLYCEROL_FROM_CULTURE);
-                Vector sls = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls");
-                
+                Vector sls = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls");               
                 manager.createProcessRecord(executionStatus, p, researcher,
                 subprotocol, in, out, null, sls, conn);
+                
+                // insert process record for creating DNA from culture
+                out.clear();
+                out.addElement((Container)newContainers.elementAt(2));
+                p = new Protocol(Protocol.CREATE_DNA_FROM_MGC_CULTURE);
+                Vector sls1 = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls1");               
+                manager.createProcessRecord(executionStatus, p, researcher,
+                subprotocol, in, out, null, sls1, conn);
                 
                 manager.processQueue(items, in, protocol, conn);
             } else {
@@ -204,7 +215,8 @@ public class GetResearcherAction extends ResearcherAction{
             request.getSession().removeAttribute("EnterSourcePlateAction.sampleLineageSet");
             request.getSession().removeAttribute("EnterSourcePlateAction.subprotocol");
             request.getSession().removeAttribute("EnterSourcePlateAction.sls");
-
+            request.getSession().removeAttribute("EnterSourcePlateAction.sls1");
+            
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

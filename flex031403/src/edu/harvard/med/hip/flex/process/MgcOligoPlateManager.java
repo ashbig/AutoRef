@@ -25,8 +25,10 @@ import java.io.*;
 
 public class MgcOligoPlateManager extends OligoPlateManager
 {
+    protected static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     protected static final String filePath = "/tmp/";
     protected static final String DELIM = "\t";
+    
     private   String                        m_UserName = null;
     private   LinkedList                    m_notDuplicatedSequences = null;
     //used for allowing user set container location & print label
@@ -160,15 +162,15 @@ public class MgcOligoPlateManager extends OligoPlateManager
             
             fileList.add( robot_file );
             //put on queue plates for creating DNA plate & Glycerol stock
-            putPlateOnQueue(rearrayed_cont);
+            //putPlateOnQueue(rearrayed_cont);
             //DatabaseTransaction.commit(conn);
             //delete culture blocks that have been used for this request
-            
+           /** 
             for (int culture_count = 0; culture_count < plate.getContainers().size() ; culture_count++)
             {
                 ContainerDescription  cont =( ContainerDescription)plate.getContainers().get(culture_count);
                 if ( cont.getCultureId() != -1)    Container.updateLocation(Location.CODE_DESTROYED, cont.getCultureId(), conn) ;
-            }
+            }*/
             DatabaseTransaction.commit(conn);
         }
     }
@@ -184,7 +186,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
     {
         
         Location location = new Location(Location.FREEZER);
-        Container cont = new Container(  m_plateType,  location, label, threadId );
+        Container cont = new Container(  REARRAYEDPLATETYPE,  location, label, threadId );
         LinkedList orgContainers = new LinkedList();
         int orgContainer_id = -1;
         //add positive control samples
@@ -270,7 +272,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
         for (int count_seq = 0; count_seq < plate.size(); count_seq++)
         {
             SequenceDescription sd = (SequenceDescription) plate.get(count_seq);
-            temp = sd.getImageId()+DELIM+ ((ContainerDescription)sd.getContainerDescription()).getCultureLabel()+DELIM+
+            temp = sd.getImageId()+DELIM+ ((ContainerDescription)sd.getContainerDescription()).getDnaLabel()+DELIM+
             sd.getPosition() +DELIM+  label+ DELIM+  (count_seq + 2) +"\n";
             
             fr.write(temp);

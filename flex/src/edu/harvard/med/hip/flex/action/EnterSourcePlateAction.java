@@ -122,11 +122,22 @@ public class EnterSourcePlateAction extends ResearcherAction {
             SubProtocol subprotocol = getSubProtocol(form);
             
             Vector sls = null;
+            Vector sls1 = null;
             if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname())) {
+                Vector cultures = new Vector();
+                cultures.addAll(newContainers);
+                
+                //make the glycerol plate from culture plate
                 Protocol next = new Protocol(Protocol.CREATE_GLYCEROL_FROM_CULTURE);
                 ContainerMapper cMapper = StaticContainerMapperFactory.makeContainerMapper(next.getProcessname());
-                newContainers.addAll(cMapper.doMapping(newContainers, next, project, workflow));
+                newContainers.addAll(cMapper.doMapping(cultures, next, project, workflow));
                 sls = cMapper.getSampleLineageSet();
+                
+                //make the DNA plate from culture plate
+                next = new Protocol(Protocol.CREATE_DNA_FROM_MGC_CULTURE);
+                cMapper = StaticContainerMapperFactory.makeContainerMapper(next.getProcessname());
+                newContainers.addAll(cMapper.doMapping(cultures, next, project, workflow));
+                sls1 = cMapper.getSampleLineageSet();                
             }
            
             // store all the information to the session.
@@ -141,6 +152,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
             
             if(sls != null)
                 request.getSession().setAttribute("EnterSourcePlateAction.sls", sls);
+            
+            if(sls1 != null)
+                request.getSession().setAttribute("EnterSourcePlateAction.sls1", sls1);
             
             return (mapping.findForward("success"));
         } catch (Exception ex) {

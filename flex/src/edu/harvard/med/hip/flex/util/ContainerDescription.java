@@ -20,21 +20,23 @@ public class ContainerDescription
     private int                 m_id = -1;
     private int                 m_glycerol_id = -1;
     private int                 m_culture_id = -1;
+    private int                 m_dna_id = -1;
     private int                 m_number_of_sequences = -1;
     private boolean             m_isReady = false;
     
     /** Creates a new instance of ContainerDescription */
-    public ContainerDescription(String l, String m, int id, int glycerol_id, int culture_id)
+    public ContainerDescription(String l, String m, int id, int glycerol_id, int culture_id, int dna_id)
     {
         m_label = l;
         m_marker = m;
         m_id = id;
         m_glycerol_id = glycerol_id;
         m_culture_id = culture_id;
+        m_dna_id = dna_id;
     }
-    public ContainerDescription(String l, String m, int id, int glycerol_id,  int culture_id, int n)
+    public ContainerDescription(String l, String m, int id, int glycerol_id,  int culture_id, int dna_id, int n)
     {
-       this(l,m,id, glycerol_id,  culture_id);
+       this(l,m,id, glycerol_id,  culture_id, dna_id);
        m_number_of_sequences = n;
     }
     
@@ -51,7 +53,12 @@ public class ContainerDescription
     public boolean          getStatus(){ return m_isReady;}
     public int              getGlycerolId(){ return m_glycerol_id;}
     public int              getCultureId(){ return m_culture_id;}
-    public String           getCultureLabel()  {  return "MLI"+m_label.substring(3);   }
+    public int              getDnaId() { return m_dna_id;}
+    public String           getCultureLabel()  {  return "MLI"+m_label.substring(3);}
+
+    public String           getDnaLabel()  {
+        return "MDN"+m_label.substring(3);
+    }
     
     public void             setNumberOfSequences(int n  )    {m_number_of_sequences = n;    }
     //status shows if culture block for this mgc container exists on queue
