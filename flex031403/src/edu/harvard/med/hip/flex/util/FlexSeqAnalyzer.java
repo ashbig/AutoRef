@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.31 2002-07-02 13:56:34 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.32 2002-07-15 18:54:26 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -31,13 +31,14 @@ public class FlexSeqAnalyzer {
     //    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
-    public static final double PERCENTIDENTITY = 0.95;
-    public static final int CDSLENGTHLIMIT = 70;
     
     private FlexSequence sequence;
     private Vector sameSequence = new Vector();
     private Vector homolog = new Vector();
     private BlastResults blastResults = new BlastResults();
+    
+    private double requiredPercentIdentity = 0.95;
+    private int requiredCdslengthLimit = 70;
     
     /**
      * Constructor.
@@ -71,13 +72,15 @@ public class FlexSeqAnalyzer {
     }
     
     /**
+     * @param pid Percent Identity for blast.
+     * @param cdslengthLimit The minimum CDS length required.
      * Return true if there is homolog in the flex database. Return false
      * otherwise.
      *
      * @return True if there is homolog in the flex database; false otherwise.
      * @exception FlexUtilException, FlexDatabaseException, ParseException.
      */
-    public boolean findHomolog() throws FlexUtilException, FlexDatabaseException, ParseException {
+    public boolean findHomolog(double pid, int cdslengthLimit) throws FlexUtilException, FlexDatabaseException, ParseException {
         boolean isHomolog = false;
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         
@@ -113,7 +116,7 @@ public class FlexSeqAnalyzer {
         double percentAlignment = (end-start+1)/(double)cdslength;
         String evalue = y.getEvalue();
         
-        if(percentIdentity>=PERCENTIDENTITY && numerator >= CDSLENGTHLIMIT) {
+        if(percentIdentity>=requiredPercentIdentity && numerator >= requiredCdslengthLimit) {
             FlexSequence s = new FlexSequence(homologid);
             s.restore(homologid);
             homolog.addElement(s);
@@ -132,7 +135,16 @@ public class FlexSeqAnalyzer {
         return isHomolog;
     }
     
-    
+    /**
+     * Return true if there is homolog in the flex database. Return false
+     * otherwise.
+     *
+     * @return True if there is homolog in the flex database; false otherwise.
+     * @exception FlexUtilException, FlexDatabaseException, ParseException.
+     */
+    public boolean findHomolog() throws FlexUtilException, FlexDatabaseException, ParseException {
+        return findHomolog(requiredPercentIdentity, requiredCdslengthLimit);
+    }    
     
     /**
      * Return the matched sequence id  from the flex database.
