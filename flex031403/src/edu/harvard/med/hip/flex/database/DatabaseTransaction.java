@@ -4,7 +4,7 @@
  *
  * Description :
  *
- *    A high level API for accessing a using a pooled data source.
+ *    A high level API for accessing a pooled data source.
  *
  * Author : Juan Munoz (jmunoz@3rdmill.com)
  *
@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-05-24 14:49:03 $
+ * $Revision: 1.3 $
+ * $Date: 2001-05-29 11:39:42 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-05-24 14:49:03 $
+ * @version    $Revision: 1.3 $ $Date: 2001-05-29 11:39:42 $
  */
 
 public class DatabaseTransaction {
