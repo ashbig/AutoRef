@@ -27,6 +27,7 @@ public class Project {
     public final static int BREASTCANCER = 5;
     public final static int KINASE = 6;
     public final static int MGC_PROJECT = 7;
+    public final static int NIDDK = 10;
     
     private int id;
     private String name;
