@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.5 2001-06-13 16:29:10 dongmei_zuo Exp $ 
+        $Id: PendingRequests.jsp,v 1.6 2001-06-14 19:15:08 dongmei_zuo Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -79,7 +79,7 @@
 
 
 </TABLE>
-Researcher Barcode: <INPUT type="text" name="<%=Constants.RESEARCHER_BARCODE_KEY%>">
+
 <br>
 
 <INPUT title="Process Requests" name="Process Requests" type="submit">

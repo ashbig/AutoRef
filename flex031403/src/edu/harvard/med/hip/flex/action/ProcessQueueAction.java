@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2001-06-14 14:53:42 $
+ * $Revision: 1.6 $
+ * $Date: 2001-06-14 19:15:08 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -50,6 +50,9 @@ import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.process.Process;
+import edu.harvard.med.hip.flex.user.*;
+
 
 import org.apache.struts.action.*;
 
@@ -58,7 +61,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.5 $ $Date: 2001-06-14 14:53:42 $
+ * @version    $Revision: 1.6 $ $Date: 2001-06-14 19:15:08 $
  */
 public class ProcessQueueAction extends WorkflowAction {
     
@@ -86,16 +89,20 @@ public class ProcessQueueAction extends WorkflowAction {
         // place to store errors
         ActionErrors errors = new ActionErrors();
         
+        User user = (User)session.getAttribute(Constants.USER_KEY);
+        
         /*
-         * Make sure the researcher barcode is in the request.
+         * Get the researcher barcode from the connected user who is assumed to
+         * be a researcher as well.
          */
         
-        String researcherBarcode =
-        request.getParameter(Constants.RESEARCHER_BARCODE_KEY);
+        String researcherBarcode = null;
         try {
+            researcherBarcode = user.getBarcode();
             Researcher researcher = new Researcher(researcherBarcode);
         } catch (Exception e) {
-            errors.add(ActionErrors.GLOBAL_ERROR,new ActionError("error.researcher.invalid.barcode",researcherBarcode));
+            errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.researcher.invalid.barcode",researcherBarcode));
             saveErrors(request,errors);
             return new ActionForward(mapping.getInput());
         }
@@ -130,9 +137,8 @@ public class ProcessQueueAction extends WorkflowAction {
             
             
             // Process object
-            edu.harvard.med.hip.flex.process.Process process =
-            new edu.harvard.med.hip.flex.process.Process(approveProtocol,"",
-            new Researcher(researcherBarcode));
+            Process process = new Process(approveProtocol,Process.SUCCESS,
+                new Researcher(researcherBarcode));
             // conncection to use for transactions
             conn = DatabaseTransaction.getInstance().requestConnection();
             
@@ -148,8 +154,7 @@ public class ProcessQueueAction extends WorkflowAction {
                     continue;
                 }
                 String status = request.getParameter(index);
-                System.out.println("QueueItem list: " + queueItemList);
-                System.out.println("index: " + index);
+                
                 queueItem = (QueueItem)queueItemList.get(Integer.parseInt(index.substring(5)));
                 FlexSequence curSeq = (FlexSequence)queueItem.getItem();
                 
