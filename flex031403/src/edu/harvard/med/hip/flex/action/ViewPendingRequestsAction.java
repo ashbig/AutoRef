@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-07-19 17:15:08 $
+ * $Revision: 1.8 $
+ * $Date: 2001-07-19 18:00:38 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -57,7 +57,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.7 $ $Date: 2001-07-19 17:15:08 $
+ * @version    $Revision: 1.8 $ $Date: 2001-07-19 18:00:38 $
  */
 
 public class ViewPendingRequestsAction extends WorkflowAction{
@@ -115,7 +115,7 @@ public class ViewPendingRequestsAction extends WorkflowAction{
             // get the total number of sequences to approve.
             int queueLength = sequenceQueue.getQueueSize(approveProtocol);
             // find out how many pages we will need.
-            int pageCount = queueLength/itemsPerPage;
+            int pageCount = (int)Math.ceil((double)queueLength/itemsPerPage);
             
             // make an array with all the page numbers
             ArrayList pages = new ArrayList(pageCount);
@@ -140,9 +140,9 @@ public class ViewPendingRequestsAction extends WorkflowAction{
             
             
             
+            
             // put the table display info into the request
             request.setAttribute("CURRENT_PAGE",new Integer(pageNum));
-            
             request.setAttribute("PAGES", pages);
             
             // figure out if we need to display the next and/or previous page 
@@ -156,11 +156,12 @@ public class ViewPendingRequestsAction extends WorkflowAction{
             }
             
             // shove stuff we need into the session
-            session.setAttribute("pendingRequestForm",seqForm);
             session.setAttribute(Constants.APPROVE_PROTOCOL_KEY, approveProtocol);
             session.setAttribute(Constants.QUEUE_ITEM_LIST_KEY,approveSeqList );
             session.setAttribute(Constants.SEQUENCE_QUEUE_KEY,sequenceQueue);
-            
+            //put the form into the session
+            session.setAttribute("pendingRequestForm",seqForm);
+             
             retForward = mapping.findForward("success");
         } catch (FlexProcessException fpe) {
             fpe.printStackTrace();

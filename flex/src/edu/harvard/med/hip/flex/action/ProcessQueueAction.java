@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2001-07-19 17:15:08 $
+ * $Revision: 1.10 $
+ * $Date: 2001-07-19 18:00:38 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -63,7 +63,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.9 $ $Date: 2001-07-19 17:15:08 $
+ * @version    $Revision: 1.10 $ $Date: 2001-07-19 18:00:38 $
  */
 public class ProcessQueueAction extends WorkflowAction {
     
@@ -237,6 +237,10 @@ public class ProcessQueueAction extends WorkflowAction {
                 // if we get here, we are error free
                 retForward = mapping.findForward("success");
                 
+                // find the number of items left in the queue
+                SequenceProcessQueue approveQueue= new SequenceProcessQueue();
+                int queueSize = approveQueue.getQueueSize(approveProtocol);
+                
                 // put the list of accepted sequences into request
                 request.setAttribute(Constants.APPROVED_SEQUENCE_LIST_KEY, acceptedList);
                 
@@ -244,8 +248,7 @@ public class ProcessQueueAction extends WorkflowAction {
                 request.setAttribute(Constants.REJECTED_SEQUENCE_LIST_KEY, rejectedList);
                 
                 // put the number of item still remaining in the queue in the request
-                request.setAttribute(Constants.PENDING_SEQ_NUM_KEY,new Integer(
-                queueItemList.size() - (acceptedList.size() + rejectedList.size())));
+                request.setAttribute(Constants.PENDING_SEQ_NUM_KEY,new Integer(queueSize));
                 
                 // put the number of items processed into the queue.
                 request.setAttribute(Constants.PROCESSED_SEQ_NUM_KEY, new Integer(
