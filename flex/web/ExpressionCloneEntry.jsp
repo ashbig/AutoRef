@@ -20,6 +20,7 @@
 <ul>
     <li><a href="EnterMasterPlateBarcode.jsp">Create Expression Plate</a>
     <li><a href="EnterExpressionPlateBarcode.jsp">Enter Expression Plate Result</a>
+    <li><a href="GetProjects.do?forwardName=PERIMETER_REARRAY">Cell Culture Perimeter Rearray For Expression Clones</a>
 </ul>
 
 </body>
