@@ -20,11 +20,11 @@ public class IndexerForBlastDB
     public static final int ACESSES_INDEX = 2;
     public static final int ACESSES_INDEX_BASE = 3;
   
-    private static final String db_pass = "C:\\GenBankMonth\\est_human_1";
+    private static final String db_pass = "C:\\GenBankmonth\\est_human";
     
-    private static final String GI_INDEX_DB = "C:\\GenBankMonth\\gi_index";
-    private static final String ACESSES_INDEX_DB = "C:\\GenBankMonth\\as_index";
-    private static final String ACESSESBASE_INDEX_DB = "C:\\GenBankMonth\\asbase_index";
+    private static final String GI_INDEX_DB = "C:\\GenBankmonth\\gi_index";
+    private static final String ACESSES_INDEX_DB = "C:\\GenBankmonth\\as_index";
+    private static final String ACESSESBASE_INDEX_DB = "C:\\GenBankmonth\\asbase_index";
     
     //hold index in memory
     private static final Hashtable m_giindex_hash = new Hashtable();
@@ -79,7 +79,7 @@ CCAAGAAGAAGAAG*/
                         writeIndexData(gi, start,end,dout_gi);
                         writeIndexData(ac, start,end,dout_ac);
                         writeIndexData(ac.substring(0, ac.indexOf('.')), start,end,dout_acbase);
-                      //  System.out.println(gi + " " + ac + " " + start + " " + end);
+                     //  System.out.println(gi + " " + ac + " " + start + " " + end);
                     }
                     
                     data = Algorithms.splitString(line,"|");
@@ -93,15 +93,12 @@ CCAAGAAGAAGAAG*/
                 
             }
             //last record
-            if (start != -1)//skip first entry
-            {
-                end = current_pos ;
-                writeIndexData(gi, start,end,dout_gi);
-                writeIndexData(ac, start,end,dout_ac);
-                writeIndexData(ac.substring(0, ac.indexOf('.')), start,end,dout_acbase);
-               
-            }
-            
+            end = current_pos -1;
+            writeIndexData(gi, start,end,dout_gi);
+            writeIndexData(ac, start,end,dout_ac);
+            writeIndexData(ac.substring(0, ac.indexOf('.')), start,end,dout_acbase);
+           // System.out.println(gi + " " + ac + " " + start + " " + end);
+           
             fin.close();dout_gi.close();dout_ac.close();dout_acbase.close();
         }
         catch (Exception e)
@@ -309,7 +306,7 @@ CCAAGAAGAAGAAG*/
             {System.out.println( "EOF reached " ); }
         catch (IOException ioe)
             {System.out.println( "IO error: " + ioe );}
-        finalise 
+        finally  
         {
             try {dis.close();}catch(Exception e){}
         }
@@ -375,7 +372,7 @@ CCAAGAAGAAGAAG*/
     }
     */
     //-----------------------------------------------------------------------
-    public static String getSequence(String id, int index_type)
+    public static String getSequence(String id, int index_type) throws BecUtilException
     {
         long[] coordinates = getSequencePosition( id,  index_type);
         long start = coordinates[0];
@@ -397,11 +394,12 @@ CCAAGAAGAAGAAG*/
             }
             raf.close();
             return new String(bytes);
-        } catch (IOException e)
+        } catch (Exception e)
         {
+            throw new BecUtilException("Cannot get sequence");
         }
         
-        return null;
+       
     }
     
     
@@ -409,21 +407,26 @@ CCAAGAAGAAGAAG*/
     
     public static void main(String [] args)
     {
-       // IndexerForBlastDB.buildIndex();
-        getIndexInMemory(IndexerForBlastDB.GI_INDEX);
-         getIndexInMemory(IndexerForBlastDB.ACESSES_INDEX_BASE);
-          getIndexInMemory(IndexerForBlastDB.ACESSES_INDEX);
+        //IndexerForBlastDB.buildIndex();
+      //  System.out.println(System.currentTimeMillis());
+      // getIndexInMemory(IndexerForBlastDB.GI_INDEX);
+      // System.out.println(System.currentTimeMillis());
+       //getIndexInMemory(IndexerForBlastDB.ACESSES_INDEX_BASE);
+       // getIndexInMemory(IndexerForBlastDB.ACESSES_INDEX);
+       // System.out.println(System.currentTimeMillis());
      
-    //  System.out.println( IndexerForBlastDB.getSequence("28436319",GI_INDEX)) ;
+     try{System.out.println( IndexerForBlastDB.getSequence("28911568",GI_INDEX)) ;}
+     catch(Exception e){}
+    //  System.out.println(System.currentTimeMillis());
     //  System.out.println( "--------------");
     //  System.out.println( IndexerForBlastDB.getSequence("28436320",GI_INDEX)) ;
     //   System.out.println( "--------------");
      //  System.out.println( IndexerForBlastDB.getSequence("28289948",GI_INDEX)) ;
      //  System.out.println( "--------------");
      //  System.out.println( IndexerForBlastDB.getSequence("28289949",GI_INDEX)) ;
-          System.out.println( IndexerForBlastDB.getSequence("CB185049.1",ACESSES_INDEX)) ;
-   System.out.println( IndexerForBlastDB.getSequence("CB185049",ACESSES_INDEX_BASE));
-       
+   //       System.out.println( IndexerForBlastDB.getSequence("CB185049.1",ACESSES_INDEX)) ;
+ //  System.out.println( IndexerForBlastDB.getSequence("CB185049",ACESSES_INDEX_BASE));
+       System.exit(0);
             
     }
 }

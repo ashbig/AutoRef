@@ -16,6 +16,7 @@ import edu.harvard.med.hip.bec.core.feature.*;
 /**
  *
  * @author  htaycher
+ *describes all aligments to one sequence
  */
 public class BlastResult
 {
@@ -30,16 +31,17 @@ public class BlastResult
     private String	m_blast_db = null;//– information about database used for search if applicable, empty for bl2seq)
     private String m_date = null;//– when blast was run for blastable db tracking purposes: 
     private int m_length = -1;//– the threshold for accepted hits
-    private ArrayList m_hits = null;
-    private String m_type = null;
+    private ArrayList m_aligments = null;
+    private String m_type = null; //dna vs protain
     private String m_file_name = null;
     private String m_params = null;
     private String m_GI = null;
     private String m_ACSESSION = null;
     private String m_Description = null;
-//Blast_hits[] – array of hits
+
 
     /** Creates a new instance of BlastResult */
+    /*
     public BlastResult(int id) throws BecDatabaseException
     {
         m_id = id;
@@ -65,7 +67,7 @@ public class BlastResult
                 m_type = rs.getString ("type");
                 m_file_name = rs.getString ("filename");
                 //exstruct hits
-                m_hits = getAllHits();
+                m_aligments = getAllHits();
                 m_params = rs.getString("params");
             }
         } catch (Exception sqlE)
@@ -76,9 +78,13 @@ public class BlastResult
             DatabaseTransaction.closeResultSet(rs);
         }
     }
+     **/
     public BlastResult()
     {
     }
+    
+    
+    /*
     public BlastResult( int  ref_sequenceid , 
           String  algorithm ,// program from blast family (bl2seq, blastn, tblastx, ..) that was run
           int     subject_sequenceid , // subject sequence – sequence id used for bl2seq
@@ -95,14 +101,17 @@ public class BlastResult
         m_blast_db = blast_db ;//– information about database used for search if applicable, empty for bl2seq)
         m_date =  date;//– when blast was run for blastable db tracking purposes: 
         m_length = length ;//– the threshold for accepted hits
-        m_hits =  hits;
+        m_aligments =  hits;
         m_file_name = fn;
         m_type = t;
         m_params = pr;
         
 
     }
+    */
     
+    
+    /*
     public void insert(Connection conn) throws BecDatabaseException
     {
         
@@ -128,9 +137,9 @@ public class BlastResult
             pstmt.setString(8, m_params);
             pstmt.setInt(9, m_length);
             DatabaseTransaction.executeUpdate(pstmt);
-            for (int count = 0; count < m_hits.size(); count++)
+            for (int count = 0; count < m_aligments.size(); count++)
             {
-                BlastHit h = (BlastHit)m_hits.get(count);
+                BlastHit h = (BlastHit)m_aligments.get(count);
                 h.setBlastId(m_id);
                 h.insert(conn);
             }
@@ -146,7 +155,7 @@ public class BlastResult
             DatabaseTransaction.closeStatement(pstmt);
         }
     }
-    
+    */
     //gettters 
     public  int         getId(){return m_id ;}
     public  String      getExecutable(){return m_executable ;}// program from blast family (bl2seq, blastn, tblastx, ..) that was run
@@ -154,23 +163,35 @@ public class BlastResult
     public  String	getDBName(){return m_blast_db ;}//– information about database used for search if applicable, empty for bl2seq)
     public  String      getDate(){return m_date ;}//– when blast was run for blastable db tracking purposes: 
     public  int         getLength(){return m_length ;}//– the threshold for accepted hits
-    public  ArrayList   getHits(){return m_hits ;}//Blast_hits[] – array of hits
+    public  ArrayList   getAligments(){return m_aligments ;}//Blast_hits[] – array of hits
     public  String	getFileName(){return m_file_name ;}
     public  String	getType(){return m_type ;}
     public  int         getQuerySequenceId() {return m_query_sequenceid ;}
-    
-    
+    public  String       getGI (){return m_GI ;}
+    public  String        getAcesession (){return m_ACSESSION; }
+    public  String        getDescription (){return m_Description; }
+    public String       getCommandLine(){ return m_params;}
    
     public  void        setBlastExecutable(String s){ m_executable =s ;}// program from blast family (bl2seq, blastn, tblastx, ..) that was run
     public  void         setSubjectSequenceId(int s) { m_subject_sequenceid =s;}// subject sequence – sequence id used for bl2seq
     public  void	setDBName(String s){ m_blast_db =s;}//– information about database used for search if applicable, empty for bl2seq)
     public  void        setDate(String s){ m_date=s ;}//– when blast was run for blastable db tracking purposes: 
     public  void         setLength(int s){ m_length =s;}//– the threshold for accepted hits
-    public  void        setHits(ArrayList s){ m_hits =s;}//Blast_hits[] – array of hits
+    public  void        setAligments(ArrayList s){ m_aligments =s;}//Blast_hits[] – array of hits
     public  void	setFileName(String s){ m_file_name=s ;}
     public  void	setType(String s){ m_type =s;}
     public  void        setQuerySequenceId(int s) { m_query_sequenceid =s;}
+    public  void        setGI (String s){m_GI =s;}
+    public  void        setAcesession (String s){m_ACSESSION =s;}
+    public  void        setDescription (String s){m_Description =s;}
+    public  void        setCommandLine(String s){ m_params = s;}
     
+    public void addAligment(BlastAligment alg) 
+    {
+        if (m_aligments == null) m_aligments = new ArrayList();
+        m_aligments.add(alg);
+    }
+    /*
     private ArrayList   getAllHits() throws BecDatabaseException
     {
         
@@ -223,12 +244,12 @@ public class BlastResult
         return res;
     }
     
-    
+    */
     
     //***********************************************
     private  void sortByScore()
     {
-        Collections.sort(m_hits, new Comparator()
+        Collections.sort(m_aligments, new Comparator()
        {
             public int compare(Object cont1, Object cont2)
             {
@@ -241,7 +262,7 @@ public class BlastResult
     
     private  void sortByIdentity()
     {
-        Collections.sort(m_hits, new Comparator()
+        Collections.sort(m_aligments, new Comparator()
        {
             public int compare(Object cont1, Object cont2)
             {
@@ -283,8 +304,8 @@ public class BlastResult
              hits,Blaster.BLAST_PROGRAM_BLASTP,"/tmp", "-p bl");
             bl.insert(conn);  conn.commit();
          **/
-            BlastResult b = new BlastResult(19);
-          System.out.print(b.getId());            
+           // BlastResult b = new BlastResult(19);
+          //System.out.print(b.getId());            
         } catch (Exception e)
         {
             System.out.println(e);

@@ -9,6 +9,8 @@ package edu.harvard.med.hip.bec.programs.blast;
 
 import java.io.*;
 import java.util.*;
+
+import edu.harvard.med.hip.bec.util.*;
 /**
  *
  * @author  htaycher
@@ -34,18 +36,18 @@ public class BlastWrapper
     //identify which blast program to use blastall / bl2seq
     private String executable =  BLAST_EXEC_BLASTALL;
 
-    private int BLASTALL =  2;
-    private int BLAST2SEQ =  1;
+    public static final int BLASTALL =  2;
+    public static final int BLAST2SEQ =  1;
     
     //return codes from blaster
-      public static final int BLAST_SUCESS = 1;
-    public static final int BLAST_FAILED = 0;
-    public static final int BLAST_FAILED_NO_DB = -1;
-    public static final int BLAST_FAILED_INTERUPTED = -3;
-    public static final int BLAST_FAILED_IO = -4;
+    public static final int BLAST_SUCESS = 1;
+    public static final String BLAST_FAILED = "Blast failed";
+    public static final String BLAST_FAILED_NO_DB = "Blast failed: no database specified";
+    public static final String BLAST_FAILED_INTERUPTED = "Blast was interapted";
+    public static final String BLAST_FAILED_IO = "Blast failed: IO exception";
     
     
-    public static final String BLAST_PASS =  "c:\\Program Files\\blast\\";
+    public static final String BLAST_PASS =  "c:\\blastnew\\";
     //public static final String BLAST_PASS =  "/kotel/data/blast/";
    
     
@@ -56,6 +58,8 @@ public class BlastWrapper
     private String m_db = null;
     //-i  Query filename Filename (and path if necessary) stdin
     private String m_inputf = null;
+    //-j  for bl2seq only second subject file
+    private String m_subjectinputf = null;
     //-e   Expectation value Real number 10.0
     private double m_exsp = 10.0;
     //-m  Alignment view options integer between 0 and 9 0 see table 2 for more detail
@@ -150,27 +154,17 @@ public class BlastWrapper
      *
      *  @param queryList, a string array of query sequence file names
      */
-    public void blast(String[] queryList)
+    public void run(String[] queryList) throws BecUtilException
     {
         for (int i=0; i<queryList.length; i++)
         {
-            blast(queryList[i]);
+            m_inputf = queryList[i];
+            run();
         }
     }
 
 
-    /** This version blast just take query sequence file and generate
-     *  blast output in queryfile.blast. Again no file existing check.
-     *
-     *  @param query, query sequence file name
-     */
-    public int blast(String query)
-    {
-
-        m_outputf = query + ".blast";
-       return blast(query, m_outputf);
-
-    }
+   
 
 
     /** This version of blast takes both query sequence file name and
@@ -184,16 +178,17 @@ public class BlastWrapper
      *return codes :
         -2 - no db specified
      */
-    public int blast(String query, String output)
+    public void run() throws BecUtilException
     {
         String blastcmd = null;
-        m_outputf = output;
-
-        if (m_db == null)
+         System.out.println("ll");
+        if (m_blast_type == BLASTALL  && m_db == null )
         {
-            return BLAST_FAILED_NO_DB;
+        
+            throw new BecUtilException( BLAST_FAILED_NO_DB);
         }
-        blastcmd = makeBlastCmd(query, m_outputf);
+        System.out.println(m_blast_type + " "+m_db);
+        blastcmd = makeBlastCmd();
 
         try
         {
@@ -211,17 +206,17 @@ public class BlastWrapper
             if (p.exitValue() != 0)
             {
 
-                return BLAST_FAILED;
+                throw new BecUtilException( BLAST_FAILED);
             }
         } catch (IOException e)
         {
             e.printStackTrace();
-            return BLAST_FAILED_IO;
+            throw new BecUtilException(BLAST_FAILED_IO);
         } catch (InterruptedException e)
         {
-            return BLAST_FAILED_INTERUPTED;
+            throw new BecUtilException(BLAST_FAILED_INTERUPTED);;
         }
-        return BLAST_SUCESS;
+       // return BLAST_SUCESS;
     }
 
 
@@ -232,6 +227,9 @@ public class BlastWrapper
   	    public String getDB (){ return m_db  ;}
   	    //-i  Query filename Filename (){and path if necessary) stdin
   	    public String getInputFN (){ return m_inputf  ;}
+            public String getOutpitFN (){ return m_outputf  ;}
+            //-j for bl2seq subject input file
+            public String getSubjectInputFN (){ return m_subjectinputf;}
   	    //-e   Expectation value Real number 10.0
   	    public double getExpect (){ return m_exsp  ;}
   	    //-m  Alignment view options integer between 0 and 9 0 see table 2 for more detail
@@ -272,6 +270,9 @@ public class BlastWrapper
 		    public void setDB (String v){  m_db  = v;}
 		    //-i  Query filename Filename ( v){and path if necessary) stdin
 		    public void setInputFN (String v){  m_inputf  = v;}
+                
+                  //-j subject input file  
+                   public void setSubjectInputFN (String v){   m_subjectinputf = v;}
 		    //-e   Expectation value Real number 10.0
 		    public void setExpect ( double v){  m_exsp  = v;}
 		    //-m  Alignment view options integer between 0 and 9 0 see table 2 for more detail
@@ -305,24 +306,26 @@ public class BlastWrapper
 		    public void setWordSize (int v){  m_wordsize  = v;}
 		    public void setBestHits (int v){  m_numbesthits  = v;}
 	    public void setHTMLformat (String v){  m_htmlout  = v;}
-
+            public void setBlastType(int v){ m_blast_type = v;}
 
 //*****************************************************************
-    private String makeBlastCmd(String query, String output)
+    private String makeBlastCmd()
     {
-        String blastcmd = null;
-        blastcmd =   "-p"   + m_program + "-d"  + m_db + "-i"   + m_inputf + "-e"    + m_exsp + "-m"   + m_format 
- + "-o"   + m_outputf + "-F"  + m_filter + "-G"   + m_opengap + "-E"   + m_extgap 
- + "-X"  + m_dropgap + "-I"  + m_gi + "-q" + m_nmismatch + "-r"  + m_nmatch + "-v"  + m_descline 
- + "-f"   + m_hitext + "-b"  + m_hitnumber + "-g"   + m_gapedal + "-M"  + m_matrix + "-W"   + m_wordsize 
- + "-K"   + m_numbesthits + "-T"   + m_htmlout ;
+        String blastcmd = "";
+        blastcmd =   " -p "   + m_program +  " -i "   + m_inputf + " -e "    + m_exsp 
+ + " -o "   + m_outputf + " -F "  + m_filter + " -G "   + m_opengap + " -E "   + m_extgap 
+ + " -X "  + m_dropgap  + " -q " + m_nmismatch + " -r "  + m_nmatch  
+  + " -g "   + m_gapedal + " -M "  + m_matrix + " -W "   + m_wordsize 
+  + " -T "   + m_htmlout ;
       //bl2seq -p blastn -e 10e-50 -i plt1_A01 -j plt1_A01.seq -o plt1_A01.n
 
        
         if (m_blast_type == BLASTALL)
-             blastcmd = BLAST_PASS + "blastall " + blastcmd;
+             blastcmd = BLAST_PASS + "blastall" + " -d "  + m_db + blastcmd + " -K "   + m_numbesthits
+             + " -f "   + m_hitext + " -b "  + m_hitnumber+ " -v "  + m_descline+ " -m "   + m_format
+             + " -I "  + m_gi;
         else if (m_blast_type == BLAST2SEQ )
-            blastcmd = BLAST_PASS + "bl2seq " + blastcmd;
+            blastcmd = BLAST_PASS + "bl2seq "  + " -j " + m_subjectinputf +" "+blastcmd;
         System.out.println(blastcmd);
         return blastcmd;
     }

@@ -22,13 +22,14 @@ public class BlastAligment
     private int m_id = -1;
   
     private int m_hit_seqid = - 1;
-    private int m_score = -1;
+    private double m_score = -1;
     private double m_identity = -1;
     private String m_expect = "";
     private double m_pvalue = -1;
+    
     private int m_query_strand = 0;
     private int m_subject_strand= 0;
-    private int m_blastid = -1;
+    private int m_blastid = -1;//for db connection
   
     private int m_subject_frame= 0;
     private int m_query_frame= 0;
@@ -37,17 +38,20 @@ public class BlastAligment
     private int m_query_stop = -1;//-The offset in the query of the end of the match
     private int m_subject_start = -1;//-The offset in the subject of the beginning of the match
     private int m_subject_stop = -1;//-The offset in the subject of the end of the match
-    private int m_subject_length = -1;
+    
     private int m_pscore = -1;
-    private int m_gaps = -1;
-    private String m_query = null;
-    private String m_subject = null;
+    private int m_mismatch_number = -1;//for tabular format
+    private int m_gaps_number = -1;//for tabular format
+    private int m_gaps_bases = -1;//for full format only
+    private String m_query = null;//for full format only
+    private String m_subject = null;//for full format only , including aligment
    // private ArrayList m_mutations = null;
     
 //-The length of the match
 
     
     /** Creates a new instance of BlastHit */
+    /*
     public BlastAligment(int hit_seqid, int score, double identity, String expect, double pvalue, int quary_strand, int Subjstrand, int subjframe, int queryframe, int query_start, int query_stop, int subject_start, int subject_stop, int subject_length, int ps, int bl, String q, String s, int gaps)
     {
         m_hit_seqid = hit_seqid;
@@ -64,7 +68,7 @@ public class BlastAligment
         m_query_stop = query_stop;
         m_subject_start = subject_start;
         m_subject_stop = subject_stop;
-        m_subject_length = subject_length;
+       // m_subject_length = subject_length;
         m_pscore = ps;
         m_blastid = bl;
         m_subject = s;
@@ -168,7 +172,7 @@ public class BlastAligment
                 pstmt.setInt(17, m_gaps);
                 
             pstmt.executeUpdate(sql);
-         */pstmt = conn.createStatement();
+         pstmt = conn.createStatement();
               pstmt.executeUpdate(sql);
         } catch (Exception sqlE)
         {
@@ -181,16 +185,20 @@ public class BlastAligment
         }
         
     }
-    
+    */
     
      
     //public void setMutations(ArrayList s){ m_mutations =s;}
     public int getId()  { return m_id;}
 
      public int getSequenceId(){ return m_hit_seqid ;}
-     public int getScore(){ return m_score;}
+     public double getScore(){ return m_score;}
       public int getProgramScore(){ return m_pscore;}
-      public int getGaps(){ return m_gaps;}
+      public int getNumberOfGapBases(){ return m_gaps_bases;}
+       public int getNumberOfMismatches(){ return m_mismatch_number ;}//for tabular format
+    public int getNumberOfGaps(){ return  m_gaps_number ;}//for tabular format
+  
+    
      public double getIdentity(){ return m_identity;}
      public String getExpectValue(){ return m_expect;}
      public double getPValue(){ return m_pvalue;}
@@ -203,16 +211,20 @@ public class BlastAligment
     public int getQStop(){return m_query_stop  ;}//-The offset in the query of the end of the match
     public int getSStart(){return m_subject_start  ;}//-The offset in the subject of the beginning of the match
     public int getSStop(){return m_subject_stop  ;}//-The offset in the subject of the end of the match
-    public int getLength(){return m_subject_length  ;}
+   // public int getLength(){return m_subject_length  ;}
     public String getQSequence(){ return m_query;}
     public String getSSequence(){ return m_subject;}
     
     
     public void setSequenceId(int v){  m_hit_seqid = v ;}
-    public void setScore(int v){  m_score= v ;}
-    public void setGaps(int v){  m_gaps= v ;}
+    public void setScore(double v){  m_score= v ;}
+ 
+    
+      public void setNumberOfGapBases(int v){  m_gaps_bases = v;}
+       public void setNumberOfMismatches(int v){  m_mismatch_number = v ;}//for tabular format
+    public void setNumberOfGaps(int v){   m_gaps_number = v;}//for tabular format
     public void setProgramScore(int v){  m_pscore= v ;}
-    public void setIdentity(int v){  m_identity= v ;}
+    public void setIdentity(double v){  m_identity= v ;}
     public void setExpectValue(String v){  m_expect= v ;}
     public void setPValue(double v){  m_pvalue= v ;}
     public void setQStrand(int v){  m_query_strand= v ;}
@@ -223,7 +235,7 @@ public class BlastAligment
     public void setQStop(int v){ m_query_stop  = v ;}//-The offset in the query of the end of the match
     public void setSStart(int v){ m_subject_start  = v ;}//-The offset in the subject of the beginning of the match
     public void setSStop(int v){ m_subject_stop  = v ;}//-The offset in the subject of the end of the match
-    public void setLength(int v){ m_subject_length  = v ;}
+  //  public void setLength(int v){ m_subject_length  = v ;}
     public void setBlastId(int v){ m_blastid = v ;}
      public void setQSequence(String s){  m_query = s;}
     public void setSSequence(String s){  m_subject = s;}
