@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-06-22 12:54:58 $
+ * $Revision: 1.8 $
+ * $Date: 2001-06-25 11:40:23 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -49,7 +49,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.7 $ $Date: 2001-06-22 12:54:58 $
+ * @version    $Revision: 1.8 $ $Date: 2001-06-25 11:40:23 $
  */
 
 public class Result {
@@ -230,12 +230,16 @@ public class Result {
     throws FlexDatabaseException{
         String sql = "insert into RESULTFILEREFERENCE (RESULTID, FILEREFERENCEID) " +
         "values (?,?)";
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql);
             ps.setInt(1,this.id);
             ps.setInt(2,fileRef.getId());
+            ps.execute();
         } catch(SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeStatement(ps);
         }
         this.fileRef = fileRef;
     }

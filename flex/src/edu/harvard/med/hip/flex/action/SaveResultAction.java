@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2001-06-22 20:12:34 $
+ * $Revision: 1.6 $
+ * $Date: 2001-06-25 11:40:23 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -65,7 +65,7 @@ import edu.harvard.med.hip.flex.process.Result;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.5 $ $Date: 2001-06-22 20:12:34 $
+ * @version    $Revision: 1.6 $ $Date: 2001-06-25 11:40:23 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -109,8 +109,9 @@ public class SaveResultAction extends ResearcherAction {
         }
         
         
-        
+        String resultType = null;
         if(form instanceof GelResultsForm) {
+            resultType = Result.GEL_RESULT_TYPE;
             GelResultsForm gelForm = (GelResultsForm)form;
             // validate the file
             FormFile image = gelForm.getGelImage();
@@ -121,6 +122,8 @@ public class SaveResultAction extends ResearcherAction {
                 return retForward;
                 
             }
+        } else {
+            resultType = Result.TRANSFORMATION_TYPE;
         }
         
         
@@ -157,7 +160,7 @@ public class SaveResultAction extends ResearcherAction {
                 Integer.toString(cal.get(Calendar.MONTH));
                 String localPath = FileRepository.GEL_LOCAL_PATH+subDirName+"/";
                 fileRef =
-                    FileReference.createFile(conn, image.getFileName(),
+                FileReference.createFile(conn, image.getFileName(),
                 FileReference.GEL_TYPE,localPath, container);
             }
             for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
@@ -166,7 +169,7 @@ public class SaveResultAction extends ResearcherAction {
                 
                 curSample.setStatus(resultForm.getStatus(i));
                 Result curResult =
-                new Result(process,curSample,Result.TRANSFORMATION_TYPE,resultForm.getResult(i));
+                    new Result(process,curSample,resultType,resultForm.getResult(i));
                 curSample.update(conn);
                 curResult.insert(conn);
                 
@@ -209,6 +212,7 @@ public class SaveResultAction extends ResearcherAction {
                 new FlexProcessException("Protocol " +
                 queueItem.getProtocol().getProcessname() +
                 " not valid here"));
+                DatabaseTransaction.closeConnection(conn);
                 return retForward;
             }
             
@@ -223,9 +227,16 @@ public class SaveResultAction extends ResearcherAction {
             
             // upload the file to the repository if its a gel image
             if(form instanceof GelResultsForm) {
-                FileRepository.uploadFile(fileRef.getBaseName(),
-                    fileRef.getLocalPath(),
+                try {
+                    FileRepository.uploadFile(fileRef.getBaseName(),
+                    FileRepository.GEL_LOCAL_PATH,
                     ((GelResultsForm)form).getGelImage().getInputStream());
+                } catch (IOException ioE) {
+                    retForward = mapping.findForward("error");
+                    request.setAttribute(Action.EXCEPTION_KEY, ioE);
+                    DatabaseTransaction.rollback(conn);
+                    return retForward;
+                }
             }
             DatabaseTransaction.commit(conn);
         } catch (FlexDatabaseException fde) {

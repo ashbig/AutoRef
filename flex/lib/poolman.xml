@@ -35,7 +35,7 @@
     <!-- logging info-->
     <logFile>poolman.log</logFile>
 
-    <debugging>false</debugging>
+    <debugging>true</debugging>
 
     <!-- Query Cache Attributes-->
 
