@@ -90,12 +90,13 @@ myNavBar1.addMenu(dhtmlMenu);
 
 dhtmlMenu = new NavBarMenu(100, 220);
 dhtmlMenu.addItem(new NavBarMenuItem("Help", ""));
-dhtmlMenu.addItem(new NavBarMenuItem("Plate Information Uploader", "Help_PlateUploader.jsp"));
-dhtmlMenu.addItem(new NavBarMenuItem("System Configuration", "Help_ConfigureSystem.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("ACE Help", "Help_GeneralHelp.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("Release Notes", "Help_New.jsp"));
+<!--dhtmlMenu.addItem(new NavBarMenuItem("System Configuration", "Help_ConfigureSystem.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Isolate Ranker", "Help_IsolateRanker.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Discrepancy Finder", "Help_DiscrepancyFinder.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Polymorphism Finder", "Help_PolymorphismFinder.jsp"));
-dhtmlMenu.addItem(new NavBarMenuItem("Primer Designer", "Help_PrimerDesigner.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("Primer Designer", "Help_PrimerDesigner.jsp"));-->
 dhtmlMenu.addItem(new NavBarMenuItem("Report Runner", "Help_ReportRunner.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Projects Settings", "Help_ProjectData.jsp"));
 myNavBar1.addMenu(dhtmlMenu);
