@@ -66,37 +66,39 @@ public class PrimerDesignerRunner extends ProcessRunner
             ArrayList specs =new ArrayList();
             specs.add(m_spec);
             process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DESIGN_OLIGO,specs,m_user) ;
-            try
-            {
+             for (int index =  0;  index < ids.size(); index++)
+             {
                 synchronized(this)
                 {
-                    for (int index =  0;  index < ids.size(); index++)
-                    {
-                        id = ((Integer) ids.get(index)).intValue();
-                        if (isPrimersDesignedForRefsequence(id, pst_check_oligo_cloning) )
+                    try
                         {
-                            m_error_messages.add("Primers have been designed for refsequence with id "+id +" and this spec");
-                            continue;
+
+                            id = ((Integer) ids.get(index)).intValue();
+                            if (isPrimersDesignedForRefsequence(id, pst_check_oligo_cloning) )
+                            {
+                                m_error_messages.add("Primers have been designed for refsequence with id "+id +" and this spec");
+                                continue;
+                            }
+                        //get reference sequence to process
+                            BaseSequence refsequence = getRefsequence(id);
+                        //run primer3 with specified spec
+                            Primer3Wrapper primer3 = new Primer3Wrapper(m_spec,  refsequence);
+                            ArrayList oligo_calculations = primer3.run();
+                            oligo_calculation = (OligoCalculation)oligo_calculations.get(0);
+                            oligo_calculation.insert(conn);
+                            //insert process_object
+                            pst_insert_process_object.setInt(1,process_id);
+                            pst_insert_process_object.setInt(2, id);
+                            DatabaseTransaction.executeUpdate(pst_insert_process_object);
+                           // conn.commit();
                         }
-                    //get reference sequence to process
-                        BaseSequence refsequence = getRefsequence(id);
-                    //run primer3 with specified spec
-                        Primer3Wrapper primer3 = new Primer3Wrapper(m_spec,  refsequence);
-                        ArrayList oligo_calculations = primer3.run();
-                        oligo_calculation = (OligoCalculation)oligo_calculations.get(0);
-                        oligo_calculation.insert(conn);
-                        //insert process_object
-                        pst_insert_process_object.setInt(1,process_id);
-                        pst_insert_process_object.setInt(2, id);
-                        DatabaseTransaction.executeUpdate(pst_insert_process_object);
-                        conn.commit();
+                        catch(Exception e)
+                        {
+                            m_error_messages.add(e.getMessage());
+                        }
                     }
-                }
-            }
-            catch(Exception e)
-            {
-                m_error_messages.add(e.getMessage());
-            }
+                
+             }
         }
         catch(Exception e)
         {
@@ -118,7 +120,8 @@ public class PrimerDesignerRunner extends ProcessRunner
         try
         {
             m_spec = (Primer3Spec)Spec.getSpecById(m_spec_id);
-            return true;
+            if (m_spec != null)            return true;
+            return false;
         }
         catch(Exception e)
         {
@@ -147,7 +150,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         {
             case  Constants.ITEM_TYPE_CLONEID :
             {
-                return "select refsequenceid from sequencingconstruct where constructid in "
+                return "select distinct refsequenceid from sequencingconstruct where constructid in "
                 +" (select constructid from isolatetracking where isolatetrackingid in "
                 +" (select isolatetrackingid from flexinfo where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
             }
@@ -161,18 +164,18 @@ public class PrimerDesignerRunner extends ProcessRunner
                     plate_names.append("'");
                     if ( index != items.size()-1 ) plate_names.append(",");
                 }
-                 return "select refsequenceid from sequencingconstruct where constructid in "
+                 return "select distinct refsequenceid from sequencingconstruct where constructid in "
                 +"  (select constructid from isolatetracking where sampleid in "
                 +"  (select sampleid from sample where containerid in (select containerid from "
                 +" containerheader where label in ("+plate_names.toString()+"))))";
             }
             case  Constants.ITEM_TYPE_BECSEQUENCE_ID :
             {
-                return "select refsequenceid from assembledsequence where sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
+                return "select distinct refsequenceid from assembledsequence where sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
             }
             case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
             {
-                return "select refsequenceid from sequencingconstruct where constructid in "
+                return "select distinct refsequenceid from sequencingconstruct where constructid in "
                 +" (select constructid from isolatetracking where isolatetrackingid in "
                 +" (select isolatetrackingid from flexinfo where flexsequenceid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
             }
@@ -191,7 +194,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             rs = t.executeQuery(sql);
             if(rs.next())
             {
-                id = rs.getInt("sequenceid");
+                id = rs.getInt("refsequenceid");
             }
             return id;
         } catch (SQLException sqlE)
@@ -217,7 +220,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             rs = t.executeQuery(sql);
             while(rs.next())
             {
-                ids.add( new Integer( rs.getInt("sequenceid")) );
+                ids.add( new Integer( rs.getInt("refsequenceid")) );
             }
             
         } 
@@ -271,15 +274,16 @@ public class PrimerDesignerRunner extends ProcessRunner
      
     {
        // InputStream input = new InputStream();
-        ReportRunner input = null;
+        PrimerDesignerRunner input = null;
         User user  = null;
         try
         {
-             
+            input = new PrimerDesignerRunner();
             user = AccessManager.getInstance().getUser("htaycher1","htaycher");
-            input.setItems("65\n651\n652\n653\n58\n581\n582\n583\n874\n875\n876\n");
-            input.setItemsType( 2);
-           
+            input.setItems("9972\n9966\n9949\n9954\n581\n9990\n9938\n9929\n");
+            input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+            input.setUser(user);
+            input.setSpecId(3);
             input.run();
         }
         catch(Exception e){}

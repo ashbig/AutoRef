@@ -57,7 +57,7 @@ public class Primer3Parser
     {
        try{
            
-            p_new_record = new RE("=$") ; 
+            p_new_record = new RE("^=") ; 
             p_left_sequence = new RE("PRIMER_LEFT_SEQUENCE=(\\S+)") ; 
             p_right_sequence = new RE("PRIMER_RIGHT_SEQUENCE=(\\S+)") ; 
             p_left = new RE("PRIMER_LEFT=(\\d*),(\\d*)") ; 
@@ -125,7 +125,7 @@ public class Primer3Parser
             fin = new BufferedReader(new FileReader(queryFile));
             while ((line = fin.readLine()) != null)
             {
-              // System.out.println(line);
+             // System.out.println(line);
                 //finished read hits - exit
                if ( seq_id == -1 )
                {
@@ -170,7 +170,7 @@ public class Primer3Parser
                      
                        olcalc.setPrimer3SpecId(spec.getId());
                        olcalc.setSequenceId(new_seq_id);
-                       // res.add(oligo_set);
+                        res.add(olcalc);
                    }
                     seq_id = new_seq_id;
                     subseq_count = Integer.parseInt(p_primer_sequence_id.getParen(2));
@@ -208,6 +208,7 @@ public class Primer3Parser
                }
              
            }
+ //  System.out.println("oligo parsed "+res.size());
             return res;
         }
         catch(Exception e)
@@ -256,8 +257,8 @@ public class Primer3Parser
             ht.put("P_EST_SEQ","50");
 
             
-           // Primer3Spec ps = new Primer3Spec(ht,null);
-           //  re = Primer3Parser.parse(queryFile,ps);
+            Primer3Spec ps = new Primer3Spec(ht,null,1);
+             re = Primer3Parser.parse(queryFile,ps);
         }catch(Exception e){}
         System.exit(0);
     }

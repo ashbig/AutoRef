@@ -118,6 +118,7 @@ public class Primer3Wrapper
         run(m_file_input, m_file_output);
         try
         {
+            System.out.println(m_file_output);
             oldoutput = new File(m_file_output);
             if (oldoutput.exists() )
                 oligo_calculations = Primer3Parser.parse(m_file_output, m_spec);
@@ -379,7 +380,7 @@ public class Primer3Wrapper
               inputFileThread.join();
               fis.close();
    System.out.println("Joined input file thread.");
-              Thread.sleep(200);
+              Thread.sleep(2000);
               System.out.println(outputFileThread.isAlive());
               fos.close();
               eos.close();  
