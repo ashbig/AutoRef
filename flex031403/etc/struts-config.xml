@@ -70,7 +70,8 @@
       <forward  name="success"   path="/SequenceSelection.jsp"/>
       <forward  name="failure"  path="/SequenceSearch.jsp"/>
     </action>    
-
+    
+    <!-- Process a customer request -->
     <action    path="/SequenceSelection"
                type="edu.harvard.med.hip.flex.action.SequenceSelectionAction"
                name="customerRequestForm"
@@ -80,6 +81,11 @@
       <forward  name="failure"  path="/SequenceSearch.jsp"/>
     </action> 
 
+    <!-- Process  view pending sequence requests-->
+    <action     path ="/ViewPendingRequests"
+                type="edu.harvard.med.hip.flex.action.ViewPendingRequestsAction">
+        <forward name="sucess" path="/PendingRequests.jsp"/>
+    </action>
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->

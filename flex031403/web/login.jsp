@@ -5,7 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html>
-    <head><title>FLEX: Login</title></head>
+    <head><title><bean:message key="flex.name"/>: Login</title></head>
     <body> <center>
     <h2>Welcome to FLEXGene Database</h2>
     <hr>

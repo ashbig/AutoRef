@@ -48,6 +48,10 @@
     <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
     
     <init-param>
+        <param-name>application</param-name>
+        <param-value>edu.harvard.med.hip.flex.ApplicationResources</param-value>
+    </init-param>
+    <init-param>
       <param-name>config</param-name>
       <param-value>/WEB-INF/struts-config.xml</param-value>
     </init-param>

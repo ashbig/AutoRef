@@ -7,8 +7,8 @@
 <html>
 <head><title>JSP Page</title></head>
 <body>
-<logic:present scope="session" name="USER">
-    Hello <bean:write name="USER" property="username"/>
+<logic:present scope="session" name="<%=edu.harvard.med.hip.flex.Constants.USER_KEY%>" property="username">
+    <bean:message key="flex.welcome"/> <bean:write name="<%=edu.harvard.med.hip.flex.Constants.USER_KEY%>" property="username"/>
 </logic:present>
 <struts:errors/>
 </body>
