@@ -1,4 +1,5 @@
 <%@ page language="java" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -13,7 +14,8 @@
     <html:errors/>
     <p>
     <h3>An error has occured and been logged</h3>
-    <html:errors/>
+    <hr>
+
     <logic:present name="exception">
         <bean:write name="exception"/>
     </logic:present>

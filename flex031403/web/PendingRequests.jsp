@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.12 2001-07-16 19:39:31 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.13 2001-07-18 15:03:05 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -11,6 +11,8 @@
 --%>
 
 <%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
 <%@ page import="edu.harvard.med.hip.flex.Constants"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>

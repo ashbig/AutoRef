@@ -14,8 +14,8 @@
  
  
  The following information is used by CVS
- $Revision: 1.7 $
- $Date: 2001-07-16 17:19:14 $
+ $Revision: 1.8 $
+ $Date: 2001-07-18 15:03:04 $
  $Author: jmunoz $
  
  ******************************************************************************
@@ -34,6 +34,8 @@
 --%>
 
 <%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 

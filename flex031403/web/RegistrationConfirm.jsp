@@ -1,4 +1,6 @@
 <%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 

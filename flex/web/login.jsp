@@ -1,9 +1,13 @@
 <%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html>
-    <head><title><bean:message key="flex.name"/> : Login</title></head>
+    <head>
+        <title><bean:message key="flex.name"/> : Login</title>
+    </head>
     <body> 
     <center>
     <h1>Welcome to <bean:message key="flex.name"/></h1>

@@ -1,4 +1,6 @@
 <%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
 <%@ page import="edu.harvard.med.hip.flex.*" %>
 <%@ page import="edu.harvard.med.hip.flex.process.*"%>
 

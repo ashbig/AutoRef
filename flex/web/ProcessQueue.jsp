@@ -1,5 +1,5 @@
 <%--
-        $Id: ProcessQueue.jsp,v 1.7 2001-07-16 19:39:31 jmunoz Exp $ 
+        $Id: ProcessQueue.jsp,v 1.8 2001-07-18 15:03:05 jmunoz Exp $ 
 
         File    : ProcessQueue.jsp
         Date    : 05102001
@@ -9,6 +9,8 @@
 	displays a summary.
 --%>
 <%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
