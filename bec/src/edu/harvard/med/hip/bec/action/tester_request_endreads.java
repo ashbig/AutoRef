@@ -212,7 +212,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
 
                         }
 
-                        naming_file_entries_forward.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_FORWARD)  );
+                        naming_file_entries_forward.add(  createNamingFileEntry( smp, Constants.READ_DIRECTION_FORWARD)  );
                        // rearray_file_entries_forward.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-F", smp.getPosition()));
                     }
                     if (i_isReverse)
@@ -235,7 +235,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                                  isStatusUpdated = true;
                              }
                         }
-                        naming_file_entries_reverse.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_REVERSE )  );
+                        naming_file_entries_reverse.add(  createNamingFileEntry( smp, Constants.READ_DIRECTION_REVERSE )  );
                         //rearray_file_entries_reverse.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-R", smp.getPosition()));
 
                     }

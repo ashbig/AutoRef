@@ -25,8 +25,10 @@ public class OutstandingJobs
 {
      //store input & output blast files
     private static final String INPUT = "/tmp/";
-    private static final String OUTPUT = "/blastoutput/";
+  //  private static final String OUTPUT = "/blastoutput/";
+    private static final String OUTPUT = "/output/blastoutput/";
     private int          m_species = RefSequence.SPECIES_NOT_SET;
+    private ArrayList       m_plateids= null;
     private String      m_blastable_dbname = null;
     private int         m_blast_minimum_stretch = 100;
     private double      m_blast_identity = 95.0;
@@ -34,14 +36,27 @@ public class OutstandingJobs
     
     public OutstandingJobs(){}
     public void setSpecies(int s){m_species = s;}
+    public void setPlateIds(ArrayList ar){ m_plateids = ar;}
     public void setBlastablDB(String s){ m_blastable_dbname = s;}
     public void setPassParamBlastIdentity(double i){m_blast_identity = i;}
     public void setPassParamBlastMinimumStretch(int i){m_blast_minimum_stretch = i;}
     
+    
     public  void findWriteORF(String reportfilename)throws Exception
     {
         //take all isolates with no match status
-        int[] status = {IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH};
+     
+        findWriteORF( reportfilename,null);
+    }
+    public  void findWriteORF(String reportfilename,int[] subm_status)throws Exception
+    {
+        //take all isolates with no match status
+        int [] status =  {IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH};
+          
+          if ( subm_status!=null)
+          {
+              status = subm_status;
+          }
         String processed_isolatetr_ids = "";
         FileWriter in = null; int count_isolates = 0;
         while (true)
@@ -49,14 +64,15 @@ public class OutstandingJobs
             if (count_isolates == 0)
             {
                 in = new FileWriter(reportfilename);
-                in.write("Construct Id\t Bec RefSequence Id\tFlex Refsequence Id\t Isolate Id\tRead Id\tRead seq id\t hit id \t identity\t stretch");
+                in.write("Construct Id\t Bec RefSequence Id\tFlex Refsequence Id\t Isolate Id\t Clone ID\tRead Id\tRead seq id\t hit id \t identity\t stretch");
             }
             else
             {
                                 in = new FileWriter(reportfilename, true);
             }
-         ArrayList isolate_engines = IsolateTrackingEngine.getIsolateTrackingEnginesByStatusandSpecies(status, m_species,processed_isolatetr_ids);
-
+  // by species ArrayList isolate_engines = IsolateTrackingEngine.getIsolateTrackingEnginesByStatusandSpecies(status, m_species,processed_isolatetr_ids);
+// plates
+            ArrayList isolate_engines = IsolateTrackingEngine.getIsolateTrackingEnginesByStatusAndPlates(status, m_plateids,processed_isolatetr_ids);
            if ( isolate_engines == null || isolate_engines.size() == 0)break;
             IsolateTrackingEngine cur_engine = null;
             String sequence = null;
@@ -75,7 +91,8 @@ public class OutstandingJobs
                 cur_engine = (IsolateTrackingEngine)isolate_engines.get(isolate_count);
                 cur_construct = new ConstructInfo(cur_engine.getId());
                 processed_isolatetr_ids += cur_engine.getId()+",";
-                in.write("\n\n"+cur_construct.getConstructId() +"\t"+ cur_construct.getRefSeqId()+"\t"+cur_construct.getFlexRefSeqId() +"\t"+ cur_engine.getId() + "\t");
+                int cloneId = getCloneId(cur_engine.getId());
+                in.write("\n\n"+cur_construct.getConstructId() +"\t"+ cur_construct.getRefSeqId()+"\t"+cur_construct.getFlexRefSeqId() +"\t"+ cur_engine.getId() + "\t"+ cloneId + "\t");
                 for (int read_count = 0; read_count < cur_engine.getEndReads().size(); read_count++)
                 {
                     count_isolates++;
@@ -131,12 +148,12 @@ public class OutstandingJobs
             {
                 case  RefSequence.SPECIES_HUMAN :
                 {
-                    blaster.setDB( FastaFileGenerator.HUMANDB);
+                    blaster.setDB( BlastWrapper.HUMANDB);
                     break;
                 }
                 case  RefSequence.SPECIES_YEAST :
                 {
-                    blaster.setDB( FastaFileGenerator.YEASTDB);
+                    blaster.setDB( BlastWrapper.YEASTDB);
                     break;
                 }
                 case RefSequence.SPECIES_MOUSE :
@@ -146,7 +163,7 @@ public class OutstandingJobs
                 }
                 case RefSequence.SPECIES_PSEUDOMONAS :
                 {
-                    blaster.setDB(FastaFileGenerator.PSEUDOMONASDB);
+                    blaster.setDB(BlastWrapper.PSEUDOMONASDB);
                     break;
                 }
                 
@@ -185,7 +202,34 @@ public class OutstandingJobs
         return res;     
     }
     
-    
+    public int getCloneId(int isolateid)throws BecDatabaseException
+        {
+            
+            String sql = "select flexcloneid from flexinfo where isolatetrackingid  ="+isolateid    ;
+            RowSet crs = null;
+        
+            try
+            {
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                crs = t.executeQuery(sql);
+
+                if(crs.next())
+                {
+                   return crs.getInt("flexcloneid");
+                  
+                }
+                return -1;
+            } 
+            catch (Exception e)
+            {
+                throw new BecDatabaseException("Error occured while extracting sequenceids: "+sql);
+            } 
+            finally
+            {
+                DatabaseTransaction.closeResultSet(crs);
+            }
+        
+        }
     class ConstructInfo
     {
         private int i_constructid = -1;
@@ -240,11 +284,24 @@ public class OutstandingJobs
         try
         {
                OutstandingJobs ot =new OutstandingJobs();
-                ot.setSpecies(RefSequence.SPECIES_YEAST);
-               String filename="/tmp/namatchout.txt";
+               ArrayList ar = new ArrayList();
+               
+     
+
+               ar.add("227");
+       ar.add("229");
+       ar.add("233");
+       ar.add("234");
+       ar.add("235");
+      
+
+               ot.setPlateIds(ar);
+               String filename="c:/tmp/no_match_pseudomonas.txt";
                 ot.setPassParamBlastIdentity( 95.0);
                 ot.setPassParamBlastMinimumStretch(70);
-                ot.findWriteORF(filename);
+                ot.setSpecies( RefSequence.SPECIES_PSEUDOMONAS);
+                int[] status = {IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED};
+                ot.findWriteORF(filename,status);
         }
         catch(Exception e){System.out.print(e.getMessage());}
   }
