@@ -10,6 +10,7 @@ package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 import java.util.*;
 import java.sql.*;
@@ -59,6 +60,21 @@ public class ConstructProcessQueue implements ProcessQueue {
         
     }
  
+    /**
+     * Retrieve all of the queued items which are waiting for the
+     * next workflow process from the Queue table
+     *
+     * @param protocol The protocol object.
+     * @param project The project to work with.
+     * @param workflow The workflow to work with.
+     * @return A List of QueueItem objects.
+     * @exception FlexDatabaseException.
+     */
+    public LinkedList getQueueItems(Protocol protocol, Project project, Workflow workflow) 
+    throws FlexDatabaseException {
+        return null;
+    }
+
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table,

@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.12 2001-08-17 20:37:48 dzuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.13 2001-08-28 17:36:25 dzuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -46,6 +46,21 @@ public class SequenceProcessQueue implements ProcessQueue {
         LinkedList items = restore(protocol, null, null, sql);
         return items;
         
+    }
+
+    /**
+     * Retrieve all of the queued items which are waiting for the
+     * next workflow process from the Queue table
+     *
+     * @param protocol The protocol object.
+     * @param project The project to work with.
+     * @param workflow The workflow to work with.
+     * @return A List of QueueItem objects.
+     * @exception FlexDatabaseException.
+     */
+    public LinkedList getQueueItems(Protocol protocol, Project project, Workflow workflow) 
+    throws FlexDatabaseException {
+        return null;
     }
     
     /**

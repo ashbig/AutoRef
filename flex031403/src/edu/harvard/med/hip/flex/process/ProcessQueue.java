@@ -1,5 +1,5 @@
 /*
- * $Id: ProcessQueue.java,v 1.6 2001-07-31 19:40:48 dzuo Exp $
+ * $Id: ProcessQueue.java,v 1.7 2001-08-28 17:36:25 dzuo Exp $
  *
  * File     : ProcessQueue.java
  * Date     : 04162001
@@ -11,6 +11,7 @@ package edu.harvard.med.hip.flex.process;
 import java.util.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * Represents the queue which contains all the item
@@ -37,6 +38,18 @@ public interface ProcessQueue {
      * @exception FlexDatabaseException.
      */
     public LinkedList getQueueItems(Protocol protocol, String Date) throws FlexDatabaseException;
+
+    /**
+     * Retrieve all of the queued items which are waiting for the
+     * next workflow process from the Queue table
+     *
+     * @param protocol The protocol object.
+     * @param project The project to work with.
+     * @param workflow The workflow to work with.
+     * @return A List of QueueItem objects.
+     * @exception FlexDatabaseException.
+     */
+    public LinkedList getQueueItems(Protocol protocol, Project project, Workflow workflow) throws FlexDatabaseException;
     
     /**
      * Retrieve the batch of queued items which are waiting for the
