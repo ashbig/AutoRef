@@ -13,7 +13,6 @@
 <hr>
 <html:errors/>
 <html:form action="/GetResearcher.do" focus="researcherBarcode">
-<input type="hidden" name="page" value="2">
 <table>
     <tr>
     <td><b>Protocol:</b></td>

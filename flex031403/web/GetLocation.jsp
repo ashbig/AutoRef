@@ -22,10 +22,7 @@
     <tr>
     <td><b>Source plate barcode:</b></td>
     <td><bean:write name="EnterSourcePlateAction.oldContainer" property="label"/></td>
-    </tr>
-
-    <tr>
-    <td><b>Source plate location:</b></td>
+    <td><b>Location:</b></td>
     <td><html:select property="sourceLocation">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -36,7 +33,9 @@
     </tr>
 
     <tr>
-    <td><b>Select the location for the destination plate:</b></td>
+    <td><b>Destination plate barcode:</b></td>
+    <td><bean:write name="EnterSourcePlateAction.newContainer" property="label"/></td>
+    <td><b>Location:</b></td>
     <td><html:select property="destLocation">
         <html:options
         collection="EnterSourcePlateAction.locations"

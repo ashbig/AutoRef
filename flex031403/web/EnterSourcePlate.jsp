@@ -13,7 +13,6 @@
 <hr>
 <html:errors/>
 <html:form action="/EnterSourcePlate.do" focus="sourcePlate">
-<input type="hidden" name="page" value="1">
 <table>
     <tr>
     <td><b>Protocol:</b></td>
