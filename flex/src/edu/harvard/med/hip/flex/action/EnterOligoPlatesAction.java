@@ -114,7 +114,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             String subProtocolName = ((CreatePCRPlateForm)form).getSubProtocolName();
             SubProtocol subprotocol = new SubProtocol(subProtocolName);
             LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems");
-            QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate);
+            QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate, templatePlate);
             if(item == null) {
                 errors.add("fivepPlate", new ActionError("error.plateset.mismatch", fivepPlate, threepOpenPlate, threepClosedPlate));
                 saveErrors(request, errors);
@@ -274,7 +274,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
     private QueueItem getValidItem(LinkedList queueItems,
     String fivepPlate,
     String threepOpenPlate,
-    String threepClosedPlate)
+    String threepClosedPlate, String templatePlate)
     throws FlexCoreException, FlexDatabaseException {
         if(queueItems == null) {
             return null;
@@ -287,8 +287,14 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             Container fivep = ps.getFivepContainer();
             Container threepOpen = ps.getThreepOpenContainer();
             Container threepClosed = ps.getThreepClosedContainer();
+            Container template = ps.getMgcContainer();
             
-            if(threepClosed == null) {
+            if(template != null && templatePlate != null) {
+                if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate) 
+                    && threepClosed.isSame(threepClosedPlate) && template.isSame(templatePlate)) {
+                        found = item;
+                }
+            } else if(threepClosed == null) {
                 if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)) {
                     found = item;
                 }
