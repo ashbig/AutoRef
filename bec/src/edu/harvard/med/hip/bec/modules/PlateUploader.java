@@ -133,7 +133,7 @@ public class PlateUploader
                    return;
               }
               //check for plate duplication in BEC
-              if (isPlateExist(platename, bec_connection))
+              if (isPlateExist(platename))
               {
                    m_error_messages.add("Plate "+platename+" already exists in BEC");
                    return;
@@ -269,7 +269,7 @@ public class PlateUploader
         {
             //DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
            // rs = DatabaseTransactionLocal.executeQuery(sql,bec_connection);
-            rs = DatabaseTransaction.executeQuery(sql, bec_connection);
+            rs = DatabaseTransaction.getInstance().executeQuery(sql);
             while(rs.next())
             {
                 flex_sequence_ids.put( new Integer(rs.getInt("flexsequenceid") ),
@@ -542,7 +542,7 @@ public class PlateUploader
         {
           //  DatabaseTransaction t = DatabaseTransaction.getInstance(); 
             //rs = t.executeQuery(sql);
-            rs = DatabaseTransaction.executeQuery(sql,bec_connection);
+            rs = DatabaseTransaction.getInstance().executeQuery(sql);
             while(rs.next())
             {
                   construct = new Construct(rs.getInt("BECCONSTRUCTID"), -1, 
@@ -648,7 +648,7 @@ public class PlateUploader
         
         
         
-        ResultSet rs = rs = DatabaseTransaction.executeQuery(sql,conn);
+        ResultSet rs = rs = DatabaseTransaction.getInstance().executeQuery(sql);
         try
         {
             while (rs.next())
@@ -666,11 +666,36 @@ public class PlateUploader
         return id;
     }
     
-    private boolean isPlateExist(String platename, Connection bec_connection)throws BecDatabaseException
+    private boolean isPlateExist(String platename)throws BecDatabaseException
     {
         String sql = "select * from containerheader where label ='"+platename+"'";
      
-        ResultSet rs  = DatabaseTransaction.executeQuery(sql,bec_connection);
+        ResultSet rs  = DatabaseTransaction.getInstance().executeQuery(sql);
+        try
+        {
+            if (rs.next())
+            {
+                return true;
+            }
+            return false;
+        } 
+        catch(SQLException sqlE)
+        {
+            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+        } 
+        finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        
+    }
+    
+    private boolean isPlateExist(String platename, Connection flex_connection)throws BecDatabaseException
+    {
+        String sql = "select * from containerheader where label ='"+platename+"'";
+     
+        ResultSet rs  = DatabaseTransactionLocal.executeQuery(sql,flex_connection);
         try
         {
             if (rs.next())
