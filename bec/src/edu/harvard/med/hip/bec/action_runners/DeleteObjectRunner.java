@@ -111,11 +111,16 @@ public class DeleteObjectRunner extends ProcessRunner
             default: m_error_messages.add("Action not set.");
         }
         //execute statements
+        printReport(sql_for_deletion,   report_file_name , "Need to be executed");
+        ArrayList exc_items = new ArrayList();
         for ( int count = 0; count < sql_for_deletion.size(); count++)
         {
-            DatabaseTransaction.executeUpdate( (String)sql_for_deletion.get(count) , conn);
+              DatabaseTransaction.executeUpdate( (String)sql_for_deletion.get(count) , conn);
+              exc_items.add((String)sql_for_deletion.get(count));
         }
-        printReport(sql_for_deletion,   report_file_name);
+        DatabaseTransaction.getInstance().requestConnection().commit();
+    
+        printReport(exc_items,   report_file_name, "Executed items");
     }
     
     //------------------------------------------------------------------
@@ -136,6 +141,7 @@ public class DeleteObjectRunner extends ProcessRunner
    
                 sql_result_type = " resulttype in  ( "+ Result.RESULT_TYPE_ENDREAD_FORWARD+","+
                     Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL +") and";
+                break;
             }
             case Constants.PROCESS_DELETE_CLONE_REVERSE_READ :
             {
@@ -143,8 +149,8 @@ public class DeleteObjectRunner extends ProcessRunner
                     Result.RESULT_TYPE_ENDREAD_REVERSE  +") and ";
                  sql_read_type = "  readtype in ("+ Read.TYPE_ENDREAD_REVERSE +","+ 
                     Read.TYPE_ENDREAD_REVERSE_FAIL+","+  Read.TYPE_ENDREAD_REVERSE_NO_MATCH +","+ 
-                    Read.TYPE_ENDREAD_REVERSE_SHORT +") and";
-                 
+                    Read.TYPE_ENDREAD_REVERSE_SHORT +") and ";
+                 break;
             }
          }
         if ( m_items_type == Constants.ITEM_TYPE_CLONEID)
@@ -172,21 +178,24 @@ public class DeleteObjectRunner extends ProcessRunner
         if ( sql_read_type != null) sql+= sql_read_type;
         sql +=" isolatetrackingid in"+ sql_where;   sql_for_deletion.add(sql);
 //get filereferens id 
-    sql = "select filereferenceid as ID from  resultfilereference  where ";
+    sql = "select filereferenceid as ID from  resultfilereference  where resultid in  (select resultid from result where ";
     if ( sql_result_type != null ) sql+= sql_result_type;
-    sql += "resultid in  (select resultid from result where sampleid in "
-+" (select sampleid from isolatetracking where isolatetrackingid in "+sql_where+"))"; 
+    sql+=" sampleid in  (select sampleid from isolatetracking where isolatetrackingid in "+sql_where+"))"; 
     String fileref_ids = getIdsToRemove(sql);            
 //delete from resultfile reference
-    sql = "delete from   resultfilereference  where ";
-    if ( sql_result_type != null ) sql+= sql_result_type;
-    sql +=" resultid in  (select resultid from result where sampleid in "
-    +" (select sampleid from isolatetracking where isolatetrackingid in "
-    +sql_where+"))";      sql_for_deletion.add(sql);
-
+  
+        sql = "delete from   resultfilereference  where ";
+        sql +=" resultid in  (select resultid from result where ";
+         if ( sql_result_type != null ) sql+= sql_result_type;
+        sql +="sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
+        +sql_where+"))";      sql_for_deletion.add(sql);
+    
 //filereference
-sql = "delete from  filereference where filereferenceid in ("+fileref_ids+")";
-sql_for_deletion.add(sql);
+       if (fileref_ids != null && !fileref_ids.equals(""))
+    {
+        sql = "delete from  filereference where filereferenceid in ("+fileref_ids+")";
+        sql_for_deletion.add(sql);
+       }
         //update reads
 sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
 + Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
@@ -273,13 +282,14 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         String sql_ids = " select constructid as id from isolatetracking  where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+")))";
         String isolatetracking_ids = getIdsToRemove(sql_ids);      
          //delete flexinfo
-         sql.add("delete from flexinfo where isolatetrackingid in ( select isolatetrackingid from isolatetracking  where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+"))))");
+           sql.add("delete from flexinfo where isolatetrackingid in ( select isolatetrackingid from isolatetracking  where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+"))))");
   
         //delete isolates
             sql.add("delete from isolatetracking where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+")))");
   
         //delete all sequencing constructs
-        sql.add("delete from sequencingconstruct where constructid in ( "+isolatetracking_ids+")");//delete isolates
+        if (isolatetracking_ids != null && !isolatetracking_ids.equals(""))
+           sql.add("delete from sequencingconstruct where constructid in ( "+isolatetracking_ids+")");//delete isolates
          //samples
               sql.add("delete from  sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+"))");
   
@@ -294,15 +304,16 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         //oligos for stretch collections   ????
         return sql;
     }
-    private void            printReport(ArrayList sql_statements,  String report_file_name)
+    private void            printReport(ArrayList sql_statements,  String report_file_name, String title)
     {
         FileWriter in = null; 
         try
         {
             in =  new FileWriter(report_file_name, true);
+            in.write(title);
             for (int count =0; count < sql_statements.size(); count++)
             {
-                  in.write( (String) sql_statements.get(count));
+                  in.write( (String) sql_statements.get(count)+";\n");
             }
             in.flush();
             in.close();
@@ -329,19 +340,17 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
             input.setUser(user);
             
            
-            input.setActionType(Constants.PROCESS_DELETE_CLONE_READS);
-           input.setItems("    BSE000934 ");
+            input.setActionType(Constants.PROCESS_DELETE_CLONE_FORWARD_READ);
+           input.setItems("    119699 ");
+           input.run();
           //   input.setItems("    734 345 ");
         //    input.setItemsType( Constants.ITEM_TYPE_CLONEID);
           
-           input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
-              ArrayList sql_groups_of_items =  input.prepareItemsListForSQL();
+       //    input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+         //     ArrayList sql_groups_of_items =  input.prepareItemsListForSQL();
            
-            ArrayList sql = input.getSqlReads((String)sql_groups_of_items.get(0),Constants.PROCESS_DELETE_CLONE_READS);
-            for (int i = 0; i < sql.size(); i ++)
-            {
-                System.out.println((String) sql.get(i));
-            }
+         //   ArrayList sql = input.getSqlReads((String)sql_groups_of_items.get(0),Constants.PROCESS_DELETE_CLONE_READS);
+       
         }
         catch(Exception e){}
      
