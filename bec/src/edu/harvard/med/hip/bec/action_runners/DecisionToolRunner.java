@@ -45,6 +45,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
         ArrayList clones = new ArrayList();
         String  report_file_name =    null;
         ArrayList sql_groups_of_items = new ArrayList();
+        m_clones = new ArrayList();
         File report = null;
         try
         {
@@ -55,7 +56,11 @@ import edu.harvard.med.hip.bec.ui_objects.*;
            {
                clones = UICloneSample.getCloneInfo( (String) sql_groups_of_items.get(count), m_items_type,true,  false);
                 processClones(clones);
-                printReport(report_file_name, clones, count);
+                 if ( clones != null && clones.size() > 0 )
+                 {
+                    printReport(report_file_name, clones, count);
+                    m_clones.addAll(clones);
+                 }
            }
            
            m_file_list_reports.add(new File(report_file_name));   
