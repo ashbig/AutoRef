@@ -26,6 +26,9 @@
 .black {
 	background-color: #999999;
 }
+.brown {
+	background-color: #ffe4c4;
+}
 .yellow {
 	background-color: #9999FF;
 }
@@ -204,8 +207,15 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
                                     break;
                                 }
                                 case IsolateTrackingEngine.RANK_BLACK:
+                                {
+                                    if (sample.getIsolateTrackingEngine().getStatus() ==IsolateTrackingEngine.PROCESS_STATUS_ER_NO_LONG_READS || sample.getIsolateTrackingEngine().getStatus()==IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS)
+                                    {
+                                        cell_data[row][col] =" <td class='brown' style='"+ borders[border_index] +"' >"+anchor+"</td>";
+                                   }
+                                    else 
                                     cell_data[row][col] =" <td class='black' style='"+ borders[border_index] +"' >"+anchor+"</td>";
-                           }
+                                }   
+                        }
 
                 }
 //System.out.println(cell_data[row][col]);
@@ -281,8 +291,12 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
     <td class="red"></td>
   </tr>
   <tr> 
-    <td ><b> Isolate that can not be used:</b></td>
+    <td ><b> Isolate that can not be used :</b></td>
     <td  class="black"  ></td>
+  </tr>
+  <tr> 
+    <td ><b> Isolate with no data :</b></td>
+    <td  class="brown"  ></td>
   </tr>
   <tr> 
     <td ><b> Wrong ORF:</b></td>
