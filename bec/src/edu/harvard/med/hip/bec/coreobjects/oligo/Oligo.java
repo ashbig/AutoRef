@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.13 2005-02-10 18:26:52 Elena Exp $
+ * $Id: Oligo.java,v 1.14 2005-02-24 17:45:49 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -329,7 +329,7 @@ public class Oligo
        if ( primers_selection_rule == PrimerOrderRunner.OLIGO_SELECTION_FORMAT_REFSEQ_ONLY)
        {
             sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
-+" from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid from oligo_calculation where stretchcollectionid <0 and  sequenceid = "
++" from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid from oligo_calculation where stretchcollectionid is null and  sequenceid = "
 +" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
 +" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+")))) order by oligocalculationid, POSITION";
     
