@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 import edu.harvard.med.hip.flex.form.CreateProcessPlateForm;
 import edu.harvard.med.hip.flex.core.Container;
+import edu.harvard.med.hip.flex.util.PrintLabel;
 
 /**
  *
@@ -59,7 +60,8 @@ public class PrintBarcodeAction extends ResearcherAction {
         Vector newContainers = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.newContainers");
         for(int i=0; i<newContainers.size(); i++) {
             Container c = (Container)newContainers.elementAt(i);
-            System.out.println("Printing barcode: "+c.getLabel());
+            String status = PrintLabel.execute(c.getLabel());
+            System.out.println("Printing barcode: "+status);
         }
         
         return (mapping.findForward("success"));   
