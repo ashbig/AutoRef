@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTransaction.java,v 1.5 2001-05-04 18:40:44 dongmei_zuo Exp $
+ * $Id: DatabaseTransaction.java,v 1.6 2001-05-08 17:15:40 wenhong_mar Exp $
  *
  * File     : DatabaseTransaction.java 
  * Date     : 04162001
@@ -9,6 +9,8 @@
  *		  Add getConnection() and disconnect() methods. [dzuo]
  * Revision : 05-01-2001
  *		  Add getResultset() method. [wmar]
+ * Revision : 05-07-2001
+ *		  Add isConnected() method. [wmar]
  */
 
 package flex.ApplicationCode.Java.database;
@@ -56,6 +58,21 @@ public class DatabaseTransaction {
 	}
 
 	/**
+	 * Return a boolean indicating whether there is
+	 * a database connection.
+	 *
+	 * @return a boolean value.
+	 */
+	public boolean isConnected ()
+  	{
+    		if (connection == null)
+    		{
+			return false;
+    		} 
+    		return true;
+  	}
+  	
+	/**
 	 * Disconnect the current database connection.
 	 *
 	 * @exception FlexDatabaseException.
@@ -64,6 +81,7 @@ public class DatabaseTransaction {
 		try {
 			if(connection != null) {
 				connection.close();
+				connection = null;
 				instance = null;
 			}
 		} catch (SQLException e) {
@@ -346,20 +364,22 @@ public class DatabaseTransaction {
 				System.out.println();
 			}
 
+			if(t.isConnected()) {
+				System.out.println("Method isConnected tested - OK");
+			} else {
+				System.out.println("Method isConnected tested - ERROR");
+			}
+
 			t.disconnect();
+
+			if(t.isConnected()) {
+				System.out.println("Method isConnected tested - ERROR");
+			} else {
+				System.out.println("Method isConnected tested - OK");
+			}	
 		} catch (FlexDatabaseException e) {
 			System.out.println(e);
 		}		
 	}
 }
-
-
-
-
-
-
-
-
-
-
 
