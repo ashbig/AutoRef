@@ -94,7 +94,6 @@ public class Usermanager {
         
         String sql = "select count (*) from userprofile where remindtext = '"+text+"'";
         Statement stmt = null;
-        boolean rt = true;
         int count = 0;
         
         try {
