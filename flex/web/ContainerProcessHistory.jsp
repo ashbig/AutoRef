@@ -17,31 +17,31 @@
     <p>
     <table>
     <tr>
-        <th><CENTER>Protocol</CENTER></th>
-        <th><CENTER>Execution Date</CENTER></th>
-        <th><CENTER>Subprotocol</CENTER></th>
-        <th><CENTER>Researcher</CENTER></th>
-        <th><CENTER>Notes</CENTER></th>
-        <th><CENTER>Container</CENTER></th>
-        <th><CENTER>Container Type</CENTER></th>
-        <th><CENTER>Container Label</CENTER></th>
+        <th>Protocol</th>
+        <th>Execution Date</th>
+        <th>Subprotocol</th>
+        <th>Researcher</th>
+        <th>Notes</th>
+        <th>Container</th>
+        <th>Container Type</th>
+        <th>Container Label</th>
     </tr>
     <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
         <tr>
         <bean:define id="process" name="threadElem" property="process"/>
         <bean:define id="protocol" name="process" property="protocol"/>
         <bean:define id="container" name="threadElem" property="object"/>
-            <td><CENTER><bean:write name="protocol" property="processname"/></CENTER></td>
-            <td><CENTER><bean:write name="process" property="date"/></CENTER></td>
-            <td><CENTER><bean:write name="process" property="subprotocol"/></CENTER></td>
-            <td><CENTER><bean:write name="process" property="researcher.name"/></CENTER></td>
-            <td><CENTER><bean:write name="process" property="extrainfo"/></CENTER></td>
-            <td><CENTER><flex:linkContainer name="container" process="process">
+            <td><bean:write name="protocol" property="processname"/></td>
+            <td><bean:write name="process" property="date"/></td>
+            <td><bean:write name="process" property="subprotocol"/></td>
+            <td><bean:write name="process" property="researcher.name"/></td>
+            <td><bean:write name="process" property="extrainfo"/></td>
+            <td><flex:linkContainer name="container" process="process">
                             <bean:write name="container" property="id"/>
                         </flex:linkContainer>
-                </CENTER></td>
-            <td><CENTER><bean:write name="container" property="type"/></CENTER></td>
-            <td><CENTER><bean:write name="container" property="label"/></CENTER></td>
+            </td>
+            <td><bean:write name="container" property="type"/></td>
+            <td><bean:write name="container" property="label"/></td>
         </tr>
     </logic:iterate>
     </table>

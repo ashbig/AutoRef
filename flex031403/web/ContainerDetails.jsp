@@ -23,9 +23,9 @@
 <html:errors/>
 <p>
 <logic:present name="process">
-    <Center><h3>Results desplayed are for protocol 
+    <h3>Results desplayed are for protocol 
     <bean:write name="process" property="protocol.processname"/>
-    </h3></center>
+    </h3>
 </logic:present>
 
 

@@ -30,13 +30,13 @@
     <br>
     <table>
     <tr>
-        <th><CENTER>Protocol</CENTER></th>
-        <th><CENTER>Execution Date</CENTER></th>
-        <th><CENTER>Subprotocol</CENTER></th>
-        <th><CENTER>Researcher</CENTER></th>
-        <th><CENTER>Notes</CENTER></th>
-        <th><CENTER>Container</CENTER></th>
-        <th><CENTER>Sample</CENTER></th>
+        <th>Protocol</th>
+        <th>Execution Date</th>
+        <th>Subprotocol</th>
+        <th>Researcher</th>
+        <th>Notes</th>
+        <th>Container</th>
+        <th>Sample</th>
     </tr>
  
     <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
@@ -47,21 +47,21 @@
         <bean:define id="sample" name="threadElem" property="object"/>
         <bean:define id="seq" name="sample" property="flexSequence"/>
         <bean:define id="container" name="sample" property="container"/>
-            <td><CENTER><bean:write name="protocol" property="processname"/></CENTER></td>
-            <td><CENTER><bean:write name="process" property="date"/></CENTER></td>
-            <td><CENTER><bean:write name="process" property="subprotocol"/></CENTER></td>
-            <td><CENTER><bean:write name="process" property="researcher.name"/></CENTER></td>
-            <td><CENTER><bean:write name="process" property="extrainfo"/></CENTER></td>
-            <td><CENTER><flex:linkContainer name="container" process="process">
+            <td><bean:write name="protocol" property="processname"/></td>
+            <td><bean:write name="process" property="date"/></td>
+            <td><bean:write name="process" property="subprotocol"/></td>
+            <td><bean:write name="process" property="researcher.name"/></td>
+            <td><bean:write name="process" property="extrainfo"/></td>
+            <td><flex:linkContainer name="container" process="process">
                             <bean:write name="container" property="label"/>
                         </flex:linkContainer>
-                </CENTER></td>
+            </td>
            
-            <td><CENTER>
+            <td>
                     <flex:linkSample name="sample" process="process">
                         <bean:write name="sample" property="id"/>
                     </flex:linkSample>
-                </CENTER></td>
+           </td>
         </tr>
     </logic:iterate>
     </table>

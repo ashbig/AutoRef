@@ -14,7 +14,7 @@
     <hr>
     <html:errors/>
     <p>
-    <center><H3>Please Scan the Container</h3></center>
+    <H3>Please Scan the Container</h3>
     <form action="ViewContainerProcessHistory.do" >
     <table>
         <tr>
