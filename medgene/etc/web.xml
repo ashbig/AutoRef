@@ -83,11 +83,19 @@
         </servlet-class>  
     <init-param>
         <param-name>driverClass</param-name>
-        <param-value>sun.jdbc.odbc.JdbcOdbcDriver</param-value>
+        <param-value>oracle.jdbc.driver.OracleDriver</param-value>
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:odbc:medgene</param-value>
+      <param-value>jdbc:oracle:thin:@hipseq:1521:mdev</param-value>
+    </init-param>
+    <init-param>
+      <param-name>user</param-name>
+      <param-value>medgene_0702</param-value>
+    </init-param>
+    <init-param>
+        <param-name>password</param-name>
+        <param-value>medgene</param-value>
     </init-param>
     <init-param>
       <param-name>minCount</param-name>
