@@ -1,0 +1,142 @@
+insert into usergroup values('Administrator');
+insert into usergroup values('Researcher');
+
+
+ insert into menuitem values (menuitemid.nextval, 'seqSelectProcess',3,'Select Process','Sequencing Project');
+ insert into menuitem   ( menuitemid, menuitem,displayorder,description) values (menuitemid.nextval, 'home',    0,'Home');                                                                                                           
+ insert into menuitem   ( menuitemid, menuitem,displayorder,description) values (menuitemid.nextval, 'addResearcher',1,'Add New Researcher');                                               
+ insert into menuitem values (menuitemid.nextval, 'seqEnterParams',2,'Sequence evaluation settings','Sequencing Project');            
+ insert into menuitem values (menuitemid.nextval, 'seqSequenceAnalysis',4,'Sequence Analysis','Sequencing Project');
+insert into menuitem       ( menuitemid, menuitem,displayorder,description) values ( menuitemid.nextval ,'help', 20, 'Help');
+
+
+
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Administrator', (select menuitemid from menuitem where menuitem='help') );
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Researcher', (select menuitemid from menuitem where menuitem='help') );
+
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Administrator', (select menuitemid from menuitem where menuitem='seqSelectProcess') );
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Researcher', (select menuitemid from menuitem where menuitem='seqSelectProcess') );
+
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Administrator', (select menuitemid from menuitem where menuitem='addResearcher') );
+
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Administrator', (select menuitemid from menuitem where menuitem='seqEnterParams') );
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Researcher', (select menuitemid from menuitem where menuitem='seqEnterParams') );
+
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Administrator', (select menuitemid from menuitem where menuitem='home') );
+insert into usergroupmenuitem (usergroup, menuitemid)
+values ('Researcher', (select menuitemid from menuitem where menuitem='home') );
+
+
+
+
+insert into config_parameter_name (paramname) values ('P_PRIMER_GC_MIN');
+insert into config_parameter_name (paramname) values ('P_PRIMER_OPT');
+insert into config_parameter_name (paramname) values ('P_DOWNSTREAM_DISTANCE');
+insert into config_parameter_name (paramname) values ('P_PRIMER_TM_OPT');
+insert into config_parameter_name (paramname) values ('P_NUMBER_OF_STRANDS');
+insert into config_parameter_name (paramname) values ('P_SINGLE_READ_LENGTH');
+insert into config_parameter_name (paramname) values ('P_PRIMER_MIN');
+insert into config_parameter_name (paramname) values ('P_PRIMER_GC_MAX');
+insert into config_parameter_name (paramname) values ('P_PRIMER_TM_MIN');
+insert into config_parameter_name (paramname) values ('P_PRIMER_MAX');
+insert into config_parameter_name (paramname) values ('P_PRIMER_TM_MAX');
+insert into config_parameter_name (paramname) values ('P_BUFFER_WINDOW_LEN');
+insert into config_parameter_name (paramname) values ('P_PRIMER_GC_OPT');
+insert into config_parameter_name (paramname) values ('P_UPSTREAM_DISTANCE');
+insert into config_parameter_name (paramname) values ('P_EST_SEQ');
+
+
+
+
+
+insert into config_parameter_name (paramname) values ('FS_C_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_C_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_C_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_C_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_FR_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_FR_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_FR_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_FR_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_IDEL_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_IDEL_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_IDEL_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_IDEL_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_IINS_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_IINS_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_IINS_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_IINS_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_N_100');
+insert into config_parameter_name (paramname) values ('FS_N_ROW');
+insert into config_parameter_name (paramname) values ('FS_NC_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_NC_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_NC_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_NC_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_PELONG_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_PELONG_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_PELONG_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_PELONG_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_PHRED_CUT_OFF');
+insert into config_parameter_name (paramname) values ('FS_PHRED_LOW_CUT_OFF');
+insert into config_parameter_name (paramname) values ('FS_S_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_S_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_S_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_S_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_TRANC_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_TRANC_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_TRANC_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_TRANC_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_C_POLM');
+insert into config_parameter_name (paramname) values ('FS_FR_POLM');
+insert into config_parameter_name (paramname) values ('FS_IDEL_POLM');
+insert into config_parameter_name (paramname) values ('FS_IINS_POLM');
+insert into config_parameter_name (paramname) values ('FS_NC_POLM');
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_POLM');
+insert into config_parameter_name (paramname) values ('FS_PELONG_POLM');
+insert into config_parameter_name (paramname) values ('FS_S_POLM');
+insert into config_parameter_name (paramname) values ('FS_TRANC_POLM');
+
+
+
+
+
+insert into config_parameter_name (paramname) values ('ER_PHRED_CUT_OFF');
+insert into config_parameter_name (paramname) values ('ER_PHRED_LOW_CUT_OFF');
+insert into config_parameter_name (paramname) values ('ER_S_H');
+insert into config_parameter_name (paramname) values ('ER_S_L');
+insert into config_parameter_name (paramname) values ('ER_C_H');
+insert into config_parameter_name (paramname) values ('ER_C_L');
+insert into config_parameter_name (paramname) values ('ER_NC_H');
+insert into config_parameter_name (paramname) values ('ER_NC_L');
+insert into config_parameter_name (paramname) values ('ER_FR_H');
+insert into config_parameter_name (paramname) values ('ER_FR_L');
+insert into config_parameter_name (paramname) values ('ER_IDEL_H');
+insert into config_parameter_name (paramname) values ('ER_IDEL_L');
+insert into config_parameter_name (paramname) values ('ER_IINS_H');
+insert into config_parameter_name (paramname) values ('ER_IINS_L');
+insert into config_parameter_name (paramname) values ('ER_TRANC_H');
+insert into config_parameter_name (paramname) values ('ER_TRANC_L');
+insert into config_parameter_name (paramname) values ('ER_NOTRANSLATION_H');
+insert into config_parameter_name (paramname) values ('ER_NOTRANSLATION_L');
+insert into config_parameter_name (paramname) values ('ER_PLONG_H');
+insert into config_parameter_name (paramname) values ('ER_PLONG_L');
+
+
+insert into config_parameter_name (paramname) values ('PL_BASES'); 
+insert into config_parameter_name (paramname) values ('PL_FORMAT'); 
+insert into config_parameter_name (paramname) values ('PL_DATABASE'); 
+insert into config_parameter_name (paramname) values ('PL_FILE'); 
+insert into config_parameter_name (paramname) values ('PL_SPECIES'); 
+
+
