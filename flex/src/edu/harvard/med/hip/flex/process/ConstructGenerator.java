@@ -340,7 +340,7 @@ public class ConstructGenerator
         else if (  m_protocol.getProcessname() == Protocol.MGC_DESIGN_CONSTRUCTS )
         {
             nextProtocols = new Vector();
-            nextProtocols.add(new Protocol(Protocol.GENERATE_OLIGO_ORDERS)  );
+            nextProtocols.add(new Protocol(Protocol.RECEIVE_OLIGO_PLATES)  );
         }
         
         ListIterator iter = constructList.listIterator();
