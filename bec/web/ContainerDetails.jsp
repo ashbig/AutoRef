@@ -84,6 +84,7 @@
        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Type</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Id</font></strong></th>
+        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Id</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Status</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Refference Sequence</font></strong></th>
 		 <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Sequence</font></strong></th>
@@ -108,6 +109,11 @@
 		<td <%= row_color %>><%= sample.getPosition() %> </td>
 		<td <%= row_color %>> <%= sample.getSampleType()%></td>
 		<td <%= row_color %>> <%= sample.getSampleId()%></td>
+                <td <%= row_color %>>
+                        <% if (sample.getCloneId() != 0)
+                        {%> <%= sample.getCloneId()%>
+                       <%}else{%>&nbsp;<%}%>
+                </td>
 		<td <%= row_color %>> <%= IsolateTrackingEngine.getStatusAsString( sample.getCloneStatus () )%></td>
 		<td <%= row_color %>> 
 	<% if (sample.getRefSequenceId() == -1)
