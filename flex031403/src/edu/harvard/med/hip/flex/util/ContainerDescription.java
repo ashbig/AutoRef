@@ -44,12 +44,14 @@ public class ContainerDescription
     }
     
     public String           getLabel()    { return m_label;   }
+    
     public int              getId()    {    return m_id;}
     public int              getNumberOfSequences()    { return m_number_of_sequences;   }
     public String           getMarker(){ return m_marker;}
     public boolean          getStatus(){ return m_isReady;}
     public int              getGlycerolId(){ return m_glycerol_id;}
     public int              getCultureId(){ return m_culture_id;}
+    public String           getCultureLabel()  {  return "MLI"+m_label.substring(3);   }
     
     public void             setNumberOfSequences(int n  )    {m_number_of_sequences = n;    }
     //status shows if culture block for this mgc container exists on queue
