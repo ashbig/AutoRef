@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.3 2001-05-23 19:23:26 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.4 2001-05-23 19:35:09 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java
  * Date     : 05042001
@@ -11,12 +11,12 @@ package edu.harvard.med.hip.flex.gui;
 import java.util.*;
 import java.io.*;
 import javax.servlet.http.*;
-import flex.ApplicationCode.Java.database.*;
-import flex.ApplicationCode.Java.core.*;
-import flex.ApplicationCode.Java.util.*;
-import flex.ApplicationCode.Java.process.*;
-import flex.ApplicationCode.Java.User.*;
-import flex.ApplicationCode.Java.blast.*;
+import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.blast.*;
 
 /**
  * This class handles the customer request.
