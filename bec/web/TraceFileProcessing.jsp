@@ -143,8 +143,14 @@ else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFIL
 <tr><td><b>Please specify directory where trace files are located</td><td><input type="text" name="inputdir" id="inputdir" value="">		</td></tr>
 <%}%>
 <tr><td><b>Please specify sequencing facility </td>
-<td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> checked>Broad Institute
-<input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD%> >Agencourt 
+<td>
+<table border='0'>
+<tr><td>
+<input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> checked>Broad Institute
+</td></tr><tr><td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC%> checked>HTMBC
+</td></tr><tr><td><input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD%> >Agencourt 
+</td></tr></table>
+<tr><td>&nbsp;</td></tr>
 </td></tr>
 <tr><td><b>Please specify read type </td>
 <td><input type=radio name=read_type value="<%= Constants.READ_TYPE_ENDREAD_STR%>" checked>End Read
