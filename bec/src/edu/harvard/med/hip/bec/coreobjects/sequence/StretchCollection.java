@@ -165,6 +165,27 @@ vi.	Type of definition (coverage low quality / no coverage )
          return null;
      }
     
+     
+     public static int     getCloneIdByStretchCollectionId(int id)throws Exception
+     {
+        ResultSet rs = null; int cloneid = 0;
+        String sql = "SELECT FLEXCLONEID from flexinfo where isolatetrackingid in (select isolatetrackingid from stretch_collection where collectionid="+id+")";
+        try
+        {
+            rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            if (rs.next())
+            {
+               cloneid = rs.getInt("FLEXCLONEID");
+            }
+            return cloneid;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while extracting cloneid for stretch collection id "+id+"\nSQL: "+sql);
+        } finally        {            if ( rs != null)DatabaseTransaction.closeResultSet(rs);        }
+
+
+     }
+    
      public static StretchCollection     getByCloneSequenceIdAndSpecId(int clone_sequence_id, int spec_id)throws Exception
      {
            String sql = " select  COLLECTIONID  ,REFSEQUENCEID   , CONFIGID, CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
@@ -267,7 +288,7 @@ vi.	Type of definition (coverage low quality / no coverage )
                          if ( isLQRWithDiscrepancyOnly )//find if any discrepancies
                          {
                               discrepancies = contig.getSequence().getDiscrepanciesInRegion( 
-                                        stretch_start, stretch_end, 0, contig.getCdsStop() );
+                                        stretch_start, stretch_end, 0, contig.getCdsStop());
                               isInclude = !(discrepancies == null || discrepancies.size() == 0);
                               if ( isInclude && isStartFromFirstDiscrepancy )
                               {
@@ -315,7 +336,7 @@ vi.	Type of definition (coverage low quality / no coverage )
               html_description.append("<TD>"+lqr.getCdsStart() +" - "+ lqr.getCdsStop() +"</TD>");
               html_description.append("<TD> <PRE> <font size='-2'>"+ stretch_html_fomated_sequence +"</font></pre></TD>");
              
-              discrepancies = clone_sequence.getDiscrepanciesInRegion( lqr.getCdsStart() , lqr.getCdsStop(), clone_sequence.getCdsStart(), cds_length );
+              discrepancies = clone_sequence.getDiscrepanciesInRegion( lqr.getCdsStart() , lqr.getCdsStop(), clone_sequence.getCdsStart(), cds_length);
               if ( discrepancies == null || discrepancies.size() == 0 )
               {
                   discrepancy_report_button_text = "&nbsp";
