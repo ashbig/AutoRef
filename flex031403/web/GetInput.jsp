@@ -17,6 +17,11 @@
 <html:form action="/GetInput.do" focus="sourcePlate">
 <table>
     <tr>
+    <td><b>Enter your ID:</b></td>
+    <td><html:text property="researcherBarcode" size="40"/></td>
+    </tr>
+
+    <tr>
     <td><b>Enter the source plate barcode:</b></td>
     <td><html:text property="sourcePlate" size="40"/></td>
     </tr>
@@ -38,7 +43,7 @@
     </td>
 
     <tr>
-    <td></td><td><html:submit property="submit" value="Search"/></td>
+    <td></td><td><html:submit property="submit" value="Create"/></td>
     </tr>
 </table>
 </html:form>
