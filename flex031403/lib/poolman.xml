@@ -20,10 +20,10 @@
     <dbname>walldb</dbname>
     <jndiName>jndi-walldb</jndiName>
     <driver>oracle.jdbc.driver.OracleDriver</driver>
-    <url>jdbc:oracle:thin:@kotel:1532:wall</url>
+    <url>jdbc:oracle:thin:@kotel:1532:flex</url>
     <nativeResults>true</nativeResults>
-    <username>flex_owner</username>
-    <password>flex</password>
+    <username>flex_production</username>
+    <password>3monkeys</password>
     <minimumSize>5</minimumSize>
     <maximumSize>30</maximumSize>
     <maximumSoft>false</maximumSoft>
