@@ -37,11 +37,11 @@ database from <b>request file</b>.
 The request file <b>must</b> contains GI numbers only.
 GI numbers should be separated by delimiter. 
 We currently support the following delimiters: !, tab (\t). 
-<b>Request User</b>: the current user of the system would be considered the request owner.
+<P><b>Request Owner</b>: 
+the current user of the system would be considered the request owner.
 
 <p>
-The request upload can take some time, after request would be uploaded the
-e-mail notification will be sent to the user.
+The request uploading may take some time. The e-mail notification will be sent to you upon completion.
 </i> 
 
 <p>
@@ -62,6 +62,8 @@ e-mail notification will be sent to the user.
 
 
 </table>
+
+<P><P>
 <html:submit/>
 </html:form>
 

@@ -1,5 +1,5 @@
 <%--
-        $Id: MgcDisplayNewPlates.jsp,v 1.2 2002-05-30 17:26:47 Elena Exp $ 
+        $Id: MgcDisplayNewPlates.jsp,v 1.3 2002-06-13 20:54:03 Elena Exp $ 
 
        
         Author  : htaycher
@@ -22,7 +22,7 @@
 
 <html>
 <head>
-    <title><bean:message key="flex.name"/> : New Mgc Clone Containers</title>
+    <title><bean:message key="flex.name"/> : New MGC Containers</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 
 <script language="JavaScript">
@@ -53,7 +53,7 @@ function SetChecked(e, val) {
  </head>
 <body>
     
-    <h2><bean:message key="flex.name"/> : New Mgc Clone Containers</h2>
+    <h2><bean:message key="flex.name"/> : New Mgc Containers</h2>
     <hr>
     <html:errors/>
     
@@ -62,7 +62,7 @@ function SetChecked(e, val) {
 
 
 
-    <h3> Print barcodes for New Mgc Plates.</h3>
+    <h3> Print barcodes for New Mgc Containers.</h3>
 <table border='0' cellpadding='0' cellspacing='9' >
     <tr>
         <td>
@@ -81,6 +81,8 @@ function SetChecked(e, val) {
 
 <p>
  
+<% if ( ((ArrayList)request.getAttribute("LABELS")).size() > 0 )
+{%> 
  <html:submit property="submit" value="  Print  "/>
       
 <p>
@@ -93,7 +95,7 @@ function SetChecked(e, val) {
         <TH>FLEX Id</TH>
         <TH>Original Mgc Plate Label</TH>
         <TH>Flex Mgc Plate Label</TH>
-        <TH><input type="checkbox" name="all" value="All" onclick="SetChecked(this, this.checked)">  Print </TH>
+        <TH><input type="checkbox" name="all" value="All" onclick="SetChecked(this, this.checked)">&nbsp&nbspPrint&nbsp&nbsp</TH>
       </TR>
 
  <logic:iterate  id="curPlate" name="LABELS"> 
@@ -126,6 +128,8 @@ function SetChecked(e, val) {
 <br>
 <p>
 
+<%
+}%>
 
 </html:form>
 </body>

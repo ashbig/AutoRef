@@ -10,22 +10,25 @@
 
 <html:html locale="true">
 <head>
-<title><bean:message key="flex.name"/> : Import Mgc Clone Master List into FLEXGene</title>
+<title><bean:message key="flex.name"/> : Import MGC clone master list into FLEXGene</title>
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
-<h2><bean:message key="flex.name"/> : Import Mgc Clone Master List into FLEXGene</h2>
+<h2><bean:message key="flex.name"/> : Import MGC clone master list into FLEXGene</h2>
 <hr>
 <html:errors/>
-<p><i>This page allows you to upload the MGC clone information and its sequences  into the
+<p><i>This page allows you to upload the MGC clones' information and their sequences  into the
 database from file: <b>mgc clone distribution file</b>. 
 The <b>mgc clone distribution file</b> contains IMAGE_cloneID, MGC_ID, source_collection, source_plate, 
-source_row, source_column, libr_id, species(only human are uploaded), vector, rearray_collection, 
-rearray_plate, rearray_row, rearray_column. The mgc id is the unique identifier
+source_row, source_column, libr_id, species(only human MGC clones are uploaded!), vector, rearray_collection, 
+rearray_plate, rearray_row, rearray_column. 
+<P>The mgc id is the unique identifier
 for each clone. It will be used for quering ncbi to get clone sequnce.
-
+<P>Uploading of clone information may take some time.
+The e-mail notification will be sent to you upon completion.
 <p>
+<P>
 <html:form action="/ImportMgcCloneInfo.do" enctype="multipart/form-data"> 
 
 <table>
@@ -38,6 +41,7 @@ for each clone. It will be used for quering ncbi to get clone sequnce.
 
 
 </table>
+<P><P>
 <html:submit/>
 </html:form>
 

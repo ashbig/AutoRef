@@ -8,15 +8,14 @@
 
 <html>
 <head>
-<title><bean:message key="flex.name"/> : Mgc request upload</title>
+<title><bean:message key="flex.name"/> : MGC-Clontech request list: import information</title>
 </head>
 <body>
-<h2><bean:message key="flex.name"/> : Mgc request upload</h2>
+<h2><bean:message key="flex.name"/> : MGC-Clontech request list: import information</h2>
 <hr>
-
-<h4>Information is uploading.
-It can take some time.
-The report will be sent to request owner by e-mail. </h4>
+<P>
+<p>Information is uploading.
+The e-mail notification will be sent to you upon completion.
 
 
 </body>

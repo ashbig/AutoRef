@@ -8,15 +8,15 @@
 
 <html>
 <head>
-<title><bean:message key="flex.name"/> : Mgc Clone import information</title>
+<title><bean:message key="flex.name"/> : Master list of MGC clones: import information</title>
 </head>
 <body>
-<h2><bean:message key="flex.name"/> : Mgc Clone import Information </h2>
+<h2><bean:message key="flex.name"/> : Master list of MGC clones: import information </h2>
 <hr>
 
-<h3>Information is loading.<p>
- It can take several hours.<p>
-Please come later. <h3>
+<p>Information is uploading.
+It can take up to an hour based on number of clones.
+The e-mail notification will be sent to you upon completion.
 
 
 </body>

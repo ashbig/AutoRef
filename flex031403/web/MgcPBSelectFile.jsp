@@ -23,7 +23,7 @@
 
 <p>
 <html:form action="/MgcDisplayNewPlates.do" enctype="multipart/form-data"> 
-This page allows you to print barcodes for MGC plates based on <b>mgc clone distribution file</b>.
+This page allows you to print barcodes for MGC plates based on <b>mgc clone distribution file</b> name.
 <p><p>
 <table>
 <tr>
