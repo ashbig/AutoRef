@@ -31,6 +31,7 @@ import edu.harvard.med.hip.flex.form.GetResearcherBarcodeForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.special_projects.*;
 
 /**
  *
@@ -206,14 +207,27 @@ public class GetResearcherAction extends ResearcherAction{
             //insert into summary table if it is the glycerol stock plate.
             if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname())) {
                 List containerids = new ArrayList();
+                List seqContainers = new ArrayList();
                 for(int i=0; i<newContainers.size(); i++) {
                     Container newContainer = (Container)newContainers.elementAt(i);
-                    containerids.add(new Integer(newContainer.getId()));
+                    if(newContainer.getLabel().substring(1,3).equals("GS")) {
+                        containerids.add(new Integer(newContainer.getId()));
+                    } else {
+                        seqContainers.add(newContainer);
+                    }
                 }
                 int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());
                 
                 ThreadedSummaryTablePopulator populator = new ThreadedSummaryTablePopulator(containerids, strategyid, CloneInfo.MASTER_CLONE);
                 new Thread(populator).start();
+                
+                String isMappingFile = ((GetResearcherBarcodeForm)form).getIsMappingFile();
+                boolean b = false;
+                if("Yes".equals(isMappingFile)) {
+                    b = true;
+                }
+                ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b);
+                new Thread(handler).start();
             }
             
             // Remove everything from the session.

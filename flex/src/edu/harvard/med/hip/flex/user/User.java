@@ -234,6 +234,37 @@ public class User {
         return ret;
     }
     
+    public static User getUserFromBarcode(String barcode) {
+        String sql = "select username, useremail, usergroup from userprofile where researcherid in (select researcherid from researcher where researcherbarcode=?)";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        User user = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, barcode);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                String username = rs.getString(1);
+                String useremail = rs.getString(2);
+                String usergroup = rs.getString(3);
+                user = new User(username, useremail, usergroup);
+            }
+            
+            return user;
+        } catch (Exception ex) {
+            return user;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+        
+                          
     //**********************************************************//
     //						Test								//
     //**********************************************************//

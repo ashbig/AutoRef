@@ -158,6 +158,7 @@ public class EnterSourcePlateAction extends ResearcherAction {
            
             // store all the information to the session.
             storeSourceContainerInSession(request, oldContainers);
+            storeOthersInRequest(request, form);
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);
             request.getSession().setAttribute("EnterSourcePlateAction.sampleLineageSet", sampleLineageSet);
             request.getSession().setAttribute("EnterSourcePlateAction.locations", locationList);
@@ -237,5 +238,8 @@ public class EnterSourcePlateAction extends ResearcherAction {
     
     protected ContainerMapper getContainerMapper(String processname, ActionForm form) throws FlexProcessException {
         return StaticContainerMapperFactory.makeContainerMapper(processname);
+    }
+    
+    protected void storeOthersInRequest(HttpServletRequest request, ActionForm form) {
     }
 }

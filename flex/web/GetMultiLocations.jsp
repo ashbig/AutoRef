@@ -19,6 +19,7 @@
 <html:form action="/GetMultiLocations.do">
 <input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
 <input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+<input type="hidden" name="isMappingFile" value="<bean:write name="isMappingFile"/>">
 <table>
     <tr>
     <td class="label">Process name:</td>

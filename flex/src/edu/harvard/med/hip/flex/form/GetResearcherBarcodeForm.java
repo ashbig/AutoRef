@@ -27,6 +27,7 @@ public class GetResearcherBarcodeForm extends ProjectWorkflowForm {
     
     private int writeBarcode = 0;
     private int templateid;
+    private String isMappingFile;
     
     /**
      * Set the flag to the given value.
@@ -81,6 +82,9 @@ public class GetResearcherBarcodeForm extends ProjectWorkflowForm {
     public int getTemplateid() {
         return templateid;
     }
+    
+    public void setIsMappingFile(String s) {this.isMappingFile = s;}
+    public String getIsMappingFile() {return isMappingFile;}
     
     /**
      * Validate the properties that have been set from this HTTP request,
