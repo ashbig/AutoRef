@@ -91,13 +91,13 @@ public class Primer3Wrapper
             
             Hashtable parameters = m_spec.getParameters();
             parameters.put("P_NUMBER_OF_STRANDS", String.valueOf(WALKING_TYPE_ONE_STRAND_FORWARD));
-            Primer3Spec   temporary_spec = new Primer3Spec(parameters,"",-1);
-            all_sequences = prepareSequences(temporary_spec);
+            //Primer3Spec   temporary_spec = new Primer3Spec(parameters,"",-1);
+            all_sequences = prepareSequences(m_spec);
             ArrayList oligo_calculations_forward = runSetOfSequences(all_sequences);
        
             parameters.put("P_NUMBER_OF_STRANDS",String.valueOf(WALKING_TYPE_ONE_STRAND_REVERSE));
-            temporary_spec = new Primer3Spec(parameters,"",-1);
-            all_sequences = prepareSequences(temporary_spec); 
+            //temporary_spec = new Primer3Spec(parameters,"",-1);
+            all_sequences = prepareSequences(m_spec); 
             ArrayList oligo_calculations_reverse = runSetOfSequences(all_sequences);
             //add second set of primers 
             OligoCalculation seq_oligo_calculation_forward = null;
@@ -118,6 +118,7 @@ public class Primer3Wrapper
                 }
                 
             }
+            parameters.put("P_NUMBER_OF_STRANDS", String.valueOf(WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE));
            
             return final_set;
         }
