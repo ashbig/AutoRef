@@ -21,8 +21,8 @@ import org.apache.struts.action.*;
  */
 public class MgcCloneInfoImportForm extends ActionForm {
     private String forwardName = null;
-    private FormFile mgcCloneFile;
-   
+    private FormFile mgcCloneFile = null;
+    private String fileName = null;
     
     /**
      * Set the mgc clone info file to the given value.
@@ -33,6 +33,10 @@ public class MgcCloneInfoImportForm extends ActionForm {
         this.mgcCloneFile = mgcCloneFile;
     }
     
+    
+    public void setFileName(String mgcCloneFile) {
+        this.fileName = mgcCloneFile;
+    }
     /**
      * Return the mgc clone file.
      *
@@ -41,7 +45,10 @@ public class MgcCloneInfoImportForm extends ActionForm {
     public FormFile getMgcCloneFile() {
         return mgcCloneFile;
     }
-    
+    public String getFileName() {
+        fileName=  mgcCloneFile.getFileName();
+        return fileName;
+    }
     public void setForwardName(String forwardName) {
         this.forwardName = forwardName;
     }
