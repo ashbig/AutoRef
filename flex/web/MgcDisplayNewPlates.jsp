@@ -1,5 +1,5 @@
 <%--
-        $Id: MgcDisplayNewPlates.jsp,v 1.4 2002-06-26 15:56:48 Elena Exp $ 
+        $Id: MgcDisplayNewPlates.jsp,v 1.5 2002-07-22 19:02:35 Elena Exp $ 
 
        
         Author  : htaycher
@@ -95,26 +95,26 @@ function SetChecked(e, val) {
         <TH>&nbsp;&nbsp;FLEX Id&nbsp;&nbsp;</TH>
         <TH>&nbsp;&nbsp;Original Mgc Plate Label&nbsp;&nbsp;</TH>
         <TH>&nbsp;&nbsp;Flex Mgc Plate Label&nbsp;&nbsp;</TH>
-        <TH><input type="checkbox" name="all" value="All" onclick="SetChecked(this, this.checked)">&nbsp&nbspPrint&nbsp&nbsp</TH>
+        <TH>&nbsp;<input type="checkbox" name="all" value="All" onclick="SetChecked(this, this.checked)">&nbsp&nbspPrint&nbsp&nbsp</TH>
       </TR>
 
  <logic:iterate  id="curPlate" name="LABELS"> 
         <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
             
-            <TD>
+            <TD align="right">
                 <a href="/FLEX/MgcViewContainerDetails.do?CONTAINER_ID=<bean:write name="curPlate" property="id"/>">
-                    <bean:write name="curPlate" property="id"/>
+                   &nbsp; <bean:write name="curPlate" property="id"/>&nbsp;
                 </a>
             </TD>
             <TD>
-                <bean:write name="curPlate" property="originalContainer"/>
+                &nbsp;<bean:write name="curPlate" property="originalContainer"/>&nbsp;
             </TD>
             <TD>
-                <bean:write name="curPlate" property="label"/>
+                &nbsp;<bean:write name="curPlate" property="label"/>&nbsp;
             </TD>
             <TD>
               
-              <input type="checkbox" name="chkPrint" value='<bean:write name="curPlate" property="label"/>'>      
+              &nbsp;<input type="checkbox" name="chkPrint" value='<bean:write name="curPlate" property="label"/>'>    &nbsp;  
                 
             </TD>
 

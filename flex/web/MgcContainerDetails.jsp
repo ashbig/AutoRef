@@ -91,15 +91,15 @@
     </tr>
     <logic:iterate id="sample" name="container" property="samples">
     <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
-        <td><bean:write name="sample" property="id"/>        </td>
-        <td><bean:write name="sample" property="mgcId"/></td>
-        <td><bean:write name="sample" property="imageId"/></td>
-        <td><bean:write name="sample" property="vector"/></td>    
-        <td><bean:write name="sample" property="type"/></td>
-        <td><bean:write name="sample" property="position"/></td>
-        <td><bean:write name="sample" property="status"/></td>
+        <td>&nbsp;<bean:write name="sample" property="id"/>&nbsp;        </td>
+        <td align="right">&nbsp;<bean:write name="sample" property="mgcId"/>&nbsp;</td>
+        <td align="right">&nbsp;<bean:write name="sample" property="imageId"/>&nbsp;</td>
+        <td>&nbsp;<bean:write name="sample" property="vector"/>&nbsp;</td>    
+        <td>&nbsp;<bean:write name="sample" property="type"/>&nbsp;</td>
+        <td align="right"><bean:write name="sample" property="position"/></td>
+        <td>&nbsp;<bean:write name="sample" property="status"/>&nbsp;</td>
           
-        <td>
+        <td align="right">
         <logic:present name="sample" property="sequenceId">
             <logic:equal  name="sample" property="sequenceId" value="0" >
                 N/A
@@ -107,7 +107,7 @@
 
             <logic:notEqual name="sample" property="sequenceId" value="0" > 
                <a href="/FLEX/ViewSequence.do?FLEX_SEQUENCE_ID=<bean:write name="sample" property="sequenceId"/>   ">
-                    <bean:write name="sample" property="sequenceId"/>
+                    &nbsp;<bean:write name="sample" property="sequenceId"/>&nbsp;
                </a>
             </logic:notEqual> 
         </logic:present>

@@ -21,6 +21,7 @@
 <html:form action="MgcOrderOligo.do">
 <input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
 <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
+<input type="hidden" name="workflowname" value="<bean:write name="workflowname"/>">
 <input type="hidden" name="processname" value="<bean:write name="processname"/>">
 
 <table>
@@ -57,9 +58,9 @@ if (plates.size() > 0)
     <tr class="headerRow">
         <TH>&nbsp;&nbsp;Plate Number&nbsp;&nbsp;</TH>
         
-        <TH>&nbsp;&nbsp;Marker&nbsp;&nbsp;</TH>
+        <TH>&nbsp;&nbsp;Vector&nbsp;&nbsp;</TH>
         <TH>&nbsp;&nbsp;Sequences&nbsp;&nbsp;</TH>
-        <TH>&nbsp;&nbsp;MGC Containers&nbsp;&nbsp;</TH>
+        <TH>&nbsp;&nbsp;Source Containers&nbsp;&nbsp;</TH>
     </TR>
 <% 
 
@@ -77,10 +78,10 @@ for (int plate_count = 0 ; plate_count < plates.size();    plate_count++  )
 <%} 
 else
 {%>
-            <TD> <%= (plate_count + 1)%>  </TD>
+            <TD align="right"> <%= (plate_count + 1)%>  </TD>
 <%}%>
-            <TD> <%= plate.getMarker()     %> </TD>
-            <TD> <%= plate.getNumberOfSequences() %>    </TD>
+            <TD>&nbsp; <%= plate.getVector()     %> &nbsp;</TD>
+            <TD align="right"> <%= plate.getNumberOfSequences() %>    </TD>
             <TD> 
                         <% for (int container_count =0; container_count < plate.getContainers().size(); container_count++)
                         {
@@ -89,14 +90,14 @@ else
                             {
                             %>
                             <font color=red >
-                                <%= desc.getLabel() %>
+                                &nbsp;<%= desc.getLabel() %>
                             </font>
                             <%
                             }
                             else
                             {
                             %>
-                                <%= desc.getLabel() %>
+                                &nbsp;<%= desc.getLabel() %>
                             <%
                             }
                         }%>
@@ -121,7 +122,14 @@ else
 </table>
 
 
+
 <p>
+
+    <p><em><bean:message key="flex.researcher.barcode.prompt"/></em>
+    <html:password property="researcherBarcode" size="40"/>
+
+<p>
+<P>
     <html:submit property="submit" value="Submit"/>
    
 <%}%>
