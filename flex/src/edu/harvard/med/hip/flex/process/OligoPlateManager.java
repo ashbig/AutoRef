@@ -268,9 +268,10 @@ public class OligoPlateManager {
     }
     
     public void sendOligoOrders() throws MessagingException{
-        String to = "wmar@hms.harvard.edu";
+        String to = "dzuo@hms.harvard.edu";
         String from = "wmar@hms.harvard.edu";
-        String cc = "flexgene_manager@hms.harvard.edu";
+        String cc = "dzuo@hms.harvard.edu";
+//        String cc = "flexgene_manager@hms.harvard.edu";
         String subject = "Oligo order for project - "+project.getName();
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
@@ -316,7 +317,6 @@ public class OligoPlateManager {
     private void performOligoOrder(LinkedList seqList) throws FlexDatabaseException, IOException, MessagingException, Exception {
         int totalQueue = seqList.size();
         System.out.println("There are total of " + totalQueue + " sequences belong to the same size group in the queue");
-        
         createOligoPlates(seqList);
         
         //avoid sending out empty email without files attached
@@ -343,7 +343,7 @@ public class OligoPlateManager {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
             p = new Project(5);
-            w = new Workflow(7);
+            w = new Workflow(6);
             
             OligoPlateManager om = new OligoPlateManager(c, p, w);
             System.out.println("About to start thread");

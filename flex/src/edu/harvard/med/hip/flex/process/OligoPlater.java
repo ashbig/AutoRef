@@ -171,9 +171,8 @@ public class OligoPlater {
             // Removed this line because the sorting by cdslength is integrated into
             // the saw-tooth pattern sorting algorithm. See Algorithms class. -dzuo
             //Collections.sort(oligoPatternList, new GeneComparator());
-            
-            for (int count = 0; count < oligoPatternList.size() ; count++) {
-                plate_oligo.add( oligoPatternList.get(count));
+            for (int count = 1; count <= oligoPatternList.size() ; count++) {
+                plate_oligo.add( oligoPatternList.get(count-1));
                 if ( count % m_totalWells == 0)//plate finished
                 {
                     orderedOligos.addAll(Algorithms.rearangeSawToothPatternInOligoPattern(plate_oligo));
