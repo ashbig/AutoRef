@@ -156,23 +156,23 @@ public class PlateUploadRunner implements Runnable
                 if (m_error_messages.size() != 0)
                 {
                   //  System.out.println(m_error_messages.size()+" l1");
-                    Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Upload plates: error messages.",
+                    Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                    "hip_informatics@hms.harvard.edu", "Upload plates: error messages.",
                     "Errors\n Processing of requested for the following plates:\n"+requested_plates +"\n"+
                     Algorithms.convertStringArrayToString(m_error_messages,"\n"));
                 }
                 if (pb.getPassPlateNames().size()!=0)
                 {
                   //  System.out.println(pb.getPassPlateNames().size()+" l3");
-                     Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Uploaded plates.",
+                     Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                    "hip_informatics@hms.harvard.edu", "Uploaded plates.",
                     "\n Processing of requested for the following plates:\n"+requested_plates +"\n The follwing plates have been sucessfully uploaded from FLEX into BEC"+
                     Algorithms.convertStringArrayToString(pb.getPassPlateNames(),"\n"));
                 }
                  if (pb.getFailedPlateNames().size() != 0)
                  {
-                    Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Failed Plates.",
+                    Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                    "hip_informatics@hms.harvard.edu", "Failed Plates.",
                     "\n Processing of requested for the following plates:\n"+requested_plates +"\nFailed plates\n"+
                     Algorithms.convertStringArrayToString(pb.getFailedPlateNames(),"\n"));
                  }

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2003-05-30 16:44:36 $
+ * $Revision: 1.4 $
+ * $Date: 2004-03-05 14:54:35 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.3 $ $Date: 2003-05-30 16:44:36 $
+ * @version    $Revision: 1.4 $ $Date: 2004-03-05 14:54:35 $
  */
 
 public class Mailer
@@ -156,8 +156,8 @@ public class Mailer
     {
         AccessManager am = AccessManager.getInstance();
         String to = am.getEmail( user_name );
-        String cc = "etaycher@hms.harvard.edu";
-        String from = "etaycher@hms.harvard.edu";
+        String cc = "hip_informatics@hms.harvard.edu";
+        String from = "hip_informatics@hms.harvard.edu";
         sendMessageWithAttachedFile( to,  from, cc, subject,  msgText,  fl);
     }
     
@@ -273,8 +273,8 @@ public static void notifyUser(String user_name, String file_name, String subject
         if (messages.size()==0) return;
         AccessManager am = AccessManager.getInstance();
         String to = am.getEmail( user_name );
-        String cc = "etaycher@hms.harvard.edu";
-        String from = "etaycher@hms.harvard.edu";
+        String cc = "hip_informatics@hms.harvard.edu";
+        String from = "hip_informatics@hms.harvard.edu";
         File fl = writeFile(messages, file_name)  ;
         Mailer.sendMessageWithAttachedFile( to,  from, cc, subject, msg, fl);
     }

@@ -108,8 +108,8 @@ public class SequenceDataUploadRunner implements Runnable
                 {
                     DatabaseTransaction.closeConnection(conn);
 
-                    Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Submit sequence data.",
+                    Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                    "hip_informatics@hms.harvard.edu", "Submit sequence data.",
                     "Sequence data submission report:\n"+
                     Algorithms.convertStringArrayToString(m_report,"\n"));
                 }

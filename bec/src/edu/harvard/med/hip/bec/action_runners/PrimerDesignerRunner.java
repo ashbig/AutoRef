@@ -74,7 +74,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             ArrayList specs =new ArrayList();
             specs.add(m_spec);
             process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DESIGN_OLIGO,specs,m_user) ;
-           
+           conn.commit();
             if ( m_isTryMode )
             {
                 File reportFile = new File(FILE_PATH + "primer3Report.txt");
@@ -88,7 +88,7 @@ public class PrimerDesignerRunner extends ProcessRunner
                 {
                     try
                         {
-
+                            Thread.currentThread().sleep(100);
                             id = ((Integer) ids.get(index)).intValue();
                             if (  isPrimersDesignedForRefsequence(id, pst_check_oligo_cloning) )
                             {
@@ -111,7 +111,10 @@ public class PrimerDesignerRunner extends ProcessRunner
                             oligo_calculation = (OligoCalculation)oligo_calculations.get(0);
 
                             if ( ! m_isTryMode )
-                                oligo_calculation.insert(conn);
+                                synchronized(this)
+                                {
+                                    oligo_calculation.insert(conn);
+                                 }
                             else
                             {
                                 

@@ -170,14 +170,14 @@ public class AssemblyRunner extends ProcessRunner
          //send errors
                     if (m_error_messages.size()>0)
                     {
-                         Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for sequence assembly : error messages.", "Errors\n " ,m_error_messages);
+                         Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                        "hip_informatics@hms.harvard.edu", "Request for sequence assembly : error messages.", "Errors\n " ,m_error_messages);
 
                     }
                     if (m_error_messages.size()==0)
                     {
-                         Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for sequence assembly: finished without errors.", "Assembly Request complited.\n ");
+                         Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                        "hip_informatics@hms.harvard.edu", "Request for sequence assembly: finished without errors.", "Assembly Request complited.\n ");
 
                     }
                 }

@@ -170,14 +170,14 @@ public class IsolateRankerRunner implements Runnable
          //send errors
                     if (m_error_messages.size()>0)
                     {
-                         Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for end reads evaluation: error messages.", "Errors\n Processing of requested for the following plates(bec ids):\n"+requested_plates ,m_error_messages);
+                         Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                        "hip_informatics@hms.harvard.edu", "Request for end reads evaluation: error messages.", "Errors\n Processing of requested for the following plates(bec ids):\n"+requested_plates ,m_error_messages);
 
                     }
                     if (m_error_messages.size()==0)
                     {
-                         Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for end reads evaluation: error messages.", "\nIsolate Ranker finished request for the following plates(bec ids):\n"+requested_plates );
+                         Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                        "hip_informatics@hms.harvard.edu", "Request for end reads evaluation: error messages.", "\nIsolate Ranker finished request for the following plates(bec ids):\n"+requested_plates );
 
                     }
                 }
@@ -195,13 +195,32 @@ public class IsolateRankerRunner implements Runnable
                 BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ,
                 BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,
                 BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES ,
-                BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED 
                  };
             String clone_sequence_analysis_status = Algorithms.convertArrayToString(sequence_analysis_status, ",");
-            int[] sequence_type = {BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED };
+            int[] sequence_type = {BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED,BaseSequence.CLONE_SEQUENCE_TYPE_FINAL };
             String clone_sequence_type = Algorithms.convertArrayToString(sequence_type, ",");
          
             constructs = Construct.getConstructsFromPlate(container_id,clone_sequence_analysis_status,clone_sequence_type,1);
             return constructs;
         }
+     
+     
+     
+     
+      public static void main(String args[])
+    {
+        try{
+        IsolateRankerRunner runner = new IsolateRankerRunner();
+        ArrayList master_container_ids = new ArrayList(); master_container_ids.add(new Integer(65));
+        runner.setContainerIds(master_container_ids );
+        runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(4, Spec.FULL_SEQ_SPEC_INT));
+        runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
+       runner.setUser(  AccessManager.getInstance().getUser("htaycher345","htaycher"));
+        runner.run();
+        }catch(Exception e){}
+        System.exit(0);
+      }
 }

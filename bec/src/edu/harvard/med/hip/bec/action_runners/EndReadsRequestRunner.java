@@ -140,8 +140,8 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                 //send email to user
                 if (file_list != null && file_list.size()>0)
                 {
-                    Mailer.sendMessageWithFileCollections(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Request for end reads sequencing", 
+                    Mailer.sendMessageWithFileCollections(i_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                    "hip_informatics@hms.harvard.edu", "Request for end reads sequencing", 
                     "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates,
                     file_list);
                 }
@@ -167,8 +167,8 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
          //send errors
                     if (i_error_messages.size()>0)
                     {
-                         Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for end reads sequencing: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates ,i_error_messages);
+                         Mailer.sendMessage(i_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                        "hip_informatics@hms.harvard.edu", "Request for end reads sequencing: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates ,i_error_messages);
                 
                     }
                 }
@@ -224,7 +224,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
 
                         }
 
-                        naming_file_entries_forward.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_FORWARD)  );
+                        naming_file_entries_forward.add(  createNamingFileEntry( smp, Constants.READ_DIRECTION_FORWARD)  );
                        // rearray_file_entries_forward.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-F", smp.getPosition()));
                     }
                     if (i_isReverse)
@@ -247,7 +247,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                                  isStatusUpdated = true;
                              }
                         }
-                        naming_file_entries_reverse.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_REVERSE )  );
+                        naming_file_entries_reverse.add(  createNamingFileEntry( smp, Constants.READ_DIRECTION_REVERSE )  );
                         //rearray_file_entries_reverse.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-R", smp.getPosition()));
 
                     }

@@ -98,6 +98,8 @@ public abstract class ProcessRunner implements Runnable
                // m_title = "Request for report generator";
 
             }
+          else if (this instanceof NoMatchReportRunner)
+              ((NoMatchReportRunner)this).run();
    
      }
      
@@ -117,6 +119,8 @@ public abstract class ProcessRunner implements Runnable
             return "Request for sequence assembler run.";
          else if (this instanceof TraceFileProcessingRunner)
             return "Request for trace files renaming.";
+         else if (this instanceof NoMatchReportRunner)
+             return "Request for NO MATCH report.";
          return "";
      }
      

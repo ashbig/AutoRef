@@ -60,6 +60,17 @@ dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "/BEC/Seq_
 	dhtmlMenu.addItem(new NavBarMenuItem("Process", "SelectProcess.jsp"));
 	myNavBar1.addMenu(dhtmlMenu);
 <%}%>
+
+<% if (!user.getUserGroup().equals("Researcher"))
+{
+    
+%>      dhtmlMenu = new NavBarMenu(100, 200);
+	dhtmlMenu.addItem(new NavBarMenuItem("Trace Files", ""));
+        dhtmlMenu.addItem(new NavBarMenuItem ("Create File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create file for sequencing facility"));
+        dhtmlMenu.addItem(new NavBarMenuItem("Upload", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=upload trace files"));
+	myNavBar1.addMenu(dhtmlMenu);
+<%}%>
+
 dhtmlMenu = new NavBarMenu(100, 220);
 dhtmlMenu.addItem(new NavBarMenuItem("Search", ""));
 dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=container Process History"));
@@ -85,7 +96,7 @@ myNavBar1.addMenu(dhtmlMenu);
 
 
 dhtmlMenu = new NavBarMenu(100, 120);
-dhtmlMenu.addItem(new NavBarMenuItem("Contact us", "mailto:elena_taycher@hms.harvard.edu"));
+dhtmlMenu.addItem(new NavBarMenuItem("Contact us", "mailto:hip_informatics@hms.harvard.edu"));
 myNavBar1.addMenu(dhtmlMenu);
 
 dhtmlMenu = new NavBarMenu(100, 120);
