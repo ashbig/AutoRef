@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.1 2001-05-31 15:07:33 dongmei_zuo Exp $ 
+        $Id: PendingRequests.jsp,v 1.2 2001-05-31 19:26:25 dongmei_zuo Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -15,12 +15,15 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 <html>
 <head><title>Pending Requests</title></head>
 <body>
     <H1><CENTER>Pending Requests</CENTER></H1> 
     <BR>
+    
     <FORM method="POST" action="ProcessQueue.jsp">
 
     <TABLE BORDER>
@@ -32,56 +35,45 @@
         <TH>Requesting Users</TH>
         <TH>Status</TH>
     </TR>
-<%
-    /*
-     * for each sequence in the queue, get all info
-     * from db and display it
-     */
-    Iterator seqIter = approveSeqList.iterator();
-    int listIndex = 0;
-    while(seqIter.hasNext()) {
-        FlexSequence curSeq = (FlexSequence)((QueueItem)seqIter.next()).getItem();
-	curSeq.restore(curSeq.getId(), DatabaseTransaction.getInstance());
-	Iterator userIter= curSeq.getRequestingUsers().iterator();
-%>
-    <TR>
-        <TD>
-            <A HREF="SequenceUI.jsp?flexID=<%=curSeq.getId()%>"><%=curSeq.getId()%></A><BR>
-        </TD>
-        <TD>
-            <%=curSeq.getDescription()%>
-        </TD>
-        <TD>
-            <%=curSeq.getQuality()%>
-        </TD>
-        <TD>
-            <A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<%=curSeq.getGi()%>&dopt=GenBank"> <%=curSeq.getAccession()%></A><BR>
-        </TD>
-        <TD>
+    <!-- iterate through each QueueItem (sequence) that is in the queue -->
+    <logic:iterate id="curQueueItem" name="<%=edu.harvard.med.hip.flex.Constants.QUEUE_ITEM_LIST_KEY%>"> 
+        <TR>
+            <TD>
+                
+                <a href="ViewSequence.do?<%=edu.harvard.med.hip.flex.Constants.FLEX_SEQUENCE_ID_KEY%>=<bean:write name="curQueueItem" property="item.id"/>">
+                    <bean:write name="curQueueItem" property="item.id"/>
+                </a>
+               
+            </TD>
+            <TD>
+                <bean:write name="curQueueItem" property="item.description"/>
+            </TD>
+            <TD>
+                <bean:write name="curQueueItem" property="item.quality"/>
+            </TD>
+            <TD>
+                <A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="curQueueItem" property="item.gi"/>&dopt=GenBank"> 
+                    <bean:write name="curQueueItem" property="item.accession"/>
+                </A>
+            </TD>
+            <TD>
+                <logic:iterate id="curUser" name="curQueueItem" property="item.requestingUsers">
+                    <A HREF="mailto:<bean:write name="curUser" property="userEmail"/>">
+                        <bean:write name="curUser" property="username"/>
+                    </A>
+                </logic:iterate>
+            </TD>
+            <TD>
+                <SELECT name=<bean:write name="curQueueItem" property="item.id" />>
+                    <Option > Pending
+                    <Option > Rejected
+                    <Option> Accepted
+                </SELECT>   
+            </TD>
+        </TR>
+    </logic:iterate> 
 
-<%
-    while(userIter.hasNext()) {
-        User curUser =  (User)userIter.next();
-%>
-        <A HREF="mailto:<%=curUser.getUserEmail()%>"> <%=curUser.getUsername()%> </A> <BR>
-<%	
-    }
-%>
-        </TD>
 
-
-        <TD>
-            <SELECT name="<%=listIndex%>">
-                <Option > Pending
-                <Option > Rejected
-                <Option> Accepted
-            </SELECT>
-        </TD>
-    <TR>
-<%
-    listIndex++;
-} // end while
-%>
 </TABLE>
 <INPUT title="Process Requests" name="Process Requests" type="submit">
 <INPUT type="reset">
@@ -90,9 +82,3 @@
 
 
 </html>
-
-
-
-
-
-

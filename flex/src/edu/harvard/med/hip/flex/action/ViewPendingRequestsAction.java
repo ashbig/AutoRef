@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-05-31 15:06:53 $
+ * $Revision: 1.2 $
+ * $Date: 2001-05-31 19:26:25 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -54,7 +54,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-05-31 15:06:53 $
+ * @version    $Revision: 1.2 $ $Date: 2001-05-31 19:26:25 $
  */
 
 public class ViewPendingRequestsAction extends FlexAction{
@@ -90,10 +90,11 @@ public class ViewPendingRequestsAction extends FlexAction{
             List approveSeqList =
             sequenceQueue.getQueueItems(approveProtocol);
             
-            session.setAttribute(Constants.APPROVE_PROTOCOL_KEY, approveProtocol);
-            session.setAttribute(Constants.QUEUE_ITEM_LIST_KEY,approveSeqList );
-            session.setAttribute(Constants.SEQUENCE_QUEUE_KEY,sequenceQueue);
+            request.setAttribute(Constants.APPROVE_PROTOCOL_KEY, approveProtocol);
+            request.setAttribute(Constants.QUEUE_ITEM_LIST_KEY,approveSeqList );
+            request.setAttribute(Constants.SEQUENCE_QUEUE_KEY,sequenceQueue);
             
+            retForward = mapping.findForward("sucess");
         } catch (FlexProcessException fpe) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.process.error", fpe));
