@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-09 16:33:24 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-16 23:11:21 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -54,8 +54,8 @@ import edu.harvard.med.hip.flex.process.Process;
  * Prepares objects for sample detail viewing.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-07-09 16:33:24 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-16 23:11:21 $
  */
 
 public class ViewSampleDetailsAction extends ResearcherAction{
@@ -114,6 +114,8 @@ public class ViewSampleDetailsAction extends ResearcherAction{
             request.setAttribute(Constants.SAMPLE_KEY, sample);
             request.setAttribute(Constants.PROCESS_KEY, process);
             request.setAttribute(Constants.RESULT_KEY, result);
+            
+           
             
             retForward = mapping.findForward("success");
         } catch(NumberFormatException nfe) {

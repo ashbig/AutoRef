@@ -11,6 +11,7 @@
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 
+<bean:define name="<%=Constants.PROCESS_KEY%>" id="process"/>
 
 <html>
 <head><title><bean:message key="flex.name"/> : Container Details</title></head>
@@ -24,6 +25,8 @@
     <bean:write name="<%=Constants.PROCESS_KEY%>" property="protocol.processname"/>
     </h3></center>
 </logic:present>
+
+
 
 <%--Loop through all the containers and display all their details--%>
 <logic:iterate id="container" name="<%=Constants.CONTAINER_LIST_KEY%>">
@@ -68,7 +71,13 @@
     </tr>
     <logic:iterate id="sample" name="container" property="samples">
     <tr>
-        <td><bean:write name="sample" property="id"/></td>
+        <td>
+            
+            <flex:linkSample name="sample" process="process">
+                <bean:write name="sample" property="id"/>
+            </flex:linkSample>
+            
+        </td>
         <td><bean:write name="sample" property="type"/></td>
         <td><bean:write name="sample" property="position"/></td>
         <td><bean:write name="sample" property="status"/></td>
@@ -85,7 +94,7 @@
             <td><bean:write name="sample" property="oligoid"/></td>
         </logic:notEqual>
         <logic:present name="<%=Constants.PROCESS_KEY%>">
-            <bean:define id="process" name="<%=Constants.PROCESS_KEY%>"/>
+            
             <td><%
                    Result result = 
                         Result.findResult((Sample)sample,(Process)process);
