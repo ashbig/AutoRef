@@ -187,6 +187,13 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DECISION_TOOL%>>
       Run decision tool (settings required) </font> <P></td>
   </tr>
+ <tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_NOMATCH_REPORT%>>
+      Run report for clone that show no match to the expected ORF </font> <P></td>
+  </tr>
+
+
   <tr>
     <td>&nbsp; </td>
   </tr>
