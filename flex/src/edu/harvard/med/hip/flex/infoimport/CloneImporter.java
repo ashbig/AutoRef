@@ -43,6 +43,12 @@ public class CloneImporter {
                         int sampleid = Integer.parseInt((String)st.nextToken());
                         int sequenceid = Integer.parseInt((String)st.nextToken());
                         String pubhit = (String)st.nextToken();
+                        
+                        int remove = pubhit.indexOf(".");
+                        if(remove != -1) {
+                            pubhit = pubhit.substring(0, remove);
+                        }
+                        
                         String result = null;
                         if(st.hasMoreTokens()) {
                             result = (String)st.nextToken();
