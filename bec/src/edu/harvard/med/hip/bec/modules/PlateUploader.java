@@ -17,6 +17,7 @@ import  edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import sun.jdbc.rowset.*;
 import java.util.*;
 import java.sql.Date;
@@ -39,48 +40,66 @@ public class PlateUploader
     
     private ArrayList m_plate_names = null;
     private int       m_plate_sabmitted_for = -1;//initial status for isolate ranking
-    private int       m_vectorid = -1;
-    private int       m_linker3_id = -1;
-    private int       m_linker5_id = -1;
+    //private int       m_vector_id = -1;
+    //private int       m_linker3_id = -1;
+    //private int       m_linker5_id = -1;
     private int       m_array_type = -1;
-    
+    private int         m_cloning_strategy_id = -1;
     private ArrayList m_error_messages = null;
+    private ArrayList m_container_ids = null;
     
-    
-   
+    private ArrayList m_messages_uploaded_plates = null;
+    private ArrayList m_messages_failed_plates = null;
     /** Creates a new instance of PlateUploader */
+    /*
     public PlateUploader(ArrayList plate_names, int mode, int vectorid, 
                         int l3id, int l5id, int isltrstatus)
     {
         m_plate_names = plate_names;
         m_array_type = mode;
         m_plate_sabmitted_for = isltrstatus;//initial status for isolate ranking
-        m_vectorid = vectorid;
+        m_vector_id = vectorid;
         m_linker3_id = l3id;
         m_linker5_id = l5id;
         m_error_messages = new ArrayList();
+        m_container_ids = new ArrayList();
+    }
+    */
+   public PlateUploader(ArrayList plate_names, int mode, int cloning_strategy_id, int isltrstatus)
+    {
+        m_plate_names = plate_names;
+        m_array_type = mode;
+        m_plate_sabmitted_for = isltrstatus;//initial status for isolate ranking
+        m_cloning_strategy_id = cloning_strategy_id;
+        m_error_messages = new ArrayList();
+        m_container_ids = new ArrayList();
+         m_messages_uploaded_plates = new ArrayList();
+         m_messages_failed_plates = new ArrayList();
     }
     
-    
     public ArrayList getErrors(){ return m_error_messages;}
+    public ArrayList getContainerIds(){ return m_container_ids;}
+    public ArrayList getPassPlateNames(){ return m_messages_uploaded_plates ;}
+    public ArrayList getFailedPlateNames(){ return m_messages_failed_plates ;}
     
-    public void  upload()
+    public void  upload(Connection conn)
     {
-     
-        //get all reference sequences from bec: to prevent multipal upload of the same sequence
+   //get all reference sequences from bec: to prevent multipal upload of the same sequence
         //Hashtable refsequences = getAllRefSequences(m_bec_connection);
          Connection  flex_connection = null;
-         Connection  bec_connection = null;
+         Connection  bec_connection = conn;
         try
         {
              flex_connection = DatabaseTransactionLocal.getInstance(DatabaseTransactionLocal.FLEX_url , DatabaseTransactionLocal.FLEX_username, DatabaseTransactionLocal.FLEX_password).requestConnection();
-             bec_connection = DatabaseTransaction.getInstance().requestConnection();
+            // bec_connection = DatabaseTransaction.getInstance().requestConnection();
         }
         catch(Exception e)
         {
-            m_error_messages.add("Cannot open connection to database");
+            m_error_messages.add("Cannot open connection to database "+e.getMessage());
           
         }
+         
+        
         for (int count = 0 ; count < m_plate_names.size(); count++)
         {
             uploadPlate( (String) m_plate_names.get(count) , flex_connection, bec_connection);
@@ -89,25 +108,36 @@ public class PlateUploader
         try
         {
             flex_connection.close();
-            bec_connection.close();
+            //bec_connection.close();
      
         }
         catch(Exception e)
         {
-            m_error_messages.add("Cannot close connection to database");
+            m_error_messages.add("Cannot close connection to database "+e.getMessage());
            
         }
     }
     
     //function uploads data for one plate into BEC
-    private   void uploadPlate( String platename, Connection flex_connection, 
-    Connection bec_connection)
+    private  synchronized   void uploadPlate( String platename, Connection flex_connection, 
+                                            Connection bec_connection)
     {
         //hash for flex sequences
         try
         {
               Hashtable flex_sequence_ids = new Hashtable();
-              
+               //check for plate existing in FLEX
+              if ( !isPlateExist(platename, flex_connection))
+              {
+                   m_error_messages.add("Plate "+platename+" does not exist in FLEX");
+                   return;
+              }
+              //check for plate duplication in BEC
+              if (isPlateExist(platename, bec_connection))
+              {
+                   m_error_messages.add("Plate "+platename+" already exists in BEC");
+                   return;
+              }
               // get all needed info from flex
 
               // get all related sample info from flex
@@ -117,18 +147,18 @@ public class PlateUploader
               //get new for BEC sequences from FLEX
                getMissingFlexSequences(flex_sequence_ids, flex_connection,bec_connection);
 
-               insertPlateInfo(platename, samples, flex_sequence_ids,bec_connection);
-
+               int plate_id = insertPlateInfo(platename, samples, flex_sequence_ids,bec_connection);
+               
                //commit plate info into bec
                bec_connection.commit();
+               m_container_ids.add(new Integer(plate_id));
+               m_messages_uploaded_plates.add( platename);
         }
         catch(Exception e)
         {
-            m_error_messages.add(e.getMessage());
-            try
-            {
-                bec_connection.rollback();
-            }catch(Exception ee){}
+            m_messages_failed_plates.add("Plate "+platename+" was not uploaded into BEC.");
+            m_error_messages.add("Plate "+platename+" was not uploaded into BEC" +e.getMessage());
+            DatabaseTransaction.rollback(bec_connection);
         }
         
     }
@@ -257,14 +287,14 @@ public class PlateUploader
             
             if ( flex_sequences.get(key) instanceof Integer &&  ((Integer)flex_sequences.get(key)).intValue() == -1)
             { 
-             System.out.println(((Integer) key).intValue());
+        //     System.out.println(((Integer) key).intValue());
                 fl = getRefSequenceFormFlex( ((Integer) key).intValue(), flex_connection);
                 fl.setId( getId("sequenceid", bec_connection));
                    
                    if (((Integer) key).intValue()==341)
                         System.out.println("get"+((Integer) key).intValue());
                 fl.insert(bec_connection);
-                   System.out.println("ins"+((Integer) key).intValue());
+       //            System.out.println("ins"+((Integer) key).intValue());
                 flex_sequences.put(key, fl);
              
             }
@@ -355,12 +385,11 @@ public class PlateUploader
     //the following functions create new plate in bec
     
     
-    private   synchronized void insertPlateInfo(String platename, ArrayList samples, 
-    Hashtable flex_sequence_ids,Connection bec_connection)
-     throws BecDatabaseException
+    private   synchronized int insertPlateInfo(String platename, ArrayList samples, 
+    Hashtable flex_sequence_ids,Connection bec_connection)throws BecDatabaseException
+    
     {
         //create container in bec
-       
         Container container = new Container( getId("containerid", bec_connection)  ,
                                             Container.TYPE_SEQUENCING_CONTAINER,
                                             platename,  -1);
@@ -389,6 +418,8 @@ public class PlateUploader
                 if ( sample_info.isControl() ||  sample_info.isEmpty())
                 {
                     istr.setStatus(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY);
+                    istr.setRank(IsolateTrackingEngine.RANK_NOT_APPLICABLE);
+                    
                 }
                 else
                 {
@@ -406,7 +437,8 @@ public class PlateUploader
                                             sample_info.getFormat(), 
                                             sample_info.getSequenceId(),
                                             flex_sequence_ids, 
-                                            bec_connection);
+                                            bec_connection,
+                                            m_cloning_strategy_id);
                     istr.setConstructId( constructid );
                 }
             
@@ -424,6 +456,8 @@ public class PlateUploader
         }
          container.insert(bec_connection);
         
+         return container.getId();
+        
         //construct
     }
     
@@ -439,7 +473,8 @@ public class PlateUploader
                                     int constructformat, 
                                     int flex_sequenceid,
                                     Hashtable flex_sequence_ids,
-                                    Connection bec_connection)
+                                    Connection bec_connection,
+                                    int cloning_strategy_id)
                                      throws BecDatabaseException
     {
         Construct construct;
@@ -454,9 +489,7 @@ public class PlateUploader
         if (construct != null)
         {
             //check if construct has the same vector & linker info
-            if (construct.getVectorId() == m_linker5_id && 
-                construct.getLinker3Id()==  m_linker3_id &&
-                construct.getLinker5Id() ==    m_linker5_id )
+            if (construct.getCloningStrategyId() ==    cloning_strategy_id )
             {
                return construct.getId();
             }
@@ -477,9 +510,10 @@ public class PlateUploader
         construct.setId(getId("constructid", bec_connection));
         construct.setRefSeqId( sequence_id );
         construct.setFormat(constructformat);
-        construct.setLinker3Id(m_linker3_id);
-        construct.setVectorId(m_linker5_id);
-        construct.setLinker5Id(m_linker5_id);
+        //construct.setLinker3Id(m_linker3_id);
+        //construct.setVectorId(m_linker5_id);
+        //construct.setLinker5Id(m_linker5_id);
+        construct.setCloningStrategyId(cloning_strategy_id);
         construct.insert(bec_connection);
         //add to hash eliminate creation of the same construct
         bec_construct_ids.put(new Integer(flexconstructId), new Integer(construct.getId() ));
@@ -490,7 +524,9 @@ public class PlateUploader
     private Construct getConstructByFlexConstructId(int flexconstructId, Connection bec_connection) throws BecDatabaseException
     {
         Construct construct = null;
-        String sql ="select REFSEQUENCEID  ,FORMAT,VECTORID,LINKER3ID,LINKER5ID,BECCONSTRUCTID,FLEXCONSTRUCTID "+
+       // String sql ="select REFSEQUENCEID  ,FORMAT,VECTORID,LINKER3ID,LINKER5ID,BECCONSTRUCTID,FLEXCONSTRUCTID "+
+      //  " from VIEW_FLEXBECCONSTRUCT where FLEXCONSTRUCTID = "+ flexconstructId;
+        String sql ="select REFSEQUENCEID  ,FORMAT,cloningstrategyid,BECCONSTRUCTID,FLEXCONSTRUCTID "+
         " from VIEW_FLEXBECCONSTRUCT where FLEXCONSTRUCTID = "+ flexconstructId;
         ResultSet rs = null;
         try
@@ -502,9 +538,9 @@ public class PlateUploader
             {
                   construct = new Construct(rs.getInt("BECCONSTRUCTID"), -1, 
                                   rs.getInt("REFSEQUENCEID"), rs.getInt("FORMAT"), 
-                                  rs.getInt("VECTORID"), rs.getInt("LINKER3ID"),
-                                  rs.getInt("LINKER5ID") ); 
-              
+                                //  rs.getInt("VECTORID"), rs.getInt("LINKER3ID"),
+                                //  rs.getInt("LINKER5ID") ); 
+                                rs.getInt("cloningstrategyid"));
             } 
             return construct;
         }
@@ -621,14 +657,52 @@ public class PlateUploader
         return id;
     }
     
+    private boolean isPlateExist(String platename, Connection bec_connection)throws BecDatabaseException
+    {
+        String sql = "select * from containerheader where label ='"+platename+"'";
+     
+        ResultSet rs = rs = DatabaseTransaction.executeQuery(sql,bec_connection);
+        try
+        {
+            if (rs.next())
+            {
+                return true;
+            }
+            return false;
+        } 
+        catch(SQLException sqlE)
+        {
+            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+        } 
+        finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        
+    }
+    //----------------------------------------------------------------------
+    
      public static void main(String args[]) 
      
     {
         ArrayList plates = new ArrayList();
-        plates.add("YGS000357-4");
-         PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 1, 
-                       4, 5, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
-         pb.upload();
+    
+      //  plates.add("YGS000360-2");
+        plates.add("YGS000360-1");
+       // plates.add("YGS000360-3");
+       // plates.add("YGS000360-4");
+        Connection conn=null;
+        try
+        {
+             conn = DatabaseTransaction.getInstance().requestConnection();
+         PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 3, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
+            pb.upload( conn);
+    //     PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 1,  4, 5, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
+     //    pb.upload();
+            conn.commit();
+            
+        }catch(Exception e){DatabaseTransaction.rollback(conn);}
         System.exit(0);
      }
 }
