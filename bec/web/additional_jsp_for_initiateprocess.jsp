@@ -58,7 +58,7 @@ additional_jsp_buffer.append("<option value='vector_pDonor221_altered.txt' > pDo
 additional_jsp_buffer.append("<option value='pBY011_cleaned.txt' > pBY011 only");
 additional_jsp_buffer.append("<option value='pBY011_cleaned_201.txt' > pBY011 and pDONR201");
 additional_jsp_buffer.append("<option value='pDONR201_cleaned.txt' > pDonor201 only");
-
+additional_jsp_buffer.append("<option value='vector_pDonorDual_altered.txt' > pDonorDual only");
 additional_jsp_buffer.append("</select></td></tr>");
 
 if ( forwardName_int ==  Constants.PROCESS_FIND_GAPS)
