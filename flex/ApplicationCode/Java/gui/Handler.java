@@ -1,3 +1,13 @@
+/*
+ *	$Id: Handler.java,v 1.2 2001-05-08 12:07:45 dongmei_zuo Exp $ 
+ *
+ *	File	: Handler.java
+ *	Date	: 05042001
+ *	Author	: Dongmei Zuo
+ *
+ *	The generic page handler. Stores user information.
+ */
+
 package flex.ApplicationCode.Java.gui;
 
 import javax.servlet.http.*;
