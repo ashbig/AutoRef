@@ -25,7 +25,7 @@ import edu.harvard.med.hip.flex.util.*;
  * @version 
  */
 public class OneToOneContainerMapper implements ContainerMapper {
-    public static final String DAUGHTER_OLIGO_PLATE_SUB_THREAD = "D";
+    public static final String DAUGHTER_OLIGO_PLATE = "D";
     
     protected FlexProperties containerType = null;    
     protected Vector sampleLineageSet = new Vector();
@@ -78,7 +78,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
             
             //For diluting oligo plate, we need to get the new label in a different way.
             if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
-                newBarcode = container.getLabel()+"-"+DAUGHTER_OLIGO_PLATE_SUB_THREAD;
+                newBarcode = DAUGHTER_OLIGO_PLATE+container.getLabel().substring(1);
             } else {
                 newBarcode = Container.getLabel(protocol.getProcesscode(), container.getThreadid(), getSubThread(container));        
             }

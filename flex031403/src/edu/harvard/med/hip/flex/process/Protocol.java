@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.14 2001-08-03 15:18:51 dzuo Exp $
+ * $Id: Protocol.java,v 1.15 2001-08-07 19:40:59 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -30,7 +30,8 @@ public class Protocol {
     public static final String GENERATE_OLIGO_ORDERS= "generate oligo orders";
     public static final String RECEIVE_OLIGO_PLATES= "receive oligo plates";
     public static final String DILUTE_OLIGO_PLATE = "dilute oligo plate";
-    public static final String GENERATE_PCR_PLATES = "generate PCR plates";
+    public static final String GENERATE_PCR_PLATES = "generate step1 PCR plates";
+    public static final String GENERATE_STEP2_PCR_PLATES = "generate step2 PCR plates";
     public static final String RUN_PCR_GEL = "run PCR gel";
     public static final String GENERATE_FILTER_PLATES="generate filter plates";
     public static final String GENERATE_BP_REACTION_PLATES=

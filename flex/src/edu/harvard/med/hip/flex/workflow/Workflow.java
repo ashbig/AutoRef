@@ -51,8 +51,12 @@ public class Workflow {
         flow.addElement(new FlowRecord(Protocol.DILUTE_OLIGO_PLATE, next)); 
         
         next = new Vector();
+        next.addElement(Protocol.GENERATE_STEP2_PCR_PLATES);        
+        flow.addElement(new FlowRecord(Protocol.GENERATE_PCR_PLATES, next)); 
+        
+        next = new Vector();
         next.addElement(Protocol.RUN_PCR_GEL);        
-        flow.addElement(new FlowRecord(Protocol.GENERATE_PCR_PLATES, next));         
+        flow.addElement(new FlowRecord(Protocol.GENERATE_STEP2_PCR_PLATES, next));         
 
         next = new Vector();
         next.addElement(Protocol.ENTER_PCR_GEL_RESULTS);        
