@@ -358,6 +358,14 @@ public class PlateUploader
                 {
                     ref_sequence.setSpecies(RefSequence.SPECIES_PSEUDOMONAS);
                 }
+                else if (species.equalsIgnoreCase("Yersinia pestis"))
+                {
+                    ref_sequence.setSpecies(RefSequence.SPECIES_YP);
+                }
+                else if (species.equalsIgnoreCase("Francisella tularensis"))
+                {
+                    ref_sequence.setSpecies(RefSequence.SPECIES_FT);
+                }
                 ref_sequence.setCdsStart(rs.getInt("CDSSTART") );
                 ref_sequence.setCdsStop( rs.getInt("CDSSTOP") );
                 ref_sequence.setGCcontent(rs.getInt("GCCONTENT"));

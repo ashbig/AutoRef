@@ -28,8 +28,8 @@ public class RefSequence extends BaseSequence
     public static final int SPECIES_YEAST = 2;
     public static final int SPECIES_MOUSE = 3;
     public static final int SPECIES_PSEUDOMONAS = 4;
-   // public static final int SPECIES_HOLDER = 5;
-     // public static final int SPECIES_HOLDER = 6;
+    public static final int SPECIES_YP = 5;
+     public static final int SPECIES_FT = 6;
      // public static final int SPECIES_HOLDER = 7;
      // public static final int SPECIES_HOLDER = 8;
      // public static final int SPECIES_HOLDER = 9;
@@ -165,6 +165,8 @@ public class RefSequence extends BaseSequence
             case SPECIES_YEAST : return "Saccharomyces cerevisiae";
             case SPECIES_MOUSE : return "Mus musculus";
             case SPECIES_PSEUDOMONAS : return "Pseudomonas aeruginosa";
+            case SPECIES_YP: return "Yersinia pestis";
+            case SPECIES_FT: return "Francisella tularensis ";
             default:return "Not known";
         }
     }
