@@ -115,11 +115,6 @@
          You can define any number of servlets, including zero.
     -->
 
-    
-
-
-    
-
 
     <!-- Define the default session timeout for your application,
          in minutes.  From a servlet or JSP page, you can modify

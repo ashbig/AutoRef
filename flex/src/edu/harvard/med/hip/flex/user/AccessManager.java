@@ -113,11 +113,13 @@ public class AccessManager {
      * authentication fail.
      */
     
-    public boolean authenticate(String username, String pw, DatabaseTransaction t) throws FlexDatabaseException {
+    public boolean authenticate(String username, String pw) 
+    throws FlexDatabaseException {
         String sql = "select * from userprofile\n"+
         "where username='"+username+"'\n"+
         "and userpassword='"+pw+"'";
         ResultSet rs = null;
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
         try {
             rs = t.executeQuery(sql);
             if(rs.next()) {
@@ -177,7 +179,7 @@ public class AccessManager {
         AccessManager manager = AccessManager.getInstance();
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
-            if(manager.authenticate("Larry Shumway", "three", t))
+            if(manager.authenticate("Larry Shumway", "three"))
                 System.out.println("Testing method authenticate - OK");
             else
                 System.out.println("Testing method authenticate - ERROR");
