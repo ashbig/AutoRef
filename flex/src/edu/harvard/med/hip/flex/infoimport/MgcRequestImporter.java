@@ -31,6 +31,7 @@ import java.io.*;
 import java.sql.*;
 import sun.jdbc.rowset.*;
 import javax.mail.*;
+import java.lang.Integer;
 
 
 public class MgcRequestImporter
@@ -304,8 +305,14 @@ public class MgcRequestImporter
         
         ArrayList temp = new ArrayList();
     
+        //htaycher: handle duplicates of GI in the request
+        for (int count = 0; count < requestGI.size(); count++)
+        {
+            if ( !temp.contains( requestGI.get(count) ) )
+                temp.add(requestGI.get(count));
+        }
         
-        String sql = "select n.namevalue as gi, n.sequenceid as sequence_id "+
+        String sql = "select n.namevalue as GI, n.sequenceid as SEQUENCE_ID "+
         "from  mgcclone mc , name n \n" +
         "where ( mc.sequenceid = n.sequenceid and n.nametype = 'GI'  ) ";
         int current_gi = 0;
@@ -320,7 +327,8 @@ public class MgcRequestImporter
             while(crs.next())
             {
                 current_seq_id = crs.getInt("SEQUENCE_ID");
-                current_gi = crs.getInt("GI");
+                String giString = crs.getString("GI");
+                current_gi = Integer.parseInt(giString);
                 if ( temp.contains( Integer.toString(current_gi)) )
                 {//create dummy flexsequence and add it to request
                     FlexSequence fc = new FlexSequence( current_seq_id, FlexSequence.GOOD, null, null, null, 0, 0, 0, 0, null, null, null);
@@ -341,7 +349,7 @@ public class MgcRequestImporter
         //create array not matched gi
         for (int count = 0; count < requestGI.size(); count++)
         {
-            if (! sequencesMatchedByGI.contains(requestGI.get(count)) )
+            if (! sequencesMatchedByGI.contains(new Integer((String)requestGI.get(count))) )
                     not_matching_gi_numbers.add(requestGI.get(count));
         }
         return true;
