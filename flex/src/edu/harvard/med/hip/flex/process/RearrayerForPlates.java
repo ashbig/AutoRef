@@ -21,7 +21,7 @@ import edu.harvard.med.hip.flex.util.*;
  */
 public class RearrayerForPlates
 {
-    private static final String DILIM = "\t!";
+    private static final String DILIM = "\t";
     private static final String filePath = "/tmp/";
     private static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     public static final int smallCDSLimit = 2000;
@@ -50,6 +50,7 @@ public class RearrayerForPlates
     /** Creates a new instance of RearrayerForPlates */
     public RearrayerForPlates(Connection con, int prid, int wfid, int protid,
                                 InputStream filein, String user)
+                                throws FlexDatabaseException
     {
         m_projectid = prid;
         m_workflowid = wfid;
@@ -58,6 +59,10 @@ public class RearrayerForPlates
         m_conn = con ;
         m_username = user;
         m_platetype = REARRAYEDPLATETYPE;
+        m_project = new Project(m_projectid);
+        m_workflow = new Workflow (m_workflowid);
+        m_protocol = new Protocol(m_protocolid);
+        m_rearrayed_containers = new ArrayList();
     }
     
     
@@ -68,21 +73,21 @@ public class RearrayerForPlates
         
         ArrayList samples = readFile();
         Hashtable sample_by_sequenceid = new Hashtable();
-        ArrayList flex_sequences = getAllSequences(samples, sample_by_sequenceid);
+        ArrayList flex_sequences = getAllSequences(samples);
         Hashtable org_containers = getAllContainers(samples);
         
         if (m_isArrangeBySize)
         {
             ArrayList small_sequences = getSequencesBySize(LIMITS[0],LIMITS[1], flex_sequences);
-            createContainers(small_sequences, org_containers, sample_by_sequenceid);
+            createContainers(small_sequences, org_containers, samples);
             ArrayList middle_sequences = getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences);
-            createContainers(middle_sequences, org_containers, sample_by_sequenceid);
-            ArrayList large_sequences = getSequencesBySize(LIMITS[1],LIMITS[2],flex_sequences);
-            createContainers(large_sequences, org_containers, sample_by_sequenceid);
+            createContainers(middle_sequences, org_containers, samples);
+            ArrayList large_sequences = getSequencesBySize(LIMITS[2],LIMITS[3],flex_sequences);
+            createContainers(large_sequences, org_containers, samples);
         }
         else
         {
-            createContainers( flex_sequences, org_containers, sample_by_sequenceid);
+            createContainers( flex_sequences, org_containers, samples);
         }
           
         try{
@@ -104,7 +109,7 @@ public class RearrayerForPlates
     public Protocol             getProtocol()    { return m_protocol;}
     public String               getUserName()    { return m_username;}
     
-    public void                 setPlateTYpe(String s){ m_platetype = s;}
+    public void                 setPlateType(String s){ m_platetype = s;}
     public void                 setWellsNumbers(int s){ m_wells_on_plate = s;}
     //-----------------------------------------
     //read file with info for the rearray 
@@ -132,6 +137,7 @@ public class RearrayerForPlates
                 {
                     samples.add(new PlateSample(info[0],info[1], info[2]));
                 }
+                
             }
             in.close();
             return samples;
@@ -149,7 +155,7 @@ public class RearrayerForPlates
     }
     
     //function gets  all flex sequences from db for samples that go into rearray
-    private ArrayList getAllSequences(ArrayList samples, Hashtable sample_by_seqid)
+    private ArrayList getAllSequences(ArrayList samples)
                      throws FlexDatabaseException
     {
         ArrayList seq = new ArrayList();
@@ -162,7 +168,7 @@ public class RearrayerForPlates
                 FlexSequence fl = new FlexSequence(id);
 
                 seq.add(fl);
-                sample_by_seqid.put(pls.getSequenceidName(),pls);
+            
             }
         }
         catch(Exception e)
@@ -187,6 +193,7 @@ public class RearrayerForPlates
                 {
                     Container new_cont = new Container(id);
                     containers.put(pls.getPlateIdName(), new_cont);
+                    new_cont.restoreSample();
                     Sample s = new_cont.getSample(pls.getWellId());
                     pls.setSampleId( s.getId() );
                 }
@@ -222,22 +229,22 @@ public class RearrayerForPlates
     }
     
     //function takes in all sequences of one group and create plates from them
-    private void createContainers(ArrayList seq, Hashtable containers, Hashtable sample_by_sequenceid)
+    private void createContainers(ArrayList seq, Hashtable containers, ArrayList samples)
         throws FlexDatabaseException
     {
         ArrayList plate_sequences = new ArrayList();
         for (int count = 0 ; count < seq.size(); count++)
         {
             plate_sequences.add(seq.get(count));
-            if (( count > 0 && count % (m_wells_on_plate - m_number_of_controls) == 0) || count == seq.size() - 1)
+            if (( count > 0 && (count + 1) % (m_wells_on_plate - m_number_of_controls) == 0) || count == seq.size() - 1)
             {
                 //create new plate
                 Algorithms.rearangeSawToothPatternInFlexSequence(plate_sequences);
                 ArrayList file_entries = new ArrayList();
                 try
                 {
-                    Container newcontainer = createContainer( plate_sequences, containers, sample_by_sequenceid, file_entries);
-                    newcontainer.insert(m_conn);
+                    Container newcontainer = createContainer( plate_sequences, containers, samples, file_entries);
+                   
                     if (newcontainer != null ) m_rearrayed_containers.add(newcontainer);
                 }catch(Exception e)
                 {
@@ -266,7 +273,7 @@ public class RearrayerForPlates
     private Container createContainer(
                                         ArrayList plate_sequences,
                                         Hashtable org_containers,
-                                        Hashtable sample_by_sequenceid,
+                                        ArrayList samples,
                                         ArrayList file_entries
                                         )
                                             throws FlexDatabaseException, FlexCoreException, 
@@ -277,7 +284,7 @@ public class RearrayerForPlates
         //get thread
         int threadId = FlexIDGenerator.getID("threadid");
         //get label for destination plate
-        ProjectWorkflow flow = new ProjectWorkflow(m_project.getId(),m_workflow.getId());
+        ProjectWorkflow flow = new ProjectWorkflow(m_projectid,m_workflowid);
         String projectCode = flow.getCode();
         String processcode = m_protocol.getProcesscode();
         String plate_label = Container.getLabel( projectCode, processcode, threadId, null)   ;
@@ -298,13 +305,14 @@ public class RearrayerForPlates
             FlexSequence fl = (FlexSequence) plate_sequences.get(count);
             //get sample we create it from
             
-            PlateSample pl_sample = (PlateSample)  sample_by_sequenceid.get( String.valueOf( fl.getId())  );
+            PlateSample pl_sample = getPlateSampleForMapping( samples,  fl.getId() );
             Container org_container = (Container)org_containers.get(pl_sample.getPlateIdName());
             if ( ! org_containers_for_this_container.contains(org_container))
             {
                 org_containers_for_this_container.add(org_container);
             }
             Sample org_sample = org_container.getSample(pl_sample.getWellId());
+            
             Sample new_sample = new Sample(type, count + 2, cont.getId(),  org_sample.getConstructid(), org_sample.getOligoid(), Sample.GOOD);
             cont.addSample(new_sample);
             sampleLineageSet.addElement(new SampleLineage( org_sample.getId(), new_sample.getId()));
@@ -346,8 +354,20 @@ public class RearrayerForPlates
     }
     
     
-    
-    
+    //get sample for mapping that was not used
+    private PlateSample getPlateSampleForMapping(ArrayList samples, int flexseqid)
+    {
+        for (int count = 0; count < samples.size(); count++)
+        {
+            PlateSample ps = (PlateSample) samples.get(count);
+            if (ps.getSequenceId() == flexseqid && ! ps.getState())
+            {
+                ps.setState(true);
+                return ps;
+            }
+        }
+        return null;
+    }
     /*
     //function put on queueu plates 
     private void putPlateOnQueue(Container cont) throws FlexDatabaseException
@@ -389,7 +409,7 @@ public class RearrayerForPlates
                 fr.write("Original plate label"+DILIM+"Original plate well"+DILIM+"Destination plate label"+ DILIM+  "Destination plate well\n");
             }
             
-            fr.write(fe.toString(DILIM));
+            fr.write(fe.toString(DILIM)+"\n");
             
         }
         fr.flush();
@@ -421,6 +441,7 @@ public class RearrayerForPlates
         private int i_sampleid = -1;
         private String  i_seqid_str = null;
         private String  i_plateid_str = null;
+        private boolean i_state_used_for_mapping = false;
        
         public PlateSample(String seqid, String plateid, String wellid)
         {
@@ -432,7 +453,9 @@ public class RearrayerForPlates
         }
         
         public void             setSampleId(int i){ i_sampleid = i;}
+        public void             setState(boolean i ){ i_state_used_for_mapping = i;}
         
+        public boolean          getState(){ return i_state_used_for_mapping;}
         public String           getSequenceidName(){ return i_seqid_str;}
         public int              getSampleId(){ return i_sampleid;}
         public int              getSequenceId(){ return i_seqid;}
@@ -469,4 +492,39 @@ public class RearrayerForPlates
         }
     }
         
+    
+    
+    
+       //******************************************************//
+    //			Test				//
+    //******************************************************//
+    public static void main(String [] args) throws Exception
+    {
+        Connection c = null;
+        Project p = null;
+        Workflow w = null;
+        String fname = "e:\\htaycher\\yeast\\rearray.txt";
+        InputStream input = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            int projectid = 2;
+            int workflowid = 10;
+            int protocolid = 40;
+            input = new FileInputStream(fname);
+            RearrayerForPlates rearrayer = new RearrayerForPlates(c,projectid, workflowid,protocolid,input,"elena_taycher@hms.harvard.edu");
+            rearrayer.setWellsNumbers(94);
+            rearrayer.createNewPlates();
+            c.commit();
+        } catch (Exception ex)
+        {
+            System.out.println(ex);
+        } finally
+        {
+            input.close();
+            DatabaseTransaction.closeConnection(c);
+        }
+        System.exit(0);
+    } //main
 }

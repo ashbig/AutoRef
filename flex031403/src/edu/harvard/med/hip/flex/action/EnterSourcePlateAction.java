@@ -165,6 +165,8 @@ public class EnterSourcePlateAction extends ResearcherAction {
             request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);
             request.setAttribute("workflowid", new Integer(workflowid));
             request.setAttribute("projectid", new Integer(projectid));
+             request.setAttribute("projectname", project.getName());
+            request.setAttribute("workflowname", workflow.getName());
             
             if(sls != null)
                 request.getSession().setAttribute("EnterSourcePlateAction.sls", sls);

@@ -40,7 +40,8 @@ import edu.harvard.med.hip.flex.workflow.*;
  * @author  dzuo
  * @version
  */
-public class EnterOligoPlatesAction extends ResearcherAction {
+public class EnterOligoPlatesAction extends ResearcherAction
+{
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -60,7 +61,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException
+    {
         ActionErrors errors = new ActionErrors();
         
         request.getSession().removeAttribute("EnterOligoPlateAction.fivep");
@@ -80,19 +82,44 @@ public class EnterOligoPlatesAction extends ResearcherAction {
         // Get the workflow and project from the form and store in request.
         int workflowid = ((CreatePCRPlateForm)form).getWorkflowid();
         int projectid = ((CreatePCRPlateForm)form).getProjectid();
+       
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
+        
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         
-        try {
+        
+        boolean isOnlyClosed = false;
+        boolean isOnlyOpen = false;
+        if ( projectid == Project.YEAST)    isOnlyClosed = true;
+        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE ) isOnlyOpen = true;
+        
+        try
+        {
+            
             // Validate container label.
             String fivepPlate = ((CreatePCRPlateForm)form).getFivepPlate();
-            String threepOpenPlate = ((CreatePCRPlateForm)form).getThreepOpenPlate();
+            String threepOpenPlate = null;
             String threepClosedPlate = null;
-            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
+            //only closed
+            if (! isOnlyClosed)
+            {
+                threepOpenPlate = ((CreatePCRPlateForm)form).getThreepOpenPlate();
+                
+                if((threepOpenPlate == null) || (threepOpenPlate.trim().length()<1))
+                {
+                    errors.add("threepOpenPlate", new ActionError("error.plate.invalid.barcode", threepOpenPlate));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+            }
+            //only open format
+            if(!isOnlyOpen)
+            {
                 threepClosedPlate = ((CreatePCRPlateForm)form).getThreepClosedPlate();
                 
-                if((threepClosedPlate == null) || (threepClosedPlate.trim().length()<1)) {
+                if((threepClosedPlate == null) || (threepClosedPlate.trim().length()<1))
+                {
                     errors.add("threepClosedPlate", new ActionError("error.plate.invalid.barcode", threepClosedPlate));
                     saveErrors(request, errors);
                     return (new ActionForward(mapping.getInput()));
@@ -101,10 +128,12 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             
             String templatePlate = null;
             if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW)
-            && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
+            && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname()))
+            {
                 templatePlate = ((CreatePCRPlateForm)form).getTemplatePlate();
                 
-                if((templatePlate == null) || (templatePlate.trim().length()<1)) {
+                if((templatePlate == null) || (templatePlate.trim().length()<1))
+                {
                     errors.add("templatePlate", new ActionError("error.plate.invalid.barcode", templatePlate));
                     saveErrors(request, errors);
                     return (new ActionForward(mapping.getInput()));
@@ -115,7 +144,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             SubProtocol subprotocol = new SubProtocol(subProtocolName);
             LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems");
             QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate, templatePlate, projectid);
-            if(item == null) {
+            if(item == null)
+            {
                 errors.add("fivepPlate", new ActionError("error.plateset.mismatch", fivepPlate, threepOpenPlate, threepClosedPlate));
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
@@ -123,43 +153,57 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             
             Plateset ps = (Plateset)item.getItem();
             Container fivep = ps.getFivepContainer();
-            Container threepOpen = ps.getThreepOpenContainer();
+            Container threepOpen = null;
             Container threepClosed = null;
             
-            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
+            if(! isOnlyOpen)
+            {
                 threepClosed = ps.getThreepClosedContainer();
+            }
+            if (! isOnlyClosed)
+            {
+                threepOpen = ps.getThreepOpenContainer();
             }
             
             Container mgc = null;
             Container template = null;
             if(workflowid == Workflow.MGC_CREATOR_WORKFLOW
-            || workflowid == Workflow.MGC_GATEWAY_WORKFLOW) {
-                try {
+            || workflowid == Workflow.MGC_GATEWAY_WORKFLOW)
+            {
+                try
+                {
                     mgc = ps.getMgcContainer();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     System.out.println(ex);
                 }
                 
-                if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
-                    if(mgc != null) {
+                if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname()))
+                {
+                    if(mgc != null)
+                    {
                         //template = Container.findNextContainerFromPrevious(mgc, Protocol.CREATE_DNA_FROM_REARRAYED_CULTURE);
                         template = mgc;
-                        if(template == null) {
+                        if(template == null)
+                        {
                             errors.add("fivepPlate", new ActionError("error.mgc.template.unavailable"));
                             saveErrors(request, errors);
                             return (new ActionForward(mapping.getInput()));
                         }
                     }
                     
-                    if(mgc == null) {
+                    if(mgc == null)
+                    {
                         errors.add("fivepPlate", new ActionError("error.mgc.rearray.notfound"));
                         saveErrors(request, errors);
                         return (new ActionForward(mapping.getInput()));
                     }
                 }
                 
-                if(Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
-                    if(mgc == null) {
+                if(Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname()))
+                {
+                    if(mgc == null)
+                    {
                         errors.add("templatePlate", new ActionError("error.mgc.template.unavailable"));
                         saveErrors(request, errors);
                         return (new ActionForward(mapping.getInput()));
@@ -168,29 +212,29 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             }
             
             ((CreatePCRPlateForm)form).setFivepSourceLocation(fivep.getLocation().getId());
-            ((CreatePCRPlateForm)form).setThreepOpenSourceLocation(threepOpen.getLocation().getId());
             
-            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
-                ((CreatePCRPlateForm)form).setThreepClosedSourceLocation(threepClosed.getLocation().getId());
-            }
-            
-            if(Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname()) && mgc != null) {
-                ((CreatePCRPlateForm)form).setTemplatePlateLocation(mgc.getLocation().getId());
-            }
-            
-            // Get all the locations.
+              // Get all the locations.
             Vector locations = Location.getLocations();
-            
             request.getSession().setAttribute("EnterOligoPlateAction.fivep", fivep);
-            request.getSession().setAttribute("EnterOligoPlateAction.threepOpen", threepOpen);
-            
-            if(threepClosed != null) {
+            if( ! isOnlyOpen)
+            {
+                ((CreatePCRPlateForm)form).setThreepClosedSourceLocation(threepClosed.getLocation().getId());
                 request.getSession().setAttribute("EnterOligoPlateAction.threepClosed", threepClosed);
             }
             
-            if(Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname()) && mgc != null) {
+            if (! isOnlyClosed )
+            {
+                ((CreatePCRPlateForm)form).setThreepOpenSourceLocation(threepOpen.getLocation().getId());
+                request.getSession().setAttribute("EnterOligoPlateAction.threepOpen", threepOpen);
+            }
+            
+            if(Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname()) && mgc != null)
+            {
+                ((CreatePCRPlateForm)form).setTemplatePlateLocation(mgc.getLocation().getId());
                 request.getSession().setAttribute("EnterOligoPlateAction.templatePlate", mgc);
             }
+            
+        
             
             request.getSession().setAttribute("EnterOligoPlateAction.locations", locations);
             request.getSession().setAttribute("EnterOligoPlateAction.item", item);
@@ -200,72 +244,102 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
+            request.setAttribute("workflowname", workflow.getName());
+            request.setAttribute("projectname", project.getName());
             
-            if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
+            
+            if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname()))
+            {
                 ContainerMapper mp = new OneToOneContainerMapper();
                 Vector oligoPlates = new Vector();
                 oligoPlates.addElement(fivep);
-                oligoPlates.addElement(threepOpen);
-                
-                if(threepClosed != null) {
+                if ( !isOnlyClosed )
+                {
+                    oligoPlates.addElement(threepOpen);
+                }
+                if( ! isOnlyOpen )
+                {
                     oligoPlates.addElement(threepClosed);
                 }
                 
                 Vector newOligoPlates = mp.doMapping(oligoPlates, protocol, project, workflow);
                 sampleLineageSet = mp.getSampleLineageSet();
                 request.getSession().setAttribute("EnterOligoPlateAction.fivepOligoD", (Container)newOligoPlates.elementAt(0));
-                request.getSession().setAttribute("EnterOligoPlateAction.threepOpenD", (Container)newOligoPlates.elementAt(1));
-                
-                if(newOligoPlates.size() > 2) {
+                if (isOnlyClosed)
+                {
+                    request.getSession().setAttribute("EnterOligoPlateAction.threepClosedD", (Container)newOligoPlates.elementAt(1));
+                }
+                else if( isOnlyOpen ) //newOligoPlates.size() > 2)
+                {
+                    request.getSession().setAttribute("EnterOligoPlateAction.threepOpenD", (Container)newOligoPlates.elementAt(1));
+                }
+                else
+                {
+                    request.getSession().setAttribute("EnterOligoPlateAction.threepOpenD", (Container)newOligoPlates.elementAt(1));
                     request.getSession().setAttribute("EnterOligoPlateAction.threepClosedD", (Container)newOligoPlates.elementAt(2));
                 }
                 
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
                 
                 if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW
-                || workflowid == Workflow.MGC_CREATOR_WORKFLOW) {
+                || workflowid == Workflow.MGC_CREATOR_WORKFLOW)
+                {
                     request.setAttribute("templateid", new Integer(template.getId()));
                 }
                 return (mapping.findForward("success_oligo_dilute"));
-            } else {
+            } 
+            else
+            {
                 //map the container to the new container
                 ContainerMapper mapper = new OligoToPCRMapper();
                 
                 //map the 3p open oligo plate.
                 Vector oldContainers = new Vector();
                 oldContainers.addElement(fivep);
-                oldContainers.addElement(threepOpen);
                 
-                if(mgc != null) {
+                if ( ! isOnlyClosed) 
+                {
+                    oldContainers.addElement(threepOpen);
+                }
+                if(! isOnlyOpen) 
+                {
+                    oldContainers.addElement(threepClosed);
+                }
+               
+                if(mgc != null)
+                {
                     oldContainers.addElement(mgc);
                 }
                 
                 Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
-                Container pcrOpen = (Container)newContainers.elementAt(0);
-                
-                Container pcrClosed = null;
-                if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
-                    //map the 3p closed oligo plate.
-                    oldContainers = new Vector();
-                    oldContainers.addElement(fivep);
-                    oldContainers.addElement(threepClosed);
-                    if(mgc != null) {
-                        oldContainers.addElement(mgc);
-                    }
-                    Vector newContainers2 = mapper.doMapping(oldContainers, protocol, project, workflow);
-                    pcrClosed = (Container)newContainers2.elementAt(0);
-                }
-                
                 sampleLineageSet = mapper.getSampleLineageSet();
-                request.getSession().setAttribute("EnterOligoPlateAction.pcrOpen", pcrOpen);
-                if(pcrClosed != null) {
+                Container pcrOpen = null; 
+                Container pcrClosed = null;
+                 if ( isOnlyOpen) 
+                {
+                     pcrOpen =  (Container)newContainers.elementAt(0);
+                     request.getSession().setAttribute("EnterOligoPlateAction.pcrOpen", pcrOpen);
+                }
+                else if(isOnlyClosed) 
+                {
+                    pcrClosed = (Container)newContainers.elementAt(0);
                     request.getSession().setAttribute("EnterOligoPlateAction.pcrClosed", pcrClosed);
                 }
+                else
+                {
+                    pcrOpen =  (Container)newContainers.elementAt(0);
+                    pcrClosed = (Container)newContainers.elementAt(1);
+                    request.getSession().setAttribute("EnterOligoPlateAction.pcrOpen", pcrOpen);
+                    request.getSession().setAttribute("EnterOligoPlateAction.pcrClosed", pcrClosed);
+                }
+                
+            
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
                 
                 return (mapping.findForward("success"));
             }
-        } catch (Exception ex) {
+        } catch (Exception ex)
+        {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
@@ -273,16 +347,19 @@ public class EnterOligoPlatesAction extends ResearcherAction {
     
     // Validate the source plate barcode.
     private QueueItem getValidItem(LinkedList queueItems,
-    String fivepPlate,
-    String threepOpenPlate,
-    String threepClosedPlate, String templatePlate, int projectid)
-    throws FlexCoreException, FlexDatabaseException {
-        if(queueItems == null) {
+                        String fivepPlate,
+                        String threepOpenPlate,
+                        String threepClosedPlate, String templatePlate, int projectid)
+                        throws FlexCoreException, FlexDatabaseException
+    {
+        if(queueItems == null)
+        {
             return null;
         }
         
         QueueItem found = null;
-        for(int i=0; i<queueItems.size(); i++) {
+        for(int i=0; i<queueItems.size(); i++)
+        {
             QueueItem item = (QueueItem)queueItems.get(i);
             Plateset ps = (Plateset)item.getItem();
             Container fivep = ps.getFivepContainer();
@@ -290,24 +367,51 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             Container threepClosed = ps.getThreepClosedContainer();
             Container template = ps.getMgcContainer();
             
-            if(template != null && templatePlate != null) {
-                if(projectid == Project.KINASE) {
-                   if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)
-                    && template.isSame(templatePlate)) {
-                        found = item;    
-                   }
-                } else {
+            if(template != null && templatePlate != null)
+            {
+                if(projectid == Project.KINASE)
+                {
                     if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)
-                    && threepClosed.isSame(threepClosedPlate) && template.isSame(templatePlate)) {
+                    && template.isSame(templatePlate))
+                    {
                         found = item;
                     }
                 }
-            } else if(threepClosed == null || projectid == Project.KINASE) {
-                if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)) {
+                else if(projectid == Project.YEAST)
+                {
+                    if(fivep.isSame(fivepPlate) && threepClosed.isSame(threepClosedPlate)
+                    && template.isSame(templatePlate))
+                    {
+                        found = item;
+                    }
+                }
+                else
+                {
+                    if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)
+                    && threepClosed.isSame(threepClosedPlate) && template.isSame(templatePlate))
+                    {
+                        found = item;
+                    }
+                }
+            } 
+            else if(threepClosed == null || projectid == Project.KINASE)
+            {
+                if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate))
+                {
                     found = item;
                 }
-            } else {
-                if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate) && threepClosed.isSame(threepClosedPlate)) {
+            } 
+            else if(threepOpenPlate == null)
+            {
+                if(fivep.isSame(fivepPlate) && threepClosed.isSame(threepClosedPlate))
+                {
+                    found = item;
+                }
+            } 
+            else
+            {
+                if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate) && threepClosed.isSame(threepClosedPlate))
+                {
                     found = item;
                 }
             }
