@@ -101,22 +101,46 @@ public class SummaryTablePopulator {
     }
     
     public int populateCloningprogressTable(List samples, Connection conn) throws FlexDatabaseException, SQLException {
+        String sqlQuery = "select statusid, constructid from cloningprogress"+
+                        " where constructid in"+
+                        " (select constructid from sample where sampleid=?)";
         String sql = "insert into cloningprogress"+
-        " select distinct constructid, 1"+
-        " from sample where sampleid=?"+
-        " and constructid not in"+
-        " (select distinct constructid from cloningprogress)";
+                    " select distinct constructid, 1"+
+                    " from sample where sampleid=?";
+        String sqlUpdate = "update cloningprogress"+
+                        " set statusid="+ConstructInfo.CLONE_OBTAINED_ID+
+                        " where constructid=?";
+        
         PreparedStatement stmt = conn.prepareStatement(sql);
+        PreparedStatement stmtQuery = conn.prepareStatement(sqlQuery);
+        PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+        ResultSet rs = null;
+        
         int ret = 0;
         
         for (int i=0; i<samples.size(); i++) {
             Integer sample = (Integer)samples.get(i);
             int sampleid = sample.intValue();
-            stmt.setInt(1, sampleid);
-            int num = DatabaseTransaction.executeUpdate(stmt);
-            ret += num;
+            stmtQuery.setInt(1, sampleid);
+            rs = DatabaseTransaction.executeQuery(stmtQuery);
+            if(rs.next()) {
+                int statusid=rs.getInt(1);
+                int constructid = rs.getInt(2);
+                if(statusid == ConstructInfo.SEQUENCE_REJECTED_ID || statusid == ConstructInfo.FAILED_CLONING_ID) {
+                    stmtUpdate.setInt(1, constructid);
+                    DatabaseTransaction.executeUpdate(stmtUpdate);
+                    ret ++;
+                } else {
+                    stmt.setInt(1, sampleid);
+                    int num = DatabaseTransaction.executeUpdate(stmt);
+                    ret += num;
+                }
+            }
         }
         
+        DatabaseTransaction.closeResultSet(rs);
+        DatabaseTransaction.closeStatement(stmtQuery);
+        DatabaseTransaction.closeStatement(stmtUpdate);
         DatabaseTransaction.closeStatement(stmt);
         
         return ret;
@@ -404,11 +428,10 @@ public class SummaryTablePopulator {
         //containers.add(new Integer(8220));       
         //containers.add(new Integer(8221));       
         //containers.add(new Integer(8222));
-        
+       
         List samples = new ArrayList();
         samples.add(new Integer(100271));
         samples.add(new Integer(100276));
-        samples.add(new Integer(105601));
         samples.add(new Integer(105872));
         samples.add(new Integer(105867));
         samples.add(new Integer(105805));
@@ -417,7 +440,6 @@ public class SummaryTablePopulator {
         samples.add(new Integer(123262));
         samples.add(new Integer(123371));
         samples.add(new Integer(123316));
-        samples.add(new Integer(123197));
         
         /**
          List samples = getSamples();
@@ -429,13 +451,13 @@ public class SummaryTablePopulator {
         */
         
         //change cloning strategy accordingly.
-        int cloningStrategyid = 8;
+        int cloningStrategyid = 2;
         String cloneType = CloneInfo.MASTER_CLONE;
         
         SummaryTablePopulator populator = new SummaryTablePopulator();
         
-        if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
-        //if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {            
+        //if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
+        if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {            
             populator.sendEmail(true, containers);            
         } else {
             populator.sendEmail(false, containers);
