@@ -1,10 +1,13 @@
 @ECHO OFF
 
 c:
-@ cd /output/needleoutput/
+@ cd output
+cd needleoutput
 @ del *.in
-@ cd /output/tmp_assembly/
+cd ..
+@ cd tmp_assembly
 @ del *.in
-@ cd /output/blastoutput/
+cd ..
+@ cd blastoutput
 @ del *.in
 cd c:\
