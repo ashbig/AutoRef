@@ -106,11 +106,22 @@ if ( plate_labels.size()> 0)
 {%>
 <table border='0' align='center'>
 <%
+boolean isStart = false; int plates_in_row = 1;
+char project_letter = ((String)plate_labels.get(0)).toUpperCase().charAt(0);
 for (int plate_count =0; plate_count < plate_labels.size(); plate_count++)
 {
     label = (String)plate_labels.get(plate_count); 
-    if (plate_count != 0 &&  plate_count % 4 == 0){%>   </tr> <%}
-    if ( plate_count % 4 == 0){%>   <tr> <%}%>
+    if ( plates_in_row % 5 == 0 || project_letter != label.toUpperCase().charAt(0) )
+    {
+            %> </tr><tr> <%
+            plates_in_row = 0;
+            
+    }
+    project_letter = label.toUpperCase().charAt(0);
+    plates_in_row+=1;
+    %>
+ 
+    
 <td> <input type="checkbox" name="chkLabel" value='<%= label%>'> <%= label %></td>
 
 <%}%>
