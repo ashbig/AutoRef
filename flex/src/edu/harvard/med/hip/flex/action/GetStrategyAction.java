@@ -57,15 +57,19 @@ public class GetStrategyAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
         
         String sourcePlate = ((CreateExpressionPlateForm)form).getSourcePlate();
-         
+        
         if ((sourcePlate == null) || (sourcePlate.trim().length() < 1)) {
-            errors.add("sourcePlate", new ActionError("error.plate.invalid.master", sourcePlate));
+            errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
         } else {
             if(!sourcePlate.substring(1, 3).equals("MG")) {
                 errors.add("sourcePlate", new ActionError("error.plate.invalid.master", sourcePlate));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
             }
-        }       
-                
+        }
+        
         List containers = null;
         try {
             containers = CloneContainer.findContainers(sourcePlate);
@@ -87,16 +91,16 @@ public class GetStrategyAction extends ResearcherAction {
         CloningStrategy strategy = null;
         try {
             strategy = CloningStrategy.findStrategyById(strategyid);
-        } catch (Exception ex) {            
+        } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
         
-        if(strategy == null) {          
+        if(strategy == null) {
             request.setAttribute(Action.EXCEPTION_KEY, "strategy is null");
             return (mapping.findForward("error"));
         }
-            
+        
         String sourceVector = strategy.getClonevector().getName();
         List destVectors = null;
         try {
@@ -110,8 +114,8 @@ public class GetStrategyAction extends ResearcherAction {
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.expression.novector", sourcePlate));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
-        }            
-            
+        }
+        
         request.setAttribute("vectors", destVectors);
         request.setAttribute("sourcePlate", sourcePlate);
         
