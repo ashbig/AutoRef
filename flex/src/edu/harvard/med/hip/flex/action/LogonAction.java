@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2001-05-30 14:01:36 $
+ * $Revision: 1.6 $
+ * $Date: 2001-06-21 16:59:32 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -63,7 +63,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: dongmei_zuo $
- * @version $Revision: 1.5 $ $Date: 2001-05-30 14:01:36 $
+ * @version $Revision: 1.6 $ $Date: 2001-06-21 16:59:32 $
  */
 
 public final class LogonAction extends Action {
@@ -112,8 +112,8 @@ public final class LogonAction extends Action {
                 new ActionError("error.password.mismatch"));
             }
         } catch (Throwable th) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.database.error",th));
+            request.setAttribute(Action.EXCEPTION_KEY, th);
+            return mapping.findForward("error");
         }
         
         // Report any errors we have discovered back to the original form
