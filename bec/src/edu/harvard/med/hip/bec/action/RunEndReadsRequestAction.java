@@ -22,6 +22,7 @@ import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
@@ -54,173 +55,224 @@ public class RunEndReadsRequestAction extends ResearcherAction
         int     reverse_primerid = -1;//get from form
         
         
-        // The database connection used for the transaction
-        Connection conn = null;
-        ArrayList master_plates = new ArrayList();
-        ArrayList files = new ArrayList();
-        try
-        {
         
-            //create request object
-            ArrayList processes = new ArrayList();
-            Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
-                                new java.util.Date(),
-                                user.getId(),
-                                processes,
-                                Constants.TYPE_OBJECTS);
-              //create specs array for the process
-            ArrayList specids = new ArrayList();
-            specids.add(new Integer(forward_primerid));
-             specids.add(new Integer(reverse_primerid));
-             // Create Process object 
-            Process process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
-                        ProcessDefinition.ProcessIdFromProcessName(ProcessDefinition.RUN_ENDREADS_SEQUENCING),
-                        actionrequest.getId(),
-                        specids,
-                        Constants.TYPE_ID) ;
-            processes.add(process);
+        ActionRunner runner = new ActionRunner();
+        runner.setContainerIds(master_container_ids );
+        if ( isForward ) runner.setForwardPrimerId(forward_primerid );
+        if ( isReverse ) runner.setRevercePrimerId(reverse_primerid);
+        runner.setUser(user);
+        Thread t = new Thread(runner);
+        t.start();
+        return mapping.findForward("proccessing");
+    
+    }
+    
+    class ActionRunner implements Runnable
+    {
+        private ArrayList   i_master_container_ids = null;//get from form
+        private boolean     i_isForward = false;//get from form
+        private boolean     i_isReverse = false;//get from form
+        private int         i_forward_primerid = -1;//get from form
+        private int         i_reverse_primerid = -1;
+        private User        i_user = null;
+        
+        private ArrayList   i_error_messages = null;
+        
+        public ActionRunner()
+        {
+            i_error_messages = new ArrayList();
+        }
+        public void         setContainerIds(ArrayList v)        { i_master_container_ids = v;}
+        public void         setForwardPrimerId(int id)        {i_forward_primerid = id; i_isForward =true;}
+        public void         setRevercePrimerId(int id)        {i_reverse_primerid = id; i_isReverse = true;}
+        public  void        setUser(User v){i_user=v;}
+        
+        public void run()
+        {
             
             
+            // The database connection used for the transaction
+            Connection conn = null;
+            ArrayList master_plates = new ArrayList();
+            ArrayList files = new ArrayList();
+            String requested_plates = "";
+            try
+            {
+                // conncection to use for transactions
+                conn = DatabaseTransaction.getInstance().requestConnection();
+                //request object
+                ArrayList processes = new ArrayList();
+                Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                            new java.util.Date(),
+                                            i_user.getId(),
+                                            processes,
+                                            Constants.TYPE_OBJECTS);
+                //create specs array for the process
+                ArrayList specids = new ArrayList();
+                specids.add(new Integer(i_forward_primerid));
+                specids.add(new Integer(i_reverse_primerid));
+                // Process object create
+                ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                                        ProcessDefinition.ProcessIdFromProcessName(ProcessDefinition.RUN_ENDREADS_SEQUENCING),
+                                                        actionrequest.getId(),
+                                                        specids,
+                                                        Constants.TYPE_ID) ;
+                 processes.add(process);
+                
+                
                 //get master plates from db
-            for (int count =0; count < master_container_ids.size(); count++)
-            {
-                master_plates.add(new Container(Integer.parseInt( (String)master_container_ids.get(count))));
-            }
-            // conncection to use for transactions
-            conn = DatabaseTransaction.getInstance().requestConnection();
-            
-            // create a new processes Object per each master plate in
-            // er container out
-            Container newcontainer = null;
-          //  ProcessObject processObj = null;ProcessExecution process =null;
-            for (int count = 0; count < master_plates.size(); count++)
-            {
-                /*
-                Container master_plate = (Container) master_plates.get(count);
-                master_plate.updateStatus(Container.STATUS_ER_PROCESS, conn);
-                 // Process object
-                process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
-                            ProcessDefinition.CODE_END_READ_CONTAINER_CREATIONS,
-                            ProcessDefinition.END_READ_CONTAINER_CREATIONS,
-                            actionrequest.getId(),
-                            null,
-                            Constants.TYPE_ID) ;
-                processes.add(process);
-                /*
-                if (isForward)
+                Container container = null;Sample smp = null;
+                for (int count =0; count < i_master_container_ids.size(); count++)
                 {
-                    newcontainer = createEndReadPlate(master_plate, true, false, process.getExecutionId(),  true ,  files );
-                    setPrimer(newcontainer, forward_primerid);
-                    newcontainer.setStatus(Container.STATUS_ER_PROCESS);
-                    newcontainer.insert(conn);
-                    processObj =   new ProcessObject(newcontainer.getId(), process.getExecutionId(), ProcessObject.OUTPUT, ProcessObject.OBJECT_TYPE_CONTAINER);
-                    processObj.insert(conn);
+                    container = new Container(Integer.parseInt( (String)i_master_container_ids.get(count)));
+                    requested_plates += container.getLabel();
+                    container.restoreSampleIsolate();
+                    master_plates.add(container);
                 }
-                 if (isReverse)
+                
+                // for each plate
+                ArrayList isolates = null;
+                Result result = null;
+                IsolateTrackingEngine istrk = null;
+                
+               
+                ArrayList file_list = new ArrayList();
+                for (int count = 0; count < master_plates.size(); count++)
                 {
-                    newcontainer = createEndReadPlate(master_plate, false, true, process.getExecutionId(),  true ,  files );
-                    setPrimer(newcontainer, reverse_primerid);
-                    newcontainer.setStatus(Container.STATUS_ER_PROCESS);
-                    newcontainer.insert(conn);
-                    processObj =   new ProcessObject(newcontainer.getId(), process.getExecutionId(), ProcessObject.OUTPUT, ProcessObject.OBJECT_TYPE_CONTAINER);
-                    processObj.insert(conn);
+                    //get all isolate tracking with status 'submitted'
+                    try
+                    {
+                        container = (Container) master_plates.get(count);
+                        processPlate( container,  file_list, conn, process.getId());
+                    }
+                    catch(Exception e)
+                    {}
                 }
-                //process object for master plate
-                processObj =   new ProcessObject(master_plate.getId(), process.getExecutionId(), ProcessObject.INPUT, ProcessObject.OBJECT_TYPE_CONTAINER);
-                processObj.insert(conn);
-                */
+                //send email to user
+                Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                "elena_taycher@hms.harvard.edu", "Request for end reads sequencing", "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates, file_list);
+                
+                //finally we must insert request
+                actionrequest.insert(conn);
+                // commit the transaction
+                conn.commit();
+              
+                
             }
             
-             /*
-              * finally we must insert all new objects
-              */
-            actionrequest.insert(conn);
-            // commit the transaction
-            conn.commit();
-            // if we get here, we are error free
-            //request.setAttribute(Constants.APPROVED_SEQUENCE_LIST_KEY, "");
-            return mapping.findForward("success");
+            catch(Exception ex)
+            {
+                i_error_messages.add(ex.getMessage());
+                //send notification to the user
+                
+                DatabaseTransaction.rollback(conn);
+            }
+            finally
+            {
+                DatabaseTransaction.closeConnection(conn);
+            }
             
         }
         
-        catch(Exception ex)
-        {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.process.error", ex));
-            DatabaseTransaction.rollback(conn);
-            request.setAttribute(Action.EXCEPTION_KEY, ex);
-            DatabaseTransaction.rollback(conn);
-            return (mapping.findForward("error"));
-        }
-        finally
-        {
-            DatabaseTransaction.closeConnection(conn);
-        }
         
+        private void processPlate(Container container, ArrayList file_list, Connection conn, int process_id) throws Exception
+        {
+            ArrayList naming_file_entries_reverse = new ArrayList();
+            ArrayList  naming_file_entries_forward =  new ArrayList();
+            ArrayList rearray_file_entries_reverse =  new ArrayList();
+            ArrayList  rearray_file_entries_forward =  new ArrayList();
+            NamingFileEntry file_entry = null;
+            File file = null; Result result = null;
+            int cloneid = 0;
+            IsolateTrackingEngine istrk = null;
+            Sample smp = null;
+            boolean isStatusUpdated = false;
+            for (int sample_count = 0; sample_count < container.getSamples().size(); sample_count++)
+            {
+                smp = (Sample) container.getSamples().get(sample_count);
+                isStatusUpdated = false;
+
+                //valid sample - create result
+                if (i_isForward)
+                {
+                    cloneid = 0;
+                    if ( smp.isClone())
+                    {
+                         //create result for each not empty /not control sample per read
+                        istrk = smp.getIsolateTrackingEngine();
+
+                        result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,     process_id,
+                                                istrk.getSampleId(),       null,
+                                                Result.RESULT_TYPE_ENDREAD_FORWARD,
+                                                BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
+                        result.insert(conn, process_id );
+                        cloneid = istrk.getFlexInfo().getFlexCloneId();
+
+                    }
+                       //change isolate status
+                    if ( !isStatusUpdated) 
+                    {
+                       
+                        IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
+                         isStatusUpdated = true;
+                    }
+                    naming_file_entries_forward.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_FORWARD)  );
+                    rearray_file_entries_forward.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-F", smp.getPosition()));
+                }
+                if (i_isReverse)
+                {
+                    cloneid = 0;
+                    if ( smp.isClone())
+                    {
+                        istrk = smp.getIsolateTrackingEngine();
+                        cloneid = istrk.getFlexInfo().getFlexCloneId();
+                        result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,    process_id,
+                                            istrk.getSampleId(),     null,
+                                            Result.RESULT_TYPE_ENDREAD_REVERSE,     
+                                            BecIDGenerator.BEC_OBJECT_ID_NOTSET
+                                            );
+                        result.insert(conn, process_id);
+                        
+                    }
+                    naming_file_entries_reverse.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_REVERSE )  );
+                    rearray_file_entries_reverse.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-R", smp.getPosition()));
+                    //change isolate status
+                     if ( !isStatusUpdated) 
+                    {
+                         IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
+                         isStatusUpdated = true;
+                     }
+                }
+           }
+                    
+            //create files and append them to the file list
+            if (i_isForward)
+            {
+                file = NamingFileEntry.createNamingFile(naming_file_entries_forward,"/tmp/"+ container.getLabel() + "_naming_endreads_f.txt");
+                file_list.add(file);
+                file = RearrayFileEntry.createRearrayFile( rearray_file_entries_forward, "/tmp/"+ container.getLabel() + "rearray_endreads_f.txt");
+                file_list.add(file);
+            }
+            if (i_isReverse)
+            {
+                file = NamingFileEntry.createNamingFile(naming_file_entries_reverse,"/tmp/"+ container.getLabel() + "_naming_endreads_r.txt");
+                file_list.add(file);
+                file = RearrayFileEntry.createRearrayFile( rearray_file_entries_reverse, "/tmp/"+ container.getLabel() + "rearray_endreads_r.txt");
+                file_list.add(file);
+            }
+    }
+        
+        private NamingFileEntry createNamingFileEntry(Sample smp, String orientation)
+                                throws Exception
+        {
+            NamingFileEntry entry =new  NamingFileEntry(smp.getIsolateTrackingEngine().getFlexInfo().getFlexCloneId()
+                        , orientation,
+                        smp.getIsolateTrackingEngine().getFlexInfo().getFlexPlateId(),
+                        smp.getPosition(), 
+                        smp.getIsolateTrackingEngine().getFlexInfo().getFlexSequenceId(),
+                        0);
+            return entry;
+        }
     }
     
-    
-    
-    
-     /*-	new request-
-        new process(es) records
-         1.	new ER Container
-         2.	sample lineage
-         3.	new processObject per ER container
-         4.	new plateset record per master platenaming file for sequencing
-      *
-      *Master plate status – in ER
-      * function create new ER containers , rearray file for each plate and naming file for each plate
-      */
-    public static Container createEndReadPlate(Container master_container,
-                    boolean forward, boolean reverse, int executionid ,
-                    boolean write_rearrayfile , ArrayList files )
-                    throws BecDatabaseException,IOException,BecUtilException
-    {
-       // ContainerCopyer cp =new ContainerCopyer();
-      //  cp.setExecutionId(executionid);
-        File fl = null;
-        
-        
-        String label = null;
-        /*
-        if ( reverse)
-        {
-            //   cp.setDestinationContainerWellNumber()  ;
-            cp.setContainerType(Container.TYPE_ER_REVERSE_CONTAINER)  ;
-            label = master_container.labelParsing()[0]+master_container.labelParsing()[1]+Container.SUF_ER_REVERSE_CONTAINER;
-             cp.doMapping( master_container, label, write_rearrayfile );
-            //wrtie naming file
-            fl =  ActionExecution.writeNamingFile((Container)cp.getNewContainers().get(0),".R00",  null);
-            if (fl != null) files.add(fl);
-            //write robot file
-            fl = RearrayFileEntry.createRearrayFile(cp.getRearrayFileEntries());
-            if (fl != null) files.add(fl);
-        }
-        if (forward )
-        {
-            cp.setContainerType(Container.TYPE_ER_FORWARD_CONTAINER)  ;
-            label = master_container.labelParsing()[0]+master_container.labelParsing()[1]+Container.SUF_ER_FORWARD_CONTAINER;
-             cp.doMapping( master_container, label, write_rearrayfile ) ;
-            //wrtie naming file
-            fl =  ActionExecution.writeNamingFile((Container)cp.getNewContainers().get(0),".F00",  null);
-            if (fl != null) files.add(fl);
-            //write robot file
-            fl = RearrayFileEntry.createRearrayFile(cp.getRearrayFileEntries());
-            if (fl != null) files.add(fl);
-        }
-        return (Container) cp.getNewContainers().get(0);
-         **/ return null;
-    }
-    
-    
-    //function sets oligo id for each sample to universal primer id
-    private void setPrimer(Container newcontainer, int primerid)
-    {
-        for (int count = 0; count < newcontainer.getSamples().size(); count++)
-        {
-            Sample s = (Sample) newcontainer.getSamples().get(count);
-          //  s.setOligoid(primerid);
-        }
-    }
 }
