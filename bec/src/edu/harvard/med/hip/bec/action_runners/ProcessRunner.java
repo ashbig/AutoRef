@@ -115,6 +115,8 @@ public abstract class ProcessRunner implements Runnable
             return "Request for report generator.";
          else if (this instanceof AssemblyRunner)
             return "Request for sequence assembler run.";
+         else if (this instanceof TraceFileProcessingRunner)
+            return "Request for trace files renaming.";
          return "";
      }
      
