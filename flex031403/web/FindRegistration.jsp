@@ -7,7 +7,7 @@
 <head><title>Find Registration</title></head>
 <body bgcolor="white">
 
-<h2>FlexGene : Find Registration</h2>
+<h2>FLEXGene : Find Registration</h2>
 <hr>
 
 <html:errors/>

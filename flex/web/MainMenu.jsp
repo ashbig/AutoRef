@@ -25,7 +25,7 @@
             <td align=center>&nbsp;</TD> 
             <td align=left>
                 <html:link forward='<%=menuItem.getMenuItem()%>' target="display"> 
-                    <bean:write name="menuItem" property="description"/><p>
+                   <b> <bean:write name="menuItem" property="description"/></b><p>
                 </html:link>
             </td>
         </tr>

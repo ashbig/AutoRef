@@ -7,7 +7,7 @@
 <head><title>Customer Registration</title></head>
 <body bgcolor="white">
 
-<h2>FlexGene : Customer Registration</h2>
+<h2>FLEXGene : Customer Registration</h2>
 <hr>
 
 <html:errors/>
