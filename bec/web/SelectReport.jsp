@@ -43,8 +43,12 @@
 <input type="radio" name="forwardName" value="<%=Constants.PROCESS_CREATE_REPORT%>" checked><strong>Genral Report </strong><br>
 <P>
 <input type="radio" name="forwardName" value="<%=  Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING%>" ><strong>Order list for End Reads repeat </strong><br>
-<input type="radio" name="forwardName" value="<%= Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING%>"> <strong> Order list for Internal Reads rerun</strong>  <br>
-</td></tr></table>
+<!--<input type="radio" name="forwardName" value="<%= Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING%>"> <strong> Order list for Internal Reads repeat</strong>  <br> -->
+
+<P><input type="radio" name="forwardName" value="<%= Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY%>"> <strong> Trace Files Quality Report</strong>  <br>
+</td></tr>
+
+</table>
 
 
 <div align="center"> 

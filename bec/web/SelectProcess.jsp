@@ -192,6 +192,11 @@ if (user.getUserGroup().equals("Administrator") )
       Run decision tool (settings required) </font> <P></td>
   </tr>
 
+  <tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DECISION_TOOL_NEW%>>
+      Run <i> new </i> decision tool  (settings required) </font> <P></td>
+  </tr>
  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_NOMATCH_REPORT%>>

@@ -203,6 +203,7 @@ case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:
 case Constants.PROCESS_CREATE_REPORT:{break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :{ break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :{ break;}
+case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:  { break;}
 case Constants.PROCESS_DELETE_PLATE :{  break;}
 case Constants.PROCESS_DELETE_CLONE_READS  :{    break;}
 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{   break;}

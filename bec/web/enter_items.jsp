@@ -89,6 +89,7 @@ case Constants.PROCESS_RUN_PRIMER3 :{ isPlateLabel = true; isPlateLabelChecked=t
 case Constants.PROCESS_CREATE_REPORT:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true;  isACESequenceId = true;break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :{ isPlateLabel = true;isPlateLabelChecked=true; break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :{ isCloneId = true; isCloneIdChecked= true; break;}
+case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:  { isCloneId = true;isPlateLabel = true; isCloneIdChecked= true; break;}
 case Constants.PROCESS_DELETE_PLATE :{ isPlateLabel = true;isPlateLabelChecked=true; break;}
 case Constants.PROCESS_DELETE_CLONE_READS  :{ isPlateLabel = true;isPlateLabelChecked=true;isCloneId = true;   break;}
 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{ isPlateLabel = true;isPlateLabelChecked=true; isCloneId = true;  break;}
