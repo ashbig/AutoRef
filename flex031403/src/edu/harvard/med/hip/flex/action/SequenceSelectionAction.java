@@ -86,11 +86,11 @@ public class SequenceSelectionAction extends FlexAction {
                 submittedSequences.addElement(sequence);
             
                 //for the new sequences, need more info from genbank.
-                if(sequence.getFlexstatus().equals("NEW")) {
+                if(sequence.getFlexstatus().equals(FlexSequence.NEW)) {
                     setSequenceInfo(sequence, gi);
                 
                     //if the sequence quality is questionable, put it aside.
-                    if("QUESTIONABLE".equals(sequence.getQuality())) {
+                    if(FlexSequence.QUESTIONABLE.equals(sequence.getQuality())) {
                         badSequences.put(gi, sequence);
                     } else {
                         FlexSeqAnalyzer analyzer = new FlexSeqAnalyzer(sequence);
@@ -125,7 +125,7 @@ public class SequenceSelectionAction extends FlexAction {
                         }
                     }
                 } else {
-                    if("QUESTIONABLE".equals(sequence.getQuality())) {
+                    if(FlexSequence.QUESTIONABLE.equals(sequence.getQuality())) {
                         badSequences.put(gi, sequence);
                     } else {
                         goodSequences.addElement(sequence);
@@ -187,10 +187,10 @@ public class SequenceSelectionAction extends FlexAction {
         sequence.setSequencetext((String)h.get("sequencetext"));
         if(start==-1 || stop == -1) {
             sequence.setCdslength(0);
-            sequence.setQuality("QUESTIONABLE");
+            sequence.setQuality(FlexSequence.QUESTIONABLE);
         }
         else {
-            sequence.setQuality("GOOD");
+            sequence.setQuality(FlexSequence.GOOD);
         }
     }    
 }

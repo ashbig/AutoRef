@@ -83,7 +83,7 @@ public class ConfirmSelectionAction extends FlexAction {
                 FlexSequence sequence = (FlexSequence)sequences.get(gi);
                 r.addSequence(sequence);
                 
-                if("NEW".equals(sequence.getFlexstatus())) {
+                if(FlexSequence.NEW.equals(sequence.getFlexstatus())) {
                     QueueItem item = new QueueItem(sequence, p);
                     l.addLast(item);
                 }

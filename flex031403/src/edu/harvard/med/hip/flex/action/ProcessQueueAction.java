@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-07-11 18:44:17 $
- * $Author: jmunoz $
+ * $Revision: 1.8 $
+ * $Date: 2001-07-19 14:48:10 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -61,8 +61,8 @@ import org.apache.struts.action.*;
  * Class description - Class to process items from the approve sequence queue.
  *
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.7 $ $Date: 2001-07-11 18:44:17 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.8 $ $Date: 2001-07-19 14:48:10 $
  */
 public class ProcessQueueAction extends WorkflowAction {
     
@@ -168,12 +168,12 @@ public class ProcessQueueAction extends WorkflowAction {
                     new ActionError("error.sequence.status", "NULL status"));
                     break;
                 } else if(status.equalsIgnoreCase("Accepted")) {
-                    curSeq.updateStatus("INPROCESS", conn);
+                    curSeq.updateStatus(FlexSequence.INPROCESS, conn);
                     acceptedList.add(queueItem);
                     process.addProcessObject(processObj);
                     
                 } else if(status.equalsIgnoreCase("Rejected")) {
-                    curSeq.updateStatus("REJECTED", conn);
+                    curSeq.updateStatus(FlexSequence.REJECTED, conn);
                     rejectedList.add(queueItem);
                     process.addProcessObject(processObj);
                     

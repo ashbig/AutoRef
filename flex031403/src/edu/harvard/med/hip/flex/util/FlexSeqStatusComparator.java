@@ -61,12 +61,12 @@ public class FlexSeqStatusComparator implements Comparator {
     }
 
     public static void main(String [] args) {
-        FlexSequence s1 = new FlexSequence(1, "OBTAINED", null, null, null, 1, 1, 1, 1, null);
-        FlexSequence s2 = new FlexSequence(1, "INPROCESS", null, null, null, 1, 1, 1, 1, null);
-        FlexSequence s3 = new FlexSequence(1, "PENDING", null, null, null, 1, 1, 1, 1, null);
-        FlexSequence s4 = new FlexSequence(1, "REJECTED", null, null, null, 1, 1, 1, 1, null);
-        FlexSequence s5 = new FlexSequence(1, "FAILED", null, null, null, 1, 1, 1, 1, null);
-        FlexSequence s6 = new FlexSequence(1, "OBTAINED", null, null, null, 1, 1, 1, 1, null);
+        FlexSequence s1 = new FlexSequence(1, FlexSequence.OBTAINED, null, null, null, 1, 1, 1, 1, null);
+        FlexSequence s2 = new FlexSequence(1, FlexSequence.INPROCESS, null, null, null, 1, 1, 1, 1, null);
+        FlexSequence s3 = new FlexSequence(1, FlexSequence.PENDING, null, null, null, 1, 1, 1, 1, null);
+        FlexSequence s4 = new FlexSequence(1, FlexSequence.REJECTED, null, null, null, 1, 1, 1, 1, null);
+        FlexSequence s5 = new FlexSequence(1, FlexSequence.FAILED, null, null, null, 1, 1, 1, 1, null);
+        FlexSequence s6 = new FlexSequence(1, FlexSequence.OBTAINED, null, null, null, 1, 1, 1, 1, null);
 
         Vector v = new Vector();
         v.addElement(s4);
