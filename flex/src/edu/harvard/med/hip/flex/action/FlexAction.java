@@ -17,8 +17,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-05-30 13:11:09 $
+ * $Revision: 1.2 $
+ * $Date: 2001-05-30 14:41:46 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -52,12 +52,12 @@ import edu.harvard.med.hip.flex.*;
  *
  *    All <code>Actions</clode> in the FLEX application should extend
  *    so that a user logon is checked in the session.  Each derived class should
- *    call super.perform() from its perform method.  If the return value is null
- *    then normal processessing should occur, otherwise the returned
- *    <code>ActionForward</code> should be returned.
+ *    impelemnt flexPerform() which is called by the perform method of
+ *    <code>FlexAction</code> and a <code>ActionForward</code> should 
+ *    be returned.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-05-30 13:11:09 $
+ * @version    $Revision: 1.2 $ $Date: 2001-05-30 14:41:46 $
  */
 public abstract class FlexAction extends org.apache.struts.action.Action {
     
@@ -82,17 +82,36 @@ public abstract class FlexAction extends org.apache.struts.action.Action {
     HttpServletResponse response)
     throws ServletException, IOException {
         if(request.getSession().getAttribute(Constants.USER_KEY) != null) {
-            return null;
+            return flexPerform(mapping,form,request,response);
         } else {
             return mapping.findForward("login");
         }
         
     } // end perform()
+    
+    
+    /**
+     * Does the real work for the perform method which must be overriden by the
+     * Child classes.
+     *
+     * @param mapping The ActionMapping used to select this instance
+     * @param actionForm The optional ActionForm bean for this request (if any)
+     * @param request The HTTP request we are processing
+     * @param response The HTTP response we are creating
+     *
+     * @exception IOException if an input/output error occurs
+     * @exception ServletException if a servlet exception occurs
+     */
+    public abstract ActionForward flexPerform(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws ServletException, IOException;
 } // End class FlexAction
 
 
-/*
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
- */
+      /*
+      |<---            this code is formatted to fit into 80 columns             --->|
+      |<---            this code is formatted to fit into 80 columns             --->|
+      |<---            this code is formatted to fit into 80 columns             --->|
+       */
