@@ -86,7 +86,8 @@ public class ScoredSequence extends BaseSequence
         }
         catch(Exception e)
         {
-            throw new BecDatabaseException("Cannot insert scored sequence.");
+            System.out.println(e.getMessage());
+            throw new BecDatabaseException("Cannot insert scored sequence."+e.getMessage());
         }
     }
     
@@ -125,21 +126,39 @@ public class ScoredSequence extends BaseSequence
    public String toHTMLString()
    {
        StringBuffer res = new StringBuffer();
-       res.append("       0--------1---------2---------3---------4---------5---------6\n\n");
-       String color_red = "<FONT COLOR=\"red\">";
+       res.append("        0--------1---------2---------3---------4---------5---------6\n\n");
+       String color_red = "<FONT COLOR=\"red\">";  
        String color_green = "<FONT COLOR=\"green\">";
        String color_blue="<FONT COLOR=\"blue\">";
+       String color_orange="<FONT COLOR=\"orange\">";
        getScoresAsArray();
        int seqIndex=1;
        char[] text = m_text.toCharArray();
-       
+      
        for(int i = 0;i< text.length;i++)
         {
+            
+            if(i == 0 ||  i % 60 == 0 )
+            {
+                res.append("\n");
+                int pad_value = String.valueOf(i+1).length();
+                String pad = "";
+                for (int count = pad_value; count < 5; count++)
+                {
+                    pad +="0";
+                }
+                
+                res.append(pad +(i+1) +" - ");
+            }
             if ( m_scores_numbers != null)
             {
-                if( m_scores_numbers[i] < 20)
+                if( m_scores_numbers[i] < 10)
                 {
-                    res.append(color_blue +text[i]+"</FONT>");
+                    res.append(color_orange +text[i]+"</FONT>");
+                }
+                else if(m_scores_numbers[i] >=10 && m_scores_numbers[i] < 20)
+                {
+                    res.append(color_blue+text[i]+"</font>");
                 }
                 else if(m_scores_numbers[i] >=20 && m_scores_numbers[i] < 25)
                 {
@@ -154,27 +173,23 @@ public class ScoredSequence extends BaseSequence
             {
                 res.append(text[i]);
             }
-            if(i%60 == 0 && i != 0)
-            {
-                 res.append("\n");
-            }
-            if(i%60 == 0)
-            {
-               
-                int pad_value = String.valueOf(seqIndex+1).length();
-                String pad = "";
-                for (int count = 1; count < 5; count++)
-                {
-                    pad +="0";
-                }
-                
-                res.append(pad +(i+1) +" - ");
-            }
             
+       
        }
        
        return res.toString();
    }
    
-    
+     public static void main(String [] args)
+    {
+        try
+        {
+            String str = "AAACCCGGGGAGAGAGAGAGAGAGTTTTTAGAGGGATTTTTTAGATAGATAGATGAATATTATATATATATGGGGGGGGGAGAGAGAGGAGAGGAGAGAGGAGAGAGGAGAGAGAGAGGAAGAAACCCGGGGAGAGAGAGAGAGAGTTTTTAGAGGGATTTTTTAGATAGATAGATGAATATTATATATATATGGGGGGGGGAGAGAGAGGAGAGGAGAGAGGAGAGAGGAGAGAGAGAGGAAGAAACCCGGGGAGAGAGAGAGAGAGTTTTTAGAGGGATTTTTTAGATAGATAGATGAATATTATATATATATGGGGGGGGGAGAGAGAGGAGAGGAGAGAGGAGAGAGGAGAGAGAGAGGAAG";
+            String scores="3 3 30 30 13 14 14 15 15 60 60 60 23 23 23 23 24 23 21 23 24 24 25 25 12 12 12 12 12 12 13 16 16 16 16 16 30 30 80 80 80 80 90 90 90 90 90 90 90 90 12 12 12 12 12 12 34 32 34 32 34 12 13 13 13 13 14 4 4 4 4 4 4 4 4 4 4 6 7 12 12 12 34 34 34 34 34 34 34 34 34 56 56 24 24 22 22 22 22 22 22 22 22 22 22 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 3 3 30 30 13 14 14 15 15 60 60 60 23 23 23 23 24 23 21 23 24 24 25 25 12 12 12 12 12 12 13 16 16 16 16 16 30 30 80 80 80 80 90 90 90 90 90 90 90 90 12 12 12 12 12 12 34 32 34 32 34 12 13 13 13 13 14 4 4 4 4 4 4 4 4 4 4 6 7 12 12 12 34 34 34 34 34 34 34 34 34 56 56 24 24 22 22 22 22 22 22 22 22 22 22 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 3 3 30 30 13 14 14 15 15 60 60 60 23 23 23 23 24 23 21 23 24 24 25 25 12 12 12 12 12 12 13 16 16 16 16 16 30 30 80 80 80 80 90 90 90 90 90 90 90 90 12 12 12 12 12 12 34 32 34 32 34 12 13 13 13 13 14 4 4 4 4 4 4 4 4 4 4 6 7 12 12 12 34 34 34 34 34 34 34 34 34 56 56 24 24 22 22 22 22 22 22 22 22 22 22 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44";
+            ScoredSequence s = new ScoredSequence(str, scores);
+            System.out.println(s.toHTMLString());
+        }
+        catch(Exception e){}
+        System.exit(0);
+     }
 }
