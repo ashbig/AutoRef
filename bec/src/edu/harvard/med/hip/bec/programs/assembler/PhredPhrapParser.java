@@ -79,7 +79,9 @@ public class PhredPhrapParser
                 }
                 if (isInSequenceInfo && !line.trim().equals(""))
                 {
+                    line.replace("x","n");
                     sequence.append( Algorithms.cleanChar(line,'*'));
+                    
                     continue;
                 }
                 if (isInSequenceInfo && line.trim().equals(""))
