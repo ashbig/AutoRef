@@ -12,23 +12,23 @@ package edu.harvard.med.hip.flex.query;
  * @version 
  */
 public class QueryInfo {
-    private int id;
-    private String gi;
-    private String geneName;
-    private String genbankAcc;
-    private String geneSymbol;
-    private String panumber;
-    private String label;
-    private int plateid;
-    private int well;
-    private String type;
-    private String fivep;
-    private String threep;
-    private String project;
-    private String workflow;
-    private String result;
-    private String status;
-    private String sequence;
+    protected int id;
+    protected String gi;
+    protected String geneName;
+    protected String genbankAcc;
+    protected String geneSymbol;
+    protected String panumber;
+    protected String label;
+    protected int plateid;
+    protected int well;
+    protected String type;
+    protected String fivep;
+    protected String threep;
+    protected String project;
+    protected String workflow;
+    protected String result;
+    protected String status;
+    protected String sequence;
     
     /** Creates new QueryInfo */
     public QueryInfo() {
