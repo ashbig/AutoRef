@@ -38,16 +38,19 @@
     <!-- Form used to do the sequencing project -->
     <form-bean      name="seqSequenceAnalysisRequestForm"
                     type="edu.harvard.med.hip.bec.form.Seq_SequenceAnalysisRequestForm"/>
-  <!-- Form used to run a process  -->
-    <form-bean      name="seqRunProcessForm"
-                    type="edu.harvard.med.hip.bec.form.RunProcessForm"/>
- <!-- Customer receive  orders form bean -->
+  <!-- Customer receive  orders form bean -->
     <form-bean      name="ReceiveOrdersForm"
                     type="edu.harvard.med.hip.bec.form.ReceiveOrdersForm"/>
 
  <!-- Customer receive  orders form bean -->
     <form-bean      name="submitDataFileForm"
                     type="edu.harvard.med.hip.bec.form.SubmitDataFileForm"/>
+
+ <!-- Form used to run a process  -->
+   <!-- <form-bean      name="seqRunProcessForm" type="edu.harvard.med.hip.bec.form.RunProcessForm"/> -->
+
+
+
  </form-beans>
 
 
@@ -164,7 +167,7 @@
             <forward name="upload_plates" path="/RunUploadPlates.jsp"/>
              <forward name="run_desicion_tool" path="/RunDesicionTool.jsp"/>
             <forward name="select_vector" path="/SelectVector.jsp"/>
-            <forward name="run_process" path="/RunProcess.jsp"/>
+            <forward name="run_process" path="/InitiateProcessDataFileIn.jsp"/>
             <forward name="scan_label" path="/ContainerScan.jsp"/>
             <forward name="submit_data_file" path="/SubmitDataFile.jsp"/>
             <forward name="select_plates" path="/SelectPlatesForProcess.jsp"/>
@@ -183,6 +186,13 @@
 
     </action>
 
+<!-- Process action that requiers data file as part of data submition -->
+    <action      path="/RunProcessDataFileIn"
+                name="submitDataFileForm"
+                input="/InitiateProcessDataFileIn.jsp"
+                type="edu.harvard.med.hip.bec.action.RunProcessDataFileInAction">
+            <forward name="processing" path="/ConfirmProcess.jsp"/>
+     </action>
 
 <!-- Process  run a process-->
     <action      path="/RunProcess"
