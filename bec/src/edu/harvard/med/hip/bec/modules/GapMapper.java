@@ -76,7 +76,7 @@ public class GapMapper
   //it should be only one contig
             if ( clone_assembly == null || clone_assembly.getContigs()== null || clone_assembly.getContigs().size() != 1)
             {
-                m_error_messages.add("Gap Mapper failed: cannot assemble reads with reference sequence");
+                m_error_messages.add("Gap Mapper failed: cannot assemble reads with reference sequence for clone id "+clone_description.getCloneId());
                 return;
             }
             ReadInAssembly read = null;
@@ -128,7 +128,7 @@ public class GapMapper
                     m_stretch_collection.setRefSequenceId (  clone_description.getBecRefSequenceId());
                     m_stretch_collection.setIsolatetrackingId ( clone_description.getIsolateTrackingId());
                     m_stretch_collection.setCloneId (clone_description.getCloneId());
-                     m_stretch_collection.setStretches( stretches);
+                    m_stretch_collection.setStretches( stretches);
                       
                 }
             }
