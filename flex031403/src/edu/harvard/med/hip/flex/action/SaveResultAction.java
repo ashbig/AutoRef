@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.19 $
- * $Date: 2001-08-01 19:17:10 $
+ * $Revision: 1.20 $
+ * $Date: 2001-08-01 23:07:46 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.19 $ $Date: 2001-08-01 19:17:10 $
+ * @version    $Revision: 1.20 $ $Date: 2001-08-01 23:07:46 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -171,47 +171,43 @@ public class SaveResultAction extends ResearcherAction {
             
             protocol = new Protocol(protocolName);
             
-            // create a new process
-            Process process = new Process(protocol, Process.SUCCESS, researcher);
             
-            // create the container process object
-            ContainerProcessObject cpo =
-            new ContainerProcessObject(container.getId(),process.getExecutionid(),ProcessObject.IO);
+            // get the linages
+            Vector lineages = this.getSampleLineages(container);
             
-            // associate the process object with the process
-            process.addProcessObject(cpo);
+            // use a dummy list for the io object
+            List dummyContainerList = new ArrayList();
+            dummyContainerList.add(container);
             
-            process.insert(conn);
+            // Do process stuff
+            WorkflowManager manager = new WorkflowManager("ProcessPlateManager");
+            Process process = manager.createProcessRecord(Process.SUCCESS, protocol, researcher, 
+                                        null, null, null, 
+                                        dummyContainerList, lineages, conn);       
             
             // save the results.
-            saveResults(resultType,process, resultForm, conn);
-            System.out.println("finished save Results");
+            saveResults(process, resultType, resultForm, conn);
+            
             /*
              * we must now create the next protocol in the workflow based on
              * what the previous protocol was.
              */
-            manageQueue(conn, queueItem, process, container);
+            List dummyQueueItemList = new ArrayList();
+            dummyQueueItemList.add(queueItem);
             
-            System.out.println("finished manageQueue");
+            
+            
+            manager.processQueue(dummyQueueItemList, dummyContainerList, 
+                protocol, conn);
+            
             // finally we commit all our changes.
             DatabaseTransaction.commit(conn);
             
-        } catch (FlexDatabaseException fde) {
+        } catch (Exception e) {
             retForward = mapping.findForward("error");
-            request.setAttribute(Action.EXCEPTION_KEY, fde);
+            request.setAttribute(Action.EXCEPTION_KEY, e);
             DatabaseTransaction.rollback(conn);
             return retForward;
-        } catch (FlexProcessException fpe) {
-            retForward = mapping.findForward("error");
-            request.setAttribute(Action.EXCEPTION_KEY, fpe);
-            DatabaseTransaction.rollback(conn);
-            return retForward;
-        } catch (IOException ioE) {
-            retForward = mapping.findForward("error");
-            request.setAttribute(Action.EXCEPTION_KEY, ioE);
-            DatabaseTransaction.rollback(conn);
-            return retForward;
-            
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
@@ -236,16 +232,20 @@ public class SaveResultAction extends ResearcherAction {
     /**
      * Save what the user has choosen to the database.
      *
+     * @param process THe process execution used for this result
      * @param resultType Type or result to save
-     * @param process The process the result referencess
      * @param resultForm The form holding the results.
      * @param conn The databae Connection used to the transactions.
      *
+     *
      * @exception FlexDatabaseException when there is a database error.
      */
-    private void saveResults(String resultType, Process process, 
+    private void saveResults(Process process, String resultType,
     ResultForm resultForm, Connection conn)
     throws FlexDatabaseException, IOException {
+        
+       
+        // the container this form is associated with
         Container container = resultForm.getContainer();
         Vector samples = container.getSamples();
         
@@ -272,13 +272,7 @@ public class SaveResultAction extends ResearcherAction {
             // if the sample is of an empty type then just go on to the next
             // one without writting anything to the DB.
             if(curSample.getType().toUpperCase().indexOf("EMPTY") == -1) {
-                // insert a record into sample linage, mapping the sample to itself
-                SampleLineage sampleL=
-                new SampleLineage(process.getExecutionid(), curSample.getId(), curSample.getId());
-                
-                // do the db insert
-                sampleL.insert(conn);
-                
+                        
                 // create a new result
                 Result curResult =
                 new Result(process,curSample,resultType,containerForm.getResult(i));
@@ -292,9 +286,31 @@ public class SaveResultAction extends ResearcherAction {
                 }
             }
         }
+        
     }
     
-    
+    /**
+     * Gets the linages from a container.
+     *
+     * @param container The container to get the linages from.
+     *
+     * @return Vector of sample linages for the container specified.
+     */
+    private Vector getSampleLineages(Container container) {
+        Vector lineageVect = new Vector();
+         // loop over all samples and add them to the vector of lineages
+        Vector samples = container.getSamples();
+        Iterator sampleIter = container.getSamples().iterator();
+        while(sampleIter.hasNext()) {
+            Sample curSample  = (Sample)sampleIter.next();
+             // insert a record into sample linage, mapping the sample to itself
+                SampleLineage sampleL=
+                new SampleLineage(curSample.getId(), curSample.getId());
+                lineageVect.add(sampleL);
+        }
+        
+        return lineageVect;
+    }
     
     /**
      * Creates and uploads a file.
@@ -347,52 +363,7 @@ public class SaveResultAction extends ResearcherAction {
         return fileRef;
     }
     
-    /**
-     * Helper method to manage the queue.
-     *
-     * Gets rid of the old item on the queue and put on more items for the next
-     * steps.
-     *
-     * @param curProcess the current process execution
-     */
-    private void manageQueue(Connection conn, QueueItem queueItem,
-    Process curProcess, Container container)
-    throws FlexDatabaseException, FlexProcessException {
-        
-         /*
-          * now we need to remove the container from the queue,
-          * and insert a new item for the next protocol.
-          */
-        StaticQueueFactory queueFactory = new StaticQueueFactory();
-        
-        ProcessQueue queue = queueFactory.makeQueue("ContainerProcessQueue");
-        
-        LinkedList dummyList = new LinkedList();
-        dummyList.add(queueItem);
-        
-        // remove the old queue items
-        queue.removeQueueItems(dummyList, conn);
-        Workflow workflow = new Workflow();
-        
-        // find the next step(s) in the work flow
-        Vector flowRecords =
-        workflow.getNextProtocol(curProcess.getProtocol().getProcessname());
-        
-        // for each one, put the container on the queue for that protocol
-        Iterator flowIter = flowRecords.iterator();
-        
-        while(flowIter.hasNext()) {
-            String nextProtocolS = (String)flowIter.next();
-            Protocol nextProtocol = new Protocol(nextProtocolS);
-            dummyList.clear();
-            dummyList.add(new QueueItem(container,nextProtocol));
-            // add queue item for the next process
-            queue.addQueueItems(dummyList, conn);
-        }
-        // update the process execution for the previous step.
-        curProcess.setExecutionStatus(Process.SUCCESS);
-        curProcess.update(conn);
-    }
+    
     
     
     /**

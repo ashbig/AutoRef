@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Vector;
 import java.sql.Connection;
 import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.process.Protocol;
 import edu.harvard.med.hip.flex.database.*;
 
@@ -31,11 +32,13 @@ public interface TaskManager {
      * @param conn The database connection.
      * @param workflow The current workflow.
      *
+     * @return Process for the parameters provided
+     *
      * @exception FlexDatabaseException
      */
     public void processQueue(List removedItems, List addedItems, Protocol protocol, Connection conn, Workflow workflow) throws FlexDatabaseException;
 
-    public void createProcessRecord(String executionStatus, Protocol protocol,
+    public Process createProcessRecord(String executionStatus, Protocol protocol,
                                     Researcher researcher, SubProtocol subprotocol,
                                     List iObjects, List oObjects, List ioObjects,
                                     Vector sampleLineageSet, Connection conn)

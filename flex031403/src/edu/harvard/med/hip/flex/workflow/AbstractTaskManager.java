@@ -57,7 +57,7 @@ public abstract class AbstractTaskManager implements TaskManager {
         }
     }
     
-    public void createProcessRecord(String executionStatus, Protocol protocol,
+    public Process createProcessRecord(String executionStatus, Protocol protocol,
                                     Researcher researcher, SubProtocol subprotocol,
                                     List iObjects, List oObjects, List ioObjects,
                                     Vector sampleLineageSet, Connection conn)
@@ -83,6 +83,7 @@ public abstract class AbstractTaskManager implements TaskManager {
         
         // Insert the process and process objects into database.
         process.insert(conn);
+        return process;
     }
     
     /**

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Vector;
 import java.sql.Connection;
 import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.database.*;
 
 /**
@@ -63,11 +64,11 @@ public class WorkflowManager {
         manager.processQueue(removedItems, addedItems, protocol, conn, workflow);
     }
     
-    public void createProcessRecord(String executionStatus, Protocol protocol,
+    public Process createProcessRecord(String executionStatus, Protocol protocol,
     Researcher researcher, SubProtocol subprotocol,
     List iObjects, List oObjects, List ioObjects,
     Vector sampleLineageSet, Connection conn) throws FlexDatabaseException {
-        manager.createProcessRecord(executionStatus, protocol,
+        return manager.createProcessRecord(executionStatus, protocol,
         researcher, subprotocol,
         iObjects, oObjects, ioObjects,
         sampleLineageSet, conn);

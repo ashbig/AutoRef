@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-07-31 19:40:48 $
+ * $Revision: 1.4 $
+ * $Date: 2001-08-01 23:07:46 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.flex.process.*;
  * on the protocol it is passed.
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.3 $ $Date: 2001-07-31 19:40:48 $
+ * @version    $Revision: 1.4 $ $Date: 2001-08-01 23:07:46 $
  */
 
 public class GetQueueItemsAction extends ResearcherAction {
@@ -91,6 +91,11 @@ public class GetQueueItemsAction extends ResearcherAction {
             StaticQueueFactory queueFactory = new StaticQueueFactory();
             ProcessQueue queue = queueFactory.makeQueue("ContainerProcessQueue");
             List queueItems = queue.getQueueItems(protocol);
+            
+            // first remove items from the session.
+            if(request.getSession().getAttribute("SelectProtocolAction.queueItems") !=null) {
+                request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+            }
             
             // shove the queue items into the session if its not empty.
             if(! queueItems.isEmpty()) {
