@@ -16,14 +16,17 @@
     <table width="80%" align="center" border="0"><tr><td> 
     <p>The MedGene database can help you to get the following information:</p>
 
+    <p>A list of genes associated with a particular</p>
     <html:form action="main.do">   
-        <html:radio property="geneDiseaseSelect" value="geneDisease" />A list of genes associated with a particular disease<br>
-        <html:radio property="geneDiseaseSelect" value="diseaseGene"/>A list of diseases associated with a particular gene<br>
-        <html:radio property="geneDiseaseSelect" value="multiDisease"/>A list of genes associated with multiple diseases<br>
-        <html:radio property="geneDiseaseSelect" value="geneGene"/>A list of genes associated with a particular gene<br>
+        <html:radio property="geneDiseaseSelect" value="geneDisease" />disease<br>      
+        <html:radio property="geneDiseaseSelect" value="multiDisease"/>multiple diseases<br>
+        <html:radio property="geneDiseaseSelect" value="geneGene"/>gene<br>
+        <p> A list of diseases associated with a particular </p>
+        <html:radio property="geneDiseaseSelect" value="diseaseGene"/>gene<br>
         <p>
         Please make a selection and submit.
         <p>
+
         <html:submit property="submit" value="continue"/>
     </html:form>
 

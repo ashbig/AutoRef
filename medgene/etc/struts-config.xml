@@ -67,6 +67,15 @@
     <form-bean      name="selectMeshTermsForm"
                     type="edu.harvard.med.hip.metagene.form.SelectMeshTermsForm"/>
 
+    <!-- Search genes for gene step1 -->   
+    <form-bean      name="searchGenesForGeneStep1Form"
+                    type="edu.harvard.med.hip.metagene.form.SearchGenesForGene_step1Form"/>
+
+    <!-- Search genes for gene step2 -->   
+    <form-bean      name="searchGenesForGeneStep2Form"
+                    type="edu.harvard.med.hip.metagene.form.SearchGenesForGene_step2Form"/>
+    
+
   </form-beans>
 
 
@@ -123,8 +132,7 @@
                name="mainForm"
               scope="request"
               input="/main.jsp">
-      <forward  name="success_disease
-"   path="/DiseaseSearch.jsp"/>
+      <forward  name="success_disease"   path="/DiseaseSearch.jsp"/>
       <forward  name="success_gene"   path="/GeneSearch.jsp"/>
       <forward  name="success_multi_disease"   path="/MultipleDiseaseSearch.jsp"/>
       <forward  name="success_gene_gene"   path="/GeneGeneSearch.jsp"/>
@@ -199,6 +207,27 @@
       <forward  name="success"   path="/DisplayGenes.jsp"/>
       <forward  name="newsearch"   path="/MultipleDiseaseSearch.jsp"/>
     </action>
+
+    <!-- Process searching genes for gene step1-->
+    <action    path="/SearchGenesForGene_step1"
+               type="edu.harvard.med.hip.metagene.action.SearchGenesForGene_step1Action"
+               name="searchGenesForGeneStep1Form"
+               scope="request"
+               input="/GeneGeneSearch.jsp">
+      <forward  name="success"   path="/GetGenesForGene.jsp"/>
+      <forward  name="failure"   path="error.do"/>
+    </action>   
+
+    <!-- Process searching genes for gene step2-->
+    <action    path="/SearchGenesForGene_step2"
+               type="edu.harvard.med.hip.metagene.action.SearchGenesForGene_step2Action"
+               name="searchGenesForGeneStep2Form"
+               scope="request"
+               input="/GetGenesForGene.jsp">
+      <forward  name="success"   path="/DisplayGenesForGene.jsp"/>
+      <forward  name="newsearch"   path="/GeneGeneSearch.jsp"/>
+    </action>   
+
 
     <action     path="/ProcessError"
                 type="edu.harvard.med.hip.metagene.action.ProcessErrorAction">

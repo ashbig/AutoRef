@@ -101,7 +101,7 @@ public class DiseaseGeneManager {
         return newAssociations;
     }
     
-    private Vector queryDiseases(Connection conn, String sql, String searchTerm) {
+    protected Vector queryDiseases(Connection conn, String sql, String searchTerm) {
         PreparedStatement stmt = null;
         Vector diseases = null;
         ResultSet rs = null;
@@ -129,7 +129,7 @@ public class DiseaseGeneManager {
         return diseases;
     }
     
-    private Vector queryAssociations(Connection conn, int statid, int diseaseid) {
+    protected Vector queryAssociations(Connection conn, int statid, int diseaseid) {
         String sql = "select g.gene_index_id, g.gene_index, t.index_type,"+
         " g.date_added, s.statistic_score, st.statistic_type, a.singlehit_disease,"+
         " a.singlehit_gene, a.doublehit, a.doublenegative, a.date_added"+
@@ -192,7 +192,7 @@ public class DiseaseGeneManager {
         return associations;
     }
     
-    private Gene queryGeneByIndex(Connection conn, GeneIndex geneIndex) {
+    protected Gene queryGeneByIndex(Connection conn, GeneIndex geneIndex) {
         PreparedStatement stmt = null;
         Gene gene = null;
         ResultSet rs = null;
@@ -274,7 +274,7 @@ public class DiseaseGeneManager {
     }
     
     
-    private Vector queryNicknamesByGene(Connection conn, int id) {
+    protected Vector queryNicknamesByGene(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
         String sql = "select gene_nick_name_value from gene_nicknames"+
@@ -299,7 +299,7 @@ public class DiseaseGeneManager {
         return nicknames;
     }
     
-    private Vector queryChildren(Connection conn, int id) {
+    protected Vector queryChildren(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
         String sql = "select l.symbol_value"+
@@ -357,7 +357,7 @@ public class DiseaseGeneManager {
         return geneInfo;
     }
     
-    private Association found(Vector newAssociations, Association association) {
+    protected Association found(Vector newAssociations, Association association) {
         if(newAssociations == null) {
             return null;
         }

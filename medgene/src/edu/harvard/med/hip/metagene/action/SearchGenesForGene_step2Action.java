@@ -1,12 +1,13 @@
 /*
- * MainMenuAction.java
+ * SearchGenesForGene_step2Action.java
  *
- * Created on December 13, 2001, 10:49 AM
+ * Created on April 4, 2002, 5:57 PM
  */
 
 package edu.harvard.med.hip.metagene.action;
 
 import java.io.*;
+import java.util.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,14 +22,14 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.metagene.form.MainForm;
+import edu.harvard.med.hip.metagene.form.SearchGenesForGene_step2Form;
+import edu.harvard.med.hip.metagene.core.*;
 
 /**
  *
- * @author  dzuo
- * @version 
+ * @author  hweng
  */
-public class MainMenuAction extends MetageneAction {
+public class SearchGenesForGene_step2Action extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -45,6 +46,8 @@ public class MainMenuAction extends MetageneAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
+
+
     public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -53,18 +56,25 @@ public class MainMenuAction extends MetageneAction {
         
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        String selected = ((MainForm)form).getGeneDiseaseSelect();       
+        int gene_index_id = ((SearchGenesForGene_step2Form)form).getGene();
+        int stat_id = ((SearchGenesForGene_step2Form)form).getStat();
+        int number = ((SearchGenesForGene_step2Form)form).getNumber();   
+        String submit = ((SearchGenesForGene_step2Form)form).getSubmit();
         
-        if("geneDisease".equals(selected)) {
-            return (mapping.findForward("success_disease"));
-        } else if("diseaseGene".equals(selected)) {
-            return (mapping.findForward("success_gene"));
-        } else if("multiDisease".equals(selected)) {
-            return (mapping.findForward("success_multi_disease"));            
-        } else if ("geneGene".equals(selected)) { 
-            return (mapping.findForward("success_gene_gene"));
-        } else {
-            return (mapping.findForward("failure"));
-        }        
+        if("New Search".equals(submit)) {
+            return (mapping.findForward("newsearch"));
+        }
+        ////***************
+        if("Get Genes".equals(submit)) {
+            GeneGeneManager manager = new GeneGeneManager();
+            Vector g_g_associations = 
+                   manager.getGeneGeneAssociationsByGeneIndexID(gene_index_id, stat_id, number);
+            SearchCondForGeneGene condition = manager.storeSearchCond(gene_index_id, stat_id, number);
+            request.setAttribute("associations", g_g_associations);
+            request.setAttribute("cond" , condition);
+            return (mapping.findForward("success"));
+        }
+        
+        return (mapping.findForward("error"));     
     }   
 }

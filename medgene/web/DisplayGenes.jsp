@@ -18,7 +18,7 @@
     <html:errors/>
     
     <p>
-    <TABLE border="1" cellpadding="2" cellspacing="0">
+    <TABLE width = "100%" align="center" border="1" cellpadding="2" cellspacing="0" >
     <TR bgcolor="gray">
         <TH><A HREF="KeySearchTerm.jsp" target="_blank">Key Search Term</A></TH>
         <TH><A HREF="SearchType.jsp" target="_blank">Search Type</A></TH>

@@ -1,10 +1,11 @@
 /*
- * MainMenuAction.java
+ * SearchGenesforGene_Step1_Action.java
  *
- * Created on December 13, 2001, 10:49 AM
+ * Created on March 28, 2002, 1:08 PM
  */
 
 package edu.harvard.med.hip.metagene.action;
+
 
 import java.io.*;
 import javax.servlet.RequestDispatcher;
@@ -21,14 +22,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.metagene.form.MainForm;
+import edu.harvard.med.hip.metagene.core.*;
+import edu.harvard.med.hip.metagene.form.SearchGenesForGene_step1Form;
+
+import java.util.*;
 
 /**
  *
- * @author  dzuo
+ * @author  hweng
  * @version 
  */
-public class MainMenuAction extends MetageneAction {
+public class SearchGenesForGene_step1Action extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -45,6 +49,7 @@ public class MainMenuAction extends MetageneAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
+    
     public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -53,18 +58,42 @@ public class MainMenuAction extends MetageneAction {
         
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        String selected = ((MainForm)form).getGeneDiseaseSelect();       
+        String term = ((SearchGenesForGene_step1Form)form).getTerm();
+        String searchTerm = ((SearchGenesForGene_step1Form)form).getSearchTerm();
         
-        if("geneDisease".equals(selected)) {
-            return (mapping.findForward("success_disease"));
-        } else if("diseaseGene".equals(selected)) {
-            return (mapping.findForward("success_gene"));
-        } else if("multiDisease".equals(selected)) {
-            return (mapping.findForward("success_multi_disease"));            
-        } else if ("geneGene".equals(selected)) { 
-            return (mapping.findForward("success_gene_gene"));
+        DiseaseGeneManager manager = new DiseaseGeneManager();
+        Vector geneIndexes = null;
+        
+        if(SearchGenesForGene_step1Form.GENENAME.equals(term) ||
+        SearchGenesForGene_step1Form.GENESYMBOL.equals(term)) {
+            geneIndexes = manager.queryGeneIndexBySearchTerm(searchTerm);
         } else {
+            int locusid;
+            
+            try {
+                locusid = Integer.parseInt(searchTerm);
+            } catch (NumberFormatException ex) {
+                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.invalid", searchTerm));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            
+            geneIndexes = manager.queryGeneIndexByLocusid(locusid);
+        }
+        
+        if(geneIndexes == null) {
             return (mapping.findForward("failure"));
-        }        
-    }   
+        }
+        
+        if(geneIndexes.size() == 0) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.invalid", searchTerm));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+        
+        Vector stats = Statistics.getAllStatistics();
+        request.setAttribute("stats", stats);
+        request.setAttribute("geneIndexes", geneIndexes);
+        return (mapping.findForward("success"));
+    }
 }

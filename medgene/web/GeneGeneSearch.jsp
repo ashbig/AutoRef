@@ -6,11 +6,11 @@
 
 <html>
     <head>
-        <title>MedGene : Gene Search</title>
+        <title>MedGene : Search Associated Genes for a paticular Gene</title>
     </head>
     <body>
     <center>
-    <h1>Gene Associated with a Particular Gene</h1>
+    <h1>Genes Associated with a Particular Gene</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>
@@ -18,7 +18,7 @@
     <p>Please type in a gene term.  The 
        corresponding official gene symbol(s) will be displayed.</p>
 
-    <html:form action="GeneSearch.do">   
+    <html:form action="SearchGenesForGene_step1.do">   
     <table width="80%" align="center">
         <tr>
             <td><html:select property="term">
