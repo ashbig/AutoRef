@@ -250,7 +250,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
               {
                     if (  read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
                         return;
-                    if ( read.getTrimEnd() - read.getTrimStart() < 65)
+                    if ( read.getTrimEnd() - read.getTrimStart() < 65 + 50)
                         return;
                     int[] scores = read.getScoresAsArray();
   
@@ -260,8 +260,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
                     {
                         if ( scores[bases] >= 20) good_bases++;
                     }
-                    if ( good_bases < 100 && bases_to_check >= 300 )
-                        return;
+                    if ( good_bases < 100  )                        return;
               }
               //read = (Read) reads.get(count);
               istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
