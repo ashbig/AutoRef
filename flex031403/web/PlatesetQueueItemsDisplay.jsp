@@ -9,7 +9,6 @@
 </head>
 <body>
 <hr>
-<html:errors/>
 <p>
 <logic:present name="SelectProtocolAction.queueItems">
 <b>The following containers are available:</b>
