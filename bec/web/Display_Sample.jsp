@@ -67,7 +67,7 @@ ArrayList clone_sequences = (ArrayList)request.getAttribute("clone_sequences");
   </tr>
   <tr> 
     <td><strong>Reference Sequence Id:</strong></td>
-    <td> <a href="#" onCLick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','newWndRefseqNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+    <td> <a href="#" onCLick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','newWndRefseqNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
       <%= sample.getRefSequenceId()%></a> </td>
   </tr>
   <tr> 
@@ -151,7 +151,7 @@ else {%>No discrepancies<%}%>
           <td width="20%"><%= contig.getName() %></td>
 		  <td ><%= Stretch.getStretchTypeAsString( contig.getType() ) %> </td>
           <td width="15%">
-		 <A HREF="" onClick="window.open('<%+edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.STRETCH_REPORT_INT%>&amp;ID=<%= contig.getId()%>','<%= contig.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+		 <A HREF="" onClick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.STRETCH_REPORT_INT%>&amp;ID=<%= contig.getId()%>','<%= contig.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 		 <%= contig.getId() %>	 </a></td>
           <td >
 <% if (contig.isAlignmentExists())
