@@ -42,17 +42,23 @@ import edu.harvard.med.hip.bec.ui_objects.*;
     public void run()
     {
         // ArrayList file_list = new ArrayList();
-        ArrayList items = new ArrayList();
+        ArrayList clones = new ArrayList();
+        String  report_file_name =    null;
+        ArrayList sql_groups_of_items = new ArrayList();
         File report = null;
         try
         {
+            report_file_name =    Constants.getTemporaryFilesPath() + "DecisionToolReport"+ System.currentTimeMillis()+ ".txt";
             m_spec = (FullSeqSpec)Spec.getSpecById(m_spec_id);
-           items = Algorithms.splitString( m_items);
-           ArrayList clones = getCloneInfo(items);
-           processClones(clones);
-           m_clones = clones;
-           report = printReport(clones);
-           m_file_list_reports.add(report);   
+           sql_groups_of_items =  prepareItemsListForSQL();
+           for (int count = 0; count < sql_groups_of_items.size(); count++)
+           {
+               clones = UICloneSample.getCloneInfo( (String) sql_groups_of_items.get(count), m_items_type,true,  false);
+                processClones(clones);
+                printReport(report_file_name, clones, count);
+           }
+           
+           m_file_list_reports.add(new File(report_file_name));   
         }
         catch(Exception ex)
         {
@@ -68,136 +74,112 @@ import edu.harvard.med.hip.bec.ui_objects.*;
     
     //------------------------------------
    
-     private ArrayList getCloneInfo( ArrayList items) throws BecDatabaseException
-     {
-        ArrayList clones = new ArrayList();String additional_id = null;
-        String sql = null;
-        UICloneSample clone = null; UICloneSample previous_clone = null;
-        ResultSet rs = null;
-        sql = constructQueryString(items);
-        try
-        {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            
-            while(rs.next())
-            {
-                 clone = new UICloneSample();
-                 clone.setCloneId (rs.getInt("CLONEID"));
-                
-                 clone.setSampleType(rs.getString("SAMPLETYPE"));
-                  if (clone.getSampleType().indexOf("CONTROL") != -1 )
-                      clone.setSampleType("CONTROL");
-                 clone.setSequenceId (rs.getInt("CLONESEQUENCEID"));
-                 clone.setConstructId (rs.getInt("CONSTRUCTID"));
-                 clone.setPlateLabel (rs.getString("LABEL"));
-                 clone.setPosition (rs.getInt("POSITION"));
-                 clone.setIsolateTrackingId (rs.getInt("ISOLATETRACKINGID"));
-                 clone.setCloneStatus(rs.getInt("CLONESTATUS"));
-                 clone.setSequenceAnalisysStatus(rs.getInt("analysisstatus"));
-                 
-                 if ( previous_clone == null || ( previous_clone != null && previous_clone.getCloneId () != clone.getCloneId()))
-                 {
-                    clones.add(clone);
-                    previous_clone = clone;
-                 }
-            }
-            return clones;
-            
-        }
-        catch(Exception e)
-        {
-          throw new BecDatabaseException("Cannot get data for clone "+e.getMessage() +"\n"+sql);
-        }
-    }
     
-      
-   
-    private String constructQueryString( ArrayList items)
-    {
-        String sql = null;
-        switch (m_items_type)
-        {
-            case Constants.ITEM_TYPE_PLATE_LABELS://plates
-            {
-                StringBuffer plate_names = new StringBuffer();
-                for (int index = 0; index < items.size(); index++)
-                {
-                    plate_names.append( "'");
-                    plate_names.append((String)items.get(index));
-                    plate_names.append("'");
-                    if (index == 3) break;
-                    if ( index != items.size()-1 ) plate_names.append(",");
-                }
-                return "select LABEL, POSITION, flexcloneid  as CLONEID,sampletype,analysisstatus,i.status as clonestatus, "
-   +"  a.SEQUENCEID as CLONESEQUENCEID,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID  "
-    +" from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a , "
-     +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
-     +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-      +" and s.containerid in (select containerid from containerheader where label in ("
-   + plate_names.toString()+")) order by c.containerid,position, a.submissiondate desc";
- 
-            } 
-            case Constants.ITEM_TYPE_CLONEID:
-            {
-                 return "select LABEL, POSITION, flexcloneid  as CLONEID,sampletype,analysisstatus,i.status as clonestatus,  "
-   +"  a.SEQUENCEID as CLONESEQUENCEID,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID  "
-    +" from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a , "
-     +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
-     +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-      +" and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") order by  c.containerid,position, a.submissiondate desc";
-            }
-            default : return "";
-        }
-       
-   
-    }
-   
     
     private void            processClones(ArrayList clones)
     {
          UICloneSample clone = null; CloneSequence clone_sequence =  null;
-         int clone_quality = -1;
+         int clone_quality = BaseSequence.QUALITY_NOT_DEFINED;
+         ArrayList discrepancy_descriptions = null;ArrayList contig_discrepancies = null;
          for (int clone_count=0; clone_count < clones.size(); clone_count++)
          {
+                discrepancy_descriptions = new ArrayList();
+                clone_quality = BaseSequence.QUALITY_NOT_DEFINED;
                  clone = (UICloneSample)clones.get(clone_count);
-                 if ( clone.getSequenceId() == 0 ) continue;
                  try
-                {
-                    clone_sequence = new CloneSequence( clone.getSequenceId() );
-                    if ( clone_sequence != null && !(clone_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED 
-                            ||clone_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH         ) )
+                 {
+                    if ( clone.getSequenceId() > 1 ) //sequence exsists
                     {
-                        if ( clone_sequence.getDiscrepancies() == null || clone_sequence.getDiscrepancies().size() == 0)
-                            clone_quality = BaseSequence.QUALITY_GOOD;
-                        else
+                        clone_sequence = new CloneSequence( clone.getSequenceId() );
+                        if ( clone_sequence != null && !(clone_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED 
+                            ||clone_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH         ) )
                         {
-                            ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_sequence.getDiscrepancies());
-                            clone_quality =  DiscrepancyDescription.defineQuality( discrepancy_descriptions ,m_spec );
+                            if ( clone_sequence.getDiscrepancies() == null || clone_sequence.getDiscrepancies().size() == 0)
+                                clone_quality = BaseSequence.QUALITY_GOOD;
+                            else
+                            {
+                                discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_sequence.getDiscrepancies());
+                                clone_quality =  DiscrepancyDescription.defineQuality( discrepancy_descriptions ,m_spec );
+                                
+                             }
                         }
-                        clone.setCloneQuality( clone_quality );
                     }
-    
-                 }
+                    else
+                    {
+                        StretchCollection str_coll = StretchCollection.getLastByCloneId( clone.getCloneId() );
+                        if (str_coll != null && str_coll.getStretches() != null && str_coll.getStretches().size() > 0 )
+                        {
+                             Stretch contig = null;
+                              for (int contig_count = 0; contig_count < str_coll.getStretches().size(); contig_count++)
+                             {
+                                   contig  = (Stretch)str_coll.getStretches().get(contig_count);
+                                   if ( contig.getType() == Stretch.GAP_TYPE_CONTIG)
+                                   {
+                                        if ( contig.getStatus()== BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED )
+                                        {
+                                            clone.setSequenceAnalisysStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED );
+                                            break;
+                                        }
+                                        contig_discrepancies = DiscrepancyDescription.assembleDiscrepancyDefinitions( contig.getSequence().getDiscrepancies());
+                                        if ( contig_discrepancies != null && contig_discrepancies.size() > 0)
+                                            discrepancy_descriptions.addAll(contig_discrepancies );
+                                   }
+                              }
+                              clone_quality =  DiscrepancyDescription.defineQuality( discrepancy_descriptions ,m_spec );
+                        
+                              if ( discrepancy_descriptions != null && discrepancy_descriptions.size() > 0 )
+                                        clone.setSequenceAnalisysStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES);
+                              else
+                                       clone.setSequenceAnalisysStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES);
+                        }
+                        else//reads only
+                         {
+                             ArrayList reads = Read.getReadByIsolateTrackingId(clone.getIsolateTrackingId());
+                               
+                             if (reads != null && reads.size() > 0)
+                             {
+                                 if ( reads.size() > 1 )
+                                 {
+                                      discrepancy_descriptions = DiscrepancyDescription.getDiscrepancyDescriptionsNoDuplicates(
+                                         ((Read) reads.get(0)).getSequence().getDiscrepancies(),
+                                          ((Read) reads.get(1)).getSequence().getDiscrepancies());
+                                     
+                                 }
+                                 else
+                                    discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions(
+                                         ((Read) reads.get(0)).getSequence().getDiscrepancies() );
+                                  if (discrepancy_descriptions == null ) 
+                                        clone_quality = BaseSequence.QUALITY_GOOD;
+                                  else
+                                    clone_quality =  DiscrepancyDescription.defineQuality( discrepancy_descriptions ,m_spec );
+                         
+                             }
+                             else
+                                 clone_quality = BaseSequence.QUALITY_CANNOT_PROCESS_NO_DATA;
+                             }
+                        }
+                 
+                       clone.setCloneQuality( clone_quality );
+                }
                 catch(Exception e)
                 {
+                    clone.setCloneQuality(BaseSequence.QUALITY_CANNOT_PROCESS);
                     m_error_messages.add("Cannot process clone "+clone.getCloneId()+"\n"+e.getMessage());
                 }
-                
+         
          }
     }
     
     
     
-    private File            printReport(ArrayList clones)
+    private void            printReport(String report_file_name, ArrayList clones, int count)
     {
-        String title = " Clone Id\tPlate Label\tPosition\tSample Type\tClone Status\tClone Sequence Id\tClone Sequence Status\tQuality\n";
+        String title = " Clone Id\tPlate Label\tPosition\tSample Type\tClone Sequence Id\tClone Sequence Status\tQuality\n";
         FileWriter in = null; 
-        File report = new File(Constants.getTemporaryFilesPath() + "DTReport"+System.currentTimeMillis()+".txt");
         try
         {
-            in = new FileWriter(report);
-            in.write(title);
+            in =  new FileWriter(report_file_name, true);
+            if(count == 0) in.write(title);
             for (int clone_count =0; clone_count<clones.size(); clone_count++)
             {
                   in.write( getCloneEntry( (UICloneSample)clones.get(clone_count)  ));
@@ -210,7 +192,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
         {
             m_error_messages.add("Cannot create report file.");
         }
-        return report;
+    
     }
     
     private String getCloneEntry(UICloneSample clone)
@@ -226,7 +208,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
         clone_info.append( clone.getPlateLabel ()+"\t");
         clone_info.append( clone.getPosition ()+"\t");
         clone_info.append( clone.getSampleType() + "\t");
-        clone_info.append( IsolateTrackingEngine.getStatusAsString(  clone.getCloneStatus()) +"\t");
+    //    clone_info.append( IsolateTrackingEngine.getStatusAsString(  clone.getCloneStatus()) +"\t");
         clone_info.append(  clone.getSequenceId()+"\t");
         clone_info.append( BaseSequence.getSequenceAnalyzedStatusAsString(clone.getSequenceAnalisysStatus ())+"\t");
          clone_info.append(BaseSequence.getSequenceQualityAsString(clone.getCloneQuality())+"\t");
@@ -244,9 +226,10 @@ import edu.harvard.med.hip.bec.ui_objects.*;
     try
     {
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+         runner.setInputData(Constants.ITEM_TYPE_CLONEID, " 140346 139858	 ");
         // runner.setItems("582 ");
        //  runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-                    runner.setSpecId(4);
+                    runner.setSpecId(20);
                       runner.run();
                 
        
