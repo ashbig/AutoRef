@@ -41,28 +41,28 @@ public class AgarToCultureMapper extends AbstractAgarToCultureMapper {
         String processcode = c.getLabel().substring(1, 3);
         
         if(processcode.equals("AA")) {
-            return new String("1");
+            return new String("-1");
         }
         if(processcode.equals("AC")) {
-            return new String("2");
+            return new String("-2");
         }
         if(processcode.equals("AE")) {
-            return new String("3");
+            return new String("-3");
         }
         if(processcode.equals("AG")) {
-            return new String("4");
+            return new String("-4");
         }
         if(processcode.equals("AI")) {
-            return new String("5");
+            return new String("-5");
         }
         if(processcode.equals("AK")) {
-            return new String("6");
+            return new String("-6");
         }
         if(processcode.equals("AM")) {
-            return new String("7");
+            return new String("-7");
         }
         if(processcode.equals("AO")) {
-            return new String("8");
+            return new String("-8");
         }
         return null;
     }
