@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.32 2003-04-17 19:44:23 dzuo Exp $
+ * $Id: Protocol.java,v 1.33 2003-05-28 16:49:11 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -29,7 +29,7 @@ public class Protocol {
         "Identify sequences from unigene";
     public static final String DESIGN_CONSTRUCTS= "Design constructs";
     
-    public static final String MGC_DESIGN_CONSTRUCTS= "MGC design constructs and rearray";
+    public static final String MGC_DESIGN_CONSTRUCTS= "Design constructs and rearray DNA template plates";
     public static final String GENERATE_OLIGO_ORDERS= "Generate oligo orders";
     public static final String RECEIVE_OLIGO_PLATES= "Receive oligo plates";
     public static final String DILUTE_OLIGO_PLATE = "Dilute oligo plate";
@@ -72,11 +72,11 @@ public class Protocol {
         "Generate culture blocks for isolates from 48 well plates";
     public static final String ENTER_CULTURE_RESULTS = "Enter culture results";
     public static final String CREATE_CULTURE_FROM_MGC = 
-        "Create culture block from MGC master plate";
+        "Create culture block from master template plate";
     public static final String CREATE_GLYCEROL_FROM_CULTURE = 
         "Create glycerol stock from MGC culture block";
     public static final String ENTER_MGC_CULTURE_RESULTS = 
-        "Enter MGC culture result";
+        "Enter template culture result";
     public static final String CREATE_GLYCEROL_FROM_REARRAYED_CULTURE = 
         "Create glycerol stock from rearrayed culture block";
     public static final String CREATE_DNA_FROM_REARRAYED_CULTURE = 

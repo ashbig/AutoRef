@@ -1,5 +1,5 @@
 /**
- * $Id: MgcContainer.java,v 1.1 2003-03-07 17:44:52 dzuo Exp $
+ * $Id: MgcContainer.java,v 1.2 2003-05-28 16:50:15 dzuo Exp $
  *
  * File     	: MgcContainer.java
  * Date     	: 04162001
@@ -53,7 +53,7 @@ public class MgcContainer extends Container {
         m_marker = marker;
         
     }
-
+    
     /**
      * Constructor.
      *
@@ -73,7 +73,7 @@ public class MgcContainer extends Container {
         m_glycerolContainerid = glycerol;
         m_culture_Containerid = culture;
         m_dnaContainerid = dna;
-    }    
+    }
     
     /**
      * Constructor.
@@ -210,7 +210,7 @@ public class MgcContainer extends Container {
                 MgcSample s = (MgcSample)enum.nextElement();
                 s.containerid = this.id;
                 s.insert(conn);
-                              
+                
             }
         }
         catch(Exception e)
@@ -291,7 +291,7 @@ public class MgcContainer extends Container {
      */
     public int getDnaContainerid() {        return m_dnaContainerid;    }
     public int setDnaContainerid() {        return m_dnaContainerid;    }
-     
+    
     /**
      * Find the MGC container from the MGC culture container. In the FLEXGene
      * database, this MGC culture container is directly generated from MGC
@@ -349,6 +349,11 @@ public class MgcContainer extends Container {
         "from containerlocation l, mgccontainer mc , containerheader c where ( mc.mgccontainerid =  c.containerid  and c.label ='MGC" + threadid + "') and " +
         " l.locationid = c.locationid ";
         
+        String sql2 = "select c.containerid, mc.filename as filename, mc.oricontainer as orgcontainer, mc.marker as marker, mc.glycerolcontainerid as gl, mc.culturecontainerid as culture,mc.dnacontainerid as dna," +
+        " c.containertype as type, c.locationid as locationid, c.label as label, " +
+        "l.locationtype as locationtype, l.locationdescription as description "+
+        "from containerlocation l, mgccontainer mc , containerheader c where ( mc.mgccontainerid =  c.containerid  and c.threadid= "+ threadid + ") and " +
+        " l.locationid = c.locationid ";
         
         CachedRowSet crs = null;
         MgcContainer container = null;
@@ -374,6 +379,26 @@ public class MgcContainer extends Container {
                 String label = crs.getString("LABEL");
                 
                 container = new MgcContainer(id, fileName, location,originalContainerName, label, marker, cultureContainerid, glycerolContainerid, dnaContainerid);
+            } else {
+                crs = t.executeQuery(sql2);
+                if(crs.next()) {
+                    int id = crs.getInt("CONTAINERID");
+                    String fileName = crs.getString("FILENAME");
+                    String originalContainerName = crs.getString("ORGCONTAINER");
+                    int glycerolContainerid = crs.getInt("GL");
+                    int cultureContainerid = crs.getInt("CULTURE");
+                    int dnaContainerid = crs.getInt("DNA");
+                    String marker = crs.getString("MARKER");
+                    String type = crs.getString("TYPE");
+                    int locationid = crs.getInt("LOCATIONID");
+                    
+                    String locationtype = crs.getString("LOCATIONTYPE");
+                    String description = crs.getString("DESCRIPTION");
+                    Location location = new Location(locationid, locationtype, description);
+                    String label = crs.getString("LABEL");
+                    
+                    container = new MgcContainer(id, fileName, location,originalContainerName, label, marker, cultureContainerid, glycerolContainerid, dnaContainerid);
+                }
             }
         } catch (Exception sqlE) {
             System.out.println(sqlE);
@@ -457,7 +482,7 @@ public class MgcContainer extends Container {
         " , CULTURECONTAINERID="+cultureid+
         " where mgccontainerid="+this.id;
         DatabaseTransaction.executeUpdate(sql, conn);
-    } 
+    }
     
     /**
      * Update the GLYCEROLCONTAINERID field and CULTURECONTAINERID field
@@ -474,8 +499,8 @@ public class MgcContainer extends Container {
         " , DNACONTAINERID="+dnaid+
         " where mgccontainerid="+this.id;
         DatabaseTransaction.executeUpdate(sql, conn);
-    }       
-  
+    }
+    
     /**
      * Get the data from Sample  & MgcSample table.
      *
@@ -512,7 +537,7 @@ public class MgcContainer extends Container {
                 int col = crs.getInt("ACOL");
                 String row = crs.getString("AROW");
                 String status = crs.getString("STATUS");
-                          
+                
                 MgcSample s = new MgcSample(sampleid,  position, this.id,
                 mgcid, imageid, vector,
                 row, col, seqId, status);
@@ -579,12 +604,12 @@ public class MgcContainer extends Container {
                 rs.getString("DESCRIPTION" ));
                 
                 MgcContainer curContainer = new MgcContainer(
-                                                            rs.getInt("CONTAINERID"),
-                                                            rs.getString("FILENAME"),
-                                                            curLocation,
-                                                            rs.getString("ORGCONTAINER"),
-                                                            rs.getString("LABEL"),
-                                                            rs.getString("MARKER"));
+                rs.getInt("CONTAINERID"),
+                rs.getString("FILENAME"),
+                curLocation,
+                rs.getString("ORGCONTAINER"),
+                rs.getString("LABEL"),
+                rs.getString("MARKER"));
                 
                 curContainer.restoreSample();
                 containerList.add(curContainer);
@@ -600,7 +625,7 @@ public class MgcContainer extends Container {
     }
     
     
-     public static List findContainersFormView(String label)
+    public static List findContainersFormView(String label)
     throws FlexCoreException,  FlexDatabaseException {
         
         List containerList = new ArrayList();
@@ -622,12 +647,12 @@ public class MgcContainer extends Container {
                 rs.getString("DESCRIPTION" ));
                 
                 MgcContainer curContainer = new MgcContainer(
-                                                            rs.getInt("CONTAINERID"),
-                                                            rs.getString("FILENAME"),
-                                                            curLocation,
-                                                            rs.getString("ORGCONTAINER"),
-                                                            rs.getString("LABEL"),
-                                                            rs.getString("MARKER"));
+                rs.getInt("CONTAINERID"),
+                rs.getString("FILENAME"),
+                curLocation,
+                rs.getString("ORGCONTAINER"),
+                rs.getString("LABEL"),
+                rs.getString("MARKER"));
                 
                 curContainer.restoreSample();
                 containerList.add(curContainer);
@@ -642,7 +667,7 @@ public class MgcContainer extends Container {
         return containerList;
     }
     
-     
+    
     public String toString() {
         return "";
     }
@@ -657,8 +682,8 @@ public class MgcContainer extends Container {
         try{
             
             // MgcContainer aa = new MgcContainer(1890);
-           // MgcContainer aa = MgcContainer.findMGCContainerFromSequenceID(37718);
-           // aa.restoreSample();
+            // MgcContainer aa = MgcContainer.findMGCContainerFromSequenceID(37718);
+            // aa.restoreSample();
             System.out.println(System.currentTimeMillis());
             Container.findContainers("MGC000001");
             System.out.println(System.currentTimeMillis());
