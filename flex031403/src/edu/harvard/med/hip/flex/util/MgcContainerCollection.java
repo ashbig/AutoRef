@@ -37,7 +37,7 @@ public class MgcContainerCollection {
         String sql = "select c.containerid as id, mc.oricontainer as orgcontainer, mc.marker as marker, c.label as label \n " + 
         " from mgccontainer mc , containerheader c \n " +
         " where  mc.mgccontainerid =  c.containerid  and " +
-         "mc.filename = '" + fileName + "'" ;        
+         "mc.filename = '" + fileName + "' order by c.label" ;        
       
         CachedRowSet crs = null;
         try {
