@@ -38,8 +38,29 @@
         </TR>    
         </TABLE>
         </logic:iterate>
+        <!-- always display a logout link-->
+        <TABLE CELLSPACING=0 CELLPADDING=0 BORDER=0 bgcolor="silver" width="100%">
+        <TR>
+            <TD colspan=2></TD>
+        </TR>
+        <tr>
+            <td align=center>&nbsp;</TD> 
+            <td align=left>
+                <html:link forward='logout' target="_top"> 
+                   <b>Logout</b><p>
+                </html:link>
+            </td>
+        </tr>
+        <TR>
+            <TD colspan=2></TD>
+        </TR>
+        <TR>
+            <TD colspan=2 align=center>
+            </TD>
+        </TR>    
+        </TABLE>
 </table>
 </center>
-<struts:errors/>
+
 </body>
 </html>
