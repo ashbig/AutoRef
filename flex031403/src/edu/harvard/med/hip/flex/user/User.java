@@ -17,6 +17,7 @@ import edu.harvard.med.hip.flex.util.*;
  *
  * Revision:	05-03-2001 by dzuo
  *				Added the method to get the customer requests and tested.
+ *              06-14-2001 by JMM: Added method to get the barcode for a user.
  */
 public class User {
     private String name;
@@ -92,6 +93,35 @@ public class User {
                 group = rs.getString("USERGROUP");
             }
             return group;
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+    
+    /**
+     * acessor for the barcode of a user, could be null if the user is not a
+     * researcher.
+     *
+     * @return the barcode of the user if the user is also a researcher,
+     *      otherwise null.
+     */
+    public String getBarcode() throws FlexDatabaseException{
+        String barcode = null;
+        String sql = "select researcherbarcode from userprofile, researcher " +
+            "where userprofile.researcherid = researcher.researcherid " +  
+            "and username = '" + name + "'";
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        RowSet rs = t.executeQuery(sql);
+        
+        try {
+            if(rs.next()) {
+                
+                barcode = rs.getString("RESEARCHERBARCODE");
+            }
+            return barcode;
         } catch(SQLException sqlE) {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
