@@ -150,7 +150,7 @@ Distance between sequencing primer and start of high quality read length</b></fo
       <% 
 
 	
-if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals("1") )
+if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals("0") )
      { %><font color="#000080">
       <p><b>Single Strand</b> (Coding strand, forward primers)</p>
       <%}else{%>
