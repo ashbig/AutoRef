@@ -18,8 +18,18 @@
     <%  String url, s; %>
     <%  java.util.Vector records = (java.util.Vector)(request.getAttribute("medline_records"));
         if(records.size() == 0){ %>
-            <b> No paper found. </b> <br>
+            <b> &nbsp;&nbsp; No paper found. </b> <br>
      <% }
+        else if(records.size() <= 200){
+            url = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=";
+            s = "";
+            for (int n=0; n < records.size(); n++){
+                s = s + ((String)(records.elementAt(n))).toString() + ",";
+            }
+            url = url + s.substring(0, s.length()-1);
+     %>
+            <logic:redirect href="<%= url %>" />
+    <%  }    
         else{
             int i = records.size()/200;
             int j = records.size()%200;
