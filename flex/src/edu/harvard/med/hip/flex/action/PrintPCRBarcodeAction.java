@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 import edu.harvard.med.hip.flex.form.CreateProcessPlateForm;
 import edu.harvard.med.hip.flex.core.Container;
+import edu.harvard.med.hip.flex.util.PrintLabel;
 
 /**
  *
@@ -58,8 +59,13 @@ public class PrintPCRBarcodeAction extends ResearcherAction {
     throws ServletException, IOException {
         Container pcrOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrOpen");
         Container pcrClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrClosed");
-        System.out.println("Printing barcode: "+pcrOpen.getLabel());
-        System.out.println("Printing barcode: "+pcrClosed.getLabel());
+
+        String status = PrintLabel.execute(pcrOpen.getLabel());
+        System.out.println("Printing barcode: "+status);
+        
+        status = PrintLabel.execute(pcrClosed.getLabel());
+        System.out.println("Printing barcode: "+status);
+        
         return (mapping.findForward("success"));   
     }
 }
