@@ -21,7 +21,7 @@
 <p>&nbsp;</p><html:errors/>
 <html:form action="/Seq_SubmitSpec.do" > 
 
-<html:hidden property="forwardName" />
+<input name="forwardName" type="hidden" value="<%=OligoPair.UNIVERSAL_PAIR_INT%>" >
 
 
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
@@ -79,56 +79,6 @@
 
 </html:form> 
 
-<HR>
-<HR>
 
-<% ArrayList pairs = (ArrayList)request.getAttribute("specs");
-   if (pairs.size() > 0 )
-  {
-%><h3>Available Sets </h3>
-<%
-    for (int pair_count = 0; pair_count < pairs.size() ; pair_count++)
-    {
-	OligoPair pair = (OligoPair) pairs.get(pair_count);
-        
-	%>
-
-<P> <font color="#2693A6" size="4"> <b>Set Name</b></font>
-<%= pair.getName() %>
-<table width="100%"  cellspacing="2" cellpadding="2">
- 
-  <tr > 
-    <td width="21%">&nbsp;</td>
-    <td width="40%" > <div align="center"> <b><font size="+2">Forward Primer</font></b> 
-      </div></td>
-    <td width="39%"> <div align="center"><b><font size="+2">Reverse Primer</font></b> 
-      </div></td>
-  </tr>
-  <tr> 
-    <td  background="barbkgde.gif"><strong>Primer Name</strong> <P></td>
-    <td  background="barbkgde.gif"><b> 
-      <%= pair.get5pOligo().getName() %>
-      </b> <P></td>
-    <td  background="barbkgde.gif"><b> 
-      <%= pair.get3pOligo().getName() %>
-      </b> <P></td>
-  </tr>
-  <tr> 
-    <td  background="barbkgde.gif"><strong>Primer Sequence</strong> <P></td>
-    <td  background="barbkgde.gif"><%= pair.get5pOligo().getSequence() %><P></td>
-    <td  background="barbkgde.gif"><%= pair.get3pOligo().getName() %><P></td>
-  </tr>
-  <tr> 
-    <td  background="barbkgde.gif"><strong>Primer Tm</strong> <P></td>
-    <td  background="barbkgde.gif"><%= pair.get5pOligo().getTm() %>     <P></td>
-    <td  background="barbkgde.gif"><%= pair.get3pOligo().getTm() %>      <P></td>
-  </tr>
-  <tr> 
-    <td  background="barbkgde.gif"><strong>Primer Start</strong> <P></td>
-    <td  background="barbkgde.gif"><%= pair.get5pOligo().getStart() %>      <P></td>
-    <td  background="barbkgde.gif"><%= pair.get5pOligo().getStart() %>      <P></td>
-  </tr>
-</table> 
-<%}}%>
 </body>
 </html>

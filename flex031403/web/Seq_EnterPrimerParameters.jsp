@@ -12,20 +12,75 @@
 <head>
 
 <title>Primer Calculating Parameters</title>
+		<script language="JavaScript">
+		<!--
+		var submissionIsEnabled = true;
+        function onChangeValue(e, val)
+		{
+ 		   // Identify the form
+   		   var form = e.form;
+ 		   if ( e = form.elements.p_downstream_distance_view)
+ 		   {
+ 				 form.elements.p_downstream_distance.value = val;
+			}
+			if ( e = form.elements.p_upstream_distance_view)
+ 		   {
+  		       form.elements.p_downstream_distance.value = val;
+			}
+		}
+		function update3pUniversalPrimer(e,checked)
+		{
+ 		   // Identify the form
+   		   var form = e.form;
+ 		   if (checked)
+ 		   {
+  			 form.elements.p_downstream_distance_view.value = 300;
+             form.elements.p_downstream_distance.value = 300;
+  			 form.elements.p_downstream_distance_view.disabled=true;
+ 		   }
+ 		   else
+ 		   {
+		   	 form.elements.p_downstream_distance.value = 130;
+             form.elements.p_downstream_distance_view.value = 130;
+		   	 form.elements.p_downstream_distance_view.disabled= false;
+		   }
+		}
+		
+		function update5pUPrimer(e,checked)
+		{
+ 		   // Identify the form
+   		   var form = e.form;
+ 		  
+ 		  
+ 		  if (checked)
+ 		   {
+  			 form.elements.p_upstream_distance_view.value = 0;
+                         form.elements.p_upstream_distance.value = 0;
+  			 form.elements.p_upstream_distance_view.disabled=true;
+ 		   }
+ 		   else
+ 		   {
+		   	 form.elements.p_upstream_distance.value = 120;
+                         form.elements.p_upstream_distance_view.value = 120;
+		   	 form.elements.p_upstream_distance_view.disabled=false;
+		   }
+		}
+
+		//--> <p>This page is best viewed with a JavaScript-capable browser. It appears that your browser does not support JavaScript.<p>
+		</script>
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 <link href="../developed/flex/web/FlexStyle.css" rel="stylesheet" type="text/css">
 </head>
 
 <body background='background.gif'>
-<h2><bean:message key="flex.name"/> : Set Parameters for Primer Calculation</h2>
+<h2><bean:message key="flex.name"/> : Set Parameters for Primer Designer</h2>
 <hr>
-<p>&nbsp;</p><html:errors/>
-<html:form action="/Seq_SubmitSpec.do" > 
-
-<html:hidden property="forwardName" />
+<html:errors/>
+ <html:form action="/Seq_SubmitSpec.do" > 
+<input name="forwardName" type="hidden" value="<%=Primer3Spec.PRIMER3_SPEC_INT%>" > 
 <h3 >Create new set of primer picking parameters </h3>
 <i>If you are not sure about certain
-parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[parameter help file]</a>.</b>
+parameter settings, leave them unchanged </i> <a href="Help_SequenceEvaluation.html">[parameter help file]</a>.</b>
 <P>
 <table border="0" width="100%" height="6">
 	<tr>
@@ -103,13 +158,26 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       Parameters</font></b></td>
     <td width="50%" colspan="2" height="39"></td>
   </tr>
+
+<tr>
+<td  colspan=2 height=44 background="barbkgde.gif" valign="middle">
+<p><IMG SRC="greenarrow.gif"   HSPACE=5><b>Check here if NO 5p Universal Primer is used </b>
+<input type=checkbox name="universal_primer_5p" id="universal_primer_5p" value="-1" onClick="update5pUPrimer(this,this.checked)"></br> 
+        <b>(<font size =2>The most upstream forward PCR primer is used when No 
+        5p Universal Primer is checked)</font></b></td>
+<td  colspan=2 height=44 background="barbkgde.gif" valign="middle">
+<p><IMG SRC="greenarrow.gif"   HSPACE=5><b>Check here if NO 3p Universal Primer is used </b> 
+<input type=checkbox name=universal_primer_3p value="-1" onClick="update3pUniversalPrimer(this,this.checked)"></p>
+</td>
+</tr>
   <tr>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif" valign="top"><b>Distance
       between 5p Universal Primer and START codon</b>&nbsp;&nbsp;&nbsp; <font size="2"><b>(For
       a left primer, primer start position is the position of the leftmost base)</b></font></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
      
-        <p><input type="text" name="p_upstream_distance" size="20" value="100">
+        <p><input type="text" name="p_upstream_distance_view"  onchange='onChangeValue(this, this.val)' size="20" value="100" id="p_upstream_distance_view">
+        <input type="hidden" name="p_upstream_distance"  value="100" id="p_upstream_distance" >
         bases</p>
    
     </td>
@@ -121,7 +189,8 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       base)&nbsp;&nbsp;</font></b></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
  
-        <p><input type="text" name="p_downstream_distance" size="20" value="100">
+        <p><input type="text" name="p_downstream_distance_view" size="20" value="100" id="p_downstream_distance_view" onchange='onChangeValue(this, this.val)'>
+<input type="hidden" name="p_downstream_distance"  value="100" id="p_downstream_distance" onchange='onChangeValue(this, this.val)'>
         bases</p>
     
     </td>
@@ -151,7 +220,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       <p align="left"><b>Number of strands to sequence</b></td>
     <td width="50%" colspan="2" height="3" align="center" valign="bottom" background="barbkgde.gif">
          <p align="left"><input type="radio" value="0" name="p_number_of_strands">
-        <b>Single Strand</b> (Coding strand, forward primers)</p>
+        <b>Single Strand</b> (Coding strand, forward primers only)</p>
         <p align="left"><input type="radio" name="p_number_of_strands" value="1" checked>
         <b>Both Strands</b>  (Both forward and reverse primers)</p>
       
@@ -171,163 +240,6 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
 
 
 </html:form>
-<HR>
-
-<% ArrayList sets = (ArrayList)request.getAttribute("specs");
-
-   if (sets.size() > 0 )
-  {
-%><h3>Available Sets </h3>
-<%
-    for (int count = 0; count < sets.size() ; count++)
-    {
-	Primer3Spec spec = (Primer3Spec) sets.get(count);
- 
-	%>
-<P>
- <P> <font color="#2693A6" size="4"> <b>Set Name</b></font>
-<%= spec.getName() %>
-
-
-
-<table border="0" width="100%" height="6">
- <tr>
-    <td width="50%" colspan="2" height="48"><font color="#2693A6" size="4">
-        <b>Primer Picking Parameters</b></font></td>
-    <td width="50%" colspan="2" height="48"></td>
-  </tr>
-  <tr>
-    <td width="25%" valign="top" height="1" background="barbkgde.gif">
-        <b>Primer Length (bp)</b></td>
-    <td width="25%" height="1" background="barbkgde.gif">
-        <p><b>Min:</b><%= spec.getParameterByNameString("p_primer_min".toUpperCase()) %></p>
-
-    </td>
-    <td width="25%" height="1" background="barbkgde.gif">
- 
-     
-        <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_opt".toUpperCase())%></p>
-
-    </td>
-    <td width="25%" height="1" background="barbkgde.gif">
-     
-        <p><b>Max:</b> <%= spec.getParameterByNameString("p_primer_max".toUpperCase())%></p>
-     
-    </td>
-  </tr>
-  <tr>
-    <td width="25%" height="26" background="barbkgde.gif" valign="top"><b>Primer
-      Tm (°C)</b></td>
-    <td width="25%" height="26" background="barbkgde.gif">
- 
-        <p><b>Min: </b><%= spec.getParameterByNameString("p_primer_tm_min".toUpperCase())%></p>
-     
-    </td>
-    <td width="25%" height="26" background="barbkgde.gif">
-  <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_tm_opt".toUpperCase())%></p>
-
-    </td>
-    <td width="25%" height="26" background="barbkgde.gif">
-    
-        <p><b>Max:</b><%= spec.getParameterByNameString("p_primer_tm_max".toUpperCase())%></p>
-    
-    </td>
-  </tr>
-  <tr>
-    <td width="25%" height="1" background="barbkgde.gif" valign="top"><b>Primer
-      GC%</b></td>
-    <td width="25%" height="1" background="barbkgde.gif" valign="top">
-   
-        <p><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></p>
-     
-    </td>
-    <td width="25%" height="1" background="barbkgde.gif" valign="top">
-    
-        <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></p>
-
-    </td>
-    <td width="25%" height="1" background="barbkgde.gif" valign="top">
-     
-        <p><b>Max:</b>&nbsp; <%= spec.getParameterByNameString("p_primer_gc_max".toUpperCase())%></p>
-     
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" colspan="2" height="1"></td>
-    <td width="50%" colspan="2" height="1"></td>
-  </tr>
-  <tr>
-    <td width="50%" colspan="2" height="39"><b><font size="4" color="#2693A6">Sequencing
-      Parameters</font></b></td>
-    <td width="50%" colspan="2" height="39"></td>
-  </tr>
-  <tr>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif" valign="top"><b>Distance
-      between 5p Universal Primer and START codon</b>&nbsp;&nbsp;&nbsp; <font size="2"><b>(For
-      a left primer, primer start position is the position of the leftmost base)</b></font></td>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif">
-     
-        <p><%= spec.getParameterByNameString("p_upstream_distance".toUpperCase()) %>
-        bases</p>
-   
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif" valign="top"><b>Distance
-      between 3p Universal Primer and STOP codon&nbsp;&nbsp; <font size="2">(For
-      a right primer, primer start position is the position of the rightmost
-      base)&nbsp;&nbsp;</font></b></td>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif">
- 
-        <p><%= spec.getParameterByNameString("p_downstream_distance".toUpperCase())%>
-        bases</p>
-    
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif" valign="top"><b>Estimated
-      high quality read length (ERL)</b></td>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif">
-     
-        <p><%= spec.getParameterByNameString("p_single_read_length".toUpperCase())%>
-        bases</p>
-     
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" colspan="2" height="3" background="barbkgde.gif" valign="top"><b>Window
-      size for testing primers</b></td>
-    <td width="50%" colspan="2" height="3" background="barbkgde.gif">
-      
-        <p><%= spec.getParameterByNameString("p_buffer_window_len".toUpperCase())%>
-        bases</p>
-     
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" colspan="2" height="3" align="center" valign="top" background="barbkgde.gif">
-      <p align="left"><b>Number of strands to sequence</b></td>
-    <td width="50%" colspan="2" height="3" align="center" valign="bottom" background="barbkgde.gif">
-<% 
-
-	
-if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals("1") )
-     { %>  <p><b>Single Strand</b> (Coding strand, forward primers)</p>
-     <%}else{%>
-        
-        <b>Both Strands</b>  (Both forward and reverse primers)</p>
-<%}%>
-      
-    </td>
-  </tr>
-  <tr>
-    <td width="100%" colspan="4" height="3" align="center" valign="bottom"></td>
-  </tr>
-  
-</table>
-
-<%}}%>
-
 <HR>
 
 
