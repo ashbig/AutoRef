@@ -192,6 +192,7 @@ function put5()
     </tr>
 
     <logic:iterate id="sample" name="allSamples" indexId="i">
+    <logic:equal name="sample" property="type" value="ISOLATE">
     <html:hidden property='<%="cloneid["+ i +"]" %>'/>
     <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
     <logic:present name="sampleid">
@@ -367,6 +368,7 @@ function put5()
         <html:textarea property='<%="comments["+ i +"]" %>'/>
     </td>
     </flex:row>
+    </logic:equal>
     </logic:iterate>
     <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">    
         <logic:present name="sampleid">
