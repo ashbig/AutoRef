@@ -174,11 +174,11 @@ public class OligoPlateManager {
                 DatabaseTransaction.commit(conn);
             } catch(FlexDatabaseException sqlex){
                 
-                //System.out.println(sqlex.getMessage());
+                System.out.println(sqlex.getMessage());
                 DatabaseTransaction.rollback(conn);
             } catch(IOException ioe){
-                //System.out.println("Error occurred while writing to oligo order files");
-                //System.out.println(ioe.getMessage());
+                System.out.println("Error occurred while writing to oligo order files");
+                System.out.println(ioe.getMessage());
                 
                 DatabaseTransaction.rollback(conn);
             }
