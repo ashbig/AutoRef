@@ -31,9 +31,9 @@ public class EndReadsWrapperRunner implements Runnable
 {
     
     // outputBaseDir specify the base directory for trace file distribution
-    private static final String OUTPUT_BASE_ROOT = "/trace_files_root/";
+    private static final String OUTPUT_BASE_ROOT = "d:/trace_files_root/";
     //inputTraceDir specify the directory where the trace files get dumped from sequencer
-    private static final String INPUT_BASE_DIR = "/trace_files_dump/";
+    private static final String INPUT_BASE_DIR = "d:/trace_files_dump/";
     //errorDir specify  the  directory for trace files for controls are stored
     private static final String CONTROLS_DIR = "controls";
     //errorDir specify  the directory for  trace files with wrong name
