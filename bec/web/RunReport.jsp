@@ -63,7 +63,7 @@
   </tr>
   <tr> 
     <td> <input type="checkbox" name="plate_label" value="1">      Plate Label</td>
-          <td>&nbsp; </td>
+    <td> <input type="checkbox" name="assembly_attempt_status" value="1">  Clone Sequence assembly attempt status</td>
   </tr>
   <tr> 
     <td> <input type="checkbox" name="sample_type" value="1">      Sample Type</td>
