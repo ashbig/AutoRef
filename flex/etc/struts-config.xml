@@ -163,7 +163,11 @@
 
     <!-- Process a customer request -->
     <action    path="/DisplayRequest"
-               type="edu.harvard.med.hip.flex.action.DisplayRequestAction">
+               type="edu.harvard.med.hip.flex.action.DisplayRequestAction"
+                name="customerRequestForm"
+                scope="request"
+                validate="false"
+              input="/SequenceSearch.jsp">
       <forward  name="success"   path="/DisplayRequest.jsp"/>
     </action> 
 
