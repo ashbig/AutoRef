@@ -22,6 +22,7 @@ import org.apache.struts.action.ActionMapping;
 public class CreateProcessPlateForm extends ActionForm {
     private int protocol;
     private String sourcePlate = null;
+    private String researcherBarcode = null;
     
     /**
      * Set the protocol to the given value.
@@ -57,5 +58,23 @@ public class CreateProcessPlateForm extends ActionForm {
      */
     public String getSourcePlate() {
         return sourcePlate;
+    }
+    
+    /**
+     * Set the researcher barcode to the given value.
+     *
+     * @param researcherBarcode The value to be set to.
+     */
+    public void setResearcherBarcode(String researcherBarcode) {
+        this.researcherBarcode = researcherBarcode;
+    }
+    
+    /**
+     * Return the researcher barcode.
+     *
+     * @return The researcher barcode.
+     */
+    public String getResearcherBarcode() {
+        return researcherBarcode;
     }
 }
