@@ -65,7 +65,7 @@
     <a name="indirect"> </a><br><br><% i = 0; %>
     
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >  
-    <TR> <p> <b>Second degree association </b> <br><br>  </TR> 
+    <TR> <p> <b>Second degree associations </b> <br><br>  </TR> 
     <TR bgcolor="#cccccc">
         <TH width="10%">Rank</TH>
         <TH width="30%">Locus ID</TH>
