@@ -239,6 +239,7 @@
                input="/SelectProtocol.jsp">
       <forward  name="success"   path="/EnterSourcePlate.jsp"/>
       <forward  name="success_pcr"   path="/EnterOligoPlates.jsp"/>
+      <forward  name="success_culture"   path="/EnterAgarPlates.jsp"/>
     </action> 
 
     <!-- Process the source plate input -->
