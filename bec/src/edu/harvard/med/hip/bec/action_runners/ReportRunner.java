@@ -435,7 +435,7 @@ public class ReportRunner extends ProcessRunner
                 for (int index = 0; index < samplereads.size(); index++)
                 {
                     read = (UIRead) samplereads.get(index);
-                    cloneinfo.append(Read.getTypeAsString(read.getType())+"_"+ (read.getTrimStop() - read.getTrimStart () )+"\t"); 
+                    cloneinfo.append(Read.getTypeAsString(read.getType())+"_"+ (read.getTrimStop() - read.getTrimStart () )+" || "); 
 
                 }
             }
