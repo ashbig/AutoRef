@@ -12,7 +12,7 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.Mailer;
-import edu.harvard.med.hip.flex.core.CloneInfo;
+import edu.harvard.med.hip.flex.core.*;
 
 /**
  *
@@ -24,6 +24,10 @@ public class SummaryTablePopulator {
     int numClones;
     int numClonestorage;
     int numSamples;
+    int numSeqs;
+    int numFailedConstructs;
+    int numFailedSeqs;
+    boolean isFailedConstructs;
     
     /** Creates a new instance of SummaryTablePopulator */
     public SummaryTablePopulator() {
@@ -41,9 +45,10 @@ public class SummaryTablePopulator {
             numClones = populateClonesTable(samples, strategyid, cloneType, conn);
             numClonestorage = populateClonestorageTable(samples, conn);
             numSamples = updateSampleTable(samples, conn);
+            numSeqs = updateSequenceTable(samples, conn);
             
             DatabaseTransaction.commit(conn);
-          
+            
             return true;
         } catch (Exception ex) {
             System.out.println(ex);
@@ -58,7 +63,12 @@ public class SummaryTablePopulator {
     public boolean populateObtainedMasterClonesWithContainers(List containers, int strategyid, String cloneType) {
         try {
             List samples = getSamples(containers);
-            return populateObtainedMasterClonesWithSamples(samples, strategyid, cloneType);           
+            if(populateObtainedMasterClonesWithSamples(samples, strategyid, cloneType)) {
+                populateFailedConstructs(containers);
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception ex) {
             System.out.println(ex);
             return false;
@@ -208,6 +218,34 @@ public class SummaryTablePopulator {
         return ret;
     }
     
+    public int updateSequenceTable(List samples, Connection conn) throws FlexDatabaseException, SQLException {
+        String sql = "update flexsequence set flexstatus='"+FlexSequence.CLONE_OBTAINED+"'"+
+                    " where sequenceid in (select distinct sequenceid"+
+                    " from constructdesign where constructid in ("+
+                    " select distinct constructid from sample where sampleid=?))"+
+                    " and (flexstatus='"+FlexSequence.INPROCESS+"'"+
+                    " or flexstatus='"+FlexSequence.FAILED+"'"+
+                    " or flexstatus='"+FlexSequence.FAILED_CLONING+"'"+
+                    " or flexstatus='"+FlexSequence.PENDING+"'"+
+                    " or flexstatus='"+FlexSequence.REJECTED+"')";
+        
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        int ret = 0;
+        
+        for(int i=0; i<samples.size(); i++) {
+            Integer sample = (Integer)samples.get(i);
+            int sampleid = sample.intValue();
+            
+            stmt.setInt(1, sampleid);
+            int num = DatabaseTransaction.executeUpdate(stmt);
+            ret += num;
+        }
+        
+        DatabaseTransaction.closeStatement(stmt);
+        
+        return ret;
+    }
+    
     public void sendEmail(boolean isSuccessful, List ids) {
         String msg = "===========================================================\n";
         String to = "dzuo@hms.harvard.edu";
@@ -232,9 +270,18 @@ public class SummaryTablePopulator {
             subject = subject + "failed";
         }
         
-        msg = msg + "===========================================================\n";
+        msg = msg + "\n===========================================================\n";
         for(int i=0; i<ids.size(); i++) {
             msg = msg + "\t" + ids.get(i).toString()+"\n";
+        }
+        msg = msg + "\n===========================================================\n";
+        
+        if(isFailedConstructs) {
+            msg = msg + "Populating failed constructs successful.\n";
+            msg = msg + "\tNumber of failed constructs: "+numFailedConstructs+"\n";
+            msg = msg + "\tNumber of failed sequences: "+numFailedSeqs+"\n";
+        } else {
+            msg = msg + "Populating failed constructs failed.\n";
         }
         
         try {
@@ -243,48 +290,185 @@ public class SummaryTablePopulator {
             System.out.println(ex);
         }
     }
+   
+    public void populateFailedConstructs(List containers) {
+        String sql = "select distinct constructid from sample"+
+                    " where sampletype='EMPTY'"+
+                    " and containerid=?"+
+                    " and constructid not in ("+
+                    " select distinct constructid from sample"+
+                    " where sampletype='ISOLATE'"+
+                    " and containerid=?)";
+        String sql2 = "select count(*) from cloningprogress where constructid=?";
+        String sql3 = "select sequenceid, flexstatus from flexsequence"+
+                    " where sequenceid in ("+
+                    " select distinct sequenceid from constructdesign"+
+                    " where constructid=?)";
+        String sql4 = "insert into cloningprogress values(?, "+ConstructInfo.CLONE_OBTAINED_ID+")";
+        String sql5 = "update flexsequence set flexstatus='"+FlexSequence.FAILED_CLONING+"' where sequenceid=?";
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
+        PreparedStatement stmt4 = null;
+        PreparedStatement stmt5 = null;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        ResultSet rs3 = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt2 = conn.prepareStatement(sql2);
+            stmt3 = conn.prepareStatement(sql3);
+            stmt4 = conn.prepareStatement(sql4);
+            stmt5 = conn.prepareStatement(sql5);
+            
+            numFailedConstructs = 0;
+            numFailedSeqs = 0;
+            System.out.println(containers.size());
+            for(int i=0; i<containers.size(); i++) {
+                int containerid = ((Integer)containers.get(i)).intValue();
+                System.out.println(i+1+": "+containerid);
+                stmt.setInt(1, containerid);
+                stmt.setInt(2, containerid);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                while(rs.next()) {
+                    int constructid = rs.getInt(1);
+                    
+                    stmt2.setInt(1, constructid);
+                    rs2 = DatabaseTransaction.executeQuery(stmt2);
+                    if(rs2.next()) {
+                        int count = rs2.getInt(1);
+                        if(count == 0) {
+                            stmt4.setInt(1, constructid);
+                            DatabaseTransaction.executeUpdate(stmt4);
+                            numFailedConstructs++;
+                            System.out.println("insert failed construct: "+constructid);
+                            
+                            stmt3.setInt(1, constructid);
+                            rs3 = DatabaseTransaction.executeQuery(stmt3);                            
+                            
+                            if(rs3.next()) {
+                                int sequenceid = rs3.getInt(1);
+                                String status = rs3.getString(2);
+                                
+                                if(FlexSequence.INPROCESS.equals(status)) {
+                                    stmt5.setInt(1, sequenceid);
+                                    DatabaseTransaction.executeUpdate(stmt5);
+                                    numFailedSeqs++;
+                                    System.out.println("update failed sequence: "+sequenceid);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            DatabaseTransaction.commit(conn);
+            isFailedConstructs = true;
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            System.out.println(ex);
+            isFailedConstructs = false;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeResultSet(rs3);
+            DatabaseTransaction.closeStatement(stmt); 
+            DatabaseTransaction.closeStatement(stmt2); 
+            DatabaseTransaction.closeStatement(stmt3); 
+            DatabaseTransaction.closeStatement(stmt4); 
+            DatabaseTransaction.closeStatement(stmt5);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
     
     public static void main(String args[]) {
+        //List containers = getContainers();
         List containers = new ArrayList();
-        containers.add(new Integer(7045));
-      containers.add(new Integer(7046));
-      containers.add(new Integer(7047));
-      containers.add(new Integer(7048));
-      containers.add(new Integer(7049));
-      containers.add(new Integer(7050));
-      containers.add(new Integer(7051));
-      containers.add(new Integer(7052));
-      containers.add(new Integer(7053));
-      containers.add(new Integer(7054));
-      containers.add(new Integer(7055));
-      containers.add(new Integer(7056));
-      containers.add(new Integer(7057));
-      containers.add(new Integer(7058));
-      containers.add(new Integer(7059));
-      containers.add(new Integer(7060));
-      containers.add(new Integer(7061));
-      containers.add(new Integer(7062));
-      containers.add(new Integer(7063));
-      containers.add(new Integer(7064));
-      containers.add(new Integer(7108));
-      containers.add(new Integer(7109));
-      containers.add(new Integer(7110));
-      containers.add(new Integer(7111));
-      containers.add(new Integer(7112));
-
+        //containers.add(new Integer(8299));
+        //containers.add(new Integer(8300));
+        //containers.add(new Integer(7150));
+        //containers.add(new Integer(7151));
+        //containers.add(new Integer(7152));
+        //containers.add(new Integer(7153));
+        containers.add(new Integer(8214));
+        //containers.add(new Integer(8215));
+        //containers.add(new Integer(8216));
+        //containers.add(new Integer(8217));
+        
+        /**
+        List samples = getSamples();
+        
+        if(samples == null) {
+            System.out.println("failed");
+            System.exit(0);
+        }
+        */
+        
         //change cloning strategy accordingly.
-        int cloningStrategyid = 4;
+        int cloningStrategyid = 8;
         String cloneType = CloneInfo.MASTER_CLONE;
         
         SummaryTablePopulator populator = new SummaryTablePopulator();
+        
         if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
-            populator.sendEmail(true, containers);
+        //if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {            
+            populator.sendEmail(true, containers);            
         } else {
             populator.sendEmail(false, containers);
         }
         
+        //populator.populateFailedConstructs(containers);
         System.exit(0);
     }
+    
+    public static List getContainers() {
+        String sql="select distinct containerid from obtainedmasterclone where containerlabel like 'YRG%' or containerlabel like 'YMG%'";
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        List containers = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                int containerid = rs.getInt(1);
+                containers.add(new Integer(containerid));
+            }
+            return containers;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }     
+    
+    public static List getSamples() {
+        String sql="select sampleid_to from samplelineage"+
+                " where sampleid_from in ("+
+                " select sampleid from sample where containerid in (8299, 8300))";
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        List sampleids = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                int sampleid = rs.getInt(1);
+                sampleids.add(new Integer(sampleid));
+            }
+            return sampleids;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }     
 }
 
 

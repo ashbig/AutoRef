@@ -29,6 +29,9 @@ public class Project {
     public final static int MGC_PROJECT = 7;
     public final static int NIDDK = 10;
     public final static int YP = 11;
+    public final static int RZPD_WALL = 13;
+    public final static int FT = 14;
+    
     public final static String HUMANSTRING = "Human";
     public final static String YEASTSTRING = "Yeast";
     public final static String PSEUDOMONASSTRING = "Pseudomonas";

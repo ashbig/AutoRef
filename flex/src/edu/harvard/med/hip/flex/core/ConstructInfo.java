@@ -20,6 +20,13 @@ public class ConstructInfo {
     public static final String SEQUENCE_REJECTED = "SEQUENCE REJECTED";
     public static final String IN_CLONING_PROCESS = "IN CLONING PROCESS";
     
+    public static final int MASTER_CLONE_OBTAINED_ID = 2;
+    public static final int IN_SEQUENCING_PROCESS_ID = 3;
+    public static final int CLONE_OBTAINED_ID = 1;
+    public static final int SEQUENCE_VERIFIED_CLONES_OBTAINED_ID = 4;
+    public static final int SEQUENCE_REJECTED_ID = 5;
+    public static final int FAILED_CLONING_ID = 6;
+    
     private int constructid;
     private int oligoid5p;
     private int oligoid3p;
