@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.2 2001-05-11 19:15:57 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.3 2001-05-11 21:10:49 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java 
  * Date     : 05042001
@@ -133,14 +133,23 @@ public class CloneRequest {
      */	
 	public void insertRequest(HttpServletRequest request, String username) throws FlexDatabaseException {
 		Request r = new Request(username);
+		LinkedList l = new LinkedList();
+		Protocol p = new Protocol("approve sequences");
+		
 		String [] selections = request.getParameterValues("checkOrder");
 		for(int i=0; i<selections.length; i++) {
 			String gi = selections[i];
 			FlexSequence sequence = (FlexSequence)selectedSequences.get(gi);
-			r.addSequence(sequence);
+			r.addSequence(sequence);			
+			QueueItem item = new QueueItem(sequence, p);
+			l.addLast(item);
 		}
 		DatabaseTransaction t = DatabaseTransaction.getInstance();
 		r.insert(t);
+
+		SequenceProcessQueue queue = new SequenceProcessQueue();
+		queue.addQueueItems(l, t);
+				
 		t.commit();
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.2 2001-05-11 19:15:57 dongmei_zuo Exp $
+ * $Id: Request.java,v 1.3 2001-05-11 21:10:49 dongmei_zuo Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -118,14 +118,14 @@ public class Request {
 	String sql = "insert into request\n"+
 	    "(requestid, username, requestdate)\n"+
 	    "values("+id+",'"+username+"',sysdate)";
-System.out.println(sql);
+
 	t.executeSql(sql);
-System.out.println(sql);
+
 	// Insert the sequence record.
 	Enumeration enum = sequences.elements();
 	while(enum.hasMoreElements()) {
 	    FlexSequence sequence = (FlexSequence)enum.nextElement();
-	    if(sequence.getFlexstatus().equals("NEW"))
+	    if("NEW".equals(sequence.getFlexstatus()))
  			sequence.insert(t);
 	    String reqSql = "insert into requestsequence\n"+
 				 		"values ("+id+","+sequence.getId()+")";
@@ -135,13 +135,15 @@ System.out.println(sql);
 
 	public static void main(String [] args) {
 		Request r = new Request("Larry Shumway");
-		for(int i=1; i<10; i++) {
+		for(int i=1; i<5; i++) {
 			FlexSequence seq = new FlexSequence(i);
+			seq.setFlexstatus("NEW");
 			r.addSequence(seq);
 		}
 		try {
 			DatabaseTransaction t = DatabaseTransaction.getInstance();
 			r.insert(t);
+			t.abort();
 		} catch (FlexDatabaseException e) {
 			System.out.println(e);
 		}

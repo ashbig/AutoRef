@@ -1,5 +1,5 @@
 /*
- * $Id: QueueItem.java,v 1.3 2001-05-11 16:25:47 dongmei_zuo Exp $
+ * $Id: QueueItem.java,v 1.4 2001-05-11 21:10:49 dongmei_zuo Exp $
  *
  * File     : QueueItem.java 
  * Date     : 04162001
@@ -20,6 +20,7 @@ public class QueueItem {
      * Constructor.
      *
      * @param item The item object to be set to.
+     * @param protocol The protocol to be set to.
      * @param date The date to be set to.
      *
      * @return A QueueItem object.
@@ -29,6 +30,19 @@ public class QueueItem {
 	this.date = date;
 	this.protocol = protocol;
     }
+
+    /**
+     * Constructor.
+     *
+     * @param item The item object to be set to.
+     * @param protocol The protocol to be set to.
+     *
+     * @return A QueueItem object.
+     */
+    public QueueItem(Object item, Protocol protocol) {
+	this.item = item;
+	this.protocol = protocol;
+	}
     
     /**
      * Return the item field of this object.
