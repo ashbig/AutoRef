@@ -16,13 +16,15 @@ import java.util.*;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class AgarToCultureMapper extends AbstractAgarToCultureMapper {
-//    public static final int AGARWELLNUM = 6;
+    //    public static final int AGARWELLNUM = 6;
     protected int NumOfDestPlates = 1;
     protected int startIndexes[] = {1, 5, 49, 53};
     protected int column = 6;
+    protected int row = 8;
+    protected int platenumOnDest = 2;
     
     /**
      * Constructor.
@@ -33,9 +35,9 @@ public class AgarToCultureMapper extends AbstractAgarToCultureMapper {
     public AgarToCultureMapper() throws FlexProcessException {
         super();
     }
-
+    
     // Return the subthreadid for culture plate from agar plate.
-    protected String getSubThread(Container c, int index) {        
+    protected String getSubThread(Container c, int index) {
         String processcode = c.getLabel().substring(1, 3);
         
         if(processcode.equals("AA")) {
@@ -46,7 +48,7 @@ public class AgarToCultureMapper extends AbstractAgarToCultureMapper {
         }
         if(processcode.equals("AE")) {
             return new String("3");
-        } 
+        }
         if(processcode.equals("AG")) {
             return new String("4");
         }
@@ -63,7 +65,7 @@ public class AgarToCultureMapper extends AbstractAgarToCultureMapper {
             return new String("8");
         }
         return null;
-    } 
+    }
     
     protected int getNumOfDestPlates() {
         return NumOfDestPlates;
@@ -75,5 +77,16 @@ public class AgarToCultureMapper extends AbstractAgarToCultureMapper {
     
     protected int getColumn() {
         return column;
-    }    
+    }
+  
+    protected int getRow() {
+        return row;
+    }
+    
+    /**
+     * Return the number of plates mapped to one destination plate.
+     */
+    protected int getPlatenumOnDest() {
+        return platenumOnDest;
+    }
 }
