@@ -133,7 +133,6 @@ public class GetInputAction extends ResearcherAction{
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
-
     }
  
     // Validate the source plate barcode.
