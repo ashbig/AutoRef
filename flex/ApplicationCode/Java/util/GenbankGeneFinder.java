@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.2 2001-05-08 09:37:25 dongmei_zuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.3 2001-05-09 18:37:24 dongmei_zuo Exp $
  *
  * File     	: GenbankGeneFinder.java 
  * Date     	: 05052001
@@ -64,7 +64,96 @@ public class GenbankGeneFinder {
 			throw new FlexUtilException (e.getMessage());
 		}
     }
-   
+ 
+ 	/**
+	 * Perform the public database searching and parse out the detailed info.
+	 *
+	 * @param gi A query string used for search (GI number).
+	 *
+	 * @return A Hashtable that contains all the information.
+	 */	
+	public Hashtable searchDetail(String gi) throws FlexUtilException {
+		try {
+			Hashtable h = new Hashtable();
+			String urlString = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids="+gi+"&dopt=GenBank";
+			URL url = new URL(urlString);	
+			BufferedReader in = new BufferedReader(
+						new InputStreamReader(
+						url.openStream()));
+	
+			String organism = "";
+			int start = -1;
+			int stop = -1;
+			String sequencetext = "";
+			boolean cdsstart = false;
+			int cdscount = 0;
+			String inputLine;
+			while ((inputLine = in.readLine()) != null) {
+					if(inputLine.indexOf("/organism=") != -1) {
+					organism = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\""));
+				}
+									
+				if(inputLine.indexOf(">CDS</a>") != -1) {
+					if(inputLine.indexOf("join") != -1) 
+						continue;
+						
+					String substr = inputLine.substring(inputLine.indexOf(">CDS</a>"));
+					StringTokenizer st = new StringTokenizer(substr);
+					String cds = "";
+					if(st.hasMoreTokens()) {
+						String ignore = st.nextToken();
+						cds = st.nextToken();						
+					}
+					st = new StringTokenizer(cds, "..");
+					if(st.hasMoreTokens()) {
+						String startStr = st.nextToken();
+						String newStart = startStr;
+						if(startStr.indexOf("&lt;")!=-1) {
+							newStart = startStr.substring(startStr.indexOf(";")+1);
+						}
+						System.out.println(newStart);
+						start = Integer.parseInt(newStart);
+						stop = Integer.parseInt(st.nextToken());
+					}
+					cdscount++;
+				}
+				
+				if(inputLine.indexOf("ORIGIN") != -1) {
+					cdsstart = true;
+					continue;
+				}
+								
+				if(inputLine.indexOf("//") == 0) {
+					cdsstart = false;
+					break;
+				}
+				
+				if(cdscount>1) {
+					start = -1;
+					stop = -1;
+					break;
+				}
+				
+				if(cdsstart) {
+					StringTokenizer st = new StringTokenizer(inputLine);	
+					while(st.hasMoreTokens()) {					
+						sequencetext = sequencetext+st.nextToken(" 1234567890");
+					}
+				}	
+			}
+			in.close();		
+			
+			h.put("species", organism);
+			h.put("start", new Integer(start));
+			h.put("stop", new Integer(stop));
+			h.put("sequencetext", sequencetext);	
+			
+			return h;
+		} catch (Exception e) {
+			throw new FlexUtilException (e.getMessage());
+		}
+    }
+      
     //**************************************************************//
     //							Test								// 
     //**************************************************************//
@@ -80,6 +169,9 @@ public class GenbankGeneFinder {
     			System.out.println("Description: "+sequence.getDescription());
 				System.out.println();
 			}
+			
+			Hashtable h = finder.searchDetail("13938452");
+			System.out.println(h);
 		} catch (FlexUtilException e) {
 			System.out.println(e);
 		}
