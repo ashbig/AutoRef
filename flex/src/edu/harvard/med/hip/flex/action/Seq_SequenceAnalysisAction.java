@@ -44,46 +44,50 @@ public class Seq_SequenceAnalysisAction extends WorkflowAction
     {
         ActionErrors errors = new ActionErrors();
        // String forwardName = ((Seq_SequenceAnalysisRequestForm)form).getForwardName();
-        int refseqid = ((Seq_SequenceAnalysisRequestForm)form).getRefseqid();
-        int ginumber = ((Seq_SequenceAnalysisRequestForm)form).getGI();
-       String expsequence = (String) request.getAttribute("FULLSEQUENCE");
+       String searchTerm = ((Seq_SequenceAnalysisRequestForm)form).getSearchType();
+        int searchValue = ((Seq_SequenceAnalysisRequestForm)form).getSearchValue();
+       String expsequence = ((Seq_SequenceAnalysisRequestForm)form).getFullsequence();//(String) request.getAttribute("FULLSEQUENCE");
        TheoreticalSequence theoretical_sequence = null;
         String errmessage = null;
       
-         System.out.println(ginumber);  System.out.println(refseqid);
+        
         try
         {
+           
             //get theoretical sequence 
-            if (refseqid == -1 && ginumber != -1)
+            if (searchTerm.equalsIgnoreCase(FullSequenceAnalysis.SEARCH_BY_GI ))
             {
-                 System.out.println(ginumber);
-                theoretical_sequence = TheoreticalSequence.findSequenceByGi(String.valueOf(ginumber));
-                errmessage = "<li>No sequence with GI number: "+ ginumber+" exists.</li>";
+                 System.out.println("get out"+searchValue+" "+searchTerm);
+                 theoretical_sequence = TheoreticalSequence.findSequenceByGi(searchValue);
+                 
+                errmessage = "<li>No sequence with GI number: "+ searchValue+" exists.</li>";
+           
             }
             else
             {
-                 System.out.println(refseqid);
-                theoretical_sequence = new TheoreticalSequence (refseqid);
-                errmessage = "<li>No sequence with id: "+ refseqid+" exists.</li>";
+               
+                theoretical_sequence = new TheoreticalSequence (searchValue);
+                errmessage = "<li>No sequence with id: "+ searchValue+" exists.</li>";
             }
-             System.out.println(theoretical_sequence);
-            if ( theoretical_sequence == null)
+          
+            if ( theoretical_sequence == null || 
+                theoretical_sequence.getText() == null || 
+                    theoretical_sequence.getText().equals(""))
             {
-                System.out.println("al");
-               errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(errmessage));
+                System.out.println("get out");
+               errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.serchterm.wrong"));
                saveErrors(request, errors);
-               System.out.println(mapping);
-               System.out.println(mapping.getInput());
-              
                return new ActionForward(mapping.getInput());
                
             }
-            refseqid = theoretical_sequence.getId();
+            System.out.println("get out");
+            int refseqid = theoretical_sequence.getId();
             
             //submit fullsequence if it was submitted
-            if ( expsequence != null)
+            System.out.println("aaa"+expsequence+"eee");
+            if ( expsequence != null && !expsequence.equals("") )
             {
-               
+              
                     FullSequence full_sequence = new FullSequence(expsequence,refseqid);
                     
                     DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -98,29 +102,22 @@ public class Seq_SequenceAnalysisAction extends WorkflowAction
                                     conn                                    
                                 );
                     seq_for_analysis.analize();
-                    ArrayList seq = TheoreticalSequence.getFullSequences(refseqid);
-                    request.setAttribute("refseqid", new Integer(refseqid) );
-                    request.setAttribute("fullsequences",seq);
-                    return (mapping.findForward("sequence_found"));
-   
             }
-            else
+            ArrayList seq = TheoreticalSequence.getFullSequences(refseqid);
+            System.out.println("aaa"+seq.size());
+            if (seq == null || seq.size() == 0)
             {
-                System.out.println("l");
-                ArrayList seq = TheoreticalSequence.getFullSequences(refseqid);
-                 System.out.println(seq.size());
-                if (seq == null || seq.size() == 0)
-                {
-                    request.setAttribute("sequenceexists","NO");
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                            new ActionError("No experimental sequence exists for this reference sequence."));
-                    return (mapping.findForward("sequence_not_found"));
-                }
-                request.setAttribute("refseqid", new Integer(refseqid) );
-                request.setAttribute("fullsequences",seq);
-                return (mapping.findForward("sequence_found"));
+                System.out.println("aaa"+seq.size());
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("<li>No experimental sequence exists for this reference sequence.</li>"));
+                saveErrors(request, errors);
+                return new ActionForward(mapping.getInput());
             }
-            
+            System.out.println("aaa"+seq.size());
+            request.setAttribute("refseqid", new Integer(theoretical_sequence.getId()) );
+            request.setAttribute("fullsequences",seq);
+            return (mapping.findForward("sequence_found"));
+  
         } 
         catch (Exception e)
         {

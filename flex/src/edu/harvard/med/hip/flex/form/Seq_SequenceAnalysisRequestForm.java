@@ -19,28 +19,39 @@ public class Seq_SequenceAnalysisRequestForm extends ActionForm
 {
     
    // private String m_forwardName = null;
-    private int m_refseqid = -1;
-    private int m_gi = -1;
+    private String m_searchTerm = null;
+    private int m_searchValue = -1;
+    private String m_sequencetext = null;
    
-    public void setRefseqid(int s)
+    public void setSearchType(String s)
     {
-         System.out.println(s);
-        m_refseqid = s;
+        
+         m_searchTerm = s;
     }
     
-    public int getRefseqid()
+    public String getSearchType()
     {
-        return m_refseqid;
+        return m_searchTerm;
     }
-    public void setGI(int s)
+    public void setFullsequence(String s)
     {
-         System.out.println(s);
-        m_gi = s;
+        
+         m_sequencetext = s.trim();
     }
     
-    public int getGI()
+    public String getFullsequence()
     {
-        return m_gi;
+        return m_sequencetext;
+    }
+    public void setSearchValue(int s)
+    {
+       
+        m_searchValue = s;
+    }
+    
+    public int getSearchValue()
+    {
+        return m_searchValue;
     }
     /**
      * Reset all properties to their default values.
@@ -54,10 +65,11 @@ public class Seq_SequenceAnalysisRequestForm extends ActionForm
     {
         
         ActionErrors errors = new ActionErrors();
-        System.out.println("validate: " +m_gi +" "+ m_refseqid);
-        if( m_gi == -1 && m_refseqid == -1) 
+       
+        if( m_searchValue == -1 || m_searchValue == 0) 
         {
            errors.add("searchTerm", new ActionError("error.searchTerm.required"));
+         
         }
      
         return errors;
