@@ -96,6 +96,13 @@
   <global-forwards>
     <forward    name="login"        path="/login.jsp"/>
     <forward    name="error"        path="/ProcessError.do"/>
+    <forward    name="customerRequest"  path="/CustomerRequest.do"/>
+    <forward    name="approveSequences" path="/ViewPendingRequests.do"/>
+    <forward    name="receiveOligoOrders" path="/ReceiveOligoOrders.jsp"/>
+    <forward    name="createProcessPlate" path="/CreateProcessPlate.do"/>
+    <forward    name="enterProcessResults" path="/EnterProcessResults.jsp"/>
+    <forward    name="containerProcessHistory" path="/ContainerScan.jsp"/>
+    <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>
   </global-forwards>
   
 
