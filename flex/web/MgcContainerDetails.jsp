@@ -79,7 +79,7 @@
     <tr class="headerRow">
         <th>&nbsp;&nbsp;ID&nbsp;&nbsp;</th> 
          <th>&nbsp;&nbsp;MGC Id&nbsp;&nbsp;</th>
-        <th>&nbsp;&nbsp;Image Id&nbsp;&nbsp;</th>
+        <th>&nbsp;&nbsp;IMAGE Id&nbsp;&nbsp;</th>
         <th>&nbsp;&nbsp;Vector&nbsp;&nbsp;</th>
         <th>&nbsp;&nbsp;Type&nbsp;&nbsp;</th>
         <th>&nbsp;&nbsp;Position&nbsp;&nbsp;</th>
