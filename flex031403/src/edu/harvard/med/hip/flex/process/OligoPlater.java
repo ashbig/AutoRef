@@ -223,7 +223,8 @@ public class OligoPlater
                 current_well = 2;
                 isNewPlate = false;
             }
-            currentGene = (OligoPattern)oligoPatternList.get(geneCount);
+            //currentGene = (OligoPattern)oligoPatternList.get(geneCount);
+            currentGene = (OligoPattern)orderedOligos.get(geneCount);
             //System.out.println("The lower gene index is: "+ currentGeneIndex);
             outputGene( currentGene , current_well);
             current_well++;
