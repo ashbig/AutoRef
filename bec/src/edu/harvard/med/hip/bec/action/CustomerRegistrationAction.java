@@ -64,18 +64,18 @@ public final class CustomerRegistrationAction extends Action
         String email = ((CustomerRegistrationForm) form).getEmail();
         String password = ((CustomerRegistrationForm) form).getPassword();
         String organization = ((CustomerRegistrationForm) form).getOrganization();
-        String usergroup = "Customer";
+        String usergroup = "Researcher";
         
-        String lastname = ((CustomerRegistrationForm) form).getLastName();
-        String firstname = ((CustomerRegistrationForm) form).getFirstName();
-        String street1 = ((CustomerRegistrationForm) form).getStreet1();
-        String street2 = ((CustomerRegistrationForm) form).getStreet2();
-        String city = ((CustomerRegistrationForm) form).getCity();
-        String province = ((CustomerRegistrationForm) form).getProvince();
-        String state = ((CustomerRegistrationForm) form).getState();
-        String zipcode = ((CustomerRegistrationForm) form).getZipCode();
-        String country = ((CustomerRegistrationForm) form).getCountry();
-        String phone = ((CustomerRegistrationForm) form).getPhone();
+      //  String lastname = ((CustomerRegistrationForm) form).getLastName();
+      //  String firstname = ((CustomerRegistrationForm) form).getFirstName();
+      //  String street1 = ((CustomerRegistrationForm) form).getStreet1();
+      //  String street2 = ((CustomerRegistrationForm) form).getStreet2();
+      //  String city = ((CustomerRegistrationForm) form).getCity();
+      //  String province = ((CustomerRegistrationForm) form).getProvince();
+      //  String state = ((CustomerRegistrationForm) form).getState();
+      //  String zipcode = ((CustomerRegistrationForm) form).getZipCode();
+      //  String country = ((CustomerRegistrationForm) form).getCountry();
+     //  String phone = ((CustomerRegistrationForm) form).getPhone();
         String reminder = ((CustomerRegistrationForm) form).getReminderText();
         
         
@@ -91,7 +91,7 @@ public final class CustomerRegistrationAction extends Action
             // ask accessManager if the user_id has been used
             if(accessManager.userExist(user_id))
             {
-               
+          
                 errors.add("userID",
                 new ActionError("error.userid.used", user_id));
                 saveErrors(request, errors);
@@ -105,6 +105,7 @@ public final class CustomerRegistrationAction extends Action
             else if (accessManager.reminderUnique(reminder)==false)
             {
                
+           
                 errors.add("reminder", new ActionError("error.reminder.used",reminder));
                 saveErrors(request, errors);
                 return (mapping.findForward("failure"));
@@ -112,13 +113,13 @@ public final class CustomerRegistrationAction extends Action
             // if the userId has not been used and reminder text is unique, insert a new user record into the database
             else
             {
-               
-                accessManager.addUser(user_id,email,password,organization,usergroup,reminder,firstname,lastname,street1,street2,city,state,province,zipcode,country,phone);
+               // accessManager.addUser(user_id,email,password,organization,usergroup,reminder,firstname,lastname,street1,street2,city,state,province,zipcode,country,phone);
+                accessManager.addUser(user_id,email,password,organization,usergroup,reminder);
                 return (mapping.findForward("success"));
             }
         } catch (Throwable th)
         {
-           // System.out.println(th);
+            System.out.println(th);
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error",th));
             return (mapping.findForward("error"));
