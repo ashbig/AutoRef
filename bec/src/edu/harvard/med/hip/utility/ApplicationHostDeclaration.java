@@ -19,4 +19,11 @@ allowing first shift between debug/server mode
     public static final boolean   IS_BIGHEAD = false;
     public static final boolean   IS_BIGHEAD_FOR_EXPRESSION_EVALUATION = false;
     //ApplicationHostDeclaration.IS_BIGHEAD
+    public static String       JSP_REDIRECTION = "/BEC/";
+    static 
+    {
+        if ( IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+            JSP_REDIRECTION = "/ACE_EXP_EVAL/";
+    }
+    
 }
