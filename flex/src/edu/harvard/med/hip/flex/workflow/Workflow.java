@@ -55,6 +55,8 @@ public class Workflow {
     public static final int TRANSFER_TO_EXPRESSION = 25;
     public static final int EXPRESSION_WORKFLOW = 30;
     
+    public static final int IMPORT_EXTERNAL_CLONE = 31;
+    
     /** Creates new Workflow */
     public Workflow() {
         flow = new Vector();

@@ -23,6 +23,7 @@ public class SpecialOligoOrderForm extends ProjectWorkflowForm {
     private boolean small = false;
     private boolean medium = false;
     private boolean large = false;
+    private String format;
     
     public void setIsFullPlate(boolean isFullPlate) {
         this.isFullPlate = isFullPlate;
@@ -54,6 +55,14 @@ public class SpecialOligoOrderForm extends ProjectWorkflowForm {
     
     public boolean getLarge() {
         return large;
+    }
+    
+    public String getFormat() {
+        return format;
+    }
+    
+    public void setFormat(String s) {
+        this.format = s;
     }
     
     /**

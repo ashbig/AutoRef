@@ -50,6 +50,7 @@ public class SpecialOligoOrderAction extends WorkflowAction {
         boolean small = ((SpecialOligoOrderForm)form).getSmall();
         boolean medium = ((SpecialOligoOrderForm)form).getMedium();
         boolean large = ((SpecialOligoOrderForm)form).getLarge();
+        String format = ((SpecialOligoOrderForm)form).getFormat();
         
         Connection conn = null;
         try {
@@ -58,6 +59,16 @@ public class SpecialOligoOrderAction extends WorkflowAction {
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
             OligoPlateManager om = new OligoPlateManager(conn, project, workflow, 94, isFullPlate, true, small, medium, large, null);
+            
+            if("fusion".equals(format)) {
+                om.setIsSetOpenClose(true);
+                om.setIsOpenOnly(true);
+            } 
+            if("close".equals(format)) {
+                om.setIsSetOpenClose(true);
+                om.setIsCloseOnly(true);
+            }
+            
             om.orderOligo();
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

@@ -54,6 +54,12 @@ You can choose to group the oligos together for different size groups.
         <dd><html:checkbox property="small" />small genes (0 <= CDS < 2000)
         <dd><html:checkbox property="medium" />medium genes (2000 <= CDS < 4000)
         <dd><html:checkbox property="large" />large genes (CDS >= 4000)
+<p>
+    <dt><b>choose oligo format:</b> <select name="format">
+            <option value="both">Both
+            <option value="fusion">Fusion
+            <option value="close">Close
+            </select>
 <dl>
 <p>
 <html:submit/>
