@@ -19,8 +19,8 @@ public class CultureResultConverter {
     public static final int IGNORELINES = 3;
     public static final int ROW = 8;
     
-    public static final double GROW = 0.09;
-    public static final double NOGROW = 0.04;
+    public static final double GROW = 0.150;
+    public static final double NOGROW = 0.065;
     
     private InputStream input;
     private String errorMessage;
