@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-14 21:14:01 $
+ * $Revision: 1.2 $
+ * $Date: 2005-01-20 16:48:31 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.bec.util.*;
  * Overides the ActionServlet to provide bec specific functionality
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-03-14 21:14:01 $
+ * @version    $Revision: 1.2 $ $Date: 2005-01-20 16:48:31 $
  */
 
 public class BecServlet extends ActionServlet {
@@ -68,14 +68,33 @@ public class BecServlet extends ActionServlet {
      */
     public void init() throws ServletException {
         super.init();
-        initBec();        
+        initBec();      
+       
     }
     
     
-    protected void initBec() throws ServletException {
-        initBecProp("BecProperties", "SystemConfig.properties");
-        initBecProp("ContainerTypeProperties", "ContainerType.properties");
-         
+    protected void initBec() throws ServletException
+    {
+        Properties prop = null;
+        InputStream systemStream = null;
+        BecProperties becProp = BecProperties.getInstance();
+        for (int count = 0 ; count < BecProperties.APPLICATION_SETTINGS.length; count++)
+        {
+            systemStream =   getServletContext().getResourceAsStream(filePath + BecProperties.APPLICATION_SETTINGS[count]);
+            if(systemStream == null) {   System.err.println("Unable to read properties file: "+BecProperties.APPLICATION_SETTINGS[count]); }
+            prop = new Properties();
+            try
+            {
+                prop.load(systemStream);
+              //  System.out.println("properties "+filePath + BecProperties.APPLICATION_SETTINGS[count] +prop.size());
+                becProp.setProperties(prop);
+            //    System.out.println("properties "+ BecProperties.getInstance().getErrorMessage());
+               
+             } catch (IOException ioE) 
+             {
+                throw new ServletException(ioE);
+            }
+        }
     }
     /**
      * Initializes bec specific resources.
@@ -85,29 +104,29 @@ public class BecServlet extends ActionServlet {
      *
      * @exception ServletException when a configuration error is found.
      */
-    protected void initBecProp(String className, String fileName) throws ServletException {
+    protected void initBecProp(String className, String fileName) throws ServletException 
+    {
         String name = filePath+fileName;
         
        // first load the system configuration info
-        InputStream systemStream = 
-            getServletContext().getResourceAsStream(name);
+        InputStream systemStream =   getServletContext().getResourceAsStream(name);
         if(systemStream == null) {
             System.err.println("Unable to read properties file: "+name);
         }
         Properties prop = new Properties();
-        try {
+       // try {
             
-            prop.load(systemStream);
+            //prop.load(systemStream);
             /*
              * give load values from the properties file into the 
              * SystemProperties class
              */
-            BecProperties becProp = StaticPropertyClassFactory.makePropertyClass(className);
-            becProp.setProperties(prop);
+          //  BecProperties becProp = BecProperties.getInstance();//StaticPropertyClassFactory.makePropertyClass(className);
+           // becProp.setProperties(prop);
            
-        } catch (IOException ioE) {
-            throw new ServletException(ioE);
-        }
+     //   } catch (IOException ioE) {
+     //       throw new ServletException(ioE);
+     //   }
        
     }
     

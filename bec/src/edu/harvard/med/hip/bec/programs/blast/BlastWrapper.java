@@ -18,7 +18,7 @@ import edu.harvard.med.hip.utility.*;
  */
 public class BlastWrapper
 {
-    public static final String HUMANDB_NAME="Homo sapiens";
+    /*public static final String HUMANDB_NAME="Homo sapiens";
     public static final String YEASTDB_NAME="Saccharomyces cerevisiae";
     public static final String PSEUDOMONASDB_NAME="Pseudomonas aeruginosa";
     public static final String MGCDB_NAME="MGC";
@@ -26,19 +26,9 @@ public class BlastWrapper
     public static final String FTDB_NAME="Francisella tularensis";
     public static final String ClontechDB_NAME="Clontech";
     public static final String NIDDKDB_NAME="NIDDK";
-    
-    public static  String HUMANDB=null;
-    public static  String YEASTDB=null;
-    public static  String PSEUDOMONASDB=null;
-    public static  String MGCDB=null;
-    public static  String YPDB=null;
-    public static  String FTDB=null;
-    public static  String ClontechDB=null;
-    public static  String NIDDKDB=null;
-
-    public static  String BLAST_PASS =  null;
-    
-    {
+   
+     
+     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
             HUMANDB="d:\\blast_db\\Human\\genes";
@@ -65,6 +55,22 @@ public class BlastWrapper
             NIDDKDB="c:\\blast_db\\NIDDKDB\\genes";
         }
     }
+     
+     
+      public static  String HUMANDB=null;
+    public static  String YEASTDB=null;
+    public static  String PSEUDOMONASDB=null;
+    public static  String MGCDB=null;
+    public static  String YPDB=null;
+    public static  String FTDB=null;
+    public static  String ClontechDB=null;
+    public static  String NIDDKDB=null;**/
+    
+   
+
+    public static  String BLAST_PASS =  edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("BLAST_EXE_COMMON_PATH") + File.separator;
+    
+    /*
     public   static String getHumanDBLocation()
     {  
         BlastWrapper wr = new BlastWrapper();
@@ -106,7 +112,7 @@ public class BlastWrapper
         BlastWrapper wr = new BlastWrapper();
         return YPDB;
     }
-        
+        */
      
     // define a set of constants;
     public static final String QUERY_TYPE_DNA = "DNA";
@@ -279,7 +285,7 @@ public class BlastWrapper
         }
        // System.out.println(m_blast_type + " "+m_db);
         blastcmd = makeBlastCmd();
-
+//System.out.println(blastcmd);
         try
         {
             Runtime r = Runtime.getRuntime();
@@ -304,7 +310,7 @@ public class BlastWrapper
             throw new BecUtilException(BLAST_FAILED_IO);
         } catch (InterruptedException e)
         {
-            throw new BecUtilException(BLAST_FAILED_INTERUPTED);;
+            throw new BecUtilException(BLAST_FAILED_INTERUPTED);
         }
        // return BLAST_SUCESS;
     }
