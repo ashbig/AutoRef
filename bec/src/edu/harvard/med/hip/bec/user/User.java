@@ -19,83 +19,94 @@ import edu.harvard.med.hip.bec.util.*;
  *              06-14-2001 by JMM: Added method to get the barcode for a user.
  *                                 Added toString method.
  */
-public class User {
-    private String name;
-    private String email;
-    private String password;
-    private String group;
-    private String organization;
-    private String information;
+public class User
+{
+    private String m_name = null;
+    private String m_email = null;
+    private String m_password= null;
+    private String m_group= null;
+    private String organization= null;
+    private String information= null;
+    
+    private int m_id  = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     
     /**
      * Constructor. Return an User object.
      *
-     * @param name the User name.
-     * @param email the user email address.
-     * @param group the user group category.
+     * @param m_name the User m_name.
+     * @param m_email the user m_email address.
+     * @param m_group the user m_group category.
      * @return An User object.
      */
-    public User(String name, String email, String group) {
-        this.name = name;
-        this.email = email;
-        this.group = group;
+    public User(String name, String email, String group)throws BecDatabaseException
+    {
+       
+            m_id = BecIDGenerator.getID("nameid");
+       
+        m_name = name;
+        m_email = email;
+        m_group = group;
     }
     
     /**
      * Constructor. Return an User object.
      *
-     * @param name the User name.
-     * @param email the user email address.
-     * @param password the user password.
+     * @param m_name the User m_name.
+     * @param m_email the user m_email address.
+     * @param m_password the user m_password.
      * @return An User object.
      */
-    public User(String name, String password) {
-        this.name = name;
-        this.password = password;
+    public User(String name, String password)throws BecDatabaseException
+    {
+        m_id = BecIDGenerator.getID("nameid");
+        
+        m_name = name;
+        m_password = password;
     }
     
     
     /**
-     * Return Username.
+     * Return Userm_name.
      *
-     * @return A Username as String.
+     * @return A Userm_name as String.
      */
-    public String getUsername() {
-        return name;
-    }
+    public String getUsername()    {        return m_name;    }
     
     /**
-     * Return User email as a String.
+     * Return User m_email as a String.
      *
-     * @return The user email address.
+     * @return The user m_email address.
      */
-    public String getUserEmail() {
-        return email;
-    }
+    public String getUserEmail()    {        return m_email;    }
     
     
     
     /**
-     * Return User group as a String.
-     * Pre-condition: The username is valid.
+     * Return User m_group as a String.
+     * Pre-condition: The userm_name is valid.
      *
-     * @return The user group category.
+     * @return The user m_group category.
      */
-    public String getUserGroup() throws BecDatabaseException {
+    public String getUserGroup() throws BecDatabaseException
+    {
         String sql = "SELECT usergroup FROM userprofile" +
-        " WHERE username = '" + DatabaseTransaction.prepareString(name) + "'";
+        " WHERE username = '" + DatabaseTransaction.prepareString(m_name) + "'";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         RowSet rs = t.executeQuery(sql);
         
-        try {
-            if(rs.next()) {
+        try
+        {
+            if(rs.next())
+            {
                 
-                group = rs.getString("USERGROUP");
+                m_group = rs.getString("USERGROUP");
             }
-            return group;
-        } catch(SQLException sqlE) {
+            return m_group;
+        } catch(SQLException sqlE)
+        {
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
@@ -113,14 +124,14 @@ public class User {
         String barcode = null;
         String sql = "select researcherbarcode from userprofile, researcher " +
         "where userprofile.researcherid = researcher.researcherid " +
-        "and username = '" + DatabaseTransaction.prepareString(name) + "'";
-        
+        "and userm_name = '" + DatabaseTransaction.prepareString(m_name) + "'";
+         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         RowSet rs = t.executeQuery(sql);
-        
+         
         try {
             if(rs.next()) {
-                
+         
                 barcode = rs.getString("RESEARCHERBARCODE");
             }
             return barcode;
@@ -138,36 +149,28 @@ public class User {
      *
      * @return the user contact information.
      */
-    public String getUserInfo() {
-        return information;
-    }
-    
+    public String getUserInfo()    {        return information;    }
+    public int       getId()    {        return m_id;    }
     /**
-     * Set Username.
+     * Set Userm_name.
      *
-     * @param newname The Username as String.
+     * @param newm_name The Userm_name as String.
      */
-    public void setUserName(String newname) {
-        name = newname;
-    }
+    public void setUserName(String newname)    {        m_name = newname;    }
     
     /**
-     * Set user email.
+     * Set user m_email.
      *
      * @param mail The User Email address.
      */
-    public void setUserEmail(String mail) {
-        email = mail;
-    }
+    public void setUserEmail(String mail)    {        m_email = mail;    }
     
     /**
-     * set user group
+     * set user m_group
      *
-     * @param usergroup The user group category
+     * @param userm_group The user m_group category
      */
-    public void setUserGroup(String usergroup) {
-        group = usergroup;
-    }
+    public void setUserGroup(String usergroup)    {        m_group = usergroup;    }
     
     /**
      * Get user requested sequences.
@@ -175,23 +178,24 @@ public class User {
      * @return A Vector of Request objects.
      * @exception FlexDatabaseException.
      */
-    public Vector getRequests() throws BecDatabaseException {
+    public Vector getRequests() throws BecDatabaseException
+    {
         /*
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Vector requests = new Vector();
-        String sql = "select requestid, username, "+
+        String sql = "select requestid, userm_name, "+
         "to_char(requestdate, 'fmYYYY-MM-DD') as rdate\n"+
-        "from request where username='"+DatabaseTransaction.prepareString(name)+
+        "from request where userm_name='"+DatabaseTransaction.prepareString(m_name)+
         "' order by requestdate desc";
         RowSet requestRs = t.executeQuery(sql);
-        
+         
         try {
             while(requestRs.next()) {
                 int id = requestRs.getInt("REQUESTID");
-                String username = requestRs.getString("USERNAME");
+                String userm_name = requestRs.getString("USERNAME");
                 String requestdate = requestRs.getString("RDATE");
                 Request r = new Request(id);
-                r.setUsername(username);
+                r.setUserm_name(userm_name);
                 r.setDate(requestdate);
                 requests.addElement(r);
             }
@@ -200,42 +204,48 @@ public class User {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(requestRs);
-        } 
-         **/    
+        }
+         **/
         return null;
-    }   
+    }
     
     /**
-     * Gets a string representation of the user, which is its username.
+     * Gets a string representation of the user, which is its userm_name.
      *
-     * @return string representation of the user (username)
+     * @return string representation of the user (userm_name)
      */
-    public String toString() {
-        return this.name;
+    public String toString()
+    {
+        return m_name;
     }
-
+    
     /**
-     * Check the database to see if the given uername exists in the database.
+     * Check the database to see if the given uerm_name exists in the database.
      *
-     * @param username The value to be checked.
-     * @return True if the username exists in the database; return false otherwise.
+     * @param userm_name The value to be checked.
+     * @return True if the userm_name exists in the database; return false otherwise.
      */
-    public static boolean exists(String username) {
+    public static boolean exists(String username)
+    {
         String sql = "select * from userprofile where username='"+username+"'";
         ResultSet rs = null;
         boolean ret = false;
         
-        try {
+        try
+        {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            if(rs.next()) {
+            if(rs.next())
+            {
                 ret = true;
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             System.err.println(e);
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
-        }     
+        }
         
         return ret;
     }
@@ -243,14 +253,17 @@ public class User {
     //**********************************************************//
     //						Test								//
     //**********************************************************//
-    public static void main(String [] args) {
-        try {
-            User user = new User("Allison Halleck", "password");
+    public static void main(String [] args)
+    {
+        try
+        {
+            User user = new User("Allison Halleck", "m_password");
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection conn = t.requestConnection();
-            String group = user.getUserGroup();
-          
-        } catch (BecDatabaseException e) {
+            String m_group = user.getUserGroup();
+            
+        } catch (BecDatabaseException e)
+        {
             System.out.println(e);
         }
     }
