@@ -60,20 +60,39 @@
                 <a href="DisplayLinks.do?hipGeneId=<bean:write name="association" property="gene.hipGeneId"/>"><bean:write name="association" property="gene.name"/></a>&nbsp                          
             </TD>
             </logic:equal>
+
             <logic:equal name="association" property="gene.type" value="FAMILY">
             <TD>
                 <bean:write name="association" property="gene.name"/>&nbsp                          
             </TD>
             </logic:equal>
+
+
             <TD>
                 <bean:write name="association" property="geneIndex.searchType"/>&nbsp
             </TD>
             <TD align="center">
                 <bean:write name="association" property="gene.symbol"/>&nbsp
             </TD>
+
+
+            <logic:equal name="association" property="gene.type" value="GENE">
             <TD>
                 <bean:write name="association" property="gene.nicknamesString"/>&nbsp
             </TD>
+            </logic:equal>
+
+
+
+            <logic:equal name="association" property="gene.type" value="FAMILY">
+            <TD>
+                <logic:iterate id="child" name="association" property="gene.nicknames"> 
+                    <a href="DisplayLinks.do?geneSymbol=<bean:write name="child"/>">
+                    <bean:write name="child"/></a>&nbsp
+                </logic:iterate>
+            </TD>
+            </logic:equal>
+
             <TD>
                 <bean:write name="association" property="gene.gosString"/>&nbsp
             </TD>
