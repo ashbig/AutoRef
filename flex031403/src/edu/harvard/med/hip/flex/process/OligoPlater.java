@@ -23,8 +23,8 @@ import java.io.*;
 
 public class OligoPlater {
     
-    private static final String filePath = "/tmp/";
-    //private static final String filePath = "H:/Dev/OligoOrder/";
+    //private static final String filePath = "/tmp/";
+    private static final String filePath = "H:/Dev/OligoOrder/";
     
     private static final int positiveControlPosition = 1;
     private static final int negativeControlPosition = 96;
@@ -86,7 +86,7 @@ public class OligoPlater {
         insertProcessOutput();
         
         //insert receive oligo queue
-        insertReceiveOligoQueue();        
+        insertReceiveOligoQueue();
     }
     
     
@@ -103,7 +103,6 @@ public class OligoPlater {
         
         while (iter.hasNext()){
             String fileName = (String)iter.next();
-          //  fileName = fileName.substring(18);
             File oligoFile = new File(fileName);
             fileList.add(oligoFile);
         } //while
@@ -139,9 +138,8 @@ public class OligoPlater {
         OligoPattern[] geneArray = new OligoPattern[0];
         geneArray = (OligoPattern[]) oligoPatternList.toArray(geneArray);
         oligoPatternList = null;
-
+        
         //System.out.println("Sorting.");
-
         Arrays.sort(geneArray,comparator);
         
         // Map genes to plates and wells, with 94 genes per plate.
@@ -152,7 +150,6 @@ public class OligoPlater {
         int well = 0;
         int numGenes = geneArray.length;
         boolean fullPlate = true;
-        // done = false;
         boolean wellsDone = false;
         int relativeLowerIndex = 0;
         int relativeUpperIndex = 0;
@@ -167,7 +164,7 @@ public class OligoPlater {
             generateOligoPlate();
             generateControlSamples();
             
-            //prepare files for oligo order            
+            //prepare files for oligo order
             plateOutFileName1 = filePath + container_5p.getLabel();
             plateOutFileName2 = filePath + container_3s.getLabel();
             plateOutFileName3 = filePath + container_3op.getLabel();
@@ -175,12 +172,14 @@ public class OligoPlater {
             plateWriter_5p = new FileWriter(plateOutFileName1);
             plateWriter_3s = new FileWriter(plateOutFileName2);
             plateWriter_3op = new FileWriter(plateOutFileName3);
+            createOligoFileHeader();
+            
             //adding file names to the list
             fileNameList.add(plateOutFileName1);
             fileNameList.add(plateOutFileName2);
             fileNameList.add(plateOutFileName3);
             
-            // array index starts at 0
+            //gene array index starts at 0
             firstGeneIndexOfPlate = currentGeneIndex+1;
             lastGeneIndexOfPlate = firstGeneIndexOfPlate+93;
             
@@ -207,26 +206,33 @@ public class OligoPlater {
             wellsDone = false;
             while (!wellsDone) {
                 ++well; //oligo sample starts at well 2
-                ++currentGeneIndex;  //starts at 0
+                ++currentGeneIndex;  //array starts at 0
                 ++relativeLowerIndex;
                 ++relativeUpperIndex;
                 
-                if ((firstGeneIndexOfPlate + relativeUpperIndex) > lastGeneIndexOfPlate) {
+                //       if ((firstGeneIndexOfPlate + relativeUpperIndex) > lastGeneIndexOfPlate) {
+                //           wellsDone = true;
+                //           continue;
+                //       }
+                
+                if (well > 94){
                     wellsDone = true;
                     continue;
+                    
                 }
                 
-                //System.out.println("gene index: "+currentGeneIndex);
+                System.out.println("The lower well is : "+well);
+                
                 // Output lower gene.
                 currentGene = geneArray[currentGeneIndex];
+                System.out.println("The lower gene index is: "+ currentGeneIndex);
                 
                 // generate three oligo sample objects and insert into sample table
                 // also a record for each oligo sample is inserted into containercell table
-
                 oligoSample_5p = generateOligoSample(currentGene,"5p", container_5p.getId(), well);
                 //System.out.println("PlateID: "+container_5p.getId() +"; " + "5p lower oligo well: "+ well + "; "
                 //+ "sampleID: "+ oligoSample_5p.getId() +"; "+ "oligoID: "+oligoSample_5p.getOligoid()+"; " + currentGene.getCDSLength());
-
+                
                 container_5p.addSample(oligoSample_5p);
                 
                 plateWriter_5p.write(container_5p.getLabel()+"\t");
@@ -237,7 +243,7 @@ public class OligoPlater {
                 oligoSample_3s = generateOligoSample(currentGene,"3s", container_3s.getId(), well);
                 //System.out.println("PlateID: "+container_3s.getId()+"; " + "3s lower oligo well: "+ well + "; "
                 //+ "sampleID: "+ oligoSample_3s.getId() +"; "+oligoSample_3s.getConstructid()+"; " + currentGene.getCDSLength());
-
+                
                 container_3s.addSample(oligoSample_3s);
                 
                 plateWriter_3s.write(container_3s.getLabel()+"\t");
@@ -248,7 +254,7 @@ public class OligoPlater {
                 oligoSample_3op = generateOligoSample(currentGene,"3op", container_3op.getId(), well);
                 //System.out.println("PlateID: "+container_3op.getId()+"; " + "3op lower oligo well: "+ well + "; "
                 //+ "sampleID: "+ oligoSample_3op.getId() +"; "+oligoSample_3op.getConstructid()+"; " +currentGene.getCDSLength());
-
+                
                 container_3op.addSample(oligoSample_3op);
                 
                 plateWriter_3op.write(container_3op.getLabel()+"\t");
@@ -256,33 +262,38 @@ public class OligoPlater {
                 plateWriter_3op.write(currentGene.getOligoseq_3op()+"\t");
                 plateWriter_3op.write(oligoSample_3op.getPosition()+"\n");
                 
-                ++well;
+                ++well; //the upper well
+                System.out.println("The upper well number is: "+ well);
                 // check whether plate is full
                 if (relativeUpperIndex > lastGeneIndexOfPlate-firstGeneIndexOfPlate) {
+                    System.out.println("plate full.  relativeUpperIndex is: "+ relativeUpperIndex);
+                    System.out.println("Total genes on plate: "+ (lastGeneIndexOfPlate-firstGeneIndexOfPlate));
                     wellsDone = true;
                     continue;
                 }
                 
                 // Output upper gene.
+                int upper_index = firstGeneIndexOfPlate + relativeUpperIndex;
+                System.out.println("next upper gene index is: "+ upper_index);
                 currentGene = geneArray[firstGeneIndexOfPlate + relativeUpperIndex];
                 
                 // generate three oligo sample objects and insert them into the sample table
-
+                
                 oligoSample_5p = generateOligoSample(currentGene,"5p", container_5p.getId(), well);
                 //System.out.println("PlateID: "+container_5p.getId() +"; " + "5p upper oligo well: "+ well + "; "
                 //+ "sampleID: "+ oligoSample_5p.getId() + "; "+"oligoID: "+oligoSample_5p.getOligoid()+"; " + currentGene.getCDSLength());
-
+                
                 container_5p.addSample(oligoSample_5p);
                 
                 plateWriter_5p.write(container_5p.getLabel()+"\t");
                 plateWriter_5p.write(currentGene.getOligoId_5p()+"\t");
                 plateWriter_5p.write(currentGene.getOligoseq_5p()+"\t");
                 plateWriter_5p.write(oligoSample_5p.getPosition()+"\n");
-
+                
                 oligoSample_3s = generateOligoSample(currentGene,"3s", container_3s.getId(), well);
                 //System.out.println("PlateID: "+container_3s.getId()+"; " + "3s upper oligo well: "+ well + "; "
                 //+ "sampleID: "+ oligoSample_3s.getId() +"; " + currentGene.getCDSLength());
-
+                
                 container_3s.addSample(oligoSample_3s);
                 
                 plateWriter_3s.write(container_3s.getLabel()+"\t");
@@ -293,7 +304,7 @@ public class OligoPlater {
                 oligoSample_3op = generateOligoSample(currentGene,"3op", container_3op.getId(), well);
                 //System.out.println("PlateID: "+container_3op.getId()+"; " + "3op upper oligo well: "+ well + "; "
                 //+ "sampleID: "+ oligoSample_3op.getId() +"; " + currentGene.getCDSLength());
-
+                
                 container_3op.addSample(oligoSample_3op);
                 
                 plateWriter_3op.write(container_3op.getLabel()+"\t");
@@ -303,7 +314,6 @@ public class OligoPlater {
                 
             } //inner while to fill oligo plate wells
             
-            System.out.println("update the current set of oligo plates");
             updateOligoPlates();
             
             plateWriter_5p.flush();
@@ -314,14 +324,34 @@ public class OligoPlater {
             plateWriter_3op.close();
             
             //move to next set of plates, generate a new set of plates
-            currentGeneIndex += 47;
-
-           // System.out.println("next plate gene index: "+currentGeneIndex);
+            currentGeneIndex += 46; //this number will be increased by 1 at the beginning of the loop            
+            System.out.println("next plate start gene index: "+(currentGeneIndex+1));
             
-            System.out.println("next plate gene index: "+currentGeneIndex);
+            //check whether all genes in the array are processed
+            if (currentGeneIndex >= numGenes) {
+                done = true;
+            } //if
+            
         } //outter while to fill oligo plates
         
     } // generateOligoOrder
+    
+    private void createOligoFileHeader() throws IOException {
+        plateWriter_5p.write("Label"+"\t");
+        plateWriter_5p.write("OligoID"+"\t");
+        plateWriter_5p.write("OligoSequence"+"\t");
+        plateWriter_5p.write("Well"+"\n");
+        
+        plateWriter_3s.write("Label"+"\t");
+        plateWriter_3s.write("OligoID"+"\t");
+        plateWriter_3s.write("OligoSequence"+"\t");
+        plateWriter_3s.write("Well"+"\n");
+        
+        plateWriter_3op.write("Label"+"\t");
+        plateWriter_3op.write("OligoID"+"\t");
+        plateWriter_3op.write("OligoSequence"+"\t");
+        plateWriter_3op.write("Well"+"\n");
+    }
     
     /**
      * This class insert three oligo plates (containerheader table)
@@ -435,7 +465,7 @@ public class OligoPlater {
         // insert process execution record into process execution table
         process = new Process(protocol,status,r);
         
-      //  System.out.println("Generate oligo orders Execution ID: "+ process.getExecutionid());
+        //  System.out.println("Generate oligo orders Execution ID: "+ process.getExecutionid());
         
         //Insert one process input records for each output construct design (two per sequence)
         ListIterator iter = constructList.listIterator();
@@ -448,7 +478,7 @@ public class OligoPlater {
             construct = (Construct)iter.next();
             constructId = construct.getId();
             cpo = new ConstructProcessObject(constructId,process.getExecutionid(),ioType);
-            process.addProcessObject(cpo);            
+            process.addProcessObject(cpo);
         } //while
         process.insert(conn);
         

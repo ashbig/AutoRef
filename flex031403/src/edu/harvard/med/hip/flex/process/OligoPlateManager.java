@@ -129,11 +129,11 @@ public class OligoPlateManager {
             numSeqsToProcess = totalWells*numPlatesToProcess;
             if (numSeqsToProcess > 0) {
                 numSeqsToTruncate = seqList.size() - numSeqsToProcess;
-                //System.out.println("There are total of "+seqList.size()+" sequence in queue");
+                
                 for (j = 0; j < numSeqsToTruncate; ++j) {
                     seqList.removeLast();
                 } // for
-                //System.out.println("There are "+ seqList.size()+" sequences going to be processed");
+                System.out.println("There are "+ seqList.size()+" sequences going to be processed");
                 
                 try{
                     cg = new ConstructGenerator(seqList,conn);
@@ -148,17 +148,13 @@ public class OligoPlateManager {
                     plater = new OligoPlater(oligoPatternList, cg.getConstructList(), conn);
 
                     plater.generateOligoOrder();
-                   // plater.insertProcessInputOutput();
-                   //plater.insertReceiveOligoQueue();
-
                     plater.removeOrderOligoQueue();
                     
                     //remove sequences from queue
                     removeQueueSequence(seqList);
                     
-                    DatabaseTransaction.commit(conn);
+                  //  DatabaseTransaction.commit(conn);
                 } catch(FlexDatabaseException sqlex){
-                    //System.out.println(sqlex);
 
                     System.out.println(sqlex.getMessage());
                     DatabaseTransaction.rollback(conn);                    
@@ -183,7 +179,7 @@ public class OligoPlateManager {
         String to = "wmar@hms.harvard.edu";
         String from = "wmar@hms.harvard.edu";
         String cc = "jmunoz@3rdmill.com";
-        String subject = "Testing Oligo Order";
+        String subject = "New Testing Oligo Order";
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
         Mailer.sendMessage(to, from, cc, subject, msgText, fileList);   
@@ -219,6 +215,7 @@ public class OligoPlateManager {
                     createOligoPlates();
                     sendOligoOrders();
                     System.out.println("Oligo order files have been mailed!");
+                    DatabaseTransaction.commit(conn);
                 } else {
                     System.out.println("There are not enough sequences in queue to create an oligo plate!");
                 }
@@ -227,8 +224,10 @@ public class OligoPlateManager {
             } catch (FlexCoreException ex){
                 ex.printStackTrace();
             } catch (IOException IOex){
+                DatabaseTransaction.rollback(conn);
                 IOex.printStackTrace();
             } catch (MessagingException msgex){
+                DatabaseTransaction.rollback(conn);
                 msgex.printStackTrace();
             }finally {
                 //   DatabaseTransaction.closeConnection(conn);
