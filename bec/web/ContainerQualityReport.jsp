@@ -9,6 +9,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
@@ -157,7 +158,8 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
    anchor = "<A HREF=\"\" onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+ Constants.CONSTRUCT_DEFINITION_REPORT 
 		+ "&amp;ID="+ sample.getIsolateTrackingEngine().getConstructId()+"','"+sample.getIsolateTrackingEngine().getConstructId()+"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
 }
-                row = (count ) % rows; col =(int) (count  /rows );
+                row = Algorithms.convertWellNumberIntoRowNumber(sample.getPosition())-1;
+                 col =Algorithms.convertWellNumberIntoColNumber(sample.getPosition() ) -1;
                 if (constructid != sample.getIsolateTrackingEngine().getConstructId())
                 {
                         border_index++;

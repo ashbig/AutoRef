@@ -225,6 +225,19 @@ public class Algorithms
         
   
     }
+    
+    public static int convertWellNumberIntoRowNumber(int position)
+    {
+        int row_number = position % 8 ;
+        if ( row_number == 0) row_number= 8;
+        return  row_number;
+    }
+    
+    public static int convertWellNumberIntoColNumber(int position)
+    {
+        if ( position % 8 == 0 ) position --;
+        return (int)Math.ceil(  position / 8)+1;
+    }
      //convert well nomenculature from A10 to int
     public static String convertWellFromInttoA8_12( int well) 
     {
@@ -267,8 +280,19 @@ public class Algorithms
     }
     public static void main(String args[])
     {
-       
-       System.out.println(convertWellFromA8_12toInt("A1"));
+       int position = 1;
+       System.out.println(  position+" "+      convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
+        position = 96;
+       System.out.println(  position+" "+         convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
+         position = 27;
+       System.out.println(  position+" "+         convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
+  position = 55;
+       System.out.println(   position+" "+        convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
+  position = 16;
+       System.out.println(   position+" "+        convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
+ position = 66;
+       System.out.println(   position+" "+        convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
+
        System.exit(0);
     }
     
