@@ -9,7 +9,7 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Vector;
+import java.util.*;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -27,15 +27,17 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.process.Protocol;
+import edu.harvard.med.hip.flex.process.ProtocolComparator;
 
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class CreateProcessPlateAction extends FlexAction {
-
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -55,35 +57,44 @@ public class CreateProcessPlateAction extends FlexAction {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException {                
+    throws ServletException, IOException {
         int projectid = ((Integer)(request.getAttribute("projectid"))).intValue();
         int workflowid = ((Integer)(request.getAttribute("workflowid"))).intValue();
         
-        String sql = "select * from processprotocol where processname like 'generate%' or processname like 'run%' or processname like 'perform%' or processname like 'dilute%'";
-        Vector protocol = new Vector();
-        try {        
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            ResultSet rs = t.executeQuery(sql);
-            while (rs.next()) {
-                int protocolid = rs.getInt("PROTOCOLID");
-                String processname = rs.getString("PROCESSNAME");
-                String processcode = rs.getString("PROCESSCODE");
-                
-                if(Protocol.GENERATE_OLIGO_ORDERS.equals(processname))
-                    continue;
-                
-                Protocol p = new Protocol(protocolid, processcode, processname);
-                protocol.addElement(p);
+        try {
+            Workflow workflow = new Workflow(workflowid);
+            Vector flow = workflow.getFlow();
+            
+            ProtocolComparator c = new ProtocolComparator();
+            TreeSet protocol = new TreeSet(c);
+            Iterator iter = flow.iterator();
+            while(iter.hasNext()) {
+                FlowRecord record = (FlowRecord)iter.next();
+                Vector p = record.getNext();
+                protocol.addAll(p);
             }
-
+ 
+            Vector protocols = new Vector();
+            Iterator i = protocol.iterator();
+            while(i.hasNext()) {
+                Protocol p = (Protocol)i.next();
+                if(Protocol.APPROVE_SEQUENCES.equals(p.getProcessname()) ||
+                   Protocol.DESIGN_CONSTRUCTS.equals(p.getProcessname()) ||
+                   Protocol.GENERATE_OLIGO_ORDERS.equals(p.getProcessname()) ||
+                   Protocol.RECEIVE_OLIGO_PLATES.equals(p.getProcessname()) ||
+                   Protocol.ENTER_PCR_GEL_RESULTS.equals(p.getProcessname()) ||
+                   Protocol.ENTER_AGAR_PLATE_RESULTS.equals(p.getProcessname()) ||
+                   Protocol.ENTER_DNA_GEL_RESULTS.equals(p.getProcessname())) {
+                    continue;
+                }
+                protocols.addElement(p);
+            }
+            
             request.setAttribute("workflowid", new Integer(workflowid));
-            request.setAttribute("projectid", new Integer(projectid));            
-            request.setAttribute("CreateProcessPlateAction.protocols", protocol);
+            request.setAttribute("projectid", new Integer(projectid));
+            request.setAttribute("CreateProcessPlateAction.protocols", protocols);
             return (mapping.findForward("success"));
-        } catch (FlexDatabaseException ex) {     
-            request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return (mapping.findForward("error"));
-        } catch (SQLException ex) {     
+        } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }

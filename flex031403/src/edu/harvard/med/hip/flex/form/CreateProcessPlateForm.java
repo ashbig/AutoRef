@@ -23,31 +23,12 @@ import edu.harvard.med.hip.flex.core.Location;
  * @version 
  */
 public class CreateProcessPlateForm extends ProjectWorkflowForm {
-    private String processname = null;
     private String sourcePlate = null;
     private String destPlate = null;
     private int sourceLocation;
     private int [] destLocations;
     private String subProtocolName = null;
-    
-    /**
-     * Set the processname to the given value.
-     *
-     * @param processname The value to be set to.
-     */
-    public void setProcessname(String processname) {
-        this.processname = processname;
-    }
-    
-    /**
-     * Return the processname.
-     *
-     * @return The processname.
-     */
-    public String getProcessname() {
-        return processname;
-    }       
-    
+          
     /**
      * Set the source plate.
      *

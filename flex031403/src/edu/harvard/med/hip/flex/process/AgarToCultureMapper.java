@@ -18,10 +18,11 @@ import java.util.*;
  * @author  dzuo
  * @version 
  */
-public class AgarToCultureMapper extends OneToOneContainerMapper {
-    public static final int COLONYNUM = 4;
-    public static final int AGARWELLNUM = 6;
-    public static final int STARTINDEXES[] = {1, 5, 49, 53};
+public class AgarToCultureMapper extends AbstractAgarToCultureMapper {
+//    public static final int AGARWELLNUM = 6;
+    protected int NumOfDestPlates = 1;
+    protected int startIndexes[] = {1, 5, 49, 53};
+    protected int column = 6;
     
     /**
      * Constructor.
@@ -33,39 +34,8 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
         super();
     }
 
-    /**
-     * Creates new containers based on given containers and protocol.
-     *
-     * @param containers Source containers for mapping.
-     * @param protocol The protocol for destination containers.
-     * @return The new containers.
-     * @exception FlexDatabaseException, FlexCoreException
-     */
-    public Vector doMapping(Vector containers, Protocol protocol, Project project,
-    Workflow workflow) throws FlexDatabaseException { 
-        Container f1 = (Container)containers.elementAt(0);
-        Vector newContainers = new Vector();
-        String newContainerType = getContainerType(protocol.getProcessname());
-        String projectCode = getProjectCode(project, workflow);
-        String subthread = getSubThread(f1);
-        String newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), f1.getThreadid(), subthread);     
-        Container newContainer = new Container(newContainerType, null, newBarcode, f1.getThreadid());
-
-        int index = 0;
-        Enumeration enum = containers.elements();
-        while(enum.hasMoreElements()) {
-            Container c = (Container)enum.nextElement();
-            c.restoreSample();
-            mappingSamples(c, newContainer, protocol, STARTINDEXES[index]); 
-            index++;
-        }
-        newContainers.addElement(newContainer);
-        
-        return newContainers;
-    }   
-
     // Return the subthreadid for culture plate from agar plate.
-    protected String getSubThread(Container c) {        
+    protected String getSubThread(Container c, int index) {        
         String processcode = c.getLabel().substring(1, 3);
         
         if(processcode.equals("AA")) {
@@ -95,87 +65,15 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
         return null;
     } 
     
-    // Creates the new samples from the samples of the previous plate.
-    protected void mappingSamples(Container container, Container newContainer, Protocol protocol, int index) throws FlexDatabaseException { 
-        String type [] = new String[COLONYNUM];
-        Vector oldSamples = container.getSamples();
-        Enumeration enum = oldSamples.elements();
-        while(enum.hasMoreElements()) {
-            Sample s = (Sample)enum.nextElement();
-            if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
-                for(int i=0; i<COLONYNUM; i++) {
-                    type[i] = Sample.CONTROL_POSITIVE;
-                }
-            } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
-                for(int i=0; i<COLONYNUM; i++) {
-                    type[i] = Sample.CONTROL_NEGATIVE;
-                }
-            } else if(Sample.EMPTY.equals(s.getType())) {
-                for(int i=0; i<COLONYNUM; i++) {
-                    type[i] = Sample.EMPTY;
-                }
-            } else {
-                type = getAgarSampleType(container, s, protocol);
-            }
-            
-            for(int i=0; i<COLONYNUM; i++) {
-                Sample newSample = new Sample(type[i], index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
-                newContainer.addSample(newSample);
-                sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
-            }            
-            index = index+COLONYNUM*2;
-        }
-    } 
+    protected int getNumOfDestPlates() {
+        return NumOfDestPlates;
+    }
     
-    protected String[] getAgarSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
-        Protocol protocol = new Protocol(Protocol.ENTER_AGAR_PLATE_RESULTS);
-        String type [] = new String[COLONYNUM];
-        edu.harvard.med.hip.flex.process.Process p = 
-        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
-        Result result = Result.findResult(s, p);
-        
-        if(Result.MORE.equals(result.getValue())) {
-            for(int i=0; i<COLONYNUM; i++) {
-                type[i] = Sample.getType(newProtocol.getProcessname());
-            }
-        } else {
-            try {
-                int colony = Integer.parseInt(result.getValue());
-           
-                if(colony == 0) {
-                    for(int i=0; i<COLONYNUM; i++) {
-                        type[i] = Sample.EMPTY;
-                    }
-                }            
-                if(colony == 1) {
-                    type[0] = Sample.getType(newProtocol.getProcessname());
-                    for(int i=1; i<COLONYNUM; i++) {
-                        type[i] = Sample.EMPTY;
-                    }                
-                }
-                if(colony == 2) {
-                    for(int i=0; i<2; i++) {
-                        type[i] = Sample.getType(newProtocol.getProcessname());
-                    }
-                    for(int i=2; i<COLONYNUM; i++) {
-                        type[i] = Sample.EMPTY;
-                    }                  
-                }
-                if(colony == 3) {
-                    for(int i=0; i<3; i++) {
-                        type[i] = Sample.getType(newProtocol.getProcessname());
-                    }
-                    for(int i=3; i<COLONYNUM; i++) {
-                        type[i] = Sample.EMPTY;
-                    }                  
-                }            
-            } catch (NumberFormatException ex) {
-                for(int i=0; i<COLONYNUM; i++) {
-                    type[i] = Sample.EMPTY;
-                }                
-            }
-        }       
-        
-        return type;
+    protected int getStartIndex(int index) {
+        return startIndexes[index];
+    }
+    
+    protected int getColumn() {
+        return column;
     }    
 }

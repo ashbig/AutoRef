@@ -17,9 +17,8 @@
 <html:errors/>
 <p>
 <html:form action="/SelectProtocol.do">
-
-<input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
-<input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 
 <table>
     <tr>

@@ -46,6 +46,18 @@ public class FlowRecord {
     }
     
     /**
+     * Return true if the given protocol is equal to the
+     * current protocol; false otherwise.
+     *
+     * @param protocol The protocol to be compared to.
+     * @return True if the given protocol is equal to the current
+     *  protocol; false otherwise.
+     */
+    public boolean equals(Protocol protocol) {
+        return (current.getId() == (protocol.getId()));
+    } 
+    
+    /**
      * Return the next protocols as a Vector.
      *
      * @return The next protocols as a Vector.

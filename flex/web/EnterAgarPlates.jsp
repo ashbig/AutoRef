@@ -17,8 +17,8 @@
 <html:errors/>
 <p>
 <html:form action="/EnterAgarPlates.do" focus="agarPlateF1">
-<input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
-<input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 <table>
     <tr>
     <td class="prompt">Process name:</td>

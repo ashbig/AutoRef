@@ -31,6 +31,10 @@ public class StaticContainerMapperFactory {
             return new AgarContainerMapper();
         } else if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {
             return new AgarToCultureMapper();
+        } else if(Protocol.GENERATE_GRID_PLATE.equals(processname)) {
+            return new OneToTwoMapper();
+        } else if(Protocol.PICK_COLONY.equals(processname)) {
+            return new GridPlateToCultureMapper();
         } else {
             return new OneToOneContainerMapper();
         }

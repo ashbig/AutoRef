@@ -59,9 +59,9 @@ public class SelectProtocolAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        String processname = ((CreateProcessPlateForm)form).getProcessname();
-        int workflowid = ((CreateProcessPlateForm)form).getWorkflowid();
-        int projectid = ((CreateProcessPlateForm)form).getProjectid();        
+        String processname = ((PickColonyForm)form).getProcessname();
+        int workflowid = ((PickColonyForm)form).getWorkflowid();
+        int projectid = ((PickColonyForm)form).getProjectid();
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
         
@@ -87,6 +87,8 @@ public class SelectProtocolAction extends FlexAction {
             
             if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {
                 return (mapping.findForward("success_culture"));
+            } else if(Protocol.PICK_COLONY.equals(processname)) {
+                return (mapping.findForward("success_pick_colony"));
             } else {
                 return (mapping.findForward("success"));
             }

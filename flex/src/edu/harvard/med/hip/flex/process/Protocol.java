@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.16 2001-08-14 20:22:37 dzuo Exp $
+ * $Id: Protocol.java,v 1.17 2001-11-13 20:58:58 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -61,6 +61,12 @@ public class Protocol {
         "enter agar plate results";
     public static final String ENTER_DNA_GEL_RESULTS = 
         "enter DNA gel results";
+    public static final String GENERATE_CAPTURE_REACTION = 
+        "generate capture reaction plate";
+    public static final String GENERATE_GRID_PLATE = 
+        "generate agar plates (48 well grid plate)";
+    public static final String PICK_COLONY = 
+        "generate culture blocks for isolates from 48 well plates";
     
     private int id;
     private String processcode;
@@ -245,14 +251,14 @@ public class Protocol {
     public String toString() {
         return this.processname;
     }
-    
+
     public static void main(String [] args) throws Exception {
-        Protocol test = new Protocol("generate PCR plates");
+        Protocol test = new Protocol("generate agar plates (48 well grid plate)");
         Vector subProtocol = test.getSubprotocol();
         for(int i=0; i<subProtocol.size(); i++) {
             SubProtocol p = (SubProtocol)subProtocol.elementAt(i);
             System.out.println("Name: "+p.getName());
             System.out.println("Description: "+p.getDescription());
         }
-    }
+    }    
 }

@@ -44,7 +44,7 @@ public abstract class AbstractTaskManager implements TaskManager {
         
         // Get the next protocols from the workflow.
         Vector nextProtocols = workflow.getNextProtocol(protocol);
-        
+
         // Add the new items to the queue for each protocol.
         queue = makeAddedItemsQueue();
         for(int i=0; i<nextProtocols.size(); i++) {

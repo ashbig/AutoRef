@@ -17,8 +17,9 @@
 <html:errors/>
 <p>
 <html:form action="/EnterOligoPlates.do" focus="fivepPlate">
-<input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
-<input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
+
 <table>
     <tr>
     <td class="prompt">Process name:</td>
