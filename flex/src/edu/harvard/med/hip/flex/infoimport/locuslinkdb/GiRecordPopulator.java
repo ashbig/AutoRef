@@ -26,6 +26,8 @@ public class GiRecordPopulator {
     
     private Collection records;
     
+    public GiRecordPopulator() {}
+    
     /** Creates a new instance of GIRecordPopulator */
     public GiRecordPopulator(Collection records) {
         this.records = records;
@@ -95,8 +97,41 @@ public class GiRecordPopulator {
         DatabaseTransaction.closeStatement(stmt);
     }
     
+    public void updateAccession() {
+        String sql="update girecord set accession=("+
+                    " select distinct accession from sequencerecord where gi=?) where gi=?";
+        String sqlQuery="select gi from girecord where accession is null";
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            rs = t.executeQuery(sqlQuery);
+            while(rs.next()) {
+                int gi = rs.getInt(1);
+                stmt.setInt(1, gi);
+                stmt.setInt(2, gi);
+                DatabaseTransaction.executeUpdate(stmt);
+                System.out.println("update: "+gi);
+            }
+            
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            System.out.println(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }        
+    }
+    
     public static void main(String args[]) {
-        List giList = new ArrayList();
+     /**   List giList = new ArrayList();
         giList.add("32450632");
         giList.add("21961206");
         giList.add("33869456");
@@ -116,5 +151,8 @@ public class GiRecordPopulator {
         }
         ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((Collection)(retriever.getFoundList().values()));
         populator.persistRecords();
+      **/
+        GiRecordPopulator populator = new GiRecordPopulator();
+        populator.updateAccession();
     }
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.2 2003-09-12 18:39:48 dzuo Exp $
+ * $Id: Container.java,v 1.3 2004-01-28 15:59:10 dzuo Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -366,7 +366,12 @@ public class Container {
      */
     public Sample getSample(int position) throws FlexCoreException {
         if (samples != null) {
-            return (Sample)samples.elementAt(position-1);
+            for(int i=0; i<samples.size(); i++) {
+                Sample s = (Sample)samples.get(i);
+                if(s.getPosition() == position)
+                    return s;
+            }
+            return null;
         }
         else {
             throw new FlexCoreException("samples not exists at position: "+position);
@@ -451,7 +456,7 @@ public class Container {
                     
                     if(rs.next()) {
                         seqid = rs.getInt("SEQUENCEID");
-                        cdslength = rs.getInt("CDSLENGTH");                        
+                        cdslength = rs.getInt("CDSLENGTH");
                         s.setSequenceid(seqid);
                         s.setCdslength(cdslength);
                         
@@ -482,6 +487,53 @@ public class Container {
             DatabaseTransaction.closeResultSet(nameRs);
             DatabaseTransaction.closeStatement(stmt);
             DatabaseTransaction.closeStatement(nameStmt);
+            DatabaseTransaction.closeConnection(c);
+        }
+    }
+    
+    /**
+     * Get the data from Sample table.
+     *
+     * @exception FlexDatabaseException.
+     */
+    public void restoreSampleWithoutSeq() throws FlexDatabaseException {
+        samples.removeAllElements();
+        
+        String sql = "select * from sample where containerid="+id+" order by CONTAINERPOSITION";
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        Connection c = t.requestConnection();
+        CachedRowSet crs = t.executeQuery(sql);
+        
+        try {
+            while(crs.next()) {
+                int sampleid = crs.getInt("SAMPLEID");
+                String sampletype = crs.getString("SAMPLETYPE");
+                int containerposition = crs.getInt("CONTAINERPOSITION");
+                
+                int constructid = -1;
+                Object construct = crs.getObject("CONSTRUCTID");
+                if(construct != null)
+                    constructid = ((BigDecimal)construct).intValue();
+                
+                int oligoid = -1;
+                Object oligo = crs.getObject("OLIGOID");
+                if(oligo != null)
+                    oligoid = ((BigDecimal)oligo).intValue();
+                
+                int cloneid = crs.getInt("CLONEID");
+                
+                String status = crs.getString("STATUS_GB");
+                
+                Sample s = new Sample(sampleid, sampletype, containerposition, id, constructid, oligoid, status);
+                s.setCloneid(cloneid);
+                
+                this.addSample(s);
+            }
+        } catch (SQLException ex) {
+            throw new FlexDatabaseException(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(crs);
             DatabaseTransaction.closeConnection(c);
         }
     }
@@ -728,7 +780,7 @@ public class Container {
         
         return ret;
     }
-            
+    
     /**
      * Static method to find the DNA template plate from the rearrayed
      * MGC container.
@@ -771,7 +823,7 @@ public class Container {
      * return c;
      * }
      */
-        
+    
     //**************************************************************//
     //				Test				//
     //**************************************************************//

@@ -18,6 +18,7 @@ public class ProjectWorkflowForm extends ActionForm {
     protected int projectid;
     protected String projectname;
     protected int workflowid;
+    protected String workflowname;
     
     public void setForwardName(String forwardName) {
         this.forwardName = forwardName;
@@ -49,5 +50,13 @@ public class ProjectWorkflowForm extends ActionForm {
     
     public int getWorkflowid() {
         return workflowid;
+    }
+    
+    public String getWorkflowname() {
+        return workflowname;
+    }
+    
+    public void setWorkflowname(String workflowname) {
+        this.workflowname = workflowname;
     }
 }

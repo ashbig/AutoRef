@@ -38,6 +38,7 @@ public class PickColonyForm extends ProjectWorkflowForm
     private String subProtocolName = null;
     
     private String pickingMethod = "interleaved";
+    private String isSeqPlates = "Yes";
     
     /**
      * Set the processname to the given value.
@@ -189,6 +190,14 @@ public class PickColonyForm extends ProjectWorkflowForm
         return pickingMethod;
     }
     
+    public void setIsSeqPlates(String s) {
+        this.isSeqPlates = s;
+    }
+    
+    public String getIsSeqPlates() {
+        return isSeqPlates;
+    }
+    
     /**
      * Reset all properties to their default values.
      */
@@ -199,6 +208,7 @@ public class PickColonyForm extends ProjectWorkflowForm
         agarPlateC1 = null;
         subProtocolName = null;
         pickingMethod = "interleaved";
+        isSeqPlates = "Yes";
     }
     
     /**

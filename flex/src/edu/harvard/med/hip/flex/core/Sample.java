@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.6 2003-09-12 18:43:57 dzuo Exp $
+ * $Id: Sample.java,v 1.7 2004-01-28 15:58:51 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -295,90 +295,93 @@ public class Sample {
         String type = null;
         
         if(Protocol.GENERATE_PCR_PLATES.equals(processname) || Protocol.GENERATE_STEP2_PCR_PLATES.equals(processname))
-            type = PCR;
+            return PCR;
         
         if(Protocol.GENERATE_FILTER_PLATES.equals(processname))
-            type = FILTER;
+            return FILTER;
         
         if(Protocol.GENERATE_BP_REACTION_PLATES.equals(processname))
-            type = BP;
+            return BP;
         
         if(Protocol.PERFORM_TRANSFORMATION.equals(processname))
-            type = TRANSFORMATION;
+            return TRANSFORMATION;
         
         if(Protocol.GENERATE_DNA_PLATES.equals(processname))
-            type = DNA;
+            return DNA;
         
         if(Protocol.GENERATE_GLYCEROL_PLATES.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         
         if(Protocol.GENERATE_AGAR_PLATES.equals(processname))
-            type = AGAR;
+            return AGAR;
         
         if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         
         if(Protocol.RUN_PCR_GEL.equals(processname))
-            type = GEL;
+            return GEL;
 
         if(Protocol.GENERATE_CAPTURE_REACTION.equals(processname))
-            type = CR;
+            return CR;
         
         if(Protocol.GENERATE_GRID_PLATE.equals(processname))
-            type = AGAR;
+            return AGAR;
         
         if(Protocol.PICK_COLONY.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         
         if(Protocol.CREATE_CULTURE_FROM_MGC.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         
         if(Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         
         if(Protocol.MGC_DESIGN_CONSTRUCTS.equals(processname))
-            type = DNA;
+            return DNA;
 
         if(Protocol.CREATE_GLYCEROL_FROM_REARRAYED_CULTURE.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
 
         if(Protocol.CREATE_DNA_FROM_REARRAYED_CULTURE.equals(processname))
-            type = DNA;
+            return DNA;
 
         if(Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(processname))
-            type = DNA;
+            return DNA;
         
         if(Protocol.REARRAY_PCR_PLATES.equals(processname))
-            type = PCR;
+            return PCR;
         
         if(Protocol.REARRAY_CULTURE_PLATES_BASED_ON_SEQUENCING_RESULTS.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         if(Protocol.GENERATE_SEQUENCING_GLYCEROL_PLATES.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
                 
         if(Protocol.REARRAY_TO_DNA_TEMPLATE.equals(processname))
-            type = DNA;
+            return DNA;
             
         if(Protocol.REARRAY_GLYCEROL.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         
         if(Protocol.REARRAY_ARCHIVE_DNA.equals(processname))
-            type = DNA;
+            return DNA;
         
         if(Protocol.REARRAY_ARCHIVE_GLYCEROL.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         
         if(Protocol.REARRAY_DIST_DNA.equals(processname))
-            type = DNA;
+            return DNA;
         
         if(Protocol.REARRAY_DIST_GLYCEROL.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
         
         if(Protocol.REARRAY_SEQ_DNA.equals(processname))
-            type = DNA;
+            return DNA;
         
         if(Protocol.REARRAY_SEQ_GLYCEROL.equals(processname))
-            type = ISOLATE;
+            return ISOLATE;
+        
+        if(Protocol.CREATE_SEQ_PLATES.equals(processname))
+            return ISOLATE;
         
         return type;
     }
