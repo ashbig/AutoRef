@@ -479,10 +479,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
          {
           TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
           runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
-            runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
+            runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
             runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
-            runner.setInputDirectory("C:\\bio\\plate_dump\\");
-runner.setRenamingFile(new  FileInputStream("C:\\bio\\plate_dump\\mapping"));
+            runner.setInputDirectory("E:\\Sequences for ACE\\files_to_transfer");
+runner.setRenamingFile(new  FileInputStream("E:\\Sequences for ACE\\files_to_transfer\\mapping.txt"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        
            
