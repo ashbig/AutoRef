@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.5 2003-10-20 17:27:36 Elena Exp $
+ * $Id: Oligo.java,v 1.6 2003-11-07 21:53:23 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -149,21 +149,24 @@ public class Oligo
         Statement stmt = null;
         if (m_sequence==null || m_sequence.length()==0) return;
         String sql = null;
-        if (m_type == TYPE_COMMON && m_type ==TYPE_UNIVERSAL)
+         try
         {
+            if (m_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+                     m_id = BecIDGenerator.getID("oligoid");
+            if (m_type == TYPE_COMMON && m_type ==TYPE_UNIVERSAL)
+            {
 
-        }
-        else if (m_type == TYPE_GENESEPECIFIC_CALCULATED && m_type ==TYPE_GENESEPECIFIC_MANUALADDED)
-        {
-             sql = "INSERT INTO geneoligo (oligoid,sequence,  tm,  submissiontype, " +
-            "position, orientation, name,oligocalculationid,submitterid) VALUES(" +m_id+ ",'" + m_sequence + "',"
-            +m_Tm + ", " + m_type+"," + m_position +","+ m_orientation + ",'"+ m_oligo_name +"',"
-            +m_calculationid+"," + m_submitterid+"')";
-        }
-        else
-            return;
-        try
-        {
+            }
+            else if (m_type == TYPE_GENESEPECIFIC_CALCULATED && m_type ==TYPE_GENESEPECIFIC_MANUALADDED)
+            {
+                 sql = "INSERT INTO geneoligo (oligoid,sequence,  tm,  submissiontype, " +
+                "position, orientation, name,oligocalculationid,submitterid) VALUES(" +m_id+ ",'" + m_sequence + "',"
+                +m_Tm + ", " + m_type+"," + m_position +","+ m_orientation + ",'"+ m_oligo_name +"',"
+                +m_calculationid+"," + m_submitterid+"')";
+            }
+            else
+                return;
+          
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
         } catch (Exception sqlE)

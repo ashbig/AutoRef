@@ -61,7 +61,7 @@ public class OligoCalculation
     
     
     
-    public void     addOligo(Oligo s)    {    m_oligos.add( s);    }
+    public void     addOligo(Oligo s)    {  if ( m_oligos == null) m_oligos = new ArrayList();  m_oligos.add( s);    }
     public void     setPrimer3Spec(Primer3Spec s)    {    m_primer3_spec = s;    }
     public void     setPrimer3SpecId(int s)    {    m_primer3_spec_id= s;    }
     public void     setSequence(RefSequence s)    {    m_refsequence = s;    }
@@ -125,12 +125,14 @@ public class OligoCalculation
     public void insert(Connection conn) throws BecDatabaseException
     {
         Statement stmt = null;
-        
-        String sql = "INSERT INTO oligocalculation (oligocalculationid, sequenceid, primer3configid, dateadded,resultid) "+
-        " VALUES("+ m_id+"," + m_refsequence_id +","+m_primer3_spec_id +"," + m_date+","+m_result_id +")";
-        
+         String sql = null;
         try
         {
+          if (m_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+                 m_id = BecIDGenerator.getID("oligoid");
+             sql = "INSERT INTO oligo_calculation (oligocalculationid, sequenceid, primer3configid, dateadded,resultid) "+
+            " VALUES("+ m_id+"," + m_refsequence_id +","+m_primer3_spec_id +",sysdate,"+m_result_id +")";
+ 
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             for (int count = 0; count < m_oligos.size(); count++)
@@ -138,8 +140,9 @@ public class OligoCalculation
                Oligo op = (Oligo)m_oligos.get(count);
                op.insert(conn);
             }
-        } catch (SQLException sqlE)
+        } catch (Exception sqlE)
         {
+              System.out.println("isert "+sqlE.getMessage()); 
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
         } finally
         {
