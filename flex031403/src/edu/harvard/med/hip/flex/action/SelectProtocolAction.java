@@ -30,6 +30,7 @@ import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
