@@ -468,6 +468,7 @@ public long start, end2;
     
     public static void main(String[] args){
 
+        System.out.println("----- start -----");
         String text = "";
 /*
         String text =

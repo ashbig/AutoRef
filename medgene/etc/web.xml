@@ -87,7 +87,7 @@
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:oracle:thin:@hipseq:1521:mdev</param-value>
+      <param-value>jdbc:oracle:thin:@localhost:1521:mdev</param-value>
     </init-param>
     <init-param>
       <param-name>user</param-name>

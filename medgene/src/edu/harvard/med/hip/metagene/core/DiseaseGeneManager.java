@@ -345,7 +345,7 @@ public class DiseaseGeneManager {
     public Vector queryGeneinfoByGene(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
-        String sql = "select t.id_type, g.id_value, g.extra_information, g.order"+
+        String sql = "select t.id_type, g.id_value, g.extra_information, g.gi_order"+
         " from id_type t, gene_information g"+
         " where t.type_id=g.type_id"+
         " and g.hip_gene_id="+id;
