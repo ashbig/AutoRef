@@ -66,9 +66,13 @@ public class RearraySelectionAction extends ResearcherAction {
                 Workflow w1 = new Workflow(Workflow.CONVERT_CLOSE_TO_FUSION);
                 Workflow w2 = new Workflow(Workflow.CONVERT_FUSION_TO_CLOSE);
                 Workflow w3 = new Workflow(Workflow.REARRAY_PLATE);
+                Workflow w4 = new Workflow(Workflow.REARRAY_TEMPLATE);
+                Workflow w5 = new Workflow(Workflow.REARRAY_OLIGO);
                 workflows.add(w1);
                 workflows.add(w2);
                 workflows.add(w3);
+                workflows.add(w4);
+                workflows.add(w5);
             } else if(GenericRearrayForm.REARRAYCLONE.equals(rearrayType)) {
                 workflows = new ArrayList();
                 Workflow w1 = new Workflow(Workflow.REARRAY_WORKING_GLYCEROL);

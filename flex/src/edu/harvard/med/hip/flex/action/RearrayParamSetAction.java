@@ -218,6 +218,10 @@ public class RearrayParamSetAction extends ResearcherAction {
             manager.setIsOnQueue(false);
         }
         
+        if(workflow == Workflow.REARRAY_TEMPLATE) {
+            manager.setIsTemplate(true);
+        }
+        
         if("onefile".equals(output))
             manager.setIsOneFile(true);
         
@@ -272,6 +276,9 @@ public class RearrayParamSetAction extends ResearcherAction {
         } else if("glycerol".equals(sampleType.trim())) {
             manager.setProtocolName(Protocol.REARRAY_GLYCEROL);
             manager.setSampleType(Sample.ISOLATE);
+        } else {
+            manager.setProtocolName(Protocol.REARRAY_OLIGO);
+            manager.setSampleType(sampleType.trim());
         }
     }
     

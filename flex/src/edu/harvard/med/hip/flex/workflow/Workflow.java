@@ -40,6 +40,8 @@ public class Workflow {
     //public static final int TEMPLATE_CREATOR_PCRA = 15;
     
     public static final int REARRAY_PLATE = 16;
+    public static final int REARRAY_TEMPLATE = 26;
+    public static final int REARRAY_OLIGO = 27;
     public static final int REARRAY_WORKING_GLYCEROL = 17;
     public static final int REARRAY_WORKING_DNA = 18;
     public static final int REARRAY_ARCHIVE_DNA = 19;
@@ -48,6 +50,8 @@ public class Workflow {
     public static final int REARRAY_SEQ_DNA = 22;
     public static final int REARRAY_DIST_DNA = 23;
     public static final int REARRAY_DIST_GLYCEROL = 24;
+    
+    public static final int TRANSFER_TO_EXPRESSION = 25;
     
     /** Creates new Workflow */
     public Workflow() {

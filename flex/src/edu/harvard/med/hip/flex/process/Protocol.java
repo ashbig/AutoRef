@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.35 2003-06-16 17:04:23 dzuo Exp $
+ * $Id: Protocol.java,v 1.36 2003-09-03 15:06:37 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -115,6 +115,12 @@ public class Protocol {
         "Rearray clones to distribution DNA plates";
      public static final String REARRAY_DIST_GLYCEROL =
         "Rearray clones to distribution glycerol stocks";
+     public static final String CREATE_EXPRESSION_PLATE = "Create expression plate";
+     public static final String ENTER_EXPRESSION_RESULT = "Enter expression result";
+     public static final String REARRAY_OLIGO = "Rearray oligo plates";
+     
+     public static final int CREATE_EXPRESSION_PLATE_CODE = 55;
+     public static final int ENTER_EXPRESSION_RESULT_CODE = 56;
      
     private int id;
     private String processcode;
@@ -196,6 +202,22 @@ public class Protocol {
         populateSubProtocols();
         
         
+    }
+     
+    /**
+     * Constructor.
+     *
+     * @param id The protocol id.
+     * @param processcode The process code of the protocol.
+     * @param processname The process name of the protocol.
+     * @param subprotocol The subprotocol used for this protocol.
+     * @return The Protocol object.
+     */
+    public Protocol(int id, String processcode, String processname, Vector subprotocol) {
+        this.id = id;
+        this.processcode = processcode;
+        this.processname = processname;
+        this.subprotocol = subprotocol;           
     }
     
     /**

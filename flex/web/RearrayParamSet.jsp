@@ -48,18 +48,36 @@
     <table>
         <tr>
             <td class="prompt">New plate type for rearrayed plates:</td>
+            <logic:notEqual name="workflow" value="27">
             <td><select name="plateType">
                 <option value="96 WELL PLATE"/>96 Well Plate
                 </select>
             </td>
+            </logic:notEqual>
+            <logic:equal name="workflow" value="27">
+            <td><select name="plateType">
+                <option value="96 WELL OLIGO PLATE"/>96 Well Oligo Plate
+                </select>
+            </td>
+            </logic:equal>
         </tr>
         <tr>
             <td class="prompt">New sample type for rearrayed plates:</td>
+            <logic:notEqual name="workflow" value="27">
             <td><select name="sampleType">
                 <option value="dna"/>DNA
                 <option value="glycerol"/>Glycerol
                 </select>
             </td>
+            </logic:notEqual>
+            <logic:equal name="workflow" value="27">
+            <td><select name="sampleType">
+                <option value="OLIGO_5P"/>5p Oligo
+                <option value="OLIGO_3F"/>3p Fusion Oligo
+                <option value="OLIGO_3C"/>3p Closed Oligo
+                </select>
+            </td>
+            </logic:equal>
         </tr>
     </table>
     
@@ -89,13 +107,17 @@
         <dd>CDS length to separate group 1 and group 2: <html:text property="lower"/>
         <dd>CDS length to separate group 2 and group 3: <html:text property="upper"/>
     </dl>
-    <p><b><html:checkbox property="isArrangeByFormat">Separate by construct type (FUSION, CLOSE, etc.)</html:checkbox></b>
+    <logic:notEqual name="workflow" value="26">
+        <p><b><html:checkbox property="isArrangeByFormat">Separate by construct type (FUSION, CLOSE, etc.)</html:checkbox></b>
+    </logic:notEqual>
     <p><b><html:checkbox property="isControl">Leave empty wells for controls (positive control on first well, negative control on last well)</html:checkbox></b>
     <p><b><html:checkbox property="isFullPlate">Do not rearray partial plates (default will be partial plates)</html:checkbox></b>
     <p><b><html:checkbox property="isSourceDup">Allow duplicate samples in source plate</html:checkbox></b>
     </logic:equal>
     
     <logic:notEqual name="workflow" value="16">
+    <logic:notEqual name="workflow" value="26">
+    <logic:notEqual name="workflow" value="27">
     <p><b>Generate rearrayed oligo plate</b>
     <dl>
         <dd><html:radio property="isNewOligo" value="false"/>from existing oligo plates
@@ -106,6 +128,8 @@
                                     <option value="close"/>Closed
                                  </select>
     </dl>
+    </logic:notEqual>
+    </logic:notEqual>
     </logic:notEqual>
     </td></tr></table>
     </logic:present>

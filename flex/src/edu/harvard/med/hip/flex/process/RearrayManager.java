@@ -45,6 +45,7 @@ public class RearrayManager {
     
     protected boolean isDestPlateSet = false;
     protected boolean isClone = false;
+    protected boolean isTemplate = false;
     protected boolean isArrangeByFormat = false;
     protected boolean isArrangeBySize = false;
     protected boolean isSmall = false;
@@ -96,6 +97,7 @@ public class RearrayManager {
     
     public void setIsDestPlateSet(boolean b) {this.isDestPlateSet = b;}
     public void setIsClone(boolean b) {this.isClone = b;}
+    public void setIsTemplate(boolean b) {this.isTemplate = b;}
     public void setIsArrangeByFormat(boolean b) {this.isArrangeByFormat = b;}
     public void setIsArrangeBySize(boolean b) {this.isArrangeBySize = b;}
     public void setIsSmall(boolean b) {this.isSmall = b;}
@@ -448,7 +450,9 @@ public class RearrayManager {
         
         ArrayList newSamples = null;
         
-        if(isClone) {
+        if(isTemplate) {
+            newSamples = creator.createRearrayTemplateSamples(samples,  conn);
+        } else if(isClone) {
             newSamples = creator.createRearrayClones(samples, storageType, storageForm, conn);
         } else {
             newSamples = creator.createRearraySamples(samples, conn);
@@ -543,6 +547,17 @@ public class RearrayManager {
         } else {
             String projectCode = pw.getCode();
             String processCode = protocol.getProcesscode();
+            
+            if(sampleType.equals(OligoPlater.OLIGO_5P)) {
+                processCode = OligoPlater.oligoFivePrefix;
+            }
+            if(sampleType.equals(OligoPlater.OLIGO_3C)) {
+                processCode = OligoPlater.oligoClosePrefix;
+            } 
+            if(sampleType.equals(OligoPlater.OLIGO_3F)) {
+                processCode = OligoPlater.oligoFusionPrefix;
+            }
+            
             label = Container.getLabel(projectCode, processCode, threadid, null);
         }
         
