@@ -176,11 +176,9 @@ public class CloningStrategy {
         || workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.GATEWAY_WORKFLOW) {
             if(projectid == Project.HUMAN || projectid == Project.BREASTCANCER || projectid == Project.KINASE) 
                 return HUMAN_GATEWAY;
-            if(projectid == Project.YEAST)
-                return YEAST_GATEWAY;
             if(projectid == Project.PSEUDOMONAS)
                 return PSEUDOMONAS_GATEWAY;
-            if(projectid == Project.YP)
+            if(projectid == Project.YP || projectid == Project.YEAST)
                 return YP_GATEWAY;
         }
         
