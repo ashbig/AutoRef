@@ -12,6 +12,19 @@ package edu.harvard.med.hip.flex;
  * @version
  */
 public class Constants {
+    /*
+     * Application constants
+     */
+    
+    // constant for interal user group
+    public static final String INTERAL_GROUP = "internal";
+    
+    //constant for external user group
+    public static final String EXTERNAL_GROUP = "external";
+    
+    /*
+     * Keys used in the session/request
+     */
     // key used to find user object in session.
     public static final String USER_KEY = "USER";
     
