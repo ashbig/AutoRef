@@ -138,7 +138,7 @@ public class RunProcessAction extends ResearcherAction
                 runner.setForwardPrimerId( forward_primer_id );
                 runner.setRevercePrimerId(reverse_primer_id);
                 runner.setUser(user);
-                t = new Thread();           t.start();
+                t = new Thread(runner);           t.start();
  
                 return mapping.findForward("processing");
               
@@ -175,7 +175,7 @@ public class RunProcessAction extends ResearcherAction
                 if (polymorphism_spec_id != -1)
                     runner.setPolymorphismSpec((PolymorphismSpec)Spec.getSpecById(polymorphism_spec_id, Spec.POLYMORPHISM_SPEC_INT));
                 runner.setUser(user);
-                t = new Thread();           t.start();
+                t = new Thread(runner);           t.start();
                  */
                 break;
             }
