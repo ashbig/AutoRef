@@ -40,8 +40,9 @@ package edu.harvard.med.hip.bec.coreobjects.feature;
        
          public String toHTMLString()
          {
-             return "<table border=0>"+"</table>";
+             return "<table border=0>"+ super.toHTMLString()+"</table>";
          }
+       
          
      public String toString()
     {
@@ -66,15 +67,15 @@ package edu.harvard.med.hip.bec.coreobjects.feature;
             if (m.length() == 0) m = null;
             
             int type = Mutation.TYPE_NOT_DEFINE;
-            if ( (o == null && m!= null) || (o != null && m == null)
-            || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1)
-            && m_type == Mutation.LINKER_3P)
+            if ( m_type == Mutation.LINKER_3P && ((o == null && m!= null) || (o != null && m == null)
+            || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1))
+            )
             {
                 return Mutation.TYPE_LINKER_3_INS_DEL;
             }
-            else if ( (o == null && m!= null) || (o != null && m == null)
-            || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1)
-            && m_type == Mutation.LINKER_5P)
+            else if ( m_type == Mutation.LINKER_5P && ( (o == null && m!= null) || (o != null && m == null)
+            || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1))
+             )
             {
                 return Mutation.TYPE_LINKER_5_INS_DEL;
             }
