@@ -79,10 +79,13 @@ public class GetPCRLocationAction extends ResearcherAction{
         try {
             
             // Set the location for the containers.
-            Location pcrOpen = new Location(pcrOpenLocation);
+            Location pcrOpen = null;
             Location pcrClose = null;
             if(pcrClosedLocation != 0) {
                 pcrClose = new Location(pcrClosedLocation);
+            }
+            if(pcrOpenLocation != 0) {
+                pcrOpen = new Location(pcrOpenLocation);
             }
          
             Location templateLocation = null;
@@ -91,9 +94,12 @@ public class GetPCRLocationAction extends ResearcherAction{
             }
             
             Location fivepLocation = new Location(fivepSourceLocation);
-            Location threepOpenLocation = new Location(threepOpenSourceLocation);
+            Location threepOpenLocation = null;
             Location threepClosedLocation = null;
-            if(threepClosedSourceLocation != 0) {
+            if(threepOpenSourceLocation != 0) {
+                threepOpenLocation = new Location(threepOpenSourceLocation);
+            }
+             if(threepClosedSourceLocation != 0) {
                 threepClosedLocation = new Location(threepClosedSourceLocation);
             }
             
@@ -104,16 +110,22 @@ public class GetPCRLocationAction extends ResearcherAction{
             Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
             Container templatePlate = (Container)request.getSession().getAttribute("EnterOligoPlateAction.templatePlate");
             
-            pcrOpenContainer.setLocation(pcrOpen);
             
-            if(pcrClosedContainer != null) {
+            
+            if(pcrOpenContainer != null) {
+                pcrOpenContainer.setLocation(pcrOpen);
+            }
+             if(pcrClosedContainer != null) {
                 pcrClosedContainer.setLocation(pcrClose);
             }
             
             fivep.setLocation(fivepLocation);
-            threepOpen.setLocation(threepOpenLocation);
+          
             
-            if(threepClosed != null) {
+            if(threepOpen != null) {
+                threepOpen.setLocation(threepOpenLocation);
+            }
+             if(threepClosed != null) {
                 threepClosed.setLocation(threepClosedLocation);
             }
             
