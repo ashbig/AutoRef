@@ -17,7 +17,7 @@ public class GeneGeneAssociation {
     private Gene source_gene;
     private Gene target_gene;
     private StatAnalysis stat_analysis;
-    private AssociationData asso_data;              //private int k;
+    private AssociationData asso_data;              
     
     
     /** Creates a new instance of GeneGeneAssociation */
@@ -27,8 +27,7 @@ public class GeneGeneAssociation {
         this.target_gene = target_gene;
         this.stat_analysis = stat_analysis;
         this.asso_data = asso_data;
-        
-        //this.k = k;
+ 
     }
     
     public Gene getSource_gene(){
@@ -47,6 +46,4 @@ public class GeneGeneAssociation {
         return asso_data;
     }
  
-    //public int getK(){return k;}
-    
 }

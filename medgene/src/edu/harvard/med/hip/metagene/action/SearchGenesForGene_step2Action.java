@@ -61,6 +61,18 @@ public class SearchGenesForGene_step2Action extends MetageneAction {
         int number = ((SearchGenesForGene_step2Form)form).getNumber();   
         String submit = ((SearchGenesForGene_step2Form)form).getSubmit();
         
+        String stat_type = "Not defined";
+        String source_gene_name = "Not defined";
+        
+        switch(stat_id){
+             case 1: stat_type = "Product of incidence"; break;
+             case 2: stat_type = "Probability"; break;
+             case 3: stat_type = "Chi square analysis"; break;
+             case 4: stat_type = "Fischer exact test"; break;
+             case 5: stat_type = "Relative risk of gene"; break;
+             case 6: stat_type = "Relative risk of disease"; break;             
+         }
+        
         if("New Search".equals(submit)) {
             return (mapping.findForward("newsearch"));
         }
@@ -69,9 +81,15 @@ public class SearchGenesForGene_step2Action extends MetageneAction {
             GeneGeneManager manager = new GeneGeneManager();
             Vector g_g_associations = 
                    manager.getGeneGeneAssociationsByGeneIndexID(gene_index_id, stat_id, number);
-            SearchCondForGeneGene condition = manager.storeSearchCond(gene_index_id, stat_id, number);
+            
+            if(!g_g_associations.isEmpty())
+                source_gene_name = manager.getSourceGeneName(g_g_associations);
+          
             request.setAttribute("associations", g_g_associations);
-            request.setAttribute("cond" , condition);
+            request.setAttribute("stat_type", stat_type);
+            request.setAttribute("number", new Integer(number).toString());
+            request.setAttribute("source_gene_symbol", source_gene_name);
+
             return (mapping.findForward("success"));
         }
         

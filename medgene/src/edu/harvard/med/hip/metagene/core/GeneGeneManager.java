@@ -124,8 +124,7 @@ public class GeneGeneManager extends DiseaseGeneManager {
             String index_type = rs.getString(2);
             String date_added = rs.getString(3);
             geneIndex = new GeneIndex(gene_index_id, gene_index, index_type, date_added);        
-             
-            //geneIndex = new GeneIndex(575, "bcl2", "Gene formal symbol", "3/1/02");  
+
             rs.close();
             stmt.close();
         }catch (SQLException ex){
@@ -133,34 +132,13 @@ public class GeneGeneManager extends DiseaseGeneManager {
         }
         return geneIndex;
     }
+ 
     
-      
-     // store search conditions for display
-     public SearchCondForGeneGene storeSearchCond(int gene_index_id, int stat_id, int number){
-         DatabaseManager manager = new DatabaseManager();
-         Connection conn = manager.connect();
-        
-         if (conn == null) {
-             System.out.println("Cannot connect to the database.");
-             return null;
-         }
-         
-         String stat_type = "Not defined";
-         switch(stat_id){
-             case 1: stat_type = "Product of incidence"; break;
-             case 2: stat_type = "Probability"; break;
-             case 3: stat_type = "Chi square analysis"; break;
-             case 4: stat_type = "Fischer exact test"; break;
-             case 5: stat_type = "Relative risk of gene"; break;
-             case 6: stat_type = "Relative risk of disease"; break;             
-         }
-         Gene source_gene = super.queryGeneByIndex(conn, 
-                                            getGeneIndexByGeneIndexID(conn, gene_index_id));
-         
-         SearchCondForGeneGene search_cond = new SearchCondForGeneGene(source_gene, number, stat_type);
-         manager.disconnect();
-         return search_cond;
+     public String getSourceGeneName(Vector g_g_associations){
+         GeneGeneAssociation g = (GeneGeneAssociation)(g_g_associations.firstElement());
+         return g.getSource_gene().getSymbol();
      }
+         
          
          
 }

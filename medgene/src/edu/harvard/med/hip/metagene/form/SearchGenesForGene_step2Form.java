@@ -59,4 +59,5 @@ public class SearchGenesForGene_step2Form extends ActionForm{
     public void setSubmit(String submit) {
         this.submit = submit;
     }
+
 }

@@ -12,8 +12,8 @@
     </head>
     <body>
     <center>
-    <h1>Top <bean:write name="cond" property="number"/> Genes Associated With <bean:write name="cond" property="source.symbol"/></h1> 
-    <h1>By Statistic Method Of "<bean:write name="cond" property="stat_type"/>"</h1>
+    <h1>Top <bean:write name="number"/> Genes Associated With <bean:write name="source_gene_symbol"/></h1> 
+    <h1>By Statistic Method Of "<bean:write name="stat_type"/>"</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td> 
