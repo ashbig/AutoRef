@@ -97,7 +97,7 @@ public class SequenceDataUploadRunner implements Runnable
             }
             catch(Exception e)
             {
-                System.out.println(e.getMessage());
+               // System.out.println(e.getMessage());
                 DatabaseTransaction.rollback(conn);
 
             }
@@ -113,7 +113,8 @@ public class SequenceDataUploadRunner implements Runnable
                     "Sequence data submission report:\n"+
                     Algorithms.convertStringArrayToString(m_report,"\n"));
                 }
-                catch(Exception e){System.out.println(e.getMessage());}
+                catch(Exception e){//System.out.println(e.getMessage());
+                }
             }
         }
             
