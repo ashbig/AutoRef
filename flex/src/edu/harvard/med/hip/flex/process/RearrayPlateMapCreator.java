@@ -140,6 +140,104 @@ public class RearrayPlateMapCreator {
             DatabaseTransaction.closeStatement(stmt);
         }
     }
+
+    
+    /**
+     * Get all the necessary information from the database for the given input samples.
+     *
+     * @param inputSamples A list of samples that containes the information from input.
+     * @conn The Database Connection object.
+     * @return A ArrayList that contains all the information for samples.
+     * @exception SQLException.
+     */
+    public ArrayList createRearrayTemplateSamples(List inputSamples, Connection conn)
+    throws SQLException, NumberFormatException, RearrayException {
+        String s1 = "select s.sampleid,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype, s.cloneid"+
+        " from flexsequence f, mgcclone m, containerheader ch,"+
+        " (select * from sample where containerid in ("+
+        " select containerid from containerheader where label=?)) s"+
+        " where f.sequenceid=m.sequenceid"+
+        " and m.mgccloneid=s.sampleid"+
+        " and s.containerid=ch.containerid"+
+        " and s.containerposition=?";
+        String s2 = "select s.sampleid,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype, s.cloneid"+
+        " from flexsequence f, mgcclone m, containerheader ch,"+
+        " (select * from sample where containerid=?) s"+
+        " where f.sequenceid=c.sequenceid"+
+        " and m.mgccloneid=s.sampleid"+
+        " and s.containerid=ch.containerid"+
+        " and s.containerposition=?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        if(isPlateAsLabel) {
+            stmt = conn.prepareStatement(s1);
+        } else {
+            stmt = conn.prepareStatement(s2);
+        }
+        
+        ArrayList samples = new ArrayList();
+        
+        try {
+            for(int i=0; i<inputSamples.size(); i++) {
+                RearrayInputSample s = (RearrayInputSample)inputSamples.get(i);
+                if(isPlateAsLabel) {
+                    stmt.setString(1, s.getSourcePlate());
+                } else {
+                    stmt.setInt(1, Integer.parseInt(s.getSourcePlate()));
+                }
+                
+                int position;
+                if(!isWellAsNumber) {
+                    position = Algorithms.convertWellFromA8_12toInt(s.getSourceWell());
+                    //System.out.println(s.getSourceWell()+"\t"+position);
+                } else {
+                    position = Integer.parseInt(s.getSourceWell());
+                }
+                
+                int destPosition = -1;
+                if(s.getDestWell() != null) {
+                    if(!isDestWellAsNumber) {
+                        destPosition = Algorithms.convertWellFromA8_12toInt(s.getDestWell());
+                    } else {
+                        destPosition = Integer.parseInt(s.getDestWell());
+                    }
+                }
+                
+                stmt.setInt(2, position);
+                
+                rs = DatabaseTransaction.executeQuery(stmt);
+                if(rs.next()) {
+                    int sampleid = rs.getInt(1);                    
+                    int sequenceid = rs.getInt(2);
+                    int cdsstart = rs.getInt(3);
+                    int cdsstop = rs.getInt(4);
+                    int cdslength = rs.getInt(5);
+                    int containerid = rs.getInt(6);
+                    String label = rs.getString(7);
+                    String sampletype = rs.getString(8);
+                    int cloneid = rs.getInt(9);
+                    RearrayPlateMap m = new RearrayPlateMap(sampleid,-1,null,-1,-1,sequenceid,cdsstart,cdsstop,cdslength,containerid,label);
+                    m.setSourceWell(position);
+                    m.setRearrayInputSample(s);
+                    m.setDestPlateLabel(s.getDestPlate());
+                    m.setDestWell(destPosition);
+                    m.setSampletype(sampletype);
+                    m.setCloneid(cloneid);
+                    samples.add(m);
+                } else {
+                    throw new RearrayException("No sample found for plate: "+s.getSourcePlate()+", well: "+s.getSourceWell());
+                }
+            }
+            return samples;
+        } catch (FlexDatabaseException ex) {
+            System.out.println(ex);
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+    }    
     
     /**
      * Get all the necessary information from the database for the given input clones.
