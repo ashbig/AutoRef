@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.19 2001-07-24 15:41:13 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.20 2001-07-26 17:51:44 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -24,13 +24,13 @@ import java.io.*;
 public class FlexSeqAnalyzer {
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
     public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
-    private static final String BLASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"BlastDB/genes";
+//    private static final String BLASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"BlastDB/genes";
     
-//    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
+    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
-    private static final double PERCENTIDENTITY = 0.9;
-    private static final double PERCENTALIGNMENT = 0.9;
+    private static final double PERCENTIDENTITY = 0.8;
+    private static final double PERCENTALIGNMENT = 0.8;
     
     private FlexSequence sequence;
     private Vector sameSequence = new Vector();
@@ -96,11 +96,11 @@ public class FlexSeqAnalyzer {
         StringTokenizer st = new StringTokenizer(identity);
         int numerator = Integer.parseInt(st.nextToken(" /"));
         int denomenator = Integer.parseInt(st.nextToken(" /"));
-        int percentIdentity = numerator/denomenator;
+        double percentIdentity = numerator/(double)denomenator;
         int start = y.getQryStart();
         int end = y.getQryEnd();
         int cdslength = sequence.getCdslength();
-        int percentAlignment = (end-start+1)/cdslength;
+        double percentAlignment = (end-start+1)/(double)cdslength;
         String evalue = y.getEvalue();
         
         if(percentIdentity>=PERCENTIDENTITY && percentAlignment>=PERCENTALIGNMENT) {
