@@ -54,7 +54,7 @@ case Constants.PROCESS_FIND_GAPS:
 
 additional_jsp_buffer.append(" <script defer='defer' type='text/javascript'><!--");
 additional_jsp_buffer.append("\n function isTrimm(e,checked){	; var form = e.form;");
-additional_jsp_buffer.append("	 if(checked) 	{");
+additional_jsp_buffer.append("	 if(!checked) 	{");
 additional_jsp_buffer.append("\n form.elements."+ PhredPhrap.QUALITY_TRIMMING_SCORE +".value = 0;");
 additional_jsp_buffer.append("\n form.elements."+ PhredPhrap.QUALITY_TRIMMING_FIRST_BASE+".value = 0;");
  additional_jsp_buffer.append("\n form.elements."+  PhredPhrap.QUALITY_TRIMMING_LAST_BASE+".value = 0;\n}\n else\n {");
