@@ -20,7 +20,7 @@
 <html:errors/>
 
 <p>
-<html:form action="/BrowseFlex.do" focus="searchTerm" method="POST">
+<html:form action="/BrowseFlex.do" method="POST">
 <p><b>Please select one of the following:</b></p>
 
     <dl>
@@ -31,6 +31,10 @@
     <dd>
     <html:radio property="browseSelect" value="kinase">
         View all sequence verified human kinase related clones.
+    </html:radio>
+    <dd>
+    <html:radio property="browseSelect" value="bc">
+        View all sequence verified breast cancer related clones.
     </html:radio>
     </dd>
     <p>

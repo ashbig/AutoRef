@@ -64,6 +64,8 @@ public class BrowseFlexAction extends FlexAction {
             manager.setSpecies(FlexSequence.HUMAN);
         } else if("kinase".equals(browseSelect)) {
             manager.setProjectid(Project.KINASE);
+        } else if("bc".equals(browseSelect)) {
+            manager.setProjectid(Project.BREASTCANCER);
         }
         
         try {
