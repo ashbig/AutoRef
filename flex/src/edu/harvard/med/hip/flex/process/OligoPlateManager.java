@@ -19,7 +19,10 @@ import java.io.*;
 
 public class OligoPlateManager {
     public static final String DESIGN_CONSTRUCTS= "design constructs";
-    
+    public static final int smallCDSLimit = 2000;
+    public static final int mediumCDSLimit = 4000;
+    public static final int largeCDSLimit = 10000;
+    public static final int totalWells = 94;
     private Connection conn;
     private LinkedList fileList;
     /**
@@ -94,17 +97,13 @@ public class OligoPlateManager {
         seqList = seqQueue.getQueueItems(protocol, cdsSizeGroupLowerLimit,
         cdsSizeGroupUpperLimit);
         
-        //delete sequence queue record 
+        //delete sequence queue record
         //seqQueue.removeQueueItems(seqList, protocol, conn);
         //System.out.println("removing sequences in queue with design construct protocl...");
         return seqList;
     }
     
     public void createOligoPlates() throws FlexDatabaseException, FlexCoreException, IOException{
-        int smallCDSLimit = 2000;
-        int mediumCDSLimit = 4000;
-        int largeCDSLimit = 10000;
-        int totalWells = 94;
         int platesetId = -1;
         int numSeqsInQueue = 0;
         int[] limits = new int[4];
@@ -121,8 +120,7 @@ public class OligoPlateManager {
         int j = 0;
         int numSeqsToProcess = 0;
         for (i = 0; i < 3; ++i) {
-            //numSeqsInQueue = totalSeqQueue(limits[i]);
-            //numPlatesToProcess = numSeqsInQueue / totalWells;
+            
             seqList = getQueueSequence(limits[i],limits[i+1]);
             numPlatesToProcess = seqList.size() / totalWells;
             numSeqsToProcess = totalWells*numPlatesToProcess;
@@ -154,60 +152,79 @@ public class OligoPlateManager {
                 } catch(FlexDatabaseException sqlex){
                     System.out.println(sqlex);
                     DatabaseTransaction.rollback(conn);
-                
+                    
                 }finally {
                     DatabaseTransaction.closeConnection(conn);
                 }
-                                
+                
             } // if
         } // for
         
-         fileList = plater.generateOligoOrderFiles();        
+        fileList = plater.generateOligoOrderFiles();
         
     } //createOligoAndConstruct
     
     public void sendOligoOrders() throws MessagingException{
         String to = "wenhongm@hotmail.com";
         String from = "wmar@hms.harvard.edu";
-        String cc = "jmunoz@3rdmill.com";
+        String cc = "cruel@3rdmill.com";
         String subject = "Testing Oligo Order";
         String msgText = "The attached files are our oligo order.\n"+
-                        "Thank you!";
+        "Thank you!";
         try{
-        Mailer.sendMessage(to, from, cc, subject, msgText, fileList);
+            Mailer.sendMessage(to, from, cc, subject, msgText, fileList);
         } catch(MessagingException ex){
             ex.printStackTrace();
         }
         
     }
     
+    
+    public void orderOligo(){
+        java.lang.Thread thread = new OligoThread();
+        thread.start();
+    }
+    
     //******************************************************//
     //			Test				//
     //******************************************************//
-    public static void main(String [] args) {
-        int totalQueue = 0;
-        try {
-            OligoPlateManager om = new OligoPlateManager();
-            totalQueue = om.totalSeqQueue(2000);
-            System.out.println("There are total of " + totalQueue + " small sequences in the queue");
-            
-            System.out.println("Calculating oligos...");
-            om.createOligoPlates();
-            om.sendOligoOrders();
-            System.out.println("Oligo order files have been mailed!");
-        } catch (FlexDatabaseException e) {
-            e.printStackTrace();
-        } catch (FlexCoreException ex){
-            ex.printStackTrace();
-        } catch (IOException IOex){
-            IOex.printStackTrace();
-        } catch (MessagingException msgex){
-            msgex.printStackTrace();
-        }finally {
-          //   DatabaseTransaction.closeConnection(conn);
-        }
-        
+    public static void main(String [] args) throws Exception {
+        OligoPlateManager om = new OligoPlateManager();
+        System.out.println("About to start thread");
+        om.orderOligo();
+        System.out.println("finished calling thread");
         
     } //main
     
+    public class OligoThread extends java.lang.Thread {
+        public void run() {
+            System.out.println("Thread started");
+            int totalQueue = 0;
+            try {
+                
+                totalQueue = totalSeqQueue(smallCDSLimit);
+                System.out.println("There are total of " + totalQueue + " small sequences in the queue");
+                if (totalQueue >= 94){
+                    System.out.println("Calculating oligos...");
+                    createOligoPlates();
+                    sendOligoOrders();
+                    System.out.println("Oligo order files have been mailed!");
+                } else {
+                    System.out.println("There are not enough sequences in queue to create an oligo plate!");
+                }
+            } catch (FlexDatabaseException e) {
+                e.printStackTrace();
+            } catch (FlexCoreException ex){
+                ex.printStackTrace();
+            } catch (IOException IOex){
+                IOex.printStackTrace();
+            } catch (MessagingException msgex){
+                msgex.printStackTrace();
+            }finally {
+                //   DatabaseTransaction.closeConnection(conn);
+            }
+            
+            System.out.println("Thread finished");
+        }
+    }
 }
