@@ -13,7 +13,7 @@
 <p>
 
 <html:form action="CustomerRegistration.do" focus="firstName">
-    <table>
+    <table width="80%" align="center">
         <tr>
         <td><b>First Name:</b></td>
         <td><html:text property="firstName" size="40"/></td>

@@ -14,7 +14,7 @@
 <p>
 
 <html:form action="FindRegistration.do" focus="firstName">
-    <table>
+    <table width="80%" align="center">
         <tr>
         <td><b>User Name:</b></td>
         <td><html:text property="userID" size="40"/></td>
