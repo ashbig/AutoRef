@@ -70,8 +70,8 @@ public abstract class Spec
     
     public void insert(Connection conn) throws FlexDatabaseException
     {
-        if (m_id != -1) return;//not allow to insert twice
-        m_id = FlexIDGenerator.getID("specid");
+        if (m_id != -1) 
+            m_id = FlexIDGenerator.getID("specid");
         Statement stmt = null;
         String key = null; Integer val = null;
         String sql = "INSERT INTO spec (specid, specname, spectype)"+
@@ -87,9 +87,12 @@ public abstract class Spec
             {
                 key = (String)e.nextElement();
                 val = (Integer)m_params.get(key);
-                sql = "INSERT INTO spec_parameters (specid, paramname, paramvalue)"+
-                " VALUES(" + m_id + ",'" + key.toUpperCase() +"','" + val + "')";
-               stmt.executeUpdate(sql);
+                try{
+                    sql = "INSERT INTO spec_parameters (specid, paramname, paramvalue)"+
+                    " VALUES(" + m_id + ",'" + key.toUpperCase() +"','" + val + "')";
+                   stmt.executeUpdate(sql);
+                }
+                catch(Exception ee)                {}
             }
         } catch (SQLException sqlE)
         {

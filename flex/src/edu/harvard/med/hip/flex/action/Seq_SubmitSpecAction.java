@@ -66,7 +66,7 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                     !name.equalsIgnoreCase("forwardName")  )
                 {    
                     params.put( name, value);
-                    System.out.println(name +"-"+value);
+                    System.out.println(name.toUpperCase());
                 }
                 if (name.equalsIgnoreCase("SET_NAME")) spec_name = value;
             }
