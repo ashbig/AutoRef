@@ -32,10 +32,10 @@ dhtmlMenu.addItem(new NavBarMenuItem("About", "about_bec.jsp"));
 myNavBar1.addMenu(dhtmlMenu);
 
 <% User user = (User)session.getAttribute(Constants.USER_KEY);
-	System.out.println(user.getUserGroup());
+//	System.out.println(user.getUserGroup());
 
 %>
-<% if (user.getUserGroup().equals("Administrator"))
+<% if (!user.getUserGroup().equals("Researcher"))
 {
     
 %>
@@ -53,7 +53,7 @@ dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "/BEC/Seq_
 
 <%}%>
 
-<% if (!user.getUserGroup().equals("Researcher"))
+<% if (user.getUserGroup().equals("Administrator"))
 {
     
 %>      dhtmlMenu = new NavBarMenu(100, 200);
