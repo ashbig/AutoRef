@@ -83,7 +83,7 @@ dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?for
 dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "InitiateProcess.jsp?forwardName=<%=Constants.PROCESS_SHOW_CLONE_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=clone History"));
 dhtmlMenu.addItem(new NavBarMenuItem("Available Containers", "<%= ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_CONTAINERS_INT%>"));
 
-dhtmlMenu.addItem(new NavBarMenuItem("Run Report", "<%= ApplicationHostDeclaration.JSP_REDIRECTION %>/SelectReport.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("Run Report", "<%= ApplicationHostDeclaration.JSP_REDIRECTION %>SelectReport.jsp"));
 
 
 myNavBar1.addMenu(dhtmlMenu);
