@@ -149,8 +149,8 @@ public class NeedleParser
             }
             if (res != null)
             {
-                res.setQuery(query);
-                res.setSubject(ref);
+                res.setQuery(query.toUpperCase());
+                res.setSubject(ref.toUpperCase());
             }
             fin.close();
          }
