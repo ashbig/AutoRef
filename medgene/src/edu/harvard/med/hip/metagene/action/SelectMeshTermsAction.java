@@ -83,8 +83,14 @@ public class SelectMeshTermsAction extends MetageneAction {
             }
             
             Vector commonAssociations = Association.mergeAssociations(allAssociations);
+            if(commonAssociations.size()>10){
+                Vector temp = new Vector();
+                for(int i = 0; i < 10; i++)
+                    temp.addElement(commonAssociations.elementAt(i));
+                commonAssociations = temp;
+            }
             request.setAttribute("associations", commonAssociations);
-            request.setAttribute("disease", allDiseaseTerms);
+            request.setAttribute("disease", allDiseaseTerms);            
             Statistics s = manager.queryStatById(stat);
             request.setAttribute("stat", s);
             

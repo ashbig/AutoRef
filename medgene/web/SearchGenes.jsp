@@ -38,11 +38,13 @@
 
     <p>Please choose the number of diseases for your list:
     <html:select property="number">
-        <html:option key="top 25" value="25"/>
-        <html:option key="top 50" value="50"/>
-        <html:option key="top 100" value="100"/>
-        <html:option key="top 500" value="500"/>
-        <html:option key="top 1000" value="1000"/>
+        <html:option key="top 5" value="5"/>
+        <html:option key="top 10" value="10"/>
+        <!html:option key="top 25" value="25"/>
+        <!html:option key="top 50" value="50"/>
+        <!html:option key="top 100" value="100"/>
+        <!html:option key="top 500" value="500"/>
+        <!html:option key="top 1000" value="1000"/>
     </html:select>
 
     <p>
