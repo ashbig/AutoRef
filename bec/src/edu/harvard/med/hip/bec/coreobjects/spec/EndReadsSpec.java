@@ -189,6 +189,86 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_3DI_L");
              }
+              case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_CDS : 
+             {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("ER_3DI_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("ER_3DI_L");
+             }//N substitution – gene region
+                case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER5 : 
+                 {
+                     if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                     {
+                         return  this.getParameterByNameInt("ER_N5SUB_PASS_H");
+                     }
+                     else 
+                         return this.getParameterByNameInt("ER_N5SUB_PASS_L");
+                 }//N substitution – linker region
+                case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER3 :
+                {
+                     if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                     {
+                         return  this.getParameterByNameInt("ER_N3SUB_PASS_H");
+                     }
+                     else 
+                         return this.getParameterByNameInt("ER_N3SUB_PASS_L");
+                 }
+                case Mutation.MACRO_SPECTYPE_N_INSERTION_LINKER5 : 
+                    {
+                     if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                     {
+                         return  this.getParameterByNameInt("ER_N5INS_PASS_H");
+                     }
+                     else 
+                         return this.getParameterByNameInt("ER_N5INS_PASS_L");
+                 }//N substitution – linker region
+                case Mutation.MACRO_SPECTYPE_N_INSERTION_LINKER3 : 
+                    {
+                     if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                     {
+                         return  this.getParameterByNameInt("ER_N3INS_PASS_H");
+                     }
+                     else 
+                         return this.getParameterByNameInt("ER_N3INS_PASS_L");
+                 }
+
+                case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_START_CODON : 
+                    {
+                     if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                     {
+                         return  this.getParameterByNameInt("ER_NSTART_PASS_H");
+                     }
+                     else 
+                         return this.getParameterByNameInt("ER_NSTART_PASS_L");
+                 }//N substitution start codon
+                case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_STOP_CODON : {
+                     if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                     {
+                         return  this.getParameterByNameInt("ER_NSTOP_PASS_H");
+                     }
+                     else 
+                         return this.getParameterByNameInt("ER_NSTOP_PASS_L");
+                 }//N substitution stop codon
+                case Mutation.MACRO_SPECTYPE_N_FRAMESHIFT_INSERTION :{
+                     if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                     {
+                         return  this.getParameterByNameInt("ER_NFRAME_PASS_H");
+                     }
+                     else 
+                         return this.getParameterByNameInt("ER_NFRAME_PASS_L");
+                 }// N frameshift (introduced only by N)
+                case Mutation.MACRO_SPECTYPE_N_INFRAME_INSERTION : 
+                {
+                     if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                     {
+                         return  this.getParameterByNameInt("ER_NINFRAME_PASS_H");
+                     }
+                     else 
+                         return this.getParameterByNameInt("ER_NINFRAME_PASS_L");
+                 }
              default: return PENALTY_NOT_DEFINED;
          }
         

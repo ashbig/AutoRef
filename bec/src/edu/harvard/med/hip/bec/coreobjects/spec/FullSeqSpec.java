@@ -298,6 +298,160 @@ public class FullSeqSpec extends Spec
                             return  this.getParameterByNameInt("FS_3DI_FAIL_L");
                  }
              }
+              case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_CDS :
+              {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NCDS_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NCDS_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NCDS_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NCDS_FAIL_L");
+                 } //N substitution – gene region
+              }
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER5 :
+            {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_N5SUB_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_N5SUB_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_N5SUB_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_N5SUB_FAIL_L");
+                 } 
+              }//N substitution – linker region
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_LINKER3 : 
+            {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_N3SUB_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_N3SUB_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_N3SUB_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_N3SUB_FAIL_L");
+                 } 
+              }//N substitution – linker region
+            case Mutation.MACRO_SPECTYPE_N_INSERTION_LINKER5 : 
+            {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_N5INS_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_N5INS_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_N5INS_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_N5INS_FAIL_L");
+                 } 
+              }//N substitution – linker region//N substitution – linker region
+            case Mutation.MACRO_SPECTYPE_N_INSERTION_LINKER3 : 
+            {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_N3INS_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_N3INS_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_N3INS_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_N3INS_FAIL_L");
+                 } 
+              }//N substitution – linker region
+
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_START_CODON :
+                {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NSTART_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NSTART_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NSTART_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NSTART_FAIL_L");
+                 } 
+              }//N substitution – linker region//N substitution start codon
+            case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_STOP_CODON :
+                {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NSTOP_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NSTOP_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NSTOP_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NSTOP_FAIL_L");
+                 } 
+              }//N substitution – linker region//N substitution stop codon
+            case Mutation.MACRO_SPECTYPE_N_FRAMESHIFT_INSERTION : 
+                {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NFRAME_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NFRAME_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NFRAME_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NFRAME_FAIL_L");
+                 } 
+              }//N substitution – linker region// N frameshift (introduced only by N)
+            case Mutation.MACRO_SPECTYPE_N_INFRAME_INSERTION : 
+                {
+                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NINFRAME_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NINFRAME_FAIL_H");
+                  }
+                 else 
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NINFRAME_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NINFRAME_FAIL_L");
+                 } 
+              }//N substitution – linker region
              default: return CUT_OFF_VALUE_NOT_FOUND;
          }
         
