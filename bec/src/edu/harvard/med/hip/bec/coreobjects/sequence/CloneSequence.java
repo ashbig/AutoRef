@@ -106,7 +106,7 @@ public class CloneSequence extends AnalyzedScoredSequence
                 sql += " and SEQUENCETYPE  in (    "+clone_sequence_type +")";
         if ( clone_sequence_analysis_status != null)
             sql +=" and ANALYSISSTATUS in ( "+clone_sequence_analysis_status +")";
-        sql += " order by submissiondate ";
+        sql += " order by submissiondate desc";
         ArrayList sequences = getByRule(sql );
         if (sequences.size() > 0)
             return (CloneSequence) sequences.get(0);
