@@ -132,7 +132,17 @@ public class GetResearcherAction extends ResearcherAction{
         
             // Print the barcode
             System.out.println("Printing barcode: "+newContainer.getLabel());
-            
+
+            // Remove everything from the session.
+            request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+            request.getSession().removeAttribute("SelectProtocolAction.protocol");
+            request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
+            request.getSession().removeAttribute("EnterSourcePlateAction.locations");
+            request.getSession().removeAttribute("EnterSourcePlateAction.item");
+            request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+
+            // Put the new barcode to the request.
+            request.setAttribute("GetResearcherAction.container", newContainer);
             return (mapping.findForward("success"));            
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

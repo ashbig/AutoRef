@@ -29,6 +29,7 @@ public class CreateProcessPlateForm extends ActionForm {
     private String researcherBarcode = null;
     private int sourceLocation;
     private int destLocation;
+    private String destPlate = null;
     
     /**
      * Set the page to the given value.
@@ -82,6 +83,24 @@ public class CreateProcessPlateForm extends ActionForm {
      */
     public String getSourcePlate() {
         return sourcePlate;
+    }
+    
+    /**
+     * Set the destination plate barcode.
+     *
+     * @param destPlate The value to be set to.
+     */
+    public void setDestPlate(String destPlate) {
+        this.destPlate = destPlate;
+    }
+    
+    /**
+     * Return the destination plate barcode.
+     *
+     * @return The destination plate barcode.
+     */
+    public String getDestPlate() {
+        return destPlate;
     }
     
     /**
