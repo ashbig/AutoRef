@@ -229,12 +229,12 @@ public class Rearrayer
                 
                 ContainerDescription cont_1 =(ContainerDescription) ((SequenceDescription)cont1).getContainerDescription();
                 ContainerDescription cont_2 = (ContainerDescription) ((SequenceDescription)cont2).getContainerDescription();
-                         
-                int res =  cont_1.getMarker().compareToIgnoreCase(cont_2.getMarker() ) ;
-                if (res == 0)//same marker
+               //htaycher : do not sort by marker          
+               // int res =  cont_1.getMarker().compareToIgnoreCase(cont_2.getMarker() ) ;
+               // if (res == 0)//same marker
                    return    -(cont_1.getNumberOfSequences() - cont_2.getNumberOfSequences());
-                else
-                   return res;
+               // else
+               //    return res;
                 
             }
         });
@@ -290,11 +290,13 @@ public class Rearrayer
             seq_description.add(    m_sequence_descriptions.get(seq_count)  );
             well_on_plate++;
                 //new plate
+            /*
            if ( seq_count != number_of_sequences -1)
            {
                next_marker = ((SequenceDescription) m_sequence_descriptions.get(seq_count + 1)).getContainerDescription().getMarker();
                isNewPlate = ! cur_container.getMarker().equalsIgnoreCase(next_marker    );
            }
+             **/
             if (well_on_plate % m_total_wells == 0 || 
                 seq_count == number_of_sequences -1  || 
                 isNewPlate)
@@ -339,10 +341,11 @@ public class Rearrayer
                         //get total number of genes in queue
             if (numOfSeqs != 0)
             {
-               Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
+               Rearrayer ra = new Rearrayer(new ArrayList(seqList), 10);
                plates = ra.getPlates();
                for (int i = 0; i < plates.size();i++)
                {
+                   System.out.println("plate");
                    PlateDescription p = (PlateDescription) plates.get(i);
                    for (int j=0;j<p.getSequenceDescriptions().size();j++)
                    {
@@ -361,6 +364,7 @@ public class Rearrayer
            // Algorithms.rearangeSawToothPatternInFlexSequence(new ArrayList(m_Request.getSequences()));
             
         }catch(Exception e){}
+        System.exit(0);
   }
             
  
