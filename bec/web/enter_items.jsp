@@ -47,6 +47,12 @@ else
 int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
+boolean isCloneIdOnly = false;
+if ( forwardName_int == Constants.PROCESS_SHOW_CLONE_HISTORY 
+|| forwardName_int == Constants.PROCESS_ORDER_INTERNAL_PRIMERS)
+{
+isCloneIdOnly = true;
+}
 %>
 
 
@@ -55,7 +61,7 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
     <td colspan=2 bgColor="#1145A6"> <font color="#FFFFFF"><strong>Select Items Type: </strong></font></td>
   </tr>
   
-<% if ( forwardName_int != Constants.PROCESS_SHOW_CLONE_HISTORY )
+<% if ( !isCloneIdOnly )
 {%>
   <tr>  
     <td><strong><input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_PLATE_LABELS%>" checked>Container Labels</strong></td>
@@ -63,15 +69,14 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
   </tr>
 <%}%>
   <tr> 
-    <td><strong>  <input type="radio" name="item_type" 
-    value="<%=Constants.ITEM_TYPE_CLONEID%>"
-     <% if ( forwardName_int == Constants.PROCESS_SHOW_CLONE_HISTORY ){%>checked <%}%>
+    <td><strong>  <input type="radio" name="item_type" value="<%=Constants.ITEM_TYPE_CLONEID%>"
+     <% if ( isCloneIdOnly){%>checked <%}%>
     >Clone Ids</strong></td>
 <td>
-<% if ( forwardName_int == Constants.PROCESS_RUN_PRIMER3 ||
-forwardName_int == Constants.PROCESS_VIEW_INTERNAL_PRIMERS)
+<% if ( forwardName_int == Constants.PROCESS_RUN_PRIMER3 || forwardName_int == Constants.PROCESS_VIEW_INTERNAL_PRIMERS)
 {%>
-<strong>  <input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_FLEXSEQUENCE_ID %>">FLEX Sequence Ids</strong><%}
+<strong>  <input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_FLEXSEQUENCE_ID %>">FLEX Sequence Ids</strong>
+<%}
 else
 {%>&nbsp;<%}%>
 </td>

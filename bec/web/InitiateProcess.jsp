@@ -11,6 +11,7 @@
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
+<%@ page import="edu.harvard.med.hip.bec.action_runners.*" %>
 <html>
 
 <head>
@@ -38,7 +39,9 @@
 	ArrayList specs = (ArrayList)request.getAttribute(Constants.SPEC_COLLECTION);
         ArrayList names = (ArrayList)  request.getAttribute(Constants.SPEC_TITLE_COLLECTION);
         ArrayList control_names  = (ArrayList)  request.getAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION);
-	 
+	int forwardName_int = 0;
+        if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
+        else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue(); 
 	
 %>
 
@@ -77,48 +80,57 @@
     <tr><td colspan=2>
          <jsp:include page="enter_items.jsp" /> </td>
     </tr>
-<%if ((specs != null && names != null && control_names != null)
+<%
+if ((specs != null && names != null && control_names != null)
     && ( specs.size()> 0 && names.size()>0 && control_names.size()>0))
- {%>
-
+ {
+        String control_name = null;         String spec_name = null; 
+        ArrayList specs_arr = null;         Spec spec = null;
+%>
 	<tr><td colspan =2 bgColor="#1145A6" ><font color="#FFFFFF"><strong>Process Specification</strong></font></td></tr>
-	
-<%String control_name = null; 
-String spec_name = null; 
-ArrayList specs_arr = null; 
-Spec spec = null;
-        for (int count = 0; count <specs.size(); count ++)
+<%
+         for (int count = 0; count <specs.size(); count ++)
         {
             control_name = (String) control_names.get(count);
             spec_name= (String) names.get(count);
             specs_arr = (ArrayList)specs.get(count);
-
-        %>
-   <tr> 
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><%= spec_name %></strong></td>
-    <td> 
-        <SELECT NAME="<%= control_name %>" id="<%= control_name %>">
-        <% 
-        	
-        	for (int count_spec = 0; count_spec < specs_arr.size(); count_spec++)
-        	
-        	{
-                    spec = (Spec)specs_arr.get(count_spec);	%>
-        		<OPTION VALUE="<%= spec.getId() %>"><%= spec.getName() %>
-                     	
-        	<%}%>
-    	</SELECT></td>
-	
-    </tr>
-<%}}%>
+            %>
+            <tr> 
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><%= spec_name %></strong></td>
+            <td> 
+            <SELECT NAME="<%= control_name %>" id="<%= control_name %>">
+            <% 
+            for (int count_spec = 0; count_spec < specs_arr.size(); count_spec++)
+            {
+                spec = (Spec)specs_arr.get(count_spec);	%>
+                <OPTION VALUE="<%= spec.getId() %>"><%= spec.getName() %>
+            <%}%>
+            </SELECT></td>
+       </tr>
+    <%}%>
 <tr><td colspan='2'>
-<% if ( ((Integer)forwardName).intValue() == Constants.PROCESS_RUN_PRIMER3)
-{
-%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b>
-<%}%>
+    <% if (forwardName_int == Constants.PROCESS_RUN_PRIMER3)
+    {
+    %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b>
+    <%}%>
 </td></tr>
-</table>
+<%}%>
 
+<% if ( forwardName_int ==  Constants.PROCESS_ORDER_INTERNAL_PRIMERS)
+{%>
+<tr><td colspan='2'>
+<table border =0 width="100%">
+<tr><td colspan=2 bgColor="#1145A6" ><font color="#FFFFFF"><strong>Oligo placement format </strong></font> </td></tr>
+<tr><td> <input type=RADIO name="oligo_placement_format" value=<%= PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER%> checked><b>All primers for clone together </td></tr>
+<tr><td>  <input type=RADIO name="oligo_placement_format" value=<%= PrimerOrderRunner.PLACEMENT_FORMAT_N_PRIMER%> ><b><i>Nth</i> primer for clone. Primer number (ordered by position from 5p end)
+  <input type=text value='1' name="primer_number"  ></td></tr>
+</table>
+</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b></td></tr>
+    
+<%}%>
+</table>
 <div align="center"> 
   <p> 
     <input type="submit" value="Submit" >
