@@ -236,7 +236,7 @@ public class PickColonyForm extends ProjectWorkflowForm
         
         if(pickingMethod.equals("interleaved"))
         {
-            if(projectid == Project.YEAST)
+            if(projectid == Project.YEAST || projectid == Project.YP)
             {
                 if ( agarPlateF1.trim().length()!=11 || agarPlateF1.charAt(LASTINDEX) != 'C' )
                 {
@@ -297,7 +297,7 @@ public class PickColonyForm extends ProjectWorkflowForm
             }
             
             // Check whether the two pairs matching with each other.
-            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE ||  projectid == Project.YEAST )
+            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE ||  projectid == Project.YEAST || projectid==Project.YP)
             {
                 if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11)
                 {
