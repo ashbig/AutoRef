@@ -10,6 +10,8 @@
 package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.util.*;
+import javax.mail.*;
 import java.sql.*;
 import java.util.*;
 import java.io.*;
@@ -17,6 +19,7 @@ import java.io.*;
 
 public class OligoPlateManager {
     private Connection conn;
+    private LinkedList fileList;
     /**
      * Constructor
      * Creates new OligoPlateManager
@@ -78,9 +81,9 @@ public class OligoPlateManager {
         
         return seqList;
     }
-
-        private LinkedList getQueueSequence(int cdsSizeGroupLowerLimit, 
-         int cdsSizeGroupUpperLimit) throws FlexDatabaseException {
+    
+    private LinkedList getQueueSequence(int cdsSizeGroupLowerLimit,
+    int cdsSizeGroupUpperLimit) throws FlexDatabaseException {
         int protocolId = 3;  // to be modified
         //int cdsSizeGroup = 2000;
         LinkedList seqList = new LinkedList();
@@ -127,31 +130,51 @@ public class OligoPlateManager {
                     seqList.removeLast();
                 } // for
                 System.out.println("There are "+ seqList.size()+" sequences going to be processed");
-                cg = new ConstructGenerator(seqList,conn);
                 
-                cg.generateOligoAndConstructs();
-                cg.insertProcessInputOutput();
-                cg.insertConstructQueue();
-                LinkedList oligoPatternList = cg.getOligoPatternList();
-                platesetId = cg.getPlatesetId();
-                System.out.println("Items in the oligoPatternList: "+ oligoPatternList.size());
-                System.out.println("The new plateset ID is: " + platesetId);
-                //all of the oligo plate header and sample info are inserted in DB
-                //three text files for order oligos will be generated
-                plater = new OligoPlater(oligoPatternList, cg.getConstructList(),platesetId,conn);
-                plater.createOligoPlates();
-                plater.insertProcessInputOutput();
-                plater.insertReceiveOligoQueue();
-                
-                
+                try{
+                    cg = new ConstructGenerator(seqList,conn);
+                    cg.generateOligoAndConstructs();
+                    cg.insertProcessInputOutput();
+                    cg.insertConstructQueue();
+                    LinkedList oligoPatternList = cg.getOligoPatternList();
+                    System.out.println("Items in the oligoPatternList: "+ oligoPatternList.size());
+                    
+                    //all of the oligo plate header and sample info are inserted in DB
+                    //three text files for order oligos will be generated
+                    plater = new OligoPlater(oligoPatternList, cg.getConstructList(), conn);
+                    plater.createOligoPlates();
+                    plater.insertProcessInputOutput();
+                    plater.insertReceiveOligoQueue();
+                    
+                    DatabaseTransaction.commit(conn);
+                } catch(FlexDatabaseException sqlex){
+                    System.out.println(sqlex);
+                    DatabaseTransaction.rollback(conn);
+                }finally {
+                    DatabaseTransaction.closeConnection(conn);
+                }
+                                
             } // if
         } // for
         
-        
-        
-        
+         fileList = plater.generateOligoOrderFiles();        
         
     } //createOligoAndConstruct
+    
+    public void sendOligoOrders() throws MessagingException{
+        String to = "wenhongm@hotmail.com";
+        String from = "wmar@hms.harvard.edu";
+        String cc = "jmunoz@3rdmill.com";
+        String subject = "Oligo Order";
+        String msgText = "The attached files is our oligo order.\n"+
+                        "Thank you!";
+        try{
+        Mailer.sendMessage(to, from, cc, subject, msgText, fileList);
+        } catch(MessagingException ex){
+            ex.printStackTrace();
+        }
+        
+    }
     
     //******************************************************//
     //			Test				//
@@ -165,15 +188,18 @@ public class OligoPlateManager {
             
             System.out.println("Calculating oligos...");
             om.createOligoPlates();
+            om.sendOligoOrders();
             
         } catch (FlexDatabaseException e) {
-            System.out.println(e);
+            e.printStackTrace();
         } catch (FlexCoreException ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         } catch (IOException IOex){
-            System.out.println(IOex);
+            IOex.printStackTrace();
+        } catch (MessagingException msgex){
+            msgex.printStackTrace();
         }finally {
-            //  DatabaseTransaction.closeConnection(conn);
+          //   DatabaseTransaction.closeConnection(conn);
         }
         
         
