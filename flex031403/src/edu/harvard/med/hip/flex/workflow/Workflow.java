@@ -55,9 +55,13 @@ public class Workflow {
         flow.addElement(new FlowRecord(Protocol.GENERATE_PCR_PLATES, next));         
 
         next = new Vector();
-        next.addElement(Protocol.GENERATE_FILTER_PLATES);        
+        next.addElement(Protocol.ENTER_PCR_GEL_RESULTS);        
         flow.addElement(new FlowRecord(Protocol.RUN_PCR_GEL, next));      
 
+        next = new Vector();
+        next.addElement(Protocol.GENERATE_FILTER_PLATES);        
+        flow.addElement(new FlowRecord(Protocol.ENTER_PCR_GEL_RESULTS, next));      
+                
         next = new Vector();
         next.addElement(Protocol.GENERATE_BP_REACTION_PLATES);        
         flow.addElement(new FlowRecord(Protocol.GENERATE_FILTER_PLATES, next));         
@@ -69,10 +73,14 @@ public class Workflow {
         next = new Vector();
         next.addElement(Protocol.GENERATE_AGAR_PLATES);        
         flow.addElement(new FlowRecord(Protocol.PERFORM_TRANSFORMATION, next)); 
-    
+
+        next = new Vector();
+        next.addElement(Protocol.ENTER_AGAR_PLATE_RESULTS);        
+        flow.addElement(new FlowRecord(Protocol.GENERATE_AGAR_PLATES, next)); 
+        
         next = new Vector();
         next.addElement(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES);        
-        flow.addElement(new FlowRecord(Protocol.GENERATE_AGAR_PLATES, next)); 
+        flow.addElement(new FlowRecord(Protocol.ENTER_AGAR_PLATE_RESULTS, next)); 
 
         next = new Vector();
         next.addElement(Protocol.GENERATE_DNA_PLATES);  
