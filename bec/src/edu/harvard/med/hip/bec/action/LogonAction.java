@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2003-06-24 20:18:35 $
+ * $Revision: 1.5 $
+ * $Date: 2003-09-17 18:52:10 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.bec.Constants;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: Elena $
- * @version $Revision: 1.4 $ $Date: 2003-06-24 20:18:35 $
+ * @version $Revision: 1.5 $ $Date: 2003-09-17 18:52:10 $
  */
 
 public final class LogonAction extends Action
@@ -129,7 +129,7 @@ public final class LogonAction extends Action
         ArrayList menu = null;
         try
         {
-            menu = UserGroup.getMenu(user.getUserGroup());
+          //  menu = UserGroup.getMenu(user.getUserGroup());
             
         }catch(Exception e)
         {
