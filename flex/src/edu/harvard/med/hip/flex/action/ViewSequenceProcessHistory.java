@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2001-07-24 18:46:07 $
+ * $Revision: 1.7 $
+ * $Date: 2001-07-26 15:49:58 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -48,6 +48,7 @@ import edu.harvard.med.hip.flex.core.Thread;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.*;
+import edu.harvard.med.hip.flex.process.*;
 
 
 import org.apache.struts.action.*;
@@ -57,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.6 $ $Date: 2001-07-24 18:46:07 $
+ * @version    $Revision: 1.7 $ $Date: 2001-07-26 15:49:58 $
  */
 
 public class ViewSequenceProcessHistory extends ResearcherAction{
@@ -177,19 +178,15 @@ public class ViewSequenceProcessHistory extends ResearcherAction{
      * @return Thread corresponding to the search.
      *
      * @exception FlexDatabaseException when something goes wrong with the database.
-     * @exception FlexCoreException when no thread is found, or the sample does not have a sequence associated with it.
+     * @exception FlexCoreException if one of the core objects is not found in 
+     *      the database, this will never happen here.
+     * @exception FlexProcessException when a process cannot be found in the 
+     *      database, this will never happen here.
      */
     private Thread processSampleId(int sampleId)
-    throws FlexCoreException, FlexDatabaseException  {
-        Sample sample = new Sample(sampleId);
-        FlexSequence seq = sample.getFlexSequence();
-        // if the sequence is null, then this is a control and no history can
-        // be found
-        if(seq == null) {
-            throw new FlexCoreException("Sample is a control");
-        }
-        int flexId = seq.getId();
-        return this.processFlexId(flexId);
+    throws FlexCoreException, FlexDatabaseException, FlexProcessException  {
+        Thread thread = SampleThread.findBySampleId(sampleId);
+        return thread;
     }
     
     

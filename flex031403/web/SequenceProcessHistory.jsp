@@ -42,7 +42,9 @@
         <th>Subprotocol</th>
         <th>Researcher</th>
         <th>Container</th>
+        <th>Well</th>
         <th>Sample</th>
+        <th>Construct Type</th>
     </tr>
  
     <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
@@ -63,11 +65,16 @@
                             <bean:write name="container" property="label"/>
                         </flex:linkContainer>
             </td>
-           
+            <td>
+                    <bean:write name="sample" property="position"/>
+            </td>
             <td>
                     <flex:linkSample name="sample" process="process">
                         <bean:write name="sample" property="id"/>
                     </flex:linkSample>
+           </td>
+           <td>
+                <bean:write name="sample" property="construct.type"/>
            </td>
         </flex:row>
     </logic:iterate>

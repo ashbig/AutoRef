@@ -117,11 +117,11 @@
     <tr>
         <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
             <td class="prompt">Please select the Gel Image you would like to upload:</td>
-            <td><html:file property="gelImage" /></td>
+            <td colspan="3"><html:file property="gelImage" /></td>
         </logic:equal>
         <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
             <td class="prompt">Gel Image file:</td>
-            <td colspan="2"><bean:write name="gelEntryForm" property="gelImage.fileName"/></td>
+            <td colspan="3"><bean:write name="gelEntryForm" property="gelImage.fileName"/></td>
         </logic:equal>
     </tr>
 
