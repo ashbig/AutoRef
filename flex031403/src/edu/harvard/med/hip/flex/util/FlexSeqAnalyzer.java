@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.33 2002-07-15 20:51:23 Elena Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.34 2002-07-22 19:07:20 Elena Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -27,8 +27,8 @@ public class FlexSeqAnalyzer {
     private static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     private static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
 
-   //private static final String HUMANDB="E:/flexDev/BlastDB/genes";
-    //    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
+  // private static final String HUMANDB="E:/flexDev/BlastDB/genes";
+    //private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
     
@@ -96,6 +96,7 @@ public class FlexSeqAnalyzer {
             blaster.setDBPath(HUMANDB);
         }
         
+        
         blaster.blast(queryFile+".in", queryFile+".out");
         BlastParser parser = new BlastParser(queryFile+".out");
         parser.parseBlast();
@@ -146,6 +147,9 @@ public class FlexSeqAnalyzer {
         return findHomolog(requiredPercentIdentity, requiredCdslengthLimit);
     }    
     
+    
+    //********************************************************************
+    
     /**
      * Return the matched sequence id  from the flex database.
      *
@@ -188,6 +192,64 @@ public class FlexSeqAnalyzer {
         return -1;
     }
     
+    /**
+     * @param pid Percent Identity for blast.
+     * @param cdslengthLimit The minimum CDS length required.
+     * Return true if there is homolog in the flex database. Return false
+     * otherwise.
+     *
+     * @return True if there is homolog in the flex database; false otherwise.
+     * @exception FlexUtilException, FlexDatabaseException, ParseException.
+     */
+    public int findExactMatchOrHomolog(double pid, int cdslengthLimit, String dbFileName) throws FlexUtilException, FlexDatabaseException, ParseException {
+        boolean isHomolog = false;
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        
+        String queryFile = makeQueryFile();
+        Blaster blaster = new Blaster();
+        blaster.setHits(1);
+        blaster.setDBPath(dbFileName);
+                
+        blaster.blast(queryFile+".in", queryFile+".out");
+        BlastParser parser = new BlastParser(queryFile+".out");
+        parser.parseBlast();
+        ArrayList homologs = parser.getHomologList();
+        
+        BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(0);
+        int homologid = Integer.parseInt((homologItem.getSubID()).trim());
+        
+        BlastParser.Alignment y = (BlastParser.Alignment)homologItem.getAlignItem(0);
+        String identity = y.getIdentity();
+        StringTokenizer st = new StringTokenizer(identity);
+        
+        int numerator = Integer.parseInt((st.nextToken(" /")).trim());
+        int denomenator = Integer.parseInt((st.nextToken(" /")).trim());
+        int start = y.getQryStart();
+        int end = y.getQryEnd();
+        int cdslength = sequence.getCdslength();
+        
+        //exact match
+        if(numerator ==  denomenator && (end - start +1) == cdslength ) {
+            return homologid;
+        }
+        if (  Math.abs(pid - 1.00) < 0.0000001 ) return -1;
+        // not exact match
+        double percentIdentity = numerator/(double)denomenator;
+        double percentAlignment = (end-start+1)/(double)cdslength;
+        String evalue = y.getEvalue();
+        
+        if (percentIdentity>=pid &&
+                numerator >= cdslengthLimit) 
+        {
+            return homologid;
+        }
+               
+        return -1;
+    }
+    
+    
+    
+    //************************************************************
     /**
      * Return the same sequences as a Vector including this sequence.
      *
