@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-18 20:08:07 $
+ * $Revision: 1.3 $
+ * $Date: 2001-06-19 12:42:05 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -47,7 +47,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-18 20:08:07 $
+ * @version    $Revision: 1.3 $ $Date: 2001-06-19 12:42:05 $
  */
 
 public class Result {
@@ -86,6 +86,15 @@ public class Result {
         this.value= value;
     }
     
+  
+    /**
+     * Return the result value.
+     *
+     * @return The result value.
+     */
+    public String getValue() {
+        return value;
+    }
     
     /**
      * Inserts this Result into the database.
