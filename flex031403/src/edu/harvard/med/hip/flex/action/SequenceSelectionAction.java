@@ -87,7 +87,7 @@ public class SequenceSelectionAction extends FlexAction {
                 
                 //for the new sequences, need more info from genbank.
                 if(sequence.getFlexstatus().equals(FlexSequence.NEW)) {
-                    setSequenceInfo(sequence, gi);
+                    sequence.setSequenceInfo(gi);
                     //if the sequence quality is questionable, put it aside.
                     if(FlexSequence.QUESTIONABLE.equals(sequence.getQuality())) {
                         badSequences.addElement(sequence);
@@ -171,26 +171,6 @@ public class SequenceSelectionAction extends FlexAction {
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
-        }
-    }
-    
-    //call the parser with sequence gid, and set sequence values.
-    private void setSequenceInfo(FlexSequence sequence, String gi) throws FlexUtilException {
-        GenbankGeneFinder finder = new GenbankGeneFinder();
-        Hashtable h = finder.searchDetail(gi);
-        sequence.setSpecies((String)h.get("species"));
-        int start = ((Integer)h.get("start")).intValue();
-        int stop = ((Integer)h.get("stop")).intValue();
-        sequence.setCdsstart(start);
-        sequence.setCdsstop(stop);
-        sequence.setCdslength(stop-start+1);
-        sequence.setSequencetext((String)h.get("sequencetext"));
-        if(start==-1 || stop == -1) {
-            sequence.setCdslength(0);
-            sequence.setQuality(FlexSequence.QUESTIONABLE);
-        }
-        else {
-            sequence.setQuality(FlexSequence.GOOD);
         }
     }
 }
