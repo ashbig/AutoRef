@@ -80,13 +80,6 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             Plateset plateset = new Plateset(current_platesetid);
             platesetList.add(plateset);           
             
-            //System.out.println("platesetid is: "+ plateset.getId());
-            //container.setLocation(oligoPlateLocation);
-            //update location if only one plate entered
-            //container.updateLocation(locationid, conn);
-            //removeReceiveOligoQueue(container,conn);
-            //System.out.println("update the location for first container: "+container.getLabel());
-            
             //oligo plates received may belong to more than one plateset
             while (iter.hasNext()){
                 // Set the location for the containers.
@@ -212,7 +205,8 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
      * insert "generate PCR plates" queue record for each plate created
      */
     protected void insertPCRQueue(Plateset plateset, Connection conn) throws FlexDatabaseException {
-        Protocol protocol = new Protocol("generate PCR plates");
+        //Protocol protocol = new Protocol("generate PCR plates");
+        Protocol protocol = new Protocol("dilute oligo plate");
         
         try{
             PlatesetProcessQueue platesetQueue = new PlatesetProcessQueue();
