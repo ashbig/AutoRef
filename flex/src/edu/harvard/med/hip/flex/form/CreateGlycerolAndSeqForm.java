@@ -20,6 +20,7 @@ public class CreateGlycerolAndSeqForm extends EnterSrcForSequencingForm {
     private String subProtocolName = null;
     private int [] sourceLocations;
     private int [] destLocations;
+    private String isMappingFile;
     
     /** Creates a new instance of CreateGlycerolAndSeqForm */
     public CreateGlycerolAndSeqForm() {
@@ -27,6 +28,8 @@ public class CreateGlycerolAndSeqForm extends EnterSrcForSequencingForm {
     
     public void setSubProtocolName(String s) {this.subProtocolName=s;}
     public String getSubProtocolName() {return subProtocolName;}
+    public String getIsMappingFile() {return isMappingFile;}
+    public void setIsMappingFile(String s) {this.isMappingFile = s;}
     
     /**
      * Set the source locations.
