@@ -37,9 +37,10 @@ public class MgcRequestImporter
 {
     public static final String DILIM = "\t!";
     public static final String DEFAULT = "NA";
+
     public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
-    //public static final String BLASTABLE_DATABASE_NAME = "E:\\flexDev\\MGC\\genes";    
-    //public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";
+    //public static final String BLASTABLE_DATABASE_NAME = "E:\\tmp\\MGC\\genes";    
+    //public static final String BLASTABLE_DATABASE_NAME = "e:\\Users\\HIP\\HTaycher\\MGC\\genes";
 
     private Project             m_Project = null;
     private Workflow                 m_workflow = null;
@@ -360,18 +361,26 @@ public class MgcRequestImporter
                         sequenceNotFound.add(current_gi + "(Sequence not found)");
                         continue;
                     }
+
                     seqData = gb.searchDetail(current_gi);
-                    if (((String)seqData.get("species")).indexOf("sapiens") != -1)
+                   // if (((String)seqData.get("species")).indexOf("sapiens") != -1)
+                    if (((String)seqData.get("species")).equals("Homo sapiens"))
                     {
                         fs = ms.createFlexSequence( seqData,(GenbankSequence) genBankSeq.get(0));
+                        /** 
+                             * The sequence doesn't have to be MGC sequence (i.e. start with "BC")
+                             * because we need to get the sequence to blast against MGC sequence db.
+                             * - dzuo 7/9/02
                         if (fs.getAccession() != null )
-                        {
+                        {                           
                             if ( !fs.getAccession().substring(0,2).equals("BC") )
                             {
                                 fs=null;
                                 sequenceNotFound.add(current_gi+ "(Bad sequence)");
                             }
+                            
                         }
+                       */
                     }
                     else
                     {

@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.9 2002-07-09 21:11:52 dzuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.10 2002-07-10 15:16:16 dzuo Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -61,7 +61,7 @@ public class GenbankGeneFinder {
                             token2 = st.nextToken("|<");
                         
                         if(token2.indexOf("[") != -1) {
-                            gi = token2.substring(1, token2.length()-1);
+                            gi = token2.substring(token2.indexOf("[")+1, token2.length()-1);
                             gb = token1;
                             break;
                         } else {
@@ -191,7 +191,7 @@ public class GenbankGeneFinder {
     public static void main(String [] args) {
         GenbankGeneFinder finder = new GenbankGeneFinder();
         try{
-            Vector v = finder.search("Human kinase");
+            Vector v = finder.search("4885066");
             Enumeration enum = v.elements();
             while(enum.hasMoreElements()) {
                 GenbankSequence sequence = (GenbankSequence)enum.nextElement();
@@ -201,7 +201,7 @@ public class GenbankGeneFinder {
                 System.out.println();
             }
             
-            Hashtable h = finder.searchDetail("4502854");
+            Hashtable h = finder.searchDetail("4502622");
             System.out.println(h);
         } catch (FlexUtilException e) {
             System.out.println(e);
