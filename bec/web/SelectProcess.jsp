@@ -144,7 +144,7 @@ if (user.getUserGroup().equals("Administrator") )
  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_PROCESS_OLIGO_PLATE %> >
-      Process oligo plate<P></font></td>
+      Process oligo plates<P></font></td>
   </tr>
  
 <tr> 
@@ -227,12 +227,12 @@ if (user.getUserGroup().equals("Administrator") )
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID %> >
-      Review oligo order(s) for Clone<P></font></td>
+      View oligo order(s) for Clone<P></font></td>
 </tr>
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
-      Review oligo plate<P></font></td>
+      View oligo plate<P></font></td>
 </tr>
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
