@@ -80,7 +80,7 @@ public class GIQueryHandler extends QueryHandler {
             }
             
             if(matchList.size() == 0) {
-                NoFound nf = new NoFound(null, NoFound.GI_NOT_IN_FLEX);
+                NoFound nf = new NoFound(searchTerm, NoFound.GI_NOT_IN_FLEX);
                 noFoundList.put(searchTerm, nf);
             } else {
                 foundList.put(searchTerm, matchList);
@@ -93,5 +93,61 @@ public class GIQueryHandler extends QueryHandler {
     }
     
     protected void setQueryParams(List params) {
-    }   
+    }  
+    
+    public static void main(String args[]) {
+        List searchTerms = new ArrayList();
+        searchTerms.add("10835090");
+        searchTerms.add("4502422");
+        searchTerms.add("16306536");
+        searchTerms.add("4557368");
+        searchTerms.add("4508004");
+        searchTerms.add("5453803");
+        searchTerms.add("4502420");
+        searchTerms.add("1234");
+        searchTerms.add("2345");
+
+        GIQueryHandler handler = new GIQueryHandler();
+        try {
+            handler.handleQuery(searchTerms);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            System.exit(0);
+        }
+        
+        Map found = handler.getFoundList();
+        Map noFound = handler.getNoFoundList();
+        
+        System.out.println("========== Found ==========");
+        Set keys = found.keySet();
+        Iterator iter = keys.iterator();
+        while(iter.hasNext()) {
+            String term = (String)iter.next();
+            System.out.println("search term: "+term);
+            List matchList = (List)found.get(term);
+            for(int i=0; i<matchList.size(); i++) {
+                MatchFlexSequence mfs = (MatchFlexSequence)matchList.get(i);
+                System.out.println("\t"+mfs.getFlexsequenceid());
+                System.out.println("\t"+mfs.getIsMatchByGi());
+                System.out.println("\t"+mfs.getMatchGenbankId());
+                BlastHit bh = mfs.getBlastHit();
+                if(bh == null) {
+                    System.out.println("\tNo blast");
+                }
+            }
+        }
+        
+        System.out.println("========== No Found ==========");
+        keys = noFound.keySet();
+        iter = keys.iterator();
+        while(iter.hasNext()) {
+            String term = (String)iter.next();
+            System.out.println("search term: "+term);
+            NoFound nf = (NoFound)noFound.get(term);
+            System.out.println("\t"+nf.getSearchTerm());
+            System.out.println("\t"+nf.getReason());
+        }
+        
+        System.exit(0);
+    }  
 }
