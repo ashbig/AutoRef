@@ -25,7 +25,8 @@ import edu.harvard.med.hip.flex.workflow.*;
  * @author  htaycher
  * @version
  */
-public class ImportMgcCloneInfoAction extends AdminAction {    
+public class ImportMgcCloneInfoAction extends WorkflowAction
+{
     /**
      * Does the real work for the perform method which must be overriden by the
      * Child classes.
@@ -38,31 +39,51 @@ public class ImportMgcCloneInfoAction extends AdminAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+   // private static boolean isBusy = false;
+    
+    public ActionForward flexPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         ActionErrors errors = new ActionErrors();
-        
+        /*
+        synchronized (this)
+        {
+            if ( isBusy)
+            {
+                request.setAttribute("message","Application is busy. Somebody else is uploading the MGC master list. Please, come later.");
+                return mapping.findForward("proccessing");
+            }
+            else
+            {
+                isBusy = true;
+            }
+        }
+        */
         FormFile mgcCloneFile = ((MgcCloneInfoImportForm)form).getMgcCloneFile();
         String fileName =  ((MgcCloneInfoImportForm)form).getFileName();
         InputStream input = null;
-        try {
+        try
+        {
             input = mgcCloneFile.getInputStream();
-        } catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex)
+        {
             errors.add("mgcCloneFile", new ActionError("flex.infoimport.file", ex.getMessage()));
             saveErrors(request,errors);
             return new ActionForward(mapping.getInput());
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             errors.add("mgcCloneFile", new ActionError("flex.infoimport.file", ex.getMessage()));
             saveErrors(request,errors);
             return new ActionForward(mapping.getInput());
         }
-        /*
-        MgcMasterListImporter importer = new MgcMasterListImporter();
-        importer.importMgcCloneInfoIntoDB(input, fileName) ;
-         **/
+        
+      
         ImportInformationRunner import_info = new ImportInformationRunner(input, fileName);
         Thread t = new Thread(import_info);
         t.start();
+        request.setAttribute("message",
+        "Information is uploading. It can take up to an hour based on number of clones. The e-mail notification will be sent to you upon completion.");
         return mapping.findForward("proccessing");
+        
     }
     
     class ImportInformationRunner implements Runnable
@@ -76,11 +97,12 @@ public class ImportMgcCloneInfoAction extends AdminAction {
         }
         public void run()
         {
-             MgcMasterListImporter importer = new MgcMasterListImporter();
-             importer.importMgcCloneInfoIntoDB(m_Input, m_filename) ;
+            MgcMasterListImporter importer = new MgcMasterListImporter();
+            importer.importMgcCloneInfoIntoDB(m_Input, m_filename) ;
+           // isBusy = false;
         }
     }
-            
+    
 }
 
 
