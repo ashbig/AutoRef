@@ -20,6 +20,7 @@ import java.util.*;
  */
 public class ColonyPickLogFileParser {
     public static final String DILIM = " ";
+    public static final int TOTALCOUNT = 96;
     
     private InputStream input;
     private String errorMessage;
@@ -85,7 +86,7 @@ public class ColonyPickLogFileParser {
                 if(start && !end) {
                     totalCount++;
                     
-                    if(totalCount == 96)
+                    if(totalCount == TOTALCOUNT)
                         end = true;
                     
                     StringTokenizer st = new StringTokenizer(line, DILIM);
