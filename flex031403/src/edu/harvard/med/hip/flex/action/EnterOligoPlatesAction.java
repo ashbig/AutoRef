@@ -100,7 +100,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             }
             
             String templatePlate = null;
-            if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
+            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW) 
+                && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
                 templatePlate = ((CreatePCRPlateForm)form).getTemplatePlate();
                 
                 if((templatePlate == null) || (templatePlate.trim().length()<1)) {
@@ -131,7 +132,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             
             Container mgc = null;
             Container template = null;
-            if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW) {
+            if(workflowid == Workflow.MGC_CREATOR_WORKFLOW 
+                || workflowid == Workflow.MGC_GATEWAY_WORKFLOW) {
                 try {
                     mgc = ps.getMgcContainer();
                 } catch (Exception ex) {
@@ -219,7 +221,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
                 
-                if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW) {
+                if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW 
+                    || workflowid == Workflow.MGC_CREATOR_WORKFLOW) {
                     request.setAttribute("templateid", new Integer(template.getId()));
                 }
                 return (mapping.findForward("success_oligo_dilute"));
