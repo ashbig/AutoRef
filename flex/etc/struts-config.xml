@@ -150,7 +150,7 @@
     <action     path="/EnterTransformDetails"
                 type="edu.harvard.med.hip.flex.action.EnterTransformDetailsAction"
                 name="transformEntryForm"
-                scope="request"
+                scope="session"
                 input="/EnterProcessResults.jsp">
         <forward name="sucess" path="/EnterTransformDetails.jsp"/>
     </action>
