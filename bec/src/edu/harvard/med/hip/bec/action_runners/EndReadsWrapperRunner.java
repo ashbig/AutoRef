@@ -23,13 +23,22 @@ import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.user.*;
+import edu.harvard.med.hip.utility.*;
 /**
  *
  * @author  HTaycher
  */
 public class EndReadsWrapperRunner implements Runnable
 {
-    
+    /*
+     private   String m_needle_output_path = null;
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+            m_needle_output_path = "d:\\output\\tmp_assembly\\";
+        else
+            m_needle_output_path = "/tmp_assembly/";
+    }
+     **/
     // outputBaseDir specify the base directory for trace file distribution
     private static final String OUTPUT_BASE_ROOT = "d:/trace_files_root/";
     //inputTraceDir specify the directory where the trace files get dumped from sequencer
@@ -115,6 +124,12 @@ public class EndReadsWrapperRunner implements Runnable
                     {
                          Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
                         "elena_taycher@hms.harvard.edu", "Request for end reads wrapper: error messages.", "Errors\n ",m_error_messages);
+                
+                    }
+                     if (m_error_messages.size()==0)
+                    {
+                         Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                        "elena_taycher@hms.harvard.edu", "Request for end reads wrapper: processing finished.", "Processing finished ");
                 
                     }
                 }
