@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.21 2001-06-29 12:20:59 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.22 2001-06-29 12:22:06 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -99,7 +99,7 @@ public class Process {
             if(rs.next()) {
                 
                 retProcess =
-                new Process(executionid, new Protocol(rs.getInt("PROTOCOLID")),
+                new Process(executionId, new Protocol(rs.getInt("PROTOCOLID")),
                 rs.getString("EXECUTIONSTATUS"),
                 new Researcher(rs.getInt("RESEARCHERID")),
                 rs.getString("PROCESSDATE"),rs.getString("SUBPROTOCALNAME"),
