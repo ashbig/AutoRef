@@ -126,6 +126,8 @@ public class SearchRecord {
             conn = t.requestConnection();
             sr.setSearchid(1);
             sr.persist(conn);
+            sr.setSearchStatus(SearchRecord.COMPLETE);
+            sr.updateStatus(conn);
             DatabaseTransaction.commit(conn);
         } catch (Exception ex) {
             System.out.println(ex);
