@@ -77,6 +77,7 @@ public class MgcMasterListImporter
                   Algorithms.notifyUser(m_username, fileName, errors_to_print);
             }catch(Exception e){}
         }
+      
         return true;
         
     }
@@ -144,23 +145,25 @@ public class MgcMasterListImporter
                 
                 //check if this mgc clone info exist in db for the same clone
                 seq_id = -1;
-                if ( existingClones.containsKey(info [1]) )
+                if ( existingClones.containsKey(info [1] + "|" +  current_container )    )
                 {
-                    MinClone mc = (MinClone)existingClones.get(info [1]);
+                    MinClone mc = (MinClone)existingClones.get(info [1] + "|" +  current_container );
                     
-                    if (mc.isEqual(current_container,info[11], info[12]))
+                    if (   mc.isEqual(info[11], info[12])  )
                         continue;
                     else// case that clone came on different plate
                         seq_id = mc.getSequenceId();
                 }
+                
                 if ( !last_container.equals(current_container))
                 {
                     
                     cont = new MgcContainer( -1,fileName, new Location(Location.FREEZER) ,
                     current_container,
-                    MgcContainer.getLabel(prev_mgc_containers +  current_container_number++),
+                    MgcContainer.getLabel(prev_mgc_containers + current_container_number ),
                     info[9]);
                     containerCol.add(cont);
+                    current_container_number++;
                     last_container = current_container;
                     
                 }
@@ -195,7 +198,7 @@ public class MgcMasterListImporter
                       " mcont.oricontainer as cont from mgcclone mc, mgccontainer mcont, sample s, containerheader h where "+
                         "(s.containerid = h.CONTAINERID and mcont.mgccontainerid = h.containerid and "+
                         "mc.mgccloneid=s.sampleid )";
-
+        
         CachedRowSet crs = null;
         
         try
@@ -209,7 +212,7 @@ public class MgcMasterListImporter
                                            crs.getString("aROW"),
                                            crs.getInt("aCOL"),
                                            crs.getInt("SEQ"));
-                existingClones.put(mc.getMgcIdString(), mc);
+                existingClones.put(mc.getKey(), mc);
             }
             return true;
         }
@@ -480,14 +483,14 @@ public class MgcMasterListImporter
             m_seq_id = seq_id;
         }
         
-        public boolean isEqual( String cont, String row, String col)
+        public boolean isEqual(  String row, String col)
         {
-            if (m_container_name.equalsIgnoreCase(cont) && m_row.equalsIgnoreCase(row) &&
-                    m_col == Integer.parseInt(col))
+            if (m_row.equalsIgnoreCase(row) &&  m_col == Integer.parseInt(col))
                 return true;
             else
                 return false;
         }
+        public String           getKey(){ return m_mgcid+"|"+m_container_name; }
         public int getMgcId(){ return m_mgcid;}
         public String getMgcIdString(){ return Integer.toString(m_mgcid);}
        // public int getCol(){ return m_col;}
