@@ -1,0 +1,120 @@
+<%@ page contentType="text/html"%>
+<%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
+
+<%@ page import="java.util.*" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="edu.harvard.med.hip.bec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
+<%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
+<%@ page import="edu.harvard.med.hip.bec.Constants" %>
+<html>
+<head>
+
+</head>
+<body>
+<jsp:include page="NavigatorBar_Administrator.jsp" />
+	<p><P>
+<br>
+<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
+    <tr>
+        <td >
+    <font color="#008000" size="5"><b> <%= request.getAttribute(Constants.JSP_TITLE)%>  </font>
+    <hr>
+    
+    <p>
+    </td>
+    </tr>
+</table>
+
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr>
+      <td width="100%"><html:errors/></td>
+    </tr>
+	
+  </table>
+  </center>
+</div>
+<p></p>
+<% ArrayList clone_info = (Container)request.getAttribute("clone_info") ;
+
+%>
+<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+  <tr> 
+    <td bgcolor="#1145A6" height="29">  <font color="#FFFFFF"><strong>Clone List:</strong></font></td>
+    
+  </tr>
+ 
+</table>
+
+<table border="1" cellpadding="0" cellspacing="0" width="84%" align=center>
+    <tr >
+        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Plate</font></strong></th>
+       <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
+       <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Type</font></strong></th>
+        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Id</font></strong></th>
+        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Status</font></strong></th>
+         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sequence ID</font></strong></th>
+        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sequence Status</font></strong></th>
+        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Discrepancy Report</font></strong></th>
+	<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Quality</font></strong></th>
+    </tr>
+<%  
+    String row_colorB = " bgColor='#e4e9f8'"; String row_colorA =" bgColor='#b8c6ed'";
+	String row_color = " bgColor='#e4e9f8'";
+	
+	int constructid = -1;
+        CloneSample clone = null;
+    for (int count = 0; count < clone_info.size(); count ++)
+	{
+	
+		clone = (CloneSample)clone_info.get(count);
+                if ( clone.getSampleType().equals("CONTROL_POSITIVE") ||  clone.getSampleType().equals("CONTROL_NEGATIVE"))
+                {
+                  row_color = " bgColor=blue";
+                }
+                else ( clone.getSampleType().equals("ISOLATE") )
+		{
+                    if (constructid != clone.getConstructId())
+                    {
+                        if (row_color.equals(row_colorA))
+                        {
+                            row_color = row_colorB;
+                        }
+                        else
+                        {
+                            row_color = row_colorA;
+                        }
+                    }
+
+                   constructid = iso.getConstructId();
+                }
+	%>
+	<tr>
+                <td <%= row_color %>> <%= clone.getPlateLabel () %>  </td>
+		<td <%= row_color %> align="center"><%= clone.getPosition() %> </td>
+		<td <%= row_color %> align="center"> <%= clone.getSampleType() %></td>
+                <td <%= row_color %> align="center"> <%= clone.getCloneId () %> </td>
+                <td <%= row_color %> align="center"> <%= clone.getCloneStatus () %> </td>
+                <td <%= row_color %> align="center"><% if (clone.getSequenceId() != -1)
+                {%>	<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.SCOREDSEQUENCE_DEFINITION_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+		<%= clone.getSequenceId()%></a> <%}else{%>&nbsp; <%}%></td>
+                 <td <%= row_color %> align="center"> <%= clone.getSequenceAnalisysStatus () %> </td>
+                <td  <%= row_color %> align="center"> <input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clonesequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"></td>
+                <td <%= row_color %> align="center"> <%= clone.getcloneQuality() %> </td>
+
+	</tr>
+	<%}%>
+    </table>
+<P><P>
+<div align="center"> <input type="SUBMIT"/></DIV>
+</html:form> 
+</body>
+</html>

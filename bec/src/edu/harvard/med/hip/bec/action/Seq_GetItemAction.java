@@ -95,6 +95,7 @@ public class Seq_GetItemAction extends ResearcherAction
                )
                {
                     id = Integer.parseInt( (String) request.getParameter("ID"));
+                       
                 }
             switch  (forwardName)
             {
@@ -120,9 +121,11 @@ public class Seq_GetItemAction extends ResearcherAction
                     BioVector vector = BioVector.getVectorById( cs.getVectorId());
                     BioLinker linker3 = BioLinker.getLinkerById( cs.getLinker3Id() );
                     BioLinker linker5 = BioLinker.getLinkerById( cs.getLinker5Id() );
-                    request.setAttribute("linker3", linker3);
-                    request.setAttribute("linker5", linker5);
-                    request.setAttribute("vector", vector);
+                    cs.setVector(vector);
+                    cs.setLinker3(linker3);
+                    cs.setLinker5(linker5);
+                    request.setAttribute("cloning_strategy", cs);
+                   
                     return (mapping.findForward("display_cloning_strategy"));
                 }
                 case Constants.CONTAINER_PROCESS_HISTORY:
@@ -178,12 +181,12 @@ public class Seq_GetItemAction extends ResearcherAction
                         request.setAttribute("container",container);
                         request.setAttribute("rows", new Integer(8));
                         request.setAttribute("cols", new Integer(12));
-
+                        request.setAttribute("forwardName", new Integer(forwardName));
                         return (mapping.findForward("display_isolate_ranker_report"));
                     }
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
-                     System.out.println("send "+System.currentTimeMillis());
+                   
                     return (mapping.findForward("display_container_results_er"));
                   
                        
@@ -286,7 +289,9 @@ public class Seq_GetItemAction extends ResearcherAction
               //  case Constants.CLONE_SEQUENCE_DEFINITION_INT :
                 case   Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT :
                 {
+                    System.out.println("L");
                     AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(id);
+                    System.out.println("1L");
                     request.setAttribute("sequence",sequence);
                     return (mapping.findForward("display_discrepancyreport"));
                 }

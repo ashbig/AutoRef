@@ -56,7 +56,9 @@ public class PlateUploadRunner implements Runnable
     private User        m_user = null;
     private int         m_plate_info_type = -1;
     private ArrayList   m_error_messages = null;
-
+      private String     m_start_codon = null;
+    private String      m_fusion_stop_codon = null;
+    private String      m_close_stop_codon = null;
 
     public void         setContainerLabels(ArrayList v)    { m_master_container_labels = v;}
     public void         setVectorId(int vectorid )    { m_vector_id = vectorid;}
@@ -65,9 +67,13 @@ public class PlateUploadRunner implements Runnable
     public void         setNextStep(int put_plate_for_step)    { m_isolate_status = put_plate_for_step;}
     public void         setPlateInfoType(int plate_info_type){m_plate_info_type = PlateUploader.PLATE_NAMES;}
     public  void        setUser(User v)    {m_user=v;}
-
+     public  void        setStartCodon(String v){m_start_codon = v;}
+    public  void        setFusionStopCodon(String v){m_fusion_stop_codon = v;}
+    public  void        setClosedStopCodon(String v){m_close_stop_codon = v;}
+    
     public void run()
     {
+       
         // The database connection used for the transaction
         Connection conn = null;
         ArrayList master_plates = new ArrayList();
@@ -76,21 +82,15 @@ public class PlateUploadRunner implements Runnable
         PlateUploader pb = null;
         try
         {
-
-
-
             // conncection to use for transactions
             conn = DatabaseTransaction.getInstance().requestConnection();
             //request object
-
-
             int cloning_startegy_id ;
            //get clonningstategy, if it does not exist - create new
-         cloning_startegy_id = CloningStrategy.getCloningStrategyIdByVectorLinkerInfo( m_vector_id , m_linker3_id ,  m_linker5_id );
-
-            if (cloning_startegy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET )
+         cloning_startegy_id = CloningStrategy.getCloningStrategyIdByVectorLinkerInfo( m_vector_id , m_linker3_id ,  m_linker5_id,m_start_codon ,m_fusion_stop_codon ,m_close_stop_codon );
+             if (cloning_startegy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET )
             {
-                CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,m_vector_id , m_linker3_id ,  m_linker5_id ," ");
+                CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,m_vector_id , m_linker3_id ,  m_linker5_id ,m_start_codon ,m_fusion_stop_codon ,m_close_stop_codon," ");
                 str.insert(conn);
                 conn.commit();
                 cloning_startegy_id = str.getId();
@@ -101,7 +101,6 @@ public class PlateUploadRunner implements Runnable
             pb = new PlateUploader( m_master_container_labels, m_plate_info_type, cloning_startegy_id, m_isolate_status);
             pb.upload(conn);
             m_error_messages.addAll(pb.getErrors());
-
             //if at least one plate was uploaded create request
             if (pb.getContainerIds().size() > 0)
             {
@@ -142,6 +141,7 @@ public class PlateUploadRunner implements Runnable
         }
         catch(Exception e)
         {
+            System.out.println(e.getMessage());
             DatabaseTransaction.rollback(conn);
 
         }
@@ -151,11 +151,11 @@ public class PlateUploadRunner implements Runnable
             try
             {
                 DatabaseTransaction.closeConnection(conn);
-                System.out.println(m_error_messages.size()+" l");
+             //   System.out.println(m_error_messages.size()+" l");
                 //send errors
                 if (m_error_messages.size() != 0)
                 {
-                    System.out.println(m_error_messages.size()+" l1");
+                  //  System.out.println(m_error_messages.size()+" l1");
                     Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
                     "elena_taycher@hms.harvard.edu", "Upload plates: error messages.",
                     "Errors\n Processing of requested for the following plates:\n"+requested_plates +"\n"+
@@ -163,7 +163,7 @@ public class PlateUploadRunner implements Runnable
                 }
                 if (pb.getPassPlateNames().size()!=0)
                 {
-                    System.out.println(pb.getPassPlateNames().size()+" l3");
+                  //  System.out.println(pb.getPassPlateNames().size()+" l3");
                      Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
                     "elena_taycher@hms.harvard.edu", "Uploaded plates.",
                     "\n Processing of requested for the following plates:\n"+requested_plates +"\n The follwing plates have been sucessfully uploaded from FLEX into BEC"+

@@ -102,9 +102,7 @@
         
 <td width="30%">
 		
-<input type=BUTTON value="Discrepancy Report" 
- onClick="window.open('/BEC/Seq_GetItem.do?forwardName=
- <%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
  
 
 </td>
@@ -124,9 +122,7 @@
 		 </td>
 <td >
 		
-<input type=BUTTON value="Discrepancy Report" 
- onClick="window.open('/BEC/Seq_GetItem.do?forwardName=
- <%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clonesequence.getId()%>','<%= clonesequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clonesequence.getId()%>','<%= clonesequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
  
 
 </td>

@@ -191,20 +191,20 @@ public class Construct
    // public void                  setLinker5Id(int v){    m_linker5_id = v;}	
  
     
-    public BaseSequence         getRefSequenceForAnalysis()throws BecDatabaseException
+    public BaseSequence         getRefSequenceForAnalysis(String startCodon,
+                            String fusionStopCodon,String closedStopCodon)throws BecDatabaseException
       { 
          if(m_refsequence == null) 
             m_refsequence = new RefSequence(m_refsequence_id);
          String seq = m_refsequence.getCodingSequence();
+         seq = seq.substring(3, seq.length()-3);
          if (m_format == FORMAT_OPEN)
          {
-             seq = seq.substring(0, seq.length()-3);
-             seq += "TTG";
+             seq = startCodon + seq + fusionStopCodon;
          }
-         else if (m_format == FORMAT_OPEN)
+         else if (m_format == FORMAT_CLOSE)
          {
-              seq = seq.substring(0, seq.length()-3);
-             seq += "TAG";
+              seq = startCodon + seq + closedStopCodon;
          }
              
          m_refsequence_for_analysis =  new BaseSequence(seq, BaseSequence.BASE_SEQUENCE );
@@ -458,7 +458,7 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
                     ||istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED
                     || istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS)
                     {
-                        CloneSequence cl = CloneSequence.getByIsolateTrackingId(istr.getId(), CloneSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED);
+                        CloneSequence cl = CloneSequence.getByIsolateTrackingId(istr.getId(), CloneSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
                         istr.setCloneSequence(cl);
                     }
                     else

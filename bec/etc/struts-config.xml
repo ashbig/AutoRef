@@ -151,6 +151,8 @@
             <forward name="display_read_report" path="/ReadReport.jsp"/>
              <forward name="show_activate_list" path="/CloneList.jsp"/>
             <forward name="show_clone_status_list" path="/ContainerCloneStatus.jsp"/>
+             <forward name="construct_report" path="/ConstructReport.jsp"/>
+            
 </action>
 
  
@@ -160,11 +162,13 @@
                 name="seqGetSpecForm"
                 type="edu.harvard.med.hip.bec.action.SelectProcessAction">
             <forward name="upload_plates" path="/RunUploadPlates.jsp"/>
+             <forward name="run_desicion_tool" path="/RunDesicionTool.jsp"/>
             <forward name="select_vector" path="/SelectVector.jsp"/>
             <forward name="run_process" path="/RunProcess.jsp"/>
             <forward name="scan_label" path="/ContainerScan.jsp"/>
             <forward name="submit_data_file" path="/SubmitDataFile.jsp"/>
-           
+            <forward name="select_plates" path="/SelectPlatesForProcess.jsp"/>
+            <forward name="processing" path="/ConfirmProcess.jsp"/>
 
     </action>
 
@@ -185,6 +189,7 @@
                 name="seqGetSpecForm"
                 type="edu.harvard.med.hip.bec.action.RunProcessAction">
             <forward name="processing" path="/ConfirmProcess.jsp"/>
+            <forward name="desicion_tool_report" path="/DesicionToolReport.jsp"/>
             
     </action>
 

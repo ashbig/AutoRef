@@ -39,9 +39,9 @@ public class IsolateRanker
     private PolymorphismSpec  m_polymorphism_spec = null;
     private boolean           m_isRunPolymorphism = false;
     
-    private BioLinker           m_linker5 = null;
-    private BioLinker           m_linker3 = null;
-    
+ //   private BioLinker           m_linker5 = null;
+ //   private BioLinker           m_linker3 = null;
+    private CloningStrategy     m_cloning_strategy = null;
      private int                m_5p_min_read_length = 0;
     private int                m_3p_min_read_length = 0;
     
@@ -109,14 +109,11 @@ public class IsolateRanker
      public ArrayList       getProcessedConstructId(){ return   m_finished_constructs;}
      public void           setForwardReadSence(boolean b){m_forward_read_sence = b;}
      public  void           setReverseReadSence(boolean b)   {       m_reverse_read_sence = b;}
-     public  void           setLinker5( BioLinker    v){       m_linker5 = v;}
-     public  void           setLinker3( BioLinker   v){        m_linker3 = v;}
+     //public  void           setLinker5( BioLinker    v){       m_linker5 = v;}
+     //public  void           setLinker3( BioLinker   v){        m_linker3 = v;}
       public  void           set5pMinReadLength(int    v){       m_5p_min_read_length = v;}
      public  void           set3pMinReadLength(int    v){        m_3p_min_read_length = v;}
-     
-     
-     
-     
+      public void    setCloningStrategy(CloningStrategy  v)      {          m_cloning_strategy = v;          }
      //main calling function : call action per construct
     public void run(Connection conn) throws BecUtilException, BecDatabaseException,ParseException
     {
@@ -151,17 +148,23 @@ public class IsolateRanker
             IsolateTrackingEngine it = null;
             ArrayList reads = null;
             CloneSequence clonesequence = null;
+            BaseSequence refsequence = null;
 
               // this is for not known gerry sequences
             if (construct.getRefSequence().getText().equals("NNNNN") ) return ;
             //prepare refsequence
-            BaseSequence refsequence = construct.getRefSequenceForAnalysis();
-            refsequence.setId( construct.getRefSeqId());
+            BaseSequence construct_refseqence = construct.getRefSequenceForAnalysis(  m_cloning_strategy.getStartCodon(),
+                                           m_cloning_strategy.getFusionStopCodon(), 
+                                           m_cloning_strategy.getClosedStopCodon() );
             
-            int cdsstart = m_linker5.getSequence().length() ;
-            int cdsstop = m_linker5.getSequence().length() + refsequence.getText().length() ;
-           
-            refsequence.setText(m_linker5.getSequence() + refsequence.getText() +m_linker3.getSequence() );
+            
+            
+            int cdsstart = m_cloning_strategy.getLinker5().getSequence().length() ;
+            int cdsstop =  m_cloning_strategy.getLinker5().getSequence().length() + construct_refseqence.getText().length() ;
+           //create refsequence for analysis
+            refsequence = new BaseSequence();
+            refsequence.setId( construct.getRefSeqId());
+            refsequence.setText( m_cloning_strategy.getLinker5().getSequence() + construct_refseqence.getText() + m_cloning_strategy.getLinker3().getSequence() );
             
             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
@@ -185,7 +188,7 @@ public class IsolateRanker
                 else if (clonesequence != null )//sequence exists process it
                 {
                     processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
-                    if (clonesequence.getStatus() == BaseSequence.STATUS_NOMATCH)
+                    if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
                     {
                         it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
                     }
@@ -326,7 +329,7 @@ public class IsolateRanker
             read_sequence.setText(read_sequence_text);
             read_sequence.setScoresAsArray(read_scores);
             
-            if (read_sequence.getStatus() == BaseSequence.STATUS_NOMATCH)
+            if (read_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
             {
                 if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
                 {
@@ -388,7 +391,7 @@ public class IsolateRanker
      
         // read can have all mutations analyzed and requers only score recalculation based on new spec
         
-        if (clonesequence.getCloneSequenceStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED)
+        if (clonesequence.getCloneSequenceStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED)
         {
    //prepare detectors
             DiscrepancyFinder df = new DiscrepancyFinder();
@@ -405,7 +408,7 @@ public class IsolateRanker
             
              
           
-            if (clonesequence.getStatus() == BaseSequence.STATUS_NOMATCH)
+            if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
             {
                 return ;
             }
@@ -424,9 +427,17 @@ public class IsolateRanker
                 clonesequence.setLinker3Stop( df.getCdsStop()  );
                 clonesequence.updateLinker3Stop(clonesequence.getId(), clonesequence.getLinker3Stop(), conn);
                 clonesequence.insertMutations(conn);
-                clonesequence.setCloneSequenceStatus(BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_DF);
-                clonesequence.updateCloneSequenceStatus(clonesequence.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_DF,conn);
-            }
+                if ( clonesequence.getDiscrepancies() != null && clonesequence.getDiscrepancies().size() > 0)
+                {
+                    clonesequence.setCloneSequenceStatus(BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES);
+                    clonesequence.updateCloneSequenceStatus(clonesequence.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,conn);
+                }
+                else
+                {
+                    clonesequence.setCloneSequenceStatus(BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES);
+                    clonesequence.updateCloneSequenceStatus(clonesequence.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES,conn);
+                }
+             }
         }
      
     }

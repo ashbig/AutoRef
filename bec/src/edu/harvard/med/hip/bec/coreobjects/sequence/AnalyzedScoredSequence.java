@@ -25,7 +25,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
     protected Hashtable m_discrepancysummary = null;
     protected int[] m_discrepancysummary_number = null;
      //obtained/analyzed/mutations cleared/final
-    protected int m_analize_status = STATUS_OBTAINED;
+    protected int m_analize_status = CLONE_SEQUENCE_STATUS_ASSEMBLED;
      //ready for storage or not
     protected int         m_refsequenceid = -1;
     
@@ -51,7 +51,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
     {
         super( Algorithms.cleanWhiteSpaces(text) , null);
         m_type = ANALIZED_SCORED_SEQUENCE;
-        m_analize_status = STATUS_OBTAINED;
+        m_analize_status = CLONE_SEQUENCE_STATUS_ASSEMBLED;
         m_refsequenceid = refseqid;
     }
      
@@ -85,11 +85,12 @@ public class AnalyzedScoredSequence extends ScoredSequence
     {
         switch (m_analize_status)
         {
-            case STATUS_OBTAINED: return "Obtained"; 
-            case STATUS_ANALIZED_YES_DISCREPANCIES : return "Analyzed"; 
-            case STATUS_NOMATCH :return "Not Matched"; 
-            case STATUS_POLYMORPHISM_CLEARED :return "Polymorphism resolved"; 
-           
+            case CLONE_SEQUENCE_STATUS_ASSEMBLED: return "Obtained"; 
+            case CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES : return "Analyzed, discrepancies found"; 
+            case CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES: return "Analyzed, no discrepancies found";
+            case CLONE_SEQUENCE_STATUS_NOMATCH :return "Not Matched"; 
+            case CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED :return "Polymorphism resolved"; 
+            case CLONE_SEQUENCE_STATUS_FINISHED: return "Analysis Finished";
             default: return "";
         }
     } 

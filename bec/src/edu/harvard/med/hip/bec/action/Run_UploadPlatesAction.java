@@ -44,6 +44,9 @@ public class Run_UploadPlatesAction extends ResearcherAction
                                     HttpServletResponse response)
                                     throws ServletException, IOException
     {
+        return null;
+    }
+    /*
         // place to store errors
         ActionErrors errors = new ActionErrors();
         
@@ -92,7 +95,9 @@ public class Run_UploadPlatesAction extends ResearcherAction
         public void         setNextStep(int put_plate_for_step)    { i_isolate_status = put_plate_for_step;}
         public void         setPlateInfoType(int plate_info_type){i_plate_info_type = PlateUploader.PLATE_NAMES;}
         public  void        setUser(User v)    {i_user=v;}
-
+         public  void        setStartCodon(String v){i_start_codon = v;}
+        public  void        setFusionStopCodon(String v){i_fusion_stop_codon = v;}
+        public  void        setClosedStopCodon(String v){i_close_stop_codon = v;}
         
         
         
@@ -181,7 +186,7 @@ public class Run_UploadPlatesAction extends ResearcherAction
 
                 conn.commit();
             }
-            */
+            
         }
         catch(Exception e)
         {
@@ -232,6 +237,6 @@ public class Run_UploadPlatesAction extends ResearcherAction
    
     }
     
-    
+    */
 }
 

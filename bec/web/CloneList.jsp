@@ -86,7 +86,7 @@ int forwardName = Integer.parseInt( (String) request.getParameter("forwardName")
  
  <html:form action="/RunProcess.do" > 
 <input name="forwardName" type="hidden" value="<%= request.getAttribute("forwardName") %>" >
- <input name="containeLabel" type="hidden" value="<%= container.getLabel() %>" >
+ <input name="containerLabel" type="hidden" value="<%= container.getLabel() %>" >
 <P><P></P></P>
 <table border="1" cellpadding="0" cellspacing="0" width="84%" align=center>
     <tr >

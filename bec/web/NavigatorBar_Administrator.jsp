@@ -51,12 +51,15 @@ dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "/BEC/Seq_
 	myNavBar1.addMenu(dhtmlMenu);
 
 
-	dhtmlMenu = new NavBarMenu(100, 200);
+<%}%>
+
+<% if (!user.getUserGroup().equals("Researcher"))
+{
+    
+%>      dhtmlMenu = new NavBarMenu(100, 200);
 	dhtmlMenu.addItem(new NavBarMenuItem("Process", "SelectProcess.jsp"));
 	myNavBar1.addMenu(dhtmlMenu);
 <%}%>
-
-
 dhtmlMenu = new NavBarMenu(100, 220);
 dhtmlMenu.addItem(new NavBarMenuItem("Search", ""));
 dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=container Process History"));

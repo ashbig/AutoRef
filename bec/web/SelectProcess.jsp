@@ -160,7 +160,7 @@
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DESIGION_TOOL%>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DECISION_TOOL%>>
       Run decision tool (settings required) </font> <P></td>
   </tr>
   <tr>

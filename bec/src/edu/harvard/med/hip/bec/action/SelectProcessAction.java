@@ -231,8 +231,12 @@ public class SelectProcessAction extends ResearcherAction
                     return (mapping.findForward("run_process"));
                 }
                 
-                case Constants.PROCESS_RUN_DESIGION_TOOL://run decision tool
+                case Constants.PROCESS_RUN_DECISION_TOOL://run decision tool
                 {
+                    ArrayList spec_collection =  FullSeqSpec.getAllSpecNames() ;
+                     request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
+                   
+                    return (mapping.findForward("run_desicion_tool"));
                 }
                 
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE:

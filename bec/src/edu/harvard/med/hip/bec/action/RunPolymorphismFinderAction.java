@@ -110,7 +110,7 @@ public class RunPolymorphismFinderAction extends ResearcherAction
               // change status per each isolate 
                it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED, it.getId(),  conn );
                //change sequence status
-               CloneSequence.updateCloneSequenceStatus( clonesequence.getId(),BaseSequence.STATUS_FINISHED, conn);
+               CloneSequence.updateCloneSequenceStatus( clonesequence.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_FINISHED, conn);
               
            }
            

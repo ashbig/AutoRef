@@ -59,7 +59,7 @@ BioVector vector= cs.getVector();
 </tr>
 <tr>
 	<td width="25%" bgColor="#e4e9f8">  <b>Closed Stop Codon</b>  </td>
-	<td width="75%" bgColor="#e4e9f8"><%= cs.getOpenStopCodon() %></td>
+	<td width="75%" bgColor="#e4e9f8"><%= cs.getClosedStopCodon() %></td>
 </tr>
 <TR><TD colspan=2>&nbsp;</TD></TR>
 <tr>

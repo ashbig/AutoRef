@@ -78,12 +78,18 @@ public class IsolateRankerRunner implements Runnable
                      requested_plates += container_id;
                     ArrayList constructs = Construct.getConstructsFromPlate(container_id);
                       CloningStrategy container_cloning_strategy = Container.getCloningStrategy(container_id);
-                     BioLinker linker3 =  null; BioLinker linker5 =null;
+                    
                      int linker3_length = 0;   int linker5_length = 0;
                       if (container_cloning_strategy != null)
                      {
-                         linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
-                         linker5 = BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() );
+                          container_cloning_strategy.setLinker3( BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id()) );
+                         container_cloning_strategy.setLinker5( BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() ));
+                          if (container_cloning_strategy.getLinker3() == null || container_cloning_strategy.getLinker5() == null ||
+                            container_cloning_strategy.getStartCodon() == null || container_cloning_strategy.getFusionStopCodon() == null ||
+                            container_cloning_strategy.getClosedStopCodon()==null)
+                         {
+                             throw new Exception("Cannot get Cloning strategy details");
+                         }
                      }
                     if (m_isRunPolymorphismFinder)
                     {
@@ -94,16 +100,10 @@ public class IsolateRankerRunner implements Runnable
                          isolate_ranker = new IsolateRanker(m_fullseq_spec,  m_endreads_spec,constructs);
                     }
 
-                    if (linker3 != null)
-                    {
-                     isolate_ranker.setLinker3(linker3);
-                    linker3_length = linker3.getSequence().length();
-                    }
-                    if (linker5 != null)
-                    {
-                     isolate_ranker.setLinker5(linker5);
-                     linker5_length = linker5.getSequence().length();
-                    }
+                     isolate_ranker.setCloningStrategy(container_cloning_strategy);
+                     linker3_length = container_cloning_strategy.getLinker3().getSequence().length();
+                     linker5_length = container_cloning_strategy.getLinker5().getSequence().length();
+                      
                     if (oligos[0] != null)
                     {
                      isolate_ranker.set5pMinReadLength(oligos[0].getLeaderLength() + linker5_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION);

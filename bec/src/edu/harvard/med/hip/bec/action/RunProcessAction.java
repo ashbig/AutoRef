@@ -68,28 +68,44 @@ public class RunProcessAction extends ResearcherAction
             {
             
                  String  container_labels = (String) request.getParameter("plate_names");//get from form
-                 int     vectorid = Integer.parseInt( (String)request.getParameter(Constants.VECTOR_ID_KEY));//get from form
+                  String     start_codon =  (String)request.getParameter("start_codon");//get from form
+                  String     fusion_stop_codon =  (String)request.getParameter("fusion_stop_codon");//get from form
+                   String    closed_stop_codon =  (String)request.getParameter("closed_stop_codon");//get from form
+                  
+                  int     vectorid = Integer.parseInt( (String)request.getParameter(Constants.VECTOR_ID_KEY));//get from form
                  int     linker3id = Integer.parseInt( (String) request.getParameter("3LINKERID"));//get from form
                  int     linker5id = Integer.parseInt( (String)request.getParameter("5LINKERID"));//get from form
                  int     put_plate_for_step = Integer.parseInt( (String) request.getParameter("nextstep")); //get from form 
+                 
+                 //validate input
+                if (container_labels == null || container_labels.trim().equals("") )
+                {
+                    errors.add(ActionErrors.GLOBAL_ERROR,  new ActionError("error.container.querry.parameter", "Please enter plate labels"));
+                    saveErrors(request,errors);
+                    return new ActionForward(mapping.getInput());
+                }
+                 
                  request.setAttribute(Constants.JSP_TITLE,"processing Request for Plates Upload");
                 request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+container_labels);
-                
+            
                 //parse plate names
                  master_container_labels = Algorithms.splitString(container_labels);
                
-/*
-                PlateUploaderRunner runner = new PlateUploaderRunner();
+
+                PlateUploadRunner runner = new PlateUploadRunner();
                 runner.setContainerLabels(master_container_labels );
                 runner.setVectorId(vectorid );
                 runner.setLinker3Id(linker3id);
                 runner.setLinker5Id(linker5id);
+                runner.setStartCodon(start_codon);
+                runner.setFusionStopCodon(fusion_stop_codon);
+                runner.setClosedStopCodon(closed_stop_codon);
                 runner.setNextStep(put_plate_for_step);
                 runner.setPlateInfoType(PlateUploader.PLATE_NAMES);
                 runner.setUser(user);
                 t = new Thread(runner);
                 t.start();
-                 **/
+                 
               
                 break;
            }
@@ -109,19 +125,21 @@ public class RunProcessAction extends ResearcherAction
                   }  
                 }
                  master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
+                
+                 
                  int forward_primer_id = Integer.parseInt( (String) request.getParameter("5p_primerid"));
                 int reverse_primer_id = Integer.parseInt( (String) request.getParameter("3p_primerid"));
               
                 request.setAttribute(Constants.JSP_TITLE,"Request for end read sequencing request" );
                 request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates "+ plate_names);
-                /*
+                
                 EndReadsRequestRunner runner = new EndReadsRequestRunner();
                 runner.setContainerIds(master_container_ids );
                 runner.setForwardPrimerId( forward_primer_id );
                 runner.setRevercePrimerId(reverse_primer_id);
                 runner.setUser(user);
                 t = new Thread();           t.start();
- **/
+ 
                 return mapping.findForward("processing");
               
             }
@@ -210,9 +228,48 @@ public class RunProcessAction extends ResearcherAction
             {
             }
 
-            case Constants.PROCESS_RUN_DESIGION_TOOL : //run decision tool
+            case Constants.PROCESS_RUN_DECISION_TOOL : //run decision tool
             {
-        }
+                //get spec
+                 int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
+                //get plate label or clonids
+                String data_type =  (String) request.getParameter("data_type");
+                String plate_name = null;String  clone_ids = null;
+              
+                if ( data_type.equalsIgnoreCase("PLATE"))
+                {
+                    plate_name = (String) request.getParameter("plate_name");
+                }
+                else if ( data_type.equalsIgnoreCase("CLONE"))
+                {
+                     clone_ids = (String) request.getParameter("clone_collection");
+                }
+       System.out.println(plate_name +" "+clone_ids);
+                if ( (plate_name == null ||  plate_name.trim().equals("")  ) &&
+                    (clone_ids == null || clone_ids.trim().equals("")) )
+                {
+                    errors.add(ActionErrors.GLOBAL_ERROR,  new ActionError("error.container.querry.parameter", "Please enter plate labels"));
+                    saveErrors(request,errors);
+                    return (mapping.findForward("error"));
+                }
+                 
+                //run 
+                DesicionTool ds = new DesicionTool();
+                ds.setSpecId(bioeval_spec_id);
+                if ( data_type.equalsIgnoreCase("PLATE"))
+                {
+                    ds.setPlateName(plate_name);
+                }
+                else if ( data_type.equalsIgnoreCase("CLONE"))
+                {
+                     ds.setCLoneIds( Algorithms.splitString(clone_ids) );
+                }
+                ds.run();
+                ArrayList clone_data = ds.getCloneData();
+                request.setAttribute(Constants.JSP_TITLE,"report Clone Sequence Qualities" );
+                request.setAttribute("clone_data",clone_data );
+                return mapping.findForward("desicion_tool_report");
+             }
 
 
             case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE : //run decision tool

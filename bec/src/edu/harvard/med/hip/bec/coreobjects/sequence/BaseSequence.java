@@ -36,30 +36,31 @@ public  class BaseSequence
     public static final int SEQUENCE_INFO_SCORE = 1;
     
     //sequence analysis status
-    public static final int STATUS_OBTAINED = 0;
-    public static final int STATUS_ANALIZED_YES_DISCREPANCIES = 1;
-    public static final int STATUS_ANALIZED_NO_DISCREPANCIES = 3;
-    public static final int STATUS_NOMATCH = 4;
-    public static final int STATUS_POLYMORPHISM_CLEARED = 2;
-    public static final int STATUS_FINISHED = 5;
+    public static final int CLONE_SEQUENCE_STATUS_ASSEMBLED = 0;
+    public static final int CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES = 1;
+    public static final int CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES = 3;
+    public static final int CLONE_SEQUENCE_STATUS_NOMATCH = 4;
+    public static final int CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED = 2;
+    public static final int CLONE_SEQUENCE_STATUS_FINISHED = 5;
     
     //sequence assembly status for clone sequence only
-     public static final int CLONE_SEQUENCE_TYPE_ASSESMBLED = 0; 
-     public static final int CLONE_SEQUENCE_TYPE_FINAL = 1; 
-     public static final int CLONE_SEQUENCE_TYPE_EDITED = 2; 
+    // !!!!!!! final should have max value we count on this !!!!!
+     public static final int CLONE_SEQUENCE_TYPE_ASSEMBLED = 0; 
+     public static final int CLONE_SEQUENCE_TYPE_EDITED = 1; 
+     public static final int CLONE_SEQUENCE_TYPE_FINAL = 2; 
      
      //analized status for clone sequence only
-     public static final int CLONE_SEQUENCE_STATUS_ASSESMBLED = 0; 
-     public static final int CLONE_SEQUENCE_STATUS_ANALIZED_DF = 1; 
-     public static final int CLONE_SEQUENCE_STATUS_POLYMORPHISM_RESOLVED = 2; 
-     public static final int CLONE_SEQUENCE_STATUS_FINAL = 3; 
-    /*
-     public static final int QUALITY_STORAGE = 2;
-    public static final int QUALITY_RECOMENDED_STORAGE =1;
-    public static final int QUALITY_BAD = -1;
-    public static final int QUALITY_RECOMENDED_BAD = -2;
+  //   public static final int CLONE_SEQUENCE_STATUS_ASSESMBLED = 0; 
+  //   public static final int CLONE_SEQUENCE_STATUS_ANALIZED_DF = 1; 
+   //  public static final int CLONE_SEQUENCE_STATUS_POLYMORPHISM_RESOLVED = 2; 
+   //  public static final int CLONE_SEQUENCE_STATUS_FINAL = 3; 
+    
+    
+    public static final int QUALITY_BAD = 3;
+    public static final int QUALITY_GOOD = 2;
+     public static final int QUALITY_REVIEW = 1;
     public static final int QUALITY_NOT_DEFINED = 0;
-    */
+    
     protected int m_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     protected String m_text = null;
     protected int m_type = -1;
@@ -253,7 +254,33 @@ public  class BaseSequence
         return res;
     }
     
+    public static String getSequenceQualityAsString(int quality)
+    {
+        switch(quality)
+        {
+            case QUALITY_BAD : return  "Bad";
+            case QUALITY_GOOD : return  "Good";
+            case QUALITY_REVIEW : return  "Review";
+            case QUALITY_NOT_DEFINED : 
+            default  : return  "Not defined";
+
+        }
+    }
     
+    
+    public static String       getSequenceAnalyzedStatusAsString(int analize_status)
+    {
+        switch (analize_status)
+        {
+            case CLONE_SEQUENCE_STATUS_ASSEMBLED: return "Obtained"; 
+            case CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES : return "Analyzed, discrepancies found"; 
+            case CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES: return "Analyzed, no discrepancies found";
+            case CLONE_SEQUENCE_STATUS_NOMATCH :return "Not Matched"; 
+            case CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED :return "Polymorphism resolved"; 
+            case CLONE_SEQUENCE_STATUS_FINISHED: return "Analysis Finished";
+            default: return "";
+        }
+    } 
     public static int    getContainerId(int sequenceid, int sequence_type)throws BecDatabaseException
     {
         int result = -1;

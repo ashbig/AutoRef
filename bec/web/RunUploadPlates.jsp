@@ -73,8 +73,35 @@
     <td colspan="2" bgcolor="#1145A6" height="29"> <font color="#FFFFFF"><strong>Common parameters </strong></font> 
     </td>
   </tr>
+<tr> 
+    <td  bgColor="#e4e9f8"><b>Start Codon</b></td>
+    <TD bgColor="#e4e9f8"> 
+    <SELECT NAME="start_codon">
+     		<OPTION VALUE="ATG">ATG
+    </SELECT>
+     </div></td>
+  </tr>
 
-
+<tr> 
+    <td  bgColor="#b8c6ed"><b>Fusion Stop Codon</b></td>
+    <TD bgColor="#b8c6ed"> 
+    <SELECT NAME="fusion_stop_codon">
+   		<OPTION VALUE="GGA">GGA
+                <OPTION VALUE="TTG">TTG
+    	</SELECT>
+     </div></td>
+  </tr>
+<tr> 
+    <td  bgColor="#e4e9f8"><b>Closed Stop Codon</b></td>
+    <TD bgColor="#e4e9f8"> 
+    <SELECT NAME="closed_stop_codon">
+   		<OPTION VALUE="TGA" selected>TGA
+                <OPTION VALUE="TAA" >TAA
+                <OPTION VALUE="TAG" >TAG
+    	</SELECT>
+     </div></td>
+  </tr>
+<tr><TD colspan='2'>&nbsp;</TD></TR>
   <tr> 
     <td  bgcolor="#e4e9f8" width="50%"> <b>Vector </b> 
     </td>
