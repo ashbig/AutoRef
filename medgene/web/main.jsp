@@ -20,6 +20,7 @@
         <html:radio property="geneDiseaseSelect" value="geneDisease" />A list of genes associated with a particular disease<br>
         <html:radio property="geneDiseaseSelect" value="diseaseGene"/>A list of diseases associated with a particular gene<br>
         <html:radio property="geneDiseaseSelect" value="multiDisease"/>A list of genes associated with multiple diseases<br>
+        <html:radio property="geneDiseaseSelect" value="geneGene"/>A list of genes associated with a particular gene<br>
         <p>
         Please make a selection and submit.
         <p>

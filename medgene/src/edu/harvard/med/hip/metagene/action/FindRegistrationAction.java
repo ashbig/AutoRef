@@ -76,7 +76,7 @@ public class FindRegistrationAction extends Action {
                     email_address = user.getEmail();
                     msgText = msgText.concat("\n"+"Username: "+user_id+"\n");
                     msgText = msgText.concat("Password: "+password+"\n");
-                    Mailer.sendMessage(email_address,"medgene@hms.harvard.edu",subject,msgText);
+                    Mailer.sendMessage(email_address,"yanhui_hu@hms.harvard.edu",subject,msgText);
                     return(mapping.findForward("success"));
                 }
                 else if (reminder.equals("")){
@@ -92,7 +92,7 @@ public class FindRegistrationAction extends Action {
                         //send email
                         msgText = msgText.concat("\n"+"Username: "+user_id+"\n");
                         msgText = msgText.concat("Password: "+password+"\n");
-                        Mailer.sendMessage(email_address,"medgene@hms.harvard.edu",subject,msgText);
+                        Mailer.sendMessage(email_address,"yanhui_hu@hms.harvard.edu",subject,msgText);
                         return(mapping.findForward("success"));
                     }
                     else {
@@ -115,7 +115,7 @@ public class FindRegistrationAction extends Action {
                     //send email
                     msgText = msgText.concat("\n"+"Username: "+user_id+"\n");
                     msgText = msgText.concat("Password: "+password+"\n");
-                    Mailer.sendMessage(email_address,"medgene@hms.harvard.edu",subject,msgText);
+                    Mailer.sendMessage(email_address,"yanhui_hu@hms.harvard.edu",subject,msgText);
                     return(mapping.findForward("success"));
                 }
                 else {

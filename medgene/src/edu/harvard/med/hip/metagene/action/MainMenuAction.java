@@ -61,6 +61,8 @@ public class MainMenuAction extends MetageneAction {
             return (mapping.findForward("success_gene"));
         } else if("multiDisease".equals(selected)) {
             return (mapping.findForward("success_multi_disease"));            
+        } else if ("geneGene".equals(selected)) {
+            return (mapping.findForward("success_gene_gene"));
         } else {
             return (mapping.findForward("failure"));
         }        

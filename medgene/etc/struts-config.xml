@@ -123,9 +123,11 @@
                name="mainForm"
               scope="request"
               input="/main.jsp">
-      <forward  name="success_disease"   path="/DiseaseSearch.jsp"/>
+      <forward  name="success_disease
+"   path="/DiseaseSearch.jsp"/>
       <forward  name="success_gene"   path="/GeneSearch.jsp"/>
       <forward  name="success_multi_disease"   path="/MultipleDiseaseSearch.jsp"/>
+      <forward  name="success_gene_gene"   path="/GeneGeneSearch.jsp"/>
       <forward  name="failure"  path="/login.jsp"/>
     </action>
 
