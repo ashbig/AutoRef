@@ -7,10 +7,14 @@
 <%@ page import="edu.harvard.med.hip.flex.seqprocess.core.sequence.*" %>
 <%@ page import="java.util.*" %>
 
+
 <html>
 <head>
     <title><bean:message key="flex.name"/> : FLEX Sequence Info</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+
+
+
 </head>
 <body>
 
@@ -19,8 +23,10 @@
 <html:errors/>
 <p>
 <% FullSequence fl = (FullSequence) request.getAttribute("FULL_SEQUENCE");
-System.out.println(fl.getId());%>
-<TABLE WIDTH=80% ALIGN=CENTER>
+%>
+<input type="hidden" id ="res"   name="blastn" value="<bean:write name="<%=Constants.FULL_SEQUENCE_BLAST_N_FORMATED%>"/>">
+<input type="hidden" id ="res"   name="blastp" value="<bean:write name="<%=Constants.FULL_SEQUENCE_BLAST_P_FORMATED%>"/>">
+<TABLE WIDTH="80%" ALIGN="CENTER">
     <TR>
         <TD class="label">Flex ID:</td>
         <td><bean:write name="FULL_SEQUENCE" property="id"/></TD>
@@ -45,11 +51,11 @@ System.out.println(fl.getId());%>
         <TD class="label">Blast Results:</td>
         
         <TD >
-        <input type=BUTTON onclick='' value='BLASTN'>
+        <input type=BUTTON onclick="showBlastN()"  value='BLASTN'>
         
         <% if (fl.getBlastpFileName() != null)
 {%>
-            <input type=BUTTON onclick='' value='BLASTP'>
+            <input type=BUTTON onclick='showBlastP()'  value='BLASTP'>
 <%}%>
         </TD>
     </TR>
@@ -84,7 +90,41 @@ else
 No Discreptancies resolved for the sequence.
 <%}%>
  
-   
+   <SCRIPT LANGUAGE = "JavaScript">
+<!--
+
+function showBlastN() {
+
+ 
+var s = window.document.all.blastn.value;	
+var w = window.open("", "blast", 
+"height=137,width=450,screenX=160,left=170,screenY=200,top=200,channelmode=0,dependent=0,directories=0,fullscreen=0,location=0,menubar=1,resizable=1,scrollbars=1,status=0,toolbar=1", "");
+with(w.document) {
+open("text/html");
+write("<HTML>");
+write('<HEAD><TITLE>Blast bresult...</TITLE></HEAD>');
+write("<BODY ><PRE>");
+write(s);
+write("</PRE></BODY></HTML>");
+}
+}
+function showBlastP() {
+
+ 
+var s = window.document.all.blastp.value;	
+var w = window.open("", "blast", 
+"height=137,width=450,screenX=160,left=170,screenY=200,top=200,channelmode=0,dependent=0,directories=0,fullscreen=0,location=0,menubar=1,resizable=1,scrollbars=1,status=0,toolbar=1", "");
+with(w.document) {
+open("text/html");
+write("<HTML>");
+write('<HEAD><TITLE>Blast bresult...</TITLE></HEAD>');
+write("<BODY ><PRE>");
+write(s);
+write("</PRE></BODY></HTML>");
+}
+}
+-->
+</SCRIPT>
 
 </body>
 </html>
