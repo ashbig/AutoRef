@@ -81,7 +81,8 @@ public class OligoPlateManager {
      * @exception FlexDatabaseException.
      */
     public OligoPlateManager(Connection conn, Project project, Workflow workflow,
-    int totalWells, boolean isFull, boolean isGroupBySize, Protocol protocol) {
+    int totalWells, boolean isFull, boolean isGroupBySize, Protocol protocol) 
+    throws FlexDatabaseException {
         this.conn = conn;
         this.project = project;
         this.workflow = workflow;
