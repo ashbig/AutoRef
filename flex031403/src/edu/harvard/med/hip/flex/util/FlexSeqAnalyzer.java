@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.5 2001-06-06 20:31:52 dongmei_zuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.6 2001-06-11 14:51:23 dongmei_zuo Exp $
  *
  * File     : FlexSeqAnalyzer.java 
  * Date     : 05102001
@@ -164,7 +164,7 @@ public class FlexSeqAnalyzer {
 			v.addElement(new Integer(id));
 		}
        } catch(SQLException sqlE) {
-           throw new FlexDatabaseException(sqlE);
+           throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
        }
 		if(v.isEmpty()) {
 			return false;
@@ -233,7 +233,7 @@ public class FlexSeqAnalyzer {
 			
 			return returnValue;
 		} catch (SQLException e) {
-			throw new FlexDatabaseException(e.getMessage());
+			throw new FlexDatabaseException(e.getMessage()+"\nSQL: "+sql);
 		} finally {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeStatement(stmt);
@@ -263,7 +263,7 @@ public class FlexSeqAnalyzer {
 			
 			return fileName;
 		}catch (IOException e) {
-			throw new FlexUtilException(e.getMessage());
+			throw new FlexUtilException("Cannot make query file for "+fileName+"\n"+e.getMessage());
 		}
 	}
 		

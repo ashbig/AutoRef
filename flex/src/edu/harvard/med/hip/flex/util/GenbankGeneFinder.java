@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.2 2001-05-23 19:23:26 dongmei_zuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.3 2001-06-11 14:53:40 dongmei_zuo Exp $
  *
  * File     	: GenbankGeneFinder.java 
  * Date     	: 05052001
@@ -61,7 +61,7 @@ public class GenbankGeneFinder {
 			in.close();
 			return v;
 		} catch (Exception e) {
-			throw new FlexUtilException (e.getMessage());
+			throw new FlexUtilException ("Cannot search for "+query+"\n"+e.getMessage());
 		}
     }
  
@@ -156,7 +156,7 @@ public class GenbankGeneFinder {
 			
 			return h;
 		} catch (Exception e) {
-			throw new FlexUtilException (e.getMessage());
+			throw new FlexUtilException ("Cannot do search for gi: "+gi+"\n"+e.getMessage());
 		}
     }
       

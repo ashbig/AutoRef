@@ -128,7 +128,7 @@ public class AccessManager {
                 return false;
             }
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

@@ -1,5 +1,5 @@
 /**
- * $Id: FlexDefPopulator.java,v 1.1 2001-06-07 15:40:19 dongmei_zuo Exp $
+ * $Id: FlexDefPopulator.java,v 1.2 2001-06-11 14:47:37 dongmei_zuo Exp $
  *
  * File     	: FlexDefPopulator.java
  * Date     	: 06072001
@@ -36,7 +36,7 @@ public class FlexDefPopulator {
                 v.addElement(s);
             }
         } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

@@ -93,7 +93,7 @@ public class User {
             }
             return group;
         } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }
@@ -172,7 +172,7 @@ public class User {
             
             return requests;
         } catch (SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(requestRs);
         }
