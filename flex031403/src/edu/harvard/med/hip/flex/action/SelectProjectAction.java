@@ -63,11 +63,7 @@ public class SelectProjectAction extends ResearcherAction {
         int projectid = ((ProjectWorkflowForm)form).getProjectid();
         String forwardName = ((ProjectWorkflowForm)form).getForwardName();        
         request.setAttribute("projectid", new Integer(projectid));
-        
-        if(Constants.MGC_PLATE_HANDLE.equals(forwardName)) {
-            return (mapping.findForward("success_mgc_plate_handle"));
-        }
-        
+                
         try {
             Project project = new Project(projectid);
             List workflows = project.getWorkflows();
