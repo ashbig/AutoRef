@@ -412,18 +412,21 @@ public class MgcMasterListImporter
                 for (int sample_count = 0; sample_count < sampl.size() ; sample_count++)
                 {
                     current_clone = (MgcSample)sampl.get(sample_count);
-                    current_key = Integer.toString(current_clone.getMgcId());
-                    FlexSequence fs = (FlexSequence)sequenceCol.get( current_key);
-                    if (fs != null && !fs.getQuality().equals(FlexSequence.QUESTIONABLE)  )
+                    if (current_clone.getSequenceId() == -1)
                     {
-                        
-                        fs.insert(conn);
-                        fs_key = fs.getId();
-                        current_clone.setSequenceId(fs_key);
+                        current_key = Integer.toString(current_clone.getMgcId());
+
+                        FlexSequence fs = (FlexSequence)sequenceCol.get( current_key);
+                        if (fs != null && !fs.getQuality().equals(FlexSequence.QUESTIONABLE)  )
+                        {
+
+                            fs.insert(conn);
+                            fs_key = fs.getId();
+                            current_clone.setSequenceId(fs_key);
+                        }
+                        if (fs == null) current_clone.setStatus(MgcSample.STATUS_NO_SEQUENCE);
+                        if (fs != null && fs.getQuality().equals(FlexSequence.QUESTIONABLE ) ) current_clone.setStatus(MgcSample.STATUS_BAD_SEQUENCE);
                     }
-                    if (fs == null) current_clone.setStatus(MgcSample.STATUS_NO_SEQUENCE);
-                    if (fs != null && fs.getQuality().equals(FlexSequence.QUESTIONABLE ) ) current_clone.setStatus(MgcSample.STATUS_BAD_SEQUENCE);
-                    
                 }//end loop clone
                 cont.insert(conn);
                 //commit_count++;
@@ -509,7 +512,7 @@ public class MgcMasterListImporter
             return;
         }
         
-        MgcMasterListImporter importer = new MgcMasterListImporter();
+        MgcMasterListImporter importer = new MgcMasterListImporter("dzuo");
         importer.importMgcCloneInfoIntoDB(input, file) ;
         System.exit(0);
     }
