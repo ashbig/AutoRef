@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-20 18:19:45 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-20 20:02:01 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.process.Result;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-20 18:19:45 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-20 20:02:01 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -148,15 +148,13 @@ public class SaveResultAction extends ResearcherAction {
              */
             Protocol nextProtocol = null;
             
-            if(queueItem.getProtocol().getProcessname().equals(Protocol.GENERATE_TRANSFORMATION_PLATES)) {
+            if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.GENERATE_TRANSFORMATION_PLATES)) {
                 nextProtocol =
                 new Protocol(Protocol.GENERATE_AGAR_PLATES);
-            } else if(queueItem.getProtocol().getProcessname().equals(Protocol.GENERATE_PCR_PLATES)) {
+            } else if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.RUN_PCR_GEL)) {
                 nextProtocol= new Protocol(Protocol.GENERATE_FILTER_PLATES);
                 GelResultsForm gelForm = (GelResultsForm)form;
                 FormFile image = gelForm.getGelImage();
-                System.out.println("File uploaded: " + image.getFileName());
-                System.out.println("file size: " + image.getFileSize());
                 OutputStream bos = new FileOutputStream("/test.doc");
                 InputStream stream = image.getInputStream();
                 int bytesRead = 0;
@@ -165,6 +163,13 @@ public class SaveResultAction extends ResearcherAction {
                     bos.write(buffer, 0, bytesRead);
                 }
                 bos.close();
+            } else {
+                retForward = mapping.findForward("error");
+                request.setAttribute(Action.EXCEPTION_KEY, 
+                    new FlexProcessException("Protocol " + 
+                    queueItem.getProtocol().getProcessname() + 
+                    " not valid here"));
+                return retForward;
             }
             
             dummyList.clear();

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2001-06-20 18:19:45 $
+ * $Revision: 1.9 $
+ * $Date: 2001-06-20 20:02:01 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.8 $ $Date: 2001-06-20 18:19:45 $
+ * @version    $Revision: 1.9 $ $Date: 2001-06-20 20:02:01 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -177,16 +177,14 @@ public class EnterPlateAction extends ResearcherAction {
         HttpSession session = request.getSession();
         
         // create the form with default values for the detail entry page
-        ContainerResultsForm detailForm = null;
         if(protocolName.equals(Protocol.RUN_PCR_GEL)) {
-            detailForm = new ContainerResultsForm(container);
             // put the form in the session
-            session.setAttribute("gelEntryForm",detailForm);
+            session.setAttribute("gelEntryForm",new GelResultsForm(container));
             retForward = mapping.findForward("gelEntry");
         } else if(protocolName.equals(Protocol.PERFORM_TRANSFORMATION)) {
-            detailForm = new GelResultsForm(container);
+            
             // put the form in the session
-            session.setAttribute("transformEntryForm",detailForm);
+            session.setAttribute("transformEntryForm",new ContainerResultsForm(container));
             retForward = mapping.findForward("transformEntry");
         } else {
             retForward = new ActionForward(mapping.getInput());
