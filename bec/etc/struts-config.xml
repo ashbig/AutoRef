@@ -222,8 +222,14 @@
             <forward name="universal_pair" path="/Seq_DisplayUniversalPrimerParameters.jsp"/>
         
     </action>
-
-
+<!-- Process process trace files -->
+    <action      path="/TraceFileProcessing"
+                name="submitDataFileForm"
+input ="/TraceFileProcessing.jsp"
+                type="edu.harvard.med.hip.bec.action.TraceFileProcessingAction">
+           <forward name="processing" path="/ConfirmProcess.jsp"/>
+        
+</action>
 
 
 
