@@ -190,6 +190,27 @@ public class FileOperations
         }
     }
     
+    public static void  deleteAllFilesFormDirectory(String directory_path)
+     {
+         try
+         {
+              File sourceDir = new File(directory_path );
+              File [] sourceFiles = sourceDir.listFiles();
+              if ( sourceFiles == null ) return;
+             if ( sourceFiles.length > 0)
+             {
+                 for (int count = 0; count < sourceFiles.length;count++)
+                 {
+                     sourceFiles[count].delete();
+                 }
+             }
+           
+         }
+         catch(Exception e)
+         {
+             System.out.println("Cannot delete files "+e.getMessage());
+         }
+     }
     //__________________________________________________________________________
     public static void main(String args[])
     
