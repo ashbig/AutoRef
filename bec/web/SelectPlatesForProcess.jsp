@@ -11,12 +11,12 @@
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
-
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 
 <html>
 
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
+<jsp:include page="NavigatorBar_Administrator.jsp" /> 
 	<p><P>
 <br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
@@ -53,16 +53,21 @@
     <td colspan =2><strong>Configuration:</strong></td>
     
   </tr>
-<% ArrayList specs = request.getAttribute(Constants.SPEC_COLLECTION);
-       ArrayList names =   request.getAttribute(Constants.SPEC_TITLE_COLLECTION);
-ArrayLis control_names  =   request.getAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION);
-String control_name = null; String spec_name = null; ArrayList specs = null; 
+<% 
+
+
+ArrayList specs = (ArrayList)request.getAttribute(Constants.SPEC_COLLECTION);
+       ArrayList names = (ArrayList)  request.getAttribute(Constants.SPEC_TITLE_COLLECTION);
+ArrayList control_names  = (ArrayList)  request.getAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION);
+String control_name = null; String spec_name = null; ArrayList specs_arr = null; 
 Spec spec = null;
+
 for (int count = 0; count <specs.size(); count ++)
 {
     control_name = (String) control_names.get(count);
     spec_name= (String) names.get(count);
-    specs = (ArrayList)specs.get(count);
+    specs_arr = (ArrayList)specs.get(count);
+System.out.println("-----"); 
 %>
    <tr> 
     <td><strong><%= spec_name %></strong></td>
@@ -70,28 +75,40 @@ for (int count = 0; count <specs.size(); count ++)
         <SELECT NAME="<%= control_name %>" id="<%= control_name %>">
         <% 
         	
-        	for (int count_spec = 0; count_spec < specs.size(); count_spec++)
+        	for (int count_spec = 0; count_spec < specs_arr.size(); count_spec++)
         	
         	{
-        		spec = (Spec)specs.get(count_spec);
-                           	%>
-        		<OPTION VALUE=<%= spec.getId() %>><%= spec.getName() %>
+        		spec = (Spec)specs_arr.get(count_spec);
+                         System.out.println("A"+spec.getName());  	%>
+        		<OPTION VALUE="<%= spec.getId() %>"><%= spec.getName() %>
         	<%
         	}%>
     	</SELECT>
    </td>
   </tr>
-  <%}}%>
+  <%}%>
   
 <br>
-<% ArrayList plate_labels = request.getAttribute(Constants.PLATE_NAMES_COLLECTION);
-STring label = null;
+<P><P>
+<% 
+
+
+ArrayList plate_labels = (ArrayList)request.getAttribute(Constants.PLATE_NAMES_COLLECTION);
+String label = null;
+if ( plate_labels.size()> 0)
+{%>
+<table border='0' align='center'>
+<%
 for (int plate_count =0; plate_count < plate_labels.size(); plate_count++)
 {
-label = (String)plate_labels.get(plate_count); %>
- <input type="checkbox" name="chkLabel" value='<%= label%>'> <%= label %>
-<%}%>
+    label = (String)plate_labels.get(plate_count); 
+    if (plate_count != 0 &&  plate_count % 3 == 0){%>   </tr> <%}
+    if ( plate_count % 3 == 0){%>   <tr> <%}%>
+<td> <input type="checkbox" name="chkLabel" value='<%= label%>'> <%= label %></td>
 
+<%}%>
+</tr></table>
+<%}%>
 <html:submit property="submit" value="Run"/>
 </body>
 </html>
