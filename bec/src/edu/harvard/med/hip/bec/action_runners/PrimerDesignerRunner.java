@@ -99,7 +99,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
             pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_OLIGOCALCULATION+")");
-            pst_check_oligo_cloning = conn.prepareStatement("select sequenceid from oligo_calculation where stretchcollectionid <> null and sequenceid = ? and primer3configid = "+m_spec_id);
+            pst_check_oligo_cloning = conn.prepareStatement("select sequenceid from oligo_calculation where stretchcollectionid is null and sequenceid = ? and primer3configid = "+m_spec_id);
             pst_check_oligo_cloning_for_stretches = conn.prepareStatement("select sequenceid from oligo_calculation where stretchcollectionid =?  and primer3configid = "+m_spec_id +
             " and STRETCHDEFPARAMS='" + buildStretchCollectionParamString()+"'");
           
