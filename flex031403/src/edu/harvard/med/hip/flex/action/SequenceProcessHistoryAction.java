@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-03 14:54:24 $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-03 17:12:57 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-07-03 14:54:24 $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-03 17:12:57 $
  */
 
 public class SequenceProcessHistoryAction extends ResearcherAction{
@@ -84,7 +84,7 @@ public class SequenceProcessHistoryAction extends ResearcherAction{
             return retForward;
         }
         // add the flex id to the first item
-        nameTypeList.set(0,"FLEX id");
+        nameTypeList.add(0,Constants.FLEX_SEQUENCE_ID_KEY);
         
         request.setAttribute(Constants.NAME_TYPE_LIST_KEY,nameTypeList);
         return retForward;

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-07-03 14:55:44 $
+ * $Revision: 1.4 $
+ * $Date: 2001-07-03 17:12:57 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@
  *    Add entries here when updating the code. Remember to date and insert
  *    your 3 letters initials.
  *
- *    MMM-DD-YYYY : JMM - Class created.
+ *    Jul-03-2001 : JMM - Class created.
  *
  */
 
@@ -47,6 +47,8 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.core.Thread;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.form.*;
+
 
 import org.apache.struts.action.*;
 
@@ -55,7 +57,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-07-03 14:55:44 $
+ * @version    $Revision: 1.4 $ $Date: 2001-07-03 17:12:57 $
  */
 
 public class ViewSequenceProcessHistory extends ResearcherAction{
@@ -82,30 +84,53 @@ public class ViewSequenceProcessHistory extends ResearcherAction{
          * the id of the sequence must be passed in, or a form must be
          * provided.
          */
-        String flexId = null;
-        if( form !=null) {
-            SequenceHistoryForm historyForm = (SequenceHistoryForm) form;
-            String search = historyForm.getSearchParam();
-            String value = historyForm.getParamValue();
+        
+        Thread thread = null;
+        String flexId = request.getParameter(Constants.FLEX_SEQUENCE_ID_KEY);
+        String search = ((SequenceHistoryForm)form).getSearchParam();
+        String value = ((SequenceHistoryForm)form).getParamValue();
+        if(search.equals(Constants.FLEX_SEQUENCE_ID_KEY)) {
+            flexId = value;
         }
-        flexId = request.getParameter(Constants.FLEX_SEQUENCE_ID_KEY);
-        if(flexId == null || flexId.equals("")) {
-            errors.add("sequenceId",
+        if(value!=null && ! value.equals("") && ! 
+        search.equals(Constants.FLEX_SEQUENCE_ID_KEY)) {
+            SequenceHistoryForm historyForm = (SequenceHistoryForm) form;
+            try {
+                thread = SequenceThread.findByName(search,value);
+            } catch (FlexDatabaseException fde) {
+                request.setAttribute(Action.EXCEPTION_KEY, fde);
+                return mapping.findForward("error");
+            } catch(FlexCoreException fce) {
+                errors.add("paramValue",new ActionError("error.sequence.not.found"));
+            }
+        } else if(flexId == null || flexId.equals("")) {
+            
+            errors.add("paramValue",
             new ActionError("error.sequence.id.invalid", flexId));
-            saveErrors(request,errors);
-            retForward = new ActionForward(mapping.getInput());
+            
         } else {
             try {
-                Thread thread =
+                
+                thread =
                 SequenceThread.findByFlexId(Integer.parseInt(flexId));
                 
-                request.setAttribute(Constants.THREAD_KEY, thread);
-                retForward = mapping.findForward("success");
+            } catch(ClassCastException cce) {
+                errors.add("paramValue", new ActionError("error.sequence.id.invalid", flexId));
             } catch (Exception e) {
                 request.setAttribute(Action.EXCEPTION_KEY, e);
                 retForward = mapping.findForward("error");
+                return retForward;
             }
         }
+        
+        if(errors.empty()) {
+            request.setAttribute(Constants.THREAD_KEY, thread);
+            retForward = mapping.findForward("success");
+        } else {
+            saveErrors(request,errors);
+            retForward = new ActionForward(mapping.getInput());
+        }
+        
         return retForward;
     }
     
