@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.36 2003-09-03 15:06:37 dzuo Exp $
+ * $Id: Protocol.java,v 1.37 2004-01-22 18:17:00 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -121,6 +121,7 @@ public class Protocol {
      
      public static final int CREATE_EXPRESSION_PLATE_CODE = 55;
      public static final int ENTER_EXPRESSION_RESULT_CODE = 56;
+     public static final String CREATE_SEQ_PLATES = "Create rearrayed sequencing plates";
      
     private int id;
     private String processcode;
