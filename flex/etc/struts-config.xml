@@ -47,6 +47,10 @@
     <form-bean      name="createProcessPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
 
+    <!-- Create process plate form bean -->
+    <form-bean      name="createPCRPlateForm"
+                    type="edu.harvard.med.hip.flex.form.CreatePCRPlateForm"/>
+    
     <!-- Customer registration form bean -->
     <form-bean      name="customerRegistrationForm"
                     type="edu.harvard.med.hip.flex.form.CustomerRegistrationForm"/>
@@ -237,6 +241,16 @@
                scope="session"
                validate="false"
                input="/EnterSourcePlate.jsp">
+      <forward  name="success"   path="/GetLocation.jsp"/>
+    </action> 
+
+    <!-- Process the source plate input -->
+    <action    path="/EnterOligoPlates"
+               type="edu.harvard.med.hip.flex.action.EnterOligoPlatesAction"
+               name="createPCRPlateForm"
+               scope="session"
+               validate="true"
+               input="/EnterOligoPlates.jsp">
       <forward  name="success"   path="/GetLocation.jsp"/>
     </action> 
 
