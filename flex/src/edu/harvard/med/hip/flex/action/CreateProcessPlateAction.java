@@ -84,7 +84,8 @@ public class CreateProcessPlateAction extends FlexAction {
                    Protocol.RECEIVE_OLIGO_PLATES.equals(p.getProcessname()) ||
                    Protocol.ENTER_PCR_GEL_RESULTS.equals(p.getProcessname()) ||
                    Protocol.ENTER_AGAR_PLATE_RESULTS.equals(p.getProcessname()) ||
-                   Protocol.ENTER_DNA_GEL_RESULTS.equals(p.getProcessname())) {
+                   Protocol.ENTER_DNA_GEL_RESULTS.equals(p.getProcessname()) ||
+                   Protocol.ENTER_CULTURE_RESULTS.equals(p.getProcessname())) {
                     continue;
                 }
                 protocols.addElement(p);
