@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.3 2001-05-09 18:37:24 dongmei_zuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.4 2001-05-11 19:15:57 dongmei_zuo Exp $
  *
  * File     	: GenbankGeneFinder.java 
  * Date     	: 05052001
@@ -45,14 +45,14 @@ public class GenbankGeneFinder {
 			String inputLine;
 
 			while ((inputLine = in.readLine()) != null) {
-				if(inputLine.indexOf("<dd>") == 0) {					
-					StringTokenizer st = new StringTokenizer(inputLine);
+				if(inputLine.indexOf("<dd>") == 0) {	
+					String desc = inputLine.substring(inputLine.indexOf("<dd>")+4, inputLine.indexOf("<br>"));				
+					StringTokenizer st = new StringTokenizer(inputLine.substring(inputLine.indexOf("<br>")+4));
 					if (st.hasMoreTokens()) {
-						String desc = st.nextToken("<dd>");
-						String giIgnore = st.nextToken("|");
-						String gi = st.nextToken("|");
-						String gbIgnore = st.nextToken("|");
-						String gb = st.nextToken("|");
+						String giIgnore = st.nextToken("|<");
+						String gi = st.nextToken("|<");
+						String gbIgnore = st.nextToken("|<");
+						String gb = st.nextToken("|<");
 						GenbankSequence sequence = new GenbankSequence(gb, gi, desc);
 						v.addElement(sequence);
 					}
