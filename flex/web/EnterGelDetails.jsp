@@ -58,6 +58,7 @@
     </table>
 <br>
 </logic:present>
+
 <table border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td class="label">Plate ID:</td> <td><bean:write name="gelEntryForm" property="container.id"/></td>
@@ -68,7 +69,9 @@
     </tr>
 </table>
 
-
+<logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
+<p><b>Note:</b> <font color="red">any result shown in RED color will give an EMPTY well on the next step (Filter Plate)</font></P>
+</logic:equal>
 <!-- table to enter info about the plate-->
 
 <html:form action="SaveGelResult.do" enctype="multipart/form-data">
@@ -136,7 +139,30 @@
              </logic:equal>
              
              <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
+             <logic:equal name="curSample" property="type" value="<%=Sample.GEL%>">
+                <logic:equal name="gelEntryForm" property='<%="result["+ i +"]" %>' value="<%=Result.CORRECT%>" >
                 <flex:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/>
+                </logic:equal>
+                <logic:equal name="gelEntryForm" property='<%="result["+ i +"]" %>' value="<%=Result.MUL_W_CORRECT%>" >
+                <flex:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/>
+                </logic:equal>
+                <logic:equal name="gelEntryForm" property='<%="result["+ i +"]" %>' value="<%=Result.NO_BAND%>" >
+                <flex:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/>
+                </logic:equal>
+                <logic:equal name="gelEntryForm" property='<%="result["+ i +"]" %>' value="<%=Result.INCORRECT%>" >
+                <font color=red><flex:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/></font>
+                </logic:equal>
+                <logic:equal name="gelEntryForm" property='<%="result["+ i +"]" %>' value="<%=Result.MUL_WO_CORRECT%>" >
+                <font color=red><flex:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/></font>
+                </logic:equal>
+                <logic:equal name="gelEntryForm" property='<%="result["+ i +"]" %>' value="<%=Result.NO_PRODUCT%>" >
+                <font color=red><flex:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/></font>
+                </logic:equal>
+             </logic:equal>
+
+             <logic:notEqual name="curSample" property="type" value="<%=Sample.GEL%>">
+                <flex:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/>
+             </logic:notEqual>
              </logic:equal>
 
         </td>
