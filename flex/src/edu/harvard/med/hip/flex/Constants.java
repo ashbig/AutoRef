@@ -188,6 +188,8 @@ public class Constants {
     public static final String FULL_SEQUENCE_BLAST_P_FORMATED = 
         "FULL_SEQUENCE_BLAST_P_FORMATED";
     
+    public static final String PERIMETER_REARRAY = "PERIMETER_REARRAY";
+    
     //The following fields represents values in species table.
     public static final String HUMAN = "Homo sapiens";
     public static final String MOUSE = "Mus musculus";

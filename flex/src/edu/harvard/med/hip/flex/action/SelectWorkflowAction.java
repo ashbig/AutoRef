@@ -115,6 +115,9 @@ public class SelectWorkflowAction extends ResearcherAction {
                 request.setAttribute("year_collection", DateCollection.getYearCollection());
                 return mapping.findForward("success_select_process");
             }
+            if(Constants.PERIMETER_REARRAY.equals(forwardName) && workflowid==Workflow.EXPRESSION_WORKFLOW) {
+                return (mapping.findForward("success_perimeter_rearray"));
+            }
             
             return (mapping.findForward("success"));
         } catch (Exception e) {

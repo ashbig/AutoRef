@@ -229,9 +229,12 @@
            
     <form-bean      name="searchFlexForm"
                     type="edu.harvard.med.hip.flex.form.SearchFlexForm"/>      
-                    
+                   
     <form-bean      name="queryFlexForm"
-                    type="edu.harvard.med.hip.flex.form.QueryFlexForm"/>                            
+                    type="edu.harvard.med.hip.flex.form.QueryFlexForm"/>   
+                    
+    <form-bean      name="perimeterRearrayInputForm"
+                    type="edu.harvard.med.hip.flex.form.PerimeterRearrayInputForm"/>                            
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -262,7 +265,9 @@
     <forward    name="rearray" path="/GetWorkflowForRearray.do"/>  
     <forward    name="browseFlex" path="/BrowseFlex.jsp"/>  
     <forward    name="genericRearray" path="/RearraySelection.jsp"/>    
-    <forward    name="expressionClone" path="/ExpressionCloneEntry.jsp"/>      
+    <forward    name="expressionClone" path="/ExpressionCloneEntry.jsp"/>     
+    <forward    name="perimeterRearray" path="/GetProjects.do?forwardName=PERIMETER_REARRAY"/>
+     
 
   </global-forwards>
   
@@ -323,8 +328,6 @@
                 type="edu.harvard.med.hip.flex.action.GetProjectsAction">
         <forward    name="success"   path="/SelectProject.jsp"/>
         <forward    name="success_import_sequence"   path="/ImportSequence.jsp"/>
-
-
     </action>
 
     <!-- Process user's selection of a project -->
@@ -345,10 +348,8 @@
             <forward name="success_special_oligo_order" path="/SpecialOligoOrder.jsp"/>
             <forward name="success_result_entry" path="/PickResultType.jsp"/>
             <forward name="success_select_process" path="/SelectProcessForSucRate.jsp"/>
-            <forward    name="success"   path="/SelectProject.jsp"/>
-     
-    
-    
+            <forward name="success_perimeter_rearray" path="/PerimeterRearrayInput.jsp"/>            
+            <forward    name="success"   path="/SelectProject.jsp"/>    
     </action>
 
     <!-- Process a customer request -->
@@ -1287,7 +1288,25 @@
       <forward  name="success"   path="/DisplayAlignment.jsp"/>
       <forward  name="fail"   path="/ViewResultsFail.jsp"/>
     </action>  
-                         
+ 
+     <action    path="/PerimeterRearrayInput"
+               type="edu.harvard.med.hip.flex.action.PerimeterRearrayInputAction"
+               name="perimeterRearrayInputForm"
+               scope="request"
+               validate="true"
+               input="/PerimeterRearrayInput.jsp">
+      <forward  name="success"   path="/GetPerimeterRearrayLocations.jsp"/>
+    </action>  
+    
+     <action    path="/GetPerimeterRearrayLocations"
+               type="edu.harvard.med.hip.flex.action.GetPerimeterRearrayLocationsAction"
+               name="perimeterRearrayInputForm"
+               scope="request"
+               validate="false"
+               input="/GetPerimeterRearrayLocations.jsp">
+      <forward  name="success"   path="/GetResearcher.jsp"/>
+    </action>                  
+                            
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->

@@ -66,7 +66,15 @@ public class SelectProjectAction extends ResearcherAction {
                 
         try {
             Project project = new Project(projectid);
-            List workflows = project.getWorkflows();
+            List workflows = new ArrayList();
+            
+            if(Constants.PERIMETER_REARRAY.equals(forwardName)) {
+                Workflow wf = new Workflow(Workflow.EXPRESSION_WORKFLOW);
+                workflows.add(wf);
+            } else {
+                workflows = project.getWorkflows();
+            }
+            
             request.setAttribute("projectname", project.getName());
             ((ProjectWorkflowForm)form).setProjectname(project.getName());     
             request.setAttribute("workflows", workflows);
