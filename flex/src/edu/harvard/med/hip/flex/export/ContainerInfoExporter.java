@@ -40,6 +40,7 @@ public class ContainerInfoExporter {
     private boolean agar = false;
     private boolean culture = false;
     private boolean isEmpty = false;
+    private boolean cloneid = false;
     
     /** Creates new ContainerInfoExporter */
     public ContainerInfoExporter() {
@@ -48,7 +49,7 @@ public class ContainerInfoExporter {
     public ContainerInfoExporter(boolean sampleid, boolean type, boolean position,
     boolean status, boolean result, boolean sequenceid, boolean cdsstart, boolean cdsstop,
     boolean cdslength, boolean gccontent, boolean sequencetext, boolean cds, boolean gi,
-    boolean genesymbol, boolean panumber, boolean pcr, boolean agar, boolean culture, boolean isEmpty) {
+    boolean genesymbol, boolean panumber, boolean pcr, boolean agar, boolean culture, boolean isEmpty, boolean cloneid) {
         this.sampleid = sampleid;
         this.type = type;
         this.position = position;
@@ -68,6 +69,7 @@ public class ContainerInfoExporter {
         this.agar = agar;
         this.culture = culture;
         this.isEmpty = isEmpty;
+        this.cloneid = cloneid;
     }
     
     public boolean doExport(int id, int executionid, PrintWriter out) {
@@ -89,6 +91,8 @@ public class ContainerInfoExporter {
                 out.print("Sample Status\t");
             if(result)
                 out.print("Sample Result\t");
+            if(cloneid)
+                out.print("Clone ID\t");
             if(pcr)
                 out.print("PCR Gel Result\t");
             if(agar)
@@ -139,6 +143,10 @@ public class ContainerInfoExporter {
                     }
                 }
                 
+                if(cloneid) {
+                    out.print(sample.getCloneid()+"\t");
+                }
+                    
                 Vector results = null;
                 if(pcr || agar || culture) {
                     results = SampleLineage.getPrevLineagesWithResults(sample.getId());

@@ -41,6 +41,7 @@ public class SaveContainerInfoForm extends ActionForm {
     private boolean agar = false;
     private boolean culture = false;
     private boolean panumber = false;
+    private boolean cloneid = false;
     
     /** Creates new SaveContainerInfoForm */
     public SaveContainerInfoForm() {
@@ -214,6 +215,14 @@ public class SaveContainerInfoForm extends ActionForm {
         this.panumber = panumber;
     }
     
+    public boolean getCloneid() {
+        return cloneid;
+    }
+    
+    public void setCloneid(boolean b) {
+        this.cloneid = b;
+    }
+    
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         sampleid = false;
         type = false;
@@ -234,5 +243,6 @@ public class SaveContainerInfoForm extends ActionForm {
         agar = false;
         culture = false;
         panumber = false;
+        cloneid = false;
     }    
 }

@@ -46,6 +46,10 @@
     <td><html:checkbox property="result" /></td>
     <td>Sample Result</td>
 </tr>
+<tr>
+    <td><html:checkbox property="cloneid" /></td>
+    <td>Clone ID</td>
+</tr>
 </table>
 <p><b>Process Result Information:</b>
 <table>

@@ -12,6 +12,7 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.Mailer;
 import edu.harvard.med.hip.utility.Logger;
 import edu.harvard.med.hip.utility.DatabaseManager;
+import edu.harvard.med.hip.flex.workflow.Project;
 import java.io.*;
 import java.util.*;
 import java.sql.*;
@@ -40,23 +41,35 @@ public class FastaFileGenerator {
     public static final String PSEUDOMONASDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Pseudomonas/genes";
     public static final String MGCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"MGC/genes";
     public static final String YPDB=BLAST_BASE_DIR+BLAST_DB_DIR+"YP/genes";
+    public static final String BCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"BC/genes";
+    public static final String NIDDKDB=BLAST_BASE_DIR+BLAST_DB_DIR+"NIDDK/genes";
+    public static final String CLONTECHDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Clontech/genes";
+    public static final String RZPDWALLDB=BLAST_BASE_DIR+BLAST_DB_DIR+"RZPD-WALL/genes";
+    public static final String FTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"FT/genes";
+    public static final String KINASEDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Kinase/genes";
+    public static final String SEQVERIFIEDDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Sequence_Verified/genes";
+    public static final String VERIFIEDBCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Sequence_Verified_BC/genes";
+    public static final String VERIFIEDKINASEDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Sequence_Verified_Kinase/genes";
+    public static final String VERIFIEDHUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Sequence_Verified_Human/genes";
+    public static final String ALLDB=BLAST_BASE_DIR+BLAST_DB_DIR+"BlastDB/genes";
+        
     public static final String LOGFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/blastdb.log";
     public static final String SEQUENCEIDFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/sequenceid.txt";
-    
-    //public static final String HUMANDB="/tmp/Human/genes";
-    //public static final String YEASTDB="/tmp/Yeast/genes";
-    //public static final String PSEUDOMONASDB="/tmp/Pseudomonas/genes";
-    //public static final String MGCDB="/tmp/MGC/genes";
-    //public static final String LOGFILE="/tmp/Log/blastdb.log";
-    //public static final String SEQUENCEIDFILE="/tmp/Log/sequenceid.txt";
-    
+                            
     public static final String HUMAN = "'Homo sapiens'";
     public static final String YEAST = "'Saccharomyces cerevisiae'";
     public static final String PSEUDOMONAS = "'Pseudomonas aeruginosa'";
     public static final String YP = "'Yersinia pestis'";
+    public static final String FT = "'Francisella tularensis'";
     
     public static final String SPECIES = "Species";
     public static final String MGCPROJECT = "MGC Project";
+    public static final String PROJECT = "Project";
+    public static final String VERIFIED = "Verified";
+    public static final String VERIFIED_HUMAN = "Verified Human";
+    public static final String VERIFIED_BC = "Verified BC";
+    public static final String VERIFIED_KINASE = "Verified Kinase";
+    public static final String ALL = "All";
     
     public static void generateFastaFiles() {
         Logger log = new Logger(LOGFILE);
@@ -107,6 +120,72 @@ public class FastaFileGenerator {
             return;
         }
         
+        int maxid6 = generateFile(log, BCDB, (new Integer(Project.BREASTCANCER)).toString(), lastSequence, PROJECT);
+        if(maxid6 == -1) {
+            logAndMail(log, "Error occured when generate Breast Cancer database file.");
+            return;
+        }
+        
+        int maxid7 = generateFile(log, NIDDKDB, (new Integer(Project.NIDDK)).toString(), lastSequence, PROJECT);
+        if(maxid7 == -1) {
+            logAndMail(log, "Error occured when generate NIDDK database file.");
+            return;
+        }
+        
+        int maxid8 = generateFile(log, CLONTECHDB, (new Integer(Project.CLONTECH)).toString(), lastSequence, PROJECT);
+        if(maxid8 == -1) {
+            logAndMail(log, "Error occured when generate NIDDK database file.");
+            return;
+        }
+        
+        int maxid9 = generateFile(log, RZPDWALLDB, (new Integer(Project.CLONTECH)).toString(), lastSequence, PROJECT);
+        if(maxid9 == -1) {
+            logAndMail(log, "Error occured when generate RZPD-Wall database file.");
+            return;
+        }
+        
+        int maxid10 = generateFile(log, FTDB, FT, lastSequence, SPECIES);
+        if(maxid10 == -1) {
+            logAndMail(log, "Error occured when generate FT database file.");
+            return;
+        }
+        
+        int maxid11 = generateFile(log, KINASEDB, (new Integer(Project.KINASE)).toString(), lastSequence, PROJECT);
+        if(maxid11 == -1) {
+            logAndMail(log, "Error occured when generate Kinase database file.");
+            return;
+        }
+               
+        int maxid12 = generateFile(log, SEQVERIFIEDDB, null, lastSequence, VERIFIED);
+        if(maxid12 == -1) {
+            logAndMail(log, "Error occured when generate Sequence Verified database file.");
+            return;
+        }
+                
+        int maxid13 = generateFile(log, VERIFIEDBCDB, null, lastSequence, VERIFIED_BC);
+        if(maxid13 == -1) {
+            logAndMail(log, "Error occured when generate Sequence Verified BC database file.");
+            return;
+        }
+                
+        int maxid14 = generateFile(log, VERIFIEDKINASEDB, null, lastSequence, VERIFIED_KINASE);
+        if(maxid14 == -1) {
+            logAndMail(log, "Error occured when generate Sequence Verified Kinase database file.");
+            return;
+        }
+                 
+        int maxid15 = generateFile(log, VERIFIEDHUMANDB, null, lastSequence, VERIFIED_HUMAN);
+        if(maxid15 == -1) {
+            logAndMail(log, "Error occured when generate Sequence Verified Human database file.");
+            return;
+        }
+                 
+        int maxid16 = generateFile(log, ALLDB, null, lastSequence, ALL);
+        if(maxid16 == -1) {
+            logAndMail(log, "Error occured when generate entire database file.");
+            return;
+        }
+                                      
         int newLastSequence = maxid2;
         if(maxid1 > maxid2) {
             newLastSequence = maxid1;
@@ -123,7 +202,51 @@ public class FastaFileGenerator {
         if(maxid5 > newLastSequence) {
             newLastSequence = maxid5;
         }
-        
+         
+        if(maxid6 > newLastSequence) {
+            newLastSequence = maxid6;
+        }
+                  
+        if(maxid7 > newLastSequence) {
+            newLastSequence = maxid7;
+        }
+           
+        if(maxid8 > newLastSequence) {
+            newLastSequence = maxid8;
+        }
+           
+        if(maxid9 > newLastSequence) {
+            newLastSequence = maxid9;
+        }
+           
+        if(maxid10 > newLastSequence) {
+            newLastSequence = maxid10;
+        }
+           
+        if(maxid11 > newLastSequence) {
+            newLastSequence = maxid11;
+        }
+           
+        if(maxid12 > newLastSequence) {
+            newLastSequence = maxid12;
+        }
+           
+        if(maxid13 > newLastSequence) {
+            newLastSequence = maxid13;
+        }
+           
+        if(maxid14 > newLastSequence) {
+            newLastSequence = maxid14;
+        }
+           
+        if(maxid15 > newLastSequence) {
+            newLastSequence = maxid15;
+        }
+            
+        if(maxid16 > newLastSequence) {
+            newLastSequence = maxid16;
+        }
+     
         if(!writeLastSequence(newLastSequence, log)) {
             logAndMail(log, "Error occured while writting to sequence file");
             return;
@@ -147,7 +270,10 @@ public class FastaFileGenerator {
     
     private static int generateFile(Logger log, String db, String species, int seq, String criteria) {
         DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
+        ResultSet rs2 = null;
         PrintWriter pr = null;
         int maxid = seq;
         
@@ -155,13 +281,27 @@ public class FastaFileGenerator {
             t = DatabaseTransaction.getInstance();
             pr = new PrintWriter(new BufferedWriter(new FileWriter(db, true)));
             String sql = getSql(species, seq, criteria);
-            
+            String sql2 = "select * from sequencetext where sequenceid=? order by sequenceorder";
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql2);
+
             rs = t.executeQuery(sql);
             while(rs.next()) {
-                int id = rs.getInt("SEQUENCEID");
+                int id = rs.getInt(1);
+                int cdsstart = rs.getInt(2);
+                int cdsstop = rs.getInt(3);
                 log.logging("Processing sequence: "+id);
-                FlexSequence sequence = new FlexSequence(id);
-                pr.print(sequence.getFastaHeader());
+                
+                stmt.setInt(1, id);
+                rs2 = DatabaseTransaction.executeQuery(stmt);  
+                
+                String sequencetext = "";                
+                while(rs2.next()) {
+                    sequencetext = sequencetext+rs2.getString("SEQUENCETEXT");
+                }
+                
+                CDNASequence sequence = new CDNASequence(cdsstart, cdsstop, sequencetext);
+                pr.print(">"+id);
                 pr.println(sequence.getCDSFasta());
                 log.logging("...OK");
                 maxid = id;
@@ -182,6 +322,9 @@ public class FastaFileGenerator {
             return -1;
         }finally {
             DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
         }
     }
     
@@ -219,21 +362,73 @@ public class FastaFileGenerator {
     private static String getSql(String where, int seq, String criteria) {
         String sql = null;
         
-        if(criteria == SPECIES) {
-            sql = "select sequenceid " +
+        if(criteria.equals(SPECIES)) {
+            sql = "select sequenceid, cdsstart, cdsstop " +
             "from flexsequence " +
             "where genusspecies = " +where + " " +
             "and sequenceid > "+seq + " " +
             "order by sequenceid";
         }
         
-        if(criteria == MGCPROJECT) {
-            sql = "select sequenceid "+
+        if(criteria.equals(MGCPROJECT)) {
+            sql = "select sequenceid, cdsstart, cdsstop "+
             " from mgcclone "+
             " where sequenceid > "+seq+
             " order by sequenceid";
         }
         
+        if(criteria.equals(PROJECT)) {
+            sql = "select distinct sequenceid, cdsstart, cdsstop"+
+                  " from requestsequence"+
+                  " where sequenceid > "+seq+
+                  " and projectid="+where+
+                  " order by sequenceid";
+        }
+        
+        if(criteria.equals(VERIFIED)) {
+            sql = "select sequenceid, cdsstart, cdsstop"+
+                " from flexsequence"+
+                " where sequenceid>"+seq+
+                " and flexstatus='"+FlexSequence.OBTAINED+"'"+
+                " order by sequenceid";
+        }
+        
+        if(criteria.equals(VERIFIED_HUMAN)) {
+            sql = "select sequenceid, cdsstart, cdsstop"+
+                " from flexsequence"+
+                " where sequenceid>"+seq+
+                " and flexstatus='"+FlexSequence.OBTAINED+"'"+
+                " and genusspecies="+HUMAN+
+                " order by sequenceid";
+        }
+        
+        if(criteria.equals(VERIFIED_BC)) {
+            sql = "select distinct f.sequenceid, f.cdsstart, f.cdsstop"+
+                " from flexsequence f, requestsequence r"+
+                " where f.sequenceid=r.sequenceid"+
+                " and f.sequenceid>"+seq+
+                " and f.flexstatus='"+FlexSequence.OBTAINED+"'"+
+                " and r.projectid="+Project.BREASTCANCER+
+                " order by f.sequenceid";
+        }
+        
+        if(criteria.equals(VERIFIED_KINASE)) {
+            sql = "select distinct f.sequenceid, f.cdsstart, f.cdsstop"+
+            " from flexsequence f, requestsequence r"+
+            " where f.sequenceid=r.sequenceid"+
+            " and f.sequenceid>"+seq+
+            " and f.flexstatus='"+FlexSequence.OBTAINED+"'"+
+            " and r.projectid="+Project.KINASE+
+            " order by f.sequenceid";
+        }
+         
+        if(criteria.equals(ALL)) {
+           sql = "select sequenceid, cdsstart, cdsstop "+
+            " from flexsequence "+
+            " where sequenceid > "+seq+
+            " order by sequenceid";
+        }
+               
         return sql;
     }
     

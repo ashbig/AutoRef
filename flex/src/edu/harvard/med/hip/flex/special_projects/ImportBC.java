@@ -55,28 +55,28 @@ public class ImportBC {
                         String resultMGC = null;
                         if(st.hasMoreTokens()) {
                             resultMGC = (String)st.nextToken();
-                            if("NA".equals(resultMGC))
+                            if("NA".equals(resultMGC) || resultMGC == null || resultMGC.length()==0)
                                 resultMGC = null;
                         }
                         
                         String resultRef = null;
                         if(st.hasMoreTokens()) {
                             resultRef = (String)st.nextToken();
-                            if("NA".equals(resultRef))
+                            if("NA".equals(resultRef) || resultRef == null || resultRef.length() == 0)
                                 resultRef = null;
                         }
 
                         String genbank = null;
                         if(st.hasMoreTokens()) {
                             genbank = (String)st.nextToken();
-                            if("NA".equals(genbank))
+                            if("NA".equals(genbank) || genbank == null || genbank.length() == 0)
                                 genbank = null;
                         }
                        
                         String gi = null;
                         if(st.hasMoreTokens()) {
                             gi = (String)st.nextToken();
-                            if("NA".equals(gi))
+                            if("NA".equals(gi) || gi == null || gi.length() == 0)
                                 gi = null;
                         }
                         
@@ -156,7 +156,9 @@ public class ImportBC {
             
             int sequenceid = FlexIDGenerator.getID("CLONESEQUENCEID");
             stmt2.setInt(1, sequenceid);
+            System.out.println("update cloneid:"+cloneid);
             DatabaseTransaction.executeUpdate(stmt2);
+            System.out.println("update finish");
            
             int i=0;
             while(sequencetext.length()-4000*i>4000) {

@@ -1230,7 +1230,7 @@
       <forward  name="fail"     path="/ExpressionResultHistoryFail.jsp"/>
     </action>  
         
-    <action    path="/EnterSrcForSequencing"
+    <action    path="/SaveContainerDetailAction"
                type="edu.harvard.med.hip.flex.action.EnterSrcForSequencingAction"
                name="enterSrcForSequencingForm"
                scope="request"
