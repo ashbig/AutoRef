@@ -81,7 +81,7 @@ public class ConstructGenerator {
             cdsLength = seq.getCDSLength();
             count++;
             
-            System.out.println("Calculate oligos for sequence number: " + count);
+            System.out.println("Calculate oligos for sequence count: " + count);
             System.out.println("SequenceID: " + seqId + "   " + cdsLength);
             // calculate all three types of oligos for each sequence
             // and insert oligo infor into the oligo table
@@ -107,8 +107,7 @@ public class ConstructGenerator {
             
             //generate construct pairID: a open and a close construct derived from
             //the same sequence have the same pair id.
-            //  pairId = setPairId(); //not working!!!
-            pairId = 20000;  //for testing
+            pairId = setPairId(); //not working!!!
             
             // create two new constructs: open and close form and insert them
             // to the ConstructDesign table
@@ -117,6 +116,8 @@ public class ConstructGenerator {
             System.out.println("inserting constructs: ");
             close.insert(conn);
             open.insert(conn);
+            System.out.println("close construct ID: " + close.getId());
+            System.out.println("open construct ID: " + open.getId());
             
         } //while
     } //generateOligoAndConstructs
@@ -136,21 +137,38 @@ public class ConstructGenerator {
     }
     
     /**
-     * Insert Process Execution record for 'design construct' protocol
-     *
+     * Insert Process Execution record for Design Construct protocol
+     * Insert one process object input record for each input sequence
      */
-    protected void insertProcessExecution() throws FlexDatabaseException {
+    protected void insertProcessInputRecords() throws FlexDatabaseException {
         Process process = null;
         Protocol protocol = null;
         Researcher r = new Researcher();
-        String status = "";
+        String status = "S"; //SUCCESS
         
-        protocol = new Protocol("Design Constructs");
+        protocol = new Protocol("design constructs");
         int userId = r.getId("SYSTEM");
         r = new Researcher(userId);
-        //
-        process = new Process(protocol,status,r);
+        // insert process execution record into process execution table
+        process = new Process(protocol,status,r);        
+        System.out.println("Insert process execution for design constructs...");
+        System.out.println("Execution ID: "+ process.getExecutionid());
         process.insert(conn);
+        
+        int executionId = process.getExecutionid();
+        String ioFlag = "I";
+        ListIterator iter = seqList.listIterator();
+        Sequence seq = null;
+        SequenceProcessObject spo = null;
+        int seqId = -1;
+        
+        while (iter.hasNext()) {
+            seq = (Sequence) iter.next(); //retrieves one sequence from the list
+            seqId = seq.getId();
+            spo = new SequenceProcessObject(seqId,executionId,ioFlag);
+            spo.insert(conn);
+        } //while
+        
     }
     
     /**
