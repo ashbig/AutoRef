@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.14 2005-02-24 17:45:49 Elena Exp $
+ * $Id: Oligo.java,v 1.15 2005-03-15 20:20:22 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -47,6 +47,9 @@ public class Oligo
     public static final int ORIENTATION_ANTISENSE = -1;
 
     public static final int ORIENTATION_NOTKNOWN = 0;
+
+    public static final int POSITION_5PRIME = 5;
+    public static final int POSITION_3PRIME = 3;
 
 
     //for end reads primers
@@ -137,9 +140,17 @@ public class Oligo
             default: return "Not known";
         }
     }
+    
+    
+    
     public String       getTypeAsString()
     {  
-        switch(m_type)
+        return getTypeAsString(m_type);
+      
+    }
+    public static String       getTypeAsString(int type)
+    {  
+        switch(type)
         {
             case TYPE_COMMON: return "Common";
             case TYPE_UNIVERSAL : return "Universal";
@@ -149,6 +160,17 @@ public class Oligo
             default: return "Not known";
         }
     }
+    
+    public static String       getOrientationAsString(int ort)
+    {  
+        switch(ort)
+        {
+            case ORIENTATION_SENSE : return "sense";
+            case ORIENTATION_ANTISENSE : return "antisense";
+            default : return "";
+        }
+    }
+
     
     //primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
     public int          getGCContent() { return m_gc_content ;}
@@ -317,7 +339,11 @@ public class Oligo
    }
    
    
-   
+    public static ArrayList getAllCommonPrimers() throws BecDatabaseException
+   {
+        String sql = "select  primerid as oligoid, name , sequence, tm, type as submissiontype from commonprimer order by name";
+        return getOligoByRule(sql, true);
+   }
     //can return sets calculated ander different configs for Primer3
    public static ArrayList getByCloneId(int cloneid, int oligo_status, int primers_selection_rule)throws BecDatabaseException
    {
@@ -391,6 +417,10 @@ public class Oligo
    //-----------------------
     private static ArrayList getOligoByRule(String sql)throws BecDatabaseException
     {
+        return getOligoByRule( sql, false);
+    }
+    private static ArrayList getOligoByRule(String sql, boolean mode_common_primer)throws BecDatabaseException
+    {
         ArrayList res = new ArrayList();
         ResultSet rs = null;
         try
@@ -402,16 +432,21 @@ public class Oligo
             {
                 Oligo ol = new  Oligo();
                 ol.setId(rs.getInt("oligoid") );
-                ol.setSubmitterId(rs.getInt("submitterid") );//for manually added genespecific oligo
                 ol.setSequence(rs.getString("SEQUENCE"));
                 ol.setTm(rs.getDouble("TM") );
+               ol.setName(   rs.getString("name") );
+               
+                if ( !mode_common_primer ) 
+                {
+                    ol.setSubmitterId(rs.getInt("submitterid") );//for manually added genespecific oligo
+                    ol.setOligoCalculationId(rs.getInt("oligocalculationid"));
+                    ol.setStatus(rs.getInt("status"));
                 ol.setPosition( rs.getInt("position")  );//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
-                ol.setName(   rs.getString("name") );
-                ol.setOrientation(rs.getInt("orientation"));
-                ol.setOligoCalculationId(rs.getInt("oligocalculationid"));
-                ol.setType(rs.getInt("submissiontype"));
-                ol.setStatus(rs.getInt("status"));
-                res.add(ol);
+                 ol.setOrientation(rs.getInt("orientation"));
+                
+                }
+                  ol.setType(rs.getInt("submissiontype"));
+                 res.add(ol);
             }
             return res;
         } catch (SQLException sqlE)
@@ -436,7 +471,7 @@ public class Oligo
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
             Oligo o = new Oligo();//"TCGCGTTAACGCTAGCATGGATCTC",-1,"ATTF",Oligo.OT_UNIVERSAL_5p,-1);
-ArrayList res = Oligo.getByRefSequenceId(15001,-1);
+ArrayList res = Oligo.getAllCommonPrimers();//(15001,-1);
             for (int i=0; i < res.size();i++)
             {
                 o = (Oligo)res.get(i);
