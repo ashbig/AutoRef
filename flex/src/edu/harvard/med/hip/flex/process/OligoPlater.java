@@ -22,10 +22,9 @@ import java.io.*;
 
 
 public class OligoPlater {
-    private static final String plateOutFileName1 = "H:/Dev/OligoOrder/testOligoPlate_5p.txt";
-    private static final String plateOutFileName2 = "H:/Dev/OligoOrder/testOligoPlate_3s.txt";
-    private static final String plateOutFileName3 = "H:/Dev/OligoOrder/testOligoPlate_3op.txt";
-    
+    // private final String plateOutFileName1 =
+    // FileRepository.REPOSITORY_PATH+FileRepository.OLIGO_ORDER_PATH+uniqueFileName;
+    private static final String filePath = "H:/Dev/OligoOrder/";
     private static final int positiveControlPosition = 1;
     private static final int negativeControlPosition = 96;
     private static final String PositiveControlSampleType = "CONTROL_POSITIVE";
@@ -38,6 +37,10 @@ public class OligoPlater {
     private Container container_5p;
     private Container container_3s;
     private Container container_3op;
+    
+    private String plateOutFileName1 = null;
+    private String plateOutFileName2 = null;
+    private String plateOutFileName3 = null;
     private FileWriter plateWriter_5p = null;
     private FileWriter plateWriter_3s = null;
     private FileWriter plateWriter_3op = null;
@@ -49,9 +52,6 @@ public class OligoPlater {
         this.constructList = constructList;
         this.conn = c;
         
-        plateWriter_5p = new FileWriter(plateOutFileName1);
-        plateWriter_3s = new FileWriter(plateOutFileName2);
-        plateWriter_3op = new FileWriter(plateOutFileName3);
     }
     
     /**
@@ -131,8 +131,6 @@ public class OligoPlater {
         int firstGeneIndexOfPlate = 0;
         int lastGeneIndexOfPlate = 0;
         int currentGeneIndex = -1;
-        //int plateNum = 0;
-        //String plateId = null;
         int well = 0;
         int numGenes = geneArray.length;
         boolean fullPlate = true;
@@ -145,6 +143,15 @@ public class OligoPlater {
         Sample oligoSample_5p = null;
         Sample oligoSample_3s = null;
         Sample oligoSample_3op = null;
+        
+        //prepare files for oligo order
+        plateOutFileName1 = filePath + container_5p.getLabel();
+        plateOutFileName2 = filePath + container_3s.getLabel();
+        plateOutFileName3 = filePath + container_3op.getLabel();
+        
+        plateWriter_5p = new FileWriter(plateOutFileName1);
+        plateWriter_3s = new FileWriter(plateOutFileName2);
+        plateWriter_3op = new FileWriter(plateOutFileName3);
         
         // Loop over plates.
         while (!done) {
