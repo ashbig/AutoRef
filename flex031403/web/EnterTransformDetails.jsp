@@ -26,7 +26,7 @@
 </table>
 
 <!-- table to enter info about the plate-->
-<html:form action="EnterTransformDetails.do">
+<html:form action="SaveTransformResult.do">
 <table border="1">
     <tr>
         <th>Sample</th><th>Cell</th><th>Status</th><th>Result</th>
@@ -47,6 +47,8 @@
                 <html:option value="Many">Many</html:option>
                 <html:option value="Few">Few</html:option>
                 <html:option value="None">None</html:option>
+                <html:option value="Failed">Failed</html:option>
+                <html:option value="Succeeded">Succeeded</html:option>
             </html:select>
         </td>
         

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2001-06-22 10:35:56 $
+ * $Revision: 1.7 $
+ * $Date: 2001-06-22 12:54:58 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -42,13 +42,14 @@ import java.util.*;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.file.*;
 import edu.harvard.med.hip.flex.util.*;
 
 /**
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.6 $ $Date: 2001-06-22 10:35:56 $
+ * @version    $Revision: 1.7 $ $Date: 2001-06-22 12:54:58 $
  */
 
 public class Result {
@@ -58,7 +59,7 @@ public class Result {
     
     // result type for a transform
     public static final String TRANSFORMATION_TYPE = "TRANSFORMATION";
-
+    
     // the following defines the result values for GEL.
     public final static String CORRECT = "Correct";
     public final static String INCORRECT = "Incorrect";
@@ -70,12 +71,12 @@ public class Result {
     public final static String MANY = "Many";
     public final static String FEW = "Few";
     public final static String NONE = "None";
-
+    
     // the following defines the result values for controls.
     public final static String SUCCEEDED = "Succeeded";
-    public final static String FAILED = "Failed";   
-
-     // id for this result
+    public final static String FAILED = "Failed";
+    
+    // id for this result
     private int id;
     
     // The process used to generate this result
@@ -90,6 +91,9 @@ public class Result {
     
     // The value of the result
     private String value;
+    
+    // File reference this result is associate with if any.
+    private FileReference fileRef;
     
     /**
      * Constructor.
@@ -106,7 +110,7 @@ public class Result {
         this.value= value;
     }
     
-  
+    
     /**
      * Return the result value.
      *
@@ -135,7 +139,7 @@ public class Result {
     }
     
     /**
-     * Accessor for the processes this result 
+     * Accessor for the processes this result
      *
      * @return process for this result
      */
@@ -166,7 +170,7 @@ public class Result {
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
         } finally {
-        DatabaseTransaction.closeStatement(ps);
+            DatabaseTransaction.closeStatement(ps);
         }
     }
     
@@ -178,7 +182,8 @@ public class Result {
      * @return The result for the given sample and process.
      * @exception FlexDatabaseException.
      */
-    public static Result findResult(Sample sample, Process process) throws FlexDatabaseException {
+    public static Result findResult(Sample sample, Process process)
+    throws FlexDatabaseException {
         Result result = null;
         String sql=
         "select r.resulttype as type, r.resultvalue as value " +
@@ -193,7 +198,7 @@ public class Result {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = conn.prepareStatement(sql);            
+            ps = conn.prepareStatement(sql);
             ps.setInt(1, sample.getId());
             ps.setInt(2, process.getExecutionid());
             
@@ -204,15 +209,35 @@ public class Result {
                 String type = rs.getString("TYPE");
                 String value = rs.getString("VALUE");
                 result = new Result(process, sample, type, value);
-            }            
+            }
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeStatement(ps);
-            DatabaseTransaction.closeConnection(conn);            
+            DatabaseTransaction.closeConnection(conn);
         }
         return result;
+    }
+    
+    /**
+     * Associates a file reference with this result.
+     *
+     * @param conn The database connection to do db insert.1
+     * @param fileRef, the file reference to associate with this result.
+     */
+    public void associateFileReference(Connection conn, FileReference fileRef)
+    throws FlexDatabaseException{
+        String sql = "insert into RESULTFILEREFERENCE (RESULTID, FILEREFERENCEID) " +
+        "values (?,?)";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1,this.id);
+            ps.setInt(2,fileRef.getId());
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        }
+        this.fileRef = fileRef;
     }
     
 } // End class Result
