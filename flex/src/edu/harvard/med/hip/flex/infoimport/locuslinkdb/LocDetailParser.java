@@ -124,11 +124,11 @@ public class LocDetailParser {
             return null;
         }
         
-        String giString = st.nextToken();
-        int gi = 0;
-        if(!"na".equals(giString)) {
-            gi = Integer.parseInt(giString);
+        String gi = st.nextToken();
+        if("na".equals(gi)) {
+            gi = null;
         }
+
         
         SequenceRecord gr = new SequenceRecord(gi, acc, type);
         return gr;
@@ -187,7 +187,7 @@ public class LocDetailParser {
             for(int n=0; n<genbanks.size(); n++) {
                 SequenceRecord gr = (SequenceRecord)genbanks.get(n);
                 stmt3.setString(1, gr.getGenbank());
-                stmt3.setInt(2, gr.getGi());
+                stmt3.setString(2, gr.getGi());
                 stmt3.setString(3, gr.getType());
                 stmt3.setInt(4, gene.getLocusid());
                 DatabaseTransaction.executeUpdate(stmt3);

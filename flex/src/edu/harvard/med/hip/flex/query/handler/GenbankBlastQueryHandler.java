@@ -21,9 +21,20 @@ public class GenbankBlastQueryHandler extends QueryHandler {
     /** Creates a new instance of GenbankBlastQueryHandler */
     public GenbankBlastQueryHandler(List params) {
         super(params);
-        giBlastQueryHandler = new GIQueryHandler(params);
+        giBlastQueryHandler = new GiBlastQueryHandler(params);
     }
     
+    /**
+     * Query FLEXGene database for a list of genbank accession numbers and populate foundList and
+     * noFoundList. It first query FLEXGene database or NCBI to get lists of SequenceRecord objects
+     * which contains GI numbers. It then use GiBlastQueryHandler to query for a list of GI numbers.
+     *
+     *  foundList:      Genbank Accession => ArrayList of MatchGenbankRecord objects
+     *  noFoundList:    Genbank Accession => NoFound object
+     *
+     * @param searchTerms A list of GI numbers as search terms.
+     * @exception Exception
+     */    
     public void handleQuery(List searchTerms) throws Exception {
         foundList = new Hashtable();
         noFoundList = new Hashtable();
@@ -32,44 +43,87 @@ public class GenbankBlastQueryHandler extends QueryHandler {
             return;
         }
         
-        Hashtable foundGenbanks = getFoundGenbanks(searchTerms);
-        List genbankNotInFlex = new ArrayList();
-        genbankNotInFlex.addAll(searchTerms);
-        //For genbanks that are not found in FLEX or public, create NoFound records.
-        genbankNotInFlex.removeAll(foundGenbanks.keySet());
-        addToNoFound(genbankNotInFlex, NoFound.NO_MATCH_GENBANK_ENTRY);
+        //search FLEXGene database to get all gene records.
+        GenbankBatchRetriever retriever = new FlexGenbankBatchRetriever(searchTerms);
+        retriever.retrieveGenbank();
+        Map founds = retriever.getFoundList();
+        Map noFounds = retriever.getNoFoundList();
         
-        List genomics = new ArrayList();
-        Map newSearchTerms = new HashMap();
-        Set keys = foundGenbanks.keySet();
-        Iterator iter = keys.iterator();
+        //put terms not found into a list
+        Set noFoundTerms = noFounds.keySet();
+        List noFoundTermsList = new ArrayList();
+        noFoundTermsList.addAll(noFoundTerms);
+        
+        //search NCBI to get all gene records for terms not found in FLEXGene database.
+        retriever = new PublicGenbankBatchRetriever(noFoundTermsList);
+        retriever.retrieveGenbank();
+        founds.putAll(retriever.getFoundList());
+        noFoundList.putAll(retriever.getNoFoundList());
+        
+        //get all the GI numbers for the found gene records.
+        Set giTerms = new TreeSet();
+        Collection values = founds.values();
+        Iterator iter = values.iterator();
         while(iter.hasNext()) {
-            String key = (String)iter.next();
-            List values = (ArrayList)foundGenbanks.get(key);
-            List newValues = new ArrayList();
-            for(int i=0; i<values.size(); i++) {
-                SequenceRecord sr = (SequenceRecord)values.get(i);
-                if(!SequenceRecord.GENOMIC.equals(sr.getType())) {
-                    newValues.add(sr);
+            List matchs = (List)iter.next();
+            for(int i=0; i<matchs.size(); i++) {
+                SequenceRecord sr = (SequenceRecord)matchs.get(i);
+                String gi = sr.getGi();
+                giTerms.add(gi);
+            }
+        }
+        List giTermsList = new ArrayList();
+        giTermsList.addAll(giTerms);
+        
+        //Query by GI terms
+        giBlastQueryHandler.handleQuery(giTermsList);
+        
+        //handle found.
+        Map foundByGi = giBlastQueryHandler.getFoundList();
+        Set terms = founds.keySet();
+        iter = terms.iterator();
+        Map leftTerms = new HashMap();
+        while(iter.hasNext()) {
+            String term = (String)iter.next();
+            List matchs = (List)founds.get(term);
+            List matchGenbankRecords = new ArrayList();
+            for(int i=0; i<matchs.size(); i++) {
+                SequenceRecord sr = (SequenceRecord)matchs.get(i);
+                String gi = sr.getGi();
+                if(foundByGi.containsKey(gi)) {
+                    List mgrs = (List)foundByGi.get(gi);
+                    matchGenbankRecords.addAll(mgrs);
+                } 
+            }
+            if(matchGenbankRecords.size() > 0) {
+                foundList.put(term, matchGenbankRecords);
+            } else {
+                leftTerms.put(term, matchs);
+            }
+        }
+
+        //handle no found
+        Map noFoundByGi = giBlastQueryHandler.getNoFoundList();
+        terms = leftTerms.keySet();
+        iter = terms.iterator();
+        while(iter.hasNext()) {
+            String term = (String)iter.next();
+            List matchs = (List)leftTerms.get(term);
+            String reason = NoFound.NO_MATCH_GI_QUERY;
+            for(int i=0; i<matchs.size(); i++) {
+                SequenceRecord sr = (SequenceRecord)matchs.get(i);
+                String gi = sr.getGi();
+                if(noFoundByGi.containsKey(gi)) {
+                    NoFound nf = (NoFound)noFoundByGi.get(gi);
+                    reason = reason+". Query by genbank accession: "+sr.getGenbank()+" - "+nf.getReason();
+                } else {
+                    reason = reason+". Query by genbank accession: "+sr.getGenbank()+" - "+NoFound.UNKNOWN;
                 }
             }
-            if(newValues.size() == 0) {
-                genomics.add(key);
-            } else {
-                newSearchTerms.put(key, newValues);
-            }
+            noFoundList.put(term, new NoFound(term, reason));
+            reason = NoFound.NO_MATCH_GI_QUERY;
         }
-        
-        if(isRelatedSeq) {
-            FlexGenbankBatchRetriever r = new FlexGenbankBatchRetriever();
-            Hashtable relatedSearchTerms = r.retrieveRelatedCodingGenbank(genomics);
-            handleGiQuery(relatedSearchTerms, MatchGenbankRecord.RELATED_SEARCH);
-        } else {
-            addToNoFound(genomics, NoFound.GENOMIC_SEQ);
-        }
-        
-        handleGiQuery(newSearchTerms, MatchGenbankRecord.DIRECT_SEARCH);            
-    }
+    }    
     
     protected void setQueryParams(List params) {
         for(int i=0; i<params.size(); i++) {
@@ -84,97 +138,93 @@ public class GenbankBlastQueryHandler extends QueryHandler {
         }
     }
     
-    private Hashtable getFoundGenbanks(List searchTerms) throws Exception {        
-        Hashtable foundGenbanks = new Hashtable();
-        GenbankBatchRetriever retriever = new FlexGenbankBatchRetriever();
-        Hashtable found = retriever.retrieveGenbank(searchTerms);
-        foundGenbanks.putAll(found);
+    public static void main(String args[]) {
+        List genbanks = new ArrayList();
+        genbanks.add("NM_130786");           
+        genbanks.add("AC010642");            
+        genbanks.add("AF414429");            
+        genbanks.add("AK055885");             
+        genbanks.add("X68728");              
+        genbanks.add("Z11711"); 
+        genbanks.add("BC001874.1");                                                                      
+        genbanks.add("BC001875.1");                                                                      
+        genbanks.add("BC001878.1");                                                                      
+        genbanks.add("BC001880.1");                                                                      
+        genbanks.add("BC001881.1");                                                                      
+        genbanks.add("BC001882.1");
+        genbanks.add("12345");
+        genbanks.add("abc");
         
-        Set genbankInFlex = found.keySet();
-        List genbankNotInFlex = new ArrayList();
-        genbankNotInFlex.addAll(searchTerms);
-        genbankNotInFlex.removeAll(genbankInFlex);
+        List params = new ArrayList();
         
-        retriever = new PublicGenbankBatchRetriever();
-        found = retriever.retrieveGenbank(genbankNotInFlex);
-        foundGenbanks.putAll(found);
-        
-        return foundGenbanks;
-    }
-    
-    private void addToNoFound(List terms, String reason) {    
-        for(int i=0; i<terms.size(); i++) {
-            String genbank = (String)terms.get(i);
-            NoFound nf = new NoFound(genbank, reason);
-            noFoundList.put(genbank, nf);
+        GenbankBlastQueryHandler handler = new GenbankBlastQueryHandler(params);
+        try {
+            handler.handleQuery(genbanks);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            System.exit(0);
         }
-    }
-    
-    private void handleGiQuery(Map newSearchTerms, String searchMethod) throws Exception {        
-        Set giSet = new TreeSet();
-        Set genbanks = newSearchTerms.keySet();
-        Iterator iter = genbanks.iterator();
-        while(iter.hasNext()) {
-            String genbank = (String)iter.next();
-            List values = (ArrayList)newSearchTerms.get(genbank);
-            for(int i=0; i<values.size(); i++) {
-                SequenceRecord sr = (SequenceRecord)values.get(i);
-                giSet.add((new Integer(sr.getGi())).toString());
-            }
-        }
-        List gis = new ArrayList(giSet);
-        giBlastQueryHandler.handleQuery(gis);
         
-        Map foundGiList = giBlastQueryHandler.getFoundList();
-        Map noFoundGiList = giBlastQueryHandler.getNoFoundList();
-        handleFoundResult(foundGiList, newSearchTerms, searchMethod);
-        handleNoFound(noFoundGiList, newSearchTerms);
-    }
-    
-    private void handleFoundResult(Map foundGiList, Map newSearchTerms, String searchMethod) {        
-        Set keys = foundGiList.keySet();
-        Iterator iter = keys.iterator();
-        while(iter.hasNext()) {
-            String k = (String)iter.next();
-            List matchs = (List)foundGiList.get(k);
-            
-            Set keyset = newSearchTerms.keySet();
-            Iterator it = keyset.iterator();
-            while(it.hasNext()) {
-                String term = (String)it.next();
-                SequenceRecord sr = (SequenceRecord)newSearchTerms.get(term);
-                if(sr.getGi() == Integer.parseInt(k)) {
-                    List matchGenbanks = new ArrayList();
-                    for(int i=0; i<matchs.size(); i++) {
-                        MatchGenbankRecord mgr = (MatchGenbankRecord)matchs.get(i);
-                        mgr.setSearchMethod(searchMethod);
-                        matchGenbanks.add(mgr);
-                    }
-                    foundList.put(term, matchGenbanks);
-                    break;
-                }
-            }
-        }
-    }
-    
-    private void handleNoFound(Map noFoundGiList, Map newSearchTerms) {
-        Set keys = noFoundGiList.keySet();
+        Map found = handler.getFoundList();
+        System.out.println("=========== Found =============");
+        Set keys = found.keySet();
         Iterator iter = keys.iterator();
         while(iter.hasNext()) {
             String gi = (String)iter.next();
-            NoFound nf = (NoFound)noFoundGiList.get(gi);
+            System.out.println("search term: "+gi);
             
-            Set ks = newSearchTerms.keySet();
-            Iterator it = ks.iterator();
-            while(it.hasNext()) {
-                String genbank = (String)it.next();
-                SequenceRecord sr = (SequenceRecord)newSearchTerms.get(genbank);
-                if(sr.getGi() == Integer.parseInt(gi)) {
-                    NoFound value = new NoFound(genbank,  nf.getReason());
-                    noFoundList.put(genbank, value);
-                    break;
+            List mgrs = (ArrayList)found.get(gi);
+            for(int i=0; i<mgrs.size(); i++) {
+                MatchGenbankRecord mgr = (MatchGenbankRecord)mgrs.get(i);
+                System.out.println("Genbank Acc: "+mgr.getGanbankAccession());
+                System.out.println("GI: "+mgr.getGi());
+                System.out.println("Search Method: "+mgr.getSearchMethod());
+                List mfss = (List)mgr.getMatchFlexSequence();
+                
+                for(int n=0; n<mfss.size(); n++) {
+                    MatchFlexSequence mfs = (MatchFlexSequence)mfss.get(n);
+                    System.out.println("\tFlex ID: "+mfs.getFlexsequenceid());
+                    System.out.println("\tIs match by GI: "+mfs.getIsMatchByGi());
+                    BlastHit bh = mfs.getBlastHit();
+                    if(bh != null) {
+                        System.out.println("\t\tFlex ID: "+bh.getMatchFlexId());
+                        System.out.println("\t\tQuery length: "+bh.getQueryLength());
+                        System.out.println("\t\tSub length: "+bh.getSubjectLength());
+                        
+                        List alignments = bh.getAlignments();
+                        for(int j=0; j<alignments.size(); j++) {
+                            BlastAlignment ba = (BlastAlignment)alignments.get(j);
+                            System.out.println("\t\t\tE value: "+ba.getEvalue());
+                            System.out.println("\t\t\tGap: "+ba.getGap());
+                            System.out.println("\t\t\tID: "+ba.getId());
+                            System.out.println("\t\t\tIdentity: "+ba.getIdentity());
+                            System.out.println("\t\t\tFlex ID: "+ba.getMatchFlexId());
+                            System.out.println("\t\t\tQuery start: "+ba.getQueryStart());
+                            System.out.println("\t\t\tQuery end: "+ba.getQueryEnd());
+                            System.out.println("\t\t\tScore: "+ba.getScore());
+                            System.out.println("\t\t\tStrand: "+ba.getStrand());
+                            System.out.println("\t\t\tSub start: "+ba.getSubStart());
+                            System.out.println("\t\t\tSub end: "+ba.getSubEnd());
+                        }
+                    } else {
+                        System.out.println("\tNo blast hits");
+                    }
                 }
             }
         }
+        
+        System.out.println("=============== No Found List ===================");
+        Map noFounds = handler.getNoFoundList();
+        Set noFoundTerms = noFounds.keySet();
+        iter = noFoundTerms.iterator();
+        while(iter.hasNext()) {
+            String gi = (String)iter.next();
+            System.out.println("Search term: "+gi);
+            NoFound nf = (NoFound)noFounds.get(gi);
+            System.out.println("\tReason: "+nf.getReason());
+            System.out.println("\tSearch term: "+nf.getSearchTerm());
+        }
+        
+        System.exit(0);
     }
 }

@@ -26,14 +26,15 @@ public class BlastHitSet {
         if(blastHits == null || blastHits.size() == 0)
             return;
         
-        String sql = "insert into blasthit(matchflexid, querylength, subjectlength)"+
-                    " values(?,?,?)";
+        String sql = "insert into blasthit(matchflexid, querylength, subjectlength, outputfile)"+
+                    " values(?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
         for (int i=0; i<blastHits.size(); i++) {
             BlastHit blastHit = (BlastHit)blastHits.get(i);
             stmt.setInt(1, blastHit.getMatchFlexId());
             stmt.setInt(2, blastHit.getQueryLength());
             stmt.setInt(3, blastHit.getSubjectLength());
+            stmt.setString(4, blastHit.getOutputFile());
             DatabaseTransaction.executeUpdate(stmt);
         }
         DatabaseTransaction.closeStatement(stmt);

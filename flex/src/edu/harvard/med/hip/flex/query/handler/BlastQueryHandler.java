@@ -234,6 +234,7 @@ public class BlastQueryHandler extends QueryHandler {
         giList.add("37550355");
         giList.add("16923985");
         giList.add("34851998");
+        giList.add("16550723");
         
         QueryHandler handler = new BlastQueryHandler();
         try {

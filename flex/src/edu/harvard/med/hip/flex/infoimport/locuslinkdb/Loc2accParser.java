@@ -83,7 +83,7 @@ public class Loc2accParser {
         if(!"9606".equals(species)) 
             return null;
         
-        SequenceRecord seq = new SequenceRecord(0, acc, type);
+        SequenceRecord seq = new SequenceRecord(null, acc, type);
         seq.setLocusid(locusid);
         return seq;
     }

@@ -88,4 +88,12 @@ public class MatchFlexSequence {
     public void setFlexSequence(FlexSequence seq) {
         this.flexSequence = seq;
     }
+    
+    public String getFoundBy() {
+        if(MATCH_BY_GI.equals(isMatchByGi)) {
+            return "GI";
+        } else {
+            return "Blast";
+        }
+    }
 }

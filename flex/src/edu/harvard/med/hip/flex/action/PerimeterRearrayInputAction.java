@@ -68,6 +68,8 @@ public class PerimeterRearrayInputAction extends ResearcherAction {
         request.getSession().removeAttribute("EnterSourcePlateAction.newContainers");
         request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateF1");
         request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateC1");
+        request.getSession().removeAttribute("PerimeterRearrayInputAction.files");
+        request.getSession().removeAttribute("PerimeterRearrayInputAction.emails");
         
         int projectid = ((PerimeterRearrayInputForm)form).getProjectid();
         int workflowid = ((PerimeterRearrayInputForm)form).getWorkflowid();
@@ -77,6 +79,12 @@ public class PerimeterRearrayInputAction extends ResearcherAction {
         String destPlateType = ((PerimeterRearrayInputForm)form).getDestPlateType();
         int volumn = ((PerimeterRearrayInputForm)form).getVolumn();
         String labels = ((PerimeterRearrayInputForm)form).getLabels();
+        String emails = ((PerimeterRearrayInputForm)form).getEmails();
+        
+        request.setAttribute("workflowid", new Integer(workflowid));
+        request.setAttribute("projectid", new Integer(projectid));
+        request.setAttribute("projectname", projectname);
+        request.setAttribute("workflowname", workflowname);
         
         List invalidContainers = new ArrayList();
         Vector containers = new Vector();
@@ -113,6 +121,7 @@ public class PerimeterRearrayInputAction extends ResearcherAction {
         }
         
         ((PerimeterRearrayInputForm)form).setSourceLocations(locations);
+        List emailList = parseLabelList(emails);
         
         try {
             Project project = new Project(projectid);
@@ -125,17 +134,22 @@ public class PerimeterRearrayInputAction extends ResearcherAction {
             Vector locationList = Location.getLocations();
             File rearrayFile = mapper.createRearrayFile();
             File worklist = mapper.createWorklist(sourcePlateType, destPlateType, volumn);
-                        
-            request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", containers);            
+            Collection fileCol = new ArrayList();
+            fileCol.add(rearrayFile);
+            fileCol.add(worklist);
+            
+            request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", containers);
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);
             request.getSession().setAttribute("EnterSourcePlateAction.sampleLineageSet", sampleLineageSet);
-            request.getSession().setAttribute("EnterSourcePlateAction.locations", locationList);           
+            request.getSession().setAttribute("EnterSourcePlateAction.locations", locationList);
             request.getSession().setAttribute("SelectProtocolAction.protocol", protocol);
+            request.setAttribute("processname", protocol.getProcessname());
             request.setAttribute("workflowid", new Integer(workflowid));
             request.setAttribute("projectid", new Integer(projectid));
-            request.setAttribute("projectname", project.getName());
-            request.setAttribute("workflowname", workflow.getName());
-            request.setAttribute("processname", protocol.getProcessname());
+            request.setAttribute("projectname", projectname);
+            request.setAttribute("workflowname", workflowname);
+            request.getSession().setAttribute("PerimeterRearrayInputAction.files", fileCol);
+            request.getSession().setAttribute("PerimeterRearrayInputAction.emails", emailList);
             
             return (mapping.findForward("success"));
         } catch (Exception ex) {

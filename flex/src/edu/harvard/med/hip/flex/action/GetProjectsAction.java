@@ -74,6 +74,10 @@ public class GetProjectsAction extends ResearcherAction {
                 Project p = new Project(Project.MGC_PROJECT);
                 projects = new Vector();
                 projects.add(p);
+            } else if(Constants.PERIMETER_REARRAY.equals(forwardName)) {
+                Project p = new Project(Project.HUMAN);
+                projects = new Vector();
+                projects.add(p);
             } else {
                 projects = Project.getAllProjects();
                 for(int i=0; i<projects.size(); i++) {

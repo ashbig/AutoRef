@@ -83,7 +83,7 @@ public class FlexGenbankBatchRetriever extends GenbankBatchRetriever {
             List matchs = new ArrayList();
             while(rs.next()) {
                 String accession = rs.getString(1);
-                int gi = rs.getInt(2);
+                String gi = rs.getString(2);
                 int locus = rs.getInt(3);
                 String type = rs.getString(4);
                 SequenceRecord sr = new SequenceRecord(accession, gi, locus, type);
