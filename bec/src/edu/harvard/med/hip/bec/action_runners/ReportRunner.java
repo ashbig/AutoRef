@@ -115,9 +115,9 @@ public class ReportRunner extends ProcessRunner
         if ( score!= null) {m_score= true;  m_report_title += "Clone Score\t";}//
         if ( rank!= null) {m_rank= true;  m_report_title += "Clone Rank\t";}//
         if( dir_name != null) {m_dir_name = true;  m_report_title += "Clone Directory Name\t";}// Directory Name
-        if ( read_length != null) {m_read_length= true;  m_report_title += "End reads length (Forward/Reverse)\t";}
+        if ( read_length != null) {m_read_length= true;  m_report_title += "End reads length: Forward\tEnd reads length:Reverse\t";}
       
-        if( ref_sequence_id != null){ m_ref_sequence_id= true;  m_report_title += "RefSequence ID\t";}//      Sequence ID
+        if( ref_sequence_id != null){ m_ref_sequence_id= true;  m_report_title += "REF: Bec ID\tREF: FLEX Id\t ";}//      Sequence ID
         if( ref_cds_start != null) {m_ref_cds_start= true; m_report_title += "REF:CDS Start\t";} //      CDS Start
         if( ref_cds_stop != null) {m_ref_cds_stop= true; m_report_title += "REF:CDS Stop\t";}//      CDS Stop
         if( ref_cds_length != null){ m_ref_cds_length= true; m_report_title += "REF:CDS Length\t";}//      CDS Length
@@ -204,6 +204,7 @@ public class ReportRunner extends ProcessRunner
                  clone.setSampleId(rs.getInt("SAMPLEID"));
                  clone.setScore(rs.getInt("SCORE"));
                  clone.setRefSequenceId(rs.getInt("REFSEQUENCEID"));
+                 clone.setFLEXRefSequenceId(rs.getInt("FLEXSEQUENCEID"));
                  clone.setCloneSequenceCdsStart(rs.getInt("cloneseqcdsstart"));
                  clone.setCloneSequenceCdsStop(rs.getInt("clonesequencecdsstop"));
                  if ( m_dir_name )
@@ -235,7 +236,7 @@ public class ReportRunner extends ProcessRunner
                 if (index == 3) break;
                 if ( index != items.size()-1 ) plate_names.append(",");
             }
-            sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
+            sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
@@ -246,7 +247,7 @@ public class ReportRunner extends ProcessRunner
         } 
         else if (submission_type == Constants.ITEM_TYPE_CLONEID)
         {
-            sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
+            sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID,  a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop,analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
@@ -257,7 +258,7 @@ public class ReportRunner extends ProcessRunner
        
         else if (submission_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)//bec sequence id
         {
-                sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
+                sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
@@ -434,7 +435,7 @@ public class ReportRunner extends ProcessRunner
                 for (int index = 0; index < samplereads.size(); index++)
                 {
                     read = (UIRead) samplereads.get(index);
-                    cloneinfo.append(Read.getTypeAsString(read.getType())+"_"+ (read.getTrimStop() - read.getTrimStart () )+"/"); 
+                    cloneinfo.append(Read.getTypeAsString(read.getType())+"_"+ (read.getTrimStop() - read.getTrimStart () )+"\t"); 
 
                 }
             }
@@ -443,7 +444,7 @@ public class ReportRunner extends ProcessRunner
     }
     if (refsequence != null  )
     {
-        if(  m_ref_sequence_id){ cloneinfo.append( refsequence.getId() +"\t");}//      Sequence ID
+        if(  m_ref_sequence_id){ cloneinfo.append( refsequence.getId() +"\t" + clone.getFLEXRefSequenceId()+"\t");}//      Sequence ID
         if( m_ref_cds_start){ cloneinfo.append( refsequence.getCdsStart()+"\t" );} //      CDS Start
         if( m_ref_cds_stop){ cloneinfo.append( refsequence.getCdsStop() +"\t");}//      CDS Stop
         if( m_ref_cds_length){ cloneinfo.append( ( refsequence.getCdsStop() - refsequence.getCdsStart())+"\t");}//      CDS Length
