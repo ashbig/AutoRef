@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.8 2003-07-07 13:16:13 Elena Exp $
+ * $Id: Container.java,v 1.9 2003-07-07 21:03:22 Elena Exp $
  *
  * File     	: Container.java
 
@@ -1368,7 +1368,7 @@ public class Container
         Container c = null;
         Oligo forward = null;
         Oligo reverse = null;
-        Oligo[] oligos = null;
+        Oligo[] oligos = new Oligo[2];
         try {
             t = DatabaseTransaction.getInstance();
             crs = t.executeQuery(sql);
@@ -1387,6 +1387,7 @@ public class Container
                     forward.setOrientation(crs.getInt("orientation")) ;
                     forward.setLeaderLength(crs.getInt("leaderlength"));
                     forward.setLeaderSequence(crs.getString("leadersequence"));
+                     oligos[0] = forward;
                 }
                 else  if (position == Oligo.POSITION_REVERSE)
                 {
@@ -1399,14 +1400,10 @@ public class Container
                     reverse.setOrientation(crs.getInt("orientation")) ;
                     reverse.setLeaderLength(crs.getInt("leaderlength"));
                     reverse.setLeaderSequence(crs.getString("leadersequence"));
+                    oligos[1] = reverse;
                 }
             }
-            if (forward != null || reverse != null)
-            {
-                oligos = new Oligo[2];
-                oligos[0] = forward;
-                oligos[1] = reverse;
-            }
+           
             return oligos;
             
         } catch (Exception ex)

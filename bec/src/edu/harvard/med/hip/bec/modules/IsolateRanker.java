@@ -190,7 +190,7 @@ public class IsolateRanker
                 }
                 it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
                     //check wether number of mutations exseedmax allowed
-                it.setBlackRank(m_cutoff_spec,m_penalty_spec);
+                it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length());
   
             }
             construct.calculateRank();
@@ -273,6 +273,24 @@ public class IsolateRanker
             else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
                 df.setIsRunCompliment(! m_reverse_read_sence);
             df.run();
+            
+            //set cds start && stop 
+            if ( (read.getType() == Read.TYPE_ENDREAD_FORWARD && m_forward_read_sence)
+            || (read.getType() == Read.TYPE_ENDREAD_REVERSE && m_reverse_read_sence)  )
+            {
+                read.setCdsStart( df.getCdsStart() + read.getTrimStart() );
+                read.setCdsStop( df.getCdsStop() + read.getTrimStart() );
+            }
+            else 
+            {
+                read.setCdsStart( -(read_sequence.getText().length() + 1 - df.getCdsStart() + read.getTrimStart() ) );
+                read.setCdsStop( -(read_sequence.getText().length() + 1 - df.getCdsStop() + read.getTrimStart() ));
+            }
+            if ( !( read.getCdsStart() == 0 && read.getCdsStop() == 0) )
+            {
+                read.updateCdsStartStop(conn);
+            }
+            
             if (m_isRunPolymorphism)
             {
                  PolymorphismDetector pf = new PolymorphismDetector();
@@ -318,14 +336,14 @@ public class IsolateRanker
             return false;
         }
         if ( read.getType() == Read.TYPE_ENDREAD_FORWARD &&
-            (read.getTrimEnd() - read.getTrimEnd()) < m_5p_min_read_length)
+            (read.getTrimEnd() - read.getTrimStart()) < m_5p_min_read_length)
         {
             //update read type
             read.setType(Read.TYPE_ENDREAD_FORWARD_SHORT);
             read.updateType(conn);
             return false;
         }
-        if ( read.getType() == Read.TYPE_ENDREAD_REVERSE && (read.getTrimEnd() - read.getTrimEnd()) < m_3p_min_read_length)
+        if ( read.getType() == Read.TYPE_ENDREAD_REVERSE && (read.getTrimEnd() - read.getTrimStart()) < m_3p_min_read_length)
         {
             //update read type
             read.setType(Read.TYPE_ENDREAD_REVERSE_SHORT);

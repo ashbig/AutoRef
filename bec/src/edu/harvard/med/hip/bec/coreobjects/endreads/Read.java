@@ -20,6 +20,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.programs.phred.*;
 
 import java.util.*;
+import java.math.*;
 /**
  *
  * @author  Administrator
@@ -63,6 +64,9 @@ public class Read
     
     private int         m_trimmedstart = -1;
     private int         m_trimmedstop = -1;
+    //1 based
+    private int         m_cdsstart = 0;
+    private int         m_cdsstop = 0;
     
     // *********************************************************************
     // these fields use only as intermidate data storage when read data
@@ -190,6 +194,11 @@ public class Read
         String sql = "update readinfo set readtype="+ m_type +   " where readid="+m_id;
         DatabaseTransaction.executeUpdate(sql, conn);
     }
+     public  void updateCdsStartStop(Connection conn) throws BecDatabaseException
+    {
+        String sql = "update readinfo set cdsstart="+ m_cdsstart +   ", cdsstop= "+m_cdsstop+" where readid="+m_id;
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
     public int         getId(){ return m_id  ;}
     public int         getIsolateTrackingId(){ return m_isolatetrackingid  ;} 
  
@@ -257,6 +266,9 @@ public class Read
     public int         getScore(){ return m_score  ;}
     public int         getTrimStart(){ return m_trimmedstart  ;}
     public int         getTrimEnd(){ return m_trimmedstop  ;}
+     public int         getCdsStart(){ return m_cdsstart ;}
+    public int         getCdsStop(){ return m_cdsstop ;}
+    
     
    public void         setId(int v){  m_id  = v;}
     public void         setIsolateTrackingId(int v){  m_isolatetrackingid  = v;} 
@@ -275,6 +287,8 @@ public class Read
     public void         setScore(int v){  m_score  = v;}
     public void         setTrimStart(int v){  m_trimmedstart  = v;}
     public void         setTrimEnd(int v){  m_trimmedstop  = v;}
+    public void         setCdsStart(int v){  m_cdsstart =v;}
+    public void         setCdsStop(int v){ m_cdsstop = v ;}
     public void         setSequence(String text, String scores, int refseqid)
     {
         m_readsequence = new AnalyzedScoredSequence(text,scores,refseqid);
@@ -418,16 +432,40 @@ public class Read
             penalty = spec.getPenalty(pair.getRNADiscrepancy().getQuality(), pair.getRNADiscrepancy().getChangeType());// by rna mutation
             //try to find pair and get its penalty
             if (penalty == EndReadsSpec.PENALTY_NOT_DEFINED)
-            {
-                penalty = spec.getPenalty(pair.getAADiscrepancy().getQuality(), pair.getAADiscrepancy().getChangeType());// by rna mutation
+                           penalty = spec.getPenalty(pair.getAADiscrepancy().getQuality(), pair.getAADiscrepancy().getChangeType());// by rna mutation
             }
             score += penalty;
         }
        **/
-        score = (int) score * 10000/ (m_trimmedstop -  m_trimmedstart);
+        int length_to_normalize = refsequenceCoveredLength();
+        if ( length_to_normalize == 0)
+            length_to_normalize = m_trimmedstop -  m_trimmedstart;
+        score = (int) score * 10000/ (length_to_normalize);
         return -score;
     }
     
+    //define length of refsequence covered by read
+    public int refsequenceCoveredLength()
+    {
+        int length = 0;
+         if (m_cdsstart != 0 && m_cdsstop != 0)//whole sequence is covered by one read
+        {
+            length = Math.abs(m_cdsstart - m_cdsstop);
+        }
+        else if (m_cdsstart > 0 && m_cdsstop == 0)//whole sequence is covered by one read
+        {
+            length = m_trimmedstop - m_cdsstart ;
+        }
+        else if (m_cdsstart == 0 && m_cdsstop > 0)//whole sequence is covered by one read
+        {
+            length = m_cdsstop - m_trimmedstart;
+        }
+         else if (m_cdsstart < 0 && m_cdsstop == 0)//whole sequence is covered by one read
+        {
+            length = Math.abs(m_cdsstart) - m_trimmedstart ;
+        }
+       return length;
+    }
     /*
     //function reformats scored sequence text according to spec
     //ei inserts N instead of all bases that are not qualified for the analysis

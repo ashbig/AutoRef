@@ -39,6 +39,11 @@ public class DiscrepancyFinder
     
     private SequencePair m_seqpair = null;
     private ArrayList    m_seqpairs = null;
+    //one based; this parameters defined as start / stop of ref sequence,
+    // so they need to be recalculated if linker is attached to the real ref sequence sequence
+    private int             m_cds_start  = 0; //start of cds for query sequence if covered
+      private int             m_cds_stop  = 0; //start of cds for query sequence if covered
+      
      private ArrayList    m_aligmentFiles = null;
     private double      m_identitycutoff = 60.0;
     private boolean      m_isRunCompliment = false;
@@ -101,7 +106,8 @@ public class DiscrepancyFinder
     public void setNeedleGapOpen(double v){ m_needle_gap_open = v;}
     public void setNeedleGapExt(double v){     m_needle_gap_ext = v;}
     
-    
+    public int     getCdsStart(){ return        m_cds_start  ;} //start of cds for query sequence if covered
+    public int     getCdsStop(){ return        m_cds_stop ;}
     //main calling function for polymorphism finder
     public void run()throws BecDatabaseException, BecUtilException
     {
@@ -922,6 +928,18 @@ System.out.println("\t\t\t "+ cur_aa_mutation.toString());
             
             element = new SequenceElement(  q_index  , s_index , q_score, sequence_query_n[count],sequence_subject_n[count]);
             elements[count]=element;
+            
+            //set up cds start && stop
+            if (s_index == 1 && q_index > 0 && m_cds_start == 0)
+            { 
+                m_cds_start = q_index;
+            }
+            if ( (s_index > 1 && ( sequence_subject_n[count] != ' ' && sequence_query_n[count] != ' '))
+                || (s_index > 1 && (count == sequence_query_n.length -1 && 
+                ( sequence_subject_n[count] != ' ' && sequence_subject_n[count] != '-' && sequence_query_n[count] != ' ' && sequence_query_n[count] != '-'))))
+            { 
+                m_cds_stop = q_index;
+            }
         }
         return elements;
     }
@@ -1209,7 +1227,8 @@ System.out.println("\t\t\t "+ cur_aa_mutation.toString());
             */
             
            NeedleResult res = new NeedleResult();
-            String queryFile = "c:\\needleATG.out";
+         //   String queryFile = "c:\\needleoutput\\needle4603_176.out";
+              String queryFile = "c:\\needleATG.out";
              NeedleParser.parse(queryFile,res);
             // edu.harvard.med.hip.bec.coreobjects.endreads.Read read =  edu.harvard.med.hip.bec.coreobjects.endreads.Read.getReadById(1154);
             // int[] trimmed_scores = read.getTrimmedScoresAsArray();
