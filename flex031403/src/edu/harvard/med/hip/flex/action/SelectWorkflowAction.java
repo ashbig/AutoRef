@@ -91,6 +91,10 @@ public class SelectWorkflowAction extends ResearcherAction {
                return mapping.findForward("success_mgc_request_import");
             }            
             
+            if(Constants.SPECIAL_OLIGO_ORDER.equals(forwardName)) {
+                return mapping.findForward("success_special_oligo_order");
+            }
+            
             return (mapping.findForward("success"));
         } catch (Exception e) {
             request.setAttribute(Action.EXCEPTION_KEY, e);

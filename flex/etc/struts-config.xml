@@ -170,7 +170,9 @@
     <forward    name="mgcPlateHandle" path="/GetProjects.do?forwardName=MGC_PLATE_HANDLE"/>
     <forward    name="importMGCMaster" path="/ImportMgcCloneList.jsp"/>
     <forward    name="importStatus" path="/MgcPBSelectFile.jsp"/>
-    <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>
+    <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>    
+    <forward    name="specialOligoOrder" path="/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER"/>
+
     
   </global-forwards>
   
@@ -248,6 +250,7 @@
         <forward name="success_create_process_plates" path="/CreateProcessPlate.do"/>
         <forward name="success_mgc_request_import" path="/MgcRequestImport.jsp"/>
         <forward name="success_mgc_plate_handle" path="/MGCPlateHandle.do"/>
+        <forward name="success_special_oligo_order" path="/SpecialOligoOrder.jsp"/>
         <forward    name="success"   path="/SelectProject.jsp"/>
     </action>
 

@@ -158,6 +158,10 @@ public class Constants {
     
     //forward name for mgc request import
     public static final String MGC_REQUEST_IMPORT = "MGC_REQUEST_IMPORT";
+    
+    //forward name for mgc request import
+    public static final String SPECIAL_OLIGO_ORDER = "SPECIAL_OLIGO_ORDER";
+    
     /** Creates new Constants */
     private Constants() {
     }
