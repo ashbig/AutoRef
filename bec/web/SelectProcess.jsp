@@ -88,7 +88,7 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  %> >
-      Run assemble for end reads</font></td>
+      Run assembler for end reads</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
@@ -195,6 +195,13 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE  %> >
       Submit assembled sequences</font></td>
   </tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  %> >
+      Find low quality regions of clone sequence (settings required)</font></td>
+  </tr>
+
+<TR><TD COlspan=2 bgcolor="#DCE8FC" >&nbsp</TD></TR>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER %> >
