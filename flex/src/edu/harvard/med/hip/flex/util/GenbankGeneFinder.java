@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.14 2004-02-23 19:47:35 dzuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.15 2005-02-17 16:08:34 dzuo Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -44,30 +44,22 @@ public class GenbankGeneFinder {
             
             String inputLine;
             
+            //looking for string like this:
+            //<dd>
+            //Homo sapiens myocardin (MYOCD), mRNA<br>
+            //gi|23957691|ref|NM_153604.1|[23957691]<br>
             while ((inputLine = in.readLine()) != null) {
                 if(inputLine.indexOf("<dd>") == 0) {
-                    String desc = inputLine.substring(inputLine.indexOf("<dd>")+4, inputLine.indexOf("<br>"));
-                    StringTokenizer st = new StringTokenizer(inputLine.substring(inputLine.indexOf("<br>")+4));
-                    String token1 = null;
-                    String gi = null;
-                    String gb = null;
+                    inputLine = in.readLine();
+                    String desc = inputLine.substring(0, inputLine.indexOf("<br>"));
                     
-                    while (st.hasMoreTokens()) {
-                        if(token1 == null)
-                            token1 = st.nextToken("|<");
-                        
-                        String token2 = null;
-                        if(st.hasMoreTokens())
-                            token2 = st.nextToken("|<");
-                        
-                        if(token2.indexOf("[") != -1) {
-                            gi = token2.substring(token2.indexOf("[")+1, token2.length()-1);
-                            gb = token1;
-                            break;
-                        } else {
-                            token1 = token2;
-                        }
-                    }
+                    String s = in.readLine();
+                    StringTokenizer st = new StringTokenizer(s, "|");
+                    String ignore = st.nextToken();
+                    String gi = st.nextToken();
+                    ignore = st.nextToken();
+                    String gb = st.nextToken();
+
                     GenbankSequence sequence = new GenbankSequence(gb, gi, desc);
                     v.addElement(sequence);
                 }
@@ -208,7 +200,7 @@ public class GenbankGeneFinder {
     public static void main(String [] args) {
         GenbankGeneFinder finder = new GenbankGeneFinder();
         try{
-            Vector v = finder.search("15080585");
+            Vector v = finder.search("NM_001011658");
             Enumeration enum = v.elements();
             while(enum.hasMoreElements()) {
                 GenbankSequence sequence = (GenbankSequence)enum.nextElement();
