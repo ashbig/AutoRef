@@ -1,5 +1,4 @@
 
-//package edu.harvard.med.hip.bec.util;
 import java.io.*;
 import java.util.*;
 /**
@@ -28,19 +27,16 @@ public class Trimming_java_script {
         boolean isWind = ( os.indexOf("Win") > -1);
         double score = -1; int first_base = -1; int last_base = -1;
         double min_pbd_val = MIN_PRB_VAL;
-        if ( arg.length > 1)
+        if ( arg.length == 2)
         {
             score = Double.parseDouble( arg[1]);
-            first_base = Integer.parseInt( arg[2]);
-            last_base = Integer.parseInt( arg[3] );
+            if ( score <= 0 ) return;
         }
+        if ( arg.length == 3)first_base = Integer.parseInt( arg[2]);
+        if ( arg.length == 4)    last_base = Integer.parseInt( arg[3] );
 
-        else
-        {
-            score = Trimming_java_script.MIN_AVG_QUAL;
-            first_base = 50;
-            last_base = 0;
-        }
+
+
 
         if (arg.length > 0)// production
         {
@@ -51,8 +47,12 @@ public class Trimming_java_script {
         else
         {
             //testing
-            score = 15;
-            first_base = 50; last_base = 700;
+            score = 10;// Trimming_java_script.MIN_AVG_QUAL;
+
+            first_base = -1; last_base = -1;
+              first_base = 50; last_base = -1;
+             // first_base = -1; last_base =500;
+            //  first_base = 50; last_base = 700;
             directory_name= "/C/bio/plate_analysis/clone_samples/3594/114275";//\\phd_dir\\6142_E05_3277_4426_F5.ab1.phd.1";
             if ( isWind )
             directory_name = convertUnixFileNameIntoWindowsBasedOnOneLetterApproach( directory_name);
@@ -94,9 +94,11 @@ public class Trimming_java_script {
         String line = null; int element_count = 0;
         ArrayList scored_elements = new ArrayList ();
         ArrayList trimmed_scored_elements = new ArrayList ();
-        ArrayList elements = new ArrayList();
+        ArrayList elements = new ArrayList(); ArrayList element_entities = null;
         ScoredElement element = null;
         String phdFile_name = null;
+        first_base = ( first_base > 0) ? first_base : 0 ;
+        last_base = ( last_base > 0) ? last_base : 0 ;
         boolean isBeforeDNAEnd = true; boolean isBeforeDNAStart = true;
         try
         {
@@ -114,19 +116,23 @@ public class Trimming_java_script {
                 }
                 else
                 {
-                    element_count++;
-                    if (  element_count >= first_base && element_count <= last_base)
+                    element_entities = splitString(line);
+                    if ( element_entities.size () == 3 )
                     {
-                        element = new ScoredElement( splitString(line)) ;
-                        if (element == null) throw new Exception();
+                        element = new ScoredElement( element_entities ) ;
                         scored_elements.add(element );
                     }
+
                 }
                 if ( isBeforeDNAStart && line.indexOf("BEGIN_DNA" ) != -1)
                     isBeforeDNAStart = false ;
                 if (isBeforeDNAEnd && line.indexOf("END_DNA" ) != -1)
                 {
-                    trimmed_scored_elements = trimScoredArray(scored_elements, score,min_pbd_val);
+                     if (  first_base > 0 ) first_base = (first_base < scored_elements.size() ) ? first_base :  scored_elements.size();
+                    if (   last_base== 0 ) last_base = scored_elements.size();
+                    if ( last_base > 0) last_base = (last_base > scored_elements.size() ) ? scored_elements.size() : last_base;
+
+                    trimmed_scored_elements = trimScoredArray(scored_elements, score,   first_base,  last_base, min_pbd_val);
                     if (trimmed_scored_elements.size() > 50 )
                     {
                         for (int count = 0; count < trimmed_scored_elements.size(); count++)
@@ -165,10 +171,10 @@ public class Trimming_java_script {
          }
     }
 
-    private      ArrayList  trimScoredArray(ArrayList scored_elements, double score, double min_pbd_val)
+    private      ArrayList  trimScoredArray(ArrayList scored_elements, double score,  int first_base, int last_base, double min_pbd_val)
     {
         ArrayList trimmed_scored_elements = new ArrayList();
-        int[] trimmed_coordinates =  trimSequencePhredAlgorithm(scored_elements, score, min_pbd_val );
+        int[] trimmed_coordinates =  trimSequencePhredAlgorithm(scored_elements, score,   first_base,  last_base,  min_pbd_val );
         for(int count = trimmed_coordinates[0]; count < trimmed_coordinates[1]; count++)
         {
             trimmed_scored_elements.add( scored_elements.get(count) );
@@ -190,7 +196,7 @@ public class Trimming_java_script {
 
 
 
-    private     int[]     trimSequencePhredAlgorithm  (ArrayList scored_elements, double score, double min_pbd_val )
+    private     int[]     trimSequencePhredAlgorithm  (ArrayList scored_elements, double score,  int first_base, int last_base, double min_pbd_val )
     {
         //** Find the maximum scoring subsequence.
           int start       = 0;          int end       = 0;
@@ -200,7 +206,8 @@ public class Trimming_java_script {
           int count = 0;
           ScoredElement element = null;
           int[] trimmed_coordinates = new int[2];
-          for(; count < scored_elements.size(); ++count )
+
+          for(count = first_base; count < last_base; ++count )
           {
             element = (ScoredElement) scored_elements.get(count);
             probScore +=  min_pbd_val - (float)Math.pow( (double)10.0, (double)( -element.getScore() / 10.0 ) );
