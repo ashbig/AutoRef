@@ -89,6 +89,78 @@ public class RefSequence extends BaseSequence
         }
     }
     
+    public RefSequence(int id, boolean isIncludePublicInfo, 
+            boolean sequencetext, 
+            boolean generalinfo) throws BecDatabaseException
+    {
+        
+        if (  ! isIncludePublicInfo && !sequencetext && !generalinfo) return;
+        if ( sequencetext )
+            m_text = BaseSequence.getSequenceInfo(id, BaseSequence.SEQUENCE_INFO_TEXT);
+        m_id = id;
+        m_type = THEORETICAL_SEQUENCE;
+        if ( isIncludePublicInfo ) m_publicInfo = new ArrayList();
+        String sql = null; boolean first_round = true;
+        
+        if (isIncludePublicInfo && generalinfo)
+        {
+            sql = "select nametype, namevalue,nameurl,description ," 
+            +" GENUSSPECIES  ,CDSSTART  ,CDSSTOP  ,GCCONTENT "
+            +" ,CDNASOURCE  ,CHROMOSOME ,"+
+            "to_char(dateadded, 'fmYYYY-MM-DD') as dateadded "+
+            "from name n,refsequence r  where n.sequenceid = r.sequenceid and r.sequenceid="+id;
+
+        }
+        else if (isIncludePublicInfo && !generalinfo)
+        {
+           sql = "select nametype, namevalue,nameurl,description from name where sequenceid="+id;
+
+        }
+        else if(!isIncludePublicInfo && generalinfo)
+        {
+             sql = "select GENUSSPECIES  ,CDSSTART  ,CDSSTOP  ,GCCONTENT "
+            +" ,CDNASOURCE  ,CHROMOSOME ,"+
+            "to_char(dateadded, 'fmYYYY-MM-DD') as dateadded\n"+
+            "from refsequence where sequenceid="+id;
+        }
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        RowSet rs = t.executeQuery(sql);
+        try
+        {
+            while(rs.next())
+            {
+                if ( generalinfo && first_round )
+                {
+                    first_round = false;
+                    m_species = rs.getInt("GENUSSPECIES");
+                    m_dateadded = rs.getString("DATEADDED");
+                    m_start = rs.getInt("CDSSTART");
+                    m_stop = rs.getInt("CDSSTOP");
+                    m_gc_content = rs.getInt("GCCONTENT");
+                    m_cdnasource = rs.getString("CDNASOURCE");
+                    m_chromosome = rs.getString("CHROMOSOME");
+                }            
+                // public info stuff
+                if ( isIncludePublicInfo)
+                {
+                   
+                   m_publicInfo.add(new PublicInfoItem(rs.getString("nametype"),
+                                                               rs.getString("namevalue"),
+                                                               rs.getString("nameurl"),
+                                                               rs.getString("description")));
+                  
+                }
+            }
+
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while restoring sequence with id "+id+"\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+    
     public synchronized  void insert(Connection conn)throws BecDatabaseException
     {
        String sql =null;
@@ -552,9 +624,14 @@ public class RefSequence extends BaseSequence
           //  int refseqid = theoretical_sequence.getId();
        
          //   String query="ATGGAGCTACGTGTGGGGAACAAGTACCGCCTGGGACGGAAGATCGGGAGCGGGTCCTTCGGAGATATCTACCTGGGTGCCAACATCGCCTCTGGTGAGGAAGTCGCCATCAAGCTGGAGTGTGTGAAGACAAAGCACCCCCAGCTGCACATCGAGAGCAAGTTCTACAAGATGATGCAGGGTGGCGTGGGGATCCCGTCCATCAAGTGGTGCGGAGCTGAGGGCGACTACAACGTGATGGTCATGGAGCTGCTGGGGCCTAGCCTCGAGGACCTGTTCAACTTCTGTTCCCGCAAATTCAGCCTCAAGACGGTGCTGCTCTTGGCCGACCAGATGATCAGCCGCATCGAGTATATCCACTCCAAGAACTTCATCCACCGGGACGTCAAGCCCGACAACTTCCTCATGGGGCTGGGGAAGAAGGGCAACCTGGTCTACATCATCGACTTCGGCCTGGCCAAGAAGTACCGGGACGCCCGCACCCACCAGCACATTCCCTACCGGGAAAACAAGAACCTGACCGGCACGGCCCGCTACGCTTCCATCAACACGCACCTGGGCATTGAGCAAAGCCGTCGAGATGACCTGGAGAGCCTGGGCTACGTGCTCATGTACTTCAACCTGGGCTCCCTGCCCTGGCAGGGGCTCAAAGCAGCCACCAAGCGCCAGAAGTATGAACGGATCAGCGAGAAGAAGATGTCAACGCCCATCGAGGTCCTCTGCAAAGGCTATCCCTCCGAATTCTCAACATACCTCAACTTCTGCCGCTCCCTGCGGTTTGACGACAAGCCCGACTACTCTTACCTACGTCAGCTCTTCCGCAACCTCTTCCACCGGCAGGGCTTCTCCTATGACTACGTCTTTGACTGGAACATGCTGAAATTCGGTGCAGCCCGGAATCCCGAGGATGTGGACCGGGAGCGGCGAGAACACGAACGCGAGGAGAGGATGGGGCAGCTACGGGGGTCCGCGACCCGAGCCCTGCCCCCTGGCCCACCCACGGGGGCCACTGCCAACCGGCTCCGCAGTGCCGCCGAGCCCGTGGCTTCCACGCCAGCCTCCCGCATCCAGCCGGCTGGCAATACTTCTCCCAGAGCGATCTCGCGGGTCGACCGGGAGAGGAAGGTGAGTATGAGGCTGCACAGGGGTGCGCCCGCCAACGTCTCCTCCTCAGACCTCACTGGGCGGCAAGAGGTCTCCCGGATCCCAGCCTCACAGACAAGTGTGCCATTTGACCATCTCGGGAAGTTGG";
-            RefSequence fl =  new RefSequence(348);
-            System.out.println(fl.getHTMLText());
-            System.out.println("O");
+            boolean isIncludePublicInfo = true;
+            boolean sequencetext = true;
+            boolean generalinfo = true;
+            RefSequence fl8 =  new RefSequence(24);
+            RefSequence fl =  new RefSequence(24 ,  true,   true, true);
+            RefSequence fl1 =  new RefSequence(24 ,  true,   false, true);
+            RefSequence fl2 =  new RefSequence(24 ,  true,   false, false);
+            RefSequence fl3 =  new RefSequence(24 ,  false,   false, false);
            // fl.insert(t.requestConnection());
             //t.requestConnection().commit();
           
