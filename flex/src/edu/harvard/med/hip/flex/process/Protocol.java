@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.39 2004-04-08 16:13:30 dzuo Exp $
+ * $Id: Protocol.java,v 1.40 2004-04-22 17:23:27 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -125,7 +125,6 @@ public class Protocol {
     
     public static final String CREATE_SEQ_PLATES = "Create rearrayed sequencing plates";
     
-    public static final String PERIMETER_REARRAY = "Cell culture perimeter rearray";
     public static final String CREATE_EXP_DNA = "Create expression DNA plate";
     public static final String CREATE_TRANSFECTION = "Create transfection plates";
     

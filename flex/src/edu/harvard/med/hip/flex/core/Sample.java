@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.8 2004-04-08 16:07:28 dzuo Exp $
+ * $Id: Sample.java,v 1.9 2004-04-22 17:22:47 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -384,6 +384,9 @@ public class Sample {
             return ISOLATE;
         
         if(Protocol.CREATE_EXP_DNA.equals(processname)) 
+            return DNA;
+        
+        if(Protocol.CREATE_TRANSFECTION.equals(processname)) 
             return DNA;
         
         return type;

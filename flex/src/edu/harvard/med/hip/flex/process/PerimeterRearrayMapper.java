@@ -39,7 +39,7 @@ public class PerimeterRearrayMapper extends ManyToManyContainerMapper {
         try {
             project = new Project(Project.HUMAN);
             workflow = new Workflow(Workflow.EXPRESSION_WORKFLOW);
-            protocol = new Protocol(Protocol.PERIMETER_REARRAY);
+            protocol = new Protocol(Protocol.CREATE_TRANSFECTION);
         } catch(Exception ex) {
             System.out.println(ex);
         }
