@@ -52,3 +52,26 @@ function showhide(divName, show_spec)
                }
           }
        
+//function checks , unchecks checkboxes in a group
+function SetChecked(e, val,checkBoxName)
+ {
+  // Check all of the checkboxes in a group
+  // Initialization
+  var iElt, currElt, f;
+
+    // Identify the form
+   f = e.form;
+    // Loop over all elements in the form
+    for (iElt=0; iElt < f.elements.length; iElt++)
+    {
+      currElt = f.elements[iElt];	
+      // If the element is one of the checkboxes in the group containing the checkbox which was just clicked...
+      if (currElt.id == checkBoxName)
+      {
+       // Check the checkbox
+
+        currElt.checked = val;
+      }  // end if
+    }  // end loop
+  
+}  // end of function CheckAllCheckboxesInGroup
