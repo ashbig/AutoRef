@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_0.dtd">
+
+<!--
+     This is the Struts configuration file for the example application,
+     using the proposed new syntax.
+
+     NOTE:  You would only flesh out the details in the "form-bean"
+     declarations if you had a generator tool that used them to create
+     the corresponding Java classes for you.  Otherwise, you would
+     need only the "form-bean" element itself, with the corresponding
+     "name" and "type" attributes.
+-->
+
+
+<struts-config>
+
+
+ 
+  <!-- ========== Form Bean Definitions =================================== -->
+  <form-beans>
+
+    <!-- Logon form bean -->
+    <form-bean      name="logonForm"
+                    type="edu.harvard.med.hip.cloneOrder.form.LogonForm"/>
+
+    <form-bean      name="viewCloneSetForm"
+                    type="edu.harvard.med.hip.cloneOrder.form.ViewCloneSetForm"/>
+
+    <form-bean      name="getGeneSequenceForm"
+                    type="edu.harvard.med.hip.cloneOrder.form.GetGeneSequenceForm"/>
+
+    <form-bean      name="makeReservationForm"
+                    type="edu.harvard.med.hip.cloneOrder.form.MakeReservationForm"/>
+
+    <form-bean      name="cancelReservationForm"
+                    type="edu.harvard.med.hip.cloneOrder.form.CancelReservationForm"/>
+
+
+
+
+  </form-beans>
+
+
+  <!-- ========== Global Forward Definitions ============================== -->
+  <global-forwards>
+    <forward    name="login"        path="/logon.jsp"/>
+    <forward    name="logout"       path="/Logout.do"/>
+    <forward    name="register"     path="/CustomerRegistration.jsp"/>
+    <forward    name="error"        path="/ProcessError.do"/>    
+  </global-forwards>
+  
+
+  <!-- ========== Action Mapping Definitions ============================== -->
+  <action-mappings type="org.apache.struts.action.ActionMapping">
+
+    
+    <!-- Process a user logon -->
+
+    <action path="/Logout" 
+            type="edu.harvard.med.hip.cloneOrder.action.LogoutAction">
+      <forward name="success" path="/Menu.jsp" /> 
+    </action>
+
+
+
+    <action    path="/checkReservation"
+               type="edu.harvard.med.hip.cloneOrder.action.CheckReservationAction"
+               name="logonForm"
+               scope="request"
+               input="/CheckReservation.jsp">
+      <forward  name="success"   path="/DisplayReservation.jsp"/>      
+    </action>
+
+    <action    path="/viewCloneSet"
+               type="edu.harvard.med.hip.cloneOrder.action.ViewCloneSetAction"
+               name="viewCloneSetForm"
+               scope="request"
+               input="/Menu.jsp">
+      <forward  name="success"   path="/DisplayCloneSet.jsp"/>
+    </action>
+
+    <action    path="/getGeneSequence"
+               type="edu.harvard.med.hip.cloneOrder.action.GetGeneSequenceAction"
+               name="getGeneSequenceForm"
+               scope="request"
+               input="/DisplayCloneSet.jsp">
+      <forward  name="success"   path="/DisplayGeneSequence.jsp"/>
+    </action>
+
+    <action    path="/reserve"
+               type="edu.harvard.med.hip.cloneOrder.action.MakeReservationAction"
+               name="makeReservationForm"
+               scope="request"
+               input="/MakeReservation.jsp">
+      <forward  name="success"   path="/ReservationSuccess.jsp"/>
+      <forward  name="fail"      path="/ReservationFail.jsp"/>
+      <forward  name="existing"      path="/DuplicatedReservation.jsp"/>
+    </action>
+
+    <action    path="/cancelReservation"
+               type="edu.harvard.med.hip.cloneOrder.action.CancelReservationAction"
+               name="cancelReservationForm"
+               scope="request"
+               input="/DisplayReservation.jsp">
+      <forward  name="success"   path="/ReservationCanceled.jsp"/>
+    </action>
+
+    <action    path="/downloadAgreement"
+               type="edu.harvard.med.hip.cloneOrder.action.DownloadAgreementAction"               
+               scope="request"               
+               input="/Agreement.jsp">      
+      <forward  name="fail"   path="/Menu.jsp"/>
+    </action>
+
+
+    <action     path="/ProcessError"
+                type="edu.harvard.med.hip.cloneOrder.action.ProcessErrorAction">
+       <forward   name="displayError" path="/Error.jsp"/>                
+    </action>
+
+    <!-- The standard administrative actions available with Struts -->
+    <!-- These would be either omitted or protected by security -->
+    <!-- in a real application deployment -->
+    <action    path="/admin/addFormBean"
+               type="org.apache.struts.actions.AddFormBeanAction"/>
+    <action    path="/admin/addForward"
+               type="org.apache.struts.actions.AddForwardAction"/>
+    <action    path="/admin/addMapping"
+               type="org.apache.struts.actions.AddMappingAction"/>
+    <action    path="/admin/reload"
+               type="org.apache.struts.actions.ReloadAction"/>
+    <action    path="/admin/removeFormBean"
+               type="org.apache.struts.actions.RemoveFormBeanAction"/>
+    <action    path="/admin/removeForward"
+               type="org.apache.struts.actions.RemoveForwardAction"/>
+    <action    path="/admin/removeMapping"
+               type="org.apache.struts.actions.RemoveMappingAction"/>
+
+
+  </action-mappings>
+
+</struts-config>
