@@ -147,5 +147,9 @@ sub init_data_fields {
 }
 
 sub cleanup {
-    unlink "*.html";
+    unlink <*.html>;
 }
+
+
+
+
