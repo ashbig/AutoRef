@@ -15,28 +15,28 @@
 <hr>
 <html:errors/>
 
-    <form:form action="/ReceiveOligoOrders.do" focus="">
+    <html:form action="/ReceiveOligoPlates.do" focus="oligoPlateIds">
         
         <table>
             <tr>
-                <td bgcolor="lightgrey"><b>Please enter plate IDs for all of the oligo plates received:</b></td>
+                <td bgcolor="lightgrey"><b>Please enter plate IDs for all of the oligo plates received:</b><p></td>
             </tr>
             <tr>
-                <td><html:textarea property="oligoPlateIds" size="60"/></td>
-            </tr>
-
-            <tr>
-                <td bgcolor="lightgrey"><b>Receive Date:</b></td>
-                <td><html:text property="receiveDate" size="40"/></td>
+                <td><html:textarea property="oligoPlateIds" rows="12" cols="50"/><p></td>
             </tr>
 
             <tr>
-                <td><b>Who:</b></td>
-                <td><html:text property="who" size="40"/></td>
+                <td bgcolor="lightgrey"><b>Receive Date:&nbsp;&nbsp;&nbsp;</b>
+                    <html:text property="receiveDate" size="30"/><p></td>
+            </tr>
+
+            <tr>
+                <td bgcolor="lightgrey"><b>User Barcode:&nbsp;&nbsp;&nbsp;</b>
+                    <html:text property="researcherBarcode" size="30"/><p></td>
             </tr>
         </table>
         <p>
-        <center><input type=submit value="Submit"> <input type=reset value="Clear"></center>
-    </form:form>
+        <input type=submit value="Submit"> <input type=reset value="Clear">
+    </html:form>
 </body>
 </html>
