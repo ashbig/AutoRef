@@ -114,6 +114,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             request.getSession().setAttribute("EnterOligoPlateAction.pcrClosed", pcrClosed);  
             request.getSession().setAttribute("EnterOligoPlateAction.locations", locations);
             request.getSession().setAttribute("EnterOligoPlateAction.item", item);
+            request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
 
             return (mapping.findForward("success"));   
         } catch (Exception ex) {

@@ -63,13 +63,18 @@ public class GetLocationAction extends ResearcherAction{
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
 
-        int destLocation = ((CreateProcessPlateForm)form).getDestLocation();                
+        int destLocation = ((CreateProcessPlateForm)form).getDestLocation();  
+        int sourceLocation = ((CreateProcessPlateForm)form).getSourceLocation();                
+              
         try {
 
             // Set the location for the new container.        
             Location dLocation = new Location(destLocation);
-            Container newContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.newContainer");            
-            newContainer.setLocation(dLocation);            
+            Location sLocation = new Location(sourceLocation);
+            Container newContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.newContainer");  
+            Container oldContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");            
+            newContainer.setLocation(dLocation);  
+            oldContainer.setLocation(sLocation);
                  
             return (mapping.findForward("success"));            
         } catch (Exception ex) {
