@@ -4,8 +4,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2005-01-20 16:38:35 $
+ * $Revision: 1.4 $
+ * $Date: 2005-01-20 19:14:01 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.3 $ $Date: 2005-01-20 16:38:35 $
+ * @version    $Revision: 1.4 $ $Date: 2005-01-20 19:14:01 $
  */
 
 public class BecProperties
@@ -117,7 +117,7 @@ public class BecProperties
             
             
             value =m_properties.getProperty("PERL_PATH");//=/F/Sequences for BEC/files_to_transfer
-            if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for original trace files directory is not set properly");
+            if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for perl exe not set properly");
             
             m_blastable_db = new Hashtable();
             m_vector_libraries = new Hashtable();
