@@ -1,5 +1,3 @@
-<script type="text/javascript" language="JavaScript">
-<!--
 
 // Show/Hide functions for non-pointer layer/objects
 function showhide(divName, show_spec)
@@ -53,5 +51,4 @@ function showhide(divName, show_spec)
                     document.all(divName).style.visibility='hidden';
                }
           }
-          -->
-</script>
+       
