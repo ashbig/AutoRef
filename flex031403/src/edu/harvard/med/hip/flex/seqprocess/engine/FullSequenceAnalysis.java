@@ -16,6 +16,7 @@ import edu.harvard.med.hip.flex.seqprocess.core.blast.*;
 import edu.harvard.med.hip.flex.seqprocess.core.feature.*;
 import edu.harvard.med.hip.flex.seqprocess.core.sequence.*;
 import edu.harvard.med.hip.flex.blast.*;
+import edu.harvard.med.hip.flex.core.*;
 /**
  *
  * @author  htaycher
@@ -52,32 +53,32 @@ public class FullSequenceAnalysis
         //run blast n 
         try{
             SequenceAnalyzer analyzer = new SequenceAnalyzer(m_full_sequence);
-             res_n = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTN, 0);
+             res_n = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTN, 5);
              best_hit_n =(BlastHit) res_n.getHits().get(0);
             if (best_hit_n.getIdentity() < 80.0)
             {
+                 m_full_sequence.setAnalizeStatus(FullSequence.STATUS_NOMATCH);
+                 m_full_sequence.setQuality(FullSequence.QUALITY_NOT_DEFINED);
+                 return;
             }
-            else
-                if (best_hit_n.getIdentity() ==100.0 &&
+            else if (best_hit_n.getIdentity() ==100.0 &&
                     best_hit_n.getQStart() == best_hit_n.getSStart() &&
                      best_hit_n.getQStop() == best_hit_n.getSStop())
                     // 100% match problem with format here
-                {
-                    m_full_sequence.setQuality(FullSequence.QUALITY_RECOMENDED_STORAGE);
-                    
-                   
-                }
+            {
+                m_full_sequence.setQuality(FullSequence.QUALITY_RECOMENDED_STORAGE);
+                m_full_sequence.setAnalizeStatus(FullSequence.STATUS_ANALIZED);
+            }
             else// not 100 on nucleotide level
             {
-                 res_p = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTX,0);
-                 best_hit_p = (BlastHit)res_n.getHits().get(0);
-                 mutations = Mutation.run_mutation_analysis(best_hit_n,best_hit_p, 
-                                                        m_full_sequence, m_t_sequence );
+                 res_p = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTX,5);
+               //  best_hit_p = (BlastHit)res_n.getHits().get(0);
+              //   mutations = Mutation.run_mutation_analysis(res_n,res_p,                                                 m_full_sequence, m_t_sequence );
                  setSequenceStatus(mutations);
-                
+                m_full_sequence.setAnalizeStatus(FullSequence.STATUS_ANALIZED);
                 
             }
-            m_full_sequence.setAnalizeStatus(FullSequence.STATUS_ANALIZED);
+            
             updateDatabase(res_p,res_n,mutations);
         }
         catch(Exception e)
@@ -93,9 +94,10 @@ public class FullSequenceAnalysis
     private void updateDatabase(BlastResult res_p,BlastResult res_n,ArrayList mutations) throws FlexDatabaseException
     {
         try{
+            
             m_full_sequence.updateQuality(m_conn);
             m_full_sequence.updateAnalyzeStatus(m_conn);
-            res_n.insert(m_conn);
+            if (res_n != null) res_n.insert(m_conn);
             if (res_p != null)
             {
                 res_p.insert(m_conn);
@@ -112,6 +114,7 @@ public class FullSequenceAnalysis
                     }
                 }
             }
+            m_conn.commit();
         }
         catch(Exception e)
         {
@@ -127,4 +130,38 @@ public class FullSequenceAnalysis
         }
     
     
+    //**********************************************************************//
+    //                          Test                                        //
+    //**********************************************************************//
+    
+    public static void main(String [] args)
+    {
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            
+       
+            String query="ATGGAGCAGCCGCCGGCGCCTAAGAGTAAACTAAAAAAGCTGAGTGAAGACAGTTTGACTAAGCAGCCTGAAGAAGTTTTTGATGTATTAGAGAAGCTTGGAGAAGGGTCTTATGGAAGTGTATTTAAAGCAATACACAAGGAATCCGGTCAAGTTGTCGCAATTAAACAAGTACCTGTTGAATCAGATCTTCAGGAAATAATCAAAGAAATTTCCATAATGCAGCAATGTGACAGCCCATATGTTGTAAAGTACTATGGCAGTTATTTTAAGAATACAGACCTCTGGATTGTTATGGAGTACTGTGGCGCTGGCTCTGTCTCAGACATAATTAGATTACGAAACAAGACATTAATAGAAGATGAAATTGCAACCATTCTTAAATCTACATTGAAAGGACTAGAATATTTGCACTTTATGAGAAAAATACACAGAGATATAAAAGCTGGAAATATTCTCCTCAATACAGAAGGACATGCAAAATTGGCAGATTTTGGAGTGGCTGGTCAGTTAACAGATACAATGGCAAAACGCAATACTGTAATAGGAACTCCATTTTGGATGGCTCCTGAGGTGATTCAAGAAATAGGCTATAACTGTGTGGCCGACATCTGGTCCCTTGGCATTACTTCTATAGAAATGGCTGAAGGAAAACCTCCTTATGCTGATATACATCCAATGAGGGCTATTTTTATGATTCCCACAAATCCACCACCAACATTCAGAAAGCCAGAACTTTGGTCCGATGATTTCACCGATTTTGTTAAAAAGTGTTTGGTGAAGAATCCTGAGCAGAGAGCTACTGCAACACAACTTTTACAGCATCCTTTTATCAAGAATGCCAAACCTGTATCAATATTAAGAGACCTGATCACAGAAGCTATGGAGATCAAAGCTAAAAGACATGAGGAACAGCAACGAGAATTGGAAGAGGAAGAAGAAAATTCGGATGAAGATGAGCTGGATTCCCACACCATGGTGAAGACTAGTGTGGAGAGTGTGGGCACCATGCGGGCCACAAGCACGATGAGTGAAGGGGCCCAGACCATGATTGAACATAATAGCACGATGTTGGAATCCGACTTGGGGACCATGGTGATAAACAGTGAGGATGAGGAAGAAGAAGATGGAACTATGAAAAGAAATGCAACCTCACCACAAGTACAAAGACCATCTTTCATGGACTACTTTGATAAGCAAGACTTCAAGAATAAGAGTCACGAAAACTGTAATCAGAACATGCATGAACCCTTCCCTATGTCCAAAAACGTTTTTCCTGATAACTGGAAAGTTCCTCAAGATGGAGACTTTGACTTTTTGAAAAATCTAAGTTTAGAAGAACTACAGATGCGGTTAAAAGCACTGGACCCCATGATGGAACGGGAGATAGAAGAACTTCGTCAGAGATACACTGCGAAAAGACAGCCCATTCTGGATGCGATGGATGCAAAGAAAAGAAGGCAGCAAAACTTTTTGG";
+            
+                 String subject="atggctgaccaactgactgaagagcagattgcagaattcaaagaagctttttcactattt"+
+"gacaaagatggtgatggaactataacaacaaaggaattgggaactgtaatgagatctctt"+
+"gggcagaatcccacagaagcagagttacaggacatgattaatgaagtagatgctgatggt"+
+"aatggcacaattgacttccctgaatttctgacaatgatggcaagaaaaatgaaagacaca"+
+"gacagtgaagaagaaattagagaagcattccgtgtgtttgataaggatggcaatggctat"+
+"attagtgctgcagaacttcgccatgtgatgacaaaccttggagagaagttaacagatgaa"+
+"gaagttgatgaaatgatcagggaagcagatattgatggtgatggtcaagtaaactatgaa"+
+"gagtttgtacaaatgatgacagcaaagtga";
+
+            FullSequence fl = new FullSequence(query,-1);
+           // fl.insert(t.requestConnection());
+            FlexSequence f = FlexSequence.findSequenceByGi("5454093");
+            TheoreticalSequence sequence = new TheoreticalSequence(f.getId());
+            FullSequenceAnalysis fsl =new FullSequenceAnalysis(fl,sequence, t.requestConnection(),null);
+        fsl.analize();
+        } catch (Exception e)
+        {
+            System.out.println(e);
+        }
+        System.exit(0);
+    }
 }

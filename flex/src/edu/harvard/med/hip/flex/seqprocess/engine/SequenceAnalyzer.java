@@ -2,6 +2,7 @@
 package edu.harvard.med.hip.flex.seqprocess.engine;
 
 import edu.harvard.med.hip.flex.seqprocess.core.sequence.*;
+import edu.harvard.med.hip.flex.seqprocess.core.feature.*;
 import edu.harvard.med.hip.flex.seqprocess.core.blast.*;
 import edu.harvard.med.hip.flex.seqprocess.util.*;
 import edu.harvard.med.hip.flex.database.*;
@@ -31,11 +32,6 @@ public class SequenceAnalyzer
     
     private BaseSequence m_sequence = null;
     
-    private Vector m_homolog = new Vector();
-    private BlastResult m_blastResult = null;
-    
-    
-    
     /**
      * Constructor.
      *
@@ -55,42 +51,22 @@ public class SequenceAnalyzer
     /**
      * run blastn
      */
-    public BlastResult run_blastn( String dbFileName , int hits) throws  FlexUtilException,ParseException
+    public int run_blastn( String dbFileName , int hits, File fname) throws  FlexUtilException,ParseException
     {
-        boolean isHomolog = false;
-        
+      
         String queryFile = makeQueryFile(m_sequence.getText(), "bn", m_sequence.getId());
         Blaster blaster = setBlaster(dbFileName, Blaster.BLAST_PROGRAM_BLASTN, queryFile, null,  hits);
         blaster.blast(queryFile+".in", queryFile+".out");
      
         BlastParser parser = new BlastParser(queryFile+".out", hits);
         parser.parseBlast();
-        parser.displayParsed();
+        
         ArrayList homologs = parser.getHomologList();
-        
-        BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(0);
-        int homologid = Integer.parseInt((homologItem.getSubID()).trim());
-        
-        BlastParser.Alignment y = (BlastParser.Alignment)homologItem.getAlignItem(0);
-        String identity = y.getIdentity();
-        StringTokenizer st = new StringTokenizer(identity);
-        
-        int numerator = Integer.parseInt((st.nextToken(" /")).trim());
-        int denomenator = Integer.parseInt((st.nextToken(" /")).trim());
-        int start = y.getQryStart();
-        int end = y.getQryEnd();
-        
-        
-        
-        
-        double percentIdentity = numerator/(double)denomenator;
-        //double percentAlignment = (end-start+1)/(double)cdslength;
-        String evalue = y.getEvalue();
-        
-        return null;
-    }
+        fname = new File(queryFile+".out");
+        return homologs.size();
+     }
     
-    
+   
     /**
      * run blastn
      */
@@ -156,11 +132,11 @@ public class SequenceAnalyzer
         String cmdLine = "bl2seq " + blastType + " " + blaster.getExpect() + " " + blaster.getGapped() +          
            " -j " + subjFile + " -i " + queryFile+".in" +  " -o " + queryFile+".out" ;
         
-       
+       System.out.println(cmdLine);
         return parseResult(queryFile+".out", blastType, tr.getId(),cmdLine, hits);
     }
     
-    private BlastResult parseResult(String fname, String bltype, int tr_id,String cmdLine, int num_hits)
+    public BlastResult parseResult(String fname, String bltype, int tr_id,String cmdLine, int num_hits)
         throws FlexUtilException
     {
      
@@ -169,7 +145,7 @@ public class SequenceAnalyzer
         java.util.Date d = new java.util.Date();
         java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM_dd_yyyy");
         String date = f.format(d);
-        int sstrand = -1; int qstrand = -1; int qframe = -1; int sframe = -1;
+        int sstrand = -1; int qstrand = -1; int qframe = -1; int sframe = -1;int gaps = -1;
         String strand = null;
         try
         {
@@ -181,6 +157,12 @@ public class SequenceAnalyzer
                      qframe = Integer.parseInt( (String)hit_data.get("qframe")); 
                  else
                      qframe = 0;
+                 
+                 if ( hit_data.containsKey("gaps") )
+                     gaps = Integer.parseInt( (String)hit_data.get("gaps")); 
+                 else
+                     gaps = 0;
+                 
                  if ( hit_data.containsKey("sframe") )
                      sframe = Integer.parseInt( (String)hit_data.get("sframe")); 
                  else
@@ -223,7 +205,7 @@ public class SequenceAnalyzer
                      score,identity,expect,  
                       -1, qstrand ,  sstrand,
                       sframe, qframe,qstart,qstop,sstart,sstop,length,
-                      0, -1,query,sbj    );
+                      0, -1,query,sbj  ,gaps  );
                  hits.add(hit);
              }
              result = new BlastResult( 
@@ -299,16 +281,9 @@ public class SequenceAnalyzer
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
-            TheoreticalSequence sequence = new TheoreticalSequence(24450);
+            TheoreticalSequence sequence = new TheoreticalSequence(20282);
        
-            String query="tgaccaactgactgaagagcagattgcagaattcaaagaagctttttcactattt"+
-"gacaaagatggtgatggaactataacaacaaaggaattgggaactgtaatgagatctctt"+
-"gggcagaatcccacagaagcagacttacaggacatgattaatgaagtagatgctgatggt"+
-"aatggcacaattgacttccctgaatttctgacaatgatggcaagataaaatgaaagacaca"+
-"gacagtgaagaagaaattagagaagcattccgtgtgtttgataaggatggcaatggctat"+
-"attagtgctgcagaacttcgccttgtgatgacaaaccttggagagattaacagatgaa"+
-"gaagttgatgaaatgatcagggaagcagatattgatggtgatggtcaagtaaactatgaa"+
-"gagtttgtacaaatgatgacagcaaagtga";
+            String query="ATGAGCGGCGGCGGGCCTTGGCCTAGAGCGCTCCCAAGAAGTGGCTTACACGGACATCAAAGTGATTGGCAATGGCTCATTTGGGGTCGTGTACCAGGCACGGCTGGCAGAGACCAGGGAACTAGTCGCCATCAAGAAGGTTCTCCAGGACAAGAGGTTCAAGAACCGAGAGCTGCAGATCATGCGTAAGCTGGACCACTGCAATATTGTGAGGCTGAGATACTTTTTCTACTCCAGTGGCGAGAAGAAAGACGAGCTTTACCTAAATCTGGTGCTGGAATATGTGCCCGAGACAGTGTACCGGGTGGCCCGCCACTTCACCAAGGCCAAGTTGACCATCCCTATCCTCTATGTCAAGGTGTACATGTACCAGCTCTTCCGCAGCTTGGCCTACATCCACTCCCAGGGCGTGTGTCACCGCGACATCAAGCCCCAGAACCTGCTGGTGGACCCTGACACTGCTGTCCTCAAGCTCTGCGATTTTGGCAGTGCAAAGCAGTTGGTCCGAGGGGAGCCCAATGTCTCCTACATCTGTTCTCGCTACTACCGGGCCCCAGAGCTCATCTTTGGAGCCACTGATTACACCTCATCCATCGATGTTTGGTCAGCTGGCTGTGTACTGGCAGAGCTCCTCTTGGGCCAGCCCATCTTCCCTGGGGACAGTGGGGTGGACCAGCTGGTGGAGATCATCAAGGTGCTGGGAACACCAACCCGGGAACAAATCCGAGAGATGAACCCCAACTACACGGAGTTCAAGTTCCCTCAGATTAAAGCTCACCCCTGGACAAAGGTGTTCAAATCTCGAACGCCGCCAGAGGCCATCGCGCTCTGCTCTAGCCTGCTGGAGTACACCCCATCCTCAAGGCTCTCCCCACTAGAGGCCTGTGCGCACAGCTTCTTTGATGAACTGCGATGTCTGGGAACCCAGCTGCCTAACAACCGCCCACTTCCCCCTCTCTTCAACTTCAGTGCTGGTGAACTCTCCATCCAACCGTCTCTCAACGCCATTCTCATCCCTCCTCACTTGAGGTCCCCAGCGGGCACTACCACCCTCACCCCGTCCTCACAAGCTTTAACTGAGACTCCGACCAGCTCAGACTGGCAGTCGACCGATGCCACACCTACCCTCACTAACTCCTCCTT";
             
                  String subject="atggctgaccaactgactgaagagcagattgcagaattcaaagaagctttttcactattt"+
 "gacaaagatggtgatggaactataacaacaaaggaattgggaactgtaatgagatctctt"+
@@ -319,52 +294,20 @@ public class SequenceAnalyzer
 "gaagttgatgaaatgatcagggaagcagatattgatggtgatggtcaagtaaactatgaa"+
 "gagtttgtacaaatgatgacagcaaagtga";
 
-            FullSequence fl = new FullSequence(query);
+            FullSequence fl = new FullSequence(query,-1);
         //    sequence.setText(subject);
           //  sequence.setText(sequence.getText().substring(0,200) + sequence.getText().substring(209) );
             SequenceAnalyzer analyzer = new SequenceAnalyzer(fl);
-            analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_BLASTN,1);
-            analyzer.run_bl2seq( sequence, Blaster.BLAST_PROGRAM_BLASTX,1);
-            analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_TBLASTX,3);
-            analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_BLASTP,3);
-            //analyzer.run_bl2seq_n( (TheoreticalSequence) sequence);
-            // analyzer.run_bl2seq_blastx( (TheoreticalSequence) sequence);
-          //  analyzer.run_bl2seq_blastp( (TheoreticalSequence) sequence);
-         // analyzer.run_bl2seq_tblastx( (TheoreticalSequence) sequence);
-            // analyzer.run_blastn("c:\\MGC\\genes", 1);
-            //analyzer.parseBlastResult("");
-            /*
-            if(analyzer.findSame()) {
-                Vector sequences = analyzer.getSameSequence();
-                Enumeration enum = sequences.elements();
-                while(enum.hasMoreElements()) {
-                    FlexSequence s = (FlexSequence)enum.nextElement();
-                    //						s.restore(s.getId(), t);
-                    System.out.println("\t"+s.getId());
-                    System.out.println("\t"+s.getSequencetext());
-                    System.out.println("\t"+s.getFlexstatus());
-                }
-            } else {
-                System.out.println("Testing findSame() - ERROR");
-            }
-             
-            if(analyzer.findHomolog()) {
-                Vector homologs = analyzer.getHomolog();
-                Enumeration enum = homologs.elements();
-                while(enum.hasMoreElements()) {
-                    Hashtable h = (Hashtable)enum.nextElement();
-                    Enumeration ks = h.keys();
-                    while(ks.hasMoreElements()) {
-                        String k = (String)ks.nextElement();
-                        FlexSequence s = (FlexSequence)h.get(k);
-                        s.restore(s.getId());
-                        System.out.println("\t"+s.getId());
-                        System.out.println("\t"+s.getSequencetext());
-                        System.out.println("\t"+s.getFlexstatus());
-                    }
-                }
-             
-            }**/
+       BlastResult res_n = analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_BLASTN,5);
+         BlastResult res_p = analyzer.run_bl2seq( sequence, Blaster.BLAST_PROGRAM_BLASTX,5);
+          BlastResult res_p1 = analyzer.run_bl2seq( sequence, Blaster.BLAST_PROGRAM_BLASTP,5);
+            // BlastResult res_n = analyzer.parseResult("/tmp/b2n-1.out", Blaster.BLAST_PROGRAM_BLASTN, sequence.getId(),"", 3);
+           // BlastResult res_p = analyzer.parseResult("/tmp/b2tp-1.out", Blaster.BLAST_PROGRAM_BLASTX,  sequence.getId(),"", 3);
+            Mutation.run_mutation_analysis(res_n, res_p,(FullSequence)fl,sequence);
+            
+           // analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_TBLASTX,3);
+           // analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_BLASTP,3);
+           
         } catch (Exception e)
         {
             System.out.println(e);
