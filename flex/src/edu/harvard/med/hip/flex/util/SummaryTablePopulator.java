@@ -272,9 +272,9 @@ public class SummaryTablePopulator {
     
     public void sendEmail(boolean isSuccessful, List ids) {
         String msg = "===========================================================\n";
-        String to = "dzuo@hms.harvard.edu";
-        String from = "dzuo@hms.harvard.edu";
-        String cc = "dzuo@hms.harvard.edu";
+        String to = "dongmei_zuo@hms.harvard.edu";
+        String from = "dongmei_zuo@hms.harvard.edu";
+        String cc = "dongmei_zuo@hms.harvard.edu";
         String subject = "Summary table populating - ";
         
         java.util.Date d = new java.util.Date();
@@ -413,9 +413,8 @@ public class SummaryTablePopulator {
     public static void main(String args[]) {
         //List containers = getContainers();
         List containers = new ArrayList();
-        containers.add(new Integer(8658));
-        containers.add(new Integer(8659));
-        containers.add(new Integer(8660));
+        containers.add(new Integer(9709));
+        containers.add(new Integer(9710));
         
         /**
         List samples = new ArrayList();
@@ -440,7 +439,7 @@ public class SummaryTablePopulator {
          */
         
         //change cloning strategy accordingly.
-        int cloningStrategyid = 1;
+        int cloningStrategyid = 4;
         String cloneType = CloneInfo.MASTER_CLONE;
         
         SummaryTablePopulator populator = new SummaryTablePopulator();
