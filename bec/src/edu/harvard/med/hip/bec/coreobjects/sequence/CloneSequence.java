@@ -14,7 +14,9 @@ import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.programs.blast.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
-
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.sampletracking.objects.*;
+import edu.harvard.med.hip.bec.programs.assembler.*;
 /**
  *
  * @author  htaycher
@@ -169,6 +171,48 @@ public class CloneSequence extends AnalyzedScoredSequence
         }
     }
     
+    
+     public static   int insertSequenceWithResult(
+                         int sampleid,
+                         int isolate_trackingid,
+                         int refseq_id,
+                         int result_type,
+                         int seq_assembly_status,
+                         int seq_type,
+                         Contig contig,
+                         int process_id,
+                         Connection conn)throws BecDatabaseException
+     {
+         //create sequence
+         try
+         {
+            Result result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,     process_id,
+                                        sampleid,       null,
+                                        result_type,
+                                        BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
+            result.insert(conn, process_id );
+
+
+            CloneSequence clone_seq = new CloneSequence( contig.getSequence(),  contig.getScores(), refseq_id);
+            clone_seq.setResultId( result.getId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+            clone_seq.setIsolatetrackingId ( isolate_trackingid );//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+            clone_seq.setCloneSequenceStatus (seq_assembly_status);
+            clone_seq.setCloneSequenceType (seq_type); //final\conseq\final editied
+            clone_seq.setCdsStart( contig.getCdsStart() );
+            clone_seq.setCdsStop( contig.getCdsStop() );
+            clone_seq.insert(conn);
+
+
+            return clone_seq.getId();
+         }
+         catch(Exception e)
+         {
+             throw new BecDatabaseException("Error while trying to insert clone sequence.");
+         }
+         //insert
+     }
+
+     
     public int          getCloneSequenceType (){ return m_sequence_type   ;} //final\conseq\final editied
     public int          getApprovedById (){ return m_approved_by_id ;} //BecIDGenerator.BEC_OBJECT_ID_NOTSET;}
     public int          getRefSequenceId (){ return m_refsequenceid;}   //BecIDGenerator.BEC_OBJECT_ID_NOTSET;}
@@ -240,7 +284,72 @@ public class CloneSequence extends AnalyzedScoredSequence
         return stop - start ;
     }
     
-   //**********************************************************
+   
+      public String toHTMLString()
+   {
+       StringBuffer res = new StringBuffer();
+       
+       
+       res.append("        0--------1---------2---------3---------4---------5---------6\n\n");
+       String color_red = "<FONT COLOR=\"red\">";  
+       String color_green = "<FONT COLOR=\"green\">";
+       String color_blue="<FONT COLOR=\"blue\">";
+       String color_orange="<FONT COLOR=\"orange\">";
+       
+    
+       getScoresAsArray();
+       int seqIndex=1;
+       char[] text = m_text.toCharArray();
+      
+       for(int index = 0;index< text.length;index++)
+        {
+            //reformat for linker - cds
+            text[index] = formatForLinkerCds(text[index],index);
+            
+            if(index == 0 ||  index % 60 == 0 )
+            {
+                res.append("\n");
+                int pad_value = String.valueOf(index+1).length();
+                String pad = "";
+                for (int count = pad_value; count < 5; count++)
+                {
+                    pad +="0";
+                }
+                
+                res.append(pad +(index+1) +" - ");
+            }
+            if ( m_scores_numbers != null)
+            {
+                if( m_scores_numbers[index] < 10)
+                {
+                    res.append(color_orange +text[index]+"</FONT>");
+                }
+                else if(m_scores_numbers[index] >=10 && m_scores_numbers[index] < 20)
+                {
+                    res.append(color_blue+text[index]+"</font>");
+                }
+                else if(m_scores_numbers[index] >=20 && m_scores_numbers[index] < 25)
+                {
+                    res.append(color_green+text[index]+"</font>");
+                }
+                else if ( m_scores_numbers[index] >= 25)
+                {
+                    res.append(color_red+text[index]+"</font>");
+                }
+            }
+            else
+            {
+                res.append(text[index]);
+            }
+            
+       
+       }
+       
+       return res.toString();
+   }
+   
+      
+      //**********************************************************
      private static ArrayList getByRule( String sql)throws BecDatabaseException
      {
         DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -263,23 +372,37 @@ public class CloneSequence extends AnalyzedScoredSequence
              throw new BecDatabaseException("Cannot extract sequence \nsql "+sql);
          }
      }
-    
-    
+    private char formatForLinkerCds(char a, int pos)
+    {
+         if ( (pos >= m_linker5_start && pos < m_cds_start)
+         || ( pos > m_cds_stop && pos <= m_linker3_stop))
+        {
+            return Character.toLowerCase(a);
+        }
+        else if (  pos >= m_cds_start &&  pos <= m_cds_stop )
+        {
+            return Character.toUpperCase(a);
+        }
+         return a;
+    }
     //__________________________________________________________________________
     
          public static void main(String [] args)
     {
         try
         {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
+             CloneSequence cl = new CloneSequence(14800);
+           
+            System.out.println( cl.toHTMLString());
+           // DatabaseTransaction t = DatabaseTransaction.getInstance();
            // TheoreticalSequence theoretical_sequence = TheoreticalSequence.findSequenceByGi(4503092);
             //int refseqid = theoretical_sequence.getId();
        
-            String query="ATGGAGCTACGTGTGGGGAACAAGTACCGCCTGGGACGGAAGATCGGGAGCGGGTCCTTCGGAGATATCTACCTGGGTGCCAACATCGCCTCTGGTGAGGAAGTCGCCATCAAGCTGGAGTGTGTGAAGACAAAGCACCCCCAGCTGCACATCGAGAGCAAGTTCTACAAGATGATGCAGGGTGGCGTGGGGATCCCGTCCATCAAGTGGTGCGGAGCTGAGGGCGACTACAACGTGATGGTCATGGAGCTGCTGGGGCCTAGCCTCGAGGACCTGTTCAACTTCTGTTCCCGCAAATTCAGCCTCAAGACGGTGCTGCTCTTGGCCGACCAGATGATCAGCCGCATCGAGTATATCCACTCCAAGAACTTCATCCACCGGGACGTCAAGCCCGACAACTTCCTCATGGGGCTGGGGAAGAAGGGCAACCTGGTCTACATCATCGACTTCGGCCTGGCCAAGAAGTACCGGGACGCCCGCACCCACCAGCACATTCCCTACCGGGAAAACAAGAACCTGACCGGCACGGCCCGCTACGCTTCCATCAACACGCACCTGGGCATTGAGCAAAGCCGTCGAGATGACCTGGAGAGCCTGGGCTACGTGCTCATGTACTTCAACCTGGGCTCCCTGCCCTGGCAGGGGCTCAAAGCAGCCACCAAGCGCCAGAAGTATGAACGGATCAGCGAGAAGAAGATGTCAACGCCCATCGAGGTCCTCTGCAAAGGCTATCCCTCCGAATTCTCAACATACCTCAACTTCTGCCGCTCCCTGCGGTTTGACGACAAGCCCGACTACTCTTACCTACGTCAGCTCTTCCGCAACCTCTTCCACCGGCAGGGCTTCTCCTATGACTACGTCTTTGACTGGAACATGCTGAAATTCGGTGCAGCCCGGAATCCCGAGGATGTGGACCGGGAGCGGCGAGAACACGAACGCGAGGAGAGGATGGGGCAGCTACGGGGGTCCGCGACCCGAGCCCTGCCCCCTGGCCCACCCACGGGGGCCACTGCCAACCGGCTCCGCAGTGCCGCCGAGCCCGTGGCTTCCACGCCAGCCTCCCGCATCCAGCCGGCTGGCAATACTTCTCCCAGAGCGATCTCGCGGGTCGACCGGGAGAGGAAGGTGAGTATGAGGCTGCACAGGGGTGCGCCCGCCAACGTCTCCTCCTCAGACCTCACTGGGCGGCAAGAGGTCTCCCGGATCCCAGCCTCACAGACAAGTGTGCCATTTGACCATCTCGGGAAGTTGG";
+            //String query="ATGGAGCTACGTGTGGGGAACAAGTACCGCCTGGGACGGAAGATCGGGAGCGGGTCCTTCGGAGATATCTACCTGGGTGCCAACATCGCCTCTGGTGAGGAAGTCGCCATCAAGCTGGAGTGTGTGAAGACAAAGCACCCCCAGCTGCACATCGAGAGCAAGTTCTACAAGATGATGCAGGGTGGCGTGGGGATCCCGTCCATCAAGTGGTGCGGAGCTGAGGGCGACTACAACGTGATGGTCATGGAGCTGCTGGGGCCTAGCCTCGAGGACCTGTTCAACTTCTGTTCCCGCAAATTCAGCCTCAAGACGGTGCTGCTCTTGGCCGACCAGATGATCAGCCGCATCGAGTATATCCACTCCAAGAACTTCATCCACCGGGACGTCAAGCCCGACAACTTCCTCATGGGGCTGGGGAAGAAGGGCAACCTGGTCTACATCATCGACTTCGGCCTGGCCAAGAAGTACCGGGACGCCCGCACCCACCAGCACATTCCCTACCGGGAAAACAAGAACCTGACCGGCACGGCCCGCTACGCTTCCATCAACACGCACCTGGGCATTGAGCAAAGCCGTCGAGATGACCTGGAGAGCCTGGGCTACGTGCTCATGTACTTCAACCTGGGCTCCCTGCCCTGGCAGGGGCTCAAAGCAGCCACCAAGCGCCAGAAGTATGAACGGATCAGCGAGAAGAAGATGTCAACGCCCATCGAGGTCCTCTGCAAAGGCTATCCCTCCGAATTCTCAACATACCTCAACTTCTGCCGCTCCCTGCGGTTTGACGACAAGCCCGACTACTCTTACCTACGTCAGCTCTTCCGCAACCTCTTCCACCGGCAGGGCTTCTCCTATGACTACGTCTTTGACTGGAACATGCTGAAATTCGGTGCAGCCCGGAATCCCGAGGATGTGGACCGGGAGCGGCGAGAACACGAACGCGAGGAGAGGATGGGGCAGCTACGGGGGTCCGCGACCCGAGCCCTGCCCCCTGGCCCACCCACGGGGGCCACTGCCAACCGGCTCCGCAGTGCCGCCGAGCCCGTGGCTTCCACGCCAGCCTCCCGCATCCAGCCGGCTGGCAATACTTCTCCCAGAGCGATCTCGCGGGTCGACCGGGAGAGGAAGGTGAGTATGAGGCTGCACAGGGGTGCGCCCGCCAACGTCTCCTCCTCAGACCTCACTGGGCGGCAAGAGGTCTCCCGGATCCCAGCCTCACAGACAAGTGTGCCATTTGACCATCTCGGGAAGTTGG";
         
-             CloneSequence s = CloneSequence.getOneByIsolateTrackingId(988, "0,1,2","0,1,2");
-              ArrayList s1 = CloneSequence.getAllByIsolateTrackingId(988, "0,1,2","0,1,2");
-             System.out.print( s.getCodingSequence());
+             //CloneSequence s = CloneSequence.getOneByIsolateTrackingId(988, "0,1,2","0,1,2");
+             // ArrayList s1 = CloneSequence.getAllByIsolateTrackingId(988, "0,1,2","0,1,2");
+             //System.out.print( s.getCodingSequence());
         } catch (Exception e)
         {
             System.out.println(e);
