@@ -56,7 +56,7 @@ public class TraceFilesDistributor
         File sourceDir = new File(inputTraceDir); //trace file directory
 
         File [] sourceFiles = sourceDir.listFiles();
-
+        if ( sourceFiles == null) return new ArrayList();
       //  TraceFilesDistributor distributor = new TraceFilesDistributor();
 
         //call file transfer and Phred moduels for each trace file
@@ -110,6 +110,7 @@ public class TraceFilesDistributor
         //obtain trace file list from source trace file directory
         File sourceDir = new File(inputTraceDir); //trace file directory
         File [] sourceFiles = sourceDir.listFiles();
+        if ( sourceFiles == null) return;
         //call file transfer and Phred moduels for each trace file
         //Phred output sequence and trace files are parsed and saved to reads.
         File destinationFile = null; //destination trace file dir after file transfer
@@ -312,11 +313,11 @@ public class TraceFilesDistributor
 
     private boolean isTraceFile(File traceFile, String wrongformatfiles)
     {
-        if (!traceFile.getName().endsWith(".ab1"))
+       if (!( traceFile.getName().endsWith(".ab1") || traceFile.getName().endsWith(".scf")) )
         {
-            m_error_messages.add("File "+traceFile.getName() +" is not abi file");
-            moveFile(traceFile, wrongformatfiles, m_isError_directory_exists);
-            return false;
+           m_error_messages.add("File "+traceFile.getName() +" is not trace file");
+           moveFile(traceFile, wrongformatfiles, m_isError_directory_exists);
+           return false;
         }
         return true;
     }
@@ -345,6 +346,7 @@ public class TraceFilesDistributor
         };
 
         File[] empty_files = sourceDir.listFiles(filter);
+        if ( empty_files == null) return;
         for (int file_count = 0; file_count < empty_files.length; file_count++)
         {
              moveFile(empty_files[file_count], emptysamples_directory, m_isEmptySamples_directory_exists);
@@ -375,6 +377,7 @@ public class TraceFilesDistributor
         };
 
         File[] control_files = sourceDir.listFiles(filter);
+        if ( control_files == null) return;
         for (int file_count = 0; file_count < control_files.length; file_count++)
         {
              moveFile(control_files[file_count], wrongformatfiles, m_isError_directory_exists);
@@ -389,9 +392,9 @@ public class TraceFilesDistributor
         {
             public boolean accept(File dir, String name)
             {
-                if (   !name.endsWith(".ab1") )
+                if (   !( name.endsWith(".ab1")  ||  name.endsWith(".scf")) )
                 {
-                    return true;
+                   return true;
                 }
                 PhredOutputFileName pr = new PhredOutputFileName(name);
                 if ( pr.isWriteFileFormat( PhredOutputFileName.FORMAT_OURS ))
@@ -402,6 +405,7 @@ public class TraceFilesDistributor
         };
 
         File[] wrong_namingformat__files = sourceDir.listFiles(filter);
+        if ( wrong_namingformat__files == null) return;
         for (int file_count = 0; file_count < wrong_namingformat__files.length; file_count++)
         {
              m_error_messages.add("File "+wrong_namingformat__files[file_count].getName() +" has wrong format.");
