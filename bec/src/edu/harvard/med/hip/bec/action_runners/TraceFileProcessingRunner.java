@@ -47,7 +47,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
         {
              INPUT_DIR = "F:\\Sequences for BEC\\files_to_transfer";
              OUTPUT_DIR = "d:\\trace_files_dump";
-              if (ApplicationHostDeclarationIS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
+              if (ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
              {
                   OUTPUT_DIR = "d:\\eval_trace_files_dump";
              }
