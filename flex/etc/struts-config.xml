@@ -216,7 +216,17 @@
                     type="edu.harvard.med.hip.flex.form.EnterResultForm"/>  
                
     <form-bean      name="expressionResultHistoryForm"
-                    type="edu.harvard.med.hip.flex.form.ExpressionResultHistoryForm"/>                          
+                    type="edu.harvard.med.hip.flex.form.ExpressionResultHistoryForm"/> 
+                    
+    <form-bean      name="enterSrcForSequencingForm"
+                    type="edu.harvard.med.hip.flex.form.EnterSrcForSequencingForm"/> 
+                    
+    <form-bean      name="isCreateSequencingForm"
+                    type="edu.harvard.med.hip.flex.form.IsCreateSequencingForm"/> 
+                    
+    <form-bean      name="createGlycerolAndSeqForm"
+                    type="edu.harvard.med.hip.flex.form.CreateGlycerolAndSeqForm"/>    
+                                          
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -479,8 +489,40 @@
       <forward  name="success_mgc_process_full_plates" path="/MgcProcessFullPlates.jsp" />
     <forward  name="success_recieve_plates" path="/ReceiveSequencingPlates.jsp" />
     <forward  name="success_rearray" path="/RearrayPlates.jsp" />
+    <forward  name="success_sequencing" path="/EnterSrcForSequencing.jsp" />
+    <forward  name="success_glycerol" path="/IsCreateSequencing.jsp" />
     </action> 
-
+    
+    <!-- Process the source plate input -->
+    <action    path="/IsCreateSequencing"
+               type="edu.harvard.med.hip.flex.action.IsCreateSequencingAction"
+               name="isCreateSequencingForm"
+               scope="request"
+               validate="false"
+               input="/IsCreateSequencing.jsp">
+      <forward  name="success_seq"   path="/EnterSrcForGlycerolAndSeq.jsp"/>
+      <forward  name="success"   path="/EnterSourcePlate.jsp"/>
+    </action> 
+    
+     <action    path="/EnterSrcForGlycerolAndSeq"
+               type="edu.harvard.med.hip.flex.action.EnterSrcForGlycerolAndSeqAction"
+               name="createGlycerolAndSeqForm"
+               scope="request"
+               validate="true"
+               input="/EnterSrcForGlycerolAndSeq.jsp">
+      <forward  name="success"   path="/GetMultiLocations.jsp"/>
+    </action> 
+ 
+    <!-- Process the location selection -->
+    <action    path="/GetMultiLocations"
+               type="edu.harvard.med.hip.flex.action.GetMultiLocationsAction"
+               name="createGlycerolAndSeqForm"
+               scope="request"
+               validate="false"
+               input="GetMultiLocations.jsp/">
+      <forward  name="success"   path="/GetResearcher.jsp"/>
+    </action> 
+      
     <!-- Process the source plate input -->
     <action    path="/EnterSourcePlate"
                type="edu.harvard.med.hip.flex.action.EnterSourcePlateAction"
@@ -925,6 +967,7 @@
                input="/SequenceQueryEntry.jsp">
       <forward  name="success_queryAllGenes"   path="/GeneQuery.jsp"/>
       <forward  name="success_queryGenes"   path="/SequenceQuery.jsp"/>
+      <forward  name="success_queryVerifiedGenes"   path="/VerifiedGeneQuery.jsp"/>
       <forward  name="success_querySuccessRate"    path="/SelectProject.jsp"/>        
     </action> 
     
@@ -1166,8 +1209,26 @@
       <forward  name="success"   path="/ExpressionResultHistory.jsp"/>
       <forward  name="noresult"     path="/ExpressionResultHistoryNoResult.jsp"/>
       <forward  name="fail"     path="/ExpressionResultHistoryFail.jsp"/>
-    </action>     
-                                       
+    </action>  
+        
+    <action    path="/EnterSrcForSequencing"
+               type="edu.harvard.med.hip.flex.action.EnterSrcForSequencingAction"
+               name="enterSrcForSequencingForm"
+               scope="request"
+               validate="true"
+               input="/EnterSrcForSequencing.jsp">
+      <forward  name="success"   path="/EnterSrcForSequencingConfirm.jsp"/>
+    </action>       
+        
+    <action    path="/EnterSrcForSequencingConfirm"
+               type="edu.harvard.med.hip.flex.action.EnterSrcForSequencingConfirmAction"
+               name="enterSrcForSequencingForm"
+               scope="request"
+               validate="true"
+               input="/EnterSrcForSequencingConfirm.jsp">
+      <forward  name="success"   path="/EnterSrcForSequencingConfirm.jsp"/>
+    </action>   
+                                           
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
