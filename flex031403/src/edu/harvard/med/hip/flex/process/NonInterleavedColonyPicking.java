@@ -45,7 +45,7 @@ public class NonInterleavedColonyPicking extends GridPlateToCultureMapper {
             Container c = (Container)enum.nextElement();
             c.restoreSample();
             
-            //If next plate has different threadid from the previouse plate, 
+            //If next plate has different threadid from the previouse plate,
             //we'll reset the subthreadid to 1.
             if(threadid == -1) {
                 threadid = c.getThreadid();
@@ -57,17 +57,16 @@ public class NonInterleavedColonyPicking extends GridPlateToCultureMapper {
             
             int index = 0;
             while(c.getSamples().size()*COLONYNUM - index*getRow()*getColumn()/getPlatenumOnDest() > 0) {
-                String subthread = getSubThread(c, subThreadIndex);
-                String newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), c.getThreadid(), subthread);
+                String subthread = Integer.toString(subThreadIndex);
+                String newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), subThreadIndex, subthread);
                 Container newContainer = new Container(newContainerType, null, newBarcode, c.getThreadid());
                 mappingSamples(c, newContainer, protocol, 1, index);
                 newContainers.addElement(newContainer);
                 index++;
                 subThreadIndex++;
-            }            
+            }
         }
         
         return newContainers;
     }
-    
 }
