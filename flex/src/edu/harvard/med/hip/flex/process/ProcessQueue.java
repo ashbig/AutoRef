@@ -1,5 +1,5 @@
 /*
- * $Id: ProcessQueue.java,v 1.3 2001-05-24 10:55:37 dongmei_zuo Exp $
+ * $Id: ProcessQueue.java,v 1.4 2001-05-24 12:13:05 dongmei_zuo Exp $
  *
  * File     : ProcessQueue.java 
  * Date     : 04162001
@@ -9,6 +9,7 @@
 package edu.harvard.med.hip.flex.process;
 
 import java.util.*;
+import java.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 
 /**

@@ -8,7 +8,9 @@
 
 package edu.harvard.med.hip.flex.process;
 
-import flex.ApplicationCode.Java.database.*;
+import java.sql.*;
+
+import edu.harvard.med.hip.flex.database.*;
 
 /**
  * This class represents a Container object that gets executed during a process.
@@ -30,13 +32,21 @@ public class ProcessContainer extends ProcessObject {
 	/**
 	 * Insert the record into processobject table.
 	 *
-	 * @param t The DatabaseTransaction object.
+	 * @param Conn The <code>Connection</code> used for the insert
 	 * @exception FlexDatabaseException.
 	 */
-	public void insert(DatabaseTransaction t) throws FlexDatabaseException {
+	public void insert(Connection conn) throws FlexDatabaseException {
 		String sql = "insert into processobject\n"+
 			"(executionid, inputoutputflag, containerid)\n"+
 			"values ("+executionid+",'"+iotype+"',"+id+")";
-		t.executeSql(sql);
+		PreparedStatement stmt = null;
+        try {
+            conn.prepareStatement(sql);
+            DatabaseTransaction.executeUpdate(sql, conn);
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
 	}  
 }

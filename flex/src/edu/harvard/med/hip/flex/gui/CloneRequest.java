@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.5 2001-05-23 20:13:50 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.6 2001-05-24 12:13:05 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java
  * Date     : 05042001
@@ -103,17 +103,18 @@ public class CloneRequest {
     /**
      * Process user selected sequences.
      *
-     * @param request The http request.
+     * @param checkOrder.
      * @exception FlexUtilException, FlexDatabaseException, ParseException.
      */
-    public void processSelection(HttpServletRequest request) throws FlexUtilException, FlexDatabaseException, ParseException {
+    public void processSelection(String [] checkOrder) 
+    throws FlexUtilException, FlexDatabaseException, ParseException {
         goodSequences.clear();
         badSequences.clear();
         sameSequences.clear();
         homologs.clear();
         blastResults.clear();
         
-        String [] selections = request.getParameterValues("checkOrder");
+        String [] selections = checkOrder;
         if(selections == null)
             return;
         
@@ -170,17 +171,22 @@ public class CloneRequest {
     /**
      * Insert the user requested sequences into database.
      *
-     * @param request The http request.
+     * @param goodSeqs array of good sequence gi numbers selected by user
+     * @param sameSeqs array of same sequence gi numbers selected by user
+     * @param homologSeqs array of homology sequence gi number selected 
+     *        by the user
+     * @param gis array of gi numbers
      * @param username The name of the requestor.
      * @exception FlexDatabaseException.
      */
-    public void insertRequest(HttpServletRequest request, String username) 
+    public void insertRequest(String [] goodSeqs, String[] sameSeqs, 
+    String[] homologSeqs, String[] gis, String username) 
     throws FlexDatabaseException {
         Request r = new Request(username);
         LinkedList l = new LinkedList();
         Protocol p = new Protocol("approve sequences");
         
-        String [] selections = request.getParameterValues("good");
+        String [] selections = goodSeqs;
         if(selections != null) {
             for(int i=0; i<selections.length; i++) {
                 String gi = selections[i];
@@ -194,7 +200,7 @@ public class CloneRequest {
             }
         }
         
-        selections = request.getParameterValues("same");
+        selections = sameSeqs;
         if(selections != null) {
             for(int i=0; i<selections.length; i++) {
                 String gi = selections[i];
@@ -209,12 +215,12 @@ public class CloneRequest {
             }
         }
         
-        selections = request.getParameterValues("homolog");
+        selections = homologSeqs;
         if(selections != null) {
             for(int i=0; i<selections.length; i++) {
                 String gi = selections[i];
                 Hashtable h = (Hashtable)homologs.get(gi);
-                String [] gis = request.getParameterValues(gi);
+                
                 
                 if(gis != null) {
                     for(int j=0; j<gis.length; j++) {
@@ -235,11 +241,17 @@ public class CloneRequest {
         r.insert(conn);
         
         SequenceProcessQueue queue = new SequenceProcessQueue();
-        queue.addQueueItems(l, t);
+        queue.addQueueItems(l, conn);
         
-        
-        conn.commit();
-        conn.close();
+        try {
+            conn.commit();
+        } catch (SQLException sqlE) {
+            try {
+                conn.rollback();
+            } catch (Exception e) {} 
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
     }
     
     /**
