@@ -10,6 +10,7 @@
 [<a href="DiseaseSearch.jsp">Find Genes for One Disease</a>] 
 [<a href="MultipleDiseaseSearch.jsp">Find Genes for Multiple Diseases</a>] 
 [<a href="Logout.do">Log Out</a>]
+[<a href="mailto:yanhui_hu@hms.harvard.edu">Contact Us</a>]
 </center>
 
 </body>
