@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.10 2001-07-16 17:19:14 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.11 2001-07-16 17:42:31 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -12,16 +12,15 @@
 
 <%@ page language="java" %>
 <%@ page import="edu.harvard.med.hip.flex.Constants"%>
-<%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
-
 <html>
 <head><title><bean:message key="flex.name"/> : Pending Requests</title></head>
 <body>
+    
     <h2><bean:message key="flex.name"/> : Pending Requests</h2>
     <hr>
     <html:errors/>

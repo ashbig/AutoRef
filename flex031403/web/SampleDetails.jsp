@@ -28,12 +28,28 @@
 <hr>
 <html:errors/>
 <p>
-Sample ID <bean:write name="sample" property="id"/></p>
+
 
 <table>
-<h3>Sample details</h3>
+
 <tr>
+    <th>Sample Id</th>
     <th>Sequence</th>
+    <th>Type</th>
+    <th>Status</th>
+    <th>Container</th>
+     <logic:notEqual name="sample" property="constructid" value="-1">
+        <th>Construct</th>
+    </logic:notEqual>
+    <logic:notEqual name="sample" property="oligoid" value="-1">
+        <th>Oligo</th>
+    </logic:notEqual>
+    <th>Well</th>
+    </tr>
+    <tr>
+    <td>
+        <bean:write name="sample" property="id"/>
+    </td>
     <td>
         <flex:linkFlexSequence sequenceName="sequence">
             <bean:write name="sequence" property="id"/>
@@ -41,13 +57,13 @@ Sample ID <bean:write name="sample" property="id"/></p>
 
     </td>
     
-    <th>Type</th>
+    
     <td><bean:write name="sample" property="type"/></td>
     
-    <th>Status</th>
+    
     <td><bean:write name="sample" property="status"/></td>
     
-    <th>Container</th>
+    
     <td>
         <flex:linkContainer name="container" process="process">
             <bean:write name="container" property="label"/>
@@ -56,16 +72,13 @@ Sample ID <bean:write name="sample" property="id"/></p>
     </td>
     
     <logic:notEqual name="sample" property="constructid" value="-1">
-        <th>Construct</th>
         <td><bean:write name="sample" property="constructid"/></td>
     </logic:notEqual>
 
     <logic:notEqual name="sample" property="oligoid" value="-1">
-        <th>Oligo</th>
         <td><bean:write name="sample" property="oligoid"/></td>
     </logic:notEqual>
 
-    <th>Well</th>
     <td><bean:write name="sample" property="position"/></td>
 </tr>
 </table>
