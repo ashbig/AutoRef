@@ -19,6 +19,7 @@ public class ContainerDescription
     private String              m_marker = null;
     private int                 m_id = -1;
     private int                 m_glycerol_id = -1;
+    private int                 m_culture_id = -1;
     private int                 m_number_of_sequences = -1;
     private boolean             m_isReady = false;
     
@@ -47,8 +48,10 @@ public class ContainerDescription
     public String           getMarker(){ return m_marker;}
     public boolean          getStatus(){ return m_isReady;}
     public int              getGlycerolId(){ return m_glycerol_id;}
+    public int              getCultureId(){ return m_culture_id;}
     
     public void             setNumberOfSequences(int n  )    {m_number_of_sequences = n;    }
     //status shows if culture block for this mgc container exists on queue
     public void             setStatus(boolean s){ m_isReady = s;}
+    public void             setCultureId(int id) { m_culture_id = id;}
 }
