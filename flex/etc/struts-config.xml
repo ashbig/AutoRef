@@ -110,6 +110,10 @@
     <form-bean      name="addResearcherForm"
                     type="edu.harvard.med.hip.flex.form.AddResearcherForm"/>
 
+    <!-- Form used to add a name type to the database -->
+    <form-bean      name="pickColonyForm"
+                    type="edu.harvard.med.hip.flex.form.PickColonyForm"/>
+
     </form-beans>
     
    
@@ -322,8 +326,6 @@
 
     <!-- Process the protocol retieval and display -->
     <action    path="/CreateProcessPlate"
-               name="createProcessPlateForm"
-               validate="false"
                type="edu.harvard.med.hip.flex.action.CreateProcessPlateAction">
       <forward  name="success"   path="/SelectProtocol.jsp"/>
     </action>  
@@ -331,13 +333,13 @@
     <!-- Process protocol selection -->
     <action    path="/SelectProtocol"
                type="edu.harvard.med.hip.flex.action.SelectProtocolAction"
-               name="createProcessPlateForm"
-               scope="request"
+               name="pickColonyForm"
                validate="false"
                input="/SelectProtocol.jsp">
       <forward  name="success"   path="/EnterSourcePlate.jsp"/>
       <forward  name="success_pcr"   path="/EnterOligoPlates.jsp"/>
       <forward  name="success_culture"   path="/EnterAgarPlates.jsp"/>
+      <forward  name="success_pick_colony"   path="/EnterColonyPlates.jsp"/>
     </action> 
 
     <!-- Process the source plate input -->
@@ -369,6 +371,15 @@
                validate="true"
                input="/EnterAgarPlates.jsp">
       <forward  name="success"   path="/GetAgarLocation.jsp"/>
+    </action> 
+
+    <!-- Process the agar plate input -->
+    <action    path="/EnterColonyPlates"
+               type="edu.harvard.med.hip.flex.action.EnterColonyPlatesAction"
+               name="pickColonyForm"
+               validate="true"
+               input="/EnterColonyPlates.jsp">
+      <forward  name="success"   path="/GetColonyLocation.jsp"/>
     </action> 
 
     <!-- Process the location selection -->
@@ -408,6 +419,16 @@
                scope="request"
                validate="false"
                input="/GetAgarLocation.jsp">
+      <forward  name="success"   path="/GetResearcher.jsp"/>
+    </action> 
+
+    <!-- Process the source plate input -->
+    <action    path="/GetColonyLocation"
+               type="edu.harvard.med.hip.flex.action.GetColonyLocationAction"
+               name="pickColonyForm"
+               scope="request"
+               validate="false"
+               input="/GetColonyLocation.jsp">
       <forward  name="success"   path="/GetResearcher.jsp"/>
     </action> 
 
