@@ -314,7 +314,7 @@ public class PrimerDesignerRunner extends ProcessRunner
     
     private String getReportForOligoCalculation(PreparedStatement pst_get_flexsequenceid,PreparedStatement pst_get_flexsequence_length, OligoCalculation oligo_calculation)throws Exception
     {
-        System.out.println("A"+oligo_calculation.getSequenceId());
+       // System.out.println("A"+oligo_calculation.getSequenceId());
         StringBuffer buf = new StringBuffer();
         int flexrefsequenceid = -1;
         pst_get_flexsequenceid.setInt(1,oligo_calculation.getSequenceId());
@@ -322,7 +322,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         if(rs.next())
         {
             flexrefsequenceid = rs.getInt("flexsequenceid");
-             System.out.println("AS "+flexrefsequenceid);
+            // System.out.println("AS "+flexrefsequenceid);
         }
         int refsequence_cdslength = -1;
         pst_get_flexsequence_length.setInt(1,oligo_calculation.getSequenceId());
@@ -330,7 +330,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         if(rs.next())
         {
             refsequence_cdslength = rs.getInt("cdslength");
-             System.out.println("AS1 "+refsequence_cdslength);
+            // System.out.println("AS1 "+refsequence_cdslength);
         }
         
         buf.append(Constants.LINE_SEPARATOR );
