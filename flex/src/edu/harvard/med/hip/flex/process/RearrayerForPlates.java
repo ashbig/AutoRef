@@ -43,9 +43,14 @@ public class RearrayerForPlates
     private Protocol        m_protocol = null;
     private Project         m_project = null;
     private Workflow        m_workflow = null;
+    
     private int             m_wells_on_plate = 96;
     private int             m_number_of_controls = 2;
     private boolean         m_isArrangeBySize = true;
+    private boolean         m_isSort = true;
+    private boolean         m_isConttrols = true;
+    private boolean         m_isPutOnQueue = true;
+    private String          m_sample_type = "";
     
     /** Creates a new instance of RearrayerForPlates */
     public RearrayerForPlates(Connection con, int prid, int wfid, int protid,
@@ -66,15 +71,45 @@ public class RearrayerForPlates
     }
     
     
-    public boolean createNewPlates() throws FlexDatabaseException
+    public boolean createNewPlates(int mode ) throws FlexDatabaseException
     {
         
         m_fileList = new ArrayList();
         
         ArrayList samples = readFile();
         Hashtable sample_by_sequenceid = new Hashtable();
-        ArrayList flex_sequences = getAllSequences(samples);
-        Hashtable org_containers = getAllContainers(samples);
+        
+        //create four samples
+        ArrayList samples1 = null;
+         ArrayList flex_sequences = null;
+        Hashtable org_containers = null;
+            ArrayList samples2 = null;
+            ArrayList samples3 = null;
+            ArrayList samples4 = null;
+        if (mode == 1)
+        {
+             samples1 = new ArrayList();
+             samples2 = new ArrayList();
+             samples3 = new ArrayList();
+             samples4 = new ArrayList();
+            int seqId = 0;
+
+            for (int count = 0; count < samples.size(); count++)
+            {
+
+                samples1.add(samples.get(count++));
+                samples2.add(samples.get(count++));
+                samples3.add(samples.get(count++));
+                samples4.add(samples.get(count));
+            }
+              flex_sequences = getAllSequences(samples1);
+         org_containers = getAllContainers(samples1);
+        }
+        else
+        {
+             flex_sequences = getAllSequences(samples);
+             org_containers = getAllContainers(samples);
+        }
         
         if (m_isArrangeBySize)
         {
@@ -87,7 +122,17 @@ public class RearrayerForPlates
         }
         else
         {
-            createContainers( flex_sequences, org_containers, samples);
+            if (mode == 1)
+            {
+                createContainers( flex_sequences, org_containers, samples1);
+                createContainers( flex_sequences, org_containers, samples2);
+                createContainers( flex_sequences, org_containers, samples3);
+                createContainers( flex_sequences, org_containers, samples4);
+            }
+            else
+            {
+                createContainers( flex_sequences, org_containers, samples);
+            }
         }
           
         try{
@@ -109,8 +154,21 @@ public class RearrayerForPlates
     public Protocol             getProtocol()    { return m_protocol;}
     public String               getUserName()    { return m_username;}
     
+    
     public void                 setPlateType(String s){ m_platetype = s;}
     public void                 setWellsNumbers(int s){ m_wells_on_plate = s;}
+    public void                 setSampleType(String s){ m_sample_type = s;}
+    public void                 setSort(boolean b){ m_isSort = b;}
+    public void                 isPutOnQueue(boolean b){m_isPutOnQueue=b;}
+    public void                 isControls(boolean b)
+    { 
+        m_isConttrols = b;
+        if (b)
+            m_number_of_controls = 2;
+        else
+            m_number_of_controls = 0;
+    }
+    public void                 isArrangeBySize(boolean b){ m_isArrangeBySize=b;}
     //-----------------------------------------
     //read file with info for the rearray 
     //file should have the following structure
@@ -239,7 +297,8 @@ public class RearrayerForPlates
             if (( count > 0 && (count + 1) % (m_wells_on_plate - m_number_of_controls) == 0) || count == seq.size() - 1)
             {
                 //create new plate
-                Algorithms.rearangeSawToothPatternInFlexSequence(plate_sequences);
+                if (m_isSort)
+                    Algorithms.rearangeSawToothPatternInFlexSequence(plate_sequences);
                 ArrayList file_entries = new ArrayList();
                 try
                 {
@@ -295,11 +354,17 @@ public class RearrayerForPlates
         //add positive control samples
         int contId = cont.getId();
         Vector sampleLineageSet = new Vector();
-        
-        Sample control_positive = new Sample(Sample.CONTROL_POSITIVE,1,contId);
-        cont.addSample(control_positive);
-        
-        String type = Sample.getType(m_protocol.getProcessname());
+        int position = 1;
+        if (m_isConttrols)
+        {
+            Sample control_positive = new Sample(Sample.CONTROL_POSITIVE, position++,contId);
+            cont.addSample(control_positive);
+        }
+        String type = null;
+        if (!m_sample_type.equals(""))
+            type = m_sample_type;
+        else
+             type = Sample.getType(m_protocol.getProcessname());
         for (int count = 0; count < plate_sequences.size(); count ++)
         {
             FlexSequence fl = (FlexSequence) plate_sequences.get(count);
@@ -313,20 +378,24 @@ public class RearrayerForPlates
             }
             Sample org_sample = org_container.getSample(pl_sample.getWellId());
             
-            Sample new_sample = new Sample(type, count + 2, cont.getId(),  org_sample.getConstructid(), org_sample.getOligoid(), Sample.GOOD);
+            Sample new_sample = new Sample(type, position++, cont.getId(),  org_sample.getConstructid(), org_sample.getOligoid(), Sample.GOOD);
             cont.addSample(new_sample);
             sampleLineageSet.addElement(new SampleLineage( org_sample.getId(), new_sample.getId()));
             
             FileEntry sample_entry = new FileEntry(org_container.getLabel(),org_sample.getPosition(), cont.getLabel(), new_sample.getPosition() );
             file_entries.add(sample_entry);
         }
-        Sample control_negative = new Sample(Sample.CONTROL_NEGATIVE, plate_sequences.size() + 2,contId);
-        cont.addSample(control_negative);
+        if (m_isConttrols)
+        {
+            Sample control_negative = new Sample(Sample.CONTROL_NEGATIVE, position++,contId);
+            cont.addSample(control_negative);
+        }
         cont.insert(m_conn);
         
         //process sample linerage
         //rearrayed plate is output container
         createSampleLinerageForContainer( cont, org_containers_for_this_container,sampleLineageSet );
+        if (m_isPutOnQueue) putPlateOnQueue(cont);
         return cont;
     }
     
@@ -368,7 +437,7 @@ public class RearrayerForPlates
         }
         return null;
     }
-    /*
+    
     //function put on queueu plates 
     private void putPlateOnQueue(Container cont) throws FlexDatabaseException
     {
@@ -377,17 +446,17 @@ public class RearrayerForPlates
         
          Vector protocols = m_workflow.getNextProtocol(m_protocol);
         //put on queue
-        for (int i = 0; i < prot.size(); i++)
+        for (int i = 0; i < protocols.size(); i++)
         {
             Protocol pr = (Protocol) protocols.get(i);
-            QueueItem queueItem = new QueueItem( cont, pr, project, workflow);
+            QueueItem queueItem = new QueueItem( cont, pr, m_project, m_workflow);
             queueItems.add(queueItem);
         }
      
         containerQueue.addQueueItems(queueItems, m_conn);
         
     }
-     **/
+    
     
     //function writes robot file
     // source plate barcode, sourcewell, destination plate barcode, destination well
@@ -503,20 +572,26 @@ public class RearrayerForPlates
         Connection c = null;
         Project p = null;
         Workflow w = null;
-        String fname = "e:\\htaycher\\yeast\\rearray.txt";
+        String fname = "E:\\HTaycher\\Pseudomonas\\rearray_pa.txt";
         InputStream input = null;
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
-            int projectid = 2;
-            int workflowid = 10;
+            int projectid = 3;
+            int workflowid = 4;
             int protocolid = 40;
             input = new FileInputStream(fname);
             RearrayerForPlates rearrayer = new RearrayerForPlates(c,projectid, workflowid,protocolid,input,"elena_taycher@hms.harvard.edu");
             rearrayer.setWellsNumbers(94);
-            rearrayer.createNewPlates();
-            c.commit();
+            rearrayer.isArrangeBySize(false);
+            rearrayer.isControls(false);
+            rearrayer.setSampleType("DNA");
+            rearrayer.setSort(false);
+            rearrayer.isPutOnQueue(false);
+            rearrayer.createNewPlates(1);
+            c.rollback();
+            //c.commit();
         } catch (Exception ex)
         {
             System.out.println(ex);
