@@ -295,7 +295,7 @@
                name="selectMeshTermsForm"
               scope="request"
               input="/SelectMeshTerms.jsp">
-      <forward  name="success"   path="/DisplayGenes.jsp"/>
+      <forward  name="success"   path="/DisplayGenesForDiseases.jsp"/>
       <forward  name="newsearch"   path="/MultipleDiseaseSearch.jsp"/>
     </action>
 

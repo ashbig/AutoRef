@@ -39,7 +39,7 @@
 
 <logic:notEqual name="hs_geneIndexes" value="no">      
 <center>
-  <h1><font color="#008000">Top <bean:write name="number"/> Genes </font></h1>
+  <h1><font color="#008000">Top <bean:write name="number"/> Diseases </font></h1>
 </center>
 
 <table width="90%" align="center" border="0">
