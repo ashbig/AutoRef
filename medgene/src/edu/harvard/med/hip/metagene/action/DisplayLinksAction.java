@@ -74,7 +74,7 @@ public class DisplayLinksAction extends MetageneAction {
             infos = manager.queryGeneinfoByGene(conn, id);
         }
         else{
-            infos = manager.queryGeneinfoByGene(conn, gene_symbol);
+            infos = manager.queryGeneinfoByGene(conn, gene_symbol);           
         }
         dbmanager.disconnect(conn);
         

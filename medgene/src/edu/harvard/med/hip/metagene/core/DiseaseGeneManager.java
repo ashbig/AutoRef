@@ -313,7 +313,7 @@ public class DiseaseGeneManager {
     protected Vector queryChildren(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
-        String sql = "select l.symbol_value"+
+        String sql = "select l.symbol_value, l.formal_name_value "+
         " from gene_list l, family_mapping m"+
         " where l.hip_gene_id = m.hip_gene_id"+
         " and m.parent_id = "+id;
@@ -325,8 +325,12 @@ public class DiseaseGeneManager {
             rs = stmt.executeQuery(sql);
             
             while(rs.next()) {
-                String name = rs.getString(1);
-                nicknames.addElement(name);
+                String symbol = rs.getString(1);
+                String formal_name = rs.getString(2);
+                if(symbol == null || symbol.trim().length() == 0)
+                    nicknames.addElement(formal_name);
+                else
+                    nicknames.addElement(symbol);
             }
             
             rs.close();
@@ -334,7 +338,7 @@ public class DiseaseGeneManager {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-        
+ 
         return nicknames;
     }
     
@@ -375,12 +379,13 @@ public class DiseaseGeneManager {
         String sql = "select t.id_type, g.id_value, g.extra_information"+
         " from id_type t, gene_information g, gene_list gl "+
         " where t.type_id=g.type_id and g.hip_gene_id = gl.hip_gene_id "+
-        " and gl.symbol_value= ?";
+        " and (gl.symbol_value = ? or gl.formal_name_value = ?)";
         Vector geneInfo = new Vector();
         
         try {
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, symbol);
+            pstmt.setString(2, symbol);
             rs = pstmt.executeQuery();
             
             while(rs.next()) {
@@ -740,7 +745,81 @@ public class DiseaseGeneManager {
         }
         return pubmed_ids;
     }
-        
     
+    
+    public Vector getMedlineRecords(String disease_mesh_term, String gene_symbol){
+        DBManager dbm = new DBManager();
+        Connection con = dbm.connect();
+        if(con == null){
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Vector pubmed_ids = new Vector();
+        
+        String sql = "select mr.pubmedid from medline_records mr, gene_index gi, gene_list gl " +
+                     "where mr.disease_index = ? and mr.gene_index = gi.gene_index " +
+                     "and gi.gene_index_id = gl.gene_index_id and gl.symbol_value = ? " +
+                     "order by mr.pubmedid desc ";
+        try{
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, disease_mesh_term);
+            pstmt.setString(2, gene_symbol);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                int pubmed_id = rs.getInt(1);
+                pubmed_ids.add(new Integer(pubmed_id).toString());
+            }
+            rs.close();
+            pstmt.close();
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            dbm.disconnect(con);
+        }
+        return pubmed_ids;
+    }
+    
+    
+    public Vector getMedlineRecordsByFamily(String disease_term, String child_gene_name) {
+        DBManager dbm = new DBManager();
+        Connection con = dbm.connect();
+        if(con == null){
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Vector pubmed_ids = new Vector();
+        
+        String sql = "select mr.pubmedid from medline_records mr, gene_index gi, " +
+                     "parent_list pl, family_mapping fm, gene_list gl " +
+                     "where mr.disease_index = ? and mr.gene_index = gi.gene_index " +
+                     "and gi.gene_index = pl.parent_value and pl.parent_id = fm.parent_id " +
+                     "and fm.hip_gene_id = gl.hip_gene_id and gl.symbol_value = ? " +
+                     "order by mr.pubmedid desc ";
+        try{
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, disease_term);
+            pstmt.setString(2, child_gene_name);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                int pubmed_id = rs.getInt(1);
+                pubmed_ids.add(new Integer(pubmed_id).toString());
+            }
+            rs.close();
+            pstmt.close();
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            dbm.disconnect(con);
+        }
+        return pubmed_ids;
+    }
+     
+        
     
 }

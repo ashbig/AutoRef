@@ -196,9 +196,18 @@
                type="edu.harvard.med.hip.metagene.action.DisplayPaperLinksAction"
                name="displayPaperLinksForm"
                scope="request"
-               input="/DisplayGenes.jsp">
+               input="/DisplayChipGenes.jsp">
       <forward  name="success"   path="/DisplayPaperLinks.jsp"/>
     </action>
+
+    <!-- Process the medline paper link display by family term -->
+    <action    path="/DisplayPaperLinksByFamily"
+               type="edu.harvard.med.hip.metagene.action.DisplayPaperLinksByFamilyAction"
+               name="displayPaperLinksForm"
+               scope="request"
+               input="/DisplayChipGenes.jsp">
+      <forward  name="success"   path="/DisplayPaperLinks.jsp"/>
+    </action>    
 
 
     <!-- Process gene search -->

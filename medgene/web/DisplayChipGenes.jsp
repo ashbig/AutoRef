@@ -39,12 +39,12 @@
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
     <TR> <b>First degree associations</b> <br><br> </TR>
     <TR bgcolor="#cccccc">
-        <TH width="10%">Rank</TH>
-        <TH width="30%">Locus ID</TH>
-        <TH width="30%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
-        <TH width="30%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="7%">Rank</TH>
+        <TH width="26%">Locus ID</TH>
+        <TH width="26%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
+        <TH width="26%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="15%">Selected Papers</TH>
     </TR>
-
     <logic:iterate id="directChipGene" name="direct_genes"> 
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
@@ -57,6 +57,10 @@
             <TD align="center">
                 <bean:write name="directChipGene" property="score"/>
             </TD>
+            <TD align="center">
+                <A HREF="DisplayPaperLinks.do?disease_mesh_term=<bean:write name="disease_mesh_term"/>&gene_symbol=<bean:write name="directChipGene" property="gene_symbol"/>" target="_blank" >
+                Link</A>
+            </TD>
         </tr>
     </logic:iterate> 
     </TABLE>
@@ -67,10 +71,11 @@
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
     <TR> <b>First degree associations by family term</b> <br><br> </TR>
     <TR bgcolor="#cccccc">
-        <TH width="10%">Rank</TH>
-        <TH width="30%">Locus ID</TH>
-        <TH width="30%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
-        <TH width="30%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="7%">Rank</TH>
+        <TH width="26%">Locus ID</TH>
+        <TH width="26%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
+        <TH width="26%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="15%">Selected Papers</TH>
     </TR>
 
     <logic:iterate id="directChipGeneByFamily" name="direct_children_genes"> 
@@ -84,6 +89,10 @@
             </TD>
             <TD align="center">
                 <bean:write name="directChipGeneByFamily" property="score"/>
+            </TD>
+            <TD align="center">
+                <A HREF="DisplayPaperLinksByFamily.do?disease_mesh_term=<bean:write name="disease_mesh_term"/>&gene_symbol=<bean:write name="directChipGeneByFamily" property="gene_symbol"/>" target="_blank" >
+                Link</A>
             </TD>
         </tr>
     </logic:iterate> 

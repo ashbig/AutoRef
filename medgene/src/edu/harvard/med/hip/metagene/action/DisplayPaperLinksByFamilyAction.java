@@ -1,7 +1,7 @@
 /*
- * DisplayPaperLinksAction.java
+ * DisplayPaperLinksByFamilyAction.java
  *
- * Created on June 5, 2002, 1:33 PM
+ * Created on June 7, 2002, 11:33 AM
  */
 
 package edu.harvard.med.hip.metagene.action;
@@ -27,34 +27,28 @@ import edu.harvard.med.hip.metagene.core.*;
 
 import java.util.*;
 import java.sql.*;
+
 /**
  *
- * @author  yanhui
+ * @author  hweng
  */
-public class DisplayPaperLinksAction extends MetageneAction{
+public class DisplayPaperLinksByFamilyAction extends MetageneAction{
     
     public ActionForward metagenePerform(ActionMapping mapping, 
                                          ActionForm form, 
                                          HttpServletRequest request, 
                                          HttpServletResponse response) 
-                                  throws ServletException, IOException {
-                                      
-        int disease_id = ((DisplayPaperLinksForm)form).getDisease_id();                                
-        String gene_index = ((DisplayPaperLinksForm)form).getGene_index();
+                                         throws ServletException, IOException {
+
         String disease_mesh_term = ((DisplayPaperLinksForm)form).getDisease_mesh_term();
         String gene_symbol = ((DisplayPaperLinksForm)form).getGene_symbol();
         Vector records = new Vector();
                                       
         DiseaseGeneManager m = new DiseaseGeneManager();
-        if(disease_id == 0){
-            records = m.getMedlineRecords(disease_mesh_term, gene_symbol);
-        }
-        else{
-            records = m.getMedlineRecords(disease_id, gene_index);            
-        }
+        records = m.getMedlineRecordsByFamily(disease_mesh_term, gene_symbol);
         request.setAttribute("medline_records", records);
-        return (mapping.findForward("success"));                                              
-                                      
-    }    
+        return (mapping.findForward("success"));                                         
+                                             
+    }
     
 }
