@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.3 2001-04-26 14:26:12 dongmei_zuo Exp $ 
+/* $Id: ContainerProcessQueue.java,v 1.4 2001-04-26 22:26:08 dongmei_zuo Exp $ 
  *
  * File     	: ContainerProcessQueue.java 
  * Date     	: 04162001
@@ -32,9 +32,9 @@ public class ContainerProcessQueue implements ProcessQueue {
 	 *
 	 * @param protocol The protocol object. 
 	 * @return A LinkedList of QueueItem objects.
-	 * @exception FlexProcessException.
+	 * @exception FlexDatabaseException.
  	 */
-	public LinkedList getQueueItems(Protocol protocol, DatabaseTransaction t) throws FlexProcessException {
+	public LinkedList getQueueItems(Protocol protocol, DatabaseTransaction t) throws FlexDatabaseException {
 		int protocolid = protocol.getId();
 		String sql = new String("select c.containerid as id, "+
 						"c.containertype as type, " +
@@ -48,12 +48,9 @@ public class ContainerProcessQueue implements ProcessQueue {
 						"and c.locationid = l.locationid\n"+
 						"and q.protocolid = "+protocolid);
 
-		try {
-			LinkedList items = restore(protocol, sql, t);
-			return items;
-		} catch (FlexProcessException e) {
-			throw e;
-		}
+		LinkedList items = restore(protocol, sql, t);
+		return items;
+
 	}
 
 	/**
@@ -64,9 +61,9 @@ public class ContainerProcessQueue implements ProcessQueue {
 	 * @param date The date added to the queue in yyyy-mm-dd format. 
 	 * @param t The DatabaseTransaction object that talks to database.
 	 * @return A LinkedList of QueueItem objects.
-	 * @exception FlexProcessException.
+	 * @exception FlexDatabaseException.
  	 */
-	public LinkedList getQueueItems(Protocol protocol, String date, DatabaseTransaction t) throws FlexProcessException {
+	public LinkedList getQueueItems(Protocol protocol, String date, DatabaseTransaction t) throws FlexDatabaseException {
 		int protocolid = protocol.getId();
 		String sql = new String("select c.containerid as id, "+
 						"c.containertype as type, " +
@@ -80,12 +77,9 @@ public class ContainerProcessQueue implements ProcessQueue {
 						"and c.locationid = l.locationid\n"+
 						"and q.protocolid = "+protocolid+
 						"and to_char(dateadded, 'fmYYYY-MM-DD') = "+date);
-		try {
-			LinkedList items = restore(protocol, sql, t);
-			return items;
-		} catch (FlexProcessException e) {
-			throw e;
-		}
+
+		LinkedList items = restore(protocol, sql, t);
+		return items;
 	}			
 
 	/**
@@ -94,9 +88,9 @@ public class ContainerProcessQueue implements ProcessQueue {
 	 *
 	 * @param LinkedList The List of QueueItem objects.
 	 * @param t The DatabaseTransaction object that talks to database.
-	 * @exception FlexProcessException.
+	 * @exception FlexDatabaseException.
  	 */
-	public void addQueueItems(LinkedList items, DatabaseTransaction t) throws FlexProcessException {
+	public void addQueueItems(LinkedList items, DatabaseTransaction t) throws FlexDatabaseException {
 		if (items == null)
 			return;
 
@@ -123,11 +117,7 @@ public class ContainerProcessQueue implements ProcessQueue {
 			v.addElement(params);
 		}
 	
-		try {	
-			t.executePreparedSql(sql, v);
-		} catch (FlexDatabaseException exception) {
-			throw new FlexProcessException(exception.getMessage());
-		}		
+		t.executePreparedSql(sql, v);		
 	}		
 
 	/**
@@ -136,9 +126,9 @@ public class ContainerProcessQueue implements ProcessQueue {
 	 *
 	 * @param LinkedList The List of QueueItem objects.
 	 * @param t The DatabaseTransaction object that talks to database.
-	 * @exception FlexProcessException.
+	 * @exception FlexDatabaseException.
  	 */
-	public void removeQueueItems (LinkedList items, DatabaseTransaction t) throws FlexProcessException {
+	public void removeQueueItems (LinkedList items, DatabaseTransaction t) throws FlexDatabaseException {
 		if (items == null) 
 			return;
 		
@@ -169,11 +159,7 @@ public class ContainerProcessQueue implements ProcessQueue {
 			v.addElement(params);
 		}
 	
-		try {	
-			t.executePreparedSql(sql, v);
-		} catch (FlexDatabaseException exception) {
-			throw new FlexProcessException(exception.getMessage());
-		}		
+		t.executePreparedSql(sql, v);		
 	}
 
 	/**
@@ -181,42 +167,42 @@ public class ContainerProcessQueue implements ProcessQueue {
 	 *
 	 * @param LinkedList The List of QueueItem objects.
 	 * @param t The DatabaseTransaction object that talks to database.
-	 * @exception FlexProcessException.
+	 * @exception FlexDatabaseException.
 	 */
-	public void updateQueueItems (LinkedList items, DatabaseTransaction t) throws FlexProcessException {
+	public void updateQueueItems (LinkedList items, DatabaseTransaction t) throws FlexDatabaseException {
 	}
 
 	/**
 	 * Get all the queued items that from the database.
 	 */
-	protected LinkedList restore(Protocol protocol, String sql, DatabaseTransaction t) throws FlexProcessException {
-		try {
-			Vector results = t.executeSql(sql);
-			Enumeration enum = results.elements();
-			StaticContainerFactory factory = new StaticContainerFactory();
-			LinkedList items = new LinkedList();
+	protected LinkedList restore(Protocol protocol, String sql, DatabaseTransaction t) throws FlexDatabaseException {
+		Vector results = t.executeSql(sql);
+		Enumeration enum = results.elements();
+		StaticContainerFactory factory = new StaticContainerFactory();
+		LinkedList items = new LinkedList();
 
-			while(enum.hasMoreElements()) {
-				Hashtable h = (Hashtable)enum.nextElement();
-				int id = ((BigDecimal)h.get("ID")).intValue();
-				String type = (String)h.get("TYPE");
-				int locationid = ((BigDecimal)h.get("LOCATIONID")).intValue();
-				String locationtype = (String)h.get("LOCATIONTYPE");
-				String description = (String)h.get("DESCRIPTION");
-				String label = (String)h.get("LABEL");
-				String date = (String)h.get("DATEADDED");
-				Location location = new Location(locationid, locationtype,description);
+		while(enum.hasMoreElements()) {
+			Hashtable h = (Hashtable)enum.nextElement();
+			int id = ((BigDecimal)h.get("ID")).intValue();
+			String type = (String)h.get("TYPE");
+			int locationid = ((BigDecimal)h.get("LOCATIONID")).intValue();
+			String locationtype = (String)h.get("LOCATIONTYPE");
+			String description = (String)h.get("DESCRIPTION");
+			String label = (String)h.get("LABEL");
+			String date = (String)h.get("DATEADDED");
+			Location location = new Location(locationid, locationtype,description);
 
-				Container c = new Container(id, type, location, label);
-				QueueItem item = new QueueItem(c, protocol, date);
-				items.addLast(item);
-			}
-			return items;
-		} catch (FlexDatabaseException exception) {
-			throw new FlexProcessException(exception.getMessage());
+			Container c = new Container(id, type, location, label);
+			QueueItem item = new QueueItem(c, protocol, date);
+			items.addLast(item);
 		}
+		return items;
 	}
 
+	//******************************************************//
+	//			Test				//
+	//******************************************************//
+	
 	public static void main(String [] args) {
 		try {
 			QueueFactory factory = new StaticQueueFactory();

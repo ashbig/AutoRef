@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.3 2001-04-25 18:37:59 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.4 2001-04-26 22:26:08 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java 
  * Date     : 04162001
@@ -7,6 +7,9 @@
  */
 
 package flex.ApplicationCode.Java.process;
+
+import java.util.*;
+import flex.ApplicationCode.Java.database.*;
 
 /**
  * Represents the protocol object corresponding to the
@@ -16,6 +19,7 @@ public class Protocol {
 	private int id;
 	private String processcode;
 	private String processname;
+	private Vector subprotocol = new Vector();
 
 	/**
 	 * Constructor.
@@ -25,11 +29,22 @@ public class Protocol {
 	 * @param processname The process name of the protocol.
 	 *
 	 * @return The Protocol object.
+	 * @exception FlexDatabaseException.
 	 */
-	public Protocol (int id, String processcode, String processname) {
+	public Protocol (int id, String processcode, String processname) throws FlexDatabaseException {
 		this.id = id;
 		this.processcode = processcode;
 		this.processname = processname;
+		
+		String sql = "select subprotocolname from subprotocol where protocolid="+id;
+		DatabaseTransaction t = DatabaseTransaction.getInstance();
+		Vector results = t.executeSql(sql);
+		Enumeration enum = results.elements();
+		while(enum.hasMoreElements()) {
+			Hashtable h = (Hashtable)enum.nextElement();
+			String name = (String)h.get("SUBPROTOCOLNAME");
+			subprotocol.addElement(name);
+		}
 	}
 
 	/**
@@ -48,6 +63,15 @@ public class Protocol {
 	 */
 	public String getProcesscode() {
 		return processcode;
+	}
+	
+	/**
+	 * Return subprotocol.
+	 *
+	 * @return The subprotocol as a Vector.
+	 */
+	public Vector getSubprotocol() {
+		return subprotocol;
 	}
 }
 
