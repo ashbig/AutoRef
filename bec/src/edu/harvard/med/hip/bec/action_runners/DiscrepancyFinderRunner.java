@@ -32,15 +32,19 @@ import edu.harvard.med.hip.bec.ui_objects.*;
  *
  * @author  HTaycher
  */
-public class DiscrepancyFinderRunner extends ProcessRunner 
+public class DiscrepancyFinderRunner extends ProcessRunner
 {
     private int                 m_cutoff_score = 25;
     private Hashtable           m_cloning_strategies = null;
-    
-    
+    private DiscrepancyFinder       i_discrepancy_finder = null;//default:used by all functions
+
+
+    private static final int        MODE_GET_CLONE_SEQUENCES = 0;
+    private static final int        MODE_GET_CONTIGS = 1;
+
      public String getTitle()     {  return "Request for discrepancy finder run.";           }
-    
-    
+
+
     public void run()
     {
         int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -55,43 +59,31 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
+            prepareDiscrepancyFinder();
             pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE+")");
             pst_check_clone_sequence = conn.prepareStatement("select sequenceid from assembledsequence where sequenceid = ? and analysisstatus ="+BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
-            
+
             sql_groups_of_items =  prepareItemsListForSQL();
             if ( sql_groups_of_items.size() > 0 )
                 process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DISCREPANCY_FINDER,new ArrayList(),m_user) ;
- 
+
             for (int count = 0; count < sql_groups_of_items.size(); count++)
             {
-                sql = getQueryString( (String)sql_groups_of_items.get(count), BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
-                sequence_descriptions =     getSequenceDescriptions(sql);
+                sql = getQueryString( (String)sql_groups_of_items.get(count) );
+                sequence_descriptions =     getSequenceDescriptions(sql, sequence_descriptions, MODE_GET_CLONE_SEQUENCES);
                 for  (int index =  0;  index < sequence_descriptions.size(); index++)
                 {
                     clone = (CloneDescription) sequence_descriptions.get(index);
                     synchronized(this)
                     {
-                        try
-                        {
-                          //  if (isSequenceProcessed(clone, pst_check_clone_sequence) ) continue;
-                            clone_sequence = processSequence(clone);
-                        //update clone data / status
-                            updateInsertCloneInfo(conn,clone_sequence, clone);
-                            //insert process_object
-                            pst_insert_process_object.setInt(1,process_id);
-                            pst_insert_process_object.setInt(2, clone_sequence.getId());
-                            DatabaseTransaction.executeUpdate(pst_insert_process_object);
-                            conn.commit();
-                        }
-                        catch(Exception e)
-                        {
-                            DatabaseTransaction.rollback(conn);
-                            m_error_messages.add(e.getMessage());
-                        }
+                        if (clone.getCloneSequenceId() > 0 )
+                            processSequence( clone, pst_insert_process_object, conn,  process_id);
+                        else
+                            processStretchCollection( clone,  conn);
                     }
                 }
             }
-            
+
         }
         catch(Exception e)
         {
@@ -104,13 +96,62 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             sendEMails( getTitle() );
         }
     }
-    
-     
-     
-     
-     
+
+
+
+
+
     //-------------------------------------------------
-    private ArrayList           getSequenceDescriptions(String sql)
+      private void prepareDiscrepancyFinder()
+    {
+         //prepare detectors
+            i_discrepancy_finder = new DiscrepancyFinder();
+            i_discrepancy_finder.setNeedleGapOpen(20.0);
+            i_discrepancy_finder.setNeedleGapExt(0.05);
+            i_discrepancy_finder.setQualityCutOff(m_cutoff_score);
+            i_discrepancy_finder.setIdentityCutoff(60.0);
+            i_discrepancy_finder.setMaxNumberOfDiscrepancies(20);
+            i_discrepancy_finder.setInputType(true);
+    }
+    private void            processStretchCollection(CloneDescription clone, Connection conn) throws Exception
+    {
+         StretchCollection strcol = StretchCollection.getByIsolateTrackingId( clone.getIsolateTrackingId(), true);
+         if ( strcol == null ) return;
+         int[] cds_start_stop = new int[2];
+         BaseSequence  refsequence = prepareRefSequence(clone,  cds_start_stop);
+         i_discrepancy_finder.setRefSequenceCdsStart(  cds_start_stop[0]);
+         i_discrepancy_finder.setRefSequenceCdsStop(  cds_start_stop[1] );
+         AnalyzedScoredSequence contig_sequence = null;
+         Stretch stretch = null;
+         for (int contig_count =0; contig_count < strcol.getStretches().size(); contig_count++)
+        {
+             stretch = (Stretch) strcol.getStretches().get(contig_count);
+             if ( stretch.getType() != Stretch.GAP_TYPE_CONTIG ) continue;
+             contig_sequence = stretch.getSequence();
+             if (contig_sequence.getStatus() != BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED) continue;
+             i_discrepancy_finder.setSequencePair(new SequencePair(contig_sequence ,  refsequence));
+             i_discrepancy_finder.run();
+             if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+                return ;
+             else
+             {
+                contig_sequence.insertMutations(conn);
+                if ( contig_sequence.getDiscrepancies() != null && contig_sequence.getDiscrepancies().size() > 0)
+                {
+                    stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,conn);
+                }
+                else
+                {
+                    stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES,conn);
+                }
+             }
+         }
+
+
+    }
+
+           
+    private ArrayList           getSequenceDescriptions(String sql , ArrayList sequence_descriptions_processed, int mode)
     {
         ArrayList sequence_descriptions = new ArrayList();
         CloneDescription clone_description = null;
@@ -127,28 +168,28 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                 clone_description.setIsolateTrackingId (rs.getInt("isolatetrackingid"));
                 clone_description.setConstructId(rs.getInt("constructid"));
                 clone_description.setConstructFormat(rs.getInt("format"));
+                clone_description.setIsolateStatus (rs.getInt("isolatestatus"));
                 clone_description.setCloningStrategyId(rs.getInt("cloningstrategyid"));
                 clone_description.setCloneSequenceId (rs.getInt("clonesequenceid"));
                 clone_description.setCloneSequenceType (rs.getInt("clonesequencetype"));
                 clone_description.setCloneSequenceStatus (rs.getInt("clonesequencestatus"));
-                clone_description.setIsolateStatus (rs.getInt("isolatestatus"));
-                
                 sequence_descriptions.add(clone_description);
+               
             }
-            
-        } 
+
+        }
         catch (Exception E)
         {
             m_error_messages.add("Error occured while trying to get descriptions for clones. "+E+"\nSQL: "+sql);
-        } 
+        }
         finally
         {
             DatabaseTransaction.closeResultSet(rs);
         }
         return sequence_descriptions;
     }
-    
-    
+
+
     private boolean             isSequenceProcessed(CloneDescription clone, PreparedStatement pst_check_clone_sequence)throws Exception
     {
          ResultSet rs = null;
@@ -167,18 +208,18 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             {
                 return true;
             }
-         } 
+         }
         catch (Exception e)
         {
            throw new Exception("Error occured while trying to check sequence status "+e.getMessage());
-        } 
+        }
         finally
         {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
-    
-    
+
+
     private void                updateInsertCloneInfo(Connection conn, CloneSequence clonesequence, CloneDescription clone)throws Exception
     {
         try
@@ -209,66 +250,75 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                 }
             }
         }
-          
+
         catch (Exception e)
         {
            throw new Exception("Error occured while trying to data for clone "+e.getMessage());
-        } 
+        }
     }
-    
-    
-    private CloneSequence            processSequence(CloneDescription clone) throws Exception
+
+    private void            processSequence(CloneDescription clone,
+                            PreparedStatement pst_insert_process_object,
+                            Connection conn, int process_id) throws Exception
     {
-        CloneSequence clonesequence = new CloneSequence( clone.getCloneSequenceId());
-       int[] cds_start_stop = new int[2];
-        BaseSequence  refsequence = prepareRefSequence(clone,  cds_start_stop);
-        DiscrepancyFinder df = new DiscrepancyFinder();
-        df.setNeedleGapOpen(20.0);
-        df.setNeedleGapExt(0.05);
-        df.setQualityCutOff(m_cutoff_score);
-        df.setIdentityCutoff(60.0);
-        df.setMaxNumberOfDiscrepancies(20);
-        df.setRefSequenceCdsStart(  cds_start_stop[0]);
-        df.setRefSequenceCdsStop(  cds_start_stop[1] );
-        df.setSequencePair(new SequencePair(clonesequence ,  refsequence));
-        df.setInputType(true);
-        df.run();
-        clonesequence.setLinker3Stop(df.getCdsStop());
-        clonesequence.setLinker5Start(df.getCdsStart() );
-        
-        return clonesequence;
+        try
+        {
+           if ( clone.getCloneSequenceStatus() != BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ) return;
+            CloneSequence clonesequence = new CloneSequence( clone.getCloneSequenceId());
+            int[] cds_start_stop = new int[2];
+            BaseSequence  refsequence = prepareRefSequence(clone,  cds_start_stop);
+            i_discrepancy_finder.setRefSequenceCdsStart(  cds_start_stop[0]);
+            i_discrepancy_finder.setRefSequenceCdsStop(  cds_start_stop[1] );
+            i_discrepancy_finder.setSequencePair(new SequencePair(clonesequence ,  refsequence));
+
+            i_discrepancy_finder.run();
+            clonesequence.setLinker3Stop(i_discrepancy_finder.getCdsStop());
+            clonesequence.setLinker5Start(i_discrepancy_finder.getCdsStart() );
+        //update clone data / status
+            updateInsertCloneInfo(conn,clonesequence, clone);
+            //insert process_object
+            pst_insert_process_object.setInt(1,process_id);
+            pst_insert_process_object.setInt(2, clonesequence.getId());
+            DatabaseTransaction.executeUpdate(pst_insert_process_object);
+            conn.commit();
+        }
+        catch(Exception e)
+        {
+            DatabaseTransaction.rollback(conn);
+            m_error_messages.add(e.getMessage());
+        }
     }
-    
-    
+
+
     private BaseSequence            prepareRefSequence(CloneDescription clone_description, int[] cds_start_stop) throws Exception
     {
         CloningStrategy cloning_strategy = getCloningStrategyForCloneSequence(clone_description);
         RefSequence refsequence = new RefSequence(clone_description.getBecRefSequenceId(), false);
-      
+
        //create refsequence for analysis
         BaseSequence refsequence_for_analysis = Construct.getRefSequenceForAnalysis(  cloning_strategy.getStartCodon(),
-                                           cloning_strategy.getFusionStopCodon(), 
+                                           cloning_strategy.getFusionStopCodon(),
                                            cloning_strategy.getClosedStopCodon(),
                                            refsequence.getCodingSequence(), clone_description.getConstructFormat());
-        
+
         cds_start_stop[0] = cloning_strategy.getLinker5().getSequence().length() ;
-        cds_start_stop[1] =  cloning_strategy.getLinker5().getSequence().length() + refsequence_for_analysis.getText().length() ;    
-       
+        cds_start_stop[1] =  cloning_strategy.getLinker5().getSequence().length() + refsequence_for_analysis.getText().length() ;
+
         String linker5_seq =  cloning_strategy.getLinker5().getSequence();
         String linker3_seq = cloning_strategy.getLinker3().getSequence();
         refsequence_for_analysis.setId( clone_description.getBecRefSequenceId());
         refsequence_for_analysis.setText( linker5_seq.toLowerCase()+ refsequence_for_analysis.getText().toUpperCase() + linker3_seq.toLowerCase() );
-        return refsequence_for_analysis;     
+        return refsequence_for_analysis;
     }
-    
+
     private  CloningStrategy            getCloningStrategyForCloneSequence(CloneDescription clone_description) throws Exception
     {
         CloningStrategy cloning_strategy = null;
-       
+
         if ( m_cloning_strategies == null)
         {
             m_cloning_strategies = new Hashtable();
-           
+
         }
         if ( !m_cloning_strategies.containsKey(new Integer(clone_description.getCloningStrategyId())) )
         {
@@ -282,16 +332,16 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             cloning_strategy = (CloningStrategy)m_cloning_strategies.get( new Integer(clone_description.getCloningStrategyId() ));
         }
         return cloning_strategy ;
-        
+
     }
-    
-    
-    
-    
-    
-    
-    
-    private String      getQueryString(String sql_items, int sequence_analysis_status)
+
+
+
+
+
+
+
+    private String      getQueryString(String sql_items)//, int sequence_analysis_status)
     {
         switch ( m_items_type)
         {
@@ -300,46 +350,47 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
-                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
+                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and i.isolatetrackingid in (select isolatetrackingid from flexinfo where flexcloneid in ("+sql_items+"))"
-                 + " and a.analysisstatus in ("+sequence_analysis_status+")";
+                ;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
             case  Constants.ITEM_TYPE_PLATE_LABELS :
             {
                  return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
-                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
+                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and i.isolatetrackingid in (select isolatetrackingid from isolatetracking where sampleid in   "
                  +" (select sampleid from sample where containerid in "
                  +" (select containerid from  containerheader where label in ("+sql_items+"))))"
-                  + " and a.analysisstatus in ("+sequence_analysis_status+")";
+                ;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
             case  Constants.ITEM_TYPE_BECSEQUENCE_ID :
             {
                 return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
-                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
+                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and a.sequenceid in  ("+sql_items+")"
-                  + " and a.analysisstatus in ("+sequence_analysis_status+")";
+                ;//  + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
             case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
             {
                 return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
-                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
+                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and i.isolatetrackingid (select isolatetrackingid from flexinfo where flexsequenceid in ("+sql_items+")))"
-                  + " and a.analysisstatus in ("+sequence_analysis_status+")";
+                 ;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
              }
         }
         return null;
     }
-    
+
+   
 ////////////////////////////////////////////////
-     public static void main(String args[]) 
-     
+     public static void main(String args[])
+
     {
        // InputStream input = new InputStream();
         FileInputStream input = null;
@@ -351,17 +402,17 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         catch(Exception e){}
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
-        String  item_ids = " 2688	";
+        String  item_ids = " 148173  6024  158511	";
 
         runner.setItems(item_ids.toUpperCase().trim());
         runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
         runner.setUser(user);
-        //Thread t = new Thread(runner);    
+        //Thread t = new Thread(runner);
        // t.start();
         runner.run();
         System.exit(0);
-   
+
     }
-     
-     
+
+
 }
