@@ -270,17 +270,18 @@ public class Workflow {
 
     public static Vector getAllWorkflows() throws FlexDatabaseException {
         
+        Vector workflows = new Vector();  
         if (Constants.s_workflows != null)
         {
-            Collection s = Constants.s_workflows.values();
-            Collections.sort((List) s);
-            return (Vector) s;
+            workflows = new Vector(Constants.s_workflows.values());
+             sortWorkflowsByName(workflows);
+           return workflows;
         }
        
         String sql = "select * from workflow";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
-        Vector workflows = new Vector();  
+        
         
         try{                   
             while(rs.next()) {
@@ -298,6 +299,21 @@ public class Workflow {
         
         return workflows;
     }
+    
+    
+    private static void sortWorkflowsByName(Vector workflows)
+    {
+        Collections.sort(workflows, new Comparator()
+       {
+            public int compare(Object cont1, Object cont2)
+            {
+                Workflow p1 =(Workflow) cont1;
+                Workflow p2 = (Workflow) cont2;
+                return  p1.getName().compareToIgnoreCase(p2.getName() ) ;
+           }
+       });
+    }
+    
     
     public static void main(String [] args) {
         try {
