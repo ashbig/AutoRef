@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2001-08-17 20:35:52 $
+ * $Revision: 1.12 $
+ * $Date: 2001-08-20 19:06:21 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.11 $ $Date: 2001-08-17 20:35:52 $
+ * @version    $Revision: 1.12 $ $Date: 2001-08-20 19:06:21 $
  */
 public class ProcessQueueAction extends WorkflowAction {
     
@@ -224,7 +224,7 @@ public class ProcessQueueAction extends WorkflowAction {
                  * now run the oligo plate manager to see if oligos
                  * need to be ordered
                  */
-                OligoPlateManager om = new OligoPlateManager();
+                OligoPlateManager om = new OligoPlateManager(project, workflow);
                 om.orderOligo();
                 
                 /*

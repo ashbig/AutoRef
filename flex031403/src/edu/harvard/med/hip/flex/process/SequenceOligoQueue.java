@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.workflow.*;
 import java.sql.*;
 import java.util.*;
 
@@ -69,7 +70,37 @@ public class SequenceOligoQueue {
         
         return result; //return the LinkedList
     } // getQueueItems
-       
+    
+    /**
+     * Retrieve all the queued sequences which are waiting for
+     * oligo primer calculation (construct design)
+     *
+     * @param protocol The process protocol.
+     * @param project The project that all the queue items belong to.
+     * @param workflow The workflow that all the queue items belong to.
+     * @cdsSizeLowerLimit The integer indicates the lower limit of the cds size class
+     * @cdsSizeUpperLimit The integer indicates the upper limit of the cds size class
+     * @return A LinkedList of Sequence objects
+     */
+        public LinkedList getQueueItems(Protocol protocol, Project project,
+        Workflow workflow, int cdsSizeLowerLimit, int cdsSizeUpperLimit) 
+        throws FlexDatabaseException {
+        //The result list stores a list of sequence objects
+        LinkedList result = new LinkedList();
+        
+        String sql = "SELECT s.sequenceid as seqid, s.cdsstart, s.cdsstop \n"+
+        "FROM FLEXSEQUENCE s, QUEUE q\n" +
+        "WHERE s.sequenceid = q.sequenceid\n" +
+        "AND q.protocolid = "+ protocol.getId() + "\n" +
+        "AND q.projectid = "+ project.getId() + "\n" +
+        "AND q.workflowid = "+ workflow.getId() + "\n" +
+        "AND s.cdslength >= " + cdsSizeLowerLimit + "\n" +
+        "AND s.cdslength < " + cdsSizeUpperLimit;
+        result = restore(sql);
+        
+        return result; //return the LinkedList
+    } // getQueueItems
+    
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table
@@ -108,6 +139,49 @@ public class SequenceOligoQueue {
         
         String sql = "DELETE FROM queue\n" +
         "WHERE protocolid = "+ protocol.getId()  + "\n" +
+        "AND sequenceid = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = c.prepareStatement(sql);
+            Vector v = new Vector();
+            ListIterator iter = seqList.listIterator();
+            
+            while (iter.hasNext()) {
+                Sequence seq = (Sequence) iter.next();
+                //String date = item.getDate();
+                int sequenceId = seq.getId();
+                stmt.setInt(1, sequenceId);
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            
+        } catch(SQLException sqlE) {
+           // throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException("Error occured while deleting sequences from queue\n"+sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+    }
+
+    /**
+     * Delete all of the selected sequence queue records from the
+     * Queue table of the database.
+     *
+     * @param LinkedList The List of QueueItem objects.
+     * @param c The database connection for database transaction.
+     * @param project The project that the sequence list is associated with.
+     * @param workflow The workflow that the sequence list is associated with.
+     * @param c The database Connectin object.
+     * @exception FlexDatabaseException.
+     */
+    public void removeQueueItems(LinkedList seqList, Protocol protocol, 
+    Project project, Workflow workflow, Connection c) throws FlexDatabaseException {
+        if (seqList == null)
+            return;
+        
+        String sql = "DELETE FROM queue\n" +
+        "WHERE protocolid = "+ protocol.getId()  + "\n" +
+        "AND projectid = "+ project.getId()  + "\n" +
+        "AND workflowid = "+ workflow.getId()  + "\n" +
         "AND sequenceid = ?";
         PreparedStatement stmt = null;
         try {

@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.14 2001-08-07 19:05:52 dzuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.15 2001-08-20 19:06:21 dzuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -137,8 +137,8 @@ public class ContainerProcessQueue implements ProcessQueue {
             return;
         
         String sql = new String("insert into queue\n" +
-        "(protocolid, dateadded, containerid)\n" +
-        "values(?, sysdate, ?)");
+        "(protocolid, dateadded, containerid, projectid, workflowid)\n" +
+        "values(?, sysdate, ?, ?, ?)");
         PreparedStatement stmt = null;
         try {
             stmt = c.prepareStatement(sql);
@@ -155,6 +155,8 @@ public class ContainerProcessQueue implements ProcessQueue {
                 
                 stmt.setInt(1, protocolid);
                 stmt.setInt(2, containerid);
+                stmt.setInt(3, item.getProject().getId());
+                stmt.setInt(4, item.getWorkflow().getId());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (SQLException sqlE) {

@@ -117,8 +117,8 @@ public class ConstructProcessQueue implements ProcessQueue {
             return;
         
         String sql = new String("insert into queue\n" +
-        "(protocolid, dateadded, constructid)\n" +
-        "values(?, sysdate, ?)");
+        "(protocolid, dateadded, constructid, projectid, workflowid)\n" +
+        "values(?, sysdate, ?, ?, ?)");
         PreparedStatement stmt = null;
         try {
             stmt = c.prepareStatement(sql);
@@ -135,6 +135,8 @@ public class ConstructProcessQueue implements ProcessQueue {
                 
                 stmt.setInt(1, protocolid);
                 stmt.setInt(2, constructid);
+                stmt.setInt(3, item.getProject().getId());
+                stmt.setInt(4, item.getWorkflow().getId());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (SQLException sqlE) {

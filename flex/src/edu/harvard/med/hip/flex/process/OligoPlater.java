@@ -16,6 +16,7 @@ package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 import java.util.*;
 import java.sql.*;
 import java.io.*;
@@ -51,15 +52,20 @@ public class OligoPlater {
     private FileWriter plateWriter_3op = null;
     private LinkedList fileNameList = new LinkedList();
     
+    private Project project = null;
+    private Workflow workflow = null;
+    
     /**
      * Creates new OligoPlater
      */
-    public OligoPlater(LinkedList oligoPatternList, LinkedList constructList, Connection c)
+    public OligoPlater(LinkedList oligoPatternList, LinkedList constructList,
+    Connection c, Project project, Workflow workflow)
     throws FlexDatabaseException, IOException {
         this.oligoPatternList = oligoPatternList;
         this.constructList = constructList;
         this.conn = c;
-        
+        this.project = project;
+        this.workflow = workflow;
     }
     
     /**
@@ -81,7 +87,7 @@ public class OligoPlater {
         container_5p.updatePlatesetId(platesetId,conn);
         container_3s.updatePlatesetId(platesetId,conn);
         container_3op.updatePlatesetId(platesetId,conn);
-*/        
+ */
         //insert process output: oligo containers
         insertProcessOutput();
         
@@ -98,7 +104,7 @@ public class OligoPlater {
     public LinkedList generateOligoOrderFiles(){
         LinkedList fileList = new LinkedList();
         int numFile = fileNameList.size();
-        System.out.println("Total oligo order files generated: "+numFile);
+        //System.out.println("Total oligo order files generated: "+numFile);
         Iterator iter = fileNameList.iterator();
         
         while (iter.hasNext()){
@@ -122,7 +128,7 @@ public class OligoPlater {
     protected void generateOligoOrder() throws FlexDatabaseException, IOException{
         String oligo5p = null;
         String oligo3s = null;
-        String oligo3op = null;        
+        String oligo3op = null;
         int cdsLength = 0;
         boolean done = false;
         
@@ -133,7 +139,7 @@ public class OligoPlater {
         
         // Sort oligos in ascending order of CDS length.
         OligoPattern[] geneArray = new OligoPattern[0];
-        geneArray = (OligoPattern[]) oligoPatternList.toArray(geneArray);  
+        geneArray = (OligoPattern[]) oligoPatternList.toArray(geneArray);
         
         //System.out.println("Sorting.");
         Arrays.sort(geneArray,comparator);
@@ -217,11 +223,11 @@ public class OligoPlater {
                     
                 }
                 
-                System.out.println("The lower well is : "+well);
+                //System.out.println("The lower well is : "+well);
                 
                 // Output lower gene.
                 currentGene = geneArray[currentGeneIndex];
-                System.out.println("The lower gene index is: "+ currentGeneIndex);
+                //System.out.println("The lower gene index is: "+ currentGeneIndex);
                 
                 // generate three oligo sample objects and insert into sample table
                 // also a record for each oligo sample is inserted into containercell table
@@ -259,18 +265,18 @@ public class OligoPlater {
                 plateWriter_3op.write(oligoSample_3op.getPosition()+"\n");
                 
                 ++well; //the upper well
-                System.out.println("The upper well number is: "+ well);
+                //System.out.println("The upper well number is: "+ well);
                 // check whether plate is full
                 if (relativeUpperIndex > lastGeneIndexOfPlate-firstGeneIndexOfPlate) {
-                    System.out.println("plate full.  relativeUpperIndex is: "+ relativeUpperIndex);
-                    System.out.println("Total genes on plate: "+ (lastGeneIndexOfPlate-firstGeneIndexOfPlate));
+                    //System.out.println("plate full.  relativeUpperIndex is: "+ relativeUpperIndex);
+                    //System.out.println("Total genes on plate: "+ (lastGeneIndexOfPlate-firstGeneIndexOfPlate));
                     wellsDone = true;
                     continue;
                 }
                 
                 // Output upper gene.
                 int upper_index = firstGeneIndexOfPlate + relativeUpperIndex;
-                System.out.println("next upper gene index is: "+ upper_index);
+                //System.out.println("next upper gene index is: "+ upper_index);
                 currentGene = geneArray[firstGeneIndexOfPlate + relativeUpperIndex];
                 
                 // generate three oligo sample objects and insert them into the sample table
@@ -310,6 +316,7 @@ public class OligoPlater {
                 
             } //inner while to fill oligo plate wells
             
+            //System.out.println("Update oligo plates.");
             updateOligoPlates();
             
             plateWriter_5p.flush();
@@ -320,13 +327,13 @@ public class OligoPlater {
             plateWriter_3op.close();
             
             //move to next set of plates, generate a new set of plates
-            currentGeneIndex += 46; //this number will be increased by 1 at the beginning of the loop            
-            System.out.println("next plate start gene index: "+(currentGeneIndex+1));
+            currentGeneIndex += 46; //this number will be increased by 1 at the beginning of the loop
+            //System.out.println("next plate start gene index: "+(currentGeneIndex+1));
             
             //check whether all genes in the array are processed
             if ((currentGeneIndex + 1) >= numGenes) {
                 done = true;
-                System.out.println("Finished plating oligos.");
+                //System.out.println("Finished plating oligos.");
             } //if
             
         } //outter while to fill oligo plates
@@ -393,9 +400,9 @@ public class OligoPlater {
         container_3s.setThreadid(threadid);
         container_3op.setThreadid(threadid);
         
-        System.out.println("5p oligo plate label: "+ label_5p);
-        System.out.println("3s oligo plate label: "+ label_3s);
-        System.out.println("3op oligo plate label: "+ label_3op);
+        //System.out.println("5p oligo plate label: "+ label_5p);
+        //System.out.println("3s oligo plate label: "+ label_3s);
+        //System.out.println("3op oligo plate label: "+ label_3op);
         
     }
     
@@ -457,8 +464,8 @@ public class OligoPlater {
      * insert process execution io for "generate oligo order" protocol
      */
     private void insertProcessInput() throws FlexDatabaseException {
-        
-        Protocol protocol = new Protocol("generate oligo orders");
+        //System.out.println("insert process input record...");
+        Protocol protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
         Researcher r = new Researcher();
         String status = "S"; //SUCCESS
         String extraInfo = "";
@@ -467,9 +474,9 @@ public class OligoPlater {
         r = new Researcher(userId);
         
         // insert process execution record into process execution table
-        process = new Process(protocol,status,r);
+        process = new Process(protocol,status,r, project, workflow);
         
-        //  System.out.println("Generate oligo orders Execution ID: "+ process.getExecutionid());
+        //System.out.println("Generate oligo orders Execution ID: "+ process.getExecutionid());
         
         //Insert one process input records for each output construct design (two per sequence)
         ListIterator iter = constructList.listIterator();
@@ -492,6 +499,7 @@ public class OligoPlater {
      * insert the output oligo plates to process object table
      */
     private void insertProcessOutput() throws FlexDatabaseException {
+        //System.out.println("insert process output record...");
         //insert the container output object
         String ioType = "O";
         ContainerProcessObject platepo_5p =
@@ -509,20 +517,28 @@ public class OligoPlater {
      * insert "receive oligo plates" queue record for each plate created
      */
     private void insertReceiveOligoQueue() throws FlexDatabaseException {
-        Protocol protocol = new Protocol("receive oligo plates");
+        //System.out.println("insert receive oligo queue record...");
+        Protocol protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
+        Vector nextProtocols = workflow.getNextProtocol(protocol);
         
         ContainerProcessQueue containerQueue = new ContainerProcessQueue();
-        QueueItem queueItem = null;
-        LinkedList containerQueueItemList = new LinkedList();
-        queueItem = new QueueItem(container_5p, protocol);
-        containerQueueItemList.add(queueItem);
-        queueItem = new QueueItem(container_3s, protocol);
-        containerQueueItemList.add(queueItem);
-        queueItem = new QueueItem(container_3op, protocol);
-        containerQueueItemList.add(queueItem);
         
-        //System.out.println("Adding receive oligo plates to queue...");
-        containerQueue.addQueueItems(containerQueueItemList, conn);
+        Iterator iter = nextProtocols.iterator();
+        while(iter.hasNext()) {
+            Protocol nextProtocol = (Protocol)iter.next();
+            LinkedList containerQueueItemList = new LinkedList();
+            
+            QueueItem queueItem = null;
+            queueItem = new QueueItem(container_5p, protocol, project, workflow);
+            containerQueueItemList.add(queueItem);
+            queueItem = new QueueItem(container_3s, protocol, project, workflow);
+            containerQueueItemList.add(queueItem);
+            queueItem = new QueueItem(container_3op, protocol, project, workflow);
+            containerQueueItemList.add(queueItem);
+            
+            //System.out.println("Adding receive oligo plates to queue...");
+            containerQueue.addQueueItems(containerQueueItemList, conn);
+        }
     } //insertReceiveOligoQueue
     
     /**
@@ -530,11 +546,13 @@ public class OligoPlater {
      */
     protected void removeOrderOligoQueue() throws FlexDatabaseException {
         
-        Protocol protocol = new Protocol("generate oligo orders");
+        Protocol protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
         
         String sql = "DELETE FROM queue\n" +
         "WHERE protocolid = "+ protocol.getId()  + "\n" +
-        "AND constructid = ?";
+        "AND constructid = ?" + "\n" +
+        "AND workflowid = "+workflow.getId()+"\n"+
+        "AND projectid = "+project.getId();
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);

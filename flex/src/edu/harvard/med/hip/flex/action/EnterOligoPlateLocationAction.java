@@ -82,14 +82,14 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
                 container.setLocation(oligoPlateLocation);
                 container.updateLocation(locationid, conn);
               //  addOligoPlate2List(container);
-                System.out.println("update the location for container: "+container.getLabel());
+              //  System.out.println("update the location for container: "+container.getLabel());
                                   
                 container = (Container)iter.next();
                 pset = Plateset.findPlateset(container);
                 
                 if (!found(platesetList, pset)){
                     platesetList.add(pset);
-                    System.out.println("next platesetid is: "+ pset.getId());
+                    //System.out.println("next platesetid is: "+ pset.getId());
                 } //if
                 
             } //while
@@ -99,7 +99,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             container.updateLocation(locationid, conn);
             removeReceiveOligoQueue(containerList,conn);
             DatabaseTransaction.commit(conn);
-            System.out.println("update the location for last container: "+container.getLabel());
+            //System.out.println("update the location for last container: "+container.getLabel());
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
@@ -110,13 +110,13 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             //check plateset to see whether all of the oligo plates
             //belong to the same plateset have been received
             ListIterator iter = platesetList.listIterator();
-            System.out.println("Total plateset received: "+ platesetList.size());
+            //System.out.println("Total plateset received: "+ platesetList.size());
             while (iter.hasNext()){
                 Plateset plateset = (Plateset)iter.next();
                 boolean complete = checkPlateset(plateset);
                 
                 if (complete) {
-                    System.out.println("inserting generate PCR plate queue...");
+                    //System.out.println("inserting generate PCR plate queue...");
                     insertPCRQueue(plateset, conn);
                //     removeReceiveOligoQueue(containerList, conn);
                     DatabaseTransaction.commit(conn);
