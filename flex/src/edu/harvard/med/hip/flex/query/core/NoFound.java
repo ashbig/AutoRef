@@ -22,6 +22,7 @@ public class NoFound {
     public static final String NO_MATCH_GENBANK_ENTRY = "No match genbank entry found";
     public static final String UNKNOWN = "Unknown";
     public static final String INVALID_GI = "Invalid GI";
+    public static final String INVALID_BLAST = "Cannot parse blast output";
     
     /** Creates a new instance of NoFound */
     public NoFound() {
