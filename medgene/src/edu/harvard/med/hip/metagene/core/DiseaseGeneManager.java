@@ -721,7 +721,7 @@ public class DiseaseGeneManager {
         
         String sql = "select mr.pubmedid from medline_records mr, disease_list dl " +
                      "where dl.disease_mesh_term = mr.disease_index " +
-                     "and dl.hip_disease_id = ? and mr.gene_index = ? ";
+                     "and dl.hip_disease_id = ? and mr.gene_index = ? order by mr.pubmedid desc";
         try{
             pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, disease_id);
