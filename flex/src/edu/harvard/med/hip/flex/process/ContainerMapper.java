@@ -9,8 +9,7 @@
 
 package edu.harvard.med.hip.flex.process;
 
-import java.util.PropertyResourceBundle;
-import java.util.MissingResourceException;
+import java.util.Properties;
 import java.io.*;
 
 import edu.harvard.med.hip.flex.process.FlexProcessException;
@@ -21,18 +20,35 @@ import edu.harvard.med.hip.flex.process.FlexProcessException;
  * @version 
  */
 public class ContainerMapper {
-//    public final static String containerTypeFile = "E:\\flexDev/flex/src/edu/harvard/med/hip/flex/process/ContainerType.properties";
-    public final static String containerTypeFile = "edu/harvard/med/hip/flex/process/ContainerType.properties";
+    public final static String containerTypeFile = "E:\\flexDev/flex/src/edu/harvard/med/hip/flex/process/ContainerType.properties";
+//    public final static String containerTypeFile = "edu/harvard/med/hip/flex/process/ContainerType.properties";
     
-    PropertyResourceBundle containerType = null;
+//    PropertyResourceBundle containerType = null;
+    Properties containerType = null;
     
     /** Creates new ContainerMapper */
-    public ContainerMapper() throws FlexProcessException {
-        
+/*
+    public ContainerMapper() throws FlexProcessException {      
         try {
             InputStream fis = ClassLoader.getSystemResourceAsStream(containerTypeFile);            
             containerType = new PropertyResourceBundle(fis);
             fis.close ();
+        } catch (Exception ex) {
+            throw new FlexProcessException(
+            "Problem loading ContainerType Property File : "       
+            + ex.getMessage());
+        }   
+    }
+*/
+
+    public ContainerMapper() throws FlexProcessException {      
+        try {
+            FileInputStream fis = new FileInputStream(containerTypeFile);  
+            containerType = new Properties();
+            containerType.load(fis);
+            fis.close ();
+        } catch (IOException ex) {
+            System.out.println(ex);
         } catch (Exception ex) {
             throw new FlexProcessException(
             "Problem loading ContainerType Property File : "       
@@ -46,8 +62,8 @@ public class ContainerMapper {
      * @param processname The name of the processname.
      * @return The container type.
      */    
-    public String getContainerType(String processname) throws MissingResourceException {
-        return (containerType.getString(processname));
+    public String getContainerType(String processname) {
+        return (containerType.getProperty(processname));
     }
 
     public static void main(String [] args) {
@@ -61,8 +77,6 @@ public class ContainerMapper {
                 System.out.println("Testing static method getContainerType - ERROR");
         } catch (FlexProcessException e) {
             System.out.println(e);
-        } catch (MissingResourceException e) {
-            System.out.println(e);
-        }
+        } 
     }
 }

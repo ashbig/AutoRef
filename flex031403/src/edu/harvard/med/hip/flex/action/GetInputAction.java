@@ -7,6 +7,9 @@
 package edu.harvard.med.hip.flex.action;
 
 import java.util.LinkedList;
+import java.util.MissingResourceException;
+import java.util.Vector;
+import java.util.Enumeration;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -34,7 +37,13 @@ import edu.harvard.med.hip.flex.form.GetProcessPlateInputForm;
  * @version 
  */
 public class GetInputAction extends ResearcherAction{
-
+    public final static String CORRECT = "Correct";
+    public final static String MUL_W_CORRECT = "Multiple with correct";
+    public final static String EMPTY = "EMPTY";
+    public final static String MANY = "Many";
+    public final static String FEW = "Few";
+    public final static String GOOD = "G";
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -82,22 +91,23 @@ public class GetInputAction extends ResearcherAction{
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-       
-        // Create the new plate and samples.
-        Container container = (Container)item.getItem();
-        String type = Container.getType(protocol.getProcessname());
-        Location sLocation = null;
-        Location dLocation = null;
-        Container newContainer = null;
-        
+
+        Connection conn = null;
         try {
-            sLocation = new Location(sourceLocation);
-            dLocation = new Location(destLocation);
-            String newBarcode = Container.getBarcode(protocol.getProcesscode(), container.getPlatesetid(), getSubThread(sourcePlate));        
-            newContainer = new Container(type, dLocation, newBarcode);
+            // Create the new plate and samples.
+            Container container = (Container)item.getItem();
+            ContainerMapper mapper = new ContainerMapper();
+            String type = mapper.getContainerType(protocol.getProcessname());
+        
+            Location sLocation = new Location(sourceLocation);
+            Location dLocation = new Location(destLocation);
+            String newBarcode = Container.getLabel(protocol.getProcesscode(), container.getPlatesetid(), getSubThread(sourcePlate));        
+            Container newContainer = new Container(type, dLocation, newBarcode);
+            container.restoreSample();
+            Vector samples = mappingSamples(container, protocol);
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
-            Connection conn = t.requestConnection();
+            conn = t.requestConnection();
         
             // Remove the container from the queue.
             LinkedList newItems = new LinkedList();
@@ -105,21 +115,31 @@ public class GetInputAction extends ResearcherAction{
             ContainerProcessQueue queue = new ContainerProcessQueue();
             //queue.removeQueueItems(newItems, conn);
         
-       
-            DatabaseTransaction.closeConnection(conn);
+        
+        request.getSession().setAttribute("oldContainer", container); 
+        request.getSession().setAttribute("newContainer", newContainer);  
+        request.getSession().setAttribute("sLocation", sLocation);
+        request.getSession().setAttribute("dLocation", dLocation);
+        request.getSession().setAttribute("samples", samples);
+        return (mapping.findForward("success"));
+        
+            
         } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         } catch (FlexCoreException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
+        } catch (FlexProcessException ex) {
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
+        } catch (MissingResourceException ex) {
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
-        
-        request.getSession().setAttribute("oldContainer", container); 
-        request.getSession().setAttribute("newContainer", newContainer);  
-        request.getSession().setAttribute("sLocation", sLocation);
-        request.getSession().setAttribute("dLocation", dLocation);
-        return (mapping.findForward("success"));
+
     }
  
     // Validate the source plate barcode.
@@ -144,5 +164,49 @@ public class GetInputAction extends ResearcherAction{
     private String getSubThread(String barcode) {
         int index = barcode.indexOf("-")+1;
         return (barcode.substring(index));
+    }
+    
+    // Creates the new samples from the samples of the previous plate.
+    private Vector mappingSamples(Container container, Protocol protocol) throws FlexDatabaseException { 
+//        String processname = protocol.getProcessname();
+        Vector newSamples = new Vector();
+        String type;
+        Vector oldSamples = container.getSamples();
+        Enumeration enum = oldSamples.elements();
+        while(enum.hasMoreElements()) {
+            Sample s = (Sample)enum.nextElement();
+            
+            if("CONTROL_POSITIVE".equals(s.getType())) {
+                type = "CONTROL_POSITIVE";
+            } else if("CONTROL_NEGATIVE".equals(s.getType())) {
+                type = "CONTROL_NEGATIVE";
+            } else if("GEL".equals(s.getType())) {
+                type = getSampleType(container, s, protocol);
+            } else if("TRANSFORMATION".equals(s.getType())) {
+                type = getSampleType(container, s, protocol);
+            } else {
+                type = Sample.getType(protocol.getProcessname());
+            }
+            
+            Sample newSample = new Sample(type, s.getPosition(), s.getContainerid(), s.getOligoid(), GOOD);
+            newSamples.addElement(newSample);
+        }
+        
+        return newSamples;
+    }
+    
+    private String getSampleType(Container container, Sample s, Protocol protocol) throws FlexDatabaseException {
+        String type = null;
+        edu.harvard.med.hip.flex.process.Process p = 
+        edu.harvard.med.hip.flex.process.Process.findProcess(container, protocol);
+        Result result = Result.findResult(s, p);
+        if(CORRECT.equals(result.getValue()) || MUL_W_CORRECT.equals(result.getValue())
+            || MANY.equals(result.getValue()) || FEW.equals(result.getValue())) {
+            type = Sample.getType(protocol.getProcessname());
+        } else {
+            type = EMPTY;
+        }
+        
+        return type;
     }
 }
