@@ -75,6 +75,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
         request.getSession().removeAttribute("EnterOligoPlateAction.fivepOligoD");
         request.getSession().removeAttribute("EnterOligoPlateAction.threepOpenD");
         request.getSession().removeAttribute("EnterOligoPlateAction.threepClosedD");
+        request.getSession().removeAttribute("EnterOligoPlateAction.templatePlate");
         
         // Get the workflow and project from the form and store in request.
         int workflowid = ((CreatePCRPlateForm)form).getWorkflowid();
@@ -92,6 +93,19 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 
                 if((threepClosedPlate == null) || (threepClosedPlate.trim().length()<1)) {
                     errors.add("threepClosedPlate", new ActionError("error.plate.invalid.barcode", threepClosedPlate));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+            }
+            
+            String templatePlate = null;
+            if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW) {
+                templatePlate = ((CreatePCRPlateForm)form).getTemplatePlate();
+                
+                if((templatePlate == null) || (templatePlate.trim().length()<1)) {
+                    errors.add("templatePlate", new ActionError("error.plate.invalid.barcode", templatePlate));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
                 }
             }
             
@@ -122,19 +136,29 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                     mgc = ps.getMgcContainer();
                 } catch (Exception ex) {}
                 
-                if(mgc != null) {
-                    template = Container.findTemplateFromRearrayedMgc(mgc);
-                    if(template == null) {
-                        errors.add("fivepPlate", new ActionError("error.mgc.template.unavailable"));
+                if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
+                    if(mgc != null) {
+                        template = Container.findTemplateFromRearrayedMgc(mgc);
+                        if(template == null) {
+                            errors.add("fivepPlate", new ActionError("error.mgc.template.unavailable"));
+                            saveErrors(request, errors);
+                            return (new ActionForward(mapping.getInput()));
+                        }
+                    }
+                    
+                    if(mgc == null) {
+                        errors.add("fivepPlate", new ActionError("error.mgc.rearray.notfound"));
                         saveErrors(request, errors);
                         return (new ActionForward(mapping.getInput()));
                     }
                 }
                 
-                if(mgc == null) {
-                    errors.add("fivepPlate", new ActionError("error.mgc.rearray.notfound"));
-                    saveErrors(request, errors);
-                    return (new ActionForward(mapping.getInput()));
+                if(Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
+                    if(mgc == null) {
+                        errors.add("templatePlate", new ActionError("error.mgc.template.unavailable"));
+                        saveErrors(request, errors);
+                        return (new ActionForward(mapping.getInput()));
+                    }
                 }
             }
             
@@ -145,6 +169,10 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 ((CreatePCRPlateForm)form).setThreepClosedSourceLocation(threepClosed.getLocation().getId());
             }
             
+            if(Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname()) && mgc != null) {
+                ((CreatePCRPlateForm)form).setTemplatePlateLocation(mgc.getLocation().getId());
+            }
+            
             // Get all the locations.
             Vector locations = Location.getLocations();
             
@@ -153,6 +181,10 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             
             if(threepClosed != null) {
                 request.getSession().setAttribute("EnterOligoPlateAction.threepClosed", threepClosed);
+            }
+            
+            if(Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname()) && mgc != null) {
+                request.getSession().setAttribute("EnterOligoPlateAction.templatePlate", mgc);
             }
             
             request.getSession().setAttribute("EnterOligoPlateAction.locations", locations);
@@ -197,6 +229,11 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 Vector oldContainers = new Vector();
                 oldContainers.addElement(fivep);
                 oldContainers.addElement(threepOpen);
+                
+                if(mgc != null) {
+                    oldContainers.addElement(mgc);
+                }
+                
                 Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
                 Container pcrOpen = (Container)newContainers.elementAt(0);
                 
@@ -206,6 +243,9 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                     oldContainers = new Vector();
                     oldContainers.addElement(fivep);
                     oldContainers.addElement(threepClosed);
+                    if(mgc != null) {
+                        oldContainers.addElement(mgc);
+                    }
                     Vector newContainers2 = mapper.doMapping(oldContainers, protocol, project, workflow);
                     pcrClosed = (Container)newContainers2.elementAt(0);
                 }

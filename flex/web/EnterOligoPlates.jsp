@@ -43,6 +43,13 @@
     </tr>
     </logic:notEqual>
 
+    <logic:equal name="workflowid" value="7">
+    <tr>
+    <td class="prompt">Enter MGC template plate barcode:</td>
+    <td><html:text property="templatePlate" size="40"/></td>
+    </tr>
+    </logic:equal>
+
     <tr>
     <td class="prompt">Select protocol:</td>
     <td><html:select property="subProtocolName">

@@ -46,6 +46,13 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
         String newContainerType = getContainerType(protocol.getProcessname());
         Container c1 = (Container)containers.elementAt(0);
         Container c2 = (Container)containers.elementAt(1);
+        Container c3 = null;
+        
+        if(containers.size() > 2) {
+            c3 = (Container)containers.elementAt(2);
+            c3.restoreSample();
+        }
+        
         String projectCode = getProjectCode(project, workflow);
         
         // Get the new container barcode.
@@ -59,8 +66,9 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
                   
         Container newContainer = new Container(newContainerType, null, newBarcode, c1.getThreadid());
         c1.restoreSample();
-        c2.restoreSample();       
-        mappingSamples(c1, c2, newContainer, protocol); 
+        c2.restoreSample();    
+
+        mappingSamples(c1, c2, c3, newContainer, protocol); 
         
         Vector newContainers = new Vector();
         newContainers.addElement(newContainer);
@@ -68,7 +76,7 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
     }   
     
     // Creates the new samples from the samples of the previous plate.
-    protected void mappingSamples(Container c1, Container c2, Container newContainer, Protocol protocol) throws FlexDatabaseException { 
+    protected void mappingSamples(Container c1, Container c2, Container c3, Container newContainer, Protocol protocol) throws FlexDatabaseException { 
         try {
             String type;
      
@@ -90,6 +98,12 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
                 newContainer.addSample(newSample);
                 sampleLineageSet.addElement(new SampleLineage(s1.getId(), newSample.getId()));
                 sampleLineageSet.addElement(new SampleLineage(s2.getId(), newSample.getId()));
+                
+                Sample s3 = null;
+                if(c3 != null) {
+                    s3 = c3.getSample(i+1);
+                    sampleLineageSet.addElement(new SampleLineage(s3.getId(), newSample.getId()));
+                }
             }
         } catch (FlexCoreException e) {
             throw new FlexDatabaseException(e.getMessage());

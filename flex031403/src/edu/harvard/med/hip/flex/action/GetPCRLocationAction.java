@@ -68,6 +68,7 @@ public class GetPCRLocationAction extends ResearcherAction{
         int threepClosedSourceLocation = ((CreatePCRPlateForm)form).getThreepClosedSourceLocation();
         int pcrOpenLocation = ((CreatePCRPlateForm)form).getPcrOpenLocation();
         int pcrClosedLocation = ((CreatePCRPlateForm)form).getPcrClosedLocation();
+        int templatePlateLocation = ((CreatePCRPlateForm)form).getTemplatePlateLocation();
         
         // Get the workflow and project from the form and store in request.
         int workflowid = ((CreatePCRPlateForm)form).getWorkflowid();
@@ -83,6 +84,11 @@ public class GetPCRLocationAction extends ResearcherAction{
             if(pcrClosedLocation != 0) {
                 pcrClose = new Location(pcrClosedLocation);
             }
+         
+            Location templateLocation = null;
+            if(templatePlateLocation != 0) {
+                templateLocation = new Location(templatePlateLocation);
+            }
             
             Location fivepLocation = new Location(fivepSourceLocation);
             Location threepOpenLocation = new Location(threepOpenSourceLocation);
@@ -96,6 +102,7 @@ public class GetPCRLocationAction extends ResearcherAction{
             Container fivep = (Container)request.getSession().getAttribute("EnterOligoPlateAction.fivep");
             Container threepOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepOpen");
             Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
+            Container templatePlate = (Container)request.getSession().getAttribute("EnterOligoPlateAction.templatePlate");
             
             pcrOpenContainer.setLocation(pcrOpen);
             
@@ -109,6 +116,9 @@ public class GetPCRLocationAction extends ResearcherAction{
             if(threepClosed != null) {
                 threepClosed.setLocation(threepClosedLocation);
             }
+            
+            if(templatePlate != null)
+                templatePlate.setLocation(templateLocation);
             
             return (mapping.findForward("success"));
         } catch (Exception ex) {

@@ -53,6 +53,15 @@
     </tr>
     </logic:present>
 
+    <logic:present name="EnterOligoPlateAction.templatePlate">
+    <tr>
+    <td class="label">MGC template plate barcode:</td>
+    <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.templatePlate" property="id"/>"><bean:write name="EnterOligoPlateAction.templatePlate" property="label"/></a></td>
+    <td class="label">Location:</td>
+    <td><bean:write name="EnterOligoPlateAction.templatePlate" property="location.type"/></td>
+    </tr>
+    </logic:present>
+
     <tr>
     <td class="label">Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>

@@ -28,6 +28,9 @@
     <logic:present name="queueItem" property="item.threepClosedContainer">
     <td><bean:write name="queueItem" property="item.threepClosedContainer.label"/></td>
     </logic:present>
+    <logic:present name="queueItem" property="item.mgcContainer">
+    <td><bean:write name="queueItem" property="item.mgcContainer.label"/></td>
+    </logic:present>
 </flex:row>
 </logic:iterate>
 </table>

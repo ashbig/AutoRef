@@ -71,6 +71,21 @@
     </tr>
     </logic:present>
 
+    <logic:present name="EnterOligoPlateAction.templatePlate">
+    <tr>
+    <td class="label">MGC template plate barcode:</td>
+    <td><bean:write name="EnterOligoPlateAction.templatePlate" property="label"/></td>
+    <td class="prompt">Location:</td>
+    <td><html:select property="templatePlateLocation">
+        <html:options
+        collection="EnterOligoPlateAction.locations"
+        property="id"
+        labelProperty="type"
+        />
+        </html:select></td>
+    </tr>
+    </logic:present>
+
     <tr>
     <td class="label">Fusion PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>
