@@ -144,7 +144,7 @@ public class ConstructGenerator {
             
             //create the OligoPattern object and store it in a linked list
             pattern = new OligoPattern(oligoID_5p, oligoID_3s, oligoID_3op,
-            result_5p.getSequence(), result_3s.getSequence(), result_3op.getSequence(),
+            result_5p.getGatewayOligoSequence("5p"), result_3s.getGatewayOligoSequence("3p"), result_3op.getGatewayOligoSequence("3p"),
             close.getId(), open.getId(), cdsLength);
             oligoPatternList.add(pattern);
         } //while
