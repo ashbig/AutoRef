@@ -27,10 +27,29 @@ insert into nametype values('PATHWAYS');
 insert into nametype values('PRIMARY_FUNCTION');    
 insert into nametype values('RATING');              
 insert into nametype values('STRUCTURE_FEATURE');   
-insert into nametype values('LOCUS_ID');            
+insert into nametype values('LOCUS_ID'); 
+           insert into nametype values('GENOME_LOCATION');  
 insert into nametype values('MGC_ID');              
 insert into nametype values('IMAGE_ID');            
 insert into nametype values('RZPD_CLONEID');  
+insert into nametype values('COG');                 
+insert into nametype values('ORF_STATUS');    
+insert into nametype values('ORF_TYPE');            
+insert into nametype values('PID');                 
+insert into nametype values('PRODUCT');             
+insert into nametype values('SEQUENCE_TYPE');       
+insert into nametype values('STRAND');              
+insert into nametype values('SUGEN_ID');            
+insert into nametype values('SUGEN_SYMBOL');        
+insert into nametype values('SYNONYM');             
+insert into nametype values('TIGER_ID'); 
+
+
+
+
+
+
+
 
 insert into sampletype values ('ISOLATE');             
 insert into sampletype values ('DNA');                 
@@ -139,7 +158,6 @@ insert into config_parameter_name (paramname) values ('FS_S_POLM');
 insert into config_parameter_name (paramname) values ('FS_TRANC_POLM');
 
 insert into config_parameter_name (paramname) values ('FS_NSTART_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_NSTART_PASS_H');
 insert into config_parameter_name (paramname) values ('FS_NSTART_PASS_L');
 insert into config_parameter_name (paramname) values ('FS_NSTART_FAIL_H');
 insert into config_parameter_name (paramname) values ('FS_NSTART_FAIL_L');
@@ -209,43 +227,25 @@ insert into config_parameter_name (paramname) values ('ER_3S_L');
 insert into config_parameter_name (paramname) values ('ER_3DI_L');
 insert into config_parameter_name (paramname) values ('ER_3DI_H');
 
-insert into config_parameter_name (paramname) values ('ER_NSTART_PASS_H');
+
 insert into config_parameter_name (paramname) values ('ER_NSTART_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_NSTART_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_NSTART_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_NSTART_FAIL_L');
 insert into config_parameter_name (paramname) values ('ER_NSTOP_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_NSTOP_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_NSTOP_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_NSTOP_FAIL_L');
 insert into config_parameter_name (paramname) values ('ER_NCDS_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_NCDS_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_NCDS_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_NCDS_FAIL_L');
 insert into config_parameter_name (paramname) values ('ER_NFRAME_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_NFRAME_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_NFRAME_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_NFRAME_FAIL_L');
 insert into config_parameter_name (paramname) values ('ER_NINFRAME_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_NINFRAME_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_NINFRAME_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_NINFRAME_FAIL_L');
 insert into config_parameter_name (paramname) values ('ER_N5SUB_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_N5SUB_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_N5SUB_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_N5SUB_FAIL_L');
 insert into config_parameter_name (paramname) values ('ER_N5INS_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_N5INS_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_N5INS_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_N5INS_FAIL_L');
 insert into config_parameter_name (paramname) values ('ER_N3SUB_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_N3SUB_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_N3SUB_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_N3SUB_FAIL_L');
 insert into config_parameter_name (paramname) values ('ER_N3INS_PASS_H');
 insert into config_parameter_name (paramname) values ('ER_N3INS_PASS_L');
-insert into config_parameter_name (paramname) values ('ER_N3INS_FAIL_H');
-insert into config_parameter_name (paramname) values ('ER_N3INS_FAIL_L');
 
 
 insert into config_parameter_name (paramname) values ('FS_5S_PASS_H');
@@ -320,7 +320,65 @@ values (vectorid.nextval,'5p Short Pseudomonas linker','CCAACTTTGTACAAAAAAGCAGGC
 insert into linker (linkerid, name,sequence)
 values (vectorid.nextval,'3p Short Pseudomonas linker','-GACCCAGCTTTCTTGTACAAAGTGGT');                                         
         
+//----------------------------
+insert into linker (linkerid, name,sequence)
+values (vectorid.nextval,'5p Yersinia linker','-GTACAAAAAAGCAGGCTCCACC');                             
+insert into linker (linkerid, name,sequence)
+values (vectorid.nextval,'3p Yersinia linker','-CACCCAGCTTTCTTGTAC');                                         
+     
+insert into vector (vectorid, vectorname, source,vectortype,
+VECTORFILENAME ,VECTORFILEPATH )
+values (vectorid.nextval,'pDONR221','Invitrogen', 1,'pdonr221_map.pdf','vector/');
 
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid)
+values (vectorid.nextval,'recombination site','attP1',          -1,         
+(select vectorid from vector where  vectorname='pDONR221'))   ;  
+
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid)
+values (vectorid.nextval,'antibiotic selection marker' ,'KanR',           0, 
+(select vectorid from vector where  vectorname='pDONR221'))   ;
+
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid)
+values (vectorid.nextval,'antibiotic marker', 'CmR (reverse orientation)',-1,  
+(select vectorid from vector where  vectorname='pDONR221'))    ;   
+
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid)
+values (vectorid.nextval,'origin of replication',  'pUC ori',        0,      
+(select vectorid from vector where  vectorname='pDONR221'))     ;   
+
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid)
+values (vectorid.nextval,'recombination site','attP2',          -1,     
+(select vectorid from vector where  vectorname='pDONR221'))      ; 
+
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid)
+values (vectorid.nextval,'death gene',        'ccdB',           -1,    
+(select vectorid from vector where  vectorname='pDONR221'))       ;
+
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid)
+values (vectorid.nextval,'sequencing priming site','M13 Reverse',    0,   
+(select vectorid from vector where  vectorname='pDONR221'))     ;
+
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid)
+values (vectorid.nextval,'sequencing priming site','M13 Forward',    0,  
+(select vectorid from vector where  vectorname='pDONR221'));
+
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'M13F','-GTAAAACGACGGCCAG',0);
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'M13R','-CAGGAAACAGCTATGAC',0);
+
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation,leaderlength)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR221'),
+(select primerid from commonprimer where name='M13R'),
+3,
+-1,78);
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation,leaderlength)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR221'),
+(select primerid from commonprimer where name='M13F'),
+5,
+1,78);
+
+//--------------------------------------------------------
 
 //for yeast
 insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'Waugh','TCGCGTTAACGCTAGCATGGATCTCG',2);
