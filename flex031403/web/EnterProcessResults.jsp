@@ -46,7 +46,7 @@
         <td><html:text property="plateBarcode"/></td>
     </tr>
     <tr>
-       <td class="prompt"><bean:message key="flex.researcher.barcode.prompt"/>:</td>
+       <td class="prompt"><bean:message key="flex.researcher.barcode.prompt"/></td>
        <td><html:text property="researcherBarcode"/></td>
     </tr>
     </table>
