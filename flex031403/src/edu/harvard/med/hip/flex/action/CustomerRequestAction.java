@@ -71,7 +71,8 @@ public class CustomerRequestAction extends FlexAction {
             if(requests.size() > 0) {
                 request.getSession().setAttribute("customerRequest", requests);
             }
-        
+ 
+            request.getSession().setAttribute("species", FlexDefPopulator.getData("species"));
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {            
             return (mapping.findForward("success"));
