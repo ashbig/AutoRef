@@ -112,6 +112,12 @@ public class ExpressionCloneContainer extends CloneContainer {
             stmt = conn.prepareStatement(sql);
             for(int i=0; i<samples.size(); i++) {
                 ExpressionCloneSample cs = (ExpressionCloneSample)samples.get(i);
+                if(Sample.CONTROL_NEGATIVE.equals(cs.getType()) 
+                || Sample.CONTROL_POSITIVE.equals(cs.getType())
+                || Sample.EMPTY.equals(cs.getType())) {
+                    continue;
+                }
+                
                 stmt.setInt(1, cs.getCloneid());
                 stmt.setString(2, cs.getAuthor());
                 stmt.setDate(3, java.sql.Date.valueOf(cs.getStartdate()));

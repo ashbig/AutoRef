@@ -86,7 +86,13 @@ public class GetStrategyAction extends ResearcherAction {
         }
         
         Vector samples = ((CloneContainer)containers.get(0)).getSamples();
-        CloneSample sample = (CloneSample)samples.get(0);
+        CloneSample sample = null;
+        if(samples.size() == 1) {
+            sample = (CloneSample)samples.get(0);
+        } else {
+            sample = (CloneSample)samples.get(1);
+        }
+        
         int strategyid = sample.getStrategyid();
         CloningStrategy strategy = null;
         try {
@@ -97,7 +103,7 @@ public class GetStrategyAction extends ResearcherAction {
         }
         
         if(strategy == null) {
-            request.setAttribute(Action.EXCEPTION_KEY, "strategy is null");
+            request.setAttribute(Action.EXCEPTION_KEY, new Exception("strategy is null"));
             return (mapping.findForward("error"));
         }
         

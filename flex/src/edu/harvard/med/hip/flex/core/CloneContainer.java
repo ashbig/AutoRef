@@ -103,6 +103,12 @@ public class CloneContainer extends Container{
             stmt = conn.prepareStatement(sql);
             for(int i=0; i<samples.size(); i++) {
                 CloneSample cs = (CloneSample)samples.get(i);
+                if(Sample.CONTROL_POSITIVE.equals(cs.getType())
+                || Sample.CONTROL_NEGATIVE.equals(cs.getType())
+                || Sample.EMPTY.equals(cs.getType())) {
+                    continue;
+                }
+                
                 stmt.setInt(1, cs.getCloneid());
                 stmt.setString(2, cs.getClonename());
                 stmt.setString(3, cs.getClonetype());
