@@ -113,7 +113,8 @@ public class ColonyPickLogFileParser {
                                 pick = Integer.parseInt(ignore);
                             }
                             
-                            if(number == 8) {
+                            //if(number == 8) {
+                            if(number == 7) {
                                 barcode = ignore;
                             }
                         }
