@@ -54,7 +54,7 @@ public class MgcPrintNewLabelsForm {
      *
      * @param action name.
      */
-    public void setRequestid(String action) {  this.action = action;  }
+    public void setAction(String action) {  this.action = action;  }
     
     
 
