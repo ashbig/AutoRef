@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.17 2003-10-08 14:33:42 Elena Exp $
+ * $Id: Container.java,v 1.18 2003-10-10 01:09:11 Elena Exp $
  *
  * File     	: Container.java
 
@@ -915,9 +915,13 @@ public class Container
         {
             
             s = (Sample)m_samples.get(ind);
+
           //  if (s.getType().equals("EMPTY"))                System.out.print(s.getPosition()+" ");
+
             s.insert(conn);
+
           //  System.out.println("insert "+s.getPosition());
+
         }
     }
     
@@ -1526,7 +1530,7 @@ public class Container
       {
         String sql = "select position, type,orientation, p.primerid as primerid, name, sequence, tm, "
                     +" leaderlength,leadersequence from vectorprimer v, commonprimer p where p.primerid=v.primerid "
-                    +" and vectorprimerid in (select configid from processconfig where "
+                    +" and p.primerid in (select configid from processconfig where "
                     +"configtype = "+Spec.VECTORPRIMER_SPEC_INT +" and processid in "
                     +"(select processid from process_object where objecttype=1 and objectid = "
                     + "(select min(resultid) from result where sampleid in(select sampleid from sample where containerid="+container_id
