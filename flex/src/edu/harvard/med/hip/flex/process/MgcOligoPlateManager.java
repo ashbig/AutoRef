@@ -27,6 +27,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
 {
     protected static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     protected static final String filePath = "/tmp/";
+    //protected static final String filePath = "G:\\";
     protected static final String DELIM = "\t";
     
     private   String                        m_UserName = null;
@@ -306,10 +307,10 @@ public class MgcOligoPlateManager extends OligoPlateManager
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
-            p = new Project(5);
-            w = new Workflow(8);
+            p = new Project(10);
+            w = new Workflow(14);
             
-            MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 94, false, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS), "htaycher");
+            MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 94, true, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS), "htaycher");
             
             System.out.println("About to start thread");
             om.orderOligo();

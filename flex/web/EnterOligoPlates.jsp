@@ -70,6 +70,12 @@
     <td><html:text property="templatePlate" size="40"/></td>
     </tr>
     </logic:equal>
+    <logic:equal name="workflowid" value="14">
+    <tr>
+    <td class="prompt">Enter DNA template plate barcode:</td>
+    <td><html:text property="templatePlate" size="40"/></td>
+    </tr>
+    </logic:equal>
     </logic:equal>
 
     <tr>
