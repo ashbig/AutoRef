@@ -11,6 +11,7 @@ package edu.harvard.med.hip.bec.file;
  * @author  htaycher
  */
 import java.io.*;
+import edu.harvard.med.hip.utility.*;
 
 public class FileOperations
 {
@@ -20,7 +21,12 @@ public class FileOperations
      */
     private final static int BUFFER_SIZE = 1024;
     private final static boolean     m_isSameComputer = false;
-    
+     {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+             m_isSameComputer = true;
+        else
+            m_isSameComputer = false;
+    }
     public static void createDirectory(String directory_path, boolean exsits_exit)   throws Exception
     {
         File directory = new File(directory_path);

@@ -25,21 +25,32 @@ import java.util.*;
 import java.sql.Date;
 import java.io.*;
 import java.math.BigDecimal;
+import edu.harvard.med.hip.utility.*;
 
 public class DiscrepancyFinder
 {
-    public static final int USE_BLAST = 0;
-     public static final int USE_NEEDLE = 1;
-
+   
     //store input & output blast files: do not allow to change
-    private static final String INPUT = "/tmp/";
-    //public static final String OUTPUT = "/needleoutput/";
-    public static final String OUTPUT = "/output/needleoutput/";
+    private  String INPUT = null;
+    public  String OUTPUT = "/output/needleoutput/";
     
     // private static final String LOG_FILE_NAME = "/needleoutput/logfile.txt";
 
-    private static final String LOG_FILE_NAME = "/output/needleoutput/logfile.txt";
-
+    private  String LOG_FILE_NAME = "/output/needleoutput/logfile.txt";
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+        {
+            INPUT = "d:\\tmp\\";
+            OUTPUT = "d:\\output\\needleoutput\\";
+            LOG_FILE_NAME = "d:\\output\\needleoutput\\logfile.txt";
+        }
+        else
+        {
+            INPUT = "/tmp/";
+            OUTPUT = "/needleoutput/";
+            LOG_FILE_NAME = "/needleoutput/logfile.txt";
+        }
+    }
     private SequencePair m_seqpair = null;
     private ArrayList    m_seqpairs = null;
     //one based; this parameters defined as start / stop of ref sequence,
