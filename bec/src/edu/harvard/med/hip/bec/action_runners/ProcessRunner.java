@@ -39,6 +39,8 @@ public abstract class ProcessRunner implements Runnable
     protected int         m_items_type = -1;
     protected User        m_user = null;
     protected ArrayList   m_file_list_reports = null;
+    
+    protected String      m_additional_info =  Constants.LINE_SEPARATOR;
   //  private   String        m_title = null;
     /** Creates a new instance of ProcessRunner */
     public ProcessRunner()
@@ -188,7 +190,8 @@ public abstract class ProcessRunner implements Runnable
                 "Please find attached report file for your request.";
                 if ( m_items != null && m_items.length() > 0)
                     message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
-              
+               if ( m_additional_info != null)
+                   message += m_additional_info;
                  Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
                 "hip_informatics@hms.harvard.edu",title, message , 
                 m_file_list_reports);
@@ -199,6 +202,8 @@ public abstract class ProcessRunner implements Runnable
                 message =  title+  Constants.LINE_SEPARATOR +"Process finished.";
                 if ( m_items != null && m_items.length() > 0)
                     message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
+                if ( m_additional_info != null)
+                   message += m_additional_info;
                  Mailer.sendMessage      ( m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",  "elena_taycher@hms.harvard.edu", title, message);
                      
             }
