@@ -89,7 +89,7 @@ public class RunProcessAction extends ResearcherAction
                 request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+container_labels);
             
                 //parse plate names
-                 master_container_labels = Algorithms.splitString(container_labels.toUpperCase());
+                 master_container_labels = Algorithms.splitString(container_labels);
                
 
                 PlateUploadRunner runner = new PlateUploadRunner();
