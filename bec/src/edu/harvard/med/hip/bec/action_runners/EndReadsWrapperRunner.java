@@ -30,58 +30,65 @@ import edu.harvard.med.hip.bec.user.*;
 public class EndReadsWrapperRunner implements Runnable
 {
     
-      // outputBaseDir specify the base directory for trace file distribution
-    private static final String OUTPUT_BASE_DR = "";
+    // outputBaseDir specify the base directory for trace file distribution
+    private static final String OUTPUT_BASE_ROOT = "/trace_files_root/";
     //inputTraceDir specify the directory where the trace files get dumped from sequencer
-    private static final String SEQUENCHER_BASE_DR = "";
-    //errorDir specify where the error log is stored for trace files failed Phred run
-    private static final String ERROR_BASE_DR = "";
-    //errorDir specify where the error log is stored for trace files failed Phred run
-    private static final String ERROR_BASE_WRONG_FORMAT_FILES = "";
+    private static final String INPUT_BASE_DIR = "/trace_files_dump/";
+    //errorDir specify  the  directory for trace files for controls are stored
+    private static final String CONTROLS_DIR = "controls";
+    //errorDir specify  the directory for  trace files with wrong name
+    private static final String ERROR_WRONG_FORMAT_FILES_DIR = "wrong_format";
+     //errorDir specify the directory for trace files of empty samples are stored
+    private static final String ERROR_EMPTY_SAMPLES_DIR = "empty_samples";
+       // specify the directory for trace files of clones
+    private static final String CLONES_DIR = "clone_samples";
     
     private static final int MAX_ROW_NUMBER = 96*2+1;
+    
+    
     private String      m_outputBaseDir = null;
     private String      m_outputBaseDir_wrongformatfiles = null;
     private String      m_inputTraceDir = null;
-    private String      m_errorDir = null;
+    private String      m_control_samples_directory = null;
     private String      m_empty_samples_directory = null;
     private ArrayList   m_error_messages = null;
     private User        m_user = null;
+    
     /** Creates a new instance of EndReadsWrapperRunner */
     public EndReadsWrapperRunner()
     {
         m_error_messages = new ArrayList();
+         m_outputBaseDir =  OUTPUT_BASE_ROOT+CLONES_DIR;
+        m_inputTraceDir =  INPUT_BASE_DIR;
+        m_control_samples_directory =  OUTPUT_BASE_ROOT + CONTROLS_DIR;
+        m_outputBaseDir_wrongformatfiles =OUTPUT_BASE_ROOT +ERROR_WRONG_FORMAT_FILES_DIR;
+        m_empty_samples_directory =OUTPUT_BASE_ROOT+ERROR_EMPTY_SAMPLES_DIR;
     }
     
     public ArrayList getErrorMessages(){ return m_error_messages;}
     public String      getOuputBaseDir (){ return m_outputBaseDir  ;}
     public String      getOuputBaseWrongFormat (){ return m_outputBaseDir_wrongformatfiles  ;}
     public String      getInputDir (){ return m_inputTraceDir  ;}
-    public String      getErrorDir (){ return m_errorDir  ;}
+    public String      getControlSamplesDir (){ return m_control_samples_directory  ;}
     public String      getEmptySamplesDir (){ return m_empty_samples_directory  ;}
 
      public  void        setUser(User v)    {m_user=v;}
     public void      setOuputBaseDir (String v){  m_outputBaseDir  = v;}
     public void      setOuputBaseWrongFormat (String v){  m_outputBaseDir_wrongformatfiles  = v;}
     public void      setInputDir (String v){  m_inputTraceDir  = v;}
-    public void      setErrorDir (String v){  m_errorDir  = v;}
+    public void      setControlSamplesDir (String v){  m_control_samples_directory  = v;}
     public void      setEmptySamplesDir (String v){  m_empty_samples_directory  = v;}
    
     public void run()
     {
-       // String baseDir ="c:\\bio\\phred\\try";//"c:\\trace_dump"; //
-       // String traceDir = "c:\\bio\\phred\\out";//"c:\\clone_files";//
-       // String errorDir = "c:\\bio\\phred\\err";//"c:\\error_files";//
-       // String dr ="c:\\bio\\phred\\err";//"c:\\contol_files_new";//
-       // String dr_empty ="c:\\bio\\phred\\empty";//"c:\\empty_files";//
-    
          Connection  conn =null;
-         ArrayList error_messages = null;
+         TraceFilesDistributor tfb = new TraceFilesDistributor();
          try
          {
                 conn = DatabaseTransaction.getInstance().requestConnection();
-                 TraceFilesDistributor tfb = new TraceFilesDistributor();
-                tfb.distributeNotActiveChromatFiles(m_inputTraceDir,  m_outputBaseDir_wrongformatfiles, m_empty_samples_directory);
+                 
+                tfb.distributeNotActiveChromatFiles(m_inputTraceDir,  m_outputBaseDir_wrongformatfiles, m_empty_samples_directory,m_control_samples_directory);
+                m_error_messages.addAll( tfb.getErrorMesages());
                 tfb.setIsInnerReads(false); 
                 //run clones
                    //process only end reads that are exspected
@@ -91,11 +98,11 @@ public class EndReadsWrapperRunner implements Runnable
                     if (expected_chromat_file_names.size() == 0)   break; ;
                     //distribute chromat files 
                     tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
-                    ArrayList chromat_files_names = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir,m_outputBaseDir_wrongformatfiles, m_empty_samples_directory);
-                    runPhredandParseOutput( chromat_files_names,  m_error_messages, conn);
+                    ArrayList chromat_files_names = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir);
+                    m_error_messages.addAll( tfb.getErrorMesages());
+                    runPhredandParseOutput( chromat_files_names,   conn);
                 }
-                    //run phred and parse output
-                m_error_messages = tfb.getErrorMesages();
+                
           } 
         catch(Exception e)  
        {}
@@ -159,16 +166,16 @@ public class EndReadsWrapperRunner implements Runnable
             return res;
         } catch (Exception sqlE)
         {
-            throw new BecDatabaseException("Error occured while getting fil names: "+"\n"+sqlE+"\nSQL: "+sql);
+            m_error_messages.add("Error occured while getting file names: "+"\n"+sqlE+"\nSQL: "+sql);
+            throw new BecDatabaseException("Error occured while getting file names: "+"\n"+sqlE+"\nSQL: "+sql);
         } finally
         {
             DatabaseTransactionLocal.closeResultSet(rs);
         }
     }
-    private ArrayList runPhredandParseOutput(ArrayList file_names, ArrayList error_messages, Connection conn)
+    private void runPhredandParseOutput(ArrayList file_names, Connection conn)
     {
-        ArrayList reads = new ArrayList();
-       
+      
         PhredWrapper prwrapper = new PhredWrapper();
         prwrapper.setTrimType(PhredWrapper.TRIMMING_TYPE_PHRED_ALT);
         Read read = null;
@@ -181,20 +188,19 @@ public class EndReadsWrapperRunner implements Runnable
             {
                 //create file structure and distribute trace file into chromat_dir
                 read = prwrapper.run(new File(traceFile_name) );
-               if (read != null) processRead(read, conn, error_messages);//reads.add(read);
+               if (read != null) processRead(read, conn);//reads.add(read);
             }
             catch(Exception e)
             {
-                e.printStackTrace();
-                error_messages.add("Error occurred while running phred on " + traceFile_name);
+                //e.printStackTrace();
+                m_error_messages.add("Error occurred while running phred on " + traceFile_name);
             }
             
         } // for
-        return reads;
-        
+       
     }//processPipeline
     
-    private void processRead(Read read, Connection conn, ArrayList error_messages)
+    private void processRead(Read read, Connection conn)
     {
         int[] istr_info = new int[2];int resultid =-1;
         FileReference filereference = null;
@@ -237,7 +243,7 @@ public class EndReadsWrapperRunner implements Runnable
           catch(Exception e)
           {
               System.out.println("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
-              error_messages.add("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
+              m_error_messages.add("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
           }
     }
 
