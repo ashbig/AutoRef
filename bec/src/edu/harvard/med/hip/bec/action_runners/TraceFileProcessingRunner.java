@@ -47,6 +47,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
         {
              INPUT_DIR = "F:\\Sequences for BEC\\files_to_transfer";
              OUTPUT_DIR = "d:\\trace_files_dump";
+              if (IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
+             {
+                  OUTPUT_DIR = "d:\\eval_trace_files_dump";
+             }
         }
     }
     
@@ -181,7 +185,6 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 sequencing_facility_plate =  (String)plate_names.get(0);
                 hip_name =(String)plate_names.get(1);
                plate_map.put( sequencing_facility_plate, hip_name);
-    //    System.out.println(sequencing_facility_plate +" "+ hip_name);        
             }
             fin.close();
             return plate_map;
@@ -244,10 +247,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
               hip_file_entry = (NamingFileEntry)file_entries.get(file_key);
               if (hip_file_entry == null) continue;
               hip_file_entry.setOrientation(original_file_info.getOrientation());
-              file_name = createHipFileName( hip_file_entry, original_file_info);
+              file_name = createHipFileName( hip_file_entry);
               if ( original_file_info.getVersion() != null) file_name+="."+original_file_info.getVersion();
-              file_name+="."+original_file_info.getExtension();
-             
+             file_name+="."+original_file_info.getExtension();
              renaming_file_entries.add(original_file_info.getFileName()+"\t"+file_name);
           }
          
@@ -296,7 +298,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 file_names = Algorithms.splitString(line, "\t");
                 filename_org = m_inputdir + File.separator + (String)file_names.get(0);
                 filename_dest= m_outputdir + File.separator + (String)file_names.get(1);
-               System.out.println(filename_org+" "+filename_dest);
+             //  System.out.println(filename_org+" "+filename_dest);
                 try
                 {
                     dest_file = new File(filename_dest);
@@ -365,21 +367,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
          {
              if (m_read_type.equals( Constants.READ_TYPE_INTERNAL_STR ))
              {
-                 if ( m_sequencing_facility == SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC )
-                 {
-                     conn = DatabaseTransaction.getInstance().requestConnection();
-                     sql = "select position, cloneid as flexcloneid, o.oligocontainerid as containerid, flexsequenceid , o.label as label "
-                     +"  from flexinfo f,  oligosample s , oligocontainer o "
-                     +" where f.flexcloneid = s.CLONEID and  o.oligocontainerid = s.oligocontainerid   and label in ("+label+")";
-
-                 }
-                 else
-                 {
-                      conn = DatabaseTransactionLocal.getInstance(DatabaseTransactionLocal.FLEX_url , DatabaseTransactionLocal.FLEX_username, DatabaseTransactionLocal.FLEX_password).requestConnection();
-                      sql="select sequenceid as flexsequenceid, flexcloneid,containerposition as position, "
-                      +" sampletype, s.containerid as containerid from constructdesign d, sample s, containerheader c "
-                      +" where label='"+label+"' and c.containerid=s.containerid and s.constructid=d.constructid(+)";
-                 }
+                  conn = DatabaseTransactionLocal.getInstance(DatabaseTransactionLocal.FLEX_url , DatabaseTransactionLocal.FLEX_username, DatabaseTransactionLocal.FLEX_password).requestConnection();
+                  sql="select sequenceid as flexsequenceid, flexcloneid,containerposition as position, "
+                  +" sampletype, s.containerid as containerid from constructdesign d, sample s, containerheader c "
+                  +" where label='"+label+"' and c.containerid=s.containerid and s.constructid=d.constructid(+)";
              }
              else if (  m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR))
              {
@@ -455,7 +446,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
      }
     */
      
-     private String createHipFileName(NamingFileEntry entry,  SequencingFacilityFileName original_file_info) 
+     private String createHipFileName(NamingFileEntry entry) 
      {
          String fn = "";
          if (  m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR) )
@@ -465,18 +456,8 @@ public class TraceFileProcessingRunner extends ProcessRunner
          }
          else if (  m_read_type.equals( Constants.READ_TYPE_INTERNAL_STR) )
          {
-             if (m_sequencing_facility == SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC )
-             {
-                 //5236_H12_JLJK_OPLATE000333_A01_R_082.ab1	jPlateNumber_joplatewell__flexsequenceid_cloneid_R/F1.ab1
-                 fn = original_file_info.getAdditionalInfo()+"_"+original_file_info.getWellName() +
-                 "_"+ entry.getSequenceId() +"_"+entry.getCloneID()+"_"+original_file_info.getOrientation() +"1";
-                
-             }
-             else
-             {
-                  entry.setReadNum(1);
-                  fn = entry.getNamingFileEntyInfo();
-             }
+              entry.setReadNum(1);
+              fn = entry.getNamingFileEntyInfo();
          }
          return fn;
      }
@@ -488,13 +469,13 @@ public class TraceFileProcessingRunner extends ProcessRunner
     {   try
          {
           TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
-runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
-runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
-runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
-runner.setInputDirectory("E:\\Sequences for BEC\\Tularensis\\test");
-runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Tularensis\\test\\mapping.txt"));
-runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-
+          runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
+            runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
+            runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD);
+            runner.setInputDirectory("E:\\Sequences for BEC\\processing_questions\\test");
+runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\files_to_transfer\\plate_mapping.txt"));
+     runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+       
            
          //         runner.setReadDirection("F");
              //       runner.setReadType("I");

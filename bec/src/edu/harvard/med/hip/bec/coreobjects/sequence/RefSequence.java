@@ -554,6 +554,44 @@ public class RefSequence extends BaseSequence
         }
       
      }
+     
+    public static RefSequence getByCloneId(int cloneid, boolean isIncludePublicInfo)throws Exception
+    {
+        String sql="select  refsequenceid as sequenceid from sequencingconstruct where constructid in "
++" (select constructid from isolatetracking where isolatetrackingid in "
++" (select isolatetrackingid from flexinfo where flexcloneid = "+cloneid+"))";
+        return getByRule(sql,isIncludePublicInfo);
+    }
+    
+    private static RefSequence getByRule(String sql, boolean isIncludePublicInfo)throws Exception
+    {
+        RefSequence seq = null;
+        DatabaseTransaction t = null;
+        CachedRowSet crs = null;
+        
+        try
+        {
+            t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            
+            if(crs.next())
+            {
+                int id = crs.getInt("SEQUENCEID");
+                seq = new RefSequence(id, isIncludePublicInfo);
+            }
+            return seq;
+        } 
+        catch (Exception e)
+        {
+            throw new Exception ("Cannot get Reference sequence by rule :"+sql);
+        } 
+        finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+        
+    }
     //__________________________________________________________________________
     
     public static void main(String [] args)

@@ -316,7 +316,11 @@ public abstract class Spec
         if (param == null) param="not set";
         return param;
     }    
-    
+    public String       getParameterByName(String param_name)
+    { 
+        String param = (String)m_params.get(param_name);
+        return param;
+    }   
     //---------------------------
       //cleans up not neaded parameters submitted by html form
      protected abstract void cleanup_parameters()  ;

@@ -113,7 +113,16 @@ else if (sets.size() > 0 )
 <TR><TD COlspan=2>&nbsp</TD></TR>
 <tr> 
     <td bgColor="#b8c6ed"><b><font color="#000080">Sequence Trimming Type:</font></b> </td>
-    <td bgColor="#b8c6ed"><%= spec.getParameterByNameString("SW_TRIM_TYPE" )%></td>
+    <td bgColor="#b8c6ed">
+<% int trim_type = spec.getParameterByNameInt("SW_TRIM_TYPE" );
+    String title = "";
+   if (trim_type == SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW_NODISC)
+        title = "Moving Window with extension for no discrepancies regions";
+    else if (trim_type == SlidingWindowTrimmingSpec.TRIM_TYPE_NONE )
+        title = "No Trimming";
+    else if (trim_type == SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW) 
+        title = "Moving Window";
+%>    <%= title %></td>
   </tr>
 </table>
 

@@ -118,9 +118,13 @@
 <TR><TD COlspan=2>&nbsp</TD></TR>
 <tr> 
     <td bgColor="#b8c6ed"><b><font color="#000080">Sequence Trimming Type:</font></b> </td>
-    <td bgColor="#b8c6ed"><input name="SW_TRIM_TYPE" type="text" 
-    id="SW_TRIM_TYPE"     value="<%= SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW_NODISC %>"  ></td>
-  </tr>
+    <td bgColor="#b8c6ed">
+<SELECT NAME='SW_TRIM_TYPE' id='SW_TRIM_TYPE'>
+    <OPTION VALUE='<%= SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW_NODISC %>'>Moving Window with extension for no discrepancies regions
+    <OPTION VALUE='<%= SlidingWindowTrimmingSpec.TRIM_TYPE_NONE  %>'>No Trimming
+    <OPTION VALUE='<%= SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW  %>'>Moving Window
+</select>  </td>
+</tr>
    
   <tr><td>&nbsp;</td></tr>
   <tr><td colspan="2">

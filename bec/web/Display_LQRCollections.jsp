@@ -91,7 +91,7 @@ for (int index = 0; index < items.size(); index ++)
 <td   ><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <%= str_collection.getCloneSequenceId() %></a></strong></td></TR>
 <tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Analysis Status: </strong></td>
 <td >&nbsp </td></tr>
-<tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Id: </strong></td>
+<tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Aligment: </strong></td>
 <td   >
 <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId() %>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= str_collection.getRefSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"></td></tr>
 

@@ -109,6 +109,14 @@ public class CloningStrategy
        
         return getByRule( sql) ;
     }
+     public static CloningStrategy getByCloneId(int cloneid)throws BecDatabaseException
+    {
+        String sql = "  where strategyid in ( select cloningstrategyid from sequencingconstruct where constructid in"
++" (select constructid from isolatetracking where isolatetrackingid in "
++" ( select isolatetrackingid from flexinfo where flexcloneid in ("+cloneid+"))))";
+       
+        return getByRule( sql) ;
+    }
     
     public static int getCloningStrategyIdByVectorLinkerInfo(int vectorid, int linker3id, int linker5id,String start,String fusionstop,String openstop)throws BecDatabaseException
     {

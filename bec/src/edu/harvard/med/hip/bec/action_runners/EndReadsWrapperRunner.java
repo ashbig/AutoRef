@@ -39,6 +39,11 @@ public class EndReadsWrapperRunner extends ProcessRunner
         {
              OUTPUT_BASE_ROOT = "d:/trace_files_root/";
              INPUT_BASE_DIR = "d:/trace_files_dump/";
+             if (IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
+             {
+                  OUTPUT_BASE_ROOT = "d:/eval_trace_files_root/";
+                  INPUT_BASE_DIR = "d:/eval_trace_files_dump/";
+             }
         }
             
         else

@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.26 2004-04-14 17:42:15 Elena Exp $
+ * $Id: Container.java,v 1.27 2004-08-26 15:32:41 Elena Exp $
  *
  * File     	: Container.java
 
@@ -35,7 +35,8 @@ public class Container
   //  public static final String TYPE_ER_CONTAINER = "ER_CONTAINER";
     public static final String TYPE_SEQUENCING_CONTAINER = "SEQUENCING_CONTAINER";
     public static final String TYPE_OLIGO_CONTAINER = "OLIGO_CONTAINER";
-  
+    
+    public static final int CONTAINER_STATUS_FINISHED = 1;
     
     private int         m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private String      m_type = null;
@@ -307,7 +308,7 @@ public class Container
             case Constants.PROCESS_RUN_ISOLATE_RUNKER:
             {
                 
-                 sql = "select distinct label,containerid from containerheader where containerid in "
+                 sql = "select distinct label,containerid from containerheader where status <> "+CONTAINER_STATUS_FINISHED+" and containerid in "
                 + " (select containerid from sample where sampleid in "
                 + " (select sampleid from isolatetracking where status in ("+IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED+
                 ","+IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED +","+ IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH 

@@ -481,7 +481,7 @@ public abstract class Mutation
                             report.append("<td "+ row_color+" > "+ rm.toHTMLString()+"</td>");
                             if (rna_count== 0)
                                 report.append("<td "+ row_color +" rowspan="+rna_discrepancies.size()+" >"+ ((AAMutation)discr_definition.getAADefinition()).toHTMLString() +"</td>");
-                            report.append(" <td  align='center'"+ row_color +">"+ rm.getPolymorphismFlagAsString()+"</td>");  
+                            report.append(" <td  align='center'"+ row_color +"><b>"+ rm.getPolymorphismFlagAsString()+"</b></td>");  
                             report.append(" <td  align='center'"+ row_color +">"+ rm.getQualityAsString()+"</td>");  
                             report.append("</tr> "); 
                         }
@@ -1208,6 +1208,18 @@ public abstract class Mutation
     }
     
  
+    public static ArrayList getDiscrepanciesBySequenceType(ArrayList discrepancies, int dicrepancy_type)  throws BecDatabaseException
+    {
+        ArrayList discrepancies_of_requested_type = new ArrayList();
+        Mutation mut = null;
+        for(int i = 0; i < discrepancies.size(); i++)
+        {
+            mut = (Mutation)discrepancies.get(i);
+            if (mut.getType() == dicrepancy_type)
+                discrepancies_of_requested_type.add( mut );
+        }
+        return discrepancies_of_requested_type;
+    }
     public static ArrayList sortDiscrepanciesByPosition(ArrayList discrepancies)
     {
         ArrayList result = new ArrayList();

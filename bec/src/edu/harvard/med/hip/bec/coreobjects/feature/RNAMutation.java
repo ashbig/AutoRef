@@ -175,9 +175,9 @@ public class RNAMutation extends Mutation {
     { 
         switch (m_polymorphismflag)
         {
-            case FLAG_POLYM_YES : return  "+";
-            case FLAG_POLYM_NO : return  "-";
-            case FLAG_POLYM_NOKNOWN : return  "?";
+            case FLAG_POLYM_YES : return  "Y";
+            case FLAG_POLYM_NO : return  "N";
+            case FLAG_POLYM_NOKNOWN : return  "N/A";
             default: return "?";
         }
     }  
