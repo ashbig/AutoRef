@@ -161,6 +161,42 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_PELONG_PASS_L");
              }
+             case Mutation.TYPE_LINKER_5_SUBSTITUTION  : 
+                   {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("FS_5S_PASS_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("FS_5S_PASS_L");
+             }
+             case Mutation.TYPE_LINKER_3_SUBSTITUTION  :  
+             {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("FS_3S_PASS_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("FS_3S_PASS_L");
+             }
+             case Mutation.TYPE_LINKER_5_INS_DEL  :   
+             {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("FS_5DI_PASS_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("FS_5DI_PASS_L");
+             }
+             case Mutation.TYPE_LINKER_3_INS_DEL  :   
+             {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("FS_3DI_PASS_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("FS_3DI_PASS_L");
+             }
              default: return CUT_OFF_VALUE_NOT_FOUND;
          }
         

@@ -96,7 +96,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_C_L");
              }
-             case Mutation.TYPE_RNA_NONSENSE:
+             
              case Mutation.TYPE_AA_NONCONSERVATIVE :
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
@@ -130,6 +130,7 @@ public class EndReadsSpec extends Spec
              }
              case Mutation.TYPE_RNA_INFRAME_STOP_CODON :
              case Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON :
+             case Mutation.TYPE_RNA_NONSENSE:
              case Mutation.TYPE_AA_TRUNCATION:
              case Mutation.TYPE_RNA_TRANCATION:
              {
@@ -157,6 +158,42 @@ public class EndReadsSpec extends Spec
                  }
                  else 
                      return this.getParameterByNameInt("ER_PLONG_L");
+             }
+             case Mutation.TYPE_LINKER_5_SUBSTITUTION  : 
+                   {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("ER_5S_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("ER_5S_L");
+             }
+             case Mutation.TYPE_LINKER_3_SUBSTITUTION  :  
+             {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("ER_3S_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("ER_3S_L");
+             }
+             case Mutation.TYPE_LINKER_5_INS_DEL  :   
+             {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("ER_5DI_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("ER_5DI_L");
+             }
+             case Mutation.TYPE_LINKER_3_INS_DEL  :   
+             {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("ER_3DI_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("ER_3DI_L");
              }
              default: return PENALTY_NOT_DEFINED;
          }
