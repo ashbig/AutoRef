@@ -146,6 +146,9 @@
             <forward name="display_discrepancyreport" path="/DiscrepancyReport.jsp"/>
             <forward name="display_scoredsequence_details" path="/ScoredSequenceDisplay.jsp"/>
             <forward name="display_needle_alignment" path="/NeedleAlignment.jsp"/>
+            <forward name="display_isolate_ranker_report" path="/ContainerQualityReport.jsp"/>
+             <forward name="display_sample_isolate_ranker_report" path="/SampleReport.jsp"/>
+            <forward name="display_read_report" path="/ReadReport.jsp"/>
 </action>
 
  

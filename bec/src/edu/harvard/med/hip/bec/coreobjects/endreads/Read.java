@@ -139,7 +139,10 @@ public class Read
     {
         return (Read)getReadByRule("readID="+id).get(0);
     }
-    
+    public static Read getReadByReadSequenceId(int id  )throws BecDatabaseException
+    {
+        return (Read)getReadByRule("readsequenceID="+id).get(0);
+    }
     public void insert(Connection conn) throws BecDatabaseException
     {
         Statement stmt = null;
@@ -269,7 +272,24 @@ public class Read
      public int         getCdsStart(){ return m_cdsstart ;}
     public int         getCdsStop(){ return m_cdsstop ;}
     
-    
+    public String       getTypeAsString()
+    {
+        switch (m_type)
+        {
+            case  TYPE_ENDREAD_REVERSE : return "Reverse";
+            case  TYPE_ENDREAD_REVERSE_FAIL : return "Reverse Fail";
+            case  TYPE_ENDREAD_REVERSE_NO_MATCH : return "Reverse No Match";
+            case  TYPE_ENDREAD_REVERSE_SHORT : return "Reverse Short";
+            case  TYPE_NOT_SET : return "Not set";
+            case  TYPE_ENDREAD_FORWARD_SHORT : return "Forward Short";
+            case  TYPE_ENDREAD_FORWARD_NO_MATCH : return "Forward No Match";
+            case  TYPE_ENDREAD_FORWARD_FAIL : return "Forward Fail";
+            case  TYPE_ENDREAD_FORWARD : return "Forward";
+            case  TYPE_INNER_REVERSE : return "Reverse Inner";
+            case  TYPE_INNER_FORWARD : return "Forward Inner";
+            default : return "";
+        }
+    }
    public void         setId(int v){  m_id  = v;}
     public void         setIsolateTrackingId(int v){  m_isolatetrackingid  = v;} 
 
@@ -424,9 +444,28 @@ public class Read
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //####################################
         if ( length_to_normalize == 0)
-            return Constants.SCORE_NOT_CALCULATED_NO_DISCREPANCIES;
+            return 0;
         score = (int) score ;
         return -score;
+    }
+    
+    
+     //get not amb read
+    public boolean isPassAmbiquoutyTest(FullSeqSpec cutoff_spec) throws BecDatabaseException
+    {
+        
+        //check for number of ambiques bases
+       int amb_bases_100base = 0;
+       String read_sequence_text = getTrimmedSequence();
+       int[] res = BaseSequence.analizeSequenceAmbiquty(read_sequence_text);
+       //check if boundry conditions reached
+       amb_bases_100base = (int)( res[0] / read_sequence_text.length());
+       if ( amb_bases_100base < cutoff_spec.getMaximumNumberOfAmbiquousBases() || 
+            res[1] < cutoff_spec.getNumberOfConsequativeAmbiquousBases())
+       {
+           return true;
+       }
+       return false;
     }
     
     //define length of refsequence covered by read
@@ -614,9 +653,25 @@ public class Read
             //  System.out.println(r.getTrimmedScores());
                
    
- 
-   
-r = Read.getReadById(19847);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
+ Read read =  Read.getReadByReadSequenceId(3003);
+   int containerid = BaseSequence.getContainerId(3003, BaseSequence.READ_SEQUENCE);
+   edu.harvard.med.hip.bec.coreobjects.oligo.Oligo[] oligos = Container.findEndReadsOligos(containerid);
+   boolean  isCompliment = false;
+                if (oligos[0] != null && (read.getType() ==  Read.TYPE_ENDREAD_FORWARD || 
+                            read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL || 
+                            read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH || 
+                            read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT))
+                {
+                       isCompliment = (oligos[0].getOrientation() == edu.harvard.med.hip.bec.coreobjects.oligo.Oligo.ORIENTATION_SENSE);
+                }
+                if (oligos[1] != null && (read.getType() ==  Read.TYPE_ENDREAD_REVERSE || 
+                            read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL || 
+                            read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH || 
+                            read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT))
+                {
+                      isCompliment =( oligos[1].getOrientation() == edu.harvard.med.hip.bec.coreobjects.oligo.Oligo.ORIENTATION_SENSE) ; 
+                }
+//r = Read.getReadById(19847);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
 //r = Read.getReadById(19856);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
 //r = Read.getReadById(19858);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
 //r = Read.getReadById(19862);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());

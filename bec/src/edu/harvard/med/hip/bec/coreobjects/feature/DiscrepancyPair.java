@@ -70,21 +70,52 @@ public class DiscrepancyPair
         ArrayList res2 = assembleDiscrepanciesInPairs(arr2);
         Hashtable discrepancy_positions = new Hashtable();
          DiscrepancyPair pair =  null; 
+         
         for (int count = 0; count < res1.size(); count++)
         {
             pair =  (DiscrepancyPair) res1.get(count);
-            discrepancy_positions.put(new Integer( pair.getRNADiscrepancy().getPosition()), " ");
+            discrepancy_positions.put(new Integer( pair.getRNADiscrepancy().getPosition()), pair);
         }
         
          for (int count = 0; count < res2.size(); count++)
          {
              pair =  (DiscrepancyPair) res2.get(count);
-             if ( !discrepancy_positions.containsKey(new Integer( pair.getRNADiscrepancy().getPosition())))
+             if ( discrepancy_positions.containsKey(new Integer( pair.getRNADiscrepancy().getPosition())))
              {
-                 res1.add(pair);
+                 if ( isMaxDiscrepancy (pair, (DiscrepancyPair)discrepancy_positions.get( new Integer( pair.getRNADiscrepancy().getPosition() ) )))
+                 {
+                    res1.add(pair);
+                 }
              }
+             else
+                 res1.add(pair);
          }
         return res1;
+        
+    }
+    
+    public static ArrayList   getDiscrepancyNoDuplicates(ArrayList arr1)
+    {
+        if (arr1 == null || arr1.size() == 0) return null;
+        ArrayList res = new ArrayList();
+        
+        Hashtable discrepancy_positions = new Hashtable();
+         Mutation mut =  null; 
+         
+        for (int count = 0; count < arr1.size(); count++)
+        {
+            mut =  (Mutation) arr1.get(count);
+            if ( discrepancy_positions.containsKey(new Integer( mut.getPosition())))
+             {
+                 if ( isMaxDiscrepancy (mut, (Mutation)discrepancy_positions.get( new Integer( mut.getPosition() ) )))
+                 {
+                    res.add(mut);
+                 }
+             }
+             else
+                 res.add(mut);
+         }
+        return res;
         
     }
     
@@ -122,4 +153,26 @@ public class DiscrepancyPair
             
             return discrepancies;
     }
+      
+      
+      private static boolean isMaxDiscrepancy(DiscrepancyPair pair_one, DiscrepancyPair pair_two)
+      {
+          if ( pair_one.getRNADiscrepancy().getQuality() > pair_two.getRNADiscrepancy().getQuality())
+          {
+              return true;
+          }
+          
+          return false;
+      }
+       private static boolean isMaxDiscrepancy(Mutation mut_one, Mutation mut_two)
+      {
+          if ( mut_one.getQuality() > mut_two.getQuality())
+          {
+              return true;
+          }
+          
+          return false;
+      }
+
 }
+

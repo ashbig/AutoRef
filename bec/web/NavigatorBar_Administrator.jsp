@@ -60,6 +60,7 @@ dhtmlMenu.addItem(new NavBarMenuItem("Search", ""));
 dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=container Process History"));
 dhtmlMenu.addItem(new NavBarMenuItem("Container Description", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_TITLE%>=container Description"));
 dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_TITLE%>=container Results"));
+<!--dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_ISOLATE_RANKER_REPORT%>&amp;<%=Constants.JSP_TITLE%>=container Isolate Ranker Report")); -->
 dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "/BEC/logon.do"));
 dhtmlMenu.addItem(new NavBarMenuItem("Sample History", "ChipGeneGeneAnalysis_1.jsp"));
 myNavBar1.addMenu(dhtmlMenu);
@@ -120,9 +121,9 @@ function init() {
     <td width="80%"><font color="#3333CC"> 
       <h1><strong>Biological Evaluation of Clones (BEC)</strong></h1>
       </font></td>
-    <td > <img align="top" border="0" src="file:///C|/Program%20Files/Apache%20Tomcat%204.0/webapps/BEC/./jpg/earth.gif" width=76 height="76" > 
+    <td > <img align="top" border="0" src="./jpg/earth.gif" width=76 height="76" > 
     </td>
-    <td><img border="0" src="file:///C|/Program%20Files/Apache%20Tomcat%204.0/webapps/BEC/./jpg/pc&woman.gif"  width=96 height="76" ></td>
+    <td><img border="0" src="./jpg/pc&woman.gif"  width=96 height="76" ></td>
   </tr>
  
  

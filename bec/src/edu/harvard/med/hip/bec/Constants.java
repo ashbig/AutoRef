@@ -155,12 +155,14 @@ public class Constants {
     
     
     public static final int            SCORE_NOT_CALCULATED = 0;
+    public static final int            SCORE_NOT_CALCULATED_NO_DISCREPANCIES = 1;
     public static final int            SCORE_NOT_CALCULATED_FOR_RANK_BLACK = 0;
     
     //process object types
     public static final int            PROCESS_OBJECT_TYPE_RESULT = 1;
     public static final int            PROCESS_OBJECT_TYPE_CONTAINER = 0;
     public static final int            PROCESS_OBJECT_TYPE_CONSTRUCT = 2;
+    public static final int            PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE = 3;
     
     //read quality
     public static final int            NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION = 50;
@@ -213,6 +215,9 @@ public class Constants {
      public static final int SCOREDSEQUENCE_DEFINITION_INT = 11;
        public static final int ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT = 12;
     public static final int READSEQUENCE_NEEDLE_ALIGNMENT_INT = 13;
+    public static final int CONTAINER_ISOLATE_RANKER_REPORT = 14;
+    public static final int SAMPLE_ISOLATE_RANKER_REPORT = 15;
+    public static final int READ_REPORT_INT = 16;
        
        //submit data from file
     public static final String FILE_DESCRIPTION = "file_description";

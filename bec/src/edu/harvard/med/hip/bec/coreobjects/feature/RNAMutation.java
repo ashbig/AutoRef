@@ -274,7 +274,8 @@ public class RNAMutation extends Mutation {
          {
               aa_ori = SequenceManipulation.translateCodonToAminoAcid(m_codon_ori);
              aa_mut = SequenceManipulation.translateCodonToAminoAcid(m_codon_mut);
-             if ( aa_mut.equals("") || aa_ori.equals("") )
+             if ( aa_mut.equals("") || aa_ori.equals("") )// notranslation available 
+                 //not full codon  '  A'
              {
                  return Mutation.TYPE_RNA_SILENT;
              }

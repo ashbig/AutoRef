@@ -138,9 +138,9 @@ int row = 0; int col = 0;System.out.println("l");
          for (int count = 0; count < container.getSamples().size(); count ++)
         {	
                 sample = (Sample)container.getSamples().get(count);
+                String anchor = "<A HREF=\"\" onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT  
+		+ "&amp;ID="+ sample.getId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
                 row = (count ) % rows; col =(int) (count  /rows );
-System.out.println(count +" row "+ row +" col "+ col);
-System.out.println(constructid +" current construct "+ sample.getIsolateTrackingEngine().getConstructId());
                 if (constructid != sample.getIsolateTrackingEngine().getConstructId())
                 {
                         border_index++;
@@ -148,15 +148,15 @@ System.out.println(constructid +" current construct "+ sample.getIsolateTracking
                 }
                 if ( sample.getType().equals("CONTROL_POSITIVE") ||  sample.getType().equals("CONTROL_NEGATIVE"))
 		{
-			cell_data[row][col] =" <td class='control'>"+sample.getPosition()+"</td>";
+			cell_data[row][col] =" <td class='control'><div align=center>"+sample.getPosition()+"</div></td>";
 		}
                 else if ( sample.getType().equals("EMPTY") )
                 {
-                      cell_data[row][col] =" <td class='empty' style="+ borders[border_index]+" >"+sample.getPosition()+"</td>";
+                      cell_data[row][col] =" <td class='empty' style="+ borders[border_index]+" ><div align=center>"+sample.getPosition()+"</div></td>";
                 }
                 else if ( sample.getIsolateTrackingEngine().getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH)
                     {
-                        cell_data[row][col] =" <td class='nomatch' style="+ borders[border_index]+" >"+sample.getPosition()+"</td>";
+                        cell_data[row][col] =" <td class='nomatch' style="+ borders[border_index]+" >"+ anchor + "</td>";
                     }
                 else
                 {
@@ -165,35 +165,35 @@ System.out.println(constructid +" current construct "+ sample.getIsolateTracking
                         {
                                 case 1: 
                                 {
-                                        cell_data[row][col] =" <td class='green' style='" + borders[border_index] +"' >"+sample.getPosition()+"</td>";
+                                        cell_data[row][col] =" <td class='green' style='" + borders[border_index] +"' >"+anchor+"</td>";
                                         break;
                                 }
                                 case 2:
                                 {
-                                        cell_data[row][col] =" <td class='orange' style='"+ borders[border_index] +"' >"+sample.getPosition()+"</td>";
+                                        cell_data[row][col] =" <td class='orange' style='"+ borders[border_index] +"' >"+anchor+"</td>";
                                         break;
 }
                                 case 3:
                                 {
-                                    cell_data[row][col] =" <td class='yellow' style='"+ borders[border_index] +"' >"+sample.getPosition()+"</td>";
+                                    cell_data[row][col] =" <td class='yellow' style='"+ borders[border_index] +"' >"+anchor+"</td>";
                                     break;
                                 }
                                 case 4:
                                 {
-                                    cell_data[row][col] =" <td class='red' style='"+ borders[border_index] +"' >"+sample.getPosition()+"</td>";
+                                    cell_data[row][col] =" <td class='red' style='"+ borders[border_index] +"' >"+anchor+"</td>";
                                     break;
                                 }
                                 case -1://not analized
                                 {
-                                    cell_data[row][col] =" <td class='notanalized' style='"+ borders[border_index] +"' >"+sample.getPosition()+"</td>";
+                                    cell_data[row][col] =" <td class='notanalized' style='"+ borders[border_index] +"' >"+anchor+"</td>";
                                     break;
                                 }
                                 case IsolateTrackingEngine.RANK_BLACK:
-                                    cell_data[row][col] =" <td class='black' style='"+ borders[border_index] +"' >"+sample.getPosition()+"</td>";
+                                    cell_data[row][col] =" <td class='black' style='"+ borders[border_index] +"' >"+anchor+"</td>";
                            }
 
                 }
-System.out.println(cell_data[row][col]);
+//System.out.println(cell_data[row][col]);
                 constructid = sample.getIsolateTrackingEngine().getConstructId();
  }
 	%>
@@ -222,7 +222,8 @@ System.out.println(cell_data[row][col]);
 {
     %> <TR> <%
     for (int count_col = 0; count_col < cols; count_col++)
-    {System.out.println(cell_data[count][count_col]);%>
+    {//System.out.println(cell_data[count][count_col]);
+%>
        <%= cell_data[count][count_col] %>
     <%}
  %> </TR> <%

@@ -51,6 +51,11 @@ public class Result
     
     public static final int RESULT_TYPE_OLIGO_CALCULATION=14;
 
+    public static final int RESULT_TYPE_ASSEMBLED_FROM_END_READS = 20;
+    public static final int RESULT_TYPE_ASSEMBLED_FROM_END_READS_PASS = 21;
+     public static final int RESULT_TYPE_ASSEMBLED_FROM_END_READS_FAIL = 22;
+     
+     
     public static final int RESULT_TYPE_ASSEMBLED_SEQUENCE_PASS =15;
     public static final int RESULT_TYPE_ASSEMBLED_SEQUENCE_FAIL =16;
     
@@ -152,8 +157,11 @@ public class Result
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
     
-            sql = "insert into process_object (processid,objectid,objecttype) values("+process_id+","+m_id+","+Constants.PROCESS_OBJECT_TYPE_RESULT+")";
-            stmt.executeUpdate(sql);
+            if ( m_process_id != BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+            {
+                sql = "insert into process_object (processid,objectid,objecttype) values("+process_id+","+m_id+","+Constants.PROCESS_OBJECT_TYPE_RESULT+")";
+                stmt.executeUpdate(sql);
+            }
             
         } catch (SQLException sqlE)
         {

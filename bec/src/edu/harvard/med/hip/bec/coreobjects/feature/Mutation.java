@@ -11,6 +11,7 @@ import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.programs.blast.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 import java.util.*;
@@ -360,6 +361,40 @@ public abstract class Mutation
         res+="<tr><td>Mutation</td><td>" + getMutationTypeAsString() + "</td></tr>" ;
         return res;
     }
+    
+    public static String HTMLReport(ArrayList discrepancies, int discrepancy_type, boolean isSeparateByQuality)
+    {
+        if (discrepancies == null || discrepancies.size()==0) return "<tr><td colspan=3><strong>No discrepancies</td></tr>";
+        StringBuffer report = new StringBuffer();
+        String line = "";boolean isExists = false;
+        int[][] discrepancy_count  = getDiscrepanciesSeparatedByType( discrepancies,  discrepancy_type,  isSeparateByQuality);
+        for (int j=0; j< 30;j++)
+        {
+            for (int i = 0; i < 2;i++)
+            {
+                line ="<tr><td>"+getMutationTypeAsString(j)+"</td>";
+                isExists = false;
+                if (discrepancy_count[j][i] != 0)
+                {
+                    
+                    if (! isExists) report.append(line);
+                    isExists = true;
+                    report.append("<td>"+discrepancy_count[j][i]+"</td>");
+                    if (i == 0)
+                    {
+                        report.append("<td>Quality: High</td>");
+                    }
+                    else
+                    {
+                        report.append("<td>Quality: Low</td>");
+                    }
+                  
+                }
+                if (isExists) report.append("</tr>");
+            }
+        }
+        return report.toString();
+    }
     //---------------------------------
     public ArrayList   getAllMutations(int id, int owner) throws BecDatabaseException
     {
@@ -552,58 +587,36 @@ public abstract class Mutation
     }
      
     //function counts number of discrepancies of each type
-    public static int[] getDiscrepanciesSeparatedByType(ArrayList discr)
+    public static int[][] getDiscrepanciesSeparatedByType(ArrayList discr, int discrepancy_type, boolean isSeparateByType)
     {
         if (discr == null || discr.size() == 0) return null;
         
-        int res[] = new int[30] ;
+        int res[][] = new int[30][2] ;
         for (int count = 0; count < discr.size(); count++)
         {
             Mutation mut = (Mutation) discr.get(count);
-            switch (mut.getChangeType() )
+            if (discrepancy_type != TYPE_NOT_DEFINE && mut.getType() != discrepancy_type ) continue;
+            if (isSeparateByType)
             {
-                case Mutation.TYPE_RNA_INFRAME:                { res[Mutation.TYPE_RNA_INFRAME]++;break;}
-                case Mutation.TYPE_RNA_FRAMESHIFT:                { res[Mutation.TYPE_RNA_FRAMESHIFT]++;break;}
-                case Mutation.TYPE_RNA_INFRAME_DELETION:                { res[Mutation.TYPE_RNA_INFRAME_DELETION]++;break;}
-                case Mutation.TYPE_RNA_INFRAME_INSERTION:                { res[Mutation.TYPE_RNA_INFRAME_INSERTION]++;break;}
-                case Mutation.TYPE_RNA_INFRAME_STOP_CODON:                { res[Mutation.TYPE_RNA_INFRAME_STOP_CODON]++;break;}
-                case Mutation.TYPE_RNA_FRAMESHIFT_DELETION:                { res[Mutation.TYPE_RNA_FRAMESHIFT_DELETION]++;break;}
-                case Mutation.TYPE_RNA_FRAMESHIFT_INSERTION:                { res[Mutation.TYPE_RNA_FRAMESHIFT_INSERTION]++;break;}
-                case Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON:                { res[Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON]++;break;}
-                case Mutation.TYPE_RNA_SILENT:                { res[Mutation.TYPE_RNA_SILENT]++;break;}
-                case Mutation.TYPE_RNA_NONSENSE:                { res[Mutation.TYPE_RNA_NONSENSE]++;break;}
-                case Mutation.TYPE_RNA_MISSENSE :                { res[Mutation.TYPE_RNA_MISSENSE]++;break;}
-                 case  TYPE_RNA_NO_TRANSLATION:  { res[Mutation.TYPE_RNA_NO_TRANSLATION]++;break;}
-            case  TYPE_RNA_POST_ELONGATION :  { res[Mutation.TYPE_RNA_POST_ELONGATION]++;break;}
-             case  TYPE_RNA_TRANCATION :  { res[Mutation.TYPE_RNA_TRANCATION]++;break;}
-             
-                case Mutation.TYPE_AA_NO_TRANSLATION  :                { res[Mutation.TYPE_AA_NO_TRANSLATION]++;break;}
-                case Mutation.TYPE_AA_OUT_OF_FRAME_TRANSLATION  :                { res[Mutation.TYPE_AA_OUT_OF_FRAME_TRANSLATION]++;break;}
-                case Mutation.TYPE_AA_FRAMESHIFT  :                { res[Mutation.TYPE_AA_FRAMESHIFT]++;break;}
-                case Mutation.TYPE_AA_INSERTION  :                { res[Mutation.TYPE_AA_INSERTION]++;break;}
-                case Mutation.TYPE_AA_INSERTION_COMPLEX  :                { res[Mutation.TYPE_AA_INSERTION_COMPLEX]++;break;}
-                case Mutation.TYPE_AA_SILENT  :                { res[Mutation.TYPE_AA_SILENT]++;break;}
-                case Mutation.TYPE_AA_POST_ELONGATION  :                { res[Mutation.TYPE_AA_POST_ELONGATION]++;break;}
-                case Mutation.TYPE_AA_SILENT_CONSERVATIVE  :                { res[ Mutation.TYPE_AA_SILENT_CONSERVATIVE]++;break;}
-                case Mutation.TYPE_AA_TRUNCATION  :                { res[Mutation.TYPE_AA_TRUNCATION]++;break;}
-                case Mutation.TYPE_AA_DELETION  :                { res[Mutation.TYPE_AA_DELETION]++;break;}
-                case Mutation.TYPE_AA_DELETION_COMPLEX  :                { res[Mutation.TYPE_AA_DELETION_COMPLEX]++;break;}
-                case Mutation.TYPE_AA_SUBSTITUTION  :                { res[Mutation.TYPE_AA_SUBSTITUTION]++;break;}
-                case Mutation.TYPE_AA_CONSERVATIVE  :                { res[Mutation.TYPE_AA_CONSERVATIVE]++;break;}
-                case Mutation.TYPE_AA_NONCONSERVATIVE  :                { res[Mutation.TYPE_AA_NONCONSERVATIVE]++;break;}
-                
-                
-                
-                  case TYPE_LINKER_5_SUBSTITUTION :{ res[Mutation.TYPE_LINKER_5_SUBSTITUTION]++;break;}
-                case TYPE_LINKER_3_SUBSTITUTION: { res[Mutation.TYPE_LINKER_3_SUBSTITUTION]++;break;}
-                case TYPE_LINKER_5_INS_DEL : { res[Mutation.TYPE_LINKER_5_INS_DEL]++;break;}
-                case TYPE_LINKER_3_INS_DEL : { res[Mutation.TYPE_LINKER_3_INS_DEL]++;break;}
-                
+                if (mut.getQuality() == Mutation.QUALITY_HIGH || mut.getQuality() == Mutation.QUALITY_NOTKNOWN)
+                {
+                    res[ mut.getChangeType() ][0]++;
+                }
+                else
+                {
+                    res[ mut.getChangeType() ][1]++;
+                }
             }
+            else
+            {
+                res[ mut.getChangeType() ][0]++;
+            }
+             
         }
         return res;
     }
     
+  
     public static Hashtable getDiscrepancySummaryStringDescription(int[] res)
     {
         Hashtable discrepancysummary = new Hashtable();
@@ -913,7 +926,9 @@ public abstract class Mutation
         NeedleResult res_needle = null;
         try
         {
-            
+            Read read = Read.getReadById( 2433);
+           String r =HTMLReport(read.getSequence().getDiscrepancies(), Mutation.RNA, true);  
+         System.out.println(r);
         } catch (Exception e)
         {
             System.out.println(e);

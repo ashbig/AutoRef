@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.9 2003-07-07 21:03:22 Elena Exp $
+ * $Id: Container.java,v 1.10 2003-07-18 19:41:05 Elena Exp $
  *
  * File     	: Container.java
 
@@ -450,7 +450,65 @@ public class Container
                     fl.setFlexCloneId ( crs.getInt("flexcloneid")) ;
 
                     isolatetracking.setFlexInfo(fl);
-                    s.setIsolaterTracking(isolatetracking);
+                    s.setIsolaterTrackingEngine(isolatetracking);
+                    m_samples.add(s);
+                  //  System.out.println(s.getId());
+                }
+            }
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while initializing sample\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            
+            DatabaseTransaction.closeResultSet(crs);
+        }
+         
+    }
+    
+     /**
+     * Get the data from Sample table.
+     *
+     * @exception BecDatabaseException.
+     */
+    public void restoreSampleIsolateNoFlexInfo() throws BecDatabaseException
+    {
+        
+        m_samples.clear();
+        
+        String sql = "select s.sampleid as sampleid, position, constructid, sampletype,rank,score, status, "
+        +" iso.isolatetrackingid as isolatetrackingid from  isolatetracking iso, sample s  "
+        +" where  iso.sampleid=s.sampleid "
+        +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
+        
+   
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        CachedRowSet crs = t.executeQuery(sql);
+         Sample s = null; IsolateTrackingEngine isolatetracking = null;FlexInfo fl = null;
+        try
+        {
+            while(crs.next())
+            {
+                
+               
+                int position = crs.getInt("position");
+                 int sampleid = crs.getInt("sampleid");
+                String sampletype = crs.getString("sampletype");
+                s = new Sample(  sampleid, sampletype, position, m_id);
+                // create isolate tracking for sample
+                if ( crs.getInt("isolatetrackingid") != -1)
+                {
+                    int isolatetracking_id = crs.getInt("isolatetrackingid");
+                    isolatetracking = new IsolateTrackingEngine();
+                    isolatetracking.setRank(crs.getInt("rank")) ;// results of the end read analysis
+                    isolatetracking.setScore(crs.getInt("score"));// results of the end read analysis
+                    isolatetracking.setStatus(crs.getInt("status"));
+                    isolatetracking.setSampleId(sampleid);
+                    isolatetracking.setId(isolatetracking_id);
+                   // sample id of the first sample of this isolate
+                    isolatetracking.setConstructId(crs.getInt("constructid") );// identifies the agar; several (four) isolates will have the same id
+                    s.setIsolaterTrackingEngine(isolatetracking);
                     m_samples.add(s);
                   //  System.out.println(s.getId());
                 }
@@ -1530,12 +1588,11 @@ public class Container
        ArrayList c  = null;Container container =null;
         try
         {
-              container = Container.findContainerDescriptionFromLabel("YGS000360-1");
+              container = Container.findContainerDescriptionFromLabel("YGS000361-3");
             
+             container.restoreSampleIsolateNoFlexInfo();
+             
              int i=container.getCloningStrategyId();
-             int[] result_types = {Result.RESULT_TYPE_ENDREAD_FORWARD,Result.RESULT_TYPE_ENDREAD_FORWARD_PASS, Result.RESULT_TYPE_ENDREAD_FORWARD_FAIL};
-            Oligo[] ol =container.findEndReadsOligos(container.getId());//   .restoreSampleWithResultId(result_types,true);
-            int constructid = -1;Read read = null;
              
         }
         catch(Exception e)

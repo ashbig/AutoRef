@@ -100,7 +100,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
         try
         {
             super.insert(conn);
-           Mutation mut;RNAMutation rna; AAMutation aa;
+          
            insertMutations(conn);
         }
         catch(Exception e)

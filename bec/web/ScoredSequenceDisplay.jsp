@@ -55,7 +55,7 @@
 <% if (request.getAttribute("trimstart") != null)
 {%>
   <TR> 
-    <TD >Trimmer Sequence starts from position:</td>
+    <TD >Trimmed Sequence starts from position:</td>
     <td><%= request.getAttribute("trimstart")%></TD>
   </TR>
 <%}

@@ -14,10 +14,9 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.bec.coreobjects.spec.*;
+
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
-import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
@@ -25,6 +24,7 @@ import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
+import edu.harvard.med.hip.bec.programs.assembler.*;
   import java.util.*;
 /**
  *
@@ -41,6 +41,7 @@ public class tester_run_assembler
     
          // outputBaseDir specify the base directory for trace file distribution
         private static final String INPUT_BASE_DR = "";
+        private static final int MAX_NUMBER_OF_ROWS_TO_RETURN = 200;
     
         private ArrayList   i_master_container_ids = null;//get from form
         private String      i_phrap_params_file = null;
@@ -58,30 +59,84 @@ public class tester_run_assembler
         {
       // The database connection used for the transaction
             Connection conn = null;
-            ArrayList files = new ArrayList();
+            ArrayList process_clones = new ArrayList();
             ArrayList sequences = new ArrayList();
             i_error_messages = new ArrayList();
+            int min_result_id = 1;
+            boolean isLastRecord = false;
             try
             {
                 // conncection to use for transactions
                 conn = DatabaseTransaction.getInstance().requestConnection();
       
           //process only sequences  that are exspected
-                ArrayList expected_sequence_definition = getExspectedSequenceDescriptions(conn, i_result_type);
-        
-                if (expected_sequence_definition.size() == 0)
-                    return ;
-        //run assembler and return sequences
-                sequences = runAssemblerandParseOutput( expected_sequence_definition,  i_error_messages, conn);
-        // put sequences into db
-                insertSequences(sequences,  i_error_messages,  conn);
+                while (isLastRecord)
+                {
+                    ArrayList expected_sequence_definition = getExspectedSequenceDescriptions(conn, i_result_type, min_result_id);
+
+                    if (expected_sequence_definition.size() == 0)      return ;
+                    CloneAssembly clone_data = null;
+                    SequenceDescription sequence_definition = null;
+                    CloneSequence clone_sequence = null;
+                    for (int count = 0; count < expected_sequence_definition.size(); count ++)
+                    {
+                        sequence_definition= ( SequenceDescription)expected_sequence_definition.get(count);
+                        try
+                        {
+                           clone_data = assembleSequence( sequence_definition );
+                           clone_sequence = insertSequence(sequence_definition, clone_data, conn );
+                           IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_WITH_SUCESS,
+                                                                sequence_definition.getIsolateTrackingId(),  conn );
+                           conn.commit();
+                           process_clones.add( new Integer( clone_sequence.getId() ));
+                           
+                        }
+                        catch(Exception e)
+                        {
+                            i_error_messages.add(e.getMessage() );
+                            DatabaseTransaction.rollback(conn);
+                        }
+                    }
+                    //finished all clones in the group
+                    min_result_id = sequence_definition.getResultId();
+                    isLastRecord = expected_sequence_definition.size() < MAX_NUMBER_OF_ROWS_TO_RETURN;
+                }
+                
+                //insert history
+                if ( process_clones.size() > 0)
+                {
+                    ArrayList processes = new ArrayList();
+                    Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                                new java.util.Date(),
+                                                i_user.getId(),
+                                                processes,
+                                                Constants.TYPE_OBJECTS);
+
+                    // Process object create
+                     //create specs array for the process
+                    ArrayList specs = new ArrayList();
+                  
+                    ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                                                ProcessDefinition.ProcessIdFromProcessName(ProcessDefinition.RUN_ASSEMBLY),
+                                                                actionrequest.getId(),
+                                                                specs,
+                                                                Constants.TYPE_OBJECTS) ;
+                    processes.add(process);
+                     //finally we must insert request
+                    actionrequest.insert(conn);
+                    String sql = "";
+                    Statement stmt = conn.createStatement();
+                    for (int sequence_count = 0; sequence_count < process_clones.size();sequence_count++)
+                    {
+                        sql = "insert into process_object (processid,objectid,objecttype) values("+process.getId()+","+((Integer)process_clones.get(sequence_count)).intValue() +","+Constants.PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE+")";
+                        stmt.executeUpdate(sql);
+                    }
+                    conn.commit();
+                }
             }
-            
             catch(Exception ex)
             {
                 i_error_messages.add(ex.getMessage());
-                //send notification to the user
-                
                 DatabaseTransaction.rollback(conn);
             }
             finally
@@ -108,7 +163,22 @@ public class tester_run_assembler
      
      
      //-------------------------------------------------------
-      private ArrayList getExspectedSequenceDescriptions(Connection conn, String result_type)throws BecDatabaseException
+     
+     private CloneAssembly assembleSequence(  SequenceDescription sequence_definition )throws BecDatabaseException
+     
+     {
+         CloneAssembly clone_assembly = null;
+         try
+         {
+             return clone_assembly;
+         }
+         catch(Exception e)
+         {
+             throw new BecDatabaseException("Error while trying to assemble sequence for isolte: "+ sequence_definition.getIsolateTrackingId()+"\n error "+ e.getMessage());
+         }
+     }
+     
+     private ArrayList getExspectedSequenceDescriptions(Connection conn, String result_type, int min_result_id)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
         String sql = "select  FLEXSEQUENCEID ,FLEXCLONEID , r.resultid as resultid, refsequenceid, iso.isolatetrackingid as isolatetrackingid "
@@ -116,7 +186,7 @@ public class tester_run_assembler
         +" where constr.constructid = iso.constructid and f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
         +" and iso.sampleid=s.sampleid and iso.sampleid in"
         +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
-        result_type +"))";
+        result_type +")) and rownum = " + MAX_NUMBER_OF_ROWS_TO_RETURN + " and resultid > "+ min_result_id +" order by resultid";
         
         ResultSet rs = null;
       SequenceDescription seq_desc = null;
@@ -144,31 +214,48 @@ public class tester_run_assembler
     }
      
      
-     private   ArrayList runAssemblerandParseOutput(
-                         ArrayList expected_sequence_definition, 
-                         ArrayList m_error_messages, 
-                         Connection conn)throws BecUtilException
+     private   CloneAssembly runAssemblerandParseOutput(
+                         SequenceDescription sequence_definition
+                        )throws BecUtilException
      {
-         ArrayList res = new ArrayList();
+         CloneAssembly res = null;
          
          return res;
      }
      
      
      
-     private   void insertSequences(
-                         ArrayList sequence_definition, 
-                         ArrayList m_error_messages, 
-                         Connection conn)throws BecUtilException
+     private   CloneSequence insertSequence(
+                         SequenceDescription sequence_definition, 
+                         CloneAssembly clone_data,
+                         Connection conn)throws BecDatabaseException
      {
+         //create sequence 
+         try
+         {
+             CloneSequence clone_seq = new CloneSequence( clone_data.getSequence(),  clone_data.getScores(), sequence_definition.getBecRefSequenceId());
+             clone_seq.setResultId( sequence_definition.getResultId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+            clone_seq.setIsolatetrackingId ( sequence_definition.getIsolateTrackingId() );//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+            clone_seq.setStatus (BaseSequence.ASSEMBLY_STATUS_ASSESMBLED);
+            clone_seq.insert(conn);
+            return clone_seq;
+         }
+         catch(Exception e)
+         {
+             throw new BecDatabaseException("Error while trying to insert clone sequence with result id "+ sequence_definition.getResultId());
+         }
+         //insert
      }
+     
+     
+     
      
      protected class SequenceDescription
      {
          private int        i_flex_sequenceid = -1;
          private int        i_flex_cloneid = -1;
          private int        i_resultid = -1;
-         private int        i_becsequenceid = -1;
+         private int        i_becrefsequenceid = -1;
          private int        i_isolatetrackingid = -1;
          
          public SequenceDescription(){}
@@ -177,20 +264,20 @@ public class tester_run_assembler
              i_flex_sequenceid = v1;
              i_flex_cloneid = v2;
              i_resultid = v3;
-              i_becsequenceid = v4;
+              i_becrefsequenceid = v4;
              i_isolatetrackingid = v5;
          }
          
          public int        getFlexSequenceId (){ return i_flex_sequenceid   ;}
          public int        getFlexCloneId (){ return i_flex_cloneid   ;}
          public int        getResultId (){ return i_resultid   ;}
-         public int        getBecSequenceId (){ return i_becsequenceid   ;}
+         public int        getBecRefSequenceId (){ return i_becrefsequenceid   ;}
          public int        getIsolateTrackingId (){ return i_isolatetrackingid   ;}
          
          public void        setFlexSequenceId  ( int v){  i_flex_sequenceid =v  ;}
          public void        setFlexCloneId ( int v){  i_flex_cloneid   =v;}
          public void        setResultId ( int v){  i_resultid =v  ;}
-          public void        setBecSequenceId (int v){  i_becsequenceid =v  ;}
+          public void        setBecRefSequenceId (int v){  i_becrefsequenceid =v  ;}
          public void          setIsolateTrackingId (int v){  i_isolatetrackingid =v  ;}
      }
      

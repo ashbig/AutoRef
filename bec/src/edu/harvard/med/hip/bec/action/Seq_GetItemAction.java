@@ -29,6 +29,8 @@ import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.feature.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
@@ -58,13 +60,14 @@ public class Seq_GetItemAction extends ResearcherAction
         {
             if ( forwardName == Constants.CONTAINER_PROCESS_HISTORY || forwardName 
                 ==Constants.CONTAINER_DEFINITION_INT ||
-                forwardName == Constants.CONTAINER_RESULTS_VIEW )//rocessing from container label
+                forwardName == Constants.CONTAINER_RESULTS_VIEW ||
+                forwardName == Constants.CONTAINER_ISOLATE_RANKER_REPORT)//rocessing from container label
                {
                      
                     label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
                     label =label.toUpperCase().trim();
                     container =  verifyLabel(label);
-                                 
+                               
                     if ( container == null)
                     {
                         errors.add(ActionErrors.GLOBAL_ERROR,
@@ -81,7 +84,9 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT ||
                forwardName == Constants.VECTOR_DEFINITION_INT ||
                forwardName == Constants.LINKER_DEFINITION_INT ||
-               forwardName == Constants.CLONING_STRATEGY_DEFINITION_INT
+               forwardName == Constants.CLONING_STRATEGY_DEFINITION_INT ||
+               forwardName == Constants.SAMPLE_ISOLATE_RANKER_REPORT ||
+               forwardName == Constants.READ_REPORT_INT
                )
                {
                     id = Integer.parseInt( (String) request.getParameter("ID"));
@@ -138,10 +143,10 @@ public class Seq_GetItemAction extends ResearcherAction
                     String result_type = (String)request.getParameter("show_action");
                     if ( result_type.equalsIgnoreCase("FER"))
                     { 
-                       System.out.println("start "+System.currentTimeMillis());
+                   
                         int[] result_types = {Result.RESULT_TYPE_ENDREAD_FORWARD,Result.RESULT_TYPE_ENDREAD_FORWARD_PASS, Result.RESULT_TYPE_ENDREAD_FORWARD_FAIL};
                         container.restoreSampleWithResultId(result_types,true);
-                         System.out.println("end "+System.currentTimeMillis());
+                      
                     }
                     else if (result_type.equalsIgnoreCase("RER"))//reverse
                     {
@@ -151,7 +156,13 @@ public class Seq_GetItemAction extends ResearcherAction
                     }
                     else if (result_type.equalsIgnoreCase("IR"))
                     {
-                       
+                        container.restoreSampleIsolateNoFlexInfo();
+                        container.getCloningStrategyId();
+                        request.setAttribute("container",container);
+                        request.setAttribute("rows", new Integer(8));
+                        request.setAttribute("cols", new Integer(12));
+
+                        return (mapping.findForward("display_isolate_ranker_report"));
                     }
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
@@ -159,6 +170,48 @@ public class Seq_GetItemAction extends ResearcherAction
                     return (mapping.findForward("display_container_results_er"));
                   
                        
+                }
+                case Constants.CONTAINER_ISOLATE_RANKER_REPORT:
+                {
+                    container.restoreSampleIsolateNoFlexInfo();
+                    container.getCloningStrategyId();
+                    request.setAttribute("container",container);
+                    request.setAttribute("rows", new Integer(8));
+                    request.setAttribute("cols", new Integer(12));
+                   
+                    return (mapping.findForward("display_isolate_ranker_report"));
+                }
+                
+                case Constants.SAMPLE_ISOLATE_RANKER_REPORT:
+                {
+                    Sample sample = new Sample(id);
+                    sample.getRefSequenceId();
+            
+                    sample.setIsolaterTrackingEngine( IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId()));
+                    ArrayList discrepancies = new ArrayList();
+                    
+                    Read read  = null;
+                    for (int read_count = 0; read_count < sample.getIsolateTrackingEngine().getEndReads().size(); read_count++)
+                    {
+                        read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(read_count);
+                        discrepancies.addAll( read.getSequence().getDiscrepancies() );
+                    }
+                    discrepancies = DiscrepancyPair.getDiscrepancyNoDuplicates(discrepancies);
+                    String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+                    request.setAttribute("container_label", request.getParameter("container_label"));
+                    request.setAttribute("sample", sample);
+                    request.setAttribute("discrepancy_report",discrepancy_report_html);
+                    return (mapping.findForward("display_sample_isolate_ranker_report"));
+                }
+                case Constants.READ_REPORT_INT:
+                {
+                    Read read = Read.getReadById(id);
+                    read.getSequence();
+                    String discrepancy_report_html = Mutation.HTMLReport( read.getSequence().getDiscrepancies(), Mutation.RNA, true);
+                    request.setAttribute("read", read);
+                    request.setAttribute("discrepancy_report",discrepancy_report_html);
+                    return (mapping.findForward("display_read_report"));
+                    
                 }
                 case Constants.REFSEQUENCE_DEFINITION_INT :
                 {
@@ -194,19 +247,34 @@ public class Seq_GetItemAction extends ResearcherAction
                   //find file
                     
                     Utils ut= new Utils();
-                    String needle_output = ut.getHTMLtransformedNeedleAlignment(BaseSequence.READ_SEQUENCE,id);
-                    RefSequence refsequence = ut.getRefSequence();
-                    if (request.getParameter("trimstart") != null)
+                    String needle_output = null;
+                   
+                    System.out.print("seq_id "+request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));   
+                    if ( request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR) != null)
                     {
-                        request.setAttribute("trimstart",request.getParameter("trimstart"));
+                        int refseq_id = Integer.parseInt(request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));
+                       
+                        ut.setRefSequenceId(refseq_id);
+                        request.setAttribute("refsequenceid" , request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));
+                        needle_output = ut.getHTMLtransformedNeedleAlignmentForTrimedRead(null,id);
                     }
-                    if (request.getParameter("trimend") != null)
+                    else
                     {
-                        request.setAttribute("trimend",request.getParameter("trimend"));
+                        needle_output = ut.getHTMLtransformedNeedleAlignment(BaseSequence.READ_SEQUENCE,id);
+                        RefSequence refsequence = ut.getRefSequence();
+                        request.setAttribute("refsequenceid" , new Integer(refsequence.getId()));
+                        if (request.getParameter("trimstart") != null)
+                        {
+                            request.setAttribute("trimstart",request.getParameter("trimstart"));
+                        }
+                        if (request.getParameter("trimend") != null)
+                        {
+                            request.setAttribute("trimend",request.getParameter("trimend"));
+                        }
                     }
                     request.setAttribute( "expsequenceid",new Integer(id));
                     request.setAttribute( "expsequencetype", new Integer(BaseSequence.READ_SEQUENCE));
-                    request.setAttribute("refsequenceid" , new Integer(refsequence.getId()));
+                    
                     request.setAttribute("alignment",needle_output);
                     return (mapping.findForward("display_needle_alignment"));
                 }

@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.6 2003-07-07 13:16:12 Elena Exp $
+ * $Id: Sample.java,v 1.7 2003-07-18 19:41:05 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -13,6 +13,7 @@ package edu.harvard.med.hip.bec.sampletracking.objects;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.coreobjects.feature.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -190,7 +191,7 @@ public class Sample
     public IsolateTrackingEngine        getIsolateTrackingEngine(){ return m_isolatetracking;}
  
     public void setIsolateTrackingid(int v)    {         m_isolatetracking_id = v;    }
-    public void setIsolaterTracking(IsolateTrackingEngine id)    {        m_isolatetracking = id;    }
+    public void setIsolaterTrackingEngine(IsolateTrackingEngine id)    {        m_isolatetracking = id;    }
    
    
    
@@ -322,6 +323,24 @@ public class Sample
     //******************************************************//
     public static void main(String args[])
     {
-       
+       try
+       {
+           Sample sample = new Sample(1441);
+                    sample.getRefSequenceId();
+            
+                    sample.setIsolaterTrackingEngine( IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId()));
+                    ArrayList discrepancies = new ArrayList();
+                    
+                    Read read  = null;
+                    for (int read_count = 0; read_count < sample.getIsolateTrackingEngine().getEndReads().size(); read_count++)
+                    {
+                        read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(read_count);
+                        discrepancies.addAll( read.getSequence().getDiscrepancies() );
+                    }
+                    discrepancies = DiscrepancyPair.getDiscrepancyNoDuplicates(discrepancies);
+                    String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+                    System.out.println(discrepancy_report_html);
+       }
+       catch(Exception e){}
     }
 }

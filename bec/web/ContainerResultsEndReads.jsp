@@ -99,6 +99,7 @@
 	{
 	// System.out.println("get "+System.currentTimeMillis());
 		sample = (Sample)container.getSamples().get(count);
+                read = null; result = null;
 	//System.out.println(sample.getPosition());
 		if ( sample.getResults() != null && sample.getResults().size() > 0)
 		{
@@ -151,7 +152,9 @@
 		<td <%= row_color %> align="center"><%if (read != null ){%>
  <input type=BUTTON value=Report onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
 		 <%}else{%> &nbsp;<%}%>    </td>
-		<td <%= row_color %>>&nbsp; </td>
+		<td <%= row_color %>><%if (read != null ){%>
+ <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= read.getSequenceId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
+		 <%}else{%> &nbsp;<%}%>     </td>
 	</tr>
 	<%}%>
     </table>

@@ -14,6 +14,9 @@ import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.programs.blast.*;
 import edu.harvard.med.hip.bec.export.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
+import edu.harvard.med.hip.bec.programs.needle.*;
+import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.util.*;
@@ -32,10 +35,35 @@ import java.sql.*;
 public class Utils
 {
     private RefSequence m_refsequence = null;
+    private int         m_refsequence_id = -1;
     public Utils(){}
     
     
     public RefSequence getRefSequence(){ return m_refsequence;}
+    public void          setRefSequenceId(int i){m_refsequence_id = i;}
+    
+    public  String getHTMLtransformedNeedleAlignmentForTrimedRead(int[] scores, int sequence_id) throws Exception
+    {
+       
+       String needle_file_name = null;
+        //if needle was already run retrive file
+        if (m_refsequence_id != -1)
+        {
+            DiscrepancyFinder nv = new DiscrepancyFinder();
+            needle_file_name = nv.getOutputDirectory()+"/needle"+sequence_id+"_"+m_refsequence_id+".out";
+      System.out.print(needle_file_name);
+        }
+        else
+        {
+            return null;
+        }
+       
+        // reparse needle output
+        return NeedleParser.parsetoHTMLString(needle_file_name, scores,      0, 0  );
+      
+    }
+    
+    
     public  String getHTMLtransformedNeedleAlignment(int sequence_type, int sequence_id) throws Exception
     {
         //get exp sequnce from db
@@ -46,46 +74,89 @@ public class Utils
         BioLinker linker5 = null;
         
         int[] scores = null;
-        if (sequence_type == BaseSequence.ANALIZED_SCORED_SEQUENCE ||
-            sequence_type == BaseSequence.SCORED_SEQUENCE || sequence_type==BaseSequence.READ_SEQUENCE)
-        {
-            
-            expsequence = new ScoredSequence(sequence_id);
-            scores = ((ScoredSequence) expsequence).getScoresAsArray();
-        }
-        // get refsequnce 
+        String needle_file_name = null;
+        Read read = null; 
+        
         if ( sequence_type==BaseSequence.READ_SEQUENCE)
         {
-            Object[] res = getRefsequenceAndCloningStrategy( sequence_id);
-            m_refsequence =(RefSequence) res[0]; clstr= (CloningStrategy)res[1];
-            if ( clstr != null)
+            read =  Read.getReadByReadSequenceId(sequence_id);
+            expsequence = read.getSequence();
+            scores = ((ScoredSequence) expsequence).getScoresAsArray();
+        }
+        else
+        {
+            if (sequence_type == BaseSequence.ANALIZED_SCORED_SEQUENCE ||
+                sequence_type == BaseSequence.SCORED_SEQUENCE || sequence_type==BaseSequence.READ_SEQUENCE)
             {
-                  linker3 = BioLinker.getLinkerById( clstr.getLinker3Id() );
-                  linker5 = BioLinker.getLinkerById( clstr.getLinker5Id() );
-                  m_refsequence.setText( linker5.getSequence()+m_refsequence.getText() + linker3.getSequence());
+
+                expsequence = new ScoredSequence(sequence_id);
+                scores = ((ScoredSequence) expsequence).getScoresAsArray();
             }
-            else
+        }
+        // get refsequnce 
+         //get for read primer direction
+            boolean isCompliment = false;
+        if ( sequence_type==BaseSequence.READ_SEQUENCE)
             {
-                    //construct reference sequence
-                    m_refsequence.setText( m_refsequence.getText());
+                Object[] res = getRefsequenceAndCloningStrategy( sequence_id);
+                m_refsequence =(RefSequence) res[0]; clstr= (CloningStrategy)res[1];
+                if ( clstr != null)
+                {
+                      linker3 = BioLinker.getLinkerById( clstr.getLinker3Id() );
+                      linker5 = BioLinker.getLinkerById( clstr.getLinker5Id() );
+                      m_refsequence.setText( linker5.getSequence()+m_refsequence.getCodingSequence() + linker3.getSequence());
+                }
+                else
+                {
+                        //construct reference sequence
+                        m_refsequence.setText( m_refsequence.getCodingSequence());
+                }
+                int containerid = BaseSequence.getContainerId(sequence_id, BaseSequence.READ_SEQUENCE);
+
+                Oligo[] oligos = Container.findEndReadsOligos(containerid);
+    
+                if (oligos[0] != null && (read.getType() ==  Read.TYPE_ENDREAD_FORWARD || 
+                            read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL || 
+                            read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH || 
+                            read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT))
+                {
+                       isCompliment = (oligos[0].getOrientation() == Oligo.ORIENTATION_SENSE);
+                }
+                if (oligos[1] != null && (read.getType() ==  Read.TYPE_ENDREAD_REVERSE || 
+                            read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL || 
+                            read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH || 
+                            read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT))
+                {
+                      isCompliment =( oligos[1].getOrientation() == Oligo.ORIENTATION_SENSE) ; 
+                }
+                
+                //convert scores ifd compliment requered
+                
+                if ( !isCompliment)
+                {
+                    
+                    
+                    int[] scores_converted = new int[scores.length];
+                    int j=0;
+                    for (int count= scores.length -1 ; count >= 0; count--)
+                    {
+                        scores_converted[j++] = scores[count];
+                    }
+                    scores = scores_converted;
+                    
+                }
             }
 
-        }
-     
+           
+            // run needle
+            needle_file_name  = runNeedle(m_refsequence,expsequence, isCompliment);
         
-        //get for read primer direction
-        boolean isCompliment = false;
-        // run needle
-        String needle_file_name  = runNeedle(m_refsequence,expsequence, isCompliment);
         // reparse needle output
         String needle_html_output = NeedleParser.parsetoHTMLString(needle_file_name, scores,
                                             linker5.getSequence().length(), linker5.getSequence().length() + m_refsequence.getText().length()
                                            );
         return needle_html_output;
     }
-    
-    
-   
     
     //-------------------------------------
      //function runs needle and parse output
@@ -95,7 +166,7 @@ public class Utils
         NeedleWrapper nw = new NeedleWrapper();
         nw.setQueryId(expsequence.getId());
         nw.setReferenceId(refsequence.getId());
-        if ( !isCompliment )
+        if ( isCompliment )
             nw.setQuerySeq(expsequence.getText());
         else
             nw.setQuerySeq( SequenceManipulation.getCompliment(expsequence.getText()));
@@ -149,8 +220,8 @@ public class Utils
         {
             
             Utils ut= new Utils();
-            String g = ut.getHTMLtransformedNeedleAlignment(BaseSequence.READ_SEQUENCE,1623) ;
-        System.out.print(ut.getRefSequence());
+            String g = ut.getHTMLtransformedNeedleAlignment(BaseSequence.READ_SEQUENCE,3003) ;
+        System.out.print(g);
         }catch(Exception e){}
         System.exit(0);
      }

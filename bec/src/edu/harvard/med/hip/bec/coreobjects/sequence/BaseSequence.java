@@ -29,6 +29,8 @@ public  class BaseSequence
     public static final int READ_SEQUENCE = 6;//for display only
    
     
+        public static final String THEORETICAL_SEQUENCE_STR = "THEORETICAL_SEQUENCE";
+    
     //sequence info type
     public static final int SEQUENCE_INFO_TEXT = 0;
     public static final int SEQUENCE_INFO_SCORE = 1;
@@ -84,6 +86,10 @@ public  class BaseSequence
                         text = rs.getString("infotext");
                 else
                     text +=rs.getString("infotext");
+            }
+            if ( info_type == SEQUENCE_INFO_TEXT )
+            {
+                text = text.toUpperCase();
             }
             return text;
         } catch (SQLException sqlE)
@@ -217,6 +223,37 @@ public  class BaseSequence
         }
          **/
         return res;
+    }
+    
+    
+    public static int    getContainerId(int sequenceid, int sequence_type)throws BecDatabaseException
+    {
+        int result = -1;
+        String sql = null;
+       if (sequence_type == BaseSequence.READ_SEQUENCE)
+       {
+           sql = "select containerid from sample where sampleid in "
+           +"(select sampleid from result where resultid in "
+           +" (select resultid from readinfo where readsequenceid="+sequenceid+"))";
+       }
+        ResultSet rs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next())
+            {
+                result = rs.getInt("containerid");
+            }
+            return result;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while getting containerid with id "+sequenceid+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+      
     }
 }
 

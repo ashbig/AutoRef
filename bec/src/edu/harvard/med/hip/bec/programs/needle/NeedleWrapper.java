@@ -52,6 +52,8 @@ public class NeedleWrapper
     public void         setQuerySeq(String s){ m_query = s;}
     public void         setRefSeq(String s){ m_reference = s;}
     public void         setOutputFileDir(String s){m_output_file_dir = s;}
+    public String       getOutputFileDir(){return m_output_file_dir ;}
+    
     
     public double          getGapOpen(){ return m_gapopen;}
     public double          getGapExtend(){ return m_gapext;}
