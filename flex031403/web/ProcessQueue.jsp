@@ -1,5 +1,5 @@
 <%--
-        $Id: ProcessQueue.jsp,v 1.1 2001-06-01 18:10:50 dongmei_zuo Exp $ 
+        $Id: ProcessQueue.jsp,v 1.2 2001-06-04 15:26:34 dongmei_zuo Exp $ 
 
         File    : ProcessQueue.jsp
         Date    : 05102001
@@ -14,7 +14,7 @@
 <%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-
+<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 <html>
 <head><title>Request Processed Summary</title></head>
@@ -27,79 +27,58 @@
 </TABLE>
 	<%--display all accepted sequences--%>
 	<H4>Accepted Sequences</H4>
-	<%
-	Iterator acceptedSeqIter = acceptedList.iterator();
-	while(acceptedSeqIter.hasNext()) {
-		QueueItem curItem = (QueueItem)acceptedSeqIter.next();
-		FlexSequence curSeq = (FlexSequence)curItem.getItem();
-		curItem.setProtocol(designProtocol);
-		
-
-		// update the status to be INPROCESS
-		curSeq.updateStatus("INPROCESS");
-
-		// hit db and get current values for the sequence
-		curSeq.restore(curSeq.getId(), DatabaseTransaction.getInstance());
-		Iterator userIter= curSeq.getRequestingUsers().iterator();
-	%>
-	<A HREF="SequenceUI.jsp?flexID=<%=curSeq.getId()%>"><%=curSeq.getId()%></A><BR>
-	Quality Assessment: <%=curSeq.getQuality()%><BR>
-	<%
-	while(userIter.hasNext()) {
-		User curUser =  (User)userIter.next();
-	%>
-	Requestor: <A HREF="mailto:<%=curUser.getUserEmail()%>"> <%=curUser.getUsername()%> </A> <BR>
-	<%	} //end of user while
-	%>
-	<A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<%=curSeq.getGi()%>&dopt=GenBank"> <%=curSeq.getAccession()%></A><BR>
-	Description: <%=curSeq.getDescription()%> <BR>
-	<P>
+        <logic:iterate id="curItem" name="<%=edu.harvard.med.hip.flex.Constants.APPROVED_SEQUENCE_LIST_KEY%>">
+            <bean:message key="flex.name"/> id:
+            <flex:linkFlexSequence sequenceName="curItem" seqProperty="item">
+                <bean:write name="curItem" property="item.id"/>
+            </flex:linkFlexSequence>
+            <BR>
+            Quality Assessment: <bean:write name="curItem" property="item.quality"/>
+            <BR>
+            <logic:iterate id="curUser" name="curItem" property="item.requestingUsers">
+                Requestor: 
+                <A HREF="mailto:<bean:write name="curUser" property="userEmail"/>">
+                    <bean:write name="curUser" property="username"/>
+                </A>
+            </logic:iterate>
+            <BR>
+            GI:
+            <A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="curItem" property="item.gi"/>&dopt=GenBank"> 
+                <bean:write name="curItem" property="item.gi"/>
+            </A>
+            <BR>
+            Description: <bean:write name="curItem" property="item.description"/>
+            <BR>
+            <P>
+        </logic:iterate>
 	
-	<%
-	} //end of accepted seq iter.
-	%>
-
-
-
-
 	<%-- display all rejected sequences --%>
 	<H4> Rejected Sequences</H4>
-	<%	
-	Iterator rejectedSeqIter = rejectedList.iterator();
-	while(rejectedSeqIter.hasNext()) {
-		FlexSequence curSeq = (FlexSequence)((QueueItem)rejectedSeqIter.next()).getItem();
-		// update the status to REJECTED
-		curSeq.updateStatus("REJECTED");
-		curSeq.restore(curSeq.getId(), DatabaseTransaction.getInstance());
-		Iterator userIter= curSeq.getRequestingUsers().iterator();
-	%>
-	<A HREF="SequenceUI.jsp?flexID=<%=curSeq.getId()%>"><%=curSeq.getId()%></A><BR>
-	Quality Assessment: <%=curSeq.getQuality()%><BR>
-	<%
-	while(userIter.hasNext()) {
-		User curUser =  (User)userIter.next();
-	%>
-	Requestor: <A HREF="mailto:<%=curUser.getUserEmail()%>"> <%=curUser.getUsername()%> </A> <BR>
-	<%	} //end of user while
-	%>
-	<A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<%=curSeq.getGi()%>&dopt=GenBank"> <%=curSeq.getAccession()%></A><BR>
-	Description: <%=curSeq.getDescription()%> <BR>
-	<P>
-	
-	<%
-	} //end of rejected seq iter.
-	%>
+	<logic:iterate id="curItem" name="<%=edu.harvard.med.hip.flex.Constants.REJECTED_SEQUENCE_LIST_KEY%>">
+            <bean:message key="flex.name"/> id:
+            <flex:linkFlexSequence sequenceName="curItem" seqProperty="item">
+                <bean:write name="curItem" property="item.id"/>
+            </flex:linkFlexSequence>
+            <BR>
+            Quality Assessment: <bean:write name="curItem" property="item.quality"/>
+            <BR>
+            <logic:iterate id="curUser" name="curItem" property="item.requestingUsers">
+                Requestor: 
+                <A HREF="mailto:<bean:write name="curUser" property="userEmail"/>">
+                    <bean:write name="curUser" property="username"/>
+                </A>
+            </logic:iterate>
+            <BR>
+            GI:
+            <A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="curItem" property="item.gi"/>&dopt=GenBank"> 
+                <bean:write name="curItem" property="item.gi"/>
+            </A>
+            <BR>
+            Description: <bean:write name="curItem" property="item.description"/>
+            <BR>
+            <P>
+        </logic:iterate>
 
 
 </body>
 </html>
-
-<%
-//add all the accepted items to the queue as 'design constructs' protocol
-sequenceQueue.addQueueItems(acceptedList, DatabaseTransaction.getInstance());
-DatabaseTransaction.getInstance().abort();
-%>
-
-
-
-

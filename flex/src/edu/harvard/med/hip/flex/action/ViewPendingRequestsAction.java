@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-01 18:10:50 $
+ * $Revision: 1.4 $
+ * $Date: 2001-06-04 15:26:34 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -54,7 +54,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-01 18:10:50 $
+ * @version    $Revision: 1.4 $ $Date: 2001-06-04 15:26:34 $
  */
 
 public class ViewPendingRequestsAction extends FlexAction{
@@ -91,17 +91,18 @@ public class ViewPendingRequestsAction extends FlexAction{
             sequenceQueue.getQueueItems(approveProtocol);
             
             session.setAttribute(Constants.APPROVE_PROTOCOL_KEY, approveProtocol);
+            
             session.setAttribute(Constants.QUEUE_ITEM_LIST_KEY,approveSeqList );
             session.setAttribute(Constants.SEQUENCE_QUEUE_KEY,sequenceQueue);
             
-            retForward = mapping.findForward("sucess");
+            retForward = mapping.findForward("success");
         } catch (FlexProcessException fpe) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.process.error", fpe));
             
         } catch (FlexDatabaseException fde) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database.error", fde));
+            new ActionError("error.database.error", fde));
             
         } finally {
             if(errors.size() > 0) {
@@ -109,6 +110,10 @@ public class ViewPendingRequestsAction extends FlexAction{
                 retForward = new ActionForward(mapping.getInput());
             }
         }
+        // make sure the page isn't cahced!
+        response.addHeader("Pragma", "NoCache");
+        response.addHeader("Cache-Control", "no-cache");
+        response.addDateHeader("Expires", 1);
         return retForward;
     }
 } // End class ViewPendingRequestsAction

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-01 18:10:50 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-04 15:26:34 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -44,7 +44,7 @@ package edu.harvard.med.hip.flex.tag;
  * Class description - Full description
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-01 18:10:50 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-04 15:26:34 $
  */
 
 import java.io.IOException;
@@ -56,17 +56,16 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import edu.harvard.med.hip.flex.Constants;
+import edu.harvard.med.hip.flex.core.*;
 
-import org.apache.struts.util.MessageResources;
-import org.apache.struts.util.ResponseUtils;
-
+import org.apache.struts.util.*;
 
 /**
  * Generate a URL-encoded hyperlink to the specified URI, with
  * associated query parameters selecting a specified User.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2001-06-01 18:10:50 $
+ * @version $Revision: 1.2 $ $Date: 2001-06-04 15:26:34 $
  */
 
 public class LinkFlexSequenceTag extends TagSupport {
@@ -89,6 +88,18 @@ public class LinkFlexSequenceTag extends TagSupport {
     private int sequenceId = -1;
     
     
+    /**
+     * The name of the variable holding the sequence or which has a property
+     * which holds the sequence to display.
+     */
+    private String sequenceName;
+    
+    
+    /**
+     * The name of the property (or nested property) that holds the sequence
+     * from the <code>sequenceName</code> variable
+     */
+    private String seqProperty;
     
     
     /**
@@ -114,6 +125,54 @@ public class LinkFlexSequenceTag extends TagSupport {
         
     }
     
+    /**
+     * Return the attribute sequence name
+     *
+     * @return the name of the <code>flexSequence</code> variable to link to
+     */
+    public String getSequenceName() {
+        
+        return (this.sequenceName);
+        
+    }
+    
+    
+    /**
+     * Set the attribute sequence.
+     *
+     * @param seqName The name of the <code>FlexSequence</code> variable 
+     *       to link to.
+     */
+    public void setSequenceName(String seqName) {
+        
+        this.sequenceName = seqName;
+        
+    }
+    
+    /**
+     * Return the attribute seqProperty
+     *
+     * @return the name of the property that holds the sequence.
+     */
+    public String getSeqProperty() {
+        
+        return (this.seqProperty);
+        
+    }
+    
+    
+    /**
+     * Set the attribute seqProperty.
+     *
+     * @param seqProp The name of the property that holds the 
+     *      <code>FlexSequence</code> variable to link to.
+     */
+    public void setSeqProperty(String seqProp) {
+        
+        this.seqProperty = seqProp;
+        
+    }
+    
     
     // --------------------------------------------------------- Public Methods
     
@@ -135,7 +194,20 @@ public class LinkFlexSequenceTag extends TagSupport {
         url.append("?");
         
         url.append(Constants.FLEX_SEQUENCE_ID_KEY+"=");
-        url.append(sequenceId);
+        if(sequenceName == null) {
+            url.append(sequenceId);
+        } else {
+            FlexSequence seqObj = null;
+            try {
+                seqObj = (FlexSequence)RequestUtils.lookup(pageContext,sequenceName, 
+                seqProperty, null);
+            } catch (ClassCastException cce) {
+                throw new JspException("The specified property: " + 
+                seqProperty + " does not contain a FlexSequence object");
+            }
+            url.append(seqObj.getId());
+            
+        }
         
         // Generate the hyperlink start element
         HttpServletResponse response =
@@ -189,6 +261,8 @@ public class LinkFlexSequenceTag extends TagSupport {
         super.release();
         
         this.sequenceId = -1;
+        this.seqProperty=null;
+        this.sequenceName=null;
         
     }
     

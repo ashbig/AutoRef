@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.3 2001-06-01 18:10:50 dongmei_zuo Exp $ 
+        $Id: PendingRequests.jsp,v 1.4 2001-06-04 15:26:34 dongmei_zuo Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -10,12 +10,14 @@
 	as pending
 --%>
 
+
 <%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 
 <html>
@@ -42,10 +44,10 @@
     <logic:iterate id="curQueueItem" name="<%=edu.harvard.med.hip.flex.Constants.QUEUE_ITEM_LIST_KEY%>"> 
         <TR>
             <TD>
-                
-                <a href="ViewSequence.do?<%=edu.harvard.med.hip.flex.Constants.FLEX_SEQUENCE_ID_KEY%>=<bean:write name="curQueueItem" property="item.id"/>">
+                <flex:linkFlexSequence sequenceName="curQueueItem" seqProperty="item">
                     <bean:write name="curQueueItem" property="item.id"/>
-                </a>
+                </flex:linkFlexSequence>
+                
                
             </TD>
             <TD>
@@ -56,7 +58,7 @@
             </TD>
             <TD>
                 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="curQueueItem" property="item.gi"/>&dopt=GenBank"> 
-                    <bean:write name="curQueueItem" property="item.accession"/>
+                    <bean:write name="curQueueItem" property="item.gi"/>
                 </A>
             </TD>
             <TD>

@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-05-30 16:40:38 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-04 15:26:34 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -52,7 +52,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Class description - Full description
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-05-30 16:40:38 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-04 15:26:34 $
  */
 
 public class ViewFlexSequenceAction extends FlexAction {
@@ -131,7 +131,7 @@ public class ViewFlexSequenceAction extends FlexAction {
             // put the formated sequence into the request
             request.setAttribute(Constants.FASTA_COLOR_SEQUENCE_KEY,
                 formatedHTMLSeq.toString());
-            System.out.println("Adding : " + formatedHTMLSeq.toString());
+            
             
             // put the FLEX sequence object into the requset as well
             request.setAttribute(Constants.FLEX_SEQUENCE_KEY, displaySeq);
