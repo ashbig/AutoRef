@@ -4,7 +4,7 @@
  * Created on September 24, 2002, 12:02 PM
  */
 
-package edu.harvard.med.hip.bec.coreobjects.discrepancy;
+package edu.harvard.med.hip.bec.coreobjects.feature;
 
 
 import  edu.harvard.med.hip.bec.util.*;
