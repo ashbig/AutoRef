@@ -59,6 +59,11 @@ public class SequenceSearchAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         String searchString = ((CustomerRequestForm)form).getSearchString(); 
+        String species = ((CustomerRequestForm)form).getSpecies();
+        if(!"all".equals(species)) {
+            searchString = searchString + species;
+        }
+        
         //Hashtable searchResult = ((CustomerRequestForm)form).getSearchResult();       
         Hashtable searchResult = new Hashtable();
         
