@@ -23,7 +23,7 @@
     <logic:iterate id="info" name="infos"> 
     <logic:equal name="info" property="type" value="BUTTON">
         <li>
-        <a href="<bean:write name="info" property="extraInfo"/>" target="_new"><bean:write name="info" property="value"/></a>
+        <a href="<bean:write name="info" property="extraInfo"/>" target="_blank"><bean:write name="info" property="value"/></a>
         </li>
     </logic:equal>
     </logic:iterate> 
