@@ -224,6 +224,10 @@ public class EndReadsWrapper
               error_messages.add("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
           }
     }
+
+
+
+
     public static void main(String args[])
     {
         String baseDir ="c:\\bio\\phred\\try";//"c:\\trace_dump"; //
@@ -238,8 +242,8 @@ public class EndReadsWrapper
        try{
             conn = DatabaseTransaction.getInstance().requestConnection();
             EndReadsWrapper ew = new EndReadsWrapper(traceDir,baseDir,errorDir, dr,dr_empty);
-         //  ArrayList errors = ew.runCleanUp();
-         //   System.out.println("Total errors object: "+errors.size());
+           ArrayList errors = ew.runCleanUp();
+            System.out.println("Total errors object: "+errors.size());
             reads = ew.run(conn);
              System.out.println("Total  objects: "+reads.size());
              error_messages =  ew.getErrorMessages();
