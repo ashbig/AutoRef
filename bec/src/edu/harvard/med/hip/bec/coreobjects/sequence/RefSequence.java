@@ -66,7 +66,7 @@ public class RefSequence extends BaseSequence
         m_type = THEORETICAL_SEQUENCE;
         try
         {
-            restore(id);
+            restore(id, true);
         } catch (BecDatabaseException fde)
         {
             System.out.println(fde.getMessage());
@@ -74,6 +74,20 @@ public class RefSequence extends BaseSequence
         }
     }
     
+    public RefSequence(int id, boolean isIncludePublicInfo) throws BecDatabaseException
+    {
+        m_text = BaseSequence.getSequenceInfo(id, BaseSequence.SEQUENCE_INFO_TEXT);
+        m_id = id;
+        m_type = THEORETICAL_SEQUENCE;
+        try
+        {
+            restore(id, isIncludePublicInfo);
+        } catch (BecDatabaseException fde)
+        {
+            System.out.println(fde.getMessage());
+            throw new BecDatabaseException(fde.getMessage());
+        }
+    }
     
     public synchronized  void insert(Connection conn)throws BecDatabaseException
     {
@@ -399,7 +413,7 @@ public class RefSequence extends BaseSequence
      * @param id The sequence id.
      * @exception BecDatabaseException.
      */
-    public void restore(int id) throws BecDatabaseException
+    public void restore(int id, boolean isIncludePublicInfo) throws BecDatabaseException
     {
         
         String sql = "select GENUSSPECIES  ,CDSSTART  ,CDSSTOP  ,GCCONTENT "
@@ -423,22 +437,25 @@ public class RefSequence extends BaseSequence
             }
             
             // public info stuff
-            sql = "select nametype, namevalue,nameurl,description from name where sequenceid="+id;
-            
-            rs = t.executeQuery(sql);
-            ResultSetMetaData meta = rs.getMetaData();
-            int cols = meta.getColumnCount();
-            m_publicInfo = new ArrayList();
-            
-            while(rs.next())
+            if ( isIncludePublicInfo)
             {
-                m_publicInfo.add(new PublicInfoItem(rs.getString("nametype"),
-                                                       rs.getString("namevalue"),
-                                                       rs.getString("nameurl"),
-                                                       rs.getString("description")));
-                
+                sql = "select nametype, namevalue,nameurl,description from name where sequenceid="+id;
+
+                rs = t.executeQuery(sql);
+                ResultSetMetaData meta = rs.getMetaData();
+                int cols = meta.getColumnCount();
+                m_publicInfo = new ArrayList();
+
+                while(rs.next())
+                {
+                    m_publicInfo.add(new PublicInfoItem(rs.getString("nametype"),
+                                                           rs.getString("namevalue"),
+                                                           rs.getString("nameurl"),
+                                                           rs.getString("description")));
+
+                }
             }
-      
+
         } catch (SQLException sqlE)
         {
             throw new BecDatabaseException("Error occured while restoring sequence with id "+id+"\n"+sqlE+"\nSQL: "+sql);
