@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2003-09-26 18:06:26 $
+ * $Revision: 1.11 $
+ * $Date: 2003-10-20 18:19:36 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -51,13 +51,13 @@ import edu.harvard.med.hip.flex.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.10 $ $Date: 2003-09-26 18:06:26 $
+ * @version    $Revision: 1.11 $ $Date: 2003-10-20 18:19:36 $
  */
 
 public class Mailer
 {
     
-    public final static String SMTP_HOST ="email.med.harvard.edu";
+    public final static String SMTP_HOST ="hms.harvard.edu";
     
     /**
      * Utility Method to send a message
