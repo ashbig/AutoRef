@@ -51,9 +51,13 @@
     <form-bean      name="displayLinksForm"
                     type="edu.harvard.med.hip.metagene.form.DisplayLinksForm"/>
 
-    <!-- get medline records form bean -->
+    <!-- get medline records disease-gene form bean -->
     <form-bean      name="displayPaperLinksForm"
                     type="edu.harvard.med.hip.metagene.form.DisplayPaperLinksForm"/>
+
+    <!-- get medline records gene-gene form bean -->
+    <form-bean      name="displayPaperLinks_GeneGene_Form"
+                    type="edu.harvard.med.hip.metagene.form.DisplayPaperLinks_GeneGene_Form"/>
 
     <!-- get genes page form bean -->
     <form-bean      name="geneSearchForm"
@@ -223,6 +227,15 @@
                input="/DisplayChipGenes.jsp">
       <forward  name="success"   path="/DisplayPaperLinks.jsp"/>
     </action>    
+
+    <!-- Process the gene-gene medline paper link display -->
+    <action    path="/DisplayPaperLinks_GeneGene"
+               type="edu.harvard.med.hip.metagene.action.DisplayPaperLinks_GeneGene_Action"
+               name="displayPaperLinks_GeneGene_Form"
+               scope="request"
+               input="/DisplayGenesForGene.jsp">
+      <forward  name="success"   path="/DisplayPaperLinks_gg.jsp"/>
+    </action>
 
     <!-- Process gene to diseases search -->
     <action     path="/selectSpeciesForGeneDisease"

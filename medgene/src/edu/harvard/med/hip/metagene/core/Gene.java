@@ -17,10 +17,10 @@ public class Gene {
     public static final String GENE = "GENE";
     public static final String FAMILY = "FAMILY";
     
-    private int hipGeneId;
+    private int hipGeneId; // it is hip_gene_id if gene type is GENE; it is parent_id if gene type is FAMILY
     private String symbol;
     private int qualityidSymbol;
-    private String name;
+    private String name;   // it is formal_name_value if gene type is GENE; it is parent_value if gene type is FAMILY
     private int qualityidName;
     private String date;
     private int locusid;

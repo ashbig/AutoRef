@@ -35,14 +35,11 @@ public class GeneGeneManager extends DiseaseGeneManager {
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
-        }
-        
+        }        
 
         Statement stmt = null;
         ResultSet rs = null;
         Gene target_gene = null;
-        Gene source_gene = super.queryGeneByIndex(conn, 
-                                            getGeneIndexByGeneIndexID(conn, gene_index_id));   
         
         String sql = "select gga.gene1_index_id, gga.gene2_index_id, " +
         "ad.doublehit, sa.statistic_score, st.statistic_type " +
@@ -63,6 +60,33 @@ public class GeneGeneManager extends DiseaseGeneManager {
         Vector gene_gene_associations = new Vector();
         
         try {
+            ///////////////////////////////////////
+
+            String sql1 = "select hip_gene_id, symbol_value, quality_id_symbol,"+
+                  " formal_name_value, quality_id_name, date_added, locus_id"+
+                  " from gene_list where gene_index_id=?";
+            PreparedStatement pstmt_symbol = conn.prepareStatement(sql1);
+            String sql2 = "select p.parent_id, p.parent_value, p.date_added"+
+                  " from parent_list p"+
+                  " where p.parent_value=?";
+            PreparedStatement pstmt_family = conn.prepareStatement(sql2);
+            String sql3 = "select gene_nick_name_value from gene_nicknames"+
+                  " where hip_gene_id=?";
+            PreparedStatement pstmt_nickname = conn.prepareStatement(sql3);
+            String sql4 = "select t.id_type, g.id_value, g.extra_information, g.gi_order"+
+                  " from id_type t, gene_information g"+
+                  " where t.type_id=g.type_id"+
+                  " and g.hip_gene_id=?";
+            PreparedStatement pstmt_geneinfo = conn.prepareStatement(sql4);
+            String sql5 = "select l.symbol_value, l.formal_name_value "+
+                  " from gene_list l, family_mapping m"+
+                  " where l.hip_gene_id = m.hip_gene_id"+
+                  " and m.parent_id = ?";
+            PreparedStatement pstmt_query_children = conn.prepareStatement(sql5);
+            
+            Gene source_gene = super.queryGeneByIndex(conn, getGeneIndexByGeneIndexID(conn, gene_index_id),
+                           pstmt_symbol, pstmt_family, pstmt_nickname, pstmt_geneinfo, pstmt_query_children);
+            //Gene source_gene = super.queryGeneByIndex(conn, getGeneIndexByGeneIndexID(conn, gene_index_id));            
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
                                    
@@ -73,7 +97,7 @@ public class GeneGeneManager extends DiseaseGeneManager {
                 int gene1_index_id = rs.getInt(1);
                 int gene2_index_id = rs.getInt(2);
                 int double_hit = rs.getInt(3);
-                double stat_score = rs.getDouble(4);
+                double stat_score = round_4(rs.getDouble(4));
                 String stat_type = rs.getString(5);
                 
                 Statistics stat = new Statistics(stat_id, stat_type);
@@ -81,21 +105,25 @@ public class GeneGeneManager extends DiseaseGeneManager {
                 AssociationData asso_data = new AssociationData(-1, -1, double_hit, -1, null);
                 
                 if(gene1_index_id == gene_index_id)
-                    target_gene = super.queryGeneByIndex(conn, 
-                                             getGeneIndexByGeneIndexID(conn, gene2_index_id));
-                
+                    target_gene = super.queryGeneByIndex(conn, getGeneIndexByGeneIndexID(conn, gene2_index_id),
+                               pstmt_symbol, pstmt_family, pstmt_nickname, pstmt_geneinfo, pstmt_query_children);
+                    //target_gene = super.queryGeneByIndex(conn, getGeneIndexByGeneIndexID(conn, gene2_index_id));
                 if(gene2_index_id == gene_index_id)
-                    target_gene = super.queryGeneByIndex(conn, 
-                                             getGeneIndexByGeneIndexID(conn, gene1_index_id));
-                               
+                    target_gene = super.queryGeneByIndex(conn, getGeneIndexByGeneIndexID(conn, gene1_index_id),
+                               pstmt_symbol, pstmt_family, pstmt_nickname, pstmt_geneinfo, pstmt_query_children);
+                    //target_gene = super.queryGeneByIndex(conn, getGeneIndexByGeneIndexID(conn, gene1_index_id));
                 GeneGeneAssociation g_g_association = 
                     new GeneGeneAssociation(source_gene, target_gene, stat_analysis, asso_data);
-                
-                
+                                
                 gene_gene_associations.addElement(g_g_association);
             }
-             rs.close();
-             stmt.close();
+            rs.close();
+            stmt.close();
+            pstmt_symbol.close(); 
+            pstmt_family.close();
+            pstmt_nickname.close();
+            pstmt_geneinfo.close();
+            pstmt_query_children.close();
                           
         }catch (SQLException e){
             System.out.println(e);
@@ -139,11 +167,52 @@ public class GeneGeneManager extends DiseaseGeneManager {
     }
  
     
-     public String getSourceGeneName(Vector g_g_associations){
+     public String getSourceGeneIndex(Vector g_g_associations){
          GeneGeneAssociation g = (GeneGeneAssociation)(g_g_associations.firstElement());
-         return g.getSource_gene().getSymbol();
+         String geneName = g.getSource_gene().getSymbol();
+         if(geneName != null)
+             return geneName;
+         else
+            return (g.getSource_gene().getName());
      }
          
+     public Vector getMedlineRecords_gg(String source_gene_index, String target_gene_index){
+        DBManager dbm = new DBManager();
+        Connection con = dbm.connect();
+        if(con == null){
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Vector pubmed_ids = new Vector();
+        
+        String sql = "select pubmedid from medline_records_gene_assoc " +
+                     "where (gene_index1 = ? and gene_index2 = ?) or " +
+                     "(gene_index2 = ? and gene_index1 = ?) " +
+                     "order by pubmedid desc ";
+        try{
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, source_gene_index);
+            pstmt.setString(2, target_gene_index);
+            pstmt.setString(3, source_gene_index);
+            pstmt.setString(4, target_gene_index);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                int pubmed_id = rs.getInt(1);
+                pubmed_ids.add(new Integer(pubmed_id).toString());
+            }
+            rs.close();
+            pstmt.close();
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            dbm.disconnect(con);
+        }
+        return pubmed_ids;
+     
+     }
          
          
 }

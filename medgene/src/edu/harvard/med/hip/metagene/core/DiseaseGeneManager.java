@@ -19,13 +19,20 @@ import edu.harvard.med.hip.metagene.database.*;
  * @version
  */
 public class DiseaseGeneManager {
-    
-    //protected ConnectionPool pool;
-    
+        
     /** Creates new DiseaseGeneManager */
-    public DiseaseGeneManager() {
-        //pool = ConnectionPool.getInstance();
+    public DiseaseGeneManager() {}
+    
+    /** round the double with 4 decimal
+     *  @param score        a double number
+     *  @return             double number rounded with 4 decimal
+     */
+    public double round_4(double score){        
+        long temp =  (long)(score * 10000 + ( score > 0 ? .5 : -.5 )); 
+        return (double) temp / 10000;
     }
+    
+    
     
     /**
      * Query the database to find the related diseases for the given term.
@@ -36,34 +43,22 @@ public class DiseaseGeneManager {
     public Vector findDiseases(String term) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
- 
-        
-        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
         }
         
-        String sql; Vector diseases;
-        /*
-        String sql = "select * from disease_list where disease_mesh_term = ?";
-        Vector diseases = queryDiseases(conn, sql, "%"+term+"%");
+        String sql; 
+        Vector diseases;
         
-        if(diseases != null && diseases.size() == 0) {
-            sql = "select dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.hip_disease_id=dn.hip_disease_id and dn.disease_nick_name_value=?";
-            diseases = queryDiseases(conn, sql, term);
-        }
-        
-        if(diseases != null && diseases.size() == 0) {
-         */
-            TreeSet diseaseSet = new TreeSet(new DiseaseComparator());
-            sql = "select * from disease_list where disease_mesh_term like ?";
-            diseaseSet.addAll(queryDiseases(conn, sql, "%"+term+"%"));
-            sql = "select distinct dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.hip_disease_id=dn.hip_disease_id and dn.disease_nick_name_value like ?";
-            diseaseSet.addAll(queryDiseases(conn, sql, "%"+term+"%"));
-            diseases = new Vector(diseaseSet);
-        
+        TreeSet diseaseSet = new TreeSet(new DiseaseComparator());
+        sql = "select distinct hip_disease_id, disease_mesh_term, date_added from disease_list where disease_mesh_term_upper like ?";        
+        diseaseSet.addAll(queryDiseases(conn, sql, "%" + term.toUpperCase() + "%"));
+        sql = "select distinct dl.hip_disease_id, dl.disease_mesh_term, dl.date_added " + 
+              " from disease_list dl, disease_nicknames dn where dl.hip_disease_id=dn.hip_disease_id and dn.disease_nickname_uppercase like ?";
+        diseaseSet.addAll(queryDiseases(conn, sql, "%" + term.toUpperCase() + "%"));
+        diseases = new Vector(diseaseSet);        
                                
         manager.disconnect(conn);
 
@@ -93,17 +88,7 @@ public class DiseaseGeneManager {
                 if(association == null) {
                     continue;
                 }
-                
-                //                Association existedAssociation = found(newAssociations, association);
-                
-                //                if(existedAssociation != null) {
-                //                    if(association.getStat().compareTo(existedAssociation.getStat()) < 0) {
-                //                        newAssociations.removeElement(existedAssociation);
-                //                        newAssociations.addElement(association);
-                //                    }
-                //                } else {
                 newAssociations.addElement(association);
-                //                }
             }
         }
                
@@ -111,6 +96,7 @@ public class DiseaseGeneManager {
         
         return newAssociations;
     }
+    
     
     protected Vector queryDiseases(Connection conn, String sql, String searchTerm) {
         PreparedStatement stmt = null;
@@ -140,7 +126,14 @@ public class DiseaseGeneManager {
         return diseases;
     }
     
+    /** find disease-gene associations based on the given disease id
+     *  @param conn      Connection
+     *  @param statid    statistic id
+     *  @param diseaseid     disease id
+     *  @return vector of associations
+     */
     protected Vector queryAssociations(Connection conn, int statid, int diseaseid) {
+        
         String sql = "select g.gene_index_id, g.gene_index, t.index_type,"+
         " g.date_added, s.statistic_score, st.statistic_type, a.singlehit_disease,"+
         " a.singlehit_gene, a.doublehit, a.doublenegative, a.date_added"+
@@ -163,11 +156,35 @@ public class DiseaseGeneManager {
         ResultSet rs = null;
         Vector associations = null;
         Disease disease = new Disease(diseaseid);
+        
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             associations = new Vector();
-            
+            ///////////////////////////////////////
+
+            String sql1 = "select hip_gene_id, symbol_value, quality_id_symbol,"+
+                  " formal_name_value, quality_id_name, date_added, locus_id"+
+                  " from gene_list where gene_index_id=?";
+            PreparedStatement pstmt_symbol = conn.prepareStatement(sql1);
+            String sql2 = "select p.parent_id, p.parent_value, p.date_added"+
+                  " from parent_list p"+
+                  " where p.parent_value=?";
+            PreparedStatement pstmt_family = conn.prepareStatement(sql2);
+            String sql3 = "select gene_nick_name_value from gene_nicknames"+
+                  " where hip_gene_id=?";
+            PreparedStatement pstmt_nickname = conn.prepareStatement(sql3);
+            String sql4 = "select t.id_type, g.id_value, g.extra_information, g.gi_order"+
+                  " from id_type t, gene_information g"+
+                  " where t.type_id=g.type_id"+
+                  " and g.hip_gene_id=?";
+            PreparedStatement pstmt_geneinfo = conn.prepareStatement(sql4);
+            String sql5 = "select l.symbol_value, l.formal_name_value "+
+                  " from gene_list l, family_mapping m"+
+                  " where l.hip_gene_id = m.hip_gene_id"+
+                  " and m.parent_id = ?";
+            PreparedStatement pstmt_query_children = conn.prepareStatement(sql5);
+                        
             int count = 0;
             while(rs.next()) {
                 count++;
@@ -175,7 +192,7 @@ public class DiseaseGeneManager {
                 String index = rs.getString(2);
                 String type = rs.getString(3);
                 String date = rs.getString(4);
-                double statScore = rs.getDouble(5);
+                double statScore = round_4(rs.getDouble(5));
                 //System.out.println(count+": id: "+id+" and score: "+statScore);
                 String statType = rs.getString(6);
                 int singlehitDisease = rs.getInt(7);
@@ -189,13 +206,21 @@ public class DiseaseGeneManager {
                 GeneIndex geneIndex = new GeneIndex(id, index, type, date);
                 AssociationData data = new AssociationData(singlehitDisease,singlehitGene,doublehit,doublehitNegative,dateadded);
                 Association assoc = new Association(disease, geneIndex, statAnalysis, data);
-                Gene gene = queryGeneByIndex(conn, assoc.getGeneIndex());
+                //Gene gene = queryGeneByIndex(conn, assoc.getGeneIndex());
+                Gene gene = queryGeneByIndex(conn, assoc.getGeneIndex(), pstmt_symbol, pstmt_family, pstmt_nickname, 
+                                              pstmt_geneinfo, pstmt_query_children );
                 assoc.setGene(gene);
                 associations.addElement(assoc);
             }
             
             rs.close();
             stmt.close();
+            pstmt_symbol.close(); 
+            pstmt_family.close();
+            pstmt_nickname.close();
+            pstmt_geneinfo.close();
+            pstmt_query_children.close();
+            
         } catch (SQLException ex) {
             System.out.println(ex);
         }
@@ -203,7 +228,83 @@ public class DiseaseGeneManager {
         return associations;
     }
     
-    protected Gene queryGeneByIndex(Connection conn, GeneIndex geneIndex) {
+   ///////////////////////////////////////////
+    /** find Object gene if given geneIndex
+     *  @param conn         Connection
+     *  @param geneIndex    GeneIndex Object
+     *  @param pstmt_symbol
+     *  @param pstmt_family
+     *  @param pstmt_nickname
+     *  @param pstmt_geneinfo
+     *  @param pstmt_query_children
+     *  @return Gene object
+     */    
+    protected Gene queryGeneByIndex(Connection conn, GeneIndex geneIndex, PreparedStatement pstmt_symbol, 
+                                    PreparedStatement pstmt_family, PreparedStatement pstmt_nickname, 
+                                    PreparedStatement pstmt_geneinfo, PreparedStatement pstmt_query_children ){
+        Gene gene = null;
+        ResultSet rs = null;
+          
+        try {
+            if(GeneIndex.NAME.equals(geneIndex.getType()) || GeneIndex.SYMBOL.equals(geneIndex.getType())) {
+                pstmt_symbol.setInt(1, geneIndex.getIndexid());         
+                rs = pstmt_symbol.executeQuery();                
+                if(rs.next()) {
+                    int id = rs.getInt(1);
+                    String symbol = rs.getString(2);
+                    int qualSymbol = rs.getInt(3);
+                    String name = rs.getString(4);
+                    int qualName = rs.getInt(5);
+                    String date = rs.getString(6);
+                    int locusid = rs.getInt(7);
+                    gene = new Gene(id, symbol, qualSymbol, name, qualName, date, locusid, Gene.GENE);
+                }                
+                rs.close();
+                
+                if(gene != null) {
+                    Vector nicknames = queryNicknamesByGene(conn, gene.getHipGeneId(), pstmt_nickname);
+                    gene.setNicknames(nicknames);
+                    Vector geneinfo = queryGeneinfoByGene(conn, gene.getHipGeneId(), pstmt_geneinfo);
+                    gene.setInformation(geneinfo);
+                }
+            } 
+            else {  // GeneIndex.FAMILY.equals(geneIndex.getType())
+                
+                pstmt_family.setString(1, geneIndex.getIndex());                
+                rs = pstmt_family.executeQuery();                
+                if(rs.next()) {
+                    int id = rs.getInt(1);
+                    String value = rs.getString(2);
+                    String date = rs.getString(3);
+                    gene = new Gene(id, null, -1, value, -1, date, -1, Gene.FAMILY);
+                }                
+                rs.close();
+                
+                if(gene != null) {
+                    Vector nicknames = queryChildren(conn, gene.getHipGeneId(), pstmt_query_children);                            
+                    gene.setNicknames(nicknames);
+                    Vector geneinfo = new Vector();
+                    gene.setInformation(geneinfo);
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);System.out.println("Exception throwed in queryGenebyGeneIndex");
+        }
+        
+        return gene;
+    
+    
+    
+    
+    }
+    
+    /** find Object gene if given geneIndex
+     *  @param conn         Connection
+     *  @param geneIndex    GeneIndex Object
+     *  @return Gene object
+     */    
+    
+    protected Gene queryGeneByIndex00(Connection conn, GeneIndex geneIndex) {
         PreparedStatement stmt = null;
         Gene gene = null;
         ResultSet rs = null;
@@ -217,20 +318,8 @@ public class DiseaseGeneManager {
                 " order by date_added desc";
                 stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, geneIndex.getIndexid());
-/*            } else {
-                sql = "select gl.hip_gene_id, gl.symbol_value, gl.quality_id_symbol,"+
-                " gl.formal_name_value, gl.quality_id_name, gl.date_added, gl.locus_id"+
-                " from gene_list gl, family_mapping f, parent_list p"+
-                " where gl.hip_gene_id=f.hip_gene_id"+
-                " and f.parent_id=p.parent_id"+
-                " and p.parent_value=?"+
-                " order by gl.date_added desc";
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, geneIndex.getIndex());
-            }
- */
-                rs = stmt.executeQuery();
-                
+         
+                rs = stmt.executeQuery();                
                 if(rs.next()) {
                     int id = rs.getInt(1);
                     String symbol = rs.getString(2);
@@ -251,7 +340,8 @@ public class DiseaseGeneManager {
                     Vector geneinfo = queryGeneinfoByGene(conn, gene.getHipGeneId());
                     gene.setInformation(geneinfo);
                 }
-            } else {
+            } 
+            else {
                 sql = "select p.parent_id, p.parent_value, p.date_added"+
                 " from parent_list p"+
                 " where p.parent_value=?";
@@ -278,13 +368,35 @@ public class DiseaseGeneManager {
                 }
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            System.out.println(ex);System.out.println("Exception in queryGenebyGeneIndex");
         }
         
         return gene;
     }
+
+    // query nick names by gene id (version 1)
+    protected Vector queryNicknamesByGene(Connection conn, int id, PreparedStatement pstmt_nickname) {
+
+        Vector nicknames = new Vector();
+        
+        try {
+            ResultSet rs = null;
+            pstmt_nickname.setInt(1, id);
+            rs = pstmt_nickname.executeQuery();            
+            while(rs.next()) {
+                String name = rs.getString(1);
+                nicknames.addElement(name);
+            }            
+            rs.close();
+            //pstmt_nickname.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        
+        return nicknames;
+    }
     
-    
+    // query nick names by gene id (version 2)
     protected Vector queryNicknamesByGene(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
@@ -310,6 +422,34 @@ public class DiseaseGeneManager {
         return nicknames;
     }
     
+    // query children by gene id (version 1)
+    protected Vector queryChildren(Connection conn, int id, PreparedStatement pstmt_query_children) {
+
+        Vector nicknames = new Vector();
+        
+        try {
+            ResultSet rs = null;
+            pstmt_query_children.setInt(1, id);
+            rs = pstmt_query_children.executeQuery();
+            
+            while(rs.next()) {
+                String symbol = rs.getString(1);
+                String formal_name = rs.getString(2);
+                if(symbol == null || symbol.trim().length() == 0)
+                    nicknames.addElement(formal_name);
+                else
+                    nicknames.addElement(symbol);
+            }
+            
+            rs.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+ 
+        return nicknames;
+    }
+    
+    // query children by gene id (version 2)
     protected Vector queryChildren(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
@@ -342,6 +482,38 @@ public class DiseaseGeneManager {
         return nicknames;
     }
     
+    // query gene information by gene id (version 1)
+    public Vector queryGeneinfoByGene(Connection conn, int id, PreparedStatement pstmt_geneinfo) {
+
+        Vector geneInfo = new Vector();
+        
+        try {
+            ResultSet rs = null;            
+            pstmt_geneinfo.setInt(1, id);
+            rs = pstmt_geneinfo.executeQuery();
+            
+            while(rs.next()) {
+                String type = rs.getString(1);
+                String value = rs.getString(2);
+                String extraInfo = rs.getString(3);
+                int refSeq_NM_order = rs.getInt(4);
+                Geneinfo info = new Geneinfo(type, value, extraInfo, refSeq_NM_order);
+                geneInfo.addElement(info);
+            }
+            
+            rs.close();            
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        
+        return geneInfo;
+    }    
+    
+    /** query gene information by gene id (version 2)
+     *  @param conn         Connection
+     *  @param id           hip gene id
+     *  @return vector of gene information
+     */   
     public Vector queryGeneinfoByGene(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
@@ -373,7 +545,12 @@ public class DiseaseGeneManager {
         return geneInfo;
     }
     
-    // override queryGeneinfoByGene(Connection, id)
+    
+    /** query gene information by gene symbol (version 3)
+     *  @param conn         Connection
+     *  @param symbol       gene symbol
+     *  @return vector of gene information
+     */   
     public Vector queryGeneinfoByGene(Connection conn, String symbol) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -449,13 +626,13 @@ public class DiseaseGeneManager {
         " from gene_index i, search_term s, index_type t"+
         " where i.gene_index_id=s.gene_index_id"+
         " and i.index_type_id=t.index_type_id"+
-        " and s.gene_term like ?";
+        " and s.gene_term_uppercase like ?";
         Vector geneIndexes = new Vector();
         TreeSet geneIndexesTree = new TreeSet(new GeneIndexComparator());
         
         try {
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, "%"+term+"%");
+            stmt.setString(1, "%" + term.toUpperCase() + "%");
             rs = stmt.executeQuery();
             
             while(rs.next()) {
@@ -579,7 +756,7 @@ public class DiseaseGeneManager {
                 int id = rs.getInt(1);
                 String term = rs.getString(2);
                 String date = rs.getString(3);
-                double statScore = rs.getDouble(4);
+                double statScore = round_4(rs.getDouble(4));
                 String statType = rs.getString(5);
                 int singlehitDisease = rs.getInt(6);
                 int singlehitGene = rs.getInt(7);
@@ -729,6 +906,44 @@ public class DiseaseGeneManager {
         manager.disconnect(conn);
         return geneIndex;
     }       
+    
+    
+    /** get GeneIndex by hip gene id
+     *  @param id   gene index id
+     *  @return     geneIndex
+     
+    public String queryGeneIndexByHipGeneId(int hip_gene_id) {
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        Statement stmt = null;
+        ResultSet rs = null;        
+        String sql = "select gi.gene_index from gene_index gi, gene_list gl where gi.gene_index_id = gl.gene_index_id "+
+                     " and gl.hip_gene_id = " + hip_gene_id;
+        String geneIndex = "";
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            
+            if(rs.next()) {             
+                String geneIndexString = rs.getString(1);
+            }            
+            rs.close();
+            stmt.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally{
+            manager.disconnect(conn);
+            return geneIndex;
+        }
+    }       
+    */
+    
     
     /** get MedlineRecords by disease id and gene index
      *  @param disease_id   disease id
@@ -915,15 +1130,21 @@ public class DiseaseGeneManager {
             return hs_homolog_geneIndexes;
     }
     
-    /*
+    long start, end;
     public static void main(String[] args){
         DiseaseGeneManager m = new DiseaseGeneManager();
-        Vector hs_homologs = m.getHsGeneIndexesByHomolog("29634", 1);
-        Vector associations = m.getAssociationsByGeneIndex(((GeneIndex)(hs_homologs.elementAt(0))).getIndexid(), 1, 25);
-        for(int i=0; i<associations.size(); i++){
-            System.out.println(((Association)(associations.elementAt(i))).getDisease().getTerm());
-        }
+        //Vector hs_homologs = m.getHsGeneIndexesByHomolog("29634", 1);
+        //Vector associations = m.getAssociationsByGeneIndex(((GeneIndex)(hs_homologs.elementAt(0))).getIndexid(), 1, 25);
+        //for(int i=0; i<associations.size(); i++){
+        //    System.out.println(((Association)(associations.elementAt(i))).getDisease().getTerm());
+        //}
+        m.start = System.currentTimeMillis();
+        Vector v = m.getAssociationsByDisease(483, 1, 3000);
+        System.out.println(v.size());
+        m.end =  System.currentTimeMillis();
+        System.out.println("done  " +  (m.end-m.start)/1000 + " sec");
+
     }
-    */
+    
         
 }

@@ -62,10 +62,10 @@ public class SearchGenesForGene_step2Action extends MetageneAction {
         String submit = ((SearchGenesForGene_step2Form)form).getSubmit();
         
         String stat_type = "Not defined";
-        String source_gene_name = "Your Gene";
+        String source_gene_index = "Your Gene";
         
         switch(stat_id){
-             case 1: stat_type = "Product of incidence"; break;
+             case 1: stat_type = "Product of frequency"; break;
              case 2: stat_type = "Probability"; break;
              case 3: stat_type = "Chi square analysis"; break;
              case 4: stat_type = "Fischer exact test"; break;
@@ -83,12 +83,12 @@ public class SearchGenesForGene_step2Action extends MetageneAction {
                    manager.getGeneGeneAssociationsByGeneIndexID(gene_index_id, stat_id, number);
             
             if(!g_g_associations.isEmpty())
-                source_gene_name = manager.getSourceGeneName(g_g_associations);
+                source_gene_index = manager.getSourceGeneIndex(g_g_associations);
           
             request.setAttribute("associations", g_g_associations);
             request.setAttribute("stat_type", stat_type);
             request.setAttribute("number", new Integer(number).toString());
-            request.setAttribute("source_gene_symbol", source_gene_name);
+            request.setAttribute("source_gene_index", source_gene_index);
 
             return (mapping.findForward("success"));
         }

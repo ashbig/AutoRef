@@ -8,7 +8,7 @@
 <P>
 <HR>
 <BR>
-<A HREF="product_of_incidence.jsp" target="_blank"><font size=3 face=Arial><b> *  Product of incidence</b></font></A><BR>
+<A HREF="product_of_incidence.jsp" target="_blank"><font size=3 face=Arial><b> *  Product of frequency</b></font></A><BR>
 <BR>
 <A HREF="probability.jsp" target="_blank"><font size=3 face=Arial><b> *  Probability</b></font></A><BR> 
 <BR>

@@ -13,7 +13,7 @@
     <body>    
     <% int i = 0; %>
     <center>
-    <h1>Top <bean:write name="number"/> Genes Associated With <bean:write name="source_gene_symbol"/></h1> 
+    <h1>Top <bean:write name="number"/> Genes Associated With <bean:write name="source_gene_index"/></h1> 
     <h1>By Statistical Method Of "<bean:write name="stat_type"/>"</h1>
     </center>
 
@@ -92,8 +92,12 @@
             <TD align="center">
                 <bean:write name="association" property="stat_analysis.score"/>&nbsp
             </TD>
+
             <TD align="center">
-                <bean:write name="association" property="asso_data.doublehit"/>&nbsp
+                <a href="DisplayPaperLinks_GeneGene.do?source_gene_index=<bean:write name="source_gene_index"/>
+&target_gene_symbol=<bean:write name="association" property="target_gene.symbol"/>
+&target_gene_name=<bean:write name="association" property="target_gene.name"/>" target="_blank">
+                <bean:write name="association" property="asso_data.doublehit"/></a>&nbsp
             </TD>
             <TD><a href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=<bean:write name="association" property="target_gene.refSeq_NM2"/>" target="_blank">
                 <font size=2> <bean:write name="association" property="target_gene.refSeq_NM"/> </font> </a>&nbsp

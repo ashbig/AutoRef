@@ -85,8 +85,12 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
             while(rs.next()) {
                 int gene_index_id = rs.getInt(1);
                 String symbol_value = rs.getString(2);
+                if(symbol_value != null) 
+                    symbol_value = symbol_value.toUpperCase();
+                else                     
+                    symbol_value = "null";
                 int locus_id = rs.getInt(3);
-                double score = rs.getDouble(4);
+                double score = round_4(rs.getDouble(4));
                 source_for_indirect_genes.put(new Integer(gene_index_id), new Double(score));      
                 
                 ChipGene gene = new ChipGene(symbol_value, locus_id, score);   
@@ -101,8 +105,12 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
             while(rs.next()){
                 int gene_index_id = rs.getInt(1);
                 String symbol_value = rs.getString(2);
+                if(symbol_value != null) 
+                    symbol_value = symbol_value.toUpperCase();
+                else                     
+                    symbol_value = "null";
                 int locus_id = rs.getInt(3);
-                double score = rs.getDouble(4);
+                double score = round_4(rs.getDouble(4));
                 source_for_indirect_genes.put(new Integer(gene_index_id), new Double(score));  
                 
                 ChipGene gene = new ChipGene(symbol_value, locus_id, score);
@@ -166,17 +174,18 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
     
     public static void main(String[] args){
 
-        //String text = "";
+        String text = "";
+        
 
-        String text =
+        text =
         "STS\n TERF1\n RAF1\n PYY\n MIR\n CCS\n DMT1\n NPY\n PPY\n GCG\n GAL\n" +
         "13CDNA73\n 6H9A\n AADAC\n AARS\n AASDHPPT\n ABCA12\n ABCA2\n ABCA4\n ABCA5\n" + 
-        "ABCA6\n ABCA8\n ABCB1\n HHHH\n";             
-        
+        "ABCA6\n ABCA8\n ABCB1\n HHHH\n C17orf1A\n";             
         /*
+        
         try{
          
-        BufferedReader in = new BufferedReader(new FileReader("c:\\test.txt"));       
+        BufferedReader in = new BufferedReader(new FileReader("c:\\data\\locusid.txt"));       
         
         String s;
         
@@ -190,15 +199,17 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
         }
         */
         
-
+        text = text.toUpperCase();
          
 //////////////////////////////////
                                                                                         
         ChipGeneGeneAnalysis ana = new ChipGeneGeneAnalysis();  
-        ana.hashDirectGenes(531, 1, ana.GENE_SYMBOL_INPUT);  
-        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1, 4000);       
-        ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT, 4000);
-        
+        ana.hashDirectGenes(5133, 1, ana.GENE_SYMBOL_INPUT);  
+        //ana.hashDirectGenes(531, 1, ana.LOCUS_ID_INPUT);
+        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1, 10000);    
+        //ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.LOCUS_ID_INPUT, 1, 10000); 
+        ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT, 10000);
+        //ana.analyzeInputChipGenes(text, ana.LOCUS_ID_INPUT, 10000);
         
         TreeSet direct = ana.getDirect_gene_tree();        
         System.out.println("direct tree:     " + direct.size());

@@ -103,7 +103,7 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
             
             String stat="";
             switch(stat_id){
-                case 1: stat="Product of incidence"; break;
+                case 1: stat="Product of frequency"; break;
                 case 2: stat="Probability"; break;
                 case 3: stat="Chi square analysis"; break;
                 case 4: stat="Fischer exact test"; break;

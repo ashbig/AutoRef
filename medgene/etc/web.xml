@@ -81,24 +81,38 @@
         <servlet-class>
             edu.harvard.med.hip.metagene.database.DBInitServlet
         </servlet-class>  
+
+    <!-- for access database 
     <init-param>
         <param-name>driverClass</param-name>
         <param-value>sun.jdbc.odbc.JdbcOdbcDriver</param-value>
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:odbc:medgene</param-value>
+      <param-value>jdbc:odbc:new_medgene</param-value>
     </init-param>
-    <!-- 
+        for access database -->             
+
+    <!-- for oracle database -->
+    <init-param>
+        <param-name>driverClass</param-name>
+        <param-value>oracle.jdbc.driver.OracleDriver</param-value>
+    </init-param>   
+    <init-param>
+      <param-name>jdbcURL</param-name>
+      <param-value>jdbc:oracle:thin:@hipseq:1521:mdev</param-value>
+    </init-param>
+
     <init-param>
       <param-name>user</param-name>
-      <param-value>medgene_0702</param-value>
+      <param-value>medgene_0802</param-value>
     </init-param>
     <init-param>
         <param-name>password</param-name>
         <param-value>medgene</param-value>
     </init-param>
-    -->
+    <!-- for oracle database -->   
+
     <init-param>
       <param-name>minCount</param-name>
       <param-value>1</param-value>

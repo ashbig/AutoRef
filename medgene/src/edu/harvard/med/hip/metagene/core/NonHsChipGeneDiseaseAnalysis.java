@@ -193,6 +193,175 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
 
     }
     
+    ///////////////////////8888888888888888888888888888888888888888888888
+    
+    /**
+     * auxiliary method for hashIndirectGenes(...)    
+     */    
+    protected void hashIndirectGenes_aux(Connection con, String sql, HashMap source_for_indirect_genes, int input_type)
+        throws SQLException{
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        stmt = con.createStatement();
+        rs = stmt.executeQuery(sql);
+        while(rs.next()) {
+                double score = rs.getDouble(3);           
+                int link_gene_index_id = rs.getInt(4);              
+
+                score = ((Double)(source_for_indirect_genes.get(new Integer(link_gene_index_id)))).doubleValue() + score;
+                long temp =  (long)(score * 10000 + ( score > 0 ? .5 : -.5 )); 
+                score = (double) temp / 10000;
+       
+                if(input_type == GENE_SYMBOL_INPUT){       
+                    String gene_symbol = rs.getString(1).toUpperCase();     
+                    if(indirect_gene_hashmap.containsKey(gene_symbol)){                        
+                        if( ((ChipGene)(indirect_gene_hashmap.get(gene_symbol))).getScore() < score )                         
+                            ((ChipGene)(indirect_gene_hashmap.get(gene_symbol))).setScore(score);
+                    }
+                    else{
+                        int locus_id = rs.getInt(2);                    
+                        indirect_gene_hashmap.put(gene_symbol, new ChipGene(gene_symbol, locus_id, score));
+                    }
+                }
+              
+                if(input_type == LOCUS_ID_INPUT){    
+                    int locus_id = rs.getInt(2); 
+                    if(indirect_gene_hashmap.containsKey(new Integer(locus_id))){                        
+                        if( ((ChipGene)(indirect_gene_hashmap.get(new Integer(locus_id)))).getScore() < score )
+                            ((ChipGene)(indirect_gene_hashmap.get(new Integer(locus_id)))).setScore(score);
+                    }
+                    else{
+                        String gene_symbol = rs.getString(1).toUpperCase();                        
+                        indirect_gene_hashmap.put(new Integer(locus_id), new ChipGene(gene_symbol, locus_id, score));
+                    }
+                }
+
+        }
+        rs.close();
+        stmt.close();
+    }
+    
+    
+    //////////////////////// Oracle version ///////////////////////////
+    
+    public void hashIndirectGenes(String input_genes, HashMap source_for_indirect_genes,
+                                      int input_type, int stat_id, int max_input){
+                                          
+        DBManager manager = new DBManager();
+        Connection con = manager.connect();
+
+        if (con == null) {
+            System.out.println("Cannot connect to the database.");
+            return;
+        }
+        if(input_genes.trim().length() == 0)
+            return;
+        if(source_for_indirect_genes.size() == 0)
+            return;
+                            
+        // since the max length of oracle8i inlist statement is 1000, 
+        // the input_genes has to be put into an array, each array element contains at most 1000 input genes.
+        StringTokenizer st = new StringTokenizer(input_genes);        
+        int input_genes_number = (st.countTokens() < max_input) ? st.countTokens() : max_input;
+        int input_array_size = (input_genes_number - 1)/1000 + 1;
+        String[] input = new String[input_array_size];
+        for(int i = 0; i < input_array_size; i++){
+            input[i] = "";
+            for(int j = 0; j < 1000; j++){
+                if(st.hasMoreTokens()){     
+                    if(input_type == GENE_SYMBOL_INPUT)
+                        input[i] = input[i] + "'" + st.nextToken() + "'" + ", ";            
+                    if(input_type == LOCUS_ID_INPUT)
+                        input[i] = input[i] + st.nextToken() + ", ";               
+                }
+                else
+                    break;
+            }
+            input[i] = input[i].substring(0, input[i].length()-2);
+        }                
+        
+        // since the max length of oracle8i inlist statement is 1000, 
+        // the source_for_indirect_genes has to be put into an array, each array element contains at most 1000 source genes.        
+        int elements_array_size = (source_for_indirect_genes.size()-1)/1000 + 1;        
+        String[] elements = new String[elements_array_size];
+        for(int i = 0; i < elements_array_size; i++)
+            elements[i] = "";                                
+        Iterator it = source_for_indirect_genes.keySet().iterator();
+        int k=-1;
+        while (it.hasNext()){
+            k++;
+            elements[k/1000] = elements[k/1000] + ((Integer)(it.next())).intValue() + ", "; 
+        }       
+        for(int i = 0; i < elements_array_size; i++)
+            elements[i] = elements[i].substring(0, elements[i].length()-2);        
+
+        // build sql
+        String[][] sql_1 = new String[input_array_size][elements_array_size];
+        String[][] sql_2 = new String[input_array_size][elements_array_size];
+        for(int i = 0; i < input_array_size; i++){
+            for(int j = 0; j < elements_array_size; j++){
+                sql_1[i][j] =  
+                "select gl.symbol_value, gl.locus_id, s.statistic_score, s.gene2_index_id " +
+                "from gene_list gl, " + 
+                "     (select sa.statistic_score, t.gene1_index_id, t.gene2_index_id " +                                // alias s
+                "           from statistic_analysis sa, association_data ad, " +
+                "                (SELECT /*+ rule */ gga.association_id, gga.gene1_index_id, gga.gene2_index_id " +     // alias t
+                "                        FROM gene_and_gene_association gga WHERE gga.gene1_index_id in ";
+        
+                if(input_type == GENE_SYMBOL_INPUT)
+                    sql_1[i][j] += "(select gene_index_id from gene_list where symbol_uppercase in ( " + input[i] + " )) ";
+                if(input_type == LOCUS_ID_INPUT)
+                    sql_1[i][j] += "(select gene_index_id from gene_list where gl.locus_id in ( " + input[i] + " )) ";
+                
+                sql_1[i][j] += 
+                    "and gga.gene2_index_id in ( " + elements[j] + " )) t " +
+                    "where sa.data_id = ad.data_id and ad.association_id = t.association_id and sa.statistic_id = " + stat_id + " " +
+                    ") s where gl.gene_index_id = s.gene1_index_id ";
+            }
+        }
+        
+        for(int i = 0; i < input_array_size; i++){
+            for(int j = 0; j < elements_array_size; j++){
+                sql_2[i][j] =  
+                "select gl.symbol_value, gl.locus_id, s.statistic_score, s.gene1_index_id " +
+                "from gene_list gl, " + 
+                "     (select sa.statistic_score, t.gene1_index_id, t.gene2_index_id " +                                // alias s
+                "           from statistic_analysis sa, association_data ad, " +
+                "                (SELECT /*+ rule */ gga.association_id, gga.gene1_index_id, gga.gene2_index_id " +     // alias t
+                "                        FROM gene_and_gene_association gga WHERE gga.gene2_index_id in ";
+        
+                if(input_type == GENE_SYMBOL_INPUT)
+                    sql_2[i][j] += "(select gene_index_id from gene_list where symbol_uppercase in ( " + input[i] + " )) ";
+                if(input_type == LOCUS_ID_INPUT)
+                    sql_2[i][j] += "(select gene_index_id from gene_list where gl.locus_id in ( " + input[i] + " )) ";
+                
+                sql_2[i][j] += 
+                    "and gga.gene1_index_id in ( " + elements[j] + " )) t " +
+                    "where sa.data_id = ad.data_id and ad.association_id = t.association_id and sa.statistic_id = " + stat_id + " " +
+                    ") s where gl.gene_index_id = s.gene2_index_id ";
+            }
+        }
+                    
+        try{
+            for(int i = 0; i < input_array_size; i++){
+                for(int j = 0; j < elements_array_size; j++){//System.out.println("bbbbbbbbbbbbbb");
+                    hashIndirectGenes_aux(con, sql_1[i][j], source_for_indirect_genes, input_type);//System.out.println("aaaaaaaaaaaaaa");
+                    hashIndirectGenes_aux(con, sql_2[i][j], source_for_indirect_genes, input_type);                    
+                }
+            }
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            manager.disconnect(con);
+        }    
+
+      //System.out.println("indirect hashmap size = " + indirect_gene_hashmap.size() + " --------");
+        System.out.println("----------- indirect hash done ----------");            
+
+    }
+    
     
     //////////////////////////////////////////// test ////////////////////////////////////////////////////////////
     
@@ -226,8 +395,8 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
          **/
         
         
-        ana.hashDirectGenes(2031, 1, 2);
-        ana.hashIndirectGenes(ana.toHsHomologInput(homolog), ana.source_for_indirect_genes, 2, 1, 4000);
+        ana.hashDirectGenes(2031, 1, 2);            
+        ana.hashIndirectGenes(ana.toHsHomologInput(homolog), ana.getSource_for_indirect_genes(), 2, 1, 4000);
         ana.analyzeInputChipGenes(text, homolog, 4000);
         
         TreeSet direct = ana.getDirect_gene_tree();        
