@@ -30,6 +30,7 @@
         <logic:iterate id="oneSpecies" name="species" scope="request">
             <option value="<bean:write name="oneSpecies"/>"><bean:write name="oneSpecies"/>
         </logic:iterate>
+        </select>
     </td>
     </tr>
     </logic:present>
