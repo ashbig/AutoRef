@@ -74,37 +74,18 @@
 
 <table border="0" cellpadding="10" cellspacing="2" width="74%" align=center>
 
-    <tr>
-    <td class="prompt">Sequence definition term:</td>
-    <td><select name="searchType">
-        <option value="clone_id" selected>Clone Id</option>
-        <option value="flex_id">FLEX Sequence Id</option>
-        <option value="bec_id">BEC Sequence Id</option>
-    </td>
-    <td>&nbsp;</td>
-    </tr>
-
-    <tr>
-    <td></td>
-    <td><input type="radio" name="searchSubmissionType" value="nonfile" checked="checked">Enter sequence ids: (separated by spaces)
-    </td>
-    <td><input type="radio" name="searchSubmissionType" value="file">Upload file containing sequence ids: (separated by spaces)
-    </td>
-    </tr>
-
-    <tr>
-    <td></td>
-    <td><textarea name="searchTerm" rows="10"></textarea>
-    </td>
-    <td valign="top"><input type="file" name="filename" value="">
-    </td>
+    <tr><td colspan=2>
+         <jsp:include page="enter_items.jsp" /> </td>
     </tr>
 <%if ((specs != null && names != null && control_names != null)
     && ( specs.size()> 0 && names.size()>0 && control_names.size()>0))
  {%>
 
-	<tr><td colspan =3 ><b>Process Specification</b></td></tr>
-	<%String control_name = null; String spec_name = null; ArrayList specs_arr = null; 
+	<tr><td colspan =2 bgColor="#1145A6" ><font color="#FFFFFF"><strong>Process Specification</strong></font></td></tr>
+	
+<%String control_name = null; 
+String spec_name = null; 
+ArrayList specs_arr = null; 
 Spec spec = null;
         for (int count = 0; count <specs.size(); count ++)
         {
@@ -127,7 +108,7 @@ Spec spec = null;
                      	
         	<%}%>
     	</SELECT></td>
-	<td >&nbsp; </td>
+	
     </tr>
 <%}}%>
 
