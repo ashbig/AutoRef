@@ -329,7 +329,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         //define 'no trace files'
         String trace_dir =   trace_files_path +File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory
         //////*********************** for testing ***************************
-        trace_dir = "Z:\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
+      //  trace_dir = "Z:\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
 
         int numberOfFilesStatus = CloneAssembly.isAssemblerRunNeeded(trace_dir, 0);
         if ( numberOfFilesStatus ==  CloneAssembly.ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE
@@ -871,7 +871,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         CloningStrategy cloning_strategy = null;
         if (linkers == null ) linkers = new Hashtable();
 
-        boolean isLinkerInformationNeeded = (  m_is_ref_5_linker||  m_is_ref_3_linker );
+        boolean isLinkerInformationNeeded = true;//(  m_is_ref_5_linker||  m_is_ref_3_linker );
 
 
         for (int count = 0; count < clones.length; count++)
@@ -1406,17 +1406,17 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
             runner = new DecisionToolRunner_New();
          //   runner.setInputData(Constants.ITEM_TYPE_CLONEID, "159321 159415 159237 159333 159423 159245 159435 159345 159349 159437 159441 159261 159353 159357 159445 159265 159269 159365 159273 159277 159369 159281 159285 159377 159289 159293 159385 159301 159397 159309 159401 159405 159317 159407 159411 172834 172842 172849 172857 172865 172869 172873 172881 172891 172893 172897 172926 172929 172940 172945 172949 172962 172966 172977 172981 172993 172997 173012 173013 173238 173249 173276 173419 173419 173437 173442 173470 173473 173477 173489 173607 173613 173619 173625 173630 173633 173642 173647 173649 173654 173662 173665 173669 173678 173682 173686 173689 ");
 
-      runner.setInputData(Constants.ITEM_TYPE_CLONEID, "172259 141149 141150 172169 135152 119982 119983 141618 141619 141620 141630 141631 141632 172223 172224 172246 172247 172248 141117 141118 141119 141151 134468 134469 134472 134475 134476 134479 134480 140012 140013 140014 140042 140043 140044 135071 135142 135143 135144 172767 172768 172769 135150 135151 172624 172625 172626 135252 135253 135396 141686 141704 141744 172167 172168 172260 172226 172227 172228 172363 172362 172691 172693 141687 141705 ");
+      //runner.setInputData(Constants.ITEM_TYPE_CLONEID, "172259 141149 141150 172169 135152 119982 119983 141618 141619 141620 141630 141631 141632 172223 172224 172246 172247 172248 141117 141118 141119 141151 134468 134469 134472 134475 134476 134479 134480 140012 140013 140014 140042 140043 140044 135071 135142 135143 135144 172767 172768 172769 135150 135151 172624 172625 172626 135252 135253 135396 141686 141704 141744 172167 172168 172260 172226 172227 172228 172363 172362 172691 172693 141687 141705 ");
 
       
-    //  runner.setInputData(Constants.ITEM_TYPE_CLONEID, "      141686 141687 141704");
+     runner.setInputData(Constants.ITEM_TYPE_CLONEID, "     154816 154658 155181 155189");
 
       
 
             runner.setUser(user);
             runner.setNumberOfOutputFiles(Constants.OUTPUT_TYPE_GROUP_PER_FILE);
           //  runner.setSpecId(4);// for yp3
-                   runner.setSpecId(44);// for bec
+                   runner.setSpecId(33);// for bec
             runner.setUserComment(" test user comment");
             //runner.setNumberOfOutputFiles( );
              runner.setFields(
