@@ -133,8 +133,8 @@ public abstract class ProcessRunner implements Runnable
             String title = getTitle();
             if (m_error_messages.size()>0)
             {
-                 Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", 
+                 Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                "hip_informatics@hms.harvard.edu", 
                title+": error messages.", "Errors\n " ,m_error_messages);
 
             }
@@ -152,21 +152,21 @@ public abstract class ProcessRunner implements Runnable
                     subject = "Trace files order files request";
                     text="Please find attached Trace files order for your request\n Requested item ids:\n"+m_items;
                 }
-                Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu",subject,                 text,               m_file_list_reports);
+                Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                "hip_informatics@hms.harvard.edu",subject,                 text,               m_file_list_reports);
             }
             if (m_error_messages.size()==0 && !(this instanceof ReportRunner))
             {
                 message_text = title;
                 if (m_items != null) message_text +=" \n Items processed:\n"+m_items;
-                 Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", title, message_text );
+                 Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                "hip_informatics@hms.harvard.edu", title, message_text );
 
             }
             if (m_error_messages.size()!=0 && !(this instanceof ReportRunner))
             {
-                 Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", title,title+ " \n Items processed:\n"+m_items +"\nSee another e-mail for error messages.");
+                 Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                "hip_informatics@hms.harvard.edu", title,title+ " \n Items processed:\n"+m_items +"\nSee another e-mail for error messages.");
 
             }
 
