@@ -222,11 +222,46 @@ public class Algorithms {
     
     
     public static void main(String args[]) {
+        String inputFile = "G:\\tmp\\wellin.txt";
+        String outputFile = "G:\\tmp\\wellout.txt";
+        String line;
         
+        try {
+            PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
+ 
+            BufferedReader in = new BufferedReader((new FileReader(inputFile)));
+            //String ignore = in.readLine();
+            
+            while((line = in.readLine()) != null) {
+                /**
+                String s = Algorithms.cleanWhiteSpaces(line);
+                int num = Algorithms.convertWellFromA8_12toInt(s);
+                output.println(line+"\t"+num);
+                */
+                
+                int num = Integer.parseInt(line);
+                String s = Algorithms.convertWellFromInttoA8_12(num);
+                String positionX = s.substring(0, 1);
+                String positionY = s.substring(1);
+                int y = Integer.parseInt(positionY);
+                java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
+                fmt.setMaximumIntegerDigits(2);
+                fmt.setMinimumIntegerDigits(2);
+                fmt.setGroupingUsed(false);
+                String well = positionX+fmt.format(y);
+                output.println(line+"\t"+well+"\t"+positionX+"\t"+y);
+            }
+            in.close();
+            output.close();
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
         
+        /**
         String s = "ff f f f f f f fd ffff ";
         s = Algorithms.cleanWhiteSpaces(s);
         System.out.println(s);
+         **/
     }
 }
 
