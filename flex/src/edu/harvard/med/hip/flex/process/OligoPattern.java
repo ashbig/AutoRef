@@ -1,5 +1,5 @@
 /*
- * $Id: OligoPattern.java,v 1.6 2001-07-17 19:30:29 wendy Exp $
+ * $Id: OligoPattern.java,v 1.7 2001-08-01 20:11:20 wendy Exp $
  * OligoPattern.java
  *
  * Created on May 29, 2001, 12:40 PM
@@ -18,6 +18,7 @@ package edu.harvard.med.hip.flex.process;
  * @date   5/29/01
  * @version
  */
+
 public class OligoPattern {
     private int oligoId_5p;
     private int oligoId_3s;
