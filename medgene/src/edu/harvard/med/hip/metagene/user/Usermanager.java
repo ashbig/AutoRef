@@ -16,14 +16,19 @@ import java.sql.*;
  */
 public class Usermanager {
     
+    private ConnectionPool pool;
+    
     /** Creates new Usermanager */
     public Usermanager() {
+        pool = ConnectionPool.getInstance();
     }
     
     public boolean authenticate(String username, String password) {
-        DatabaseManager manager = new DatabaseManager();
-        Connection conn = manager.connect();
+        //DatabaseManager manager = new DatabaseManager();
+        //Connection conn = manager.connect();
         
+        Connection conn = pool.getConnection();
+
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return false;
@@ -46,15 +51,28 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            manager.disconnect();
+            try{
+                conn.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
         }
-        
+            //manager.disconnect();        
+            
+        try{
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+                
         return rt;
     }
     
     public boolean userExist(String userid) {
-        DatabaseManager manager = new DatabaseManager();
-        Connection conn = manager.connect();
+        //DatabaseManager manager = new DatabaseManager();
+        //Connection conn = manager.connect();
+        
+        Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -77,15 +95,28 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            manager.disconnect();
+            try{
+                conn.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+            //manager.disconnect();        
+            
+        try{
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
         }
         
         return rt;
     }
     
     public boolean reminderUnique(String text) {
-        DatabaseManager manager = new DatabaseManager();
-        Connection conn = manager.connect();
+        //DatabaseManager manager = new DatabaseManager();
+        //Connection conn = manager.connect();
+        
+        Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -108,7 +139,18 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            manager.disconnect();
+            try{
+                conn.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+            //manager.disconnect();        
+            
+        try{
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
         }
         
         return (count<=1);
@@ -117,8 +159,10 @@ public class Usermanager {
     public boolean addUser(String userid, String email, String password,
     String organization, String reminder,
     String firstname, String lastname, String phone) {
-        DatabaseManager manager = new DatabaseManager();
-        Connection conn = manager.connect();
+        //DatabaseManager manager = new DatabaseManager();
+        //Connection conn = manager.connect();
+        
+        Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -144,15 +188,28 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            manager.disconnect();
+            try{
+                conn.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+            //manager.disconnect();        
+            
+        try{
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
         }
         
         return rt;
     }
     
     public User getUser(String userid) {
-        DatabaseManager manager = new DatabaseManager();
-        Connection conn = manager.connect();
+        //DatabaseManager manager = new DatabaseManager();
+        //Connection conn = manager.connect();
+        
+        Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -183,15 +240,28 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            manager.disconnect();
+            try{
+                conn.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+            //manager.disconnect();        
+            
+        try{
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
         }
         
         return user;
     }
     
     public User findUser(String reminder) {
-        DatabaseManager manager = new DatabaseManager();
-        Connection conn = manager.connect();
+        //DatabaseManager manager = new DatabaseManager();
+        //Connection conn = manager.connect();
+        
+        Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -222,7 +292,18 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            manager.disconnect();
+            try{
+                conn.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+            //manager.disconnect();        
+            
+        try{
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
         }
         
         return user;

@@ -10,7 +10,8 @@
     <head>
         <title>MedGene : Genes Associated With a Particular Gene</title>
     </head>
-    <body>
+    <body>    
+    <% int i = 0; %>
     <center>
     <h1>Top <bean:write name="number"/> Genes Associated With <bean:write name="source_gene_symbol"/></h1> 
     <h1>By Statistical Method Of "<bean:write name="stat_type"/>"</h1>
@@ -22,16 +23,18 @@
     <p>
     <TABLE width="100%" align="center" border="1" cellpadding="2" cellspacing="0">
     <COLGROUP>
+        <COL width="3%">
         <COL width="15%">
         <COL width="5%">
         <COL width="10%">
-        <COL width="33%">
-        <COL width="25%">
-        <COL width="6%">
-        <COL width="6%">
+        <COL width="30%">
+        <COL width="27%">
+        <COL width="5%">
+        <COL width="5%">
     <THEAD>
 
     <TR bgcolor="gray">
+        <TH>Rank</TH>
         <TH><A HREF="KeySearchTerm.jsp" target="_blank">Key Search Term</A></TH>
         <TH><A HREF="SearchType.jsp" target="_blank">Search Type</A></TH>
         <TH><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
@@ -43,6 +46,7 @@
 
     <logic:iterate id="association" name="associations"> 
         <tr>
+            <TD align="center"><% out.println(++i); %></TD>
             <logic:equal name="association" property="target_gene.type" value="GENE">
             <TD>
                 <a href="DisplayLinks.do?hipGeneId=<bean:write name="association" property="target_gene.hipGeneId"/>"><bean:write name="association" property="target_gene.name"/>&nbsp</a>                          

@@ -93,7 +93,7 @@ public class Gene {
                 if(go == null)
                     go = info.getValue();
                 else
-                    go = go+","+info.getValue();
+                    go = go+", "+info.getValue();
             }
         }
         
@@ -111,7 +111,7 @@ public class Gene {
                 if(proteome == null)
                     proteome = info.getValue();
                 else
-                    proteome = proteome+","+info.getValue();
+                    proteome = proteome+", "+info.getValue();
             }
         }
         

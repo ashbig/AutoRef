@@ -10,6 +10,7 @@
         <title>MedGene : Gene Search</title>
     </head>
     <body>
+    <% int i = 0; %>
     <center>
     <h1>Top <bean:write name="number"/> Diseases Associated With 
         <bean:write name="gene" property="index"/></h1>
@@ -23,6 +24,7 @@
     <TABLE width="100%" align="center" border="1" cellpadding="2" cellspacing="0">
 
     <TR bgcolor="gray">
+        <TH>Rank</TH>
         <TH>Disease Name</TH>
         <TH><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
         <TH><A HREF="NumberOfPapers.jsp" target="_blank">Number of Papers</A></TH>
@@ -30,6 +32,7 @@
 
     <logic:iterate id="association" name="associations"> 
         <tr>
+            <TD align="center"><% out.println(++i); %></TD>
             <TD>
                 <bean:write name="association" property="disease.term"/>&nbsp
             </TD>

@@ -75,6 +75,32 @@
     <load-on-startup>2</load-on-startup>
   </servlet>
 
+    <!-- DBInitServlet Configuration -->
+  <servlet>
+    <servlet-name>dbInit</servlet-name>
+        <servlet-class>
+            edu.harvard.med.hip.metagene.database.DBInitServlet
+        </servlet-class>  
+    <init-param>
+        <param-name>driverClass</param-name>
+        <param-value>sun.jdbc.odbc.JdbcOdbcDriver</param-value>
+    </init-param>   
+    <init-param>
+      <param-name>jdbcURL</param-name>
+      <param-value>jdbc:odbc:medgene</param-value>
+    </init-param>
+    <init-param>
+      <param-name>minCount</param-name>
+      <param-value>1</param-value>
+    </init-param>
+    <init-param>
+        <param-name>maxCount</param-name>
+        <param-value>10</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+
   <!-- Action Servlet Mapping -->
   <servlet-mapping>
     <servlet-name>action</servlet-name>

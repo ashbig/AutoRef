@@ -17,7 +17,8 @@
 <html:errors/>
 <p>
 
-<html:form action="FindRegistration.do" focus="firstName">
+<html:form action="FindRegistration.do">
+<!--html:form action="FindRegistration.do" focus="firstName"-->
     <table width="80%" align="center">
         <tr>
         <td class="prompt">User Name:</td>
