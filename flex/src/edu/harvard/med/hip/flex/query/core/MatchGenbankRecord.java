@@ -106,6 +106,35 @@ public class MatchGenbankRecord {
     
     public String getLocusid() {return locusid;}
     public String getUnigene() {return unigene;}
+    
+    public List getLocusidList() {
+        if(locusid == null || locusid.length() == 0) {
+            return null;
+        }
+        
+        List locusidList = new ArrayList();
+        StringTokenizer st = new StringTokenizer(locusid, ",");
+        while(st.hasMoreTokens()) {
+            String s = st.nextToken();
+            locusidList.add(s);
+        }
+        return locusidList;
+    }
+    
+    public List getUnigeneList() {
+        if(unigene == null || unigene.length() == 0) {
+            return null;
+        }
+        
+        List unigeneList = new ArrayList();
+        StringTokenizer st = new StringTokenizer(unigene, ",");
+        while(st.hasMoreTokens()) {
+            String s = st.nextToken();
+            unigeneList.add(s);
+        }
+        return unigeneList;
+    }
+    
     public void setLocusid(String s) {this.locusid=s;}
     public void setUnigene(String s) {this.unigene = s;}
 }
