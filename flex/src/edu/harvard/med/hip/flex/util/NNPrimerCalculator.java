@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.8 2001-08-21 21:05:24 dzuo Exp $
+ * $Id: NNPrimerCalculator.java,v 1.9 2001-11-30 19:06:53 wendy Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -138,7 +138,6 @@ public class NNPrimerCalculator implements PrimerCalculator
                     
                     //System.out.println("TM is: "+Tm);
                     //System.out.println("position is: "+pos);
-                    //System.out.println("position+2 is: "+pos+2);
 			preTm = Tm;
 			dimer = subSeq.substring(pos, pos+2); //slide dimers from seq			
 			//System.out.println(dimer);			
@@ -151,13 +150,12 @@ public class NNPrimerCalculator implements PrimerCalculator
 			totalH += paramH[indexOne][indexTwo];
 			totalS += paramS[indexOne][indexTwo];
 			
-			//In the current calculation, the [Na+] is 5mM
-			//Thus, Log[Na+]= -2.301
-			//In other algorithm on the web, [Na+] is 50mM
-			//Thus, Log[Na+]= -1.301
-			//For the current formula, [DNA] is 100 uM, thus 0.1mM
-			Tm = totalH * 1000/(totalS - R*9.21)-273.16;
-			Tm = Tm - 12.5 * 2.301;
+			//standard condition: [Na+] is 50mM, Thus, Log[Na+]= -1.301
+                        //The salt adjusting factor is 12.5 
+			//For the old formula, [DNA] is 100 uM, thus 0.1mM
+                        //For the current formula, [DNA] is 0.2 uM, ln(C)=-15.4
+			Tm = totalH * 1000/(totalS - R*15.4)-273.16;
+			Tm = Tm - 12.5 * 1.301;
 			pos++;
 		} //while
 
@@ -185,11 +183,11 @@ public class NNPrimerCalculator implements PrimerCalculator
 			pos = 18;
 		}
 
-		// Tm calculation for oligos more than 42 bases seem to be underestimated
+		// Tm calculation for oligos more than 38 bases seem to be underestimated
 		// Also, longer primers tend to form internal loops
 		// All the oligos should be no more 42 bases long
-		if (pos > 42) {
-			pos = 42;
+		if (pos > 38) {
+			pos = 38;
 		}
 
 		// The oligo sequence is the substring of parameter seq50
