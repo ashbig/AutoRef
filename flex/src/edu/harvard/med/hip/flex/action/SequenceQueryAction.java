@@ -92,6 +92,7 @@ public class SequenceQueryAction extends CollaboratorAction {
                 input = filename.getInputStream();
                 BufferedReader in = new BufferedReader(new InputStreamReader(input));
                 String line = null;
+                searchTerm = "";
                 while((line = in.readLine()) != null) {
                     searchTerm = searchTerm+line+"\n";
                 }
