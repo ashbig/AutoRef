@@ -60,7 +60,7 @@ public class IsolateRankerRunner implements Runnable
         // The database connection used for the transaction
             Connection conn = null;
             ArrayList master_plates = new ArrayList();
-            String requested_plates=null;
+            String requested_plates="";
             int container_id = -1;
              IsolateRanker isolate_ranker = null;
             try
@@ -75,7 +75,7 @@ public class IsolateRankerRunner implements Runnable
 // this staff will work only for one pair of end read primers !!!!!!!!!!!!
                     // fix for multipal pairs
                     Oligo[] oligos = Container.findEndReadsOligos(container_id);
-                     requested_plates += container_id;
+                     requested_plates += container_id +"\n";
                     ArrayList constructs = getConstructs(container_id);
                      CloningStrategy container_cloning_strategy = Container.getCloningStrategy(container_id);
                     
@@ -171,13 +171,13 @@ public class IsolateRankerRunner implements Runnable
                     if (m_error_messages.size()>0)
                     {
                          Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for end reads evaluation: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates ,m_error_messages);
+                        "elena_taycher@hms.harvard.edu", "Request for end reads evaluation: error messages.", "Errors\n Processing of requested for the following plates(bec ids):\n"+requested_plates ,m_error_messages);
 
                     }
                     if (m_error_messages.size()==0)
                     {
                          Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for end reads evaluation: error messages.", "\nIsolate Ranker finished request for the following plates:\n"+requested_plates );
+                        "elena_taycher@hms.harvard.edu", "Request for end reads evaluation: error messages.", "\nIsolate Ranker finished request for the following plates(bec ids):\n"+requested_plates );
 
                     }
                 }
