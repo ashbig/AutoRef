@@ -112,11 +112,15 @@ public class RearrayPlatesAction extends ResearcherAction
             rearrayer.isPutOnQueue(isPutOnQueue);
 
             rearrayer.createNewPlates(0);
-            conn.commit();
+            
  
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", new Vector(rearrayer.getRearrayContainers() ) );
             request.setAttribute("locations", Location.getLocations());
 
+            
+            //delete item from queue for current protocol;
+            removeQueueItems(conn, projectid, workflowid,  protocolid);
+            conn.commit();
             return mapping.findForward("success");
         } catch (FlexDatabaseException fde)
         {
@@ -149,4 +153,30 @@ public class RearrayPlatesAction extends ResearcherAction
     
     }
     
+    
+    
+    private void removeQueueItems( Connection c, int projectid, 
+                                int workflowid, int protocolid)
+                                throws FlexDatabaseException
+    {
+       
+        String sql = "delete from queue where protocolid = ?" +
+        " and projectid = ? and workflowid = ?";
+        
+     
+        PreparedStatement stmt = null;
+        try {
+            
+            stmt = c.prepareStatement(sql);
+            
+            stmt.setInt(1, protocolid);
+            stmt.setInt(2, projectid);
+            stmt.setInt(3, workflowid);
+            DatabaseTransaction.executeUpdate(stmt);
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+    }
 }
