@@ -93,6 +93,7 @@
               scope="request"
               input="/SequenceSearch.jsp">
       <forward  name="success"   path="/SequenceSelection.jsp"/>
+      <forward name="emptysearchresult" path="/SearchResultEmpty.jsp"/>
     </action>    
     
     <!-- Process a customer request -->
