@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.7 2001-06-11 14:21:31 dongmei_zuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.8 2001-06-26 15:43:52 dongmei_zuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -45,6 +45,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         "c.containertype as type, " +
         "c.locationid as locationid, " +
         "c.label as label, " +
+        "c.platesetid as platesetid, "+
         "l.locationtype as locationtype, "+
         "l.locationdescription as description, "+
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
@@ -76,6 +77,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         "l.locationtype as locationtype," +
         "l.locationdescription as description,"+
         "c.label as label, " +
+        "c.platesetid as platesetid, "+
         "to_char(q.dateadded, 'fmMM-DD-YYYY') as dateadded\n" +
         "from containerheader c, containerlocation l, queue q\n" +
         "where c.containerid = q.containerid\n" +
@@ -197,6 +199,7 @@ public class ContainerProcessQueue implements ProcessQueue {
             String locationtype = rs.getString("LOCATIONTYPE");
             String description = rs.getString("DESCRIPTION");
             String label = rs.getString("LABEL");
+            int platesetid = rs.getInt("PLATESETID");
             String date = rs.getString("DATEADDED");
             Location location = new Location(locationid, locationtype,description);
             
