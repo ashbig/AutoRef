@@ -83,10 +83,12 @@ public class NamingFileEntry
         
         File fl = null;
         String temp = null;
+        if ( file_entries == null || file_entries.size() < 1) return null;
         FileWriter fr = null; NamingFileEntry fe= null;
         if (m_filePath == null) m_filePath = FILE_PATH;
+        
         try{
-            fl =   new File(m_filePath + fe.getPlateId()+ ".txt");
+            fl =   new File(m_filePath + ((NamingFileEntry) file_entries.get(0)).getPlateId()+ ".txt");
             fr =  new FileWriter(fl);
             fr.write("Plate number"+DILIM+"well"+DILIM+"sequence id"+ DILIM+  "clone id\n");
              
