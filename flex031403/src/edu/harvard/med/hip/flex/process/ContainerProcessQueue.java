@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.10 2001-07-09 19:54:51 dzuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.11 2001-07-09 22:06:26 dzuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -119,7 +119,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         "and p.executionid = x.executionid\n"+
         "and x.executionstatus = '"+executionstatus+"'\n"+
         "and q.protocolid = "+protocolid);
-  System.out.println(sql);      
+        
         LinkedList items = restore(protocol, sql);
         return items;
     }    

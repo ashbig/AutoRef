@@ -80,6 +80,21 @@ public class PlatesetProcessQueue implements ProcessQueue {
         LinkedList items = restore(protocol, sql);
         return items;
     }
+ 
+    /**
+     * Retrieve the batch of queued items which are waiting for the
+     * next workflow process on a particular date from the Queue table,
+     * and have a certain execution status.
+     *
+     * @param protocol The protocol object.
+     * @param executionstatus The status of the queue items.
+     * @return A LinkedList of QueueItem objects.
+     * @exception FlexDatabaseException.
+     */
+    public LinkedList getQueueItemsWithStatus(Protocol protocol, String executionstatus)
+    throws FlexDatabaseException {
+        return null;
+    }    
     
     /**
      * Insert all the selected process objects into the Queue
