@@ -29,12 +29,12 @@ public class LocDetailParser {
         List genesymbols = new ArrayList();
         
         int count = 0;
-        System.out.println(line);
+        //System.out.println(line);
         int locusid = Integer.parseInt(line.substring(line.indexOf(":")+1).trim());
         gene = new GeneRecord(locusid);
         
         while((line = in.readLine()) != null) {
-            System.out.println(line);
+            //System.out.println(line);
             if(line.indexOf(">>") == 0) {
                 if(gene != null) {
                     gene.setGenesymbol(genesymbols);
@@ -44,7 +44,7 @@ public class LocDetailParser {
                     genesymbols = new ArrayList();
                 }                
                 count++;
-                System.out.println(count);
+                //System.out.println(count);
                 if(count == 200)
                     return result;
             }
@@ -200,7 +200,7 @@ public class LocDetailParser {
     }
     
     public static void main(String args[]) {
-        String file = "G:\\locus.txt";
+        String file = "G:\\tmp\\LL3_030718";
         
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -217,6 +217,7 @@ public class LocDetailParser {
             in.readLine();
             
             while((line = in.readLine()) != null) {
+                System.out.println(line);
                 records = parser.parseFile(in, line);
                 parser.insert(conn, records);
                 DatabaseTransaction.commit(conn);

@@ -11,7 +11,7 @@ package edu.harvard.med.hip.flex.query.core;
  * @author  dzuo
  */
 public class GiRecord {
-    protected int gi;
+    protected String gi;
     protected String genbankAccession;
     protected String sequenceFile;
     protected int cdsStart;
@@ -19,18 +19,18 @@ public class GiRecord {
     protected String sequenceText;
     
     /** Creates a new instance of GiRecord */
-    public GiRecord(int gi, String sequenceFile) {
+    public GiRecord(String gi, String sequenceFile) {
         this.gi = gi;
         this.sequenceFile = sequenceFile;
     }
     
-    public GiRecord(int gi, String genbankAccession, String sequenceFile) {
+    public GiRecord(String gi, String genbankAccession, String sequenceFile) {
         this.gi = gi;
         this.genbankAccession = genbankAccession;
         this.sequenceFile = sequenceFile;
     }
     
-    public GiRecord(int gi, String genbankAccession, String sequenceText, int cdsStart, int cdsStop) {
+    public GiRecord(String gi, String genbankAccession, String sequenceText, int cdsStart, int cdsStop) {
         this.gi = gi;
         this.genbankAccession = genbankAccession;
         this.sequenceText = sequenceText;
@@ -46,7 +46,7 @@ public class GiRecord {
         this.sequenceText = sequenceText;
     }
     
-    public int getGi() {
+    public String getGi() {
         return gi;
     }
     

@@ -23,6 +23,9 @@ public class BlastAlignmentSet {
     }
     
     public void persist(Connection conn) throws FlexDatabaseException, SQLException {
+        if(alignments == null || alignments.size() == 0)
+            return;
+
         String sql = "insert into blastalignment(blastalignmentid, evalue,identity, querystart, queryend, substart, subend, score, strand, matchflexid)"+
                     " values (?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);

@@ -23,6 +23,9 @@ public class MatchFlexSequenceSet {
     }
     
     public void persist(Connection conn) throws FlexDatabaseException, SQLException {
+        if(matchFlexSequences == null || matchFlexSequences.size() == 0)
+            return;
+        
         String sql = "insert into matchflexsequence(matchflexid, ismatchbygi, matchgenbankid, flexsequenceid)"+
                     " values(?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -31,7 +34,7 @@ public class MatchFlexSequenceSet {
             stmt.setInt(1, mfs.getMatchFlexId());
             stmt.setString(2, mfs.getIsMatchByGi());
             stmt.setInt(3, mfs.getMatchGenbankId());
-            stmt.setInt(4, mfs.getMatchFlexId());
+            stmt.setInt(4, mfs.getFlexsequenceid());
             DatabaseTransaction.executeUpdate(stmt);
         }
         DatabaseTransaction.closeStatement(stmt);

@@ -23,6 +23,9 @@ public class BlastHitSet {
     }
     
     public void persist(Connection conn) throws FlexDatabaseException, SQLException {
+        if(blastHits == null || blastHits.size() == 0)
+            return;
+        
         String sql = "insert into blasthit(matchflexid, querylength, subjectlength)"+
                     " values(?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);

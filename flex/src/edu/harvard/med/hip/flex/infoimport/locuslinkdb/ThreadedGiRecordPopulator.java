@@ -21,7 +21,7 @@ import edu.harvard.med.hip.flex.database.*;
  */
 public class ThreadedGiRecordPopulator extends GiRecordPopulator implements Runnable {
     /** Creates a new instance of GIRecordPopulator */
-    public ThreadedGiRecordPopulator(List records) {
+    public ThreadedGiRecordPopulator(Collection records) {
         super(records);
     }
     

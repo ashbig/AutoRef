@@ -6,6 +6,8 @@
 
 package edu.harvard.med.hip.flex.query.core;
 
+import edu.harvard.med.hip.flex.core.FlexSequence;
+
 /**
  *
  * @author  dzuo
@@ -19,6 +21,7 @@ public class MatchFlexSequence {
     private String isMatchByGi;
     private BlastHit blastHit;
     private int matchGenbankId;
+    private FlexSequence flexSequence;
     
     /** Creates a new instance of MatchFlexSequence */
     public MatchFlexSequence() {
@@ -27,6 +30,14 @@ public class MatchFlexSequence {
     public MatchFlexSequence(String isMatchByGi, int id, BlastHit hit) {
         this.isMatchByGi = isMatchByGi;
         this.flexsequenceid = id;
+        this.blastHit = hit;
+    }
+    
+    public MatchFlexSequence(int matchFlexId,String isMatchByGi,int flexsequenceid, FlexSequence sequence,BlastHit hit) {
+        this.matchFlexId = matchFlexId;
+        this.isMatchByGi = isMatchByGi;
+        this.flexsequenceid = flexsequenceid;
+        this.flexSequence = sequence;
         this.blastHit = hit;
     }
     
@@ -68,5 +79,13 @@ public class MatchFlexSequence {
     
     public int getMatchGenbankId() {
         return matchGenbankId;
+    }
+    
+    public FlexSequence getFlexSequence() {
+        return flexSequence;
+    }
+    
+    public void setFlexSequence(FlexSequence seq) {
+        this.flexSequence = seq;
     }
 }

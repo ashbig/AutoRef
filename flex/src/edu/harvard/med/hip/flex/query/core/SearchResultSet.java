@@ -44,6 +44,9 @@ public class SearchResultSet {
     }
     
     public void persist(Connection conn, int searchid) throws FlexDatabaseException, SQLException {        
+        if(searchResults == null || searchResults.size() == 0)
+            return;
+        
         String sql = "insert into searchresult(searchresultid, searchterm, searchid, isfound)"+
                     " values(?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);

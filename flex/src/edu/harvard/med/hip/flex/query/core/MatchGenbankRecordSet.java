@@ -24,6 +24,9 @@ public class MatchGenbankRecordSet {
     }
     
     public void persist(Connection conn) throws FlexDatabaseException, SQLException {
+        if(matchGenbankRecords == null || matchGenbankRecords.size() == 0)
+            return;
+        
         String sql = "insert into matchgenbankrecord(matchgenbankid, genbankaccession, gi, searchmethod, searchresultid)"+
                     " values(?,?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -31,7 +34,7 @@ public class MatchGenbankRecordSet {
             MatchGenbankRecord mgr = (MatchGenbankRecord)matchGenbankRecords.get(i);
             stmt.setInt(1, mgr.getMatchGenbankId());
             stmt.setString(2, mgr.getGanbankAccession());
-            stmt.setString(3, (new Integer(mgr.getGi())).toString());
+            stmt.setString(3, mgr.getGi());
             stmt.setString(4, mgr.getSearchMethod());
             stmt.setInt(5, mgr.getSearchResultid());
             DatabaseTransaction.executeUpdate(stmt);

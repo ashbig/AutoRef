@@ -46,8 +46,8 @@ public class GIQueryHandler extends QueryHandler {
     /**
      * Query FLEXGene database for a list of GI numbers and populate foundList and
      * noFoundList. 
-     *  foundList:      gi => ArrayList of MatchFlexSequence objects
-     *  noFoundList:    gi => NoFound object
+     *  foundList:      GiRecord => ArrayList of MatchFlexSequence objects
+     *  noFoundList:    GiRecord => NoFound object
      *
      * @param searchTerms A list of GI numbers as search terms.
      * @exception Exception
@@ -79,8 +79,9 @@ public class GIQueryHandler extends QueryHandler {
             rs = DatabaseTransaction.executeQuery(stmt);
             
             List matchList = new ArrayList();
+            String genbank = null;
             while (rs.next()) {
-                String genbank = rs.getString("GENBANK");
+                genbank = rs.getString("GENBANK");
                 String gi = rs.getString("GI");
                 int sequenceid = rs.getInt("SEQUENCEID");
                                
@@ -90,9 +91,9 @@ public class GIQueryHandler extends QueryHandler {
             
             if(matchList.size() == 0) {
                 NoFound nf = new NoFound(searchTerm, NoFound.GI_NOT_IN_FLEX);
-                noFoundList.put(searchTerm, nf);
+                noFoundList.put(new GiRecord(searchTerm,genbank,null), nf);
             } else {
-                foundList.put(searchTerm, matchList);
+                foundList.put(new GiRecord(searchTerm,genbank,null), matchList);
             }
         }
         
@@ -131,9 +132,10 @@ public class GIQueryHandler extends QueryHandler {
         Set keys = found.keySet();
         Iterator iter = keys.iterator();
         while(iter.hasNext()) {
-            String term = (String)iter.next();
-            System.out.println("search term: "+term);
-            List matchList = (List)found.get(term);
+            GiRecord gr = (GiRecord)iter.next();
+            System.out.println("search term acc: "+gr.getGenbankAccession());
+            System.out.println("search term gi: "+gr.getGi());
+            List matchList = (List)found.get(gr);
             for(int i=0; i<matchList.size(); i++) {
                 MatchFlexSequence mfs = (MatchFlexSequence)matchList.get(i);
                 System.out.println("\t"+mfs.getFlexsequenceid());
@@ -150,9 +152,10 @@ public class GIQueryHandler extends QueryHandler {
         keys = noFound.keySet();
         iter = keys.iterator();
         while(iter.hasNext()) {
-            String term = (String)iter.next();
-            System.out.println("search term: "+term);
-            NoFound nf = (NoFound)noFound.get(term);
+            GiRecord gr = (GiRecord)iter.next();
+            System.out.println("search term acc: "+gr.getGenbankAccession());
+            System.out.println("search term gi: "+gr.getGi());
+            NoFound nf = (NoFound)noFound.get(gr);
             System.out.println("\t"+nf.getSearchTerm());
             System.out.println("\t"+nf.getReason());
         }

@@ -23,7 +23,10 @@ public class NoFoundSet {
     }
     
     public void persist(Connection conn) throws FlexDatabaseException, SQLException {
-        String sql = "insert into nofound(searchresultid, reason)"+
+        if(noFounds == null || noFounds.size() == 0)
+            return;
+        
+        String sql = "insert into notfound(searchresultid, reason)"+
                     " values(?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
         

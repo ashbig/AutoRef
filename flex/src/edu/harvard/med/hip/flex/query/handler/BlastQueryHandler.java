@@ -70,12 +70,13 @@ public class BlastQueryHandler extends QueryHandler {
     }
     
     /**
-     * Blast a list of input sequences against the blastable database. Return a list of objects
-     * that found match by blast.
+     * Blast FLEXGene database for a list of GI numbers and populate foundList and
+     * noFoundList. 
+     *  foundList:      GiRecord object => ArrayList of MatchFlexSequence objects
+     *  noFoundList:    GiRecord object => NoFound object
      *
-     * @param queryList A list of GiRecord objects.
-     * @return A list of GiRecord that found match by blast.
-     * @exception QueryException.
+     * @param searchTerms A list of GI numbers as search terms.
+     * @exception Exception
      */
     public void handleQuery(List searchTerms) throws Exception {
         foundList = new HashMap();
@@ -97,7 +98,7 @@ public class BlastQueryHandler extends QueryHandler {
             String noFoundTerm = (String)iter.next();
             NoFound nf = (NoFound)noFound.get(noFoundTerm);
             if(NoFound.INVALID_GI.equals(nf.getReason())) {
-                noFoundList.put(noFoundTerm, nf);
+                noFoundList.put(new GiRecord(noFoundTerm, null), nf);
             } else {
                 leftSearchTerms.add(noFoundTerm);
             }
@@ -107,7 +108,13 @@ public class BlastQueryHandler extends QueryHandler {
         retriever.retrieveSequence();
         found.putAll(retriever.getFoundList());
         noFound.putAll(retriever.getNoFoundList());
-        noFoundList.putAll(noFound);
+        noFoundTerms = noFound.keySet();
+        iter = noFoundTerms.iterator();
+        while(iter.hasNext()) {
+            String noFoundTerm = (String)iter.next();
+            NoFound nf = (NoFound)noFound.get(noFoundTerm);
+            noFoundList.put(new GiRecord(noFoundTerm, null), nf);
+        }
         
         ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((Collection)(retriever.getFoundList().values()));
         populator.persistRecords();
@@ -126,69 +133,77 @@ public class BlastQueryHandler extends QueryHandler {
         while(iter.hasNext()) {
             String searchTerm = (String)iter.next();
             GiRecord gr = (GiRecord)found.get(searchTerm);
-            int gi = gr.getGi();
+            String gi = gr.getGi();
             output = FILEPATH+gi+"_"+hits+"_"+f.format(d);
             String sequenceFile = gr.getSequenceFile();
             blaster.blast(sequenceFile, output);
             parser = new BlastParser(output);
             parser.parseBlast();
             
-            int queryLength = Integer.parseInt(parser.getQuerySeqLength());
-            ArrayList homologs = parser.getHomologList();
-            
             List hits = new ArrayList();
-            
-            //evaluate all alignments of each hit to see if it meets the criteria
-            for(int j=0; j<homologs.size(); j++) {
-                BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(j);
-                int sequenceid = Integer.parseInt(homologItem.getSubID().trim());
-                int subLength = homologItem.getSubLen();
+            try {
+                int queryLength = Integer.parseInt(parser.getQuerySeqLength());
+                ArrayList homologs = parser.getHomologList();
                 
-                ArrayList alignments = new ArrayList();
-                boolean isFound = false;
-                for(int n=0; n<homologItem.getSize(); n++) {
-                    BlastParser.Alignment y = (BlastParser.Alignment)homologItem.getAlignItem(n);
-                    String evalue = y.getEvalue();
-                    String gap = y.getGap();
-                    String identity = y.getIdentity();
-                    int queryStart = y.getQryStart();
-                    int queryEnd = y.getQryEnd();
-                    int subStart = y.getSbjStart();
-                    int subEnd = y.getSbjEnd();
-                    String score = y.getScore();
-                    String strand = y.getStrand();
-                    BlastAlignment ba = new BlastAlignment(evalue, gap, identity, queryStart, queryEnd, subStart, subEnd, score, strand);
-                    alignments.add(ba);
+                //evaluate all alignments of each hit to see if it meets the criteria
+                for(int j=0; j<homologs.size(); j++) {
+                    BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(j);
+                    int sequenceid = Integer.parseInt(homologItem.getSubID().trim());
+                    int subLength = homologItem.getSubLen();
                     
-                    if(n == 0 || !isFound) {
-                        StringTokenizer st = new StringTokenizer(identity);
-                        int numerator = Integer.parseInt((st.nextToken(" /")).trim());
-                        int denomenator = Integer.parseInt((st.nextToken(" /")).trim());
-                        double percentIdentity = numerator/(double)denomenator;
-                        //meet the criteria
-                        if (percentIdentity>=blastPid && numerator >= alignLength) {
-                            isFound = true;
+                    ArrayList alignments = new ArrayList();
+                    boolean isFound = false;
+                    for(int n=0; n<homologItem.getSize(); n++) {
+                        BlastParser.Alignment y = (BlastParser.Alignment)homologItem.getAlignItem(n);
+                        String evalue = y.getEvalue();
+                        String gap = y.getGap();
+                        String identity = y.getIdentity();
+                        int queryStart = y.getQryStart();
+                        int queryEnd = y.getQryEnd();
+                        int subStart = y.getSbjStart();
+                        int subEnd = y.getSbjEnd();
+                        String score = y.getScore();
+                        String strand = y.getStrand();
+                        BlastAlignment ba = new BlastAlignment(evalue, gap, identity, queryStart, queryEnd, subStart, subEnd, score, strand);
+                        alignments.add(ba);
+                        
+                        if(n == 0 || !isFound) {
+                            StringTokenizer st = new StringTokenizer(identity);
+                            int numerator = Integer.parseInt((st.nextToken(" /")).trim());
+                            int denomenator = Integer.parseInt((st.nextToken(" /")).trim());
+                            double percentIdentity = numerator/(double)denomenator;
+                            //meet the criteria
+                            if (percentIdentity>=blastPid && numerator >= alignLength) {
+                                isFound = true;
+                            }
                         }
                     }
+                    
+                    if(isFound) {
+                        BlastHit hit = new BlastHit(sequenceid, queryLength, subLength, alignments);
+                        MatchFlexSequence mfs = new MatchFlexSequence("F", sequenceid, hit);
+                        hits.add(mfs);
+                    }
                 }
-                
-                if(isFound) {
-                    BlastHit hit = new BlastHit(sequenceid, queryLength, subLength, alignments);
-                    MatchFlexSequence mfs = new MatchFlexSequence("F", sequenceid, hit);
-                    hits.add(mfs);
-                }
+            } catch (Exception ex) {
+                NoFound nofound = new NoFound((new Integer(gi)).toString(), NoFound.INVALID_BLAST);
+                noFoundList.put(gr, nofound);
+                continue;
             }
             
             if(hits.size() > 0) {
-                foundList.put(searchTerm, hits);
+                foundList.put(gr, hits);
             } else {
                 NoFound nofound = new NoFound((new Integer(gi)).toString(), NoFound.NO_MATCH_BLAST);
-                noFoundList.put(searchTerm, nofound);
+                noFoundList.put(gr, nofound);
             }
         }
     }
     
     protected void setQueryParams(List params) {
+        if(params == null)
+            return;
+        
         for(int i=0; i<params.size(); i++) {
             Param p = (Param)params.get(i);
             if(Param.BLASTDB.equals(p.getName()) && p.getValue() != null && p.getValue().length()!=0) {
@@ -208,6 +223,7 @@ public class BlastQueryHandler extends QueryHandler {
     
     public static void main(String args[]) {
         List giList = new ArrayList();
+        giList.add("345");
         giList.add("32450632");
         giList.add("21961206");
         giList.add("33869456");
@@ -234,9 +250,10 @@ public class BlastQueryHandler extends QueryHandler {
         Set terms = founds.keySet();
         Iterator iter = terms.iterator();
         while(iter.hasNext()) {
-            String term = (String)iter.next();
-            System.out.println("Search term: "+term);
-            List hits = (List)founds.get(term);
+            GiRecord gr = (GiRecord)iter.next();
+            System.out.println("search term acc: "+gr.getGenbankAccession());
+            System.out.println("Search term gi: "+gr.getGi());
+            List hits = (List)founds.get(gr);
             for(int i=0; i<hits.size(); i++) {
                 MatchFlexSequence mfs = (MatchFlexSequence)hits.get(i);
                 System.out.println("\tFlexsequence ID: "+mfs.getFlexsequenceid());
@@ -270,9 +287,10 @@ public class BlastQueryHandler extends QueryHandler {
         Set noFoundTerms = noFounds.keySet();
         iter = noFoundTerms.iterator();
         while(iter.hasNext()) {
-            String t = (String)iter.next();
-            System.out.println("Search term: "+t);
-            NoFound nf = (NoFound)noFounds.get(t);
+            GiRecord gr = (GiRecord)iter.next();
+            System.out.println("Search term acc: "+gr.getGenbankAccession());
+            System.out.println("Search term gi: "+gr.getGi());
+            NoFound nf = (NoFound)noFounds.get(gr);
             System.out.println("\tReason: "+nf.getReason());
             System.out.println("\tSearch term: "+nf.getSearchTerm());
         }

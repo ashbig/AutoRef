@@ -47,6 +47,13 @@ public class SearchResult {
         this.noFound = noFound;
     }
 
+    public SearchResult(int id, String term, String isFound, int searchid) {
+        this.searchResultid = id;
+        this.searchTerm = term;
+        this.isGenbankFound = isFound;
+        this.searchid = searchid;
+    }
+        
     public int getSearchResultid() {
         return searchResultid;
     }

@@ -33,6 +33,14 @@ public class MatchGenbankRecord {
         this.searchMethod = searchMethod;
         this.matchFlexSequence = matchFlexSequence;
     }
+ 
+    public MatchGenbankRecord(int id, String genbank, String gi, String searchMethod, List matchFlexSequence) {
+        this.matchGenbankId = id;
+        this.genbankAccession = genbank;
+        this.gi = gi;
+        this.searchMethod = searchMethod;
+        this.matchFlexSequence = matchFlexSequence;
+    }
     
     public void setMatchGenbankId(int id) {
         this.matchGenbankId = id;
