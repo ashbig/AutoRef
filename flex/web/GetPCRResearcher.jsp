@@ -19,47 +19,47 @@
 <html:form action="/GetPCRResearcher.do" focus="researcherBarcode">
 <table>
     <tr>
-    <td>Process name:</td>
+    <td class="label">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td>PCR protocol:</td>
+    <td class="label">PCR protocol:</td>
     <td><bean:write name="EnterOligoPlateAction.subprotocol" property="description"/></td>
     </tr>
 
     <tr>
-    <td>5P oligo plate barcode:</td>
+    <td class="label">5P oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.fivep" property="id"/>"><bean:write name="EnterOligoPlateAction.fivep" property="label"/></a></td>
-    <td>Location:</td>
+    <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.fivep" property="location.type"/></td>
     </tr>
 
     <tr>
-    <td>3P open oligo plate barcode:</td>
+    <td class="label">3P open oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.threepOpen" property="id"/>"><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></a></td>
-    <td>Location:</td>
+    <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="location.type"/></td>
     </tr>
 
     <tr>
-    <td>3P closed oligo plate barcode:</td>
+    <td class="label">3P closed oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.threepClosed" property="id"/>"><bean:write name="EnterOligoPlateAction.threepClosed" property="label"/></a></td>
-    <td>Location:</td>
+    <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.threepClosed" property="location.type"/></td>
     </tr>
 
     <tr>
-    <td>Open PCR plate barcode:</td>
+    <td class="label">Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>
-    <td>Location:</td>
+    <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="location.type"/></td>
     </tr>
 
     <tr>
-    <td>Open PCR plate barcode:</td>
+    <td class="label">Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrClosed" property="label"/></td>
-    <td>Location:</td>
+    <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrClosed" property="location.type"/></td>
     </tr>
 </table>

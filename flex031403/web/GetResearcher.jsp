@@ -19,29 +19,29 @@
 <html:form action="/GetResearcher.do" focus="researcherBarcode">
 <table>
     <tr>
-    <td>Process name:</td>
+    <td class="label">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td>Protocol:</td>
+    <td class="label">Protocol:</td>
     <td><bean:write name="EnterSourcePlateAction.subprotocol" property="description"/></td>
     </tr>
 
     <logic:iterate id="oldContainer" name="EnterSourcePlateAction.oldContainers">
     <tr>
-    <td>Source plate barcode:</td>
+    <td class="label">Source plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="oldContainer" property="id"/>"><bean:write name="oldContainer" property="label"/></a></td>
-    <td class="prompt">Source plate location:</td>
+    <td class="label">Source plate location:</td>
     <td><bean:write name="oldContainer" property="location.type"/></td>
     </tr>
     </logic:iterate> 
 
     <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
     <tr>
-    <td>Destination plate barcode:</td>
+    <td class="label">Destination plate barcode:</td>
     <td><bean:write name="newContainer" property="label"/></td>
-    <td>Location:</td>
+    <td class="label">Location:</td>
     <td><bean:write name="newContainer" property="location.type"/></td>
     </tr>
     </logic:iterate>  

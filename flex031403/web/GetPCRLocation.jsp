@@ -19,17 +19,17 @@
 <html:form action="/GetPCRLocation.do" focus="researcherBarcode">
 <table>
     <tr>
-    <td>Process name:</td>
+    <td class="label">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td>PCR protocol:</td>
+    <td class="label">PCR protocol:</td>
     <td><bean:write name="EnterOligoPlateAction.subprotocol" property="description"/></td>
     </tr>
 
     <tr>
-    <td>5P oligo plate barcode:</td>
+    <td class="label">5P oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.fivep" property="label"/></td>
     <td class="prompt">Location:</td>
     <td><html:select property="fivepSourceLocation">
@@ -42,7 +42,7 @@
     </tr>
 
     <tr>
-    <td>3P open oligo plate barcode:</td>
+    <td class="label">3P open oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></td>
     <td class="prompt">Location:</td>
     <td><html:select property="threepOpenSourceLocation">
@@ -55,7 +55,7 @@
     </tr>
 
     <tr>
-    <td>3P closed oligo plate barcode:</td>
+    <td class="label">3P closed oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepClosed" property="label"/></td>
     <td class="prompt">Location:</td>
     <td><html:select property="threepClosedSourceLocation">
@@ -68,7 +68,7 @@
     </tr>
 
     <tr>
-    <td>Open PCR plate barcode:</td>
+    <td class="label">Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>
     <td class="prompt">Location:</td>
     <td><html:select property="pcrOpenLocation">
@@ -81,7 +81,7 @@
     </tr>
 
     <tr>
-    <td>Open PCR plate barcode:</td>
+    <td class="label">Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrClosed" property="label"/></td>
     <td>Location:</td>
     <td class="prompt"><html:select property="pcrClosedLocation">

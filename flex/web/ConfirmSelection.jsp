@@ -20,7 +20,7 @@
 <p>
 <h3>You have submitted the following sequences. They are grouped into different
 categories based on similarity to FLEXGene sequences and qualities. Please make
-appropriated selection and submit your cloning request to FLEXGene.</h3>
+appropriate selection and submit your cloning request to FLEXGene.</h3>
 
 <p>
 <logic:present name="submittedSequences">

@@ -18,7 +18,7 @@
 <p>
 <html:form action="/PrintBarcode.do">
 <Center>
-<h3>The following plate has been created:</h3>
+<h3>The following plate(s) have been created:</h3>
 <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
 <p><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="newContainer" property="id"/>"><bean:write name="newContainer" property="label"/></a>
 </logic:iterate>

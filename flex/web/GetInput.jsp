@@ -25,7 +25,7 @@
     </tr>
 
     <tr>
-    <td>Enter the source plate barcode:</td>
+    <td class="prompt">Enter the source plate barcode:</td>
     <td><html:text property="sourcePlate" size="40"/></td>
     </tr>
 
