@@ -92,6 +92,7 @@ public class RNAMutation extends Mutation {
                 m_polymid = rs.getString("POLYMID");
                 m_polymdate = rs.getDate("POLMDATE");
                 m_quality = rs.getInt("DISCQUALITY");
+                m_exp_position = rs.getInt("DISCRPOSITION");
             }
         } catch (Exception sqlE)
         {
