@@ -41,8 +41,8 @@ import edu.harvard.med.hip.flex.util.*;
  */
 public class GetResearcherAction extends ResearcherAction{
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
-    public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
-    //public final static String BARCODEFILE = "/tmp/barcode.txt";
+    //public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
+    public final static String BARCODEFILE = "/tmp/barcode.txt";
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -197,6 +197,7 @@ public class GetResearcherAction extends ResearcherAction{
             // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
             request.getSession().removeAttribute("SelectProtocolAction.protocol");
+            request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
             request.getSession().removeAttribute("EnterSourcePlateAction.oldContainers");
             request.getSession().removeAttribute("EnterSourcePlateAction.locations");
             request.getSession().removeAttribute("EnterSourcePlateAction.items");
