@@ -47,8 +47,8 @@ import edu.harvard.med.hip.flex.util.*;
 /**
  * Represents the result of a process execution for a sample.
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.16 $ $Date: 2001-08-02 21:17:33 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.17 $ $Date: 2002-02-08 18:34:01 $
  */
 
 public class Result {
@@ -73,7 +73,8 @@ public class Result {
     public final static String INCORRECT = "Incorrect";
     public final static String MUL_W_CORRECT = "Multiple with correct";
     public final static String MUL_WO_CORRECT = "Multiple without correct";
-    public final static String NO_PRODUCT = "No product";
+    public final static String NO_PRODUCT = "No product";    
+    public final static String NO_BAND = "No visible band with cloning attempt";
     
     // the following defines the result values for TRANSFORMATION.
     public final static String MORE = "4+";

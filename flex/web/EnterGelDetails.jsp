@@ -127,6 +127,7 @@
                     <html:option value="<%=Result.MUL_W_CORRECT%>">Multiple with correct</html:option>
                     <html:option value="<%=Result.MUL_WO_CORRECT%>">Multiple without correct</html:option>
                     <html:option value="<%=Result.NO_PRODUCT%>">No product</html:option>
+                    <html:option value="<%=Result.NO_BAND%>">No visible band with cloning attempt</html:option>
                     <%
                     }
                     %>

@@ -139,7 +139,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
         edu.harvard.med.hip.flex.process.Process p =
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
         Result result = Result.findResult(s, p);
-        if(Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())) {
+        if(Result.CORRECT.equals(result.getValue()) || 
+           Result.MUL_W_CORRECT.equals(result.getValue()) ||
+           Result.NO_BAND.equals(result.getValue())) {
             type = Sample.getType(newProtocol.getProcessname());
         } else {
             type = Sample.EMPTY;
