@@ -188,7 +188,7 @@ public class PhredWrapper
         String cmd = null;
         if (isUnix)
         {
-            m_phredFilePath = Algorithms.convertWindowsFileNameIntoUnix(m_phredFilePath);
+           
             m_input_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_input_directoryname);
             m_output_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_output_directoryname);
             m_output_quality_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_output_quality_directoryname);
