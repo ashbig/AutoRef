@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-08-01 16:22:58 $
+ * $Revision: 1.2 $
+ * $Date: 2001-08-01 17:29:19 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -41,13 +41,14 @@ import org.apache.struts.action.*;
 import org.apache.struts.upload.*;
 
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.file.*;
 
 /**
  * Holds the information about a DNA Gel result
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.1 $ $Date: 2001-08-01 16:22:58 $
+ * @version    $Revision: 1.2 $ $Date: 2001-08-01 17:29:19 $
  */
 
 public class DNAGelForm extends ResultForm implements FileForm{
@@ -83,7 +84,23 @@ public class DNAGelForm extends ResultForm implements FileForm{
         this.dnaGel = formFile;
     }
     
+    /**
+     * Gets the localpath for this file
+     *
+     * @return localpath
+     */
+    public String getLocalPath() {
+        return FileRepository.DNA_GEL_LOCAL_PATH;
+    }    
   
+    /**
+     * Get the type of the file
+     *
+     * @return file type
+     */
+    public String getFileType() {
+        return FileReference.DNA_GEL_TYPE;
+    }    
     
   
     

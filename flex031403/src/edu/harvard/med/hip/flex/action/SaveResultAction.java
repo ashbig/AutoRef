@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.17 $
- * $Date: 2001-08-01 16:22:57 $
+ * $Revision: 1.18 $
+ * $Date: 2001-08-01 17:29:19 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.17 $ $Date: 2001-08-01 16:22:57 $
+ * @version    $Revision: 1.18 $ $Date: 2001-08-01 17:29:19 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -334,10 +334,10 @@ public class SaveResultAction extends ResearcherAction {
             
             String subDirName = Integer.toString(cal.get(Calendar.YEAR)) +
             monthNumS;
-            String localPath = FileRepository.GEL_LOCAL_PATH+subDirName+"/";
+            String localPath = fileForm.getLocalPath()+subDirName+"/";
             fileRef =
             FileReference.createFile(conn, image.getFileName(),
-            FileReference.GEL_TYPE,localPath, container);
+            fileForm.getFileType(),localPath, container);
             
             FileRepository.uploadFile(fileRef,
             fileForm.getFormFile().getInputStream());

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2001-08-01 13:57:31 $
+ * $Revision: 1.6 $
+ * $Date: 2001-08-01 17:29:19 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -46,13 +46,14 @@ import org.apache.struts.action.*;
 import org.apache.struts.upload.*;
 
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.file.*;
 
 /**
  * Form for entering gel results.
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.5 $ $Date: 2001-08-01 13:57:31 $
+ * @version    $Revision: 1.6 $ $Date: 2001-08-01 17:29:19 $
  */
 
 public class GelResultsForm extends ContainerResultsForm implements FileForm {
@@ -122,7 +123,23 @@ public class GelResultsForm extends ContainerResultsForm implements FileForm {
         
     }
     
+    /**
+     * Gets the localpath for this file
+     *
+     * @return localpath
+     */
+    public String getLocalPath() {
+        return FileRepository.GEL_LOCAL_PATH;
+    }    
     
+    /**
+     * Get the type of the file
+     *
+     * @return file type
+     */
+    public String getFileType() {
+        return FileReference.GEL_TYPE;
+    }    
     
 } // End class GelDetailsForm
 

@@ -16,7 +16,7 @@ import edu.harvard.med.hip.flex.core.*;
  * generic way for a container.
  *
  * @author  $Author: jmunoz $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface FileForm {
     
@@ -47,5 +47,19 @@ public interface FileForm {
      * @param gelImage the <code>FormFile</code> that represents the gel image.
      */
     public void setFormFile(FormFile formFile);
+    
+    /**
+     * Gets the localpath for this file
+     * 
+     * @return localpath
+     */
+    public String getLocalPath();
+    
+    /**
+     * Get the type of the file
+     *
+     * @return file type
+     */
+    public String getFileType();
 }
 
