@@ -202,7 +202,7 @@ public abstract class ProcessRunner implements Runnable
                     message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
                 if ( m_additional_info != null)
                    message += m_additional_info;
-                 Mailer.sendMessage      ( m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",  "elena_taycher@hms.harvard.edu", title, message);
+                 Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "elena_taycher@hms.harvard.edu", title, message);
                      
             }
      

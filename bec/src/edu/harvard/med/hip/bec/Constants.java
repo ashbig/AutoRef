@@ -33,7 +33,7 @@ public class Constants {
             return TEMPORARY_FILES_FILE_PATH;
         }
     }
-    public static String       LINE_SEPARATOR = System.getProperty("line.separator") ;
+    public static String       LINE_SEPARATOR = "\n";//System.getProperty("line.separator") ;
     
     public static final String DELIM_WHITE_SPACE = " ";
     
