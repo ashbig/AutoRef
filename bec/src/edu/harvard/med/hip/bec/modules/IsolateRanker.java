@@ -39,8 +39,7 @@ public class IsolateRanker
     private PolymorphismSpec  m_polymorphism_spec = null;
     private boolean           m_isRunPolymorphism = false;
     
- //   private BioLinker           m_linker5 = null;
- //   private BioLinker           m_linker3 = null;
+    private DiscrepancyFinder       i_discrepancy_finder = null;//default:used by all functions
     private CloningStrategy     m_cloning_strategy = null;
      private int                m_5p_min_read_length = 0;
     private int                m_3p_min_read_length = 0;
@@ -66,6 +65,7 @@ public class IsolateRanker
         m_cutoff_spec = fs;
         m_error_messages = new ArrayList();
         m_finished_constructs = new ArrayList();
+        prepareDiscrepancyFinder();
         
     }
     
@@ -76,7 +76,21 @@ public class IsolateRanker
         m_cutoff_spec = fs;
          m_error_messages = new ArrayList();
         m_finished_constructs = new ArrayList();
+        prepareDiscrepancyFinder();
        
+    }
+    
+    private void prepareDiscrepancyFinder()
+    {
+         //prepare detectors
+            i_discrepancy_finder = new DiscrepancyFinder();
+            i_discrepancy_finder.setNeedleGapOpen(10.0);
+            i_discrepancy_finder.setNeedleGapExt(0.05);
+            i_discrepancy_finder.setQualityCutOff(m_cutoff_score);
+            i_discrepancy_finder.setIdentityCutoff(60.0);
+            i_discrepancy_finder.setMaxNumberOfDiscrepancies(20);
+            i_discrepancy_finder.setInputType(true);
+          
     }
     /** Creates a new instance of IsolateRanker */
     public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, ArrayList c, PolymorphismSpec p)
@@ -146,9 +160,10 @@ public class IsolateRanker
         {
             ArrayList isolate_trackings = construct.getIsolateTrackings();
             IsolateTrackingEngine it = null;
-            ArrayList reads = null;
+            ArrayList reads = null; ArrayList contigs = null;
             CloneSequence clonesequence = null;
             BaseSequence refsequence = null;
+            int items_to_analize = 0;
 
               // this is for not known gerry sequences
             if (construct.getRefSequence().getText().equals("NNNNN") ) return ;
@@ -172,39 +187,46 @@ public class IsolateRanker
             {
                 //we process only not yet analized isolates
                 it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
-                clonesequence = it.getCloneSequence();
-                reads =  it.getEndReads();
-                
-                if (clonesequence == null && (reads == null || reads.size() == 0))
+                //get what kind of data we have : 0 - none; 1 - clone sequence; 2 - contigs; 3 - er
+                items_to_analize = findWhatTypeOfDataAreAvailable(it);
+                switch ( items_to_analize )
                 {
-                    it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
-                  //  it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS, it.getId(),conn);
-                }
-                //no sequence , only reads
-                else if (clonesequence == null && (reads != null && reads.size() > 0))
-                {
-                    processReads(it,refsequence,cdsstart,cdsstop, conn);
-                    it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
-                    
-                }
-                else if (clonesequence != null )//sequence exists process it
-                {
-                    processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
-                    
-                    if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+                    case 0:
                     {
-                        it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
+                        it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
+                        break;
                     }
-                    else
+                    case 1:
                     {
-                        it.setStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                        clonesequence = it.getCloneSequence();
+                        processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
+                        if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+                        {
+                            it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
+                        }
+                        else
+                        {
+                            it.setStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                        }
+                        break;
+                    }
+                    case 2:
+                    {
+                        processContigs(it.getContigs(),refsequence,cdsstart,cdsstop,conn);
+                        it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                        break;
+                    }
+                    case 3:
+                    {
+                        reads =  it.getEndReads();
+                        processReads(it,refsequence,cdsstart,cdsstop, conn);
+                        it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                        break;
                     }
                 }
-                
-                
-                    //check wether number of mutations exseedmax allowed
+                 //check wether number of mutations exseedmax allowed
                 if (it.getRank() == IsolateTrackingEngine.RANK_BLACK) it.setRank(-1);
-                it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length());
+                it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length(),items_to_analize);
             }
             construct.calculateRank( refsequence.getText().length() ,m_cutoff_spec);
              for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
@@ -229,6 +251,16 @@ public class IsolateRanker
     }
     
     //*****************************************************
+    private int findWhatTypeOfDataAreAvailable(IsolateTrackingEngine it)throws Exception
+    {
+        int result = 0;
+        if ( it.getCloneSequence() != null) return 1;
+        ArrayList contigs = it.getContigs();
+        if (contigs != null && contigs.size() > 0) return 2;
+        if (it.getEndReads() != null && it.getEndReads().size() > 0 )return 3;
+        return 0;
+    }
+                  
     //process isolate tracking based on reads
     private void processReads(IsolateTrackingEngine it,BaseSequence refsequence,
                     int cdststart, int cdsstop,
@@ -269,14 +301,8 @@ public class IsolateRanker
          if (   (read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_FORWARD))
         {
    //prepare detectors
-            DiscrepancyFinder df = new DiscrepancyFinder();
-            df.setNeedleGapOpen(10.0);
-            df.setNeedleGapExt(0.05);
-            df.setQualityCutOff(m_cutoff_score);
-            df.setIdentityCutoff(60.0);
-            df.setMaxNumberOfDiscrepancies(20);
-            df.setRefSequenceCdsStart(   cdststart );
-            df.setRefSequenceCdsStop(  cdsstop);
+           i_discrepancy_finder.setRefSequenceCdsStart(   cdststart );
+            i_discrepancy_finder.setRefSequenceCdsStop(  cdsstop);
            
             // reasign sequence for only trimmed sequence
              AnalyzedScoredSequence read_sequence =  read.getSequence();
@@ -298,26 +324,26 @@ public class IsolateRanker
             }
     //run read
 
-            df.setSequencePair(new SequencePair(read.getSequence() ,  refsequence));
-            df.setInputType(true);
+            i_discrepancy_finder.setSequencePair(new SequencePair(read.getSequence() ,  refsequence));
+            
             //set compliment request
             if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
-                df.setIsRunCompliment(! m_forward_read_sence );
+                i_discrepancy_finder.setIsRunCompliment(! m_forward_read_sence );
             else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
-                df.setIsRunCompliment(! m_reverse_read_sence);
-            df.run();
+                i_discrepancy_finder.setIsRunCompliment(! m_reverse_read_sence);
+            i_discrepancy_finder.run();
             
             //set cds start && stop 
             if ( (read.getType() == Read.TYPE_ENDREAD_FORWARD && m_forward_read_sence)
             || (read.getType() == Read.TYPE_ENDREAD_REVERSE && m_reverse_read_sence)  )
             {
-                read.setCdsStart( df.getCdsStart()  + read.getTrimStart() );
-                read.setCdsStop( df.getCdsStop() + read.getTrimStart() );
+                read.setCdsStart( i_discrepancy_finder.getCdsStart()  + read.getTrimStart() );
+                read.setCdsStop( i_discrepancy_finder.getCdsStop() + read.getTrimStart() );
             }
             else 
             {
-                read.setCdsStart( -(read_sequence.getText().length() + 1 - df.getCdsStart() + read.getTrimStart() ) );
-                read.setCdsStop( -(read_sequence.getText().length() + 1 - df.getCdsStop() + read.getTrimStart() ));
+                read.setCdsStart( -(read_sequence.getText().length() + 1 - i_discrepancy_finder.getCdsStart() + read.getTrimStart() ) );
+                read.setCdsStop( -(read_sequence.getText().length() + 1 - i_discrepancy_finder.getCdsStop() + read.getTrimStart() ));
             }
             read.updateCdsStartStop(conn);
             read.setStatus(Read.STATUS_ANALIZED);
@@ -399,19 +425,10 @@ public class IsolateRanker
         if (clonesequence.getCloneSequenceStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED)
         {
    //prepare detectors
-            DiscrepancyFinder df = new DiscrepancyFinder();
-            df.setNeedleGapOpen(20.0);
-            df.setNeedleGapExt(0.05);
-            df.setQualityCutOff(m_cutoff_score);
-            df.setIdentityCutoff(60.0);
-            df.setMaxNumberOfDiscrepancies(20);
-            df.setRefSequenceCdsStart(  cdststart);
-            df.setRefSequenceCdsStop(  cdsstop );
-            df.setSequencePair(new SequencePair(clonesequence ,  refsequence));
-            df.setInputType(true);
-            df.run();
-            
-             
+            i_discrepancy_finder.setRefSequenceCdsStart(  cdststart);
+            i_discrepancy_finder.setRefSequenceCdsStop(  cdsstop );
+            i_discrepancy_finder.setSequencePair(new SequencePair(clonesequence ,  refsequence));
+            i_discrepancy_finder.run();
           
             if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
             {
@@ -427,9 +444,9 @@ public class IsolateRanker
                     pf.setSequence( clonesequence);
                     pf.run();
                 }
-                clonesequence.setLinker5Start( df.getCdsStart()   );
+                clonesequence.setLinker5Start( i_discrepancy_finder.getCdsStart()   );
                 clonesequence.updateLinker5Start(clonesequence.getId(), clonesequence.getLinker5Start(), conn);
-                clonesequence.setLinker3Stop( df.getCdsStop()  );
+                clonesequence.setLinker3Stop( i_discrepancy_finder.getCdsStop()  );
                 clonesequence.updateLinker3Stop(clonesequence.getId(), clonesequence.getLinker3Stop(), conn);
                 clonesequence.insertMutations(conn);
                 if ( clonesequence.getDiscrepancies() != null && clonesequence.getDiscrepancies().size() > 0)
@@ -445,6 +462,54 @@ public class IsolateRanker
              }
         }
      
+    }
+      //function runs analysis of one read
+    private void  processContigs( ArrayList contigs, BaseSequence refsequence, 
+            int cdststart, int cdsstop, Connection conn)
+            throws BecUtilException, BecDatabaseException, ParseException
+    {
+        
+   //prepare discrepancy finder
+            i_discrepancy_finder.setRefSequenceCdsStart(  cdststart);
+            i_discrepancy_finder.setRefSequenceCdsStop(  cdsstop );
+            Stretch stretch = null;
+            AnalyzedScoredSequence contig_sequence = null;
+            for (int contig_count =0; contig_count < contigs.size(); contig_count++)
+            {
+                 stretch = (Stretch) contigs.get(contig_count);
+                 contig_sequence = stretch.getSequence();
+                 if (stretch.getAnalysisStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED)
+                 {
+                    i_discrepancy_finder.setSequencePair(new SequencePair(contig_sequence ,  refsequence));
+                    i_discrepancy_finder.run();
+         
+                    if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+                    {
+                        return ;
+                    }
+                    else
+                    {
+                    // insert mutations
+                        if (m_isRunPolymorphism)
+                        {
+                             PolymorphismDetector pf = new PolymorphismDetector();
+                            pf.setSpec(m_polymorphism_spec);
+                            pf.setSequence( contig_sequence);
+                            pf.run();
+                        }
+                        contig_sequence.insertMutations(conn);
+                        if ( contig_sequence.getDiscrepancies() != null && contig_sequence.getDiscrepancies().size() > 0)
+                        {
+                            stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,conn);
+                        }
+                        else
+                        {
+                            stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES,conn);
+                        }
+                     }
+                }
+
+            }
     }
 
 }
