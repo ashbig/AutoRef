@@ -28,6 +28,7 @@ import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.programs.assembler.*;
+import edu.harvard.med.hip.bec.util_objects.*;
   import java.util.*;
 /**
  *
@@ -84,17 +85,17 @@ public class AssemblyRunner implements Runnable
 
                     if (expected_sequence_definition.size() == 0 )      return ;
                     CloneAssembly clone_assembly = null;
-                    SequenceDescription sequence_definition = null;
+                    CloneDescription clone_definition = null;
                     int clone_sequence_id = -1;
                     for (int count = 0; count < expected_sequence_definition.size(); count ++)
                     {
-                        sequence_definition= ( SequenceDescription)expected_sequence_definition.get(count);
+                        clone_definition= ( CloneDescription)expected_sequence_definition.get(count);
                         //get linker info
                         try
                         {
-                            if ((linker5 == null || linker3 == null) || sequence_definition.getContainerId() != cur_containerid )
+                            if ((linker5 == null || linker3 == null) || clone_definition.getContainerId() != cur_containerid )
                             {
-                                CloningStrategy container_cloning_strategy = Container.getCloningStrategy(sequence_definition.getContainerId());
+                                CloningStrategy container_cloning_strategy = Container.getCloningStrategy(clone_definition.getContainerId());
                                 if (container_cloning_strategy != null)
                                  {
                                      linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
@@ -102,21 +103,21 @@ public class AssemblyRunner implements Runnable
                                  }
 
 
-                                cur_containerid =  sequence_definition.getContainerId() ;
+                                cur_containerid =  clone_definition.getContainerId() ;
                             }
 
                         //get refsequence if needed
-                            if (base_refsequence == null || base_refsequence.getId() != sequence_definition.getBecRefSequenceId())
+                            if (base_refsequence == null || base_refsequence.getId() != clone_definition.getBecRefSequenceId())
                             {
-                                refsequence = new RefSequence( sequence_definition.getBecRefSequenceId());
+                                refsequence = new RefSequence( clone_definition.getBecRefSequenceId());
                                 //gerry's sequences
                                 if (refsequence.getText().equals("NNNNN"))
                                 {
                                      IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
-                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                                        clone_definition.getIsolateTrackingId(),  conn );
                                     IsolateTrackingEngine.updateAssemblyStatus(
                                                         IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED,
-                                                        sequence_definition.getIsolateTrackingId(),  conn);
+                                                        clone_definition.getIsolateTrackingId(),  conn);
                                     conn.commit();
 
                                     continue;
@@ -126,12 +127,12 @@ public class AssemblyRunner implements Runnable
                                 if (base_refsequence.getText().length() >2000)
                                 {
                                     IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
-                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                                        clone_definition.getIsolateTrackingId(),  conn );
                                     IsolateTrackingEngine.updateAssemblyStatus(
                                                         IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED,
-                                                        sequence_definition.getIsolateTrackingId(),  conn);
+                                                        clone_definition.getIsolateTrackingId(),  conn);
                                     conn.commit();
-                                     System.out.println("Sequence too long. Clone "+sequence_definition.getFlexCloneId() +" "+sequence_definition.getFlexSequenceId());
+                                     System.out.println("Sequence too long. Clone "+clone_definition.getFlexCloneId() +" "+clone_definition.getFlexSequenceId());
                                     continue;
                                 }
                                 cds_start = linker5.getSequence().length();
@@ -141,26 +142,26 @@ public class AssemblyRunner implements Runnable
                             }
 
                            clone_sequence_id = -1;
-                           clone_assembly = assembleSequence( sequence_definition );
+                           clone_assembly = assembleSequence( clone_definition );
                            if (clone_assembly == null )
                            {
                                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
-                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                                        clone_definition.getIsolateTrackingId(),  conn );
                                 IsolateTrackingEngine.updateAssemblyStatus(
                                                 IsolateTrackingEngine.ASSEMBLY_STATUS_NO_CONTIGS,
-                                                sequence_definition.getIsolateTrackingId(),  conn);
+                                                clone_definition.getIsolateTrackingId(),  conn);
                                 conn.commit();
-                                 System.out.println("Assembly null. Clone "+sequence_definition.getFlexCloneId() +" "+sequence_definition.getFlexSequenceId());
+                                 System.out.println("Assembly null. Clone "+clone_definition.getFlexCloneId() +" "+clone_definition.getFlexSequenceId());
                                 continue;
                            }
                            else if( clone_assembly.getContigs().size() != 1)
                            {
 
                                  IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
-                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                                        clone_definition.getIsolateTrackingId(),  conn );
                                 IsolateTrackingEngine.updateAssemblyStatus(
                                                     IsolateTrackingEngine.ASSEMBLY_STATUS_N_CONTIGS,
-                                                    sequence_definition.getIsolateTrackingId(),  conn);
+                                                    clone_definition.getIsolateTrackingId(),  conn);
                                conn.commit();
                                continue;
                            }
@@ -168,7 +169,7 @@ public class AssemblyRunner implements Runnable
                            {
                                //check coverage
                                Contig contig = (Contig) clone_assembly.getContigs().get(0);
-                               int result = contig.checkForCoverage(sequence_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
+                               int result = contig.checkForCoverage(clone_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
 
                                if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS
                                 || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED
@@ -176,17 +177,17 @@ public class AssemblyRunner implements Runnable
                                   || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED )
 
                                {
-                                        clone_sequence_id = insertSequence(sequence_definition, contig,
+                                        clone_sequence_id = insertSequence(clone_definition, contig,
 
                                         process_id,conn );
                                         if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
-                                        System.out.println("Clone "+sequence_definition.getFlexCloneId() +" "+result+" "+sequence_definition.getFlexSequenceId()+" "+clone_sequence_id);
+                                        System.out.println("Clone "+clone_definition.getFlexCloneId() +" "+result+" "+clone_definition.getFlexSequenceId()+" "+clone_sequence_id);
                                }
                                  IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
-                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                                        clone_definition.getIsolateTrackingId(),  conn );
                                 IsolateTrackingEngine.updateAssemblyStatus(
                                                 result,
-                                                sequence_definition.getIsolateTrackingId(),  conn);
+                                                clone_definition.getIsolateTrackingId(),  conn);
                                 conn.commit();
                                 continue;
                            }
@@ -218,7 +219,13 @@ public class AssemblyRunner implements Runnable
                     if (m_error_messages.size()>0)
                     {
                          Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for sequence assemblyu : error messages.", "Errors\n " ,m_error_messages);
+                        "elena_taycher@hms.harvard.edu", "Request for sequence assembly : error messages.", "Errors\n " ,m_error_messages);
+
+                    }
+                    if (m_error_messages.size()==0)
+                    {
+                         Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                        "elena_taycher@hms.harvard.edu", "Request for sequence assembly: finished without errors.", "Assembly Request complited.\n ");
 
                     }
                 }
@@ -232,7 +239,7 @@ public class AssemblyRunner implements Runnable
  
      //-------------------------------------------------------
 
-     private CloneAssembly assembleSequence(  SequenceDescription sequence_definition )throws BecDatabaseException
+     private CloneAssembly assembleSequence(  CloneDescription sequence_definition )throws BecDatabaseException
 
      {
          CloneAssembly clone_assembly = null;
@@ -273,7 +280,7 @@ public class AssemblyRunner implements Runnable
 
 
         ResultSet rs = null;ResultSet rs_ref = null;String sql_sample = null;
-      SequenceDescription seq_desc = null;
+      CloneDescription seq_desc = null;
         try
         {
            // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
@@ -281,7 +288,7 @@ public class AssemblyRunner implements Runnable
 
             while(rs.next())
             {
-                seq_desc = new SequenceDescription();
+                seq_desc = new CloneDescription();
 
                 seq_desc.setBecRefSequenceId(rs.getInt("refsequenceID"));
                 seq_desc.setIsolateTrackingId( rs.getInt("isolatetrackingid"));
@@ -322,15 +329,16 @@ public class AssemblyRunner implements Runnable
 
 
      private   int insertSequence(
-                         SequenceDescription sequence_definition,
+                         CloneDescription sequence_definition,
                          Contig contig,
                          int process_id,
                          Connection conn)throws BecDatabaseException
      {
+         int return_value = -1;
          //create sequence
          try
          {
-            Result result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,     process_id,
+            /*Result result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,     process_id,
                                         sequence_definition.getSampleId(),       null,
                                         Result.RESULT_TYPE_ASSEMBLED_FROM_END_READS_PASS,
                                         BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
@@ -346,8 +354,15 @@ public class AssemblyRunner implements Runnable
             clone_seq.setCdsStop( contig.getCdsStop() );
             clone_seq.insert(conn);
 
-
-            return clone_seq.getId();
+            */
+           return_value = CloneSequence.insertSequenceWithResult(
+                         sequence_definition.getSampleId(),
+                         sequence_definition.getIsolateTrackingId(),
+                         sequence_definition.getBecRefSequenceId(),
+                         Result.RESULT_TYPE_ASSEMBLED_FROM_END_READS_PASS,
+                         BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED,
+                         BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED, contig, process_id, conn);
+            return return_value;
          }
          catch(Exception e)
          {
@@ -387,7 +402,7 @@ public class AssemblyRunner implements Runnable
              throw new BecDatabaseException("Cannot create process");
          }
      }
-
+/*
      protected class SequenceDescription
      {
          private int        m_flex_sequenceid = -1;
@@ -431,7 +446,7 @@ public class AssemblyRunner implements Runnable
          public void        setSampleId(int v){ m_sampleid = v;}
      }
 
-
+*/
 
 
 }
