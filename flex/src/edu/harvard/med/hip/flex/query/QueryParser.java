@@ -79,7 +79,7 @@ public class QueryParser {
         BufferedReader in = new BufferedReader(new InputStreamReader(input));
         String line = null;
         String searchTerm = "";
-        while((line = in.readLine()) != null) {
+        while((line = in.readLine()) != null && line.trim().length()>0) {
             searchTerm = searchTerm+line+"\n";
         }
         
