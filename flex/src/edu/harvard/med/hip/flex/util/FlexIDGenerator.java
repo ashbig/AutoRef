@@ -1,5 +1,5 @@
 /**
- * $Id: FlexIDGenerator.java,v 1.3 2001-05-23 19:23:26 dongmei_zuo Exp $
+ * $Id: FlexIDGenerator.java,v 1.4 2001-05-24 14:49:04 dongmei_zuo Exp $
  *
  * File     	: FlexIDGenerator.java
  * Date     	: 04182001
@@ -43,6 +43,8 @@ public class FlexIDGenerator {
             }
         } catch(SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
         }
         return id;
     }

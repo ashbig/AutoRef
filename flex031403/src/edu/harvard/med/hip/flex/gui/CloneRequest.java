@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.6 2001-05-24 12:13:05 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.7 2001-05-24 14:49:03 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java
  * Date     : 05042001
@@ -72,7 +72,7 @@ public class CloneRequest {
     public Vector getUserRequest(String username, String password) throws FlexDatabaseException {
         User user = new User(username, password);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
-        Vector request = user.getRequests(t);
+        Vector request = user.getRequests();
         return request;
     }
     

@@ -65,6 +65,8 @@ public class AccessManager {
             isExist = rs.next();
         }catch (SQLException sqlex) {
             sqlex.printStackTrace();
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
         }
         
         return isExist;
@@ -94,6 +96,8 @@ public class AccessManager {
             }
         }catch (SQLException sqlex) {
             sqlex.printStackTrace();
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
         }
         
         return pswd;
@@ -113,8 +117,9 @@ public class AccessManager {
         String sql = "select * from userprofile\n"+
         "where username='"+username+"'\n"+
         "and userpassword='"+pw+"'";
+        ResultSet rs = null;
         try {
-            ResultSet rs = t.executeQuery(sql);
+            rs = t.executeQuery(sql);
             if(rs.next()) {
                 return false;
             } else {
@@ -122,6 +127,8 @@ public class AccessManager {
             }
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
         }
     }
     

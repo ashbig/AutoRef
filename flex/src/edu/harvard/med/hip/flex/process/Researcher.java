@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.2 2001-05-24 12:13:05 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.3 2001-05-24 14:49:04 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -112,6 +112,8 @@ public class Researcher {
         } catch (FlexProcessException e) {
             System.out.println(e);
         } catch (SQLException sqlE) {
+            System.out.println(sqlE);
+        } finally {
             DatabaseTransaction.closeConnection(conn);
         }
     }

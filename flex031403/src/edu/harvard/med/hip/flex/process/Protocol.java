@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.2 2001-05-23 16:25:19 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.3 2001-05-24 14:49:04 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -67,22 +67,19 @@ public class Protocol {
             
             try {
                 protocolRowSet.next();
-            } catch (SQLException sqlE) {
-                throw new FlexDatabaseException(sqlE);
-            }
+                
         /*
          * if a record is found, assign values to the object
          * and find the sub protocols
          */
-            try {
+                
                 this.id = protocolRowSet.getInt("PROTOCOLID");
-            } catch (SQLException sqlE) {
-                throw new FlexDatabaseException(sqlE);
-            }
-            try {
+                
                 this.processcode = protocolRowSet.getString("PROCESSCODE");
             } catch(SQLException sqlE) {
                 throw new FlexDatabaseException(sqlE);
+            } finally {
+                DatabaseTransaction.closeResultSet(protocolRowSet);
             }
             this.processname = processname;
             
@@ -112,6 +109,8 @@ public class Protocol {
             }
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
         }
     }
     

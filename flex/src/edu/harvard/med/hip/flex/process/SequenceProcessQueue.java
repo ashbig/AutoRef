@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.4 2001-05-24 12:13:05 dongmei_zuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.5 2001-05-24 14:49:04 dongmei_zuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -164,7 +164,8 @@ public class SequenceProcessQueue implements ProcessQueue {
     /**
      * Get all the queued items that from the database.
      */
-    protected LinkedList restore(Protocol protocol, String sql) throws FlexDatabaseException {
+    protected LinkedList restore(Protocol protocol, String sql) 
+    throws FlexDatabaseException {
         ResultSet rs = null;
         try {
             rs = DatabaseTransaction.getInstance().executeQuery(sql);

@@ -1,5 +1,5 @@
 /*
- *	$Id: Handler.java,v 1.2 2001-05-23 20:13:50 dongmei_zuo Exp $ 
+ *	$Id: Handler.java,v 1.3 2001-05-24 14:49:04 dongmei_zuo Exp $ 
  *
  *	File	: Handler.java
  *	Date	: 05042001
@@ -10,7 +10,7 @@
 
 package edu.harvard.med.hip.flex.gui;
 
-import javax.servlet.http.*;
+
 import java.util.*;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.database.*;
@@ -53,9 +53,9 @@ public class Handler {
 		this.errorMessage = errorMessage;
 	}
 		
-	public void processRequest(HttpServletRequest request) {
-		pathInfo = request.getPathInfo();
-		queryString = request.getQueryString();
+	public void processRequest(String pathInfo, String queryString) {
+		this.pathInfo = pathInfo;
+		this.queryString = queryString;
 	}
 
 	public boolean authenticate(DatabaseTransaction t) throws FlexDatabaseException {

@@ -94,6 +94,8 @@ public class User {
             return group;
         } catch(SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
         }
     }
     
@@ -136,11 +138,11 @@ public class User {
     /**
      * Get user requested sequences.
      *
-     * @param t The DatabaseTransaction object.
      * @return A Vector of Request objects.
      * @exception FlexDatabaseException.
      */
-    public Vector getRequests(DatabaseTransaction t) throws FlexDatabaseException {
+    public Vector getRequests() throws FlexDatabaseException {
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
         Vector requests = new Vector();
         String sql = "select requestid, username, "+
         "to_char(requestdate, 'fmYYYY-MM-DD') as requestdate\n"+
@@ -171,6 +173,8 @@ public class User {
             return requests;
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(requestRs);
         }
     }
     
@@ -200,7 +204,7 @@ public class User {
                 DatabaseTransaction.executeUpdate("insert into flexsequence (sequenceid, flexstatus, genusspecies, dateadded) values ("+sequenceid+",'TEST','Test', sysdate)",conn);
                 DatabaseTransaction.executeUpdate("insert into requestsequence values("+requestid+","+sequenceid+")",conn);
             }
-            Vector requests = user.getRequests(t);
+            Vector requests = user.getRequests();
             Enumeration en = requests.elements();
             while(en.hasMoreElements()) {
                 Request request = (Request)en.nextElement();

@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.2 2001-05-23 20:13:50 dongmei_zuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.3 2001-05-24 14:49:04 dongmei_zuo Exp $
  *
  * File     : FlexSeqAnalyzer.java 
  * Date     : 05102001
@@ -184,8 +184,10 @@ public class FlexSeqAnalyzer {
 					 "and s.sequenceid = ? "+
 					 "and t.sequenceorder = ? "+
 					 "and t.sequencetext = ?";		
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
 		try {
-			PreparedStatement stmt = c.prepareStatement(sql);
+			stmt = c.prepareStatement(sql);
 
 			String sequencetext = sequence.getSequencetext();
 		
@@ -202,14 +204,14 @@ public class FlexSeqAnalyzer {
 					stmt.setInt(2, order); 
 					stmt.setString(3, subseq);
 				
-					ResultSet rs = stmt.executeQuery();
+					rs = stmt.executeQuery();
 					if (!rs.next()) {
 						isSame=false;
-						rs.close();
+			
 						break;
 					} else {
 						sequenceid = rs.getBigDecimal("ID").intValue();
-						rs.close();
+			
 					}
 					order++;
 				}	
@@ -222,7 +224,7 @@ public class FlexSeqAnalyzer {
 					returnValue = true;
 				}
 			}
-			stmt.close();
+			
 			
 			if(returnValue) {
 				sameSequence.addElement(sequence);
@@ -231,7 +233,11 @@ public class FlexSeqAnalyzer {
 			return returnValue;
 		} catch (SQLException e) {
 			throw new FlexDatabaseException(e.getMessage());
-		}
+		} finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(c);
+        }
 	}			
 			
 	//Return the substring of a string with 4000 char long.

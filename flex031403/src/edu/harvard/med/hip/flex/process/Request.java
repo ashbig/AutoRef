@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.2 2001-05-23 19:23:26 dongmei_zuo Exp $
+ * $Id: Request.java,v 1.3 2001-05-24 14:49:04 dongmei_zuo Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -145,15 +145,19 @@ public class Request {
 			seq.setFlexstatus("NEW");
 			r.addSequence(seq);
 		}
+        Connection conn = null;
 		try {
 			DatabaseTransaction t = DatabaseTransaction.getInstance();
-            Connection conn = t.requestConnection();
+            conn = t.requestConnection();
 			r.insert(conn);
 			conn.rollback();
 		} catch (FlexDatabaseException e) {
 			System.out.println(e);
+            
 		} catch (SQLException sqlE) {
             System.out.println(sqlE);
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
 	}
 }

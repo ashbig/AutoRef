@@ -1,5 +1,5 @@
 /**
- * $Id: GelImageViewer.java,v 1.2 2001-05-23 20:13:50 dongmei_zuo Exp $
+ * $Id: GelImageViewer.java,v 1.3 2001-05-24 14:49:03 dongmei_zuo Exp $
  *
  * File     	: GelImage.java 
  * Date     	: 05102001
@@ -7,7 +7,7 @@
  */
 
 package edu.harvard.med.hip.flex.gui;
-//import javax.servlet.http.*;
+
 import java.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
@@ -75,7 +75,9 @@ public class GelImageViewer {
 		//	rs.close();
 		} catch (SQLException e) {
 		 	throw new FlexDatabaseException(e.getMessage());
-		}
+		} finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
 		
 		return gelName;
 	 }
@@ -98,9 +100,8 @@ public class GelImageViewer {
 		
 		try{
 			t = DatabaseTransaction.getInstance();
-			//con = t.requestConnection();
 			rs = t.executeQuery(sql);
-			rs.next();
+			
 			
 			ResultSetMetaData rsmd = rs.getMetaData();
         		columnCount = rsmd.getColumnCount();
@@ -133,7 +134,9 @@ public class GelImageViewer {
 		//	rs.close();
 		} catch (SQLException e) {
 		 	throw new FlexDatabaseException(e.getMessage());
-		}
+		} finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
 		
 		return (dbResults.toHTMLTable("GREY"));
 	 }
@@ -160,7 +163,9 @@ public class GelImageViewer {
 		//	rs.close();	
 		} catch (SQLException e) {
 		 	throw new FlexGuiException(e.getMessage());
-		}
+		} finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
 		
 		return gelName;
 	 }
