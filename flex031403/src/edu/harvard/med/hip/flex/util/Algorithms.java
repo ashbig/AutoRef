@@ -11,6 +11,8 @@ public class Algorithms{
 public static ArrayList rearangeSawToothPatternInFlexSequence(ArrayList sequences)
     {
         ArrayList result = new ArrayList();
+         for (int i=0; i< sequences.size();i++)
+     
         //sort array by cds length
         Collections.sort(sequences, new Comparator()
         {
@@ -25,7 +27,7 @@ public static ArrayList rearangeSawToothPatternInFlexSequence(ArrayList sequence
             // compare
         } );
         //get middle element
-        int middle = (int)Math.ceil((double)sequences.size() / 2);
+        int middle = (int)Math.ceil((double)sequences.size() / 2) - 1;
         for (int count = 0; count < middle; count++)
         {
             result.add(sequences.get(count));
@@ -33,6 +35,7 @@ public static ArrayList rearangeSawToothPatternInFlexSequence(ArrayList sequence
         }
         //ad last element 
         if (result.size() < sequences.size()) result.add(sequences.get(sequences.size() -1));
+      
         return result;
     }
 
