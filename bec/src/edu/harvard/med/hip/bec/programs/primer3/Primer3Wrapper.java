@@ -17,6 +17,7 @@ import edu.harvard.med.hip.bec.programs.*;
 import edu.harvard.med.hip.bec.file.*;
 import java.sql.*;
 import edu.harvard.med.hip.utility.*;
+import edu.harvard.med.hip.bec.*;
 /**
  *
  * @author  htaycher
@@ -36,24 +37,25 @@ public class Primer3Wrapper
     private BaseSequence        m_sequence = null;
     private Primer3Spec         m_spec = null;
      
-    private String              m_file_input = null;
-    private String              m_file_output = null;
+   // private String              m_file_input = null;
+   // private String              m_file_output = null;
     private String              m_file_error = null;
+   
     private ArrayList           m_failed_sequences = null;
     
      private   String m_PRIMER3_EXE = null;
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
-           m_file_input = "d:\\tmp\\primer3input.txt";
-            m_file_output = "d:\\tmp\\primer3output.txt";
+         //  m_file_input = "d:\\tmp\\primer3input.txt";
+         //   m_file_output = "d:\\tmp\\primer3output.txt";
             m_file_error = "d:\\tmp\\primer3err.txt";
             m_PRIMER3_EXE = "d:\\bio_programs\\primer3\\primer3.exe";
         }
         else
         {
-            m_file_input = "c:\\tmp\\primer3input.txt";
-            m_file_output = "c:\\tmp\\primer3output.txt";
+          //  m_file_input = "c:\\tmp\\primer3input.txt";
+          //  m_file_output = "c:\\tmp\\primer3output.txt";
             m_file_error = "c:\\tmp\\primer3err.txt";
             m_PRIMER3_EXE =  "c://blast//primer3.exe";
         }
@@ -62,8 +64,12 @@ public class Primer3Wrapper
     public Primer3Wrapper()    {        m_failed_sequences = new ArrayList(); m_sequences = new ArrayList();    }
     
     public void         setSpec(Primer3Spec spec) { m_spec = spec;}
-    public void         setSequence( BaseSequence sequence){ m_sequences.add( sequence);}
-    public void         setSequences(ArrayList sequences){ m_sequences = sequences;}
+    public void         setSequence( BaseSequence sequence){ m_sequences = new ArrayList();m_sequences.add( sequence);}
+    public void         setSequences(ArrayList sequences)
+    { 
+        m_sequences = new ArrayList();
+        m_sequences = sequences;
+    }
     
   
     
@@ -129,22 +135,25 @@ public class Primer3Wrapper
         ArrayList oligo_calculations = new ArrayList();
         //delete old primer3 input / output
         File oldoutput = null; 
-        try
+     /*   try
         {
              oldoutput = new File(m_file_output);            oldoutput.delete();
             File oldinput = new File(m_file_input);            oldinput.delete();
         }
         catch(Exception e){}
+      */
          //write input file
-        writeInputFile(sequences);
+        String input_fileName = Constants.getTemporaryFilesPath() + "primer3input"+ System.currentTimeMillis()+".txt";
+        String output_filename = Constants.getTemporaryFilesPath() + "primer3output"+ System.currentTimeMillis()+".txt";
+        writeInputFile(sequences, input_fileName);
         //call primer3
-        run(m_file_input, m_file_output);
+        run(input_fileName, output_filename);
         try
         {
           //  System.out.println(m_file_output);
-            oldoutput = new File(m_file_output);
+            oldoutput = new File(output_filename);
             if (oldoutput.exists() )
-                oligo_calculations = Primer3Parser.parse(m_file_output, m_spec);
+                oligo_calculations = Primer3Parser.parse(output_filename, m_spec);
         }catch(Exception e){}
         
         return oligo_calculations;
@@ -198,12 +207,12 @@ public class Primer3Wrapper
     }
     
     //function writes one output file for the primer3
-    private void writeInputFile(ArrayList seq)throws BecDatabaseException
+    private void writeInputFile(ArrayList seq, String input_fileName)throws BecDatabaseException
     {
         String param_string = writeParamString();
         try
         {
-            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(m_file_input));
+            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(input_fileName));
             for (int count = 0 ; count < seq.size(); count++)
             {
                 InnerSequence ts = (InnerSequence) seq.get(count);
@@ -405,7 +414,7 @@ public class Primer3Wrapper
      */
     private boolean run(String input, String output)
     {
-        if( !(new File(m_file_input)).exists() ) return false;
+        if( !(new File(input)).exists() ) return false;
                 
         String cmd =  m_PRIMER3_EXE;
          // String cmd = "/kotel/data/blast/bl2seq ";
@@ -418,8 +427,8 @@ public class Primer3Wrapper
         try
         {
             //open requered streams
-             fis = new BufferedInputStream(new FileInputStream(m_file_input));
-              fos = new BufferedOutputStream(new FileOutputStream(m_file_output));
+             fis = new BufferedInputStream(new FileInputStream(input));
+              fos = new BufferedOutputStream(new FileOutputStream(output));
               eos = new BufferedOutputStream(new FileOutputStream(m_file_error));
               
             Runtime r = Runtime.getRuntime();

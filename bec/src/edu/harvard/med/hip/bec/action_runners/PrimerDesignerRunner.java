@@ -37,7 +37,7 @@ public class PrimerDesignerRunner extends ProcessRunner
 {
     public  static final int        COVERAGE_TYPE_REFERENCE_CDS = 0;
     public  static final int        COVERAGE_TYPE_GAP_LQR = 1;
-    public  static final int        COVERAGE_TYPE_GAP_LQR_DISCREPANCIES = 3;
+   // public  static final int        COVERAGE_TYPE_GAP_LQR_DISCREPANCIES = 3;
    
      public  static final int        LQR_COVERAGE_TYPE_NONE = 0;
      public  static final int        LQR_COVERAGE_TYPE_ANY_LQR = 1;
@@ -68,7 +68,17 @@ public class PrimerDesignerRunner extends ProcessRunner
     public void         setIsLQRCoverageType(int v) { m_type_of_lqr_coverage = v;}
     public void         setMinDistanceBetweenStretchesToBeCombined(int v){ m_min_distance_between_stretches = v;} 
     
-    public String       getTitle()     {  return "Request for primer designer execution.";     }
+    public String       getTitle()   
+    {  
+        String title = "Request for primer designer execution.";
+        if ( m_type_of_sequence_coverage == COVERAGE_TYPE_GAP_LQR )
+        {
+           title +=" Stretch collection coverage.";
+        }
+        else
+            title += " Reference Sequence coverage.";
+        return title;
+    }
   
     
     
@@ -84,7 +94,7 @@ public class PrimerDesignerRunner extends ProcessRunner
           PreparedStatement pst_insert_process_object = null;
            PreparedStatement pst_get_flexsequence_length= null;
            PreparedStatement pst_check_oligo_cloning_for_stretches = null;
-           FileWriter reportFileWriter = null;
+           FileWriter reportFileWriter = null;QueryItem item = null;
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
@@ -103,8 +113,8 @@ public class PrimerDesignerRunner extends ProcessRunner
             primer3.setSpec(m_spec);
             m_number_of_bases_to_start_stop_requier_er = m_spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");
             //gett refsequence ids or stretch collections ids
-            ArrayList  ids =     getObjectIds(-1);
-            if ( ids == null || ids.size() <1 ) return;
+            ArrayList  query_items =     getObjectIds(-1);
+            if ( query_items == null || query_items.size() <1 ) return;
             
             if (! m_isTryMode )
             {
@@ -121,16 +131,16 @@ public class PrimerDesignerRunner extends ProcessRunner
                 reportFileWriter =  new FileWriter(reportFile);
                 
             }
-            for (int index =  0;  index < ids.size(); index++)
+            for (int index =  0;  index < query_items.size(); index++)
              {
                 synchronized(this)
                 {
                     try
                         {
                             Thread.currentThread().sleep(100);
-                            id = ((Integer) ids.get(index)).intValue();
-                            ArrayList oligo_calculations =getOligoCalculations( id, pst_check_oligo_cloning, pst_check_oligo_cloning_for_stretches,primer3);
-                           
+                            item = (QueryItem) query_items.get(index);
+                            ArrayList oligo_calculations =getOligoCalculations( item.getWorkingItem(), pst_check_oligo_cloning, pst_check_oligo_cloning_for_stretches,primer3);
+                     
                             if ( primer3.getFailedSequences() != null && primer3.getFailedSequences().size() >0)
                                 m_error_messages.addAll(primer3.getFailedSequences());
                             if ( oligo_calculations == null || oligo_calculations.size() < 1)
@@ -138,20 +148,19 @@ public class PrimerDesignerRunner extends ProcessRunner
                                 continue;
                             }
                             oligo_calculation = (OligoCalculation)oligo_calculations.get(0);
-
                             if ( ! m_isTryMode )
                             {
                                 oligo_calculation.insert(conn);
                                      //insert process_object
                                 pst_insert_process_object.setInt(1,process_id);
-                                pst_insert_process_object.setInt(2, id);
+                                pst_insert_process_object.setInt(2, item.getWorkingItem());
                                 DatabaseTransaction.executeUpdate(pst_insert_process_object);
                                 conn.commit();
                                
                             }
                             else
                             {
-                                String ol_report = getReportForOligoCalculation(pst_get_flexsequenceid, pst_get_flexsequence_length,oligo_calculation, id);
+                                String ol_report = getReportForOligoCalculation(pst_get_flexsequenceid, pst_get_flexsequence_length,oligo_calculation, item);
                                 reportFileWriter.write( ol_report);
                                 reportFileWriter.flush();
                             }
@@ -224,9 +233,16 @@ public class PrimerDesignerRunner extends ProcessRunner
         {
             case  Constants.ITEM_TYPE_CLONEID :
             {
+                return "select  refsequenceid as working_id , refsequenceid as repeat_id,  flexcloneid as query_id "
++" from sequencingconstruct c, flexinfo f,  isolatetracking i "
++" where i.constructid = c.constructid and f.isolatetrackingid = i.isolatetrackingid and   "
++" flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")" ;
+/*
                 return "select distinct refsequenceid as id from sequencingconstruct where constructid in "
                 +" (select constructid from isolatetracking where isolatetrackingid in "
-                +" (select isolatetrackingid from flexinfo where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
+                +" (select isolatetrackingid from flexinfo where flexcloneid in" +
+                " ("+Algorithms.convertStringArrayToString(items,"," )+")))";
+                */
             }
             case  Constants.ITEM_TYPE_PLATE_LABELS :
             {
@@ -238,20 +254,36 @@ public class PrimerDesignerRunner extends ProcessRunner
                     plate_names.append("'");
                     if ( index != items.size()-1 ) plate_names.append(",");
                 }
-                 return "select distinct refsequenceid as id from sequencingconstruct where constructid in "
+                return "select  distinct refsequenceid as working_id , refsequenceid as repeat_id, label as query_id "
+                +" from sequencingconstruct c, sample s, containerheader ch,  isolatetracking i "
+                +" where i.constructid = c.constructid and i.sampleid=s.sampleid and   s.containerid=ch.containerid and "
++" label in ("+plate_names.toString()+")";
+
+/*
+                 return "select  refsequenceid as id from sequencingconstruct where constructid in "
                 +"  (select constructid from isolatetracking where sampleid in "
                 +"  (select sampleid from sample where containerid in (select containerid from "
                 +" containerheader where label in ("+plate_names.toString()+"))))";
+ **/
             }
             case  Constants.ITEM_TYPE_BECSEQUENCE_ID :
             {
-                return "select distinct refsequenceid as id from assembledsequence where sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
+                return "select distinct refsequenceid as working_id , refsequenceid as repeat_id, refsequenceid as query_id "
+                +" from sequencingconstruct where  refsequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
+
+              //  return "select distinct refsequenceid as id from assembledsequence where sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
             }
             case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
             {
+                return "select distinct refsequenceid as working_id , refsequenceid as repeat_id, flexsequenceid as query_id "
+                +" from flexinfo f, isolatetracking i, sequencingconstruct c where f.isolatetrackingid=i.isolatetrackingid and c.constructid=i.constructid "
++" and  flexsequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
+
+/*
                 return "select distinct refsequenceid as id from sequencingconstruct where constructid in "
                 +" (select constructid from isolatetracking where isolatetrackingid in "
                 +" (select isolatetrackingid from flexinfo where flexsequenceid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
+          */
             }
         }
         return null;
@@ -264,9 +296,14 @@ public class PrimerDesignerRunner extends ProcessRunner
         {
             case  Constants.ITEM_TYPE_CLONEID :
             {
-                return "select collectionid as id , isolatetrackingid from stretch_collection "
+                return "select flexcloneid as query_id, collectionid as working_id , f.isolatetrackingid as repeat_id"
+                +" from stretch_collection s, flexinfo f where  f.isolatetrackingid =s.isolatetrackingid and "
+                +" flexcloneid in (" +Algorithms.convertStringArrayToString(items,"," )+" ) order by f.isolatetrackingid, collectionid desc";
+       /*
+                return "select collectionid as working_id , isolatetrackingid from stretch_collection "
                 +"  where isolatetrackingid in  (select isolatetrackingid from  flexinfo where flexcloneid in ("
                 +Algorithms.convertStringArrayToString(items,"," )+")) order by isolatetrackingid, collectionid desc";
+          */
             }
             case  Constants.ITEM_TYPE_PLATE_LABELS :
             {
@@ -278,13 +315,19 @@ public class PrimerDesignerRunner extends ProcessRunner
                     plate_names.append("'");
                     if ( index != items.size()-1 ) plate_names.append(",");
                 }
+                return  "select collectionid as working_id , label as query_id, i.isolatetrackingid  as repeat_id"
+                +" from stretch_collection  s, sample ss, containerheader c, isolatetracking i "
+                +" where i.isolatetrackingid = s.isolatetrackingid and i.sampleid =  ss.sampleid and "
+                +" ss.containerid = c.containerid and  label in ( "+plate_names.toString()+") order by isolatetrackingid, collectionid desc ";
+         
+                /*
                  return "select collectionid as id , isolatetrackingid from stretch_collection "
                 +"  where isolatetrackingid in   "
                 +"  (select isolatetrackingid from isolatetracking where sampleid in "
                 +"  (select sampleid from sample where containerid in (select containerid from "
                 +" containerheader where label in ("+plate_names.toString()+")))) order by isolatetrackingid, collectionid desc";
+            */
             }
-          
         }
         return null;
     }
@@ -329,7 +372,7 @@ public class PrimerDesignerRunner extends ProcessRunner
                 break;
             }
             case COVERAGE_TYPE_GAP_LQR :
-            case COVERAGE_TYPE_GAP_LQR_DISCREPANCIES:
+          //  case COVERAGE_TYPE_GAP_LQR_DISCREPANCIES:
             {
                 sql = getQueryStringToGetStretchCollectionIds( rownum) ;
                 if (sql == null) return null;
@@ -347,8 +390,10 @@ public class PrimerDesignerRunner extends ProcessRunner
        
         ArrayList ids = new ArrayList();
         //get sequence id
-        DatabaseTransaction t = null;
-        ResultSet rs = null; int prev_isolatetrackingid = -1;
+        DatabaseTransaction t = null;int working_id = -1; String query_id = null;
+        ResultSet rs = null;
+        Integer repeat_key = null; int repeat_key_int = -1;
+        Hashtable repeats = new Hashtable();
         try
         {
             t = DatabaseTransaction.getInstance();
@@ -356,12 +401,17 @@ public class PrimerDesignerRunner extends ProcessRunner
             while(rs.next())
             {
                 //change here to hashmap error
-                if  (  m_type_of_sequence_coverage != COVERAGE_TYPE_REFERENCE_CDS )
+                repeat_key_int = rs.getInt("repeat_id");
+                repeat_key = new Integer(repeat_key_int);
+                if(  repeats.containsKey(repeat_key) ) 
+                    continue;
+                else
                 {
-                    if ( prev_isolatetrackingid == rs.getInt("isolatetrackingid")) continue;
-                    prev_isolatetrackingid = rs.getInt("isolatetrackingid");
+                    repeats.put(repeat_key, repeat_key);
+                    working_id = rs.getInt("working_id");
+                    query_id =  String.valueOf( rs.getObject("query_id"));
+                    ids.add( new QueryItem(working_id,query_id ) );
                 }
-                ids.add( new Integer( rs.getInt("id")) );
             }
             
         } 
@@ -515,7 +565,9 @@ public class PrimerDesignerRunner extends ProcessRunner
     }
     
     
-    private String getReportForOligoCalculation(PreparedStatement pst_get_flexsequenceid,PreparedStatement pst_get_flexsequence_length, OligoCalculation oligo_calculation, int id)throws Exception
+    private String getReportForOligoCalculation(PreparedStatement pst_get_flexsequenceid,
+        PreparedStatement pst_get_flexsequence_length, 
+        OligoCalculation oligo_calculation, QueryItem item)throws Exception
     {
        // System.out.println("A"+oligo_calculation.getSequenceId());
         StringBuffer buf = new StringBuffer();
@@ -537,7 +589,11 @@ public class PrimerDesignerRunner extends ProcessRunner
         }
         
         buf.append(Constants.LINE_SEPARATOR );
-        buf.append( Constants.getItemTypeAsString(m_items_type)+" "+ id+Constants.LINE_SEPARATOR);
+        buf.append( Constants.getItemTypeAsString(m_items_type)+" "+ item.getQueryItem() +Constants.LINE_SEPARATOR);
+        if ( m_type_of_sequence_coverage == COVERAGE_TYPE_GAP_LQR )
+        {
+            buf.append( "Stretch collection Id "+ item.getWorkingItem() +Constants.LINE_SEPARATOR);
+        }
         buf.append("RefSequence Id: "+oligo_calculation.getSequenceId()+Constants.LINE_SEPARATOR);
         buf.append("RefSequence Length: "+refsequence_cdslength+Constants.LINE_SEPARATOR);
         buf.append("FLEX RefSequence Id: "+flexrefsequenceid+Constants.LINE_SEPARATOR);
@@ -688,6 +744,21 @@ public class PrimerDesignerRunner extends ProcessRunner
         +PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_MIN_DISTANCE_BETWEEN_STRETCHES+"="+  m_min_distance_between_stretches +OligoCalculation.WRITE_PARAM_DELIM;
        return stretch_params;
     }
+    
+    class QueryItem
+    {
+        private String i_query_item = null;
+        private int     i_woring_item = -1;
+        
+        public QueryItem(){}
+        public QueryItem(int v, String c){i_query_item = c;i_woring_item = v;}
+        
+        public int          getWorkingItem(){ return i_woring_item;}
+        public String       getQueryItem(){ return i_query_item;}
+         public void          setWorkingItem(int v){  i_woring_item = v;}
+        public void       setQueryItem(String v){  i_query_item = v;}
+    }
+    
     ///////////////////////////////////////////////////////
      public static void main(String args[]) 
      
@@ -700,14 +771,14 @@ public class PrimerDesignerRunner extends ProcessRunner
             input = new PrimerDesignerRunner();
             user = AccessManager.getInstance().getUser("lena","htaycher");
           //  input.setItems("   1085 1269 ");
-           input.setInputData( Constants.ITEM_TYPE_CLONEID," 132414   ");
+           input.setInputData( Constants.ITEM_TYPE_CLONEID," 134377    134389 134377");
          //   input.setInputData( Constants.ITEM_TYPE_CLONEID,"145895");
             input.setUser(user);
             input.setSpecId(42);
-            input.setIsTryMode(false);
-            input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_GAP_LQR);
+            input.setIsTryMode(true);
+            input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_REFERENCE_CDS);
             input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR);
-            input.setMinDistanceBetweenStretchesToBeCombined(60);
+            input.setMinDistanceBetweenStretchesToBeCombined(20);
    
             input.run();
           
