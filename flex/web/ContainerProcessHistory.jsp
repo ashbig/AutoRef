@@ -13,7 +13,7 @@
 <html>
 <head>
     <title><bean:message key="flex.name"/> : Container Process History</title>
-    <LINK REL=StyleSheet HREF="table.css" TYPE="text/css" MEDIA=screen>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
     <h2><bean:message key="flex.name"/> : Container Process History</h2>

@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.15 2001-07-19 22:14:12 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.16 2001-07-20 19:13:27 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -22,7 +22,7 @@
 <html>
 <head>
     <title><bean:message key="flex.name"/> : Pending Requests</title>
-    <LINK REL=StyleSheet HREF="table.css" TYPE="text/css" MEDIA=screen>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
  </head>
 <body>
     

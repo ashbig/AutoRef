@@ -20,7 +20,7 @@
     <center>    
         <table>
             <tr>
-                <td bgcolor="lightgrey"><b>Plate Labels</b></td>
+                <td><b>Plate Labels</b></td>
             </tr>
            <% ListIterator iter = ids.listIterator(); String id = null; %>
            <% while (iter.hasNext()) { id = (String) iter.next(); %>

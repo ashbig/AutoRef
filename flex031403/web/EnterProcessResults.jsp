@@ -9,7 +9,11 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Enter Process Results</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Enter Process Results</title>
+    
+</head>
+
 <body>
     
 <html:form action="EnterPlate.do" focus="plateBarcode">
@@ -17,7 +21,7 @@
     <hr>
     <html:errors/>
     <p>
-    <center>
+
     <table>
     <logic:present name="<%=Constants.CONTAINER_KEY%>">
         <bean:write name="<%=Constants.CONTAINER_KEY%>" property="label"/> was processed sucessfully.
@@ -47,7 +51,7 @@
     </tr>
     </table>
     <html:submit/>
-    </center>
+
 </html:form>
 </body>
 </html>

@@ -4,11 +4,14 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
+
 <%@ page import="edu.harvard.med.hip.flex.Constants" %>
 
 <html:html locale="true">
 <head>
 <title><bean:message key="flex.name"/> : Cloning Request History</title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -54,15 +57,15 @@ Please follow the following hint.
 
 <logic:present name="customerRequest" scope="request">
 <p><b>You have the following cloning requests:</b>
-<table border="1" width="100%">
-<tr><th>Date</th><th>Total Sequences</th><th>Processed Sequences</th><th>Non-processed Sequences</th></tr>
+<table border="1" cellpadding="2" cellspacing="0" width="100%">
+<tr class="headerRow"><th>Date</th><th>Total Sequences</th><th>Processed Sequences</th><th>Non-processed Sequences</th></tr>
 <logic:iterate id="oneRequest" name="customerRequest">
-<tr>
+<flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
 <td><a href="DisplayRequest.do?requestid=<bean:write name="oneRequest" property="id"/>&requestDate=<bean:write name="oneRequest" property="date"/>"><bean:write name="oneRequest" property="date"/></a></td>
 <td><bean:write name="oneRequest" property="numSequences"/></td>
 <td><bean:write name="oneRequest" property="processedSequences"/></td>
 <td><bean:write name="oneRequest" property="pendingSequences"/></td>
-</tr>
+</flex:row>
 </logic:iterate>
 </table>
 </logic:present>

@@ -16,19 +16,19 @@
         
         <table>
             <tr>
-                <td bgcolor="lightgrey"><b>Please enter plate IDs for all of the oligo plates received:</b><p></td>
+                <td>Please enter plate IDs for all of the oligo plates received:<p></td>
             </tr>
             <tr>
                 <td><html:textarea property="oligoPlateIds" rows="12" cols="50"/><p></td>
             </tr>
 
             <tr>
-                <td bgcolor="lightgrey"><b>Receive Date:&nbsp;&nbsp;&nbsp;</b>
+                <td>Receive Date:&nbsp;&nbsp;&nbsp;
                     <html:text property="receiveDate" size="30"/><p></td>
             </tr>
 
             <tr>
-                <td bgcolor="lightgrey"><b>User Barcode:&nbsp;&nbsp;&nbsp;</b>
+                <td>User Barcode:&nbsp;&nbsp;&nbsp;
                     <html:text property="researcherBarcode" size="30"/><p></td>
             </tr>
         </table>

@@ -20,12 +20,12 @@
     <html:form action="logon.do" focus="username" target="_top">
         <table>
             <tr>
-                <td bgcolor="lightgrey"><b>User Name:</b></td>
-                <td bgcolor="lightgrey"><html:text property="username"/></td>
+                <td><b>User Name:</b></td>
+                <td><html:text property="username"/></td>
             </tr>
             <tr>
-                <td bgcolor="lightgrey"><b>Password:</b></td>
-                <td bgcolor="lightgrey"><html:password property="password"/></td>
+                <td><b>Password:</b></td>
+                <td><html:password property="password"/></td>
             </tr>
         </table>
         <p>

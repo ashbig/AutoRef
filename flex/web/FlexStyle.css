@@ -1,0 +1,11 @@
+// styles to be used for navigation/menus
+body.nav {background: #7a8a9a}
+//table.nav {background: #9bbad6}
+table.nav {background: #white}
+div.nav {margin: 1em 0em 1em 1em}
+
+// styles to be used for tablular data entry or viewing
+tr.oddRow {background: #ffffff}
+tr.evenRow {background: #eeeeee}
+tr.headerRow {background: #999999}
+tr.navRow {background: #9bbad6}

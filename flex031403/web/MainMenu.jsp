@@ -7,60 +7,34 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html>
-
-<body bgcolor="silver">
+<head>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
+<body bgcolor="#9bbad6">
 <center>
-<table border=0 cellpadding=2 cellspacing=0 width=90%>
+<div class="nav">
+<table class="nav" border=0 cellpadding=1 cellspacing=0 width=100%>
 <tr>
-    <TD width=1></td>
-    <td><br><br>
-        <h3><bean:message key="flex.name"/></h3>
+    <TD>
+        <center><h3><bean:message key="flex.name"/></h3></center>
     
-
+        <TABLE>
         <logic:iterate name="menulist" id="menuItem" type="edu.harvard.med.hip.flex.user.MenuItem">
-        <TABLE CELLSPACING=0 CELLPADDING=0 BORDER=0 bgcolor="silver" width="100%">
-        <TR>
-            <TD colspan=2></TD>
-        </TR>
-        <tr>
-            <td align=center>&nbsp;</TD> 
-            <td align=left>
+        
                 <html:link forward='<%=menuItem.getMenuItem()%>' target="display"> 
                    <b> <bean:write name="menuItem" property="description"/></b><p>
                 </html:link>
-            </td>
-        </tr>
-        <TR>
-            <TD colspan=2></TD>
-        </TR>
-        <TR>
-            <TD colspan=2 align=center>
-            </TD>
-        </TR>    
-        </TABLE>
-        </logic:iterate>
-        <!-- always display a logout link-->
-        <TABLE CELLSPACING=0 CELLPADDING=0 BORDER=0 bgcolor="silver" width="100%">
-        <TR>
-            <TD colspan=2></TD>
-        </TR>
-        <tr>
-            <td align=center>&nbsp;</TD> 
-            <td align=left>
                 <html:link forward='logout' target="_top"> 
                    <b>Logout</b><p>
-                </html:link>
-            </td>
-        </tr>
-        <TR>
-            <TD colspan=2></TD>
-        </TR>
-        <TR>
-            <TD colspan=2 align=center>
-            </TD>
-        </TR>    
+                </html:link>   
+        
+        </logic:iterate>
         </TABLE>
+    </td>
+    <td>
+    </td>
 </table>
+</div>
 </center>
 
 </body>

@@ -9,6 +9,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 
 <%-- Get the mode of this form, edit or ready only --%>
@@ -24,7 +25,10 @@
 
 
 <html>
-<head><title><bean:message key="flex.name"/> : Gel Result Details</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Gel Result Details</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
 <h2><bean:message key="flex.name"/> : Gel Result Details</h2>
 <hr>
@@ -39,7 +43,7 @@
 </logic:equal>
 
 
-<table>
+<table border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td>Plate ID:</td> <td><bean:write name="gelEntryForm" property="container.id"/></td>
         <td>Plate Type:</td> <td><bean:write name="gelEntryForm" property="container.type"/></td>
@@ -62,14 +66,14 @@
     <html:hidden property="editable" value="true"/>
 </logic:equal>
 
-<table border="1">
-    <tr>
+<table border="1" cellpadding="2" cellspacing="0">
+    <tr class="headerRow">
         <th>Sample</th><th>Type</th><th>Cell</th><th>Result</th>
     </tr>
     
     <logic:iterate name="gelEntryForm" property="container.samples" id="curSample" 
     indexId="i" type="edu.harvard.med.hip.flex.core.Sample">
-    <tr>
+    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
         <td>
             <bean:write name="curSample" property="id"/>
         </td>
@@ -108,7 +112,7 @@
 
         </td>
         
-    </tr>
+    </flex:row>
     </logic:iterate>
     <tr>
         <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
