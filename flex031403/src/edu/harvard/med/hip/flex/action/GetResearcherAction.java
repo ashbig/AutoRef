@@ -87,7 +87,7 @@ public class GetResearcherAction extends ResearcherAction{
             conn = t.requestConnection();
 
             // update the location of the old container.
-            container.updateLocation(container.getLocation().getId());
+            container.updateLocation(container.getLocation().getId(), conn);
             // Insert the new container and samples into database.
             newContainer.insert(conn);
             

@@ -102,7 +102,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
         while (enum.hasMoreElements()) {
             Container container = (Container)enum.nextElement();            
             String newBarcode = Container.getLabel(protocol.getProcesscode(), container.getPlatesetid(), getSubThread(container));        
-            Container newContainer = new Container(newContainerType, null, newBarcode);
+            Container newContainer = new Container(newContainerType, null, newBarcode, container.getPlatesetid());
             container.restoreSample();
             mappingSamples(container, newContainer, protocol); 
             newContainers.addElement(newContainer);
@@ -113,9 +113,13 @@ public class OneToOneContainerMapper implements ContainerMapper {
  
     // Parse the barcode to get the sub thread.
     protected String getSubThread(Container c) {
-        String barcode = c.getLabel();
-        int index = barcode.indexOf("-")+1;
-        return (barcode.substring(index));
+        String barcode = c.getLabel();        
+        int index = barcode.indexOf("-");
+        
+        if(index<0)
+            return null;
+        
+        return (barcode.substring(index+1));
     }
 
     // Creates the new samples from the samples of the previous plate.

@@ -55,7 +55,7 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
             newBarcode = newBarcode+"-"+CLOSED;
         }
                   
-        Container newContainer = new Container(newContainerType, null, newBarcode);
+        Container newContainer = new Container(newContainerType, null, newBarcode, c1.getPlatesetid());
         c1.restoreSample();
         c2.restoreSample();       
         mappingSamples(c1, c2, newContainer, protocol); 

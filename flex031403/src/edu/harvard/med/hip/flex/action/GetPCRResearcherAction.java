@@ -91,9 +91,9 @@ public class GetPCRResearcherAction extends ResearcherAction {
             conn = t.requestConnection();
 
             // update the location of the old containers.
-            fivep.updateLocation(fivep.getLocation().getId());
-            threepOpen.updateLocation(threepOpen.getLocation().getId());
-            threepClosed.updateLocation(threepClosed.getLocation().getId());
+            fivep.updateLocation(fivep.getLocation().getId(), conn);
+            threepOpen.updateLocation(threepOpen.getLocation().getId(), conn);
+            threepClosed.updateLocation(threepClosed.getLocation().getId(), conn);
             
             // Insert the new container and samples into database.
             pcrOpenContainer.insert(conn);
@@ -159,7 +159,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
             }
             
             // Commit the changes to the database.
-            DatabaseTransaction.rollback(conn);
+            DatabaseTransaction.commit(conn);
         
             // Print the barcode
             System.out.println("Printing barcode: "+pcrOpenContainer.getLabel());
