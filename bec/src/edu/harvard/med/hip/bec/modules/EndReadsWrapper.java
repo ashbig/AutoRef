@@ -15,7 +15,7 @@ import sun.jdbc.rowset.*;
 import java.sql.*;
 import org.apache.regexp.*;
 
-import edu.harvard.med.hip.bec.engine.*;
+//import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.bioutil.*;
 import  edu.harvard.med.hip.bec.util.*;
@@ -27,7 +27,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
  *
  * @author  htaycher
  */
-public class EndReadsWrapper
+public class EndReadsWrapper 
 {
      // outputBaseDir specify the base directory for trace file distribution
     private static final String OUTPUT_BASE_DR = "";
@@ -119,7 +119,7 @@ public class EndReadsWrapper
         try
         {
            // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
-            rs = DatabaseTransaction.executeQuery(sql, conn);
+            rs = DatabaseTransaction.executeQuery(sql,conn);
             
             while(rs.next())
             {
@@ -231,11 +231,11 @@ public class EndReadsWrapper
 
     public static void main(String args[])
     {
-        String baseDir ="c:\\bio\\phred\\try";//"c:\\trace_dump"; //
-        String traceDir = "c:\\bio\\phred\\out";//"c:\\clone_files";//
-        String errorDir = "c:\\bio\\phred\\err";//"c:\\error_files";//
-        String dr ="c:\\bio\\phred\\err";//"c:\\contol_files_new";//
-         String dr_empty ="c:\\bio\\phred\\empty";//"c:\\empty_files";//
+        String baseDir ="f:\\pseudomonas_dump\\tracedata\\trace_dump"; //
+        String traceDir = "f:\\pseudomonas_dump\\tracedata\\clone_files";//
+        String errorDir = "f:\\pseudomonas_dump\\tracedata\\error_files";//
+        String dr ="f:\\pseudomonas_dump\\tracedata\\control_files";//
+         String dr_empty ="f:\\pseudomonas_dump\\tracedata\\empty_files";//
       //  PipelineDriver task = new PipelineDriver();
         //task.processPipeline(baseDir,traceDir,errorDir);
      ArrayList reads=null;Connection  conn =null;

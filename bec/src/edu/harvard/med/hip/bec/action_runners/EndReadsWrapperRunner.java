@@ -15,7 +15,7 @@ import sun.jdbc.rowset.*;
 import java.sql.*;
 import org.apache.regexp.*;
 
-import edu.harvard.med.hip.bec.engine.*;
+//import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.bioutil.*;
 import  edu.harvard.med.hip.bec.util.*;
@@ -135,7 +135,7 @@ public class EndReadsWrapperRunner implements Runnable
         try
         {
            // DatabaseTransactionLocal t   = DatabaseTransactionLocal.getInstance();
-            rs = DatabaseTransaction.executeQuery(sql, conn);
+            rs = DatabaseTransaction.executeQuery(sql,conn);
             
             while(rs.next())
             {

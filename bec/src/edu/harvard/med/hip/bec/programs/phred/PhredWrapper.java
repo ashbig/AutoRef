@@ -9,7 +9,7 @@ package edu.harvard.med.hip.bec.programs.phred;
 import java.util.*;
 import java.io.*;
 import org.apache.regexp.*;
-import edu.harvard.med.hip.bec.engine.*;
+//import edu.harvard.med.hip.bec.engine.*;
 //import  edu.harvard.med.hip.bec.bioutil.*;
 import  edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
