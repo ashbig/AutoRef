@@ -202,7 +202,11 @@ bool processDNAFile(const std::string& fileName, const sTrimParams& params)
     fputs(preBuff[i].c_str(), file);
   }
 
-	trimDNAArray(dna, params, trimStart, trimEnd);
+  trimDNAArray(dna, params, trimStart, trimEnd);
+  if (trimStart ==  trimEnd )
+{
+         trimStart= 0; trimEnd = dna.size();
+}
   dumpTrimmedDNAArray(dna, trimStart, trimEnd, file);
 
   for (int i = 0;i < postBuff.size();i++)
