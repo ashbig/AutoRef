@@ -109,7 +109,7 @@ public class DesicionTool
     {
         if ( clone_sequence.getDiscrepancies() == null || clone_sequence.getDiscrepancies().size() == 0)
             return BaseSequence.QUALITY_GOOD;
-        ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( clone_sequence.getDiscrepancies());
+        ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_sequence.getDiscrepancies());
     
         return  DiscrepancyDescription.defineQuality( discrepancy_descriptions ,m_spec );
     }

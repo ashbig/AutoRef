@@ -14,6 +14,7 @@ import  edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.utility.*;
+import edu.harvard.med.hip.bec.Constants;
 /**
  *
  * @author  htaycher
@@ -63,14 +64,14 @@ public class Contig
         nw.setReferenceId( refsequence.getId());
         nw.setQuerySeq(m_sequence);
         nw.setRefSeq(refsequence.getText());
-        nw.setGapOpen(20);
-        nw.setGapExtend(0.05);
+     //   nw.setGapOpen(20);
+     //   nw.setGapExtend(0.05);
         nw.setOutputFileDir(m_needle_output_path);
         NeedleResult res_needle =  nw.runNeedle();
         
         //parse needle output
          res_needle.recalculateIdentity();
-        if (res_needle.getIdentity() < 50)
+        if (res_needle.getIdentity() < Constants.MIN_IDENTITY_CUTOFF)
         {
             return IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_NO_MATCH;
         }

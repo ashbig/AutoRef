@@ -28,7 +28,7 @@ public class PhredPhrapParser
     
     public  CloneAssembly parse(String foutput_name) throws BecUtilException
     {
-        System.out.println("a");
+        //System.out.println("a");
         String line = null;
         CloneAssembly clone_assembly = null;
         Contig contig = null;

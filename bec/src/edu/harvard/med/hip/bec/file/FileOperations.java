@@ -28,6 +28,13 @@ public class FileOperations
         else
             m_isSameComputer = false;
     }
+    
+    public static boolean isFileExists(String file_name)
+    {
+        File fl = new File(file_name);
+        return fl.exists();
+    }
+    
     public static void createDirectory(String directory_path, boolean exsits_exit)   throws Exception
     {
         File directory = new File(directory_path);

@@ -46,10 +46,6 @@ public class Constants {
      */
     // key used to find user object in session.
     public static final String USER_KEY = "USER";
-    
-    // key used to find researcher barcode
-    public static final String RESEARCHER_BARCODE_KEY = "RESEARCHER_BARCODE";
-    
     // key used to find The flex sequence id.
     public static final String SEQUENCE_ID_KEY = "SEQUENCE_ID";
    
@@ -103,20 +99,7 @@ public class Constants {
     // key used to find the edit mode of a form
     public static final String FORM_MODE_KEY="EDIT_MODE";
     
-    // key used to find the thread
-    public static final String THREAD_KEY="THREAD";
-   
-    // key used to find the length of a table
-    public static final String TABLE_LENGTH_KEY="TABLE_LENGTH";
-    
-    // key used to find the offset for a table
-    public static final String TABLE_OFFSET_KEY="TABLE_OFFSET";
-    
-    // key used to find the list of name types
-    public static final String NAME_TYPE_LIST_KEY="NAME_TYPE_LIST";
-    
-    // Key used to find the next page to display
-    public static final String SUCCESS_PAGE_KEY="SUCCESS_PAGE";
+ 
     
     // key used to find the forward to use
     public static final String FORWARD_KEY = "FORWARD";
@@ -127,29 +110,12 @@ public class Constants {
     // forward name used for approve sequence after select the workflow.
     public static final String APPROVE_SEQUENCES = "APPROVE_SEQUENCES";
     
-    //forward name used for create process plates after select the workflow.
-    public static final String CREATE_PROCESS_PLATES = "CREATE_PROCESS_PLATES";
-
-     
-    
-    //forward name for set project parameters for sequencing 
-    public static final String SEQ_SET_PROJECT_PARAMS = "SEQ_SET_PROJECT_PARAMS";
-    
-      // key used to find The full sequence id.
+         // key used to find The full sequence id.
     public static final String FULL_SEQUENCE_ID_KEY = "FULL_SEQUENCE_ID";
      // key used to find the full sequence
     public static final String FULL_SEQUENCE_KEY = "FULL_SEQUENCE";
     // key used to find the  formated colorized sequence
     public static final String COLOR_SEQUENCE_KEY = "COLOR_SEQUENCE";
-    public static final String BLAST_FILE_NAME = "BLAST_FILE_NAME";
-    public static final String FULL_SEQUENCE_BLAST_N_FORMATED = 
-        "FULL_SEQUENCE_BLAST_N_FORMATED";
-    public static final String FULL_SEQUENCE_BLAST_P_FORMATED = 
-        "FULL_SEQUENCE_BLAST_P_FORMATED";
-    
-    
-    
-    
     
     //constants for constructors
     public static final int TYPE_OBJECTS = 1;
@@ -231,6 +197,9 @@ public class Constants {
      
      public static final int            PROCESS_PROCESS_OLIGO_PLATE = 65;
      public static final int            PROCESS_VIEW_OLIGO_PLATE = 66;
+     
+     public static final int            PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER = 67;
+     public static final int            PROCESS_INITIATE_TRACEFILES_TRANSFER = 68;
        //67
        
     //items for display 1-40
@@ -265,7 +234,8 @@ public class Constants {
     public static final int ITEM_TYPE_BECSEQUENCE_ID = 3;
     public static final int ITEM_TYPE_FLEXSEQUENCE_ID = 4;
    
-    
+    // for checking sequence identity
+    public static final double MIN_IDENTITY_CUTOFF = 60.0;
     /**
      * get today's date in dd-mmm-yy format
      */

@@ -1,4 +1,4 @@
-/*
+       /*
  * Needle.java
  *
  * Created on November 27, 2002, 5:19 PM
@@ -63,19 +63,11 @@ public class PhredPhrap
         //output_file_name = Algorithms.convertWindowsFileNameIntoUnix(output_file_name);
         clone_path =  Algorithms.convertWindowsFileNameIntoUnix(clone_path);
         if (clone_path.indexOf("/f") != -1) clone_path ="/cygdrive" + clone_path;
-       // if (isWindows)
-        //{
+      
             
             cmd =  m_phredphrap_path + " --clonepath " + clone_path  + " --outputfilename "+ output_file_name;
             if (m_vector_file_name != null && !m_vector_file_name.equals("")) cmd += " --vectorfile " + Algorithms.convertWindowsFileNameIntoUnix(m_vector_file_name);
-        //}
-       // else
-       // {
-       // }
-            //cmd =  "perl "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
-       // System.out.println(cmd);
-        //blastcmd = "/usr/local/emboss/bin/needle "+q_name+ ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile "+.out ";
-
+        
         try
         {
             Runtime r = Runtime.getRuntime();

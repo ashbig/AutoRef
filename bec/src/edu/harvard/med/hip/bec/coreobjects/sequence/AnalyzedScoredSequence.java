@@ -112,13 +112,15 @@ public class AnalyzedScoredSequence extends ScoredSequence
    
    public synchronized  void insertMutations (Connection conn) throws BecDatabaseException
     {
+        int ind = 0;
+        Mutation mut = null;
         try
         {
           
-           Mutation mut;RNAMutation rna; AAMutation aa;
+           
            if (m_discrepancies != null)
            {
-                for (int ind = 0; ind < m_discrepancies.size();ind++)
+                for (; ind < m_discrepancies.size();ind++)
                 {
                      mut = (Mutation)m_discrepancies.get(ind);
                      mut.insert(conn);
@@ -132,7 +134,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
     }
     public ArrayList getDiscrepancies()  throws BecDatabaseException
     {
-        if (m_discrepancies != null) return m_discrepancies;
+        if (m_discrepancies != null ) return m_discrepancies;
         
          m_discrepancies = new ArrayList();
          m_discrepancies = Mutation.getDiscrepanciesBySequenceId(m_id);
@@ -184,6 +186,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
     // quality , if quality set to UNknown , function do not separate by quality,
     //          not_set qualified as high
     // isPolym - specifie include polymorphic change as discrepancy or not
+   /*(
     public int getDiscrepancyNumberByParameters(int dicrepancy_type, int change_type, int quality, int polym_flag)
                                            
     {
@@ -194,7 +197,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
     {
         return Mutation.getDiscrepancyNumberByParameters(m_discrepancies, dicrepancy_type,  change_type,  quality);
     }
-    
+    */
     public ArrayList getDiscrepanciesByType(int dicrepancy_type)  throws BecDatabaseException
     {
         ArrayList discrepancies = new ArrayList();
@@ -213,38 +216,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
             return discrepancies;
         }
         return null;
-       /*
-        String sql = "select mutationid,type from mutation  where sequenceid="+m_id +" order by mutationnumber, type";
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        ResultSet rs = null;
-        try
-        {
-            rs = t.executeQuery(sql);
-            while(rs.next())
-            {
-                int mid =rs.getInt("mutationid"); //obtained/analyzed/mutations cleared/final
-                int mtype = rs.getInt("type");//ready for storage or not
-                if (mtype == Mutation.RNA)
-                {
-                    RNAMutation rmut = new RNAMutation(mid);
-                    m_discrepancies.add(rmut);
-                }
-                else if (mtype == Mutation.AA)
-                {
-                    AAMutation amut = new AAMutation(mid);
-                    m_discrepancies.add(amut);
-                }
-            }
-            getMutationSummary();
-             return m_discrepancies;
-        } catch (Exception sqlE)
-        {
-            throw new BecDatabaseException("Error occured while restoring sequence with id "+sqlE+"\nSQL: "+sql);
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-       */
+     
        
     }
    
@@ -254,37 +226,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
    
     
     
-    /*
-    public ArrayList    getAllBlasts() throws BecDatabaseException
-    {
-        if (m_blast_results != null) return m_blast_results;
-        m_blast_results = new ArrayList();
-        String sql = "select blastid from blastresult  where queryid="+m_id+" order by rundate";
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        ResultSet rs = null;
-        try
-        {
-            rs = t.executeQuery(sql);
-            while(rs.next())
-            {
-                int id =rs.getInt("blastid"); //obtained/analyzed/mutations cleared/final
-                BlastResult r = new BlastResult(id);
-                m_blast_results.add(r);
-                if (r.getType().equals(Blaster.BLAST_PROGRAM_BLASTN)) m_blast_n = r.getFileName();
-                if (r.getType().equals(Blaster.BLAST_PROGRAM_BLASTX)) m_blast_p = r.getFileName();
-            }
-             return m_blast_results;
-        } catch (SQLException sqlE)
-        {
-            throw new BecDatabaseException("Error occured while restoring sequence with id "+sqlE+"\nSQL: "+sql);
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-       
-       
-    }
-    */
+  
    
     
     //__________________________________________________________________________
@@ -320,7 +262,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
            // f.updateQuality(t.requestConnection());
             
            // t.requestConnection().commit();
-              AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(1876);
+              AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(21177);
                Mutation.toHTMLString(sequence.getDiscrepancies()) ;
               System.out.println(sequence.getDiscrepancies().size());
         } catch (Exception e)

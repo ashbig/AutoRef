@@ -256,9 +256,9 @@ public class Algorithms
     }
     public static void main(String args[])
     {
-        String g = "BBBAAAAABBBSSSBBBDDDDDBBB";
-     
-        System.out.print( g+"   "+replaceString(g,"BBB","-"));
+        String g = "E:\\Sequences for BEC\\files_to_transfer\\7388_H6_11923_52186_R0.T0.scf";
+     File f= new File(g);
+        System.out.println(f.getName().substring( 0,f.getName().indexOf('.')));
     }
     
     
