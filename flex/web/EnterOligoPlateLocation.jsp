@@ -15,7 +15,7 @@
 
     <% List ids = (List) request.getSession().getAttribute("plateList"); %>
 
-    <html:form action="/EnterOligoPlateLocation.do" focus="location">
+    <html:form action="/EnterOligoPlateLocation.do" focus="locations">
         
         <table>
             <tr>
@@ -30,7 +30,7 @@
                     <b> <%= id %></b>
                 </td>
                 <td>
-                    <html:select property="location">
+                    <html:select property="locations">
                     <html:option value="FREEZER">FREEZER</html:option>
                     <html:option value="REFRIGERATOR">REFRIGERATOR</html:option>
                     <html:option value="WORKBENCH">WORKBENCH</html:option>
