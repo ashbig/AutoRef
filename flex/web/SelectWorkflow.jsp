@@ -19,6 +19,7 @@
 <html:form action="/SelectWorkflow.do">
 <html:hidden property="projectid" />
 <html:hidden property="forwardName" />
+<html:hidden property="projectname" />
 
 <table>
     <tr>
