@@ -175,9 +175,11 @@ public class SequencingFacilityFileName
         m_well_number = Algorithms.convertWellFromA8_12toInt(m_well_name);
         m_extention = kolodner_file_name.substring(index_extension_separator + 1);
       
-        String tmp = kolodner_file_name.substring(0, index_platename_separator);
-        
-        if (tmp.length() < 9)// add 0 placeholders
+        m_plate_name = kolodner_file_name.substring(0, index_platename_separator);
+        m_orientation = "I";
+        /*
+         String tmp = kolodner_file_name.substring(0, index_platename_separator);
+         if (tmp.length() < 9)// add 0 placeholders
         {
             char arr[] = tmp.toCharArray();m_plate_name="";
             for (int char_count = 0 ; char_count < tmp.length(); )
@@ -197,8 +199,8 @@ public class SequencingFacilityFileName
             }
         }
         else
-            m_plate_name = tmp;
-        if (m_well_number != -1 &&    m_plate_name != null && m_plate_name.length() == 9 )
+            m_plate_name = tmp;*/
+        if (m_well_number != -1 &&    m_plate_name != null  )
              m_isProperName = true;
        
     }
