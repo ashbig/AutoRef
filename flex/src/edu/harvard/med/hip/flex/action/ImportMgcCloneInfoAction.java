@@ -19,6 +19,8 @@ import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.infoimport.MgcMasterListImporter;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.workflow.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.Constants;
 
 /**
  *
@@ -76,8 +78,8 @@ public class ImportMgcCloneInfoAction extends WorkflowAction
             return new ActionForward(mapping.getInput());
         }
         
-      
-        ImportInformationRunner import_info = new ImportInformationRunner(input, fileName);
+        String username = ((User)request.getSession().getAttribute(Constants.USER_KEY)).getUsername();
+        ImportInformationRunner import_info = new ImportInformationRunner(input, fileName, username);
         Thread t = new Thread(import_info);
         t.start();
         request.setAttribute("message",
@@ -90,14 +92,16 @@ public class ImportMgcCloneInfoAction extends WorkflowAction
     {
         private InputStream m_Input = null;
         private String      m_filename= null;
-        public ImportInformationRunner(InputStream in, String fn)
+        private String      m_username = null;
+        public ImportInformationRunner(InputStream in, String fn, String username)
         {
             m_Input = in;
             m_filename = fn;
+            m_username = username;
         }
         public void run()
         {
-            MgcMasterListImporter importer = new MgcMasterListImporter();
+            MgcMasterListImporter importer = new MgcMasterListImporter(m_username);
             importer.importMgcCloneInfoIntoDB(m_Input, m_filename) ;
            // isBusy = false;
         }
