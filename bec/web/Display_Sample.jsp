@@ -101,7 +101,7 @@
           <td >
 <% if (read.isAlignmentExists())
 {%>
- <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= read.getSequenceId()%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+ <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= read.getSequenceId()%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= "A"+read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 <%}
 else
  {%>Not available<%}%>
@@ -110,7 +110,7 @@ else
 <td width="30%">
 <% if (read.isDiscrepancies())
 {%>		
-<input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','<%= "D"+read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 <%}
 else {%>No discrepancies<%}%> 
 
