@@ -7,6 +7,6 @@
 <h2>FlexGene : Cloning Request : Confirm Selection</h2>
 <hr>
 <p>
-No sequence has been selected.
+No sequence has been submitted.
 </body>
 </html>

@@ -61,7 +61,7 @@ public class SequenceSearchAction extends FlexAction {
         String searchString = ((CustomerRequestForm)form).getSearchString(); 
         String species = ((CustomerRequestForm)form).getSpecies();
         if(!"all".equals(species)) {
-            searchString = searchString + species;
+            searchString = searchString + "+" + species;
         }
         
         //Hashtable searchResult = ((CustomerRequestForm)form).getSearchResult();       
@@ -70,6 +70,11 @@ public class SequenceSearchAction extends FlexAction {
         try {
             GenbankGeneFinder finder = new GenbankGeneFinder();
             Vector sequences = finder.search(searchString);
+            
+            if(sequences.size()==0) {
+                return (mapping.findForward("emptysearchresult"));
+            }
+            
             Enumeration e = sequences.elements();
             while(e.hasMoreElements()) {
                 GenbankSequence sequence = (GenbankSequence)e.nextElement();

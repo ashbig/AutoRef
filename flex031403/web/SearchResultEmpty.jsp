@@ -4,9 +4,10 @@
 </head>
 <body bgcolor="white">
 
-<h2>FlexGene : Cloning Request : Confirm Selection</h2>
+<h2>FlexGene : Cloning Request : Sequence Selection</h2>
 <hr>
-<p>
-No sequence has been submitted.
+
+No matching sequences found.
+
 </body>
 </html>

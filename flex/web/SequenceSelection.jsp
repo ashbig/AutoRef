@@ -13,7 +13,6 @@
 <hr>
 
 <html:form action="/SequenceSelection.do">
-
 <p>
 <table>
 <logic:iterate id="sr" name="searchResult">

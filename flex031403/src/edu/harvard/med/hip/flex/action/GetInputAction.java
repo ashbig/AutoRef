@@ -75,29 +75,51 @@ public class GetInputAction extends ResearcherAction{
             return (mapping.findForward("error"));
         }
  
-        if(!isValidPlate(queueItems, sourcePlate)) {
+        QueueItem item = getValidPlate(queueItems, sourcePlate);
+        if(item == null) {
             errors.add("sourcePlate", new ActionError("error.plateId.invalid", sourcePlate));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
+        }
+        
+        // Create the new plate and samples.
+        Container container = (Container)item.getItem();
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            Connection conn = t.requestConnection();
+        
+            // Remove the container from the queue.
+            LinkedList newItems = new LinkedList();
+            newItems.addLast(item);
+            ContainerProcessQueue queue = new ContainerProcessQueue();
+            queue.removeQueueItems(newItems, conn);
+        
+       
+            DatabaseTransaction.closeConnection(conn);
+        } catch (FlexDatabaseException ex) {
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
         }
             
         return null;
     }
  
     // Validate the source plate barcode.
-    private boolean isValidPlate(LinkedList queueItems, String sourcePlate) {        
+    private QueueItem getValidPlate(LinkedList queueItems, String sourcePlate) {        
         if(queueItems == null) {
-            return false;
+            return null;
         }
         
+        QueueItem found = null;
         for(int i=0; i<queueItems.size(); i++) {
             QueueItem item = (QueueItem)queueItems.get(i);
             Container container = (Container)item.getItem();
             if(container.isSame(sourcePlate)) {
-                return true;
+                item = found;
             }
         }   
         
-        return false;
+        return found;
     }
 }
