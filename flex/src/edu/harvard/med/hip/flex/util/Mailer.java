@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.12 $
- * $Date: 2004-02-18 22:04:18 $
+ * $Revision: 1.13 $
+ * $Date: 2004-06-16 19:17:03 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -51,13 +51,14 @@ import edu.harvard.med.hip.flex.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.12 $ $Date: 2004-02-18 22:04:18 $
+ * @version    $Revision: 1.13 $ $Date: 2004-06-16 19:17:03 $
  */
 
 public class Mailer
 {
-    
+    public static final String FILEPATH = FlexProperties.getInstance().getProperty("tmp");
     public final static String SMTP_HOST ="hms.harvard.edu";
+    //public final static String SMTP_HOST ="email.med.harvard.edu";
     
     /**
      * Utility Method to send a message
@@ -353,7 +354,7 @@ public static void notifyUser(String user_name, String file_name, String subject
 private static File writeFile(Vector fileData, String file_name)
 throws IOException
 {
-    File fl = new File( "/tmp/"  + file_name);
+    File fl = new File( FILEPATH  + file_name);
     //File fl = new File( "G:\\"  + file_name);
     FileWriter fr = new FileWriter(fl);
     
@@ -383,7 +384,7 @@ throws IOException
         Mailer.sendMessage("jmunoz@3rdmill.com","jmunoz@3rdmill.com",
         "jmunoz@3rdmill.com","Test","Test of cc and file", fileCol);
         
-        Mailer.sendMessage("jmunoz@3rdmill.com","dzuo@hms.harvard.edu", "test","Testing 12 3");
+        Mailer.sendMessage("jmunoz@3rdmill.com","dongmei_zuo@hms.harvard.edu", "test","Testing 12 3");
     }
     
 } // End class Mailer
