@@ -153,7 +153,7 @@
     <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>
     <forward    name="importSequence" path="/GetProjects.do?forwardName=IMPORT_SEQUENCES"/>
     <forward    name="addResearcher" path="/AddResearcher.jsp"/>
-    <forward    name="mgcPlateHandle" path="/MGCPlateHandle.do"/>
+    <forward    name="mgcPlateHandle" path="/GetProjects.do?forwardName=MGC_PLATE_HANDLE"/>
     <forward    name="importMGCMaster" path="/ImportMGCMaster.jsp"/>
     <forward    name="requestMGC" path="/RequestMGC.jsp"/>
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>
@@ -224,6 +224,7 @@
                 name="projectWorkflowForm"
                 type="edu.harvard.med.hip.flex.action.SelectProjectAction">
         <forward    name="success"   path="/SelectWorkflow.jsp"/>
+        <forward    name="success_mgc_plate_handle"   path="/MGCPlateHandle.do"/>
     </action>
 
     <!-- Process user's selection of a workflow -->
