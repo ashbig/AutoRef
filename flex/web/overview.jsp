@@ -24,8 +24,5 @@
 			<li><b>View All Cloned Genes</b> ? this is a list of all genes that have been physically captured into plasmids.  They have not necessarily been sequence-verified.</li>
 			<li><b>Search FLEX Database</b> ? this is a way to search for genes that meet specific criteria.  Users can look for all genes that have ?cyclin? in the gene or ?cdk? in the gene symbol.   Users can also use Boolean logic.</li>
 		</ul>
-
-		<CENTER><P><I><small><a href="mailto:dzuo@hms.harvard.edu">Send us email</a></small></I></P></CENTER>	
-
 	</BODY>
 <HTML>

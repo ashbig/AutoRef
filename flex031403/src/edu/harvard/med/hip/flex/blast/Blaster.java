@@ -193,8 +193,8 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits;                    
-/*
-       
+
+/*       
          String blastcmd = "E:\\flexDev\\blast\\blastall " +                  
                           program + " " +                
                           "-d " + dbPath +  " " +                
@@ -205,7 +205,7 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits; 
- */ 
+*/ 
          return blastcmd;
     }
     

@@ -25,10 +25,10 @@
 </tr>
 <logic:iterate id="gs" name="goodSequences">
 <tr>
-<logic:equal name="gs" property="species" value="Homo sapiens">
+<logic:equal name="gs" property="speciesCategory" value="allowed">
 <td><input name="selection" type="checkbox" value="<bean:write name="gs" property="gi"/>"></td>
 </logic:equal>
-<logic:notEqual name="gs" property="species" value="Homo sapiens">
+<logic:notEqual name="gs" property="speciesCategory" value="allowed">
 <td></td>
 </logic:notEqual>
 <td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="gs" property="gi"/>&dopt=GenBank"><bean:write name="gs" property="accession"/></a></td>
@@ -55,10 +55,10 @@
 </tr>
 <logic:iterate id="element" name="ss" property="value">
 <tr>
-<logic:equal name="element" property="id" value="-1">
+<logic:equal name="element" property="id" value="NA">
 <td><font color=red><bean:write name="element" property="id"/></font></td>
 </logic:equal>
-<logic:notEqual name="element" property="id" value="-1">
+<logic:notEqual name="element" property="id" value="NA">
 <td><font color=red><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="element" property="id"/>"><bean:write name="element" property="id"/></a></font></td>
 </logic:notEqual>
 <td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="element" property="gi"/>&dopt=GenBank"><bean:write name="element" property="accession"/></a></td>
@@ -94,16 +94,16 @@
 </tr>
 <logic:iterate id="h" name="homo" property="value.homolog">
 <tr>
-<logic:equal name="h" property="species" value="Homo sapiens">
+<logic:equal name="h" property="speciesCategory" value="allowed">
 <td><input name="selection" type="checkbox" value="<bean:write name="h" property="gi"/>"></td>
 </logic:equal>
-<logic:notEqual name="h" property="species" value="Homo sapiens">
+<logic:notEqual name="h" property="speciesCategory" value="allowed">
 <td></td>
 </logic:notEqual>
-<logic:equal name="h" property="id" value="-1">
+<logic:equal name="h" property="id" value="NA">
 <td><font color=red><bean:write name="h" property="id"/><br></font></td>
 </logic:equal>
-<logic:notEqual name="h" property="id" value="-1">
+<logic:notEqual name="h" property="id" value="NA">
 <td><font color=red><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="h" property="id"/>"><bean:write name="h" property="id"/></a><br></font></td>
 </logic:notEqual>
 <td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="h" property="gi"/>&dopt=GenBank"><bean:write name="h" property="accession"/><br></a></td>
