@@ -18,7 +18,7 @@
   <center>
 
 <table border="0" cellpadding="0" cellspacing="0" width="73%">
-  <tr>
+  <!--<tr>
     <td width="50%" valign="top" align="center"><font color="#002677"><b>Click
       here to make clone set reservation.<br>
       <br>
@@ -28,7 +28,7 @@
   <tr>
     <td width="50%" align="center"><a href="NoNewReservations.jsp"><img border="0" src="jpg/button21.jpg" width="250" height="31"></a>
     </td>
-  </tr>
+  </tr>-->
   <tr>
     <td width="50%" align="center"><font color="#003399"><br>
       </font><font color="#002677"><b>Click here to view the available clone set.</b><br>
@@ -37,16 +37,16 @@
   </tr>
   <tr>
     <td width="50%" align="center"><a href="viewCloneSet.do?cloneSetName=Kinase Clone Set 1" target="_blank">
-     <img border="0" src="jpg/button4.jpg" width="158" height="31"></a></td>
+     <img border="0" src="jpg/button44.gif" width="158" height="31"></a></td>
   </tr>
   <tr>
     <td width="50%" align="center"><br>
-      <font color="#000080"><b>Click here to check your clone set reservation.<br>
+      <font color="#000080"><b>Click here to provide delivery and billing information.<br>
       <br>
       </b></font></td>
   </tr>
   <tr>
-    <td width="50%" align="center"><a href="CheckReservation.jsp"><img border="0" src="jpg/button1.jpg" width="158" height="31"></a></td>
+    <td width="50%" align="center"><a href="CheckReservation.jsp"><img border="0" src="jpg/button11.gif" width="158" height="31"></a></td>
   </tr>
 </table>
 

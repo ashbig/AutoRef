@@ -116,6 +116,12 @@
       <forward  name="fail"   path="/Menu.jsp"/>
     </action>
 
+    <action    path="/downloadPlate"
+               type="edu.harvard.med.hip.cloneOrder.action.DownloadPlateAction"               
+               scope="request"               
+               input="/DisplayCloneSet.jsp">      
+      <forward  name="fail"   path="/Menu.jsp"/>
+    </action>
 
     <action     path="/ProcessError"
                 type="edu.harvard.med.hip.cloneOrder.action.ProcessErrorAction">
