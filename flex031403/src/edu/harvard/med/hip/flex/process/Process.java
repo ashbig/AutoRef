@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.11 2001-06-18 19:48:30 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.12 2001-06-20 11:15:57 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -105,7 +105,6 @@ public class Process {
         ResultSet rs = null;
         try {
             ps = conn.prepareStatement(sql);
-            System.out.println("Container: " + container);
             
             ps.setInt(1, container.getId());
             ps.setInt(2, protocol.getId());
@@ -121,6 +120,8 @@ public class Process {
                 new Researcher(rs.getInt("researcherid")),
                 rs.getString("processDate"),rs.getString("subprotocolname"),
                 rs.getString("extrainformation"));
+                
+                
             }
             
         } catch (SQLException sqlE) {
@@ -133,6 +134,9 @@ public class Process {
         }
         return retProcess;
     }
+    
+    
+    
     
     /**
      * Set the subprotocol field to the given value.
@@ -303,6 +307,34 @@ public class Process {
         while(enum.hasMoreElements()) {
             SampleLineage slineage = (SampleLineage)enum.nextElement();
             slineage.insert(c);
+        }
+    }
+    
+    /**
+     * Updates the process execution record for this process using the
+     * information sotred in the object.
+     *
+     * @param conn The connection used to perform the update.
+     *
+     * @exception FlexDatabaseException when a database* error occurs.
+     */
+    public void update(Connection conn) throws FlexDatabaseException {
+        PreparedStatement ps = null;
+        try{
+            String sql = "UPDATE PROCESSEXECUTION SET EXECUTIONSTATUS = ?, "+
+            "RESEARCHERID = ?, SUBPROTOCOLNAME = ?, EXTRAINFORMATION=? " +
+            "WHERE EXECUTIONID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1,this.getStatus());
+            ps.setInt(2,this.researcher.getId());
+            ps.setString(3,this.getSubprotocol());
+            ps.setString(4,this.extrainfo);
+            ps.setInt(5,this.getExecutionid());
+            DatabaseTransaction.executeUpdate(ps);
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeStatement(ps);
         }
     }
     

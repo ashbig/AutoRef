@@ -9,9 +9,7 @@
 
 <bean:define id="plate" name="<%=Constants.CONTAINER_KEY%>"/>
 
-<%
-java.util.Date date = new java.util.Date();
-%>
+
 <html>
 <head><title>Transformation Plate Details</title></head>
 <body>
@@ -23,7 +21,7 @@ java.util.Date date = new java.util.Date();
         <td>Plate Type:</td> <td><bean:write name="plate" property="type"/></td>
     </tr>
     <tr>
-        <td>Process Date:</td> <td><%=date.toString()%></td><td></td>
+        <td>Process Date:</td> <td><bean:write name="<%=Constants.QUEUE_ITEM_KEY%>" property="date"/></td><td></td>
     </tr>
 </table>
 

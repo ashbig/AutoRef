@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2001-06-18 19:48:30 $
+ * $Revision: 1.6 $
+ * $Date: 2001-06-20 11:15:57 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.5 $ $Date: 2001-06-18 19:48:30 $
+ * @version    $Revision: 1.6 $ $Date: 2001-06-20 11:15:57 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -86,7 +86,7 @@ public class EnterPlateAction extends ResearcherAction {
         
         QueueFactory queueFactory = new StaticQueueFactory();
         ProcessQueue containerQueue = null;
-        Protocol runPCRGel = null;
+        Protocol performTransform = null;
         List transformItems = null;
         // the queueItem and container corresponding to the barcode
         QueueItem queueItem= null;
@@ -96,8 +96,8 @@ public class EnterPlateAction extends ResearcherAction {
             containerQueue =
             queueFactory.makeQueue("ContainerProcessQueue");
             // transform protocol
-            runPCRGel = new Protocol(Protocol.RUN_PCR_GEL);
-            transformItems = containerQueue.getQueueItems(runPCRGel);
+            performTransform = new Protocol(Protocol.PERFORM_TRANSFORMATION);
+            transformItems = containerQueue.getQueueItems(performTransform);
             
         } catch(FlexProcessException fpe) {
             request.setAttribute(Action.EXCEPTION_KEY, fpe);
@@ -133,14 +133,14 @@ public class EnterPlateAction extends ResearcherAction {
         // Find the right process
         Process process = null;
         try {
-            process = Process.findProcess(container,runPCRGel);
+            process = Process.findProcess(container,performTransform);
         } catch (FlexDatabaseException fde) {
             request.setAttribute(Action.EXCEPTION_KEY, fde);
             return mapping.findForward("error");
         }
         
         // make sure the process execution is in process
-        if(process == null || process.getStatus() != process.INPROCESS) {
+        if(process == null || ! process.getStatus().trim().equals(process.INPROCESS)) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.queue.notready", container.getLabel()));
             saveErrors(request,errors);
@@ -170,8 +170,14 @@ public class EnterPlateAction extends ResearcherAction {
         // put the form in the session
         session.setAttribute("transformEntryForm",detailForm);
         
+        // put Queue item in the session
+        session.setAttribute(Constants.QUEUE_ITEM_KEY, queueItem);
         // put the process in the session
-        session.setAttribute(Constants.PROCESS_KEY,process);
+        session.setAttribute(Constants.PROCESS_KEY, process);
+        /* 
+         * put the container and the samples into the request for the jsp 
+         * page to display
+         */
         request.setAttribute(Constants.SAMPLES_KEY ,samples);
         request.setAttribute(Constants.CONTAINER_KEY, container);
         

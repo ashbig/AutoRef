@@ -165,7 +165,7 @@
                 name="transformEntryForm"
                 scope="session"
                 input="/EnterTransformDetails.jsp">
-        <forward name="sucess" path="/EnterProcessResults.jsp"/>
+        <forward name="success" path="/EnterProcessResults.jsp"/>
     </action>
 
     <!-- Process the protocol retieval and display -->

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2001-06-18 19:48:30 $
+ * $Revision: 1.7 $
+ * $Date: 2001-06-20 11:15:57 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -39,6 +39,7 @@ package edu.harvard.med.hip.flex.action;
 
 import java.io.*;
 import java.util.*;
+import java.util.LinkedList;
 import java.sql.*;
 
 import javax.servlet.*;
@@ -52,13 +53,14 @@ import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.process.Result;
 
+
 import org.apache.struts.action.*;
 /**
  * Action to enter details about a plate transfer into the database.
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.6 $ $Date: 2001-06-18 19:48:30 $
+ * @version    $Revision: 1.7 $ $Date: 2001-06-20 11:15:57 $
  */
 
 public class EnterTransformDetailsAction extends ResearcherAction {
@@ -85,14 +87,16 @@ public class EnterTransformDetailsAction extends ResearcherAction {
     HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ActionForward retForward = null;
-        ActionErrors errors = null;
+        ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
-        // the process object should be in the session
-        Process process = (Process) session.getAttribute(Constants.PROCESS_KEY);
-        if(process == null) {
+        // The Queue item and process must be in the session
+        QueueItem queueItem = (QueueItem)session.getAttribute(Constants.QUEUE_ITEM_KEY);
+        Process process = (Process)session.getAttribute(Constants.PROCESS_KEY);
+        if(queueItem == null || process == null) {
+            
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.session.missing.attribute",
-            Constants.PROCESS_KEY));
+            queueItem==null ? Constants.QUEUE_ITEM_KEY : Constants.PROCESS_KEY));
             saveErrors(request,errors);
             retForward = new ActionForward(mapping.getInput());
             return retForward;
@@ -104,21 +108,53 @@ public class EnterTransformDetailsAction extends ResearcherAction {
         
         Connection conn = null;
         
-        
+       
         
         try {
             conn = DatabaseTransaction.getInstance().requestConnection();
             for(int i = 0; transForm != null &&i <transForm.size() ;i++) {
+                
                 Sample curSample = (Sample)samples.get(i);
+                
                 curSample.setStatus(transForm.getStatus(i));
                 Result curResult = 
                     new Result(process,curSample,Result.TRANSFORMATION_TYPE,transForm.getResult(i));
                 curSample.update(conn);
+                curResult.insert(conn);
             }
+            /*
+             * now we need to remove the container from the queue, 
+             * and insert it for the Agar process.
+             */
+            StaticQueueFactory queueFactory = new StaticQueueFactory();
+            ProcessQueue queue = queueFactory.makeQueue("ContainerProcessQueue");
+         
+           
+            LinkedList dummyList = new LinkedList();
+            dummyList.add(queueItem);
+            // remove the transform from the queue.
+            queue.removeQueueItems(dummyList, conn);
+            
+            
+            Protocol agarProtocol = 
+                new Protocol(Protocol.GENERATE_AGAR_PLATES);
+            dummyList.clear();
+            dummyList.add(new QueueItem(container,agarProtocol));
+            // add queue item for the generate filter plates process
+            queue.addQueueItems(dummyList, conn);
+            
+            // update the process execution for the transform
+            process.setExecutionStatus(Process.SUCCESS);
+            process.update(conn);
             DatabaseTransaction.commit(conn);
         } catch (FlexDatabaseException fde) {
             retForward = mapping.findForward("error");
             request.setAttribute(Action.EXCEPTION_KEY, fde);
+            DatabaseTransaction.rollback(conn);
+            return retForward;
+        } catch (FlexProcessException fpe) {
+            retForward = mapping.findForward("error");
+            request.setAttribute(Action.EXCEPTION_KEY, fpe);
             DatabaseTransaction.rollback(conn);
             return retForward;
         } finally {
@@ -127,7 +163,10 @@ public class EnterTransformDetailsAction extends ResearcherAction {
         
         // if no errors have occured, we must remove the items from the session
         session.removeAttribute(Constants.PROCESS_KEY);
+        session.removeAttribute(Constants.QUEUE_ITEM_KEY);
         session.removeAttribute("transformEntryForm");
+        request.setAttribute(Constants.CONTAINER_KEY, container);
+        retForward=mapping.findForward("success");
         return retForward;
     } //end flexPerform
     
