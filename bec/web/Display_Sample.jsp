@@ -45,6 +45,7 @@
 <p></p>
 <% Sample sample = (Sample)request.getAttribute("sample") ;
 ArrayList end_read = (ArrayList)request.getAttribute("end_read");
+ArrayList contigs = (ArrayList)request.getAttribute("contigs");
 ArrayList clone_sequences = (ArrayList)request.getAttribute("clone_sequences");
 %>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
@@ -129,6 +130,41 @@ else {%>No discrepancies<%}%>
  </td> </tr>
 <%}%>
  <tr>     <td colspan="2">&nbsp;</td></tr>
+ <% if ( contigs != null && contigs.size()>0)
+{%>
+  <tr> 
+    <td colspan="2"><p><strong>Contigs:</strong></p>
+      <table width="90%" border="1" align="center" cellpadding="2" cellspacing="2">
+	 <th>Contig Name </th>
+	 <th>Contig Type</th>
+        <th>Contig Id </th>
+        <th>Alignment </th>
+        <th>Discrepancy Report </th>
+        <%
+
+        UIRead contig   = null;
+        for (int contig_count = 0; contig_count < contigs.size(); contig_count++)
+	  	{
+	  		 contig  = (UIRead)contigs.get(contig_count);
+			%>
+        <tr>
+          <td width="20%"><%= contig.getName() %></td>
+		  <td ><%= Stretch.getStretchTypeAsString( contig.getType() ) %> </td>
+          <td width="15%">
+		 <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.STRETCH_REPORT_INT%>&amp;ID=<%= contig.getId()%>','<%= contig.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+		 <%= contig.getId() %>	 </a></td>
+          <td >
+<% if (contig.isAlignmentExists())
+{%> <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= contig.getSequenceId()%>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE %>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= "A"+contig.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"><%}
+else {%>Not available<%}%>		 </td>
+<td width="30%"><% if (contig.isDiscrepancies())
+{%>		
+<input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= contig.getSequenceId()%>','<%= "D"+contig.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<%}
+else {%>No discrepancies<%}%> 
+</td>       </tr>       <%}%>      </table></td></tr>
+ <tr>     <td colspan="2">&nbsp;</td></tr><%}%>
+
 <% if ( clone_sequences != null && clone_sequences.size()>0)
 {%>
 <tr>
