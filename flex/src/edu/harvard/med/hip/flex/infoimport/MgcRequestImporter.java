@@ -38,7 +38,7 @@ public class MgcRequestImporter
     public static final String DILIM = "\t!";
     public static final String DEFAULT = "NA";
 
-    public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
+    static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
     //public static final String BLASTABLE_DATABASE_NAME = "E:\\tmp\\MGC\\genes";    
     //public static final String BLASTABLE_DATABASE_NAME = "e:\\Users\\HIP\\HTaycher\\MGC\\genes";
 
@@ -132,7 +132,7 @@ public class MgcRequestImporter
 
             }catch(Exception e)
             {
-                System.out.println(e);
+                //System.out.println(e);
             }
         }
         //somthing went wrong notify user and myself
@@ -173,7 +173,7 @@ public class MgcRequestImporter
             }
         } catch (Exception e)
         {
-            System.out.println(e);
+            //System.out.println(e);
             return false;
         }    
 //put mgc containers on queue
@@ -183,15 +183,12 @@ public class MgcRequestImporter
          **/
         //Protocol protocol = null;
         Protocol protocolSeq = null;
-        System.out.println("1");
         try{
-            System.out.println("2");
             //protocol = new Protocol(  Protocol.CREATE_CULTURE_FROM_MGC);
             protocolSeq = new Protocol(  Protocol.MGC_DESIGN_CONSTRUCTS);
         }catch(FlexDatabaseException ex)
         {
             m_messages.add("Can not get protocol for CREATE_CULTURE_FROM_MGC");
-            System.out.println("ex");
             return false;
         }
        // Protocol nextProtocol = workflow.getNextProtocol(protocol).get(0);
@@ -233,18 +230,14 @@ public class MgcRequestImporter
         */
         
         //put sequences for oligo design on queue
-        System.out.println("3");
         SequenceProcessQueue cloneQueue = new SequenceProcessQueue();
-        System.out.println("before put on queue");
         for (int clone_count = 0; clone_count < m_Request.getSequences().size(); clone_count++)
         {
             queueItem = new QueueItem((FlexSequence) m_Request.getSequences().get(clone_count),protocolSeq, m_Project, m_workflow);
             queueItems.add(queueItem);
         }
-        System.out.println("after put on queue");
          try{
              cloneQueue.addQueueItems(queueItems, conn);
-             System.out.println("put on queue finished");
         }
         catch(Exception e)
         {
