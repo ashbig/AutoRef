@@ -93,4 +93,41 @@
           applications to be build on ACE code </li> </li>
       </ul></ul>
     </td>
+  </tr>
+  <tr> 
+    <td> <p><strong><em>Release 9/30/04 </em></strong></p>
+      <h3><strong>Major Development: </strong></h3>
+      <ul>
+        <li> General Report <br>
+          <ul>
+            <li> New field - assembly attempt status;</li>
+            <li> Print discrepancy summary for contigs if assembled sequence not 
+              avaiable;<br>
+            </li>
+          </ul>
+        <li>Delete options</li>
+        <ul>
+          <li>UI reconfigured;</li>
+          <li>Added option: print list of trace files available for the clone;</li>
+          <li> Added option: delete trace files which name submitted in file;</li>
+        </ul>
+        <li>End reads wrapper: names of trace files that were not submitted because 
+          of low quality printed into error log; </li>
+        <li> Error messages are send in attached file for all modules;</li>
+        <li> Data input clean up: all none digit items will be deleted for input 
+          data submitted as clone id, ACE sequence id, FLEX sequence id;
+<li>GapMapper: report is send  to user regardless of the run mode;</li>
+        <li>All .phd files are removed prior to assembly run to prevent 
+          assembly with refsequence.phd created on Gap Mapper run;</li>
+        <li> Discrepancy Finder: if assembled sequence is not available module 
+          analized contigs collection.</li>
+      </ul>
+      <h3>Bug Fixes:</h3>
+      <ul>
+        <li>LQR Finder: report shows description of RNA discrepancies in report. 
+        </li>
+      </ul>
+      <br> <br>
+      12. General Report: bug fix: show all controls<br> <br></p>
+      </li> </li> </td>
   </tr></table></body>
