@@ -34,8 +34,6 @@ public class Constants {
     // Constant to denote read only mode
     public static final String READ_ONLY_MODE="read";
     
-    // base path for gel image file repository
-    public static final String GEL_IMAGE_REPOSITORY_PATH="/kotel/data/gelimages/";
     
     /*
      * Keys used in the session/request
