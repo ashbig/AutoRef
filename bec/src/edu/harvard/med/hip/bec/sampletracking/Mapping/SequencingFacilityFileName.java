@@ -18,6 +18,7 @@ public class SequencingFacilityFileName
     public final static int      SEQUENCING_FACILITY_BROAD = 1;
     public final static int      SEQUENCING_FACILITY_AGENCORD = 2;
     public final static int      SEQUENCING_FACILITY_HTMBC = 3;
+    public final static int      SEQUENCING_FACILITY_KOLODNER = 4;
    
      
     private String          m_file_name = null;
@@ -39,6 +40,7 @@ public class SequencingFacilityFileName
              case SEQUENCING_FACILITY_BROAD : {broadFileName( file_name);break;}
              case SEQUENCING_FACILITY_AGENCORD :{agencortFileName(file_name);break;}
              case SEQUENCING_FACILITY_HTMBC :{htmbcFileName(file_name);break;}
+             case SEQUENCING_FACILITY_KOLODNER: {kolodnerFileName(file_name); break;}
          }
    
     }
@@ -156,9 +158,58 @@ public class SequencingFacilityFileName
              m_isProperName = true;
 
     }
+      
+      
+      
+      //YSG1438.379_A03.ab1
+      
+      private  void kolodnerFileName(String kolodner_file_name)
+     {
+      //YSG1438.379_A03.ab1   ->   hip plate name with 0 droped . oplate thread _ well . extension
+       m_file_name = kolodner_file_name;
+        int index_platename_separator = kolodner_file_name.indexOf('.');
+        int index_well_separator = kolodner_file_name.indexOf('_');
+        int index_extension_separator = kolodner_file_name.lastIndexOf('.');
+        
+        m_well_name = kolodner_file_name.substring(index_well_separator + 1,index_extension_separator);
+        m_well_number = Algorithms.convertWellFromA8_12toInt(m_well_name);
+        m_extention = kolodner_file_name.substring(index_extension_separator + 1);
+      
+        String tmp = kolodner_file_name.substring(0, index_platename_separator);
+        
+        if (tmp.length() < 9)// add 0 placeholders
+        {
+            char arr[] = tmp.toCharArray();m_plate_name="";
+            for (int char_count = 0 ; char_count < tmp.length(); )
+            {
+                if ( char_count < 3 || m_plate_name.length() >= ( 9 -  tmp.length() + 3) )
+                {
+                    m_plate_name += arr[char_count];
+                    char_count++;
+                }
+                else
+                {
+                    while (m_plate_name.length() <  (9 -  tmp.length() + 3) )
+                    {
+                        m_plate_name +=  '0';
+                    }
+                }
+            }
+        }
+        else
+            m_plate_name = tmp;
+        if (m_well_number != -1 &&    m_plate_name != null && m_plate_name.length() == 9 )
+             m_isProperName = true;
+       
+    }
+      
+      
       public static void main(String args[])
     {
-        SequencingFacilityFileName br= new SequencingFacilityFileName("000000262271_H10_F.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD);
+      SequencingFacilityFileName br= new SequencingFacilityFileName("YSG1438.379_A03.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
+        br= new SequencingFacilityFileName("YSG01438.379_A03.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
+      br= new SequencingFacilityFileName("YSG001438.379_A03.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
+     
       SequencingFacilityFileName br1= new SequencingFacilityFileName("D248P100FA1.T0.scf", SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD);
       
         System.exit(0);
