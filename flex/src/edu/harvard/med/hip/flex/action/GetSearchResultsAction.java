@@ -79,21 +79,28 @@ public class GetSearchResultsAction extends FlexAction {
             
             String submitButton = ((QueryFlexForm)form).getSumbitButton();
             List selectedClones = ((QueryFlexForm)form).getSelectedClones();
+            List allClones = ((QueryFlexForm)form).getAllClones();
+            List checkedClones = ((QueryFlexForm)form).getCheckedClones();
             
+            boolean isModifySelectedClones = true;
             if(selectedClones == null || number != lastFounds) {
                 selectedClones = new ArrayList();
+                allClones = new ArrayList();
+                checkedClones = new ArrayList();
+                isModifySelectedClones = false;
             }
             
-            List allClones = ((QueryFlexForm)form).getAllClones();
-            for(int i=0; i<allClones.size(); i++) {
-                String clone = (String)allClones.get(i);
-                changeCloneList(selectedClones, clone, false);
-            }
-            
-            List checkedClones = ((QueryFlexForm)form).getCheckedClones();
-            for(int i=0; i<checkedClones.size(); i++) {
-                String clone = (String)checkedClones.get(i);
-                changeCloneList(selectedClones, clone, true);
+            if(isModifySelectedClones) {
+                for(int i=0; i<allClones.size(); i++) {
+                    String clone = (String)allClones.get(i);
+                    changeCloneList(selectedClones, clone, false);
+                }
+                
+                System.out.println("size of checkedClones: "+checkedClones.size());
+                for(int i=0; i<checkedClones.size(); i++) {
+                    String clone = (String)checkedClones.get(i);
+                    changeCloneList(selectedClones, clone, true);
+                }
             }
             
             request.setAttribute("selectedClones", selectedClones);
