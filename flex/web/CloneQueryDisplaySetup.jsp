@@ -89,7 +89,7 @@
     <tr>
     <td></td>
     <td><html:submit property="submit" value="Continue"/></td>
-    <td><html:submit property="reset" value="Reset"/></td>
+    <td><html:reset/></td>
     </tr>
 </table>
 </html:form>
