@@ -267,7 +267,7 @@ public class Project {
     
     public static void main(String []  args) {
         try {
-            Project project = new Project(1);
+            Project project = new Project(Project.BREASTCANCER);;
             System.out.println("Project name is: "+project.getName());
             System.out.println("Project description is: "+project.getDescription());
             System.out.println("Project version is: "+project.getVersion());
