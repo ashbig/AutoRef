@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.29 2001-08-17 20:37:48 dzuo Exp $
+ * $Id: Process.java,v 1.30 2001-08-21 15:36:29 dzuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -379,6 +379,24 @@ public class Process {
      */
     public Vector getProcessObjects() {
         return processObjects;
+    }
+
+    /**
+     * Return the project related to this process.
+     *
+     * @return The project related to this process.
+     */
+    public Project getProject() {
+        return project;
+    }
+    
+    /**
+     * Return the workflow related to this process.
+     *
+     * @return The workflow related to this process.
+     */
+    public Workflow getWorkflow() {
+        return workflow;
     }
     
     /**

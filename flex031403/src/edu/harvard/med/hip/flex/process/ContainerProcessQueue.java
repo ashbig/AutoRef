@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.15 2001-08-20 19:06:21 dzuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.16 2001-08-21 15:36:29 dzuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -10,6 +10,7 @@ package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 import java.util.*;
 import java.sql.*;
@@ -46,6 +47,8 @@ public class ContainerProcessQueue implements ProcessQueue {
         "c.locationid as locationid, " +
         "c.label as label, " +
         "c.threadid as threadid, "+
+        "q.projectid as projectid, " +
+        "q.workflowid as workflowid, "+
         "l.locationtype as locationtype, "+
         "l.locationdescription as description, "+
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
@@ -76,6 +79,8 @@ public class ContainerProcessQueue implements ProcessQueue {
         "c.locationid as locationid, " +
         "l.locationtype as locationtype," +
         "l.locationdescription as description,"+
+        "q.projectid as projectid, " +
+        "q.workflowid as workflowid, "+
         "c.label as label, " +
         "c.threadid as threadid, "+
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
@@ -88,7 +93,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         LinkedList items = restore(protocol, sql);
         return items;
     }
-
+    
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table,
@@ -107,6 +112,8 @@ public class ContainerProcessQueue implements ProcessQueue {
         "c.locationid as locationid, " +
         "l.locationtype as locationtype," +
         "l.locationdescription as description,"+
+        "q.projectid as projectid, " +
+        "q.workflowid as workflowid, "+
         "c.label as label, " +
         "c.threadid as threadid, "+
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
@@ -122,7 +129,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         
         LinkedList items = restore(protocol, sql);
         return items;
-    }    
+    }
     
     /**
      * Insert all the selected process objects into the Queue
@@ -181,7 +188,9 @@ public class ContainerProcessQueue implements ProcessQueue {
         String sql = "delete from queue\n" +
         "where protocolid = ?\n" +
         "and to_char(dateadded, 'fmYYYY-MM-DD') = ?\n" +
-        "and containerid = ?";
+        "and containerid = ?\n" +
+        "and projectid = ?\n" +
+        "and workflowid = ?";
         PreparedStatement stmt = null;
         try {
             
@@ -201,6 +210,8 @@ public class ContainerProcessQueue implements ProcessQueue {
                 stmt.setInt(1, protocolid);
                 stmt.setString(2, date);
                 stmt.setInt(3, containerid);
+                stmt.setInt(4, item.getProject().getId());
+                stmt.setInt(5, item.getWorkflow().getId());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch(SQLException sqlE) {
@@ -226,27 +237,29 @@ public class ContainerProcessQueue implements ProcessQueue {
     protected LinkedList restore(Protocol protocol, String sql) throws FlexDatabaseException {
         RowSet rs = null;
         try {
-        rs = DatabaseTransaction.getInstance().executeQuery(sql);
-       LinkedList items = new LinkedList();
-        
-        while(rs.next()) {
-            int id = rs.getInt("ID");
-            String type = rs.getString("TYPE");
-            int locationid = rs.getInt("LOCATIONID");
-            String locationtype = rs.getString("LOCATIONTYPE");
-            String description = rs.getString("DESCRIPTION");
-            String label = rs.getString("LABEL");
-            int threadid = rs.getInt("THREADID");
-            String date = rs.getString("DATEADDED");
-            Location location = new Location(locationid, locationtype,description);
+            rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            LinkedList items = new LinkedList();
             
-            Container c = new Container(id, type, location, label);
-            c.setThreadid(threadid);
-            QueueItem item = new QueueItem(c, protocol, date);
-            items.addLast(item);
-        }
-        
-        return items;
+            while(rs.next()) {
+                int id = rs.getInt("ID");
+                String type = rs.getString("TYPE");
+                int locationid = rs.getInt("LOCATIONID");
+                String locationtype = rs.getString("LOCATIONTYPE");
+                String description = rs.getString("DESCRIPTION");
+                String label = rs.getString("LABEL");
+                int threadid = rs.getInt("THREADID");
+                String date = rs.getString("DATEADDED");
+                int projectid = rs.getInt("PROJECTID");
+                int workflowid = rs.getInt("WORKFLOWID");
+                Location location = new Location(locationid, locationtype,description);
+                
+                Container c = new Container(id, type, location, label);
+                c.setThreadid(threadid);
+                QueueItem item = new QueueItem(c, protocol, date, new Project(projectid), new Workflow(workflowid));
+                items.addLast(item);
+            }
+            
+            return items;
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
@@ -317,7 +330,7 @@ public class ContainerProcessQueue implements ProcessQueue {
             
             System.out.println("Remove items from queue:");
             queue.removeQueueItems(items, c);
-            c.commit();   
+            c.commit();
             
             System.out.println("Get items from queue:");
             while (iter.hasNext()) {
@@ -325,7 +338,7 @@ public class ContainerProcessQueue implements ProcessQueue {
                 Container contain = (Container)item.getItem();
                 System.out.println("Container ID: "+contain.getId());
             }
-             
+            
             c.close();
         } catch (FlexDatabaseException exception) {
             System.out.println(exception.getMessage());

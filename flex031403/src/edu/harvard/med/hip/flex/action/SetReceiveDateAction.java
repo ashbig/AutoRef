@@ -72,7 +72,7 @@ public class SetReceiveDateAction extends ResearcherAction {
         Protocol protocol = null;
         
         try{
-            protocol = new Protocol("receive oligo plates");
+            protocol = new Protocol(Protocol.RECEIVE_OLIGO_PLATES);
             ContainerProcessQueue cpq = new ContainerProcessQueue();
             LinkedList items = cpq.getQueueItems(protocol);
             //remove the attributes from the session.

@@ -27,6 +27,9 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.ReceiveOligoOrdersForm;
+import edu.harvard.med.hip.flex.process.Process;
+import edu.harvard.med.hip.flex.workflow.*;
+
 /**
  *
  * @author  Wendy
@@ -60,13 +63,13 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         String receiveDate = ((ReceiveOligoOrdersForm)form).getReceiveDate();
         Researcher researcher = null;
         Protocol protocol = null;
-        edu.harvard.med.hip.flex.process.Process process = null;
         LinkedList containerList = new LinkedList();
+        LinkedList queueItems = new LinkedList();
         
         // Validate the researcher barcode.
         try {
             researcher = new Researcher(barcode);
-            protocol = new Protocol("receive oligo plates");
+            protocol = new Protocol(Protocol.RECEIVE_OLIGO_PLATES);
         } catch (FlexProcessException ex) {
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
@@ -75,17 +78,7 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
-        
-        //generate the process execution record for "receive oligo plates"
-        try{
-            process = new edu.harvard.med.hip.flex.process.Process(protocol,
-            edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
-            
-        } catch(FlexDatabaseException dbex){
-            request.setAttribute(Action.EXCEPTION_KEY, dbex);
-            return (mapping.findForward("error"));
-        }
-        
+                
         //get the list of oligo barcode user entered
         ReceiveOligoOrdersForm formProper = (ReceiveOligoOrdersForm) form;
         List ids = formProper.getOligoPlateList();
@@ -96,14 +89,16 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         Container container = null;
         
         //insert receive plates process execution record for each plate received.
+        Vector processes = new Vector();
         while (iter.hasNext()) {
             String label = (String)iter.next();
+            QueueItem item = null;
             
             // Validate container label entered with items in queue
             try{
                 ContainerProcessQueue cpq = new ContainerProcessQueue();
                 LinkedList queueitems = cpq.getQueueItems(protocol);
-                QueueItem item = getValidPlate(queueitems, label);
+                item = getValidPlate(queueitems, label);
                 
                 if(item == null) {
                     errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.queue.notready", label));
@@ -111,7 +106,7 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
                     return (new ActionForward(mapping.getInput()));
                 } //if
                 container = (Container)item.getItem();
-                
+                queueItems.addLast(item);                
                 containerList.add(container);
             } catch(Exception e){
                 request.setAttribute(Action.EXCEPTION_KEY, e);
@@ -119,6 +114,14 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             }
             
             try {
+                Workflow workflow = item.getWorkflow();
+                Project project = item.getProject();
+                Process process = findProcess(processes, project, workflow);
+                if(process == null) {
+                    process = new Process(protocol, Process.SUCCESS, researcher, project, workflow);
+                    processes.addElement(process);
+                }
+                                
                 //Add process object to "receive oligo plates" process.
                 ContainerProcessObject ioContainer =
                 new ContainerProcessObject(container.getId(), process.getExecutionid(),
@@ -139,7 +142,12 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         try{
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            process.insert(conn);
+            Iterator processIter = processes.iterator();
+            while(processIter.hasNext()) {
+                Process process = (Process)processIter.next();
+                process.insert(conn);
+            }
+            
             // Commit the changes to the database.
             DatabaseTransaction.commit(conn);
             
@@ -154,7 +162,7 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         //save containerList to session
         //System.out.println("Size of the containerList: "+ containerList.size());
         request.getSession().setAttribute("containerList",containerList);
-        
+        request.getSession().setAttribute("ReceiveOligoPlatesAction.queueItems", queueItems);
         return (mapping.findForward("success"));
         
     } //flexPerform
@@ -177,5 +185,18 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         
         return found;
     } //getValidPlate   
-    
+
+    // Return the process that matches the given workflow and project.
+    private Process findProcess(List processes, Project project, Workflow workflow) {
+        Iterator iter = processes.iterator();
+        while(iter.hasNext()) {
+            Process process = (Process)iter.next();
+            if(process.getProject().getId() == project.getId() &&
+               process.getWorkflow().getId() == workflow.getId()) {
+                   return process;
+            } 
+        }
+        
+        return null;
+    }
 }

@@ -109,8 +109,8 @@ public class PlatesetProcessQueue implements ProcessQueue {
             return;
         
         String sql = new String("insert into queue\n" +
-        "(protocolid, dateadded, platesetid)\n" +
-        "values(?, sysdate, ?)");
+        "(protocolid, dateadded, platesetid, projectid, workflowid)\n" +
+        "values(?, sysdate, ?, ?, ?)");
         PreparedStatement stmt = null;
         try {
             stmt = c.prepareStatement(sql);
@@ -127,6 +127,8 @@ public class PlatesetProcessQueue implements ProcessQueue {
                 
                 stmt.setInt(1, protocolid);
                 stmt.setInt(2, psid);
+                stmt.setInt(3, item.getProject().getId());
+                stmt.setInt(4, item.getWorkflow().getId());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (SQLException sqlE) {
@@ -151,7 +153,9 @@ public class PlatesetProcessQueue implements ProcessQueue {
         String sql = "delete from queue\n" +
         "where protocolid = ?\n" +
         "and to_char(dateadded, 'fmYYYY-MM-DD') = ?\n" +
-        "and platesetid = ?";
+        "and platesetid = ?\n" +
+        "and projectid = ?\n" +
+        "and workflowid = ?";
         PreparedStatement stmt = null;
         try {
             
@@ -171,6 +175,8 @@ public class PlatesetProcessQueue implements ProcessQueue {
                 stmt.setInt(1, protocolid);
                 stmt.setString(2, date);
                 stmt.setInt(3, psid);
+                stmt.setInt(4, item.getProject().getId());
+                stmt.setInt(5, item.getWorkflow().getId());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch(SQLException sqlE) {

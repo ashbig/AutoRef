@@ -529,11 +529,11 @@ public class OligoPlater {
             LinkedList containerQueueItemList = new LinkedList();
             
             QueueItem queueItem = null;
-            queueItem = new QueueItem(container_5p, protocol, project, workflow);
+            queueItem = new QueueItem(container_5p, nextProtocol, project, workflow);
             containerQueueItemList.add(queueItem);
-            queueItem = new QueueItem(container_3s, protocol, project, workflow);
+            queueItem = new QueueItem(container_3s, nextProtocol, project, workflow);
             containerQueueItemList.add(queueItem);
-            queueItem = new QueueItem(container_3op, protocol, project, workflow);
+            queueItem = new QueueItem(container_3op, nextProtocol, project, workflow);
             containerQueueItemList.add(queueItem);
             
             //System.out.println("Adding receive oligo plates to queue...");

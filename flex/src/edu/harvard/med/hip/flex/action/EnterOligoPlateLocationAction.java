@@ -64,6 +64,8 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         Connection conn = null;
         LinkedList containerList = (LinkedList)request.getSession().getAttribute("containerList");
         LinkedList platesetList = new LinkedList();
+        LinkedList queueItems = (LinkedList)request.getSession().getAttribute("ReceiveOligoPlatesAction.queueItems");
+        LinkedList queueItemList = new LinkedList();
         
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -71,24 +73,26 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             Location oligoPlateLocation = new Location("FREEZER"); //to be modified
             int locationid = oligoPlateLocation.getId();
             
-            ListIterator iter = containerList.listIterator();
-            Container container = (Container)iter.next();           
+            ListIterator iter = queueItems.listIterator();
+            QueueItem item = (QueueItem)iter.next();
+            Container container = (Container)item.getItem();
             Plateset pset = Plateset.findPlateset(container);
-            platesetList.add(pset);           
+            platesetList.add(pset);
+            queueItemList.add(item);
             
             //oligo plates received may belong to more than one plateset
             while (iter.hasNext()){
                 // Set the location for the containers.
                 container.setLocation(oligoPlateLocation);
                 container.updateLocation(locationid, conn);
-              //  addOligoPlate2List(container);
-              //  System.out.println("update the location for container: "+container.getLabel());
-                                  
-                container = (Container)iter.next();
+                
+                item = (QueueItem)iter.next();
+                container = (Container)item.getItem();
                 pset = Plateset.findPlateset(container);
                 
-                if (!found(platesetList, pset)){
+                if (!found(platesetList, pset)) {
                     platesetList.add(pset);
+                    queueItemList.add(item);
                     //System.out.println("next platesetid is: "+ pset.getId());
                 } //if
                 
@@ -97,7 +101,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             //update the location for the last or the only oligo plate received
             container.setLocation(oligoPlateLocation);
             container.updateLocation(locationid, conn);
-            removeReceiveOligoQueue(containerList,conn);
+            removeReceiveOligoQueue(queueItems, conn);
             DatabaseTransaction.commit(conn);
             //System.out.println("update the location for last container: "+container.getLabel());
         } catch (Exception ex) {
@@ -110,15 +114,19 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             //check plateset to see whether all of the oligo plates
             //belong to the same plateset have been received
             ListIterator iter = platesetList.listIterator();
+            Iterator queueItemIter = queueItemList.iterator();
+            
             //System.out.println("Total plateset received: "+ platesetList.size());
             while (iter.hasNext()){
                 Plateset plateset = (Plateset)iter.next();
+                QueueItem queueItem = (QueueItem)queueItemIter.next();
+                
                 boolean complete = checkPlateset(plateset);
                 
                 if (complete) {
                     //System.out.println("inserting generate PCR plate queue...");
-                    insertPCRQueue(plateset, conn);
-               //     removeReceiveOligoQueue(containerList, conn);
+                    insertPCRQueue(plateset, queueItem, conn);
+                    //     removeReceiveOligoQueue(containerList, conn);
                     DatabaseTransaction.commit(conn);
                 }
             } //while
@@ -127,7 +135,10 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
-                
+        
+        request.getSession().removeAttribute("ReceiveOligoPlatesAction.queueItems");
+        request.getSession().removeAttribute("containerList");
+        
         return (mapping.findForward("success"));
     }
     
@@ -135,14 +146,14 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         Container fivep = plateset.getFivepContainer();
         Container threepFusion = plateset.getThreepOpenContainer();
         Container threepClosed = plateset.getThreepClosedContainer();
-
+        
         boolean complete = true;
-
+        
         if(Location.UNAVAILABLE.equals(fivep.getLocation().getType()) ||
-           Location.UNAVAILABLE.equals(threepFusion.getLocation().getType()) ||
-           Location.UNAVAILABLE.equals(threepClosed.getLocation().getType())) {           
+        Location.UNAVAILABLE.equals(threepFusion.getLocation().getType()) ||
+        Location.UNAVAILABLE.equals(threepClosed.getLocation().getType())) {
             complete = false;
-        } 
+        }
         
         return complete;
     } //checkPlateset
@@ -154,50 +165,35 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         if (items == null)
             return;
         
-        Protocol protocol = new Protocol("receive oligo plates");
-        
-        String sql = "DELETE FROM queue\n" +
-        "WHERE protocolid = "+ protocol.getId()  + "\n" +
-        "AND containerid = ?";
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement(sql);
-            Vector v = new Vector();
-            ListIterator iter = items.listIterator();
-            
-            while (iter.hasNext()) {
-                Container container = (Container) iter.next();
-                int containerid = container.getId();
-                stmt.setInt(1, containerid);
-                DatabaseTransaction.executeUpdate(stmt);
-            }
-            
-        } catch(SQLException sqlE) {
-            throw new FlexDatabaseException("Error occured while deleting oligo plates from queue\n"+sqlE+"\nSQL: "+sql);
-        } finally {
-            DatabaseTransaction.closeStatement(stmt);
-        }
+        ContainerProcessQueue queue = new ContainerProcessQueue();
+        queue.removeQueueItems(items, conn);
     }
     
     /**
      * insert "generate PCR plates" queue record for each plate created
      */
-    protected void insertPCRQueue(Plateset plateset, Connection conn) throws FlexDatabaseException {
-        //Protocol protocol = new Protocol("generate PCR plates");
-        Protocol protocol = new Protocol("dilute oligo plate");
+    protected void insertPCRQueue(Plateset plateset, QueueItem item, Connection conn) throws FlexDatabaseException {
+        Protocol protocol = new Protocol(Protocol.RECEIVE_OLIGO_PLATES);
+        Project project = item.getProject();
+        Workflow workflow = item.getWorkflow();
+        Vector nextProtocols = workflow.getNextProtocol(protocol);
         
         try{
             PlatesetProcessQueue platesetQueue = new PlatesetProcessQueue();
-            LinkedList platesetQueueItemList = new LinkedList();
-            QueueItem queueItem = new QueueItem(plateset, protocol);
-            platesetQueueItemList.add(queueItem);
             
-            platesetQueue.addQueueItems(platesetQueueItemList, conn);
+            Iterator iter = nextProtocols.iterator();
+            while(iter.hasNext()) {
+                Protocol nextProtocol = (Protocol)iter.next();
+                LinkedList platesetQueueItemList = new LinkedList();
+                QueueItem queueItem = new QueueItem(plateset, nextProtocol, project, workflow);
+                platesetQueueItemList.add(queueItem);                
+                platesetQueue.addQueueItems(platesetQueueItemList, conn);
+            }
         } catch(FlexDatabaseException sqlE) {
             throw new FlexDatabaseException("Error occured while inserting plateset into queue for PCR\n");
         }
     } //insertPCRQueue
- 
+    
     // Return true if the given plateset is found in the list; return false otherwise.
     private boolean found(LinkedList platesetList, Plateset pset) {
         Iterator iter = platesetList.iterator();
