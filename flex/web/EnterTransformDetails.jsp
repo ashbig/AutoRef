@@ -61,17 +61,21 @@
 
 <table border="1">
     <tr>
-        <th>Sample</th><th>Cell</th><th>Status</th><th>Result</th>
+        <th>Sample</th><th>Type</th><th>Cell</th><!--<th>Status</th>--><th>Result</th>
     </tr>
-    <%int i =0;%>
-    <logic:iterate name="transformEntryForm" property="container.samples" id="curSample">
+
+    <logic:iterate name="transformEntryForm" property="container.samples" id="curSample" indexId="i">
     <tr>
         <td>
             <bean:write name="curSample" property="id"/>
         </td>
         <td>
+            <bean:write name="curSample" property="type"/>
+        </td>
+        <td>
             <bean:write name="curSample" property="position"/>
         </td>
+        <%--
         <td>
             <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
                 <html:select property='<%="status["+i+"]" %>'>
@@ -85,9 +89,10 @@
             </logic:equal>
 
         </td>
+        --%>
         <td>
             <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
-                <html:select property='<%="result["+ i++ +"]" %>'>
+                <html:select property='<%="result["+ i +"]" %>'>
                     <html:option value="<%=Result.MANY%>">Many</html:option>
                     <html:option value="<%=Result.FEW%>">Few</html:option>
                     <html:option value="<%=Result.NONE%>">None</html:option>
@@ -97,7 +102,7 @@
              </logic:equal>
              
              <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
-                <bean:write name="transformEntryForm" property='<%="result["+ i++ +"]" %>'/>
+                <bean:write name="transformEntryForm" property='<%="result["+ i +"]" %>'/>
              </logic:equal>
 
         </td>

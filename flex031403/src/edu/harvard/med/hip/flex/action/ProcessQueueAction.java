@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2001-06-14 19:15:08 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.7 $
+ * $Date: 2001-07-11 18:44:17 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -25,7 +25,8 @@
  *    your 3 letters initials.
  *
  *    Jun-01-2001 : JMM - class created
- *    Jun-13-2001 : JMM Now restricts access to workflow (queue) managers
+ *    Jun-13-2001 : JMM - Now restricts access to workflow (queue) managers
+ *    Jul-15-2001 : JMM - Now orders oligo's when the threshhold is reached.
  *
  */
 
@@ -60,8 +61,8 @@ import org.apache.struts.action.*;
  * Class description - Class to process items from the approve sequence queue.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.6 $ $Date: 2001-06-14 19:15:08 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.7 $ $Date: 2001-07-11 18:44:17 $
  */
 public class ProcessQueueAction extends WorkflowAction {
     
@@ -208,6 +209,13 @@ public class ProcessQueueAction extends WorkflowAction {
                     item.setProtocol(designProtocol);
                 }
                 
+                /*
+                 * now run the oligo plate manager to see if oligos
+                 * need to be ordered
+                 */
+                OligoPlateManager om = new OligoPlateManager();
+                om.orderOligo();
+               
                 
                 sequenceQueue.addQueueItems(acceptedList, conn);
                 

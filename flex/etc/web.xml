@@ -63,7 +63,7 @@
     </init-param>
     <init-param>
         <param-name>nocache</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </init-param>
     <init-param>
       <param-name>detail</param-name>
