@@ -170,9 +170,9 @@ public class SequenceOligoQueue {
             Protocol protocol = new Protocol("design constructs");
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
+            
             //get a list of sequence objects
-            LinkedList items = new LinkedList();
-            items = queue.getQueueItems(protocol, 2000);
+            LinkedList items = queue.getQueueItems(protocol, 2000);
             ListIterator iter = items.listIterator();
             System.out.println("Get small sequences from queue:");
             while (iter.hasNext()) {
@@ -182,7 +182,14 @@ public class SequenceOligoQueue {
                 System.out.println("Start: "+ seq.getStart());
                 System.out.println("Stop: "+ seq.getStop());
             } //while
+            
+            //remove the sequence from queue
+            System.out.println("removing sequences from queue...");
+            queue.removeQueueItems(items,protocol,c);
+            System.out.println("sequences removed!");
+            DatabaseTransaction.commit(c);
         } catch (FlexDatabaseException exception) {
+            DatabaseTransaction.rollback(c);
             System.out.println(exception.getMessage());
         } finally {
             DatabaseTransaction.closeConnection(c);
