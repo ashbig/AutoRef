@@ -160,9 +160,25 @@ public class AssemblyRunner extends ProcessRunner
             }
             finally
             {
+                try
+                {
+                    String message=null;
+                    if (m_error_messages != null && m_error_messages.size()>0)
+                    {
+                        String file_name = Constants.getTemporaryFilesPath() + File.separator + "ErrorMessages"+ System.currentTimeMillis()+".txt";
+                        Algorithms.writeArrayIntoFile( m_error_messages, false,  file_name) ;
+                        message = getTitle()+ Constants.LINE_SEPARATOR + "Please find error messages for your request in  attached file";
+                        Mailer.sendMessageWithAttachedFile(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",getTitle(), message , 
+                        new File(file_name) );
+                    }
+                    message =  getTitle()+  Constants.LINE_SEPARATOR +"Process finished.";
+                    if ( m_items != null && m_items.length() > 0)
+                        message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
+                     Mailer.sendMessage      ( m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",  "elena_taycher@hms.harvard.edu", getTitle(), message);
+
+                }catch(Exception e1){}
                 if ( conn != null) DatabaseTransaction.closeConnection(conn);
-                System.out.println("l assembler");
-                sendEMails( getTitle() );
+               
             }
 
         }
@@ -570,7 +586,7 @@ public static void main(String args[])
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
         runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
          runner.setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
-             runner.setItems("113423	");
+             runner.setItems("775	");
         runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
                                       
         runner.run();           

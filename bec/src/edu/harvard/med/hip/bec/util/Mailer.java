@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2004-07-19 14:28:33 $
+ * $Revision: 1.8 $
+ * $Date: 2004-10-12 19:38:26 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.7 $ $Date: 2004-07-19 14:28:33 $
+ * @version    $Revision: 1.8 $ $Date: 2004-10-12 19:38:26 $
  */
 
 public class Mailer
@@ -241,14 +241,13 @@ public class Mailer
     public static void sendMessage(String to, String from, String subject,
     String msgText) throws MessagingException
     {
-        Mailer.sendMessage(to,from,null,subject,msgText, null);
+         Mailer.sendMessage(to,from,null,subject,msgText, null);
     }
     
      public static void sendMessage(String to, String from, String cc, String subject,
     String msgText) throws MessagingException
     {
-        //System.out.println(msgText);
-        Mailer.sendMessage(to,from,cc,subject,msgText, null);
+         Mailer.sendMessage(to,from,cc,subject,msgText, null);
     }
     
     public static void sendMessage(String to, String from, String cc, String subject,
@@ -262,8 +261,8 @@ public class Mailer
                 errors += "\n"+(String) msgs.get(ind);
             }
         }
-        Mailer.sendMessageWithAttachedFile( to,  from,cc,  subject,  title+errors, null);
-    }
+          Mailer.sendMessageWithAttachedFile( to,  from,cc,  subject,  title+errors, null);
+   }
     
      
      
@@ -283,7 +282,7 @@ public static void notifyUser(String user_name, String file_name, String subject
 private static File writeFile(Vector fileData, String file_name)
 throws IOException
 {
-    File fl = new File( "/tmp/"  + file_name);
+    File fl = new File( edu.harvard.med.hip.bec.Constants.getTemporaryFilesPath()  + file_name);
     FileWriter fr = new FileWriter(fl);
     
     for (int count = 0; count < fileData.size(); count++)
