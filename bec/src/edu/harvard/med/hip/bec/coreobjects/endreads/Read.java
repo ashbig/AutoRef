@@ -359,7 +359,7 @@ public class Read
         ArrayList reads = new ArrayList();
         String sql = "select  READID  ,MACHINE  ,CAPILARITY  ,READSEQUENCEID ,TRIMMEDTYPE "
         +"  ,TRIMMEDSTART  ,TRIMMEDEND  ,READTYPE  ,ASSEMBLEDSEQUENCEID  ,RESULTID  ,SCORE "
-        +" ,ISOLATETRACKINGID  from READINFO where " + rule;
+        +" ,ISOLATETRACKINGID , cdsstart,cdsstop from READINFO where " + rule;
        
         ResultSet rs = null; Read read = null;
         try
@@ -381,6 +381,8 @@ public class Read
                 read.setTrimEnd( rs.getInt("TRIMMEDEND"));
                 read.setTrimStart( rs.getInt("TRIMMEDSTART"));
                 read.setSequence ( read.getSequenceId() );
+                read.setCdsStart( rs.getInt("cdsstart"));
+                read.setCdsStop( rs.getInt("cdsstop"));
                 reads.add(read);
             }
             return reads;
@@ -402,7 +404,7 @@ public class Read
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //####################################
         if (m_readsequence.getDiscrepancies() == null || m_readsequence.getDiscrepancies().size() == 0)
-            return m_trimmedstop -  m_trimmedstart;
+            return 0;
         
       
         int score = Constants.SCORE_NOT_CALCULATED; 
@@ -422,8 +424,8 @@ public class Read
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //####################################
         if ( length_to_normalize == 0)
-            length_to_normalize = m_trimmedstop -  m_trimmedstart;
-        score = (int) score * 10000/ (length_to_normalize);
+            return Constants.SCORE_NOT_CALCULATED_NO_DISCREPANCIES;
+        score = (int) score ;
         return -score;
     }
     

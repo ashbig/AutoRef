@@ -189,7 +189,7 @@ public class Construct
          m_refsequence_for_analysis =  new BaseSequence(m_refsequence.getCodingSequence(), BaseSequence.BASE_SEQUENCE );
          return m_refsequence_for_analysis;
      }
-    
+    /*
     public void calculateRank()
     {
         //sort isolate tracking by score
@@ -202,8 +202,7 @@ public class Construct
                 IsolateTrackingEngine is2 = (IsolateTrackingEngine) o2;
                 return -(   is1.getScore() - is2.getScore()  );
             }
-            /** Note: this comparator imposes orderings that are
-             * inconsistent with equals. */
+            // Note: this comparator imposes orderings that are inconsistent with equals. 
             public boolean equals(java.lang.Object obj)
             {      return false;  }
             // compare
@@ -225,7 +224,90 @@ public class Construct
             
         }
     }
+    */
     
+     public void calculateRank(int refsequence_length)
+    {
+      
+        
+        double expected_score = calculateExpectedScore();
+        //assign score to isolte
+// S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
+
+//(RL1 -- overlap length, S1 - isolate score)
+         IsolateTrackingEngine it = null;
+         for (int isolate_count = 0; isolate_count < m_isolates.size(); isolate_count++)
+        {
+            it = (IsolateTrackingEngine)m_isolates.get(isolate_count);
+            if ( it.getRank() != IsolateTrackingEngine.RANK_BLACK)
+            {
+                it.setScore( (int) ( (it.getScore() * it.getCdsLengthCovered() + expected_score * ( refsequence_length - it.getCdsLengthCovered())) / refsequence_length ));
+            }
+        }
+        //sort isolate tracking by score
+      
+        Collections.sort(m_isolates, new Comparator()
+        {
+            public int compare(Object o1, Object o2)
+            {
+                IsolateTrackingEngine is1 = (IsolateTrackingEngine) o1;
+                IsolateTrackingEngine is2 = (IsolateTrackingEngine) o2;
+                return -(   is1.getScore() - is2.getScore()  );
+            }
+            /** Note: this comparator imposes orderings that are
+             * inconsistent with equals. */
+            public boolean equals(java.lang.Object obj)
+            {      return false;  }
+            // compare
+        } );
+        //assign rank
+        int rank = 1;
+        
+        
+        for (int count = 0; count < m_isolates.size(); count++)
+        {
+            IsolateTrackingEngine is = (IsolateTrackingEngine) m_isolates.get(count);
+            if (is.getRank() != IsolateTrackingEngine.RANK_BLACK && is.getRank() != IsolateTrackingEngine.RANK_NOT_APPLICABLE &&
+                is.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY)
+            {
+               is.setRank(rank++);
+               if ( is.getRank() == 1)
+               {
+                   m_current_index = is.getSampleId();
+               }
+            }
+            
+        }
+    }
+    
+   
+     private double calculateExpectedScore()
+     {
+          /*
+        ExpectedScore = ((RS1 + RS2 + RS3 + RS4) / 4) - small number;
+
+(RS -- read(s) score, sum(penalties) / overlap_length)
+
+S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
+
+(RL1 -- overlap length, S1 - isolate score)
+*/
+        double expectedScore = -0.05;int isolate_number = 0;
+        int isolate_score = 0;IsolateTrackingEngine it = null;
+        for (int isolate_count = 0; isolate_count < m_isolates.size(); isolate_count++)
+        {
+            it = (IsolateTrackingEngine)m_isolates.get(isolate_count);
+            if ( it.getRank() != IsolateTrackingEngine.RANK_BLACK)
+            {
+                isolate_number++;
+                isolate_score+=it.getScore();
+            }
+        }
+        if (isolate_number == 0) return expectedScore;
+        expectedScore += isolate_score / isolate_number;
+        return expectedScore;
+     }
+     
     public void updateCurrentIndex(int ind)throws BecDatabaseException
     {
         m_current_index = ind;

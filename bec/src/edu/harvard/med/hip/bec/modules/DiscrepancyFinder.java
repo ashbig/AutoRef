@@ -934,7 +934,7 @@ System.out.println("\t\t\t "+ cur_aa_mutation.toString());
             { 
                 m_cds_start = q_index;
             }
-            if ( (s_index > 1 && ( sequence_subject_n[count] != ' ' && sequence_query_n[count] != ' '))
+            if ( (s_index > 1 && ( sequence_subject_n[count] == ' ' && sequence_query_n[count] != ' '))
                 || (s_index > 1 && (count == sequence_query_n.length -1 && 
                 ( sequence_subject_n[count] != ' ' && sequence_subject_n[count] != '-' && sequence_query_n[count] != ' ' && sequence_query_n[count] != '-'))))
             { 
@@ -1227,8 +1227,8 @@ System.out.println("\t\t\t "+ cur_aa_mutation.toString());
             */
             
            NeedleResult res = new NeedleResult();
-         //   String queryFile = "c:\\needleoutput\\needle4603_176.out";
-              String queryFile = "c:\\needleATG.out";
+          String queryFile = "c:\\needleoutput\\needle4092_411.out";
+            //  String queryFile = "c:\\needleATG.out";
              NeedleParser.parse(queryFile,res);
             // edu.harvard.med.hip.bec.coreobjects.endreads.Read read =  edu.harvard.med.hip.bec.coreobjects.endreads.Read.getReadById(1154);
             // int[] trimmed_scores = read.getTrimmedScoresAsArray();

@@ -194,7 +194,7 @@ public class IsolateRanker
                     //check wether number of mutations exseedmax allowed
                 it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length());
             }
-            construct.calculateRank();
+            construct.calculateRank( refsequence.getText().length() );
              for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
                 //update database
@@ -269,7 +269,7 @@ public class IsolateRanker
             if ( (read.getType() == Read.TYPE_ENDREAD_FORWARD && m_forward_read_sence)
             || (read.getType() == Read.TYPE_ENDREAD_REVERSE && m_reverse_read_sence)  )
             {
-                read.setCdsStart( df.getCdsStart() + read.getTrimStart() );
+                read.setCdsStart( df.getCdsStart()  + read.getTrimStart() );
                 read.setCdsStop( df.getCdsStop() + read.getTrimStart() );
             }
             else 

@@ -105,6 +105,7 @@ public class SequenceManipulation
         int second_index = getIndexOfBase(codon.charAt(1));
         int third_index = getIndexOfBase(codon.charAt(2));
         
+        if (first_index == 4 || second_index == 4 || third_index ==4) return "";
         int codon_index = first_index * 16 + second_index * 4 + third_index;
         
         return  "" + amino_acid_symbol_names[codon_index];

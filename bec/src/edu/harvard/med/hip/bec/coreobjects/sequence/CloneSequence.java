@@ -45,6 +45,12 @@ public class CloneSequence extends AnalyzedScoredSequence
         m_analize_status = STATUS_OBTAINED;
        
     }
+    public CloneSequence( String text, String scores,int refseqid, int status) 
+    {
+        this( text, scores ,refseqid);
+        m_analize_status = status;
+        m_type = CLONE_SEQUENCE;
+    }
     public CloneSequence(int id) throws BecDatabaseException
     {  
         super( id);

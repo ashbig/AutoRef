@@ -233,6 +233,8 @@ public class RNAMutation extends Mutation {
         }
     }
     
+     
+ 
     //------------------
     private int  setType()
    {
@@ -272,7 +274,11 @@ public class RNAMutation extends Mutation {
          {
               aa_ori = SequenceManipulation.translateCodonToAminoAcid(m_codon_ori);
              aa_mut = SequenceManipulation.translateCodonToAminoAcid(m_codon_mut);
-             if (aa_ori.equals(aa_mut))
+             if ( aa_mut.equals("") || aa_ori.equals("") )
+             {
+                 return Mutation.TYPE_RNA_SILENT;
+             }
+             else if(aa_ori.equals(aa_mut))
              {
                 return Mutation.TYPE_RNA_SILENT;
              }
