@@ -95,7 +95,7 @@ public class AssemblyRunner extends ProcessRunner
                {
                     
                     expected_sequence_definition = getExspectedSequenceDescriptions(conn, m_result_type, (String)sql_groups_of_items.get(count) );
-                    if (expected_sequence_definition.size() == 0 )      return ;
+                    if (expected_sequence_definition.size() == 0 )      break; ;
                     for (int clone_count = 0; clone_count < expected_sequence_definition.size(); clone_count ++)
                     {
                         clone_definition= ( CloneDescription)expected_sequence_definition.get(clone_count);
@@ -225,7 +225,7 @@ public class AssemblyRunner extends ProcessRunner
            {
                clone_assembly = getAssemblyFromRead(clone_definition, refsequence.getText().length() + MINIMUM_LINKER_COVERAGE);
            }
-           if (clone_assembly == null && m_assembly_mode == END_READS_ASSEMBLY )
+           if (clone_assembly == null )//&& m_assembly_mode == END_READS_ASSEMBLY )
            {
                 IsolateTrackingEngine.updateStatus(isolate_status_fail, clone_definition.getIsolateTrackingId(),  conn );
                 IsolateTrackingEngine.updateAssemblyStatus(
@@ -233,7 +233,7 @@ public class AssemblyRunner extends ProcessRunner
                                 clone_definition.getIsolateTrackingId(),  conn);
                 System.out.println("Assembly null. Clone "+clone_definition.getCloneId() +" "+clone_definition.getFlexSequenceId());
            }
-           else if( clone_assembly.getContigs().size() != 1   && m_assembly_mode == END_READS_ASSEMBLY )
+           else if( clone_assembly.getContigs().size() != 1  )// && m_assembly_mode == END_READS_ASSEMBLY )
            {
                 IsolateTrackingEngine.updateStatus(isolate_status_fail, clone_definition.getIsolateTrackingId(),  conn );
                 IsolateTrackingEngine.updateAssemblyStatus(
