@@ -13,6 +13,9 @@
  * in the ProcessObject table, one Process Object output records
  * for each new output construct is inserted in the ProcessObject
  * table.
+ *
+ * Revision:    07-01-2001  [wmar]
+ *              removed the setPlatesetId method and the platsetId data member
  */
 
 package edu.harvard.med.hip.flex.process;
@@ -28,8 +31,6 @@ public class ConstructGenerator {
     private Connection conn;
     private LinkedList oligoPatternList;
     private LinkedList constructList;
-    //private LinkedList constructListClosed;
-    private int platesetId = -1;
     
     /**
      * Constructor
@@ -40,7 +41,7 @@ public class ConstructGenerator {
         this.conn = c;
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
-       // this.platesetId = setPlatesetId(); //create new plateset ID
+       
     }
     
     /**
@@ -131,14 +132,7 @@ public class ConstructGenerator {
      */
     public LinkedList getOligoPatternList() {
         return oligoPatternList;
-    }
-    
-    /**
-     * @return The platesetId
-     */
-    public int getPlatesetId() {
-        return platesetId;
-    }
+    }    
     
     /**
      * @return The list of newly generated constructs
@@ -215,21 +209,6 @@ public class ConstructGenerator {
         
         System.out.println("Adding constructs to queue...");
         constructQueue.addQueueItems(constructQueueItemList, conn); 
-    }
-    
-    /**
-     * set the oligo platesetId
-     *
-     * @return The platesetId
-     */
-    private int setPlatesetId() throws FlexDatabaseException {
-        int platesetId = -1;
-        try{
-            platesetId = FlexIDGenerator.getID("platesetid");
-        }catch(FlexDatabaseException sqlex){
-            throw new FlexDatabaseException(sqlex);
-        }
-        return platesetId;
     }
     
     private int setPairId() throws FlexDatabaseException {
