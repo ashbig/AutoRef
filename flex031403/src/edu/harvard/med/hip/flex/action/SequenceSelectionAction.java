@@ -1,12 +1,12 @@
 /*
- * SequenceSelectionAction.java
+ * ConfirmSelectionAction.java
  *
  * Created on May 31, 2001, 5:47 PM
  *
  * This class performs the flex database search for the sequences user submitted.
  */
 
-package edu.harvard.med.hip.flex.action;
+package src.edu.harvard.med.hip.flex.action;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -36,7 +36,7 @@ import edu.harvard.med.hip.flex.database.*;
  * @author  Dongmei Zuo
  * @version 
  */
-public class SequenceSelectionAction extends FlexAction {
+public class ConfirmSelectionAction extends FlexAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -60,15 +60,15 @@ public class SequenceSelectionAction extends FlexAction {
     throws ServletException, IOException {
         Hashtable searchResult = (Hashtable)request.getSession().getAttribute("searchResult");
         String [] selections = ((CustomerRequestForm)form).getCheckOrder();
-        if(selections == null) {           
-            return (mapping.findForward("success"));
+        if(selections == null) {         
+            return (mapping.findForward("empty"));
         }
              
         Hashtable goodSequences = new Hashtable();
         Hashtable badSequences = new Hashtable();
         Hashtable sameSequence = new Hashtable();
         Hashtable homologs = new Hashtable();
-        Hashtable blastResults = new Hashtable();
+        Hashtable sequences = new Hashtable();
         
         try {
             for(int i=0; i<selections.length; i++) {
@@ -86,28 +86,56 @@ public class SequenceSelectionAction extends FlexAction {
                         FlexSeqAnalyzer analyzer = new FlexSeqAnalyzer(sequence);
                         if(analyzer.findSame()) {
                             sameSequence.put(gi, analyzer.getSameSequence());
+                            sequences.put(gi, sequence);
                         } else {
                             if(analyzer.findHomolog()) {
-                                homologs.put(gi, analyzer.getHomolog());
-                                blastResults.put(gi, analyzer.getBlastResults());
+                                Homologs h = new Homologs();
+                                h.setHomolog(analyzer.getHomolog());
+                                h.setBlastResults(analyzer.getBlastResults());
+                                homologs.put(gi, h);
+                                
+                                Enumeration enum = analyzer.getHomolog().elements();
+                                while(enum.hasMoreElements()) {
+                                    FlexSequence seq = (FlexSequence)enum.nextElement();
+                                    sequences.put(seq.getGi(), seq);
+                                }
                             } else {
                                 goodSequences.put(gi, sequence);
+                                sequences.put(gi, sequence);
                             }
                         }
                     }
                 } else {
                     goodSequences.put(gi, sequence);
+                    sequences.put(gi, sequence);
                 }
             }
             
-            HttpSession session = request.getSession();
-            session.setAttribute("goodSequences", goodSequences);
-            session.setAttribute("badSequences", badSequences);
-            session.setAttribute("sameSequence", sameSequence);
-            session.setAttribute("homologs", homologs);
-            session.setAttribute("blastResults", blastResults);
+            int count = 0;
             
-            return (mapping.findForward("success"));
+            if(goodSequences.size() > 0) {
+                request.setAttribute("goodSequences", goodSequences);
+                count++;
+            }
+            if(badSequences.size() > 0) {
+                request.setAttribute("badSequences", badSequences);
+                count++;
+            }
+            if(sameSequence.size() > 0) {
+                request.setAttribute("sameSequence", sameSequence);
+                count++;
+            }
+            if(homologs.size() > 0) {
+                request.setAttribute("homologs", homologs);
+                count++;
+            }
+            
+            request.getSession().setAttribute("sequences", sequences);
+            if(count == 0) {
+                return (mapping.findForward("empty"));
+            } else {
+                return (mapping.findForward("success"));
+            }
         } catch (Exception ex) {
             return (mapping.findForward("failure"));
         }    
