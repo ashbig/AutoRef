@@ -87,7 +87,7 @@ throws IOException
 public static void notifyUser(String user_name, String fileName, Vector messages) throws Exception
     {
         AccessManager am = AccessManager.getInstance();
-        String to = am.getEmail( m_username );
+        String to = am.getEmail( user_name );
         //String to = "etaycher@hms.harvard.edu";
         String from = "etaycher@hms.harvard.edu";
         String subject = "User Notification: Mgc clone master list "+fileName+" was uploaded to database";
