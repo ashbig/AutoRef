@@ -66,7 +66,7 @@ public class ReportRunner extends ProcessRunner
         private String      m_report_title = "";
    
 
-
+        
    // public  void        setUser(User v){m_user=v;}
    // public  void        setItems(String item_ids)
    // {
@@ -206,6 +206,8 @@ public class ReportRunner extends ProcessRunner
                  clone.setRefSequenceId(rs.getInt("REFSEQUENCEID"));
                  clone.setCloneSequenceCdsStart(rs.getInt("cloneseqcdsstart"));
                  clone.setCloneSequenceCdsStop(rs.getInt("clonesequencecdsstop"));
+                 if ( m_dir_name )
+                    clone.setTraceFilesDirectory( getTraceFilesDirName( clone.getSampleId() ));
                  clones.add(clone);
             }
            
@@ -416,7 +418,7 @@ public class ReportRunner extends ProcessRunner
           cloneinfo.append(er.getControlSamplesDir()+"\t");
        else if ( clone.getSampleType().equals("ISOLATE") )
            if ( refsequence != null)
-                cloneinfo.append(er.getOuputBaseDir()+ File.separator + refsequence.getId()+File.separator+clone.getCloneId()+"\t");
+                cloneinfo.append( clone.getTraceFilesDirectory()+"\t");
            else cloneinfo.append("\t");
       else if (  clone.getSampleType().equals("EMPTY") )
             cloneinfo.append(er.getEmptySamplesDir()+"\t");
@@ -535,7 +537,31 @@ public class ReportRunner extends ProcessRunner
              
   }
   
-  
+    private String getTraceFilesDirName( int sampleId )
+    {
+         
+        ResultSet rs = null;
+        String sql ="select distinct LOCALPATH from filereference where filereferenceid in "
+        +" (select filereferenceid from resultfilereference where resultid in "
+        +" (select resultid from result where sampleid ="+sampleId+"))";
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                 return rs.getString("LOCALPATH");
+            }
+           
+            
+        }
+        catch(Exception e)
+        {
+            m_error_messages.add("Cannot get data for clone "+e.getMessage() +"\n"+sql);
+        }
+       return null;
+    }
   
      public static void main(String args[]) 
      
