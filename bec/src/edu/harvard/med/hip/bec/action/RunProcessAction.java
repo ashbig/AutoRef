@@ -439,7 +439,8 @@ public class RunProcessAction extends ResearcherAction
                             //run assembly wrapper
                              runner = new AssemblyRunner();
                                ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.END_READS_ASSEMBLY);
-                             title = "request for end read wrapper invocation";
+                             ((AssemblyRunner)runner).setResultType( IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN);
+                               title = "request for end read wrapper invocation";
                              break;
                         }
                          case Constants.PROCESS_RUN_PRIMER3: //run primer3
