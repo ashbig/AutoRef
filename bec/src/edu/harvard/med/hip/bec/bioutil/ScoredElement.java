@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.bec.bioutil;
 
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.util.*;
 import java.util.*;
 /**
@@ -19,8 +20,8 @@ public class ScoredElement
     
     private int m_index = DEFAULT_COORDINATE;
     private int m_base_score = 0;
-    private char m_base ='\u0000';
-   
+    private char m_base ='\u0000'; 
+    private boolean      m_isDiscrepancy = false;
   
     /** Creates a new instance of ScoredElement */
     public ScoredElement()    {    }
@@ -32,16 +33,74 @@ public class ScoredElement
         m_base_score = base_score;
         m_base = base;
     }
+     public ScoredElement( int index  ,int base_score,char base, boolean isDiscrepancy)
+    {
+        m_index = index;
+        m_base_score = base_score;
+        m_base = base;
+        m_isDiscrepancy = isDiscrepancy;
+    }
   
-    public int getIndex (){ return m_index    ; }
-    public int getScore (){ return m_base_score    ; }
-    public char getBase (){ return m_base   ; }
+    public int          getIndex (){ return m_index    ; }
+    public int          getScore (){ return m_base_score    ; }
+    public char         getBase (){ return m_base   ; }
+    public boolean      isDiscrepancy(){ return m_isDiscrepancy;}
 
     public void setIndex (int v){  m_index    = v; }
     public void setScore (int v){  m_base_score    = v; }
     public void setBase (char v){  m_base   = v; }
+    public void setIsDiscrepancy(boolean isDiscrepancy){ m_isDiscrepancy = isDiscrepancy;}
     
+    public String toString(){ return m_index + " "+ m_base +" "+m_base_score; }
     
+    public static ScoredSequence trimStretch 
+            (ArrayList current_contig, Stretch contig, SlidingWindowTrimmingSpec spec)
+            throws Exception
+    {
+        ScoredSequence sequence = null;
+        if ( spec.getType() == SlidingWindowTrimmingSpec.TRIM_TYPE_NONE )
+        {
+                sequence = ScoredElement.createScoredSequence( current_contig  );
+         }
+         else
+         {
+            ScoredElement[] sequence_elements = ScoredElement.createScoredSequence(  current_contig, false);
+            int[] high_quality_start_stop =  ScoredElement.trimSequenceMovingWindowAlgorithm(sequence_elements,  SlidingWindowTrimmingSpec.getDefaultSpec() );
+            if (high_quality_start_stop != null)
+            {
+                if ( spec.getType() == SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW_NODISC )
+                {
+                     current_contig = ScoredElement.preserveNotMutatedLowQualityBases( sequence_elements, high_quality_start_stop);
+                }
+                else
+                {
+                    current_contig = new ArrayList();
+                   for (int index = high_quality_start_stop[0]; index < high_quality_start_stop[1]  ; index ++)
+                   {
+                       current_contig.add( sequence_elements[index] );
+                   }
+                }
+                     
+                 if ( sequence_elements[high_quality_start_stop[0]].getIndex() != ScoredElement.DEFAULT_COORDINATE)
+                 {
+                     if ( contig.getCdsStart() == ScoredElement.DEFAULT_COORDINATE)
+                         contig.setCdsStart(   sequence_elements[high_quality_start_stop[0]].getIndex() );
+                     else
+                        contig.setCdsStart( contig.getCdsStart() + high_quality_start_stop[0] );
+                 }
+                 if ( sequence_elements[high_quality_start_stop[1]].getIndex() != ScoredElement.DEFAULT_COORDINATE)
+                 {
+                     if ( contig.getCdsStop() == ScoredElement.DEFAULT_COORDINATE ||
+                            contig.getCdsStart() == ScoredElement.DEFAULT_COORDINATE )
+                         contig.setCdsStop(   sequence_elements[high_quality_start_stop[1]].getIndex() );
+                     else
+                        contig.setCdsStop(contig.getCdsStart() + high_quality_start_stop[1] );
+                 }
+                sequence = ScoredElement.createScoredSequence( current_contig  );
+             }
+         }
+        return sequence;
+    }
     //creates scored sequence from array of scored elements
     public static ScoredSequence createScoredSequence( ArrayList contig_data ) throws Exception
     {
@@ -65,9 +124,159 @@ public class ScoredElement
         {throw new BecUtilException("Cannot build contig sequence from the array of elements");}
     }
     
+    //creates scored sequence from array of scored elements
+    public static ScoredElement[] createScoredSequence( ArrayList contig_data, boolean isDeletePlaceholders ) throws Exception
+    {
+        ScoredElement current_element = null;
+        ScoredElement[] result = new ScoredElement[contig_data.size()];
+        int count = 0;
+        try
+        {
+            for (int base_count = 0; base_count < contig_data.size(); base_count++)
+            {
+                current_element = (ScoredElement) contig_data.get(base_count);
+                if ( current_element.getBase() == '\u0000' || current_element.getBase() == '*')
+                    continue;
+                result[ count++] = current_element; 
+            }
+            return result;
+        }
+        catch(Exception e)
+        {throw new BecUtilException("Cannot build contig sequence from the array of elements");}
+    }
+    
+   public static int[]  trimSequenceMovingWindowAlgorithm(ScoredElement[] scored_elements, SlidingWindowTrimmingSpec spec)
+                        throws Exception
+   {
+       if ( scored_elements.length < spec.getQWindowSize() ) return null;
+       int start_of_quality_sequence =  getIndexOfFirstQualityElement(scored_elements,0,scored_elements.length-1,spec);
+       if ( scored_elements.length - start_of_quality_sequence < spec.getQWindowSize()) return null;
+       int end_of_quality_sequence = getIndexOfLastQualityElement( scored_elements, 0,scored_elements.length-1, spec);
+       int[] result = {start_of_quality_sequence, end_of_quality_sequence};
+       return result;
+   }
+   
+   
+  public static int  getIndexOfFirstQualityElement(ScoredElement[] scored_elements, 
+                    int first_element, int last_element, 
+                    SlidingWindowTrimmingSpec spec)
+                     throws Exception
+   {
+       int count_not_pass_criteria_bases = 0;
+       boolean isFirstWindow = true;
+       int window_start = first_element;
+       int window_end = window_start + spec.getQWindowSize();
+       int start_of_quality_sequence = first_element;
+       for (; window_end < last_element; window_end++)
+       {
+           if (isFirstWindow)
+           {
+               isFirstWindow = false;
+               window_start++;
+               //collect data for the first window as base for calculatons
+               for (int count = window_start; count < window_end; count++)
+               {
+                  if ( scored_elements[count].getScore() < spec.getQCutOff() )
+                        count_not_pass_criteria_bases++;
+               }
+               continue;
+           }
+           if ( scored_elements[window_start].getScore() < spec.getQCutOff() )
+               count_not_pass_criteria_bases--;
+           if ( scored_elements[window_end].getScore() < spec.getQCutOff() )
+               count_not_pass_criteria_bases++;
+           if ( count_not_pass_criteria_bases >= spec.getQMaxNumberLowQualityBases() )
+                   start_of_quality_sequence++;
+           else
+               break;
+           window_start++;
+       }
+       return start_of_quality_sequence;
+   }
+    
+  
+  public  static int  getIndexOfLastQualityElement(
+                    ScoredElement[] scored_elements, 
+                    int first_element, int last_element, 
+                    SlidingWindowTrimmingSpec spec)
+                     throws Exception
+   {
+       int count_not_pass_criteria_bases = 0;
+       boolean isFirstWindow = true;
+       int window_start = last_element; int window_end = last_element - spec.getQWindowSize();
+       int end_of_quality_sequence= last_element;
+       for (; window_end > first_element; window_end--)
+       {
+           if (isFirstWindow)
+           {
+               isFirstWindow = false;
+               window_start--;
+               for (int count = window_end; count < window_start; count++)
+               {
+                  if ( scored_elements[count].getScore() < spec.getQCutOff() )
+                        count_not_pass_criteria_bases++;
+               }
+               continue;
+           }
+           if ( scored_elements[window_start].getScore() < spec.getQCutOff() )
+               count_not_pass_criteria_bases--;
+           if ( scored_elements[window_end].getScore() < spec.getQCutOff() )
+               count_not_pass_criteria_bases++;
+           if ( count_not_pass_criteria_bases >= spec.getQMaxNumberLowQualityBases() )
+           {
+               end_of_quality_sequence--;
+           }
+           else
+               break;
+           window_start--;
+       }
+       return end_of_quality_sequence;
+   }
+    
+    
+   
+   public static ArrayList  preserveNotMutatedLowQualityBases(ScoredElement[] sequence, int[] high_quality_start_stop)
+   {
+       int start_of_quality_sequence = high_quality_start_stop [0];
+       int end_of_quality_sequence = high_quality_start_stop[1];
+       ArrayList contig_elements = new ArrayList();
+       int new_start = start_of_quality_sequence; int new_end = end_of_quality_sequence;
+       for (int index = start_of_quality_sequence - 1; index >= 0 ; index --)
+       {
+            if (  sequence[index].isDiscrepancy() )
+            {
+                contig_elements.add( 0, sequence[index] );
+                new_start--;
+            }
+            else
+               break;
+       }
+       high_quality_start_stop [0] = new_start < 0 ? 0 : new_start;
+       for (int index = start_of_quality_sequence; index < end_of_quality_sequence  ; index ++)
+       {
+           contig_elements.add( sequence[index] );
+               
+       }
+       for (int index = end_of_quality_sequence; index < sequence.length ; index ++)
+       {
+           if (  sequence[index].isDiscrepancy() )
+           {
+                contig_elements.add( sequence[index] );
+                new_end++;
+           }
+           else
+           {
+               new_end--;break;
+           }
+       }
+       high_quality_start_stop [1] = new_end > sequence.length - 1 ? sequence.length - 1 : new_end;
+       return contig_elements;
+       
+   }
+   
     
     //from array of the aligned bases from different reads create contig element
-    public static ScoredElement createScoreElementFromListOfElements(ScoredElement[] base_data, int index)
+    public static ScoredElement createScoreElementFromListOfElements(ScoredElement[] base_data, int index, char refseq_base)
     {
         /* 
          *first column -> our scored elements
@@ -117,10 +326,16 @@ public class ScoredElement
            }
            common_product += product;
         }
+      
        base = base_image[base_column];
        double probability = matrix [base_data.length][base_column] / common_product;
        score = transferProbabilityToScore(probability);
-        base_element = new ScoredElement( index , score, base);
+       if (score > 99) score = 99;
+       //define if contig base is equal to expected base
+         if ( refseq_base == '\u0000' ) refseq_base = base;
+       boolean isDiscrepancy = (Character.toUpperCase(base) == Character.toUpperCase(refseq_base));
+ //     System.out.println(index+" "+ score+" "+ base+" "+ isDiscrepancy+" "+refseq_base);
+        base_element = new ScoredElement( index , score, base, isDiscrepancy);
         return base_element;
     }
           
@@ -142,15 +357,15 @@ public class ScoredElement
     
     public static int transferProbabilityToScore(double score)
     {
-         double result = 0.00000D;
-         result = -10 * Math.log(1 - score)/ Math.log(10);
+         double result = 0.0D;
+         result = -10.0D * (double)(  (double) Math.log(1.0D - score)/ (double)Math.log(10.0D) );
         return (int)( Math.ceil(result));
     }
     
-    public static float transferScoreToProbability(int score)
+    public static double transferScoreToProbability(int score)
     {
-        float result = 0.0F;
-        result = (float)( 1.0F - Math.pow( (double)10.0, (double)(-score/10.0)));
+        double result = 0.0D;
+        result = (double)( 1.0D - Math.pow( (double)10.0D, (double)(-score/10.0D)));
         return result;
     }
     
@@ -158,15 +373,15 @@ public class ScoredElement
      public static void main(String [] args)
     {
         ScoredElement s = new ScoredElement();
-        System.out.println( transferProbabilityToScore( 1 - 0.99 ) );
-        System.out.println( transferScoreToProbability(10) );
-         System.out.println( transferScoreToProbability(15) );
-         System.out.println( transferScoreToProbability(8) );
-        ScoredElement[] base_data = new ScoredElement[2];
-        base_data[0] = new ScoredElement(34, 8,'T');
-        base_data[1] = new ScoredElement(34, 45, 'T');
-       // base_data[2] = new ScoredElement(34, 15, 'C');
-        ScoredElement result = createScoreElementFromListOfElements( base_data, 34);
-    
+     //   System.out.println( transferProbabilityToScore(  0.999999994 ) );
+     //   System.out.println( transferScoreToProbability(99) );
+     //    System.out.println( transferScoreToProbability(56) );
+     //    System.out.println( transferScoreToProbability(34) );
+        ScoredElement[] base_data = new ScoredElement[3];
+        base_data[0] = new ScoredElement(34, 51,'A');
+        base_data[1] = new ScoredElement(34, 56, 'A');
+        base_data[2] = new ScoredElement(34, 34, 'A');
+        ScoredElement result = createScoreElementFromListOfElements( base_data, 34, 'A');
+    System.out.println( result.toString() );
     }
 }
