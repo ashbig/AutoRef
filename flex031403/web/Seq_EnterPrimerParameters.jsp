@@ -4,7 +4,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-
+<%@ page import="java.util.*" %>
+<%@ page import="edu.harvard.med.hip.flex.seqprocess.spec.*" %>
+<%@ page import="edu.harvard.med.hip.flex.seqprocess.core.*" %>
 <html>
 
 <head>
@@ -15,10 +17,10 @@
 </head>
 
 <body background='background.gif'>
-<h2><bean:message key="flex.name"/> : Set Parameters for Primer Calculation</h2>
+<h2><bean:message key="flex.name"/> Set Parameters for Primer Calculation</h2>
 <hr>
 <p>&nbsp;</p><html:errors/>
-<html:form action="/logon.do" > 
+<html:form action="/Set_SubmitSpec.do" > 
 <h3 >Create new set of primer picking parameters </h3>
 <i>If you are not sure about certain
 parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[parameter help file]</a>.</b>
@@ -27,7 +29,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
 	<tr>
     <td width="50%" colspan="2" height="48"><font color="#2693A6" size="4">
         <b>Set Name</b></font></td>
-    <td width="50%" colspan="2" height="48"> <input type="text" name="set_name" size="53" value=""></td>
+    <td width="50%" colspan="2" height="48"> <input name="SET_NAME" type="text" id="SET_NAME" value="" size="53"></td>
   </tr>
   <tr>
     <td width="50%" colspan="2" height="48"><font color="#2693A6" size="4">
@@ -146,9 +148,9 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
     <td width="50%" colspan="2" height="3" align="center" valign="top" background="barbkgde.gif">
       <p align="left"><b>Number of strands to sequence</b></td>
     <td width="50%" colspan="2" height="3" align="center" valign="bottom" background="barbkgde.gif">
-         <p align="left"><input type="radio" value="V1" name="number_of_strands">
+         <p align="left"><input type="radio" value="0" name="number_of_strands">
         <b>Single Strand</b> (Coding strand, forward primers)</p>
-        <p align="left"><input type="radio" name="number_of_strands" value="V2" checked>
+        <p align="left"><input type="radio" name="number_of_strands" value="1" checked>
         <b>Both Strands</b>  (Both forward and reverse primers)</p>
       
     </td>
@@ -168,26 +170,25 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
 
 </html:form>
 <HR>
-<font color="#2693A6" size="4">
-        <b>Available Sets for Primer Picking Parameters</b>
-		
-</font>
+
+<% ArrayList sets = (ArrayList)request.getAttribute("specs");
+   if (sets.size() > 0 )
+  {
+%><h3>Available Sets </h3>
+<%
+    for (int count = 0; count < sets.size() ; count++)
+    {
+	Primer3Spec spec = (Primer3Spec) sets.get(count);
+        
+	%>
+<P>
+ <P> <font color="#2693A6" size="4"> <b>Set Name</b></font>
+<%= spec.getName() %>
 
 
 
-     
 <table border="0" width="100%" height="6">
-	<tr>
-    <td width="50%" colspan="2" height="48"><font color="#2693A6" size="4">
-        <b>Set Name</b></font></td>
-    <td width="50%" colspan="2" height="48">  
- <SELECT NAME="Set 1" >
-<OPTION VALUE="Less than 1 year.">Set 1
-<OPTION VALUE="1-5 years.">Set 2
-</SELECT>
-</td>
-  </tr>
-  <tr>
+ <tr>
     <td width="50%" colspan="2" height="48"><font color="#2693A6" size="4">
         <b>Primer Picking Parameters</b></font></td>
     <td width="50%" colspan="2" height="48"></td>
@@ -196,18 +197,18 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
     <td width="25%" valign="top" height="1" background="barbkgde.gif">
         <b>Primer Length (bp)</b></td>
     <td width="25%" height="1" background="barbkgde.gif">
-        <p><b>Min:</b>  <!-- < %= set.getPrimerMin () % > --></p>
+        <p><b>Min:</b><%= spec.getParameterByNameString("primer_min") %></p>
 
     </td>
     <td width="25%" height="1" background="barbkgde.gif">
  
      
-        <p><b>Opt:</b> <!-- < %= set.getPrimerOpt() % > --></p>
+        <p><b>Opt:</b> <%= spec.getParameterByNameString("primer_opt")%></p>
   
     </td>
     <td width="25%" height="1" background="barbkgde.gif">
      
-        <p><b>Max:</b> <!-- < %= set.getPrimerMax()% > --></p>
+        <p><b>Max:</b> <%= spec.getParameterByNameString("primer_max")%></p>
      
     </td>
   </tr>
@@ -216,16 +217,16 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       Tm (°C)</b></td>
     <td width="25%" height="26" background="barbkgde.gif">
  
-        <p><b>Min: </b><!-- < %= set.getPrimerTmMin()% > --></p>
+        <p><b>Min: </b><%= spec.getParameterByNameString("primer_tm_min")%></p>
      
     </td>
     <td width="25%" height="26" background="barbkgde.gif">
-  <p><b>Opt:</b> <!-- < %= set.getPrimerTmOpt()% > --></p>
+  <p><b>Opt:</b> <%= spec.getParameterByNameString("primer_tm_opt")%></p>
 
     </td>
     <td width="25%" height="26" background="barbkgde.gif">
     
-        <p><b>Max:</b>&nbsp; <!-- < %= set.getPrimerTmMax()% > --></p>
+        <p><b>Max:</b><%= spec.getParameterByNameString("primer_tm_max")%></p>
     
     </td>
   </tr>
@@ -234,17 +235,17 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       GC%</b></td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
    
-        <p><b>Min:</b>&nbsp; <!-- < %= set.get PrimerGcMin()% >--></p>
+        <p><b>Min:</b><%= spec.getParameterByNameString("primer_gc_min")%></p>
      
     </td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
     
-        <p><b>Opt:</b> <!-- < %= set.getPrimerGcOpt% >  --> </p>
+        <p><b>Opt:</b> <%= spec.getParameterByNameString("primer_gc_opt")%></p>
 
     </td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
      
-        <p><b>Max:</b>&nbsp; <!-- < %= set.getPrimerGcMax()% > --></p>
+        <p><b>Max:</b>&nbsp; <%= spec.getParameterByNameString("primer_gc_max")%></p>
      
     </td>
   </tr>
@@ -263,7 +264,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       a left primer, primer start position is the position of the leftmost base)</b></font></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
      
-        <p> <!-- < %= set.getUpstreamDistance()% > -->
+        <p><%= spec.getParameterByNameString("upstream_distance") %>
         bases</p>
    
     </td>
@@ -275,7 +276,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       base)&nbsp;&nbsp;</font></b></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
  
-        <p><!-- < %= set.getDownstreamDistance()% > -->
+        <p><%= spec.getParameterByNameString("downstream_distance")%>
         bases</p>
     
     </td>
@@ -285,7 +286,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       high quality read length (ERL)</b></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
      
-        <p><!-- < %= set.getsingle_read_length() % > -->
+        <p><%= spec.getParameterByNameString("single_read_length")%>
         bases</p>
      
     </td>
@@ -295,7 +296,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       size for testing primers</b></td>
     <td width="50%" colspan="2" height="3" background="barbkgde.gif">
       
-        <p><!-- < %= set.getbuffer_window_len% > -->
+        <p><%= spec.getParameterByNameString("buffer_window_len")%>
         bases</p>
      
     </td>
@@ -303,15 +304,23 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
   <tr>
     <td width="50%" colspan="2" height="3" align="center" valign="top" background="barbkgde.gif">
       <p align="left"><b>Number of strands to sequence</b></td>
-    <td width="50%" colspan="2" height="3" align="center" valign="top" background="barbkgde.gif">
-         <p align="left"><!-- < %= set.getNumberOfStrends()% > -->
+    <td width="50%" colspan="2" height="3" align="center" valign="bottom" background="barbkgde.gif">
+<% if ( spec.getParameterByNameInt("number_of_strands") ==1 )
+     { %>  <p><b>Single Strand</b> (Coding strand, forward primers)</p>
+     <%}else{%>
+        
+        <b>Both Strands</b>  (Both forward and reverse primers)</p>
+<%}%>
       
     </td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="4" height="3" align="center" valign="bottom"></td>
   </tr>
   
 </table>
 
-
+<%}}%>
 
 <HR>
 

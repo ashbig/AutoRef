@@ -4,6 +4,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="java.util.*" %>
+<%@ page import="edu.harvard.med.hip.flex.seqprocess.spec.*" %>
+<%@ page import="edu.harvard.med.hip.flex.seqprocess.core.*" %>
 
 <html>
 <head>
@@ -13,10 +16,14 @@
 </head>
 <body background='background.gif'>
 
-<h2><bean:message key="flex.name"/> Define Universal Primer Set</h2>
+<h2><bean:message key="flex.name"/> :  Define Universal Primer Set</h2>
 <hr>
 <p>&nbsp;</p><html:errors/>
-<html:form action="/logon.do" > 
+<html:form action="/Seq_SubmitSpec.do" > 
+
+<html:hidden property="forwardName" />
+
+
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
   <tr> 
     <TD width="21%"><b>Set Name</b></TD>
@@ -78,13 +85,16 @@
 <% ArrayList pairs = (ArrayList)request.getAttribute("specs");
    if (pairs.size() > 0 )
   {
-    for (int pair_count = 0; pair_count < specs.size() ; pair_count++)
+%><h3>Available Sets </h3>
+<%
+    for (int pair_count = 0; pair_count < pairs.size() ; pair_count++)
     {
 	OligoPair pair = (OligoPair) pairs.get(pair_count);
+        
 	%>
-<h3>Available Sets </h3>
+
 <P> <font color="#2693A6" size="4"> <b>Set Name</b></font>
-<% =name %>
+<%= pair.getName() %>
 <table width="100%"  cellspacing="2" cellpadding="2">
  
   <tr > 
@@ -97,26 +107,26 @@
   <tr> 
     <td  background="barbkgde.gif"><strong>Primer Name</strong> <P></td>
     <td  background="barbkgde.gif"><b> 
-      M13-F
+      <%= pair.get5pOligo().getName() %>
       </b> <P></td>
     <td  background="barbkgde.gif"><b> 
-      M13-R
+      <%= pair.get3pOligo().getName() %>
       </b> <P></td>
   </tr>
   <tr> 
     <td  background="barbkgde.gif"><strong>Primer Sequence</strong> <P></td>
-    <td  background="barbkgde.gif">GTTTTCCCATCACGAC<P></td>
-    <td  background="barbkgde.gif">CAGGAAACAGCTATGACC<P></td>
+    <td  background="barbkgde.gif"><%= pair.get5pOligo().getSequence() %><P></td>
+    <td  background="barbkgde.gif"><%= pair.get3pOligo().getName() %><P></td>
   </tr>
   <tr> 
     <td  background="barbkgde.gif"><strong>Primer Tm</strong> <P></td>
-    <td  background="barbkgde.gif">0     <P></td>
-    <td  background="barbkgde.gif">0      <P></td>
+    <td  background="barbkgde.gif"><%= pair.get5pOligo().getTm() %>     <P></td>
+    <td  background="barbkgde.gif"><%= pair.get3pOligo().getTm() %>      <P></td>
   </tr>
   <tr> 
     <td  background="barbkgde.gif"><strong>Primer Start</strong> <P></td>
-    <td  background="barbkgde.gif">-40      <P></td>
-    <td  background="barbkgde.gif">0      <P></td>
+    <td  background="barbkgde.gif"><%= pair.get5pOligo().getStart() %>      <P></td>
+    <td  background="barbkgde.gif"><%= pair.get5pOligo().getStart() %>      <P></td>
   </tr>
 </table> 
 <%}}%>
