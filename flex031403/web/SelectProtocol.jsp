@@ -16,7 +16,7 @@
 <table>
     <tr>
     <td><b>Select process protocol:</b></td>
-    <td><html:select property="protocol">
+    <td><html:select property="processname">
         <html:options
         collection="protocols"
         property="processname"

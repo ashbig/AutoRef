@@ -62,7 +62,7 @@ public class SelectProtocolAction extends FlexAction {
         
         ContainerProcessQueue queue = new ContainerProcessQueue();
         try {       
-            String processname = ((CreateProcessPlateForm)form).getProtocol();
+            String processname = ((CreateProcessPlateForm)form).getProcessname();
             Protocol protocol = new Protocol(processname);
             LinkedList items = queue.getQueueItems(protocol);
             
@@ -72,7 +72,7 @@ public class SelectProtocolAction extends FlexAction {
 
             // Get the location from the database.
             Vector locations = Location.getLocations();
-            request.getSession().setAttribute("protocol", protocol);
+            request.getSession().setAttribute("SelectProtocolAction.protocol", protocol);
             request.setAttribute("locations", locations);
             
             return (mapping.findForward("success"));

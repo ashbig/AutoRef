@@ -219,6 +219,16 @@
                scope="session"
                validate="false"
                input="/SelectProtocol.jsp">
+      <forward  name="success"   path="/EnterSourcePlate.jsp"/>
+    </action> 
+
+    <!-- Process the protocol selection -->
+    <action    path="/EnterSourcePlate"
+               type="edu.harvard.med.hip.flex.action.EnterSourcePlateAction"
+               name="createProcessPlateForm"
+               scope="session"
+               validate="true"
+               input="/EnterSourcePlate.jsp">
       <forward  name="success"   path="/GetInput.jsp"/>
     </action> 
  
@@ -226,7 +236,7 @@
     <action    path="/GetInput"
                type="edu.harvard.med.hip.flex.action.GetInputAction"
                name="createProcessPlateForm"
-               scope="request"
+               scope="session"
                input="/SelectProtocol.do">
       <forward  name="success"   path="/ConfirmPlate.jsp"/>
     </action>  

@@ -13,6 +13,8 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import edu.harvard.med.hip.flex.process.Protocol;
+import edu.harvard.med.hip.flex.database.FlexDatabaseException;
 
 /**
  *
@@ -20,28 +22,47 @@ import org.apache.struts.action.ActionMapping;
  * @version 
  */
 public class CreateProcessPlateForm extends ActionForm {
-    private String protocol;
+    private int page = 0;
+    private String processname = null;
     private String sourcePlate = null;
     private String researcherBarcode = null;
     private int sourceLocation;
     private int destLocation;
     
     /**
-     * Set the protocol to the given value.
+     * Set the page to the given value.
      *
-     * @param protocol The value to be set to.
+     * @param page The page number to be set to.
      */
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
+    public void setPage(int page) {
+        this.page = page;
     }
     
     /**
-     * Return the protocol.
+     * Return the page number.
      *
-     * @return The protocol.
+     * @return The page number.
      */
-    public String getProtocol() {
-        return protocol;
+    public int getPage() {
+        return page;
+    }
+    
+    /**
+     * Set the processname to the given value.
+     *
+     * @param processname The value to be set to.
+     */
+    public void setProcessname(String processname) {
+        this.processname = processname;
+    }
+    
+    /**
+     * Return the processname.
+     *
+     * @return The processname.
+     */
+    public String getProcessname() {
+        return processname;
     }       
     
     /**
@@ -112,11 +133,17 @@ public class CreateProcessPlateForm extends ActionForm {
                                  HttpServletRequest request) {
                                     
         ActionErrors errors = new ActionErrors();
-        if((researcherBarcode == null) || (researcherBarcode.trim().length()<1)) {
-            errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", researcherBarcode));
-        }    
-        if((sourcePlate == null) || (sourcePlate.trim().length()<1)) {
-            errors.add("sourcePlate", new ActionError("error.plateId.invalid", sourcePlate));
+        
+        if(page == 1) {
+            if((sourcePlate == null) || (sourcePlate.trim().length()<1)) {
+                errors.add("sourcePlate", new ActionError("error.plateId.invalid", sourcePlate));
+            }
+        }
+        
+        if(page == 2) {
+            if((researcherBarcode == null) || (researcherBarcode.trim().length()<1)) {
+                errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", researcherBarcode));
+            }  
         }
         
         return errors;
