@@ -8,7 +8,6 @@
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
 </head>
 <body>
-<h2><bean:message key="flex.name"/> : Create Process Plate</h2>
 <hr>
 <html:errors/>
 <p>
