@@ -74,8 +74,18 @@
     </copy>
   </target>
 
-
-
+<target depends="prepare" name="javadoc">
+  <javadoc packagenames="edu.harvard.med.hip.*"
+           sourcepath="src"
+           defaultexcludes="yes"
+           destdir="${javadoc.home}"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="Test API">
+    <group title="utility package" packages="edu.harvard.med.hip.utility.*"/>
+  </javadoc>
+</target>
 
 <!-- The "all" target rebuilds everything by executing the "clean"            target first, which forces the "compile" target to compile all            source code instead of just the files that have been changed. -->
 
