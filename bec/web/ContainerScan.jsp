@@ -80,7 +80,7 @@ else if  (request.getAttribute(Constants.JSP_TITLE ) != null)
 <% 
 int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
-else if (forwardName instanceof String) forwardName_int = ((Integer) forwardName).intValue();
+else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
 if (  forwardName_int== Constants.CONTAINER_RESULTS_VIEW)
 
 {%>
