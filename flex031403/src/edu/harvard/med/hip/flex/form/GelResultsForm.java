@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-20 20:02:01 $
+ * $Revision: 1.4 $
+ * $Date: 2001-06-21 16:31:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -52,7 +52,7 @@ import edu.harvard.med.hip.flex.core.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-20 20:02:01 $
+ * @version    $Revision: 1.4 $ $Date: 2001-06-21 16:31:45 $
  */
 
 public class GelResultsForm extends ContainerResultsForm {
@@ -114,12 +114,7 @@ public class GelResultsForm extends ContainerResultsForm {
         if(errors==null) {
             errors = new ActionErrors();
         }
-        if(this.gelImage == null || this.gelImage.getFileName() == null || 
-            this.gelImage.getFileName().equals("") || this.gelImage.getFileSize() == 0 ) {
-            errors.add("gelImage",
-            new ActionError("error.gel.file.required"));
-            
-        }
+       
         
         return errors;
         

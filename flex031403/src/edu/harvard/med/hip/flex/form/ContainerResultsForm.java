@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-20 12:07:58 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-21 16:31:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -55,7 +55,7 @@ import edu.harvard.med.hip.flex.core.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-20 12:07:58 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-21 16:31:45 $
  */
 
 public class ContainerResultsForm extends ActionForm{
@@ -68,6 +68,9 @@ public class ContainerResultsForm extends ActionForm{
     
     // store the container for this form
     private Container container;
+    
+    // is this form editable
+    private boolean editable = true;
     
     /**
      * Default Constructor
@@ -155,6 +158,24 @@ public class ContainerResultsForm extends ActionForm{
         resultList.set(index,value);
     }
     
+    /**
+     * Accessor for the editable flag.
+     *
+     * @return true if editable, false otherwise
+     */
+    public boolean isEditable() {
+        return this.editable;
+    }
+    
+    
+    /**
+     * Mutator for the editable flag.
+     *
+     * @param editable true if the form is editable, false otherwise.
+     */
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
     
     /**
      * Reset all properties to their default values.
@@ -163,6 +184,7 @@ public class ContainerResultsForm extends ActionForm{
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
+        this.editable=true;
     }
     
     /**

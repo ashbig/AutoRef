@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.10 2001-06-21 10:32:26 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.11 2001-06-21 16:31:45 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -79,18 +79,34 @@ public class Researcher {
     }
     
     /**
-     * Constructor for user: SYSTEM.
+     * Constructs a new researcher based on the id of the researcher.
      *
-     * @param id The researcher id.
-     * @return The Researcher object.
+     * @param id The researcher id
      */
-    public Researcher(int id) {
-        this.id = id;
-        this.name = "SYSTEM";
-        this.barcode = "DEFAULT";
-        this.isActive = "Y";
+    public Researcher(int id) throws FlexDatabaseException{
+        DatabaseTransaction dt = DatabaseTransaction.getInstance();
+        ResultSet rs = null;
+        try {
+            rs =
+            dt.executeQuery("select RESEARCHERID, RESEARCHERBARCODE, "+
+                             "ACTIVEFLAG_YN, RESEARCHERNAME " +
+                              "from RESEARCHER where Researcherid = " + id);
+            if(rs.next()) {
+                                           
+                this.id=rs.getInt("RESEARCHERID");
+                                           
+                this.barcode=rs.getString("RESEARCHERBARCODE");
+                                        
+            this.isActive=rs.getString("ACTIVEFLAG_YN");
+                                           
+                this.name=rs.getString("RESEARCHERNAME");
+            } else {
+                throw new FlexDatabaseException("Researcher with id " + id + " does not exist");
+            }
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        }
     }
-    
     /**
      * default constructor
      */
@@ -140,7 +156,7 @@ public class Researcher {
         
         return Id;
     }
-
+    
     /**
      * Gets the reseacher's barcode.
      *

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-20 18:19:45 $
+ * $Revision: 1.3 $
+ * $Date: 2001-06-21 16:31:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -42,7 +42,7 @@ import java.util.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
- 
+
 import org.apache.struts.action.*;
 
 import edu.harvard.med.hip.flex.core.*;
@@ -54,7 +54,7 @@ import edu.harvard.med.hip.flex.process.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-20 18:19:45 $
+ * @version    $Revision: 1.3 $ $Date: 2001-06-21 16:31:45 $
  */
 
 public class PlateEntryForm extends ActionForm{
@@ -64,6 +64,10 @@ public class PlateEntryForm extends ActionForm{
     
     // The name of the protocol used
     private String protocolString ="";
+    
+    // The barcode of the researcher used in the process
+    private String researcherBarcode="";
+    
     
     /**
      * Reset all properties to their default values.
@@ -116,6 +120,24 @@ public class PlateEntryForm extends ActionForm{
     
     
     /**
+     * Accessor for the researcher barcode.
+     *
+     * @return the barcode of the researcher
+     */
+    public String getResearcherBarcode() {
+        return this.researcherBarcode;
+    }
+    
+    /**
+     * Mutator for the researcher barcode.
+     *
+     * @param barcode The barocde for the researcher
+     */
+    public void setResearcherBarcode(String barcode) {
+        this.researcherBarcode = barcode;
+    }
+    
+    /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any
      * validation errors that have been found.  If no errors are found, return
@@ -129,8 +151,20 @@ public class PlateEntryForm extends ActionForm{
     HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
         if( this.plateBarcode == null || this.plateBarcode.length() < 1) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.plate.invalid.barcode",plateBarcode));
+            errors.add("plateBarcode",
+            new ActionError("error.plate.invalid.barcode",plateBarcode));
+        }
+        try {
+            if(this.researcherBarcode == null || 
+               this.researcherBarcode.equals("") ||
+               ! Researcher.isValid(this.researcherBarcode)) {
+                errors.add("researcherBarcode",
+                    new ActionError("error.researcher.invalid.barcode",
+                    researcherBarcode));
+            }
+        } catch(FlexDatabaseException fde) {
+            errors.add("researcherBarcode",
+                new ActionError("error.database.error","Please try again later"));
         }
         return errors;
     }

@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-20 20:02:01 $
+ * $Revision: 1.3 $
+ * $Date: 2001-06-21 16:31:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.process.Result;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-20 20:02:01 $
+ * @version    $Revision: 1.3 $ $Date: 2001-06-21 16:31:45 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -91,6 +91,7 @@ public class SaveResultAction extends ResearcherAction {
     HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ActionForward retForward = null;
+        
         ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
         // The Queue item and process must be in the session
@@ -106,7 +107,31 @@ public class SaveResultAction extends ResearcherAction {
             return retForward;
         }
         
+        
+        
+        if(form instanceof GelResultsForm) {
+            GelResultsForm gelForm = (GelResultsForm)form;
+            // validate the file
+            FormFile image = gelForm.getGelImage();
+            if (image.getFileName().equals("") || image.getFileSize() == 0) {
+                errors.add("gelImage", new ActionError("error.gel.file.required"));
+                saveErrors(request,errors);
+                retForward = new ActionForward(mapping.getInput());
+                return retForward;
+                
+            }
+        }
+        
+        
+        
         ContainerResultsForm resultForm = (ContainerResultsForm) form;
+        
+        // if the form is editable, forward to the confirm page.
+        if(resultForm.isEditable()) {
+            return mapping.findForward("confirm");
+        }
+        
+        
         Container container =resultForm.getContainer();
         Vector samples = container.getSamples();
         
@@ -153,9 +178,23 @@ public class SaveResultAction extends ResearcherAction {
                 new Protocol(Protocol.GENERATE_AGAR_PLATES);
             } else if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.RUN_PCR_GEL)) {
                 nextProtocol= new Protocol(Protocol.GENERATE_FILTER_PLATES);
+                // save the file
                 GelResultsForm gelForm = (GelResultsForm)form;
+                
+                // the image file
                 FormFile image = gelForm.getGelImage();
-                OutputStream bos = new FileOutputStream("/test.doc");
+                
+                // the directory name is the month preappended with the year.
+                Calendar cal = Calendar.getInstance();
+                String subDirName = Integer.toString(cal.get(Calendar.YEAR)) + 
+                    Integer.toString(cal.get(Calendar.MONTH));
+                String fullPath=Constants.GEL_IMAGE_REPOSITORY_PATH + 
+                        subDirName + "/" + process.getExecutionid()+
+                        image.getFileName();
+                
+                OutputStream bos = 
+                    new FileOutputStream(fullPath);
+                
                 InputStream stream = image.getInputStream();
                 int bytesRead = 0;
                 byte[] buffer = new byte[8192];
@@ -163,12 +202,14 @@ public class SaveResultAction extends ResearcherAction {
                     bos.write(buffer, 0, bytesRead);
                 }
                 bos.close();
+                
+                
             } else {
                 retForward = mapping.findForward("error");
-                request.setAttribute(Action.EXCEPTION_KEY, 
-                    new FlexProcessException("Protocol " + 
-                    queueItem.getProtocol().getProcessname() + 
-                    " not valid here"));
+                request.setAttribute(Action.EXCEPTION_KEY,
+                new FlexProcessException("Protocol " +
+                queueItem.getProtocol().getProcessname() +
+                " not valid here"));
                 return retForward;
             }
             

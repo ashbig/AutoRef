@@ -28,6 +28,15 @@ public class Constants {
     //Constant for the System Admin group
     public static final String SYSTEM_ADMIN_GROUP="System Admin";
     
+    //Constant to denote edit mode
+    public static final String EDIT_MODE="edit";
+    
+    // Constant to denote read only mode
+    public static final String READ_ONLY_MODE="read";
+    
+    // base path for gel image file repository
+    public static final String GEL_IMAGE_REPOSITORY_PATH="/kotel/data/gelimages/";
+    
     /*
      * Keys used in the session/request
      */
@@ -82,6 +91,11 @@ public class Constants {
     
     // key used to find the process
     public static final String PROCESS_KEY="PROCESS";
+    
+    // key used to find the edit mode of a form
+    public static final String FORM_MODE_KEY="EDIT_MODE";
+    
+    
     /** Creates new Constants */
     private Constants() {
     }

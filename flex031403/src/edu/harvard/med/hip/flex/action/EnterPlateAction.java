@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2001-06-20 20:02:01 $
+ * $Revision: 1.10 $
+ * $Date: 2001-06-21 16:31:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.9 $ $Date: 2001-06-20 20:02:01 $
+ * @version    $Revision: 1.10 $ $Date: 2001-06-21 16:31:45 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -84,6 +84,9 @@ public class EnterPlateAction extends ResearcherAction {
         // get the barcode from the form
         String barcode = ((PlateEntryForm)form).getPlateBarcode();
         
+        //get the researcher barcode from the form
+        String researcherBarcode=((PlateEntryForm)form).getResearcherBarcode();
+        
         //get the protocol name
         String protocolName = ((PlateEntryForm)form).getProtocolString();
         
@@ -96,6 +99,7 @@ public class EnterPlateAction extends ResearcherAction {
         // the queueItem and container corresponding to the barcode
         QueueItem queueItem= null;
         Container container = null;
+        
         
         
         
@@ -146,7 +150,20 @@ public class EnterPlateAction extends ResearcherAction {
         } catch (FlexDatabaseException fde) {
             request.setAttribute(Action.EXCEPTION_KEY, fde);
             return mapping.findForward("error");
-        }
+        } 
+        
+        /*
+         * make sure the researcher is the same as the one from the previous 
+         * step.
+         */
+        
+       if (! researcherBarcode.equals(process.getResearcher().getBarcode())) {
+           errors.add("researcherBarcode", 
+            new ActionError("error.researcher.barcode.missmatch", researcherBarcode));
+           saveErrors(request,errors);
+           retForward = new ActionForward(mapping.getInput());
+           return retForward;
+       }
         
         // make sure the process execution is in process
         if(process == null || ! process.getStatus().trim().equals(process.INPROCESS)) {
@@ -184,7 +201,8 @@ public class EnterPlateAction extends ResearcherAction {
         } else if(protocolName.equals(Protocol.PERFORM_TRANSFORMATION)) {
             
             // put the form in the session
-            session.setAttribute("transformEntryForm",new ContainerResultsForm(container));
+            session.setAttribute("transformEntryForm",
+                new ContainerResultsForm(container));
             retForward = mapping.findForward("transformEntry");
         } else {
             retForward = new ActionForward(mapping.getInput());
@@ -196,12 +214,7 @@ public class EnterPlateAction extends ResearcherAction {
         // put the process in the session
         session.setAttribute(Constants.PROCESS_KEY, process);
         
-        /*
-         * put the container and the samples into the request for the jsp
-         * page to display
-         */
-        request.setAttribute(Constants.SAMPLES_KEY ,samples);
-        request.setAttribute(Constants.CONTAINER_KEY, container);
+        
         
         return retForward;
     }
