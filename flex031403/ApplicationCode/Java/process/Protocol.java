@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.5 2001-05-09 11:30:00 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.6 2001-05-11 18:19:50 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java 
  * Date     : 04162001
@@ -9,6 +9,7 @@
 package flex.ApplicationCode.Java.process;
 
 import java.util.*;
+import java.math.*;
 import flex.ApplicationCode.Java.database.*;
 import java.sql.*;
 
@@ -36,16 +37,11 @@ public class Protocol {
 	this.id = id;
 	this.processcode = processcode;
 	this.processname = processname;
+
+	// populate the sub protocols
+	populateSubProtocols();
 	
-	String sql = "select subprotocolname from subprotocol where protocolid="+id;
-	DatabaseTransaction t = DatabaseTransaction.getInstance();
-	Vector results = t.executeSql(sql);
-	Enumeration enum = results.elements();
-	while(enum.hasMoreElements()) {
-	    Hashtable h = (Hashtable)enum.nextElement();
-	    String name = (String)h.get("SUBPROTOCOLNAME");
-	    subprotocol.addElement(name);
-	}
+	
     }
 
     /**
@@ -56,46 +52,50 @@ public class Protocol {
      * @exception FlexDatabaseException
      */
     public Protocol (String processname) throws FlexDatabaseException {
-	String sql = "select protocolid, processcode," + 
-	    " defaultextrainformation from processprotocol" + 
-	    "where processname = " + processname;
+	String sql = "select protocolid, processcode " +
+	    "from processprotocol " + 
+	    "where processname = '" + processname +"'";
+	
 	DatabaseTransaction t = DatabaseTransaction.getInstance();
 	// only one result should be returned if any
-	ResultSet rs = t.getResultset(sql);
-	try {
-	    if(rs.next()) {
-		/*
-		 * if a record is found, assign values to the object
-		 * and find the sub protocols
-		 */
-		this.id = rs.getInt(1);
-		this.processcode = rs.getString(2);
-		this.processname = processname;
+	Vector protocolVect = t.executeSql(sql);
+	// only one protocol should be found
+	if(protocolVect.size() == 1) {
+	    Hashtable h = (Hashtable)protocolVect.get(0);
+	    /*
+	     * if a record is found, assign values to the object
+	     * and find the sub protocols
+	     */
+	    this.id = ((BigDecimal)h.get("PROTOCOLID")).intValue();
+	    this.processcode = (String)h.get("PROCESSCODE");
+	    this.processname = processname;
 	    
-		sql = "select subprotocolname from subprotocol where protocolid="+id;
-		t = DatabaseTransaction.getInstance();
-		Vector results = t.executeSql(sql);
-		Enumeration enum = results.elements();
-		while(enum.hasMoreElements()) {
-		    
-		    Hashtable h = (Hashtable)enum.nextElement();
-		    String name = (String)h.get("SUBPROTOCOLNAME");
-		    subprotocol.addElement(name);
-		}
-	    } else {
-		throw new FlexDatabaseException("No database record found for " + processname);
+	    populateSubProtocols();
+	} else {
+	    throw new FlexDatabaseException("No database record found for " + processname);
 	    }
-
-	    } catch (SQLException sqlE) {
-		sqlE.printStackTrace();
-	    } finally {
-		try {
-			rs.close();
-		} catch (Exception e) {}
-	    }
+	
+	
     }
     
 
+    /**
+     * Helper method to populate subprotocols
+     *
+     */
+    private void populateSubProtocols() throws FlexDatabaseException {
+	String sql = 
+	    "select subprotocolname from subprotocol where protocolid="+id;
+	DatabaseTransaction t = 
+	    DatabaseTransaction.getInstance();
+	Vector results = t.executeSql(sql);
+	Enumeration enum = results.elements();
+	while(enum.hasMoreElements()) {
+	    Hashtable h = (Hashtable)enum.nextElement();
+	    String name = (String)h.get("SUBPROTOCOLNAME");
+	    subprotocol.addElement(name);
+	}
+    }
     
     /**
      * Return the protocol id.
@@ -123,48 +123,10 @@ public class Protocol {
     public Vector getSubprotocol() {
 	return subprotocol;
     }
+
+    public static void main(String [] args) throws Exception {
+	Protocol test = new Protocol("approve sequences");
+	
+	
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
