@@ -19,6 +19,7 @@ import java.util.Hashtable;
  */
 public class CustomerRequestForm extends ActionForm {
     private String searchString = null;
+    private String species = null;
     private String [] checkOrder = null;
     private String [] selection = null;
     
@@ -38,6 +39,24 @@ public class CustomerRequestForm extends ActionForm {
      */
     public String getSearchString() {
         return searchString;
+    }
+
+    /**
+     * Set the species to the given value.
+     * 
+     * @param species The value to be set to.
+     */
+    public void setSpecies(String species) {
+        this.species = species;
+    }
+    
+    /**
+     * Return the species.
+     *
+     * @return The species.
+     */
+    public String getSpecies() {
+        return species;
     }
     
     /**
