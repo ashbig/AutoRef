@@ -362,7 +362,6 @@ public abstract class Mutation
         StringBuffer report = new StringBuffer();
         String row_color = " bgColor='#e4e9f8'";
         Mutation mut = null;
-        LinkerMutation linker = null;
         RNAMutation rm = null;
         AAMutation am = null; 
         int cur_number =1;
@@ -375,9 +374,50 @@ public abstract class Mutation
         report.append("<th width='17%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Polymorphism</font></strong></th>");
         report.append("<th width='14%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Confidence</font></strong></th>");
         report.append("</tr>");
+	DiscrepancyDescription discr_definition = null;
+        ArrayList rna_discrepancies = null;
+	//convert to discrepancy definition
+        ArrayList discrepancy_definition = DiscrepancyDescription.assembleDiscrepancyDefinitions(discrepancies);
+        for (int count = 0; count < discrepancy_definition.size(); count ++)
+	{
+        	if (count % 2 == 0){  row_color = " bgColor='#e4e9f8'";	}
+		else	{	row_color =" bgColor='#b8c6ed'";	}
+                discr_definition = (DiscrepancyDescription)discrepancy_definition.get(count);
+                if ( discr_definition.getDiscrepancyDefintionType() == DiscrepancyDescription.TYPE_AA)
+                {
+                        rna_discrepancies = discr_definition.getRNACollection();
+			
+                        for (int rna_count = 0; rna_count < rna_discrepancies.size(); rna_count++)
+                        {
+                            rm = (RNAMutation)rna_discrepancies.get(rna_count);
+                            report.append("<tr><td  "+row_color +">" + rm.getNumber() +"</td>");
+                            report.append("<td "+ row_color+" > "+ rm.toHTMLString()+"</td>");
+                            if (rna_count== 0)
+                                report.append("<td "+ row_color +" rowspan="+rna_discrepancies.size()+" >"+ ((AAMutation)discr_definition.getAADefinition()).toHTMLString() +"</td>");
+                            report.append(" <td  align='center'"+ row_color +">"+ rm.getPolymorphismFlagAsString()+"</td>");  
+                            report.append(" <td  align='center'"+ row_color +">"+ rm.getQualityAsString()+"</td>");  
+                            report.append("</tr> "); 
+                        }
+             
+		}
+	   else if ( discr_definition.getDiscrepancyDefintionType() != DiscrepancyDescription.TYPE_AA)
+           {
+               mut = discr_definition.getRNADefinition();
+               report.append("<tr>");
+	       report.append("<td  "+ row_color +">"+ mut.getNumber() +"</td> ");
+	       if (discr_definition.getDiscrepancyDefintionType() == DiscrepancyDescription.TYPE_NOT_AA_LINKER)
+               {
+                    report.append("<td  "+ row_color +">"+ ((LinkerMutation)discr_definition.getRNADefinition()).toHTMLString()+"</td>");  
+               }
+               
+               report.append("<td  "+ row_color +">&nbsp;</td><td  "+ row_color +">&nbsp;</td> ");       
+		report.append("<td  align='center'"+ row_color +">"+ mut.getQualityAsString() +"</td>  ");  
+		report.append("</tr>");     
+      
+	}}
 	
-	
-    
+        report.append("</table>");
+    /*
     for (int count = 0; count < discrepancies.size(); count ++)
 	{
 	
@@ -428,8 +468,10 @@ public abstract class Mutation
 	}}
 	
         report.append("</table>");
+     **/
         return report.toString();
     }
+     
     public String toHTMLString()
     {
         String res = "";
@@ -613,40 +655,38 @@ public abstract class Mutation
     {
           switch (change_type)
           {
-             case Mutation.TYPE_RNA_SILENT : 
+         //    case Mutation.TYPE_RNA_SILENT : 
              case Mutation.TYPE_AA_SILENT:
                   return Mutation.MACRO_SPECTYPE_SILENT;
              case Mutation.TYPE_RNA_INFRAME_INSERTION: 
              case Mutation.TYPE_RNA_INFRAME :
                    return Mutation.MACRO_SPECTYPE_INFRAME;
-             case Mutation.TYPE_RNA_MISSENSE : 
+           // case Mutation.TYPE_RNA_MISSENSE : 
              case Mutation.TYPE_AA_CONSERVATIVE:
                    return Mutation.MACRO_SPECTYPE_CONSERVATIVE;
              case Mutation.TYPE_AA_NONCONSERVATIVE :
                     return Mutation.MACRO_SPECTYPE_NONCONSERVATIVE;
-             case  Mutation.TYPE_RNA_FRAMESHIFT : 
-             case Mutation.TYPE_RNA_FRAMESHIFT_DELETION :
-             case Mutation.TYPE_RNA_FRAMESHIFT_INSERTION :
+            // case  Mutation.TYPE_RNA_FRAMESHIFT : 
+            // case Mutation.TYPE_RNA_FRAMESHIFT_DELETION :
+           //  case Mutation.TYPE_RNA_FRAMESHIFT_INSERTION :
              case Mutation.TYPE_AA_FRAMESHIFT:
                  return Mutation.MACRO_SPECTYPE_FRAMESHIFT;
-            
-            
              case Mutation.TYPE_RNA_INFRAME_DELETION:
                  return Mutation.MACRO_SPECTYPE_INFRAME_DELETION;
             
-             case Mutation.TYPE_RNA_INFRAME_STOP_CODON :
-             case Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON :
-             case Mutation.TYPE_RNA_NONSENSE:
+            // case Mutation.TYPE_RNA_INFRAME_STOP_CODON :
+           //  case Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON :
+            // case Mutation.TYPE_RNA_NONSENSE:
              case Mutation.TYPE_AA_TRUNCATION:
-             case Mutation.TYPE_RNA_TRANCATION:
+            // case Mutation.TYPE_RNA_TRANCATION:
                     return Mutation.MACRO_SPECTYPE_TRANCATION;
              
              case Mutation.TYPE_AA_NO_TRANSLATION :
-              case Mutation.TYPE_RNA_NO_TRANSLATION:
+          //    case Mutation.TYPE_RNA_NO_TRANSLATION:
                     return Mutation.MACRO_SPECTYPE_NO_TRANSLATION;
              
              case Mutation.TYPE_AA_POST_ELONGATION :
-              case Mutation.TYPE_RNA_POST_ELONGATION:
+           //   case Mutation.TYPE_RNA_POST_ELONGATION:
                     return Mutation.MACRO_SPECTYPE_POST_ELONGATION;
              
              case Mutation.TYPE_LINKER_5_SUBSTITUTION  : 
@@ -706,32 +746,29 @@ public abstract class Mutation
         boolean isType = false;
         boolean isQuality = false;
         int mut_quality ;
-        for(int i = 0; i < discrepancies.size(); i++)
+        DiscrepancyDescription discr_description = null;
+        for(int count = 0; count < discrepancies.size(); count++)
         {
-            if ( discrepancies.get(i) instanceof DiscrepancyDescription)
+            if ( discrepancies.get(count) instanceof DiscrepancyDescription)
             {
-                switch (dicrepancy_type)
+                discr_description = (DiscrepancyDescription)discrepancies.get(count);
+                switch (discr_description.getDiscrepancyDefintionType() )
                 {
-                    case Mutation.AA:
+                    case DiscrepancyDescription.TYPE_AA:
                     {
-                        mut = ( (DiscrepancyDescription)discrepancies.get(i)).getAADiscrepancy();
+                        mut = discr_description.getAADefinition();
                         break;
                     }
-                    case Mutation.RNA:
+                    case DiscrepancyDescription.TYPE_NOT_AA_LINKER:
                     {
-                        mut =  ( (DiscrepancyDescription)discrepancies.get(i)).getRNADiscrepancy();
+                        mut =  discr_description.getRNADefinition();
                         break;
                     }
-                    case Mutation.LINKER_3P:
-                    case Mutation.LINKER_5P:
-                    {
-                        mut =  ( (DiscrepancyDescription)discrepancies.get(i)).getLinkerDiscrepancy();
-                        break;
-                    }
+                   
                 }
             }
             else
-                mut = (Mutation)discrepancies.get(i);
+                mut = (Mutation)discrepancies.get(count);
             mut_quality = mut.getQuality();
             isType = (mut.getType() == dicrepancy_type && mut.getChangeType() == change_type   );
             if  (quality == QUALITY_NOTKNOWN || quality == QUALITY_HIGH)
@@ -891,6 +928,20 @@ public abstract class Mutation
             
             return discrepancies;
     }
+    public static ArrayList sortDiscrepanciesByPosition(ArrayList discrepancies)
+    {
+        ArrayList result = new ArrayList();
+        for (int i=0; i< discrepancies.size();i++)
+            Collections.sort(discrepancies, new Comparator()
+            {
+                public int compare(Object o1, Object o2)
+                {
+                    return ((Mutation) o1).getPosition() - ((Mutation) o2).getPosition();
+                }
+                public boolean equals(java.lang.Object obj)               {      return false;  }
+            } );
+            return discrepancies;
+    }
     
      public static ArrayList sortDiscrepanciesByNumberAndType(ArrayList discrepancies)
     {
@@ -956,168 +1007,6 @@ public abstract class Mutation
      
      
    
-    /*
-     
-    public static ArrayList run_mutation_analysis(BlastResult res_n, BlastResult res_p,
-         FullSequence full_sequence, TheoreticalSequence t_sequence)
-     
-     
-     
-    {
-        ArrayList res = new ArrayList();
-         /*
-        ArrayList char_arrays = prepareData( res_n, res_p);
-        boolean isInMutation = false;
-        int query_n_start = ((BlastHit)res_n.getHits().get(0)).getQStart();
-        int subject_n_start = ((BlastHit)res_n.getHits().get(0)).getSStart();
-        int mut_start = 0;
-        int mut_count = 0;
-        String q_allel = "";
-        String s_allel = "";
-        char[] sequence_query_n ;char[] sequence_subject_n  ;
-        int length  = 0;
-        AAMutation cur_aa_mutation = null;
-        RNAMutation cur_rna_mutation = null;
-        //find longer sequence
-        if ( char_arrays.get(0) != null && char_arrays.get(1) != null)
-        {
-            sequence_query_n = (char[]) char_arrays.get(0);
-            sequence_subject_n = (char[]) char_arrays.get(1);
-            length = ( sequence_query_n.length >= sequence_subject_n.length) ? sequence_query_n.length -1 :sequence_subject_n.length -1;
-        }
-        else
-            return res;
-     
-     
-        //check if sequence is good enough to be subject for mutation analyzez
-     //   if ( ! goodSequence( full_sequence,  t_sequence, res_p, res, res_n) ) return res;
-        try{
-        for (int count = 0; count < length; count++ )
-        {
-            if ( sequence_query_n[count + query_n_start - 1] == sequence_subject_n[count + subject_n_start - 1])
-            {
-                // do nothing
-                if (isInMutation)//mutation finished
-                {
-                    mut_count++;
-                    int upstream_start = 0;
-                    if  (mut_start - query_n_start > RNAMutation.RNA_STREAM_RANGE)
-                    {
-                        upstream_start = RNAMutation.RNA_STREAM_RANGE;
-                    }
-                    else
-                         upstream_start = mut_start - query_n_start ;
-                    int downstream_end = (mut_start -2 + s_allel.length() + RNAMutation.RNA_STREAM_RANGE < sequence_query_n.length)?
-                        RNAMutation.RNA_STREAM_RANGE: sequence_query_n.length -1;
-                    int codon_start =  (int)Math.ceil(count - subject_n_start - 1);
-     
-                    String up =new String(sequence_query_n, mut_start - upstream_start - 1 , upstream_start);
-                    String dn =    new String(sequence_query_n, mut_start - 1 + s_allel.length() , downstream_end);
-                    String cori =     new String (sequence_subject_n, codon_start , 3);
-                    String corm =    new String(sequence_query_n, ( (int)Math.ceil(count - query_n_start - 1)) , 3); //codon mutant
-     
-                    cur_rna_mutation = new RNAMutation(mut_count,Mutation.FLAG_MUTATION,
-                        mut_start,
-                        s_allel.length(),
-                        q_allel,
-                        s_allel,
-                        res_n.getId(),
-                        full_sequence.getId(), -1,-1,
-                        up,
-                        dn,
-                        cori,
-                        corm, //codon mutant
-                        (count - subject_n_start ) % 3 +1 ,
-                        TYPE_BLAST_HIT) ;
-                    System.out.println(cur_rna_mutation.toString());
-                    res.add(cur_rna_mutation);
-                    if (    cur_rna_mutation.getType() != Mutation.TYPE_RNA_SILENT )
-                    {
-                        String atr =  SequenceManipulation.getTranslation( corm, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
-                        String am =  SequenceManipulation.getTranslation(cori, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
-                        AAMutation cur_AA_mut =  new AAMutation(mut_count,Mutation.FLAG_MUTATION,
-                            (int) Math.ceil(mut_start / 3) +1,
-                            (int) Math.ceil(cori.length() / 3 ),
-                            atr,
-                            am,
-                            res_p.getId(),
-                            full_sequence.getId(),
-                            -1,-1
-                            ,TYPE_BLAST_HIT);
-                        res.add(cur_AA_mut);
-     
-                         System.out.println(cur_AA_mut.toString());
-                    }
-     
-                    mut_start = -1;
-                    s_allel="";
-                    q_allel="";
-                    isInMutation =false;
-                }
-            }
-            else
-            {
-                isInMutation = true;
-                mut_start = count - query_n_start + 2;
-                if (isInMutation)
-                {
-                    if (sequence_query_n[count] != '-' && sequence_query_n[count] !='[')
-                        q_allel += sequence_query_n[count];
-                    if (sequence_subject_n[count] != '-' && sequence_subject_n[count] !='[')
-                        s_allel += sequence_subject_n[count];
-                }
-            }
-        }
-        }catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-     
-        return res;
-    }
-     
-     
-     
-     
-     
-    
-    //used if only blast results provided
-    
-    
-    /*
-    private static  ArrayList  prepareData( BlastResult res_n, BlastResult res_p)
-    {
-        ArrayList res = new ArrayList();
-        char[] sequence_query_n = null;
-        char[] sequence_subject_n = null;
-     
-        BlastHit hit = null;
-        try
-        {
-            if (res_n.getHits().size() > 0 )
-            {
-                hit = (BlastHit) res_n.getHits().get(0);
-                sequence_query_n = new char[hit.getQSequence().length() + hit.getQStart()];
-                sequence_subject_n = new char[hit.getSSequence().length() + hit.getSStart()];
-     
-                hit.getQSequence().getChars(0,hit.getQSequence().length(),sequence_query_n,hit.getQStart() -1);
-                hit.getSSequence().getChars(0,hit.getSSequence().length(),sequence_subject_n,hit.getSStart() -1);
-                 res.add(sequence_query_n);
-                 res.add(sequence_subject_n);
-            }
-     
-        } catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return res;
-    }
-     
-     */
-    
-    
-    
-    
     
     //_______________________________________________________
     
