@@ -154,6 +154,11 @@ public class AnalyzedScoredSequence extends ScoredSequence
                     AAMutation amut = new AAMutation(mid);
                     m_discrepancies.add(amut);
                 }
+                else if (mtype == Mutation.LINKER_5P || mtype == Mutation.LINKER_3P )
+                {
+                    LinkerMutation amut = new LinkerMutation(mid);
+                    m_discrepancies.add(amut);
+                }
             }
             
              return m_discrepancies;

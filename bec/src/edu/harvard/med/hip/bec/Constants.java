@@ -205,8 +205,9 @@ public class Constants {
     public static final int CLONING_STRATEGY_DEFINITION_INT = 7;
      public static final int CONTAINER_PROCESS_HISTORY = 8;
     public static final int CLONE_SEQUENCE_DEFINITION_INT = 9;
-    public static final int CONTAINER_RESULTS_VIEW = 9;
-  
+    public static final int CONTAINER_RESULTS_VIEW = 10;
+     public static final int SCOREDSEQUENCE_DEFINITION_INT = 11;
+       public static final int ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT = 12;
     //submit data from file
     public static final String FILE_DESCRIPTION = "file_description";
     public static final String FILE_TITLE = "file_title";

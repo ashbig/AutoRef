@@ -113,4 +113,19 @@ public class CloningStrategy
         }
     }
     
+    
+      public static void main(String args[]) 
+     
+    {
+      
+      try
+      {
+    
+      CloningStrategy cs =  CloningStrategy.getById(3);
+                    BioVector vector = BioVector.getVectorById( cs.getVectorId());
+                    BioLinker linker3 = BioLinker.getLinkerById( cs.getLinker3Id() );
+                    BioLinker linker5 = BioLinker.getLinkerById( cs.getLinker5Id() );
+      }
+      catch(Exception e){}
+      }
 }

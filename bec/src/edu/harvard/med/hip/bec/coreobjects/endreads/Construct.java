@@ -213,9 +213,16 @@ public class Construct
         for (int count = 0; count < m_isolates.size(); count++)
         {
             IsolateTrackingEngine is = (IsolateTrackingEngine) m_isolates.get(count);
-            if (is.getRank() != IsolateTrackingEngine.RANK_BLACK &&
+            if (is.getRank() != IsolateTrackingEngine.RANK_BLACK && is.getRank() != IsolateTrackingEngine.RANK_NOT_APPLICABLE &&
                 is.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY)
+            {
                is.setRank(rank++);
+               if ( is.getRank() == 1)
+               {
+                   m_current_index = is.getSampleId();
+               }
+            }
+            
         }
     }
     
@@ -348,7 +355,7 @@ public class Construct
     {
         try{
         ArrayList master_container_ids = new ArrayList();
-        master_container_ids.add(new Integer(33));  
+        master_container_ids.add(new Integer(16));  
         ArrayList co =Construct.getConstructsFromPlates(master_container_ids);
         System.exit(0);
         }catch(Exception e){}

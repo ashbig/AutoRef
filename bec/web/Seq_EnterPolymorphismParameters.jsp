@@ -16,39 +16,67 @@
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 <link href="FlexStyle.css" rel="stylesheet" type="text/css">
 </head>
+<body>
+<jsp:include page="NavigatorBar_Administrator.jsp" />
+	<p><P>
+<br>
+<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
+    <tr>
+        <td >
+    <font color="#008000" size="5"><b> create new set of parameters for Polymorphism Detection</font>
+    <hr>
+    
+    <p>
+    </td>
+    </tr>
+</table>
 
-<body background='background.gif'>
-<h2><bean:message key="bec.name"/> : Set Polymorphism Detector Parameters</h2>
-<hr>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr>
+      <td width="100%"><html:errors/></td>
+    </tr>
+	<tr>
+        <td><i>If you are not sure about certain parameter settings, leave them 
+          unchanged </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. 
+          </i></td>
+      </tr>
+  </table>
+  </center>
+</div>
 
-<html:errors/> 
 <html:form action="/Seq_SubmitSpec.do" > 
 <input name="forwardName" type="hidden" value="<%=PolymorphismSpec.POLYMORPHISM_SPEC_INT%>" >
 
+<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+  <tr> 
+    <td colspan =2><div align="right"><b> <a href="/BEC/Seq_GetSpec.do?forwardName=<%=Spec.POLYMORPHISM_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> "> 
+        View Mine </a>&nbsp;&nbsp;<a href="/BEC/Seq_GetSpec.do?forwardName=<%=Spec.POLYMORPHISM_SPEC_INT%>"> 
+        View All </a></b> </div>
+      <p> 
+      <p> 
+      
+      </td>
+  </tr>
+  <tr> 
+    <td colspan="2"> <p> <font  size="4"> <b>Set Name</b></font> 
+        <input type="text" name="SET_NAME" size="53" value="">
+      <p> </td>
+  </tr>
 
-
-<h3 >Create new set of parameters for Polymorphism detector</h3>
-<i>If you are not sure about certain parameter settings, leave them unchanged 
-</i> <a href="Help_SequenceEvaluation.html">[parameter help file]</a>.</b> 
-<P> <font color="#2693A6" size="4"> <b>Set Name</b></font> 
-  <input type="text" name="SET_NAME" size="53" value="">
-<P><P>
-<font size="4" color="#2693A6"><b>
-<p>
-
-
-<table width="85%" border="0" align="center">
   <tr > 
-    <td background="barbkgde.gif" ><strong>Please select species:</strong> </td>
-    <td background="barbkgde.gif"> <select name="PL_SPECIES" id="PL_SPECIES" width="70" disabledd>
+    <td bgColor="#e4e9f8" ><strong><font color="#000080">Please select species:</font></strong> 
+    </td>
+    <td bgColor="#e4e9f8"> <select name="PL_SPECIES" id="PL_SPECIES" width="70" disabledd>
         <option  value="GI">Human</option>
 		<option  value="GI">Yeast</option>
 		<option  value="GI">Pseudomonas</option>
-        <option selected value="FlexSequence ID">FlexSequence ID</option>
+        
       </select> </td>
   <tr> 
-    <td ><strong>Please select Database:</strong></td>
-    <td> <select name="PL_DATABASE" id="PL_DATABASE"  disabled>
+    <td bgcolor="#b8c6ed"><strong><font color="#000080">Please select Database:</font></strong></td>
+    <td bgcolor="#b8c6ed"> <select name="PL_DATABASE" id="PL_DATABASE"  disabled>
         <option value="nr" selected>nr</option>
         <option  value="nr">a aaaaaaaaa</option>
       </select> </td>
@@ -57,13 +85,14 @@
     <td colspan="2">&nbsp; </td>
   </tr>
   <tr> 
-    <td background="barbkgde.gif"><b>Please specify number of bases in flanking 
-      sequence:</b> </td>
-    <td background="barbkgde.gif"><input name="PL_BASES" type="text" id="PL_BASES" value="20" width="120" ></td>
+    <td bgColor="#e4e9f8"><b><font color="#000080">Please specify number of bases 
+      in flanking sequence:</font></b> </td>
+    <td bgColor="#e4e9f8"><input name="PL_BASES" type="text" id="PL_BASES" value="20" width="120" ></td>
   </tr>
   <tr> 
-    <td> <b>Please select output format <i>(optional)</i>:</b> </td>
-    <td> <select name="PL_FORMAT" id="PL_FORMAT" disabled>
+    <td bgcolor="#b8c6ed"> <b><font color="#000080">Please select output format 
+      <i>(optional)</i>:</font></b> </td>
+    <td bgcolor="#b8c6ed"> <select name="PL_FORMAT" id="PL_FORMAT" disabled>
         <option selected value="XML">XML</option>
         <option  value="FLatFile">Flat File</option>
       </select> </p> </td>
@@ -71,7 +100,7 @@
   <tr>
     <td colspan="2">&nbsp;</td>
   </tr>
-  <tr > 
+  <!-- <tr > 
     <td width="75%" nowrap background="barbkgde.gif"> <table border="0" width="100%">
         <tr>
           <Td><b>Upload a data file <em>(optional)</em>: </b> </Td>
@@ -79,15 +108,21 @@
         </tr>
       </table></td>
     <td align="left" nowrap background="barbkgde.gif"><input type="button" name="Browse" value="Browse..." ></td>
-  </tr>
-  
+  </tr> -->
+  <tr><td>&nbsp;</td></tr>
+  <tr><td colspan="2">
+  <div align="center">
+  <input type="submit" name="Submit" value="Submit">
+  &nbsp; 
+  <input type="reset" name="Reset" value="Reset">
+</div>
+  </td></tr>
 </table>
 
 
 <p>
-<div align="center">
-  <input type="submit" name="Submit" value="Submit">
-</div>
+
+</html:form>
 </p>
 </body>
-</html:form>
+

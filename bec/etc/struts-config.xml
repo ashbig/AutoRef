@@ -44,7 +44,13 @@
  <!-- Customer receive  orders form bean -->
     <form-bean      name="ReceiveOrdersForm"
                     type="edu.harvard.med.hip.bec.form.ReceiveOrdersForm"/>
+
+ <!-- Customer receive  orders form bean -->
+    <form-bean      name="submitDataFileForm"
+                    type="edu.harvard.med.hip.bec.form.SubmitDataFileForm"/>
  </form-beans>
+
+
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
@@ -74,7 +80,7 @@
                name="logonForm"
               scope="request"
               input="/login.jsp">
-      <forward  name="success"   path="/main.jsp"/>
+      <forward  name="success"   path="/about_bec.jsp"/>
       <forward  name="failure"  path="/login.jsp"/>
     </action>
 
@@ -123,19 +129,53 @@
             <forward name="universal_pair" path="/Seq_DisplayUniversalPrimerParameters.jsp"/>
     </action>
 
+ <!-- Process display item -->
+    <action     path="/Seq_GetItem"
+                name="seqGetSpecForm"
+ scope="request"
+                input="/ContainerScan.jsp"
+                type="edu.harvard.med.hip.bec.action.Seq_GetItemAction">
+            <forward name="display_vector" path="/VectorDisplay.jsp"/>
+            <forward name="display_linker" path="/LinkerDisplay.jsp"/>
+            <forward name="display_refsequence_details" path="/RefSequenceDisplay.jsp"/>
+              <forward name="display_container_results_er" path="/ContainerResultsEndReads.jsp"/>
+            <forward name="display_clone" path="/CloneInfoDisplay.jsp"/>
+            <forward name="display_cloning_strategy" path="/CloningStrategyDisplay.jsp"/>
+            <forward name="display_container_details" path="/ContainerDetails.jsp"/>
+            <forward name="display_container_history" path="/ContainerHistory.jsp"/>
+            <forward name="display_discrepancyreport" path="/DiscrepancyReport.jsp"/>
+            <forward name="display_scoredsequence_details" path="/ScoredSequenceDisplay.jsp"/>
+</action>
+
+ 
+
 <!-- Process select process to run -->
     <action      path="/SelectProcess"
                 name="seqGetSpecForm"
                 type="edu.harvard.med.hip.bec.action.SelectProcessAction">
             <forward name="upload_plates" path="/RunUploadPlates.jsp"/>
             <forward name="run_process" path="/RunProcess.jsp"/>
-        <forward name="recieve_orders" path="/RecieveOrders.jsp"/>
+            <forward name="scan_lable" path="/ContainerScan.jsp"/>
+            <forward name="submit_data_file" path="/SubmitDataFile.jsp"/>
+           
 
     </action>
 
+<!-- Process run discrepancy finder as stand aloan -->
+    <action      path="/SubmitDataFile"
+                name="submitDataFileForm"
+                input="/SubmitDataFile.jsp"
+                type="edu.harvard.med.hip.bec.action.SubmitDataFileAction">
+            <forward name="response" path="/Response.jsp"/>
+          
+           
+
+    </action>
+
+
 <!-- Process  run a process-->
     <action      path="/RunProcess"
-                name="seqRunProcessForm"
+                name="seqGetSpecForm"
                 type="edu.harvard.med.hip.bec.action.RunProcessAction">
             <forward name="sucess" path="/ConfirmProcess.jsp"/>
             
@@ -143,7 +183,7 @@
 
   <!-- Process the receiving of new  plates -->
     <action    path="/ReceivePlates"
-               type="edu.harvard.med.hip.flex.action.ReceivePlatesAction"
+               type="edu.harvard.med.hip.bec.action.ReceivePlatesAction"
                name="ReceiveOrdersForm"
                scope="request"
                input="/ReceiveOrders.jsp">

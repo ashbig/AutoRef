@@ -21,21 +21,29 @@ import javax.sql.*;
  */
 public class BioVector
 {
+    public final static int VECTOR_TYPE_MASTER = 1;
+    public final static int VECTOR_TYPE_EXSPRESION = 2;
+    public final static String VECTOR_TYPE_MASTER_STR = "entry vector";
+    public final static String VECTOR_TYPE_EXSPRESION_STR = "destination vector";
     
     private int m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private int m_type = -1;
     private String m_name = null;
     private String m_sequence = null;
+    private String m_source = null;
     private ArrayList m_features = null;
     private ArrayList m_primers = null;
     /** Creates a new instance of BioVector */
-    public BioVector(int id, String name, String seq, ArrayList features, ArrayList primers)throws BecDatabaseException
+    public BioVector(int id, String name, String seq, String source, int type,ArrayList features, ArrayList primers)throws BecDatabaseException
     {
         m_name = name;
         m_sequence = seq;
         m_features = features;
+        m_source=source;
+        m_type = type;
         m_primers =primers;
          if (id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
-            m_id = BecIDGenerator.getID("containerid");
+            m_id = BecIDGenerator.getID("vectorid");
         else
             m_id = id;
     }
@@ -44,21 +52,35 @@ public class BioVector
     public int getId()    { return m_id;}
     public String getName()    { return m_name;}
     public String getSequence()    { return m_sequence;}
+    public String getSource(){ return m_source;}
     public ArrayList getFeatures()    { return m_features;}
+    public int     getType(){ return m_type;}   
+    public String  getTypeAsString()
+    {
+        switch (m_type)
+        {
+            case VECTOR_TYPE_MASTER: return VECTOR_TYPE_MASTER_STR;
+            case VECTOR_TYPE_EXSPRESION: return VECTOR_TYPE_EXSPRESION_STR;
+        }
+        return "";
+    }
+    
     public void addFeature(BioVectorFeature v)    {  m_features.add(v);}
     public ArrayList getPrimers()    { return m_primers;}
     public void addPrimers(Oligo v)    {  m_primers.add(v);}
     
     public void setId( int v)    {  m_id = v;}
+    public void setType(int v){  m_type = v;}   
     public void setName( String v)    {  m_name = v;}
     public void setSequence( String v)    {  m_sequence = v;}
+    public void setSource(String s){ m_source = s;}
     public void setFeatures( ArrayList v)    {  m_features = v;}
-public void setPrimers( ArrayList v)    {  m_primers = v;}
+    public void setPrimers( ArrayList v)    {  m_primers = v;}
 
     public static ArrayList getAllVectors()throws BecDatabaseException
     {
         ArrayList vect = new ArrayList();
-         String sql = "select vectorid, vectorname, sequence from vector ";
+         String sql = "select vectorid, vectorname, source,vectortype from vector ";
         RowSet rs = null;
         
         try
@@ -68,7 +90,7 @@ public void setPrimers( ArrayList v)    {  m_primers = v;}
             
             while(rs.next())
             {
-                vect.add( new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), rs.getString("sequence") , null, null));
+                vect.add( new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), null, rs.getString("source") , rs.getInt("vectortype"), null, null));
             }
             return vect;
             
@@ -86,7 +108,7 @@ public void setPrimers( ArrayList v)    {  m_primers = v;}
     public static BioVector getVectorById(int id)throws BecDatabaseException
     {
               
-        String sql = "select vectorid, vectorname, sequence from vector where vectorid = "+id;
+        String sql = "select vectorid, vectorname, source, vectortype from vector where vectorid = "+id;
         RowSet rs = null;
         BioVector vect = null;
         try
@@ -96,7 +118,8 @@ public void setPrimers( ArrayList v)    {  m_primers = v;}
             
             while(rs.next())
             {
-                vect = new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), rs.getString("sequence") , null, null);
+                vect = new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), null,rs.getString("source") ,rs.getInt("vectortype"), null, null);
+                vect.setFeatures( getFeatures(vect.getId()));
             }
             //get features
            
@@ -111,6 +134,8 @@ public void setPrimers( ArrayList v)    {  m_primers = v;}
     
     
     }
+    
+    /*
     public void insert(Connection conn)throws BecDatabaseException
     {
         String sql = "insert into vector(vectorid, vectorname, sequence)"+
@@ -137,7 +162,7 @@ public void setPrimers( ArrayList v)    {  m_primers = v;}
             DatabaseTransaction.closeStatement(stmt);
         }
     }
-    
+    */
     
     public static ArrayList getVectorPrimers(int vectorid)throws BecDatabaseException
     {
@@ -175,7 +200,7 @@ public void setPrimers( ArrayList v)    {  m_primers = v;}
     
     private static ArrayList getFeatures(  int vectorid)throws BecDatabaseException
     {
-        String sql = "select featureid, vectorid, featuretype, featurename from vectorfeature where vectorid = "+vectorid;
+        String sql = "select featureid, vectorid, featuretype, featurename,description from vectorfeature where vectorid = "+vectorid;
         RowSet rs = null;
         ArrayList features = new ArrayList();
        
@@ -186,8 +211,9 @@ public void setPrimers( ArrayList v)    {  m_primers = v;}
             
             while(rs.next())
             {
-             //   features.add(new BioVectorFeature ( rs.getInt("featureid"),
-              // rs.getString("featurename"),rs.getInt("featuretype"), rs.getInt("vectorid")));
+               
+                features.add(new BioVectorFeature ( rs.getInt("featureid"),
+               rs.getString("featurename"),rs.getInt("featuretype"), rs.getInt("vectorid"),rs.getString("description")));
             }
             return features;
         } catch (Exception e)

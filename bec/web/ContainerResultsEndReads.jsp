@@ -11,12 +11,12 @@
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
-
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 
 <html>
 
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
+<jsp:include page="NavigatorBar_Administrator.jsp" flush="true"/>
 	<p><P>
 <br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
@@ -41,7 +41,10 @@
   </center>
 </div>
 <p></p>
-<% Container container = (Container)request.getAttribute("container") ;%>
+<% Container container = (Container)request.getAttribute("container") ;
+
+
+%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
     <td width="19%"><strong>Label:</strong></td>
@@ -78,7 +81,7 @@
     <tr >
        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Type</font></strong></th>
-       
+        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Read Type</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Trace File</font></strong></th>
 		 <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Read Length</font></strong></th>
 		 <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Score</font></strong></th>
@@ -87,52 +90,70 @@
 		  <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Show Alignment</font></strong></th>
     </tr>
 <%  
-    String row_color = " bgColor='#e4e9f8'";
+    String row_colorB = " bgColor='#e4e9f8'"; String row_colorA =" bgColor='#b8c6ed'";
+	String row_color = " bgColor='#e4e9f8'";
 	Sample sample=null;
+	Read read  = null;Result result =null;
+	int constructid = -1;
     for (int count = 0; count < container.getSamples().size(); count ++)
 	{
+	// System.out.println("get "+System.currentTimeMillis());
 		sample = (Sample)container.getSamples().get(count);
-		if (count % 2 == 0)
+	//System.out.println(sample.getPosition());
+		if ( sample.getResults() != null && sample.getResults().size() > 0)
 		{
-		  row_color = " bgColor='#e4e9f8'";
+			result = (Result)sample.getResults().get(0);
+			
+			if (result != null)
+			{
+				//System.out.println("result id "+ result.getId() +" "+result.getType() );
+				read = (Read) result.getValueObject();
+				if (read != null)
+				{
+					System.out.println("read id "+ read.getId());
+					}
+			}
+			
 		}
-		else
+	
+		 if ( sample.getType().equals("CONTROL_POSITIVE") ||  sample.getType().equals("CONTROL_NEGATIVE"))
 		{
-			row_color =" bgColor='#b8c6ed'";
+		  row_color = " bgColor=blue";
 		}
+		else if (constructid != sample.getConstructId())
+		{
+			if (row_color.equals(row_colorA))
+			{
+		   		row_color = row_colorB;
+				}
+				else
+				{
+				row_color = row_colorA;
+				}
+		}
+		
+		constructid = sample.getConstructId();
 	%>
 	<tr>
-
 		<td <%= row_color %>><%= sample.getPosition() %> </td>
 		<td <%= row_color %>> <%= sample.getType()%></td>
-		<td <%= row_color %>> <%= sample.getId()%></td>
-		<td <%= row_color %>> <%= sample.getIsolateTrackingEngine().getStatusAsString()%></td>
-		<td <%= row_color %>> 
-	<% if (sample.getRefSequenceId() == -1)
-	{%>
-	&nbsp;
-	<%}else{%>
-
-		<!--<a href="/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>" > 
-		<%= sample.getRefSequenceId()%></a> -->
-		<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>');" > 
-		<%= sample.getRefSequenceId()%></a>
+		<td <%= row_color %>><% if ( result != null ) {%> <%= result.getTypeAsString()%> <%}else{%> &nbsp;<%}%></td>
+		<td <%= row_color %>><% if (read != null && read.getTraceFileName() != null){%>	<%= read.getTraceFileName()%> <%}else{%>&nbsp; <%}%></td>
+		<td align="right" <%= row_color %>> <%if (read != null ){%> <%= (read.getTrimEnd() - read.getTrimStart() )%><%}else{%> &nbsp;<%}%>  </td>
+		<td  align="right" <%= row_color %>> <%if (read != null ){%> <%= read.getScore() %><%}else{%> &nbsp;<%}%>  </td>
 		
-	<%}%>	
-		</td>
-	    
-		<td <%= row_color %>> 
-		<% if ( sample.getCloneSequenceId() != -1)
-		{%>
-		<a href="/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getCloneSequenceId()%>" > <%= sample.getRefSequenceId()%></a>
-		<%}else{%>&nbsp;
-		<%}%></td>
-		
+		<td <%= row_color %>><%if (read != null ){%>
+		 <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.SCOREDSEQUENCE_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>&amp;trimstart=<%=read.getTrimStart()%>&amp;trimend=<%=read.getTrimEnd()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
+		 <%= read.getSequenceId() %>
+		 </a>
+		 
+		 <%}else{%> &nbsp;<%}%>  </td>
+		<td <%= row_color %> align="center">
+ <input type=BUTTON value=Report onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
+		  </td>
+		<td <%= row_color %>>&nbsp; </td>
 	</tr>
 	<%}%>
-  
-     
-    
     </table>
 </body>
 </html>

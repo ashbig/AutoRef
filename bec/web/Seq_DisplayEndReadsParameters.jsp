@@ -62,7 +62,9 @@ else if (specs.size() > 0 )
 
 <P> <font  size="4"> <b>Set Name</b></font>   <%= current_spec.getName() %>
 </td></tr>
-<tr> <td  bgColor="#e4e9f8" width="60%"><b>Phred base score (high quality cut-off)</td>
+<tr> 
+    <td  bgColor="#e4e9f8" width="60%"><font color="#000080"><b>Phred base score 
+      (high quality cut-off)</font></td>
  <td bgColor="#e4e9f8"><%= current_params.get("ER_PHRED_CUT_OFF") %>  </td>    </tr>
 <tr> <td  bgColor="#b8c6ed" width="60%"><b>	 Phred base score (low quality cut-off)</td>
  <td bgColor="#b8c6ed">  <%= current_params.get("ER_PHRED_LOW_CUT_OFF") %></td>   </tr>
@@ -103,7 +105,7 @@ else if (specs.size() > 0 )
           <td bgColor="#b8c6ed"><div align="center"><%= current_params.get("ER_FR_L")%></div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><font color="#000080"><strong>Inframe deletion</font></strong></td>
+          <td bgColor="#e4e9f8"><font color="#000080"><strong>Inframe deletion</strong></font></td>
           <td bgColor="#e4e9f8"><div align="center"><%= current_params.get("ER_IDEL_H")%></div></td>
           <td bgColor="#e4e9f8"><div align="center"><%= current_params.get("ER_IDEL_L")%></div></td>
         </tr>
@@ -130,11 +132,52 @@ else if (specs.size() > 0 )
       </table></td>
   </tr>
 
-    
-         
-        </table>
-  		</td>
     </tr>
+	 <td colspan=2 ><p><b>Mutation penalty for sequence scoring (linker region)</b> </p> 
+     
+      <table width="85%" border="0" align="center">
+        <tr> 
+          <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base Confidence</font></strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High </font></strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low </font></strong></div></td>
+        </tr>
+        <tr> 
+          <td width="44%" bgColor="#e4e9f8" ><strong><font color="#000080">5' substitution</font></strong></td>
+          <td width="16%" bgColor="#e4e9f8"><div align="center"> 
+             <%= current_params.get("ER_5S_H")%>
+            </div></td>
+          <td width="14%" bgColor="#e4e9f8"><div align="center"> 
+             <%= current_params.get("ER_5S_L")%>
+            </div></td>
+        </tr>
+        <tr> 
+          <td bgColor="#e4e9f8"><strong><font color="#000080">5' deletion/insertion</font></strong></td>
+          <td bgColor="#e4e9f8"><div align="center"> 
+              <%= current_params.get("ER_5DI_H")%>
+            </div></td>
+          <td bgColor="#e4e9f8"><div align="center"> 
+              <%= current_params.get("ER_5DI_L")%>
+            </div></td>
+        </tr>
+        <tr> 
+          <td bgColor="#b8c6ed"><strong><font color="#000080">3' substitution</font></strong></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <%= current_params.get("ER_3S_H")%>
+            </div></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+             <%= current_params.get("ER_3S_L")%>
+            </div></td>
+        </tr>
+        <tr> 
+          <td bgColor="#b8c6ed"><strong><font color="#000080">3' deletion/insertion</font></strong></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <%= current_params.get("ER_3DI_H")%>
+            </div></td>
+       	<td bgColor="#b8c6ed"><div align="center"> 
+              <%= current_params.get("ER_3DI_H")%>
+            </div></td>
+      </table></td>
+  </tr>
   </table>
 <p> 
 <hr>

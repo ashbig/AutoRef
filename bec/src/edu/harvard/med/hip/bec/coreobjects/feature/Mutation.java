@@ -30,6 +30,8 @@ public abstract class Mutation
     public static final int DNA = 0;
     public static final int AA = 2;
     public static final int RNA = 1;
+    public static final int LINKER_3P = 3;
+    public static final int LINKER_5P = 4;
     
     public static final int QUALITY_NOTKNOWN = 0;
     public static final int QUALITY_HIGH = 2;
@@ -70,6 +72,12 @@ public abstract class Mutation
     public static final int TYPE_RNA_NO_TRANSLATION = 27;
     public static final int TYPE_RNA_POST_ELONGATION = 28;
      public static final int TYPE_RNA_TRANCATION = 29;
+     
+     //
+      public static final int TYPE_LINKER_5_SUBSTITUTION = 40;
+        public static final int TYPE_LINKER_3_SUBSTITUTION = 41;
+        public static final int TYPE_LINKER_5_INS_DEL = 42;
+       public static final int TYPE_LINKER_3_INS_DEL = 43;
     
     public static final int TYPE_NOTRESOLVED=23;
     //owner of mutations
@@ -150,7 +158,7 @@ public abstract class Mutation
         PreparedStatement pstmt = null;
         
         String sql = "INSERT INTO discrepancy  (DISCREPANCYID  ,POSITION ,LENGTH ,CHANGEORI ,CHANGEMUT "
- +",TYPE ,SEQUENCEID ,CHANGETYPE ,DISCRNUMBER  )   VALUES(?, ?, ?, ?,?,?,?,?,?)" ;
+ +",TYPE ,SEQUENCEID ,CHANGETYPE ,DISCRNUMBER,DISCQUALITY  )   VALUES(?, ?, ?, ?,?,?,?,?,?,?)" ;
     
         try
         {
@@ -167,6 +175,7 @@ public abstract class Mutation
             pstmt.setInt(7, m_sequenceid);
             pstmt.setInt(8,m_change_type);
             pstmt.setInt(9,m_number);
+            pstmt.setInt(10,m_quality);
             DatabaseTransaction.executeUpdate(pstmt);
               
             
@@ -197,9 +206,29 @@ public abstract class Mutation
     public int          getPosition()    { return m_position ;}// start of mutation (on object sequence)
     public int          getLength()    { return m_length;}// – length of mutation (optional)
     public int          getType()    { return   m_type ;}// – mutation type
+    public String       getTypeAsString()
+    {
+        switch(m_type)
+        {
+            case DNA : return "DNA";
+            case AA: return "AA";
+            case  RNA : return "RNA";
+            default: return "not known";
+        }
+    }
     public String       getQueryStr()    { return    m_change_mut ;}// – mutation bases of object sequence
     public String       getSubjectStr()    { return   m_change_ori ;}// mutation bases of subject sequence
     public int           getQuality()    { return m_quality;}
+    public String       getQualityAsString()
+    {
+        switch (m_quality)
+        {
+            
+            case QUALITY_HIGH :return "High";
+            case QUALITY_LOW: return "Low";
+            default  : return "Not Known";
+        }
+    }
     public int          getNumber()    { return m_number;}
     public int          getChangeType()    { return m_change_type;}
     
@@ -237,6 +266,11 @@ public abstract class Mutation
             case TYPE_RNA_SILENT: return "Silent";
             case TYPE_RNA_NONSENSE: return "Nonsense";
             case TYPE_RNA_MISSENSE: return "Missense";
+            
+            case TYPE_LINKER_5_SUBSTITUTION : return "5' substitution";
+            case TYPE_LINKER_3_SUBSTITUTION: return "3' substitution";
+            case TYPE_LINKER_5_INS_DEL : return "5' insertion/deletion";
+            case TYPE_LINKER_3_INS_DEL : return "3' insertion/deletion";
             default  : return "Not known";
         }
         
@@ -278,6 +312,11 @@ public abstract class Mutation
             case TYPE_RNA_SILENT: return "RNA - Silent";
             case TYPE_RNA_NONSENSE: return "RNA - Nonsense";
             case TYPE_RNA_MISSENSE: return "RNA - Missense";
+            
+            case TYPE_LINKER_5_SUBSTITUTION : return "5' substitution";
+            case TYPE_LINKER_3_SUBSTITUTION: return "3' substitution";
+            case TYPE_LINKER_5_INS_DEL : return "5' insertion/deletion";
+            case TYPE_LINKER_3_INS_DEL : return "3' insertion/deletion";
             default  : return "Not known";
         }
         
@@ -286,14 +325,14 @@ public abstract class Mutation
     
     public String toString()
     {
-        String res= "\n\nMutation desc.\n id: " +  m_id +
-        "\n position: "+m_position +" length: "+ m_length+"\n type: "+m_type
-        +"\n mut ori: "+ m_change_mut
-        +" \nori: "+m_change_ori
-        +"\n sequence id: "+ m_sequenceid
+        String res= "\n\n\t\t\tMutation desc.\n id: " +  m_id +
+        "\t position: "+m_position +" length: "+ m_length+"\t type: "+getTypeAsString()
+        +"\t mut ori: "+ m_change_mut
+        +" \t ori: "+m_change_ori
+        +"\t sequence id: "+ m_sequenceid
         
-        +"\n mut number: "+ m_number
-        + " \nmutation type: "+ getMutationTypeAsString() +"\n" ;
+        +"\t mut number: "+ m_number
+        + " \t mutation type: "+ getMutationTypeAsString() +"\t quality "+getQualityAsString() ;
         return res;
     }
     
@@ -545,6 +584,12 @@ public abstract class Mutation
                 case Mutation.TYPE_AA_NONCONSERVATIVE  :                { res[Mutation.TYPE_AA_NONCONSERVATIVE]++;break;}
                 
                 
+                
+                  case TYPE_LINKER_5_SUBSTITUTION :{ res[Mutation.TYPE_LINKER_5_SUBSTITUTION]++;break;}
+                case TYPE_LINKER_3_SUBSTITUTION: { res[Mutation.TYPE_LINKER_3_SUBSTITUTION]++;break;}
+                case TYPE_LINKER_5_INS_DEL : { res[Mutation.TYPE_LINKER_5_INS_DEL]++;break;}
+                case TYPE_LINKER_3_INS_DEL : { res[Mutation.TYPE_LINKER_3_INS_DEL]++;break;}
+                
             }
         }
         return res;
@@ -576,7 +621,15 @@ public abstract class Mutation
         if (res[Mutation.TYPE_RNA_MISSENSE] != 0)
             discrepancysummary.put("Missense" ,String.valueOf( res[Mutation.TYPE_RNA_MISSENSE]++));
         
-        
+         if (res[Mutation.TYPE_LINKER_5_SUBSTITUTION] != 0)
+            discrepancysummary.put("5' substitution" ,String.valueOf( res[Mutation.TYPE_LINKER_5_SUBSTITUTION]++));
+         if (res[Mutation.TYPE_LINKER_3_SUBSTITUTION] != 0)
+            discrepancysummary.put("3' substitution" ,String.valueOf(  res[Mutation.TYPE_LINKER_3_SUBSTITUTION]++));
+         if (res[Mutation.TYPE_LINKER_5_INS_DEL] != 0)
+            discrepancysummary.put("5' insertion/deletion" ,String.valueOf(  res[Mutation.TYPE_LINKER_5_INS_DEL]++));
+         if (res[Mutation.TYPE_LINKER_3_INS_DEL] != 0)
+            discrepancysummary.put("3' insertion/deletion" ,String.valueOf(  res[Mutation.TYPE_LINKER_3_INS_DEL]++));
+                
         return discrepancysummary;
     }
     

@@ -37,13 +37,14 @@ public class IsolateTrackingEngine
      public static final int           PROCESS_STATUS_SUBMITTED_FOR_ER = 0;
     public static final int            PROCESS_STATUS_SUBMITTED_FOR_FULLSEQUENCING = 1;
     public static final int            PROCESS_STATUS_SUBMITTED_FOR_ER_AND_FULL_SEQUENCING = 17;
-    public static final int            PROCESS_STATUS_SUBMITTED_FOR_ER_SEQUENCING = 18;
+    public static final int            PROCESS_STATUS_SUBMITTED_FOR_ER_SEQUENCING = 20;
     public static final int            PROCESS_STATUS_SUBMITTED_EMPTY = -4;
     
     public static final int            PROCESS_STATUS_ER_INITIATED = 2;
     public static final int            PROCESS_STATUS_ER_PHRED_RUN = 3;
     public static final int            PROCESS_STATUS_ER_ANALYZED = 4;
     public static final int            PROCESS_STATUS_ER_ANALYZED_NO_MATCH = 19;
+    public static final int            PROCESS_STATUS_ER_NO_READS = 18;
     public static final int            PROCESS_STATUS_ER_CONFIRMED = 5;
     
     public static final int            PROCESS_STATUS_READY_FOR_ASSEMBLY = 6;
@@ -142,6 +143,7 @@ public class IsolateTrackingEngine
     public int      getFlexInfoId(){ return m_flexinfo_id ;}// sample id of the first sample of this isolate
     public int      getConstructId(){ return m_construct_id ;}// identifies the agar; several (four) isolates will have the same id
     public int      getStatus(){ return m_status ;}
+    
     public int[]    getEndReadId(){ return m_end_reads_id ;}// sample id of the sample used for the forward read
     public int      getRank(){ return m_rank;} ;// results of the end read analysis
     public int      getSampleId(){ return m_sample_id ;}// resulting from the full sequencing
@@ -152,7 +154,44 @@ public class IsolateTrackingEngine
        
         return m_score;
     }
+    public String getStatusAsString()
+    {
+        switch(m_status)
+        {
+            
+             case PROCESS_STATUS_DOES_NOT_MATCH_REQUEST :return "No match";
+
+            case PROCESS_STATUS_SUBMITTED_FOR_ER : return "Submitted for end reads";
+            case PROCESS_STATUS_SUBMITTED_FOR_FULLSEQUENCING :return "Submitted for full sequencing";
+            case PROCESS_STATUS_SUBMITTED_FOR_ER_AND_FULL_SEQUENCING :return "Submitted for whole process";
+            case PROCESS_STATUS_SUBMITTED_FOR_ER_SEQUENCING : return "Submitted for end reads sequnecing";
+            case PROCESS_STATUS_SUBMITTED_EMPTY : return "No processing requered";
+
+            case PROCESS_STATUS_ER_INITIATED :return "End reads ordered";
+            case PROCESS_STATUS_ER_PHRED_RUN : return "Phred finished";
+            case PROCESS_STATUS_ER_ANALYZED : return "End reads analisys finished";
+            case PROCESS_STATUS_ER_ANALYZED_NO_MATCH : return "No match";
+            case PROCESS_STATUS_ER_NO_READS : return "No end reads";
+            case PROCESS_STATUS_ER_CONFIRMED : return "End reads confirmed";
+
+            case PROCESS_STATUS_READY_FOR_ASSEMBLY : return "Ready for assembly";
+            case PROCESS_STATUS_READY_FOR_INTERNAL_READS :return "Ready for internal reads";
+            case PROCESS_STATUS_OLIGODESIGNER_RUN : return "Primer designer finished";
+            case PROCESS_STATUS_OLIGODESIGNER_CONFIRMED : return "Internal primers confirmed";
+            case PROCESS_STATUS_INTERNAL_READS_FINISHED : return "Full sequencing finished";
+
+            case PROCESS_STATUS_ASSEMBLY_WITH_SUCESS : return "Assembled with sucess";
+            case PROCESS_STATUS_ASSEMBLY_WITHOUT_SUCESS :return "Assembly failed";
+            case PROCESS_STATUS_ASSEMBLY_CONFIRMED : return "Assembly confirmed";
+
+            case PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED : return "Discrepancy finder finished";
+            case PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED : return "Polymorphism finder finished";
+
+            case PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED : return "Sequencing process finished";
+            default  : return "Not defined";
     
+        }
+    }
     public FlexInfo  getFlexInfo()throws BecDatabaseException
     {
         if (m_flexinfo == null)
@@ -238,13 +277,17 @@ public class IsolateTrackingEngine
     //it's calculates isolta score as well
     public void setBlackRank(FullSeqSpec cutoff_spec, EndReadsSpec spec) throws BecDatabaseException
     {
-        //if no match exit
-        if (m_status == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH)
+        //if no match exit or no good reads are available for the isolate
+        if (m_status == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH
+            || m_status == IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS)
         { 
             m_rank = RANK_BLACK;
             m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
             return;
         }
+        
+     
+        
         //check for number of ambiques bases
         String read_sequence_text = null; int amb_bases_100base = 0;
         for (int read_count = 0; read_count < m_endreads.size(); read_count++)
@@ -404,7 +447,7 @@ public class IsolateTrackingEngine
             +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid "
             +" from isolatetracking iso, sequencingconstruct c, refsequence r "
             +"where status in ("+ processtatus+") and r.sequenceid=c.refsequenceid and c.constructid=iso.constructid and r.genusspecies="+species;
-        CachedRowSet crs = null;
+        RowSet crs = null;
         IsolateTrackingEngine it = null;
         try
         {

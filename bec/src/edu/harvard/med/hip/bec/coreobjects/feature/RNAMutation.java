@@ -114,7 +114,7 @@ public class RNAMutation extends Mutation {
         
         String sql = "INSERT INTO discrepancy  (DISCREPANCYID  ,POSITION ,LENGTH ,CHANGEORI ,CHANGEMUT "
  +",TYPE ,SEQUENCEID ,POLYMFLAG ,POLYMID ,POLMDATE,CODONORI ,CODONMUT ,UPSTREAM ,DOWNSTREAM "
- +",CODONPOS ,CHANGETYPE ,DISCRNUMBER  )   VALUES(?,?,?,?,?,?,?,?,?,sysdate, ?,?,?,?,?,?,?)" ;
+ +",CODONPOS ,CHANGETYPE ,DISCRNUMBER ,DISCQUALITY )   VALUES(?,?,?,?,?,?,?,?,?,sysdate, ?,?,?,?,?,?,?,?)" ;
     
         try
         {
@@ -141,6 +141,7 @@ public class RNAMutation extends Mutation {
             pstmt.setInt(14,m_codon_pos);
             pstmt.setInt(15,m_change_type);
             pstmt.setInt(16,m_number);
+             pstmt.setInt(17,m_quality);
             DatabaseTransaction.executeUpdate(pstmt);
               
             
@@ -170,7 +171,16 @@ public class RNAMutation extends Mutation {
         return m_change_type;
     }
      
-     
+    public String              getPolymorphismFlagAsString()
+    { 
+        switch (m_polymorphismflag)
+        {
+            case FLAG_POLYM_YES : return  "+";
+            case FLAG_POLYM_NO : return  "-";
+            case FLAG_POLYM_NOKNOWN : return  "?";
+            default: return "?";
+        }
+    }  
     public void             setPolymFlag(int v){  m_polymorphismflag = v;}//polymorphism or not
     public void             setPolymId(String v){m_polymid =v;}
     public void             setPolymDate(java.util.Date d){m_polymdate = d;}
@@ -183,11 +193,11 @@ public class RNAMutation extends Mutation {
     
     public String toString()
     {
-        return super.toString() +   " \nupsterm: "+m_upstream +
-        " \nDownstream: " + m_downstream
-        +" \ncodon ori: " +m_codon_ori 
-        + "\n codon mut: " +m_codon_mut 
-        +" \ncodon pos: "+m_codon_pos +"\n";
+        return super.toString() +   " \t upsterm: "+m_upstream +
+        " \t Downstream: " + m_downstream
+        +" \t codon ori: " +m_codon_ori 
+        + "\t codon mut: " +m_codon_mut 
+        +" \t codon pos: "+m_codon_pos +"\n";
     }
     
     public String toHTMLString()
@@ -195,8 +205,7 @@ public class RNAMutation extends Mutation {
         String res = "";
         
         res ="<table  border=0>"+  super.toHTMLString() +   
-        "<tr><td>Upstream: </td><td>"+m_upstream + "</td></tr>" + 
-        "<tr><td>Downstream</td><td>"  + m_downstream + "</td></tr>" + 
+       
         "<tr><td>Codon ori</td><td>" +m_codon_ori + "</td></tr>" + 
         "<tr><td>Codon mut</td><td>" +m_codon_mut + "</td></tr>" + 
         "<tr><td>Codon position</td><td>"+m_codon_pos +"</td></tr>"

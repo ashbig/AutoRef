@@ -5,31 +5,53 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.*" %>
-<%@ page import="edu.harvard.med.hip.bec.core.spec.*" %>
-<%@ page import="edu.harvard.med.hip.bec.core.oligo.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 <html>
 
 <head>
 
 <title>Primer Calculating Parameters</title>
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
-<link href="../developed/bec/web/FlexStyle.css" rel="stylesheet" type="text/css">
+<link href="FlexStyle.css" rel="stylesheet" type="text/css">
 </head>
 
-<body background='background.gif'>
-<h2><bean:message key="bec.name"/> : Parameters for Primer Designer</h2>
-<hr>
-<html:errors/>
+<body>
+<jsp:include page="NavigatorBar_Administrator.jsp" />
+	<p><P>
+<br>
+<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
+    <tr>
+        <td >
+    <font color="#008000" size="5"><b> available sets of parameters for Primer Designer</font>
+    <hr>
+    
+    <p>
+    </td>
+    </tr>
+</table>
 
-<h3 >All available sets of primer designer parameters </h3>
-<i>Parameters discription </i> <a href="Help_SequenceEvaluation.html">[parameter help file]</a>.</b>
-<P>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr>
+      <td width="100%"><html:errors/></td>
+    </tr>
+	<tr>
+        <td><i>Prameter Definition </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. 
+          </i></td>
+      </tr>
+  </table>
+  </center>
+</div>
+
 
 
 <% ArrayList sets = (ArrayList)request.getAttribute("specs");
  if (sets.size()==0)
 {%>
-<p><b>No sets are available</b>
+<p><table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+  <tr> <td><b>No sets are available</b></td></tr></table>
 <%}
 else 
    if (sets.size() > 0 )
@@ -41,147 +63,93 @@ else
 	Primer3Spec spec = (Primer3Spec) sets.get(count);
  
 	%>
-<P>
- <P> <font color="#2693A6" size="4"> <b>Set Name</b></font>
-<%= spec.getName() %>
-
-
-
-<table border="0" width="100%" height="6">
- <tr>
-    <td width="50%" colspan="2" height="48">
-		<font color="#2693A6" size="4">
-        <b>Primer Picking Parameters</b></font></td>
-    <td width="50%" colspan="2" height="48"></td>
+<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+  <tr> 
+    <td colspan ="2"><b>Set Name</b><%= spec.getName() %> <P></P></td>
   </tr>
-  <tr>
-    <td width="25%" valign="top" height="1" background="barbkgde.gif">
-        <b>Primer Length (bp)</b></td>
-    <td width="25%" height="1" background="barbkgde.gif">
-        <p><b>Min:</b><%= spec.getParameterByNameString("p_primer_min".toUpperCase()) %></p>
-
-    </td>
-    <td width="25%" height="1" background="barbkgde.gif">
- 
-     
-        <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_opt".toUpperCase())%></p>
-
-    </td>
-    <td width="25%" height="1" background="barbkgde.gif">
-     
-        <p><b>Max:</b> <%= spec.getParameterByNameString("p_primer_max".toUpperCase())%></p>
-     
-    </td>
+  <tr> 
+    <td colspan="2" height="48"  bgcolor="#1145A6"> <font color="white" size="4"> 
+      <b>Primer Picking Parameters</b></font></td>
   </tr>
-  <tr>
-    <td width="25%" height="26" background="barbkgde.gif" valign="top"><b>Primer
-      Tm (°C)</b></td>
-    <td width="25%" height="26" background="barbkgde.gif">
- 
-        <p><b>Min: </b><%= spec.getParameterByNameString("p_primer_tm_min".toUpperCase())%></p>
-     
-    </td>
-    <td width="25%" height="26" background="barbkgde.gif">
-  <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_tm_opt".toUpperCase())%></p>
-
-    </td>
-    <td width="25%" height="26" background="barbkgde.gif">
-    
-        <p><b>Max:</b><%= spec.getParameterByNameString("p_primer_tm_max".toUpperCase())%></p>
-    
-    </td>
+  <tr> 
+    <td width="35%" valign="top" height="1" bgColor="#e4e9f8" > <font color="#000080"><b>Primer 
+      Length (bp)</b></font></td>
+    <td width="20%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_min".toUpperCase()) %></font></p></td>
+    <td width="20%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Opt:</b> 
+        <%= spec.getParameterByNameString("p_primer_opt".toUpperCase())%></font></p></td>
+    <td width="25%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Max:</b> 
+        <%= spec.getParameterByNameString("p_primer_max".toUpperCase())%></font></p></td>
   </tr>
-  <tr>
-    <td width="25%" height="1" background="barbkgde.gif" valign="top"><b>Primer
-      GC%</b></td>
-    <td width="25%" height="1" background="barbkgde.gif" valign="top">
-   
-        <p><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></p>
-     
-    </td>
-    <td width="25%" height="1" background="barbkgde.gif" valign="top">
-    
-        <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></p>
-
-    </td>
-    <td width="25%" height="1" background="barbkgde.gif" valign="top">
-     
-        <p><b>Max:</b>&nbsp; <%= spec.getParameterByNameString("p_primer_gc_max".toUpperCase())%></p>
-     
-    </td>
+  <tr> 
+    <td width="35%" height="26" bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Primer 
+      Tm (°C)</b></font></td>
+    <td width="20%" height="26" bgcolor="#b8c6ed"> <p><font color="#000080"><b>Min: 
+        </b><%= spec.getParameterByNameString("p_primer_tm_min".toUpperCase())%></font></p></td>
+    <td width="20%" height="26"bgcolor="#b8c6ed"> <p><font color="#000080"><b>Opt:</b> 
+        <%= spec.getParameterByNameString("p_primer_tm_opt".toUpperCase())%></font></p></td>
+    <td width="25%" height="26" bgcolor="#b8c6ed"> <p><font color="#000080"><b>Max:</b><%= spec.getParameterByNameString("p_primer_tm_max".toUpperCase())%></font></p></td>
   </tr>
-  <tr>
-    <td width="50%" colspan="2" height="1"></td>
-    <td width="50%" colspan="2" height="1"></td>
+  <tr> 
+    <td width="35%" height="1" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Primer 
+      GC%</b></font></td>
+    <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></font></p></td>
+    <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Opt:</b> 
+        <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></font></p></td>
+    <td width="25%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Max:</b>&nbsp; 
+        <%= spec.getParameterByNameString("p_primer_gc_max".toUpperCase())%></font></p></td>
   </tr>
-  <tr>
-    <td width="50%" colspan="2" height="39"><b><font size="4" color="#2693A6">Sequencing
+  <tr> 
+    <td colspan="2" height="1"><font color="#000080">&nbsp;</font></td>
+    <td colspan="2" height="1"></td>
+  </tr>
+  <tr> 
+    <td colspan="4" height="39"  bgcolor="#1145A6"><b><font size="4" color=white>Sequencing 
       Parameters</font></b></td>
-    <td width="50%" colspan="2" height="39"></td>
   </tr>
-  <tr>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif" valign="top"><b>Distance
-      between 5p Universal Primer and START codon</b>&nbsp;&nbsp;&nbsp; <font size="2"><b>(For
-      a left primer, primer start position is the position of the leftmost base)</b></font></td>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif">
-     
-        <p><%= spec.getParameterByNameString("p_upstream_distance".toUpperCase()) %>
-        bases</p>
-   
-    </td>
+  <tr> 
+    <td colspan="2" height="44" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Distance 
+      between 5p Universal Primer and START codon</b>&nbsp;&nbsp;&nbsp; <font size="2"><b>(For 
+      a left primer, primer start position is the position of the leftmost base)</b></font></font></td>
+    <td colspan="2" height="44" bgColor="#e4e9f8" > <p><%= spec.getParameterByNameString("p_upstream_distance".toUpperCase()) %> 
+        bases</p></td>
   </tr>
-  <tr>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif" valign="top"><b>Distance
-      between 3p Universal Primer and STOP codon&nbsp;&nbsp; <font size="2">(For
-      a right primer, primer start position is the position of the rightmost
-      base)&nbsp;&nbsp;</font></b></td>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif">
- 
-        <p><%= spec.getParameterByNameString("p_downstream_distance".toUpperCase())%>
-        bases</p>
-    
-    </td>
+  <tr> 
+    <td colspan="2" height="44" bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Distance 
+      between 3p Universal Primer and STOP codon&nbsp;&nbsp; <font size="2">(For 
+      a right primer, primer start position is the position of the rightmost base)&nbsp;&nbsp;</font></b></font></td>
+    <td colspan="2" height="44" bgcolor="#b8c6ed"> <p><%= spec.getParameterByNameString("p_downstream_distance".toUpperCase())%> 
+        bases</p></td>
   </tr>
-  <tr>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif" valign="top"><b>Estimated
-      high quality read length (ERL)</b></td>
-    <td width="50%" colspan="2" height="44" background="barbkgde.gif">
-     
-        <p><%= spec.getParameterByNameString("p_single_read_length".toUpperCase())%>
-        bases</p>
-     
-    </td>
+  <tr> 
+    <td colspan="2" height="44" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Estimated 
+      high quality read length (ERL)</b></font></td>
+    <td colspan="2" height="44" bgColor="#e4e9f8" > <p><%= spec.getParameterByNameString("p_single_read_length".toUpperCase())%> 
+        bases</p></td>
   </tr>
-  <tr>
-    <td width="50%" colspan="2" height="3" background="barbkgde.gif" valign="top"><b>Window
-      size for testing primers</b></td>
-    <td width="50%" colspan="2" height="3" background="barbkgde.gif">
-      
-        <p><%= spec.getParameterByNameString("p_buffer_window_len".toUpperCase())%>
-        bases</p>
-     
-    </td>
+  <tr> 
+    <td colspan="2" height="3" bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Window 
+      size for testing primers</b></font></td>
+    <td colspan="2" height="3" bgcolor="#b8c6ed"> <p><%= spec.getParameterByNameString("p_buffer_window_len".toUpperCase())%> 
+        bases</p></td>
   </tr>
-  <tr>
-    <td width="50%" colspan="2" height="3" align="center" valign="top" background="barbkgde.gif">
-      <p align="left"><b>Number of strands to sequence</b></td>
-    <td width="50%" colspan="2" height="3" align="center" valign="bottom" background="barbkgde.gif">
-<% 
+  <tr> 
+    <td colspan="2" height="3" align="center" valign="top" bgColor="#e4e9f8" > 
+      <p align="left"><font color="#000080"><b>Number of strands to sequence</b></font></td>
+    <td colspan="2" height="3" align="center" valign="bottom" bgColor="#e4e9f8" > 
+      <% 
 
 	
 if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals("1") )
-     { %>  <p><b>Single Strand</b> (Coding strand, forward primers)</p>
-     <%}else{%>
-        
-        <b>Both Strands</b>  (Both forward and reverse primers)</p>
-<%}%>
-      
+     { %>
+      <p><b>Single Strand</b> (Coding strand, forward primers)</p>
+      <%}else{%>
+      <b>Both Strands</b> (Both forward and reverse primers)</p> 
+      <%}%>
     </td>
   </tr>
-  <tr>
-    <td width="100%" colspan="4" height="3" align="center" valign="bottom"></td>
+  <tr> 
+    <td colspan="4" height="3" align="center" valign="bottom"></td>
   </tr>
-  
 </table>
 
 <%}}%>

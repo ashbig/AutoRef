@@ -30,7 +30,9 @@ public abstract class Spec
     public static final int CLONINGSTRATEGY_SPEC_INT = 6;
     public static final int NONE_SPEC_INT = -1;
     
+    
     public static final int SPEC_SHOW_USER_ONLY_SPECS = 10;
+    public static final int SPEC_SHOW_SPEC = 1000;
     
     private int m_id = -1;
     
@@ -120,6 +122,65 @@ public abstract class Spec
         }
     }
     
+     public static Spec getSpecById(int id) throws BecDatabaseException
+    {
+        Hashtable params = new Hashtable();
+        Spec spec ;
+        String sql = "select submitterid,configname,configtype,configid from config where configid = " + id;
+        
+        ResultSet rs = null;
+        ResultSet rsl = null;
+       
+        String spec_name = null;
+        String n = null;
+        int v = -1;
+        int config_type = -1;
+       
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+              rs = t.executeQuery(sql);
+            if(rs.next())
+            {
+                String name = rs.getString("configname");
+                int submitter_id = rs.getInt("submitterid");
+                config_type = rs.getInt("configtype");
+                rsl = t.executeQuery("select paramname,paramvalue from config_parameters where configid="+id);
+                while(rsl.next())
+                {
+                  //  n = rs1.getString("paramname");
+                  //  v = rs1.getInt("paramvalue");
+                  //  m_params.put(n,String.valueOf(v));
+                    params.put(rsl.getString("paramname"), String.valueOf(rsl.getInt("paramvalue") ));
+             
+                }
+                switch  (config_type)
+                {
+                    case EndReadsSpec.END_READS_SPEC_INT:
+                        return new EndReadsSpec(params, name, submitter_id,id) ;
+                       
+                    case FullSeqSpec.FULL_SEQ_SPEC_INT:
+                        return new FullSeqSpec(params, name, submitter_id,id) ;
+                      
+                    case Primer3Spec.PRIMER3_SPEC_INT:
+                  
+                        return new Primer3Spec(params, spec_name, submitter_id,id) ;
+                    
+                    case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
+                         return new PolymorphismSpec(params, spec_name, submitter_id,id) ;
+                 }
+            }
+            return null;
+        } catch(Exception sqlE)
+        {
+            System.out.println(sqlE.getMessage());
+            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rsl);
+        }
+    }
     
     public void insert(Connection conn) throws BecDatabaseException
     {

@@ -5,14 +5,14 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.*" %>
-<%@ page import="edu.harvard.med.hip.bec.core.spec.*" %>
-<%@ page import="edu.harvard.med.hip.bec.core.oligo.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 
 <html>
 <head>
 <title><bean:message key="bec.name"/> : Define Universal Primer Set</title>
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
-<link href="../developed/bec/web/FlexStyle.css" rel="stylesheet" type="text/css">
+<link href="FlexStyle.css" rel="stylesheet" type="text/css">
 </head>
 <body background='background.gif'>
 

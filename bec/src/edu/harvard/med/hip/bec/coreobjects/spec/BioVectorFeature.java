@@ -32,6 +32,9 @@ public class BioVectorFeature
     public static final int TYPE_ADDED = 1;
     public static final int TYPE_LOST = -1;
     public static final int TYPE_REMAIN = 0;
+    public static final String TYPE_ADDED_STR = "Added";
+    public static final String TYPE_LOST_STR = "Lost";
+    public static final String TYPE_REMAIN_STR = "Remain";
     
     /** Creates a new instance of VectorFeature */
     public BioVectorFeature(int id)throws BecDatabaseException
@@ -78,8 +81,19 @@ public class BioVectorFeature
     public int getId (){ return m_id      ;}
     public String getName (){ return m_name     ;}
     public int getType (){ return m_type      ;}
-    public int getVectorId (){ return m_vectorid      ;}
+    public String       getTypeAsString()
+    {
+        switch (m_type)
+        {
+            case TYPE_ADDED: return TYPE_ADDED_STR;
+            case TYPE_LOST : return TYPE_LOST_STR;
+            case TYPE_REMAIN: return TYPE_REMAIN_STR;
+        }
+        return "";
     
+    }
+    public int getVectorId (){ return m_vectorid      ;}
+    public String getDescription(){ return m_description;}
     public void setId ( int v){   m_id      = v;}
     public void setName ( String v){   m_name     = v;}
     public void setType ( int v){   m_type      = v;}

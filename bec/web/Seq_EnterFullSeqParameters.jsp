@@ -69,7 +69,7 @@
   <tr> 
     <td> 
   <tr> 
-    <td  bgcolor="#e4e9f8" width="60%"><b>Phred base score (high quality cut-off) 
+    <td  bgcolor="#e4e9f8" width="64%"><b>Phred base score (high quality cut-off) 
       </b></td>
     <td bgcolor="#e4e9f8"> <input name="FS_PHRED_CUT_OFF" type="text" id="FS_PHRED_CUT_OFF" value="20" size="10"> 
     </td>
@@ -83,13 +83,12 @@
     <td >&nbsp; </td>
   </tr>
   <tr> 
-    <td colspan=2><b>Maximum acceptable number of mutations:</b> <p> 
+    <td colspan=2><b>Maximum acceptable number of discrepancies (gene region)</b> 
+     
       <p></p>
-      <p></p></td>
-  </tr>
-  <td align="center" colspan=2><table width="85%" border="0">
+      <table width="85%" border="0" align="center">
         <tr> 
-          <td bgcolor="#1145A6"><div align="left"><strong><font color="#FFFFFF">Threshold</font></strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Threshold</font></strong></div></td>
           <td bgcolor="#1145A6" colspan=2><div align="center"><strong><font color="#FFFFFF">PASS 
               </font></strong></div></td>
           <td bgcolor="#1145A6"colspan=2><div align="center"><strong><font color="#FFFFFF">FAIL 
@@ -130,7 +129,8 @@
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><b><strong><font color="#000080">Conservative substitution</font></strong></b></td>
+          <td bgColor="#b8c6ed"><b><strong><font color="#000080">Conservative 
+            substitution</font></strong></b></td>
           <td bgColor="#b8c6ed"><div align="center"> <font color="#000080"><strong><b> 
               <input name="FS_C_PASS_H" type="input" value="3" size="5">
               </b></strong></font></div></td>
@@ -148,7 +148,8 @@
               </b></strong></font></div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Nonconservative substitution</font></strong></td>
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Nonconservative 
+            substitution</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> 
               <input name="FS_NC_PASS_H" type="input" value="1" size="5">
             </div></td>
@@ -277,21 +278,107 @@
         </tr>
       </table></td>
   </tr>
+    <td colspan=2><b>Maximum acceptable number of discrepancies (linker region):</b> 
+      <p> 
+      <p></p>
+      <p></p>
+      <table width="85%" border="0" align="center">
+        <tr> 
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Threshold</font></strong></div></td>
+          <td bgcolor="#1145A6" colspan=2><div align="center"><strong><font color="#FFFFFF">PASS 
+              </font></strong></div></td>
+          <td bgcolor="#1145A6"colspan=2><div align="center"><strong><font color="#FFFFFF">FAIL 
+              </font></strong></div></td>
+        </tr>
+        <tr> 
+          <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base 
+              Confidence </font></strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High 
+              </font> </strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low 
+              </font></strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High 
+              </font> </strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low 
+              </font></strong></div></td>
+        </tr>
+        <tr> 
+          <td width="44%" bgcolor="#e4e9f8" ><strong><font color="#000080">5' 
+            substitution </font></strong></td>
+          <td width="16%" bgcolor="#e4e9f8"><div align="center"> 
+              <input name="FS_5S_PASS_H" type="input" id="FS_5S_PASS_H" value="1" size="5" >
+            </div></td>
+          <td width="14%"bgcolor="#e4e9f8"><div align="center"> 
+              <input name="FS_5DI_PASS_L" type="input" id="FS_5DI_PASS_L" value="1" size="5">
+            </div></td>
+          <td width="13%"bgcolor="#e4e9f8"><div align="center"> 
+              <input name="FS_5S_FAIL_H" type="input" id="FS_5S_FAIL_H" value="1" size="5" >
+            </div></td>
+          <td width="13%"bgcolor="#e4e9f8"><div align="center"> 
+              <input name="FS_5S_FAIL_L" type="input" id="FS_5S_FAIL_L" value="1" size="5">
+            </div></td>
+        </tr>
+        <tr> 
+          <td bgColor="#e4e9f8"><b><strong><font color="#000080">5' deletion/insertion</font></strong></b></td>
+          <td bgColor="#e4e9f8"><div align="center"> <font color="#000080"><strong><b> 
+              <input name="FS_5DI_PASS_H" type="input" value="0" size="5">
+              </b></strong></font></div></td>
+          <td bgColor="#e4e9f8"><div align="center"> <font color="#000080"><strong><b> 
+              <input name="FS_5DI_PASS_L" type="input" value="0" size="5">
+              </b></strong></font></div></td>
+          <td bgColor="#e4e9f8"><div align="center"> <font color="#000080"><strong><b> 
+              <input name="FS_5DI_FAIL_H" type="input" id="FS_5DI_FAIL_H" value="3" size="5">
+              </b></strong></font></div></td>
+          <td bgColor="#e4e9f8"><div align="center"> <font color="#000080"><strong><b> 
+              <input name="FS_5DI_FAIL_L" type="input" id="FS_5DI_FAIL_L" value="4" size="5">
+              </b></strong></font></div></td>
+        </tr>
+        <tr> 
+          <td bgColor="#b8c6ed"><strong><font color="#000080">3' substitution</font></strong></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <input name="FS_3S_PASS_H" type="input" value="1" size="5">
+            </div></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <input name="FS_3S_PASS_L" type="input" value="1" size="5">
+            </div></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <input name="FS_3S_FAIL_H" type="input" id="FS_3S_FAIL_H" value="1" size="5">
+            </div></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <input name="FS_3S_FAIL_L" type="input" id="FS_3S_FAIL_L" value="1" size="5">
+            </div></td>
+        </tr>
+        <tr> 
+          <td bgColor="#b8c6ed"><strong><font color="#000080">3' deletion/insertion</font></strong></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <input name="FS_3DI_PASS_H" type="input" value="0" size="5">
+            </div></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <input name="FS_3DI_PASS_L" type="input" value="0" size="5">
+            </div></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <input name="FS_3DI_FAIL_H" type="input" id="FS_3DI_FAIL_H" value="0" size="5">
+            </div></td>
+          <td bgColor="#b8c6ed"><div align="center"> 
+              <input name="FS_3DI_FAIL_L" type="input" id="FS_3DI_FAIL_L" value="0" size="5">
+            </div></td>
+        </tr>
+      </table></td>
+  </tr>
   <tr> 
-    <td > <P></P>&nbsp;</td>
+    <td > <P></P>
+      &nbsp;</td>
   </tr>
-  
-        <tr> 
-          <td  nowrap bgColor="#b8c6ed"><strong>Maximum number of ambiquous bases per 100 bases:</strong></td>
-          <td  align="left"bgColor="#b8c6ed" nowrap><input name="FS_N_100" type="input" id="FS_N_100" value="10"></td>
-        </tr>
-        <tr> 
-          <td width="64%"  nowrap bgColor="#e4e9f8"> <strong>Max number of consequative ambiquous 
-            bases :</strong></td>
-          <td width="26%"  align="left" nowrap bgColor="#e4e9f8"><input name="FS_N_ROW" type="input" id="FS_N_ROW" value="3"></td>
-        </tr>
-     
+  <tr> 
+    <td  nowrap bgColor="#b8c6ed"><strong><font color="#000080">Maximum number 
+      of ambiquous bases per 100 bases:</font></strong></td>
+    <td  align="left"bgColor="#b8c6ed" nowrap><input name="FS_N_100" type="input" id="FS_N_100" value="10"></td>
   </tr>
+  <tr> 
+    <td width="64%"  nowrap bgColor="#e4e9f8"> <strong><font color="#000080">Max 
+      number of consequative ambiquous bases :</font></strong></td>
+    <td width="26%"  align="left" nowrap bgColor="#e4e9f8"><input name="FS_N_ROW" type="input" id="FS_N_ROW" value="3"></td>
+  </tr></tr>
 </table>
 <p> 
 <div align="center"> 

@@ -107,6 +107,7 @@ public class ScoredSequence extends BaseSequence
     //function parse out scores string
     public int[] getScoresAsArray()
     {
+        if ( m_scores == null ) return null;
         if (m_scores_numbers != null) return m_scores_numbers;       
         ArrayList scores = Algorithms.splitString(m_scores," ");
         m_scores_numbers = new int[scores.size()];
@@ -121,6 +122,55 @@ public class ScoredSequence extends BaseSequence
     public void setScoresAsArray(int[] v){m_scores_numbers =v;}
     public void setScores(String v){m_scores =v;}
      
-  
+   public String toHTMLString()
+   {
+       StringBuffer res = new StringBuffer();
+       res.append("       0--------1---------2---------3---------4---------5---------6\n\n");
+       String color_red = "<FONT COLOR=\"red\">";
+       String color_green = "<FONT COLOR=\"green\">";
+       String color_blue="<FONT COLOR=\"blue\">";
+       getScoresAsArray();
+       int seqIndex=1;
+       char[] text = m_text.toCharArray();
+       
+       for(int i = 0;i< text.length;i++)
+        {
+            if ( m_scores_numbers != null)
+            {
+                if( m_scores_numbers[i] < 20)
+                {
+                    res.append(color_blue +text[i]+"</FONT>");
+                }
+                else if(m_scores_numbers[i] >=20 && m_scores_numbers[i] < 25)
+                {
+                    res.append(color_green+text[i]+"</font>");
+                }
+                else if ( m_scores_numbers[i] >= 25)
+                {
+                    res.append(color_red+text[i]+"</font>");
+                }
+            }
+            else
+            {
+                res.append(text[i]);
+            }
+            if(i%60 == 0)
+            {
+                res.append("\n");
+                int pad_value = String.valueOf(seqIndex+1).length();
+                String pad = "";
+                for (int count = 1; count < 5; count++)
+                {
+                    pad +="0";
+                }
+                
+                res.append(pad +(seqIndex+1) +" - ");
+            }
+            
+       }
+       
+       return res.toString();
+   }
+   
     
 }

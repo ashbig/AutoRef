@@ -134,6 +134,18 @@ public class RefSequence extends BaseSequence
      * @return The species value.
      */
     public int getSpecies()    {    return m_species;}
+    public String getSpeciesAsString()  
+    {    
+        switch( m_species)
+        {
+            case SPECIES_NOT_SET : return "Not known";
+            case SPECIES_HUMAN : return "Homo sapiens";
+            case SPECIES_YEAST : return "Saccharomyces cerevisiae";
+            case SPECIES_MOUSE : return "Mus musculus";
+            case SPECIES_PSEUDOMONAS : return "Pseudomonas aeruginosa";
+            default:return "Not known";
+        }
+    }
     public String getDateadded()    {    return m_dateadded;}
     public String getFastaHeader()    {    return new String(">"+ super.getId());}
     public ArrayList getPublicInfo()    {    return m_publicInfo;}
@@ -394,6 +406,7 @@ public class RefSequence extends BaseSequence
             ResultSetMetaData meta = rs.getMetaData();
             int cols = meta.getColumnCount();
             m_publicInfo = new ArrayList();
+            
             while(rs.next())
             {
                 m_publicInfo.add(new PublicInfoItem(rs.getString("nametype"),
@@ -446,6 +459,38 @@ public class RefSequence extends BaseSequence
         return seq;
     }
     
+    
+    public String getHTMLText()
+    {
+        //String res = "<font color=black>"+m_text.substring(0,m_start-1);
+       // res +="</font><font color=red>"+m_text.substring(m_start-1,m_stop);
+       // res +="</font><font color=black>"+m_text.substring(m_stop-1,m_text.length()-1)+"</font>";
+        //convert to fasta format
+        int seqIndex = 1;
+        StringBuffer formatedHTMLSeq = new StringBuffer();
+         for(int i = 0;i<m_text.length();i++)
+        {
+            
+            if(seqIndex == m_start)
+            {
+                formatedHTMLSeq.append("<FONT COLOR=\"red\">");
+            }
+            if(seqIndex == m_stop+1)
+            {
+                formatedHTMLSeq.append("</FONT>");
+            }
+            
+            if(seqIndex%60 == 0)
+            {
+                formatedHTMLSeq.append("\n");
+            }
+            
+            formatedHTMLSeq.append(m_text.charAt(i));
+            seqIndex++;
+            
+        }
+        return formatedHTMLSeq.toString();
+    }
     //__________________________________________________________________________
     
     public static void main(String [] args)
@@ -457,7 +502,8 @@ public class RefSequence extends BaseSequence
           //  int refseqid = theoretical_sequence.getId();
        
          //   String query="ATGGAGCTACGTGTGGGGAACAAGTACCGCCTGGGACGGAAGATCGGGAGCGGGTCCTTCGGAGATATCTACCTGGGTGCCAACATCGCCTCTGGTGAGGAAGTCGCCATCAAGCTGGAGTGTGTGAAGACAAAGCACCCCCAGCTGCACATCGAGAGCAAGTTCTACAAGATGATGCAGGGTGGCGTGGGGATCCCGTCCATCAAGTGGTGCGGAGCTGAGGGCGACTACAACGTGATGGTCATGGAGCTGCTGGGGCCTAGCCTCGAGGACCTGTTCAACTTCTGTTCCCGCAAATTCAGCCTCAAGACGGTGCTGCTCTTGGCCGACCAGATGATCAGCCGCATCGAGTATATCCACTCCAAGAACTTCATCCACCGGGACGTCAAGCCCGACAACTTCCTCATGGGGCTGGGGAAGAAGGGCAACCTGGTCTACATCATCGACTTCGGCCTGGCCAAGAAGTACCGGGACGCCCGCACCCACCAGCACATTCCCTACCGGGAAAACAAGAACCTGACCGGCACGGCCCGCTACGCTTCCATCAACACGCACCTGGGCATTGAGCAAAGCCGTCGAGATGACCTGGAGAGCCTGGGCTACGTGCTCATGTACTTCAACCTGGGCTCCCTGCCCTGGCAGGGGCTCAAAGCAGCCACCAAGCGCCAGAAGTATGAACGGATCAGCGAGAAGAAGATGTCAACGCCCATCGAGGTCCTCTGCAAAGGCTATCCCTCCGAATTCTCAACATACCTCAACTTCTGCCGCTCCCTGCGGTTTGACGACAAGCCCGACTACTCTTACCTACGTCAGCTCTTCCGCAACCTCTTCCACCGGCAGGGCTTCTCCTATGACTACGTCTTTGACTGGAACATGCTGAAATTCGGTGCAGCCCGGAATCCCGAGGATGTGGACCGGGAGCGGCGAGAACACGAACGCGAGGAGAGGATGGGGCAGCTACGGGGGTCCGCGACCCGAGCCCTGCCCCCTGGCCCACCCACGGGGGCCACTGCCAACCGGCTCCGCAGTGCCGCCGAGCCCGTGGCTTCCACGCCAGCCTCCCGCATCCAGCCGGCTGGCAATACTTCTCCCAGAGCGATCTCGCGGGTCGACCGGGAGAGGAAGGTGAGTATGAGGCTGCACAGGGGTGCGCCCGCCAACGTCTCCTCCTCAGACCTCACTGGGCGGCAAGAGGTCTCCCGGATCCCAGCCTCACAGACAAGTGTGCCATTTGACCATCTCGGGAAGTTGG";
-            RefSequence fl =  new RefSequence(1654);
+            RefSequence fl =  new RefSequence(348);
+            System.out.println(fl.getHTMLText());
             System.out.println("O");
            // fl.insert(t.requestConnection());
             //t.requestConnection().commit();

@@ -46,6 +46,7 @@ public class Seq_GetItemAction extends ResearcherAction
     HttpServletResponse response)
     throws ServletException, IOException
     {
+     
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         String label = null;int id = -1;Container container = null;
@@ -54,13 +55,14 @@ public class Seq_GetItemAction extends ResearcherAction
         try
         {
             if ( forwardName == Constants.CONTAINER_PROCESS_HISTORY || forwardName 
-                ==Constants.CONTAINER_DEFINITION_INT)//rocessing from container label
+                ==Constants.CONTAINER_DEFINITION_INT ||
+                forwardName == Constants.CONTAINER_RESULTS_VIEW )//rocessing from container label
                {
+                     
                     label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
                     label =label.toUpperCase().trim();
                     container =  verifyLabel(label);
-                    
-                
+                                 
                     if ( container == null)
                     {
                         errors.add(ActionErrors.GLOBAL_ERROR,
@@ -71,10 +73,12 @@ public class Seq_GetItemAction extends ResearcherAction
                             return new ActionForward(mapping.getInput());
                     }
                }
-               else 
+               else if (forwardName == Constants.SCOREDSEQUENCE_DEFINITION_INT || 
+               forwardName == Constants.REFSEQUENCE_DEFINITION_INT ||
+               forwardName ==  Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT )
                {
                     id = Integer.parseInt( (String) request.getParameter("ID"));
-                    System.out.println("id "+id);
+                 
                }
             switch  (forwardName)
             {
@@ -121,16 +125,63 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("container",container);
                     return (mapping.findForward("display_container_details"));
                 }
+                 case Constants.CONTAINER_RESULTS_VIEW:
+                {
+                   
+                    String result_type = (String)request.getParameter("show_action");
+                    if ( result_type.equalsIgnoreCase("FER"))
+                    { 
+                       System.out.println("start "+System.currentTimeMillis());
+                        int[] result_types = {Result.RESULT_TYPE_ENDREAD_FORWARD,Result.RESULT_TYPE_ENDREAD_FORWARD_PASS, Result.RESULT_TYPE_ENDREAD_FORWARD_FAIL};
+                        container.restoreSampleWithResultId(result_types,true);
+                         System.out.println("end "+System.currentTimeMillis());
+                    }
+                    else if (result_type.equalsIgnoreCase("RER"))//reverse
+                    {
+                        
+                         int[] result_types = {Result.RESULT_TYPE_ENDREAD_REVERSE,Result.RESULT_TYPE_ENDREAD_REVERSE_PASS, Result.RESULT_TYPE_ENDREAD_REVERSE_FAIL};
+                        container.restoreSampleWithResultId(result_types,true);
+                    }
+                    else if (result_type.equalsIgnoreCase("IR"))
+                    {
+                       
+                    }
+                    container.getCloningStrategy();
+                    request.setAttribute("container",container);
+                     System.out.println("send "+System.currentTimeMillis());
+                    return (mapping.findForward("display_container_results_er"));
+                  
+                       
+                }
                 case Constants.REFSEQUENCE_DEFINITION_INT :
                 {
-                    System.out.println("id "+id);
+                   
                     RefSequence refsequence = new RefSequence(id);
-                    System.out.println("refseq "+id);
                     request.setAttribute("refsequence",refsequence);
                     return (mapping.findForward("display_refsequence_details"));
                 }
-                case Constants.CLONE_SEQUENCE_DEFINITION_INT :
-  
+                case Constants.SCOREDSEQUENCE_DEFINITION_INT:
+                {
+                  
+                    ScoredSequence scoredsequence = new ScoredSequence(id);
+                    if (request.getParameter("trimstart") != null)
+                    {
+                        request.setAttribute("trimstart",request.getParameter("trimstart"));
+                    }
+                    if (request.getParameter("trimend") != null)
+                    {
+                        request.setAttribute("trimend",request.getParameter("trimend"));
+                    }
+                    request.setAttribute("scoredsequence",scoredsequence);
+                    return (mapping.findForward("display_scoredsequence_details"));
+                }
+              //  case Constants.CLONE_SEQUENCE_DEFINITION_INT :
+                case   Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT :
+                {
+                    AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(id);
+                    request.setAttribute("sequence",sequence);
+                    return (mapping.findForward("display_discrepancyreport"));
+                }
               
             }
             

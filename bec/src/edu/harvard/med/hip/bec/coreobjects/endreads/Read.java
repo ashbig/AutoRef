@@ -53,6 +53,7 @@ public class Read
     private int         m_result_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int         m_type = TYPE_NOT_SET;     //end / reverse
     private String      m_abi_file_name = null;
+    private String      m_abi_file_basename = null;
     private String      m_machine = null;
     private String      m_capilarity = null;
     private int         m_trimmingtype = PhredWrapper.TRIMMING_TYPE_NOT_TRIMMED;
@@ -220,6 +221,14 @@ public class Read
         }
        return res;
     }
+    public int[]      getScoresAsArray()throws BecDatabaseException
+    {
+        if (m_readsequence == null)            getSequence();
+        if (m_readsequence.getScores() == null) return null;
+        int[] scores = m_readsequence.getScoresAsArray();
+       
+       return scores;
+    }
      public String     getTrimmedScores()throws BecDatabaseException
     {
         if (m_readsequence == null)            getSequence();
@@ -239,6 +248,7 @@ public class Read
     public int         getResultId(){ return m_result_id  ;}
     public int         getType(){ return m_type  ;}     //end / reverse/inner/end
     public String      getTraceFileName(){ return m_abi_file_name  ;}
+    public String      getTraceFileBaseName(){ return m_abi_file_basename ;}
     public String      getMachine(){ return m_machine  ;}
     public String      getCapilarity(){ return m_capilarity  ;}
     public int         getTrimType(){ return m_trimmingtype  ;}
@@ -255,8 +265,9 @@ public class Read
     public void         setCloneSequenceId(int v){  m_clonesequence_id  = v;}
     public void         setResultId(int v){  m_result_id  = v;}
     public void         setType(int v){  m_type  = v;}     //end / reverse
-   public void          setTraceFileName(String v){  m_abi_file_name  = v;}
-   public void          setMachine(String v){  m_machine  = v;}
+    public void          setTraceFileName(String v){  m_abi_file_name  = v;}
+    public void          setTraceFileBaseName(String v){  m_abi_file_basename  = v;}
+    public void          setMachine(String v){  m_machine  = v;}
     public void         setCapilarity(String v){  m_capilarity  = v;}
     public void         setTrimType(int v){  m_trimmingtype  = v;}
     public void         setScore(int v){  m_score  = v;}
@@ -559,14 +570,23 @@ public class Read
         Read r = null;
         try
         {
-            r = Read.getReadById(12071);
+            //r = Read.getReadById(12071);
            
-              System.out.println(r.getSequence().getText().length() +" "+ r.getTrimStart() +" "+r.getTrimEnd());
-              System.out.println(r.getSequence().getText());
-              System.out.println(r.getSequence().getScores());
-              System.out.println(r.getTrimmedSequence());
-              System.out.println(r.getTrimmedScores());
-            
+             // System.out.println(r.getSequence().getText().length() +" "+ r.getTrimStart() +" "+r.getTrimEnd());
+             // System.out.println(r.getSequence().getText());
+              //System.out.println(r.getSequence().getScores());
+            //  System.out.println(r.getTrimmedSequence());
+            //  System.out.println(r.getTrimmedScores());
+               
+   
+ 
+   
+r = Read.getReadById(19847);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
+//r = Read.getReadById(19856);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
+//r = Read.getReadById(19858);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
+//r = Read.getReadById(19862);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
+//r = Read.getReadById(20030);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
+
         }
         catch(Exception e){}
          System.exit(0);
