@@ -56,7 +56,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
-            pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_REFSEQUENCE+")");
+            pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_OLIGOCALCULATION+")");
             pst_check_oligo_cloning = conn.prepareStatement("select sequenceid from oligo_calculation where sequenceid = ? and primer3configid = "+m_spec_id);
             //get primer spec
             if ( !getPrimer3Spec()  ) return;
@@ -130,6 +130,7 @@ public class PrimerDesignerRunner extends ProcessRunner
                         }
                         catch(Exception e)
                         {
+                            DatabaseTransaction.rollback(conn);
                             m_error_messages.add(e.getMessage());
                         }
                     }
@@ -138,6 +139,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         }
         catch(Exception e)
         {
+            DatabaseTransaction.rollback(conn);
             m_error_messages.add(e.getMessage());
         }
         finally

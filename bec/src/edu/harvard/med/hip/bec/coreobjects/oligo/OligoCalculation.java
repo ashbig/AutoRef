@@ -217,6 +217,31 @@ public class OligoCalculation
 
     }
    
+    public static ArrayList sortByRefSequenceIdPrimerSpec(ArrayList oligo_calculations)
+    {
+          //sort array by containerid and position
+            Collections.sort(oligo_calculations, new Comparator() 
+            {
+                public int compare(Object o1, Object o2) 
+                {
+                    OligoCalculation cl1 = (OligoCalculation)o1;
+                    OligoCalculation cl2 = (OligoCalculation)o2;
+                    if (cl1.getSequenceId() != cl2.getSequenceId())
+                        return cl1.getPrimer3SpecId() - cl2.getPrimer3SpecId();
+                    else
+                        return cl1.getSequenceId() - cl2.getSequenceId();
+                 
+                }
+                /** Note: this comparator imposes orderings that are
+                 * inconsistent with equals. */
+                public boolean equals(java.lang.Object obj)
+                {      return false;  }
+                // compare
+            } );
+        
+        return oligo_calculations;
+    }
+    
   //*********************************************************************
     
     public static void main(String [] args)

@@ -34,7 +34,7 @@
 int forwardName_int = 0;
 if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
 else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
-System.out.println(forwardName_int);
+
 %>
    
     
@@ -108,10 +108,13 @@ for (int index = 0; index < items.size(); index ++)
         OligoCalculation olc = (OligoCalculation) ol_per_item.get(oligo_c_count);
 
     %>
-    <tr><td ><strong>Primer3 Specification: </strong></td>
+<!--<% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
+{%>   <tr><td colspan=2><strong>&nbsp;&nbsp;  <input type="radio" name ="<%= olc.getSequenceId()%>" > 
+Select Oligo Set </strong></td></tr><%}%> -->
+    <tr><td ><strong>&nbsp;&nbsp;  Primer3 Specification: </strong></td>
 <td   ><strong>
 <a href="/BEC/Seq_GetSpec.do?forwardName=<%= olc.getPrimer3SpecId()  * Spec.SPEC_SHOW_SPEC %> "> <%= olc.getPrimer3SpecId()%></a></strong></td></TR>
-    <tr> <td  ><strong>Reference Sequence Id: </strong></td>
+    <tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence Id: </strong></td>
 <td   ><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= olc.getSequenceId()%>','<%=olc.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= olc.getSequenceId()%></a></strong></td></TR>
  <% if ( ocalc_ids.containsKey(new Integer(olc.getId()) ))
 {%><tr><td colspan=2>See Primers above</td></tr><% continue;}%>  
@@ -128,7 +131,7 @@ for (int index = 0; index < items.size(); index ++)
 <th bgcolor="#1145A6" width="15%"><strong><font color="#FFFFFF">Orientation</font></strong></th>
 <th bgcolor="#1145A6" width="25%"><strong><font color="#FFFFFF">Status</font></strong></th>
 <th bgcolor="#1145A6" width="25%"><strong><font color="#FFFFFF">Submission Type</font></strong></th>
-<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Submitter</font></strong></th>
+<th bgcolor="#1145A6" width="5%"><strong><font color="#FFFFFF">Submitter</font></strong></th>
 </tr>
 
     <%  
@@ -143,7 +146,7 @@ for (int oligo_count = 0; oligo_count < olc.getOligos().size();oligo_count++)
     %>
 <tr>
 <% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
-{%><td><input type=checkbox name=chkPrimer value=<%=ol.getId() %> <%if (ol.getStatus() != Oligo.STATUS_DESIGNED){%> checked disabled<%}%> ></td><%
+{%><td><input type=checkbox name=chkPrimer value=<%=ol.getId() %> <%if (ol.getStatus() != Oligo.STATUS_DESIGNED){%> checked <%}%> ></td><%
 }%>
 <td  ><strong><% if ( ol.getName() != null){%> <%= ol.getName() %> <%}else{%> &nbsp; <%}%></td>
 

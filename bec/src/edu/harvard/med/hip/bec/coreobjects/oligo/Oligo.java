@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.8 2003-11-20 21:32:59 Elena Exp $
+ * $Id: Oligo.java,v 1.9 2003-12-08 19:16:59 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -287,6 +287,18 @@ public class Oligo
             " from geneoligo where "+oligo_status_condition+" oligocalculationid = "+oligocalcid +" order by position";
         return getOligoByRule(sql);
    }
+    public static Oligo getByOligoId(int oligoid)throws BecDatabaseException
+    {
+      
+        String sql = "select  oligoid,sequence,  tm,  submissiontype, " +
+            "position, status, orientation, name,oligocalculationid,submitterid "+
+            " from geneoligo where  oligocalid = "+oligoid ;
+        ArrayList oligos = getOligoByRule(sql);
+        if ( oligos != null && oligos.size() > 0)
+            return (Oligo)oligos.get(0);
+        else 
+            return null;
+   }
     
     //can return sets calculated ander different configs for Primer3
    public static ArrayList getByRefSequenceId(int refsequenceid, int oligo_status)throws BecDatabaseException
@@ -311,6 +323,24 @@ public class Oligo
        if ( oligo_status != STATUS_ANY)
        {
            oligo_status_condition = " status = "+oligo_status +" and ";
+       }
+        String sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
++" from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid from oligo_calculation where sequenceid = "
++" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
++" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+")))) order by oligocalculationid, POSITION";
+        return getOligoByRule(sql);
+   }
+   
+      //can return sets calculated ander different configs for Primer3
+   public static ArrayList getByCloneId(int cloneid, int[] oligo_status)throws BecDatabaseException
+   {
+       String oligo_status_condition = "";
+       
+       if ( oligo_status != null)
+       {
+           String oligo_status_str = Algorithms.convertArrayToString(oligo_status,",");
+           
+           oligo_status_condition = " status in ( "+oligo_status_str +") and ";
        }
         String sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
 +" from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid from oligo_calculation where sequenceid = "
