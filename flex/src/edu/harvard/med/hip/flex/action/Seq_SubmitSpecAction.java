@@ -46,14 +46,15 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
     {
         ActionErrors errors = new ActionErrors();
         String forwardName = ((Seq_GetSpecForm)form).getForwardName();
-        
+        String created_spec = null;
         try
         {
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection conn = t.requestConnection();
             
-            String spec_name = (String)request.getAttribute("SET_NAME");
+            String spec_name = null;
+           
             Hashtable params = new Hashtable();
             //get all parameters
             Enumeration requestNames = request.getParameterNames();
@@ -61,10 +62,16 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
             {
                 String name=(String)requestNames.nextElement();
                 String value=(String)request.getParameter(name);
-                params.put( name, value);
+                if ( !name.equalsIgnoreCase("submit") && !name.equalsIgnoreCase("set_name") ||
+                    !name.equalsIgnoreCase("forwardName")  )
+                {    
+                    params.put( name, value);
+                    System.out.println(name +"-"+value);
+                }
+                if (name.equalsIgnoreCase("SET_NAME")) spec_name = value;
             }
 
-            
+             System.out.println(spec_name);
             
             if ( forwardName.equals(EndReadsSpec.END_READS_SPEC) )
             {
@@ -85,23 +92,31 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
             {
                
                 Oligo o_5p = new Oligo( 
-                                        (String) params.get("FORWARD_NAME"), 
+                                        (String) params.get("FORWARD_SEQUENCE"), 
                                         Double.parseDouble((String) params.get("FORWARD_TM")), 
-                                         (String) params.get("FORWARD_SEQUENCE"), 
-                                        Oligo.OT_UNIVERSAL_5p, 
+                                        (String) params.get("FORWARD_NAME"), 
+                                        Oligo.OT_UNIVERSAL_5p,
                                         Integer.parseInt( (String) params.get("FORWARD_START"))
                                         );
+                
+                
+ 
                 Oligo o_3p = new Oligo(
-                                        (String) params.get("REVERSE_NAME"), 
-                                        Double.parseDouble((String) params.get("REVERSE_TM")), 
+                
                                          (String) params.get("REVERSE_SEQUENCE"), 
+                                          Double.parseDouble((String) params.get("REVERSE_TM")), 
+                                        (String) params.get("REVERSE_NAME"), 
                                         Oligo.OT_UNIVERSAL_3p, 
                                         Integer.parseInt( (String) params.get("REVERSE_START"))
                                         );
-                OligoPair olp = new OligoPair(spec_name,o_5p,o_3p);
-                olp.insert(conn);   
+                OligoPair olp = new OligoPair(spec_name, OligoPair.UNIVERSAL_PAIR, o_5p,o_3p);
+                
+                
+                created_spec = "Spec type: UNIVERSAL OLIGO PAIR \nSet Name: "+spec_name;
+                olp.insert(conn);  
+                conn.commit();
             }
-                            
+            request.setAttribute("created_spec", created_spec);                 
             return (mapping.findForward("success"));
         }
         catch(Exception e)

@@ -51,10 +51,15 @@ public class Seq_GetSpecAction extends ResearcherAction
         
         try
         {
-            ArrayList specs = Spec.getAllSpecs(forwardName);
-              
-            request.setAttribute("specs", specs);
-            request.setAttribute("forwardName", forwardName);
+            if ( forwardName.equals(EndReadsSpec.END_READS_SPEC) ||
+                forwardName.equals(FullSeqSpec.FULL_SEQ_SPEC) ||
+                forwardName.equals(Primer3Spec.PRIMER3_SPEC ) )
+            {
+                ArrayList specs = Spec.getAllSpecs(forwardName);
+
+                request.setAttribute("specs", specs);
+                request.setAttribute("forwardName", forwardName);
+            }
             if ( forwardName.equals(EndReadsSpec.END_READS_SPEC) )
                 return (mapping.findForward("end_reads_spec"));
             else if (forwardName.equals(FullSeqSpec.FULL_SEQ_SPEC) )
@@ -62,11 +67,17 @@ public class Seq_GetSpecAction extends ResearcherAction
             else if( forwardName.equals(Primer3Spec.PRIMER3_SPEC ) )
                 return (mapping.findForward("primer3_spec"));
             else if( forwardName.equals(OligoPair.UNIVERSAL_PAIR ) )
+            {
+                OligoPair op = null;
+                ArrayList o_pairs = op.getOligoPairsByType(OligoPair.UNIVERSAL_PAIR);
+                request.setAttribute("specs", o_pairs);
                 return (mapping.findForward("universal_pair"));
+            }
             
         } 
         catch (Exception e)
         {
+            System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
