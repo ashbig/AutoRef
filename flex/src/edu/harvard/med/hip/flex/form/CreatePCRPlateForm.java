@@ -211,15 +211,15 @@ public class CreatePCRPlateForm extends ActionForm {
         ActionErrors errors = new ActionErrors();
         
         if((fivepPlate == null) || (fivepPlate.trim().length()<1)) {
-            errors.add("fivepPlate", new ActionError("error.plateId.invalid", fivepPlate));
+            errors.add("fivepPlate", new ActionError("error.plate.invalid.barcode", fivepPlate));
         }
         
         if((threepOpenPlate == null) || (threepOpenPlate.trim().length()<1)) {
-            errors.add("threepOpenPlate", new ActionError("error.plateId.invalid", threepOpenPlate));
+            errors.add("threepOpenPlate", new ActionError("error.plate.invalid.barcode", threepOpenPlate));
         }
         
         if((threepClosedPlate == null) || (threepClosedPlate.trim().length()<1)) {
-            errors.add("threepClosedPlate", new ActionError("error.plateId.invalid", threepClosedPlate));
+            errors.add("threepClosedPlate", new ActionError("error.plate.invalid.barcode", threepClosedPlate));
         }       
         
         return errors;

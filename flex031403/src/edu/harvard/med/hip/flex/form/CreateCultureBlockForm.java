@@ -215,19 +215,19 @@ public class CreateCultureBlockForm extends ActionForm {
         boolean isReturn = false;
         
         if((agarPlateF1 == null) || (agarPlateF1.trim().length()!=10) || (agarPlateF1.charAt(LASTINDEX) != 'F')) {
-            errors.add("agarPlateF1", new ActionError("error.plateId.invalid", agarPlateF1));
+            errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
             isReturn = true;
         }
         if((agarPlateC1 == null) || (agarPlateC1.trim().length()!=10) || (agarPlateC1.charAt(LASTINDEX) != 'C')) {
-            errors.add("agarPlateC1", new ActionError("error.plateId.invalid", agarPlateC1));
+            errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
             isReturn = true;
         }
         if((agarPlateF2 == null) || (agarPlateF2.trim().length()!=10) || (agarPlateF2.charAt(LASTINDEX) != 'F')) {
-            errors.add("agarPlateF2", new ActionError("error.plateId.invalid", agarPlateF2));
+            errors.add("agarPlateF2", new ActionError("error.plate.invalid.barcode", agarPlateF2));
             isReturn = true;
         }
         if((agarPlateC2 == null) || (agarPlateC2.trim().length()!=10) || (agarPlateC2.charAt(LASTINDEX) != 'C')) {
-            errors.add("agarPlateC2", new ActionError("error.plateId.invalid", agarPlateC2));
+            errors.add("agarPlateC2", new ActionError("error.plate.invalid.barcode", agarPlateC2));
             isReturn = true;
         }            
         
@@ -236,17 +236,53 @@ public class CreateCultureBlockForm extends ActionForm {
         }
         
         // Check whether the two pairs matching with each other.
-        if(!(agarPlateF1.substring(0, 1).equals(agarPlateC1.substring(0, 1)))) {
+        if(!(agarPlateF1.substring(0, 2).equals(agarPlateC1.substring(0, 2)))) {
             errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
         }
-        if(!(agarPlateF2.substring(0, 1).equals(agarPlateC2.substring(0, 1)))) {
+        if(!(agarPlateF2.substring(0, 2).equals(agarPlateC2.substring(0, 2)))) {
             errors.add("agarPlateF2", new ActionError("error.plate.mismatch", agarPlateF2, agarPlateC2));
         }
-        if(agarPlateF1.substring(0, 1).equals("AA") && !(agarPlateF2.substring(0, 1).equals("AB"))) {
+        if(agarPlateF1.substring(0, 2).equals("AA") && !(agarPlateF2.substring(0, 2).equals("AB"))) {
             errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
         }       
-        if(agarPlateC1.substring(0, 1).equals("AA") && !(agarPlateC2.substring(0, 1).equals("AB"))) {
+        if(agarPlateC1.substring(0, 2).equals("AA") && !(agarPlateC2.substring(0, 2).equals("AB"))) {
             errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateC1, agarPlateC2));
+        }
+
+        if(!(agarPlateF1.substring(0, 2).equals("AA")) &&
+           !(agarPlateF1.substring(0, 2).equals("AC")) && 
+           !(agarPlateF1.substring(0, 2).equals("AE")) &&
+           !(agarPlateF1.substring(0, 2).equals("AG")) &&
+           !(agarPlateF1.substring(0, 2).equals("AI")) &&
+           !(agarPlateF1.substring(0, 2).equals("AK")) && 
+           !(agarPlateF1.substring(0, 2).equals("AM")) &&
+           !(agarPlateF1.substring(0, 2).equals("AO"))) {
+           errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
+        }
+        
+        if((agarPlateF1.substring(0, 2).equals("AA")) && !(agarPlateF2.substring(0, 2).equals("AB"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
+        }
+        if((agarPlateF1.substring(0, 2).equals("AC")) && !(agarPlateF2.substring(0, 2).equals("AD"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
+        }
+        if((agarPlateF1.substring(0, 2).equals("AE")) && !(agarPlateF2.substring(0, 2).equals("AF"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
+        }
+        if((agarPlateF1.substring(0, 2).equals("AG")) && !(agarPlateF2.substring(0, 2).equals("AH"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
+        }
+        if((agarPlateF1.substring(0, 2).equals("AI")) && !(agarPlateF2.substring(0, 2).equals("AJ"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
+        }
+        if((agarPlateF1.substring(0, 2).equals("AK")) && !(agarPlateF2.substring(0, 2).equals("AL"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
+        }
+        if((agarPlateF1.substring(0, 2).equals("AM")) && !(agarPlateF2.substring(0, 2).equals("AN"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
+        }
+        if((agarPlateF1.substring(0, 2).equals("AO")) && !(agarPlateF2.substring(0, 2).equals("AP"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
         }
         
         return errors;

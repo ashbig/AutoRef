@@ -135,7 +135,7 @@ public class CreateProcessPlateForm extends ActionForm {
         ActionErrors errors = new ActionErrors();
 
         if((sourcePlate == null) || (sourcePlate.trim().length()<1)) {
-            errors.add("sourcePlate", new ActionError("error.plateId.invalid", sourcePlate));
+            errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
         }
         
         return errors;
