@@ -224,8 +224,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
     private CloneSequence            processSequence(CloneDescription clone) throws Exception
     {
         CloneSequence clonesequence = new CloneSequence( clone.getCloneSequenceId());
-  System.out.println(clonesequence.getText());
-        int[] cds_start_stop = new int[2];
+       int[] cds_start_stop = new int[2];
         BaseSequence  refsequence = prepareRefSequence(clone,  cds_start_stop);
         DiscrepancyFinder df = new DiscrepancyFinder();
         df.setNeedleGapOpen(20.0);
