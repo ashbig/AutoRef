@@ -35,11 +35,17 @@ public class FlexGenbankBatchRetriever extends GenbankBatchRetriever {
      * @exception Exception
      *
      */
-    public void retrieveGenbank() throws Exception {     
+    public void retrieveAllGenbank() throws Exception {     
         String sql = "select * from sequencerecord where accession=?";
         doRetrieve(genbankList, sql);
     }
-  
+    
+    public void retrieveGenbank() throws Exception {     
+        String sql = "select * from sequencerecord where accession=?"+
+                    " and type in ('m', 'e', 'NM', 'XM')";
+        doRetrieve(genbankList, sql);
+    }
+    
     public void retrieveRelatedGenbank(List genbanks) throws Exception {        
         String sql = "select * from sequencerecord where locusid = "+
                     " (select locusid from sequencerecord where accession=?)";
@@ -49,7 +55,7 @@ public class FlexGenbankBatchRetriever extends GenbankBatchRetriever {
     public void retrieveRelatedCodingGenbank(List genbanks) throws Exception {        
         String sql = "select * from sequencerecord where locusid = "+
                     " (select locusid from sequencerecord where accession=?)"+
-                    " and type in ('m', 'e')";
+                    " and type in ('m', 'e', 'NM', 'XM')";
         doRetrieve(genbankList, sql);
     } 
 

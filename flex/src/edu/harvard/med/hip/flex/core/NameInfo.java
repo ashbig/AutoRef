@@ -24,6 +24,19 @@ public class NameInfo {
     public NameInfo() {
     }
     
+    public NameInfo(NameInfo n) {
+        if(n != null) {
+            this.gi = n.getGi();
+            this.genesymbol = n.getGenesymbol();
+            this.genbank = n.getGenbank();
+            this.locusid = n.getLocusid();
+            this.panumber = n.getPanumber();
+            this.sgd = n.getSgd();
+            this.cloneAcc = n.getCloneAcc();
+            this.cloneGi = n.getCloneGi();
+        }
+    }
+    
     public NameInfo(String gi, String genesymbol, String genbank, String locusid, String panumber, String sgd) {
         this.gi = gi;
         this.genesymbol = genesymbol;

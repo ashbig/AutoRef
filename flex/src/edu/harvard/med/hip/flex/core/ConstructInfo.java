@@ -43,6 +43,28 @@ public class ConstructInfo {
         clones = new ArrayList();
     }
     
+    public ConstructInfo(ConstructInfo info) {
+        if(info != null) {
+            this.constructid = info.getConstructid();
+            this.oligoid5p = info.getOligoid5p();
+            this.oligoid3p = info.getOligoid3p();
+            this.constructType = info.getConstructType();
+            this.projectid = info.getProjectid();
+            this.projectName = info.getProjectName();
+            this.workflowid = info.getWorkflowid();
+            this.workflowName = info.getWorkflowName();
+            this.status = info.getStatus();
+            clones = new ArrayList();
+            List cs = info.getClones();
+            if(cs != null) {
+                for(int i=0; i<cs.size(); i++) {
+                    CloneInfo c = (CloneInfo)cs.get(i);
+                    clones.add(new CloneInfo(c));
+                }
+            }
+        }
+    }
+    
     public ConstructInfo(int constructid, int oligoid5p, int oligoid3p, String constructType, int projectid, String projectName, int workflowid, String workflowName, String status) {
         this.constructid = constructid;
         this.oligoid5p = oligoid5p;

@@ -27,6 +27,15 @@ public class VectorFeature {
         this.status = status;
     }
     
+    public VectorFeature(VectorFeature v) {
+        if(v != null) {
+            this.id = v.getId();
+            this.name = v.getName();
+            this.description = v.getDescription();
+            this.status = v.getStatus();
+        }
+    }
+    
     public int getId() {return id;}
     public String getName() {return name;}
     public String getDescription() {return description;}

@@ -35,6 +35,29 @@ public class CloneVector {
         this.name = name;
     }
     
+    public CloneVector(CloneVector c) {
+        if(c != null) {
+            this.name = c.getName();
+            this.source = c.getSource();
+            this.type = c.getType();
+            this.file = c.getFile();
+            this.path = c.getPath();
+            this.description = c.getDescription();
+            this.restriction = c.getRestriction();
+            this.hipname = c.getHipname();
+            this.vectorid = c.getVectorid();
+            
+            features = new ArrayList();
+            List f = c.getFeatures();
+            if(f != null) {
+                for(int i=0; i<f.size(); i++) {
+                    VectorFeature vf = (VectorFeature)f.get(i);
+                    features.add(new VectorFeature(vf));
+                }
+            }
+        }
+    }
+    
     public CloneVector(String name, String source, String type, String file, String path, List features) {
         this.name = name;
         this.source = source;

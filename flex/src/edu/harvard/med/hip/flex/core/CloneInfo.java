@@ -50,12 +50,51 @@ public class CloneInfo extends CDNASequence {
     protected String matchpubhit;
     protected String keyword;
     
+    protected String exportId;
+    
     /** Creates a new instance of CloneInfo */
     public CloneInfo() {
     }
     
     public CloneInfo(int cdsstart, int cdsstop, String sequencetext) {
         super(cdsstart, cdsstop, sequencetext);
+    }
+    
+    public CloneInfo(CloneInfo c) {
+        if(c != null) {
+            this.cloneid = c.getCloneid();
+            this.clonename=c.getClonename();
+            this.clonetype=c.getClonetype();
+            this.mastercloneid=c.getMastercloneid();
+            this.comment=c.getComment();
+            this.status=c.getStatus();
+            this.refsequenceid=c.getRefsequenceid();
+            this.species=c.getSpecies();
+            this.constructid=c.getConstructid();
+            this.oligoid5p=c.getOligoid5p();
+            this.oligoid3p=c.getOligoid3p();
+            this.constructtype=c.getConstructtype();
+            this.projectid=c.getProjectid();
+            this.workflowid=c.getWorkflowid();
+            this.cloningstrategy=new CloningStrategy(c.getCloningstrategy());
+            this.nameinfo=new NameInfo(c.getNameinfo());
+            this.storages=new ArrayList();
+            List s = c.getStorages();
+            if(s != null) {
+                for(int i=0; i<s.size(); i++) {
+                    CloneStorage cs = (CloneStorage)s.get(i);
+                    storages.add(cs);
+                }
+            }
+            this.flexstatus=c.getFlexstatus();
+            this.pubhit=c.getPubhit();
+            this.resultexpect=c.getResultexpect();
+            this.resultpubhit=c.getResultpubhit();
+            this.matchexpect=c.getMatchexpect();
+            this.matchpubhit=c.getMatchpubhit();
+            this.keyword=c.getKeyword();
+            this.exportId=c.getExportId();
+        }
     }
     
     public int getCloneid() {return cloneid;}
@@ -82,7 +121,12 @@ public class CloneInfo extends CDNASequence {
     public String getMatchpubhit() {return matchpubhit;}
     public String getKeyword() {return keyword;}
     public String getFlexstatus() {return flexstatus;}
-    
+    public String getExportId() {
+        if(exportId != null)
+            exportId = exportId.replace(' ', '|');
+        return exportId;
+    }
+
     public void setCloneid(int cloneid) {this.cloneid=cloneid;}
     public void setClonename(String clonename) {this.clonename=clonename;}
     public void setClonetype(String clonetype) {this.clonetype=clonetype;}
@@ -107,6 +151,7 @@ public class CloneInfo extends CDNASequence {
     public void setMatchpubhit(String s) {matchpubhit=s;}
     public void setKeyword(String s) {keyword=s;}
     public void setFlexstatus(String s) {this.flexstatus = s;}
+    public void setExportId(String s) {this.exportId = s;}
     
     public void restoreClone(int id) throws Exception {
         String sql = "select c.cloneid, c.clonename, c.clonetype, c.mastercloneid, c.comments, c.status,"+
@@ -118,8 +163,8 @@ public class CloneInfo extends CDNASequence {
         " where c.constructid=cd.constructid"+
         " and f.sequenceid=cd.sequenceid"+
         " and c.strategyid=cs.strategyid"+
-        " and g.sequencingid=cl.sequencingid"+
-        " and g.cloneid=c.cloneid"+
+        " and g.sequencingid=cl.sequencingid(+)"+
+        " and g.cloneid(+)=c.cloneid"+
         " and cs.linkerid_5p=l5.linkerid"+
         " and cs.linkerid_3p=l3.linkerid"+
         " and c.cloneid="+id;

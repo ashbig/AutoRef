@@ -413,14 +413,19 @@ public class SummaryTablePopulator {
     public static void main(String args[]) {
         //List containers = getContainers();
         List containers = new ArrayList();
-        containers.add(new Integer(8446));
-        containers.add(new Integer(8447));
-        containers.add(new Integer(8448));
-        containers.add(new Integer(8449));
-        containers.add(new Integer(8440));
-        containers.add(new Integer(8437));
-        containers.add(new Integer(8438));
-        containers.add(new Integer(8439));
+        containers.add(new Integer(8475));
+        containers.add(new Integer(8476));
+        containers.add(new Integer(8477));
+        containers.add(new Integer(8478));
+        containers.add(new Integer(8479));
+        containers.add(new Integer(8480));
+        containers.add(new Integer(8481));
+        containers.add(new Integer(8482));
+        containers.add(new Integer(8483));
+        containers.add(new Integer(8484));
+        containers.add(new Integer(8485));
+        containers.add(new Integer(8486));
+        containers.add(new Integer(8487));
         
         /**
         List samples = new ArrayList();
@@ -445,7 +450,7 @@ public class SummaryTablePopulator {
          */
         
         //change cloning strategy accordingly.
-        int cloningStrategyid = 8;
+        int cloningStrategyid = 2;
         String cloneType = CloneInfo.MASTER_CLONE;
         
         SummaryTablePopulator populator = new SummaryTablePopulator();

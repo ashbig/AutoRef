@@ -68,6 +68,9 @@
             </A>
             </td>
             <td rowspan="<bean:write name="mgr" property="numOfMatchFlexSequence"/>">
+                <logic:equal name="mgr" property="hasLocusid" value="0">
+                &nbsp;
+                </logic:equal>
                 <logic:iterate name="mgr" property="locusidList" id="locusid">
                 <A target="_blank" HREF="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="locusid"/>"> 
                     <flex:write name="locusid"/>

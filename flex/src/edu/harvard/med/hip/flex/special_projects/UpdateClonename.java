@@ -396,14 +396,14 @@ public class UpdateClonename {
          * u.updateCloneid(clones);
          */
         //u.updateDestCloneid("(7275,7276)");
-       /**
+
         try {
-            u.updateRearrayPlateCloneid(7389);
+            u.updateRearrayPlateCloneid(8450);
         } catch (Exception ex) {
             System.out.println(ex);
         }
-        **/
+       
         //u.correctConstructid();
-        u.correctConstructidForClones();
+        //u.correctConstructidForClones();
     }
 }

@@ -102,7 +102,8 @@ public class SearchManager {
             List matchGenbanks = result.getFound();
             if(matchGenbanks != null) {
                 for (int j=0; j<matchGenbanks.size(); j++) {
-                    MatchGenbankRecord mgr = (MatchGenbankRecord)matchGenbanks.get(j);
+                    MatchGenbankRecord mgr = new MatchGenbankRecord((MatchGenbankRecord)matchGenbanks.get(j));
+                    
                     mgr.setSearchResultid(result.getSearchResultid());
                     mgr.setMatchGenbankId(++matchGenbankid);
                     matchGenbankList.add(mgr);
@@ -228,14 +229,19 @@ public class SearchManager {
     }
     
     public static void main(String args[]) {
-        SearchRecord searchRecord = new SearchRecord("Test search", SearchRecord.LOCUSID, SearchRecord.INPROCESS, "dzuo");
+        SearchRecord searchRecord = new SearchRecord("Test search", SearchRecord.GENESYMBOL, SearchRecord.INPROCESS, "dzuo");
         List searchTerms = new ArrayList();
         //searchTerms.add("33469916");
         //searchTerms.add("21961206");
         //searchTerms.add("33469967");
         //searchTerms.add("1234");
         //searchTerms.add("345");
-        searchTerms.add("1012");
+        //searchTerms.add("ABCA2");
+        //searchTerms.add("DRG2");
+        //searchTerms.add("DSCR8");
+        //searchTerms.add("EEF1G");
+        //searchTerms.add("EGFR");
+        searchTerms.add("ABCA2");
         
         SearchManager manager = new SearchManager(searchRecord, null, searchTerms);
         

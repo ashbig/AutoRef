@@ -6,6 +6,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 <%@ page import="edu.harvard.med.hip.flex.query.handler.QueryManager" %>
+<%@ page import="edu.harvard.med.hip.flex.form.QueryFlexForm" %>
+<%@ page import="java.util.*" %>
 
 <html>
 <head>
@@ -50,8 +52,8 @@
             </html:select>
 <html:hidden property="searchid"/>
 <html:hidden property="condition"/>
-<html:submit value="Go"/>
-</html:form>
+<html:submit property="submitButton" value="Go"/>
+<html:submit property="submitButton" value="Export"/>
 
 <p>
 <TABLE border=1>
@@ -68,6 +70,7 @@
     <th>Clone ID</th><th>Clone Name</th><th>Clone Type</th>
     <th>Cloning Strategy</th><th>Vector</th><th>Status</th>
     </tr>
+    <% int index=0; %>
     <logic:iterate name="results" id="result">
     <tr>
         <td rowspan="<bean:write name="result" property="numOfFoundClones"/>"><bean:write name="result" property="searchTerm"/></td>
@@ -78,6 +81,9 @@
             </A>
             </td>
             <td rowspan="<bean:write name="mgr" property="numOfMatchClones"/>">
+                <logic:equal name="mgr" property="hasLocusid" value="0">
+                &nbsp;
+                </logic:equal>
                 <logic:iterate name="mgr" property="locusidList" id="locusid">
                 <A target="_blank" HREF="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="locusid"/>"> 
                     <flex:write name="locusid"/>
@@ -110,7 +116,7 @@
                 </logic:notEqual>
                 <td rowspan="<bean:write name="mfs" property="numOfClones"/>"><flex:write name="mgr" property="searchMethod"/></td>
                                     
-                <logic:equal name="mfs" property="numOfClones" value="0">
+                <logic:equal name="mfs" property="hasClones" value="0">
                     <td>NA</td>
                     <td>NA</td>
                     <td>NA</td>
@@ -143,6 +149,24 @@
                             <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&isCloneStorageDisplay=1">
                             <flex:write name="clone" property="cloneid"/>
                             <A>
+                            <bean:define id="selectedClone" name="clone" property="exportId"/>
+                            <bean:define id="form" name="queryFlexForm"/>
+                            <input type=checkbox name=checkedClone[<%=index%>] value=<bean:write name="clone" property="exportId"/> 
+                                <%
+                                    List selectedClones = ((QueryFlexForm)form).getSelectedClones();
+                                    if(selectedClones != null) {
+                                        for(int i=0; i<selectedClones.size(); i++) {
+                                            String c = (String)selectedClones.get(i);
+                                            if(c.equals(selectedClone)) {
+                                                out.println(" checked");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                %>
+                            />
+                            <input type=hidden name=allClone[<%=index%>] value=<bean:write name="clone" property="exportId"/> />
+                            <% index++; %>
                         </td>
                         <td><flex:write name="clone" property="clonename"/></td>
                         <td><flex:write name="clone" property="clonetype"/></td>
@@ -159,6 +183,18 @@
     </TR>
     </logic:iterate>
 </table>
+
+<logic:present name="selectedClones">
+    <logic:iterate name="selectedClones" id="sc" indexId="count">
+        <input type=hidden name=selectedClone[<%=count%>] value=<bean:write name="sc"/> />
+    </logic:iterate>
+</logic:present>
+
+<logic:present name="lastFounds">
+    <html:hidden property="lastFounds" name="lastFounds"/>
+</logic:present>
+
+</html:form>
 
 </body>
 </html>

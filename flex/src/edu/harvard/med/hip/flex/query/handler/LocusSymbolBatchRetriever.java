@@ -41,7 +41,10 @@ public class LocusSymbolBatchRetriever extends GenbankBatchRetriever {
         
         String sql = "select * from generecord where locusid in"+
                     " (select locusid from genesymbol where symbol=?)";
-        
+        doRetrieve(genbankList, sql);
+    }
+    
+    private void doRetrieve(List genbankList, String sql) throws Exception {
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);

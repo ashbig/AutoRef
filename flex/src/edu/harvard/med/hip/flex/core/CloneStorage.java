@@ -37,6 +37,19 @@ public class CloneStorage {
     public CloneStorage() {
     }
     
+    public CloneStorage(CloneStorage c) {
+        if (c != null) {
+            this.storageid = c.getStorageid();
+            this.sampleid = c.getSampleid();
+            this.storageType = c.getStorageType();
+            this.storageForm = c.getStorageForm();
+            this.cloneid = c.getCloneid();
+            this.position = c.getPosition();
+            this.label = c.getLabel();
+            this.containerid = c.getContainerid();
+        }
+    }
+
     public CloneStorage(int storageid, int sampleid, String storageType, String storageForm, int cloneid) {
         this.storageid = storageid;
         this.sampleid = sampleid;

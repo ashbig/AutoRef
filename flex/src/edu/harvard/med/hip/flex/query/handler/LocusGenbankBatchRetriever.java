@@ -34,13 +34,16 @@ public class LocusGenbankBatchRetriever extends GenbankBatchRetriever {
      * @exception Exception
      *
      */
-    public void retrieveGenbank() throws Exception {        
+    public void retrieveAllGenbank() throws Exception {
         if(genbankList == null || genbankList.size() == 0) {
             return;
         }
         
         String sql = "select * from sequencerecord where locusid=?";
-        
+        doRetrieve(genbankList, sql);
+    }
+    
+    private void doRetrieve(List genbankList, String sql) throws Exception {
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -70,7 +73,17 @@ public class LocusGenbankBatchRetriever extends GenbankBatchRetriever {
         
         DatabaseTransaction.closeResultSet(rs);
         DatabaseTransaction.closeStatement(stmt);
-        DatabaseTransaction.closeConnection(conn);            
+        DatabaseTransaction.closeConnection(conn);
+    }
+    
+    public void retrieveGenbank() throws Exception {
+        if(genbankList == null || genbankList.size() == 0) {
+            return;
+        }
+        
+        String sql = "select * from sequencerecord where locusid=?"+
+        " and type in ('m', 'e', 'NM', 'XM')";
+        doRetrieve(genbankList, sql);
     }
     
     public static void main(String args[]) {
@@ -116,5 +129,5 @@ public class LocusGenbankBatchRetriever extends GenbankBatchRetriever {
         }
         
         System.exit(0);
-    }    
+    }
 }

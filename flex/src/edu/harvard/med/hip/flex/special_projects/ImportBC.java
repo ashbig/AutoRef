@@ -185,6 +185,7 @@ public class ImportBC {
                         //System.out.println("codon: "+codon);
                         if (codon.equalsIgnoreCase("taa") || codon.equalsIgnoreCase("tag") || codon.equalsIgnoreCase("tga")) {
                             result.append("\tInternal stop: "+first+"\n");
+                            result.append("cdslength: "+cdslength);
                             break;
                         }
                         first = first+3;
@@ -237,7 +238,7 @@ public class ImportBC {
     
     public static void main(String arg[]) {
         //String file = "G:\\ct_rejected_mgc.txt";
-        String file = "G:\\clontech_unseq.txt";
+        String file = "G:\\BC_gateway_import_final.txt";
         String logfile = "G:\\clontech.log";
         
         Logger log = new Logger(logfile);
@@ -252,8 +253,8 @@ public class ImportBC {
             ImportBC importer = new ImportBC();
             //importer.readSequence(seqfile);
             importer.readFile(file);
-            importer.updateDB(conn, log);
-            DatabaseTransaction.commit(conn);
+            //importer.updateDB(conn, log);
+            //DatabaseTransaction.commit(conn);
         } catch (Exception ex) {
             System.out.println(ex);
             DatabaseTransaction.rollback(conn);

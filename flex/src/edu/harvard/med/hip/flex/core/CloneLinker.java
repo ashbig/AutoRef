@@ -19,6 +19,14 @@ public class CloneLinker {
     public CloneLinker() {
     }
     
+    public CloneLinker(CloneLinker c) {
+        if(c != null) {
+            this.id = c.getId();
+            this.name = c.getName();
+            this.sequence = c.getSequence();
+        }
+    }
+    
     public CloneLinker(int id) {
         this.id = id;
     }

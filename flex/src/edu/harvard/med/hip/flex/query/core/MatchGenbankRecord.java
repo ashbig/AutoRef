@@ -29,7 +29,18 @@ public class MatchGenbankRecord {
     /** Creates a new instance of MatchGenbankRecord */
     public MatchGenbankRecord() {
     }
-
+    
+    public MatchGenbankRecord(MatchGenbankRecord r) {
+        this.matchGenbankId = r.getMatchGenbankId();
+        this.genbankAccession = r.getGanbankAccession();
+        this.gi = r.getGi();
+        this.matchFlexSequence = r.getMatchFlexSequence();
+        this.searchMethod = r.getSearchMethod();
+        this.searchResultid = r.getSearchResultid();
+        this.locusid = r.getLocusid();
+        this.unigene = r.getUnigene();
+    }
+    
     public MatchGenbankRecord(String genbank, String gi, String searchMethod, List matchFlexSequence, String locusid, String unigene) {
         this.genbankAccession = genbank;
         this.gi = gi;
@@ -38,7 +49,7 @@ public class MatchGenbankRecord {
         this.locusid = locusid;
         this.unigene = unigene;
     }
- 
+    
     public MatchGenbankRecord(int id, String genbank, String gi, String searchMethod, List matchFlexSequence, String locusid, String unigene) {
         this.matchGenbankId = id;
         this.genbankAccession = genbank;
@@ -91,7 +102,7 @@ public class MatchGenbankRecord {
     
     public void addMatchFlexSequence(MatchFlexSequence f) {
         matchFlexSequence.add(f);
-    }        
+    }
     
     public void setSearchResultid(int id) {
         this.searchResultid = id;
@@ -138,6 +149,13 @@ public class MatchGenbankRecord {
             locusidList.add(s);
         }
         return locusidList;
+    }
+    
+    public int getHasLocusid() {
+        if(locusid == null || locusid.length() == 0) {
+            return 0;
+        }
+        return 1;
     }
     
     public List getUnigeneList() {

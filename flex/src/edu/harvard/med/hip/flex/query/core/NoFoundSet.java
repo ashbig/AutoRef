@@ -32,8 +32,12 @@ public class NoFoundSet {
         
         for(int i=0; i<noFounds.size(); i++) {
             NoFound nf = (NoFound)noFounds.get(i);
+            String reason = nf.getReason();
+            if(reason.length() > 100)
+                reason = reason.substring(0, 100);
+       
             stmt.setInt(1, nf.getSearchResultId());
-            stmt.setString(2, nf.getReason());
+            stmt.setString(2, reason);
             DatabaseTransaction.executeUpdate(stmt);
         }
         DatabaseTransaction.closeStatement(stmt);

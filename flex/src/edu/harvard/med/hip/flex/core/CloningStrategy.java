@@ -36,6 +36,17 @@ public class CloningStrategy {
     public CloningStrategy() {
     }
     
+    public CloningStrategy(CloningStrategy c) {
+        if(c != null) {
+            this.id = c.getId();
+            this.name = c.getName();
+            this.clonevector = new CloneVector(c.getClonevector());
+            this.linker5p = new CloneLinker(c.getLinker5p());
+            this.linker3p = new CloneLinker(c.getLinker3p());
+            this.type = c.getType();
+        }
+    }
+    
     public CloningStrategy(int id, String name, CloneVector clonevector, CloneLinker linker5p, CloneLinker linker3p) {
         this.id = id;
         this.name = name;
@@ -53,6 +64,7 @@ public class CloningStrategy {
     public CloneVector getClonevector() {return clonevector;}
     public CloneLinker getLinker5p() {return linker5p;}
     public CloneLinker getLinker3p() {return linker3p;}
+    public String getType() {return type;}
     
     public static CloningStrategy findStrategyByName(String name) {
         String sql = "Select * from cloningstrategy where strategyname='"+name+"'";

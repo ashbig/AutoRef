@@ -54,12 +54,14 @@ public class GetSearchResultsAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
+        
         int searchid = ((QueryFlexForm)form).getSearchid();
         String condition = ((QueryFlexForm)form).getCondition();
         int currentPage = ((QueryFlexForm)form).getCurrentPage();
         int pageSize = ((QueryFlexForm)form).getPageSize();
         String searchCriteria = ((QueryFlexForm)form).getSearchCriteria();
         String cloneCriteria = ((QueryFlexForm)form).getCloneCriteria();
+        int lastFounds = ((QueryFlexForm)form).getLastFounds();
         
         QueryManager manager = new QueryManager();
         manager.setSearchCriteria(searchCriteria);
@@ -69,19 +71,54 @@ public class GetSearchResultsAction extends FlexAction {
         request.setAttribute("params", params);
         
         if("found".equals(condition)) {
+            int number = manager.getNumOfFounds(searchid);
+            
+            if(number == 0) {
+                return (mapping.findForward("empty"));
+            }
+            
+            String submitButton = ((QueryFlexForm)form).getSumbitButton();
+            List selectedClones = ((QueryFlexForm)form).getSelectedClones();
+            
+            if(selectedClones == null || number != lastFounds) {
+                selectedClones = new ArrayList();
+            }
+            
+            List allClones = ((QueryFlexForm)form).getAllClones();
+            for(int i=0; i<allClones.size(); i++) {
+                String clone = (String)allClones.get(i);
+                changeCloneList(selectedClones, clone, false);
+            }
+            
+            List checkedClones = ((QueryFlexForm)form).getCheckedClones();
+            for(int i=0; i<checkedClones.size(); i++) {
+                String clone = (String)checkedClones.get(i);
+                changeCloneList(selectedClones, clone, true);
+            }
+            
+            request.setAttribute("selectedClones", selectedClones);
+            request.setAttribute("lastFounds", new Integer(number));
+            
+            if("Export".equals(submitButton)) {
+                return (mapping.findForward("export"));
+            }
+            
+            if((currentPage-1)*pageSize >= number) {
+                currentPage = 1;
+            }
+            
             List founds = manager.getFounds(searchid, (currentPage-1)*pageSize, (currentPage)*pageSize);
             
             if(founds == null) {
                 String error = manager.getError();
                 request.setAttribute("error", error);
                 return (mapping.findForward("fail"));
-            } 
+            }
             
             if(founds.size() == 0) {
                 return (mapping.findForward("empty"));
             }
             
-            int number = manager.getNumOfFounds(searchid);
             int pages = number/pageSize;
             if(number%pageSize>0) {
                 pages += 1;
@@ -119,7 +156,7 @@ public class GetSearchResultsAction extends FlexAction {
                 String error = manager.getError();
                 request.setAttribute("error", error);
                 return (mapping.findForward("fail"));
-            } 
+            }
             
             if(nofounds.size() == 0) {
                 return (mapping.findForward("empty"));
@@ -129,6 +166,22 @@ public class GetSearchResultsAction extends FlexAction {
             return (mapping.findForward("success_nofound"));
         } else {
             return (mapping.findForward("error"));
+        }
+    }
+    
+    private void changeCloneList(List selectedClones, String clone, boolean isChecked) {
+        for(int i=0; i<selectedClones.size(); i++) {
+            String selectedClone = (String)selectedClones.get(i);
+            if(clone.equals(selectedClone)) {
+                if(!isChecked) {
+                    selectedClones.remove(i);
+                    return;
+                }
+                return;
+            }
+        }
+        if(isChecked) {
+            selectedClones.add(clone);
         }
     }
 }

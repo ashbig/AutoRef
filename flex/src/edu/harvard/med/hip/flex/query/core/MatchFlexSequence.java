@@ -118,7 +118,14 @@ public class MatchFlexSequence {
         }
         return num;
     }
-    
+     
+    public int getHasClones() {
+        if(constructInfos == null || constructInfos.size() == 0)
+            return 0;
+        
+        return 1;
+    }
+     
     public String getFoundBy() {
         if(MATCH_BY_GI.equals(isMatchByGi)) {
             return "GI";

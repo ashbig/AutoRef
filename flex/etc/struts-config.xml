@@ -234,7 +234,11 @@
                     type="edu.harvard.med.hip.flex.form.QueryFlexForm"/>   
                     
     <form-bean      name="perimeterRearrayInputForm"
-                    type="edu.harvard.med.hip.flex.form.PerimeterRearrayInputForm"/>                            
+                    type="edu.harvard.med.hip.flex.form.PerimeterRearrayInputForm"/> 
+                    
+    <form-bean      name="exportSearchResultsForm"
+                    type="edu.harvard.med.hip.flex.form.ExportSearchResultsForm"/> 
+                                               
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -1279,8 +1283,16 @@
       <forward  name="success_nofound"   path="/ViewNoFoundResults.jsp"/>
       <forward  name="fail"   path="/ViewResultsFail.jsp"/>
       <forward  name="empty"   path="/ViewSearchResultsEmpty.jsp"/>
+      <forward  name="export"   path="/ExportSearchResults.do"/>
     </action>  
                           
+    <action    path="/ExportSearchResults"
+               type="edu.harvard.med.hip.flex.action.ExportSearchResultsAction"
+               name="queryFlexForm"
+               scope="session"
+               validate="false">
+    </action> 
+                             
     <action    path="/ViewConstructsInfo"
                type="edu.harvard.med.hip.flex.action.ViewConstructsInfoAction"
                name="queryFlexForm"
