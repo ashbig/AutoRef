@@ -35,7 +35,9 @@
     <!-- Plate entry form bean-->
     <form-bean      name="plateEntryForm"
                     type="edu.harvard.med.hip.flex.form.PlateEntryForm"/>
-
+    <!-- transformation plate details page -->
+    <form-bean      name="transformEntryForm"
+                    type="edu.harvard.med.hip.flex.form.TransformDetailsForm"/>
     <!-- Create process plate form bean -->
     <form-bean      name="createProcessPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
@@ -148,7 +150,8 @@
     <action     path="/EnterTransformDetails"
                 type="edu.harvard.med.hip.flex.action.EnterTransformDetailsAction"
                 name="transformEntryForm"
-                scope="request">
+                scope="request"
+                input="/EnterProcessResults.jsp">
         <forward name="sucess" path="/EnterTransformDetails.jsp"/>
     </action>
 
