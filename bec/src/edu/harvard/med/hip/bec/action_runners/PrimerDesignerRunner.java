@@ -68,27 +68,29 @@ public class PrimerDesignerRunner extends ProcessRunner
             process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DESIGN_OLIGO,specs,m_user) ;
             try
             {
-
-                for (int index =  0;  index < ids.size(); index++)
+                synchronized(this)
                 {
-                    id = ((Integer) ids.get(index)).intValue();
-                    if (isPrimersDesignedForRefsequence(id, pst_check_oligo_cloning) )
+                    for (int index =  0;  index < ids.size(); index++)
                     {
-                        m_error_messages.add("Primers have been designed for refsequence with id "+id +" and this spec");
-                        continue;
+                        id = ((Integer) ids.get(index)).intValue();
+                        if (isPrimersDesignedForRefsequence(id, pst_check_oligo_cloning) )
+                        {
+                            m_error_messages.add("Primers have been designed for refsequence with id "+id +" and this spec");
+                            continue;
+                        }
+                    //get reference sequence to process
+                        BaseSequence refsequence = getRefsequence(id);
+                    //run primer3 with specified spec
+                        Primer3Wrapper primer3 = new Primer3Wrapper(m_spec,  refsequence);
+                        ArrayList oligo_calculations = primer3.run();
+                        oligo_calculation = (OligoCalculation)oligo_calculations.get(0);
+                        oligo_calculation.insert(conn);
+                        //insert process_object
+                        pst_insert_process_object.setInt(1,process_id);
+                        pst_insert_process_object.setInt(2, id);
+                        DatabaseTransaction.executeUpdate(pst_insert_process_object);
+                        conn.commit();
                     }
-                //get reference sequence to process
-                    BaseSequence refsequence = getRefsequence(id);
-                //run primer3 with specified spec
-                    Primer3Wrapper primer3 = new Primer3Wrapper(m_spec,  refsequence);
-                    ArrayList oligo_calculations = primer3.run();
-                    oligo_calculation = (OligoCalculation)oligo_calculations.get(0);
-                    oligo_calculation.insert(conn);
-                    //insert process_object
-                    pst_insert_process_object.setInt(1,process_id);
-                    pst_insert_process_object.setInt(2, id);
-                    DatabaseTransaction.executeUpdate(pst_insert_process_object);
-                    conn.commit();
                 }
             }
             catch(Exception e)
@@ -232,7 +234,10 @@ public class PrimerDesignerRunner extends ProcessRunner
         return ids;
     }
     
-    private boolean             isPrimersDesignedForRefsequence(int refsequenceid, PreparedStatement pst_check_oligo_cloning)
+    private boolean             isPrimersDesignedForRefsequence
+                            (int refsequenceid, 
+                            PreparedStatement pst_check_oligo_cloning)
+                            throws Exception
     {
        
         ResultSet rs = null;
@@ -245,21 +250,22 @@ public class PrimerDesignerRunner extends ProcessRunner
             rs = t.executeQuery(pst_check_oligo_cloning);
             if(rs.next())
             {
-                result= true;
+                return true;
             }
             else
             {
-                result= false;
+                return false;
             }
-           
-        } catch (Exception sqlE)
+        } 
+        catch (Exception sqlE)
         {
-            m_error_messages.add("Error occured while restoring sequence with id "+refsequenceid);
-        } finally
+           throw new Exception("Error occured while restoring sequence with id "+refsequenceid);
+        } 
+        finally
         {
             DatabaseTransaction.closeResultSet(rs);
         }
-         return result;
+        
     }
     
     
