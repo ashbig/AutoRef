@@ -308,14 +308,14 @@
     <!-- Displays the container details page -->
     <action     path="/ViewContainerDetails"
                 type="edu.harvard.med.hip.flex.action.ViewContainerDetailsAction"
-                input="">
+                input="/ContainerScan.jsp">
         <forward   name="success"  path="/ContainerDetails.jsp"/>
     </action>
 
     <!-- Displays the process history for a container -->
     <action     path="/ViewContainerProcessHistory"
                 type="edu.harvard.med.hip.flex.action.ViewContainerProcessHistoryAction"
-                input="">
+                input="/ContainerScan.jsp">
        <forward    name="success"  path="/ContainerProcessHistory.jsp"/>
     </action>
 
