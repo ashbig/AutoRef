@@ -39,6 +39,8 @@ public class UICloneSample
     private int             m_clone_quality = -1;
     private int             m_clone_rank = -1;
     private int             m_clone_score = -1;
+    
+    private String          m_tracefiles_dir = null;
     /** Creates a new instance of CloneSample */
     public UICloneSample()
     {
@@ -62,6 +64,7 @@ public class UICloneSample
     public int             getRefSequenceId(){ return m_refsequence_id ;}
     public int             getCloneSequenceCdsStart (){ return m_clone_sequence_cds_start ;}
    public int             getCloneSequenceCdsStop (){ return m_clone_sequence_cds_stop ;}
+   public String           getTraceFilesDirectory(){ return m_tracefiles_dir;}
     
     public void             setPlateLabel (String v){  m_plate_lable  = v ;}
     public void             setPosition (int v){  m_poisition  = v ;}
@@ -80,7 +83,7 @@ public class UICloneSample
     public void             setRefSequenceId(int v){   m_refsequence_id = v;}
     public void             setCloneSequenceCdsStart (int v){  m_clone_sequence_cds_start =v;}
    public void             setCloneSequenceCdsStop (int v){  m_clone_sequence_cds_stop =v;}
-    
+   public void           setTraceFilesDirectory(String v){  m_tracefiles_dir = v;} 
 
      
      public static CloneSequence setCloneSequence(UICloneSample clone_sample,int[] sequence_analysis_status ) throws BecDatabaseException
