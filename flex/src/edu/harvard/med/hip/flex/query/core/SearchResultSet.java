@@ -57,4 +57,31 @@ public class SearchResultSet {
         }
         DatabaseTransaction.closeStatement(stmt);        
     }
+    
+    public static void main(String args[]) {
+        List searchResults = new ArrayList();
+        searchResults.add(new SearchResult(1, "33469916", SearchResult.GENBANK_FOUND, null, null, 1));
+        searchResults.add(new SearchResult(2, "21961206", SearchResult.GENBANK_NOT_FOUND, null, null, 1));
+        SearchResultSet srs = new SearchResultSet(searchResults);
+       
+        for(int i=0; i<searchResults.size(); i++) {
+            SearchResult sr = (SearchResult)searchResults.get(i);
+            System.out.println(sr.getIsGenbankFound());
+        }
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            srs.persist(conn, 1);
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.rollback(conn);
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+            System.exit(0);
+        }
+    }
 }
