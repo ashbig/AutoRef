@@ -21,19 +21,21 @@ public class SequenceDescription
     
     //sample parameters
     private int             m_image_id = -1;
+    private String          m_vector = null;
     private int             m_org_sample_id = -1;
     private int             m_org_position = -1;
     //initial MGC container
     private ContainerDescription          m_org_container = null;
     
     
-    public SequenceDescription(int id, int pos, int sampleid,ContainerDescription cont, int imageid)
+    public SequenceDescription(int id, int pos, int sampleid,ContainerDescription cont, int imageid, String vector)
     {
         m_seq_id = id;
         m_org_position = pos;
         m_image_id = imageid;
         m_org_sample_id = sampleid;
         m_org_container = cont;
+        m_vector = vector;
     }
     
     public void                         setCdsLength(int l){ m_cds_length = l;}
@@ -45,5 +47,6 @@ public class SequenceDescription
     public int                          getCdsLength(){ return m_cds_length;}
     public int                          getContainerId(){ return m_org_container.getId();}
     public int                          getSampleId(){ return m_org_sample_id;}
+    public String                       getVector(){ return m_vector;}
 
 }
