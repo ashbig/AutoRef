@@ -116,6 +116,11 @@ public class PhredOutputFileName
             m_read_type = Read.TYPE_INNER_FORWARD;
             m_read_num = getReadNumber(temp);
         }
+        else if (temp[0] == 'I' ) 
+        {
+            m_read_type = Read.TYPE_INNER_FORWARD;
+            m_read_num = getReadNumber(temp);
+        }
         else if (temp[0] == 'R' && temp[1] != '0') 
         {
             m_read_type = Read.TYPE_INNER_REVERSE;
@@ -155,7 +160,7 @@ public class PhredOutputFileName
      public static void main(String args[])
     {
         try{
-        PhredOutputFileName p = new PhredOutputFileName("C:\\bio\\plate_analysis\\clone_samples\\1029\\114779\\chromat_dir\\7204_D11_1029_114779_F1.ab1",PhredOutputFileName.FORMAT_OURS);
+        PhredOutputFileName p = new PhredOutputFileName("C:\\bio\\plate_analysis\\clone_samples\\1029\\114779\\chromat_dir\\7204_D11_1029_114779_I0.ab1",PhredOutputFileName.FORMAT_OURS);
         System.out.println( p.isWriteFileFormat(PhredOutputFileName.FORMAT_OURS));
         }catch(Exception e){}
         System.exit(0);
