@@ -25,6 +25,7 @@
         Your input genes are grouped into 3 categories according to their relationship with 
         the disease of <b><bean:write name="disease_mesh_term"/></b> as cited in literature. <br><br>
         <a href="#direct"> First degree associations </a> <br>
+        <a href="#direct_family"> First degree associations by family term </a> <br>
         <a href="#indirect"> Second degree associations </a> <br>
         <a href="#new"> Genes new to this disease </a> <br>
     </TD>
@@ -55,6 +56,34 @@
             </TD>
             <TD align="center">
                 <bean:write name="directChipGene" property="score"/>
+            </TD>
+        </tr>
+    </logic:iterate> 
+    </TABLE>
+
+    <br>
+
+    <a name="direct_family"> </a><br><br><% i = 0; %>
+    <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
+    <TR> <b>First degree associations by family term</b> <br><br> </TR>
+    <TR bgcolor="#cccccc">
+        <TH width="10%">Rank</TH>
+        <TH width="30%">Locus ID</TH>
+        <TH width="30%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
+        <TH width="30%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+    </TR>
+
+    <logic:iterate id="directChipGeneByFamily" name="direct_children_genes"> 
+        <tr>
+            <TD align="center"><% out.println(++i); %></TD>
+            <TD align="center">
+                <bean:write name="directChipGeneByFamily" property="locus_id"/>
+            </TD>
+            <TD align="center">
+                <bean:write name="directChipGeneByFamily" property="gene_symbol"/>
+            </TD>
+            <TD align="center">
+                <bean:write name="directChipGeneByFamily" property="score"/>
             </TD>
         </tr>
     </logic:iterate> 

@@ -28,6 +28,8 @@
  GP2 <br>
  CD14 <br>
  NUDT6 <br>
+ ESR1 <br>
+ ESR2 <br>
  HHHH <br>
 </p>
 

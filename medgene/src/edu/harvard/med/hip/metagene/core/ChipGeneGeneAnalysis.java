@@ -205,7 +205,7 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
        
         
         Iterator it = direct.iterator();
-        System.out.println("direct genes -------------------------------------");
+        System.out.println("direct children genes -------------------------------------");
         while (it.hasNext()){
             ChipGene g = (ChipGene)(it.next());
             System.out.println( g.getGene_symbol() + "              " + g.getScore() );

@@ -20,9 +20,13 @@ public class ChipGeneDiseaseAnalysis {
     public static final int GENE_SYMBOL_INPUT = 1;
     public static final int LOCUS_ID_INPUT = 2;
     
-    // The direct_gene_hashmap contains all non-family genes and all children
-    // genes from the gene families. But it doesn't contain the gene families themselves.
+    // The direct_gene_hashmap contains all non-family genes.
+    // It doesn't contain the gene families and their children.
     protected HashMap direct_gene_hashmap = new HashMap();
+    
+    // The direct children gene hashmap contains the children of gene families.
+    // But it doesn't contain the gene families theirselves.
+    protected HashMap direct_children_gene_hashmap = new HashMap();
     
     // The source for finding indirect genes. It contains all non-family genes index ids plus
     // family gene index ids. However, it doesn't include all children genes from the families.
@@ -34,6 +38,9 @@ public class ChipGeneDiseaseAnalysis {
     
     // direct gene tree contains all directly disease-associated genes
     protected TreeSet direct_gene_tree = new TreeSet(new GeneComparator());
+    
+    // direct children gene treee contains all directly disease-associated genes by family term
+    protected TreeSet direct_children_gene_tree = new TreeSet(new GeneComparator());
 
     // indirect gene tree contains all indirectly disease-associated genes
     protected TreeSet indirect_gene_tree = new TreeSet (new GeneComparator());
@@ -55,6 +62,9 @@ public long start, end2;
     public TreeSet getDirect_gene_tree(){
         return direct_gene_tree;
     }    
+    public TreeSet getDirect_children_gene_tree(){
+        return direct_children_gene_tree;
+    }
     public TreeSet getIndirect_gene_tree(){
         return indirect_gene_tree;
     }    
@@ -132,23 +142,23 @@ public long start, end2;
                 double score = rs.getDouble(4);    
                 
                 if(input_type == GENE_SYMBOL_INPUT){      
-                    if(direct_gene_hashmap.containsKey(symbol_value)){
-                        if( ((ChipGene)(direct_gene_hashmap.get(symbol_value))).getScore() < score )
-                            ((ChipGene)(direct_gene_hashmap.get(symbol_value))).setScore(score);
+                    if(direct_children_gene_hashmap.containsKey(symbol_value)){
+                        if( ((ChipGene)(direct_children_gene_hashmap.get(symbol_value))).getScore() < score )
+                            ((ChipGene)(direct_children_gene_hashmap.get(symbol_value))).setScore(score);
                     }
                     else{
-                        direct_gene_hashmap.put(symbol_value, new ChipGene(symbol_value, locus_id, score));
+                        direct_children_gene_hashmap.put(symbol_value, new ChipGene(symbol_value, locus_id, score));
                     }
                 }
                 
                 if(input_type == LOCUS_ID_INPUT){
                     Integer key = new Integer(locus_id);
-                    if(direct_gene_hashmap.containsKey(key)){
-                        if( ((ChipGene)(direct_gene_hashmap.get(key))).getScore() < score )
-                            ((ChipGene)(direct_gene_hashmap.get(key))).setScore(score);
+                    if(direct_children_gene_hashmap.containsKey(key)){
+                        if( ((ChipGene)(direct_children_gene_hashmap.get(key))).getScore() < score )
+                            ((ChipGene)(direct_children_gene_hashmap.get(key))).setScore(score);
                     }
                     else{
-                        direct_gene_hashmap.put(key, new ChipGene(symbol_value, locus_id, score));
+                        direct_children_gene_hashmap.put(key, new ChipGene(symbol_value, locus_id, score));
                     }
                 }
             }
@@ -163,8 +173,8 @@ public long start, end2;
         
         
    System.out.println("************ hash direct genes done ************");
-   System.out.println(" we have the number of total pairs    " + direct_gene_hashmap.size());     
-   System.out.println(" we have the number of pairs          " + source_for_indirect_genes.size());
+   System.out.println(" we have the number of non-family pairs    " + direct_gene_hashmap.size());     
+   System.out.println(" we have the number of children pairs      " + direct_children_gene_hashmap.size());
 
         
         
@@ -352,7 +362,14 @@ public long start, end2;
         double score;
 
         if(direct_gene_hashmap.containsKey(gene_symbol)){
-            direct_gene_tree.add((ChipGene)(direct_gene_hashmap.get(gene_symbol)));                                                       
+            direct_gene_tree.add((ChipGene)(direct_gene_hashmap.get(gene_symbol))); 
+            if(direct_children_gene_hashmap.containsKey(gene_symbol)){
+                direct_children_gene_tree.add((ChipGene)(direct_children_gene_hashmap.get(gene_symbol)));        
+            }
+        }
+        
+        else if(direct_children_gene_hashmap.containsKey(gene_symbol)){
+            direct_children_gene_tree.add((ChipGene)(direct_children_gene_hashmap.get(gene_symbol)));        
         }
                                
         else if(indirect_gene_hashmap.containsKey(gene_symbol)){
@@ -371,8 +388,15 @@ public long start, end2;
         double score;
 
         if(direct_gene_hashmap.containsKey(new Integer(locus_id))){
-            direct_gene_tree.add((ChipGene)(direct_gene_hashmap.get(new Integer(locus_id))));         
+            direct_gene_tree.add((ChipGene)(direct_gene_hashmap.get(new Integer(locus_id)))); 
+            if(direct_children_gene_hashmap.containsKey(new Integer(locus_id))){
+                direct_children_gene_tree.add((ChipGene)(direct_children_gene_hashmap.get(new Integer(locus_id))));        
+            }
         }
+        
+        if(direct_children_gene_hashmap.containsKey(new Integer(locus_id))){
+            direct_children_gene_tree.add((ChipGene)(direct_children_gene_hashmap.get(new Integer(locus_id))));        
+        }                
                 
         else if(indirect_gene_hashmap.containsKey(new Integer(locus_id))){
              indirect_gene_tree.add((ChipGene)(indirect_gene_hashmap.get(new Integer(locus_id))));     
@@ -424,7 +448,7 @@ public long start, end2;
         "13CDNA73\n 6H9A\n AADAC\n AARS\n AASDHPPT\n ABCA12\n ABCA2\n ABCA4\n ABCA5\n" + 
         "ABCA6\n ABCA8\n ABCB1\n ABCB11\n ABCB6\n ABCC1\n ABCC2\n ABCC5\n ABCC5\n" + 
         "ABCC9\n ABCC9\n ABCD2\n ABCD3\n ABCE1\n" +
-        "TNF GP2 CD14\n NUDT6\n HHHH\n";             
+        "TNF GP2 CD14\n NUDT6\n HHHH\n ESR1\n ESR2\n";             
         
         /*
         try{
@@ -448,13 +472,15 @@ public long start, end2;
 //////////////////////////////////
                                                                                         
         ChipGeneDiseaseAnalysis ana = new ChipGeneDiseaseAnalysis();  
-        ana.hashDirectGenes(402, 1, ana.GENE_SYMBOL_INPUT);  //402 483
+        ana.hashDirectGenes(483, 1, ana.GENE_SYMBOL_INPUT);  //402 483
         ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT);       
         ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT);
         
         
         TreeSet direct = ana.getDirect_gene_tree();        
         System.out.println("direct tree:     " + direct.size());
+        TreeSet children_direct = ana.getDirect_children_gene_tree();
+        System.out.println("children_direct tree:     " + children_direct.size());
         TreeSet indirect = ana.getIndirect_gene_tree();
         System.out.println("indirect tree:     " + indirect.size());       
         TreeSet new_genes = ana.getNew_gene_tree();
@@ -467,6 +493,13 @@ public long start, end2;
             ChipGene g = (ChipGene)(it.next());
             System.out.println( g.getGene_symbol() + "              " + g.getScore() );
         }
+        
+        Iterator t = children_direct.iterator();
+        System.out.println("direct children genes -------------------------------------");
+        while (t.hasNext()){
+            ChipGene g = (ChipGene)(t.next());
+            System.out.println( g.getGene_symbol() + "              " + g.getScore() );
+        }        
         
         Iterator itt = indirect.iterator();
         System.out.println("indirect genes -------------------------------------");

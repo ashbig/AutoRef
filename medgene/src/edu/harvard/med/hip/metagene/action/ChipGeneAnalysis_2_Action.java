@@ -78,7 +78,7 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
             "13CDNA73\n 6H9A\n AADAC\n AARS\n AASDHPPT\n ABCA12\n ABCA2\n ABCA4\n ABCA5\n" + 
         "ABCA6\n ABCA8\n ABCB1\n ABCB11\n ABCB6\n ABCC1\n ABCC2\n ABCC5\n ABCC5\n" + 
         "ABCC9\n ABCC9\n ABCD2\n ABCD3\n ABCE1\n" +
-        "TNF GP2 CD14\n NUDT6\n HHHH\n";          
+        "TNF GP2 CD14\n NUDT6\n HHHH\n ESR1\n, ESR2\n";          
             */
             
             // analysis input genes
@@ -101,6 +101,7 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
             
             // set attributes
             request.setAttribute("direct_genes", gda.getDirect_gene_tree());
+            request.setAttribute("direct_children_genes", gda.getDirect_children_gene_tree());
             request.setAttribute("indirect_genes", gda.getIndirect_gene_tree());
             request.setAttribute("new_genes", gda.getNew_gene_tree());
             request.setAttribute("disease_mesh_term", disease_mesh_term);

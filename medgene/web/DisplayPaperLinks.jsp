@@ -12,7 +12,7 @@
 <h1>Selected Paper Links (PMID)</h1>
 </center>
 <p>
-    <% String url = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=nucleotide&list_uids="; %>
+    <% String url = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids="; %>
     <ul>
     <logic:iterate id="paper" name="medline_records"> 
         <li>

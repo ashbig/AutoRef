@@ -53,7 +53,7 @@
             <html:option key="top 100" value="100"/>
             <html:option key="top 500" value="500"/>
             <html:option key="top 1000" value="1000"/>
-            <html:option key="top 2000" value="2000"/>
+            <html:option key="top 3000" value="3000"/>
         <% } %>
     </html:select>
     <p>For performance issue, we only display limited genes here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
