@@ -12,7 +12,6 @@
 
 <h2><bean:message key="flex.name"/> : Cloning Request : Sequence Search</h2>
 <hr>
-
 <html:errors/>
 <p>
 <html:form action="/SequenceSearch.do" focus="searchString">

@@ -9,8 +9,8 @@
 <head><title><bean:message key="flex.name"/> : Find Registration Confirmation</title></head>
 <body>
     <h2><bean:message key="flex.name"/> : Find Registration Confirmation</h2>
-    <html:errors/>
     <hr>
+    <html:errors/>
     <p>
     <h3>The information for your registration has been sent to you through email.</h3>
 <a href="login.jsp">Login to <bean:message key="flex.name"/></a>

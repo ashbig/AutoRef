@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.9 2001-07-16 17:10:26 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.10 2001-07-16 17:19:14 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -20,9 +20,9 @@
 
 
 <html>
-<head><title><html:errors/> : Pending Requests</title></head>
+<head><title><bean:message key="flex.name"/> : Pending Requests</title></head>
 <body>
-    <h2><html:errors/> : Pending Requests</h2>
+    <h2><bean:message key="flex.name"/> : Pending Requests</h2>
     <hr>
     <html:errors/>
     <p>

@@ -27,7 +27,8 @@
 <h2><bean:message key="flex.name"/> : Sample Details</h2>
 <hr>
 <html:errors/>
-<p>Sample ID <bean:write name="sample" property="id"/></p>
+<p>
+Sample ID <bean:write name="sample" property="id"/></p>
 
 <table>
 <h3>Sample details</h3>
