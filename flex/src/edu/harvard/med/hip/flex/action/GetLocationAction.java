@@ -66,9 +66,8 @@ public class GetLocationAction extends ResearcherAction{
         int destLocation = ((CreateProcessPlateForm)form).getDestLocation();                
         try {
 
-            // Create the new plate and samples.        
+            // Set the location for the new container.        
             Location dLocation = new Location(destLocation);
-            Container container = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");
             Container newContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.newContainer");            
             newContainer.setLocation(dLocation);            
                  

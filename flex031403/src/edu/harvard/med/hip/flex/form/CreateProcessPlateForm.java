@@ -23,31 +23,11 @@ import edu.harvard.med.hip.flex.core.Location;
  * @version 
  */
 public class CreateProcessPlateForm extends ActionForm {
-    private int page = 0;
     private String processname = null;
     private String sourcePlate = null;
-    private String researcherBarcode = null;
     private int sourceLocation;
     private int destLocation;
     private String destPlate = null;
-    
-    /**
-     * Set the page to the given value.
-     *
-     * @param page The page number to be set to.
-     */
-    public void setPage(int page) {
-        this.page = page;
-    }
-    
-    /**
-     * Return the page number.
-     *
-     * @return The page number.
-     */
-    public int getPage() {
-        return page;
-    }
     
     /**
      * Set the processname to the given value.
@@ -104,24 +84,6 @@ public class CreateProcessPlateForm extends ActionForm {
     }
     
     /**
-     * Set the researcher barcode to the given value.
-     *
-     * @param researcherBarcode The value to be set to.
-     */
-    public void setResearcherBarcode(String researcherBarcode) {
-        this.researcherBarcode = researcherBarcode;
-    }
-    
-    /**
-     * Return the researcher barcode.
-     *
-     * @return The researcher barcode.
-     */
-    public String getResearcherBarcode() {
-        return researcherBarcode;
-    }
-    
-    /**
      * Set the destination location.
      *
      * @param destLocation The destination location.
@@ -171,17 +133,9 @@ public class CreateProcessPlateForm extends ActionForm {
                                  HttpServletRequest request) {
                                     
         ActionErrors errors = new ActionErrors();
-        
-        if(page == 1) {
-            if((sourcePlate == null) || (sourcePlate.trim().length()<1)) {
-                errors.add("sourcePlate", new ActionError("error.plateId.invalid", sourcePlate));
-            }
-        }
-        
-        if(page == 2) {
-            if((researcherBarcode == null) || (researcherBarcode.trim().length()<1)) {
-                errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", researcherBarcode));
-            }  
+
+        if((sourcePlate == null) || (sourcePlate.trim().length()<1)) {
+            errors.add("sourcePlate", new ActionError("error.plateId.invalid", sourcePlate));
         }
         
         return errors;

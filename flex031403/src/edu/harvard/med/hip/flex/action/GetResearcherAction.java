@@ -29,7 +29,7 @@ import org.apache.struts.util.MessageResources;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.form.CreateProcessPlateForm;
+import edu.harvard.med.hip.flex.form.GetResearcherBarcodeForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
 
@@ -60,8 +60,7 @@ public class GetResearcherAction extends ResearcherAction{
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        String barcode = ((CreateProcessPlateForm)form).getResearcherBarcode();
-        int location = ((CreateProcessPlateForm)form).getSourceLocation();
+        String barcode = ((GetResearcherBarcodeForm)form).getResearcherBarcode();
         Researcher researcher = null;        
         
         // Validate the researcher barcode.
