@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.28 2002-05-24 16:53:46 Elena Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.29 2002-05-30 17:44:07 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -24,10 +24,14 @@ import java.io.*;
 public class FlexSeqAnalyzer {
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
     public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
-    private static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
+//    private static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     private static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
     
+<<<<<<< FlexSeqAnalyzer.java
+    private static final String HUMANDB="E:/flexDev/BlastDB/genes";
+=======
     //    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
+>>>>>>> 1.28
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
     public static final double PERCENTIDENTITY = 0.95;
