@@ -139,6 +139,9 @@ public class Plateset {
     public Plateset() {
     }
     
+    public void setContainerid3pFusion(int id) {this.containerid_3pfusion = id;}
+    public void setContainerid3pClosed(int id) {this.containerid_3pclosed = id;}
+    
     /**
      * return the platesetid.
      *
