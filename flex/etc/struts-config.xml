@@ -813,7 +813,6 @@
 
     <!-- Action mapping for sequence query -->
     <action path="/GetQueryInfo"
-                name="sequenceQueryForm"
                 type="edu.harvard.med.hip.flex.action.GetQueryInfoAction">
         <forward    name="success"   path="/SequenceQuery.jsp"/>
     </action>

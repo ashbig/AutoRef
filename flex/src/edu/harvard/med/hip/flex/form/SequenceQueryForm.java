@@ -118,5 +118,32 @@ public class SequenceQueryForm extends ActionForm {
         workflow = -1;
         plate = null;
         isResultDisplay = false;
-    }        
+    }
+    
+    /**
+     * Validate the properties that have been set from this HTTP request,
+     * and return an <code>ActionErrors</code> object that encapsulates any
+     * validation errors that have been found.  If no errors are found, return
+     * <code>null</code> or an <code>ActionErrors</code> object with no
+     * recorded error messages.
+     *
+     * @param mapping The mapping used to select this instance
+     * @param request The servlet request we are processing
+     */
+    public ActionErrors validate(ActionMapping mapping,
+    HttpServletRequest request) {
+        
+        ActionErrors errors = new ActionErrors();
+        if("nonfile".equals(searchTermType)) {
+            if(searchTerm == null || searchTerm.trim().length() < 1) {
+                errors.add("searchTerm", new ActionError("error.searchTerm.required"));
+            }
+        } else {
+            if(filename.getFileName() == null || filename.getFileName().trim().length() < 1) {
+                errors.add("filename", new ActionError("error.filename.required"));
+            }
+        }
+        
+        return errors;
+    }
 }

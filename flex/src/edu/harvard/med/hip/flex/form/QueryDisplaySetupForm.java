@@ -22,14 +22,14 @@ import java.util.*;
  * @version
  */
 public class QueryDisplaySetupForm extends ActionForm {
-    private boolean id = true;
-    private boolean gi = true;
+    private boolean id = false;
+    private boolean gi = false;
     private boolean genename = false;
-    private boolean genbank = true;
+    private boolean genbank = false;
     private boolean genesymbol = false;
     private boolean pa = false;
-    private boolean label = true;
-    private boolean well = true;
+    private boolean label = false;
+    private boolean well = false;
     private boolean type = false;
     private boolean oligo = false;
     private boolean project = false;
@@ -156,14 +156,14 @@ public class QueryDisplaySetupForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        id = true;
-        gi = true;
+        id = false;
+        gi = false;
         genename = false;
-        genbank = true;
+        genbank = false;
         genesymbol = false;
         pa = false;
-        label = true;
-        well = true;
+        label = false;
+        well = false;
         type = false;
         oligo = false;
         project = false;
