@@ -251,7 +251,7 @@
                scope="session"
                validate="true"
                input="/EnterOligoPlates.jsp">
-      <forward  name="success"   path="/GetLocation.jsp"/>
+      <forward  name="success"   path="/GetOligoLocation.jsp"/>
     </action> 
 
     <!-- Process the location selection -->
