@@ -2,6 +2,8 @@
 <%@ page language="java" %>
 <%@ page import="edu.harvard.med.hip.flex.*" %>
 <%@ page import="edu.harvard.med.hip.flex.core.*" %>
+<%@ page import="edu.harvard.med.hip.flex.process.*" %>
+<%@ page import="edu.harvard.med.hip.flex.process.Process" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -12,6 +14,7 @@
 <html>
 <head><title>Container Details</title></head>
 <body>
+
 
 <%--Loop through all the containers and display all their details--%>
 <logic:iterate id="container" name="<%=Constants.CONTAINER_LIST_KEY%>">
@@ -50,6 +53,9 @@
         <th>Status</th>
         <th>Construct</th>
         <th>Oligo</th>
+        <logic:present name="<%=Constants.PROCESS_KEY%>">
+            <th>Result</th>
+        </logic:present>
     </tr>
     <logic:iterate id="sample" name="container" property="samples">
     <tr>
@@ -69,6 +75,10 @@
         <logic:notEqual name="sample" property="oligoid" value="-1">
             <td><bean:write name="sample" property="oligoid"/></td>
         </logic:notEqual>
+        <logic:present name="<%=Constants.PROCESS_KEY%>">
+            <bean:define id="process" name="<%=Constants.PROCESS_KEY%>"/>
+            <td><%=Result.findResult((Sample)sample,(Process)process)%><td>
+        </logic:present>
     </tr>
     </logic:iterate>
 </table>

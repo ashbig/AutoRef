@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2001-06-26 11:55:45 $
+ * $Revision: 1.11 $
+ * $Date: 2001-06-29 12:59:29 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -49,7 +49,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.10 $ $Date: 2001-06-26 11:55:45 $
+ * @version    $Revision: 1.11 $ $Date: 2001-06-29 12:59:29 $
  */
 
 public class Result {
@@ -243,7 +243,14 @@ public class Result {
         }
         this.fileRef = fileRef;
     }
-    
+    /**
+     * String representation of the result which is the value.
+     *
+     * @return value of the result.
+     */
+    public String toString() {
+        return this.value;
+    }
 } // End class Result
 
 

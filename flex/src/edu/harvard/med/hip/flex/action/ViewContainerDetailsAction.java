@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-25 19:12:25 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-29 12:59:29 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -25,6 +25,8 @@
  *    your 3 letters initials.
  *
  *    Jun-25-2001 : JMM - Class created. 
+ *    Jun-29-2001 : JMM - Modified to also produce results for samples when
+ *                      and Process exection id is passed in
  *
  */
 
@@ -46,6 +48,8 @@ import javax.servlet.http.*;
 import edu.harvard.med.hip.flex.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.process.Process;
 
 import org.apache.struts.action.*;
 
@@ -54,7 +58,7 @@ import org.apache.struts.action.*;
  * the request to display the details of a container.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-25 19:12:25 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-29 12:59:29 $
  */
 
 public class ViewContainerDetailsAction extends ResearcherAction {
@@ -84,6 +88,22 @@ public class ViewContainerDetailsAction extends ResearcherAction {
         String containerIdS = request.getParameter(Constants.CONTAINER_ID_KEY);
         String containerBarcode = 
             request.getParameter(Constants.CONTAINER_BARCODE_KEY);
+        String processId = request.getParameter(Constants.PROCESS_ID_KEY);
+        Process process=null;
+        
+        if(processId != null && ! processId.equals("")) {
+            try {
+                process = Process.findProcess(Integer.parseInt(processId));
+            } catch (FlexDatabaseException fde) {
+                request.setAttribute(Action.EXCEPTION_KEY, fde);
+                return mapping.findForward("error");
+            } catch (FlexProcessException fpe) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.process.notfound"));
+                saveErrors(request,errors);
+                return new ActionForward(mapping.getInput());
+            }
+        }
         
         List containerList = null;
         try {
@@ -119,13 +139,14 @@ public class ViewContainerDetailsAction extends ResearcherAction {
             retForward=mapping.findForward("success");
         }
         
-        // public the list in the request.
+        // put the list in the request.
         request.setAttribute(Constants.CONTAINER_LIST_KEY,containerList);
+        if(process!=null) {
+            // put the process in the request.
+            request.setAttribute(Constants.PROCESS_KEY, process);
+        }
         return retForward;
     }    
-    
-    
-    
 } // End class ViewContainerDetails
 
 
