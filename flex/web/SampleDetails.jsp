@@ -111,7 +111,7 @@
         <bean:write name="process" property="protocol"/>
     </h3>
 
-
+<p>
 <logic:present name="result">
     
     <bean:write name="result" property="value"/>
