@@ -1,5 +1,5 @@
 /*
- * $Id: OligoPattern.java,v 1.3 2001-07-16 19:50:58 wendy Exp $
+ * $Id: OligoPattern.java,v 1.4 2001-07-16 20:23:28 wendy Exp $
  * OligoPattern.java
  *
  * Created on May 29, 2001, 12:40 PM
@@ -50,8 +50,6 @@ public class OligoPattern {
         this.oligoseq_5p = oligoseq_5p;
         this.oligoseq_3s = oligoseq_3s;
         this.oligoseq_3op = oligoseq_3op;
-        this.constructid_close = close;
-        this.constructid_open = open;
         this.cdsLength = cdsLength;
     }
     
@@ -61,14 +59,6 @@ public class OligoPattern {
     
     public int getOligoId_3s() {
         return oligoId_3s;
-    }
-    
-    public int getConstructid_close(){
-        return constructid_close;
-    }
-    
-    public int getConstructid_open(){
-        return constructid_open;
     }
     
     public int getOligoId_3op() {
