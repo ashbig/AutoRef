@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-20 11:51:52 $
+ * $Revision: 1.3 $
+ * $Date: 2001-06-20 12:22:51 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.flex.form.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-20 11:51:52 $
+ * @version    $Revision: 1.3 $ $Date: 2001-06-20 12:22:51 $
  */
 
 public class EnterGelDetailsAction extends ResearcherAction {
@@ -73,7 +73,7 @@ public class EnterGelDetailsAction extends ResearcherAction {
     public ActionForward flexPerform(ActionMapping mapping, ActionForm form,
     HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        GelDetailsForm gelForm = (GelDetailsForm)form;
+        GelResultsForm gelForm = (GelResultsForm)form;
         FormFile image = gelForm.getGelImage();
         System.out.println("File uploaded: " + image.getFileName());
         System.out.println("file size: " + image.getFileSize());

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-06-20 11:15:57 $
+ * $Revision: 1.8 $
+ * $Date: 2001-06-20 12:22:51 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -60,7 +60,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.7 $ $Date: 2001-06-20 11:15:57 $
+ * @version    $Revision: 1.8 $ $Date: 2001-06-20 12:22:51 $
  */
 
 public class EnterTransformDetailsAction extends ResearcherAction {
@@ -102,8 +102,8 @@ public class EnterTransformDetailsAction extends ResearcherAction {
             return retForward;
         }
         
-        TransformDetailsForm transForm = (TransformDetailsForm) form;
-        Container container =transForm.getContainer();
+        ContainerResultsForm resultForm = (ContainerResultsForm) form;
+        Container container =resultForm.getContainer();
         Vector samples = container.getSamples();
         
         Connection conn = null;
@@ -112,13 +112,13 @@ public class EnterTransformDetailsAction extends ResearcherAction {
         
         try {
             conn = DatabaseTransaction.getInstance().requestConnection();
-            for(int i = 0; transForm != null &&i <transForm.size() ;i++) {
+            for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
                 
                 Sample curSample = (Sample)samples.get(i);
                 
-                curSample.setStatus(transForm.getStatus(i));
+                curSample.setStatus(resultForm.getStatus(i));
                 Result curResult = 
-                    new Result(process,curSample,Result.TRANSFORMATION_TYPE,transForm.getResult(i));
+                    new Result(process,curSample,Result.TRANSFORMATION_TYPE,resultForm.getResult(i));
                 curSample.update(conn);
                 curResult.insert(conn);
             }
