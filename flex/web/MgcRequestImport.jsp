@@ -19,6 +19,9 @@
 
 <input name="projectid" type="hidden" value="<bean:write name="projectid" />" >
 <input name="workflowid" type="hidden" value="<bean:write name="workflowid" />" >
+<input name="projectname" type="hidden" value="<bean:write name="projectname" />" >
+<input name="workflowname" type="hidden" value="<bean:write name="workflowname" />" >
+
 
 <table>
     <tr>
