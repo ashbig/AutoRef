@@ -80,14 +80,19 @@ public class SequencingFacilityFileName
     
     
     ///D248P100FA1.T0.scf
+    // assumption : broad name 8 letters/digits followed by F/R followed by well names
      private  void broadFileName(String broad_file_name)
      {
-        int plate_name_end_f = 0; int plate_name_end_r = 0;
+        int plate_name_end_f = 8; int plate_name_end_r = 0;
         int well_info_start = 0;
         m_file_name = broad_file_name;
         
-        plate_name_end_f = broad_file_name.indexOf("F");
-        if ( plate_name_end_f == -1 )
+       // plate_name_end_f = broad_file_name.indexOf("F");
+        char orientation = broad_file_name.charAt(8);
+        if ( broad_file_name.length() < 11 || !(orientation == 'R' || orientation =='r' 
+            ||   orientation== 'F' || orientation =='f')) return;
+        //if ( plate_name_end_f == -1 )
+        if ( orientation == 'r' || orientation == 'R')
         {
             plate_name_end_r = broad_file_name.indexOf("R");
             m_orientation = "R";
