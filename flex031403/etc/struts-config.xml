@@ -68,6 +68,10 @@
     <form-bean      name="findRegistrationForm"
                     type="edu.harvard.med.hip.flex.form.FindRegistrationForm"/>
 
+    <!-- Get process results form bean -->
+    <form-bean      name="GetProcessResultsForm"
+                    type="edu.harvard.med.hip.flex.form.GetProcessResultsForm"/>
+
 
   </form-beans>
 
@@ -290,6 +294,15 @@
                scope="request"
                input="/PrintOligoPlateBarcode.jsp">
       <forward  name="success"   path="/PrintOligoPlateBarcode.jsp"/>
+    </action>
+
+    <!-- Process the get process results -->
+    <action    path="/GetProcessResults"
+               type="edu.harvard.med.hip.flex.action.GetProcessResultsAction"
+               name="GetProcessResultsForm"
+               scope="request"
+               input="/GetProcessResults.jsp">
+      <forward  name="success"   path="/GetProcessResults.jsp"/>
     </action>
 
     <!-- Displays the container details page -->
