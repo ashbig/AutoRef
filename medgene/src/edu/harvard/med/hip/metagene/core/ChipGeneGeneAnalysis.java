@@ -103,7 +103,7 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
                 String symbol_value = rs.getString(2);
                 int locus_id = rs.getInt(3);
                 double score = rs.getDouble(4);
-                source_for_indirect_genes.add(new Integer(gene_index_id));   
+                source_for_indirect_genes.put(new Integer(gene_index_id), new Double(score));  
                 
                 ChipGene gene = new ChipGene(symbol_value, locus_id, score);
                 if(input_type == GENE_SYMBOL_INPUT)
