@@ -278,7 +278,7 @@
                name="EnterOligoPlateLocationForm"
                scope="request"
                input="/EnterOligoPlateLocation.jsp">
-      <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
+      <forward  name="success"   path="/PrintOligoPlateBarcode.jsp"/>
     </action>
 
     <!-- Process the printing of new oligo plate barcodes -->
