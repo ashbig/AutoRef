@@ -35,6 +35,17 @@
     <html:link forward="register" target="_top">Customer registration</html:link>
     <br>
     <html:link forward="findRegistration" target="_top">Forgot your password?</html:link>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<small>** This system and the underlying database was built in conjunction with
+<a href="http://www.3rdmill.com" target="_blank">3rd Millennium Inc.</a> **</small>
+<p><a href="http://www.3rdmill.com" target="_blank">
+    <img height=40 
+        src="3rdhoriz.gif" 
+        width=150 border=0>
+    </a>
+
 </center>
 </body>
 </html>

@@ -107,5 +107,17 @@
 
 </html:form>
 
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<center>
+<small>** This system and the underlying database was built in conjunction with
+<a href="http://www.3rdmill.com" target="_blank">3rd Millennium Inc.</a> **</small>
+<p><a href="http://www.3rdmill.com" target="_blank">
+    <img height=40 
+        src="3rdhoriz.gif" 
+        width=150 border=0>
+</a>
+</center>
+
 </body>
 </html>
