@@ -33,11 +33,11 @@ import java.util.*;
     // only for LQR report how many bases will be covered by end reads
     private int				m_number_of_bases_covered_by_forward_er = 300;
     private int				m_number_of_bases_covered_by_reverse_er = 300;
-    public static final int             STATUS_NO_READS_NEEDED = -1;
+   /* public static final int             STATUS_NO_READS_NEEDED = -1;
     public static final int             STATUS_NO_READS_NEEDED_OUT_OF_RANGE_FOR_DEFINITION = -2;
     public static final int             STATUS_NOT_DEFINED = 0;
     public static final int             STATUS_YES_READS_NEEDED = 1;
-
+*/
     public void         setProcessType(int v){ m_process_type = v;}
     public void         setSpecId(int v){m_spec_id = v;}
     public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
@@ -65,7 +65,6 @@ import java.util.*;
     {
          Connection conn = null;
          int process_id = -1;
-          FileWriter reportFileWriter = null;
          PreparedStatement pst_check_prvious_process_complition = null;
          PreparedStatement pst_insert_process_object = null;
          StretchCollection stretch_collection = null;
@@ -78,6 +77,7 @@ import java.util.*;
             trimming_spec = (SlidingWindowTrimmingSpec)Spec.getSpecById(m_spec_id);
             conn = DatabaseTransaction.getInstance().requestConnection();
             ArrayList clone_ids = Algorithms.splitString( m_items);
+            String report_file_name = Constants.getTemporaryFilesPath() + "GapMapper"+System.currentTimeMillis()+".txt";
             for (int count_clones = 0; count_clones < clone_ids.size(); count_clones++)
             {
                 //we need to get linkers to prevent definition of lqrs outside intresting regions
@@ -106,19 +106,16 @@ import java.util.*;
                             DatabaseTransaction.executeUpdate(pst_insert_process_object);
                             conn.commit();
                         }
-                        else
-                        {
-                            if (reportFileWriter == null)
-                            {
-                                File reportFile = new File(Constants.getTemporaryFilesPath() + "GapMapper"+System.currentTimeMillis()+".txt");
-                                m_file_list_reports.add(reportFile);
-                                reportFileWriter =  new FileWriter(reportFile);
-                            }
-                            String stretch_collection_report = getReportForStretchCollection((String)clone_ids.get(count_clones), stretch_collection);
-                            reportFileWriter.write( stretch_collection_report);
-                            reportFileWriter.flush();
-                        }
+                        
+                        ArrayList print_items = SpecialReportsRunner.getReportForStretchCollection(
+                                        (String)clone_ids.get(count_clones), 
+                                        stretch_collection, 
+                                        m_number_of_bases_covered_by_forward_er ,
+                                        m_number_of_bases_covered_by_reverse_er,
+                                        true, true);
+                        Algorithms.writeArrayIntoFile( print_items, true, report_file_name);
                     }
+                    
                 }
                 catch(Exception e)
                 {
@@ -126,6 +123,7 @@ import java.util.*;
                     m_error_messages.add(e.getMessage());
                 }
          }
+         m_file_list_reports.add( new File(report_file_name));
         }
         catch(Exception e)
         {
@@ -135,7 +133,6 @@ import java.util.*;
         }
         finally
         {
-            try{ if ( reportFileWriter!= null) reportFileWriter.close();}catch(Exception e1){}
             if(conn != null)            DatabaseTransaction.closeConnection(conn);
             sendEMails( getTitle() );
         }
@@ -297,7 +294,7 @@ import java.util.*;
         return cloning_strategy;
     }
 
-
+/*
             //PreparedStatement pst_get_flexsequenceid,PreparedStatement pst_get_flexsequence_length,
      private String getReportForStretchCollection(String clone_id, StretchCollection stretch_collection)throws Exception
     {
@@ -358,15 +355,7 @@ import java.util.*;
                 buf.append( stretch.toString() );
             }
             buf.append(Constants.LINE_SEPARATOR );
-            /*
-            if ( stretch.getSequence() != null)
-            {
-                buf.append( stretch.getSequence().getText() );
-                buf.append(Constants.LINE_SEPARATOR );
-                buf.append( stretch.getSequence().getScores() );
-                buf.append(Constants.LINE_SEPARATOR );
-            }
-             **/
+           
         }
         //define need for end / internal  read
         if ( m_process_type == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE )
@@ -445,7 +434,7 @@ import java.util.*;
             return STATUS_NOT_DEFINED;
     }
 
-    
+    */
     //to fix yeast long linker
     private boolean isYeastLinker(String name)
     {
@@ -461,6 +450,7 @@ import java.util.*;
         return false;
 
     }
+
      /*3558 3491 3515 884 6947 6858 3724 */
 
         public static void main(String [] args)
@@ -469,7 +459,7 @@ import java.util.*;
         try
         {
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setItems(" 900 942 1793");
+             runner.setItems(" 146364        146277 ");
              
              
              runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
