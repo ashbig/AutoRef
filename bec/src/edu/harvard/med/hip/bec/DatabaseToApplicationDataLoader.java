@@ -37,12 +37,14 @@ public class DatabaseToApplicationDataLoader
     
      
     private static Hashtable      m_project_definition = null;
+    private static Hashtable      m_process_definition = null;
     private static Hashtable      m_species_definition = null;
   
     public static void            loadDefinitionsFromDatabase()
     {
         loadProjectDefinition();
         loadBiologicalSpeciesNames();
+        loadProcessDefinition();
     }
     /** Creates a new instance of DataLoad */
     private static void            loadProjectDefinition()
@@ -68,6 +70,29 @@ public class DatabaseToApplicationDataLoader
 
     }
      
+    public static void      loadProcessDefinition()
+    {
+        String sql = "select  PROCESSDEFINITIONID,PROCESSNAME from processdefinition ";
+        ResultSet rs = null;
+        m_process_definition = new Hashtable();
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next() )
+            {
+                m_process_definition.put ( rs.getString("PROCESSNAME"), new ProcessDefinition(rs.getInt("PROCESSDEFINITIONID"),  rs.getString("PROCESSNAME"), null));
+            }
+            
+        } catch (Exception e)
+        {
+            System.out.println( "Cannot load  processdefinition " + e.getMessage());
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+    
     
     private static void loadBiologicalSpeciesNames()
     {
@@ -90,6 +115,12 @@ public class DatabaseToApplicationDataLoader
         }
     }
     
+    
+     public static Hashtable getSpecies(){ return m_species_definition;}
+    public static Hashtable getProcessDefinitions(){ return m_process_definition;}
+   
+    
+    //----------------------------------------------------
     public static String getSpeciesName(int species_code)
     {
         SpeciesDefinition sd = (SpeciesDefinition) m_species_definition.get( String.valueOf(species_code ));
@@ -99,7 +130,6 @@ public class DatabaseToApplicationDataLoader
             return  sd.getName();
     }
     
-    public static Hashtable getSpecies(){ return m_species_definition;}
     
     public static int getSpeciesId(String  species_name)
     {
