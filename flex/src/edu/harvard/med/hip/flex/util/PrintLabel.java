@@ -26,22 +26,30 @@ public class PrintLabel {
        public PrintLabel() {
        }
 
-       public static void main(String[] args) { 
+       public String execute(String label) {
+           /* 
+            * the status message that going to return
+            */
+           StringBuffer msg = new StringBuffer();
+           
 
            try { 
-               /* Execute the command using the Runtime object and get the 
-                  Process which controls this command */ 
-               Process p = Runtime.getRuntime().exec(args[0]); 
-
+               /* 
+                * Execute the command using the Runtime object and get the 
+                * Process which controls this command 
+                */
+               String cmd = "perl print_label.pl " + label;
+               Process p = Runtime.getRuntime().exec(cmd); 
+                      
                /* Use the following code to wait for the process to finish 
-                  and check the return code from the process */ 
+                *  and check the return code from the process 
+                */ 
                try { 
                     p.waitFor();
 		    
                     String imsg = "";
                	    String emsg = "";
-                    StringBuffer msg = new StringBuffer();
-
+                    
                     BufferedReader in = new
                     BufferedReader(new InputStreamReader (p.getInputStream()));
 
@@ -57,22 +65,26 @@ public class PrintLabel {
                     }
                     
                     p.destroy();
-                    System.out.println(msg);
-                    
                /* Handle exceptions for waitFor() */ 
                } catch (InterruptedException intexc) { 
-                  System.out.println("Interrupted Exception on waitFor: " +  
-                            intexc.getMessage()); 
+                    msg.append("Interrupted exception from waitfor, detail: " 
+                                + intexc.getMessage()); 
                
                } catch (Exception e) {
-		            System.out.println("Exception: " + e.getMessage());
-	            }
+		            msg.append("Exception when printing label, detail: " 
+                                + e.getMessage());
+               }
 
-           /* Handle the exceptions for exec() */ 
+           /* 
+            * Handle the exceptions for exec() 
+            */ 
            } catch (IOException e) { 
-               System.out.println("IO Exception from exec : " + 
-                                                e.getMessage()); 
-               e.printStackTrace(); 
+               msg.append("IO Exception from exec, detail : " 
+                                  + e.getMessage()); 
+           }
+           
+           finally {
+                return msg.toString();
            }
      }
 } 
