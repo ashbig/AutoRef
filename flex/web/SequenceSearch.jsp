@@ -8,7 +8,7 @@
 </head>
 <body bgcolor="white">
 
-<h2>FlexGene : Cloning Request : SequenceSearch</h2>
+<h2>FlexGene : Cloning Request : Sequence Search</h2>
 <hr>
 
 <html:errors/>
