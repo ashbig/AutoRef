@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.17 2001-06-25 15:24:23 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.18 2001-06-26 12:49:19 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -136,7 +136,62 @@ public class Process {
     }
     
     
-    
+    /**
+     * Find the process execution with the provided container and protocol.
+     * The process has been completed and the records are removed from 
+     * queue to processobject.
+     *
+     * @param container The container of the process we want.
+     * @param protocol The protocol of the porcess we want.
+     *
+     * @return the process specified by the container and protocol or null
+     *      if no process is found.
+     */
+    public static Process findCompleteProcess(Container container, Protocol protocol)
+    throws FlexDatabaseException{
+        Process retProcess = null;
+        String sql=
+        "select x.executionid, x.executionstatus, x.researcherid,"+
+        "x.processdate, x.subprotocolname, x.extrainformation "+
+        "from processexecution x, processobject o "+
+        "WHERE "+
+        "o.containerid=? AND "+
+        "x.protocolid=?";
+        DatabaseTransaction dt = DatabaseTransaction.getInstance();
+        
+        Connection conn = dt.requestConnection();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conn.prepareStatement(sql);
+            
+            ps.setInt(1, container.getId());
+            ps.setInt(2, protocol.getId());
+            rs = dt.executeQuery(ps);
+            // if we find a process then create it
+            if(rs.next()) {
+                retProcess =
+                new Process(rs.getInt("executionid"),
+                protocol,
+                rs.getString("executionstatus"),
+                new Researcher(rs.getInt("researcherid")),
+                rs.getString("processDate"),rs.getString("subprotocolname"),
+                rs.getString("extrainformation"));
+                
+                
+            }
+            
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(ps);
+            DatabaseTransaction.closeConnection(conn);
+            
+        }
+        return retProcess;
+    }    
     
     /**
      * Set the subprotocol field to the given value.
