@@ -84,11 +84,10 @@ public class SequenceSelectionAction extends FlexAction {
                 String gi = selections[i];
                 FlexSequence sequence = (FlexSequence)searchResult.get(gi);
                 submittedSequences.addElement(sequence);
-            
+         
                 //for the new sequences, need more info from genbank.
                 if(sequence.getFlexstatus().equals(FlexSequence.NEW)) {
-                    setSequenceInfo(sequence, gi);
-                
+                    setSequenceInfo(sequence, gi);           
                     //if the sequence quality is questionable, put it aside.
                     if(FlexSequence.QUESTIONABLE.equals(sequence.getQuality())) {
                         badSequences.addElement(sequence);
@@ -107,7 +106,7 @@ public class SequenceSelectionAction extends FlexAction {
                                 Homologs h = new Homologs();
                                 h.setHomolog(analyzer.getHomolog());
                                 h.setBlastResults(analyzer.getBlastResults());
-                                
+
                                 if(analyzer.getBlastResults().getEvalue().equals("0.0")) {
                                     cdsMatchSequences.put(gi, h);
                                 } else {
