@@ -255,6 +255,13 @@
       <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action> 
 
+     <!-- Process the researcher barcode input -->
+    <action    path="/PrintBarcode"
+               type="edu.harvard.med.hip.flex.action.PrintBarcodeAction"
+               input="/PrintBarcode.jsp">
+      <forward  name="success"   path="/PrintBarcode.jsp"/>
+    </action> 
+
     <!-- Process the receiving of new oligo plates -->
     <action    path="/ReceiveOligoPlates"
                type="edu.harvard.med.hip.flex.action.ReceiveOligoPlatesAction"
