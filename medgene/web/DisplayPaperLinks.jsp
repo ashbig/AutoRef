@@ -6,10 +6,10 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><title>Medline Paper Links (PMID)</title></head>
+<head><title>Medline Paper Links</title></head>
 <body>
 <center>
-<h1>Selected Paper Links</h1>
+<h1>Selected Paper Links (PMID)</h1>
 </center>
 <p>
     <% String url = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=nucleotide&list_uids="; %>
