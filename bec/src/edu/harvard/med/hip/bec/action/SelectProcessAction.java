@@ -121,10 +121,11 @@ public class SelectProcessAction extends ResearcherAction
                 {
                      EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
                     runner.setUser(user);
-                    t = new Thread(runner);
+                    
                      request.setAttribute(Constants.JSP_TITLE,"Request for end read wrapper invocation" );
                    request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
-                   // t.start();
+                   t = new Thread(runner);
+                   t.start();
                    return mapping.findForward("processing");
                 }
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper
@@ -181,7 +182,20 @@ public class SelectProcessAction extends ResearcherAction
                     request.setAttribute(Constants.JSP_TITLE,"select Plate to Approve Isolate Ranker Results");
                      return (mapping.findForward("scan_label"));
                 }
-               
+                case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE:
+                {
+                     String file_description = "<I>You are about to submit sequence data to BEC. The <B>requested file format</b> is: <p> <i> ></i>FLEX SAMPLE ID <P> sequence in fasta format."
+                    +"The process will take some time. The e-mail report will be sent to you upon completion."; 
+                    String file_title = "Please select the sequence information file:";
+                    String additional_jsp = "";
+                    request.setAttribute(Constants.JSP_TITLE, "submit Sequence data for set of clones");
+                    request.setAttribute(Constants.FILE_DESCRIPTION, file_description);
+                    request.setAttribute(Constants.FILE_TITLE, file_title);
+                    request.setAttribute(Constants.FILE_NAME,Constants.FILE_NAME);
+                    request.setAttribute(Constants.ADDITIONAL_JSP, additional_jsp);
+                    return (mapping.findForward("submit_data_file"));
+                    
+                }
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER: // add new internal primer
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
                 {
