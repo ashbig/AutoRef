@@ -15,6 +15,7 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
 <%@ page import="edu.harvard.med.hip.bec.Constants" %>
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <%@ page import="edu.harvard.med.hip.utility.*" %>
 
 <%-- The container that was searched --%>
@@ -50,19 +51,19 @@
 <% Container container = (Container)request.getAttribute("container") ;%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
-    <td width="19%"><strong>Label:</strong></td>
+    <td width="19%"><strong>Label: </strong></td>
     <td width="81%"> 
       <%= container.getLabel() %>
     </td>
   </tr>
   <tr> 
-    <td><strong>Container Id:</strong></td>
+    <td><strong>Container Id: </strong></td>
     <td> 
       <%= container.getId() %>
     </td>
   </tr>
    <tr> 
-    <td><strong>Container Type:</strong></td>
+    <td><strong>Container Type: </strong></td>
     <td> 
       <%= container.getType() %>
     </td>
@@ -70,10 +71,12 @@
   
   
   <tr> 
-    <td><strong>Cloning Strategy</strong></td>
+    <td><strong>Cloning Strategy: </strong></td>
     <td> 
+    <% if ( container.getCloningStrategyId() != BecIDGenerator.BEC_OBJECT_ID_NOTSET){%> 
       <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
 	    <%= container.getCloningStrategyId() %></A>
+	    <%} else {%> &nbsp; <%}%>
     </td>
   </tr>
   

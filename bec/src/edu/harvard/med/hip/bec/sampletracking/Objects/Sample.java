@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.9 2003-09-16 18:59:16 Elena Exp $
+ * $Id: Sample.java,v 1.10 2005-03-29 19:33:28 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -31,11 +31,7 @@ public class Sample
     public final static String OLIGO_3F = "OLIGO_3F";
     
     public final static String ISOLATE = "ISOLATE";
-    public final static String DNA = "DNA";
-   
     public final static String EMPTY = "EMPTY";
-    public final static String GEL = "GEL";
-  
     public final static String CONTROL_POSITIVE = "CONTROL_POSITIVE";
     public final static String CONTROL_NEGATIVE = "CONTROL_NEGATIVE";
     
@@ -316,7 +312,13 @@ public class Sample
         
     }
     
-    
+    public String toString()
+    {
+        String result = "Sample: id "+m_id +" type "+ m_type +" container id "+
+         m_containerid +" position "+ m_position +" isolate tracking id "+ m_isolatetracking_id ;
+        if (  m_isolatetracking != null) result+= m_isolatetracking.toString();
+        return result;
+    }
    
     //******************************************************//
     //			Testing				//

@@ -1,0 +1,44 @@
+/* styles for status */
+h3.rejected {color: red}
+h3.accepted {color: green}
+
+/* styles for prompts */
+EM, TD.prompt, TD.label {font-style: normal; color: black; font-weight: bold}
+
+/* styles for navigation */
+body.nav {background: #7a8a9a}
+table.nav {background: white}
+div.nav {margin: .3em .3em .3em .3em}
+
+/* styles for tables */
+tr.oddRow {background: #ffffff}
+tr.evenRow {background: #eeeeee}
+tr.headerRow {background: #999999}
+tr.navRow {background: #9bbad6}
+tr.highlightRow {background: #9bbad6}
+
+
+borders_1  {"border:solid 2px magen"}
+borders_2  {"border:solid 1px #060"} 
+borders_3  {"border:dotted 2px magen"}
+borders_4  {"border:dotted 1px #060"}
+borders_5  {"border:solid 2px red"}
+borders_6  {"border:dashed 2px blue"}
+borders_7  {"border:dotted 1px green"}
+borders_8  {"border:solid 2px black"}
+borders_9  {"border:dashed 1px green"}
+borders_10  {"border:solid 2px magen"}
+
+
+.red {	background-color:#9999CC;}
+.green {	background-color: #99FFFF;}
+.black {	background-color: #999999;}
+.brown {	background-color: #ffe4c4;}
+.yellow {	background-color: #9999FF;}
+.orange {	background-color: #99CCFF;}
+.control {	background-color: #CCCCFF;}
+.empty {	background-color: #CCCCCC;}
+.nosample {	background-color: white;}
+.notanalized {	background-color: white;}
+.nomatch {	background-color: #ADFF2F;}
+

@@ -242,8 +242,10 @@ public class Constants {
     public static final int         PROCESS_VIEW_ALL_NAME_TYPE  = 92;
     public static final int         PROCESS_VIEW_ALL_SPECIES_DEFINITION  = 93;
     public static final int         PROCESS_VIEW_ALL_PROJECT_DEFINITION  = 94;
-     public static final int         PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER  = 95;
-       public static final int         PROCESS_ADD_NEW_COMMON_PRIMER  = 98;
+    public static final int         PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER  = 95;
+    public static final int         PROCESS_ADD_NEW_COMMON_PRIMER  = 98;
+    public static final int         PROCESS_ADD_NEW_CLONINGSTRATEGY   = 99;
+
 // outside submission
     public static final int         PROCESS_SUBMIT_REFERENCE_SEQUENCES  = 96;
     public static final int         PROCESS_SUBMIT_CLONE_COLLECTION  = 97;

@@ -86,9 +86,17 @@ public class CloningStrategy
         try
         {
             DatabaseTransaction dt = DatabaseTransaction.getInstance();
+            if ( m_name != null )
+            {
+                 sql = "insert into cloningstrategy (strategyid, name, vectorid,linker5id,linker3id,STARTCODON  ,FUSIONSTOPCODON   ,CLOSEDSTOPCODON  ) values ("
+            + m_id +",'"+m_name +"',"+ m_vector_id +","+m_linker5_id+","+m_linker3_id +",'"+m_start_codon+"','"+ m_fusion_stop_codon +"','"+ m_closed_stop_codon+"')";
+          
+            }
+            else
+            {
             sql = "insert into cloningstrategy (strategyid, vectorid,linker5id,linker3id,STARTCODON  ,FUSIONSTOPCODON   ,CLOSEDSTOPCODON  ) values ("
             + m_id +","+ m_vector_id +","+m_linker5_id+","+m_linker3_id +",'"+m_start_codon+"','"+ m_fusion_stop_codon +"','"+ m_closed_stop_codon+"')";
-            
+            }
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             
@@ -116,6 +124,19 @@ public class CloningStrategy
 +" ( select isolatetrackingid from flexinfo where flexcloneid in ("+cloneid+"))))";
        
         return getByRule( sql) ;
+    }
+     
+     public  boolean isExist()throws BecDatabaseException
+    {
+        return isExist( this) ;
+    }
+     
+     public boolean isExist(CloningStrategy cs)throws BecDatabaseException
+    {
+        String sql = "  where VECTORID ="+cs.getVectorId() +" and LINKER3ID  ="+
+       cs.getLinker3Id()+" and LINKER5ID ="+cs.getLinker5Id()+" and STARTCODON='"+cs.getStartCodon()
+       +"' and FUSIONSTOPCODON  ='"+cs.getFusionStopCodon() +"' and CLOSEDSTOPCODON ='"+cs.getClosedStopCodon()+"'";
+       return ( getByRule( sql) != null)  ;
     }
     
     public static int getCloningStrategyIdByVectorLinkerInfo(int vectorid, int linker3id, int linker5id,String start,String fusionstop,String openstop)throws BecDatabaseException

@@ -68,6 +68,7 @@ public class RefSequenceParser extends DefaultHandler
       public void startElement(String uri, String localName, String rawName,
                                Attributes attributes) 
       {
+          String local_value = null;
              if (localName.equalsIgnoreCase(REFSEQUENCE_START) )
             {
                 i_current_refsequence = new RefSequence();
@@ -82,14 +83,15 @@ public class RefSequenceParser extends DefaultHandler
                {
                     for (int ii = 0; ii < attributes.getLength(); ii++)
                     {
+                        local_value= attributes.getValue(ii).trim() ;
                          if (attributes.getQName(ii).equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_TYPE) )
-                            i_current_public_info.setName( attributes.getValue(ii));
+                            i_current_public_info.setName( local_value);
                         else  if (attributes.getQName(ii).equalsIgnoreCase(REFSEQUENCE_FEATURE_NAME_VALUE) )
-                            i_current_public_info.setValue( attributes.getValue(ii));
+                            i_current_public_info.setValue( local_value);
                         else  if (attributes.getQName(ii).equalsIgnoreCase(REFSEQUENCE_FEATURE_DESCRIPTION) )
-                            i_current_public_info.setDescription( attributes.getValue(ii));
+                            i_current_public_info.setDescription( local_value);
                         else  if (attributes.getQName(ii).equalsIgnoreCase(REFSEQUENCE_FEATURE_URL) )
-                            i_current_public_info.setUrl( attributes.getValue(ii));
+                            i_current_public_info.setUrl( local_value);
                      }
                }
                else
@@ -123,7 +125,7 @@ public class RefSequenceParser extends DefaultHandler
          
           switch(i_current_status)
           {
-             case  REFSEQUENCE_ID_STATUS: {break;}
+             case  REFSEQUENCE_ID_STATUS: {i_current_refsequence.setId(Integer.parseInt(chData));break;}
              case  REFSEQUENCE_SPECIES_STATUS: { i_current_refsequence.setSpecies(Integer.parseInt(chData));break;}
              case REFSEQUENCE_CDS_START_STATUS: {i_current_refsequence.setCdsStart(Integer.parseInt(chData));break;}
              case REFSEQUENCE_CDS_STOP_STATUS: {i_current_refsequence.setCdsStop(Integer.parseInt(chData));break;}
@@ -151,7 +153,7 @@ public class RefSequenceParser extends DefaultHandler
         SAXParser parser = new SAXParser();
         parser.setContentHandler(SAXHandler);
         parser.setErrorHandler(SAXHandler);
-        parser.parse("C:\\BEC\\bec\\docs\\REFSEQUENCE.xml");
+        parser.parse("C:\\BEC\\bec\\docs\\ApplicationSetup\\RefSeqFOrTest.xml");
         ArrayList v= SAXHandler.getRefSequences();
         java.sql.Connection conn = edu.harvard.med.hip.bec.database.DatabaseTransaction.getInstance().requestConnection();
         //for (int count = 0; count < v.size();count++)
