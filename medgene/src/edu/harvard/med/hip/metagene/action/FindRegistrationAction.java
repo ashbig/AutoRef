@@ -31,7 +31,7 @@ import edu.harvard.med.hip.metagene.util.*;
  * @author  yanhuihu
  * @version
  */
-public final class FindRegistrationAction extends Action {
+public class FindRegistrationAction extends Action {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
