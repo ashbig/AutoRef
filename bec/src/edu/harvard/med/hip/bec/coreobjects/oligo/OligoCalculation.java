@@ -228,9 +228,9 @@ public class OligoCalculation
         else if ( type_of_oligo_calculation ==    TYPE_OF_OLIGO_CALCULATION_STRETCH_COLLECTION )
         {
    sql=  "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS   "
-+" from  oligo_calculation where STRETCHCOLLECTIONID > 0 and sequenceid = "
-+" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
-+" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+"))) order by oligocalculationid";
++" from  oligo_calculation where STRETCHCOLLECTIONID in "
++" (select collectionid from stretch_collection  where isolatetrackingid in "
++" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+")) order by oligocalculationid";
 
         }
      else if ( type_of_oligo_calculation ==  TYPE_OF_OLIGO_CALCULATION_ANY )
@@ -258,8 +258,9 @@ sql=         "select  oligocalculationid, sequenceid, primer3configid, dateadded
         else if ( type_of_oligo_calculation ==    TYPE_OF_OLIGO_CALCULATION_STRETCH_COLLECTION )
         {
   sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS    "
-+" from  oligo_calculation where STRETCHCOLLECTIONID > 0 and sequenceid in "
-+" (select refsequenceid from sequencingconstruct where constructid in  (select constructid from isolatetracking where sampleid in"
++" from  oligo_calculation where STRETCHCOLLECTIONID  in "
++" (select collectionid from stretch_collection where isolatetrackingid in "
++" (select isolatetrackingid from isolatetracking where sampleid in "
 +" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid";
    
         }
