@@ -55,7 +55,7 @@
 
             <logic:iterate name="constructInfo" property="clones" id="clone">
             <td>
-            <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&isCloneStorageDisplay=1">
+            <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&<%=Constants.ISDISPLAY%>=1">
                 <flex:write name="clone" property="cloneid"/>
             </A>
             </td>
