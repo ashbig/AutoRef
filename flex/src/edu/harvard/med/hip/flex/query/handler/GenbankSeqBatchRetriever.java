@@ -60,7 +60,7 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
                     noFoundList.put(element, nofound);
                 } else {
                     String genbank = (String)(searchResult.get("accession"));
-                    GiRecord giRecord = new GiRecord(Integer.parseInt(element), genbank, (String)(searchResult.get("sequencetext")), start, stop);
+                    GiRecord giRecord = new GiRecord(element, genbank, (String)(searchResult.get("sequencetext")), start, stop);
                     foundList.put(element, giRecord);
                 }
             } catch (FlexUtilException ex) {

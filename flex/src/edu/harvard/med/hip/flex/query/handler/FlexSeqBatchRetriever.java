@@ -56,7 +56,7 @@ public class FlexSeqBatchRetriever extends SeqBatchRetriever {
                         
             if (rs.next()) {
                 String genbank = rs.getString("ACCESSION");
-                int gi = rs.getInt("GI");
+                String gi = rs.getString("GI");
                 String sequenceFile = rs.getString("SEQUENCEFILE");
                 GiRecord giRecord = new GiRecord(gi, genbank, sequenceFile);
                 giRecord.setCdsStart(rs.getInt("CDSSTART"));
