@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.27 2002-10-02 17:50:24 Elena Exp $
+ * $Id: Protocol.java,v 1.28 2002-10-03 18:05:20 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -102,13 +102,14 @@ public class Protocol {
         if (Constants.s_protocols_id != null && Constants.s_protocols_id.get(String.valueOf(id)) != null)
         {
             Protocol pr = (Protocol)Constants.s_protocols_id.get(String.valueOf(id));
+   
             this.id = id;
             this.processcode = pr.getProcesscode();
             this.processname = pr.getProcessname();
             this.subprotocol = pr.getSubprotocol();
-            System.out.println("return");
             return;
         }
+   
            String sql = "select protocolid, processcode, processname " +
         "from processprotocol " +
         "where protocolid = " + id;
@@ -176,10 +177,13 @@ public class Protocol {
      */
     public Protocol(String processname) throws FlexDatabaseException {
         
+      
         if (Constants.s_protocols_name != null && Constants.s_protocols_name.get(processname) != null)
         {
+           
             Protocol pr = (Protocol)Constants.s_protocols_name.get(processname);
-            this.id = id;
+          
+            this.id = pr.getId();
             this.processcode = pr.getProcesscode();
             this.processname = pr.getProcessname();
             this.subprotocol = pr.getSubprotocol();
