@@ -99,7 +99,7 @@ public class GetLocationAction extends ResearcherAction{
         oldContainer.setLocation(sLocation);
         Vector oldContainers = new Vector();
         oldContainers.addElement(oldContainer);
-        request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
+        //request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
         request.getSession().setAttribute("EnterSourcePlateAction.oldContainers", oldContainers);    
     }
        

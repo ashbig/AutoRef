@@ -249,6 +249,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
             
             // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+            request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
             request.getSession().removeAttribute("SelectProtocolAction.protocol");
             request.getSession().removeAttribute("EnterOligoPlateAction.fivep");
             request.getSession().removeAttribute("EnterOligoPlateAction.threepOpen");
