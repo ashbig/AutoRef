@@ -39,7 +39,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  * @author  dzuo
  * @version 
  */
-public class SelectWorkflowAction extends WorkflowAction {
+public class SelectWorkflowAction extends ResearcherAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
