@@ -83,26 +83,26 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
             
             // analysis input genes
             ActionErrors errors = new ActionErrors();    
-            ChipGeneAnalysis ana = new ChipGeneAnalysis();  
-            ana.hashDirectGenes(disease_id, 1, input_type);
-            //ana.hashDirectGenes(402, 1, input_type);  //402 483
+            ChipGeneDiseaseAnalysis gda = new ChipGeneDiseaseAnalysis();  
+            gda.hashDirectGenes(disease_id, 1, input_type);
+            //gda.hashDirectGenes(402, 1, input_type);  //402 483
             
             try{
-            ana.hashIndirectGenes(gene_input, ana.getSource_for_indirect_genes(), input_type);       
-            ana.analyzeInputChipGenes(gene_input, input_type);
+            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type);       
+            gda.analyzeInputChipGenes(gene_input, input_type);
             }catch(NumberFormatException e){
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
  
             }
-            String disease_mesh_term = ana.getDiseaseMeshTerm(disease_id);
-            //String disease_mesh_term = ana.getDiseaseMeshTerm(402);
+            String disease_mesh_term = gda.getDiseaseMeshTerm(disease_id);
+            //String disease_mesh_term = gda.getDiseaseMeshTerm(402);
             
             // set attributes
-            request.setAttribute("direct_genes", ana.getDirect_gene_tree());
-            request.setAttribute("indirect_genes", ana.getIndirect_gene_tree());
-            request.setAttribute("new_genes", ana.getNew_gene_tree());
+            request.setAttribute("direct_genes", gda.getDirect_gene_tree());
+            request.setAttribute("indirect_genes", gda.getIndirect_gene_tree());
+            request.setAttribute("new_genes", gda.getNew_gene_tree());
             request.setAttribute("disease_mesh_term", disease_mesh_term);
             
             return (mapping.findForward("success"));
