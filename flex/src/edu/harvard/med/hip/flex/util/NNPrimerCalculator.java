@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.3 2001-05-25 18:41:59 wenhong_mar Exp $
+ * $Id: NNPrimerCalculator.java,v 1.4 2001-05-31 15:13:53 wenhong_mar Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -325,38 +325,38 @@ public class NNPrimerCalculator implements PrimerCalculator
 	public static void main(String[] args)
 	{
 		NNPrimerCalculator calculator = new NNPrimerCalculator();
-		calculator.test();
+		//calculator.test();
 	}
 
 	//Test methuod for oligo calculation
-	public void test ()
+	public void test () throws FlexDatabaseException
 	{	
 		String seqText = "ATGGCGTTTCTCCGAAGCATGTGGGGCGTGCTGACTGCCCTGGGAAGGTCTGGAGCAGAGCTGTGCACCGGCTGTGGAAGTCGACTGCGCTCCCCCTTCAGGTAG";
 		int seqID = 1;
 
 		int Start = 0;
 		int Stop = 104;
-		Sequence testSeq = new Sequence(seqID,Start,Stop,seqText);
+		Sequence testSeq = new Sequence(seqID,Start,Stop);
                 
                 try{
 		Oligo result = calculateFivepOligo(testSeq);
 		System.out.println(result.getSequence());
 		System.out.println(result.getOligoLength());
-		System.out.println(result.getGatewaySequence());
+		System.out.println(result.getGatewayOligoSequence());
 		System.out.println(result.getType());
 		System.out.println(result.getTm());
 
 		Oligo result1 = calculateThreepCloseOligo(testSeq);
 		System.out.println(result1.getSequence());
 		System.out.println(result1.getOligoLength());
-		System.out.println(result1.getGatewaySequence());
+		System.out.println(result1.getGatewayOligoSequence());
 		System.out.println(result1.getType());
 		System.out.println(result1.getTm());
 
 		Oligo result2 = calculateThreepOpenOligo(testSeq);
 		System.out.println(result2.getSequence());
 		System.out.println(result2.getOligoLength());
-		System.out.println(result2.getGatewaySequence());
+		System.out.println(result2.getGatewayOligoSequence());
 		System.out.println(result2.getType());
 		System.out.println(result2.getTm());
                 }
