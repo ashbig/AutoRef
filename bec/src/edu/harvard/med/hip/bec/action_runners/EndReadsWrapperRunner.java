@@ -228,7 +228,11 @@ public class EndReadsWrapperRunner extends ProcessRunner
           {
            //   if ( ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION ) // check for read quality 
            //   {
-                    if (! isSufficientQualityRead(read) )     return;
+                    if (! isSufficientQualityRead(read) )  
+                    {
+                        m_error_messages.add("Read " + read.getTraceFileBaseName()+" was not submitted into ACE, because of read low quality");
+                        return;
+                    }
            //   }
               //read = (Read) reads.get(count);
               istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
