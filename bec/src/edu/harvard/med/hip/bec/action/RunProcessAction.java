@@ -187,6 +187,7 @@ public class RunProcessAction extends ResearcherAction
                             IsolateTrackingEngine.updateRankUserChangerId(rank,user.getId(),isolate_id,conn);
                         }
                     }
+                    conn.commit();
                     request.setAttribute(Constants.JSP_TITLE,"request for change of clone ranking is in process" );
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing "+clone_number +"  clones");
                     break;
@@ -194,9 +195,6 @@ public class RunProcessAction extends ResearcherAction
              
       //primer design items
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER : // add new internal primer
-                {
-                }
-                
                 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS : //view internal primers
                 {
@@ -243,6 +241,10 @@ public class RunProcessAction extends ResearcherAction
                     else if ( forwardName == Constants.PROCESS_VIEW_INTERNAL_PRIMERS)
                     {
                        request.setAttribute(Constants.JSP_TITLE,"view Internal Primers");
+                    }
+                    else if ( forwardName == Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER)
+                    {
+                       request.setAttribute(Constants.JSP_TITLE,"add new Internal Primers");
                     }
                     request.setAttribute("oligo_calculations",oligo_calculations);
                     request.setAttribute("items",items);
