@@ -361,6 +361,28 @@ public class CloneInfo extends CDNASequence {
         }
     }
     
+    public static class CloneAccComparator implements Comparator {
+        
+        public CloneAccComparator() {
+        }
+        
+        public int compare(Object p1, Object p2) {
+            String s1 = ((CloneInfo)p1).getNameinfo().getCloneAcc();
+            String s2 = ((CloneInfo)p2).getNameinfo().getCloneAcc();
+            
+            if(s1 == null && s2 == null)
+                return 0;
+            
+            if(s1 == null)
+                return 1;
+            
+            if(s2 == null)
+                return -1;
+            
+            return s1.compareTo(s2);
+        }
+    }
+    
     public static class SGDComparator implements Comparator {
         
         public SGDComparator() {

@@ -19,14 +19,23 @@ import org.apache.struts.action.ActionMapping;
 public class ExpressionResultHistoryForm extends ActionForm {
     private int sampleid;
     private String resulttype;
-    
+    private String gene;
+    private String plate;
+    private int well;
+   
     /** Creates a new instance of ExpressionResultHistoryForm */
     public ExpressionResultHistoryForm() {
     }
     
     public int getSampleid() {return sampleid;}
     public String getResulttype() {return resulttype;}
+    public String getGene() {return gene;}
+    public String getPlate() {return plate;}
+    public int getWell() {return well;}
     
     public void setSampleid(int sampleid) {this.sampleid=sampleid;}
     public void setResulttype(String resulttype) {this.resulttype=resulttype;}
+    public void setGene(String gene) {this.gene = gene;}
+    public void setPlate(String plate) {this.plate = plate;}
+    public void setWell(int well) {this.well = well;}
 }

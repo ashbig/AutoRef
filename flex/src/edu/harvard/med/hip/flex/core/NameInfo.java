@@ -17,6 +17,8 @@ public class NameInfo {
     protected String locusid;
     protected String panumber;
     protected String sgd;
+    protected String cloneAcc;
+    protected String cloneGi;
     
     /** Creates a new instance of NameInfo */
     public NameInfo() {
@@ -37,4 +39,9 @@ public class NameInfo {
     public String getLocusid() {return locusid;}
     public String getPanumber() {return panumber;}
     public String getSgd() {return sgd;}
+    public String getCloneAcc() {return cloneAcc;}
+    public String getCloneGi() {return cloneGi;}
+    
+    public void setCloneAcc(String s) {this.cloneAcc = s;}
+    public void setCloneGi(String s) {this.cloneGi = s;}
 }
