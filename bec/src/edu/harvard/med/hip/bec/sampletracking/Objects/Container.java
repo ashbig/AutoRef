@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.16 2003-09-16 18:59:06 Elena Exp $
+ * $Id: Container.java,v 1.17 2003-10-08 14:33:42 Elena Exp $
  *
  * File     	: Container.java
 
@@ -741,22 +741,22 @@ public class Container
             }
             	Sample sampleq=null;
 		Read readq  = null;
-		System.out.println(this.getSamples().size());
+		//System.out.println(this.getSamples().size());
     for (int count = 0; count < this.getSamples().size(); count ++)
     {
 	
 		sampleq = (Sample)this.getSamples().get(count);
-	System.out.println(sampleq.getPosition() +" ");
+	//System.out.println(sampleq.getPosition() +" ");
 		if ( sampleq.getResults() != null && sampleq.getResults().size() > 0)
 		{
 		
 			readq = (Read) ((Result)sampleq.getResults().get(0)).getValueObject();
-			if ( readq != null) System.out.println(" read id "+ readq.getId() +" ");
+			//if ( readq != null) System.out.println(" read id "+ readq.getId() +" ");
 		}
 		
 		 if ( sampleq.getConstructId()!= -1)
 		{
-		  System.out.println(sampleq.getConstructId() );
+		  //System.out.println(sampleq.getConstructId() );
 		}
 		
 		}
@@ -915,10 +915,9 @@ public class Container
         {
             
             s = (Sample)m_samples.get(ind);
-            if (s.getType().equals("EMPTY"))
-                System.out.print(s.getPosition()+" ");
+          //  if (s.getType().equals("EMPTY"))                System.out.print(s.getPosition()+" ");
             s.insert(conn);
-            System.out.println("insert "+s.getPosition());
+          //  System.out.println("insert "+s.getPosition());
         }
     }
     
