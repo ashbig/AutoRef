@@ -103,7 +103,7 @@ public class RearrayManager {
     public void setIsMedium(boolean b) {this.isMedium = b;}
     public void setIsLarge(boolean b) {this.isLarge = b;}
     public void setIsFullPlate(boolean b) {this.isFullPlate = b;}
-    public void setIsControl(boolean b) {this.isControl = b;}
+    public void setIsControl(boolean b) {this.isControl = b; setNumOfControls(2);}
     public void setIsOligo(boolean b) {this.isOligo = b;}
     public void setIsNewOligo(boolean b) {this.isNewOligo = b;}
     public void setIsOnQueue(boolean b) {this.isOnQueue = b;}

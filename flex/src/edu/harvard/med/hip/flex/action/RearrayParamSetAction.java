@@ -244,6 +244,9 @@ public class RearrayParamSetAction extends ResearcherAction {
             ArrayList files = manager.getFiles();
             request.setAttribute("containers", rearrayedContainers);
             request.setAttribute("files", files);
+            Vector v = new Vector();
+            v.addAll(rearrayedContainers);
+            request.getSession().setAttribute("EnterSourcePlateAction.newContainers", v);
             //request.getSession().removeAttribute("Rearray.locations");
             return (mapping.findForward("success"));
         } catch (RearrayException ex) {

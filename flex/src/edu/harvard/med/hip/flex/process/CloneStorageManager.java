@@ -68,6 +68,12 @@ public class CloneStorageManager {
                     int sampleid = s.getId();
                     int position = s.getPosition();
                     int cloneid = s.getCloneid();
+                    String sampleType = s.getType();
+                    
+                    if(sampleType.equals(Sample.CONTROL_POSITIVE) ||
+                       sampleType.equals(Sample.CONTROL_NEGATIVE) ||
+                       sampleType.equals(Sample.EMPTY)) 
+                           continue;
                     
                     stmtInsert.setInt(1, sampleid);
                     stmtInsert.setInt(2, containerid);
