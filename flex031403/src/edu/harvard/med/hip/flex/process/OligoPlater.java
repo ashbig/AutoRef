@@ -2,14 +2,14 @@
  * OligoPlater.java
  * @date    06052001
  * @author  Wendy Mar
- * @version
- *
- * modified 062801 wmar:    added method to output threee oligo order files
  *
  * This class first sort a list of OligoPattern objects according to
  * the cds length of the sequence which the oligos are derived from.
  * Then, the oligo samples are arranged in a saw-tooth pattern on the
  * oligo plates. Three files for oligo ordering are generated.
+ * 
+ * modified 062801 wmar:    added method to output threee oligo order files
+ *
  */
 
 package edu.harvard.med.hip.flex.process;
@@ -28,7 +28,7 @@ public class OligoPlater {
     
     private LinkedList oligoPatternList;
     private LinkedList constructList;
-    private int platesetId;
+    private Plateset plateset;
     private Connection conn;
     private Container container_5p;
     private Container container_3s;
@@ -38,12 +38,12 @@ public class OligoPlater {
     private FileWriter plateWriter_3op = null;
     
     /** Creates new OligoPlater */
-    public OligoPlater(LinkedList oligoPatternList, LinkedList constructList, int platesetId, Connection c)
+    public OligoPlater(LinkedList oligoPatternList, LinkedList constructList, Connection c)
     throws FlexDatabaseException, IOException {
         this.oligoPatternList = oligoPatternList;
         this.constructList = constructList;
-        this.platesetId = platesetId;
         this.conn = c;
+        
         plateWriter_5p = new FileWriter(plateOutFileName1);
         plateWriter_3s = new FileWriter(plateOutFileName2);
         plateWriter_3op = new FileWriter(plateOutFileName3);
@@ -54,11 +54,38 @@ public class OligoPlater {
      * The containerheader, sample and containercell tables are updated
      */
     public void createOligoPlates() throws FlexDatabaseException, IOException {
+       
         generateOligoPlate();
         generateOligoOrder();
         container_5p.insert(conn);
         container_3s.insert(conn);
         container_3op.insert(conn);
+        
+        plateset.insert(conn);
+        
+        //update the platesetid column in containerheader table
+        int platesetId = plateset.getId();
+        container_5p.updatePlatesetId(platesetId,conn);
+        container_3s.updatePlatesetId(platesetId,conn);
+        container_3op.updatePlatesetId(platesetId,conn);
+        
+    }
+    
+    
+    /**
+     * This method creates three oligo order file objects
+     * and store them in a list
+     */
+    public LinkedList generateOligoOrderFiles(){
+        LinkedList fileList = new LinkedList();
+        File file_5p = new File(plateOutFileName1);
+        File file_3s = new File(plateOutFileName2);
+        File file_3op = new File(plateOutFileName3);
+        fileList.add(file_5p);
+        fileList.add(file_3s);
+        fileList.add(file_3op);
+        
+        return fileList;
     }
     
     /**
@@ -235,6 +262,7 @@ public class OligoPlater {
             currentGeneIndex += 47;
             System.out.println("next plate gene index: "+currentGeneIndex);
         } //outter while to fill oligo plates
+        
         plateWriter_5p.flush();
         plateWriter_5p.close();
         plateWriter_3s.flush();
@@ -251,34 +279,37 @@ public class OligoPlater {
         Location location = null;
         String plateType = "96 WELL OLIGO PLATE";
         String locationType = "UNAVAILABLE";
-        Plateset plateset = null;
+        String label_5p = "default";
+        String label_3s = "default";
+        String label_3op = "default";
         
         // get the oligo container location object
         location = new Location();
         int locationId = location.getId(locationType);
-        location = new Location(locationId,locationType,"");
+        location = new Location(locationId,locationType,""); 
         
-        // generate oligo plate labels for the group of three oligo plates
-        String label_5p = Container.getLabel("Ou",platesetId,null); //upstream
-        String label_3s = Container.getLabel("Oc",platesetId,null); //closed
-        String label_3op = Container.getLabel("Of",platesetId,null); //fusion
-        
-        // generate new container header object and insert into ContainerHeader table
+        // generate new container header object 
         container_5p = new Container(plateType, location,label_5p);
         System.out.println("Created the 5p oligo plate: "+ container_5p.getId());
-        System.out.println("5p oligo plate label: "+ label_5p);
         
         container_3s = new Container(plateType, location,label_3s);
         System.out.println("Created the 3s oligo plate: "+ container_3s.getId());
-        System.out.println("3s oligo plate label: "+ label_3s);
         
         container_3op = new Container(plateType, location,label_3op);
         System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
-        System.out.println("3op oligo plate label: "+ label_3op);
         
-        //insert one plateset record identifying the three new plates
-        plateset = new Plateset(platesetId, container_5p.getId(), container_3op.getId(),container_3s.getId());
-        //plateset.insertPlateset(conn);
+        plateset = new Plateset(container_5p.getId(), container_3op.getId(),container_3s.getId());
+        int platesetId = plateset.getId();
+        label_5p = Container.getLabel("Ou",platesetId,null); //upstream
+        label_3s = Container.getLabel("Oc",platesetId,null); //closed
+        label_3op = Container.getLabel("Of",platesetId,null); //fusion
+        
+        container_5p.setLabel(label_5p);
+        container_3s.setLabel(label_3s);
+        container_3op.setLabel(label_3op);
+        System.out.println("5p oligo plate label: "+ label_5p);
+        System.out.println("3s oligo plate label: "+ label_3s);
+        System.out.println("3op oligo plate label: "+ label_3op);
         
     }
     
@@ -364,17 +395,18 @@ public class OligoPlater {
         
         ContainerProcessQueue containerQueue = new ContainerProcessQueue();
         QueueItem queueItem = null;
-        LinkedList containerQueueItemList = new LinkedList();        
+        LinkedList containerQueueItemList = new LinkedList();
         queueItem = new QueueItem(container_5p, protocol);
         containerQueueItemList.add(queueItem);
         queueItem = new QueueItem(container_3s, protocol);
         containerQueueItemList.add(queueItem);
         queueItem = new QueueItem(container_3op, protocol);
-        containerQueueItemList.add(queueItem);       
+        containerQueueItemList.add(queueItem);
         
         System.out.println("Adding receive oligo plates to queue...");
         containerQueue.addQueueItems(containerQueueItemList, conn);
-    }
+    } //insertReceiveOligoQueue
+    
     
     /** Note: this comparator imposes orderings that are
      * inconsistent with equals. */

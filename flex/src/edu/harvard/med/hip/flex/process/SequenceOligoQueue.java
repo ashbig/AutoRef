@@ -44,6 +44,22 @@ public class SequenceOligoQueue {
         return result; //return the LinkedList
     } // getQueueItems
     
+        public LinkedList getQueueItems(int protocolId, int cdsSizeLowerLimit, 
+         int cdsSizeUpperLimit) throws FlexDatabaseException {
+        //The result list stores a list of sequence objects
+        LinkedList result = new LinkedList();
+        
+        String sql = "SELECT s.sequenceid as seqid, s.cdsstart, s.cdsstop \n"+
+        "FROM FLEXSEQUENCE s, QUEUE q\n" +
+        "WHERE s.sequenceid = q.sequenceid\n" +
+        "AND q.protocolid = "+ protocolId + "\n" +
+        "AND s.cdslength >= " + cdsSizeLowerLimit + "\n" +
+        "AND s.cdslength < " + cdsSizeUpperLimit;
+        result = restore(sql);
+        
+        return result; //return the LinkedList
+    } // getQueueItems
+       
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table
