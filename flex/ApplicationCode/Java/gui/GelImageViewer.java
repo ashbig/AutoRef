@@ -1,5 +1,5 @@
 /**
- * $Id: GelImageViewer.java,v 1.3 2001-05-14 18:06:13 wenhong_mar Exp $
+ * $Id: GelImageViewer.java,v 1.4 2001-05-14 18:51:13 dongmei_zuo Exp $
  *
  * File     	: GelImage.java 
  * Date     	: 05102001
@@ -138,7 +138,7 @@ public class GelImageViewer {
 		return (dbResults.toHTMLTable("GREY"));
 	 }
 	 
-	 public String findGel4Plateset(String platesetID) throws FlexDatabaseException 
+	 public String findGel4Plateset(String platesetID) throws FlexGuiException, FlexDatabaseException
 	 {
 	 	DatabaseTransaction t = null;
 		ResultSet rs = null;
@@ -151,13 +151,15 @@ public class GelImageViewer {
 		try{
 			t = DatabaseTransaction.getInstance();
 			rs = t.getResultset(sql);
-			rs.next();
-			gelName = rs.getString(1);
-			
+			if(rs.next()) {
+				gelName = rs.getString(1);
+			} else {
+				throw new FlexGuiException("Invalid input");
+			}		
 		//	if (rs != null)
-		//	rs.close();
+		//	rs.close();	
 		} catch (SQLException e) {
-		 	throw new FlexDatabaseException(e.getMessage());
+		 	throw new FlexGuiException(e.getMessage());
 		}
 		
 		return gelName;
