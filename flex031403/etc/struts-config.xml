@@ -151,8 +151,8 @@
                 type="edu.harvard.med.hip.flex.action.EnterTransformDetailsAction"
                 name="transformEntryForm"
                 scope="session"
-                input="/EnterProcessResults.jsp">
-        <forward name="sucess" path="/EnterTransformDetails.jsp"/>
+                input="/EnterTransformDetails.jsp">
+        <forward name="sucess" path="/EnterProcessResults.jsp"/>
     </action>
 
     <!-- Process the protocol retieval and display -->
