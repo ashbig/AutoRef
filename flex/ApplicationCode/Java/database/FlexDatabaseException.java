@@ -1,12 +1,12 @@
 /*
- * $Id: FlexDatabaseException.java,v 1.1 2001-04-20 14:49:47 dongmei_zuo Exp $
+ * $Id: FlexDatabaseException.java,v 1.2 2001-04-25 18:37:06 dongmei_zuo Exp $
  *
  * File     : FlexDatabaseException.java 
  * Date     : 04162001
  * Author	: Dongmei Zuo
  */
 
-package flex.database;
+package flex.ApplicationCode.Java.database;
 
 /**
  * This class builds the exception for a given error message.

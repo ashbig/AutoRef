@@ -1,17 +1,20 @@
 /*
- * $Id: DatabaseTransaction.java,v 1.1 2001-04-20 14:49:47 dongmei_zuo Exp $
+ * $Id: DatabaseTransaction.java,v 1.2 2001-04-25 18:37:06 dongmei_zuo Exp $
  *
  * File     : DatabaseTransaction.java 
  * Date     : 04162001
  * Author	: Dongmei Zuo
+ *
+ * Revision	: 04-23-2001
+ *		  Add getConnection() and disconnect() methods. [dzuo]
  */
 
-package flex.database;
+package flex.ApplicationCode.Java.database;
 
 import java.sql.*;
 import java.util.*;
 
-import flex.util.*;
+import flex.ApplicationCode.Java.util.*;
 
 /**
  * The DatabaseTransaction class basically servers as a wrapper
@@ -38,6 +41,30 @@ public class DatabaseTransaction {
 		}
 
 		return instance;
+	}
+	
+	/**
+	 * Return the Connection object of this transaction.
+	 *
+	 * @return The Connection object.
+	 */
+	public Connection getConnection() {
+		return connection;
+	}
+
+	/**
+	 * Disconnect the current database connection.
+	 *
+	 * @exception FlexDatabaseException.
+	 */
+	public void disconnect() throws FlexDatabaseException {
+		try {
+			if(connection != null) {
+				connection.close();
+			}
+		} catch (SQLException e) {
+			throw new FlexDatabaseException(e.getMessage());
+		}
 	}
 	
 	/**
@@ -217,7 +244,13 @@ public class DatabaseTransaction {
 	public static void main (String args[]) {
 		try {
 			DatabaseTransaction t = DatabaseTransaction.getInstance();
+
+			Connection c = t.getConnection();
+			if (c == null) 
+				System.out.println("Error: Connection is null");
+			
 			//Testing executeSql()
+			System.out.println("select from processprotocol:");
 			String sql = "select * from processprotocol";
 			Vector result = t.executeSql(sql);
 			Enumeration enum = result.elements();
@@ -232,7 +265,9 @@ public class DatabaseTransaction {
 			}
 			
 			//Testing executePreparedSql()
+			System.out.println("Insert into processprotocol:");
 			sql = "insert into processprotocol "+
+				"(protocolid, processcode, processname)\n"+
 			    "values(?, ?, ?)";
 
 			Vector v = new Vector();
@@ -247,6 +282,7 @@ public class DatabaseTransaction {
 
 			t.executePreparedSql(sql, v);
 
+			System.out.println("Select from processprotocol:");
 			sql = "select * from processprotocol where protocolid=3";
 			Vector res = t.executeSql(sql);
 			Enumeration enum1 = res.elements();
@@ -260,8 +296,9 @@ public class DatabaseTransaction {
 				System.out.println();
 			}		
 
-	      		t.abort();
+	      	t.abort();
 
+			System.out.println("Select from processprotocol after abort:");
 			sql = "select * from processprotocol";
 			Vector res1 = t.executeSql(sql);
 			Enumeration enum2 = res1.elements();
@@ -274,6 +311,8 @@ public class DatabaseTransaction {
 				}
 				System.out.println();
 			}
+
+			t.disconnect();
 		} catch (FlexDatabaseException e) {
 			System.out.println(e);
 		}		
