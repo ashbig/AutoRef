@@ -579,3 +579,18 @@ values(vectorid.nextval,(select vectorid from vector where vectorname='pBY011'),
 (select primerid from commonprimer where name='PBY011 C-term primer'),3,-1,70);
 
 
+
+insert into projectdefinition values (projectid.nextval, 'A','NIDDK Diabetis - Human');
+insert into projectdefinition values (projectid.nextval, 'B','Breast Cancer'); 
+insert into projectdefinition values (projectid.nextval, 'C','Clontech'); 
+insert into projectdefinition values (projectid.nextval, 'D','NIDDK Diabetis - Mouse'); 
+insert into projectdefinition values (projectid.nextval, 'G','Prostate Cancer'); 
+insert into projectdefinition values (projectid.nextval, 'H','Human'); 
+insert into projectdefinition values (projectid.nextval, 'K','Kinase'); 
+insert into projectdefinition values (projectid.nextval, 'M','MGC'); 
+insert into projectdefinition values (projectid.nextval, 'P','Pseudomonas'); 
+insert into projectdefinition values (projectid.nextval, 'S','Yersinia pestis'); 
+insert into projectdefinition values (projectid.nextval, 'T','Transcription Factor');
+insert into projectdefinition values (projectid.nextval, 'Y','Yeast');
+insert into projectdefinition values (projectid.nextval,'F','Francisella tularentsis');
+
