@@ -32,17 +32,27 @@ public class Primer3Wrapper
     private Primer3Spec         m_spec = null;
     
     
-    private String              m_file_input = "/tmp/primer3input.txt";
-    private String              m_file_output = "/tmp/primer3output.txt";
-    private String              m_file_error = "/tmp/primer3err.txt";
+    private String              m_file_input = null;
+    private String              m_file_output = null;
+    private String              m_file_error = null;
     private ArrayList           m_failed_sequences = null;
     
      private   String m_PRIMER3_EXE = null;
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
+        {
+           m_file_input = "d:\\tmp\\primer3input.txt";
+            m_file_output = "d:\\tmp\\primer3output.txt";
+            m_file_error = "d:\\tmp\\primer3err.txt";
             m_PRIMER3_EXE = "d:\\bio_programs\\primer3\\primer3.exe";
+        }
         else
+        {
+            m_file_input = "c:\\tmp\\primer3input.txt";
+            m_file_output = "c:\\tmp\\primer3output.txt";
+            m_file_error = "c:\\tmp\\primer3err.txt";
             m_PRIMER3_EXE =  "c://blast//primer3.exe";
+        }
     }
     /** Creates a new instance of Primer3Caller */
     public Primer3Wrapper(Primer3Spec spec, ArrayList seq_info)
@@ -93,14 +103,26 @@ public class Primer3Wrapper
         {
             seq = prepareSequences();
         }
-        if (seq != null || seq.size()<1) return null; 
+        if (seq == null || seq.size()<1) return null; 
         //write input file
         writeInputFile(seq);
-        //call primer3
-        if ( run(m_file_input, m_file_output))
+        //delete old primer3 output
+        File oldoutput = null;
+        try
         {
-           oligo_calculations = Primer3Parser.parse(m_file_output, m_spec);
+            oldoutput = new File(m_file_output);
+            oldoutput.delete();
         }
+        catch(Exception e){}
+        //call primer3
+        run(m_file_input, m_file_output);
+        try
+        {
+            oldoutput = new File(m_file_output);
+            if (oldoutput.exists() )
+                oligo_calculations = Primer3Parser.parse(m_file_output, m_spec);
+        }catch(Exception e){}
+        
         return oligo_calculations;
     }
     
@@ -253,12 +275,13 @@ public class Primer3Wrapper
     private ArrayList  one_directional_walker(int id, String seq,
                         int UL, int DL, int PHD, int ERL, int W)
     {
+        
         ArrayList res = new ArrayList();
-        int ARL = ERL - W - PHD;
-        int AURL = ERL - UL - W - PHD;
-        int ADRL = ERL - DL;
+        int ARL = ERL - W - PHD;//adjusted read length
+        int AURL = ERL - UL - W - PHD;//adjusted upstream universal primer read length
+        int ADRL = ERL - DL;//adjusted downstream universal primer read length
         int THRESHOLD = AURL + ADRL; //THRESHOLD is adjusted 5p UP read length plus 3p UP read length
-        String subSeq = null;        int counter = 1;        String subSeqId = null;
+        String subSeq = seq;        int counter = 1;        String subSeqId = null;
         InnerSequence is = null;
         //if seq length is < (AURL + ADRL)bp, no internal primers are calculated
         if (seq.length() < THRESHOLD)
@@ -273,24 +296,15 @@ public class Primer3Wrapper
             counter++;
             res.add(is);
             
-            while (true)
+            while (subSeq.length() > (ARL+ADRL))
             {
                 //System.out.println("seqId: "+primerId+"; "+"seq len: "+SSL);
                 //if SSL > ARL+ADRL bp, more primers are needed
-                if (subSeq.length() > (ARL+ADRL))
-                {
-                    subSeq = subSeq.substring(ARL);
+               subSeq = subSeq.substring(ARL);
                     //take ARL off 5p end of the subsequence
-                    is = new InnerSequence( String.valueOf(id)+"_"+counter, subSeq);
-                    counter++;
-                    res.add(is);
-                    
-                }//if more primers needed
-                else
-                {
-                    break;
-                }
-                
+                is = new InnerSequence( String.valueOf(id)+"_"+counter, subSeq);
+                counter++;
+                res.add(is);
             } //while
         } //else
         return res;
@@ -361,17 +375,17 @@ public class Primer3Wrapper
               Streamer errorFileStreamer = new Streamer(process.getErrorStream(),eos);
               Thread errorFileThread = new Thread(errorFileStreamer);
               errorFileThread.start();
-  //System.out.println("Started error file thread.");
+  System.out.println("Started error file thread.");
               inputFileThread.join();
               fis.close();
-   //System.out.println("Joined input file thread.");
-              Thread.sleep(2000);
+   System.out.println("Joined input file thread.");
+              Thread.sleep(200);
               System.out.println(outputFileThread.isAlive());
               fos.close();
               eos.close();  
               process.destroy();
               int result = process.waitFor();
-              //System.out.println("Ran Primer3.");
+              System.out.println("Ran Primer3.");
               if (result != 0) return false;
               return true;
         } catch (IOException e)
@@ -439,26 +453,17 @@ public class Primer3Wrapper
             re = new ArrayList();
             Primer3Spec ps = new Primer3Spec(ht,null,1);
             String str = "ATGGAGATGCTCCAGGGGCTGCTGCTGTTGCTGCTGCTGAGCATGGGCGGGGCATGGGCATCCAGGGAGCCGCTTCGGCCATGGTGCCACCCCATCAATGCCATCCTGGCTGTGGAGAAGGAGGGCTGCCCCGTGTGCATCACCGTCAACACCACCATCTGTGCCGGCTACTGCCCCACCATGATGCGCGTGCTGCAGGCGGTCCTGCCGCCCCTGCCTCAGGTGGTGTGCACCTACCGTGATGTGCGCTTCGAGTCCATCCGGCTCCCTGGCTGCCCGCGTGGCGTGGACCCCGTGGTCTCCTTCCCTGTGGCTCTCAGCTGTCGCTGTGGACCCTGCCGCCGCAGCACCTCTGACTGTGGGGGTCCCAAAGACCACCCCTTGACCTGTGACCACCCCCAACTCTCAGGCCTCCTCTTCCTCTAA";
-            RefSequence tr = new RefSequence(1);
-            tr.setText(str);
-            
+            RefSequence tr = new RefSequence(str); tr.setId(1);
             re.add(tr);
              str = "ATGGCGGAGACCAACAACGAATGTAGCATCAAGGTGCTCTGCCGATTCCGGCCCCTGAACCAGGCTGAGATTCTGCGGGGAGACAAGTTCATCCCCATTTTCCAAGGGGACGACAGCGTCGTTATTGGGGGGAAGCCATATGTTTTTGACCGTGTATTCCCCCCAAACACGACTCAAGAGCAAGTTTATCATGCATGTGCCATGCAGATTGTCAAAGATGTCCTTGCTGGCTACAATGGCACCATTTTTGCTTATGGACAGACATCCTCAGGGAAAACACATACCATGGAGGGAAAGCTGCACGACCCTCAGCTGATGGGAATCATTCCTCGAATTGCCCGAGACATCTTCAACCACATCTACTCCATGGATGAGAACCTTGAGTTCCACATCAAGGTTTCTTACTTTGAAATTTACCTGGACAAAATTCGTGACCTTCTGGATGTGACCAAGACAAATCTGTCCGTGCACGAGGACAAGAACCGGGTGCCATTTGTCAAGGGTTGTACTGAACGCTTTGTGTCCAGCCCGGAGGAGATTCTGGATGTGATTGATGAAGGGAAATCAAATCGTCATGTGGCTGTCACCAACATGAATGAACACAGCTCTCGGAGCCACAGCATCTTCCTCATCAACATCAAGCAGGAGAACATGGAAACGGAGCAGAAGCTCAGTGGGAAGCTGTATCTGGTGGACCTGGCAGGGAGTGAGAAGGTCAGCAAGACTGGAGCAGAGGGAGCCGTGCTGGACGAGGCAAAGAATATCAACAAGTCACTGTCAGCTCTGGGCAATGTGATCTCCGCACTGGCTGAGGGCACTAAAAGCTATGTTCCATATCGTGACAGCAAAATGACAAGGATTCTCCAGGACTCTCTCGGGGGAAACTGCCGGACGACTATGTTCATCTGTTGCTCACCATCCAGTTATAATGATGCAGAGACCAAGTCCACCCTGATGTTTGGGCAGCGGGCAAAGACCATTAAGAACACTGCCTCAGTAAATTTGGAGTTGACTGCTGAGCAGTGGAAGAAGAAATATGAGAAGGAGAAGGAGAAGACAAAGGCCCAGAAGGAGACGATTGCGAAGCTGGAGGCTGAGCTGAGCCGGTGGCGCAATGGAGAGAATGTGCCTGAGACAGAGCGCCTGGCTGGGGAGGAGGCAGCCCTGGGAGCCGAGCTCTGTGAGGAGACCCCTGTGAATGACAACTCATCCATCGTGGTGCGCATCGCGCCCGAGGAGCGGCAGAAATACGAGGAGGAGATCCGCCGTCTCTATAAGCAGCTTGACGACAAGGATGATGAAATCAACCAACAAAGCCAACTCATAGAGAAGCTCAAGCAGCAAATGCTGGACCAGGAAGAGCTGCTGGTGTCCACCCGAGGAGACAACGAGAAGGTCCAGCGGGAGCTGAGCCACCTGCAATCAGAGAACGATGCCGCTAAGGATGAGGTGAAGGAAGTGCTGCAGGCCCTGGAGGAGCTGGCTGTGAACTATGACCAGAAGTCCCAGGAGGTGGAGGAGAAGAGCCAGCAGAACCAGCTTCTGGTGGATGAGCTGTCTCAGAAGGTGGCCACCATGCTGTCCCTGGAGTCTGAGTTGCAGCGGCTACAGGAGGTCAGTGGACACCAGCGAAAACGAATTGCTGAGGTGCTGAACGGGCTGATGAAGGATCTGAGCGAGTTCAGTGTCATTGTGGGCAACGGGGAGATTAAGCTGCCAGTGGAGATCAGTGGGGCCATCGAGGAGGAGTTCACTGTGGCCCGACTCTACATCAGCAAAATCAAATCAGAAGTCAAGTCTGTGGTCAAGCGGTGCCGGCAGCTGGAGAACCTCCAGGTGGAGTGTCACCGCAAGATGGAAGTGACCGGGCGGGAGCTCTCATCCTGCCAGCTCCTCATCTCTCAGCATGAGGCCAAGATCCGCTCGCTTACGGAATACATGCAGAGCGTGGAGCTAAAGAAGCGGCACCTGGAAGAGTCCTATGACTCCTTGAGCGATGAGCTGGCCAAGCTCCAGGCCCAGGAAACTGTGCATGAAGTGGCCCTGAAGGACAAGGAGCCTGACACTCAGGATGCAGATGAAGTGAAGAAGGCTCTGGAGCTGCAGATGGAGAGTCACCGGGAGGCCCATCACCGGCAGCTGGCCCGGCTCCGGGACGAGATCAACGAGAAGCAGAAGACCATTGATGAGCTCAAAGACCTAAATCAGAAGCTCCAGTTAGAGCTAGAGAAGCTTCAGGCTGACTACGAGAAGCTGAAGAGCGAAGAACACGAGAAGAGCACCAAGCTGCAGGAGCTGACATTTCTGTACGAGCGACATGAGCAGTCCAAGCAGGACCTCAAGGGTCTGGAGGAGACAGTTGCCCGGGAACTCCAGACCCTCCACAACCTTCGCAAGCTGTTCGTTCAAGACGTCACGACTCGAGTCAAGAAAAGTGCAGAAATGGAGCCCGAAGACAGTGGGGGGATTCACTCCCAAAAGCAGAAGATTTCCTTTCTTGAGAACAACCTGGAACAGCTTACAAAGGTTCACAAACAGCTGGTACGTGACAATGCAGATCTGCGTTGTGAGCTTCCTAAATTGGAAAAACGACTTAGGGCTACGGCTGAGAGAGTTAAGGCCCTGGAGGGTGCACTGAAGGAGGCCAAGGAGGGCGCCATGAAGGACAAGCGCCGGTACCAGCAGGAGGTGGACCGCATCAAGGAGGCCGTTCGCTACAAGAGCTCGGGCAAACGGGCGCATTCTGCCCAGATTGCCAAACCCGTCCGGCCTGGCCACTACCCAGCATCCTCACCCACCAACCCCTATGGCACCCGGAGCCCTGAGTGCATCAGTTACACCAACAGCCTCTTCCAGAACTACCAGAATCTCTACCTGCAGGCCACACCCAGCTCCACCTCAGATATGTACTTTGCAAACTCCTGTACCAGCAGTGGAGCCACATCTTCTGGCGGCCCCTTGGCTTCCTACCAGAAGGCCAACATGGACAATGGAAATGCCACAGATATCAATGACAATAGGAGTGACCTGCCGTGTGGCTATGAGGCTGAGGACCAGGCCAAGCTTTTCCCTCTCCACCAAGAGACAGCAGCCAGCTAA";
-            RefSequence tr1 = new RefSequence(2);
-            tr1.setText(str);
-            
-            
-             str = "ATGGTCAGCAAGTCCCGCTGGAAGCTCCTGGCCATGTTGGCTCTGGTCCTGGTCGTCATGGTGTGGTATTCCATCTCCCGGGAAGACAGTTTTTATTTTCCCATCCCAGAGAAGAAGGAGCCGTGCCTCCAGGGTGAGGCAGAGAGCAAGGCCTCTAAGCTCTTTGGCAACTACTCCCGGGATCAGCCCATCTTCCTGCGGCTTGAGGATTATTTCTGGGTCAAGACGCCATCTGCTTACGAGCTGCCCTATGGGACCAAGGGGAGTGAGGATCTGCTCCTCCGGGTGCTAGCCATCACCAGCTCCTCCATCCCCAAGAACATCCAGAGCCTCAGGTGCCGCCGCTGTGTGGTCGTGGGGAACGGGCACCGGCTGCGGAACAGCTCACTGGGAGATGCCATCAACAAGTACGATGTGGTCATCAGATTGAACAATGCCCCAGTGGCTGGCTATGAGGGTGACGTGGGCTCCAAGACCACCATGCGTCTCTTCTACCCTGAATCTGCCCACTTCGACCCCAAAGTAGAAAACAACCCAGACACACTCCTCGTCCTGGTAGCTTTCAAGGCAATGGACTTCCACTGGATTGAGACCATCCTGAGTGATAAGAAGCGGGTGCGAAAGGGTTTCTGGAAACAGCCTCCCCTCATCTGGGATGTCAATCCTAAACAGATTCGGATTCTCAACCCCTTCTTCATGGAGATTGCAGCTGACAAACTGCTGAGCCTGCCAATGCAACAGCCACGGAAGATTAAGCAGAAGCCCACCACGGGCCTGTTGGCCATCACGCTGGCCCTCCACCTCTGTGACTTGGTGCACATTGCCGGCTTTGGCTACCCAGACGCCTACAACAAGAAGCAGACCATTCACTACTATGAGCAGATCACGCTCAAGTCCATGGCGGGGTCAGGCCATAATGTCTCCCAAGAGGCCCTGGCCATTAAGCGGATGCTGGAGATGGGAGCTATCAAGAACCTCACGTCCTTCTGA";
-            RefSequence tr2 = new RefSequence(3);
-            tr2.setText(str);
-            
-            re.add(tr2);
-            re.add(tr1);
+             tr = new RefSequence(str); tr.setId(2);re.add(tr);
+            str = "ATGGTCAGCAAGTCCCGCTGGAAGCTCCTGGCCATGTTGGCTCTGGTCCTGGTCGTCATGGTGTGGTATTCCATCTCCCGGGAAGACAGTTTTTATTTTCCCATCCCAGAGAAGAAGGAGCCGTGCCTCCAGGGTGAGGCAGAGAGCAAGGCCTCTAAGCTCTTTGGCAACTACTCCCGGGATCAGCCCATCTTCCTGCGGCTTGAGGATTATTTCTGGGTCAAGACGCCATCTGCTTACGAGCTGCCCTATGGGACCAAGGGGAGTGAGGATCTGCTCCTCCGGGTGCTAGCCATCACCAGCTCCTCCATCCCCAAGAACATCCAGAGCCTCAGGTGCCGCCGCTGTGTGGTCGTGGGGAACGGGCACCGGCTGCGGAACAGCTCACTGGGAGATGCCATCAACAAGTACGATGTGGTCATCAGATTGAACAATGCCCCAGTGGCTGGCTATGAGGGTGACGTGGGCTCCAAGACCACCATGCGTCTCTTCTACCCTGAATCTGCCCACTTCGACCCCAAAGTAGAAAACAACCCAGACACACTCCTCGTCCTGGTAGCTTTCAAGGCAATGGACTTCCACTGGATTGAGACCATCCTGAGTGATAAGAAGCGGGTGCGAAAGGGTTTCTGGAAACAGCCTCCCCTCATCTGGGATGTCAATCCTAAACAGATTCGGATTCTCAACCCCTTCTTCATGGAGATTGCAGCTGACAAACTGCTGAGCCTGCCAATGCAACAGCCACGGAAGATTAAGCAGAAGCCCACCACGGGCCTGTTGGCCATCACGCTGGCCCTCCACCTCTGTGACTTGGTGCACATTGCCGGCTTTGGCTACCCAGACGCCTACAACAAGAAGCAGACCATTCACTACTATGAGCAGATCACGCTCAAGTCCATGGCGGGGTCAGGCCATAATGTCTCCCAAGAGGCCCTGGCCATTAAGCGGATGCTGGAGATGGGAGCTATCAAGAACCTCACGTCCTTCTGA";
+            tr = new RefSequence(str); tr.setId(3); re.add(tr);
             
             Primer3Wrapper pw = new Primer3Wrapper(ps, re);
             pw.runPrimer3();
             //String fn = m_file_output;
-            re = Primer3Parser.parse("\\tmp\\primer3output.txt",ps);
+           // re = Primer3Parser.parse("c:\\tmp\\primer3output.txt",ps);
             System.out.println(re.size());
         }catch(Exception e){}
         System.exit(0);
