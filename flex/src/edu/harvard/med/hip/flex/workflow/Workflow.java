@@ -53,6 +53,7 @@ public class Workflow {
     public static final int REARRAY_DIST_GLYCEROL = 24;
     
     public static final int TRANSFER_TO_EXPRESSION = 25;
+    public static final int EXPRESSION_WORKFLOW = 30;
     
     /** Creates new Workflow */
     public Workflow() {
