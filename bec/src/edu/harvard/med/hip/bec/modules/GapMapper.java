@@ -114,7 +114,7 @@ public class GapMapper
                         scores_as_array = compliment_scores;
                     }
                     if ( read.getName().toUpperCase().indexOf( "REFSEQUENCE") != -1)
-                         refsequence_start = read.getQualityStart();
+                         refsequence_start = read.getAlignStart();//QualityStart();
                     read.setScores(scores_as_array);
                 }
                 int linker5_length = m_cloning_startegy.getLinker5().getSequence().length();

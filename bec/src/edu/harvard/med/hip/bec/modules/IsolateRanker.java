@@ -129,7 +129,7 @@ public class IsolateRanker
      public  void           set3pMinReadLength(int    v){        m_3p_min_read_length = v;}
       public void    setCloningStrategy(CloningStrategy  v)      {          m_cloning_strategy = v;          }
      //main calling function : call action per construct
-    public void run(Connection conn) throws BecUtilException, BecDatabaseException,ParseException
+    public void run(Connection conn) throws BecDatabaseException//,BecUtilException, ParseException
     {
         m_cutoff_score = m_penalty_spec.getParameterByNameInt("ER_PHRED_CUT_OFF");
         if (m_constructs != null)
@@ -252,7 +252,7 @@ public class IsolateRanker
         {
            //  ex.printStackTrace();
          //   System.out.println(ex.getMessage());
-            m_error_messages.add(ex.getMessage());
+            m_error_messages.add("Error processing construct id "+ construct.getId()+ex.getMessage());
             DatabaseTransaction.rollback(conn);
         }
     }
