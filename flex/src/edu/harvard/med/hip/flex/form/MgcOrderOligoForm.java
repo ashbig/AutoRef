@@ -19,6 +19,7 @@ import java.sql.*;
 public class MgcOrderOligoForm extends ProjectWorkflowForm
 {
     private boolean isFullPlate = true;
+    private boolean isMarker = true;
     private boolean isCleanupDuplicates = true;
     private boolean isCheckForResearchBarcode = true;
     private String  processname = null;
@@ -27,6 +28,10 @@ public class MgcOrderOligoForm extends ProjectWorkflowForm
     
     public void         setIsFullPlate(boolean isFullPlate)    {        this.isFullPlate = isFullPlate;    }
     public boolean      getIsFullPlate()    {        return isFullPlate;    }
+   
+    
+    public void         setIsMarker(boolean isMarker)    {        this.isMarker = isMarker;    }
+    public boolean      getIsMarker()    {        return isMarker;    }
     
     public void setIsCleanupDuplicates(boolean isCleanupDuplicates)
     {

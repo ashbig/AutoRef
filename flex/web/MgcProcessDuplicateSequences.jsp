@@ -44,6 +44,7 @@
     <td class="prompt">Number of duplicates:</td>
     <td><bean:write name="number_of_duplicates" /></td>
     </tr>
+  
     <tr>
     <td class="prompt">Keep duplicate sequences on queue?</td>
     <td>

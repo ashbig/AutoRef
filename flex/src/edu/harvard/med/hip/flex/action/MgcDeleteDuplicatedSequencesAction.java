@@ -86,18 +86,22 @@ public class MgcDeleteDuplicatedSequencesAction extends ResearcherAction
         
        
         //constract
-        ArrayList plates = new ArrayList();
+       // ArrayList plates = new ArrayList();
         //get total number of genes in queue
         if (seqList.size() != 0)
         {
             try
             {
                 Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
-                ra.setRearrayByMarker(true);
-                plates = ra.getPlates();
-                request.setAttribute("platesInfo_marker", plates);
-                request.setAttribute("full_plates", new Integer( plates.size() ));
               
+               ra.setRearrayByMarker(true);
+               ArrayList plates = ra.getPlates();
+                request.setAttribute("platesInfo_marker", plates);
+                request.setAttribute("full_plates_marker", new Integer( plates.size() ));
+                ra.setRearrayByMarker(false);
+               ArrayList  plates_no_marker = ra.getPlates();
+                request.setAttribute("platesInfo_no_marker", plates_no_marker);
+                request.setAttribute("full_plates_no_marker", new Integer( plates_no_marker.size() ));
             }
             catch(Exception e)
             {

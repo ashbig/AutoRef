@@ -42,19 +42,27 @@
     <td><bean:write name="sequences_count" /></td>
     </tr>
 <tr>
-    <td class="prompt">Number of plates:</td>
-    <td><bean:write name="full_plates" /></td>
+    <td class="prompt">Number of plates (rearray based on marker):</td>
+    <td><bean:write name="full_plates_marker" /></td>
+    </tr>
+<tr>
+    <td class="prompt">Number of plates (rearray not based on marker):</td>
+    <td><bean:write name="full_plates_no_marker" /></td>
     </tr>
 </table>
 <% 
-ArrayList plates = (ArrayList)request.getAttribute("platesInfo") ;
-if (plates.size() > 0)
+boolean isRunDuplicatesCheck = false;
+ArrayList plates_marker = (ArrayList)request.getAttribute("platesInfo_marker") ;
+ArrayList plates_no_marker = (ArrayList)request.getAttribute("platesInfo_no_marker") ;
+if (plates_marker.size() > 0)
 {      
- 
- %>
+   
+  %>
 <h3>Plates Information:</h3>
+ 
+    <i>Default rearray: based on marker information</i>
 
-<table  cellpadding=0 cellspacing=2 border=1>
+<table  cellpadding=0 cellspacing=2 border=1 width="80%">
     <tr class="headerRow">
         <TH>&nbsp;&nbsp;Plate Number&nbsp;&nbsp;</TH>
         
@@ -64,9 +72,9 @@ if (plates.size() > 0)
     </TR>
 <% 
 
-for (int plate_count = 0 ; plate_count < plates.size();    plate_count++  )
+for (int plate_count = 0 ; plate_count < plates_marker.size();    plate_count++  )
 {
-        PlateDescription plate = (PlateDescription)plates.get(plate_count);
+        PlateDescription plate = (PlateDescription)plates_marker.get(plate_count);
 %>
 <tr>
         <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
@@ -111,15 +119,88 @@ else
 %>
 </TABLE>
 
+
+
+<h3>Plates Information:</h3>
+ 
+    <i>Rearray: not based on marker information</i>
+
+<table  cellpadding=0 cellspacing=2 border=1 width="80%">
+    <tr class="headerRow">
+        <TH>&nbsp;&nbsp;Plate Number&nbsp;&nbsp;</TH>
+        <TH>&nbsp;&nbsp;Sequences&nbsp;&nbsp;</TH>
+        <TH>&nbsp;&nbsp;Source Containers&nbsp;&nbsp;</TH>
+    </TR>
+<% 
+
+for (int plate_count = 0 ; plate_count < plates_no_marker.size();    plate_count++  )
+{
+        PlateDescription plate = (PlateDescription)plates_no_marker.get(plate_count);
+%>
+<tr>
+        <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+<% if ( !plate.getStatus() ) 
+{%>
+
+            <TD><font color=red bold=true> <%= (plate_count+1) %> </font> </TD>
+
+<%} 
+else
+{%>
+            <TD align="right"> <%= (plate_count + 1)%>  </TD>
+<%}%>
+            <TD align="right"> <%= plate.getNumberOfSequences() %> 
+</TD>
+            <TD> 
+                        <%
+                            ArrayList desc_no_duplicates = new ArrayList();
+                        for (int container_count =0; container_count < plate.getContainers().size(); container_count++)
+                        {
+                            ContainerDescription desc = (ContainerDescription)plate.getContainers().get(container_count);
+                          
+                            if (  ! desc_no_duplicates.contains(desc.getLabel()) )
+                            {
+
+                                desc_no_duplicates.add(desc.getLabel());
+
+                                if ( !desc.getStatus() )
+                                {
+                                %>
+                                <font color=red >
+                                    &nbsp;<%= desc.getLabel() %>
+                                </font>
+                                <%
+                                }
+                                else
+                                {
+                                %>
+                                    &nbsp;<%= desc.getLabel() %>
+                                <%
+                                }
+                            }
+                        }%>
+            </TD>    
+          </flex:row>
+          </tr>
+  
+<% 
+
+}
+%>
+</TABLE>
+
+
+<P><P>
 <table>
-<td class="prompt">Is rearray by marker required?</td>
+<tr>
+<td class="prompt">Rearray based on marker?</td>
     <td>
          
-         <html:radio property="isMarker" value="false"/>Yes
-       <html:radio property="isMarker" value="true"/>No
+         <html:radio property="isMarker" value="true"/>Yes
+       <html:radio property="isMarker" value="false"/>No
     </td>
 </tr> 
-
+<tr>
  <td class="prompt">Is full plate required?</td>
     <td>
          

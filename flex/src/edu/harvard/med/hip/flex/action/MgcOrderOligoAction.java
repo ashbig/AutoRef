@@ -60,6 +60,7 @@ public class MgcOrderOligoAction extends ResearcherAction
         String barcode = requestForm.getResearcherBarcode();
         String processname = requestForm.getProcessname();
         boolean isFullPlatesOnly = requestForm.getIsFullPlate();
+        boolean isMarker = requestForm.getIsMarker();
         MgcOligoPlateManager om  = null;
         
          // Validate the researcher barcode.
@@ -97,14 +98,15 @@ public class MgcOrderOligoAction extends ResearcherAction
             if ( request.getSession().getAttribute("not_duplicated_sequences") != null)
             {
                  LinkedList seqList = (LinkedList)request.getSession().getAttribute("not_duplicated_sequences");
-                 om = new MgcOligoPlateManager(seqList, conn,project, workflow,
-                                                                isFullPlatesOnly, protocol, username);
+                 om = new MgcOligoPlateManager(seqList, conn,project, workflow, 
+                                               isFullPlatesOnly, isMarker, 
+                                               protocol, username);
                  request.getSession().removeAttribute("not_duplicated_sequences")         ;                                      
             }
             else
             {
                 om = new MgcOligoPlateManager(conn,project, workflow,
-                                                                isFullPlatesOnly, protocol, username);
+                                              isFullPlatesOnly, isMarker, protocol, username);
             }
             
             om.orderOligo();
