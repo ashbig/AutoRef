@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.3 2001-05-11 21:10:49 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.4 2001-05-12 17:38:28 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java 
  * Date     : 05042001
@@ -15,6 +15,7 @@ import flex.ApplicationCode.Java.core.*;
 import flex.ApplicationCode.Java.util.*;
 import flex.ApplicationCode.Java.process.*;
 import flex.ApplicationCode.Java.User.*;
+import flex.ApplicationCode.Java.blast.*;
 
 /**
  * This class handles the customer request.
@@ -25,7 +26,10 @@ public class CloneRequest {
 	private String searchString = null;
 	private String checkOrder = null;
 	private Hashtable searchResult = new Hashtable();;
-	private Hashtable selectedSequences = new Hashtable();
+	private Hashtable goodSequences = new Hashtable();
+	private Hashtable badSequences = new Hashtable();
+	private Hashtable sameSequences = new Hashtable();
+	private Hashtable homologs = new Hashtable();
 	
 	/**
 	 * Return searchString field.
@@ -98,12 +102,15 @@ public class CloneRequest {
      * Process user selected sequences.
      *
      * @param request The http request.
-     * @return A Hashtable of sequences that have all the information populated.
-     * @exception FlexUtilException.
+     * @exception FlexUtilException, FlexDatabaseException, ParseException.
      */	
-	public Hashtable processSelection(HttpServletRequest request) throws FlexUtilException {	
-		selectedSequences.clear();;
-		String [] selections = request.getParameterValues("checkOrder");
+	public void processSelection(HttpServletRequest request) throws FlexUtilException, FlexDatabaseException, ParseException {	
+		goodSequences.clear();
+		badSequences.clear();
+		sameSequences.clear();
+		homologs.clear();
+		
+		String [] selections = request.getParameterValues("checkOrder");			
 		for(int i=0; i<selections.length; i++) {
 			String gi = selections[i];
 			FlexSequence sequence = (FlexSequence)searchResult.get(gi);
@@ -111,17 +118,42 @@ public class CloneRequest {
 			//for the new sequences, need more info from genbank.
 			if(sequence.getFlexstatus().equals("NEW")) {
 				setSequenceInfo(sequence, gi);
-					
-					//output the sequence text for blast search.
-/*					String seqText = sequence.getSequencetext();
-					if(!seqText.equals("")) {
-						output.println(seqText);
+				
+				//if the sequence quality is questionable, put it aside.
+				if("QUESTIONABLE".equals(sequence.getQuality())) {
+					badSequences.put(gi, sequence);
+				} else {			
+					FlexSeqAnalyzer analyzer = new FlexSeqAnalyzer(sequence);
+					if(analyzer.findSame()) {
+						sameSequences.put(gi, analyzer.getSameSequence());
+					} else {
+						if(analyzer.findHomolog()) {
+							homologs.put(gi, analyzer.getHomolog());
+						} else {
+							goodSequences.put(gi, sequence);
+						}
 					}
-*/			}
-            			
-           	 selectedSequences.put(gi, sequence);
+				}
+			} else {
+				goodSequences.put(gi, sequence);
+			}         	
 		}				
-		return selectedSequences;
+	}
+	
+	public Hashtable getGoodSequences() {
+		return goodSequences;
+	}
+
+	public Hashtable getBadSequences() {
+		return badSequences;
+	}
+		
+	public Hashtable getSameSequences() {
+		return sameSequences;
+	}
+	
+	public Hashtable getHomologs() {
+		return homologs;
 	}
 
 	/**
@@ -135,15 +167,50 @@ public class CloneRequest {
 		Request r = new Request(username);
 		LinkedList l = new LinkedList();
 		Protocol p = new Protocol("approve sequences");
-		
-		String [] selections = request.getParameterValues("checkOrder");
+
+		try {		
+		String [] selections = request.getParameterValues("good");
 		for(int i=0; i<selections.length; i++) {
 			String gi = selections[i];
-			FlexSequence sequence = (FlexSequence)selectedSequences.get(gi);
+			FlexSequence sequence = (FlexSequence)goodSequences.get(gi);
 			r.addSequence(sequence);			
-			QueueItem item = new QueueItem(sequence, p);
-			l.addLast(item);
+			
+			if("NEW".equals(sequence.getFlexstatus())) {
+				QueueItem item = new QueueItem(sequence, p);
+				l.addLast(item);
+			}
 		}
+
+		selections = request.getParameterValues("same");
+		for(int i=0; i<selections.length; i++) {
+			String gi = selections[i];
+			Vector v = (Vector)sameSequences.get(gi);				
+			FlexSequence sequence = (FlexSequence)v.elementAt(0);				
+			r.addSequence(sequence);			
+			
+			if("NEW".equals(sequence.getFlexstatus())) {
+				QueueItem item = new QueueItem(sequence, p);
+				l.addLast(item);
+			}
+		}
+
+		selections = request.getParameterValues("homolog");
+		for(int i=0; i<selections.length; i++) {
+			String gi = selections[i];
+			Hashtable h = (Hashtable)homologs.get(gi);			
+			String [] gis = request.getParameterValues(gi);	
+			for(int j=0; j<gis.length; j++) {
+				FlexSequence sequence = (FlexSequence)h.get(gis[j]);				
+				r.addSequence(sequence);			
+			
+				if("NEW".equals(sequence.getFlexstatus())) {
+					QueueItem item = new QueueItem(sequence, p);
+					l.addLast(item);
+				}
+			}
+		}	
+		} catch (NullPointerException ex){}
+				
 		DatabaseTransaction t = DatabaseTransaction.getInstance();
 		r.insert(t);
 

@@ -1,5 +1,5 @@
 /*
- *	$Id: Handler.java,v 1.2 2001-05-08 12:07:45 dongmei_zuo Exp $ 
+ *	$Id: Handler.java,v 1.3 2001-05-12 17:38:28 dongmei_zuo Exp $ 
  *
  *	File	: Handler.java
  *	Date	: 05042001
@@ -27,7 +27,7 @@ public class Handler {
     	public Handler() {
     		Hashtable h1 = new Hashtable();
    		h1.put("SequenceSearch.jsp", "Request Gene");
-    		h1.put("ValidateRequest", "Validate Gene Request");
+    		h1.put("PendingRequests.jsp", "Validate Gene Request");
     		h1.put("ReceiveOligoOrder", "Receive Oligo Order");
     		h1.put("GeneratePCRPlate", "Generate PCR Plate"); 
     		h1.put("GenerateGelPlate", "Generate Gel Plate");
