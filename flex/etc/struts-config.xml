@@ -162,6 +162,12 @@
     </action>   
 
     <!-- Process a customer request -->
+    <action    path="/DisplayRequest"
+               type="edu.harvard.med.hip.flex.action.DisplayRequestAction">
+      <forward  name="success"   path="/DisplayRequest.jsp"/>
+    </action> 
+
+    <!-- Process a customer request -->
     <action    path="/SequenceSearch"
                type="edu.harvard.med.hip.flex.action.SequenceSearchAction"
                name="customerRequestForm"
