@@ -24,6 +24,7 @@ public class Project {
     public final static int PSEUDOMONAS = 3;
     public final static int CLONTECH = 4;
     public final static int BREASTCANCER = 5;
+    public final static int KINASE = 6;
     public final static int MGC_PROJECT = 7;
     
     private int id;
