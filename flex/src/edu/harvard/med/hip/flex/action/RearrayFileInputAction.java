@@ -1,17 +1,13 @@
 /*
- * GetProjectsAction.java
+ * RearrayFileInputAction.java
  *
- * This action gets all the projects from the database and save to the request.
- *
- * Created on August 15, 2001, 3:21 PM
+ * Created on June 3, 2003, 3:20 PM
  */
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Enumeration;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -28,21 +24,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.flex.core.*;
-import edu.harvard.med.hip.flex.util.*;
-import edu.harvard.med.hip.flex.form.*;
-import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.process.*;
-import edu.harvard.med.hip.flex.user.*;
-import edu.harvard.med.hip.flex.Constants;
+import edu.harvard.med.hip.flex.form.GenericRearrayForm;
+import edu.harvard.med.hip.flex.core.Location;
 import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
  * @author  dzuo
- * @version
  */
-public class GetProjectsAction extends ResearcherAction {
+public class RearrayFileInputAction extends ResearcherAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -65,36 +55,29 @@ public class GetProjectsAction extends ResearcherAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        String forwardName = ((ProjectWorkflowForm)form).getForwardName();
+        String fileFormat = ((GenericRearrayForm)form).getFileFormat();
+        String plateFormat = ((GenericRearrayForm)form).getPlateFormat();
+        String wellFormat = ((GenericRearrayForm)form).getWellFormat();
+        String destWellFormat = ((GenericRearrayForm)form).getDestWellFormat();
+        int project = ((GenericRearrayForm)form).getProject();
+        int workflow = ((GenericRearrayForm)form).getWorkflow();
         
-        try {
-            Vector projects = null;
-            
-            if(Constants.MGC_PLATE_HANDLE.equals(forwardName)) {
-                Project p = new Project(Project.MGC_PROJECT);
-                projects = new Vector();
-                projects.add(p);
-            } else {
-                projects = Project.getAllProjects();
-                for(int i=0; i<projects.size(); i++) {
-                    Project proj = (Project)projects.elementAt(i);
-                    if(Project.MGC_PROJECT == (proj.getId()))
-                        projects.remove(i);
-                }
-            }
-            
-            request.setAttribute("projects", projects);
-            
-            if(Constants.IMPORT_SEQUENCES.equals(forwardName)) {
-                return (mapping.findForward("success_import_sequence"));
-            }
-             
-            request.setAttribute("forwardName", forwardName);
+       try {
+            Vector locations = Location.getLocations();                        
+            request.getSession().setAttribute("Rearray.locations", locations);            
+            request.setAttribute("fileFormat", fileFormat);
+            request.setAttribute("plateFormat", plateFormat);
+            request.setAttribute("wellFormat", wellFormat);
+            request.setAttribute("destWellFormat", destWellFormat);
+            request.setAttribute("project", new Integer(project));
+            request.setAttribute("workflow", new Integer(workflow));
             
             return (mapping.findForward("success"));
         } catch (Exception e) {
+            //System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
     }
 }
+

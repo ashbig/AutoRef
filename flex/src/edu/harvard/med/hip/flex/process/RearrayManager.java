@@ -26,8 +26,8 @@ import edu.harvard.med.hip.flex.user.User;
 public class RearrayManager {
     public static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     public static final String DILIM = "\t";
-    public static final String FILEPATH = "/tmp/";
-    //public static final String FILEPATH = "G:\\";
+    //public static final String FILEPATH = "/tmp/";
+    public static final String FILEPATH = "G:\\";
     public static final String LEFTFILE = "left";
     
     protected InputStream fileInput = null;
@@ -55,9 +55,10 @@ public class RearrayManager {
     protected boolean isFusion = false;
     protected boolean isClosed = false;
     protected boolean isOnQueue = false;
-    protected boolean isOneFile = true;
+    protected boolean isOneFile = false;
     protected boolean isPlateAsLabel = true;
     protected boolean isWellAsNumber = true;
+    protected boolean isDestWellAsNumber = true;
     
     protected int sortBy = GenericRearrayer.SORT_BY_NONE;
     protected int numOfWellsOnPlate = 96;
@@ -80,6 +81,9 @@ public class RearrayManager {
     protected Location l = null;
     protected Researcher researcher = null;
     
+    public ArrayList getFiles() {return files;}
+    public ArrayList getRearrayedContainers() {return rearrayedContainers;}
+    
     public void setIsDestPlateSet(boolean b) {this.isDestPlateSet = b;}
     public void setIsClone(boolean b) {this.isClone = b;}
     public void setIsArrangeByFormat(boolean b) {this.isArrangeByFormat = b;}
@@ -95,6 +99,7 @@ public class RearrayManager {
     public void setIsOneFile(boolean b) {this.isOneFile = b;}
     public void setIsPlateAsLabel(boolean b) {this.isPlateAsLabel = b;}
     public void setIsWellAsNumber(boolean b) {this.isWellAsNumber = b;}
+    public void setIsDestWellAsNumber(boolean b) {this.isDestWellAsNumber = b;}
     public void setIsFusion(boolean b) {this.isFusion = b;}
     public void setIsClosed(boolean b) {this.isClosed = b;}
     
@@ -140,7 +145,7 @@ public class RearrayManager {
             protocol = new Protocol(protocolName);
         }
         
-        l = new Location(location);
+        l = new Location(location);        
         researcher = new Researcher(researcherBarcode);
         
         ArrayList inputSamples = readFile();
@@ -314,6 +319,8 @@ public class RearrayManager {
     protected ArrayList convertSamples(List samples, Connection conn)
     throws SQLException {
         RearrayPlateMapCreator creator = new RearrayPlateMapCreator(isPlateAsLabel,isWellAsNumber);
+        creator.setIsDestWellAsNumber(isDestWellAsNumber);
+        
         ArrayList newSamples = null;
         
         if(isClone) {
@@ -327,7 +334,8 @@ public class RearrayManager {
     
     //Creates rearrayed plates for given samples. Insert records into database.
     protected void createPlates(List samples, Connection conn)
-    throws FlexDatabaseException, FlexCoreException, FlexWorkflowException, IOException, Exception {
+    throws FlexDatabaseException, FlexCoreException, FlexWorkflowException,
+    RearrayException, IOException, Exception {
         GenericRearrayer rearrayer = new GenericRearrayer();
         
         if(sortBy == GenericRearrayer.SORT_BY_SOURCE && !isDestPlateSet) {
@@ -344,8 +352,8 @@ public class RearrayManager {
             
             //check the dest plate well position for illegal value
             if(isDestPlateSet && (m.getDestWell()<(numOfControls/2+1) || m.getDestWell()>(numOfWellsOnPlate-numOfControls/2)))
-                throw new Exception("Invalid destination well: "+m.getRearrayInputSample().getDestPlate()+": "+m.getRearrayInputSample().getDestWell());
-        
+                throw new RearrayException("Invalid destination well: "+m.getRearrayInputSample().getDestPlate()+": "+m.getRearrayInputSample().getDestWell());
+            
             plateSamples.add(samples.get(i));
             
             //This is one plate
@@ -353,7 +361,7 @@ public class RearrayManager {
                 int threadid = FlexIDGenerator.getID("threadid");
                 String label = getLabel(pw, protocol, threadid);
                 Container container = createPlate(plateSamples, plateType,sampleType,threadid,label,conn);
-                rearrayedContainers.add(container);
+                //rearrayedContainers.add(container);
                 
                 if(isOligo) {
                     if(isNewOligo) {
@@ -390,6 +398,8 @@ public class RearrayManager {
         Vector sampleLineageSet = mapper.getSampleLineageSet();
         Set sourceContainers = mapper.getSourceContainers();
         createProcessRecord(sourceContainers, container, sampleLineageSet, conn);
+        
+        rearrayedContainers.add(container);
         
         return container;
     }
@@ -439,6 +449,15 @@ public class RearrayManager {
         om.setIsReorder(false);
         om.createOligoPlate(sequences, container.getId());
         om.sendOligoOrders();
+        
+        OligoPlater plater = om.getOligoPlater();
+        Container c5p = plater.get5pContainer();
+        Container c3f = plater.get3fContainer();
+        Container c3c = plater.get3cContainer();
+        
+        if(c5p != null) rearrayedContainers.add(c5p);
+        if(c3f != null) rearrayedContainers.add(c3f);
+        if(c3c != null) rearrayedContainers.add(c3c);
     }
     
     //Create the rearrayed oligo plates from the source oligo plates for given samples.
@@ -602,5 +621,5 @@ public class RearrayManager {
             System.out.println("oligo 3p reversed:\t"+sample.getOligoid3pReversed());
             System.out.println();
         }
-    }      
+    }
 }
