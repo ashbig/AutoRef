@@ -258,12 +258,20 @@ public class OligoPlateManager {
         } catch(FlexDatabaseException sqlex){
             System.out.println(sqlex.getMessage());
             DatabaseTransaction.rollback(conn);
+            
         } catch(IOException ioe){
             System.out.println("Error occurred while writing to oligo order files");
             System.out.println(ioe.getMessage());
             
             DatabaseTransaction.rollback(conn);
+           
         }
+        catch(Exception e)
+        {
+            System.out.println (e.getMessage());
+        }
+
+        
         
         fileList = plater.generateOligoOrderFiles();
     }
@@ -349,7 +357,8 @@ public class OligoPlateManager {
             p = new Project(5);
             w = new Workflow(6);
             
-            OligoPlateManager om = new OligoPlateManager(c, p, w);
+            //OligoPlateManager om = new OligoPlateManager(c, p, w);
+            OligoPlateManager om = new OligoPlateManager(c, p, w, 94, false, true, null);
             System.out.println("About to start thread");
             om.orderOligo();
             System.out.println("finished calling thread");
