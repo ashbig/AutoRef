@@ -72,6 +72,7 @@ public class SequenceSelectionAction extends FlexAction {
         }
              
         Vector goodSequences = new Vector();
+        Vector newSequences = new Vector();
         Hashtable badSequences = new Hashtable();
         Hashtable sameSequence = new Hashtable();
         Hashtable homologs = new Hashtable();
@@ -119,7 +120,7 @@ public class SequenceSelectionAction extends FlexAction {
                                     sequences.put(seq.getGi(), seq);
                                 }
                             } else {
-                                goodSequences.addElement(sequence);
+                                newSequences.addElement(sequence);
                                 sequences.put(gi, sequence);
                             }
                         }
@@ -136,6 +137,10 @@ public class SequenceSelectionAction extends FlexAction {
             
             int count = 0;
             
+            if(newSequences.size() > 0) {
+                request.setAttribute("newSequences", newSequences);
+                count++;
+            }            
             if(goodSequences.size() > 0) {
                 Collections.sort(goodSequences, new FlexSeqStatusComparator());
                 request.setAttribute("goodSequences", goodSequences);
@@ -159,6 +164,9 @@ public class SequenceSelectionAction extends FlexAction {
             }
             if(submittedSequences.size() > 0) {
                 request.setAttribute("submittedSequences", submittedSequences);
+            }
+            if(goodSequences.size() > 0 || sameSequence.size() > 0 || cdsMatchSequences.size() > 0) {
+                request.setAttribute("displaySameSequence", "1");
             }
             
             request.getSession().setAttribute("sequences", sequences);
