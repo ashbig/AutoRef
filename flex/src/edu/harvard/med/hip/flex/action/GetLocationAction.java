@@ -1,15 +1,15 @@
 /*
- * CreateProcessPlateAction.java
+ * GetLocationAction.java
  *
- * Created on June 12, 2001, 1:49 PM
- *
- * This class gets all the process protocols related to generating process
- * plates from the beans.
+ * Created on June 26, 2001, 10:03 AM
  */
 
 package edu.harvard.med.hip.flex.action;
 
+import java.util.LinkedList;
+import java.util.MissingResourceException;
 import java.util.Vector;
+import java.util.Enumeration;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -26,16 +26,19 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.process.Protocol;
+import edu.harvard.med.hip.flex.form.CreateProcessPlateForm;
+import edu.harvard.med.hip.flex.process.Process;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
  * @author  dzuo
  * @version 
  */
-public class CreateProcessPlateAction extends FlexAction {
-
+public class GetLocationAction extends ResearcherAction{
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -56,25 +59,25 @@ public class CreateProcessPlateAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        String sql = "select * from processprotocol where processname like 'generate % plates'";
-        Vector protocol = new Vector();
-        try {        
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            ResultSet rs = t.executeQuery(sql);
-            while (rs.next()) {
-                int protocolid = rs.getInt("PROTOCOLID");
-                String processname = rs.getString("PROCESSNAME");
-                String processcode = rs.getString("PROCESSCODE");
-                Protocol p = new Protocol(protocolid, processcode, processname);
-                protocol.addElement(p);
-            }
-            
-            request.setAttribute("CreateProcessPlateAction.protocols", protocol);
-            return (mapping.findForward("success"));
-        } catch (FlexDatabaseException ex) {     
-            request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return (mapping.findForward("error"));
-        } catch (SQLException ex) {     
+        ActionErrors errors = new ActionErrors();
+
+        int destLocation = ((CreateProcessPlateForm)form).getDestLocation();
+        Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");        
+        
+        try {
+
+            // Create the new plate and samples.        
+            Location dLocation = new Location(destLocation);
+            Container container = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");
+            Vector sampleLineageSet = new Vector();
+            ContainerMapper mapper = new ContainerMapper();
+            Container newContainer = mapper.mapContainer(container, protocol, dLocation, sampleLineageSet);
+
+            // Store the data in the session.        
+            request.getSession().setAttribute("GetLocationAction.newContainer", newContainer);  
+            request.getSession().setAttribute("GetLocationAction.sampleLineageSet", sampleLineageSet);
+            return (mapping.findForward("success"));            
+        } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }

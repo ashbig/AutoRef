@@ -137,8 +137,6 @@ public class ContainerMapper {
         Result result = Result.findResult(s, p);
         if(Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())) {
             type = Sample.getType(newProtocol.getProcessname());
-System.out.println("Sample type is :"+type);
-System.out.println("Process:"+ newProtocol.getProcessname());
         } else {
             type = Sample.EMPTY;
         }

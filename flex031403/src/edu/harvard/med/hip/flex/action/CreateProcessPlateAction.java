@@ -71,10 +71,12 @@ public class CreateProcessPlateAction extends FlexAction {
             
             request.setAttribute("CreateProcessPlateAction.protocols", protocol);
             return (mapping.findForward("success"));
-        } catch (FlexDatabaseException ex) {
-             return (mapping.findForward("error"));
-        } catch (SQLException ex) {
-             return (mapping.findForward("error"));
+        } catch (FlexDatabaseException ex) {     
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
+        } catch (SQLException ex) {     
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
         }
     }
 }

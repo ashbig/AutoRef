@@ -1,7 +1,7 @@
 /*
- * GetInputAction.java
+ * GetResearcherAction.java
  *
- * Created on June 12, 2001, 3:50 PM
+ * Created on June 26, 2001, 10:27 AM
  */
 
 package edu.harvard.med.hip.flex.action;
@@ -38,7 +38,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  * @author  dzuo
  * @version 
  */
-public class GetInputAction extends ResearcherAction{
+public class GetResearcherAction extends ResearcherAction{
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -61,8 +61,9 @@ public class GetInputAction extends ResearcherAction{
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String barcode = ((CreateProcessPlateForm)form).getResearcherBarcode();
-        Researcher researcher = null;
-
+        int location = ((CreateProcessPlateForm)form).getSourceLocation();
+        Researcher researcher = null;        
+        
         // Validate the researcher barcode.
         try {
             researcher = new Researcher(barcode);
@@ -74,31 +75,20 @@ public class GetInputAction extends ResearcherAction{
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
-        
-        // Validate container label.
-        String sourcePlate = ((CreateProcessPlateForm)form).getSourcePlate();
-        LinkedList queueItems = (LinkedList)request.getSession().getAttribute("queueItems"); 
-        QueueItem item = getValidPlate(queueItems, sourcePlate);
-        if(item == null) {
-            errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
-        }
 
-        int destLocation = ((CreateProcessPlateForm)form).getDestLocation();
-        Protocol protocol = (Protocol)request.getSession().getAttribute("protocol");        
+        Container newContainer = (Container)request.getSession().getAttribute("GetLocationAction.newContainer");
+        Container container = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");
+        QueueItem item = (QueueItem)request.getSession().getAttribute("EnterSourcePlateAction.item");
+        Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
+        Vector sampleLineageSet = (Vector)request.getSession().getAttribute("GetLocationAction.sampleLineageSet");
+        
         Connection conn = null;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
 
-            // Create the new plate and samples.        
-            Location dLocation = new Location(destLocation);
-            Container container = (Container)item.getItem();
-            Vector sampleLineageSet = new Vector();
-            ContainerMapper mapper = new ContainerMapper();
-            Container newContainer = mapper.mapContainer(container, protocol, dLocation, sampleLineageSet);
-
+            // update the location of the old container.
+            container.updateLocation(location);
             // Insert the new container and samples into database.
             newContainer.insert(conn);
             
@@ -139,12 +129,9 @@ public class GetInputAction extends ResearcherAction{
             
             // Commit the changes to the database.
             DatabaseTransaction.rollback(conn);
-            
-            // Store the data in the session.
-            Location sLocation = container.getLocation();        
-            request.getSession().setAttribute("oldContainer", container); 
-            request.getSession().setAttribute("newContainer", newContainer);  
-            request.getSession().setAttribute("dLocation", dLocation);
+        
+            // Print the barcode
+            System.out.println("Printing barcode: "+newContainer.getLabel());
             
             return (mapping.findForward("success"));            
         } catch (Exception ex) {
@@ -155,22 +142,5 @@ public class GetInputAction extends ResearcherAction{
             DatabaseTransaction.closeConnection(conn);
         }
     }
- 
-    // Validate the source plate barcode.
-    private QueueItem getValidPlate(LinkedList queueItems, String sourcePlate) { 
-        if(queueItems == null) {
-            return null;
-        }
-        
-        QueueItem found = null;
-        for(int i=0; i<queueItems.size(); i++) {
-            QueueItem item = (QueueItem)queueItems.get(i);
-            Container container = (Container)item.getItem();
-            if(container.isSame(sourcePlate)) {
-                found = item;
-            }
-        }   
-        
-        return found;
-    }
 }
+ 
