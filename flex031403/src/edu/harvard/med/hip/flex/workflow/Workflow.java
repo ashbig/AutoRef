@@ -19,7 +19,8 @@ import edu.harvard.med.hip.flex.Constants;
  * @author  dzuo
  * @version
  */
-public class Workflow {
+public class Workflow
+{
     protected int id;
     protected String name;
     protected String description;
@@ -32,11 +33,15 @@ public class Workflow {
     public static final int MGC_PLATE_HANDLE_WORKFLOW = 7;
     public static final int MGC_GATEWAY_WORKFLOW = 8;
     public static final int MGC_CREATOR_WORKFLOW = 9;
+    public static final int YEAST_REVISED_ORF  = 10;
+    public static final int YEAST_FAILED_ORF  = 11;
     
     /** Creates new Workflow */
-    public Workflow() {
+    public Workflow()
+    {
         flow = new Vector();
-        try {
+        try
+        {
             //initialize all the flow records.
             Vector next = new Vector();
             next.addElement(new Protocol(Protocol.APPROVE_SEQUENCES));
@@ -46,7 +51,7 @@ public class Workflow {
             next.addElement(new Protocol(Protocol.DESIGN_CONSTRUCTS));
             flow.addElement(new FlowRecord(new Protocol(Protocol.APPROVE_SEQUENCES), next));
             
-           
+            
             
             next = new Vector();
             next.addElement(new Protocol(Protocol.GENERATE_OLIGO_ORDERS));
@@ -131,7 +136,8 @@ public class Workflow {
             next = new Vector();
             next.addElement(new Protocol(Protocol.RECEIVE_SEQUENCING_RESULTS));
             flow.addElement(new FlowRecord(new Protocol(Protocol.SUBMIT_SEQUENCING_ORDERS), next));
-        } catch (FlexDatabaseException ex) {}
+        } catch (FlexDatabaseException ex)
+        {}
     }
     
     /**
@@ -140,7 +146,8 @@ public class Workflow {
      * @param id The workflowid corresponding to the primary key in the database.
      * @exception FlexDatabaseException.
      */
-    public Workflow(int id) throws FlexDatabaseException {
+    public Workflow(int id) throws FlexDatabaseException
+    {
         this.id = id;
         if (Constants.s_workflows != null && Constants.s_workflows.get(String.valueOf(id)) != null)
         {
@@ -158,12 +165,14 @@ public class Workflow {
         "where workflowid = "+id;
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
-        try{
-            if(rs.next()) {
+        try
+        {
+            if(rs.next())
+            {
                 name = rs.getString("NAME");
                 description = rs.getString("DESCRIPTION");
             }
-         
+            
             sql = "select currentprotocolid, nextprotocolid "+
             "from workflowtask where workflowid = "+id+
             " order by currentprotocolid";
@@ -172,19 +181,24 @@ public class Workflow {
             Vector v = new Vector();
             
             int current = -1;
-            while(rs.next()) {
+            while(rs.next())
+            {
                 int currentProtocol = rs.getInt("CURRENTPROTOCOLID");
                 int nextProtocol = rs.getInt("NEXTPROTOCOLID");
                 
-                if(current == -1) {
+                if(current == -1)
+                {
                     current = currentProtocol;
                     v.addElement(new Protocol(nextProtocol));
                     FlowRecord fr = new FlowRecord(new Protocol(current), v);
                     flow.addElement(fr);
-                } else {
-                    if(current == currentProtocol) {
+                } else
+                {
+                    if(current == currentProtocol)
+                    {
                         v.addElement(new Protocol(nextProtocol));
-                    } else {
+                    } else
+                    {
                         current = currentProtocol;
                         v = new Vector();
                         v.addElement(new Protocol(nextProtocol));
@@ -193,14 +207,16 @@ public class Workflow {
                     }
                 }
             }
-        } catch(SQLException sqlE) {
+        } catch(SQLException sqlE)
+        {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
-
-    /** 
+    
+    /**
      * Constructor.
      *
      * @param id The workflowid.
@@ -208,7 +224,8 @@ public class Workflow {
      * @param description The workflow description.
      * @return The Workflow object.
      */
-    public Workflow(int id, String name, String description) {
+    public Workflow(int id, String name, String description)
+    {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -219,7 +236,8 @@ public class Workflow {
      *
      * @return The workflow id.
      */
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
     
@@ -229,13 +247,42 @@ public class Workflow {
      * @param protocol The given protocol.
      * @return The next protocol.
      */
-    public Vector getNextProtocol(Protocol protocol) {
+    public Vector getNextProtocol(Protocol protocol)
+    {
         Enumeration enum = flow.elements();
-        while(enum.hasMoreElements()) {
+      
+        while(enum.hasMoreElements())
+        {
+            
             FlowRecord r = (FlowRecord)enum.nextElement();
-            if(r.isEqual(protocol)) {
+            if(r.isEqual(protocol))
+            {
                 return r.getNext();
             }
+            
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Return the previous protocol name for the given protocol name.
+     *
+     * @param protocol The given protocol.
+     * @return The next protocol.
+     */
+    public Vector getPreviousProtocol(Protocol protocol)
+    {
+        Enumeration enum = flow.elements();
+        FlowRecord prev = null;
+        while(enum.hasMoreElements())
+        {
+            FlowRecord r = (FlowRecord)enum.nextElement();
+            if( prev != null && prev.isEqual(protocol))
+            {
+                return prev.getNext();
+            }
+            prev = r;
         }
         
         return null;
@@ -246,7 +293,8 @@ public class Workflow {
      *
      * @return The name of the workflow.
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
     
@@ -255,7 +303,8 @@ public class Workflow {
      *
      * @return The workflow description.
      */
-    public String getDescription() {
+    public String getDescription()
+    {
         return description;
     }
     
@@ -264,36 +313,42 @@ public class Workflow {
      *
      * @return The entire workflow.
      */
-    public Vector getFlow() {
+    public Vector getFlow()
+    {
         return flow;
     }
-
-    public static Vector getAllWorkflows() throws FlexDatabaseException {
+    
+    public static Vector getAllWorkflows() throws FlexDatabaseException
+    {
         
-        Vector workflows = new Vector();  
+        Vector workflows = new Vector();
         if (Constants.s_workflows != null)
         {
             workflows = new Vector(Constants.s_workflows.values());
-             sortWorkflowsByName(workflows);
-           return workflows;
+            sortWorkflowsByName(workflows);
+            return workflows;
         }
-       
+        
         String sql = "select * from workflow";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         
         
-        try{                   
-            while(rs.next()) {
+        try
+        {
+            while(rs.next())
+            {
                 int workflowid = rs.getInt("WORKFLOWID");
                 String name = rs.getString("NAME");
                 String description = rs.getString("DESCRIPTION");
                 Workflow w = new Workflow(workflowid, name, description);
                 workflows.addElement(w);
-            }                
-        } catch(SQLException sqlE) {
+            }
+        } catch(SQLException sqlE)
+        {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
         
@@ -304,19 +359,21 @@ public class Workflow {
     private static void sortWorkflowsByName(Vector workflows)
     {
         Collections.sort(workflows, new Comparator()
-       {
+        {
             public int compare(Object cont1, Object cont2)
             {
                 Workflow p1 =(Workflow) cont1;
                 Workflow p2 = (Workflow) cont2;
                 return  p1.getName().compareToIgnoreCase(p2.getName() ) ;
-           }
-       });
+            }
+        });
     }
     
     
-    public static void main(String [] args) {
-        try {
+    public static void main(String [] args)
+    {
+        try
+        {
             Workflow flow = new Workflow(5);
             System.out.println("Name is: "+flow.getName());
             System.out.println("Description is: "+flow.getDescription());
@@ -326,11 +383,13 @@ public class Workflow {
             
             List nexts = flow.getNextProtocol(curr);
             Iterator iter = nexts.iterator();
-            while(iter.hasNext()) {
+            while(iter.hasNext())
+            {
                 Protocol next = (Protocol)iter.next();
                 System.out.println("Next protocol is: "+next.getProcessname());
             }
-        } catch (FlexDatabaseException ex) {
+        } catch (FlexDatabaseException ex)
+        {
             System.out.println(ex);
         }
     }
