@@ -31,18 +31,8 @@
 <A><font size=3>6. The analyzed gene list from other gene related high-throughput experiments, such as micro-array</A></font><BR>
 <center>
 <br>&nbsp;
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <tr>
-    <td width="7%" valign="top"><font color="#FF0000"><b>Note:</b></font></td>
-    <td width="93%" valign="top">&nbsp;MedGene is freely available to all academic and
-      non-profit researchers. Commercial users are welcome and should contact
-      the Harvard OTL (Office of Technology Liscencing) at (617) 432-0922.</td>
-  </tr>
-</table>
-
 
     <html:form action="logon.do" focus="username" target="_top">
-<br><br>
         <table>
             <tr>
                 <TD>User Name:</TD>
@@ -56,14 +46,24 @@
         <p>
         <html:submit property="submit" value="continue"/>
     </html:form>
-
+<br>
      <html:link forward="register" target="_top">User registration</html:link>
-     <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>
+
 <!--    
     <html:link forward="findRegistration" target="_top">Forgot your password?</html:link>
 -->
-    <br>
-    <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>
+<br><br>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td width="7%" valign="top"><font color="#FF0000"><b>Note:</b></font></td>
+    <td width="93%" valign="top"><font size='2'> MedGene is freely available for all research
+      purposes. For information on commercial use please contact 
+      the Harvard Medical School Office of Technology Licensing at (617) 432-0922.</font></td>
+  </tr>
+</table>
+
     <br><br>
 
 </center>
