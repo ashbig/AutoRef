@@ -251,7 +251,7 @@
                scope="request"
                validate="true"
                input="/EnterOligoPlates.jsp">
-      <forward  name="success"   path="/GetOligoLocation.jsp"/>
+      <forward  name="success"   path="/GetPCRLocation.jsp"/>
     </action> 
 
     <!-- Process the location selection -->
@@ -262,6 +262,16 @@
                validate="false"
                input="/EnterSourcePlate.jsp">
       <forward  name="success"   path="/GetResearcher.jsp"/>
+    </action> 
+
+    <!-- Process the source plate input -->
+    <action    path="/GetPCRLocation"
+               type="edu.harvard.med.hip.flex.action.GetPCRLocationAction"
+               name="createPCRPlateForm"
+               scope="request"
+               validate="true"
+               input="/GetPCRLocation.jsp">
+      <forward  name="success"   path="/GetPCRResearcher.jsp"/>
     </action> 
 
      <!-- Process the researcher barcode input -->
