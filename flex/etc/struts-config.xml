@@ -77,6 +77,16 @@
                name="customerRequestForm"
               scope="request"
               input="/SequenceSelection.jsp">
+      <forward  name="success"   path="/ConfirmSelection.jsp"/>
+      <forward  name="failure"  path="/SequenceSearch.jsp"/>
+    </action> 
+
+    <!-- Process a customer request -->
+    <action    path="/ConfirmSelection"
+               type="edu.harvard.med.hip.flex.action.ConfirmSelectionAction"
+               name="customerRequestForm"
+              scope="request"
+              input="/ConfirmSelection.jsp">
       <forward  name="success"   path="/SequenceSearch.jsp"/>
       <forward  name="failure"  path="/SequenceSearch.jsp"/>
     </action> 

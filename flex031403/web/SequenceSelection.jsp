@@ -14,9 +14,9 @@
 
 <html:form action="/SequenceSelection.do">
 
-<logic:iterate id="sr" name="searchResult">
 <p>
 <table>
+<logic:iterate id="sr" name="searchResult">
 <tr>
 <td>
 <input name="checkOrder" type="checkbox" value="<bean:write name="sr" property="value.gi"/>"</td>
@@ -28,8 +28,8 @@
 <tr>
 <td></td><td><bean:write name="sr" property="value.accession"/>| GI: <bean:write name="sr" property="value.gi"/></td>
 </tr>
-</table>
 </logic:iterate> 
+</table>
 
 <p>
 <center>

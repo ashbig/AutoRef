@@ -19,11 +19,8 @@ import java.util.Hashtable;
  */
 public class CustomerRequestForm extends ActionForm {
     private String searchString = null;
+    private String [] checkOrder = null;
     
-    /**
-     * Stores the genbank search result.
-     */
-    private Hashtable searchResult = new Hashtable();;   
     /**
      * Set the searchString to the given value.
      *
@@ -43,20 +40,20 @@ public class CustomerRequestForm extends ActionForm {
     }
     
     /**
-     * Set the searchResult to the given value.
+     * Return checkOrder field.
      *
-     * @param searchResult The value to be set to.
+     * @return The checkOrder field.
      */
-    public void setSearchResult(Hashtable searchResult) {
-        this.searchResult = searchResult;
+    public String [] getCheckOrder() {
+        return checkOrder;
     }
     
     /**
-     * Return the searchResult field.
+     * Set the checkOrder field to the given value.
      *
-     * @return The searchResult field.
+     * @param checkOrder The value to be set to.
      */
-    public Hashtable getSearchResult() {
-        return searchResult;
+    public void setCheckOrder(String [] checkOrder) {
+        this.checkOrder = checkOrder;
     }
 }
