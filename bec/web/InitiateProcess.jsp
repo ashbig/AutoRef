@@ -112,31 +112,8 @@ if ((specs != null && names != null && control_names != null)
 
 <%}%>
 
-<% if ( forwardName_int ==  Constants.PROCESS_ORDER_INTERNAL_PRIMERS)
-{%>
-<tr><td colspan='2'>
-<table border =0 width="100%">
-<tr><td colspan=2 bgColor="#1145A6" ><font color="#FFFFFF"><strong>Oligo placement format </strong></font> </td></tr>
-<tr><td> <input type=RADIO name="oligo_placement_format" value=<%= PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER%> checked><b>All primers for clone together </td></tr>
-<tr><td>  <input type=RADIO name="oligo_placement_format" value=<%= PrimerOrderRunner.PLACEMENT_FORMAT_N_PRIMER%> ><b><i>Nth</i> primer for clone. Primer number (ordered by position from 5p end)
-  <input type=text value='1' name="primer_number"  ></td></tr>
-</table>
-</td></tr>
-    
-<%}%>
-<% if ( request.getAttribute(Constants.ADDITIONAL_JSP) != null)
-{%> <%=request.getAttribute(Constants.ADDITIONAL_JSP) %> <%}%>
-<tr><td colspan='2'>
-    <% if (forwardName_int == Constants.PROCESS_RUN_PRIMER3
-           || forwardName_int == Constants.PROCESS_FIND_GAPS
-           || forwardName_int == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE
-           || forwardName_int ==  Constants.PROCESS_ORDER_INTERNAL_PRIMERS)
-    {
-    %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b>
-    <%}%>
-</td></tr>
 
-
+ <jsp:include page="additional_jsp_for_initiateprocess.jsp" />
 
 </table>
 

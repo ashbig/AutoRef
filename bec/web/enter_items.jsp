@@ -85,6 +85,9 @@ case Constants.PROCESS_DELETE_CLONE_READS  :{ isPlateLabel = true;isPlateLabelCh
 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{ isPlateLabel = true;isPlateLabelChecked=true; isCloneId = true;  break;}
 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ  :{ isPlateLabel = true;isPlateLabelChecked=true; isCloneId = true;  break;}
 case Constants.PROCESS_DELETE_CLONE_SEQUENCE: { isCloneId = true; isCloneIdChecked= true;isACESequenceId = true;break;}
+case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{ isCloneId = true; isCloneIdChecked= true;break;}
+case  Constants.PROCESS_DELETE_TRACE_FILES :{ break;}
+                      
 }
 String[] cells = new String[4]; cells[0]="&nbsp;";cells[1]="&nbsp;";cells[2]="&nbsp;";cells[3]="&nbsp;";int current_entity = 0;
 if ( isPlateLabel )

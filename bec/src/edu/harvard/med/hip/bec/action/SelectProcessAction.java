@@ -216,12 +216,14 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :
                 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                 case Constants.PROCESS_DELETE_CLONE_SEQUENCE ://
+                case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
+                case  Constants.PROCESS_DELETE_TRACE_FILES :
+  
                 {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
                     ArrayList control_names = new ArrayList();
                     String title = null;
-                     StringBuffer additional_jsp = new StringBuffer();
                     switch( forwardName)
                     {
                         case Constants.PROCESS_DELETE_PLATE :  {title="delete Plates";break; }
@@ -229,6 +231,8 @@ public class SelectProcessAction extends ResearcherAction
                         case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : {title="delete Clone forward End Reads";break; }
                         case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : {title="delete Clone reverse End Reads";break; }
                         case Constants.PROCESS_DELETE_CLONE_SEQUENCE : {title="delete Clone sequences";break; }
+                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title="get Trace Files' names";break; }
+                        case  Constants.PROCESS_DELETE_TRACE_FILES :{title="delete Trace Files from hard drive";break; }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  {title="get Order List for resequencing of End Reads";break; }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : {title="get Order List for resequencing of Internal Reads";break; }
                         case Constants.PROCESS_RUN_END_READS_WRAPPER: {title="run End Reads Wrapper";break; }
@@ -298,9 +302,6 @@ public class SelectProcessAction extends ResearcherAction
                              }
                              else if (forwardName ==  Constants.PROCESS_FIND_GAPS)
                              {
-additional_jsp.append("<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input NAME='isRunLQR' id='isRunLQR' type = checkbox value=0>");
-additional_jsp.append("<strong>Run LQR Finder on contig sequences</strong></td></tr>");
-
                                 title="run Gap Mapper";
                              }
                              
@@ -308,31 +309,7 @@ additional_jsp.append("<strong>Run LQR Finder on contig sequences</strong></td><
                          }
  
                         case Constants.PROCESS_NOMATCH_REPORT:
-                        { 
-additional_jsp.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
-additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Database Name</strong></td>");
-additional_jsp.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> <OPTION VALUE='"+ BlastWrapper.getHumanDBLocation() +"'>" + BlastWrapper.HUMANDB_NAME );
-additional_jsp.append(" <OPTION VALUE='"+ BlastWrapper.getYeastDBLocation() +"'>");
-additional_jsp.append( BlastWrapper.YEASTDB_NAME);
-additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getPseudomonasDBLocation() +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
-additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getMGCDBLocation() +"'>"+ BlastWrapper.MGCDB_NAME );
-additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getYPDBLocation() +"'>"+ BlastWrapper.YPDB_NAME );
-additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getFTDBLocation()+"'>"+ BlastWrapper.FTDB_NAME );
-additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getClontechDBLocation()+"'>"+ BlastWrapper.ClontechDB_NAME );
-additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getNIDDKDBLocation()+"'>"+ BlastWrapper.NIDDKDB_NAME );
-additional_jsp.append("</SELECT></td> </tr>");
-additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
-additional_jsp.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
-additional_jsp.append("<OPTION VALUE='NONE'> None");
-additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.GI +"'>"+ PublicInfoItem.GI);
-additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.PANUMBER +"'>"+ PublicInfoItem.PANUMBER );
-additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.SGD +"'>"+ PublicInfoItem.SGD );
-additional_jsp.append("</SELECT></td> </tr>");
-
-                            
-                            title="run 'NO MATCH' report";break;
-                           
-                        }
+                        {   title="run 'NO MATCH' report";break; }
                        
                     }
                     if ( spec_names != null )
@@ -341,12 +318,7 @@ additional_jsp.append("</SELECT></td> </tr>");
                         request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
                         request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
                     }
-                    if (additional_jsp.length() != 0)
-                    {
-                        request.setAttribute(Constants.ADDITIONAL_JSP, additional_jsp.toString());
-                    }
                     request.setAttribute(Constants.JSP_TITLE,title);
-                   
                     return (mapping.findForward("initiate_process"));
                 }
                 
