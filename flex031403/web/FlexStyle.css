@@ -1,5 +1,5 @@
 /* styles for prompts */
-EM, TD.prompt {font-style: normal; color: black; font-weight: bold}
+EM, TD.prompt, TD.label {font-style: normal; color: black; font-weight: bold}
 
 /* styles for navigation */
 body.nav {background: #7a8a9a}
