@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.6 2001-06-14 19:15:08 dongmei_zuo Exp $ 
+        $Id: PendingRequests.jsp,v 1.7 2001-07-11 14:37:50 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -14,7 +14,6 @@
 <%@ page import="edu.harvard.med.hip.flex.Constants"%>
 <%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>

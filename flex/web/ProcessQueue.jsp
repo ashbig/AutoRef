@@ -1,5 +1,5 @@
 <%--
-        $Id: ProcessQueue.jsp,v 1.2 2001-06-04 15:26:34 dongmei_zuo Exp $ 
+        $Id: ProcessQueue.jsp,v 1.3 2001-07-11 14:37:50 jmunoz Exp $ 
 
         File    : ProcessQueue.jsp
         Date    : 05102001
@@ -11,7 +11,6 @@
 <%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>

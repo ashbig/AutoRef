@@ -1079,6 +1079,11 @@
 <rtexprvalue>true</rtexprvalue>
 </attribute>
 <attribute>
+<name>title</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
+<attribute>
 <name>transaction</name>
 <required>false</required>
 <rtexprvalue>true</rtexprvalue>
@@ -1471,6 +1476,11 @@
 </attribute>
 <attribute>
 <name>styleId</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
+<attribute>
+<name>tabindex</name>
 <required>false</required>
 <rtexprvalue>true</rtexprvalue>
 </attribute>

@@ -16,9 +16,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2001-06-13 16:29:10 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.6 $
+ * $Date: 2001-07-11 14:37:50 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -58,8 +58,8 @@ import org.apache.struts.action.*;
  * Whenever an exception is encountered, controll should be forwarded
  * to this action to process the exception.
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.5 $ $Date: 2001-06-13 16:29:10 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.6 $ $Date: 2001-07-11 14:37:50 $
  */
 
 public class ProcessErrorAction extends Action {
@@ -165,9 +165,10 @@ public class ProcessErrorAction extends Action {
             logMessage.append("\t"+key + " = " + value + "\n");
         }
         
-        System.out.println("#######Exception###########");
-        System.out.println(logMessage);
-        System.out.println("###########################");
+        
+        //System.out.println("#######Exception###########");
+        servlet.log(logMessage.toString());
+        //System.out.println("###########################");
          
         //servlet.log(logMessage);
         retForward = mapping.findForward("displayError");
