@@ -140,6 +140,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("container",container) ;
                    
                     request.setAttribute("process_items",pr_history);
+                    
                     return (mapping.findForward("display_container_history"));
                 }
                
@@ -410,36 +411,46 @@ public class Seq_GetItemAction extends ResearcherAction
                     String title = "available Containers";
                    ArrayList labels = Container.findAllContainerLabels();
                      StringBuffer container_names= new StringBuffer();
-                    int cur_column=1;String cur_label = null;
+                    int cur_column=1;String cur_label = null;String prev_label = null;
                     if (labels == null || labels.size() < 1)
                     {
-                        container_names.append( "No containers known by BEC");
+                        container_names.append( "No containers are available.");
                     }
                     else
                     {
-                        container_names.append("<table border = 0>");
+                         container_names.append("<script language='JavaScript' src='/BEC/scripts.js'></script> ");
+                       
                         for (int index = 0; index < labels.size(); index ++)
                         {
                             cur_label = (String)labels.get(index);
                           //  System.out.println(cur_label);
                             if (index == 0) container_names.append("<tr>");
-                            if ( cur_column == 5)
+                            if ( cur_column == 6)
                             {
                                 container_names.append("</tr><tr>");
                                 cur_column =1;
                             }
                                 
-                            if (index != 0 && cur_label.charAt(0) != ((String)labels.get(index-1)).charAt(0))
+                            if ( prev_label == null || ( prev_label != null &&  cur_label.charAt(0) != prev_label.charAt(0)))
                             {
-                                container_names.append("</tr><tr>&nbsp</tr><tr>");
+                                if (index != 0)
+                                {
+                                     container_names.append("</table>");
+                                    container_names.append("</DIV>");
+                                    container_names.append("</tr><tr>");
+                                }
+                                 
+                                container_names.append("<tr><td><INPUT onclick='javascript:showhide(\""+cur_label.charAt(0) +"\", this.checked);' type=checkbox CHECKED value=1 name=show> "+getProjectName(cur_label.charAt(0)));
+                                container_names.append("<DIV ID='"+cur_label.charAt(0) +"' STYLE='  position:relative;  clip:rect(0px 120px 120px 0px); '>");
+                                container_names.append("<p><table border = 0>");
                                 cur_column=1;
                             }
                             container_names.append( "<td><b>"+cur_label+"</b></td>");
                             cur_column ++;
+                            prev_label = cur_label;
                         }
-                        container_names.append("</table>");
+                        container_names.append("</table></table>");
                     }
-                 
                     request.setAttribute( Constants.ADDITIONAL_JSP, container_names.toString()) ;
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("display_info"));
@@ -498,6 +509,27 @@ public class Seq_GetItemAction extends ResearcherAction
         return container;
     }
     
+    private String getProjectName(char project_code)
+    {
+        project_code = Character.toUpperCase(project_code);
+        switch (project_code)
+        {
+            case         'A': return  "NIDDK Diabetis - Human";
+            case 'B': return  " Breast Cancer"; 
+            case         'C': return  " Clontech"; 
+            case         'D': return  " NIDDK Diabetis - Mouse"; 
+            case         'G': return  " Prostate Cancer"; 
+            case         'H': return  " Human"; 
+            case         'K': return  " Kinase"; 
+            case         'M': return  " MGC"; 
+            case         'P': return  " Pseudomonas"; 
+            case         'S': return  " Yersinia pestis"; 
+            case         'T': return  " Transcription Factor";
+            case         'Y': return  " Yeast";
+            default: return String.valueOf(project_code);
+        }
+
+    }
     
     //for sample report: converts end reads list int o uireads
     private ArrayList  createListOfUIReads(IsolateTrackingEngine istr, String discrepancy_report_for_endread, int ref_seqid)
