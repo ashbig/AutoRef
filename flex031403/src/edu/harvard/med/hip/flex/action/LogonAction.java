@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-05-29 15:57:54 $
+ * $Revision: 1.3 $
+ * $Date: 2001-05-29 19:20:04 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -62,7 +62,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: dongmei_zuo $
- * @version $Revision: 1.2 $ $Date: 2001-05-29 15:57:54 $
+ * @version $Revision: 1.3 $ $Date: 2001-05-29 19:20:04 $
  */
 
 public final class LogonAction extends Action {
@@ -106,6 +106,8 @@ public final class LogonAction extends Action {
         try {
             // ask accessManager if the username and password are valid
             if(!accessManager.authenticate(username,password)) {
+                System.out.println("user not authenticated: " + username + 
+                    " " + password);
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.password.mismatch"));
             }
@@ -118,6 +120,7 @@ public final class LogonAction extends Action {
         if (!errors.empty()) {
             
             saveErrors(request, errors);
+            System.out.println("about to return with errors: " + mapping.getInput());
             return (new ActionForward(mapping.getInput()));
         }
         
@@ -138,6 +141,7 @@ public final class LogonAction extends Action {
         }
         
         // Forward control to the specified success URI
+        System.out.println("about to return: " + mapping.findForward("success"));
         return (mapping.findForward("success"));
         
     }
