@@ -30,19 +30,25 @@ import edu.harvard.med.hip.utility.*;
  */
 public class EndReadsWrapperRunner implements Runnable
 {
-    /*
-     private   String m_needle_output_path = null;
+     // outputBaseDir specify the base directory for trace file distribution
+    private static  String OUTPUT_BASE_ROOT = null;
+    //inputTraceDir specify the directory where the trace files get dumped from sequencer
+    private static  String INPUT_BASE_DIR = null;
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
-            m_needle_output_path = "d:\\output\\tmp_assembly\\";
+        {
+             OUTPUT_BASE_ROOT = "d:/trace_files_root/";
+             INPUT_BASE_DIR = "d:/trace_files_dump/";
+        }
+            
         else
-            m_needle_output_path = "/tmp_assembly/";
+        {
+           OUTPUT_BASE_ROOT = "c:/bio/plate_analysis/";
+           INPUT_BASE_DIR = "C:/bio/plate_analysis/";
+        }
     }
-     **/
-    // outputBaseDir specify the base directory for trace file distribution
-    private static final String OUTPUT_BASE_ROOT = "d:/trace_files_root/";
-    //inputTraceDir specify the directory where the trace files get dumped from sequencer
-    private static final String INPUT_BASE_DIR = "d:/trace_files_dump/";
+  
+   
     //errorDir specify  the  directory for trace files for controls are stored
     private static final String CONTROLS_DIR = "controls";
     //errorDir specify  the directory for  trace files with wrong name
@@ -62,6 +68,9 @@ public class EndReadsWrapperRunner implements Runnable
     private String      m_empty_samples_directory = null;
     private ArrayList   m_error_messages = null;
     private User        m_user = null;
+    
+    
+    private int         m_min_clone_id = -1;
     
     /** Creates a new instance of EndReadsWrapperRunner */
     public EndReadsWrapperRunner()
@@ -107,9 +116,9 @@ public class EndReadsWrapperRunner implements Runnable
                    //process only end reads that are exspected
                 while (true)
                 {
-                    ArrayList expected_chromat_file_names = getExspectedChromatFileNames(conn);
-                    if (expected_chromat_file_names.size() == 0)   break; ;
-                    //distribute chromat files 
+                    ArrayList expected_chromat_file_names = getExspectedChromatFileNames(conn, m_min_clone_id);
+                     if (expected_chromat_file_names.size() == 0)   break; 
+                      //distribute chromat files 
                     tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
                     ArrayList chromat_files_names = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir);
                     m_error_messages.addAll( tfb.getErrorMesages());
@@ -118,7 +127,7 @@ public class EndReadsWrapperRunner implements Runnable
                 
           } 
         catch(Exception e)  
-       {}
+       {m_error_messages.add(e.getMessage());}
         finally
             {
                 try
@@ -145,16 +154,16 @@ public class EndReadsWrapperRunner implements Runnable
     //private
     
     
-      private ArrayList getExspectedChromatFileNames(Connection conn)throws BecDatabaseException
+      private ArrayList getExspectedChromatFileNames(Connection conn, int min_clone_id)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
         String sql = "select  FLEXSEQUENCINGPLATEID as plateid ,FLEXSEQUENCEID as sequenceid "
          +",FLEXCLONEID as cloneid,position,resulttype as orientation"
         +" from flexinfo f, isolatetracking iso, result r, sample s "
-        +" where rownum < "+MAX_ROW_NUMBER +" and f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
+        +" where FLEXCLONEID  > "+min_clone_id+"and rownum < "+MAX_ROW_NUMBER +" and f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
         +" and iso.sampleid=s.sampleid and iso.sampleid in"
         +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
-        Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE +"))";
+        Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE +")) order by FLEXCLONEID ";
         
         ResultSet rs = null;NamingFileEntry entry = null;
         String orientation_str = "";
@@ -181,6 +190,7 @@ public class EndReadsWrapperRunner implements Runnable
                                sequence_id,   0);
                // System.out.println(entry.toString());
                 res.add( entry.toString() );
+                m_min_clone_id = clone_id;
             }
             return res;
         } catch (Exception sqlE)
@@ -267,5 +277,14 @@ public class EndReadsWrapperRunner implements Runnable
     }
 
 
-    
+     public static void main(String args[])
+    {
+        try
+        {
+         EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
+        runner.setUser( AccessManager.getInstance().getUser("htaycher1","htaycher"));
+     // runner.run();
+        }catch(Exception e){}
+        System.exit(0);
+     }
 }
