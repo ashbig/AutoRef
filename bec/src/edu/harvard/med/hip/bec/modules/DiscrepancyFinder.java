@@ -43,7 +43,7 @@ public class DiscrepancyFinder
             INPUT = Constants.getTemporaryFilesPath();
             OUTPUT = "d:\\output\\needleoutput\\";
             LOG_FILE_NAME = "d:\\output\\needleoutput\\logfile.txt";
-            if (IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
+            if (ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
             {
                  OUTPUT = "d:\\output\\eval_needleoutput\\";
             }
