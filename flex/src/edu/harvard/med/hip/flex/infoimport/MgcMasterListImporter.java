@@ -80,13 +80,13 @@ public class MgcMasterListImporter
         boolean res = true;
         writeToFile("Log file for MGC master list upload\n");        
         if (res) res =  getExistingClonesFromDB(existingClones);
-        System.out.println("read");
+        System.out.println("mgc master list read");
         if (res) res = readCloneInfo(  input,  fileName, containerCol, existingClones) ;
-       System.out.println("read finish");
+        System.out.println("mgc master list read finish");
         if (res) res = readSeqences(containerCol, sequenceCol) ;
-       System.out.println("read sequences finished");
+        System.out.println("mgc master list read sequences finished");
         if (res) res = uploadToDatabase(containerCol, sequenceCol) ;
-       System.out.println("upload to DB finished");
+        System.out.println("mgc master list upload to DB finished");
         if (m_username != null)
         {
             try
@@ -303,7 +303,7 @@ public class MgcMasterListImporter
                             //only human
                             if (((String)seqData.get("species")).indexOf("sapiens") != -1)
                             {
-                                fs = createFlexSequence( seqData, genBankSeq);
+                                fs = createFlexSequence( seqData, current_gbs);
                                 continue;
                             }
                        }
@@ -342,7 +342,7 @@ public class MgcMasterListImporter
      *@param        genBankData vector of GenebankSeq objects (gi, gb_accession, description
      *returns flexseq object
      */
-    public FlexSequence createFlexSequence(Hashtable seqData, Vector genBankData)
+    public FlexSequence createFlexSequence(Hashtable seqData, GenbankSequence genBankSeq)
     {
         //can get empty seqData filled by default values
         String seqText = (String)seqData.get("sequencetext");
@@ -368,14 +368,14 @@ public class MgcMasterListImporter
         
         Hashtable pubinfo_entry_gi = new Hashtable();
         pubinfo_entry_gi.put(FlexSequence.NAMETYPE,FlexSequence.GI);
-        pubinfo_entry_gi.put(FlexSequence.NAMEVALUE,((GenbankSequence)genBankData.get(0)).getGi() );
-        pubinfo_entry_gi.put(FlexSequence.DESCRIPTION,((GenbankSequence)genBankData.get(0)).getDescription() );
+        pubinfo_entry_gi.put(FlexSequence.NAMEVALUE,genBankSeq.getGi() );
+        pubinfo_entry_gi.put(FlexSequence.DESCRIPTION,genBankSeq.getDescription() );
         publicInfo.add(pubinfo_entry_gi);
         
         
         Hashtable pubinfo_entry_gb = new Hashtable();
         pubinfo_entry_gb.put(FlexSequence.NAMETYPE,FlexSequence.GENBANK_ACCESSION);
-        pubinfo_entry_gb.put(FlexSequence.NAMEVALUE,((GenbankSequence)genBankData.get(0)).getAccession() );
+        pubinfo_entry_gb.put(FlexSequence.NAMEVALUE,genBankSeq.getAccession() );
         publicInfo.add(pubinfo_entry_gb);
         
         if (seqData.containsKey("gene_name") )
@@ -557,7 +557,7 @@ public class MgcMasterListImporter
     public static void main(String args[])
     {
         
-        String file = "c:\\mgc_test.txt";
+        String file = "c:\\mgclistWrongSeq.txt";
         InputStream input;
         
         try
