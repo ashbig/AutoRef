@@ -591,6 +591,7 @@ public class DiscrepancyFinder
         cur_rna_mutation.setCodonMut(corm);
         cur_rna_mutation.setCodonPos( elements[mut_start].getSubjectIndex()  % 3 );
         cur_rna_mutation.setPosition ( elements[mut_start].getSubjectIndex()- m_refsequence_cds_start);// start of mutation (on object sequence)
+        cur_rna_mutation.setExpPosition ( elements[mut_start].getQueryIndex());// start of mutation (on object sequence)
         cur_rna_mutation.setLength ( s_allel.length());
         cur_rna_mutation.setChangeMut ( q_allel);
         cur_rna_mutation.setChangeOri ( s_allel);
