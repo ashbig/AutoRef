@@ -36,13 +36,8 @@ import java.sql.*;
  */
 public class UIUtils
 {
-    private   String m_needle_output_path = null;
-    {
-    if (ApplicationHostDeclaration.IS_BIGHEAD)
-        m_needle_output_path = "d:\\tmp\\";
-    else
-        m_needle_output_path = "c:\\tmp\\";
-    }
+    private   String m_needle_output_path = Constants.getTemporaryFilesPath();
+    
     private RefSequence m_refsequence = null;
     private int         m_refsequence_id = -1;
     public UIUtils(){}
