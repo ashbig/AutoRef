@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-07-31 18:36:04 $
+ * $Revision: 1.5 $
+ * $Date: 2001-08-01 16:22:58 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -55,10 +55,10 @@ import edu.harvard.med.hip.flex.core.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.4 $ $Date: 2001-07-31 18:36:04 $
+ * @version    $Revision: 1.5 $ $Date: 2001-08-01 16:22:58 $
  */
 
-public class ContainerResultsForm extends ActionForm{
+public class ContainerResultsForm extends ResultForm {
     
     // store the status indexed properties as a List
     private List statusList;
@@ -66,20 +66,6 @@ public class ContainerResultsForm extends ActionForm{
     // store the results as an index property
     private List resultList;
     
-    // store the container for this form
-    private Container container;
-    
-    // is this form editable
-    private boolean editable = true;
-    
-    // The barcode of the researcher entering the results
-    private String researcherBarcode =null;
-    
-    // the protocol name 
-    private String protocolString = null;
-    
-    // the process date in string format
-    private String processDate = null;
     
     /**
      * Default Constructor
@@ -94,7 +80,7 @@ public class ContainerResultsForm extends ActionForm{
      * @param the container this form is representing
      */
     public ContainerResultsForm(Container container) {
-        this.container = container;
+        super(container);
         statusList = new LinkedList();
         resultList = new LinkedList();
         
@@ -106,23 +92,7 @@ public class ContainerResultsForm extends ActionForm{
     }
     
     
-    /**
-     * Access for the container
-     *
-     * @return The container this form represents
-     */
-    public Container getContainer() {
-        return this.container;
-    }
     
-    /**
-     * Mutator for the container
-     *
-     * @param container, the container to set to
-     */
-    public void setContainer(Container container) {
-        this.container = container;
-    }
     
     
     /**
@@ -168,82 +138,7 @@ public class ContainerResultsForm extends ActionForm{
     }
     
     
-    /**
-     * Access for the researcher barcode property
-     *
-     * @return barcode for the researcher doing the expirament
-     */
-    public String getResearcherBarcode() {
-        return this.researcherBarcode;
-    }
     
-    
-    /**
-     * Mutator for the researcher barcode property
-     *
-     * @param barcode The barcode of the researcher entering results
-     */
-    public void setResearcherBarcode(String barcode) {
-        this.researcherBarcode = barcode;
-    }
-    
-    /**
-     * Accessor for the protocol name property
-     *
-     * @return protocol name from the string.
-     */
-    public String getProtocolString() {
-        return this.protocolString;
-    }
-    
-    
-    /**
-     * Mutator for the protocolstring property.
-     *
-     * @param protocolString The name of the protocol used.
-     */
-    public void setProtocolString(String protocolString) {
-        this.protocolString = protocolString;
-    }
-    
-    
-    /**
-     * Accessor for process date for the queueitem we are entering results for.
-     *
-     * @return date of the process
-     */
-    public String getProcessDate() {
-        return this.processDate;
-    }
-    
-    
-    /**
-     * Mutator for the process date.
-     *
-     * @param the date to set to.
-     */
-    public void setProcessDate(String processDate){
-        this.processDate = processDate;
-    }
-    
-    /**
-     * Accessor for the editable flag.
-     *
-     * @return true if editable, false otherwise
-     */
-    public boolean isEditable() {
-        return this.editable;
-    }
-    
-    
-    /**
-     * Mutator for the editable flag.
-     *
-     * @param editable true if the form is editable, false otherwise.
-     */
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
     
     /**
      * Reset all properties to their default values.
@@ -252,7 +147,8 @@ public class ContainerResultsForm extends ActionForm{
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        this.editable=true;
+        super.reset(mapping, request);
+        this.setEditable(true);
     }
     
     /**
@@ -264,10 +160,6 @@ public class ContainerResultsForm extends ActionForm{
         //reset the lists
         statusList.clear();
         resultList.clear();
-
-        this.researcherBarcode = null;
-        this.processDate = null;
-        this.protocolString = null;
         
         Iterator sampleIter = container.getSamples().iterator();
         int i = 0;
@@ -285,7 +177,7 @@ public class ContainerResultsForm extends ActionForm{
      * @return the size of the lists
      */
     public int size() {
-        return container == null ? 0 : container.getSamples().size();
+        return this.getContainer() == null ? 0 : this.getContainer().getSamples().size();
     }
 } // End class ContainerResultsForm
 

@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.12 2001-07-30 21:35:07 dzuo Exp $
+ * $Id: Protocol.java,v 1.13 2001-08-01 16:22:58 jmunoz Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -57,7 +57,9 @@ public class Protocol {
         "enter PCR gel results";
     public static final String ENTER_AGAR_PLATE_RESULTS = 
         "enter agar plate results";
-        
+    public static final String ENTER_DNA_GEL_RESULTS = 
+        "enter DNA gel results";
+    
     private int id;
     private String processcode;
     private String processname;

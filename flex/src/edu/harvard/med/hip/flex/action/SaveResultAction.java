@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.16 $
- * $Date: 2001-08-01 14:08:17 $
+ * $Revision: 1.17 $
+ * $Date: 2001-08-01 16:22:57 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.16 $ $Date: 2001-08-01 14:08:17 $
+ * @version    $Revision: 1.17 $ $Date: 2001-08-01 16:22:57 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -135,28 +135,30 @@ public class SaveResultAction extends ResearcherAction {
         }
         
         
-        //figure out the result type.
+        //figure out the result type, could be null if there is none.
         String resultType = null;
         if(form instanceof GelResultsForm) {
             resultType = Result.PCR_GEL_TYPE;
-        } else {
+        } else if(form instanceof ContainerResultsForm) {
             resultType = Result.AGAR_PLATE_TYPE;
         }
         
-        ContainerResultsForm resultForm = (ContainerResultsForm) form;
+        ResultForm resultForm = (ResultForm) form;
         
         // if the form is editable, forward to the confirm page with stats.
         if(resultForm.isEditable()) {
             
-            Map stats = getResultStats(resultForm);
-            
-            // shove it into the request.
-            request.setAttribute(Constants.RESULT_STATS_KEY,stats);
+            // only get stats if we are recording info about samples in a container
+            if(form instanceof ContainerResultsForm) {
+                Map stats = getResultStats((ContainerResultsForm)form);
+                
+                // shove it into the request.
+                request.setAttribute(Constants.RESULT_STATS_KEY,stats);
+            }
             return mapping.findForward("confirm");
         }
         
         Container container =resultForm.getContainer();
-        Vector samples = container.getSamples();
         
         Connection conn = null;
         
@@ -239,7 +241,8 @@ public class SaveResultAction extends ResearcherAction {
      *
      * @exception FlexDatabaseException when there is a database error.
      */
-    private void saveResults(String resultType, Process process, ContainerResultsForm resultForm, Connection conn)
+    private void saveResults(String resultType, Process process, 
+    ResultForm resultForm, Connection conn)
     throws FlexDatabaseException, IOException {
         Container container = resultForm.getContainer();
         Vector samples = container.getSamples();
@@ -248,8 +251,19 @@ public class SaveResultAction extends ResearcherAction {
         // with the form.
         FileReference fileRef = handleFileReference(conn,resultForm);
         
+        /*
+         * if this is a container result form then process each sample,
+         * otherwise just return
+         */
+        ContainerResultsForm containerForm = null;
+        if(resultForm instanceof ContainerResultsForm) {
+            containerForm = (ContainerResultsForm) resultForm;
+        } else {
+            return;
+        }
+        
         // Go through and get the result and record it.
-        for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
+        for(int i = 0; containerForm != null &&i <containerForm.size() ;i++) {
             
             Sample curSample = (Sample)samples.get(i);
             
@@ -265,7 +279,7 @@ public class SaveResultAction extends ResearcherAction {
                 
                 // create a new result
                 Result curResult =
-                new Result(process,curSample,resultType,resultForm.getResult(i));
+                new Result(process,curSample,resultType,containerForm.getResult(i));
                 
                 // insert into db
                 curResult.insert(conn);

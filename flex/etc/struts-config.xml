@@ -45,6 +45,10 @@
     <form-bean      name="gelEntryForm"
                     type="edu.harvard.med.hip.flex.form.GelResultsForm"/>
 
+    <!-- form used to enter results for a dna gel -->
+    <form-bean      name="dnaEntryForm"
+                    type="edu.harvard.med.hip.flex.form.DNAGelForm"/>
+
     <!-- Create process plate form bean -->
     <form-bean      name="createProcessPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
@@ -240,6 +244,7 @@
                 input="/EnterProcessResults.jsp">
         <forward name="transformEntry" path="/EnterTransformDetails.jsp"/>
         <forward name="gelEntry"    path="/EnterGelDetails.jsp"/>
+        <forward name="dnaEntry"    path="/EnterDNAGelDetails.jsp"/>
     </action>
     
     <!-- Save a gel plate result-->

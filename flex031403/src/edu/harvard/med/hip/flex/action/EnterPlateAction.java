@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.17 $
- * $Date: 2001-07-31 18:36:03 $
+ * $Revision: 1.18 $
+ * $Date: 2001-08-01 16:22:57 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.17 $ $Date: 2001-07-31 18:36:03 $
+ * @version    $Revision: 1.18 $ $Date: 2001-08-01 16:22:57 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -161,26 +161,31 @@ public class EnterPlateAction extends ResearcherAction {
         // get the session
         HttpSession session = request.getSession();
         
-        ContainerResultsForm containerForm = null;
+        ResultForm resultForm = null;
         // create the form with default values for the detail entry page
         if(protocolName.equals(Protocol.ENTER_PCR_GEL_RESULTS)) {
-            containerForm=new GelResultsForm(container);
+            resultForm=new GelResultsForm(container);
             // put the form in the session
-            session.setAttribute("gelEntryForm",containerForm);
+            session.setAttribute("gelEntryForm",resultForm);
             retForward = mapping.findForward("gelEntry");
         } else if(protocolName.equals(Protocol.ENTER_AGAR_PLATE_RESULTS)) {
-            containerForm = new ContainerResultsForm(container);
+            resultForm = new ContainerResultsForm(container);
             // put the form in the session
-            session.setAttribute("transformEntryForm",containerForm);
+            session.setAttribute("transformEntryForm",resultForm);
             retForward = mapping.findForward("transformEntry");
+        } else if(protocolName.equals(Protocol.ENTER_DNA_GEL_RESULTS)) {
+            resultForm = new DNAGelForm(container);
+            // put the form into the session
+            session.setAttribute("dnaEntryForm", resultForm);
+            retForward = mapping.findForward("dnaEntry");
         } else {
             retForward = new ActionForward(mapping.getInput());
         }
         
         // populate the form with the necissary info
-        containerForm.setResearcherBarcode(researcherBarcode);
-        containerForm.setProtocolString(protocol.getProcessname());
-        containerForm.setProcessDate(queueItem.getDate());
+        resultForm.setResearcherBarcode(researcherBarcode);
+        resultForm.setProtocolString(protocol.getProcessname());
+        resultForm.setProcessDate(queueItem.getDate());
         
         // put Queue item in the session
         session.setAttribute(Constants.QUEUE_ITEM_KEY, queueItem);

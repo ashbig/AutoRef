@@ -35,7 +35,7 @@
 <html:errors/>
 <p>
 <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
-    <h3>Enter The results of this gel</h3>
+    <h3>Enter the results of this gel</h3>
 </logic:equal>
 
 <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
@@ -144,12 +144,12 @@
     </logic:iterate>
     <tr>
         <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
-            <td class="prompt">Please select the Gel Image you would like to upload:</td>
-            <td colspan="3"><html:file property="gelImage" /></td>
+            <td class="prompt">Please select the gel image you would like to upload:</td>
+            <td colspan="3"><html:file property="formFile" /></td>
         </logic:equal>
         <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
-            <td class="prompt">Gel Image file:</td>
-            <td colspan="3"><bean:write name="gelEntryForm" property="gelImage.fileName"/></td>
+            <td class="prompt">Gel image file:</td>
+            <td colspan="3"><bean:write name="gelEntryForm" property="formFile.fileName"/></td>
         </logic:equal>
     </tr>
 
