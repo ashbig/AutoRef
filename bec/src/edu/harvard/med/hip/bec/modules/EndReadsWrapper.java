@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.bec.modules;
 
 import edu.harvard.med.hip.bec.programs.phred.*;
+import  edu.harvard.med.hip.bec.file.*;
 
 import java.util.*;
 import java.io.*;
@@ -85,11 +86,23 @@ public class EndReadsWrapper
         ArrayList chromat_files_names = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir,m_outputBaseDir_wrongformatfiles, m_empty_samples_directory);
         m_error_messages = tfb.getErrorMesages();
     
-        return runPhredandParseOutput( chromat_files_names,  m_error_messages);
+        return runPhredandParseOutput( chromat_files_names,  m_error_messages, conn);
         //run phred and parse output
     }
     
     
+    //distribute trace files that wont be uploaded into BEC
+     public ArrayList runCleanUp()
+    {
+        //distribute chromat files 
+        TraceFilesDistributor tfb = new TraceFilesDistributor();
+    
+        tfb.distributeNotActiveChromatFiles(m_inputTraceDir,  m_outputBaseDir_wrongformatfiles, m_empty_samples_directory);
+        return tfb.getErrorMesages();
+    
+    }
+     
+     
     private ArrayList getExspectedChromatFileNames(Connection conn)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
@@ -136,7 +149,7 @@ public class EndReadsWrapper
         }
     }
     
-    private ArrayList runPhredandParseOutput(ArrayList file_names, ArrayList error_messages)
+    private ArrayList runPhredandParseOutput(ArrayList file_names, ArrayList error_messages, Connection conn)
     {
         ArrayList reads = new ArrayList();
        
@@ -152,7 +165,7 @@ public class EndReadsWrapper
             {
                 //create file structure and distribute trace file into chromat_dir
                 read = prwrapper.run(new File(traceFile_name) );
-               if (read != null)reads.add(read);
+               if (read != null) processRead(read, conn, error_messages);//reads.add(read);
             }
             catch(Exception e)
             {
@@ -165,57 +178,161 @@ public class EndReadsWrapper
         
     }//processPipeline
     
+    private void processRead(Read read, Connection conn, ArrayList error_messages)
+    {
+        int[] istr_info = new int[2];int resultid =-1;
+        FileReference filereference = null;
+         try
+          {
+              //read = (Read) reads.get(count);
+              istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
+              read.setIsolateTrackingId( istr_info[0]);
+              //get reasult id
+              if ( read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL)
+              {
+                  resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_REVERSE);
+              }
+              if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
+              {
+                  resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_FORWARD);
+              }
+              //insert read data
+              if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_REVERSE)
+              {
+                  read.setResultId(resultid);
+                  read.insert(conn);
+                  String file_name = read.getTraceFileName().substring( read.getTraceFileName().lastIndexOf('\\')+1);
+                  String path_name = read.getTraceFileName().substring(0, read.getTraceFileName().lastIndexOf('\\')-1);
+                  filereference = new FileReference(BecIDGenerator.BEC_OBJECT_ID_NOTSET, file_name,  FileReference.TYPE_TRACE_FILE,    path_name );
+                  filereference.insertDataIntoDatabase(conn, resultid);
+                  Result.updateResultValueId( resultid,read.getId(), conn);
+              }
+
+              Result.updateType( resultid,read.getType(), conn);
+              if (istr_info[1] == IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED)
+              {
+                IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN, istr_info[0],  conn );
+              }
+              conn.commit();
+              String org_trace_file_name = read.getTraceFileName().substring( read.getTraceFileName().lastIndexOf(File.separator));
+              File org_trace_file = new File(m_inputTraceDir+org_trace_file_name);
+              org_trace_file.delete();
+          }
+          catch(Exception e)
+          {
+              System.out.println("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
+              error_messages.add("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
+          }
+    }
     public static void main(String args[])
     {
-        String baseDir = "C:\\bio\\phred\\try";
-        String traceDir = "C:\\bio\\phred\\out";
-        String errorDir = "C:\\bio\\phred\\err";
-        String dr ="c:\\bio\\phred\\err";
-         String dr_empty ="c:\\bio\\phred\\empty";
+        String baseDir ="c:\\bio\\phred\\try";//"c:\\trace_dump"; //
+        String traceDir = "c:\\bio\\phred\\out";//"c:\\clone_files";//
+        String errorDir = "c:\\bio\\phred\\err";//"c:\\error_files";//
+        String dr ="c:\\bio\\phred\\err";//"c:\\contol_files_new";//
+         String dr_empty ="c:\\bio\\phred\\empty";//"c:\\empty_files";//
       //  PipelineDriver task = new PipelineDriver();
         //task.processPipeline(baseDir,traceDir,errorDir);
-        try{
-            Connection  conn = DatabaseTransaction.getInstance().requestConnection();
+     ArrayList reads=null;Connection  conn =null;
+     ArrayList error_messages = null;
+       try{
+            conn = DatabaseTransaction.getInstance().requestConnection();
             EndReadsWrapper ew = new EndReadsWrapper(traceDir,baseDir,errorDir, dr,dr_empty);
-            ArrayList reads = ew.run(conn);
-            System.out.println("Total read object: "+reads.size());
-        
+         //  ArrayList errors = ew.runCleanUp();
+         //   System.out.println("Total errors object: "+errors.size());
+            reads = ew.run(conn);
+             System.out.println("Total  objects: "+reads.size());
+             error_messages =  ew.getErrorMessages();
+             for (int i = 0; i < ew.getErrorMessages().size();i++)
+             {
+                 System.out.println((String)ew.getErrorMessages().get(i));
+             }
+       }   catch(Exception e)       {}
+     finally
+            {
+                try
+                {
+         //send errors
+                    if (error_messages.size()>0)
+                    {
+                         Mailer.sendMessage("elena_taycher@hms.harvard.edu", "elena_taycher@hms.harvard.edu",
+                        "elena_taycher@hms.harvard.edu", "Request for end reads wrapper: error messages.", "Errors\n ",error_messages);
+                
+                    }
+                }
+                    catch(Exception e){}
+                DatabaseTransaction.closeConnection(conn);
+            }
+     /*
+            FileReference filereference = null;
               Read read = null; int[] istr_info = new int[2];int resultid =-1;
               for (int count = 0; count < reads.size(); count++)
               {
-                  read = (Read) reads.get(count);
-                  istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
-                  read.setIsolateTrackingId( istr_info[0]);
-                  //get reasult id
-                  if ( read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL)
+                  try
                   {
-                      resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_REVERSE);
-                  }
-                  if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
-                  {
-                      resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_FORWARD);
-                  }
-                  //insert read data
-                  if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_REVERSE)
-                  {
-                      read.setResultId(resultid);
-                      read.insert(conn);
-                      Result.updateResultValueId( resultid,read.getId(), conn);
-                  }
+                      read = (Read) reads.get(count);
+                      istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
+                      read.setIsolateTrackingId( istr_info[0]);
+                      //get reasult id
+                      if ( read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL)
+                      {
+                          resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_REVERSE);
+                      }
+                      if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
+                      {
+                          resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_FORWARD);
+                      }
+                      //insert read data
+                      if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_REVERSE)
+                      {
+                          read.setResultId(resultid);
+                          read.insert(conn);
+                          String file_name = read.getTraceFileName().substring( read.getTraceFileName().lastIndexOf('\\')+1);
+                          String path_name = read.getTraceFileName().substring(0, read.getTraceFileName().lastIndexOf('\\')-1);
+                          filereference = new FileReference(BecIDGenerator.BEC_OBJECT_ID_NOTSET, file_name,  FileReference.TYPE_TRACE_FILE,    path_name );
+                          filereference.insertDataIntoDatabase(conn, resultid);
+                          Result.updateResultValueId( resultid,read.getId(), conn);
+                      }
 
-                  Result.updateType( resultid,read.getType(), conn);
-                  if (istr_info[1] == IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED)
-                  {
-                    IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN, istr_info[0],  conn );
+                      Result.updateType( resultid,read.getType(), conn);
+                      if (istr_info[1] == IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED)
+                      {
+                        IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN, istr_info[0],  conn );
+                      }
+                      conn.commit();
+                      String org_trace_file_name = read.getTraceFileName().substring( read.getTraceFileName().lastIndexOf(File.separator));
+                      File org_trace_file = new File(baseDir+org_trace_file_name);
+                      org_trace_file.delete();
                   }
-                  conn.commit();
-                  String org_trace_file_name = read.getTraceFileName().substring( read.getTraceFileName().lastIndexOf(File.separator));
-                  File org_trace_file = new File(baseDir+org_trace_file_name);
-                  org_trace_file.delete();
-             }
-             
-        }
-        catch(Exception e){}
+                  catch(Exception e)
+                  {
+                      System.out.println("Error "+read.getFLEXPlate()+"_"+read.getFLEXWellid()+"_" +read.getFLEXSequenceid()+"_"+read.getFLEXCloneId());
+                  }
+        
+              }
+        
+        
+    /*
+         File sourceDir = new File("C:\\bio\\phred\\backup");
+    FilenameFilter filter = new FilenameFilter()
+        {
+            public boolean accept(File dir, String name)
+            {
+                if ( !name.endsWith(".ab1"))
+                {
+                    return true;
+                }
+                PhredOutputFileName pr = new PhredOutputFileName(name);
+                if ( pr.isWriteFileFormat( PhredOutputFileName.FORMAT_OURS ))
+                    return false;
+                else
+                     return true;
+            }
+        };
+        
+        File[] wrong_namingformat__files = sourceDir.listFiles(filter);
+       System.out.println(wrong_namingformat__files.length);
+      **/
         System.exit(0);
     } // main
 }

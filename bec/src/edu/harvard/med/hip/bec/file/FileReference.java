@@ -7,34 +7,10 @@
  *      Represents a file in the repository on the server.
  *
  *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
- *
- * See COPYRIGHT file for copyright information
- *
- *
- * Revision:    07-03-2001  [wmar]
- *              Added static method findFile (Container container)
- *              Added static method findFile (Result result)
- * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-14 21:19:51 $
- * $Author: Elena $
+ 
  *
  ******************************************************************************
- *
- * Revision history (Started on June 22, 2001) :
- *
- *    Add entries here when updating the code. Remember to date and insert
- *    your 3 letters initials.
- *
- *    Jun-22-2001 : JMM - Class created.
- *
- */
-
-/*
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
+ 
  */
 
 
@@ -47,7 +23,13 @@ import java.util.*;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
-
+import edu.harvard.med.hip.bec.file.*;
+import edu.harvard.med.hip.bec.user.*;
+import  edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import  edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
+import sun.jdbc.rowset.*;
+import edu.harvard.med.hip.bec.*;
 
 /**
  * Represents a file in the file repository.
@@ -56,91 +38,80 @@ import edu.harvard.med.hip.bec.util.*;
  * create method or use one of the find methods.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-03-14 21:19:51 $
+ * @version    $Revision: 1.2 $ $Date: 2003-06-09 20:16:37 $
  */
 
 public class FileReference
 {
  
     // file type for gel images;
-    public static final String GEL_TYPE="GEL_IMAGE";
+    public static final int TYPE_TRACE_FILE=1;
   
   
     // id for the file reference
-    private int id;
+    private int             m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+      // the type of the file reference
+    private int            m_fileType=-1;
   
-    // the container this file reference is for
-   // private Container container;
-  
-    // the type of the file reference
-    private String fileType;
-  
-    /*
-  * the path relative to the repository base directory this file is contained
-  * in, excluding the name of the file.
-  */
     
-    
-    private String localPath;
-     
-     
-    //The name of the file excluding any path information.
-    private String baseName;
+  // the path relative to the repository base directory this file is contained in, excluding the name of the file.
+    private String          m_localPath        = null;
+     //The name of the file excluding any path information.
+    private String          m_baseName = null;
      
     /**
      * Protected constructor, to get an instance of file Reference you must
      * use either one of the create or find methods.
      */
     
-    /*
-    protected FileReference(int id, String fileName, String fileType,
-    String localPath, Container container) {
-        this.id =id;
-        this.fileType = fileType;
-        this.baseName = fileName;
-        this.localPath = localPath;
-        this.container = container;
+    
+    public FileReference(int id, String fileName, int fileType,    String localPath) throws BecDatabaseException
+    {
+        if (id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+            m_id = BecIDGenerator.getID("filereferenceid");
+        else
+            m_id = id;
+       m_fileType = fileType;
+        m_baseName = fileName;
+        m_localPath = localPath;
+    
     }
      
-    /**
-     * Accessor for the id.
-     *
-     * @return the id for this file reference.
-     */
     
-    public int getId() {        return id;    }
-     
-    /**
-     * Accessor for the fileType
-     *
-     * @return the type of this file
-     */
+    public int          getId() {        return m_id;    }
+    public int          getFileType() {        return m_fileType;    }
+    public String       getBaseName() {        return m_baseName;    }
+    public String       getLocalPath() {        return m_localPath;    }
+    public void         setId(int i) {         m_id = i;    }
+    public void         setFileType(int i) {         m_fileType = i;    }
+    public void         setBaseName(String i) {         m_baseName = i;    }
+    public void         setLocalPath(String i) {         m_localPath = i;    }
    
-    public String getFileType() {        return this.fileType;    }
-     
-    /**
-     * Accessor for base name of the file
-     *
-     * @return the name of this file
-     */
     
-    public String getBaseName() {        return this.baseName;    }
+    public void insertDataIntoDatabase(Connection conn, int resultid) throws BecDatabaseException
+    {
+        Statement stmt = null;
+        String sql =null;
+        try
+        {
+            stmt = conn.createStatement();
+              sql = "insert into filereference (filereferenceid,localpath,basename,filetype)"
+            +"values("+m_id+",'"+m_localPath+"','"+m_baseName+"',"+m_fileType+")";
+            stmt.executeUpdate(sql);
+            sql = "insert into resultfilereference  (resultid, filereferenceid)"+
+                " values("+resultid+","+m_id+")";
+            stmt.executeUpdate(sql);
     
-    /**
-     * Accessor for the localPath
-     *
-     * @return the local path for this file
-     */
-     public String getLocalPath() {        return this.localPath;    }
-    
-    
-    /**
-     * Accessor for the container this file is about.
-     *
-     * @return the container associated with this file.
-     */
-    //   public Container getContainer() {        return this.container;    }
-    
+          
+            
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Cannot insert filerefernce info "+sqlE);
+        } finally
+        {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+    }
     /**
      * This method finds existing filereferences linked to a
      * container in the database
@@ -291,6 +262,7 @@ public class FileReference
      *
      * @Return url to file
      */
+    /*
     public String getURL()
     {
         BecProperties props = BecProperties.getInstance();
@@ -299,12 +271,6 @@ public class FileReference
         this.localPath+this.getBaseName();
         return url;
     }
-    
+    */
 } // End class FileReference
 
-
-/*
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
- */

@@ -42,7 +42,7 @@ public class NeedleParser
             p_score = new RE("Score:\\s*(\\d*\\.\\d*)") ; 
             //sequence
             //1 ATGAGCGGCGGCGGGCCTTGGCCTAGAGCGCTCCCAAGAAGTGGCTTACA     50
-            p_sequence = new RE("^\\s*[^\\#](\\S*)\\s*(\\d+) (\\s*\\S*)(\\d*)") ; 
+            p_sequence = new RE("^\\s*[^\\#](\\S*)\\s*(\\d+)\\s{1}(\\D{50})\\s*(\\d+)") ; 
           
        }
        catch(Exception e)
@@ -98,12 +98,14 @@ public class NeedleParser
                    if (isQuerySeq)
                    {
                         query+=p_sequence.getParen(3);
+                    //    System.out.println(p_sequence.getParen(3).length()+" "+p_sequence.getParen(3));
                         isQuerySeq = false;
                         isRefSeq = true;
                    }
                    else if (isRefSeq)
                    {
                         ref+=p_sequence.getParen(3);
+                       //  System.out.println(p_sequence.getParen(3).length()+" "+p_sequence.getParen(3));
                         isQuerySeq = true;
                         isRefSeq = false;
                    }
@@ -114,9 +116,11 @@ public class NeedleParser
                 res.setQuery(query);
                 res.setSubject(ref);
             }
+            fin.close();
          }
          catch(Exception e)
          {
+             try{fin.close();}catch(Exception c){}
              throw new  BecUtilException("Cannot parse needle output");
          }
     }
@@ -137,13 +141,15 @@ public class NeedleParser
         }
      */
         
-        String queryFile = "c:\\emboss-2.5.1\\emboss\\needle.out";
+        String queryFile = "c:\\needleATG.out";
         NeedleResult res = null;
         try
         {
              res = new NeedleResult();
             
             NeedleParser.parse(queryFile,res);
+            res.recalculateIdentity();
+            
         }catch(Exception e){}
         System.exit(0);
     }

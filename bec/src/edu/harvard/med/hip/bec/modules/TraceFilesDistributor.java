@@ -48,18 +48,13 @@ public class TraceFilesDistributor
     public ArrayList distributeChromatFiles(String inputTraceDir, String outputBaseDir, String wrongformatfiles, String emptysamples_directory)
     {
         ArrayList chromat_files = new ArrayList();
+         PhredOutputFileName pr = null;
         //obtain file path for base directory for trace file distribution
         File baseDir = new File(outputBaseDir);
         
         //obtain trace file list from source trace file directory
         File sourceDir = new File(inputTraceDir); //trace file directory
-        //distribute wrong file format files
-        distributeWrongNamingFormatFiles( wrongformatfiles ,  sourceDir);
-        //distribute empty samples files
-        distributeEmptySampleFiles( emptysamples_directory , sourceDir);
-        //distribute control files
-        distributeControlFiles( wrongformatfiles ,  sourceDir);
-        
+  
         File [] sourceFiles = sourceDir.listFiles();
         
       //  TraceFilesDistributor distributor = new TraceFilesDistributor();
@@ -82,6 +77,8 @@ public class TraceFilesDistributor
             try
             {
                 //create file structure and distribute trace file into chromat_dir
+                pr = new PhredOutputFileName(traceFile.getName(),PhredOutputFileName.FORMAT_OURS );
+                destination_dir = pr.getSequenceid() +File.separator+pr.getCloneid();
                 destinationFileName = distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);//distributor.distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);
                 destinationFile = new File(destinationFileName);
                 if (destinationFile != null)
@@ -112,7 +109,7 @@ public class TraceFilesDistributor
         //obtain trace file list from source trace file directory
         File sourceDir = new File(inputTraceDir); //trace file directory
         //distribute wrong file format files
-    //    distributeWrongNamingFormatFiles( wrongformatfiles ,  sourceDir);
+        distributeWrongNamingFormatFiles( wrongformatfiles ,  sourceDir);
         //distribute empty samples files
         distributeEmptySampleFiles( emptysamples_directory , sourceDir);
         //distribute control files
@@ -212,7 +209,7 @@ public class TraceFilesDistributor
         
         //move trace file into chromat directory
         String chromatfilepath = base_directory +File.separator+destination_dir +File.separator+PhredWrapper.CHROMAT_DIR_NAME+File.separator+ file.getName();
-        FileOperations.moveFile(file, new File(chromatfilepath));
+        FileOperations.moveFile(file, new File(chromatfilepath), true,false);
         return chromatfilepath;
         
     } // distributeFiles
@@ -411,7 +408,7 @@ public class TraceFilesDistributor
                 FileOperations.createDirectory(directory_move_to,true);
                 isDirectoryExists= true;
             }
-            FileOperations.moveFile(moving_file, new File(directory_move_to  +File.separator+ moving_file.getName()), false, false);
+            FileOperations.moveFile(moving_file, new File(directory_move_to  +File.separator+ moving_file.getName()), true, true);
         }
         catch(Exception e)
         {

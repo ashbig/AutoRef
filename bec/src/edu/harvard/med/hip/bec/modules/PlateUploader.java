@@ -154,10 +154,10 @@ public class PlateUploader
                m_container_ids.add(new Integer(plate_id));
                m_messages_uploaded_plates.add( platename);
         }
-        catch(Exception e)
+        catch(Exception ex)
         {
             m_messages_failed_plates.add("Plate "+platename+" was not uploaded into BEC.");
-            m_error_messages.add("Plate "+platename+" was not uploaded into BEC" +e.getMessage());
+            m_error_messages.add("Plate "+platename+" was not uploaded into BEC" +ex.getMessage());
             DatabaseTransaction.rollback(bec_connection);
         }
         
@@ -281,18 +281,16 @@ public class PlateUploader
     {
         RefSequence fl = null;
         
-        for (Enumeration e = flex_sequences.keys(); e.hasMoreElements() ;)
+        for (Enumeration enum = flex_sequences.keys(); enum.hasMoreElements() ;)
         {
-            Object key = e.nextElement();
+            Object key = enum.nextElement();
             
             if ( flex_sequences.get(key) instanceof Integer &&  ((Integer)flex_sequences.get(key)).intValue() == -1)
             { 
         //     System.out.println(((Integer) key).intValue());
                 fl = getRefSequenceFormFlex( ((Integer) key).intValue(), flex_connection);
                 fl.setId( getId("sequenceid", bec_connection));
-                   
-                   if (((Integer) key).intValue()==341)
-                        System.out.println("get"+((Integer) key).intValue());
+
                 fl.insert(bec_connection);
        //            System.out.println("ins"+((Integer) key).intValue());
                 flex_sequences.put(key, fl);

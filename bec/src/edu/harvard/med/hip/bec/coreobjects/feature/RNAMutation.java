@@ -238,7 +238,7 @@ public class RNAMutation extends Mutation {
         //point mutation
      if (o!= null && m!=null && o.length()==1 &&m.length()==1 && m_codon_ori.indexOf("-") == -1 && m_codon_mut.indexOf("-") == -1  ) 
      { 
-         System.out.print(SequenceManipulation.isStartCodon (m_codon_ori)+" "+SequenceManipulation.isStartCodon (m_codon_mut));
+      //   System.out.print(SequenceManipulation.isStartCodon (m_codon_ori)+" "+SequenceManipulation.isStartCodon (m_codon_mut));
          //start codon
          if (m_codon_ori != m_codon_mut && SequenceManipulation.isStartCodon (m_codon_ori)
            && !SequenceManipulation.isStartCodon (m_codon_mut)
@@ -259,20 +259,21 @@ public class RNAMutation extends Mutation {
          {
              type = Mutation.TYPE_RNA_TRANCATION;
          }
-         else if(aa_ori.equals(aa_mut))
+         else 
          {
               aa_ori = SequenceManipulation.translateCodonToAminoAcid(m_codon_ori);
              aa_mut = SequenceManipulation.translateCodonToAminoAcid(m_codon_mut);
-            type = Mutation.TYPE_RNA_SILENT;
-         }
-         else
-         {
-               aa_ori = SequenceManipulation.translateCodonToAminoAcid(m_codon_ori);
-             aa_mut = SequenceManipulation.translateCodonToAminoAcid(m_codon_mut);
-            if ( edu.harvard.med.hip.bec.bioutil.BioConstants.getScore(aa_ori.charAt(0),aa_mut.charAt(0)) > 0 )
-                type = Mutation.TYPE_RNA_NONSENSE;
-            else
-                type = Mutation.TYPE_RNA_MISSENSE;
+             if (aa_ori.equals(aa_mut))
+             {
+                type = Mutation.TYPE_RNA_SILENT;
+             }
+             else
+            {
+               if ( edu.harvard.med.hip.bec.bioutil.BioConstants.getScore(aa_ori.charAt(0),aa_mut.charAt(0)) > 0 )
+                    type = Mutation.TYPE_RNA_NONSENSE;
+                else
+                    type = Mutation.TYPE_RNA_MISSENSE;
+             }
          }
     }  
     else 
@@ -318,7 +319,7 @@ public class RNAMutation extends Mutation {
 	   
 	}
     }
-System.out.print(type);
+//System.out.print(type);
     return type;
     
    }

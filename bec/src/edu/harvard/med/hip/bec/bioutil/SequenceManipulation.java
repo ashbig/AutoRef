@@ -29,11 +29,22 @@ public class SequenceManipulation
     {
         codon=codon.toUpperCase();
         if (codon.equalsIgnoreCase("TGA") || codon.equalsIgnoreCase("TAA") ||
-        codon.equalsIgnoreCase("TAG")  )
+        codon.equalsIgnoreCase("TAG") || codon.equalsIgnoreCase("UGA") || codon.equalsIgnoreCase("UAA") ||
+        codon.equalsIgnoreCase("UAG")  )
             return true;
         else
             return false;
     }
+    public static boolean isStartCodon(String codon)
+    {
+        codon=codon.toUpperCase();
+        if (codon.equalsIgnoreCase("ATG") || codon.equalsIgnoreCase("AUG")   )
+            return true;
+        else
+            return false;
+    }
+    
+   
     
     //function creates complimentary strend for the given one
     public static String getCompliment(String old)
@@ -221,7 +232,7 @@ public class SequenceManipulation
     {
         'F', 'F', 'L', 'L',
         'S', 'S', 'S', 'S',
-        'Y', 'Y', '#', '+',
+        'Y', 'Y', '*', '*',
         'C', 'C', '*', 'W',
         
         'L', 'L', 'L', 'L',
@@ -244,7 +255,7 @@ public class SequenceManipulation
     {
         "Phe", "Phe", "Leu", "Leu",
         "Ser", "Ser", "Ser", "Ser",
-        "Tyr", "Tyr", "#", "+",
+        "Tyr", "Tyr", "*", "*",
         "Cys", "Cys", "*", "W",
         
         "Leu", "Leu", "Leu", "Leu",

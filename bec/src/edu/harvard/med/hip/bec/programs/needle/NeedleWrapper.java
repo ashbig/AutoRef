@@ -66,13 +66,14 @@ public class NeedleWrapper
         m_needle.setSubjectSequenceId(m_ref_id);
    
         String query_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_query, "needle", String.valueOf(m_query_id));
-            String ref_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_reference, "needle", String.valueOf(m_ref_id));           
-  String output_name=m_output_file_dir+"needle"+m_query_id+"_"+m_ref_id+".out";
+        String ref_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_reference, "needle", String.valueOf(m_ref_id));           
+        String output_name=m_output_file_dir+"needle"+m_query_id+"_"+m_ref_id+".out";
          
          //  String output_name="/c/tmp/needleout.out";
         //  String query_file="/c/tmp/needle123.in";
         //  String ref_file="/c/tmp/needle127.in";
             m_needle.setFileName(output_name);
+            m_needle.setQuerySequenceId(m_query_id);
             boolean res = run(query_file+".in",ref_file+".in",output_name);
             if (res)
             {
@@ -85,11 +86,9 @@ public class NeedleWrapper
     
       public  NeedleResult runNeedleTest(String output_name) throws BecUtilException
     {
-        
         m_needle = new NeedleResult();
         NeedleParser.parse(output_name, m_needle);
         return m_needle;
-         
     }
     
     private boolean run(String q_name, String ref_name, String output_name)throws BecUtilException
@@ -164,7 +163,7 @@ String query_f ="ATGGCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCA
             String query_r ="TGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTTCCAGCTGCCACCATGGTATACACTTCAACGTACAGACACACTATCGTTGTTGACCTTTTAGAATATTTGGGTATAGCGTCCAACTTAGAAACTTTACAGAGTGCCCGTGAAGATGAAACAAGAAAACCCGAGAATACCGATAAAAAAGAATGTAAACCCGACTATGATATAGAATGCGGTCCTAATAGATCGTGCTCTGAATCCTCTACCGATTCAGACTCTAGTGGTTCACAGATCGAAAAAAATGATCCTTTCAGGGTGGATTGGAACGGCCCCAGTGATCCTGAGAACCCACAAAACTGGCCCCTACTGAAAAAATCATTGGTAGTATTCCAAATAATGTTACTTACTTGCGTCACGTACATGGGATCCTCCATTTACACACCTGGCCAGGAATATATTCAAGAAGAGTTCCACGTTGGTCATGTAGTGGCAACATTAAATCTTTCTTTATATGTTCTTGGTTATGGTCTAGGTCCCATCATTTTTTCACCGCTATCAGAAACTGCACGCTATGGCCGTCTAAATCTGTACATGGTGACTTTATTTTTTTTCATGATCTTTCAAGTTGGTTGTGCTACTGTGCATAACATCGGCGGCTTAATCGTCATGCGTTTCATC";
             RefSequence rf = new RefSequence(1188);
             
-            Read rd_f = new Read(1244);
+            Read rd_f = Read.getReadById(1244);
             nl.setQuerySeq(rd_f.getSequence().getText());
             nl.setRefSeq(rf.getCodingSequence());
             nl.setQueryId(1);

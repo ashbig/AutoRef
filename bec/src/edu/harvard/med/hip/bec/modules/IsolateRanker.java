@@ -38,6 +38,12 @@ public class IsolateRanker
     private PolymorphismSpec  m_polymorphism_spec = null;
     private boolean           m_isRunPolymorphism = false;
     
+    private int                  m_cutoff_score = 20;
+    
+    
+    private ArrayList           m_error_messages = null;
+    private ArrayList           m_finished_constructs = null;
+    
     //collection of end reads primers that define whether read was from plus strand
     //or on compliment
     // needle can not convert sequence to compliment sequences
@@ -51,6 +57,9 @@ public class IsolateRanker
        
         m_penalty_spec = er;
         m_cutoff_spec = fs;
+        m_error_messages = new ArrayList();
+        m_finished_constructs = new ArrayList();
+        
     }
     
     public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, Construct c)
@@ -58,6 +67,9 @@ public class IsolateRanker
         m_construct = c;
         m_penalty_spec = er;
         m_cutoff_spec = fs;
+         m_error_messages = new ArrayList();
+        m_finished_constructs = new ArrayList();
+       
     }
     /** Creates a new instance of IsolateRanker */
     public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, ArrayList c, PolymorphismSpec p)
@@ -68,6 +80,9 @@ public class IsolateRanker
         m_cutoff_spec = fs;
         m_polymorphism_spec = p;
         if ( p != null) m_isRunPolymorphism = true;
+         m_error_messages = new ArrayList();
+        m_finished_constructs = new ArrayList();
+       
     }
     
     public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, Construct c, PolymorphismSpec p)
@@ -77,25 +92,30 @@ public class IsolateRanker
         m_cutoff_spec = fs;
         m_polymorphism_spec = p;
         if ( p != null) m_isRunPolymorphism = true;
+         m_error_messages = new ArrayList();
+        m_finished_constructs = new ArrayList();
+       
     }
     
     
-    
+     public ArrayList       getErrorMessages(){ return m_error_messages ;}
+     public ArrayList       getProcessedConstructId(){ return   m_finished_constructs;}
      public void           setForwardReadSence(boolean b){m_forward_read_sence = b;}
-    public  void           setReverseReadSence(boolean b)   {       m_reverse_read_sence = b;}
+     public  void           setReverseReadSence(boolean b)   {       m_reverse_read_sence = b;}
     //main calling function : call action per construct
-    public void run(Connection conn, ArrayList error_messages) throws BecUtilException, BecDatabaseException,ParseException
+    public void run(Connection conn) throws BecUtilException, BecDatabaseException,ParseException
     {
+        m_cutoff_score = m_penalty_spec.getParameterByNameInt("ER_PHRED_CUT_OFF");
         if (m_constructs != null)
         {
             for (int count = 0; count < m_constructs.size(); count++)
             {
-                runConstruct( (Construct) m_constructs.get(count), conn, error_messages);
+                runConstruct( (Construct) m_constructs.get(count), conn);
             }
         }
         else if (m_construct != null)
         {
-            runConstruct( m_construct, conn, error_messages);
+            runConstruct( m_construct, conn);
         }
     }
     
@@ -107,8 +127,8 @@ public class IsolateRanker
     // calculate score per read
     // calculate score per isolate
     // rank isolates
-    public void  runConstruct( Construct construct, Connection conn, ArrayList error_messages)
-        throws BecUtilException, BecDatabaseException,ParseException
+    public void  runConstruct( Construct construct, Connection conn)
+       // throws BecUtilException, BecDatabaseException,ParseException
     {
         try
         {
@@ -116,7 +136,11 @@ public class IsolateRanker
             IsolateTrackingEngine it = null;
             ArrayList reads = null;
 
+              // this is for not known gerry sequences
+            if (construct.getRefSequence().getText().equals("NNNNN") ) return ;
             BaseSequence refsequence = construct.getRefSequenceForAnalysis();
+            
+          
             refsequence.setId( construct.getRefSeqId());
 
             
@@ -128,16 +152,31 @@ public class IsolateRanker
                 if (it.getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN)
                 {
                     reads =  it.getEndReads();
-                    for (int reads_count = 0; reads_count < reads.size(); reads_count ++)
+                    if (reads == null || reads.size() == 0)
                     {
-                        Read read  = (Read) reads.get(reads_count);
-                        runRead( read, refsequence, conn);
+                        it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
+                        it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS, it.getId(),conn);
+                                
+                    }
+                    else
+                    {
+                        for (int reads_count = 0; reads_count < reads.size(); reads_count ++)
+                        {
+                            Read read  = (Read) reads.get(reads_count);
+                            runRead( read, refsequence, conn);
+                            if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
+                                 read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH)
+                            {
+                                it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
+                                it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH, it.getId(),conn);
+                                break;
+                            }
+                        }
                     }
                     //check wether number of mutations exseedmax allowed
                     it.setBlackRank(m_cutoff_spec,m_penalty_spec);
-                    //calculate rank if not black
-                    if (it.getRank() != IsolateTrackingEngine.RANK_BLACK)
-                        it.getScore();
+                    //calculate score if not black
+                  //  if (it.getRank() != IsolateTrackingEngine.RANK_BLACK )                        it.getScore();
  
                 }
                 
@@ -148,14 +187,22 @@ public class IsolateRanker
                 //update database
                 it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
                 it.updateRankAndScore(it.getRank(), it.getScore(), it.getId(),  conn );
-                it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, it.getId(), conn);
+                if ( it.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH
+                    && it.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY)
+                {
+                    it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, it.getId(), conn);
+                }
              }
             construct.updateCurrentIndex( construct.getCurrentIsolateId(),conn);
+            
             conn.commit();
+            m_finished_constructs.add(new Integer( construct.getId()));
         }
         catch(Exception ex)
         {
-            error_messages.add(ex.getMessage());
+             ex.printStackTrace();
+            System.out.println(ex.getMessage());
+            m_error_messages.add(ex.getMessage());
             DatabaseTransaction.rollback(conn);
         }
     }
@@ -167,15 +214,38 @@ public class IsolateRanker
             throws BecUtilException, BecDatabaseException, ParseException
     {
         // read can have all mutations analyzed and requers only score recalculation based on new spec
+        
         if (read.getScore() == Constants.SCORE_NOT_CALCULATED)
         {
         
             //prepare detectors
             DiscrepancyFinder df = new DiscrepancyFinder();
-
+            df.setNeedleGapOpen(40.0);
+            df.setNeedleGapExt(0.05);
+            df.setQualityCutOff(m_cutoff_score);
+            df.setMaxNumberOfDiscrepancies(20);
             // reasign sequence for only trimmed sequence
+            
+            
+            
             AnalyzedScoredSequence read_sequence =  read.getSequence();
-            read_sequence.setText(read.getTrimmedSequence());
+            //store values
+            String read_sequence_text=read_sequence.getText();
+            int[] read_scores = read.getScoresAsArray();
+            try
+            {
+                read_sequence.setText(read.getTrimmedSequence());
+
+
+                //reasign scores for only trimmed scores
+                int[] trimmed_scores = read.getTrimmedScoresAsArray();
+                read_sequence.setScoresAsArray(trimmed_scores);
+            }
+            catch(Exception e)
+            {
+                 e.printStackTrace();
+                System.out.println("Can not get trimmed sequence; readid " + read.getId());
+            }
             //run read
 
             df.setSequencePair(new SequencePair(read.getSequence() ,  refsequence));
@@ -193,11 +263,30 @@ public class IsolateRanker
                 pf.setSequence( read.getSequence());
                 pf.run();
             }
+            //reassign values read_sequence=read_sequence.getText();
+          
+            read_sequence.setText(read_sequence_text);
+            read_sequence.setScoresAsArray(read_scores);
+            
+            if (read_sequence.getStatus() == BaseSequence.STATUS_NOMATCH)
+            {
+                if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
+                {
+                    read.setType(Read.TYPE_ENDREAD_FORWARD_NO_MATCH);
+                }
+                else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
+                {
+                    read.setType(Read.TYPE_ENDREAD_REVERSE_NO_MATCH);
+                   
+                }
+                 read.updateType(conn);
+                return;
+            }
+            else
               // insert mutations
-            read.getSequence().insertMutations(conn);
+                read.getSequence().insertMutations(conn);
         }
         read.calculateScore(m_penalty_spec);
-      
         read.updateScore(conn);
     }
 

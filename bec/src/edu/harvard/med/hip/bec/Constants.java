@@ -144,13 +144,25 @@ public class Constants {
         "FULL_SEQUENCE_BLAST_N_FORMATED";
     public static final String FULL_SEQUENCE_BLAST_P_FORMATED = 
         "FULL_SEQUENCE_BLAST_P_FORMATED";
+    
+    
+    
+    
+    
     //constants for constructors
     public static final int TYPE_OBJECTS = 1;
     public static final int TYPE_ID = 2;
     
     
-    public static final int            SCORE_NOT_CALCULATED = -1;
+    public static final int            SCORE_NOT_CALCULATED = 0;
     public static final int            SCORE_NOT_CALCULATED_FOR_RANK_BLACK = 0;
+    
+    //process object types
+    public static final int            PROCESS_OBJECT_TYPE_RESULT = 1;
+    public static final int            PROCESS_OBJECT_TYPE_CONTAINER = 0;
+    
+    
+    
     /**
      * get today's date in dd-mmm-yy format
      */
