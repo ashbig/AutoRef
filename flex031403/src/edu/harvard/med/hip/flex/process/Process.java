@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.15 2001-06-22 16:34:37 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.16 2001-06-25 15:04:49 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -264,6 +264,7 @@ public class Process {
      * @param s The SampleLineage object.
      */
     public void addSampleLineage(SampleLineage s) {
+        s.setExecutionid(executionid);
         sampleLineageSet.addElement(s);
     }
     
