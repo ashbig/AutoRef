@@ -63,5 +63,6 @@ public class GetMultiLocationsAction extends GetLocationAction {
         int projectid = ((CreateGlycerolAndSeqForm)form).getProjectid();
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
+        request.setAttribute("isMappingFile", ((CreateGlycerolAndSeqForm)form).getIsMappingFile());
     }
 }

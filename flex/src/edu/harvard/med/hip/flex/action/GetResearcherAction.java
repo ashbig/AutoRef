@@ -216,18 +216,15 @@ public class GetResearcherAction extends ResearcherAction{
                         seqContainers.add(newContainer);
                     }
                 }
-                int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());
-                
-                ThreadedSummaryTablePopulator populator = new ThreadedSummaryTablePopulator(containerids, strategyid, CloneInfo.MASTER_CLONE);
-                new Thread(populator).start();
-                
+                int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());                
                 String isMappingFile = ((GetResearcherBarcodeForm)form).getIsMappingFile();
                 boolean b = false;
                 if("Yes".equals(isMappingFile)) {
                     b = true;
                 }
-                ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b);
-                new Thread(handler).start();
+                SummaryTablePopulator populator = new SummaryTablePopulator();
+                ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b, populator, containerids, strategyid, CloneInfo.MASTER_CLONE);
+                new Thread(handler).start();   
             }
             
             // Remove everything from the session.

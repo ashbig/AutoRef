@@ -69,7 +69,7 @@ public class EnterSrcForGlycerolAndSeqAction extends EnterSourcePlateAction {
     
     // Set the container location for the form bean.
     protected void setSourceLocations(ActionForm form, int [] locations) {
-        ((CreateGlycerolAndSeqForm)form).setSourceLocations(locations);      
+        ((CreateGlycerolAndSeqForm)form).setSourceLocations(locations);
     }
     
     // Store the source container in the session.
@@ -86,7 +86,7 @@ public class EnterSrcForGlycerolAndSeqAction extends EnterSourcePlateAction {
     protected int getWorkflowid(ActionForm form) {
         return ((CreateGlycerolAndSeqForm)form).getWorkflowid();
     }
-        
+    
     protected ContainerMapper getContainerMapper(String processname, ActionForm form) throws FlexProcessException {
         String row = ((CreateGlycerolAndSeqForm)form).getRow();
         GlycerolAndSeqContainerMapper mapper = new GlycerolAndSeqContainerMapper();
@@ -100,6 +100,9 @@ public class EnterSrcForGlycerolAndSeqAction extends EnterSourcePlateAction {
         }
         
         return mapper;
+    }
+    protected void storeOthersInRequest(HttpServletRequest request, ActionForm form) {
+        request.setAttribute("isMappingFile", ((CreateGlycerolAndSeqForm)form).getIsMappingFile());
     }
 }
 

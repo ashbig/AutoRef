@@ -74,12 +74,14 @@ public class EnterSourcePlateAction extends ResearcherAction {
         request.getSession().removeAttribute("EnterSourcePlateAction.newContainers");
         request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateF1");
         request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateC1");
-         
+        
         int projectid = getProjectid(form);
         int workflowid = getWorkflowid(form);
         
         try {
             Vector containers = getContainers(form);
+            Project project = new Project(projectid);
+            Workflow workflow = new Workflow(workflowid);
             
             int locations[] = new int[containers.size()];
             
@@ -95,6 +97,8 @@ public class EnterSourcePlateAction extends ResearcherAction {
                 if(item == null) {
                     request.setAttribute("workflowid", new Integer(workflowid));
                     request.setAttribute("projectid", new Integer(projectid));
+                    request.setAttribute("projectname", project.getName());
+                    request.setAttribute("workflowname", workflow.getName());
                     
                     errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", container));
                     saveErrors(request, errors);
@@ -112,8 +116,6 @@ public class EnterSourcePlateAction extends ResearcherAction {
             
             //map the container to the new container
             Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
-            Project project = new Project(projectid);
-            Workflow workflow = new Workflow(workflowid);
             
             ContainerMapper mapper = null;
             if(Protocol.PICK_COLONY.equals(protocol.getProcessname())) {
@@ -127,10 +129,10 @@ public class EnterSourcePlateAction extends ResearcherAction {
             } else {
                 mapper = getContainerMapper(protocol.getProcessname(), form);
             }
-                
+            
             Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
             Vector sampleLineageSet = mapper.getSampleLineageSet();
-
+            
             // Get all the locations.
             Vector locationList = Location.getLocations();
             
@@ -153,9 +155,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
                 next = new Protocol(Protocol.CREATE_DNA_FROM_MGC_CULTURE);
                 cMapper = StaticContainerMapperFactory.makeContainerMapper(next.getProcessname());
                 newContainers.addAll(cMapper.doMapping(cultures, next, project, workflow));
-                sls1 = cMapper.getSampleLineageSet();                
+                sls1 = cMapper.getSampleLineageSet();
             }
-           
+            
             // store all the information to the session.
             storeSourceContainerInSession(request, oldContainers);
             storeOthersInRequest(request, form);
@@ -166,7 +168,7 @@ public class EnterSourcePlateAction extends ResearcherAction {
             request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);
             request.setAttribute("workflowid", new Integer(workflowid));
             request.setAttribute("projectid", new Integer(projectid));
-             request.setAttribute("projectname", project.getName());
+            request.setAttribute("projectname", project.getName());
             request.setAttribute("workflowname", workflow.getName());
             
             if(sls != null)
