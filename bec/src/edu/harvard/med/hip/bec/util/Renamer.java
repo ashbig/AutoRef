@@ -24,19 +24,37 @@ public class Renamer
     public static void main(String args[])
     {
         String dir = null; String line = null;
-        String dir_into = "E:\\Sequences for BEC\\Pseudomonas\\Broad_scf_files";
+        String dir_into = "E:\\HTaycher\\YR";
         Renamer r = new Renamer();
         try{
-        //    r.renameYeastJasonInternalReads("E:\\Sequences for BEC\\YEAST\\2b\\org_files\\yrg766",            "E:\\Sequences for BEC\\YEAST\\2b\\renamed",             "E:\\Sequences for BEC\\YEAST\\2b\\OPLATE000031_ygs766.txt");
-          //    r.renameYeast1b( "E:\\Sequences for BEC\\YEAST\\2b internal\\4728_YSG000766",
-          //    "E:\\Sequences for BEC\\YEAST\\2b internal\\4728_YSG000766\\renamed",
-          //    "E:\\Sequences for BEC\\YEAST\\2b internal\\4728_YSG000766\\rename.txt") ;
-           r.yeastCopyIntoNewClones("E:\\HTaycher\\Yeast\\remapping\\directories.txt","E:\\HTaycher\\Yeast\\remapping\\phase2renaming.txt", "E:\\HTaycher\\Yeast\\remapping\\");
-           
+            printFileNames("E:\\Sequences for BEC\\files_to_transfer");
+/*printFileNames("E:\\Sequences for BEC\\Breast Cancer\\BSA000942_T7");
+printFileNames("E:\\Sequences for BEC\\Breast Cancer\\BSE000942_pDiddy");
+printFileNames("E:\\Sequences for BEC\\Breast Cancer\\BSE000942_T7");
+printFileNames("E:\\Sequences for BEC\\Yersinia pestis\\SAE000866_M13F");
+printFileNames("E:\\Sequences for BEC\\Yersinia pestis\\SAE000866_M13R");
+       */     
         }
         
         catch(Exception e){}
          System.exit(0);
+    }
+    
+    public static void printFileNames(String dir_into )
+    {
+        System.out.println("\n\n"+dir_into);
+        try
+        {
+            File sourceDir = new File(dir_into); //trace file directory
+                
+            File [] sourceFiles = sourceDir.listFiles();
+            for (int i = 0 ; i< sourceFiles.length;i++)
+            {
+                System.out.println( sourceFiles[i].getName());
+            }
+        }
+        
+        catch(Exception e){}
     }
    public static void renamePseudomonas()
     {
