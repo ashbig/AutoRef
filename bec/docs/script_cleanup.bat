@@ -1,6 +1,6 @@
 @ECHO OFF
 
-c:
+d:
 @ cd output
 cd needleoutput
 @ del *.in
@@ -10,4 +10,4 @@ cd ..
 cd ..
 @ cd blastoutput
 @ del *.in
-cd c:\
+cd d:\
