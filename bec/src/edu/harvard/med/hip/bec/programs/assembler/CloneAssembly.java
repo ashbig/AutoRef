@@ -46,21 +46,33 @@ public class CloneAssembly
     public ArrayList        getContigs(){ return m_contigs;}
     public int              getStatus(){ return             m_contig_coverage ;}
     
+    
     public static int isAssemblerRunNeeded( String clone_trace_files_location )throws Exception
-        {
+    {
+        return isAssemblerRunNeeded(clone_trace_files_location, 2);
+    }
+    public static int isAssemblerRunNeeded( String clone_trace_files_location , int requered_number_of_files)throws Exception
+    {
             int assembly_run_status = -1;
-            File trace_dir = new File( clone_trace_files_location +File.separator +PhredWrapper.CHROMAT_DIR_NAME); //trace file directory
-            File [] trace_files = trace_dir.listFiles(); //trace file directory
-            if (   trace_files == null || trace_files.length < 2)
-                 return ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE;
+            int numberOfTraceFiles = numberOfExistingTraceFiles( clone_trace_files_location +File.separator +PhredWrapper.CHROMAT_DIR_NAME, requered_number_of_files); //trace file directory
+             if ( numberOfTraceFiles == 0 ) 
+                    return ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE;
             File phd_dir = new File( clone_trace_files_location +File.separator +PhredWrapper.PHD_DIR_NAME); //trace file directory
             File [] phd_files = phd_dir.listFiles(); //trace file directory
-            if (   trace_files.length > phd_files.length ) 
+            if (   numberOfTraceFiles > phd_files.length ) 
                 return ASSEMBLY_RUN_STATUS_NOT_ALL_TRACE_FILES_INCLUDED;
             return assembly_run_status;
     }
      
 
-    
+    public static int numberOfExistingTraceFiles( String clone_trace_files_location, int requered_number_of_files )throws Exception
+    {
+            File trace_dir = new File( clone_trace_files_location ); //trace file directory
+            File [] trace_files = trace_dir.listFiles(); //trace file directory
+            if (   trace_files == null || trace_files.length < requered_number_of_files)
+                 return 0;
+            else
+                return trace_files.length;
+    }
     
 }
