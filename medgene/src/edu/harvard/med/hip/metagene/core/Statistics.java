@@ -43,7 +43,7 @@ public class Statistics {
     }
     
     public static Vector getAllStatistics() {
-        DatabaseManager manager = new DatabaseManager();
+        DBManager manager = new DBManager();
         Connection conn = manager.connect();
         
         if (conn == null) {
@@ -72,7 +72,7 @@ public class Statistics {
             System.out.println(ex);
         }
         
-        manager.disconnect();
+        manager.disconnect(conn);
         return stats;
     }
 }

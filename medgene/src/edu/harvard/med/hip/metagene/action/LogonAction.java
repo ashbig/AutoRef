@@ -76,11 +76,14 @@ public final class LogonAction extends Action {
             Calendar calendar = new GregorianCalendar();
             Date d = new Date();
             calendar.setTime(d);  
-            String login_time = "" + (calendar.get(Calendar.MONTH) + 1) + "/" +
+            String login_date = "" + (calendar.get(Calendar.MONTH) + 1) + "/" +
                             calendar.get(Calendar.DAY_OF_MONTH) + "/" +
                             calendar.get(Calendar.YEAR);
-            manager.addLog(username, login_time);
-            
+            int minute = calendar.get(Calendar.MINUTE);
+            String min = (minute < 10)?("0"+minute):new Integer(minute).toString();
+            String login_time = "" + calendar.get(Calendar.HOUR_OF_DAY) + ":" + min;
+            manager.addLog(login_date, login_time, username, request.getRemoteAddr());
+           
             
             // Remove the obsolete form bean
             if (mapping.getAttribute() != null) {

@@ -15,18 +15,14 @@ import java.sql.*;
  * @version
  */
 public class Usermanager {
-    
-    private ConnectionPool pool;
-    
+     
     /** Creates new Usermanager */
-    public Usermanager() {
-        pool = ConnectionPool.getInstance();
-    }
+    public Usermanager() {}
     
     public boolean authenticate(String username, String password) {
-        
-        Connection conn = pool.getConnection();
 
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return false;
@@ -49,11 +45,7 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+            manager.disconnect(conn);
         }
 
         return rt;
@@ -61,7 +53,8 @@ public class Usermanager {
     
     public boolean userExist(String userid) {
        
-        Connection conn = pool.getConnection();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -84,11 +77,7 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+            manager.disconnect(conn);
         }
 
         return rt;
@@ -96,7 +85,8 @@ public class Usermanager {
     
     public boolean reminderUnique(String text) {
        
-        Connection conn = pool.getConnection();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -119,11 +109,7 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+            manager.disconnect(conn);
         }
 
         return (count<=1);
@@ -133,7 +119,8 @@ public class Usermanager {
     String organization, String reminder,
     String firstname, String lastname, String phone, String registration_date, int type) {
        
-        Connection conn = pool.getConnection();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -152,18 +139,14 @@ public class Usermanager {
         
         try {
             stmt = conn.createStatement();
-            int n = stmt. executeUpdate(sql);
+            int n = stmt.executeUpdate(sql);
             conn.commit();
             rt = true;
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+            manager.disconnect(conn);
         }
 
         return rt;
@@ -171,7 +154,8 @@ public class Usermanager {
     
     public User getUser(String userid) {
        
-        Connection conn = pool.getConnection();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -202,11 +186,7 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+            manager.disconnect(conn);
         }
 
         return user;
@@ -214,7 +194,8 @@ public class Usermanager {
     
     public User findUser(String reminder) {
  
-        Connection conn = pool.getConnection();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -245,11 +226,7 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+            manager.disconnect(conn);
         }
 
         return user;
@@ -261,7 +238,9 @@ public class Usermanager {
      */
     public int getUserType(String userid){
 
-        Connection conn = pool.getConnection();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+        
         int type = 0;
         
         if (conn == null) {
@@ -284,20 +263,17 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+            manager.disconnect(conn);
         }
 
         return type;
     }
     
     
-    public void addLog(String userid, String login_time){
+    public void addLog(String login_date, String login_time, String userid, String ip){
         
-        Connection conn = pool.getConnection();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
 
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -305,9 +281,10 @@ public class Usermanager {
         }
         
         String sql = "insert into usage"+
-        " (userid, login_time)"+
-        " values('" + userid + "', '" + login_time + "')"; 
- 
+        " (login_date, login_time, userid, ip_address)"+
+        " values('" + login_date + "', '" + login_time + "', '" + userid + "', '" + ip + "')"; 
+         
+        
         Statement stmt = null;        
         try {
             stmt = conn.createStatement();
@@ -317,16 +294,14 @@ public class Usermanager {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+            manager.disconnect(conn);
         }        
     }
+
         
     
     public static void main(String [] args) {
+        //ConnectionPool.init();
         Usermanager manager = new Usermanager();
         if(manager.authenticate("dzuo", "dzuo")) {
             System.out.println("Testing authenticate method - OK");

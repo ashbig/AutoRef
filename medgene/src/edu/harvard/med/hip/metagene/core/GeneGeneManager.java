@@ -21,16 +21,11 @@ public class GeneGeneManager extends DiseaseGeneManager {
     public GeneGeneManager() {
         super();
     }
-    
-    //public Vector queryGeneIndexBySearchTerm(String term) inheritance
-             
-    
+                   
     public Vector getGeneGeneAssociationsByGeneIndexID(int gene_index_id, int stat_id, int number) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
-        
-        Connection conn = pool.getConnection();   
-        
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+     
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -100,11 +95,7 @@ public class GeneGeneManager extends DiseaseGeneManager {
             System.out.println(e);
         }
         
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
+        manager.disconnect(conn);
         
         return gene_gene_associations;
     }

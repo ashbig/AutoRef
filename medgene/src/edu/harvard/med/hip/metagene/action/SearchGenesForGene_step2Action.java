@@ -62,7 +62,7 @@ public class SearchGenesForGene_step2Action extends MetageneAction {
         String submit = ((SearchGenesForGene_step2Form)form).getSubmit();
         
         String stat_type = "Not defined";
-        String source_gene_name = "Not defined";
+        String source_gene_name = "Your Gene";
         
         switch(stat_id){
              case 1: stat_type = "Product of incidence"; break;

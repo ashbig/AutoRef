@@ -61,7 +61,7 @@ public class DisplayLinksAction extends MetageneAction {
         int id = ((DisplayLinksForm)form).getHipGeneId();
         
         DiseaseGeneManager manager = new DiseaseGeneManager();
-        DatabaseManager dbmanager = new DatabaseManager();
+        DBManager dbmanager = new DBManager();
         Connection conn = dbmanager.connect();
         
         if (conn == null) {
@@ -69,7 +69,7 @@ public class DisplayLinksAction extends MetageneAction {
         }
         
         Vector infos = manager.queryGeneinfoByGene(conn, id);
-        dbmanager.disconnect();
+        dbmanager.disconnect(conn);
         
         request.setAttribute("infos", infos);
         return (mapping.findForward("success"));

@@ -20,11 +20,11 @@ import edu.harvard.med.hip.metagene.database.*;
  */
 public class DiseaseGeneManager {
     
-    protected ConnectionPool pool;
+    //protected ConnectionPool pool;
     
     /** Creates new DiseaseGeneManager */
     public DiseaseGeneManager() {
-        pool = ConnectionPool.getInstance();
+        //pool = ConnectionPool.getInstance();
     }
     
     /**
@@ -34,11 +34,11 @@ public class DiseaseGeneManager {
      * @return A list of Disease objects.
      */
     public Vector findDiseases(String term) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
  
         
-        Connection conn = pool.getConnection();
+        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -61,21 +61,18 @@ public class DiseaseGeneManager {
             diseaseSet.addAll(queryDiseases(conn, sql, "%"+term+"%"));
             diseases = new Vector(diseaseSet);
         }
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
-        //manager.disconnect();
+
+        manager.disconnect(conn);
+
         return diseases;
     }
     
     public Vector getAssociationsByDisease(int disease, int stat, int number) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+ 
         
-        Connection conn= pool.getConnection();        
+        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -109,14 +106,9 @@ public class DiseaseGeneManager {
                 //                }
             }
         }
+               
+        manager.disconnect(conn);
         
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
-        //manager.disconnect();
         return newAssociations;
     }
     
@@ -404,10 +396,11 @@ public class DiseaseGeneManager {
     }
     
     public Vector queryGeneIndexBySearchTerm(String term) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+ 
         
-        Connection conn = pool.getConnection();   
+        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -441,30 +434,20 @@ public class DiseaseGeneManager {
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
-            //manager.disconnect();
+            manager.disconnect(conn);
             return null;
         }
         
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
-        //manager.disconnect();
+        manager.disconnect(conn);
         return geneIndexes;
     }
     
     public Vector queryGeneIndexByLocusid(int locusid) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+ 
         
-        Connection conn = pool.getConnection();   
+        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -497,31 +480,20 @@ public class DiseaseGeneManager {
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
-            
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
-            //manager.disconnect();
+            manager.disconnect(conn);
             return null;
         }
         
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
-        //manager.disconnect();
+        manager.disconnect(conn);
         return geneIndexes;
     }
     
     public Vector getAssociationsByGeneIndex(int geneIndexid, int statid, int number) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+ 
         
-        Connection conn = pool.getConnection();   
+        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -581,30 +553,20 @@ public class DiseaseGeneManager {
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
-            //manager.disconnect();
+            manager.disconnect(conn);
             return null;
         }
         
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
-        //manager.disconnect();
+        manager.disconnect(conn);
         return associations;
     }
     
     public Disease queryDiseaseById(int id) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+ 
         
-        Connection conn = pool.getConnection();   
+        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -632,30 +594,20 @@ public class DiseaseGeneManager {
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
-            //manager.disconnect();
+            manager.disconnect(conn);
             return null;
         }
         
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
-        //manager.disconnect();
+        manager.disconnect(conn);
         return disease;
     }
     
     public Statistics queryStatById(int id) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+ 
         
-        Connection conn = pool.getConnection();   
+        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -682,30 +634,19 @@ public class DiseaseGeneManager {
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
-            //manager.disconnect();
+            manager.disconnect(conn);
             return null;
         }
-        
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
-        //manager.disconnect();
+        manager.disconnect(conn);
         return stat;
     }        
     
     public GeneIndex queryGeneIndexById(int id) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
+        DBManager manager = new DBManager();
+        Connection conn = manager.connect();
+ 
         
-        Connection conn = pool.getConnection();   
+        //Connection conn = pool.getConnection();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
@@ -734,21 +675,10 @@ public class DiseaseGeneManager {
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
-            try{
-                conn.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
-            //manager.disconnect();
+            manager.disconnect(conn);
             return null;
         }
-        
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        //manager.disconnect();
+        manager.disconnect(conn);
         return geneIndex;
     }                
 }
