@@ -22,9 +22,12 @@
 <bean:define name="sample" property="container" id="container"/>
 
 <html>
-<head><title>Sample Details</title></head> 
+<head><title><bean:message key="flex.name"/> : Sample Details</title></head> 
 <body>
-<h2>Sample ID <bean:write name="sample" property="id"/></h2>
+<h2><bean:message key="flex.name"/> : Sample Details</h2>
+<hr>
+<html:errors/>
+<p>Sample ID <bean:write name="sample" property="id"/></p>
 
 <table>
 <h3>Sample details</h3>

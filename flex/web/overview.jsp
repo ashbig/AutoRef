@@ -1,5 +1,5 @@
  <HTML><HEAD><TITLE>HIP FLEX Database</TITLE></HEAD>
-	<BODY BGCOLOR="white" topmargin=50>
+	<BODY>
 		<H1><CENTER><bean:message key="flex.name"/> Database</CENTER></H1><HR><BR>
 		
 		<H3><bean:message key="flex.name"/> Repository</H3>		

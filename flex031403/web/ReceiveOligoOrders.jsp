@@ -5,12 +5,9 @@
 
 <%@page contentType="text/html"%>
 <html>
-<head><title><bean:message key="flex.name"/>: Oligo Order Receiving Form</title></head>
+<head><title><bean:message key="flex.name"/> : Oligo Order Receiving Form</title></head>
 <body>
-<h2><bean:message key="flex.name"/>: Oligo Order Receiving Form</h2>
-
-<%-- <jsp:useBean id="beanInstanceName" scope="session" class="package.class" /> --%>
-<%-- <jsp:getProperty name="beanInstanceName"  property="propertyName" /> --%>
+<h2><bean:message key="flex.name"/> : Oligo Order Receiving Form</h2>
 <hr>
 <html:errors/>
 

@@ -13,9 +13,10 @@
 
 
 <html>
-<head><title>Sequence Process History</title></head>
+<head><title><bean:message key="flex.name"/> : Sequence Process History</title></head>
 <body>
-    <h2>Sequence Process History</h2>
+    <h2><bean:message key="flex.name"/> : Sequence Process History</h2>
+    <hr>
     <p>
     <logic:present name="<%=Constants.FLEX_SEQUENCE_KEY%>"/>
         <bean:define name="<%=Constants.FLEX_SEQUENCE_KEY%>" id="sequence"/>    

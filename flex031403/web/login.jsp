@@ -4,12 +4,13 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html>
-    <head><title><bean:message key="flex.name"/> Login</title></head>
-    <body> <center>
-    <h2>Welcome to <bean:message key="flex.name"/> Database</h2>
+    <head><title><bean:message key="flex.name"/> : Login</title></head>
+    <body> 
+    <h2>Welcome to <bean:message key="flex.name"/></h2>
     <hr>
-
-   <html:errors/>
+    <html:errors/>
+    <center>
+  
 
 
     <html:form action="logon.do" focus="username" target="_top">

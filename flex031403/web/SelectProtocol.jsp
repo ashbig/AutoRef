@@ -11,6 +11,7 @@
 
 <h2><bean:message key="flex.name"/> : Create Process Plate</h2>
 <hr>
+<html:errors/>
 
 <html:form action="/SelectProtocol.do">
 <table>
