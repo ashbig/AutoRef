@@ -266,12 +266,14 @@
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>    
     <forward    name="specialOligoOrder" path="/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER"/>
     <forward    name="geneQuery" path="/SequenceQueryEntry.jsp"/>  
-    <forward    name="rearray" path="/GetWorkflowForRearray.do"/>  
+    <!--<forward    name="rearray" path="/GetWorkflowForRearray.do"/>  -->
     <forward    name="browseFlex" path="/BrowseFlex.jsp"/>  
     <forward    name="genericRearray" path="/RearraySelection.jsp"/>    
     <forward    name="expressionClone" path="/ExpressionCloneEntry.jsp"/>     
     <forward    name="perimeterRearray" path="/GetProjects.do?forwardName=PERIMETER_REARRAY"/>
-     
+    <forward    name="queryFlex" path="/GetSearchTerms.do"/>   
+    <forward    name="queryHistory" path="/GetAllSearchRecords.do"/>
+    <forward    name="helpExternal" path="/tmp.jsp"/>
 
   </global-forwards>
   

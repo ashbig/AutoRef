@@ -34,6 +34,19 @@
     </tr>
 
     <tr>
+    <td class="prompt">Select Destination Plate Type:</td>
+    <td><html:select property="destPlateType">
+        <option>Costar flt bttm/MP16-24</option>
+        <option>Costar rd bttm/MP16-24</option>
+        <option>Deepwell on MP16</option>
+        <option>PCR on MP16 landscape</option>
+        <option>Reservoir on MP16</option>
+        <option>RK riplate dw/MP16-24</option>
+        </html:select>
+    </td>
+    </tr>
+
+    <tr>
     <td class="prompt">Select Source Plate Type:</td>
     <td><html:select property="sourcePlateType">
         <option>Costar flt bttm/MP16-24</option>
