@@ -377,6 +377,7 @@
       <forward  name="success_pcr"   path="/EnterOligoPlates.jsp"/>
       <forward  name="success_culture"   path="/EnterAgarPlates.jsp"/>
       <forward  name="success_pick_colony"   path="/EnterColonyPlates.jsp"/>
+      <forward  name="success_enter_result"   path="/EnterProcessResults.jsp"/>
     </action> 
 
     <!-- Process the source plate input -->
