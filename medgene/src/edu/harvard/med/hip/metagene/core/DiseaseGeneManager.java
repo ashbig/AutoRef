@@ -345,7 +345,7 @@ public class DiseaseGeneManager {
     public Vector queryGeneinfoByGene(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
-        String sql = "select t.id_type, g.id_value, g.extra_information"+
+        String sql = "select t.id_type, g.id_value, g.extra_information, g.order"+
         " from id_type t, gene_information g"+
         " where t.type_id=g.type_id"+
         " and g.hip_gene_id="+id;
@@ -359,7 +359,8 @@ public class DiseaseGeneManager {
                 String type = rs.getString(1);
                 String value = rs.getString(2);
                 String extraInfo = rs.getString(3);
-                Geneinfo info = new Geneinfo(type, value, extraInfo);
+                int refSeq_NM_order = rs.getInt(4);
+                Geneinfo info = new Geneinfo(type, value, extraInfo, refSeq_NM_order);
                 geneInfo.addElement(info);
             }
             
@@ -372,7 +373,7 @@ public class DiseaseGeneManager {
         return geneInfo;
     }
     
-    
+    // override queryGeneinfoByGene(Connection, id)
     public Vector queryGeneinfoByGene(Connection conn, String symbol) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -392,7 +393,7 @@ public class DiseaseGeneManager {
                 String type = rs.getString(1);
                 String value = rs.getString(2);
                 String extraInfo = rs.getString(3);
-                Geneinfo info = new Geneinfo(type, value, extraInfo);
+                Geneinfo info = new Geneinfo(type, value, extraInfo, -1);
                 geneInfo.addElement(info);
             }
             

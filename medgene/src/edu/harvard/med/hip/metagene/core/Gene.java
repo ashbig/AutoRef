@@ -100,6 +100,50 @@ public class Gene {
         return go;
     }
     
+    // generate refSeq_NM with blank space in the middle to fit display
+    public String getRefSeq_NM() {
+        
+        if(information == null)
+            return " ";
+        
+        String refSeq_NM = " ";
+        String tmp;
+        for(int i=0; i<information.size(); i++) {
+            Geneinfo info = (Geneinfo)information.elementAt(i);
+            if(info.getType().equals(Geneinfo.REFSEQ_NM)) {
+                if(info.getRefSeq_NM_order()==1){
+                    tmp = info.getValue();
+                    refSeq_NM = tmp.substring(0,3) + " " + tmp.substring(3);
+                    break;
+                }
+            }
+        }
+
+        return refSeq_NM;
+    } 
+    
+    // generate refSeq_NM without blank space in the middle
+    public String getRefSeq_NM2() {
+        
+        if(information == null)
+            return "";
+        
+        String refSeq_NM = "";
+        for(int i=0; i<information.size(); i++) {
+            Geneinfo info = (Geneinfo)information.elementAt(i);
+            if(info.getType().equals(Geneinfo.REFSEQ_NM)) {
+                if(info.getRefSeq_NM_order()==1){
+                    refSeq_NM = info.getValue();
+                    break;
+                }
+            }
+        }
+
+        return refSeq_NM;
+    } 
+    
+    
+    // not in current use
     public String getProteomesString() {
         if(information == null)
             return "";
