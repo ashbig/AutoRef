@@ -261,7 +261,7 @@ sql=         "select  oligocalculationid, sequenceid, primer3configid, dateadded
 +" from  oligo_calculation where STRETCHCOLLECTIONID  in "
 +" (select collectionid from stretch_collection where isolatetrackingid in "
 +" (select isolatetrackingid from isolatetracking where sampleid in "
-+" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid";
++" (select sampleid from sample  where containerid in (select containerid from containerheader where label in ('"+label+"'))))) order by oligocalculationid";
    
         }
      else if ( type_of_oligo_calculation ==  TYPE_OF_OLIGO_CALCULATION_ANY )
@@ -269,7 +269,7 @@ sql=         "select  oligocalculationid, sequenceid, primer3configid, dateadded
   sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS    "
 +" from  oligo_calculation where sequenceid in "
 +" (select refsequenceid from sequencingconstruct where constructid in  (select constructid from isolatetracking where sampleid in"
-+" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid";
++" (select sampleid from sample  where containerid in (select containerid from containerheader where label in ('"+label+"'))))) order by oligocalculationid";
     
      }
         
