@@ -21,19 +21,10 @@ public class Seq_SequenceAnalysisRequestForm extends ActionForm
    // private String m_forwardName = null;
     private int m_refseqid = -1;
     private int m_gi = -1;
-    /*
-    public void setForwardName(String forwardName)
-    {
-        m_forwardName = forwardName;
-    }
-    
-    public String getForwardName()
-    {
-        return m_forwardName;
-    }
-     **/
+   
     public void setRefseqid(int s)
     {
+         System.out.println(s);
         m_refseqid = s;
     }
     
@@ -43,6 +34,7 @@ public class Seq_SequenceAnalysisRequestForm extends ActionForm
     }
     public void setGI(int s)
     {
+         System.out.println(s);
         m_gi = s;
     }
     
@@ -50,5 +42,24 @@ public class Seq_SequenceAnalysisRequestForm extends ActionForm
     {
         return m_gi;
     }
+    /**
+     * Reset all properties to their default values.
+     *
+     * @param mapping The mapping used to select this instance
+     * @param request The servlet request we are processing
+     */
+  
     
+    public ActionErrors validate(ActionMapping mapping,HttpServletRequest request) 
+    {
+        
+        ActionErrors errors = new ActionErrors();
+        System.out.println("validate: " +m_gi +" "+ m_refseqid);
+        if( m_gi == -1 && m_refseqid == -1) 
+        {
+           errors.add("searchTerm", new ActionError("error.searchTerm.required"));
+        }
+     
+        return errors;
+    }
 }
