@@ -307,13 +307,42 @@ public class DeleteObjectRunner extends ProcessRunner
         sql_for_deletion.add(sql);
        }
         //update reads
+        if ( m_action_type == Constants.PROCESS_DELETE_CLONE_READS )
+        {
+        sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
++ Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++ sql_where+")";   sql_for_deletion.add(sql);      
+sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_REVERSE+" where resulttype in ("
++Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++ sql_where+")";   sql_for_deletion.add(sql);  
+        }
+        if ( m_action_type ==  Constants.PROCESS_DELETE_CLONE_FORWARD_READ )
+        {
+            sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
++ Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++ sql_where+")";   sql_for_deletion.add(sql);      
+sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_REVERSE+" where resulttype in ("
++Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++ sql_where+")";   sql_for_deletion.add(sql);  
+        }
+        if ( m_action_type ==  Constants.PROCESS_DELETE_CLONE_REVERSE_READ)
+        {
+            sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
++ Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++ sql_where+")";   sql_for_deletion.add(sql);      
+sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_REVERSE+" where resulttype in ("
++Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
++ sql_where+")";   sql_for_deletion.add(sql);  
+        
+        }
+  /*      
 sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
 + Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
 + sql_where+")";   sql_for_deletion.add(sql);      
 sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_REVERSE+" where resulttype in ("
 +Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
 + sql_where+")";   sql_for_deletion.add(sql);                      
-     
+  */   
         return sql_for_deletion;
      }
       
