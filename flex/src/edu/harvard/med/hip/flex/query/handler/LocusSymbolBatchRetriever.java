@@ -40,7 +40,7 @@ public class LocusSymbolBatchRetriever extends GenbankBatchRetriever {
         }
         
         String sql = "select * from generecord where locusid in"+
-                    " (select locusid from genesymbol where symbol=?)";
+                    " (select locusid from genesymbol where UPPER(symbol)=?)";
         doRetrieve(genbankList, sql);
     }
     
@@ -52,7 +52,7 @@ public class LocusSymbolBatchRetriever extends GenbankBatchRetriever {
         
         for(int i=0; i<genbankList.size(); i++) {
             String symbol = (String)genbankList.get(i);
-            stmt.setString(1, symbol);
+            stmt.setString(1, symbol.toUpperCase());
             rs = DatabaseTransaction.executeQuery(stmt);
             List matchs = new ArrayList();
             while(rs.next()) {
