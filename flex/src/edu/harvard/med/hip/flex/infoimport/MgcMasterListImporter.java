@@ -40,20 +40,16 @@ public class MgcMasterListImporter
     private int                 m_failCount = 0;
     private int                 m_totalCount = 0;
     private String              m_username = null;
-  //  private File                m_log_file = null;
+    //  private File                m_log_file = null;
     private FileWriter          m_writer = null;
     
-  
     private Vector errors_to_print = null;
-    //private Vector log = null; //get outof memory error
-    
+      
     /** Creates a new instance of MgcMasterListImporter */
     public MgcMasterListImporter(String username)
     {
         m_username = username;
         errors_to_print = new Vector();
-      
-   
     }
     
     
@@ -61,7 +57,6 @@ public class MgcMasterListImporter
     public MgcMasterListImporter()
     {
         errors_to_print = new Vector();
-       // log = new Vector();
     }
     
     /**
@@ -76,9 +71,9 @@ public class MgcMasterListImporter
         ArrayList containerCol = new ArrayList();
         Hashtable existingClones = new Hashtable();
         System.out.println(System.currentTimeMillis());
-       
+        
         boolean res = true;
-        writeToFile("Log file for MGC master list upload\n");        
+        writeToFile("Log file for MGC master list upload\n");
         if (res) res =  getExistingClonesFromDB(existingClones);
         System.out.println("mgc master list read");
         if (res) res = readCloneInfo(  input,  fileName, containerCol, existingClones) ;
@@ -97,14 +92,16 @@ public class MgcMasterListImporter
                     errors_to_print.add( 1,"Report: master mgc list upload.\n File Name "+fileName);
                 System.out.println("send message");
                 Mailer.notifyUser(m_username, "report.txt", "Report: master mgc list upload","Report: master mgc list upload",  errors_to_print);
-               // m_writer.flush(); m_writer.close();
+                // m_writer.flush(); m_writer.close();
                 File m_log_file = new File(FILE_PATH + "import_log.txt");
-          
-                Mailer.sendMessageWithAttachedFile (m_username,  "Report on master mgc list upload","Report for mgc list upload",  m_log_file);
+                
+                Mailer.sendMessageWithAttachedFile(m_username,  "Report on master mgc list upload","Report for mgc list upload",  m_log_file);
                 m_log_file.delete();
-                  
-            }catch(Exception e){
-            System.out.println(e.getMessage());}
+                
+            }catch(Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
         }
         System.out.println(System.currentTimeMillis());
         return true;
@@ -123,8 +120,8 @@ public class MgcMasterListImporter
      * @ param containerCol - collection of mgcContainer objects that hold these mgc clones.
      * @return true if successful; false otherwise.
      */
-    private boolean readCloneInfo(InputStream input, String fileName,  
-                                    ArrayList containerCol, Hashtable existingClones)
+    private boolean readCloneInfo(InputStream input, String fileName,
+    ArrayList containerCol, Hashtable existingClones)
     {
         int prev_mgc_containers = 0;//how many mgccontainers exist in DB
         
@@ -140,8 +137,7 @@ public class MgcMasterListImporter
         {
             prev_mgc_containers = FlexIDGenerator.getCount("mgccontainer");
         }
-        catch(Exception e)
-        {return false;}
+        catch(Exception e)        {return false;}
         
         try
         {
@@ -171,7 +167,7 @@ public class MgcMasterListImporter
                 //if container the same - create new MgcClone
                 //************************** change
                 current_container = info[9] + info[10];
-             
+                
                 //check if this mgc clone info exist in db for the same container/position
                 seq_id = -1;
                 if ( existingClones.containsKey(info [1] + "|" +  current_container )    )
@@ -191,7 +187,7 @@ public class MgcMasterListImporter
                     current_container,
                     MgcContainer.getLabel(prev_mgc_containers + current_container_number ),
                     info[9]);
-                   writeToFile("Get from import file mgc container\t"+current_container +"\n");
+                    writeToFile("Get from import file mgc container\t"+current_container +"\n");
                     containerCol.add(cont);
                     current_container_number++;
                     last_container = current_container;
@@ -200,11 +196,12 @@ public class MgcMasterListImporter
                 
                 
                 MgcSample clone = new MgcSample( -1,  -1,
-                                        Integer.parseInt(info [1]), Integer.parseInt(info[0]),
-                                        info[8], info[11], Integer.parseInt(info[12]),
-                                        MgcSample.STATUS_AVAILABLE);
+                Integer.parseInt(info [1]), Integer.parseInt(info[0]),
+                info[8], info[11], Integer.parseInt(info[12]),
+                MgcSample.STATUS_AVAILABLE);
                 writeToFile("Get from import file mgc clone\t "+info [1] + "\n");
                 if (seq_id != -1) clone.setSequenceId(seq_id);
+                //clone.setSequenceId(seq_id);
                 cont.addSample(clone);
                 m_successCount++;
             }
@@ -226,9 +223,9 @@ public class MgcMasterListImporter
     private boolean getExistingClonesFromDB(Hashtable existingClones)
     {
         String sql = "select mc.mgcid as id, mc.sequenceid as seq, mc.orgrow as arow, mc.orgcol as acol, "+
-                      " mcont.oricontainer as cont from mgcclone mc, mgccontainer mcont, sample s, containerheader h where "+
-                        "(s.containerid = h.CONTAINERID and mcont.mgccontainerid = h.containerid and "+
-                        "mc.mgccloneid=s.sampleid )";
+        " mcont.oricontainer as cont from mgcclone mc, mgccontainer mcont, sample s, containerheader h where "+
+        "(s.containerid = h.CONTAINERID and mcont.mgccontainerid = h.containerid and "+
+        "mc.mgccloneid=s.sampleid )";
         
         CachedRowSet crs = null;
         
@@ -238,11 +235,11 @@ public class MgcMasterListImporter
             crs = t.executeQuery(sql);
             while(crs.next())
             {
-                MinClone mc = new MinClone(crs.getInt("id"), 
-                                            crs.getString("cont"),
-                                           crs.getString("aROW"),
-                                           crs.getInt("aCOL"),
-                                           crs.getInt("SEQ"));
+                MinClone mc = new MinClone(crs.getInt("id"),
+                crs.getString("cont"),
+                crs.getString("aROW"),
+                crs.getInt("aCOL"),
+                crs.getInt("SEQ"));
                 existingClones.put(mc.getKey(), mc);
             }
             return true;
@@ -306,8 +303,8 @@ public class MgcMasterListImporter
                                 fs = createFlexSequence( seqData, current_gbs);
                                 continue;
                             }
-                       }
-                         
+                        }
+                        
                         
                         if (fs == null)//can not create sequence
                         {
@@ -317,12 +314,11 @@ public class MgcMasterListImporter
                         sequenceCol.put( Integer.toString(current_key), fs );
                         writeToFile("Get from ncbi sequence for mgc clone\t "+current_key  +"\n" );
                         current_gi = null;
-                       
-
+                        
                     }catch(Exception e)
-                { errors_to_print.add("Can not find sequence for MGC : " + current_key + "\n");  }
-                
-            }
+                    { errors_to_print.add("Can not find sequence for MGC : " + current_key + "\n");  }
+                    
+                }
             }//end sample count
         }//end loop container_count
         return true;
@@ -330,7 +326,7 @@ public class MgcMasterListImporter
     }
     
     
-   
+    
     
     /** Creat flexsequence object from data collected from ncbi
      * @param seqData - hashtable of  "species" => organism;
@@ -353,18 +349,6 @@ public class MgcMasterListImporter
         String seqQuality;
         int cdsLength; int gccont = 0;
         Vector publicInfo = new Vector();
-        
-        if(start==-1 || stop == -1)
-        {
-            cdsLength = 0;
-            seqQuality = FlexSequence.QUESTIONABLE;
-        }
-        else
-        {
-            seqQuality = FlexSequence.GOOD;
-            cdsLength = stop -start +1;
-        }
-        
         
         Hashtable pubinfo_entry_gi = new Hashtable();
         pubinfo_entry_gi.put(FlexSequence.NAMETYPE,FlexSequence.GI);
@@ -396,11 +380,21 @@ public class MgcMasterListImporter
         }
         
         gccont =  (int) gc_content(seqText);
+        cdsLength = (start==-1 || stop == -1) ? 0 : stop - start +1;
+        
         FlexSequence seq = new FlexSequence(-1, FlexSequence.NEW,
         "Homo sapiens", null, seqText, start, stop,
         cdsLength, gccont, publicInfo);
-        seq.setQuality(seqQuality);
-        return seq;
+        if(  seq.checkSequence() )
+        {
+            seq.setQuality(FlexSequence.GOOD);
+            return seq;
+        }
+        else
+        {
+            return null;
+        }
+        
     }
     
     //calculates gc_content for the sequence shold be some other place
@@ -455,15 +449,15 @@ public class MgcMasterListImporter
                     if (current_clone.getSequenceId() == -1)
                     {
                         current_key = Integer.toString(current_clone.getMgcId());
-
+                        
                         FlexSequence fs = (FlexSequence)sequenceCol.get( current_key);
                         if (fs != null && !fs.getQuality().equals(FlexSequence.QUESTIONABLE)  )
                         {
-
+                            
                             fs.insert(conn);
-                             
+                            
                             fs_key = fs.getId();
-                            writeToFile("Insert into db sequence for mgc clone\t"+fs_key  +"\n");
+                            writeToFile("Insert into db sequence for mgc clone\t"+fs_key  + "\n");
                             current_clone.setSequenceId(fs_key);
                         }
                         if (fs == null) current_clone.setStatus(MgcSample.STATUS_NO_SEQUENCE);
@@ -472,7 +466,7 @@ public class MgcMasterListImporter
                     
                 }//end loop clone
                 cont.insert(conn);
-                writeToFile("Insert into db mgc container\t"+cont.getLabel() + "\n");
+                writeToFile("Insert into db mgc container\t"+cont.getLabel() + "_"+cont.getId() +"\n");
                 //commit_count++;
                 //if ( (commit_count % 10) == 0 ) DatabaseTransaction.commit(conn);
                 DatabaseTransaction.commit(conn);
@@ -492,20 +486,12 @@ public class MgcMasterListImporter
         DatabaseTransaction.closeConnection(conn);
         return true;
     }
+  
     
+    public int getFailedCount()    { return m_failCount ;}
+    public int getTotalCount()    { return m_totalCount; }
+    public int getSuccessCount()    { return m_successCount ;}
     
-    
-    
-    
-    
-    public int getFailedCount()
-    { return m_failCount ;}
-    public int getTotalCount()
-    { return m_totalCount; }
-    public int getSuccessCount()
-    { return m_successCount ;}
-    
-   
     
     class MinClone
     {
@@ -532,32 +518,30 @@ public class MgcMasterListImporter
                 return false;
         }
         
-        public String           getKey(){ return m_mgcid+"|"+m_container_name; }
-        public int getMgcId(){ return m_mgcid;}
-        public String getMgcIdString(){ return Integer.toString(m_mgcid);}
-       // public int getCol(){ return m_col;}
-        //public String getRow(){ return m_row;}
-        
-        public int getSequenceId() { return m_seq_id;}
+        public String           getKey()        { return m_mgcid+"|"+m_container_name; }
+        public int              getMgcId()        { return m_mgcid;}
+        public String           getMgcIdString()        { return Integer.toString(m_mgcid);}
+        public int              getSequenceId()        { return m_seq_id;}
     }
     
-   private void writeToFile(String mes)
-   {
-        try{
-            //delete log file 
-             m_writer = new  FileWriter(FILE_PATH + "import_log.txt", true);
-             m_writer.write(mes);
-             m_writer.close();
-         }catch(IOException e)
-         { errors_to_print.add("Can not open log file");}
-   }
-     
+    private void writeToFile(String mes)
+    {
+        try
+        {
+            //delete log file
+            m_writer = new  FileWriter(FILE_PATH + "import_log.txt", true);
+            m_writer.write(mes);
+            m_writer.close();
+        }catch(IOException e)
+        { errors_to_print.add("Can not open log file");}
+    }
+    
     //****************************Testing*******************************
     
     public static void main(String args[])
     {
         
-        String file = "c:\\mgclistWrongSeq.txt";
+        String file = "c:\\IRAT_IRAU_IRAV_cumulative.26Jun02";
         InputStream input;
         
         try
@@ -578,4 +562,4 @@ public class MgcMasterListImporter
     
     
 }
-   
+
