@@ -171,7 +171,8 @@ public class SequenceImporter {
         String line = null;
         
         try {
-            while((line = in.readLine()) != null) {
+            while((line = in.readLine()) != null) 
+            {
                 totalCount++;
                 
                 StringTokenizer st = new StringTokenizer(line, DILIM);
@@ -194,6 +195,7 @@ public class SequenceImporter {
                     Integer.parseInt(info[4]),
                     Integer.parseInt(info[5]), names,
                     info[6], info[7]);
+                    seq.getGccontent();
                     sequences.put(info[0], seq);
                 } catch (NoSuchElementException ex) {
                 } catch (NumberFormatException ex) {
@@ -246,8 +248,8 @@ public class SequenceImporter {
     }
     
     public static void main(String args[]) {
-        String sequenceFile = "C:\\TEMP\\FlexSequenceFile";
-        String nameFile = "C:\\TEMP\\FlexNameFile";
+        String sequenceFile = "C:\\TMP\\FlexSequenceFile.txt";
+        String nameFile = "C:\\TMP\\FlexNameFile.txt";
         InputStream sequenceInput;
         InputStream nameInput;
         
