@@ -27,8 +27,8 @@ import edu.harvard.med.hip.utility.Logger;
 public class RearrayManager {
     public static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     public static final String DILIM = "\t";
-    //public static final String FILEPATH = "/tmp/";
-    public static final String FILEPATH = "G:\\";
+    public static final String FILEPATH = "/tmp/";
+    //public static final String FILEPATH = "G:\\";
     public static final String LEFTFILE = "left";
     public static final String DEFAULTLOGFILE = "rearray_log.txt";
     
