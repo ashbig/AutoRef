@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2002-05-31 18:48:52 $
+ * $Revision: 1.6 $
+ * $Date: 2002-06-04 21:03:16 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -50,7 +50,7 @@ import javax.mail.internet.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.5 $ $Date: 2002-05-31 18:48:52 $
+ * @version    $Revision: 1.6 $ $Date: 2002-06-04 21:03:16 $
  */
 
 public class Mailer
@@ -229,6 +229,12 @@ public class Mailer
     String msgText) throws MessagingException
     {
         Mailer.sendMessage(to,from,null,subject,msgText, null);
+    }
+    
+     public static void sendMessage(String to, String from, String cc, String subject,
+    String msgText) throws MessagingException
+    {
+        Mailer.sendMessage(to,from,cc,subject,msgText, null);
     }
     
     public static void main(String [] args) throws Exception
