@@ -14,8 +14,8 @@
  
  
  The following information is used by CVS
- $Revision: 1.3 $
- $Date: 2001-06-13 16:29:10 $
+ $Revision: 1.4 $
+ $Date: 2001-06-14 19:35:06 $
  $Author: dongmei_zuo $
  
  ******************************************************************************
@@ -80,15 +80,11 @@
     </TR>
     
     <TR><TD COLSPAN=2>
-        <PRE>
-        <%--
+    <%--
         make the cds region in red.
         NOTE: Sequence indexes start at 1 while String indexes start at 0
         --%>
-            <bean:write name="FASTA_COLOR_SEQUENCE" filter="false"/>
-
-
-            </PRE>
+        <PRE><bean:write name="FASTA_COLOR_SEQUENCE" filter="false"/></PRE>
         </TD>
     </TR>
 </TABLE>
