@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2001-06-21 16:49:05 $
+ * $Revision: 1.6 $
+ * $Date: 2001-06-22 10:35:56 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.5 $ $Date: 2001-06-21 16:49:05 $
+ * @version    $Revision: 1.6 $ $Date: 2001-06-22 10:35:56 $
  */
 
 public class Result {
@@ -74,6 +74,9 @@ public class Result {
     // the following defines the result values for controls.
     public final static String SUCCEEDED = "Succeeded";
     public final static String FAILED = "Failed";   
+
+     // id for this result
+    private int id;
     
     // The process used to generate this result
     private Process process;
@@ -114,6 +117,34 @@ public class Result {
     }
     
     /**
+     * Accessor for the id
+     *
+     * @return id of this result.
+     */
+    public int getId() {
+        return this.id;
+    }
+    
+    /**
+     * Accessor for the sample.
+     *
+     * @return the sample this is the result for.
+     */
+    public Sample getSample() {
+        return this.sample;
+    }
+    
+    /**
+     * Accessor for the processes this result 
+     *
+     * @return process for this result
+     */
+    public Process getProcess() {
+        return this.process;
+    }
+    
+    
+    /**
      * Inserts this Result into the database.
      *
      * @param conn The connection to use when doing the insert.
@@ -124,7 +155,8 @@ public class Result {
             DatabaseTransaction dt = DatabaseTransaction.getInstance();
             String sql = "insert into result values(?,?,?,?,?)";
             ps = conn.prepareStatement(sql);
-            ps.setInt(1,FlexIDGenerator.getID("RESULTID"));
+            this.id = FlexIDGenerator.getID("RESULTID");
+            ps.setInt(1,this.id);
             ps.setInt(2,this.sample.getId());
             ps.setInt(3,this.process.getExecutionid());
             ps.setString(4,this.type);
