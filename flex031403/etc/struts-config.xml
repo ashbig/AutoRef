@@ -152,6 +152,7 @@
     <forward    name="approveSequences" path="/GetProjects.do?forwardName=APPROVE_SEQUENCES"/>
     <forward    name="receiveOligoOrders" path="/SetReceiveDate.do"/>
     <forward    name="createProcessPlate" path="/GetProjects.do?forwardName=CREATE_PROCESS_PLATES"/>
+    <forward    name="requestMGC" path="/GetProjects.do?forwardName=MGC_REQUEST_IMPORT"/>
     <forward    name="enterProcessResults" path="/PickResultType.jsp"/>
     <forward    name="containerProcessHistory" path="/ContainerScan.jsp"/>
     <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>
@@ -159,7 +160,7 @@
     <forward    name="addResearcher" path="/AddResearcher.jsp"/>
     <forward    name="mgcPlateHandle" path="/GetProjects.do?forwardName=MGC_PLATE_HANDLE"/>
     <forward    name="importMGCMaster" path="/ImportMgcCloneList.jsp"/>
-    <forward    name="requestMGC" path="/RequestMGC.jsp"/>
+    
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>
     
   </global-forwards>
@@ -236,6 +237,7 @@
                 type="edu.harvard.med.hip.flex.action.SelectWorkflowAction">
         <forward name="success_approve_sequences" path="/ViewPendingRequests.do"/>
         <forward name="success_create_process_plates" path="/CreateProcessPlate.do"/>
+        <forward name="success_mgc_request_import" path="/MgcRequestImport.jsp"/>
         <forward name="success_mgc_plate_handle" path="/MGCPlateHandle.do"/>
         <forward    name="success"   path="/SelectProject.jsp"/>
     </action>
@@ -696,7 +698,7 @@
             name="mgcCloneInfoImportForm"
             scope="request"
             input="/ImportMgcCloneList.jsp">
-      <forward name="proccessing" path="/overview.jsp"/>
+      <forward name="proccessing" path="/MgcCloneImportResponse.jsp"/>
     </action>
 
     <!-- Export container detail information to a file -->
