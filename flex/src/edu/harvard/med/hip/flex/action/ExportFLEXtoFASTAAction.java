@@ -31,15 +31,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.export.*;
 
 /**
  *
  * @author  Dongmei Zuo
- * @version 
+ * @version
  */
 public class ExportFLEXtoFASTAAction extends Action {
-
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -60,9 +60,7 @@ public class ExportFLEXtoFASTAAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        System.out.println("export...");
         FastaFileGenerator.generateFastaFiles();
-        System.out.println("export done");
         return (mapping.findForward("success"));
     }
 }

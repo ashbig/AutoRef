@@ -4,7 +4,7 @@
  * Created on September 24, 2001, 2:33 PM
  */
 
-package edu.harvard.med.hip.flex.util;
+package edu.harvard.med.hip.flex.export;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
