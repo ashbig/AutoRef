@@ -13,4 +13,6 @@
 @ copy pseudomonasgenes d:\blast_db\Pseudomonas\genes /y
 @ del d:\blast_db\pseudomonasgenes
 @ d:\bio_programs\Blast\formatdb -pF -oT -i d:\blast_db\Pseudomonas\genes
+@ del d:\blast_db\yp
+@ d:\bio_programs\Blast\formatdb -pF -oT -i d:\blast_db\yp\genes
 @ cd..

@@ -5,4 +5,5 @@ get /kotel/data/FLEXRepository/Blast/Human/genes humangenes
 get /kotel/data/FLEXRepository/Blast/Yeast/genes yeastgenes
 get /kotel/data/FLEXRepository/Blast/MGC/genes mgcgenes
 get /kotel/data/FLEXRepository/Blast/Pseudomonas/genes pseudomonasgenes
+get /kotel/data/FLEXRepository/Blast/Pseudomonas/genes yp
 quit
