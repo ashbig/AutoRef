@@ -52,31 +52,10 @@
     </tr>
 
     <tr>
-    <% 
-       Integer projectids = (Integer)request.getAttribute("projectid");
-        int projectid = projectids.intValue();
-        if (projectid == Project.PSEUDOMONAS)
-        {%>
-            <td class="prompt">Enter the first fusion agar plate barcode:</td>
-            <td><html:text property="agarPlateF1" size="20"/></td>
-            <td class="prompt">Enter the second fusion agar plate barcode:</td>
-             <td><html:text property="agarPlateC1" size="20"/></td>
-    <%}
-    else if   (projectid == Project.YEAST)
-    {%>
-        <td class="prompt">Enter the first closed agar plate barcode:</td>
+        <td class="prompt">Enter the agar plate barcode on tray 1:</td>
         <td><html:text property="agarPlateF1" size="20"/></td>
-        <td class="prompt">Enter the second closed agar plate barcode:</td>
-        <td><html:text property="agarPlateC1" size="20"/></td>
-    <%}
-    else 
-    {%>
-        <td class="prompt">Enter the fusion agar plate barcode:</td>
-        <td><html:text property="agarPlateF1" size="20"/></td>
-         <td class="prompt">Enter the corresponding closed agar plate barcode:</td>
+         <td class="prompt">Enter the agar plate barcode on tray 2:</td>
          <td><html:text property="agarPlateC1" size="20"/></td>
-    <%}%>
-    
     </tr>
     <tr></tr>
     <tr>
