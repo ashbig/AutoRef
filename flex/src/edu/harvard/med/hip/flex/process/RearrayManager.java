@@ -442,7 +442,7 @@ public class RearrayManager {
     
     //Convert the input samples into RearrayPlateMap samples.
     protected ArrayList convertSamples(List samples, Connection conn)
-    throws SQLException, NumberFormatException {
+    throws SQLException, NumberFormatException, RearrayException {
         RearrayPlateMapCreator creator = new RearrayPlateMapCreator(isPlateAsLabel,isWellAsNumber);
         creator.setIsDestWellAsNumber(isDestWellAsNumber);
         
@@ -592,7 +592,7 @@ public class RearrayManager {
     //Create the rearrayed oligo plates from the source oligo plates for given samples.
     //Insert records into database.
     protected Plateset createRearrayedOligos(List samples, Container container, int threadid, Connection conn)
-    throws FlexDatabaseException, FlexWorkflowException, SQLException {
+    throws FlexDatabaseException, FlexWorkflowException, SQLException, RearrayException {
         RearrayPlateMapCreator creator = new RearrayPlateMapCreator();
         creator.setReversedOligos(samples, conn);
         ArrayList samples5p = creator.createRearrayOligoSamples(samples, RearrayPlateMapCreator.OLIGO_5P, conn);

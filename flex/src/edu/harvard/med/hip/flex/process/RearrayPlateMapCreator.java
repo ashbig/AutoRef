@@ -48,7 +48,7 @@ public class RearrayPlateMapCreator {
      * @exception SQLException.
      */
     public ArrayList createRearraySamples(List inputSamples, Connection conn)
-    throws SQLException, NumberFormatException {
+    throws SQLException, NumberFormatException, RearrayException {
         String s1 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype, s.cloneid"+
         " from flexsequence f, constructdesign c, containerheader ch,"+
         " (select * from sample where containerid in ("+
@@ -127,6 +127,8 @@ public class RearrayPlateMapCreator {
                     m.setSampletype(sampletype);
                     m.setCloneid(cloneid);
                     samples.add(m);
+                } else {
+                    throw new RearrayException("No sample found for plate: "+s.getSourcePlate()+", well: "+s.getSourceWell());
                 }
             }
             return samples;
@@ -148,7 +150,7 @@ public class RearrayPlateMapCreator {
      * @exception SQLException.
      */
     public ArrayList createRearrayClones(List inputSamples, String storageType, String storageForm, Connection conn)
-    throws SQLException, NumberFormatException {
+    throws SQLException, NumberFormatException, RearrayException {
         String sql = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype, s.containerposition"+
         " from flexsequence f, constructdesign c, containerheader ch,"+
         " (select * from sample where sampleid in ("+
@@ -204,6 +206,8 @@ public class RearrayPlateMapCreator {
                     m.setSampletype(sampletype);
                     m.setCloneid(cloneid);
                     samples.add(m);
+                } else {
+                    throw new RearrayException("No clone found for "+s.getClone()+" with specified sample type and form.");
                 }
             }
             return samples;
@@ -223,7 +227,7 @@ public class RearrayPlateMapCreator {
      * @conn The Database Connection object.
      */
     public void setReversedOligos(List samples, Connection conn)
-    throws SQLException {
+    throws SQLException, RearrayException {
         String sql = "select c1.oligoid_3p from constructdesign c1, constructdesign c2"+
         " where c1.constructpairid=c2.constructpairid"+
         " and c2.oligoid_3p=?"+
@@ -241,6 +245,8 @@ public class RearrayPlateMapCreator {
                 if(rs.next()) {
                     int id = rs.getInt(1);
                     sample.setOligo3pReversed(id);
+                } else {
+                    throw new RearrayException("Cannot find paired oligo for sample: "+sample.getSampleid());
                 }
             }
         } catch (FlexDatabaseException ex) {
@@ -261,7 +267,7 @@ public class RearrayPlateMapCreator {
      * @exception SQLException.
      */
     public ArrayList createRearrayOligoSamples(List samples, String type, Connection conn)
-    throws SQLException {
+    throws SQLException, RearrayException {
         ArrayList newSamples = new ArrayList();
         
         String sql = "select s.sampleid, s.constructid, s.containerid, s.containerposition, c.label, s.sampletype"+
@@ -296,6 +302,8 @@ public class RearrayPlateMapCreator {
                     s.setSampletype(sampletype);
                     
                     newSamples.add(s);
+                } else {
+                    throw new RearrayException("Cannot find oligo for sample: "+sample.getSampleid());
                 }
             }
             return newSamples;
