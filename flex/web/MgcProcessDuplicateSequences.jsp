@@ -45,15 +45,15 @@
     <td><bean:write name="number_of_duplicates" /></td>
     </tr>
     <tr>
-    <td class="prompt">Clean duplicated sequences from queue?</td>
+    <td class="prompt">Keep duplicate sequences on queue?</td>
     <td>
          
-       <html:radio property="isCleanupDuplicates" value="true"/>Yes
-       <html:radio property="isCleanupDuplicates" value="false"/>No
+       <html:radio property="isCleanupDuplicates" value="false"/>Yes
+       <html:radio property="isCleanupDuplicates" value="true"/>No
     </td>
    </tr> 
 </table>
-
+<P>
 <p>
     <html:submit property="submit" value="Submit"/>
 <p>
@@ -65,7 +65,7 @@
 <table>
 <logic:iterate name="duplicatedSequences" id ="sequence" >
 <tr>
-    <td>    <bean:write name = "sequence" property="id" /> </td>
+    <td> &nbsp;   <bean:write name = "sequence" property="id" /> </td>
 </tr>
 </logic:iterate>
 </table>
