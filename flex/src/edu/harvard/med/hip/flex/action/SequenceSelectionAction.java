@@ -70,7 +70,7 @@ public class SequenceSelectionAction extends FlexAction {
         Hashtable homologs = new Hashtable();
         Hashtable sequences = new Hashtable();
         
-        try {
+       // try {
             for(int i=0; i<selections.length; i++) {
                 String gi = selections[i];
                 FlexSequence sequence = (FlexSequence)searchResult.get(gi);
@@ -136,10 +136,10 @@ public class SequenceSelectionAction extends FlexAction {
             } else {
                 return (mapping.findForward("success"));
             }
-        } catch (Exception ex) {
-            request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return (mapping.findForward("error"));
-        }    
+   //     } catch (Exception ex) {
+   //         request.setAttribute(Action.EXCEPTION_KEY, ex);
+   //         return (mapping.findForward("error"));
+   //     }    
     }
     
     //call the parser with sequence gid, and set sequence values.
