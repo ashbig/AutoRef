@@ -1,7 +1,7 @@
 /*
- * DiseaseSearchAction.java
+ * SelectMeshTermsAction.java
  *
- * Created on January 17, 2002, 1:18 PM
+ * Created on February 14, 2002, 4:10 PM
  */
 
 package edu.harvard.med.hip.metagene.action;
@@ -21,7 +21,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.metagene.form.DiseaseSearchForm;
+import edu.harvard.med.hip.metagene.form.SelectMeshTermsForm;
 import edu.harvard.med.hip.metagene.core.*;
 
 import java.util.*;
@@ -29,9 +29,9 @@ import java.util.*;
 /**
  *
  * @author  dzuo
- * @version
+ * @version 
  */
-public class DiseaseSearchAction extends MetageneAction {
+public class SelectMeshTermsAction extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -56,21 +56,29 @@ public class DiseaseSearchAction extends MetageneAction {
         
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        String searchTerm = ((DiseaseSearchForm)form).getSearchTerm();
+        int [] diseases = ((SelectMeshTermsForm)form).getDiseaseTerms();
+        int stat = ((SelectMeshTermsForm)form).getStat(); 
+        String submit = ((SelectMeshTermsForm)form).getSubmit();
         
-        DiseaseGeneManager manager = new DiseaseGeneManager();
-        Vector diseases = manager.findDiseases(searchTerm);
+        if("New Search".equals(submit)) {
+            return (mapping.findForward("newsearch"));
+        }
         
-        if(diseases == null || diseases.size() == 0) {
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.notfound", searchTerm));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
-        } else {
-            Vector stats = Statistics.getAllStatistics();
-            request.setAttribute("stats", stats);
-            request.setAttribute("diseases", diseases);
+        if("Get Genes".equals(submit)) {
+            DiseaseGeneManager manager = new DiseaseGeneManager();
+            Vector allAssociations = new Vector();
+            
+            for(int i=0; i<diseases.length; i++) {
+                int disease = diseases[i];
+                Vector associations = manager.getAssociations(disease, stat, -1);
+                allAssociations.addElement(associations);
+            }
+            
+            Vector commonAssociations = Association.mergeAssociations(allAssociations);
+            request.setAttribute("associations", commonAssociations);
             return (mapping.findForward("success"));
         }
-    }
+        
+        return (mapping.findForward("error"));     
+    }       
 }
-

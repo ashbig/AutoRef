@@ -1,7 +1,7 @@
 <%@page contentType="text/html"%>
 <html>
 <head><title>JSP Page</title></head>
-<body><table width="80%" align="center" border="0">
+<body><table width="80%" align="center" border="0"><tr><td>
 
 <p>Error to display the links.
 <p>

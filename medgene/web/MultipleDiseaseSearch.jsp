@@ -10,19 +10,21 @@
     </head>
     <body>
     <center>
-    <h1>Genes Associated with a Certain Disease</h1>
+    <h1>Genes Associated with Multiple Diseases</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
-    <p>Please type in a disease name. You may type in any term you like and 
-    will be confirmed with the corresponding MeSH term(s).</p>
+    <p>Please type in all the disease names you want to search for,
+    separated by comma (,). You may type in any term you like and 
+    will be confirmed with the corresponding MeSH terms. The order of
+    the gene list will be sorted by the order of the entry.</p>
 
-    <html:form action="diseaseSearch.do">   
+    <html:form action="MultipleDiseaseSearch.do">   
     <table width="80%" align="center">
         <tr>
-            <td>Disease term:</td>
-            <td><html:text property="searchTerm" size="50" /></td>
+            <td>Disease terms:</td>
+            <td><html:text property="searchTerms" size="50" /></td>
         </tr>
         <tr>
             <td></td>

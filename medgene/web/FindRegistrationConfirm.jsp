@@ -10,7 +10,7 @@
 <body>
     <center><h1>Find Registration Confirmation</h1></center>
 
-    <table width="80%" align="center" border="0">
+    <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
     <p>
     <h3>The information for your registration has been sent to you through email.</h3>

@@ -14,7 +14,7 @@
     <h1>Disease List</h1>    
     </center>
 
-    <table width="80%" align="center" border="0"> 
+    <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
     <p>
     <TABLE border="1" cellpadding="2" cellspacing="0" width=80% align=center>

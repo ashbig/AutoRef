@@ -11,10 +11,10 @@
     <body>
 
     <center>
-    <h1>Diseases Associated with Gene(s)</h1>
+    <h1>Diseases Associated with a Certain Gene</h1>
     </center>
 
-    <table width="80%" align="center" border="0"> 
+    <table width="80%" align="center" border="0"><tr><td> 
     <html:errors/>
     <p>Following are the corresponding gene symbol(s). Please choose one:</p>
 

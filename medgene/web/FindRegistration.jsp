@@ -13,7 +13,7 @@
 
 <h1><center>Find Registration</center></h1>
 
-<table width="80%" align="center" border="0">
+<table width="80%" align="center" border="0"><tr><td>
 <html:errors/>
 <p>
 

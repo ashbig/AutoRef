@@ -59,6 +59,14 @@
     <form-bean      name="searchGenesForm"
                     type="edu.harvard.med.hip.metagene.form.SearchGenesForm"/>
 
+    <!-- Search multiple disease -->
+    <form-bean      name="multipleDiseaseSearchForm"
+                    type="edu.harvard.med.hip.metagene.form.MultipleDiseaseSearchForm"/>
+
+    <!-- Search multiple disease -->
+    <form-bean      name="selectMeshTermsForm"
+                    type="edu.harvard.med.hip.metagene.form.SelectMeshTermsForm"/>
+
   </form-beans>
 
 
@@ -117,6 +125,7 @@
               input="/main.jsp">
       <forward  name="success_disease"   path="/DiseaseSearch.jsp"/>
       <forward  name="success_gene"   path="/GeneSearch.jsp"/>
+      <forward  name="success_multi_disease"   path="/MultipleDiseaseSearch.jsp"/>
       <forward  name="failure"  path="/login.jsp"/>
     </action>
 
@@ -167,6 +176,26 @@
               input="/SearchGenes.jsp">
       <forward  name="success"   path="/DisplayDiseases.jsp"/>
       <forward  name="newsearch"   path="/GeneSearch.jsp"/>
+    </action>
+
+    <!-- Search genes in multiple diseases -->
+    <action    path="/MultipleDiseaseSearch"
+               type="edu.harvard.med.hip.metagene.action.MultipleDiseaseSearchAction"
+               name="multipleDiseaseSearchForm"
+              scope="request"
+              input="/MultipleDiseaseSearch.jsp">
+      <forward  name="success"   path="/SelectMeshTerms.jsp"/>
+      <forward  name="failure"  path="/FlexError.jsp"/>
+    </action>
+
+    <!-- Search genes in multiple diseases -->
+    <action    path="/SelectMeshTerms"
+               type="edu.harvard.med.hip.metagene.action.SelectMeshTermsAction"
+               name="selectMeshTermsForm"
+              scope="request"
+              input="/SelectMeshTerms.jsp">
+      <forward  name="success"   path="/DisplayGenes.jsp"/>
+      <forward  name="newsearch"   path="/MultipleDiseaseSearch.jsp"/>
     </action>
 
     <action     path="/ProcessError"

@@ -13,7 +13,7 @@
     <h1>METAGENE : Error</h1>
 </center>
 
-    <table width="80%" align="center" border="0">
+    <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
     <p>
     <h3>An error has occured and been logged</h3>

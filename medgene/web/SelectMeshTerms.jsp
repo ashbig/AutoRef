@@ -12,23 +12,27 @@
     <body>
 
     <center>
-    <h1>Genes Associated with a Certain Disease</h1>
+    <h1>Genes Associated with Multiple Diseases</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td> 
     <html:errors/>
 
-    <p>Following are the correspondng MeSH term(s). Please choose one:</p>
+    <p>Following are the correspondng MeSH term(s). Please choose one from each group:</p>
 
-    <html:form action="GetGenes.do">   
+    <html:form action="SelectMeshTerms.do">   
 
-    <html:select property="diseaseTerm">
+    <logic:iterate id="meshTerm" name="meshTerms">
+    <p>
+    <html:select property="diseaseTerms">
         <html:options
-        collection="diseases"
+        collection="meshTerm"
         property="id"
         labelProperty="term"
         />
     </html:select>
+    </p>
+    </logic:iterate>
 
     <p>Please choose a statistic method to rank the gene list:
     <html:select property="stat">
@@ -39,16 +43,6 @@
         />
     </html:select>
     [<a href="statistic_menu.jsp">help</a>]
-
-    <p>Please choose the number of genes for your list:
-    <html:select property="number">
-        <html:option key="top 25" value="25"/>
-        <html:option key="top 50" value="50"/>
-        <html:option key="top 100" value="100"/>
-        <html:option key="top 500" value="500"/>
-        <html:option key="top 1000" value="1000"/>
-        <html:option key="top 2000" value="2000"/>
-    </html:select>
 
     <p>
     <html:submit property="submit" value="Get Genes"/>
