@@ -430,7 +430,6 @@ public class MgcRequestImporter
             }catch(Exception e)
             {
                 errorsOnBlastGI.add(fc.getGi());
-                sequencesNotMatchedByBlast.add(fc.getGi());
                 m_messages.add("Error gettting blast sequence for sequence id: " + seq_id);
                 
             }
