@@ -228,7 +228,7 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_INT  %> >
-      View contigs       <P></font></td>
+      View latest contig collection      <P></font></td>
 </tr>
 
 <tr> 
