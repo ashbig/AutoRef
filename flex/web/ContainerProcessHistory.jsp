@@ -13,7 +13,8 @@
 <body>
     <h2><bean:message key="flex.name"/> : Container Process History</h2>
     <hr>
-    <br>
+    <html:errors/>
+    <p>
     <table>
     <tr>
         <th><CENTER>Protocol</CENTER></th>

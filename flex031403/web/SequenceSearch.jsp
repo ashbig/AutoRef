@@ -14,7 +14,7 @@
 <hr>
 
 <html:errors/>
-
+<p>
 <html:form action="/SequenceSearch.do" focus="searchString">
 <table>
     <tr>

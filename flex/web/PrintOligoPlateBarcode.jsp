@@ -10,6 +10,7 @@
 <h2><bean:message key="flex.name"/> : Print Oligo Plate Barcode Form</h2>
 <hr>
 <html:errors/>
+<p>
 <h3>Please click the buttons to print out plate barcodes:<p></h3>
     <% List ids = (List) request.getSession().getAttribute("plateList"); %>
 

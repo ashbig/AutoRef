@@ -11,6 +11,7 @@
 <hr>
 
 <html:errors/>
+<p>
 
 <html:form action="FindRegistration.do" focus="firstName">
     <table>

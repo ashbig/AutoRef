@@ -1,5 +1,5 @@
 <%--
-        $Id: ProcessQueue.jsp,v 1.4 2001-07-16 16:04:29 jmunoz Exp $ 
+        $Id: ProcessQueue.jsp,v 1.5 2001-07-16 17:10:26 jmunoz Exp $ 
 
         File    : ProcessQueue.jsp
         Date    : 05102001
@@ -20,7 +20,8 @@
 <body>
 <H2><bean:message key="flex.name"/> : Request Processed</H2>
 <hr>
-
+<html:errors/>
+<p>
 	<%-- display summary of requests processed --%>
 
 <TABLE>

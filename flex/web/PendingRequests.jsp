@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.8 2001-07-16 16:04:28 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.9 2001-07-16 17:10:26 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -24,8 +24,8 @@
 <body>
     <h2><html:errors/> : Pending Requests</h2>
     <hr>
-    <BR>
     <html:errors/>
+    <p>
     <FORM method="POST" action="ProcessQueue.do">
 
     <TABLE BORDER>

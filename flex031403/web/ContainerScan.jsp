@@ -13,6 +13,7 @@
     <h2><bean:message key="flex.name"/> : Container Process History</h2>
     <hr>
     <html:errors/>
+    <p>
     <center><H3>Please Scan the Container</h3></center>
     <form action="ViewContainerProcessHistory.do" >
     <table>

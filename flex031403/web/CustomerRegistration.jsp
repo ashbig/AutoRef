@@ -9,8 +9,8 @@
 
 <h2><bean:message key="flex.name"/> : Customer Registration</h2>
 <hr>
-
 <html:errors/>
+<p>
 
 <html:form action="CustomerRegistration.do" focus="firstName">
     <table>

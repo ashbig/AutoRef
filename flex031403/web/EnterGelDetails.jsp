@@ -26,7 +26,8 @@
 <body>
 <h2><bean:message key="flex.name"/> : Gel Result Details</h2>
 <hr>
-<center><html:errors/></center>
+<html:errors/>
+<p>
 <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
     <h3>Enter The results of this gel</h3>
 </logic:equal>

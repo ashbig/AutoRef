@@ -11,6 +11,8 @@
 <body>
     <h2><bean:message key="flex.name"/> : Error</h2>
     <hr>
+    <html:errors/>
+    <p>
     <h3>An error has occured and been logged</h3>
     <html:errors/>
     <logic:present name="exception">

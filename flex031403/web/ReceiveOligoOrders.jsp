@@ -10,7 +10,7 @@
 <h2><bean:message key="flex.name"/> : Oligo Order Receiving Form</h2>
 <hr>
 <html:errors/>
-
+<p>
     <html:form action="/ReceiveOligoPlates.do" focus="oligoPlateIds">
         
         <table>

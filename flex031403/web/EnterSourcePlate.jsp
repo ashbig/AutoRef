@@ -12,6 +12,7 @@
 <h2><bean:message key="flex.name"/> : Create Process Plate</h2>
 <hr>
 <html:errors/>
+<p>
 <html:form action="/EnterSourcePlate.do" focus="sourcePlate">
 <table>
     <tr>

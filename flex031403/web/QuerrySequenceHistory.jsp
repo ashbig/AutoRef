@@ -15,6 +15,7 @@
     <h2><bean:message key="flex.name"/> : Query Sequence History</h2>
     <hr>
     <html:errors/>
+    <p>
     <html:form action="/ViewSequenceProcessHistory">
         Search By &nbsp;
         <html:select property="searchParam">

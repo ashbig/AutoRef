@@ -13,6 +13,8 @@
 <html:form action="EnterPlate.do" focus="plateBarcode">
     <h2><bean:message key="flex.name"/> : Enter Process Results</h2>
     <hr>
+    <html:errors/>
+    <p>
     <center>
     <table>
     <html:errors/>

@@ -12,12 +12,13 @@
 
 <h2><bean:message key="flex.name"/> : Cloning Request : Confirm Selection</h2>
 <hr>
-
+<html:errors/>
+<p>
 <html:form action="/ConfirmSelection.do">
 
 <logic:present name="goodSequences">
 
-<p><b> The following sequences are good quality sequences:</b>
+<b> The following sequences are good quality sequences:</b>
 <table border=1>
 <tr>
 <th></th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>

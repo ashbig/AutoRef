@@ -7,13 +7,13 @@
 <head>
 <title><bean:message key="flex.name"/> : Cloning Request</title>
 </head>
-<body bgcolor="white">
+<body>
 
 <h2><bean:message key="flex.name"/> : Cloning Request : Sequence Selection</h2>
 <hr>
 <html:errors/>
-<html:form action="/SequenceSelection.do">
 <p>
+<html:form action="/SequenceSelection.do">
 <table>
 <logic:iterate id="sr" name="searchResult">
 <tr>

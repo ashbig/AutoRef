@@ -11,6 +11,7 @@
 <hr>
 
 <html:errors/>
+<p>
 <h3>Please specify the location for each oligo plate received:<p></h3>
 
     <% List ids = (List) request.getSession().getAttribute("plateList"); %>

@@ -10,9 +10,9 @@
 <body>
 <h2><bean:message key="flex.name"/> : Create Process Plate</h2>
 <hr>
-
-<logic:present name="SelectProtocolAction.queueItems">
+<html:errors/>
 <p>
+<logic:present name="SelectProtocolAction.queueItems">
 <b>The following containers are available:</b>
 <table>
 <tr>
@@ -31,7 +31,7 @@
 
 
 <logic:notPresent name="SelectProtocolAction.queueItems">
-<p>There are no items on the queue for this protocol.
+There are no items on the queue for this protocol.
 </logic:notPresent>
 </body>
 </html>

@@ -17,6 +17,8 @@
 <body>
 <h2><bean:message key="flex.name"/> : Container Details</h2>
 <hr>
+<html:errors/>
+<p>
 <logic:present name="<%=Constants.PROCESS_KEY%>">
     <Center><h3>Results desplayed are for protocol 
     <bean:write name="<%=Constants.PROCESS_KEY%>" property="protocol.processname"/>
