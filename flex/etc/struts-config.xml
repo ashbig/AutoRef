@@ -108,7 +108,7 @@
     <forward    name="approveSequences" path="/ViewPendingRequests.do"/>
     <forward    name="receiveOligoOrders" path="/SetReceiveDate.do"/>
     <forward    name="createProcessPlate" path="/CreateProcessPlate.do"/>
-    <forward    name="enterProcessResults" path="/EnterProcessResults.jsp"/>
+    <forward    name="enterProcessResults" path="/PickResultType.jsp"/>
     <forward    name="containerProcessHistory" path="/ContainerScan.jsp"/>
     <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>
   </global-forwards>
@@ -248,7 +248,7 @@
                 name="gelEntryForm"
                 scope="session"
                 input="/EnterGelDetails.jsp">
-        <forward name="success" path="/EnterProcessResults.jsp"/>
+        <forward name="success" path="/PickResultType.jsp"/>
         <forward name="confirm" path="/EnterGelDetails.jsp?EDIT_MODE=read"/>
     </action>
 
@@ -258,7 +258,7 @@
                 name="transformEntryForm"
                 scope="session"
                 input="/EnterTransformDetails.jsp">
-         <forward name="success" path="/EnterProcessResults.jsp"/>
+         <forward name="success" path="/PickResultType.jsp"/>
          <forward name="confirm" path="/EnterTransformDetails.jsp?EDIT_MODE=read"/>
     </action>
 
@@ -458,11 +458,18 @@
       <forward  name="success" path="/SampleDetails.jsp"/>
     </action>
      
-
+    <!-- Action that will simply print the string it is passed-->
     <action path="/PrintLabel"
             type="edu.harvard.med.hip.flex.action.PrintLabelAction"
             name="printLabelForm">
       <forward  name="success" path="/PrintConfirm.jsp"/>
+    </action>
+
+
+    <!-- Action that will find all the queue items for the protocol name given-->
+    <action path="/GetQueueItems"
+            type="edu.harvard.med.hip.flex.action.GetQueueItemsAction">
+      <forward name="enterProcessResults" path="/EnterProcessResults.jsp"/>
     </action>
 
     <!-- The standard administrative actions available with Struts -->

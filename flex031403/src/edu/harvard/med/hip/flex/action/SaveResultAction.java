@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2001-07-13 15:33:30 $
+ * $Revision: 1.9 $
+ * $Date: 2001-07-27 18:47:01 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -65,7 +65,7 @@ import edu.harvard.med.hip.flex.process.Result;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.8 $ $Date: 2001-07-13 15:33:30 $
+ * @version    $Revision: 1.9 $ $Date: 2001-07-27 18:47:01 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -99,6 +99,7 @@ public class SaveResultAction extends ResearcherAction {
         QueueItem queueItem =
         (QueueItem)session.getAttribute(Constants.QUEUE_ITEM_KEY);
         Process process = (Process)session.getAttribute(Constants.PROCESS_KEY);
+        
         if(queueItem == null || process == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.session.missing.attribute",
@@ -111,7 +112,7 @@ public class SaveResultAction extends ResearcherAction {
         
         String resultType = null;
         if(form instanceof GelResultsForm) {
-            resultType = Result.GEL_RESULT_TYPE;
+            resultType = Result.PCR_GEL_TYPE;
             GelResultsForm gelForm = (GelResultsForm)form;
             // validate the file
             FormFile image = gelForm.getGelImage();
@@ -131,7 +132,7 @@ public class SaveResultAction extends ResearcherAction {
                 return new ActionForward(mapping.getInput());
             }
         } else {
-            resultType = Result.TRANSFORMATION_TYPE;
+            resultType = Result.AGAR_PLATE_TYPE;
         }
         
         
@@ -219,9 +220,9 @@ public class SaveResultAction extends ResearcherAction {
              */
             Protocol nextProtocol = null;
             
-            if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.PERFORM_TRANSFORMATION)) {
+            if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.GENERATE_AGAR_PLATES)) {
                 nextProtocol =
-                new Protocol(Protocol.GENERATE_AGAR_PLATES);
+                new Protocol(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES);
             } else if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.RUN_PCR_GEL)) {
                 nextProtocol= new Protocol(Protocol.GENERATE_FILTER_PLATES);
                 
@@ -241,7 +242,7 @@ public class SaveResultAction extends ResearcherAction {
             // add queue item for the generate filter plates process
             queue.addQueueItems(dummyList, conn);
             
-            // update the process execution for the transform
+            // update the process execution for the Agar
             process.setExecutionStatus(Process.SUCCESS);
             process.update(conn);
             
@@ -278,11 +279,13 @@ public class SaveResultAction extends ResearcherAction {
             session.removeAttribute(Constants.QUEUE_ITEM_KEY);
             session.removeAttribute("transformEntryForm");
             session.removeAttribute("gelEntryForm");
+            session.removeAttribute("SelectProtocolAction.queueItems");
             request.setAttribute(Constants.CONTAINER_KEY, container);
             retForward=mapping.findForward("success");
         }
         return retForward;
     } //end flexPerform
+
     
     
 } // End class EnterTransformDetailsAction

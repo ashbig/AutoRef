@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.13 $
- * $Date: 2001-07-16 19:35:27 $
+ * $Revision: 1.14 $
+ * $Date: 2001-07-27 18:47:01 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.13 $ $Date: 2001-07-16 19:35:27 $
+ * @version    $Revision: 1.14 $ $Date: 2001-07-27 18:47:01 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -89,6 +89,7 @@ public class EnterPlateAction extends ResearcherAction {
         
         //get the protocol name
         String protocolName = ((PlateEntryForm)form).getProtocolString();
+        
         
         QueueFactory queueFactory = new StaticQueueFactory();
         ProcessQueue containerQueue = null;
@@ -207,7 +208,7 @@ public class EnterPlateAction extends ResearcherAction {
             // put the form in the session
             session.setAttribute("gelEntryForm",new GelResultsForm(container));
             retForward = mapping.findForward("gelEntry");
-        } else if(protocolName.equals(Protocol.PERFORM_TRANSFORMATION)) {
+        } else if(protocolName.equals(Protocol.GENERATE_AGAR_PLATES)) {
             
             // put the form in the session
             session.setAttribute("transformEntryForm",

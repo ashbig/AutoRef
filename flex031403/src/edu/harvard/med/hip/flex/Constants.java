@@ -57,6 +57,9 @@ public class Constants {
     // key used to find the aprove sequence protocol object
     public static final String APPROVE_PROTOCOL_KEY = "APPROVE_PROTOCOL";
     
+    // key used to find the name of a protocol
+    public static final String PROTOCOL_NAME_KEY = "PROTOCOl_NAME";
+    
     // key used to find the Queue item list object
     public static final String QUEUE_ITEM_LIST_KEY = "QUEUE_ITEM_LIST";
     
@@ -128,6 +131,12 @@ public class Constants {
     
     // key used to find the list of name types
     public static final String NAME_TYPE_LIST_KEY="NAME_TYPE_LIST";
+    
+    // Key used to find the next page to display
+    public static final String SUCCESS_PAGE_KEY="SUCCESS_PAGE";
+    
+    // key used to find the forward to use
+    public static final String FORWARD_KEY = "FORWARD";
     
     /** Creates new Constants */
     private Constants() {

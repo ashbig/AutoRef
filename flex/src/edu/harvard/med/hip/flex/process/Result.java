@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.13 $ $Date: 2001-07-09 22:17:18 $
+ * @version    $Revision: 1.14 $ $Date: 2001-07-27 18:47:01 $
  */
 
 public class Result {
@@ -56,8 +56,17 @@ public class Result {
     // result type for a GEL
     public static final String GEL_RESULT_TYPE = "GEL";
     
+    // result type for a PCR GEL
+    public static final String PCR_GEL_TYPE = "PCR GEL";
+    
     // result type for a transform
     public static final String TRANSFORMATION_TYPE = "TRANSFORMATION";
+    
+    // result type for an agar plate
+    public static final String AGAR_PLATE_TYPE="AGAR PLATE";
+    
+    // result type for DNA GEL
+    public static final String DNA_GEL_TYPE="DNA GEL";
     
     // the following defines the result values for GEL.
     public final static String CORRECT = "Correct";
