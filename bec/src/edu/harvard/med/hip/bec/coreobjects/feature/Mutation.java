@@ -366,7 +366,7 @@ public abstract class Mutation
         report.append("<tr >");
         report.append("<th width='13%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Number</font></strong></th>");
         report.append("<th width='31%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Description</font></strong></th>");
-        report.append("<th width='25%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Proteine Description</font></strong></th>");
+        report.append("<th width='25%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Protain Description</font></strong></th>");
         report.append("<th width='17%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Polymorphism</font></strong></th>");
         report.append("<th width='14%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Confidence</font></strong></th>");
         report.append("</tr>");
@@ -390,7 +390,7 @@ public abstract class Mutation
 
 			rm = (RNAMutation)discrepancies.get(count);
 			report.append("<tr><td  "+row_color +">" + rm.getNumber() +"</td>");
-            report.append("<td "+ row_color+" > "+ rm.toHTMLString()+"</td>");
+                        report.append("<td "+ row_color+" > "+ rm.toHTMLString()+"</td>");
   			if ( discrepancies.size() >= count )
 	   		{
 				mut= (Mutation) discrepancies.get(count+1);
@@ -407,8 +407,8 @@ public abstract class Mutation
 					report.append(" <td  "+ row_color +">&nbsp;</td> ");
 				}
 			}
-			report.append(" <td  "+ row_color +">"+ rm.getPolymorphismFlagAsString()+"</td>");  
-			report.append(" <td  "+ row_color +">"+ rm.getQualityAsString()+"</td>");  
+			report.append(" <td  align='center'"+ row_color +">"+ rm.getPolymorphismFlagAsString()+"</td>");  
+			report.append(" <td  align='center'"+ row_color +">"+ rm.getQualityAsString()+"</td>");  
 		    report.append("</tr> ");               
 		}
 	   else if (mut.getType() == Mutation.LINKER_3P || mut.getType() == Mutation.LINKER_5P)
@@ -418,7 +418,7 @@ public abstract class Mutation
 		report.append("<td  "+ row_color +">"+ linker.getNumber() +"</td> ");
         report.append("<td  "+ row_color +">"+ linker.toHTMLString()+"</td>");   
 		report.append("<td  "+ row_color +">&nbsp;</td><td  "+ row_color +">&nbsp;</td> ");       
-		report.append("<td  "+ row_color +">"+ linker.getQualityAsString() +"</td>  ");  
+		report.append("<td  align='center'"+ row_color +">"+ linker.getQualityAsString() +"</td>  ");  
 		report.append("</tr>");                
 	}}
 	
@@ -429,18 +429,19 @@ public abstract class Mutation
     {
         String res = "";
         
-        res = "<tr><td> id: </td><td>"+m_id + "</td></tr>" +
+        res = "<tr><td>Discrepancy id: </td><td>"+m_id + "</td></tr>" +
         "<tr><td>Position</td><td>"  + m_position + "</td></tr>" +
         "<tr><td>Length</td><td>" +m_length + "</td></tr>" ;
-        if (m_change_mut ==null)
-            res+="<tr><td>Query Str</td><td>&nbsp;</td></tr>";
-        else
-            res+="<tr><td>Query Str</td><td>" +m_change_mut + "</td></tr>" ;
+        
         if (m_change_ori ==null)
-            res+="<tr><td>Query Str</td><td>&nbsp;</td></tr>";
+            res+="<tr><td>Ori Str</td><td>&nbsp;</td></tr>";
         else
-            res+="<tr><td>Subject Str</td><td>"+m_change_ori +"</td></tr>" ;
-        res+="<tr><td>Mutation</td><td>" + getMutationTypeAsString() + "</td></tr>" ;
+            res+="<tr><td>Ori Str</td><td>"+m_change_ori +"</td></tr>" ;
+        if (m_change_mut ==null)
+            res+="<tr><td>Mutant Str</td><td>&nbsp;</td></tr>";
+        else
+            res+="<tr><td>Mutant Str</td><td>" +m_change_mut + "</td></tr>" ;
+        res+="<tr><td>Type</td><td>" + getMutationTypeAsString() + "</td></tr>" ;
         return res;
     }
     
