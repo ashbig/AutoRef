@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.6 2001-05-14 12:08:08 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.7 2001-05-14 14:10:19 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java 
  * Date     : 05042001
@@ -113,7 +113,10 @@ public class CloneRequest {
 		homologs.clear();
 		blastResults.clear();
 		
-		String [] selections = request.getParameterValues("checkOrder");			
+		String [] selections = request.getParameterValues("checkOrder");	
+		if(selections == null) 
+			return;
+					
 		for(int i=0; i<selections.length; i++) {
 			String gi = selections[i];
 			FlexSequence sequence = (FlexSequence)searchResult.get(gi);
