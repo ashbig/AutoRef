@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.1 2001-05-08 09:30:13 dongmei_zuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.2 2001-05-08 09:37:25 dongmei_zuo Exp $
  *
  * File     	: GenbankGeneFinder.java 
  * Date     	: 05052001
