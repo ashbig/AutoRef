@@ -126,9 +126,11 @@ public class Primer3Parser
                if ( seq_id == -1 )
                {
                    oligo_left = new Oligo();
-                   oligo_left.setType(Oligo.OT_SEQ_5p);
+                   oligo_left.setType(Oligo.TYPE_GENESEPECIFIC);
+                   oligo_left.setOrientation(Oligo.ORIENTATION_FORWARD);
                    oligo_right = new Oligo();
-                   oligo_right.setType(Oligo.OT_SEQ_3p);
+                   oligo_right.setType(Oligo.TYPE_GENESEPECIFIC);
+                   oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
                }
                if ( seq_id != -1 &&  p_new_record.match(line)  ) //new record
                {
@@ -137,7 +139,7 @@ public class Primer3Parser
                    oligo_left.setStart(_AURL + _ARL * (subseq_count - 1) + l_start + 1);
                    oligo_right.setStart(_AURL + _ARL * (subseq_count - 1) + r_start + 1);
                   
-                   oligo_pair = new OligoPair( null, OligoPair.NOT_UNIVERSAL_PAIR, oligo_left, oligo_right);
+                  // oligo_pair = new OligoPair( null, OligoPair.NOT_UNIVERSAL_PAIR, oligo_left, oligo_right);
                   System.out.println(oligo_pair.toString());
                    //check if its another sequence
                    if ( oligo_set.getSequenceId() != seq_id)
@@ -147,11 +149,15 @@ public class Primer3Parser
                        res.add(oligo_set);
                    }
                    
-                   oligo_set.addOligoPair(oligo_pair);
+                   //oligo_set.addOligoPair(oligo_pair);
+                   if (oligo_left != null) oligo_set.addOligo(oligo_left);
+                  if (oligo_right != null) oligo_set.addOligo(oligo_right);
                    oligo_left = new Oligo();
-                   oligo_left.setType(Oligo.OT_SEQ_5p);
+                   oligo_left.setType(Oligo.TYPE_GENESEPECIFIC);
+                   oligo_left.setOrientation(Oligo.ORIENTATION_REVERSE);
                    oligo_right = new Oligo();
-                   oligo_right.setType(Oligo.OT_SEQ_3p);
+                   oligo_right.setType(Oligo.TYPE_GENESEPECIFIC);
+                   oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
                }
                    //read subject
                if ( p_primer_sequence_id.match(line) ) 
@@ -194,7 +200,7 @@ public class Primer3Parser
                       
                    }
                    
-                   oligo_set.addOligoPair(null);
+                  // oligo_set.addOligoPair(null);
                }
              
            }
