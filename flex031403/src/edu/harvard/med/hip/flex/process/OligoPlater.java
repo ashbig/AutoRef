@@ -120,14 +120,11 @@ public class OligoPlater {
      *
      */
     protected void generateOligoOrder() throws FlexDatabaseException, IOException{
-        String geneId = null;
         String oligo5p = null;
         String oligo3s = null;
-        String oligo3op = null;
-        
+        String oligo3op = null;        
         int cdsLength = 0;
         boolean done = false;
-        int geneNum = 0;
         
         GeneComparator comparator = new GeneComparator();
         
@@ -136,8 +133,7 @@ public class OligoPlater {
         
         // Sort oligos in ascending order of CDS length.
         OligoPattern[] geneArray = new OligoPattern[0];
-        geneArray = (OligoPattern[]) oligoPatternList.toArray(geneArray);
-        oligoPatternList = null;
+        geneArray = (OligoPattern[]) oligoPatternList.toArray(geneArray);  
         
         //System.out.println("Sorting.");
         Arrays.sort(geneArray,comparator);
@@ -328,8 +324,9 @@ public class OligoPlater {
             System.out.println("next plate start gene index: "+(currentGeneIndex+1));
             
             //check whether all genes in the array are processed
-            if (currentGeneIndex >= numGenes) {
+            if ((currentGeneIndex + 1) >= numGenes) {
                 done = true;
+                System.out.println("Finished plating oligos.");
             } //if
             
         } //outter while to fill oligo plates
