@@ -87,7 +87,7 @@ public class EndReadsWrapper
             TraceFilesDistributor tfb = new TraceFilesDistributor();
             tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
             tfb.setIsInnerReads(false);
-            ArrayList chromat_files_names = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir);
+            ArrayList chromat_files_names = tfb.distributeEndReadsChromatFiles(m_inputTraceDir, m_outputBaseDir);
             m_error_messages.addAll( tfb.getErrorMesages() );
 
             return runPhredandParseOutput( chromat_files_names,   conn);
