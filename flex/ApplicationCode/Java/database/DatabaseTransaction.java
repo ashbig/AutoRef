@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTransaction.java,v 1.3 2001-04-26 13:39:39 dongmei_zuo Exp $
+ * $Id: DatabaseTransaction.java,v 1.4 2001-05-03 16:23:17 wenhong_mar Exp $
  *
  * File     : DatabaseTransaction.java 
  * Date     : 04162001
@@ -7,6 +7,8 @@
  *
  * Revision	: 04-23-2001
  *		  Add getConnection() and disconnect() methods. [dzuo]
+ * Revision : 05-01-2001
+ *		  Add getResultset() method. [wmar]
  */
 
 package flex.ApplicationCode.Java.database;
@@ -66,6 +68,37 @@ public class DatabaseTransaction {
 			throw new FlexDatabaseException(e.getMessage());
 		}
 	}
+
+	/**
+	 * Executes a sql statement and returns the result
+	 * as a ResultSet. For update statement, returns null.
+	 *
+	 * @param sql The sql statement to be executed.
+	 *
+	 * @return A ResultSet.
+	 * @exception throws FlexDatabaseException.
+	 */	
+
+	public ResultSet getResultset(String sql) throws FlexDatabaseException  
+  	{ 
+		ResultSet rs = null;
+		Statement stmt = null;	
+		try {
+			stmt = connection.createStatement();
+			if(stmt.execute(sql)) {
+				rs = stmt.getResultSet();
+				stmt.close();
+				return rs;
+			} //if
+			
+			stmt.close();	
+		}catch (SQLException sqlex) {
+			sqlex.printStackTrace();
+		}
+		return rs;
+
+   	} //getResultset
+
 	
 	/**
 	 * Executes a sql statement and returns the result
