@@ -1,6 +1,6 @@
 -- E:\flex_ddl.sql
 --
--- Generated for Oracle 8.1 on Tue May 01  11:28:42 2001 by Server Generator 6.5.40.3.0
+-- Generated for Oracle 8.1 on Tue May 08  14:32:36 2001 by Server Generator 6.5.40.3.0
 
 
 SPOOL flex_ddl.lst
