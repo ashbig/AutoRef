@@ -35,6 +35,8 @@ public class Workflow
     public static final int MGC_CREATOR_WORKFLOW = 9;
     public static final int YEAST_REVISED_ORF  = 10;
     public static final int YEAST_FAILED_ORF  = 11;
+    public static final int CONVERT_FUSION_TO_CLOSE = 12;
+    public static final int CONVERT_CLOSE_TO_FUSION = 13;
     
     /** Creates new Workflow */
     public Workflow()
@@ -374,11 +376,11 @@ public class Workflow
     {
         try
         {
-            Workflow flow = new Workflow(5);
+            Workflow flow = new Workflow(Workflow.CONVERT_CLOSE_TO_FUSION);
             System.out.println("Name is: "+flow.getName());
             System.out.println("Description is: "+flow.getDescription());
             
-            Protocol curr = new Protocol(39);
+            Protocol curr = new Protocol(45);
             System.out.println("Current protocol is: "+curr.getProcessname());
             
             List nexts = flow.getNextProtocol(curr);
