@@ -6,10 +6,10 @@
 
 package edu.harvard.med.hip.flex.util;
 
-import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.Mailer;
 import edu.harvard.med.hip.utility.Logger;
+import edu.harvard.med.hip.utility.DatabaseManager;
 import java.io.*;
 import java.util.*;
 import java.sql.*;
@@ -30,8 +30,12 @@ import javax.mail.internet.*;
  */
 
 public class FastaFileGenerator {
-    public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
-    public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
+//    public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
+//    public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
+
+    public final static String BLAST_BASE_DIR="/kotel/data/FLEXRepository/";
+    public final static String BLAST_DB_DIR="Blast/";
+
     public static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     public static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
     public static final String LOGFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/blastdb.log";
@@ -98,20 +102,27 @@ public class FastaFileGenerator {
     }
     
     private static int generateFile(Logger log, String db, String species, int seq) {
-        DatabaseTransaction t = null;
+        DatabaseManager t = new DatabaseManager();
         ResultSet rs = null;
         PrintWriter pr = null;
         int maxid = seq;
         
         try {
-            t = DatabaseTransaction.getInstance();
             pr = new PrintWriter(new BufferedWriter(new FileWriter(db, true)));
             String sql = "select sequenceid " +
             "from flexsequence " +
             "where genusspecies = " +species + " " +
             "and sequenceid > "+seq + " " +
             "order by sequenceid";
-            rs = t.executeQuery(sql);
+        
+            Connection conn = t.connect();
+            if(conn == null) {
+                log.logging("Error occured when connecting to the database");
+                return -1;
+            }
+            
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
             
             while(rs.next()) {
                 int id = rs.getInt("SEQUENCEID");
@@ -122,6 +133,7 @@ public class FastaFileGenerator {
                 log.logging("...OK");
                 maxid = id;
             }
+            stmt.close();
             pr.close();
             return maxid;
         }catch (IOException e) {
@@ -134,7 +146,7 @@ public class FastaFileGenerator {
             log.logging(sqlE.getMessage());
             return -1;
         } finally {
-            edu.harvard.med.hip.flex.database.DatabaseTransaction.closeResultSet(rs);
+            t.disconnect();
         }
     }
     
