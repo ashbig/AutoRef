@@ -89,10 +89,13 @@ public class Primer3Parser
         String line = null;
         BufferedReader  fin = null;
        
+        
+      
+        OligoCalculation olcalc = null;
         Oligo oligo_left = null;
         Oligo oligo_right = null;
-        OligoPair oligo_pair = null;
-        OligoPairSet oligo_set = null;
+     //   OligoPair oligo_pair = null;
+       // OligoPairSet oligo_set = null;
         ArrayList res = new ArrayList();
         int seq_id = -1;
         int subseq_count = -1;
@@ -126,11 +129,12 @@ public class Primer3Parser
                if ( seq_id == -1 )
                {
                    oligo_left = new Oligo();
-                   oligo_left.setType(Oligo.TYPE_GENESEPECIFIC);
+                   oligo_left.setType(Oligo.TYPE_GENESEPECIFIC_CALCULATED);
                    oligo_left.setOrientation(Oligo.ORIENTATION_FORWARD);
                    oligo_right = new Oligo();
-                   oligo_right.setType(Oligo.TYPE_GENESEPECIFIC);
+                   oligo_right.setType(Oligo.TYPE_GENESEPECIFIC_CALCULATED);
                    oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
+                    
                }
                if ( seq_id != -1 &&  p_new_record.match(line)  ) //new record
                {
@@ -140,23 +144,29 @@ public class Primer3Parser
                    oligo_right.setStart(_AURL + _ARL * (subseq_count - 1) + r_start + 1);
                   
                   // oligo_pair = new OligoPair( null, OligoPair.NOT_UNIVERSAL_PAIR, oligo_left, oligo_right);
-                  System.out.println(oligo_pair.toString());
+              //    System.out.println(oligo_pair.toString());
                    //check if its another sequence
-                   if ( oligo_set.getSequenceId() != seq_id)
+                   if ( olcalc.getSequenceId() != seq_id)
                    {
-                       oligo_set = new OligoPairSet(null, spec, seq_id);
-                       
-                       res.add(oligo_set);
+                      // oligo_set = new OligoPairSet(null, spec, seq_id);
+                       olcalc = new OligoCalculation();
+                     
+                       olcalc.setPrimer3SpecId(spec.getId());
+                       olcalc.setSequenceId(seq_id);
+                       //res.add(oligo_set);
                    }
                    
                    //oligo_set.addOligoPair(oligo_pair);
-                   if (oligo_left != null) oligo_set.addOligo(oligo_left);
-                  if (oligo_right != null) oligo_set.addOligo(oligo_right);
+                   //if (oligo_left != null) oligo_set.addOligo(oligo_left);
+                  //if (oligo_right != null) oligo_set.addOligo(oligo_right);
+                   if (oligo_left != null) olcalc.addOligo(oligo_left);
+                     if (oligo_right != null)  olcalc.addOligo(oligo_right);
+                       
                    oligo_left = new Oligo();
-                   oligo_left.setType(Oligo.TYPE_GENESEPECIFIC);
+                   oligo_left.setType(Oligo.TYPE_GENESEPECIFIC_CALCULATED);
                    oligo_left.setOrientation(Oligo.ORIENTATION_REVERSE);
                    oligo_right = new Oligo();
-                   oligo_right.setType(Oligo.TYPE_GENESEPECIFIC);
+                   oligo_right.setType(Oligo.TYPE_GENESEPECIFIC_CALCULATED);
                    oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
                }
                    //read subject
@@ -165,8 +175,12 @@ public class Primer3Parser
                    int new_seq_id = Integer.parseInt(p_primer_sequence_id.getParen(1));
                    if (seq_id == -1)
                    {
-                        oligo_set = new OligoPairSet(null, spec, new_seq_id);
-                        res.add(oligo_set);
+                      //  oligo_set = new OligoPairSet(null, spec, new_seq_id);
+                        olcalc = new OligoCalculation();
+                     
+                       olcalc.setPrimer3SpecId(spec.getId());
+                       olcalc.setSequenceId(new_seq_id);
+                       // res.add(oligo_set);
                    }
                     seq_id = new_seq_id;
                     subseq_count = Integer.parseInt(p_primer_sequence_id.getParen(2));
@@ -194,11 +208,11 @@ public class Primer3Parser
                    oligo_right.setGCContent( Integer.parseInt(p_right_gc.getParen(1)));
                if (p_error.match(line))
                {
-                   if ( oligo_set.getSequenceId() != seq_id)
-                   {
-                       oligo_set = new OligoPairSet(null, null, seq_id);
+                 //  if ( oligo_set.getSequenceId() != seq_id)
+                 //  {
+                      // oligo_set = new OligoPairSet(null, null, seq_id);
                       
-                   }
+                 //  }
                    
                   // oligo_set.addOligoPair(null);
                }
