@@ -38,10 +38,14 @@ public abstract class ProcessRunner implements Runnable
     protected String      m_items = null;
     protected int         m_items_type = -1;
     protected User        m_user = null;
+    protected ArrayList   m_file_list_reports = null;
+    private   String        m_title = null;
     /** Creates a new instance of ProcessRunner */
     public ProcessRunner()
     {
         m_error_messages = new ArrayList();
+        m_file_list_reports = new ArrayList();
+        m_title = "";
     }
     
     public  void        setUser(User v){m_user=v;}
@@ -58,18 +62,54 @@ public abstract class ProcessRunner implements Runnable
      
      public void run()
      {
+         
          if (this instanceof PrimerDesignerRunner)
-         {
-                  ((PrimerDesignerRunner)this).run();
-         }
-         else if  (this instanceof PolymorphismFinderRunner)
-         {
-            
-              ((PolymorphismFinderRunner)this).run();
-         }//run polymorphism finder
-        else if (this instanceof DiscrepancyFinderRunner)
-        {
-            ((DiscrepancyFinderRunner)this).run();
-        }
+             {
+                      ((PrimerDesignerRunner)this).run();
+                      m_title = "Request for primer designer execution";
+             }
+             else if  (this instanceof PolymorphismFinderRunner)
+             {
+
+                  ((PolymorphismFinderRunner)this).run();
+                  m_title = "Request for polymorphism finder run";
+             }//run polymorphism finder
+            else if (this instanceof DiscrepancyFinderRunner)
+            {
+                ((DiscrepancyFinderRunner)this).run();
+                m_title = "Request for discrepancy finder run";
+            }
+             else if (this instanceof ReportRunner)
+            {
+                ((ReportRunner)this).run();
+                m_title = "Request for report generator";
+
+            }
+   
      }
+     
+     protected void             sendEMails()
+     {
+         try
+         {
+ //send errors
+            if (m_error_messages.size()>0)
+            {
+                 Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                "elena_taycher@hms.harvard.edu", m_title+": error messages.", "Errors\n " ,m_error_messages);
+
+            }
+            if (m_file_list_reports != null && m_file_list_reports.size()>0)
+            {
+                Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                "elena_taycher@hms.harvard.edu", m_title, 
+                "Please find attached report files for your request\n Requested item ids:\n"+m_items,
+               m_file_list_reports);
+            }
+
+        }
+        catch(Exception e){}
+     }
+     
+    
 }

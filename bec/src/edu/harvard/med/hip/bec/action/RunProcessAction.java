@@ -322,17 +322,12 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_CREATE_REPORT:
                 {
                     String  item_ids = (String) request.getParameter("items");
-                    if (item_ids == null || item_ids.trim().equals("") )
-                    {
-                        errors.add(ActionErrors.GLOBAL_ERROR,  new ActionError("error.parameter.invalid", "No search items provided"));
-                        saveErrors(request,errors);
-                        return new ActionForward("/RunReport.jsp");
-                    }
-                    ReportRunner runner = new ReportRunner();
+                    ProcessRunner runner = null;
+                    runner = new ReportRunner();
                     runner.setItems(item_ids.toUpperCase().trim());
                     runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
                     // value="2"//Clone Ids</strong//
-                    runner.setFields(
+                    ((ReportRunner)runner).setFields(
                     request.getParameter("clone_id"), //    Clone Id
                     request.getParameter("dir_name"), // Directory Name
                     request.getParameter("sample_id"), //      Sample Id
@@ -358,7 +353,7 @@ public class RunProcessAction extends ResearcherAction
                     request.getParameter("read_length") //      end reads length
                     );
                     runner.setUser(user);
-                    t = new Thread(runner);                    t.start();
+                    t = new Thread( runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,"processing Report Generation request");
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
                     break;

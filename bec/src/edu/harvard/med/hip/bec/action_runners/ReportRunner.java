@@ -74,11 +74,7 @@ public class ReportRunner extends ProcessRunner
         
         
         private String      m_report_title = "";
-    /** Creates a new instance of ReportRunner */
-    public ReportRunner()
-    {
-         m_error_messages = new ArrayList();
-    }
+   
 
 
    // public  void        setUser(User v){m_user=v;}
@@ -147,7 +143,7 @@ public class ReportRunner extends ProcessRunner
 
     public void run()
     {
-        ArrayList file_list = new ArrayList();
+        // ArrayList file_list = new ArrayList();
         ArrayList items = new ArrayList();
         File report = null;
         Hashtable refsequences = new Hashtable();//containes refsequences by bec id
@@ -156,11 +152,7 @@ public class ReportRunner extends ProcessRunner
         {
             //convert item into array
            items = Algorithms.splitString( m_items);
-           if ( m_items_type != 1 && m_items_type != 2 && m_items_type != 4)//clones
-           {
-               m_error_messages.add("No item type has been specified.");
-               return;
-           }
+          
           ArrayList clones = getCloneInfo(m_items_type,items);
           refsequences= extractRefSequences( clones);
            if ( m_read_length )
@@ -169,17 +161,18 @@ public class ReportRunner extends ProcessRunner
                 
            }
           report = printReport(clones,refsequences,reads);
-          file_list.add(report);
-               
+         // file_list.add(report);
+            m_file_list_reports.add(report);   
         }
         catch(Exception ex)
         {
             m_error_messages.add(ex.getMessage());
 
         }
+        
         finally
         {
-            try
+            /*try
             {
      //send errors
                 if (m_error_messages.size()>0)
@@ -198,8 +191,10 @@ public class ReportRunner extends ProcessRunner
   
             }
             catch(Exception e){}
-          
+          */
+            sendEMails();
         }
+        
     }
     
     
@@ -247,7 +242,7 @@ public class ReportRunner extends ProcessRunner
     private String constructQueryString(int submission_type, ArrayList items)
     {
         String sql = null;
-        if ( submission_type == 1)//plates
+        if ( submission_type == Constants.ITEM_TYPE_PLATE_LABELS)//plates
         {
             StringBuffer plate_names = new StringBuffer();
             for (int index = 0; index < items.size(); index++)
@@ -267,7 +262,7 @@ public class ReportRunner extends ProcessRunner
 +"and s.containerid in (select containerid from containerheader where label in ("
 +plate_names.toString()+")) order by s.containerid,position";
         } 
-        else if (submission_type == 2)
+        else if (submission_type == Constants.ITEM_TYPE_CLONEID)
         {
             sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID, "
             +" i.STATUS,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, refsequenceid , "
@@ -277,7 +272,7 @@ public class ReportRunner extends ProcessRunner
             +" s.containerid=c.containerid and a.isolatetrackingid =i.isolatetrackingid ";
         }
        
-        else if (submission_type == 4)//bec sequence id
+        else if (submission_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)//bec sequence id
         {
             sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID, "
             +" i.STATUS,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, refsequenceid , "
