@@ -479,6 +479,7 @@ public class DiscrepancyFinder
      {
          
             int base_count = 0;int quality = RNAMutation.QUALITY_NOTKNOWN;
+            /*
             //count dicrepancy bases
             for (int count_element = discr_start_pointer ; count_element <= discr_end_pointer; count_element++)
             {
@@ -522,6 +523,46 @@ public class DiscrepancyFinder
                     return RNAMutation.QUALITY_LOW;
             else
                     return RNAMutation.QUALITY_HIGH;
+             */
+              //count dicrepancy bases
+            for (int count_element = discr_start_pointer ; count_element <= discr_end_pointer; count_element++)
+            {
+                if ( elements[count_element].getQueryChar() != '\u0000')
+                {
+                    if ( elements[count_element].getBaseScore() < m_quality_cutoff)
+                        return RNAMutation.QUALITY_LOW;
+                }
+            }
+             //count n downstream
+            int count_end = 4;
+            int element_pointer = discr_start_pointer - 1;
+            while ( count_end > 0 && element_pointer >= 0)
+            {
+                if ( elements[element_pointer].getQueryChar() != '\u0000')
+                {
+                     if ( elements[element_pointer].getBaseScore() < m_quality_cutoff)
+                        return RNAMutation.QUALITY_LOW; 
+                    count_end--;
+                }
+                element_pointer--;
+            }
+            
+             //count n upstream
+            count_end = 0;
+            element_pointer = discr_end_pointer + 1;
+            while ( count_end < 4 && element_pointer < elements.length)
+            {
+                if ( elements[element_pointer].getQueryChar() != '\u0000')
+                {
+                     if ( elements[element_pointer].getBaseScore() < m_quality_cutoff)
+                        return RNAMutation.QUALITY_LOW; 
+                    count_end++;
+                }
+                element_pointer++;
+            }
+            
+            
+           return RNAMutation.QUALITY_HIGH;
      }
      
      
