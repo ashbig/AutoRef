@@ -9,6 +9,7 @@ get /kotel/data/FLEXRepository/Blast/YP/genes ypgenes
 get /kotel/data/FLEXRepository/Blast/FT/genes ftgenes
 get /kotel/data/FLEXRepository/Blast/Clontech/genes ftgenes
 get /kotel/data/FLEXRepository/Blast/NIDDK/genes ftgenes
+get /kotel/data/FLEXRepository/Blast/VC/genes ftgenes
 quit
 
                        
