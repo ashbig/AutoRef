@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.18 2002-04-02 21:04:59 dzuo Exp $
+ * $Id: Protocol.java,v 1.19 2002-05-14 21:17:42 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -68,6 +68,12 @@ public class Protocol {
     public static final String PICK_COLONY = 
         "generate culture blocks for isolates from 48 well plates";
     public static final String ENTER_CULTURE_RESULTS = "enter culture results";
+    public static final String CREATE_CULTURE_FROM_MGC = 
+        "Create culture block from MGC master plate";
+    public static final String CREATE_GLYCEROL_FROM_CULTURE = 
+        "Create glycerol stock from MGC culture block";
+    public static final String ENTER_MGC_CULTURE_RESULTS = 
+        "Enter MGC culture result";
     
     private int id;
     private String processcode;
