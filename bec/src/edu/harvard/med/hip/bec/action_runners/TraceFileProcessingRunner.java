@@ -124,7 +124,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
          ArrayList sequencing_facility_file_items = parseTraceFileNames();
          //get plates that we will rename: one renaming file can include a 
          //lot of plate names that are not in the folder
-         ArrayList plate_names_for_processing =  getPlateNames( sequencing_facility_file_items);
+         ArrayList plate_names_for_processing =  getPlateNames( sequencing_facility_file_items, plate_map_names);
    
          for (int plate_count = 0; plate_count < plate_names_for_processing.size(); plate_count++)
          {
@@ -141,7 +141,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
      }
      
      
-     private ArrayList       getPlateNames(ArrayList sequencing_facility_file_items)
+     private ArrayList       getPlateNames(ArrayList sequencing_facility_file_items, Hashtable plate_map_names)
      {
          String plate_names = "";String plate_name = null;String plate_name_last = "";
          ArrayList plate_names_for_processing = new ArrayList();
@@ -152,7 +152,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
              if ( !plate_name_last.equalsIgnoreCase(plate_name))
              {
                  number_of_plates++;
-                 plate_names += "'"+plate_name +"',";
+                 plate_names += "'"+(String)plate_map_names.get(plate_name) +"',";
              }
             if ( !plate_names.equals("") && (number_of_plates % 5==0 || plate_count == sequencing_facility_file_items.size()-1))// by 5 plates 
              {
@@ -169,7 +169,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
      private Hashtable       readPlateMapping() throws Exception
      {
            //only for windows
-        String broad_plate = null;String hip_name = null;
+        String sequencing_facility_plate = null;String hip_name = null;
         String line = null; ArrayList plate_names = null;
         Hashtable plate_map = new Hashtable();        BufferedReader fin=null;
         try
@@ -178,9 +178,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
             while ((line = fin.readLine()) != null)
            {
                 plate_names = Algorithms.splitString(line, "\t");
-                broad_plate =  (String)plate_names.get(0);
+                sequencing_facility_plate =  (String)plate_names.get(0);
                 hip_name =(String)plate_names.get(1);
-               plate_map.put( broad_plate, hip_name);
+               plate_map.put( sequencing_facility_plate, hip_name);
                 
             }
             fin.close();
@@ -469,8 +469,8 @@ public class TraceFileProcessingRunner extends ProcessRunner
           runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
             runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
             runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD);
-            runner.setInputDirectory("E:\\Sequences for BEC\\Pseudomonas\\NewPlate2");
-runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Pseudomonas\\mapping.txt"));
+            runner.setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
+runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Pseudomonas\\New Plates 4_28_04\\mapping.txt"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        
            

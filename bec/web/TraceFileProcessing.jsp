@@ -137,7 +137,11 @@ else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFIL
 {%>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
 <tr><td><b>Please specify maping file(format sequencing facility plate name&nbsp; &nbsp;&nbsp;FLEX label)</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
+<%if ( !ApplicationHostDeclaration.IS_BIGHEAD) 
+{%>
+
 <tr><td><b>Please specify directory where trace files are located</td><td><input type="text" name="inputdir" id="inputdir" value="">		</td></tr>
+<%}%>
 <tr><td><b>Please specify sequencing facility </td>
 <td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> checked>Broad Institute
 <input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD%> >Agencourt 
