@@ -32,11 +32,11 @@ public class GenbankGeneFinder extends java.lang.Object {
     public Vector search() //throws FlexUtilException 
     { 
         pageName = new TempObject(srchStr).getPageName();
-        FileReader fin;
+        //System.out.println("Page name: " + pageName);
+	FileReader fin;
         
         // call perl routine to fetch and parse the first page
-        String cmd = "perl GBSearch.pl " + "\"" + srchStr + "\"" + " " + 
-                     "\"" + pageName + "\"";  
+        String cmd = "perl GBSearch.pl " + pageName + " " + srchStr;
         //System.out.println(cmd);        
         try {
             Process p = Runtime.getRuntime().exec(cmd);
@@ -55,8 +55,10 @@ public class GenbankGeneFinder extends java.lang.Object {
             makeEntrezVT(fin);
             fin.close();
         } catch (FileNotFoundException e) {
+	    e.printStackTrace();
             //throw new FlexUtilException(e.getMessage()));
         } catch (IOException e) {
+	    e.printStackTrace();
             //throw new FlexUtilException(e.getMessage()));
         }
         return entrezItemVT;
@@ -144,12 +146,20 @@ public class GenbankGeneFinder extends java.lang.Object {
         if (!itemsVT.isEmpty()) {
             for (int i=0; i<itemsVT.size(); i++) {
                 EntrezItem item = (EntrezItem)itemsVT.get(i);
-                System.out.println("GI: " + item.getGI());
-                System.out.println("GI: " + item.getAccession());
-                System.out.println("GI: " + item.getDescription());
+                System.out.println("GI:          " + item.getGI());
+                System.out.println("ACCESSION:   " + item.getAccession());
+                System.out.println("DESCRIPTION: " + item.getDescription());
+		System.out.println();
             }
         } 
         else 
             System.out.println("No item returned");
     }
 }
+
+
+
+
+
+
+
