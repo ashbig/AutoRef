@@ -13,14 +13,15 @@ import java.util.*;
  * @author  dzuo
  */
 public class SearchResult {
-    public static final String GENBANK_FOUND = "T";
-    public static final String GENBANK_NOT_FOUND = "F";
+    public static final String GENBANK_FOUND = "Y";
+    public static final String GENBANK_NOT_FOUND = "N";
     
     private int searchResultid;
     private String searchTerm; 
     private String isGenbankFound;
-    private List found;
-    private NoFound noFound;
+    private List found; //contains a list of MatchGenbankRecord objects.
+    private NoFound noFound; 
+    private int searchid;
     
     /** Creates a new instance of SearchResult */
     public SearchResult() {
@@ -28,6 +29,15 @@ public class SearchResult {
     
     public SearchResult(String searchTerm) {
         this.searchTerm = searchTerm;
+    }
+        
+    public SearchResult(int id, String searchTerm, String isGenbankFound, List found, NoFound noFound, int searchid) {
+        this.searchResultid = id;
+        this.searchTerm = searchTerm;
+        this.isGenbankFound = isGenbankFound;
+        this.found = found;
+        this.noFound = noFound;
+        this.searchid = searchid;
     }
     
     public SearchResult(String searchTerm, String isGenbankFound, List found, NoFound noFound) {
@@ -75,5 +85,13 @@ public class SearchResult {
     
     public void setNoFound(NoFound l) {
         this.noFound = l;
+    }
+    
+    public void setSearchid(int id) {
+        this.searchid = id;
+    }
+    
+    public int getSearchid() {
+        return searchid;
     }
 }
