@@ -6,7 +6,7 @@
 
 <html>
     <head>
-        <title>METAGENE : Login</title>
+        <title>MedGene : Login</title>
     </head>
     <body> 
 

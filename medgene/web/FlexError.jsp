@@ -10,7 +10,7 @@
 <head><title>Error</title></head>
 <body>
 <center>
-    <h1>METAGENE : Error</h1>
+    <h1>MedGene : Error</h1>
 </center>
 
     <table width="80%" align="center" border="0"><tr><td>

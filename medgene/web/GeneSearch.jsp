@@ -6,7 +6,7 @@
 
 <html>
     <head>
-        <title>METAGENE : Gene Search</title>
+        <title>MedGene : Gene Search</title>
     </head>
     <body>
     <center>

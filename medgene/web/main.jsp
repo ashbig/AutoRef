@@ -6,7 +6,7 @@
 
 <html>
     <head>
-        <title>METAGENE : main</title>
+        <title>MedGene : main</title>
     </head>
     <body>
     <center>

@@ -7,7 +7,7 @@
 
 <html>
     <head>
-        <title>METAGENE : Disease Search</title>
+        <title>MedGene : Disease Search</title>
     </head>
     <body>
 
