@@ -26,6 +26,7 @@ import edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.bec.ui_objects.*;
   import java.util.*;
   import edu.harvard.med.hip.utility.*;
+   
 /**
  *
  * @author  HTaycher
@@ -68,6 +69,9 @@ public class ReportRunner implements Runnable
 	private boolean    m_ref_panum= false; //      PA Number (for Pseudomonas project only)
 	private boolean    m_ref_sga= false; //      SGA Number (for Yeast project only)
 	private boolean    m_rank = false;
+        private boolean    m_read_length = false;//length of end reads high quality strip
+        
+        
         private String      m_report_title = "";
     /** Creates a new instance of ReportRunner */
     public ReportRunner()
@@ -108,7 +112,8 @@ public class ReportRunner implements Runnable
                     Object ref_gene_symbol, //      Gene Symbol
                     Object ref_panum, //      PA Number (for Pseudomonas project only)
                     Object ref_sga, //      SGA Number (for Yeast project only)
-                    Object rank //      Leave Sequence Info Empty for Empty Well
+                    Object rank ,//      Leave Sequence Info Empty for Empty Well
+                    Object read_length
                  )
      {
         if( clone_id!= null){ m_clone_id= true; m_report_title += "Clone ID\t";} //    Clone Id
@@ -118,7 +123,7 @@ public class ReportRunner implements Runnable
         if( position != null) {m_position= true;  m_report_title += "Position\t";}//      Sample Position
         if ( rank!= null) {m_rank= true;  m_report_title += "Clone Rank\t";}//
         if( dir_name != null) {m_dir_name = true;  m_report_title += "Clone Directory Name\t";}// Directory Name
-        
+        if ( read_length != null) {m_read_length= true;  m_report_title += "End reads length (Forward/Reverse)\t";}
       
         if( ref_sequence_id != null){ m_ref_sequence_id= true;  m_report_title += "RefSequence ID\t";}//      Sequence ID
         if( ref_cds_start != null) {m_ref_cds_start= true; m_report_title += "REF:CDS Start\t";} //      CDS Start
@@ -145,6 +150,7 @@ public class ReportRunner implements Runnable
         ArrayList items = new ArrayList();
         File report = null;
         Hashtable refsequences = new Hashtable();//containes refsequences by bec id
+        Hashtable reads = new Hashtable();//containes reads by isolatetrackingid
         try
         {
             //convert item into array
@@ -156,7 +162,12 @@ public class ReportRunner implements Runnable
            }
           ArrayList clones = getCloneInfo(m_items_type,items);
           refsequences= extractRefSequences( clones);
-          report = printReport(clones,refsequences);
+           if ( m_read_length )
+           {
+                reads = extractReads(clones);
+                
+           }
+          report = printReport(clones,refsequences,reads);
           file_list.add(report);
                
         }
@@ -205,6 +216,7 @@ public class ReportRunner implements Runnable
                 plate_names.append( "'");
                 plate_names.append((String)items.get(index));
                 plate_names.append("'");
+                if (index == 3) break;
                 if ( index != items.size()-1 ) plate_names.append(",");
             }
             sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID, "
@@ -222,7 +234,7 @@ public class ReportRunner implements Runnable
             +" i.STATUS,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, refsequenceid , "
             +" i.CONSTRUCTID,  i.ISOLATETRACKINGID, RANK "
             +"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a "
-            +" where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid and  "
+            +" where rownum<300 and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid and  "
             +" s.containerid=c.containerid and a.isolatetrackingid =i.isolatetrackingid ";
         }
         try
@@ -282,7 +294,64 @@ public class ReportRunner implements Runnable
         return refsequences;
         
     }
-  private File  printReport(ArrayList clones,Hashtable refsequences)
+    
+    
+    
+    private Hashtable extractReads(ArrayList clones) 
+    {
+        Hashtable reads = new Hashtable();
+        ArrayList samplereads = new ArrayList();
+        UICloneSample clone = null;
+        UIRead read = null;
+        StringBuffer isolatetrackingids = new StringBuffer();
+        for (int index = 0; index <clones.size();index++)
+        {
+            clone= (UICloneSample)clones.get(index);
+            isolatetrackingids.append( clone.getIsolateTrackingId() );
+            if ( index != clones.size()-1 ) isolatetrackingids.append(",");
+        }
+        String sql = "select readid, isolatetrackingid, READSEQUENCEID,READTYPE,TRIMMEDSTART,TRIMMEDEND from readinfo where isolatetrackingid in ("+isolatetrackingids.toString()+") order by isolatetrackingid";
+        
+         ResultSet rs = null;
+         int istr_id = -1;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                 read = new UIRead();
+                 read.setId (rs.getInt("READID")); 
+                read.setSequenceId (rs.getInt("READSEQUENCEID")); 
+                read.setType (rs.getInt("READTYPE")); 
+                read.setTrimStart (rs.getInt("TRIMMEDSTART")); 
+                read.setTrimStop(rs.getInt("TRIMMEDEND")); 
+                if ( istr_id!= rs.getInt("isolatetrackingid"))
+                {
+                    istr_id = rs.getInt("isolatetrackingid");
+                    samplereads = new ArrayList();
+                }
+                
+                
+                samplereads.add(read);
+                reads.put(new Integer(istr_id), samplereads);
+            }
+            
+        }
+        catch(Exception e)
+        {
+            m_error_messages.add(e.getMessage());
+        }
+        return reads;    
+        
+        
+    }
+    
+    
+     
+     
+  private File  printReport(ArrayList clones,Hashtable refsequences,Hashtable reads)
   {
         File fl = null;
         String temp = null;
@@ -300,7 +369,7 @@ public class ReportRunner implements Runnable
                     fr.write(m_report_title+"\n");
                 }
 
-                fr.write(writeClone(clone,refsequences)+"\n");
+                fr.write(writeClone(clone,refsequences,reads)+"\n");
 
             }
             fr.flush();
@@ -311,10 +380,11 @@ public class ReportRunner implements Runnable
         return null;
     
   }
-  private String writeClone(UICloneSample clone,Hashtable refsequences )
+  private String writeClone(UICloneSample clone,Hashtable refsequences,Hashtable reads )
   {
       StringBuffer cloneinfo= new StringBuffer();
       CloneSequence clone_sequence = null;
+      UIRead read = null;
       RefSequence refsequence = null;
       if ( clone.getRefSequenceId()>0)
       {
@@ -334,7 +404,17 @@ public class ReportRunner implements Runnable
         EndReadsWrapperRunner er = new EndReadsWrapperRunner();
         cloneinfo.append(er.getControlSamplesDir()+ File.separator + refsequence.getId()+File.separator+clone.getCloneId()+"\t");
     }// Directory Name
-
+    if ( m_read_length )
+    {
+        ArrayList samplereads = (ArrayList)reads.get(new Integer(clone.getIsolateTrackingId()));
+        for (int index = 0; index < samplereads.size(); index++)
+        {
+            read = (UIRead) samplereads.get(index);
+            cloneinfo.append(Read.getTypeAsString(read.getType())+"_"+ (read.getTrimStop() - read.getTrimStart () )+"/"); 
+                
+        }
+        cloneinfo.append("\t");
+    }
     if (refsequence != null)
     {
         if(  m_ref_sequence_id){ cloneinfo.append( refsequence.getId() +"\t");}//      Sequence ID
