@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.3 2001-05-11 21:10:49 dongmei_zuo Exp $
+ * $Id: Request.java,v 1.4 2001-05-12 20:44:55 dongmei_zuo Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -111,6 +111,9 @@ public class Request {
      * @exception FlexDatabaseException.
      */
     public void insert(DatabaseTransaction t) throws FlexDatabaseException {
+    	if(sequences.size() == 0) 
+    		return;
+    		
 	if (id == -1) {
 	    id = FlexIDGenerator.getID("requestid");
 	}

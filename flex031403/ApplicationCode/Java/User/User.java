@@ -144,7 +144,7 @@ public class User {
 		Vector requests = new Vector();
 		String sql = "select requestid, username, "+
 					 "to_char(requestdate, 'fmYYYY-MM-DD') as requestdate\n"+ 
-					 "from request where username='"+name+"'";
+					 "from request where username='"+name+"' order by requestdate";
 		Vector v = t.executeSql(sql);
 		Enumeration enum = v.elements();
 		while(enum.hasMoreElements()) {

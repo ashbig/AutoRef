@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTransaction.java,v 1.6 2001-05-08 17:15:40 wenhong_mar Exp $
+ * $Id: DatabaseTransaction.java,v 1.7 2001-05-12 20:44:55 dongmei_zuo Exp $
  *
  * File     : DatabaseTransaction.java 
  * Date     : 04162001
@@ -107,11 +107,11 @@ public class DatabaseTransaction {
 			stmt = connection.createStatement();
 			if(stmt.execute(sql)) {
 				rs = stmt.getResultSet();
-				stmt.close();
+//				stmt.close();
 				return rs;
 			} //if
 			
-			stmt.close();	
+//			stmt.close();	
 		}catch (SQLException sqlex) {
 			sqlex.printStackTrace();
 		}

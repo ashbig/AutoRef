@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.4 2001-05-12 17:38:28 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.5 2001-05-12 20:44:55 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java 
  * Date     : 05042001
@@ -30,6 +30,7 @@ public class CloneRequest {
 	private Hashtable badSequences = new Hashtable();
 	private Hashtable sameSequences = new Hashtable();
 	private Hashtable homologs = new Hashtable();
+	private Hashtable blastResults = new Hashtable();
 	
 	/**
 	 * Return searchString field.
@@ -109,6 +110,7 @@ public class CloneRequest {
 		badSequences.clear();
 		sameSequences.clear();
 		homologs.clear();
+		blastResults.clear();
 		
 		String [] selections = request.getParameterValues("checkOrder");			
 		for(int i=0; i<selections.length; i++) {
@@ -129,6 +131,7 @@ public class CloneRequest {
 					} else {
 						if(analyzer.findHomolog()) {
 							homologs.put(gi, analyzer.getHomolog());
+							blastResults.put(gi, analyzer.getBlastResults());
 						} else {
 							goodSequences.put(gi, sequence);
 						}
@@ -156,6 +159,10 @@ public class CloneRequest {
 		return homologs;
 	}
 
+	public Hashtable getBlastResults() {
+		return blastResults;
+	}
+	
 	/**
 	 * Insert the user requested sequences into database.
 	 *
@@ -167,9 +174,9 @@ public class CloneRequest {
 		Request r = new Request(username);
 		LinkedList l = new LinkedList();
 		Protocol p = new Protocol("approve sequences");
-
-		try {		
+		
 		String [] selections = request.getParameterValues("good");
+		if(selections != null) {
 		for(int i=0; i<selections.length; i++) {
 			String gi = selections[i];
 			FlexSequence sequence = (FlexSequence)goodSequences.get(gi);
@@ -180,8 +187,10 @@ public class CloneRequest {
 				l.addLast(item);
 			}
 		}
+		}
 
 		selections = request.getParameterValues("same");
+		if(selections != null) {
 		for(int i=0; i<selections.length; i++) {
 			String gi = selections[i];
 			Vector v = (Vector)sameSequences.get(gi);				
@@ -193,14 +202,17 @@ public class CloneRequest {
 				l.addLast(item);
 			}
 		}
+		}
 
 		selections = request.getParameterValues("homolog");
+		if(selections != null) {
 		for(int i=0; i<selections.length; i++) {
 			String gi = selections[i];
 			Hashtable h = (Hashtable)homologs.get(gi);			
 			String [] gis = request.getParameterValues(gi);	
+			
 			for(int j=0; j<gis.length; j++) {
-				FlexSequence sequence = (FlexSequence)h.get(gis[j]);				
+				FlexSequence sequence = (FlexSequence)h.get(gis[j]);			
 				r.addSequence(sequence);			
 			
 				if("NEW".equals(sequence.getFlexstatus())) {
@@ -209,7 +221,7 @@ public class CloneRequest {
 				}
 			}
 		}	
-		} catch (NullPointerException ex){}
+		}
 				
 		DatabaseTransaction t = DatabaseTransaction.getInstance();
 		r.insert(t);
@@ -218,6 +230,7 @@ public class CloneRequest {
 		queue.addQueueItems(l, t);
 				
 		t.commit();
+		t.disconnect();
 	}
 
 	//call the parser with sequence gid, and set sequence values.

@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.4 2001-05-11 19:15:57 dongmei_zuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.5 2001-05-12 20:44:55 dongmei_zuo Exp $
  *
  * File     	: GenbankGeneFinder.java 
  * Date     	: 05052001
@@ -94,7 +94,7 @@ public class GenbankGeneFinder {
 				}
 									
 				if(inputLine.indexOf(">CDS</a>") != -1) {
-					if(inputLine.indexOf("join") != -1) 
+					if(inputLine.indexOf("join") != -1 || inputLine.indexOf("complement") != -1)
 						continue;
 						
 					String substr = inputLine.substring(inputLine.indexOf(">CDS</a>"));
@@ -109,11 +109,17 @@ public class GenbankGeneFinder {
 						String startStr = st.nextToken();
 						String newStart = startStr;
 						if(startStr.indexOf("&lt;")!=-1) {
-							newStart = startStr.substring(startStr.indexOf(";")+1);
+//							newStart = startStr.substring(startStr.indexOf(";")+1);
+							newStart = "-1";
 						}
-						System.out.println(newStart);
+						
+						String stopStr = st.nextToken();
+						String newStop = stopStr;
+						if(stopStr.indexOf("&gt;") != -1) {
+							newStop = "-1";
+						}
 						start = Integer.parseInt(newStart);
-						stop = Integer.parseInt(st.nextToken());
+						stop = Integer.parseInt(newStop);
 					}
 					cdscount++;
 				}
