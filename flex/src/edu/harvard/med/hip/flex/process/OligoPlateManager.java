@@ -316,11 +316,15 @@ public class OligoPlateManager {
     
     private void performOligoOrder(LinkedList seqList) throws FlexDatabaseException, IOException, MessagingException, Exception {
         int totalQueue = seqList.size();
+        
+        if(fileList != null)
+            fileList.clear();
+        
         System.out.println("There are total of " + totalQueue + " sequences belong to the same size group in the queue");
         createOligoPlates(seqList);
         
         //avoid sending out empty email without files attached
-        if (fileList.size() >= 1){
+        if (fileList != null && fileList.size() >= 1){
             sendOligoOrders();
             System.out.println("Oligo order files have been mailed!");
             DatabaseTransaction.commit(conn);
@@ -352,7 +356,8 @@ public class OligoPlateManager {
         } catch (Exception ex) {
             System.out.println(ex);
         } finally {
-            DatabaseTransaction.closeConnection(c);
+            if(c != null)
+                DatabaseTransaction.closeConnection(c);
         }
         
     } //main
