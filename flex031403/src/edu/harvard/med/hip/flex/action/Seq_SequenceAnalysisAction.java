@@ -50,14 +50,14 @@ public class Seq_SequenceAnalysisAction extends WorkflowAction
        TheoreticalSequence theoretical_sequence = null;
         String errmessage = null;
       
-        
+      
         try
         {
            
             //get theoretical sequence 
             if (searchTerm.equalsIgnoreCase(FullSequenceAnalysis.SEARCH_BY_GI ))
             {
-                 System.out.println("get out"+searchValue+" "+searchTerm);
+                
                  theoretical_sequence = TheoreticalSequence.findSequenceByGi(searchValue);
                  
                 errmessage = "<li>No sequence with GI number: "+ searchValue+" exists.</li>";
@@ -80,11 +80,9 @@ public class Seq_SequenceAnalysisAction extends WorkflowAction
                return new ActionForward(mapping.getInput());
                
             }
-            System.out.println("get out");
             int refseqid = theoretical_sequence.getId();
             
             //submit fullsequence if it was submitted
-            System.out.println("aaa"+expsequence+"eee");
             if ( expsequence != null && !expsequence.equals("") )
             {
               
@@ -93,7 +91,7 @@ public class Seq_SequenceAnalysisAction extends WorkflowAction
                     DatabaseTransaction t = DatabaseTransaction.getInstance();
                     Connection conn = t.requestConnection();
                     full_sequence.insert(conn);
-                   
+                    conn.commit();
                     FullSequenceAnalysis seq_for_analysis =
                                new  FullSequenceAnalysis
                                 (  
@@ -101,7 +99,7 @@ public class Seq_SequenceAnalysisAction extends WorkflowAction
                                     theoretical_sequence,
                                     conn                                    
                                 );
-                    seq_for_analysis.analize();
+                    seq_for_analysis.analizeUsingNeedle();
             }
             ArrayList seq = TheoreticalSequence.getFullSequences(refseqid);
             System.out.println("aaa"+seq.size());
@@ -109,7 +107,7 @@ public class Seq_SequenceAnalysisAction extends WorkflowAction
             {
                 System.out.println("aaa"+seq.size());
                 errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("<li>No experimental sequence exists for this reference sequence.</li>"));
+                        new ActionError("error.sequenceproject.nosequence"));
                 saveErrors(request, errors);
                 return new ActionForward(mapping.getInput());
             }
