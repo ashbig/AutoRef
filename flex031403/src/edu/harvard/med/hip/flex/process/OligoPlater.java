@@ -22,21 +22,31 @@ public class OligoPlater {
     private LinkedList oligoPatternList;
     private int platesetId;
     private Connection conn;
-    private int containerId_5p;
-    private int containerId_3s;
-    private int containerId_3op;
-    
+    private Container container_5p;
+    private Container container_3s;
+    private Container container_3op;
     
     /** Creates new OligoPlater */
-    public OligoPlater(LinkedList oligoPatternList, int platesetId, Connection c)  {
+    public OligoPlater(LinkedList oligoPatternList, int platesetId, Connection c)
+    throws FlexDatabaseException {
         this.oligoPatternList = oligoPatternList;
         this.platesetId = platesetId;
+        // this.containerId_5p = setPlateId();
+        // this.containerId_3op = setPlateId();
+        // this.containerId_3s = setPlateId();
         this.conn = c;
     }
     
-    public void createOligoPlates () throws FlexDatabaseException {
+    /**
+     * This class generates three oligo plates, sort the samples on the plate.
+     * The containerheader, sample and containercell tables are updated
+     */
+    public void createOligoPlates() throws FlexDatabaseException {
         generateOligoPlate();
-        oligoSampleSorter();    
+        oligoSampleSorter();
+        container_5p.insert(conn);
+        container_3s.insert(conn);
+        container_3op.insert(conn);
     }
     
     /**
@@ -45,15 +55,21 @@ public class OligoPlater {
      * First, the oligos are sorted by cds-length and arranged by
      * saw-tooth pattern based on cds-length.
      * Second, the oligo sample objecsts are generated and the sample
-     * records are inserted into the sample table.
-     * Third, the containercell table is populated.
+     * records are added to the container.
      *
      */
-    public void oligoSampleSorter() throws FlexDatabaseException {
+    protected void oligoSampleSorter() throws FlexDatabaseException {
         String geneId = null;
         String oligo5p = null;
         String oligo3s = null;
         String oligo3op = null;
+        
+        int containerId_5p = container_5p.getId();
+        int containerId_3s = container_3s.getId();
+        int containerId_3op = container_3op.getId();
+        
+        System.out.println("5p plateID: "+ containerId_5p);
+        
         int cdsLength = 0;
         boolean done = false;
         int geneNum = 0;
@@ -72,8 +88,8 @@ public class OligoPlater {
         int firstGeneIndexOfPlate = 0;
         int lastGeneIndexOfPlate = 0;
         int currentGeneIndex = -1;
-        int plateNum = 0;
-        String plateId = null;
+        //int plateNum = 0;
+        //String plateId = null;
         int well = 0;
         int numGenes = geneArray.length;
         boolean fullPlate = true;
@@ -81,6 +97,7 @@ public class OligoPlater {
         boolean wellsDone = false;
         int relativeLowerIndex = 0;
         int relativeUpperIndex = 0;
+        
         OligoPattern currentGene = null;
         Sample oligoSample_5p = null;
         Sample oligoSample_3s = null;
@@ -88,10 +105,9 @@ public class OligoPlater {
         
         // Loop over plates.
         while (!done) {
-            ++plateNum;
-            plateId = String.valueOf(plateNum);
+            // ++plateNum;
+            // plateId = String.valueOf(plateNum);
             
-            System.out.println("Starting plate: "+plateId);
             // array index starts at 0
             firstGeneIndexOfPlate = currentGeneIndex+1;
             lastGeneIndexOfPlate = firstGeneIndexOfPlate+93;
@@ -135,20 +151,28 @@ public class OligoPlater {
                 // generate three oligo sample objects and insert into sample table
                 // also a record for each oligo sample is inserted into containercell table
                 oligoSample_5p = generateOligoSample(currentGene,"5p", containerId_5p, well);
-                oligoSample_5p.insert(conn);
-                insertContainercell(containerId_5p,well,oligoSample_5p.getId());
+                System.out.println("PlateID: "+containerId_5p +"; " + "5p lower oligo well: "+ well + "; " 
+                        + "sampleID: "+ oligoSample_5p.getId() +"; " + currentGene.getCDSLength());
+                container_5p.addSample(oligoSample_5p);
+                //oligoSample_5p.insert(conn);
+               // insertContainercell(containerId_5p,well,oligoSample_5p.getId());
                 
+                //System.out.println("Starting plate: "+ containerId_3s);
                 oligoSample_3s = generateOligoSample(currentGene,"3s", containerId_3s, well);
-                oligoSample_3s.insert(conn);
-                insertContainercell(containerId_3s,well,oligoSample_3s.getId());
+                System.out.println("PlateID: "+containerId_3s+"; " + "3s lower oligo well: "+ well + "; " 
+                    + "sampleID: "+ oligoSample_3s.getId() +"; " + currentGene.getCDSLength());
+                container_3s.addSample(oligoSample_3s);
+                //oligoSample_3s.insert(conn);
+                //insertContainercell(containerId_3s,well,oligoSample_3s.getId());
                 
                 oligoSample_3op = generateOligoSample(currentGene,"3op", containerId_3op, well);
-                oligoSample_3op.insert(conn);
-                insertContainercell(containerId_3op,well,oligoSample_3op.getId());
+                System.out.println("PlateID: "+containerId_3op+"; " + "3op lower oligo well: "+ well + "; " 
+                    + "sampleID: "+ oligoSample_3op.getId() +"; " + currentGene.getCDSLength());
+                container_3op.addSample(oligoSample_3op);
                 
-                System.out.println(plateId+"\t");
-                System.out.println(String.valueOf(well));
-                System.out.println("\n");
+                //System.out.println(plateId+"\t");
+                //System.out.println(String.valueOf(well));
+                //System.out.println("\n");
                 
                 ++well;
                 // check whether plate is full
@@ -162,33 +186,38 @@ public class OligoPlater {
                 
                 // generate three oligo sample objects and insert them into the sample table
                 oligoSample_5p = generateOligoSample(currentGene,"5p", containerId_5p, well);
-                oligoSample_5p.insert(conn);
-                insertContainercell(containerId_5p,well,oligoSample_5p.getId());
+                System.out.println("PlateID: "+containerId_5p +"; " + "5p upper oligo well: "+ well + "; " 
+                    + "sampleID: "+ oligoSample_5p.getId() + "; " + currentGene.getCDSLength());
+                container_5p.addSample(oligoSample_5p);
+                //oligoSample_5p.insert(conn);
+                //insertContainercell(containerId_5p,well,oligoSample_5p.getId());
                 
                 oligoSample_3s = generateOligoSample(currentGene,"3s", containerId_3s, well);
-                oligoSample_3s.insert(conn);
-                insertContainercell(containerId_3s,well,oligoSample_3s.getId());
+                System.out.println("PlateID: "+containerId_3s+"; " + "3s upper oligo well: "+ well + "; " 
+                    + "sampleID: "+ oligoSample_3s.getId() +"; " + currentGene.getCDSLength());
+                container_3s.addSample(oligoSample_3s);
+                //oligoSample_3s.insert(conn);
+                //insertContainercell(containerId_3s,well,oligoSample_3s.getId());
                 
                 oligoSample_3op = generateOligoSample(currentGene,"3op", containerId_3op, well);
-                oligoSample_3op.insert(conn);
-                insertContainercell(containerId_3op,well,oligoSample_3op.getId());
-                
+                System.out.println("PlateID: "+containerId_3op+"; " + "3op upper oligo well: "+ well + "; " 
+                    + "sampleID: "+ oligoSample_3op.getId() +"; " + currentGene.getCDSLength());
+                container_3op.addSample(oligoSample_3op);
+                           
                 // _plateWriter.write(currentGene.getId()+"\t");
                 // _plateWriter.write(currentGene.getLength()+"\t");
-                System.out.println(plateId+"\t");
-                System.out.println(String.valueOf(well));
-                System.out.println("\n");
                 // _plateWriter.flush();
                 
             } //inner while to fill oligo plate wells
             
             currentGeneIndex += 47;
+            System.out.println("next plate gene index: "+currentGeneIndex);
         } //outter while to fill oligo plates
         
     } // oligoSorter
     
     /**
-     * set the oligo plateId
+     * generate the oligo plateId
      *
      * @return The plateId
      */
@@ -202,17 +231,13 @@ public class OligoPlater {
     }
     
     /**
-     * This class insert three oligo plates (containerheader table) 
+     * This class insert three oligo plates (containerheader table)
      * and one plateset record (plateset table)
      */
     private void generateOligoPlate() throws FlexDatabaseException {
         Location location = null;
         String plateType = "96 WELL OLIGO PLATE";
         String locationType = "UNAVAILABLE";
-        String label = "";
-        Container container_5p = null;
-        Container container_3s = null;
-        Container container_3op = null;
         Plateset plateset = null;
         
         // get the oligo container location object
@@ -220,53 +245,62 @@ public class OligoPlater {
         int locationId = location.getId(locationType);
         location = new Location(locationId,locationType,"");
         
-        // generate container id for the group of three oligo plates
-        containerId_5p = setPlateId();
-        containerId_3s = setPlateId();
-        containerId_3op = setPlateId();
-                
+        // generate oligo plate labels for the group of three oligo plates
+        String label_5p = Container.getLabel("Ou",platesetId,null); //upstream
+        String label_3s = Container.getLabel("Oc",platesetId,null); //closed
+        String label_3op = Container.getLabel("Of",platesetId,null); //fusion
+        
         // generate new container header object and insert into ContainerHeader table
-        container_5p = new Container(containerId_5p, plateType, location,label);
-        container_5p.insert(conn);
-        container_3s = new Container(containerId_3s, plateType, location,label);
-        container_3s.insert(conn);
-        container_3op = new Container(containerId_3op, plateType, location,label);
-        container_3op.insert(conn);
+        container_5p = new Container(plateType, location,label_5p);        
+        System.out.println("Created the 5p oligo plate: "+ container_5p.getId());
+        System.out.println("5p oligo plate label: "+ label_5p);
+        
+        container_3s = new Container(plateType, location,label_3s);        
+        System.out.println("Created the 3s oligo plate: "+ container_3s.getId());
+        System.out.println("3s oligo plate label: "+ label_3s);
+        
+        container_3op = new Container(plateType, location,label_3op);        
+        System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
+        System.out.println("3op oligo plate label: "+ label_3op);
         
         //insert one plateset record identifying the three new plates
-        plateset = new Plateset(platesetId, containerId_5p, containerId_3op,containerId_3s);
-        plateset.insertPlateset(conn);
-            
+        plateset = new Plateset(platesetId, container_5p.getId(), container_3op.getId(),container_3s.getId());
+        //plateset.insertPlateset(conn);
+        
     }
     
-    private Sample generateOligoSample(OligoPattern currentOligo, String oligoType, int plateId, int wellId) throws FlexDatabaseException {
+    private Sample generateOligoSample(OligoPattern currentOligo, String oligoType, int plateId, int wellId)
+    throws FlexDatabaseException {
         int oligoId;
-        String sampleType = "OLIGO";
-        String status = "GOOD";
+        String sampleType = null;
+        String status = "G";
         Sample sample = null;
         
         if (oligoType.equals("5p")) {
             oligoId = currentOligo.getOligoId_5p();
+            sampleType = "OLIGO_5P";
         }
         else if (oligoType.equals("3s")) {
             oligoId = currentOligo.getOligoId_3s();
+            sampleType = "OLIGO_3C";
         }
         else {
             oligoId = currentOligo.getOligoId_3op();
+            sampleType = "OLIGO_3F";
         }
         
         sample = new Sample(sampleType, wellId, plateId, oligoId, status);
         
-        return sample;     
+        return sample;
     } //generateOligoSample
     
     /**
      * This method insert the oligo sample record into the containercell table
      * precondition: containerheader and sample table are populated
      */
-    private void insertContainercell (int plateId, int well, int sampleId) throws FlexDatabaseException {
+    private void insertContainercell(int plateId, int well, int sampleId) throws FlexDatabaseException {
         String sql = "INSERT INTO containercell\n"+
-        "(containerid, position, sampleid\n"+
+        "(containerid, position, sampleid)\n"+
         "VALUES ("+plateId + "," +well+ "," +sampleId +")";
         Statement stmt = null;
         try {
@@ -295,7 +329,7 @@ public class OligoPlater {
         
         public boolean equals(java.lang.Object obj) {
             return false;
-        }      
+        }
         // compare
         
     } //GeneComparator
