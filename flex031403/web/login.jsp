@@ -2,12 +2,14 @@
 <%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html>
     <head><title>FLEX: Login</title></head>
     <body> <center>
     <h2>Welcome to FLEXGene Database</h2>
     <hr>
+
    <html:errors/>
 
 

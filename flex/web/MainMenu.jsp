@@ -7,7 +7,7 @@
 <html>
 <head><title>JSP Page</title></head>
 <body>
-<logic:present scope="session" name="user">
+<logic:present scope="session" name="USER">
     Hello <bean:write name="USER" property="username"/>
 </logic:present>
 <struts:errors/>
