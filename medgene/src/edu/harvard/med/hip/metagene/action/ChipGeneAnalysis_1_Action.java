@@ -57,6 +57,7 @@ public class ChipGeneAnalysis_1_Action extends MetageneAction {
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
         String searchTerm = ((ChipGeneAnalysis_1_Form)form).getSearchTerm();
+        String species = ((ChipGeneAnalysis_1_Form)form).getSpecies();
         
         DiseaseGeneManager manager = new DiseaseGeneManager();
         Vector diseases = manager.findDiseases(searchTerm);
@@ -65,11 +66,16 @@ public class ChipGeneAnalysis_1_Action extends MetageneAction {
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.notfound", searchTerm));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
-        } else {
+        } else {            
             Vector stats = Statistics.getAllStatistics();
             request.setAttribute("stats", stats);
             request.setAttribute("diseases", diseases);
-            return (mapping.findForward("success"));
+            request.setAttribute("species", species);
+            if(species.equalsIgnoreCase("Homo sapiens"))                
+                return (mapping.findForward("success_hs"));
+            else                
+                return (mapping.findForward("success_nonhs"));
+                        
         }
     }
 }

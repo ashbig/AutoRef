@@ -19,13 +19,20 @@ import org.apache.struts.action.ActionMapping;
  */
 public class ChipGeneAnalysis_1_Form extends ActionForm {
     private String searchTerm = null;
+    private String species = "Homo sapiens";
     
     public String getSearchTerm() {
         return searchTerm;
     }
+    public String getSpecies(){
+        return species;
+    }    
     
     public void setSearchTerm(String searchTerm) {
         this.searchTerm = searchTerm;
+    }
+    public void setSpecies(String species){
+        this.species = species;
     }
     
     /**
@@ -43,7 +50,7 @@ public class ChipGeneAnalysis_1_Form extends ActionForm {
 
         ActionErrors errors = new ActionErrors();
         if ((searchTerm == null) || (searchTerm.trim().length() < 1))
-            errors.add("searchTerm", new ActionError("error.searchTerm.required"));
+            errors.add("searchTerm", new ActionError("error.searchTerm.required"));        
 
         return errors;
     }    

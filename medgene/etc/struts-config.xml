@@ -87,6 +87,10 @@
     <!-- chip gene analysis step2 -->   
     <form-bean      name="chipGeneAnalysis_2_Form"
                     type="edu.harvard.med.hip.metagene.form.ChipGeneAnalysis_2_Form"/>
+    
+    <!-- chip gene analysis step2 -->   
+    <form-bean      name="chipGeneAnalysis_2b_Form"
+                    type="edu.harvard.med.hip.metagene.form.ChipGeneAnalysis_2b_Form"/>
 
     <!-- chip gene gene analysis step1 -->
     <form-bean      name="chipGeneGeneAnalysis_1_Form"
@@ -276,7 +280,8 @@
                name="chipGeneAnalysis_1_Form"
                scope="request"
                input="/ChipGeneAnalysis_1.jsp">
-      <forward  name="success"   path="/ChipGeneAnalysis_2.jsp"/>
+      <forward name="success_hs"   path="/ChipGeneAnalysis_2.jsp"/>
+      <forward name="success_nonhs" path="/ChipGeneAnalysis_2b.jsp" />
     </action>
 
     <!-- Process MicroArray data analysis step2 -->    
@@ -284,9 +289,17 @@
                type="edu.harvard.med.hip.metagene.action.ChipGeneAnalysis_2_Action"
                name="chipGeneAnalysis_2_Form"
                scope="request"
-               input="/ChipGeneAnalysis_2.jsp">
-      <!-- forward  name="success"   path="/DisplayChipGenes.jsp"/ -->    
+               input="/ChipGeneAnalysis_2.jsp">      
       <forward  name="success"   path="/DisplayChipGenes.jsp"/>   
+    </action>
+
+    <!-- Process MicroArray data analysis step2b -->    
+    <action    path="/chipGeneAnalysis_2b"
+               type="edu.harvard.med.hip.metagene.action.ChipGeneAnalysis_2b_Action"
+               name="chipGeneAnalysis_2b_Form"
+               scope="request"
+               input="/ChipGeneAnalysis_2b.jsp">      
+      <forward  name="success"   path="/DisplayChipGenes_2.jsp"/>   
     </action>
 
     <!-- Process MicroArray data (2) analysis step1 -->    

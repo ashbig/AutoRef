@@ -21,14 +21,15 @@
     <br>
     <TABLE width = "80%" align="center" border="0" cellpadding="2" cellspacing="0" > 
     <TR>
-    <TD>
-        Your input genes are grouped into <a href="microArray_category.jsp" target="_black">4 categories</a> according to their relationship with 
+    <TD>        
+        Your input genes are grouped into <a href="microArray_category.jsp" target="_black">5 categories</a> according to their relationship with 
         the disease of <b><bean:write name="disease_mesh_term"/></b> as cited in literature. 
         The statistical method you selected is <b><bean:write name="stat"/></b>. <br><br>
         <a href="#direct"> First degree associations </a> <br>
         <a href="#direct_family"> First degree associations by family term </a> <br>
         <a href="#indirect"> Second degree associations </a> <br>
         <a href="#new"> Genes new to this disease </a> <br>
+        <a href="#no_homolog"> Genes having no human homolog </a> <br>
     </TD>
     </TR>
     </TABLE>    
@@ -40,15 +41,29 @@
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
     <TR> <b>First degree associations</b> <br><br> </TR>
     <TR bgcolor="#cccccc">
-        <TH width="7%">Rank</TH>
-        <TH width="26%">Locus ID</TH>
-        <TH width="26%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
-        <TH width="26%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
-        <TH width="15%">Selected Papers</TH>
+        <TH width="5%">Rank</TH>
+
+        <logic:equal name="input_type" value="1">
+        <TH width="20%">LocusID</TH>
+        </logic:equal>
+        <logic:equal name="input_type" value="2">
+        <TH width="20%">Unigene</TH>
+        </logic:equal>       
+        <logic:equal name="input_type" value="3">
+        <TH width="20%">Accession</TH>
+        </logic:equal>
+
+        <TH width="20%">Homo sapiens LocusID</TH>
+        <TH width="25%"><A HREF="GeneSymbol.jsp" target="_blank">Homo sapiens Gene Symbol</A></TH>
+        <TH width="20%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="10%">Selected Papers</TH>
     </TR>
     <logic:iterate id="directChipGene" name="direct_genes"> 
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
+            <TD align="center">
+                <bean:write name="directChipGene" property="homolog_id"/>
+            </TD>
             <TD align="center">
                 <a href="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="directChipGene" property="locus_id"/>" target="_blank">
                 <bean:write name="directChipGene" property="locus_id"/></a>
@@ -74,16 +89,30 @@
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
     <TR> <b>First degree associations by family term</b> <br><br> </TR>
     <TR bgcolor="#cccccc">
-        <TH width="7%">Rank</TH>
-        <TH width="26%">Locus ID</TH>
-        <TH width="26%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
-        <TH width="26%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
-        <TH width="15%">Selected Papers</TH>
+        <TH width="5%">Rank</TH>
+
+        <logic:equal name="input_type" value="1">
+        <TH width="20%">LocusID</TH>
+        </logic:equal>
+        <logic:equal name="input_type" value="2">
+        <TH width="20%">Unigene</TH>
+        </logic:equal>       
+        <logic:equal name="input_type" value="3">
+        <TH width="20%">Accession</TH>
+        </logic:equal>
+
+        <TH width="20%">Homo sapiens LocusID</TH>
+        <TH width="25%"><A HREF="GeneSymbol.jsp" target="_blank">Homo sapiens Gene Symbol</A></TH>
+        <TH width="20%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="10%">Selected Papers</TH>
     </TR>
 
     <logic:iterate id="directChipGeneByFamily" name="direct_children_genes"> 
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
+            <TD align="center">
+                <bean:write name="directChipGeneByFamily" property="homolog_id"/>
+            </TD>
             <TD align="center">
                 <a href="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="directChipGeneByFamily" property="locus_id"/>" target="_blank">
                 <bean:write name="directChipGeneByFamily" property="locus_id"/></a>
@@ -110,15 +139,30 @@
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >  
     <TR> <p> <b>Second degree associations </b> <br><br>  </TR> 
     <TR bgcolor="#cccccc">
-        <TH width="10%">Rank</TH>
-        <TH width="30%">Locus ID</TH>
-        <TH width="30%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
+        <TH width="5%">Rank</TH>
+
+        <logic:equal name="input_type" value="1">
+        <TH width="20%">LocusID</TH>
+        </logic:equal>
+        <logic:equal name="input_type" value="2">
+        <TH width="20%">Unigene</TH>
+        </logic:equal>       
+        <logic:equal name="input_type" value="3">
+        <TH width="20%">Accession</TH>
+        </logic:equal>
+
+        <TH width="20%">Homo sapiens LocusID</TH>
+        <TH width="25%"><A HREF="GeneSymbol.jsp" target="_blank">Homo sapiens Gene Symbol</A></TH>
         <TH width="30%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        
     </TR>
 
     <logic:iterate id="indirectChipGene" name="indirect_genes"> 
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
+            <TD align="center">
+                <bean:write name="indirectChipGene" property="homolog_id"/>
+            </TD>
             <TD align="center">
                 <a href="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="indirectChipGene" property="locus_id"/>" target="_blank">
                 <bean:write name="indirectChipGene" property="locus_id"/></a>
@@ -141,15 +185,30 @@
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
     <TR> <p> <b>Genes new to this disease</b> <br><br>   </TR> 
     <TR bgcolor="#cccccc">
-        <TH width="10%">Rank</TH>
-        <TH width="30%">Locus ID</TH>
-        <TH width="30%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
-        <TH width="30%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="5%">Rank</TH>
+
+        <logic:equal name="input_type" value="1">
+        <TH width="20%">LocusID</TH>
+        </logic:equal>
+        <logic:equal name="input_type" value="2">
+        <TH width="20%">Unigene</TH>
+        </logic:equal>       
+        <logic:equal name="input_type" value="3">
+        <TH width="20%">Accession</TH>
+        </logic:equal>
+
+        <TH width="20%">Homo sapiens LocusID</TH>
+        <TH width="25%"><A HREF="GeneSymbol.jsp" target="_blank">Homo sapiens Gene Symbol</A></TH>
+        <TH width="35%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        
     </TR>
 
     <logic:iterate id="newChipGene" name="new_genes"> 
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
+            <TD align="center">
+                <bean:write name="newChipGene" property="homolog_id"/>
+            </TD>
 
             <logic:equal name="newChipGene" property="locus_id" value="0">
             <TD align="center"> - </TD>            
@@ -167,10 +226,40 @@
                 <bean:write name="newChipGene" property="gene_symbol"/></a> </TD>
             </logic:notEqual>
 
-            <TD align="center"> - <TD>
+            <TD align="center"> -- <TD>
         </tr>
     </logic:iterate> 
     </TABLE>
+
+    <a name="no_homolog"> </a><br><br><% i = 0; %>
+   
+    <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
+    <TR> <p> <b>Genes having no human homolog</b> <br><br>   </TR> 
+    <TR bgcolor="#cccccc">
+        <TH width="5%">Rank</TH>
+
+        <logic:equal name="input_type" value="1">
+        <TH width="95%">LocusID</TH>
+        </logic:equal>
+        <logic:equal name="input_type" value="2">
+        <TH width="95%">Unigene</TH>
+        </logic:equal>       
+        <logic:equal name="input_type" value="3">
+        <TH width="95%">Accession</TH>
+        </logic:equal>
+    </TR>
+
+    <logic:iterate id="gene" name="no_homolog_genes"> 
+        <tr>
+            <TD align="center"><% out.println(++i); %></TD>
+            <TD align="center">
+                <bean:write name="gene"/>
+            </TD>
+        </tr>
+    </logic:iterate> 
+    </TABLE>   
+
+
 <br><br> 
 
 <jsp:include page="links.jsp" flush="true"/>

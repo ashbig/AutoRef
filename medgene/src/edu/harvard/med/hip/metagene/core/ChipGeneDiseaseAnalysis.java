@@ -340,7 +340,7 @@ public long start, end2;
         } finally{
             manager.disconnect(con);
         }
-                        
+                        System.out.println("----------- indirect hash done ----------");
     }
         
     /** parse the text file of chip genes, 
@@ -418,7 +418,7 @@ public long start, end2;
         }
                 
         else
-            new_gene_tree.add(new ChipGene(null, locus_id, 0.0));
+            new_gene_tree.add(new ChipGene(" ", locus_id, 0.0));
 
     }
     
