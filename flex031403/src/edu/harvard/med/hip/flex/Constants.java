@@ -90,6 +90,9 @@ public class Constants {
     // key used to find the barcode of a container
     public static final String CONTAINER_BARCODE_KEY= "CONTAINER_BARCODE";
     
+    // key used to find the list of containers
+    public static final String CONTAINER_LIST_KEY = "CONTAINER_LIST";
+    
     // key used to find the collection of samples
     public static final String SAMPLES_KEY = "SAMPLES";
     
