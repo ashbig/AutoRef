@@ -56,6 +56,7 @@
 
     <logic:iterate  id="curContainer" name="EnterSourcePlateAction.newContainers"> 
          <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+                <tr>
                <TD align="right" >
                      &nbsp;<bean:write name="curContainer" property="id"/>&nbsp;
                </TD>
