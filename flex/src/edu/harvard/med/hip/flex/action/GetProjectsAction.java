@@ -77,6 +77,11 @@ public class GetProjectsAction extends ResearcherAction {
                 projects.add(p);
             } else {
                 projects = Project.getAllProjects();
+                for(int i=0; i<projects.size(); i++) {
+                    Project proj = (Project)projects.elementAt(i);
+                    if(Project.MGC_PROJECT == (proj.getId()))
+                        projects.remove(i);
+                }
             }
             
             request.setAttribute("projects", projects);
