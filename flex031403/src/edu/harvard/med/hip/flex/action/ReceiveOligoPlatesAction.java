@@ -74,62 +74,148 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             return (mapping.findForward("error"));
         }
         
-
-       ReceiveOligoOrdersForm formProper = (ReceiveOligoOrdersForm) form;
-       //formProper.setOligoPlateIds(oligoPlateIds);
         
-        
-     //   System.out.println("Total labels entered: "+ oligoPlateIdList.size());
-        // validate the input oligo plate labels
-        //    try{
-        //        if(!plateExist(oligoPlateIdList)) {
-        //            errors.add("oligoPlateIds", new ActionError("error.plate.invalid.barcode", oligoPlateIds));
-        //            saveErrors(request, errors);
-        //            return (new ActionForward(mapping.getInput()));
-        //        }
-        //    } catch(FlexDatabaseException sqlex) {
-        //        System.out.println("Invalid oligo plate barcode input! " +sqlex);
-        //    }
-        
-        
-        //request.getSession().setAttribute("protocol", protocol);
-       
+        ReceiveOligoOrdersForm formProper = (ReceiveOligoOrdersForm) form;
         List ids = formProper.getOligoPlateList();
         request.getSession().setAttribute("plateList",ids);
+  
+        Connection conn = null;
+        ListIterator iter = ids.listIterator();
+        List containerList = null;
+        int containerId = -1;
+        System.out.println("Total labels entered: "+ ids.size());
         
-        
+        //insert receive plates process execution record
+        //for each plate received.
+        while (iter.hasNext()) {
+            String label = (String)iter.next();
+            System.out.println("The oligo plate label is: "+label);
+            
+            try{
+                containerId = findContainerId(label);
+                System.out.println("container ID is: " + containerId);
+            } catch(FlexCoreException coreEx){
+                System.out.println(coreEx);
+                return (new ActionForward(mapping.getInput()));
+            } catch(FlexDatabaseException dbEx){
+                System.out.println(dbEx);
+                //request.setAttribute(Action.EXCEPTION_KEY, ex);
+                return (mapping.findForward("error"));
+            }
+    
+            
+            try {
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                conn = t.requestConnection();
+                Protocol protocol = new Protocol("receive oligo plates");
+                // Create a process and process object.
+                
+                edu.harvard.med.hip.flex.process.Process process =
+                new edu.harvard.med.hip.flex.process.Process(protocol,
+                edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
+                System.out.println("process created");
+                System.out.println("containerid is: "+ containerId);
+                
+                ProcessContainer ioContainer =
+                new ProcessContainer(containerId,
+                process.getExecutionid(),
+                edu.harvard.med.hip.flex.process.ProcessObject.IO);
+                System.out.println("process object created");
+                
+                // Insert the process and process objects into database.
+                process.addProcessObject(ioContainer);
+                process.insert(conn);
+                
+                // Remove the container from the queue.
+                 LinkedList newItems = new LinkedList();
+                 //   newItems.addLast(item);
+                 //   ContainerProcessQueue queue = new ContainerProcessQueue();
+                 //   queue.removeQueueItems(newItems, conn);
+                
+                 // Add the new container to the queue.
+                 //   newItems.clear();
+                 //   newItems.addLast(new QueueItem(newContainer, protocol));
+                 //   queue.addQueueItems(newItems, conn);
+                
+                 // Commit the changes to the database.
+                // DatabaseTransaction.commit(conn);
+                
+                 // Store the data in the session.
+                 //    Location sLocation = new Location(sourceLocation);
+                 //    request.getSession().setAttribute("dLocation", dLocation);
+                
+                 //    return (mapping.findForward("success"));
+            } catch (Exception ex) {
+                DatabaseTransaction.rollback(conn);
+                request.setAttribute(Action.EXCEPTION_KEY, ex);
+                return (mapping.findForward("error"));
+            } finally {
+                DatabaseTransaction.closeConnection(conn);
+            }
+            
+        } //while
         return (mapping.findForward("success"));
-        //return null;
+        
         // return (mapping.findForward("error"));
     } //flexPerform
     
     
-    // Validate the source plate barcode.
-    private boolean plateExist(LinkedList oligoPlateList) throws FlexDatabaseException {
-        boolean isExist = true;
+    // Validate the plate barcode with containerids in the queue.
+    private boolean plateExist(int id) throws FlexDatabaseException {
+        boolean isExist = false;
         ResultSet rs = null;
         
-        for(int i=0; i<oligoPlateList.size(); i++) {
-            String plateId = (String)oligoPlateList.get(i);
-            String sql = "SELECT containerid FROM containerheader\n"
-            + "WHERE label = '" + plateId + "'";
-            
-            System.out.println("The plate label is: "+ plateId);
-            try {
-                DatabaseTransaction t = DatabaseTransaction.getInstance();
-                rs = t.executeQuery(sql);
-                if (!rs.next()) {
-                    isExist = false;
-                }
-            }catch (SQLException sqlex) {
-                sqlex.printStackTrace();
-                throw new FlexDatabaseException(sqlex+"\nSQL: "+sql);
-            } finally {
-                DatabaseTransaction.closeResultSet(rs);
+        String sql = "SELECT containerid FROM queue\n"
+        + "WHERE containerid = '" + id + "'";
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if (rs.next()) {
+                isExist = true;
             }
-        } //for
+        }catch (SQLException sqlex) {
+            sqlex.printStackTrace();
+            throw new FlexDatabaseException(sqlex+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
         
         return isExist;
     } //PlateExist
+    
+    private int findContainerId(String label) throws FlexCoreException,
+    FlexDatabaseException {
+         int id = -1;
+        String sql = "select c.containerid as containerid, "+
+        "c.containertype as containertype, "+
+        "c.label as label, "+
+        "c.locationid as locationid, "+
+        "c.platesetid as platesetid, "+
+        "l.locationtype as locationtype, "+
+        "l.locationdescription as description\n"+
+        "from containerheader c, containerlocation l\n"+
+        "where c.locationid = l.locationid\n"+
+        "and c.label = '"+ label+"'";
+        ResultSet rs = null;
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next()) {
+                
+                 id = rs.getInt("CONTAINERID");
+                 System.out.println("container ID is: "+ id);
+                //Container curContainer = new Container(id);
+            }
+        } catch (NullPointerException ex) {
+            throw new FlexCoreException("Error occured while initializing container with label: "+label+"\n"+ex.getMessage());
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException("Error occured while initializing container from labe: "+label+"\n"+"\nSQL: "+sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return id;
+    }
     
 }
