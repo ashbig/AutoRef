@@ -95,19 +95,22 @@ public class TraceFileProcessingAction extends ResearcherAction
                 }
                 case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
                 {
-                    request.setAttribute(Constants.JSP_TITLE,"processing Request for Creating Reanaming File for Trace Files");
+                    request.setAttribute(Constants.JSP_TITLE,"processing Request for Creating Renaming File for Trace Files");
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Application will put renaming file into input directory. Report will be send to you by e-mail.");
-             
+       System.out.println("Application will put ");       
                     String inputdir = (String)request.getParameter("inputdir");
                     runner.setInputDirectory(inputdir);
                     runner.setReadType((String)request.getParameter("read_type"));
+                       System.out.println((String)request.getParameter("read_type"));   
                     runner.setSequencingFacility(Integer.parseInt((String)request.getParameter("sequencing_facility")));
+                System.out.println(Integer.parseInt((String)request.getParameter("sequencing_facility")));   
                     FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
                     InputStream input = null;
                     try
                     {
                         input = requestFile.getInputStream();
                         runner.setRenamingFile(input);
+                              System.out.println("setRenamingFile ");     
                     }
                     catch (Exception ex)
                     {
