@@ -176,7 +176,7 @@
                name="getProcessPlateInputForm"
                scope="request"
                input="/SelectProtocol.do">
-      <forward  name="success"   path="/CreatePlate.jsp"/>
+      <forward  name="success"   path="/ConfirmPlate.jsp"/>
     </action>  
 
 
