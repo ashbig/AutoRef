@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-04 15:26:34 $
+ * $Revision: 1.5 $
+ * $Date: 2001-06-05 17:32:07 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -54,10 +54,10 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-04 15:26:34 $
+ * @version    $Revision: 1.5 $ $Date: 2001-06-05 17:32:07 $
  */
 
-public class ViewPendingRequestsAction extends FlexAction{
+public class ViewPendingRequestsAction extends InternalFlexAction{
     
     /**
      * Does the real work for the perform method which must be overriden by the
