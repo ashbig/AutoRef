@@ -413,7 +413,10 @@ public class ReportRunner extends ProcessRunner
     }    
     if( m_rank)
     {
-        if ( clone.getSampleType().equals("ISOLATE")   )     { cloneinfo.append( IsolateTrackingEngine.getRankAsString(clone.getRank())+"\t");}
+        if ( clone.getSampleType().equals("ISOLATE")   )   
+        {
+            cloneinfo.append( IsolateTrackingEngine.getRankStatusAsString(clone.getRank(), clone.getCloneStatus())+"\t");
+        }
         else       { cloneinfo.append("\t");}
     }
       //get directories
