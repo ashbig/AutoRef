@@ -86,8 +86,6 @@ function put5()
 <hr>
 <html:errors/>
 <p>
-<html:form action="/EnterExpressionResult.do" enctype="multipart/form-data">
-<html:hidden property="newPlate"/>
 <table>
     <tr>
         <td class="prompt">Plate:</td>
@@ -95,6 +93,8 @@ function put5()
     </tr>
 </table>
 
+<html:form action="/EnterExpressionResult.do" enctype="multipart/form-data">
+<html:hidden property="newPlate"/>
 <bean:define id="allSamples" name="newExpressionPlate" property="samples"/>
 <p>
 <TABLE border="1" cellpadding="2" cellspacing="0">

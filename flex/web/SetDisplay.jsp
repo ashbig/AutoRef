@@ -16,14 +16,19 @@
 <hr>
 <html:errors/>
 <p>
-<html:form action="/SetDisplay.do">
 
 <table>
     <tr>
         <td class="prompt">Plate:</td>
-        <td><bean:write name="newPlate" /></td>
+        <td><bean:write name="newPlate" /></td>        
+        <html:form action="/PrintLabel.do">
+        <input type="hidden" name="label" value="<bean:write name="newPlate"/>"/>
+        <td><html:submit value="Print Barcode"/></td>
+        </html:form>
     </tr>
 </table>
+
+<html:form action="/SetDisplay.do">
 <input type="hidden" name="newPlate" value="<bean:write name="newPlate" />">
 <html:hidden property="nextForward"/>
 
