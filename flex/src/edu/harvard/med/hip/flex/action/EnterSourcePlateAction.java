@@ -72,21 +72,34 @@ public class EnterSourcePlateAction extends ResearcherAction {
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }
-      
+                  
             Container container = (Container)item.getItem();
             ((CreateProcessPlateForm)form).setSourceLocation(container.getLocation().getId());
 
+            //map the container to the new container
+            Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
+            ContainerMapper mapper = new OneToOneContainerMapper();
+            Vector oldContainers = new Vector();
+            oldContainers.addElement(container);
+            Vector newContainers = mapper.doMapping(oldContainers, protocol);
+            Container newContainer = (Container)newContainers.elementAt(0);
+            Vector sampleLineageSet = mapper.getSampleLineageSet();
+            
             // Get all the locations.
             Vector locations = Location.getLocations();
             
+            // store all the information to the session.
             request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", container);  
+            request.getSession().setAttribute("EnterSourcePlateAction.newContainer", newContainer);  
+            request.getSession().setAttribute("EnterSourcePlateAction.sampleLineageSet", sampleLineageSet);
             request.getSession().setAttribute("EnterSourcePlateAction.locations", locations);
             request.getSession().setAttribute("EnterSourcePlateAction.item", item);
+
             return (mapping.findForward("success"));   
-        } catch (FlexDatabaseException ex) {
+        } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
-        }
+        } 
     }
  
     // Validate the source plate barcode.

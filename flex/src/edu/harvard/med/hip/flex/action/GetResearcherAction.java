@@ -76,11 +76,11 @@ public class GetResearcherAction extends ResearcherAction{
             return (mapping.findForward("error"));
         }
 
-        Container newContainer = (Container)request.getSession().getAttribute("GetLocationAction.newContainer");
+        Container newContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.newContainer");
         Container container = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");
         QueueItem item = (QueueItem)request.getSession().getAttribute("EnterSourcePlateAction.item");
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
-        Vector sampleLineageSet = (Vector)request.getSession().getAttribute("GetLocationAction.sampleLineageSet");
+        Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sampleLineageSet");
         
         Connection conn = null;
         try {
@@ -88,7 +88,7 @@ public class GetResearcherAction extends ResearcherAction{
             conn = t.requestConnection();
 
             // update the location of the old container.
-            container.updateLocation(location);
+            container.updateLocation(newContainer.getLocation().getId());
             // Insert the new container and samples into database.
             newContainer.insert(conn);
             
@@ -139,10 +139,8 @@ public class GetResearcherAction extends ResearcherAction{
             request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
             request.getSession().removeAttribute("EnterSourcePlateAction.locations");
             request.getSession().removeAttribute("EnterSourcePlateAction.item");
-            request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+            request.getSession().removeAttribute("EnterSourcePlateAction.sampleLineageSet");
 
-            // Put the new barcode to the request.
-            request.setAttribute("GetResearcherAction.container", newContainer);
             return (mapping.findForward("success"));            
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

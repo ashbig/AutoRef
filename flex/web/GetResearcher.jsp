@@ -29,9 +29,9 @@
 
     <tr>
     <td><b>Destination plate barcode:</b></td>
-    <td><bean:write name="GetLocationAction.newContainer" property="label"/></td>
+    <td><bean:write name="EnterSourcePlateAction.newContainer" property="label"/></td>
     <td><b>Destination plate location:</b></td>
-    <td><bean:write name="GetLocationAction.newContainer" property="location.type"/></td>
+    <td><bean:write name="EnterSourcePlateAction.newContainer" property="location.type"/></td>
     </tr>
 </table>
     <Center>

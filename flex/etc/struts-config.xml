@@ -227,7 +227,7 @@
     <action    path="/SelectProtocol"
                type="edu.harvard.med.hip.flex.action.SelectProtocolAction"
                name="createProcessPlateForm"
-               scope="session"
+               scope="request"
                validate="false"
                input="/SelectProtocol.jsp">
       <forward  name="success"   path="/EnterSourcePlate.jsp"/>
@@ -238,7 +238,7 @@
     <action    path="/EnterSourcePlate"
                type="edu.harvard.med.hip.flex.action.EnterSourcePlateAction"
                name="createProcessPlateForm"
-               scope="session"
+               scope="request"
                validate="false"
                input="/EnterSourcePlate.jsp">
       <forward  name="success"   path="/GetLocation.jsp"/>
@@ -248,7 +248,7 @@
     <action    path="/EnterOligoPlates"
                type="edu.harvard.med.hip.flex.action.EnterOligoPlatesAction"
                name="createPCRPlateForm"
-               scope="session"
+               scope="request"
                validate="true"
                input="/EnterOligoPlates.jsp">
       <forward  name="success"   path="/GetOligoLocation.jsp"/>
@@ -258,7 +258,7 @@
     <action    path="/GetLocation"
                type="edu.harvard.med.hip.flex.action.GetLocationAction"
                name="createProcessPlateForm"
-               scope="session"
+               scope="request"
                validate="false"
                input="/EnterSourcePlate.jsp">
       <forward  name="success"   path="/GetResearcher.jsp"/>
@@ -268,7 +268,7 @@
     <action    path="/GetResearcher"
                type="edu.harvard.med.hip.flex.action.GetResearcherAction"
                name="createProcessPlateForm"
-               scope="session"
+               scope="request"
                validate="true"
                input="/GetResearcher.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>

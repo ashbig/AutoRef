@@ -1,6 +1,8 @@
 /*
  * GetLocationAction.java
  *
+ * This class gets the location from the form and set the location for the container.
+ *
  * Created on June 26, 2001, 10:03 AM
  */
 
@@ -61,26 +63,15 @@ public class GetLocationAction extends ResearcherAction{
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
 
-        int destLocation = ((CreateProcessPlateForm)form).getDestLocation();
-        Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");        
-        
+        int destLocation = ((CreateProcessPlateForm)form).getDestLocation();                
         try {
 
             // Create the new plate and samples.        
             Location dLocation = new Location(destLocation);
             Container container = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");
-            
-            ContainerMapper mapper = new OneToOneContainerMapper();
-            Vector oldContainers = new Vector();
-            oldContainers.addElement(container);
-            Vector newContainers = mapper.doMapping(oldContainers, protocol);
-            Container newContainer = (Container)newContainers.elementAt(0);
-            newContainer.setLocation(dLocation);
-            Vector sampleLineageSet = mapper.getSampleLineageSet();
-            
-            // Store the data in the session.        
-            request.getSession().setAttribute("GetLocationAction.newContainer", newContainer);  
-            request.getSession().setAttribute("GetLocationAction.sampleLineageSet", sampleLineageSet);
+            Container newContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.newContainer");            
+            newContainer.setLocation(dLocation);            
+                 
             return (mapping.findForward("success"));            
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
