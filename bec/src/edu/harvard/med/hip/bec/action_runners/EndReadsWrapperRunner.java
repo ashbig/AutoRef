@@ -226,10 +226,10 @@ public class EndReadsWrapperRunner extends ProcessRunner
         FileReference filereference = null;
          try
           {
-              if ( ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION ) // check for read quality 
-              {
+           //   if ( ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION ) // check for read quality 
+           //   {
                     if (! isSufficientQualityRead(read) )     return;
-              }
+           //   }
               //read = (Read) reads.get(count);
               istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
               read.setIsolateTrackingId( istr_info[0]);

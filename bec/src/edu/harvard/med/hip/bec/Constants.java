@@ -225,6 +225,12 @@ public class Constants {
      public static final int            PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  = 72;
       public static final int           PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  = 73;
       public static final int           PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  = 74;
+       public static final int         PROCESS_DELETE_PLATE = 75;//
+    public static final int         PROCESS_DELETE_CLONE_READS = 76;//
+    public static final int         PROCESS_DELETE_CLONE_FORWARD_READ = 77;//
+    public static final int         PROCESS_DELETE_CLONE_REVERSE_READ = 78;//
+    public static final int         PROCESS_DELETE_CLONE_SEQUENCE = 79;//
+ 
    
      //69
        
