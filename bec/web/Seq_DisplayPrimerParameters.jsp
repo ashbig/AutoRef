@@ -7,6 +7,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
+<%@ page import="edu.harvard.med.hip.bec.programs.primer3.*" %>
 <html>
 
 <head>
@@ -150,7 +151,7 @@ Distance between sequencing primer and start of high quality read length</b></fo
       <% 
 
 	
-if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals("0") )
+if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_ONE_STRAND) ))
      { %><font color="#000080">
       <p><b>Single Strand</b> (Coding strand, forward primers)</p>
       <%}else{%>

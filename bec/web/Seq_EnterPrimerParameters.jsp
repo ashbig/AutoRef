@@ -7,6 +7,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
+<%@ page import="edu.harvard.med.hip.bec.programs.primer3.*" %>
 <html>
 
 <head>
@@ -231,10 +232,10 @@ Distance between sequencing primer and start of high quality read length</b></fo
       <p align="left"><font color="#000080"><b>Number of strands to sequence</b></font></td>
     <td width="50%" height="3" align="center" valign="bottom"  bgcolor="#e4e9f8"> 
       <p align="left"> 
-        <input type="radio" value="0" name="p_number_of_strands">
+        <input type="radio" value="<%= Primer3Wrapper.WALKING_TYPE_ONE_STRAND %>" name="p_number_of_strands">
         <b>Single Strand</b> (Coding strand, forward primers only)</p>
       <p align="left"> 
-        <input type="radio" name="p_number_of_strands" value="1" checked>
+        <input type="radio" name="p_number_of_strands" value="<%= Primer3Wrapper.WALKING_TYPE_BOTH_STRAND %>" checked>
         <b>Both Strands</b> (Both forward and reverse primers)</p></td>
   </tr>
   <tr> 
