@@ -21,6 +21,9 @@ import edu.harvard.med.hip.flex.process.*;
 public class Project {
     public final static int HUMAN = 1;
     public final static int YEAST = 2;
+    public final static int PSEUDOMONAS = 3;
+    public final static int CLONTECH = 4;
+    public final static int BREASTCANCER = 5;
     
     private int id;
     private String name;
