@@ -12,13 +12,31 @@
 </head>
 <body>
 
-<h2><bean:message key="bec.name"/> : Customer Registration</h2>
-<hr>
+
 <html:errors/>
 <p>
 
 <html:form action="CustomerRegistration.do" focus="firstName">
-    <table width="80%" align="center">
+
+<div align="center">
+  <center>
+
+ <table border="0" cellpadding="0" cellspacing="0" width="78%" height="46"> 
+<tr>
+      <td width="54%" height="22" valign="bottom" align="left">
+        <h1><b><font color="#000080">Resercher Registration </font></b></h1>
+      </td>
+        <td width="46%" height="22" valign="middle" align="right"><img src="./jpg/earth.gif" width="76" height="76"><img src="./jpg/pc&woman.gif" width="110" height="76">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="100%" colspan="2" height="24">
+        <hr>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%" colspan="2" height="21">
+        <table border="0" cellpadding="0" cellspacing="0" width="80%">
+  
         <tr>
         <td class="prompt">First Name:</td>
         <td><html:text property="firstName" size="40"/></td>
@@ -104,20 +122,14 @@
         </tr>
 
     </table>
-
+</tr>
+</table>
+</center>
+</div>
 </html:form>
 
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<center>
-<small>** This system and the underlying database was built in conjunction with
-<a href="http://www.3rdmill.com" target="_blank">3rd Millennium Inc.</a> **</small>
-<p><a href="http://www.3rdmill.com" target="_blank">
-    <img height=40 
-        src="3rdhoriz.gif" 
-        width=150 border=0>
-</a>
-</center>
+
+
 
 </body>
 </html>
