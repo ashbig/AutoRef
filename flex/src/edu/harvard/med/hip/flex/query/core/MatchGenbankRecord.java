@@ -108,11 +108,11 @@ public class MatchGenbankRecord {
     public String getUnigene() {return unigene;}
     
     public List getLocusidList() {
+        List locusidList = new ArrayList();
         if(locusid == null || locusid.length() == 0) {
-            return null;
+            return locusidList;
         }
         
-        List locusidList = new ArrayList();
         StringTokenizer st = new StringTokenizer(locusid, ",");
         while(st.hasMoreTokens()) {
             String s = st.nextToken();

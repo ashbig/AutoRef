@@ -40,7 +40,11 @@ public class ConstructInfoBean {
         
         for(int i=0; i<constructInfos.size(); i++) {
             ConstructInfo info = (ConstructInfo)constructInfos.get(i);
-            n = n+info.getNumOfClones();
+            int num = info.getNumOfClones();
+            if(num == 0) {
+                num = 1;
+            }
+            n = n+num;
         }
         
         return n;

@@ -60,8 +60,8 @@ public class GetSearchTermsAction extends FlexAction {
         searchTerms.add(new SearchTerm(SearchTerm.LOCUS, "Locus ID"));
         
         List databases = new ArrayList();
-        databases.add(new SearchDatabase(SearchDatabase.HUMAN, "All Human Clones"));
-        databases.add(new SearchDatabase(SearchDatabase.HUMAN_FINISHED, "Sequence Verified Human Clones"));
+        databases.add(new SearchDatabase(SearchDatabase.HUMAN, SearchDatabase.HUMAN, SearchDatabase.HUMAN_DB));
+        databases.add(new SearchDatabase(SearchDatabase.HUMAN_FINISHED, SearchDatabase.HUMAN_FINISHED, SearchDatabase.HUMAN_FINISHED_DB));
         
         request.setAttribute("searchTerms", searchTerms);
         request.setAttribute("searchDatabases", databases);     

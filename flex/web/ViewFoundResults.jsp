@@ -17,6 +17,16 @@
 <hr>
 <html:errors/>
 
+<h3>Search Parameters:</h3>
+<table>
+<logic:iterate name="params" id="param">
+<tr>
+    <td class="prompt"><small><bean:write name="param" property="name"/></small></td>
+    <td><small><bean:write name="param" property="value"/></small></td>
+</tr>
+</logic:iterate>
+</table>
+
 <p>
 <html:form action="/GetSearchResults.do">
     Total pages: <bean:write name="pages"/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -30,6 +40,8 @@
 <html:hidden property="condition"/>
 <html:submit value="Go"/>
 </html:form>
+
+<p>
 <TABLE border=1>
     <tr bgcolor="#9bbad6">
     <th>Search Term</th><th>Match Genbank</th><th>Locus ID</th><th>Match FLEXGene</th><th>Status</th><th>Found By</th><th>Alignments</th><th>Search Method</th>
@@ -56,14 +68,20 @@
                     <flex:write name="mfs" property="flexsequenceid"/>
                 </A>
                 </td>
+
                 <td>
+                <logic:equal name="mfs" property="flexSequence.isCloned" value="true">
                 <A HREF="ViewConstructsInfo.do?sequenceid=<bean:write name="mfs" property="flexsequenceid"/>">
+                </logic:equal>
                 <flex:write name="mfs" property="flexSequence.flexstatus"/>
+                <logic:equal name="mfs" property="flexSequence.isCloned" value="true">
                 </A>
+                </logic:equal>
                 </td>
+
                 <td><flex:write name="mfs" property="foundBy"/></td>
                 <logic:equal name="mfs" property="isMatchByGi" value="F">
-                <td><A target="_blank" href="ViewBlastOutput.do?outputFile=<bean:write name="mfs" property="blastHit.outputFile"/>">View Alignments</A></td>
+                <td><A target="_blank" href="ViewBlastOutput.do?outputFile=<bean:write name="mfs" property="blastHit.outputFile"/>&sequenceid=<bean:write name="mfs" property="flexsequenceid"/>">View Alignments</A></td>
                 </logic:equal>
                 <logic:notEqual name="mfs" property="isMatchByGi" value="F">
                 <td>NA</td>

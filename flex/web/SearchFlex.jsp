@@ -68,8 +68,8 @@
 
     <tr>
     <td></td>
-    <td class="prompt">Percent Identity:
-    <td><html:text property="pid"/>%</td>
+    <td class="prompt">Percent Identity (%):
+    <td><html:text property="pid"/></td>
     </tr>
 
     <tr>

@@ -55,22 +55,27 @@ public class ViewBlastOutputAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         String fileName = ((QueryFlexForm)form).getOutputFile();
+        int sequenceid = ((QueryFlexForm)form).getSequenceid();
         
         try {
             BufferedReader in = new BufferedReader(new FileReader(fileName));
             StringBuffer sb = new StringBuffer();
-            boolean start = false;
+            String startString = ">"+sequenceid;
+            String stopString = ">";
+            boolean isStart = false;
             
             String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                if(start) {
+            while ((inputLine = in.readLine()) != null) {               
+                if(inputLine.indexOf(startString)>=0) {
                     sb.append(inputLine+"\n");
+                    isStart = true;
                     continue;
                 }
-                
-                if(inputLine.indexOf(">")==0) {
+                if(inputLine.indexOf(stopString)>=0 && isStart) {
+                    break;
+                }
+                if(isStart) {
                     sb.append(inputLine+"\n");
-                    start = true;
                 }
             }
             in.close();

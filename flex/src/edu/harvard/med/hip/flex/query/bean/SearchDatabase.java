@@ -13,24 +13,41 @@ import edu.harvard.med.hip.flex.util.FlexSeqAnalyzer;
  * @author  DZuo
  */
 public class SearchDatabase {
-    public static final String HUMAN = FlexSeqAnalyzer.HUMANDB;
-    public static final String HUMAN_FINISHED = "human_finished";
+    public static final String HUMAN_DB = FlexSeqAnalyzer.HUMANDB;
+    public static final String HUMAN_FINISHED_DB = "human_finished";
+    
+    public static final String HUMAN = "All Human Clones";
+    public static final String HUMAN_FINISHED = "Sequence Verified Human Clones";
     
     private String name;
     private String value;
+    private String db;
     
     public void setName(String name) {this.name=name;}
     public void setValue(String value) {this.value = value;}
+    public void setDb(String db) {this.db = db;}
     
     public String getName() {return name;}
     public String getValue() {return value;}
+    public String getDb() {return db;}
     
     /** Creates a new instance of SearchDatabase */
     public SearchDatabase() {
     }
     
-    public SearchDatabase(String name, String value) {
+    public SearchDatabase(String name, String value, String db) {
         this.name = name;
         this.value = value;
+        this.db = db;
+    }
+    
+    public static String getDbByName(String name) {
+        if(SearchDatabase.HUMAN.equals(name)) {
+            return SearchDatabase.HUMAN_DB;
+        }
+        if(SearchDatabase.HUMAN_FINISHED.equals(name)) {
+            return SearchDatabase.HUMAN_FINISHED_DB;
+        }
+        return null;
     }
 }

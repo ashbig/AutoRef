@@ -15,8 +15,12 @@ import edu.harvard.med.hip.flex.query.core.*;
  * @author  DZuo
  */
 public class GenbankBlastQueryHandler extends QueryHandler {
-    private boolean isRelatedSeq = false;
+    private boolean isRelatedSeq;
     private QueryHandler giBlastQueryHandler;
+    
+    public QueryHandler getQueryHandler() {
+        return giBlastQueryHandler;
+    }
     
     /** Creates a new instance of GenbankBlastQueryHandler */
     public GenbankBlastQueryHandler(List params) {
@@ -134,6 +138,8 @@ public class GenbankBlastQueryHandler extends QueryHandler {
     }    
     
     protected void setQueryParams(List params) {
+        isRelatedSeq = false;
+        
         if(params == null || params.size() == 0)
             return;
         
@@ -151,6 +157,7 @@ public class GenbankBlastQueryHandler extends QueryHandler {
     
     public static void main(String args[]) {
         List genbanks = new ArrayList();
+        /**
         genbanks.add("NM_130786");           
         genbanks.add("AC010642");            
         genbanks.add("AF414429");            
@@ -165,10 +172,17 @@ public class GenbankBlastQueryHandler extends QueryHandler {
         genbanks.add("BC001882.1");
         genbanks.add("12345");
         genbanks.add("abc");
+         **/
+        genbanks.add("U95089");
         
         List params = new ArrayList();
+        params.add(new Param(Param.BLASTLENGTH, "79"));
+        params.add(new Param(Param.BLASTPID, "89"));
         
         GenbankBlastQueryHandler handler = new GenbankBlastQueryHandler(params);
+        System.out.println(((BlastQueryHandler)((GiBlastQueryHandler)handler.getQueryHandler()).getBlastHandler()).getPercentPid());
+        System.out.println(((BlastQueryHandler)((GiBlastQueryHandler)handler.getQueryHandler()).getBlastHandler()).getAlignLength());
+        
         try {
             handler.handleQuery(genbanks);
         } catch (Exception ex) {

@@ -9,6 +9,7 @@ package edu.harvard.med.hip.flex.query.handler;
 import edu.harvard.med.hip.flex.util.FlexSeqAnalyzer;
 import edu.harvard.med.hip.flex.blast.*;
 import edu.harvard.med.hip.flex.query.core.*;
+import edu.harvard.med.hip.flex.query.bean.*;
 import edu.harvard.med.hip.flex.query.QueryException;
 import edu.harvard.med.hip.flex.infoimport.locuslinkdb.ThreadedGiRecordPopulator;
 import edu.harvard.med.hip.flex.Constants;
@@ -23,22 +24,27 @@ import java.text.SimpleDateFormat;
  */
 public class BlastQueryHandler extends QueryHandler {
     public static final int DEFAULT_HITS = 5;
-    public static final String DEFAULT_DB = FlexSeqAnalyzer.HUMANDB;
-    public static final double DEFAULT_PID = 0.9;
+    public static final String DEFAULT_DB = SearchDatabase.HUMAN;
+    public static final int DEFAULT_PID = 90;
     public static final int DEFAULT_LENGTH = 70;
     public static final int DIRECT_SEARCH = 1;
     public static final int SEARCH_BY_GI = 2;
     public static final String FILEPATH = Constants.TMPDIR;
     
-    protected int hits = DEFAULT_HITS;
-    protected String db = DEFAULT_DB;
-    protected double blastPid = DEFAULT_PID;
-    protected int alignLength = DEFAULT_LENGTH;
+    protected int hits;
+    protected String db;
+    protected int blastPid;
+    protected int alignLength;
     
-    protected int searchType = DIRECT_SEARCH;
+    protected int searchType;
     
     public BlastQueryHandler() {
         super();
+        hits = DEFAULT_HITS;
+        db = DEFAULT_DB;
+        blastPid = DEFAULT_PID;
+        alignLength = DEFAULT_LENGTH;
+        searchType = DIRECT_SEARCH;
     }
     
     public BlastQueryHandler(List params) {
@@ -48,17 +54,25 @@ public class BlastQueryHandler extends QueryHandler {
     public void setHits(int hits) {
         this.hits = hits;
     }
-    
+    public int getHits() {return hits;}
     public void setDb(String db) {
         this.db = db;
     }
     
-    public void setPercentPid(double blastPid) {
+    public void setPercentPid(int blastPid) {
         this.blastPid = blastPid;
+    }
+    
+    public int getPercentPid() {
+        return blastPid;
     }
     
     public void setAlignLength(int alignLength) {
         this.alignLength = alignLength;
+    }
+    
+    public int getAlignLength() {
+        return alignLength;
     }
     
     public int getSearchType() {
@@ -71,7 +85,7 @@ public class BlastQueryHandler extends QueryHandler {
     
     /**
      * Blast FLEXGene database for a list of GI numbers and populate foundList and
-     * noFoundList. 
+     * noFoundList.
      *  foundList:      GiRecord object => ArrayList of MatchFlexSequence objects
      *  noFoundList:    GiRecord object => NoFound object
      *
@@ -171,9 +185,9 @@ public class BlastQueryHandler extends QueryHandler {
                             StringTokenizer st = new StringTokenizer(identity);
                             int numerator = Integer.parseInt((st.nextToken(" /")).trim());
                             int denomenator = Integer.parseInt((st.nextToken(" /")).trim());
-                            double percentIdentity = numerator/(double)denomenator;
+                            int percentIdentity = numerator*100/denomenator;
                             //meet the criteria
-                            if (percentIdentity>=blastPid && numerator >= alignLength) {
+                            if (percentIdentity>=blastPid && denomenator >= alignLength) {
                                 isFound = true;
                             }
                         }
@@ -201,13 +215,19 @@ public class BlastQueryHandler extends QueryHandler {
     }
     
     protected void setQueryParams(List params) {
+        hits = DEFAULT_HITS;
+        db = DEFAULT_DB;
+        blastPid = DEFAULT_PID;
+        alignLength = DEFAULT_LENGTH;
+        searchType = DIRECT_SEARCH;
+        
         if(params == null)
             return;
         
         for(int i=0; i<params.size(); i++) {
             Param p = (Param)params.get(i);
             if(Param.BLASTDB.equals(p.getName()) && p.getValue() != null && p.getValue().length()!=0) {
-                setDb(p.getValue());
+                setDb(SearchDatabase.getDbByName(p.getValue()));
             }
             if(Param.BLASTHIT.equals(p.getName()) && p.getValue() != null && p.getValue().length()!=0) {
                 setHits(Integer.parseInt(p.getValue()));
@@ -236,7 +256,13 @@ public class BlastQueryHandler extends QueryHandler {
         giList.add("34851998");
         giList.add("16550723");
         
-        QueryHandler handler = new BlastQueryHandler();
+        List params = new ArrayList();
+        params.add(new Param(Param.BLASTLENGTH, "100"));
+        params.add(new Param(Param.BLASTPID, "70"));
+        QueryHandler handler = new BlastQueryHandler(params);
+        System.out.println("align length: "+((BlastQueryHandler)handler).getAlignLength());
+        System.out.println("hits: "+((BlastQueryHandler)handler).getHits());
+        
         try {
             handler.handleQuery(giList);
         } catch (Exception ex) {

@@ -60,7 +60,10 @@ public class GetSearchResultsAction extends FlexAction {
         int pageSize = ((QueryFlexForm)form).getPageSize();
 
         QueryManager manager = new QueryManager();
-     
+        
+        List params = manager.getParams(searchid);
+        request.setAttribute("params", params);
+        
         if("found".equals(condition)) {
             List founds = manager.getFounds(searchid, (currentPage-1)*pageSize, (currentPage)*pageSize);
             

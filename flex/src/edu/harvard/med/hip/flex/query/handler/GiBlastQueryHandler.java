@@ -18,6 +18,8 @@ public class GiBlastQueryHandler extends QueryHandler {
     QueryHandler giHandler;
     QueryHandler blastHandler;
     
+    public QueryHandler getBlastHandler() {return blastHandler;}
+    
     /** Creates a new instance of GiBlastQueryHandler */
     public GiBlastQueryHandler(List params) {
         super(params);
@@ -94,10 +96,13 @@ public class GiBlastQueryHandler extends QueryHandler {
         searchTerms.add("345");
         
         List params = new ArrayList();
-        params.add(new Param(Param.BLASTPID, "90"));
-        params.add(new Param(Param.BLASTLENGTH, "100"));
+        params.add(new Param(Param.BLASTPID, "0.9"));
+        params.add(new Param(Param.BLASTLENGTH, "70"));
         
         GiBlastQueryHandler handler = new GiBlastQueryHandler(params);
+        System.out.println(((BlastQueryHandler)handler.getBlastHandler()).getHits());
+        System.out.println(((BlastQueryHandler)handler.getBlastHandler()).getAlignLength());
+        
         try {
             handler.handleQuery(searchTerms);
         } catch (Exception ex) {

@@ -13,7 +13,7 @@ package edu.harvard.med.hip.flex.query.core;
 public class Param {
     public static final String BLASTDB = "Blast DB";
     public static final String BLASTHIT = "Blast Hit";
-    public static final String BLASTPID = "Blast PID";
+    public static final String BLASTPID = "Blast PID (%)";
     public static final String BLASTLENGTH = "Blast Length";
     public static final String ISRELATEDSEQ = "Related Sequences Used";
     public static final String ISRELATEDSEQ_YES = "YES";

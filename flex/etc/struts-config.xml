@@ -1277,7 +1277,7 @@
       <forward  name="success_found"   path="/ViewFoundResults.jsp"/>
       <forward  name="success_nofound"   path="/ViewNoFoundResults.jsp"/>
       <forward  name="fail"   path="/ViewResultsFail.jsp"/>
-      <forward  name="empty"   path="/ViewResultsEmpty.jsp"/>
+      <forward  name="empty"   path="/ViewSearchResultsEmpty.jsp"/>
     </action>  
                           
     <action    path="/ViewConstructsInfo"

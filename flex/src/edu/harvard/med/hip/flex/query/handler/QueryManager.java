@@ -57,7 +57,7 @@ public class QueryManager {
     
     public List getSearchRecords(String username) {
         List searchRecords = new ArrayList();
-        String sql = "select * from search where username=?";
+        String sql = "select * from search where username=? order by searchid desc";
         DatabaseTransaction t = null;
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -380,7 +380,7 @@ public class QueryManager {
         " p.projectid, p.name, w.workflowid, w.name, cs.type"+
         " from constructdesign cd, cloningprogress cl, cloningstatus cs, project p, workflow w"+
         " where cd.constructid=cl.constructid(+)"+
-        " and cl.statusid=cs.statusid"+
+        " and cl.statusid=cs.statusid(+)"+
         " and cd.projectid=p.projectid"+
         " and cd.workflowid=w.workflowid"+
         " and cd.sequenceid=?";
@@ -483,6 +483,28 @@ public class QueryManager {
         }
     }
     
+    public List getParams(int searchid) {
+        String sql = "select * from param where searchid="+searchid;
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        List params = new ArrayList();
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String paramName = rs.getString(1);
+                String paramValue = rs.getString(2);
+                Param param = new Param(paramName, paramValue);
+                params.add(param);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        
+        return params;
+    }
+    
     private void setCloneInfo(List infos, CloneInfo cloneInfo) {
         for(int i=0; i<infos.size(); i++) {
             ConstructInfoBean info = (ConstructInfoBean)infos.get(i);
@@ -532,7 +554,7 @@ public class QueryManager {
         System.out.println("Number of results: "+manager.getNumOfResults(1));
         
         System.out.println("=============== Test getFounds ================");
-        List founds = manager.getFounds(6);
+        List founds = manager.getFounds(1);
         if(founds == null) {
             System.out.println(manager.getError());
         } else {
@@ -578,7 +600,7 @@ public class QueryManager {
         }
         
         System.out.println("=============== test getNoFounds ==============");
-        List noFounds = manager.getNoFounds(6);
+        List noFounds = manager.getNoFounds(1);
         if(noFounds== null) {
             System.out.println(manager.getError());
         } else {
@@ -590,7 +612,9 @@ public class QueryManager {
         }
         
         System.out.println("================ test getConstructInfo ============");
-        List constructInfos = manager.getConstructInfo(seqids);
+        List sequenceids = new ArrayList();
+        sequenceids.add("36476");
+        List constructInfos = manager.getConstructInfo(sequenceids);
         if(constructInfos == null) {
             System.out.println(manager.getError());
             System.exit(0);
@@ -629,6 +653,12 @@ public class QueryManager {
                     System.out.println("\t\t"+names.getGenbank());
                 }
             }
+        }
+        
+        List params = manager.getParams(1);
+        for(int i=0; i<params.size(); i++) {
+            Param p = (Param)params.get(i);
+            System.out.println(p.getName()+"\t"+p.getValue());
         }
     }
 }

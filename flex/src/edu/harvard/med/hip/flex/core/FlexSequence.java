@@ -1,5 +1,5 @@
 /**
- * $Id: FlexSequence.java,v 1.4 2003-10-17 13:08:38 dzuo Exp $
+ * $Id: FlexSequence.java,v 1.5 2004-03-10 19:02:23 dzuo Exp $
  *
  * File     : FlexSequence.java
  * Date     : 05022001
@@ -930,6 +930,13 @@ public class FlexSequence extends CDNASequence {
             quality = GOOD;
         }
         return quality;
+    }
+    
+    public boolean getIsCloned() {
+        if(PENDING.equals(flexstatus) || REJECTED.equals(flexstatus)) {
+            return false;
+        }
+        return true;
     }
     
     //******************************************************************//

@@ -15,9 +15,8 @@
 <H2><bean:message key="flex.name"/> : Query Results</h2>
 <hr>
 <html:errors/>
+
 <p>
-
-
 <h3>Search Parameters:</h3>
 <table>
 <logic:iterate name="params" id="param">
@@ -29,17 +28,9 @@
 </table>
 
 <p>
-<TABLE border=1>
-    <tr bgcolor="#9bbad6">
-    <th>Search Term</th><th>Reason</th>
-    </tr>
-    <logic:iterate name="results" id="result">
-    <tr>
-                <td><bean:write name="result" property="searchTerm"/></td>
-                <td><bean:write name="result" property="reason"/></td> 
-    </TR>
-    </logic:iterate>
-</table>
+
+<h3>No results to display.</H3>
+
 
 </body>
 </html>
