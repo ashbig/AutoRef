@@ -10,10 +10,13 @@
 package edu.harvard.med.hip.bec.ui_objects;
 
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.action_runners.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.*;
 import java.util.*;
 import java.sql.*;
+import java.io.*;
 
 /**
  *
@@ -174,4 +177,142 @@ public class UICloneSample
             
         }
     
+    
+    
+       public static ArrayList getCloneInfo( String items, int item_type,
+          boolean isAssembledSequenceInfo, boolean isACERefsequenceId)
+          throws BecDatabaseException
+     {
+        ArrayList clones = new ArrayList();String additional_id = null;
+        String sql = constructQueryString(items, item_type    ,  isAssembledSequenceInfo,  isACERefsequenceId);
+        if (sql == null) return null;
+        UICloneSample clone = null; 
+        ResultSet rs = null;
+        EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
+         Hashtable processed_clone_ids = new Hashtable();
+        Integer current_clone_id = null;
+       
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            //sql="select flexcloneid  as CLONEID, FLEXSEQUENCEID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, i.CONSTRUCTID as CONSTRUCTID, i.STATUS as STATUS , RANK, i.SCORE as SCORE, i.SAMPLEID as SAMPLEID, i.ASSEMBLY_STATUS as ASSEMBLYSTATUS, POSITION, SAMPLETYPE , LABEL  from flexinfo f,isolatetracking i, sample s, containerheader c  where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid  and s.containerid=c.containerid and flexcloneid in (1062,123,546,582) order by c.containerid,position desc";
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                clone = new UICloneSample();
+                 clone.setCloneId (rs.getInt("CLONEID"));
+                 if (clone.getCloneId() > 0 )
+                 {
+                    current_clone_id = new Integer(clone.getCloneId());
+                    if (  processed_clone_ids.contains( current_clone_id ))
+                    {
+                        continue;
+                    }
+                   processed_clone_ids.put(current_clone_id, current_clone_id );
+                 }
+                 clone.setSampleType(rs.getString("SAMPLETYPE"));
+                 clone.setPlateLabel (rs.getString("LABEL"));
+                 clone.setPosition (rs.getInt("POSITION"));
+                 clone.setIsolateTrackingId (rs.getInt("ISOLATETRACKINGID"));
+                 clone.setCloneStatus(rs.getInt("STATUS"));
+                 clone.setRank(rs.getInt("RANK"));
+                 clone.setScore( rs.getInt("SCORE"));
+                clone.setCloneAssemblyStatus(rs.getInt("ASSEMBLYSTATUS"));
+                clone.setSampleId(rs.getInt("SAMPLEID"));
+                clone.setFLEXRefSequenceId(rs.getInt("FLEXSEQUENCEID"));
+                clone.setConstructId (rs.getInt("CONSTRUCTID"));
+                
+                clone.setTraceFilesDirectory(erw.getOuputBaseDir()+ File.separator + clone.getFLEXRefSequenceId() + File.separator + clone.getCloneId());
+                if ( isAssembledSequenceInfo)
+                {
+                    clone.setCloneSequenceCdsStart( rs.getInt("cloneseqCDSStart"));
+                    clone.setCloneSequenceCdsStop( rs.getInt("cloneseqcdsstop"));
+                    clone.setSequenceAnalisysStatus(rs.getInt("cloneseqANALYSISSTATUS"));
+                    clone.setSequenceId (rs.getInt("clonesequenceid"));
+                    clone. setSequenceType(rs.getInt("cloneSEQUENCETYPE"));
+                }
+                if ( isACERefsequenceId)
+                {
+                     clone.setRefSequenceId(rs.getInt("acerefsequenceid")); 
+                }
+                clones.add(clone);
+            }
+            return clones;
+            
+        }
+        catch(Exception e)
+        {
+          throw new BecDatabaseException("Cannot get data for clone "+e.getMessage() +"\n"+sql);
+        }
+    }
+    
+       
+    public static String constructQueryString( String items, int items_type,
+                            boolean isAssembledSequenceInfo, boolean isACERefsequenceId)
+    {
+        String what_str = ""; String from_str = ""; 
+        String where_str = ""; String orderby_str = "";
+        what_str = "select flexcloneid  as CLONEID, FLEXSEQUENCEID, " +
+                    " i.ISOLATETRACKINGID as ISOLATETRACKINGID, i.CONSTRUCTID as CONSTRUCTID, i.STATUS as STATUS " +
+                    ", RANK, i.SCORE as SCORE, i.SAMPLEID as SAMPLEID, i.ASSEMBLY_STATUS as ASSEMBLYSTATUS, " +
+                    "POSITION, SAMPLETYPE , " +
+                    "LABEL ";
+        from_str = " from flexinfo f,isolatetracking i, sample s, containerheader c ";
+        orderby_str = " order by c.containerid,position desc";  
+         if ( isAssembledSequenceInfo)
+        {
+            from_str += ", assembledsequence a ";
+            what_str += ", a.SEQUENCEID as clonesequenceid   ,a.ANALYSISSTATUS as cloneseqANALYSISSTATUS  ,a.SEQUENCETYPE as cloneSEQUENCETYPE "
+            + ", a.CDSSTART   as cloneseqCDSStart,   a.CDSSTOP   as cloneseqcdsstop ";
+            where_str +="  and a.isolatetrackingid(+) =i.isolatetrackingid   ";
+        }
+        if ( isACERefsequenceId )
+        {
+            from_str += ", sequencingconstruct sc " ;
+            what_str += ", sc.REFSEQUENCEID as acerefsequenceid ";
+            where_str +=" and sc.CONSTRUCTID(+)=i.constructid  ";
+        }
+        switch (items_type)
+        {
+            case Constants.ITEM_TYPE_PLATE_LABELS://plates
+            {
+                
+                where_str = " where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
+     +" and  s.containerid=c.containerid and s.containerid in (select containerid from containerheader where label in ("
+   + items+"))"  +where_str;
+                return what_str+from_str+where_str+orderby_str;
+            } 
+            case Constants.ITEM_TYPE_CLONEID:
+            {
+                 where_str =  " where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
+     +" and s.containerid=c.containerid and flexcloneid in ("+items +")" +where_str;
+                return what_str+from_str+where_str+orderby_str ;
+            }
+            default: return null;
+        }
+     
+   
+    }
+
+
+ public static void main(String args[]) 
+    {
+         
+        try
+        {
+             int items_type = Constants.ITEM_TYPE_CLONEID;
+             String items = "582, 123, 1032";
+//System.out.println( constructQueryString(  items,  items_type,   true,  true));
+//System.out.println( constructQueryString(  items,  items_type,   true,  false));
+//System.out.println( constructQueryString(  items,  items_type,   false,  true));
+//System.out.println( constructQueryString(  items,  items_type,   false,  false));
+ArrayList a= getCloneInfo(  items,  items_type,false,false);
+
+         }
+        catch(Exception e)
+        {
+        }
+        System.exit(0);
+ }
 }

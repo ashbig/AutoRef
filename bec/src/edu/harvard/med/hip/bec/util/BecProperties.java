@@ -2,29 +2,15 @@
  * File : BecProperties.java
  * Classes : BecProperties
  *
- * Description :
- *
- *      Abstract singleton class that hold flex properties.
- *
- *
- * Author : Juan Munoz (jmunoz@3rdmill.com)
  * 
- * See COPYRIGHT file for copyright information
- *
- *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2005-01-20 16:37:59 $
+ * $Revision: 1.3 $
+ * $Date: 2005-01-20 16:38:35 $
  * $Author: Elena $
  *
  ******************************************************************************
  *
- * Revision history (Started on July 6, 2001) :
  *
- *    Add entries here when updating the code. Remember to date and insert
- *    your 3 letters initials.
- *
- *    Jul-07-2001 : JMM - Class created. 
  *
  */
 
@@ -38,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.2 $ $Date: 2005-01-20 16:37:59 $
+ * @version    $Revision: 1.3 $ $Date: 2005-01-20 16:38:35 $
  */
 
 public class BecProperties
