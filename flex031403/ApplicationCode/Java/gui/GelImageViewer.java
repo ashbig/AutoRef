@@ -1,5 +1,5 @@
 /**
- * $Id: GelImageViewer.java,v 1.2 2001-05-14 15:39:34 dongmei_zuo Exp $
+ * $Id: GelImageViewer.java,v 1.3 2001-05-14 18:06:13 wenhong_mar Exp $
  *
  * File     	: GelImage.java 
  * Date     	: 05102001
@@ -92,7 +92,8 @@ public class GelImageViewer {
 		String sql = 	 "select h.label, s.containerposition, s.constructid, s.sampleid " +
 				 " from Sample s, ContainerHeader h " +
 				 " where s.containerid = h.containerid " +
-				 " and h.label = '" + gelName + "'";
+				 " and h.label = '" + gelName + "'" +
+				 " order by s.containerposition";
 				 
 		
 		try{
