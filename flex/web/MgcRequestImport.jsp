@@ -74,6 +74,29 @@ The request uploading may take some time. The e-mail notification will be sent t
 
 
 </table>
+<P>
+<b>Blast Parameters<b>:
+<table>
+    <tr>
+        <td >&nbsp;&nbsp;Required percent identity<td>
+        <td align="right"><html:text property="requiredPercentIdentity" size="4" value="95" /></td>
+    </tr>
+    <tr>
+        <td >&nbsp;&nbsp;Required cds length limit<td>
+        <td align="right"><html:text property="requiredCdslengthLimit" size="4" value="70"/></td>
+    </tr>
+</table>
+
+<P>
+<table>
+    <tr>
+         <td class="prompt">Put sequences on queue for processing?<td>
+        <td align="right">
+            <html:radio property="isPutOnQueue" value="true"/>Yes
+            <html:radio property="isPutOnQueue" value="false"/>No
+        </td>
+    </tr>
+</table>
 
 <P><P>
 <html:submit/>
