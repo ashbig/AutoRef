@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-18 17:22:05 $
+ * $Revision: 1.4 $
+ * $Date: 2001-06-18 18:23:52 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -47,6 +47,7 @@ import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.form.*;
 
 import org.apache.struts.action.*;
@@ -57,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-18 17:22:05 $
+ * @version    $Revision: 1.4 $ $Date: 2001-06-18 18:23:52 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -90,12 +91,14 @@ public class EnterPlateAction extends ResearcherAction {
         // the queueItem and container corresponding to the barcode
         QueueItem queueItem= null;
         Container container = null;
+        Process process = null;
         try {
             containerQueue =
             queueFactory.makeQueue("ContainerProcessQueue");
             // transform protocol
             runPCRGel = new Protocol(Protocol.RUN_PCR_GEL);
             transformItems = containerQueue.getQueueItems(runPCRGel);
+            process = Process.findProcess(container,runPCRGel);
         } catch(FlexProcessException fpe) {
             request.setAttribute(Action.EXCEPTION_KEY, fpe);
             return mapping.findForward("error");
@@ -127,6 +130,15 @@ public class EnterPlateAction extends ResearcherAction {
             return retForward;
         }
         
+        // make sure the process execution is in process
+        
+        if(process.getStatus() != process.INPROCESS) {
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.queue.notready", container.getLabel()));
+            saveErrors(request,errors);
+            retForward = new ActionForward(mapping.getInput());
+            return retForward;
+        }
         
         
         /*
@@ -144,8 +156,12 @@ public class EnterPlateAction extends ResearcherAction {
         
         // create the form with default values
         TransformDetailsForm detailForm = new TransformDetailsForm(container);
+        HttpSession session = request.getSession();
+        // put the form in the session
+        session.setAttribute("transformEntryForm",detailForm);
         
-        request.getSession().setAttribute("transformEntryForm",detailForm);
+        // put the process in the session
+        session.setAttribute(Constants.PROCESS_KEY,process);
         request.setAttribute(Constants.SAMPLES_KEY ,samples);
         request.setAttribute(Constants.CONTAINER_KEY, container);
         

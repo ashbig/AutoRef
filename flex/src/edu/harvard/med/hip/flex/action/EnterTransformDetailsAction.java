@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-18 17:22:05 $
+ * $Revision: 1.5 $
+ * $Date: 2001-06-18 18:23:52 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -55,7 +55,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-18 17:22:05 $
+ * @version    $Revision: 1.5 $ $Date: 2001-06-18 18:23:52 $
  */
 
 public class EnterTransformDetailsAction extends ResearcherAction {
@@ -95,7 +95,7 @@ public class EnterTransformDetailsAction extends ResearcherAction {
             Protocol transformProtocol = 
             new Protocol(Protocol.ENTER_TRANSFORMATION_RESULTS);
             
-            // create a new process 
+            
     
             
             conn = DatabaseTransaction.getInstance().requestConnection();
