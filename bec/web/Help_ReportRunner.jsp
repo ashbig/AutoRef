@@ -25,13 +25,14 @@
 
 
 
-<table width="100%" border="1" cellpadding="2" cellspacing="2">
+<table width="74%" border="1" cellpadding="2" cellspacing="2" align="center">
   <tr> 
     <td colspan="3" bgColor="#1145A6"> <div align="center"><font color="#FFFFFF"><strong>Tool 
         goal: </strong></font></div></td>
   </tr>
   <tr> 
-    <td colspan="3" >&nbsp; </td>
+    <td colspan="3" ><strong>Report Runner is a tool designed to assist the researcher 
+      in acssesing information about available clones. </strong></td>
   </tr>
   <tr> 
     <td colspan="2" bgColor="#1145A6"> <div align="center"><font color="#FFFFFF"><strong>Information 
@@ -80,10 +81,7 @@
     <td>&nbsp;</td>
     <td>&nbsp; </td>
   </tr>
-  <tr> 
-    <td ></td>
-    <td >&nbsp;</td>
-  </tr>
+ 
   <tr> 
     <td colspan="3" bgColor="#e4e9f8"> <div align="left"><font color="000080"><strong>Infomation 
         type: Clone Trace Files Information</strong></font></div></td>
