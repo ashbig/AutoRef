@@ -31,7 +31,7 @@
     <shrinkBy>10</shrinkBy>
 
     <!-- logging info-->
-    <logFile>poolman.log<logFile>
+    <logFile>poolman.log</logFile>
 
     <debugging>false</debugging>
 
