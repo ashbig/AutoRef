@@ -254,7 +254,7 @@ public class DiseaseGeneManager {
         return nicknames;        
     }
     
-    private Vector queryGeneinfoByGene(Connection conn, int id) {
+    public Vector queryGeneinfoByGene(Connection conn, int id) {
         Statement stmt = null;
         ResultSet rs = null;
         String sql = "select t.id_type, g.id_value, g.extra_information"+

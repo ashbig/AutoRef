@@ -39,6 +39,10 @@
     <form-bean      name="getGenesForm"
                     type="edu.harvard.med.hip.metagene.form.GetGenesForm"/>
 
+    <!-- get genes page form bean -->
+    <form-bean      name="displayLinksForm"
+                    type="edu.harvard.med.hip.metagene.form.DisplayLinksForm"/>
+
   </form-beans>
 
 
@@ -88,6 +92,16 @@
               scope="request"
               input="/GetGenes.jsp">
       <forward  name="success"   path="/DisplayGenes.jsp"/>
+    </action>
+
+    <!-- Process the link display -->
+    <action    path="/DisplayLinks"
+               type="edu.harvard.med.hip.metagene.action.DisplayLinksAction"
+               name="displayLinksForm"
+              scope="request"
+              input="/DisplayGenes.jsp">
+      <forward  name="success"   path="/DisplayLinks.jsp"/>
+      <forward  name="fail"   path="/DisplayLinksFail.jsp"/>
     </action>
 
     <action     path="/ProcessError"

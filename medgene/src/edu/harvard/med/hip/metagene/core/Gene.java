@@ -90,6 +90,19 @@ public class Gene {
         return "";
     }
     
+    public String getProteome() {
+        if(information == null)
+            return "";
+        
+        for(int i=0; i<information.size(); i++) {
+            Geneinfo info = (Geneinfo)information.elementAt(i);
+            if(Geneinfo.PROTEOME.equals(info.getType())) 
+                return info.getValue();
+        }
+        
+        return "";
+    }
+    
     public int getLocusid() {
         return locusid;
     }

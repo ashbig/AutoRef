@@ -13,6 +13,7 @@ package edu.harvard.med.hip.metagene.core;
  */
 public class Geneinfo {
     public static final String GO = "GO";
+    public static final String PROTEOME = "EXTANNOT";
     
     private String type;
     private String value;

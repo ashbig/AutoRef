@@ -25,17 +25,15 @@
         <TH>GO Annotations</TH>
         <TH>Proteome Annotations</TH>
         <TH>Locus ID</TH>
-        <TH>Unigene Clustering ID</TH>
-        <TH>Refseq ID</TH>
     </TR>
 
     <logic:iterate id="association" name="associations"> 
         <tr>
             <TD>
-                <bean:write name="association" property="gene.name"/>&nbsp                           
+                <a href="DisplayLinks.do?hipGeneId=<bean:write name="association" property="gene.hipGeneId"/>"><bean:write name="association" property="gene.name"/>&nbsp</a>                          
             </TD>
             <TD>
-                <bean:write name="association" property="geneIndex.type"/>&nbsp
+                <bean:write name="association" property="geneIndex.searchType"/>&nbsp
             </TD>
             <TD>
                 <bean:write name="association" property="gene.symbol"/>&nbsp
@@ -45,6 +43,9 @@
             </TD>
             <TD>
                 <bean:write name="association" property="gene.go"/>&nbsp
+            </TD>
+            <TD>
+                <bean:write name="association" property="gene.proteome"/>&nbsp
             </TD>
             <TD>
                 <bean:write name="association" property="gene.locusid"/>&nbsp

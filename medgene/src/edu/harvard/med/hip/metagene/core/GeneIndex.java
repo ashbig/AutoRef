@@ -44,4 +44,11 @@ public class GeneIndex {
     public String getDate() {
         return date;
     }
+    
+    public String getSearchType() {
+        if(GeneIndex.NAME.equals(type) || GeneIndex.SYMBOL.equals(type))
+            return "By gene term";
+        else
+            return "By family term";
+    }
 }
