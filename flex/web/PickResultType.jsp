@@ -23,7 +23,7 @@
 <p>
 
 <logic:present name="<%=Constants.CONTAINER_KEY%>">
-        <bean:write name="<%=Constants.CONTAINER_KEY%>" property="label"/> was processed sucessfully.
+        <bean:write name="<%=Constants.CONTAINER_KEY%>" property="label"/> was processed successfully.
         <hr>
 </logic:present>
 Select the type of result you wish to enter.

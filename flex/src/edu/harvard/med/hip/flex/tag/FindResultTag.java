@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-17 19:57:53 $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-31 21:33:33 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.flex.process.Process;
 /**
  * Defines a result object from a process object and a sample
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2001-07-17 19:57:53 $
+ * @version $Revision: 1.2 $ $Date: 2001-07-31 21:33:33 $
  */
 
 public class FindResultTag extends TagSupport {
@@ -120,10 +120,13 @@ public class FindResultTag extends TagSupport {
             throw new JspException(e.getMessage());
         }
 
-        // Expose this value as a page variable if the result isn't null
-        if (result != null) {
+        // Expose this value as a page variable, it could be null
+        if(result != null) {
             int inScope = PageContext.PAGE_SCOPE;
             this.pageContext.setAttribute(id, result, inScope); 
+        } else {
+            // if it is null, remove it from the page context.
+            this.pageContext.removeAttribute(id);
         }
         return (SKIP_BODY);
     }
@@ -138,7 +141,6 @@ public class FindResultTag extends TagSupport {
         id = null;
         sampleName = null;
         processName = null;
-        
     }
 }
 
