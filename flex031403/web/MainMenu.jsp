@@ -1,5 +1,7 @@
 
 <%@ page language="java" %>
+<%@ page import="java.util.*"%>
+<%@ page import="edu.harvard.med.hip.flex.user.*"%>
 <%@ page errorPage="ProcessError.do"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -22,30 +24,95 @@
 <tr>
     <td><hr></td>
 </tr>
-<logic:iterate name="menulist" id="menuItem" type="edu.harvard.med.hip.flex.user.MenuItem">
-<tr>
-    <td class="label">
-        <small>
-        <html:link forward='<%=menuItem.getMenuItem()%>' target="display"> 
-            <bean:write name="menuItem" property="description"/>
-        </html:link>
-        </small>
-    </td>
-</tr>
-<tr>
-    <td>&nbsp</td>
-</tr>           
-        </logic:iterate>
 
+
+<% 
+    LinkedList menu_list = (LinkedList)session.getAttribute("menulist");
+     String group_name = null;
+    String prev_menu_group = "first_group";
+    boolean isInGroup = false;
+    boolean isStartGroup = false;
+    boolean isEndGroup = false;
+    MenuItem menu_item = null;
+    for (int menu_count = 0; menu_count < menu_list.size(); menu_count++)
+    {
+         menu_item = (MenuItem) menu_list.get(menu_count);
+         group_name = menu_item.getMenuGroup();
+       
+         isStartGroup = ( !group_name.equals(prev_menu_group) && !group_name.equals("None") ) ?  true : false;
+         
+         isEndGroup = ( !group_name.equals(prev_menu_group) && isInGroup) ?  true : false;
+         if ( group_name.equals("None") && isInGroup) isEndGroup =  true ;
+         isInGroup = group_name.equalsIgnoreCase("None")  ? false : true;
+         prev_menu_group = group_name;
+       
+
+    // display home menu
+          if (isEndGroup)
+            {%>
+
+                </table>
+                </td></tr>
+                <tr><td>&nbsp;</tr></td>
+              
+            <%}
+            if ( isStartGroup )//print group name
+            {%>
+                <TR><TD><B><%=group_name %></b>
+                <table  border="0">
+            <%
+
+            }
+        if ( !isInGroup )
+        {
+        %>
             <tr>
                 <td class="label">
-                <small>
-                <html:link forward='logout' target="_top"> 
-                   Logout
-                </html:link>
-                </small>
+                    <small>
+                    <html:link forward='<%=menu_item.getMenuItem()%>' target="display"> 
+                        <%=menu_item.getDescription()%>
+                    </html:link>
+                    </small>
                 </td>
-            </tr> 
+            </tr>
+
+        <%
+            if (menu_count == 0) %><tr>    <td>&nbsp</td>  </tr>  <%       
+        } 
+        else
+        {
+           %>
+           
+            <tr>
+                <td width="10%"> &nbsp;</td>
+                 <td class="label">
+                    <small>
+                    <html:link forward='<%=menu_item.getMenuItem()%>' target="display"> 
+                        <%=menu_item.getDescription()%>
+                    </html:link>
+                    </small>
+                </td>
+           </tr>
+           <%
+
+        }
+
+    
+    }
+
+
+%>
+
+
+<tr>
+    <td class="label">
+    <small>
+    <html:link forward='logout' target="_top"> 
+       Logout
+    </html:link>
+    </small>
+    </td>
+</tr> 
 <tr>
     <td><hr></td>
 </tr>
