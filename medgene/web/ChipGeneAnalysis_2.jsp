@@ -67,7 +67,7 @@
      
         <tr>
             <td>
-            You can paste your gene list here. &nbsp;&nbsp;  [<a href="ChipGeneInputSample.jsp">sample input</a>]<BR>
+            You can paste your gene list here. &nbsp;&nbsp;  [<a href="ChipGeneInputSample.jsp" target="_blank">sample input</a>]<BR>
             We currently support the following delimiters: new line(\n), tab(\t).<BR><BR>
             <html:textarea property="chipGeneInput" rows="15" cols="50"/><BR>
             <br><b>OR</b><br><br>
@@ -80,7 +80,7 @@
         <tr>
             <td>Please select the sequence file:</td>
             <td><html:file property="chipGeneInputFile" /></td>
-            <td>[<a href="ChipGeneInputSample.jsp">sample file</a>]</td>
+            <td>[<a href="ChipGeneInputSample.jsp" target="_blank">sample file</a>]</td>
         </tr>
     </table>
 
