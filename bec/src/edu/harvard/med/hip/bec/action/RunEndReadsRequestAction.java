@@ -127,7 +127,7 @@ public class RunEndReadsRequestAction extends ResearcherAction
                 Container container = null;Sample smp = null;
                 for (int count =0; count < i_master_container_ids.size(); count++)
                 {
-                    container = new Container(Integer.parseInt( (String)i_master_container_ids.get(count)));
+                    container = new Container(( (Integer)i_master_container_ids.get(count)).intValue());
                     requested_plates += container.getLabel();
                     container.restoreSampleIsolate();
                     master_plates.add(container);
@@ -276,5 +276,6 @@ public class RunEndReadsRequestAction extends ResearcherAction
             return entry;
         }
     }
+    
     
 }
