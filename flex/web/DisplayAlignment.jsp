@@ -6,7 +6,7 @@
 <html>
 <head><title><bean:message key="flex.name"/> : View Alignment</title></head>
 <body>
-<h2><bean:message key="flex.name"/> : View Blast Alignment</h2>
+<h2><bean:message key="flex.name"/> : View BLAST Alignment</h2>
 <hr>
 <html:errors/>
 <p>
