@@ -90,46 +90,52 @@ public class FileOperations
             }
         }
         
-        if (from.renameTo(to)) return;
+        if (mode_remove)
+        {
+            if (from.renameTo(to)) return;//on the same machine
+        }
+        else
+        {
         
-        InputStream in = null;
-        OutputStream out = null;
-        try
-        {
-            in = new FileInputStream(from);
-            out = new FileOutputStream(to);
-            copy(in, out);
-            in.close();
-            in = null;
-            out.flush();
-            out.close();
-            out = null;
-            if (mode_remove && !from.delete())
+            InputStream in = null;
+            OutputStream out = null;
+            try
             {
-                throw new IOException("Cannot delete original file");
-            }
-        } finally
-        {
-            if (in != null)
-            {
-                try
-                {
-                    in.close();
-                } catch (IOException ignore)
-                {
-                }
+                in = new FileInputStream(from);
+                out = new FileOutputStream(to);
+                copy(in, out);
+                in.close();
                 in = null;
-            }
-            if (out != null)
-            {
-                try
-                {
-                    out.flush();
-                    out.close();
-                } catch (IOException ignore)
-                {
-                }
+                out.flush();
+                out.close();
                 out = null;
+                if (mode_remove && !from.delete())
+                {
+                    throw new IOException("Cannot delete original file");
+                }
+            } finally
+            {
+                if (in != null)
+                {
+                    try
+                    {
+                        in.close();
+                    } catch (IOException ignore)
+                    {
+                    }
+                    in = null;
+                }
+                if (out != null)
+                {
+                    try
+                    {
+                        out.flush();
+                        out.close();
+                    } catch (IOException ignore)
+                    {
+                    }
+                    out = null;
+                }
             }
         }
     }
