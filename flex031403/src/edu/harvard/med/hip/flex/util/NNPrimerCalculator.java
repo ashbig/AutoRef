@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.17 2002-09-30 16:54:28 Elena Exp $
+ * $Id: NNPrimerCalculator.java,v 1.18 2002-09-30 20:16:21 Elena Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * modified 12/13/01 All of the stop (close) oligos now use the universal stop
@@ -27,9 +27,9 @@ public class NNPrimerCalculator implements PrimerCalculator
     private double[][] paramS;
     
     
-    private static final String TYPE_3_OPEN = "TYPE_3_OPEN";
-    private static final String TYPE_3_CLOSED = "TYPE_3_CLOSED";
-    private static final String TYPE_5_OPEN = "TYPE_5_OPEN";
+    private static final int TYPE_3_OPEN = 0;
+    private static final int TYPE_3_CLOSED = 1;
+    private static final int TYPE_5_OPEN = 2;
     //private double[][] paramG;
     
     /**
@@ -87,7 +87,7 @@ public class NNPrimerCalculator implements PrimerCalculator
     {
         
         String subSeq = sequence.getSeqFragmentStart();
-        System.out.println("seq 5p fragment: "+ subSeq);
+     //   System.out.println("seq 5p fragment: "+ subSeq);
         return calTm(subSeq, TYPE_5_OPEN);
     }
     
@@ -101,11 +101,11 @@ public class NNPrimerCalculator implements PrimerCalculator
      
         //convert seq fragment to its reverse compliment
         String subSeq = getReverseComplement(sequence.getSeqFragmentStop());
-         System.out.println("The 3s reverse fragment is:" + subSeq);
+       //  System.out.println("The 3s reverse fragment is:" + subSeq);
         //new algorithem: get rid of the native stop codon
         //and use a universal stop "TAG" instead
         subSeq = UniversalStop + subSeq.substring(0, (subSeq.length()-3));
-        System.out.println("The 3 final: " + subSeq);
+     //   System.out.println("The 3 final: " + subSeq);
         return calTm(subSeq, TYPE_3_CLOSED);
     }
     
@@ -119,7 +119,7 @@ public class NNPrimerCalculator implements PrimerCalculator
         String subSeq = null;
       
         subSeq = sequence.getSeqFragmentStop();
-        System.out.println("The 3 final: " + subSeq);
+   //     System.out.println("The 3 final: " + subSeq);
         //get rid of the stop codon at the end of the seq
         subSeq = subSeq.substring(0, (subSeq.length()-3));
         
@@ -127,7 +127,7 @@ public class NNPrimerCalculator implements PrimerCalculator
         //System.out.println(subSeq);
         
         subSeq = getReverseComplement(subSeq);
-        System.out.println("The 3 final: " + subSeq);
+   //     System.out.println("The 3 final: " + subSeq);
         return calTm(subSeq, TYPE_3_OPEN);
     }
     
@@ -163,7 +163,7 @@ public class NNPrimerCalculator implements PrimerCalculator
      * @param oligoType A String object indicates the types of oligos
      * @return A Oligo object
      */
-    private Oligo calTm(String subSeq, String oligoType) throws FlexDatabaseException
+    private Oligo calTm(String subSeq, int oligoType) throws FlexDatabaseException
     {
         //System.out.println("sequence length is: "+subSeq.length());
         double Tm = 0;
@@ -238,7 +238,7 @@ public class NNPrimerCalculator implements PrimerCalculator
             oligoSeq = subSeq.substring(0, pos+1);
         }
         
-        oligo = new Oligo(oligoType, oligoSeq, Tm);
+        oligo = new Oligo( oligoSeq, Tm);
         //System.out.println("OligoId: " + oligoId);
         //System.out.println("OligoSeq: " + oligoSeq);
         
