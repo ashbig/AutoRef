@@ -70,6 +70,11 @@ public class GetProjectsAction extends WorkflowAction {
         try {
             Vector projects = Project.getAllProjects();
             request.setAttribute("projects", projects);
+            
+            if(Constants.IMPORT_SEQUENCES.equals(forwardName)) {
+                return (mapping.findForward("success_import_sequence"));
+            }
+                
             request.setAttribute("forwardName", forwardName);
             
             return (mapping.findForward("success"));

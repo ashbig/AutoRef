@@ -43,6 +43,38 @@ Import finished.
     <logic:equal name="logger" property="successful" value="false">
     <tr>
         <td><bean:write name="logger" property="sequenceid" /></td>
+        <td><bean:write name="logger" property="message" /></td>
+    </tr>
+    </logic:equal>
+    </logic:iterate>
+</table>
+</logic:present>
+
+<p>
+<table>
+<tr>
+    <td class="prompt">Total number of requests for import:</td>
+    <td><bean:write name="ImportSequenceAction.totalRequestCount" /></td>
+</tr>
+<tr>
+    <td class="prompt">Number of requests imported successfully:</td>
+    <td><bean:write name="ImportSequenceAction.successfulRequestCount" /></td>
+</tr>
+<tr>
+    <td class="prompt">Number of requests failed import:</td>
+    <td><bean:write name="ImportSequenceAction.failRequestCount" /></td>
+</tr>
+</table>
+
+<logic:present name="ImportSequenceAction.importRequestResult">
+<h4>List of requests failed import:</h4>
+<table width="80%" align="center">
+    <logic:iterate id="requestLogger" name="ImportSequenceAction.importRequestResult">
+    <logic:equal name="requestLogger" property="successful" value="false">
+    <tr>
+        <td><bean:write name="requestLogger" property="sequenceid" /></td>
+        <td><bean:write name="requestLogger" property="message" /></td>
+        <td><bean:write name="requestLogger" property="username" /></td>
     </tr>
     </logic:equal>
     </logic:iterate>

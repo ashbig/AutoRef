@@ -18,13 +18,14 @@ import org.apache.struts.upload.*;
 import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.infoimport.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
  * @author  dzuo
  * @version
  */
-public class ImportSequenceAction extends WorkflowAction {
+public class ImportSequenceAction extends AdminAction {
     
     /**
      * Does the real work for the perform method which must be overriden by the
@@ -43,12 +44,26 @@ public class ImportSequenceAction extends WorkflowAction {
         
         FormFile sequenceFile = ((ImportForm)form).getSequenceFile();
         FormFile nameFile = ((ImportForm)form).getNameFile();
+        FormFile requestFile = ((ImportForm)form).getRequestFile();
+        int projectid = ((ImportForm)form).getProjectid();
+        Project project = null;
+        
+        try {
+            project = new Project(projectid);
+        } catch (FlexDatabaseException ex) {
+            errors.add("projectid", new ActionError("error.workflow.project.invalid", ex.getMessage()));
+            saveErrors(request,errors);
+            return new ActionForward(mapping.getInput());
+        }
+        
         InputStream sequenceInput;
         InputStream nameInput;
+        InputStream requestInput;
         
         try {
             sequenceInput = sequenceFile.getInputStream();
             nameInput = nameFile.getInputStream();
+            requestInput = requestFile.getInputStream();
         } catch (FileNotFoundException ex) {
             errors.add("sequenceFile", new ActionError("flex.infoimport.file", ex.getMessage()));
             saveErrors(request,errors);
@@ -56,10 +71,10 @@ public class ImportSequenceAction extends WorkflowAction {
         } catch (IOException ex) {
             errors.add("sequenceFile", new ActionError("flex.infoimport.file", ex.getMessage()));
             saveErrors(request,errors);
-            return new ActionForward(mapping.getInput());            
+            return new ActionForward(mapping.getInput());
         }
         
-        SequenceImporter importer = new SequenceImporter();
+        SequenceImporter importer = new SequenceImporter(project);
         DatabaseTransaction t = null;
         Connection conn = null;
         
@@ -68,17 +83,33 @@ public class ImportSequenceAction extends WorkflowAction {
             conn = t.requestConnection();
             
             if(importer.performImport(sequenceInput, nameInput, conn)) {
-                DatabaseTransaction.commit(conn);
                 Vector results = importer.getResults();
-                request.setAttribute("ImportSequenceAction.totalCount", new Integer(importer.getTotalCount()));
-                request.setAttribute("ImportSequenceAction.successfulCount", new Integer(importer.getSuccessfulCount()));
-                request.setAttribute("ImportSequenceAction.failCount", new Integer(importer.getFailedCount()));
                 
-                if(importer.getFailedCount() != 0) {
-                    request.setAttribute("ImportSequenceAction.importResult", results);
+                RequestImporter requestImporter = new RequestImporter(project);
+                if(requestImporter.performImport(requestInput, results, conn)) {
+                    DatabaseTransaction.commit(conn);
+                    Vector requestResults = requestImporter.getResult();
+                    
+                    request.setAttribute("ImportSequenceAction.totalCount", new Integer(importer.getTotalCount()));
+                    request.setAttribute("ImportSequenceAction.successfulCount", new Integer(importer.getSuccessfulCount()));
+                    request.setAttribute("ImportSequenceAction.failCount", new Integer(importer.getFailedCount()));
+                    request.setAttribute("ImportSequenceAction.totalRequestCount", new Integer(requestImporter.getTotalCount()));
+                    request.setAttribute("ImportSequenceAction.successfulRequestCount", new Integer(requestImporter.getSuccessfulCount()));
+                    request.setAttribute("ImportSequenceAction.failRequestCount", new Integer(requestImporter.getFailedCount()));
+                    
+                    if(importer.getFailedCount() != 0) {
+                        request.setAttribute("ImportSequenceAction.importResult", results);
+                    }
+
+                    if(requestImporter.getFailedCount() != 0) {
+                        request.setAttribute("ImportSequenceAction.importRequestResult", requestResults);
+                    }
+                    
+                    return mapping.findForward("success");
+                } else {
+                    DatabaseTransaction.rollback(conn);
+                    return mapping.findForward("fail");
                 }
-                
-                return mapping.findForward("success");
             } else {
                 DatabaseTransaction.rollback(conn);
                 return mapping.findForward("fail");
@@ -89,9 +120,15 @@ public class ImportSequenceAction extends WorkflowAction {
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return mapping.findForward("error");         
+            return mapping.findForward("error");
         } finally {
+            try {
+                sequenceInput.close();
+                nameInput.close();
+                requestInput.close();
+            } catch (IOException ex) {}
+            
             DatabaseTransaction.closeConnection(conn);
-        }        
-    } 
+        }
+    }
 }

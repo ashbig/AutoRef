@@ -207,6 +207,32 @@ public class User {
     public String toString() {
         return this.name;
     }
+
+    /**
+     * Check the database to see if the given uername exists in the database.
+     *
+     * @param username The value to be checked.
+     * @return True if the username exists in the database; return false otherwise.
+     */
+    public static boolean exists(String username) {
+        String sql = "select * from userprofile where username='"+username+"'";
+        ResultSet rs = null;
+        boolean ret = false;
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                ret = true;
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }     
+        
+        return ret;
+    }
     
     //**********************************************************//
     //						Test								//

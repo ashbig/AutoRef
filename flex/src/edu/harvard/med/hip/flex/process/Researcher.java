@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.14 2001-07-09 16:35:18 wenhong_mar Exp $
+ * $Id: Researcher.java,v 1.15 2001-10-31 20:17:32 dzuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -170,6 +170,31 @@ public class Researcher {
     public String getBarcode() {
         return this.barcode;
     }
+
+    /**
+     * Return true if the given name exists in the database; false otherwise.
+     *
+     * @return true if the given researcher name exists in the database; 
+     * return false otherwise.
+     * @exception FlexDatabaseException.
+     */
+    public static boolean nameExists(String name) throws FlexDatabaseException {
+        String sql ="select * from researcher where researchername = '"+name+"'";
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        
+        ResultSet rs = t.executeQuery(sql);
+        try{
+            if(rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
     
     /**
      * Return true if the barcode is valid; false otherwise.
@@ -194,20 +219,55 @@ public class Researcher {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
+
+    /**
+     * Add the researcher to the database.
+     *
+     * @param researcherName The researcher name.
+     * @param researcherBarcode The researcher barcode.
+     * @param conn The Connection object.
+     *
+     * @return true if added successfully; false otherwise.
+     */
+    public static boolean addResearcher(String researcherName, String researcherBarcode, Connection conn) {
+        String sql = "insert into researcher "+
+                     "(researcherid, researchername, researcherbarcode, activeflag_yn) "+
+                     "values (researcherid.nextval, '"+researcherName+"', '"+
+                     researcherBarcode+"','Y')";
+        
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            return true;
+        } catch (SQLException sqlE) {
+            return false;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }      
+    }
     
     //******************************************************//
     //			Test				//
     //******************************************************//
     public static void main(String [] args) {
         Connection conn = null;
-        try {
+        try {            
             String sql ="insert into researcher values (1, 'Tester', 'AB0000', 'Y')";
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
+            
+            if(Researcher.addResearcher("test", "test", conn)) {
+                System.out.println("Add researcher successful.");
+            } else {
+                System.out.println("Add researcher failed.");
+            }
+            
             t.executeUpdate(sql,conn);
             Researcher r = new Researcher("AB0000");
             System.out.println(r.getId());
             System.out.println(r.getName());
+            
             conn.rollback();
         } catch (FlexDatabaseException e) {
             System.out.println(e);
