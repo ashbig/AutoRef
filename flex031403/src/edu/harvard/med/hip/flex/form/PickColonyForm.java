@@ -23,7 +23,8 @@ import edu.harvard.med.hip.flex.workflow.Project;
  * @author  dzuo
  * @version
  */
-public class PickColonyForm extends ProjectWorkflowForm {
+public class PickColonyForm extends ProjectWorkflowForm
+{
     private String processname = null;
     
     public static final int LASTINDEX = 10;
@@ -43,7 +44,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @param processname The value to be set to.
      */
-    public void setProcessname(String processname) {
+    public void setProcessname(String processname)
+    {
         this.processname = processname;
     }
     
@@ -52,7 +54,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @return The processname.
      */
-    public String getProcessname() {
+    public String getProcessname()
+    {
         return processname;
     }
     
@@ -61,7 +64,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @return The first fusion agar plate barcode.
      */
-    public String getAgarPlateF1() {
+    public String getAgarPlateF1()
+    {
         return agarPlateF1;
     }
     
@@ -70,7 +74,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @param The value to be set to.
      */
-    public void setAgarPlateF1(String agarPlateF1) {
+    public void setAgarPlateF1(String agarPlateF1)
+    {
         this.agarPlateF1 = agarPlateF1;
     }
     
@@ -79,7 +84,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @return The first closed agar plate barcode.
      */
-    public String getAgarPlateC1() {
+    public String getAgarPlateC1()
+    {
         return agarPlateC1;
     }
     
@@ -88,7 +94,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @param The value to be set to.
      */
-    public void setAgarPlateC1(String agarPlateC1) {
+    public void setAgarPlateC1(String agarPlateC1)
+    {
         this.agarPlateC1 = agarPlateC1;
     }
     
@@ -97,7 +104,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @return The location of the first open agar plate.
      */
-    public int getAgarF1Location() {
+    public int getAgarF1Location()
+    {
         return agarF1Location;
     }
     
@@ -106,7 +114,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @param agarF1Location The value to be set to.
      */
-    public void setAgarF1Location(int agarF1Location) {
+    public void setAgarF1Location(int agarF1Location)
+    {
         this.agarF1Location = agarF1Location;
     }
     
@@ -115,7 +124,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @return The location of the first closed agar plate.
      */
-    public int getAgarC1Location() {
+    public int getAgarC1Location()
+    {
         return agarC1Location;
     }
     
@@ -124,7 +134,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @param agarC1Location The value to be set to.
      */
-    public void setAgarC1Location(int agarC1Location) {
+    public void setAgarC1Location(int agarC1Location)
+    {
         this.agarC1Location = agarC1Location;
     }
     
@@ -133,7 +144,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @param destLocations The destination locations.
      */
-    public void setDestLocations(int [] destLocations) {
+    public void setDestLocations(int [] destLocations)
+    {
         this.destLocations = destLocations;
     }
     
@@ -142,7 +154,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @return The destination locations.
      */
-    public int [] getDestLocations() {
+    public int [] getDestLocations()
+    {
         return destLocations;
     }
     
@@ -151,7 +164,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @param subProtocolName The value to be set to.
      */
-    public void setSubProtocolName(String subProtocolName) {
+    public void setSubProtocolName(String subProtocolName)
+    {
         this.subProtocolName = subProtocolName;
     }
     
@@ -160,22 +174,26 @@ public class PickColonyForm extends ProjectWorkflowForm {
      *
      * @return The subProtocolName.
      */
-    public String getSubProtocolName() {
+    public String getSubProtocolName()
+    {
         return subProtocolName;
     }
     
-    public void setPickingMethod(String method) {
+    public void setPickingMethod(String method)
+    {
         this.pickingMethod = method;
     }
     
-    public String getPickingMethod() {
+    public String getPickingMethod()
+    {
         return pickingMethod;
     }
     
     /**
      * Reset all properties to their default values.
      */
-    public void reset(ActionMapping mapping, HttpServletRequest request) {
+    public void reset(ActionMapping mapping, HttpServletRequest request)
+    {
         processname = null;
         agarPlateF1 = null;
         agarPlateC1 = null;
@@ -194,60 +212,94 @@ public class PickColonyForm extends ProjectWorkflowForm {
      * @param request The servlet request we are processing
      */
     public ActionErrors validate(ActionMapping mapping,
-    HttpServletRequest request) {
+    HttpServletRequest request)
+    {
         
         ActionErrors errors = new ActionErrors();
         boolean isReturn = false;
         
-        if((agarPlateF1 == null) || (agarPlateF1.trim().length()==0)) {
+        if((agarPlateF1 == null) || (agarPlateF1.trim().length()==0))
+        {
             errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
             return errors;
         }
         
-        if(pickingMethod.equals("interleaved")) {
-            if((agarPlateF1.trim().length()!=11) || (agarPlateF1.charAt(LASTINDEX) != 'F')) {
+        if(pickingMethod.equals("interleaved"))
+        {
+            if(projectid != Project.YEAST && (agarPlateF1.trim().length()!=11) || (agarPlateF1.charAt(LASTINDEX) != 'F'))
+            {
                 errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
                 isReturn = true;
             }
             
-            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
-                if((agarPlateC1 == null) || (agarPlateC1.trim().length()!=11)) {
+            if(projectid == Project.YEAST && (agarPlateF1.trim().length()!=11) || (agarPlateF1.charAt(LASTINDEX) != 'C'))
+            {
+                errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
+                isReturn = true;
+            }
+            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE && projectid != Project.YEAST)
+            {
+                if((agarPlateC1 == null) || (agarPlateC1.trim().length()!=11))
+                {
                     errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
                     isReturn = true;
                 }
             }
         }
         
-        if(isReturn) {
+        if(isReturn)
+        {
             return errors;
         }
         
-        if(pickingMethod.equals("interleaved")) {
-            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE) {
-                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11 && (agarPlateC1.charAt(LASTINDEX) != 'F')) {
+        if(pickingMethod.equals("interleaved"))
+        {
+            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE )
+            {
+                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11 && (agarPlateC1.charAt(LASTINDEX) != 'F'))
+                {
                     errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
                     isReturn = true;
                 }
-            } else {
-                if((agarPlateC1.charAt(LASTINDEX) != 'C')) {
+            } 
+            if(projectid == Project.YEAST )
+            {
+                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11 && (agarPlateC1.charAt(LASTINDEX) != 'C'))
+                {
+                    errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
+                    isReturn = true;
+                }
+            } 
+            else
+            {
+                if((agarPlateC1.charAt(LASTINDEX) != 'C'))
+                {
                     errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
                     isReturn = true;
                 }
             }
             
-            if(isReturn) {
+            if(isReturn)
+            {
                 return errors;
             }
             
             // Check whether the two pairs matching with each other.
-            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE) {
-                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11) {
-                    if(!(agarPlateF1.substring(3, 9).equals(agarPlateC1.substring(3, 9)))) {
+            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || projectid == Project.YEAST)
+            {
+                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11)
+                {
+                    if(!(agarPlateF1.substring(3, 9).equals(agarPlateC1.substring(3, 9))))
+                    {
                         errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
                     }
                 }
-            } else {
-                if(!(agarPlateF1.substring(0, 3).equals(agarPlateC1.substring(0, 3)))) {
+            } 
+            
+            else
+            {
+                if(!(agarPlateF1.substring(0, 3).equals(agarPlateC1.substring(0, 3))))
+                {
                     errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
                 }
             }
