@@ -27,7 +27,7 @@
         labelProperty="index"
         />
     </html:select>
-    <p>Please choose a statistic method to rank the gene list:
+    <p>Please choose a statistical method to rank the disease list:
     <html:select property="stat">
         <html:options
         collection = "stats"
@@ -37,7 +37,7 @@
     </html:select>
     [<a href="statistic_menu.jsp">help</a>]
 
-    <p>Please choose the number of genes for your list:
+    <p>Please choose the number of diseases for your list:
     <html:select property="number">
         <html:option key="top 25" value="25"/>
         <html:option key="top 50" value="50"/>

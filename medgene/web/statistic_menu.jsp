@@ -4,7 +4,7 @@
 </HEAD>
 <BODY>
 <table width="80%" align="center" border="0"><tr><td>
-<center><h1>Detailed Information of Statistic Analysis<BR></H1></center>
+<center><h1>Detailed Information about Statistical Analysis<BR></H1></center>
 <P>
 <HR>
 <BR>

@@ -30,7 +30,7 @@
         />
     </html:select>
 
-    <p>Please choose a statistic method to rank the gene list:
+    <p>Please choose a statistical method to rank the gene list:
     <html:select property="stat">
         <html:options
         collection = "stats"

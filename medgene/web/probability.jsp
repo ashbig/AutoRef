@@ -4,9 +4,12 @@
 <body>
 <center><h1>Probability<BR></H1></center>
 <center><img src="circle.jpg"></center><br><br>
-<center><font size=3 face=Arial color=black><b>Probability = Y/(X+Y+Z)</b></font><BR></center>
-<center><font size=3 face=Arial color=black><b>Y: papers studying both the gene and the disease</b></font><BR></center>
-<center><font size=3 face=Arial color=black><b>X+Y+Z: papers studying either the gene or the disease</b></font><BR></center>
+<center><font size=5 face=Arial color=blue><b>Probability = Y/(X+Y+Z)</b></font><BR></center>
+<center><b>Y: papers studying both the gene and the disease</b><BR></center>
+<center><b>X+Y+Z: papers studying either the gene or the disease</b><BR></center>
+<BR>
+<center><b>The distribution of probability (log value) for all the breast cancer related genes</b></center>
+<center><img src="probability.jpg"></center>
 <jsp:include page="links.jsp" flush="true"/> 
 </body>
 </html>

@@ -11,7 +11,7 @@
     </head>
     <body>
     <center>
-    <h1>Genes List</h1>
+    <h1>Gene List</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td> 
@@ -20,13 +20,13 @@
     <p>
     <TABLE border="1" cellpadding="2" cellspacing="0">
     <TR bgcolor="gray">
-        <TH>Key Search Term</TH>
-        <TH>Search Type</TH>
-        <TH>Gene Symbol</TH>
-        <TH>All Search Terms</TH>
-        <TH>GO Annotations</TH>
-        <TH>Statistic Score</TH>
-        <TH>Number of Papers</TH>
+        <TH><A HREF="KeySearchTerm.jsp">Key Search Term</A></TH>
+        <TH><A HREF="SearchType.jsp">Search Type</A></TH>
+        <TH><A HREF="GeneSymbol.jsp">Gene Symbol</A></TH>
+        <TH><A HREF="AllSearchTerms.jsp">All Search Terms</A></TH>
+        <TH><A HREF="GOAnnotation.jsp">GO Annotations</A></TH>
+        <TH><A HREF="statistic_menu.jsp">Statistical Score</A></TH>
+        <TH><A HREF="NumberOfPapers.jsp">Number of Papers</A></TH>
     </TR>
 
     <logic:iterate id="association" name="associations"> 

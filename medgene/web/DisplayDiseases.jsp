@@ -20,8 +20,8 @@
     <TABLE border="1" cellpadding="2" cellspacing="0" width=80% align=center>
     <TR bgcolor="gray">
         <TH>Disease Name</TH>
-        <TH>Statistic Score</TH>
-        <TH>Number of Papers</TH>
+        <TH><A HREF="statistic_menu.jsp">Statistical Score</A></TH>
+        <TH><A HREF="NumberOfPapers.jsp">Number of Papers</A></TH>
     </TR>
 
     <logic:iterate id="association" name="associations"> 

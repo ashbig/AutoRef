@@ -34,6 +34,8 @@
     </html:form>
 
 <p>
+<BR><BR><A HREF="http://www.nlm.nih.gov/mesh/"><b>Link to MeSH home</b></A><BR>
+<A HREF="DiseaseList.jsp"><b>Show all disease MeSH terms</b></A>
 <jsp:include page="links.jsp" flush="true"/>
 </td></tr></table></body>
 </html>
