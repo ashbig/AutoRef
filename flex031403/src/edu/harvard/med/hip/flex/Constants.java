@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Created on May 25, 2001, 11:03 AM
  */
@@ -9,7 +9,7 @@ package edu.harvard.med.hip.flex;
 /**
  *
  * @author  jmunoz
- * @version 
+ * @version
  */
 public class Constants {
     // key used to find user object in session.
@@ -19,8 +19,8 @@ public class Constants {
     public static final String FLEX_SEQUENCE_ID_KEY = "FLEX_SEQUENCE_ID";
     
     // key used to find the fasta formated colorized sequence
-    public static final String FASTA_COLOR_SEQUENCE_KEY = 
-        "FASTA_COLOR_SEQUENCE";
+    public static final String FASTA_COLOR_SEQUENCE_KEY =
+    "FASTA_COLOR_SEQUENCE";
     
     // key used to find the flex sequence
     public static final String FLEX_SEQUENCE_KEY = "FLEX_SEQUENCE";
@@ -32,11 +32,17 @@ public class Constants {
     public static final String QUEUE_ITEM_LIST_KEY = "QUEUE_ITEM_LIST";
     
     // key used to find the sequence queue.
-    public static final String SEQUENCE_QUEUE_KEY = "SEQEUENCE_QUEUE"; 
-   
+    public static final String SEQUENCE_QUEUE_KEY = "SEQEUENCE_QUEUE";
+    
+    // key used to find the list of accepted seqeunces
+    public static final String APPROVED_SEQUENCE_LIST_KEY = "APPROVE_SEQUENCE_LIST";
+    
+    // key used to find the list of rejected seqeunces
+    public static final String REJECTED_SEQUENCE_LIST_KEY = "REJECTED_SEQUENCE_LIST";
+    
     
     /** Creates new Constants */
     private Constants() {
     }
-
+    
 }
