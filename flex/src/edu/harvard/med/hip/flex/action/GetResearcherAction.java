@@ -75,7 +75,7 @@ public class GetResearcherAction extends ResearcherAction{
             return (mapping.findForward("error"));
         }
 
-        Container newContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.newContainer");
+        Vector newContainers = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.newContainers");
         Container container = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");
         QueueItem item = (QueueItem)request.getSession().getAttribute("EnterSourcePlateAction.item");
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
@@ -88,28 +88,41 @@ public class GetResearcherAction extends ResearcherAction{
 
             // update the location of the old container.
             container.updateLocation(container.getLocation().getId(), conn);
-            // Insert the new container and samples into database.
-            newContainer.insert(conn);
+            // Insert the new containers and samples into database.
+            for(int i=0; i<newContainers.size(); i++) {
+                Container newContainer = (Container)newContainers.elementAt(i);
+                newContainer.insert(conn);
+            }
             
             // Create a process, process object and sample lineage record. 
             String executionStatus = null;
-            if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname())) {
+            // For GEl and Transformation, the statis is inprocess.
+            if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
+                Protocol.PERFORM_TRANSFORMATION.equals(protocol.getProcessname())) {
                 executionStatus = edu.harvard.med.hip.flex.process.Process.INPROCESS;
             } else {
                 executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
             }
             
             Process process = new Process(protocol, executionStatus, researcher);
+            // Add old container as input container.
             ContainerProcessObject inputContainer = 
                 new ContainerProcessObject(container.getId(), 
                 process.getExecutionid(), 
                 edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            ContainerProcessObject outputContainer = 
-                new ContainerProcessObject(newContainer.getId(), 
-                process.getExecutionid(),
-                edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
             process.addProcessObject(inputContainer);
-            process.addProcessObject(outputContainer);  
+            
+            // Add new containers as output containers.
+            for(int i=0; i<newContainers.size(); i++) {
+                Container newContainer = (Container)newContainers.elementAt(i);
+                ContainerProcessObject outputContainer = 
+                    new ContainerProcessObject(newContainer.getId(), 
+                    process.getExecutionid(),
+                    edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
+                process.addProcessObject(outputContainer);  
+            }
+            
+            // Add sampleLineageSet object.
             process.setSampleLineageSet(sampleLineageSet);            
             
             // Insert the process and process objects into database.
@@ -123,18 +136,25 @@ public class GetResearcherAction extends ResearcherAction{
 
             newItems.clear();
             
-            // for "run PCR gel" protocol, we use the same protocol for queue.
-            if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname())) {
-                newItems.addLast(new QueueItem(newContainer, protocol));
+            // for gel and transformation protocols, we use the same protocol for queue.
+            if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
+                Protocol.PERFORM_TRANSFORMATION.equals(protocol.getProcessname())) {
+                for(int i=0; i<newContainers.size(); i++) {
+                    Container newContainer = (Container)newContainers.elementAt(i);
+                    newItems.addLast(new QueueItem(newContainer, protocol));
+                }
                 queue.addQueueItems(newItems, conn); 
             } else {            
                 // Get the next protocols from the workflow.
                 Workflow wf = new Workflow();
                 Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
 
-                // Add the new container to the queue for each protocol.
+                // Add the new containers to the queue for each protocol.
                 for(int i=0; i<nextProtocols.size(); i++) {
-                    newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));
+                    for(int j=0; j<newContainers.size(); j++) {
+                        Container newContainer = (Container)newContainers.elementAt(i);
+                        newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));                        
+                    }
                     queue.addQueueItems(newItems, conn);
                 }
             }
@@ -143,7 +163,10 @@ public class GetResearcherAction extends ResearcherAction{
             DatabaseTransaction.commit(conn);
         
             // Print the barcode
-            System.out.println("Printing barcode: "+newContainer.getLabel());
+            for(int i=0; i<newContainers.size(); i++) {
+                Container newContainer = (Container)newContainers.elementAt(i);
+                System.out.println("Printing barcode: "+newContainer.getLabel());
+            }
 
             // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");

@@ -79,11 +79,10 @@ public class EnterSourcePlateAction extends ResearcherAction {
 
             //map the container to the new container
             Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
-            ContainerMapper mapper = new OneToOneContainerMapper();
+            ContainerMapper mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
             Vector oldContainers = new Vector();
             oldContainers.addElement(container);
             Vector newContainers = mapper.doMapping(oldContainers, protocol);
-            Container newContainer = (Container)newContainers.elementAt(0);
             Vector sampleLineageSet = mapper.getSampleLineageSet();
             
             // Get all the locations.
@@ -91,7 +90,7 @@ public class EnterSourcePlateAction extends ResearcherAction {
             
             // store all the information to the session.
             request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", container);  
-            request.getSession().setAttribute("EnterSourcePlateAction.newContainer", newContainer);  
+            request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);  
             request.getSession().setAttribute("EnterSourcePlateAction.sampleLineageSet", sampleLineageSet);
             request.getSession().setAttribute("EnterSourcePlateAction.locations", locations);
             request.getSession().setAttribute("EnterSourcePlateAction.item", item);

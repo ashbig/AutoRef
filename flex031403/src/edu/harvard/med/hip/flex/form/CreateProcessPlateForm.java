@@ -28,6 +28,7 @@ public class CreateProcessPlateForm extends ActionForm {
     private int sourceLocation;
     private int destLocation;
     private String destPlate = null;
+    private int [] destLocations;
     
     /**
      * Set the processname to the given value.
@@ -101,6 +102,24 @@ public class CreateProcessPlateForm extends ActionForm {
         return destLocation;
     }
 
+    /**
+     * Set the destination locations.
+     *
+     * @param destLocations The destination locations.
+     */
+    public void setDestLocations(int [] destLocations) {
+        this.destLocations = destLocations;
+    }
+    
+    /**
+     * Return the destination locations.
+     *
+     * @return The destination locations.
+     */
+    public int [] getDestLocations() {
+        return destLocations;
+    }    
+    
     /**
      * Set the source location.
      *

@@ -12,7 +12,7 @@
 <h2>FlexGene : Create Process Plate</h2>
 <hr>
 <html:errors/>
-<html:form action="/GetLocation.do" focus="researcherBarcode">
+<html:form action="/GetLocation.do">
 <table>
     <tr>
     <td><b>Protocol:</b></td>
@@ -32,11 +32,12 @@
         </html:select></td>
     </tr>
 
+    <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
     <tr>
     <td><b>Destination plate barcode:</b></td>
-    <td><bean:write name="EnterSourcePlateAction.newContainer" property="label"/></td>
+    <td><bean:write name="newContainer" property="label"/></td>
     <td><b>Location:</b></td>
-    <td><html:select property="destLocation">
+    <td><html:select property="destLocations">
         <html:options
         collection="EnterSourcePlateAction.locations"
         property="id"
@@ -44,6 +45,8 @@
         />
         </html:select>
     </td>
+    </tr>
+    </logic:iterate>    
 
     <tr>
     <td></td><td><html:submit property="submit" value="Continue"/></td>

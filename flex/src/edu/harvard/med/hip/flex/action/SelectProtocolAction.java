@@ -70,7 +70,7 @@ public class SelectProtocolAction extends FlexAction {
                 items = queue.getQueueItems(protocol);
                 storeInSession(request, items, protocol);
                 return (mapping.findForward("success_pcr"));
-            } else {
+            } else {                
                 queue = new ContainerProcessQueue();
                 items = queue.getQueueItems(protocol);
                 storeInSession(request, items, protocol);

@@ -26,12 +26,15 @@
     <td><bean:write name="EnterSourcePlateAction.oldContainer" property="location.type"/></td>
     </tr>
 
+    <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
     <tr>
     <td><b>Destination plate barcode:</b></td>
-    <td><bean:write name="EnterSourcePlateAction.newContainer" property="label"/></td>
-    <td><b>Destination plate location:</b></td>
-    <td><bean:write name="EnterSourcePlateAction.newContainer" property="location.type"/></td>
+    <td><bean:write name="newContainer" property="label"/></td>
+    <td><b>Location:</b></td>
+    <td><bean:write name="newContainer" property="location.type"/></td>
     </tr>
+    </logic:iterate>  
+
 </table>
     <Center>
     <p><b>Please enter your barcode:</b>

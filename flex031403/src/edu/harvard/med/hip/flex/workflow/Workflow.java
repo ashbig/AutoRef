@@ -63,7 +63,7 @@ public class Workflow {
         flow.addElement(new FlowRecord(Protocol.GENERATE_FILTER_PLATES, next));         
 
         next = new Vector();
-        next.addElement(Protocol.GENERATE_TRANSFORMATION_PLATES);        
+        next.addElement(Protocol.PERFORM_TRANSFORMATION);        
         flow.addElement(new FlowRecord(Protocol.GENERATE_BP_REACTION_PLATES, next)); 
 
         next = new Vector();

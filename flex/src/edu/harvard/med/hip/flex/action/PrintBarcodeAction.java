@@ -56,8 +56,12 @@ public class PrintBarcodeAction extends ResearcherAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        Container c = (Container)request.getSession().getAttribute("EnterSourcePlateAction.newContainer");
-        System.out.println("Printing barcode: "+c.getLabel());
+        Vector newContainers = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.newContainers");
+        for(int i=0; i<newContainers.size(); i++) {
+            Container c = (Container)newContainers.elementAt(i);
+            System.out.println("Printing barcode: "+c.getLabel());
+        }
+        
         return (mapping.findForward("success"));   
     }
 }
