@@ -31,11 +31,11 @@ import javax.mail.internet.*;
  */
 
 public class FastaFileGenerator {
-//    public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
-//    public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
+    public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
+    public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
 
-    public final static String BLAST_BASE_DIR="/kotel/data/FLEXRepository/";
-    public final static String BLAST_DB_DIR="Blast/";
+//    public final static String BLAST_BASE_DIR="/kotel/data/FLEXRepository/";
+//    public final static String BLAST_DB_DIR="Blast/";
 
     public static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     public static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
@@ -96,14 +96,13 @@ public class FastaFileGenerator {
             String line = in.readLine();
             in.close();
             return Integer.parseInt(line);
-        }catch (IOException ex) {
+        }catch (Exception ex) {
             log.logging(ex.getMessage());
             return -1;
         } 
     }
     
     private static int generateFile(Logger log, String db, String species, int seq) {
-//        DatabaseManager t = new DatabaseManager();
         DatabaseTransaction t = null;
         ResultSet rs = null;
         PrintWriter pr = null;
@@ -118,14 +117,6 @@ public class FastaFileGenerator {
             "and sequenceid > "+seq + " " +
             "order by sequenceid";
         
-//            Connection conn = t.connect();
-//            if(conn == null) {
-//                log.logging("Error occured when connecting to the database");
-//                return -1;
-//            }
-            
-//            Statement stmt = conn.createStatement();
-//            rs = stmt.executeQuery(sql);
             rs = t.executeQuery(sql);            
             while(rs.next()) {
                 int id = rs.getInt("SEQUENCEID");
@@ -136,7 +127,6 @@ public class FastaFileGenerator {
                 log.logging("...OK");
                 maxid = id;
             }
-            //stmt.close();
             pr.close();
             return maxid;
         }catch (IOException e) {
@@ -148,8 +138,10 @@ public class FastaFileGenerator {
         }catch (FlexDatabaseException ex) {
             log.logging(ex.getMessage());
             return -1;
+        }catch (Exception ex) {
+            log.logging(ex.getMessage());
+            return -1;            
         }finally {
-            //t.disconnect();
             DatabaseTransaction.closeResultSet(rs);
         }
     }
@@ -161,7 +153,7 @@ public class FastaFileGenerator {
             SEQFILE.println(newLastSequence);
             SEQFILE.close();
             return true;
-        }catch (IOException e) {
+        }catch (Exception e) {
             log.logging(e.getMessage());
             return false;
         }

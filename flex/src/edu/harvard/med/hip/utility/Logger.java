@@ -47,7 +47,7 @@ public class Logger {
             LOG.println("Begin: "+today);
             
             return true;
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
             return false;
         }        
