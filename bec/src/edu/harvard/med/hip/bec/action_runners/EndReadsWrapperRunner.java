@@ -253,13 +253,14 @@ public class EndReadsWrapperRunner extends ProcessRunner
                     if ( read.getTrimEnd() - read.getTrimStart() > 65)
                         return;
                     int[] scores = read.getScoresAsArray();
+  
                     int bases_to_check = ( scores.length <= 300 ) ? scores.length : 300;
                     int good_bases = 0;
                     for ( int bases = 1; bases <= bases_to_check; bases++)
                     {
                         if ( scores[bases] >= 20) good_bases++;
                     }
-                    if ( good_bases < 100 && bases_to_check >= 300 )
+                    if ( good_bases >= 100 && bases_to_check >= 300 )
                         return;
               }
               //read = (Read) reads.get(count);
