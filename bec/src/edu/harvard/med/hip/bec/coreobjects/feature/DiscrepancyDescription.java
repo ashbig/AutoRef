@@ -282,11 +282,11 @@ public class DiscrepancyDescription
         //check if limit reached
         for (int count = 1; count <= Mutation.MACRO_SPECTYPES_COUNT; count++)
         {
-            if (total_discrepancy_numbers_pass_high_quality[count] > cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_HIGH,-count ) )
+            if (total_discrepancy_numbers_pass_high_quality[count] > cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_HIGH,-count , FullSeqSpec.MODE_PASS) )
             {
                 return true;
             }
-            if (total_discrepancy_numbers_pass_low_quality[count] > cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_LOW,-count ) )
+            if (total_discrepancy_numbers_pass_low_quality[count] > cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_LOW,-count , FullSeqSpec.MODE_PASS) )
             {
                 return true;
             }
@@ -295,6 +295,85 @@ public class DiscrepancyDescription
          
         return result;
     }
+    
+    
+      public static int defineQuality(ArrayList discrepancy_descriptions ,
+                                                            FullSeqSpec cutoff_spec )
+                                                            throws BecDatabaseException
+    {
+       
+        if ( discrepancy_descriptions == null || discrepancy_descriptions.size() ==0)
+            return BaseSequence.QUALITY_GOOD;
+        int global_change_type = Mutation.TYPE_NOT_DEFINE;
+ //get total number of discrepancies per each global type
+        int quality = Mutation.QUALITY_NOTKNOWN;
+        DiscrepancyDescription pair = null;
+        int[] total_discrepancy_numbers_pass_high_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
+        int[] total_discrepancy_numbers_pass_low_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
+        for (int pair_count = 0; pair_count < discrepancy_descriptions.size(); pair_count++)
+        {
+            global_change_type = Mutation.TYPE_NOT_DEFINE;
+            pair = (DiscrepancyDescription)discrepancy_descriptions.get(pair_count);
+            quality = pair.getRNADefinition().getQuality();
+            if ( pair.getAADefinition() != null)
+            {
+                global_change_type = Mutation.getMacroChangeType(pair.getAADefinition().getChangeType());
+            }
+            if (pair.getAADefinition() == null ||  global_change_type == Mutation.TYPE_NOT_DEFINE)
+            {
+                global_change_type = Mutation.getMacroChangeType(pair.getRNADefinition().getChangeType());
+            }
+            if (global_change_type != Mutation.TYPE_NOT_DEFINE)
+            {
+                if ( quality == Mutation.QUALITY_HIGH || quality == Mutation.QUALITY_NOTKNOWN)
+                {
+                    total_discrepancy_numbers_pass_high_quality[-global_change_type]++;
+                }
+                else if (quality == Mutation.QUALITY_LOW)
+                {
+                    total_discrepancy_numbers_pass_low_quality[-global_change_type ]++;
+                }
+            }
+            
+        }
+        //check if limit reached
+        int disc_low_pass = 0;
+        int disc_high_pass =0;
+        int disc_low_fail = 0;
+        int disc_high_fail =0;
+        for (int count = 1; count <= Mutation.MACRO_SPECTYPES_COUNT; count++)
+        {
+            disc_low_pass =  cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_LOW,-count , FullSeqSpec.MODE_PASS);
+            disc_high_pass = cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_HIGH,-count , FullSeqSpec.MODE_PASS);
+            disc_low_fail =  cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_LOW,-count , FullSeqSpec.MODE_FAIL);
+            disc_high_fail = cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_HIGH,-count , FullSeqSpec.MODE_FAIL);
+
+    
+            if ( (total_discrepancy_numbers_pass_high_quality[count] !=  0 && 
+                    total_discrepancy_numbers_pass_high_quality[count] >  disc_high_fail) 
+            ||
+            ( total_discrepancy_numbers_pass_low_quality[count] != 0 && 
+                    total_discrepancy_numbers_pass_low_quality[count] > disc_low_fail))
+            {
+                return BaseSequence.QUALITY_BAD;
+            }
+            if ( (total_discrepancy_numbers_pass_high_quality[count] != 0
+            && total_discrepancy_numbers_pass_high_quality[count] >  disc_high_pass 
+            && total_discrepancy_numbers_pass_high_quality[count] <= disc_high_fail)
+            || 
+            (  total_discrepancy_numbers_pass_low_quality[count] != 0
+            && total_discrepancy_numbers_pass_low_quality[count] >  disc_low_pass 
+            && total_discrepancy_numbers_pass_low_quality[count] <= disc_low_fail))
+            {
+                return BaseSequence.QUALITY_REVIEW;
+            }
+        }
+             
+         
+        return BaseSequence.QUALITY_GOOD;
+    }
+      
+      
     public static  int getPenalty(   ArrayList discrepancy_descriptions,
                                 EndReadsSpec spec)
                                 throws BecDatabaseException
@@ -355,24 +434,24 @@ public class DiscrepancyDescription
             try
             {
        
-        Sample sample = new Sample(768);
-                    sample.getRefSequenceId();
-            
-                    sample.setIsolaterTrackingEngine( IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId()));
-                    ArrayList discrepancies = new ArrayList();
-                  
-                    ArrayList ar1 = null; ArrayList ar2=null;
-                    Read read  = null;
-                   // for (int read_count = 0; read_count < sample.getIsolateTrackingEngine().getEndReads().size(); read_count++)
-                    //{
-                        read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(0);
-                        ar1=read.getSequence().getDiscrepancies();
-                         read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(1);
-                        ar2=read.getSequence().getDiscrepancies();
+              CloneSequence cl= new CloneSequence(13858);
+               ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( cl.getDiscrepancies());
+               edu.harvard.med.hip.bec.coreobjects.spec.FullSeqSpec spec = (FullSeqSpec ) Spec.getSpecById(11);
+               int c = defineQuality( discrepancy_descriptions ,spec);
+              System.out.print(c);   
+                 cl= new CloneSequence(13839);
+                discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( cl.getDiscrepancies());
+           //    edu.harvard.med.hip.bec.coreobjects.spec.FullSeqSpec spec = (FullSeqSpec ) Spec.getSpecById(11);
+                c = defineQuality( discrepancy_descriptions ,spec);
+               
+                 System.out.print(c);
+                 cl= new CloneSequence(13872);
+                discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( cl.getDiscrepancies());
+          //     edu.harvard.med.hip.bec.coreobjects.spec.FullSeqSpec spec = (FullSeqSpec ) Spec.getSpecById(11);
+                c = defineQuality( discrepancy_descriptions ,spec);
                         //discrepancies.addAll( read.getSequence().getDiscrepancies() );
-                   // }
-                    discrepancies = DiscrepancyDescription.getDiscrepancyPairsNoDuplicates(ar1,ar2);
-                    System.out.print(discrepancies.size());
+       
+                    System.out.print(c);
 
             }
             catch(Exception e)
