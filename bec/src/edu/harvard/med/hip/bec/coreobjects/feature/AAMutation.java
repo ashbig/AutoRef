@@ -59,7 +59,7 @@
             if (o.length() == 0 ) o = null;
             if (m.length() == 0) m = null;
             
-            int type = Mutation.TYPE_NONE;
+            int type = Mutation.TYPE_NOT_DEFINE;
             
             if (m_position == 1 )
             {
@@ -72,6 +72,7 @@
                     return Mutation.TYPE_AA_SILENT;
                 }
             }
+            //never executed - fix this
             else if(o != null &&  o.substring( 0, 1).equals("*") )
             {
                 if (m != null && !o.substring( 0, 1).equals(m.substring( 0, 1)))

@@ -67,7 +67,7 @@ public class EndReadsSpec extends Spec
      {
          switch (changetype)
          {
-             case Mutation.TYPE_RNA_SILENT : case Mutation.TYPE_AA_SILENT:
+             case Mutation.MACRO_SPECTYPE_SILENT:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -76,8 +76,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_S_L");
              }
-             case Mutation.TYPE_RNA_INFRAME_INSERTION: 
-             case Mutation.TYPE_RNA_INFRAME :
+             case Mutation.MACRO_SPECTYPE_INFRAME :
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -86,8 +85,8 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_IINS_L");
              }
-             case Mutation.TYPE_RNA_MISSENSE : 
-             case Mutation.TYPE_AA_CONSERVATIVE:
+             case Mutation.MACRO_SPECTYPE_CONSERVATIVE:
+                 
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -97,7 +96,7 @@ public class EndReadsSpec extends Spec
                      return this.getParameterByNameInt("ER_C_L");
              }
              
-             case Mutation.TYPE_AA_NONCONSERVATIVE :
+             case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE :
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -107,10 +106,8 @@ public class EndReadsSpec extends Spec
                      return this.getParameterByNameInt("ER_NC_L");
                  
              }
-             case  Mutation.TYPE_RNA_FRAMESHIFT : 
-             case Mutation.TYPE_RNA_FRAMESHIFT_DELETION :
-             case Mutation.TYPE_RNA_FRAMESHIFT_INSERTION :
-             case Mutation.TYPE_AA_FRAMESHIFT:
+             case  Mutation.MACRO_SPECTYPE_FRAMESHIFT:
+            
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -119,7 +116,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_FR_L");
              }
-             case Mutation.TYPE_RNA_INFRAME_DELETION:
+             case Mutation.MACRO_SPECTYPE_INFRAME_DELETION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -128,11 +125,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_IDEL_L");
              }
-             case Mutation.TYPE_RNA_INFRAME_STOP_CODON :
-             case Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON :
-             case Mutation.TYPE_RNA_NONSENSE:
-             case Mutation.TYPE_AA_TRUNCATION:
-             case Mutation.TYPE_RNA_TRANCATION:
+             case Mutation.MACRO_SPECTYPE_TRANCATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -141,7 +134,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_TRANC_L");
              }
-             case Mutation.TYPE_AA_NO_TRANSLATION :case Mutation.TYPE_RNA_NO_TRANSLATION:
+             case Mutation.MACRO_SPECTYPE_NO_TRANSLATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -150,7 +143,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_NOTRANSLATION_L");
              }
-             case Mutation.TYPE_AA_POST_ELONGATION :case Mutation.TYPE_RNA_POST_ELONGATION:
+             case Mutation.MACRO_SPECTYPE_POST_ELONGATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -159,7 +152,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_PLONG_L");
              }
-             case Mutation.TYPE_LINKER_5_SUBSTITUTION  : 
+             case Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION  : 
                    {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -168,7 +161,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_5S_L");
              }
-             case Mutation.TYPE_LINKER_3_SUBSTITUTION  :  
+             case Mutation.MACRO_SPECTYPE_LINKER_3_SUBSTITUTION  :  
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -177,7 +170,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_3S_L");
              }
-             case Mutation.TYPE_LINKER_5_INS_DEL  :   
+             case Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL  :   
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -186,7 +179,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_5DI_L");
              }
-             case Mutation.TYPE_LINKER_3_INS_DEL  :   
+             case Mutation.MACRO_SPECTYPE_LINKER_3_INS_DEL  :   
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {

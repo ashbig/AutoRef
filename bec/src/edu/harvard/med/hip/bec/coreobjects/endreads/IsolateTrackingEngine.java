@@ -44,6 +44,7 @@ public class IsolateTrackingEngine
     
     public static final int            PROCESS_STATUS_ER_INITIATED = 2;
     public static final int            PROCESS_STATUS_ER_PHRED_RUN = 3;
+    public static final int            PROCESS_STATUS_ER_ASSEMBLY_FINISHED = 32;
     public static final int            PROCESS_STATUS_ER_ANALYZED = 4;
     public static final int            PROCESS_STATUS_ER_ANALYZED_NO_MATCH = 19;
     public static final int            PROCESS_STATUS_ER_NO_READS = 18;
@@ -55,15 +56,24 @@ public class IsolateTrackingEngine
     public static final int            PROCESS_STATUS_OLIGODESIGNER_RUN = 8;
     public static final int            PROCESS_STATUS_OLIGODESIGNER_CONFIRMED = 9;
     public static final int            PROCESS_STATUS_INTERNAL_READS_FINISHED = 10;
+  
     
-    public static final int            PROCESS_STATUS_ASSEMBLY_WITH_SUCESS = 11;
-    public static final int            PROCESS_STATUS_ASSEMBLY_WITHOUT_SUCESS =12;
-    public static final int            PROCESS_STATUS_ASSEMBLY_CONFIRMED = 13;
+
+    public static final int            ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED = -3;
+    public static final int            ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED = -4;
+    public static final int            ASSEMBLY_STATUS_N_CONTIGS =-6;
+    public static final int            ASSEMBLY_STATUS_NO_CONTIGS =-5;
+    public static final int           ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED = -7;
+    public static final int           ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED = -8;
+     public static final int            ASSEMBLY_STATUS_FAILED_NO_MATCH = -10;  
+    public static final int           ASSEMBLY_STATUS_PASS = 11;
+
+    public static final int            ASSEMBLY_STATUS_CONFIRMED = 13;
     
     public static final int            PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED = 14;
     public static final int            PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED = 15;
    
-    public static final int            PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED = 16;
+    public static final int            PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED = 41;
     
     
     
@@ -75,7 +85,7 @@ public class IsolateTrackingEngine
     private     int     m_userchangedrank_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;//date of end reads analysis
     private	int     m_flexinfo_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;//  isolate id
     private	int     m_sample_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET ;// resulting from the full sequencing
-    
+    private     int     m_assembly_status = -1;
        
     private     FlexInfo    m_flexinfo = null;
     
@@ -84,6 +94,7 @@ public class IsolateTrackingEngine
     private	int[]   m_end_reads_id = new int[2] ;// end reads id
     private Read    m_forward_endread = null;
     private Read    m_reverse_endread = null;
+    private CloneSequence   m_clone_sequence = null;
     private ArrayList   m_endreads = null;
     
     
@@ -146,17 +157,19 @@ public class IsolateTrackingEngine
     public void      setEndReadId(int[] v){  m_end_reads_id = v;}// sample id of the sample used for the forward read
     public void      setFlexInfo(FlexInfo v){ m_flexinfo = v;}
     public void      setEndReads(ArrayList reads)    {          m_endreads = reads;    }
+    public void         setAssemblyStatus(int v){ m_assembly_status = v;}
+    public void     setCloneSequence(CloneSequence c){ m_clone_sequence =c ;}
     
     public  int     getId(){ return m_id;}
     public int      getFlexInfoId(){ return m_flexinfo_id ;}// sample id of the first sample of this isolate
     public int      getConstructId(){ return m_construct_id ;}// identifies the agar; several (four) isolates will have the same id
     public int      getStatus(){ return m_status ;}
-    
+     public int     getAssemblyStatus(){return  m_assembly_status ;}
     public int[]    getEndReadId(){ return m_end_reads_id ;}// sample id of the sample used for the forward read
     public int      getRank(){ return m_rank;} ;// results of the end read analysis
     public int      getSampleId(){ return m_sample_id ;}// resulting from the full sequencing
     public int[]    getCloneSequenceReadsId(){ return m_fullseq_reads_id;}
-    
+    public CloneSequence     getCloneSequence( ){ return m_clone_sequence ;}
     public int      getScore() 
     { 
        
@@ -189,10 +202,11 @@ public class IsolateTrackingEngine
             case PROCESS_STATUS_OLIGODESIGNER_CONFIRMED : return "Internal primers confirmed";
             case PROCESS_STATUS_INTERNAL_READS_FINISHED : return "Full sequencing finished";
 
-            case PROCESS_STATUS_ASSEMBLY_WITH_SUCESS : return "Assembled with sucess";
-            case PROCESS_STATUS_ASSEMBLY_WITHOUT_SUCESS :return "Assembly failed";
-            case PROCESS_STATUS_ASSEMBLY_CONFIRMED : return "Assembly confirmed";
+          
+            case PROCESS_STATUS_ER_ASSEMBLY_FINISHED: return "Finished assembly from end reads";
 
+    
+    
             case PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED : return "Discrepancy finder finished";
             case PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED : return "Polymorphism finder finished";
 
@@ -201,6 +215,23 @@ public class IsolateTrackingEngine
     
         }
     }
+    
+    /*
+    public String getAssemblyStatusAsString()
+    {
+        switch (m_assembly_status)
+        {
+              case ASSEMBLY_STATUS_PASS : return "Assembled with sucess";
+            case ASSEMBLY_STATUS_N_CONTIGS :return "Assembly failed";
+            case ASSEMBLY_STATUS_CONFIRMED : return "Assembly confirmed";
+            case ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED : return "Assembly failed: cds not covered";
+            case ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED : return "Assembly failed: linker 5 not covered";
+            case ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED : return "Assembly failed: linker 3 not covered";
+            default: return "Not known";
+        }
+    }
+    */
+    
     public FlexInfo  getFlexInfo()throws BecDatabaseException
     {
         if (m_flexinfo == null)
@@ -222,8 +253,7 @@ public class IsolateTrackingEngine
          String sql=null;
         try
         {
-              sql = "update isolatetracking "+
-            " set status="+status+" where isolatetrackingid="+ isolatetrackingid;
+              sql = "update isolatetracking set status="+status+" where isolatetrackingid="+ isolatetrackingid;
 
             DatabaseTransaction.executeUpdate(sql, conn);
         }
@@ -245,6 +275,14 @@ public class IsolateTrackingEngine
         
         DatabaseTransaction.executeUpdate(sql, conn);
     }
+    
+    public static void updateAssemblyStatus(int asstatus, int isolatetrackingid, Connection conn )throws BecDatabaseException
+    {
+         String sql = "update isolatetracking set ASSEMBLY_STATUS="+asstatus +" where isolatetrackingid="+ isolatetrackingid;
+        
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
+    
     
     public void updateRank(int r)throws BecDatabaseException
     {
@@ -308,70 +346,27 @@ public class IsolateTrackingEngine
             m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
             return;
         }
-        
-     
-        //check for ambiquouty condition
-       ArrayList not_ambiquous_read = getReadPassedAmbiquoutyTest(cutoff_spec);
-       if ( not_ambiquous_read == null || not_ambiquous_read.size() == 0)
-       {
-           m_rank = RANK_BLACK;
-           m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
-           return;
-       }
-         ArrayList discrepancies_pairs = new ArrayList();
-       //check wherther reads are overlap
-       //case of one read or no overlap
-         Read read = null; int overlap_length = 0; int isolate_penalty = 0;
-       if ( not_ambiquous_read.size() == 1 || !isOverlap( not_ambiquous_read , refsequence_length) )
-       {
-           for (int read_count = 0; read_count < not_ambiquous_read.size(); read_count++)
-           {
-               read  = (Read)not_ambiquous_read.get(read_count);
-                isolate_penalty +=  read.getScore();
-                overlap_length += read.refsequenceCoveredLength();
-                discrepancies_pairs.addAll( DiscrepancyPair.assembleDiscrepanciesInPairs(
-                     read.getSequence().getDiscrepancies())); 
-           }
-           if ( isRankBlack(discrepancies_pairs,cutoff_spec) )
-           {   
-                m_rank = RANK_BLACK;
-                m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
-           }
-           else
-           {
-               m_score =(int) ( 1000 * ( isolate_penalty/overlap_length ));
-           }
-           return;
-       }
-       // case of two read and overlap
-        
-        discrepancies_pairs = DiscrepancyPair.getDiscrepancyPairsNoDuplicates(
-                     ((Read) m_endreads.get(0)).getSequence().getDiscrepancies(), 
-                      ((Read) m_endreads.get(1)).getSequence().getDiscrepancies());
-     
-        // no mutations
-        if (discrepancies_pairs.size() == 0) 
+        if (m_clone_sequence != null)
         {
-            m_score = 0;
+            setBlackRankBasedOnCloneSequence( cutoff_spec,  spec, refsequence_length);
         }
         else
         {
-            //sort all disrcrepancyes: polymorphism not included change later
-            
-              if ( isRankBlack(discrepancies_pairs,cutoff_spec) )
-               {   
-                    m_rank = RANK_BLACK;
-                    m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
-               }
-               else
-               {
-                   m_score =(int)( 1000 * getPenalty( discrepancies_pairs, spec)/refsequence_length);
-               }
+             setBlackRankBasedOnReads( cutoff_spec,  spec, refsequence_length) ;
+    
         }
+     
     }
     
     
-    public int getCdsLengthCovered(){ return t_cds_length_covered_by_reads;}
+    public int getCdsLengthCovered()
+    { 
+        if (m_clone_sequence != null)
+        {
+            return m_clone_sequence.getLinker3Stop() - m_clone_sequence.getLinker3Stop();
+        }
+        else
+            return t_cds_length_covered_by_reads;}
     
     
     
@@ -438,7 +433,7 @@ public class IsolateTrackingEngine
         if (species == RefSequence.SPECIES_NOT_SET)
             sql = "select isolatetrackingid,constructid,status,rank,score,sampleid  from isolatetracking where status in ("+processtatus+")";
         else
-            sql = "select iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
+            sql = "select iso.ASSEMBLY_STATUS as assemblystatus, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
             +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid "
             +" from isolatetracking iso, sequencingconstruct c, refsequence r "
             +"where status in ("+ processtatus+") and r.sequenceid=c.refsequenceid and c.constructid=iso.constructid and r.genusspecies="+species;
@@ -458,6 +453,7 @@ public class IsolateTrackingEngine
                 istr.setStatus(crs.getInt("status") );
                 istr.setSampleId(crs.getInt("sampleid") );
                 istr.setId( crs.getInt("isolatetrackingid") );
+                istr.setAssemblyStatus( crs.getInt("assemblystatus"));
                 istr.setConstructId( crs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
                 // exstruct reads if not empty sample
                 if (istr.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY)
@@ -544,6 +540,7 @@ public class IsolateTrackingEngine
         if (it != null && it.size() > 0) return (IsolateTrackingEngine)it.get(0);
         return null;
     }
+    
     public void setStatusBasedOnReadStatus(int default_status )
     {
             if ( m_status == PROCESS_STATUS_SUBMITTED_EMPTY ||
@@ -633,19 +630,19 @@ public class IsolateTrackingEngine
     }
     
     
-    
+    /*
     private boolean isRankBlack(ArrayList discrepancies_pairs,  FullSeqSpec cutoff_spec )
                                 throws BecDatabaseException
     {
           int discrepancy_number = 0; int cutoff ;
           int penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
-          DiscrepancyPair pair = null; int score = 0;
-          discrepancies_pairs = DiscrepancyPair.sortByRNADiscrepancyByChangeTypeQuality(discrepancies_pairs);
+          DiscrepancyDescription pair = null; int score = 0;
+          discrepancies_pairs = DiscrepancyDescription.sortByRNADiscrepancyByChangeTypeQuality(discrepancies_pairs);
         for (int pair_count = 0; pair_count< discrepancies_pairs.size(); )
         {
             cutoff = FullSeqSpec.CUT_OFF_VALUE_NOT_FOUND;
             penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
-            pair = (DiscrepancyPair)discrepancies_pairs.get(pair_count);
+            pair = (DiscrepancyDescription)discrepancies_pairs.get(pair_count);
             // get cutof  numer for the current pair
             cutoff = cutoff_spec.getDiscrepancyNumberByType( pair.getRNADiscrepancy().getQuality(), pair.getRNADiscrepancy().getChangeType());
             if (cutoff == FullSeqSpec.CUT_OFF_VALUE_NOT_FOUND)//can be determine by AA only
@@ -670,8 +667,8 @@ public class IsolateTrackingEngine
        
         return false;
     }
-    
-    
+    */
+    /*
       private int getPenalty(   ArrayList discrepancies_pairs,
                                 EndReadsSpec spec)
                                 throws BecDatabaseException
@@ -697,6 +694,9 @@ public class IsolateTrackingEngine
        
         return -isolate_penalty;
     }
+     *
+     *
+     **/
     //get not amb read
     private ArrayList getReadPassedAmbiquoutyTest(FullSeqSpec cutoff_spec) throws BecDatabaseException
     {
@@ -763,7 +763,7 @@ public class IsolateTrackingEngine
     {
         ArrayList engines = new ArrayList();
        
-       sql = "select flexsequenceid,flexcloneid ,id,flexconstructid,flexsampleid,flexsequencingplateid, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
+       sql = "select ASSEMBLY_STATUS as assemblystatus ,flexsequenceid,flexcloneid ,id,flexconstructid,flexsampleid,flexsequencingplateid, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
             +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid  "
             +" from isolatetracking iso, flexinfo f "
             +" where  f.isolatetrackingid=iso.isolatetrackingid  and "+sql;
@@ -784,6 +784,7 @@ public class IsolateTrackingEngine
                 istr.setSampleId(crs.getInt("sampleid") );
                 istr.setId( crs.getInt("isolatetrackingid") );
                 istr.setFlexInfoId(crs.getInt("id") );
+                istr.setAssemblyStatus( crs.getInt("assemblystatus"));
                 istr.setConstructId( crs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
                 // exstruct reads if not empty sample
                 if (istr.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY)
@@ -816,6 +817,99 @@ public class IsolateTrackingEngine
             DatabaseTransaction.closeResultSet(crs);
         }
         
+    }
+    
+   
+     //function checks wether isolate quality (by number of discrepancies) below minimum
+    //it's calculates isolta score as well
+    private void setBlackRankBasedOnCloneSequence(FullSeqSpec cutoff_spec, EndReadsSpec spec, int refsequence_length) throws BecDatabaseException
+    {
+       //check for ambiquouty condition
+       if (!BaseSequence.isPassAmbiquoutyTest(cutoff_spec,m_clone_sequence.getText() ))
+       {
+           m_rank = RANK_BLACK;
+           m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+           return;
+       }
+       
+        int sequence_penalty = 0;
+        ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( m_clone_sequence.getDiscrepancies());
+     
+       if ( DiscrepancyDescription.isMaxNumberOfDiscrepanciesReached( discrepancy_descriptions ,cutoff_spec ))
+       {   
+            m_rank = RANK_BLACK;
+            m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+       }
+       else
+       {
+            sequence_penalty = DiscrepancyDescription.getPenalty(discrepancy_descriptions, spec);// by rna mutation
+            m_score =(int) ( 1000 *  (sequence_penalty/ (m_clone_sequence.getRefsequenceCoveredLength())));
+       }
+    
+    }
+    
+    
+    private void setBlackRankBasedOnReads(FullSeqSpec cutoff_spec, EndReadsSpec spec, int refsequence_length) throws BecDatabaseException
+    {
+           
+        //check for ambiquouty condition
+       ArrayList not_ambiquous_read = getReadPassedAmbiquoutyTest(cutoff_spec);
+       if ( not_ambiquous_read == null || not_ambiquous_read.size() == 0)
+       {
+           m_rank = RANK_BLACK;
+           m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+           return;
+       }
+        ArrayList discrepancies_pairs = new ArrayList();
+       //check wherther reads are overlap
+       //case of one read or no overlap
+         Read read = null; int overlap_length = 0; int isolate_penalty = 0;
+       if ( not_ambiquous_read.size() == 1 || !isOverlap( not_ambiquous_read , refsequence_length) )
+       {
+           for (int read_count = 0; read_count < not_ambiquous_read.size(); read_count++)
+           {
+               read  = (Read)not_ambiquous_read.get(read_count);
+                isolate_penalty +=  read.getScore();
+                overlap_length += read.refsequenceCoveredLength();
+                discrepancies_pairs.addAll( DiscrepancyDescription.assembleDiscrepanciesInPairs(
+                     read.getSequence().getDiscrepancies())); 
+           }
+           if ( DiscrepancyDescription.isMaxNumberOfDiscrepanciesReached(discrepancies_pairs,cutoff_spec) )
+           {   
+                m_rank = RANK_BLACK;
+                m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+           }
+           else
+           {
+               m_score =(int) ( 1000 * ( isolate_penalty/overlap_length ));
+           }
+           return;
+       }
+       // case of two read and overlap
+        
+        discrepancies_pairs = DiscrepancyDescription.getDiscrepancyPairsNoDuplicates(
+                     ((Read) m_endreads.get(0)).getSequence().getDiscrepancies(), 
+                      ((Read) m_endreads.get(1)).getSequence().getDiscrepancies());
+     
+        // no mutations
+        if (discrepancies_pairs.size() == 0) 
+        {
+            m_score = 0;
+        }
+        else
+        {
+            //sort all disrcrepancyes: polymorphism not included change later
+            
+              if ( DiscrepancyDescription.isMaxNumberOfDiscrepanciesReached(discrepancies_pairs,cutoff_spec) )
+               {   
+                    m_rank = RANK_BLACK;
+                    m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+               }
+               else
+               {
+                   m_score =(int)( 1000 * (DiscrepancyDescription.getPenalty( discrepancies_pairs, spec)/refsequence_length));
+               }
+        }
     }
     
     

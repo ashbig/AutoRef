@@ -82,7 +82,7 @@ public class BioVector
         ArrayList vect = new ArrayList();
          String sql = "select vectorid, vectorname, source,vectortype from vector ";
         RowSet rs = null;
-        
+        BioVector vector = null;
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -90,7 +90,10 @@ public class BioVector
             
             while(rs.next())
             {
-                vect.add( new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), null, rs.getString("source") , rs.getInt("vectortype"), null, null));
+                
+                vector= new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), null, rs.getString("source") , rs.getInt("vectortype"), null, null);
+                 vector.setFeatures( getFeatures(vector.getId()));
+                vect.add(vector);
             }
             return vect;
             
@@ -226,4 +229,16 @@ public class BioVector
             DatabaseTransaction.closeResultSet(rs);
         }
     }
+    
+    
+    
+      public static void main(String [] args) {
+          ArrayList r = null;
+          try{
+              r=BioLinker.getAllLinkers();
+          }
+          catch(Exception e){}
+          System.exit(0);
+              
+      }
 }

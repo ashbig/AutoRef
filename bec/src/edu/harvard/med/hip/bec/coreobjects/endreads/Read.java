@@ -430,42 +430,24 @@ public class Read
         int score = Constants.SCORE_NOT_CALCULATED; 
         int dtype = -1; int dquality = -1; int penalty = 0;
         
-        ArrayList rna_discrepancies = m_readsequence.getDiscrepanciesByType(Mutation.RNA);
-        Mutation disc = null;
-      
-       for (int ind = 0; ind < rna_discrepancies.size();ind++)
-        {
-            disc = (Mutation)rna_discrepancies.get(ind);
-            penalty = spec.getPenalty(disc.getQuality(), disc.getChangeType());// by rna mutation
-            score += penalty;
-        }
-     
+        ArrayList discrepancy_definitions = DiscrepancyDescription.assembleDiscrepanciesInPairs(
+                                                m_readsequence.getDiscrepancies());
+        score = DiscrepancyDescription.getPenalty( discrepancy_definitions, spec);
         int length_to_normalize = refsequenceCoveredLength();
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //####################################
-        if ( length_to_normalize == 0)
-            return 0;
-        score = (int) score ;
-        return -score;
+        if ( length_to_normalize == 0)           return 0;
+        return score;
     }
     
     
      //get not amb read
     public boolean isPassAmbiquoutyTest(FullSeqSpec cutoff_spec) throws BecDatabaseException
     {
-        
-        //check for number of ambiques bases
-       int amb_bases_100base = 0;
+    
        String read_sequence_text = getTrimmedSequence();
-       int[] res = BaseSequence.analizeSequenceAmbiquty(read_sequence_text);
-       //check if boundry conditions reached
-       amb_bases_100base = (int)( res[0] / read_sequence_text.length());
-       if ( amb_bases_100base < cutoff_spec.getMaximumNumberOfAmbiquousBases() || 
-            res[1] < cutoff_spec.getNumberOfConsequativeAmbiquousBases())
-       {
-           return true;
-       }
-       return false;
+       return BaseSequence.isPassAmbiquoutyTest(cutoff_spec,read_sequence_text);
+       
     }
     
     //define length of refsequence covered by read

@@ -242,7 +242,7 @@ public class RNAMutation extends Mutation {
         String m = m_change_mut;
         if (o.length() == 0 ) o = null;
             if (m.length() == 0) m = null;
-        int type = Mutation.TYPE_NONE;
+        int type = Mutation.TYPE_NOT_DEFINE;
          String aa_ori = null;
          String aa_mut = null;
         

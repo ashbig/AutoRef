@@ -188,7 +188,7 @@ public class Constants {
       public static final int PROCESS_CHECK_READS_AVAILABILITY =24;//check reads
       public static final int PROCESS_RUN_ISOLATE_RUNKER = 25;//run isolate runker
       public static final int PROCESS_APROVE_ISOLATE_RANKER = 26;//approve isolate ranker
-      public static final int PROCESS_PUT_CLONES_ON_HOLD = 27; //put clones on hold
+    
       public static final int PROCESS_ADD_NEW_INTERNAL_PRIMER = 28; // add new internal primer
       public static final int PROCESS_VIEW_INTERNAL_PRIMERS = 29;//view internal primers
       public static final int PROCESS_APPROVE_INTERNAL_PRIMERS = 30;//approve internal primers
@@ -198,7 +198,9 @@ public class Constants {
       public static final int PROCESS_RUN_DESIGION_TOOL = 34;//run decision tool
       
       public static final int PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 35;//run decision tool
-              
+       public static final int PROCESS_PUT_CLONES_ON_HOLD = 27; //put clones on hold
+      public static final int            PROCESS_ACTIVATE_CLONES = 37;
+       public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 38;
     //items for display 1-19
   
    
@@ -218,6 +220,9 @@ public class Constants {
     public static final int CONTAINER_ISOLATE_RANKER_REPORT = 14;
     public static final int SAMPLE_ISOLATE_RANKER_REPORT = 15;
     public static final int READ_REPORT_INT = 16;
+     public static final int AVAILABLE_VECTORS_DEFINITION_INT = 17;
+      public static final int AVAILABLE_LINKERS_DEFINITION_INT = 18;
+      
        
        //submit data from file
     public static final String FILE_DESCRIPTION = "file_description";

@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.7 2003-07-18 19:41:05 Elena Exp $
+ * $Id: Sample.java,v 1.8 2003-08-14 20:08:20 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -337,7 +337,7 @@ public class Sample
                         read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(read_count);
                         discrepancies.addAll( read.getSequence().getDiscrepancies() );
                     }
-                    discrepancies = DiscrepancyPair.getDiscrepancyNoDuplicates(discrepancies);
+                 //   discrepancies = DiscrepancyPair.getDiscrepancyNoDuplicates(discrepancies);
                     String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
                     System.out.println(discrepancy_report_html);
        }

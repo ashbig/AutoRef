@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.11 2003-08-04 17:39:19 Elena Exp $
+ * $Id: Container.java,v 1.12 2003-08-14 20:08:19 Elena Exp $
  *
  * File     	: Container.java
 
@@ -416,7 +416,7 @@ public class Container
         }
         if (isRefSequenceInfo)
         {
-            sql="select s.sampleid as sampleid, position, iso.constructid as constructid, sampletype,rank,score, status,refsequenceid,  "
+            sql="select s.sampleid as sampleid, position, iso.ASSEMBLY_STATUS as ASSEMBLY_STATUS,  iso.constructid as constructid, sampletype,rank,score, status,refsequenceid,  "
         +" iso.isolatetrackingid as isolatetrackingid,id,flexconstructid,flexsampleid,flexsequencingplateid, "
         +"  flexsequenceid,flexcloneid from flexinfo f, isolatetracking iso, sample s, sequencingconstruct c  "
         +"  where f.isolatetrackingid=iso.isolatetrackingid and iso.sampleid=s.sampleid "
@@ -452,6 +452,7 @@ public class Container
                     isolatetracking.setStatus(crs.getInt("status"));
                     isolatetracking.setSampleId(sampleid);
                     isolatetracking.setId(isolatetracking_id);
+                    isolatetracking.setAssemblyStatus(crs.getInt("ASSEMBLY_STATUS"));
                     isolatetracking.setFlexInfoId(crs.getInt("id") );// sample id of the first sample of this isolate
                     isolatetracking.setConstructId(crs.getInt("constructid") );// identifies the agar; several (four) isolates will have the same id
     //create flex info for isolate tracxking
@@ -491,7 +492,7 @@ public class Container
         
         m_samples.clear();
         
-        String sql = "select s.sampleid as sampleid, position, constructid, sampletype,rank,score, status, "
+        String sql = "select s.sampleid as sampleid, position, constructid, sampletype,rank,score, status, ASSEMBLY_STATUS "
         +" iso.isolatetrackingid as isolatetrackingid from  isolatetracking iso, sample s  "
         +" where  iso.sampleid=s.sampleid "
         +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
@@ -519,6 +520,7 @@ public class Container
                     isolatetracking.setRank(crs.getInt("rank")) ;// results of the end read analysis
                     isolatetracking.setScore(crs.getInt("score"));// results of the end read analysis
                     isolatetracking.setStatus(crs.getInt("status"));
+                    isolatetracking.setAssemblyStatus(crs.getInt("ASSEMBLY_STATUS"));
                     isolatetracking.setSampleId(sampleid);
                     isolatetracking.setId(isolatetracking_id);
                    // sample id of the first sample of this isolate

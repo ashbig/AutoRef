@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.7 2003-07-18 19:41:05 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.8 2003-08-14 20:08:20 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -28,6 +28,7 @@ public class ProcessDefinition
     
     public static final     String    RUN_PREPARE_ASSEMBLY = "Prepare for sequence assembly";
     public static final     String    RUN_ASSEMBLY = "Run sequence assembly";
+    public static final     String    RUN_ASSEMBLY_FROM_END_READS = "Run sequence assembly from end reads";
     
     private int             m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private String          m_process_name = null;

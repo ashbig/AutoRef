@@ -18,7 +18,7 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
  */
 public class FullSeqSpec extends Spec
 {
-    public static final int CUT_OFF_VALUE_NOT_FOUND = -1;
+    public static final int CUT_OFF_VALUE_NOT_FOUND = -1000;
     
     //values
     
@@ -70,7 +70,7 @@ public class FullSeqSpec extends Spec
      {
          switch (changetype)
          {
-             case Mutation.TYPE_RNA_SILENT : case Mutation.TYPE_AA_SILENT:
+             case Mutation.MACRO_SPECTYPE_SILENT:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -79,8 +79,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_S_PASS_L");
              }
-             case Mutation.TYPE_RNA_INFRAME_INSERTION: 
-             case Mutation.TYPE_RNA_INFRAME :
+             case Mutation.MACRO_SPECTYPE_INFRAME :
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -89,8 +88,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_IINS_PASS_L");
              }
-             case Mutation.TYPE_RNA_MISSENSE : 
-             case Mutation.TYPE_AA_CONSERVATIVE:
+             case Mutation.MACRO_SPECTYPE_CONSERVATIVE:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -99,8 +97,8 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_C_PASS_L");
              }
-             case Mutation.TYPE_RNA_NONSENSE:
-             case Mutation.TYPE_AA_NONCONSERVATIVE :
+             
+             case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE :
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -110,10 +108,7 @@ public class FullSeqSpec extends Spec
                      return this.getParameterByNameInt("FS_NC_PASS_L");
                  
              }
-             case  Mutation.TYPE_RNA_FRAMESHIFT : 
-             case Mutation.TYPE_RNA_FRAMESHIFT_DELETION :
-             case Mutation.TYPE_RNA_FRAMESHIFT_INSERTION :
-             case Mutation.TYPE_AA_FRAMESHIFT:
+             case  Mutation.MACRO_SPECTYPE_FRAMESHIFT:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -123,7 +118,7 @@ public class FullSeqSpec extends Spec
                      return this.getParameterByNameInt("FS_FR_PASS_L");
              }
              
-             case Mutation.TYPE_RNA_INFRAME_DELETION:
+             case Mutation.MACRO_SPECTYPE_INFRAME_DELETION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -132,9 +127,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_IDEL_PASS_L");
              }
-             case Mutation.TYPE_RNA_INFRAME_STOP_CODON :
-             case Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON :
-             case Mutation.TYPE_AA_TRUNCATION:
+             case Mutation.MACRO_SPECTYPE_TRANCATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -143,7 +136,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_TRANC_PASS_L");
              }
-             case Mutation.TYPE_AA_NO_TRANSLATION :
+             case Mutation.MACRO_SPECTYPE_NO_TRANSLATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -152,7 +145,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_NOTRANSLATION_PASS_L");
              }
-             case Mutation.TYPE_AA_POST_ELONGATION :
+             case Mutation.MACRO_SPECTYPE_POST_ELONGATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -161,7 +154,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_PELONG_PASS_L");
              }
-             case Mutation.TYPE_LINKER_5_SUBSTITUTION  : 
+             case Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION  : 
                    {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -170,7 +163,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_5S_PASS_L");
              }
-             case Mutation.TYPE_LINKER_3_SUBSTITUTION  :  
+             case Mutation.MACRO_SPECTYPE_LINKER_3_SUBSTITUTION  :  
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -179,7 +172,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_3S_PASS_L");
              }
-             case Mutation.TYPE_LINKER_5_INS_DEL  :   
+             case Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL  :   
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -188,7 +181,7 @@ public class FullSeqSpec extends Spec
                  else 
                      return this.getParameterByNameInt("FS_5DI_PASS_L");
              }
-             case Mutation.TYPE_LINKER_3_INS_DEL  :   
+             case Mutation.MACRO_SPECTYPE_LINKER_3_INS_DEL  :   
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {

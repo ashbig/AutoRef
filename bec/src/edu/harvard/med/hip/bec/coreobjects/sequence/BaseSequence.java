@@ -7,7 +7,7 @@
 
 package edu.harvard.med.hip.bec.coreobjects.sequence;
 
-
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import java.sql.*;
@@ -43,10 +43,16 @@ public  class BaseSequence
     public static final int STATUS_POLYMORPHISM_CLEARED = 2;
     public static final int STATUS_FINISHED = 5;
     
-    //sequence assembly status
-     public static final int ASSEMBLY_STATUS_ASSESMBLED = 0; 
-    public static final int ASSEMBLY_STATUS_EDITED = 1; 
-    public static final int ASSEMBLY_STATUS_FINAL = 2; 
+    //sequence assembly status for clone sequence only
+     public static final int CLONE_SEQUENCE_TYPE_ASSESMBLED = 0; 
+     public static final int CLONE_SEQUENCE_TYPE_FINAL = 1; 
+     public static final int CLONE_SEQUENCE_TYPE_EDITED = 2; 
+     
+     //analized status for clone sequence only
+     public static final int CLONE_SEQUENCE_STATUS_ASSESMBLED = 0; 
+     public static final int CLONE_SEQUENCE_STATUS_ANALIZED_DF = 1; 
+     public static final int CLONE_SEQUENCE_STATUS_POLYMORPHISM_RESOLVED = 2; 
+     public static final int CLONE_SEQUENCE_STATUS_FINAL = 3; 
     /*
      public static final int QUALITY_STORAGE = 2;
     public static final int QUALITY_RECOMENDED_STORAGE =1;
@@ -175,7 +181,7 @@ public  class BaseSequence
         int total_amb_chars = 0;
         int stretch_curent = 0;
         int stretch_preserved = 0;
-        for (int count = 0; count < chars[count]; count++)
+        for (int count = 0; count < chars.length; count++)
         {
             if (chars[count] == 'N' || chars[count] == 'n')
             {
@@ -196,6 +202,28 @@ public  class BaseSequence
         res[1] = (stretch_preserved >= stretch_curent) ? stretch_preserved : stretch_curent;
         return res;
      }
+    
+    
+    
+      //get not amb read
+    public static boolean isPassAmbiquoutyTest(FullSeqSpec cutoff_spec, String sequence) throws BecDatabaseException
+    {
+        
+        //check for number of ambiques bases
+       int amb_bases_100base = 0;
+      
+       int[] res = BaseSequence.analizeSequenceAmbiquty(sequence);
+       //check if boundry conditions reached
+       amb_bases_100base = (int)( res[0] / sequence.length());
+       if ( amb_bases_100base < cutoff_spec.getMaximumNumberOfAmbiquousBases() || 
+            res[1] < cutoff_spec.getNumberOfConsequativeAmbiquousBases())
+       {
+           return true;
+       }
+       return false;
+    }
+    
+    
     public static ArrayList getAllSequencesWithStatus(int status, int seqtype) throws BecDatabaseException
     {
        

@@ -23,10 +23,7 @@ import java.sql.*;
 public abstract class Mutation
 {
     
-    public static final int TYPE_NONE = 0;
-    
-    
-    
+  
     //mutation type
     public static final int DNA = 0;
     public static final int AA = 2;
@@ -41,6 +38,7 @@ public abstract class Mutation
     
     //mutation types
     public static final int TYPE_NOT_DEFINE = 0;
+     public static final int TYPE_NOTRESOLVED=23;
     //aa mutation type
     public static final int TYPE_AA_NO_TRANSLATION = 1;
     public static final int TYPE_AA_OUT_OF_FRAME_TRANSLATION = 2;
@@ -74,24 +72,30 @@ public abstract class Mutation
     public static final int TYPE_RNA_POST_ELONGATION = 28;
      public static final int TYPE_RNA_TRANCATION = 29;
      
-     //
+     //linker mutation type
       public static final int TYPE_LINKER_5_SUBSTITUTION = 40;
         public static final int TYPE_LINKER_3_SUBSTITUTION = 41;
         public static final int TYPE_LINKER_5_INS_DEL = 42;
        public static final int TYPE_LINKER_3_INS_DEL = 43;
     
-    public static final int TYPE_NOTRESOLVED=23;
-    //owner of mutations
-    public static final int OWNER_FULL_SEQUENCE=0;
-    public static final int OWNER_BLAST_HIT=1;
+   
+   // global mutation types used for spec query
+    public static final int MACRO_SPECTYPE_SILENT = -1;
+    public static final int MACRO_SPECTYPE_INFRAME =-2;
+    public static final int MACRO_SPECTYPE_CONSERVATIVE = -3;
+    public static final int MACRO_SPECTYPE_NONCONSERVATIVE = -4;
+    public static final int MACRO_SPECTYPE_FRAMESHIFT = -5;
+    public static final int MACRO_SPECTYPE_INFRAME_DELETION =-6;
+    public static final int MACRO_SPECTYPE_TRANCATION = -7;
+    public static final int MACRO_SPECTYPE_NO_TRANSLATION =-8;
+    public static final int MACRO_SPECTYPE_POST_ELONGATION = -9;
+    public static final int MACRO_SPECTYPE_LINKER_5_SUBSTITUTION  = -10; 
+    public static final int MACRO_SPECTYPE_LINKER_3_SUBSTITUTION  = -11;  
+    public static final int MACRO_SPECTYPE_LINKER_5_INS_DEL  = -12;
+    public static final int MACRO_SPECTYPE_LINKER_3_INS_DEL  = -13;   
     
-    //type of mutation analysis
-    public static final int TYPE_BLAST_HIT=1;
-    public static final int TYPE_NEEDLE = 2;
-    
-    
-    
-    
+    public static final int MACRO_SPECTYPES_COUNT = 13;
+	                 
     protected int         m_id =-1;
     protected int         m_position =-1;// start of mutation (on object sequence)
     protected int         m_length=-1;// – length of mutation (optional)
@@ -396,6 +400,8 @@ public abstract class Mutation
         return report.toString();
     }
     //---------------------------------
+    
+    /*
     public ArrayList   getAllMutations(int id, int owner) throws BecDatabaseException
     {
         String sql = "select  position,length,subject,query,type "+
@@ -462,6 +468,20 @@ public abstract class Mutation
                     mut.setId(mutid);
                     res.add(mut);
                 }
+                else     if (type == Mutation.LINKER_5P || type == Mutation.LINKER_3P)
+                {
+                    
+                    LinkerMutation mut_linker = new LinkerMutation( ( type == Mutation.LINKER_5P));
+                    mut_linker.setPosition( position);// start of mutation (on object sequence)
+                    mut_linker.setLength( length);
+                    mut_linker.setChangeMut( query_str);
+                    mut_linker.setChangeOri( subject_str);
+                    mut_linker.setSequenceId( sequenceid) ;
+                    mut_linker.setNumber( number) ;
+                    mut_linker.setChangeType( mutation_type) ;
+                    mut_linker.setId(mutid);
+                    res.add(mut_linker);
+                }
                 
                 
             }
@@ -474,8 +494,62 @@ public abstract class Mutation
         }
         return res;
     }
-    
-    
+    */
+    //function returns macro change type for discrepancy, used for  spec query
+    public static int       getMacroChangeType(int change_type)
+    {
+          switch (change_type)
+          {
+             case Mutation.TYPE_RNA_SILENT : 
+             case Mutation.TYPE_AA_SILENT:
+                  return Mutation.MACRO_SPECTYPE_SILENT;
+             case Mutation.TYPE_RNA_INFRAME_INSERTION: 
+             case Mutation.TYPE_RNA_INFRAME :
+                   return Mutation.MACRO_SPECTYPE_INFRAME;
+             case Mutation.TYPE_RNA_MISSENSE : 
+             case Mutation.TYPE_AA_CONSERVATIVE:
+                   return Mutation.MACRO_SPECTYPE_CONSERVATIVE;
+             case Mutation.TYPE_AA_NONCONSERVATIVE :
+                    return Mutation.MACRO_SPECTYPE_NONCONSERVATIVE;
+             case  Mutation.TYPE_RNA_FRAMESHIFT : 
+             case Mutation.TYPE_RNA_FRAMESHIFT_DELETION :
+             case Mutation.TYPE_RNA_FRAMESHIFT_INSERTION :
+             case Mutation.TYPE_AA_FRAMESHIFT:
+                 return Mutation.MACRO_SPECTYPE_FRAMESHIFT;
+            
+            
+             case Mutation.TYPE_RNA_INFRAME_DELETION:
+                 return Mutation.MACRO_SPECTYPE_INFRAME_DELETION;
+            
+             case Mutation.TYPE_RNA_INFRAME_STOP_CODON :
+             case Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON :
+             case Mutation.TYPE_RNA_NONSENSE:
+             case Mutation.TYPE_AA_TRUNCATION:
+             case Mutation.TYPE_RNA_TRANCATION:
+                    return Mutation.MACRO_SPECTYPE_TRANCATION;
+             
+             case Mutation.TYPE_AA_NO_TRANSLATION :
+              case Mutation.TYPE_RNA_NO_TRANSLATION:
+                    return Mutation.MACRO_SPECTYPE_NO_TRANSLATION;
+             
+             case Mutation.TYPE_AA_POST_ELONGATION :
+              case Mutation.TYPE_RNA_POST_ELONGATION:
+                    return Mutation.MACRO_SPECTYPE_POST_ELONGATION;
+             
+             case Mutation.TYPE_LINKER_5_SUBSTITUTION  : 
+                    return Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION;
+             
+             case Mutation.TYPE_LINKER_3_SUBSTITUTION  :  
+                    return Mutation.MACRO_SPECTYPE_LINKER_3_SUBSTITUTION;
+             
+             case Mutation.TYPE_LINKER_5_INS_DEL  : 
+                    return Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL;
+             
+             case Mutation.TYPE_LINKER_3_INS_DEL  : 
+                    return Mutation.MACRO_SPECTYPE_LINKER_3_INS_DEL;
+              default: return TYPE_NOT_DEFINE;
+          }
+    }
     //function updates set of values to database
     //if no change in field name - user should submit empty string
     public  void updateFields(String[] fields_names, String[] fields_value, Connection conn)
@@ -521,12 +595,27 @@ public abstract class Mutation
         int mut_quality ;
         for(int i = 0; i < discrepancies.size(); i++)
         {
-            if ( discrepancies.get(i) instanceof DiscrepancyPair)
+            if ( discrepancies.get(i) instanceof DiscrepancyDescription)
             {
-                if (dicrepancy_type == Mutation.AA)
-                    mut = ( (DiscrepancyPair)discrepancies.get(i)).getAADiscrepancy();
-                else
-                    mut =  ( (DiscrepancyPair)discrepancies.get(i)).getRNADiscrepancy();
+                switch (dicrepancy_type)
+                {
+                    case Mutation.AA:
+                    {
+                        mut = ( (DiscrepancyDescription)discrepancies.get(i)).getAADiscrepancy();
+                        break;
+                    }
+                    case Mutation.RNA:
+                    {
+                        mut =  ( (DiscrepancyDescription)discrepancies.get(i)).getRNADiscrepancy();
+                        break;
+                    }
+                    case Mutation.LINKER_3P:
+                    case Mutation.LINKER_5P:
+                    {
+                        mut =  ( (DiscrepancyDescription)discrepancies.get(i)).getLinkerDiscrepancy();
+                        break;
+                    }
+                }
             }
             else
                 mut = (Mutation)discrepancies.get(i);
@@ -564,6 +653,7 @@ public abstract class Mutation
     
     {
         RNAMutation mut = null;
+        LinkerMutation mut_linker =null;
         int res = -1;
         if (discrepancies == null) return res;
         boolean isType = false;
@@ -571,16 +661,27 @@ public abstract class Mutation
         boolean isPolym = false;
         for(int i = 0; i < discrepancies.size(); i++)
         {
-            if (mut.getType() != Mutation.RNA) continue;
-            mut = (RNAMutation)discrepancies.get(i);
-            isType = (mut.getType() == dicrepancy_type && mut.getChangeType() == change_type   );
-            isQuality = ( (quality == QUALITY_HIGH && ( mut.getQuality() == QUALITY_HIGH || mut.getQuality()== QUALITY_NOTKNOWN))
-                || (quality == QUALITY_LOW &&  mut.getQuality() == QUALITY_LOW));
-            isPolym = ( polym_flag == RNAMutation.FLAG_POLYM_YES && ( mut.getPolymorphismFlag() == RNAMutation.FLAG_POLYM_YES || mut.getPolymorphismFlag()== RNAMutation.FLAG_POLYM_NOKNOWN))
-                || (polym_flag == RNAMutation.FLAG_POLYM_NO &&  mut.getPolymorphismFlag() == RNAMutation.FLAG_POLYM_NO)
-                ||(polym_flag == RNAMutation.FLAG_POLYM_NOKNOWN);
-            
-            if (isType && isQuality && isPolym) res++;  
+            if (mut.getType() == Mutation.AA) continue;
+            else if(mut.getType() == Mutation.RNA)
+            {
+                mut = (RNAMutation)discrepancies.get(i);
+                isType = (mut.getType() == dicrepancy_type && mut.getChangeType() == change_type   );
+                isQuality = ( (quality == QUALITY_HIGH && ( mut.getQuality() == QUALITY_HIGH || mut.getQuality()== QUALITY_NOTKNOWN))
+                    || (quality == QUALITY_LOW &&  mut.getQuality() == QUALITY_LOW));
+                isPolym = ( polym_flag == RNAMutation.FLAG_POLYM_YES && ( mut.getPolymorphismFlag() == RNAMutation.FLAG_POLYM_YES || mut.getPolymorphismFlag()== RNAMutation.FLAG_POLYM_NOKNOWN))
+                    || (polym_flag == RNAMutation.FLAG_POLYM_NO &&  mut.getPolymorphismFlag() == RNAMutation.FLAG_POLYM_NO)
+                    ||(polym_flag == RNAMutation.FLAG_POLYM_NOKNOWN);
+
+                if (isType && isQuality && isPolym) res++;  
+            }
+            else if(mut.getType() == Mutation.LINKER_3P || mut.getType() == LINKER_5P)
+            {
+                mut_linker = (LinkerMutation)discrepancies.get(i);
+                isType = (mut_linker.getType() == dicrepancy_type && mut_linker.getChangeType() == change_type   );
+                isQuality = ( (quality == QUALITY_HIGH && ( mut_linker.getQuality() == QUALITY_HIGH || mut_linker.getQuality()== QUALITY_NOTKNOWN))
+                    || (quality == QUALITY_LOW &&  mut_linker.getQuality() == QUALITY_LOW));
+                if (isType && isQuality ) res++;  
+            }
   
         }
         return res;

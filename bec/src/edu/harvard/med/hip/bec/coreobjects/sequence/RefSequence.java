@@ -63,6 +63,7 @@ public class RefSequence extends BaseSequence
         } catch (BecDatabaseException fde)
         {
             System.out.println(fde.getMessage());
+            throw new BecDatabaseException(fde.getMessage());
         }
     }
     

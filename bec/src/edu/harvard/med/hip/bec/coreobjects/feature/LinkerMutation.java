@@ -65,7 +65,7 @@ package edu.harvard.med.hip.bec.coreobjects.feature;
             if (o.length() == 0 ) o = null;
             if (m.length() == 0) m = null;
             
-            int type = Mutation.TYPE_NONE;
+            int type = Mutation.TYPE_NOT_DEFINE;
             if ( (o == null && m!= null) || (o != null && m == null)
             || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1)
             && m_type == Mutation.LINKER_3P)
