@@ -263,64 +263,7 @@ public class RefSequence extends BaseSequence
          m_publicInfo.add( v);
      }
    
-    /*
-    public ArrayList getFullSequences()throws BecDatabaseException
-    {
-        if ( m_fullsequences != null) return m_fullsequences;
-        m_fullsequences = new ArrayList();
-           
-        String sql = "select sequenceid from fullsequence  where refsequenceid="+m_id;
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        ResultSet rs = null;
-        try
-        {
-            rs = t.executeQuery(sql);
-            while(rs.next())
-            {
-                int mid =rs.getInt("mutationid"); //obtained/analyzed/mutations cleared/final
-                m_fullsequences.add(new FullSequence(mid));
-            }
-             return m_fullsequences;
-        } catch (SQLException sqlE)
-        {
-            throw new BecDatabaseException("Error occured while restoring sequence with id "+sqlE+"\nSQL: "+sql);
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-       
-    }
-    
-    public static ArrayList getFullSequences(int id)throws BecDatabaseException
-    {
-       
-        ArrayList fullsequences = new ArrayList();
-           
-        String sql = "select sequenceid, refsequenceid from fullsequence  where refsequenceid="+id+" order by sequenceid";
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        ResultSet rs = null;
-        try
-        {
-            rs = t.executeQuery(sql);
-            while(rs.next())
-            {
-                int wid =rs.getInt("refsequenceid");
-                int mid =rs.getInt("sequenceid"); //obtained/analyzed/mutations cleared/final
-                FullSequence fl = new FullSequence(mid);
-              
-                fullsequences.add(fl );
-            }
-             return fullsequences;
-        } catch (Exception E)
-        {
-            throw new BecDatabaseException("Error occured while restoring sequence with id "+E+"\nSQL: "+sql);
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-       
-    }
-    */
+   
     /**
      * Return Genbank accession number.
      *
@@ -378,6 +321,20 @@ public class RefSequence extends BaseSequence
             }
         }
         return "";
+    }
+    
+    public ArrayList getPublicInfoParametersNotIncludedInList(ArrayList param_names)
+    {
+        ArrayList names = new ArrayList();
+        for (int elm = 0; elm < m_publicInfo.size(); elm++)
+        {
+            PublicInfoItem info_item = (PublicInfoItem)m_publicInfo.get(elm);
+            if( !param_names.contains( info_item.getName() ))
+            {
+                names.add( info_item.getName() +": "+ info_item.getValue()) ;
+            }
+        }
+        return names;
     }
     /**
      * Return Genbank gi number.

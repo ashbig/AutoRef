@@ -68,7 +68,7 @@ private boolean 				 m_is_ref_5_linker = false;//5' linker sequence    </td>
 private boolean 				 m_is_clone_sequence_disc_det = false; //Detailed Discrepancy Report </td>
 private boolean 				 m_is_ref_3_linker = false;//   3' linker sequence</td>
 private boolean 				 m_is_ref_species_id = false;//Species specific ID</td>
-private boolean 				 m_is_ref_locusid = false; //All available identifiers</td>
+private boolean 				 m_is_ref_ids = false; //All available identifiers</td>
 
     public void                 setSpecId(int v){ m_spec_id = v;}
     public void                 setUserComment(String v){ m_user_comment = v;}
@@ -99,7 +99,7 @@ private boolean 				 m_is_ref_locusid = false; //All available identifiers</td>
                         Object is_clone_sequence_disc_det, //Detailed Discrepancy Report </td>
                         Object is_ref_3_linker,//   3' linker sequence</td>
                         Object is_ref_species_id,//Species specific ID</td>
-                        Object is_ref_locusid//All available identifiers</td>
+                        Object is_ref_ids//All available identifiers</td>
                         )
    {
           if(   is_plate_label != null ) { m_is_plate_label = true; }
@@ -112,7 +112,7 @@ private boolean 				 m_is_ref_locusid = false; //All available identifiers</td>
         if(  is_ref_cds_length != null ) { m_is_ref_cds_length = true; }
         if(  is_ref_gene_symbol != null ) { m_is_ref_gene_symbol = true;  }
         if(  is_ref_gi != null ) { m_is_ref_gi = true;   }
-        if(  is_ref_locusid != null ) { m_is_ref_locusid  = true;   }
+        if(  is_ref_ids != null ) { m_is_ref_ids  = true;   }
         if(  is_ref_species_id != null ){    m_is_ref_species_id = true;   }
 
         if(  is_clone_seq_id != null ) { m_is_clone_seq_id = true; }
@@ -812,7 +812,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
 
         boolean generalinfo = true;//(  m_is_ref_cds_start ||  m_is_ref_cds_stop || m_is_ref_cds_length);
         boolean sequencetext = ( m_is_ref_seq_text ||  m_is_ref_seq_cds );
-        boolean isIncludePublicInfo = (  m_is_ref_gene_symbol ||  m_is_ref_gi || m_is_ref_locusid);
+        boolean isIncludePublicInfo = (  m_is_ref_gene_symbol ||  m_is_ref_gi || m_is_ref_ids || m_is_ref_species_id);
 
 
 
@@ -909,7 +909,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
     {
         StringBuffer cloneinfo= new StringBuffer();
        RefSequence refsequence = null;
-       String cds = null;
+       String cds = null; String species_specific_id_name = null;
 //System.out.println("clones writing " + clone.getCloneId());
 try
 {
@@ -932,19 +932,34 @@ try
         if(     m_is_ref_cds_start ){ cloneinfo.append(refsequence.getCdsStart()  + Constants.TAB_DELIMETER); }//          "CDS Start "
         if(     m_is_ref_cds_stop ){ cloneinfo.append(refsequence.getCdsStop()+ Constants.TAB_DELIMETER); }//          "CDS Stop "
         if(     m_is_ref_cds_length ){ cloneinfo.append( (refsequence.getCdsStop() - refsequence.getCdsStart())+ Constants.TAB_DELIMETER); }//          "CDS Length "
-        if(     m_is_ref_gene_symbol ){ cloneinfo.append( refsequence.getPublicInfoParameter("GENE_NAME") + Constants.TAB_DELIMETER); }//          "Gene Symbol "
+        if(     m_is_ref_gene_symbol ){ cloneinfo.append( refsequence.getPublicInfoParameter("GENE_SYMBOL") + Constants.TAB_DELIMETER); }//          "Gene Symbol "
         if(     m_is_ref_gi ){ cloneinfo.append(refsequence.getPublicInfoParameter("GI")+ Constants.TAB_DELIMETER); }//          "GI Number "
-        if(     m_is_ref_locusid  ){ cloneinfo.append(refsequence.getPublicInfoParameter("LOCUS_ID")+Constants.TAB_DELIMETER ); }//        "All available identifiers "
         if(     m_is_ref_species_id )
         {
              for (int count = 0; count < m_species_id_definitions.length; count++)
             {
                  if (m_species_id_definitions[count] != null)
-                      cloneinfo.append(refsequence.getPublicInfoParameter(m_species_id_definitions[count].getIdName()) + Constants.TAB_DELIMETER);
+                 { 
+                     species_specific_id_name = m_species_id_definitions[count].getIdName();
+                      cloneinfo.append(refsequence.getPublicInfoParameter(species_specific_id_name) + Constants.TAB_DELIMETER);
+                 }
 
             }
 
          }//          "Species specific ID "
+        if(     m_is_ref_ids  )
+        { 
+            ArrayList param_names = new ArrayList();
+            param_names.add("GENE_SYMBOL"); param_names.add("GI");param_names.add(species_specific_id_name);
+            param_names = refsequence.getPublicInfoParametersNotIncludedInList(param_names);
+            for ( int cc = 0; cc < param_names.size(); cc++) 
+            {
+                cloneinfo.append( param_names.get(cc)+" "); 
+            }
+             cloneinfo.append(Constants.TAB_DELIMETER);
+             
+        }//        "All available identifiers "
+      
     }
     else
     {
@@ -954,7 +969,7 @@ try
         if(     m_is_ref_cds_length ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "CDS Length "
         if(     m_is_ref_gene_symbol ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "Gene Symbol "
         if(     m_is_ref_gi ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "GI Number "
-        if(     m_is_ref_locusid  ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//        "All available identifiers "
+        if(     m_is_ref_ids  ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//        "All available identifiers "
         if(     m_is_ref_species_id ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "Species specific ID "
     }
 
@@ -1296,7 +1311,6 @@ if(   m_is_ref_cds_stop ) title.append("Ref CDS Stop" + Constants.TAB_DELIMETER)
 if(   m_is_ref_cds_length ) title.append("Ref CDS Length" + Constants.TAB_DELIMETER);
 if(  m_is_ref_gene_symbol ) title.append("Gene Symbol" + Constants.TAB_DELIMETER);
 if(  m_is_ref_gi)title.append("GI Number" + Constants.TAB_DELIMETER);
-if(  m_is_ref_locusid) title.append("Locus ID" + Constants.TAB_DELIMETER);
 
 if(  m_is_ref_species_id  )
 {
@@ -1309,6 +1323,7 @@ if(  m_is_ref_species_id  )
     }
 
  }
+if(  m_is_ref_ids) title.append("All other available IDs" + Constants.TAB_DELIMETER);
 
 if(   m_is_clone_seq_id )title.append("Clone Sequence Id" + Constants.TAB_DELIMETER);
 if(  m_is_clone_sequence_assembly_status )title.append("Assembly attempt status - clone sequence" + Constants.TAB_DELIMETER);
@@ -1414,7 +1429,7 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
       //runner.setInputData(Constants.ITEM_TYPE_CLONEID, "172259 141149 141150 172169 135152 119982 119983 141618 141619 141620 141630 141631 141632 172223 172224 172246 172247 172248 141117 141118 141119 141151 134468 134469 134472 134475 134476 134479 134480 140012 140013 140014 140042 140043 140044 135071 135142 135143 135144 172767 172768 172769 135150 135151 172624 172625 172626 135252 135253 135396 141686 141704 141744 172167 172168 172260 172226 172227 172228 172363 172362 172691 172693 141687 141705 ");
 
       
-     runner.setInputData(Constants.ITEM_TYPE_CLONEID, "     154816 154658 155181 155189");
+     runner.setInputData(Constants.ITEM_TYPE_CLONEID, "    158673	");
 
       
 
@@ -1448,7 +1463,7 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
             "is_ref_5_linker",//5' linker sequence    </td>
             "is_clone_sequence_disc_det", //Detailed Discrepancy Report </td>
             "is_ref_3_linker",//   3' linker sequence</td>
-            "is_ref_species_id",//Species specific ID</td>
+           "is_ref_species_id",//Species specific ID</td>
             "is_ref_ids"//All available identifiers</td>
 	);
 
