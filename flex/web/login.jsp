@@ -34,7 +34,7 @@
  
     <html:link forward="register" target="_top">Customer registration</html:link>
     <br>
-    <html:link forward="findRegistration" target="_top">Forget your password</html:link>
+    <html:link forward="findRegistration" target="_top">Forgot your password?</html:link>
 </center>
 </body>
 </html>
