@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTransaction.java,v 1.4 2001-05-03 16:23:17 wenhong_mar Exp $
+ * $Id: DatabaseTransaction.java,v 1.5 2001-05-04 18:40:44 dongmei_zuo Exp $
  *
  * File     : DatabaseTransaction.java 
  * Date     : 04162001
@@ -24,7 +24,8 @@ import flex.ApplicationCode.Java.util.*;
  */
 public class DatabaseTransaction {
 	private Connection connection = null;
-    	private String     url        = "jdbc:oracle:oci8:@";    
+//    	private String     url        = "jdbc:oracle:oci8:@";  
+	private String     url        = "jdbc:oracle:thin:@localhost:1532:WALL";  
 	private String username = "flex_owner";
 	private String pswd = "flex";
 //    	private Properties props      = null;
@@ -63,6 +64,7 @@ public class DatabaseTransaction {
 		try {
 			if(connection != null) {
 				connection.close();
+				instance = null;
 			}
 		} catch (SQLException e) {
 			throw new FlexDatabaseException(e.getMessage());
