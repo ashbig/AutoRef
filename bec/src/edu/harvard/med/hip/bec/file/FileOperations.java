@@ -147,9 +147,16 @@ public class FileOperations
                
                 out.close();
                 out = null;
-                if (mode_remove && !from.delete())
+                if (mode_remove)
                 {
-                    throw new IOException("Cannot delete original file");
+                    try
+                    {
+                        from.delete();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new IOException("Cannot delete original file");
+                    }
                 }
             } finally
             {
