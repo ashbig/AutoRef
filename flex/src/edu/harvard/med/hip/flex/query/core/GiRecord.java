@@ -11,26 +11,29 @@ package edu.harvard.med.hip.flex.query.core;
  * @author  dzuo
  */
 public class GiRecord {
-    protected String gi;
+    protected int gi;
     protected String genbankAccession;
-    protected int genbankVersion;
     protected String sequenceFile;
     protected int cdsStart;
     protected int cdsStop;
     protected String sequenceText;
+    protected String type;
     
     /** Creates a new instance of GiRecord */
-    public GiRecord(String gi, String genbankAccession, int genbankVersion, String sequenceFile) {
+    public GiRecord(int gi, String sequenceFile) {
         this.gi = gi;
-        this.genbankAccession = genbankAccession;
-        this.genbankVersion = genbankVersion;
         this.sequenceFile = sequenceFile;
     }
     
-    public GiRecord(String gi, String genbankAccession, int genbankVersion, String sequenceFile, int cdsStart, int cdsStop) {
+    public GiRecord(int gi, String genbankAccession, String sequenceFile) {
         this.gi = gi;
         this.genbankAccession = genbankAccession;
-        this.genbankVersion = genbankVersion;
+        this.sequenceFile = sequenceFile;
+    }
+    
+    public GiRecord(int gi, String genbankAccession, String sequenceFile, int cdsStart, int cdsStop) {
+        this.gi = gi;
+        this.genbankAccession = genbankAccession;
         this.sequenceFile = sequenceFile;
         this.cdsStart = cdsStart;
         this.cdsStop = cdsStop;
@@ -44,7 +47,7 @@ public class GiRecord {
         this.sequenceText = sequenceText;
     }
     
-    public String getGi() {
+    public int getGi() {
         return gi;
     }
     
@@ -52,11 +55,15 @@ public class GiRecord {
         return genbankAccession;
     }
     
-    public int getGenbankVersion() {
-        return genbankVersion;
-    }
-    
     public String getSequenceFile() {
         return sequenceFile;
+    }
+    
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    public String getType() {
+        return type;
     }
 }
