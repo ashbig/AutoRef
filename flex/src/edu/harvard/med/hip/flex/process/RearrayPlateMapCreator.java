@@ -205,6 +205,7 @@ public class RearrayPlateMapCreator {
                     m.setDestWell(destPosition);
                     m.setSampletype(sampletype);
                     m.setCloneid(cloneid);
+                    m.setRearrayInputSample(s);
                     samples.add(m);
                 } else {
                     throw new RearrayException("No clone found for "+s.getClone()+" with specified sample type and form.");
