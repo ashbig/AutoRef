@@ -202,7 +202,8 @@
             <forward name="display_oligo_calculations" path="/Display_OligoCalculation.jsp"/>
 <forward name="display_oligo_container" path  = "/Display_OligoContainer.jsp"/>
        <forward name="display_stretch_collections" path  = "/Display_StretchCollections.jsp"/>   
-           <forward name="display_lqr_collections" path  = "/Display_LQRCollections.jsp"/>   
+           <forward name="display_lqr_collections" path  = "/Display_LQRCollections.jsp"/>  
+           <forward name="display_oligo_order_for_clone" path  = "/Display_OligoOrderForClone.jsp"/> 
              
     </action>
 
