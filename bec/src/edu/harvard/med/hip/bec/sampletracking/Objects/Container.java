@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.18 2003-10-10 01:09:11 Elena Exp $
+ * $Id: Container.java,v 1.19 2003-10-10 15:29:17 Elena Exp $
  *
  * File     	: Container.java
 
@@ -327,7 +327,7 @@ public class Container
                 label =  rs.getString("label");
                 if (process_code ==  Constants.PROCESS_SELECT_PLATES_FOR_END_READS)
                 {
-                    sqlCheckVector += rs.getInt("containerid") + "))";
+                    sqlCheckVector = sqlCheckVector +rs.getInt("containerid") + "))";
                     rsCheckParam = t.executeQuery(sqlCheckVector);
                     if ( rsCheckParam.next() )
                     {
