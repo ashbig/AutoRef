@@ -49,13 +49,19 @@ public abstract class AbstractAgarContainerMapper extends OneToOneContainerMappe
             Container container = (Container)enum.nextElement(); 
             container.restoreSample();
             String processCodes[] = getProcessCodes();
+            int samplesLeft = container.getSamples().size();
             
             for(int i=0; i<processCodes.length; i++) {
+                if(samplesLeft <= 0)
+                    break;
+                
                 String processCode = processCodes[i];
                 String newBarcode = Container.getLabel(projectCode, processCode, container.getThreadid(), getSubThread(container));        
                 Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
                 mappingSamples(container, newContainer, protocol, i); 
                 newContainers.addElement(newContainer);
+                
+                samplesLeft -= getWell();
             }
         }
         
@@ -68,7 +74,13 @@ public abstract class AbstractAgarContainerMapper extends OneToOneContainerMappe
         Vector oldSamples = container.getSamples();
         
         int position = 1;
-        for(int n=i*getWell(); n<i*getWell()+getWell(); n++) {
+        int expectedWellNum = getWell();
+        int actualWellNum = oldSamples.size();
+        
+        for(int n=i*expectedWellNum; n<i*expectedWellNum+expectedWellNum; n++) {
+            if(n >= actualWellNum)
+                break;
+            
             Sample s = (Sample)oldSamples.elementAt(n);
             if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
                 type = Sample.CONTROL_POSITIVE;

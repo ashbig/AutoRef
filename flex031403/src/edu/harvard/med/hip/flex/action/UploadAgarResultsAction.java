@@ -198,9 +198,12 @@ public class UploadAgarResultsAction extends ResearcherAction {
             for(i=0; i<plateInfo.size(); i++) {
                 ColonyCountInfo count = (ColonyCountInfo)(plateInfo.elementAt(i));
                 int well = count.getWell();
-                
+                                
                 if(well > 48)
                     well = well - 48;
+                
+                if(well > container.getSamples().size())
+                    break;
                 
                 int found = count.getFound();
                 Sample sample = null;

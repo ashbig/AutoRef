@@ -52,13 +52,23 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
             
             int index = 0;
             Enumeration enum = containers.elements();
+            boolean addNewContainer = false;
             while(enum.hasMoreElements()) {
                 Container c = (Container)enum.nextElement();
                 c.restoreSample();
+                
+                addNewContainer = true;
+                if(c.getSamples().size() - i*getColumn() <= 0) {
+                    addNewContainer = false;
+                    continue;
+                }
+                
                 mappingSamples(c, newContainer, protocol, getStartIndex(index), i);
                 index++;
             }
-            newContainers.addElement(newContainer);
+            
+            if(addNewContainer)
+                newContainers.addElement(newContainer);
         }
         
         return newContainers;
@@ -70,7 +80,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         
         int column = getColumn();
         int n=platenum*column;
-        while(n<platenum*column+column) {
+        while(n<platenum*column+column && n<oldSamples.size()) {
             Sample s = (Sample)oldSamples.elementAt(n);
             type = getType(container, s, protocol);
             
