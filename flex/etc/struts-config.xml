@@ -967,7 +967,6 @@
                input="/SequenceQueryEntry.jsp">
       <forward  name="success_queryAllGenes"   path="/GeneQuery.jsp"/>
       <forward  name="success_queryGenes"   path="/SequenceQuery.jsp"/>
-      <forward  name="success_queryVerifiedGenes"   path="/VerifiedGeneQuery.jsp"/>
       <forward  name="success_querySuccessRate"    path="/SelectProject.jsp"/>        
     </action> 
     
