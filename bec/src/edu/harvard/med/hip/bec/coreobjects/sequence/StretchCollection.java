@@ -328,7 +328,7 @@ vi.	Type of definition (coverage low quality / no coverage )
                   {
                       discr_ids += ((Mutation)discrepancies.get(discr_count)).getId() + "_";
                   }
-                  discrepancy_report_button_text = "<input type=BUTTON value=\"Discrepancy Report\"  onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT +"&amp;"
+                  discrepancy_report_button_text = "<input type=BUTTON value=\"Discrepancy Report\"  onClick=\"window.open('"+edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION +"Seq_GetItem.do?forwardName="+Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT +"&amp;"
                   +"DISCRIDS="+discr_ids+"','D"+clone_sequence.getId() +"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\">";
               }
                   
