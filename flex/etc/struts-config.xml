@@ -237,7 +237,8 @@
     <forward    name="specialOligoOrder" path="/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER"/>
     <forward    name="geneQuery" path="/SequenceQueryEntry.jsp"/>  
     <forward    name="rearray" path="/GetWorkflowForRearray.do"/>  
-    <forward    name="browseFlex" path="/BrowseFlex.jsp"/>   
+    <forward    name="browseFlex" path="/BrowseFlex.jsp"/>  
+    <forward    name="genericRearray" path="/RearraySelection.jsp"/>    
     
 
 
