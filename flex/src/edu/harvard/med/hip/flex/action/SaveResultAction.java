@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.23 $
- * $Date: 2002-04-18 20:45:08 $
+ * $Revision: 1.24 $
+ * $Date: 2002-06-27 19:19:26 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.23 $ $Date: 2002-04-18 20:45:08 $
+ * @version    $Revision: 1.24 $ $Date: 2002-06-27 19:19:26 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -97,6 +97,12 @@ public class SaveResultAction extends ResearcherAction {
         // The Queue item and process must be in the session
         QueueItem queueItem =
         (QueueItem)session.getAttribute(Constants.QUEUE_ITEM_KEY);
+        
+        Project project = queueItem.getProject();
+        Workflow workflow = queueItem.getWorkflow();
+        
+        request.setAttribute("projectid", new Integer(project.getId()));
+        request.setAttribute("workflowid", new Integer(workflow.getId()));
         
         String protocolName = (String)session.getAttribute(Constants.PROTOCOL_NAME_KEY);
         
@@ -143,10 +149,10 @@ public class SaveResultAction extends ResearcherAction {
             resultType = Result.CULTURE_PLATE_TYPE;
         } else if(form instanceof ContainerResultsForm) {
             resultType = Result.AGAR_PLATE_TYPE;
-        } 
+        }
         
         ResultForm resultForm = (ResultForm) form;
-
+        
         // if the form is editable, forward to the confirm page with stats.
         if(resultForm.isEditable()) {
             
@@ -166,7 +172,7 @@ public class SaveResultAction extends ResearcherAction {
             }
             
             ActionForward confirm = mapping.findForward("confirm");
-//            System.out.println("confirm path " + confirm.getPath());
+            //            System.out.println("confirm path " + confirm.getPath());
             return mapping.findForward("confirm");
         }
         
@@ -190,12 +196,10 @@ public class SaveResultAction extends ResearcherAction {
             dummyContainerList.add(container);
             
             // Do process stuff
-            Project project = queueItem.getProject();
-            Workflow workflow = queueItem.getWorkflow();
             WorkflowManager manager = new WorkflowManager(project, workflow, "ProcessPlateManager");
-            Process process = manager.createProcessRecord(Process.SUCCESS, protocol, researcher, 
-                                        null, null, null, 
-                                        dummyContainerList, lineages, conn);       
+            Process process = manager.createProcessRecord(Process.SUCCESS, protocol, researcher,
+            null, null, null,
+            dummyContainerList, lineages, conn);
             
             // save the results.
             saveResults(process, resultType, resultForm, conn);
@@ -209,8 +213,8 @@ public class SaveResultAction extends ResearcherAction {
             
             
             
-            manager.processQueue(dummyQueueItemList, dummyContainerList, 
-                protocol, conn);
+            manager.processQueue(dummyQueueItemList, dummyContainerList,
+            protocol, conn);
             
             // finally we commit all our changes.
             DatabaseTransaction.commit(conn);
@@ -257,7 +261,7 @@ public class SaveResultAction extends ResearcherAction {
     ResultForm resultForm, Connection conn)
     throws FlexDatabaseException, IOException {
         
-       
+        
         // the container this form is associated with
         Container container = resultForm.getContainer();
         Vector samples = container.getSamples();
@@ -287,7 +291,7 @@ public class SaveResultAction extends ResearcherAction {
             // if the sample is of an empty type then just go on to the next
             // one without writting anything to the DB.
             if(curSample.getType().toUpperCase().indexOf("EMPTY") == -1) {
-                        
+                
                 // create a new result
                 Result curResult =
                 new Result(process,curSample,resultType,containerForm.getResult(i));
@@ -313,15 +317,15 @@ public class SaveResultAction extends ResearcherAction {
      */
     private Vector getSampleLineages(Container container) {
         Vector lineageVect = new Vector();
-         // loop over all samples and add them to the vector of lineages
+        // loop over all samples and add them to the vector of lineages
         Vector samples = container.getSamples();
         Iterator sampleIter = container.getSamples().iterator();
         while(sampleIter.hasNext()) {
             Sample curSample  = (Sample)sampleIter.next();
-             // insert a record into sample linage, mapping the sample to itself
-                SampleLineage sampleL=
-                new SampleLineage(curSample.getId(), curSample.getId());
-                lineageVect.add(sampleL);
+            // insert a record into sample linage, mapping the sample to itself
+            SampleLineage sampleL=
+            new SampleLineage(curSample.getId(), curSample.getId());
+            lineageVect.add(sampleL);
         }
         
         return lineageVect;
