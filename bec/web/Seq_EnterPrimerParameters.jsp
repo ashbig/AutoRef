@@ -19,14 +19,14 @@
 		{
  		   // Identify the form
    		   var form = e.form;
- 		   if ( e = form.elements.p_downstream_distance_view)
+ 		   if ( e == form.elements.p_downstream_distance_view)
  		   {
- 				 form.elements.p_downstream_distance.value = val;
-			}
-			if ( e = form.elements.p_upstream_distance_view)
- 		   {
-  		       form.elements.p_downstream_distance.value = val;
-			}
+                        form.elements.p_downstream_distance.value = val;
+                    }
+                    if ( e == form.elements.p_upstream_distance_view)
+                    {  
+                        form.elements.p_upstream_distance.value = val;
+                    }
 		}
 		function update3pUniversalPrimer(e,checked)
 		{
@@ -192,7 +192,7 @@
       <font size="2"><b>(For a left primer, primer start position is the position 
       of the leftmost base)</b></font></font></td>
     <td width="50%" height="44"  bgcolor="#b8c6ed"> <p> 
-        <input type="text" name="p_upstream_distance_view"  onchange='onChangeValue(this, this.val)' size="20" value="100" id="p_upstream_distance_view">
+        <input type="text" name="p_upstream_distance_view"  onchange='onChangeValue(this, this.value)' size="20" value="100" id="p_upstream_distance_view">
         <input type="hidden" name="p_upstream_distance"  value="100" id="p_upstream_distance" >
         bases</p></td>
   </tr>
@@ -201,8 +201,8 @@
       between 3p Universal Primer and STOP codon&nbsp;&nbsp; <font size="2">(For 
       a right primer, primer start position is the position of the rightmost base)&nbsp;&nbsp;</font></b></font></td>
     <td width="50%" height="44"bgColor="#e4e9f8"> <p> 
-        <input type="text" name="p_downstream_distance_view" size="20" value="100" id="p_downstream_distance_view" onchange='onChangeValue(this, this.val)'>
-        <input type="hidden" name="p_downstream_distance"  value="100" id="p_downstream_distance" onchange='onChangeValue(this, this.val)'>
+        <input type="text" name="p_downstream_distance_view" size="20" value="100" id="p_downstream_distance_view" onchange='onChangeValue(this, this.value)'>
+        <input type="hidden" name="p_downstream_distance"  value="100" id="p_downstream_distance" onchange='onChangeValue(this, this.value)'>
         bases</p></td>
   </tr>
   <tr> 
