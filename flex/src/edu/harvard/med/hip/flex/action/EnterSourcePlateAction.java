@@ -72,7 +72,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
         request.getSession().removeAttribute("EnterSourcePlateAction.sampleLineageSet");
         request.getSession().removeAttribute("EnterSourcePlateAction.subprotocol");
         request.getSession().removeAttribute("EnterSourcePlateAction.newContainers");
-        
+        request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateF1");
+        request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateC1");
+         
         int projectid = getProjectid(form);
         int workflowid = getWorkflowid(form);
         
