@@ -165,7 +165,7 @@
     <action    path="/SelectProtocol"
                type="edu.harvard.med.hip.flex.action.SelectProtocolAction"
                name="createProcessPlateForm"
-               scope="session"
+               scope="request"
                input="/SelectProtocol.jsp">
       <forward  name="success"   path="/GetInput.jsp"/>
     </action> 
@@ -178,7 +178,6 @@
                input="/SelectProtocol.do">
       <forward  name="success"   path="/ConfirmPlate.jsp"/>
     </action>  
-
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
