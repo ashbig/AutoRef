@@ -86,7 +86,7 @@ public class SequenceQueryAction extends CollaboratorAction {
                 BufferedReader in = new BufferedReader(new InputStreamReader(input));
                 String line = null;
                 while((line = in.readLine()) != null) {
-                    searchTerm = searchTerm+line;
+                    searchTerm = searchTerm+line+"\n";
                 }
             } catch (FileNotFoundException ex) {
                 errors.add("filename", new ActionError("flex.infoimport.file", ex.getMessage()));

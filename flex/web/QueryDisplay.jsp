@@ -104,7 +104,12 @@
         </logic:present>
 
         <logic:present name="label">
-        <td><a href="/FLEX/ViewContainerDetails.do?CONTAINER_ID=<bean:write name="info" property="plateid"/>" target="_blank"><flex:write name="info" property="label"/></td>
+            <logic:equal name="info" property="plateid" value="-1">
+                <td>&nbsp;</td>
+            </logic:equal>
+            <logic:notEqual name="info" property="plateid" value="-1">
+                <td><a href="/FLEX/ViewContainerDetails.do?CONTAINER_ID=<bean:write name="info" property="plateid"/>" target="_blank"><flex:write name="info" property="label"/></td>
+            </logic:notEqual>
         </logic:present>
 
         <logic:present name="well">
