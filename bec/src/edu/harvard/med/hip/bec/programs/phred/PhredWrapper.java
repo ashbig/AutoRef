@@ -26,7 +26,9 @@ public class PhredWrapper
     
    //  private static final String PhredExePath = "c:\\bio\\phred\\Phred.exe";
       private static final String PhredExePath = "d:\\bio_programs\\phredPhrap\\phred.exe";
-     public static final String SEQUENCE_DIR_NAME = "sequence_dir";
+      private static final boolean isUnix = true;
+      
+      public static final String SEQUENCE_DIR_NAME = "sequence_dir";
      public static final String QUALITY_DIR_NAME = "quality_dir";
      public static final String CHROMAT_DIR_NAME = "chromat_dir";
      public static final String PHD_DIR_NAME = "phd_dir";
@@ -184,7 +186,13 @@ public class PhredWrapper
    public boolean run()throws BecUtilException
     {
         String cmd = null;
-        
+        if (isUnix)
+        {
+            m_phredFilePath = Algorithms.convertWindowsFileNameIntoUnix(m_phredFilePath);
+            m_input_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_input_directoryname);
+            m_output_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_output_directoryname);
+            m_output_quality_directoryname=Algorithms.convertWindowsFileNameIntoUnix(m_output_quality_directoryname);
+        }
         cmd = m_phredFilePath + m_IDN + m_input_directoryname +  m_ODN + m_output_directoryname + m_OQDN
         + m_output_quality_directoryname + m_trim_alg + m_trim_type + m_ezyme_sequence ;
         System.out.println(cmd);
