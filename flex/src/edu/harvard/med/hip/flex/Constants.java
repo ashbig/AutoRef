@@ -53,6 +53,9 @@ public class Constants {
     // key used to find the Queue item list object
     public static final String QUEUE_ITEM_LIST_KEY = "QUEUE_ITEM_LIST";
     
+    // key used to find the qeue item object
+    public static final String QUEUE_ITEM = "QUEUE_ITEM";
+    
     // key used to find the sequence queue.
     public static final String SEQUENCE_QUEUE_KEY = "SEQEUENCE_QUEUE";
     
