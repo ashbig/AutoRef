@@ -22,6 +22,7 @@ import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.action_runners.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
@@ -50,6 +51,9 @@ public class RunProcessAction extends ResearcherAction
         Thread t = null;
          int forwardName = ((Seq_GetSpecForm)form).getForwardName();
          Connection conn = null;
+         
+         ArrayList master_container_ids = null;
+         ArrayList master_container_labels = null;
         try
         {
             
@@ -62,20 +66,19 @@ public class RunProcessAction extends ResearcherAction
         {
            case Constants.PROCESS_UPLOAD_PLATES : //upload plates
             {
-                 String  container_labels = (String) request.getAttribute("plate_names");//get from form
-                int     vectorid = ((Integer) request.getAttribute(Constants.VECTOR_ID_KEY)).intValue();//get from form
-                int     linker3id = ((Integer) request.getAttribute("3LINKER")).intValue();//get from form
-                int     linker5id = ((Integer) request.getAttribute("5LINKER")).intValue();//get from form
-                int     put_plate_for_step = ((Integer) request.getAttribute("nextstep")).intValue(); //get from form 
-                System.out.println(container_labels);
-                System.out.println(vectorid);
-                System.out.println(linker3id);
-                System.out.println(linker5id);
-                System.out.println(put_plate_for_step);
-                /*
+            
+                 String  container_labels = (String) request.getParameter("plate_names");//get from form
+                 int     vectorid = Integer.parseInt( (String)request.getParameter(Constants.VECTOR_ID_KEY));//get from form
+                 int     linker3id = Integer.parseInt( (String) request.getParameter("3LINKERID"));//get from form
+                 int     linker5id = Integer.parseInt( (String)request.getParameter("5LINKERID"));//get from form
+                 int     put_plate_for_step = Integer.parseInt( (String) request.getParameter("nextstep")); //get from form 
+                 request.setAttribute(Constants.JSP_TITLE,"processing Request for Plates Upload");
+                request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+container_labels);
+                
                 //parse plate names
-                ArrayList master_container_labels = Algorithms.splitString(container_labels);
-
+                 master_container_labels = Algorithms.splitString(container_labels);
+               
+/*
                 PlateUploaderRunner runner = new PlateUploaderRunner();
                 runner.setContainerLabels(master_container_labels );
                 runner.setVectorId(vectorid );
@@ -87,33 +90,99 @@ public class RunProcessAction extends ResearcherAction
                 t = new Thread(runner);
                 t.start();
                  **/
-                request.setAttribute(Constants.JSP_TITLE,"processing Request for Plates Upload");
-                request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+container_labels);
+              
                 break;
            }
 
             case Constants.PROCESS_RUN_END_READS : //run sequencing for end reads
-            {/*
-                 ArrayList master_container_ids = new ArrayList();
-    
-                  master_container_ids.add(new Integer(96));
-
-                tester_request_endreads runner = new tester_request_endreads();
+            {
+                  master_container_ids = new ArrayList();
+                   master_container_labels = new ArrayList();
+                 String[] labels = request.getParameterValues("chkLabel");
+                    String plate_names = "";
+                if(labels != null) 
+                {
+                  for (int i = 0; i < labels.length; i ++)
+                  {
+                    master_container_labels.add(labels[i] );
+                    plate_names += labels[i] + "\n";
+                  }  
+                }
+                 master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
+                 int forward_primer_id = Integer.parseInt( (String) request.getParameter("5p_primerid"));
+                int reverse_primer_id = Integer.parseInt( (String) request.getParameter("3p_primerid"));
+              
+                request.setAttribute(Constants.JSP_TITLE,"Request for end read sequencing request" );
+                request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates "+ plate_names);
+                /*
+                EndReadsRequestRunner runner = new EndReadsRequestRunner();
                 runner.setContainerIds(master_container_ids );
-                runner.setForwardPrimerId( 5 );
-                runner.setRevercePrimerId(6);
+                runner.setForwardPrimerId( forward_primer_id );
+                runner.setRevercePrimerId(reverse_primer_id);
                 runner.setUser(user);
                 t = new Thread();           t.start();
-                break;
-              **/
+ **/
+                return mapping.findForward("processing");
+              
             }
 
             case Constants.PROCESS_RUN_ISOLATE_RUNKER : //run isolate runker
             {
+                 master_container_labels = new ArrayList();
+                 String[] labels = request.getParameterValues("chkLabel");
+                    String plate_names = "";
+                if(labels != null) 
+                {
+                  for (int i = 0; i < labels.length; i ++)
+                  {
+                    master_container_labels.add(labels[i] );
+                    plate_names += labels[i] + "\n";
+                  }  
+                }
+
+                master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
+                request.setAttribute(Constants.JSP_TITLE,"Request for isolate ranker run" );
+                request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates "+ plate_names);
+    
+                int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
+                int endread_spec_id = Integer.parseInt( (String) request.getParameter(Spec.END_READS_SPEC));
+                int polymorphism_spec_id = Integer.parseInt( (String) request.getParameter(Spec.POLYMORPHISM_SPEC));
+ 
+                    /*
+        * 
+                IsolateRankerRunner runner = new IsolateRankerRunner();
+                runner.setContainerIds(master_container_ids );
+                runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(bioeval_spec_id, Spec.FULL_SEQ_SPEC_INT));
+                runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(endread_spec_id, Spec.END_READS_SPEC_INT));
+                if (polymorphism_spec_id != -1)
+                    runner.setPolymorphismSpec((PolymorphismSpec)Spec.getSpecById(polymorphism_spec_id, Spec.POLYMORPHISM_SPEC_INT));
+                runner.setUser(user);
+                t = new Thread();           t.start();
+                 */
+                break;
             }
-
-            
-
+            case Constants.PROCESS_APROVE_ISOLATE_RANKER:
+            {
+                
+                int clone_number = 0;
+                int isolate_id = -1;
+                Enumeration e = request.getParameterNames(); 
+                while (e.hasMoreElements()) 
+                { 
+                    String param_name = (String)e.nextElement(); 
+          
+                    if ( !param_name.equalsIgnoreCase("forwardName") )
+                    {
+                        int rank = Integer.parseInt( (String) request.getParameter(param_name)); 
+                        isolate_id = Integer.parseInt(param_name);
+                        clone_number++;
+                        IsolateTrackingEngine.updateRankUserChangerId(rank,user.getId(),isolate_id,conn);
+                    }
+                } 
+                request.setAttribute(Constants.JSP_TITLE,"request for change of clone ranking is in process" );
+                request.setAttribute(Constants.ADDITIONAL_JSP,"Processing "+clone_number +"  clones");
+                break;
+            }
             case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
             {
             }
@@ -165,8 +234,8 @@ public class RunProcessAction extends ResearcherAction
                       }
                 } 
                 request.setAttribute(Constants.JSP_TITLE,"Request for clones status change" );
-                request.setAttribute(Constants.ADDITIONAL_JSP,"For " +chkStr.length+ " clones from plate "+ request.getAttribute("containeLabel") +" status have been changes" );
-                return mapping.findForward("proccessing");
+                request.setAttribute(Constants.ADDITIONAL_JSP,"For " +chkStr.length+ " clones from plate "+ request.getParameter("containerLabel") +" status have been changes" );
+                return mapping.findForward("processing");
             }
 
              
@@ -180,7 +249,7 @@ public class RunProcessAction extends ResearcherAction
 
         }
        
-        return mapping.findForward("proccessing");
+        return mapping.findForward("processing");
         }
         catch (Exception e)
         {
