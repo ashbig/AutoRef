@@ -27,7 +27,34 @@
   <tr><td aligment ="right">   n       </td><td>  subthread Id</td></tr>
   </table>
   
-  
+ <h5> Project codes</h5>
+<TABLE border="0" cellpadding="2" cellspacing="2">
+<tr> <td class="label">A</td>
+        <td>NIDDK Diabetis - Human</td>    </tr>
+<tr> <td class="label">B</td>
+        <td>Breast Cancer</td>    </tr>
+<tr> <td class="label">C</td>
+        <td>Clontech</td>    </tr>
+<tr> <td class="label">D</td>
+        <td>NIDDK Diabetis - Mouse</td>    </tr>
+<tr> <td class="label">G</td>
+        <td>Prostate Cancer</td>    </tr>
+<tr> <td class="label">H</td>
+        <td>Human</td>    </tr>
+<tr> <td class="label">K</td>
+        <td>Kinase</td>    </tr>
+<tr> <td class="label">M</td>
+        <td>MGC</td>    </tr>
+<tr> <td class="label">P</td>
+        <td>Pseudomonas</td>    </tr>
+<tr> <td class="label">S</td>
+        <td>Yersinia pestis</td>    </tr>
+<tr> <td class="label">T</td>
+        <td>Transcription Factor</td>    </tr>
+<tr> <td class="label">Y</td>
+        <td>Yeast</td>    </tr>
+</table>
+ 
  <h5> Process codes</h5>
 <TABLE border="0" cellpadding="2" cellspacing="2">
 <tr> <td class="label">OU</td>
@@ -52,6 +79,28 @@
         <td>Agar gels</td>    </tr>
 <tr> <td class="label">LI</td>
         <td>Liquid isolate (culture)</td>    </tr>
+<tr> <td class="label">GS</td>
+        <td>Glycerol Stock</td>    </tr>
+<tr> <td class="label">RG</td>
+        <td>Rearrayed Glycerol</td>    </tr>
+<tr> <td class="label">XG</td>
+        <td>Expression Glycerol</td>    </tr>
+<tr> <td class="label">MG</td>
+        <td>Master Working Glycerol</td>    </tr>
+<tr> <td class="label">MD</td>
+        <td>Master Working DNA</td>    </tr>
+<tr> <td class="label">AG</td>
+        <td>Archive Glycerol</td>    </tr>
+<tr> <td class="label">AD</td>
+        <td>Archive DNA</td>    </tr>
+<tr> <td class="label">SG</td>
+        <td>Sequencing Glycerol</td>    </tr>
+<tr> <td class="label">SD</td>
+        <td>Sequencing DNA</td>    </tr>
+<tr> <td class="label">DG</td>
+        <td>Distribution Glycerol</td>    </tr>
+<tr> <td class="label">DD</td>
+        <td>Distribution DNA</td>    </tr>
 </table>
 
 

@@ -9,9 +9,7 @@
 <a href = "/FLEX/Help_ContainerLabels.jsp"  > 
 Container Labels</a>
 </td>
-<tr><td></td><td>
-<a href = "/FLEX/Help_FullSequenceAnalysis.html"  > 
-Full Sequence Analysis</a>  </td>
+</tr>
 </table>
 </body>
 </html>
