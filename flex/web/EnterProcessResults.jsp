@@ -42,7 +42,7 @@ Define the type of result to enter, if none is given, gell result is the default
     </tr>
     <tr>
        <td class="prompt"><bean:message key="flex.researcher.barcode.prompt"/></td>
-       <td><html:text property="researcherBarcode"/></td>
+       <td><html:password property="researcherBarcode"/></td>
     </tr>
     </table>
     <br>

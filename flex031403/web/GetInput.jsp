@@ -21,7 +21,7 @@
 <table>
     <tr>
     <td class="prompt"><bean:message key="flex.researcher.barcode.prompt"/></td>
-    <td><html:text property="researcherBarcode" size="40"/></td>
+    <td><html:password property="researcherBarcode" size="40"/></td>
     </tr>
 
     <tr>

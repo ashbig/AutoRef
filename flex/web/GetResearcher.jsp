@@ -49,7 +49,7 @@
 </table>
     <Center>
     <p><em><bean:message key="flex.researcher.barcode.prompt"/></em>
-    <html:text property="researcherBarcode" size="40"/>
+    <html:password property="researcherBarcode" size="40"/>
     <p>
     <html:submit property="submit" value="Create Plate"/>
     </center>
