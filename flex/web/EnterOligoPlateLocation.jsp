@@ -35,7 +35,7 @@
                     <html:option value="REFRIGERATOR">REFRIGERATOR</html:option>
                     <html:option value="WORKBENCH">WORKBENCH</html:option>
                     <html:option value="UNAVAILABLE">UNAVAILABLE</html:option>
-                </html:select>
+                    </html:select>
                 </td>
            </tr>
 
@@ -43,7 +43,7 @@
 
         </table>
         <p>
-        <input type=submit value="Confirm and Print Barcode"> <input type=reset value="Clear">
+        <input type=submit value="Confirm and Print Barcode">
     </html:form>
 </body>
 </html>

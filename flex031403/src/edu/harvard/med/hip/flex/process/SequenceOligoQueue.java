@@ -124,7 +124,8 @@ public class SequenceOligoQueue {
             }
             
         } catch(SQLException sqlE) {
-            throw new FlexDatabaseException(sqlE);
+           // throw new FlexDatabaseException(sqlE);
+            throw new FlexDatabaseException("Error occured while deleting sequences from queue\n"+sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
         }

@@ -7,7 +7,7 @@
  * the cds length of the sequence which the oligos are derived from.
  * Then, the oligo samples are arranged in a saw-tooth pattern on the
  * oligo plates. Three files for oligo ordering are generated.
- * 
+ *
  * modified 062801 wmar:    added method to output threee oligo order files
  *
  */
@@ -25,6 +25,11 @@ public class OligoPlater {
     private static final String plateOutFileName1 = "H:/Dev/OligoOrder/testOligoPlate_5p.txt";
     private static final String plateOutFileName2 = "H:/Dev/OligoOrder/testOligoPlate_3s.txt";
     private static final String plateOutFileName3 = "H:/Dev/OligoOrder/testOligoPlate_3op.txt";
+    
+    private static final int positiveControlPosition = 1;
+    private static final int negativeControlPosition = 96;
+    private static final String PositiveControlSampleType = "CONTROL_POSITIVE";
+    private static final String NegativeControlSampleType = "CONTROL_NEGATIVE";
     
     private LinkedList oligoPatternList;
     private LinkedList constructList;
@@ -54,8 +59,9 @@ public class OligoPlater {
      * The containerheader, sample and containercell tables are updated
      */
     public void createOligoPlates() throws FlexDatabaseException, IOException {
-       
+        
         generateOligoPlate();
+        generateControlSamples();
         generateOligoOrder();
         container_5p.insert(conn);
         container_3s.insert(conn);
@@ -263,6 +269,8 @@ public class OligoPlater {
             System.out.println("next plate gene index: "+currentGeneIndex);
         } //outter while to fill oligo plates
         
+        //add controls to oligo plates
+        
         plateWriter_5p.flush();
         plateWriter_5p.close();
         plateWriter_3s.flush();
@@ -286,9 +294,9 @@ public class OligoPlater {
         // get the oligo container location object
         location = new Location();
         int locationId = location.getId(locationType);
-        location = new Location(locationId,locationType,""); 
+        location = new Location(locationId,locationType,"");
         
-        // generate new container header object 
+        // generate new container header object
         container_5p = new Container(plateType, location,label_5p);
         System.out.println("Created the 5p oligo plate: "+ container_5p.getId());
         
@@ -337,6 +345,31 @@ public class OligoPlater {
         
         return sample;
     } //generateOligoSample
+    
+    /**
+     * This method adds one positive and one negative control to each of
+     * the three oligo plates
+     */
+    private void generateControlSamples()throws FlexDatabaseException {
+        Sample control_positive = null;
+        Sample control_negative = null;
+        //add positive control samples
+        control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_5p.getId());
+        container_5p.addSample(control_positive);
+        control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3s.getId());
+        container_3s.addSample(control_positive);
+        control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3op.getId());
+        container_3op.addSample(control_positive);
+        
+        //add negative samples
+        control_negative = new Sample(NegativeControlSampleType,negativeControlPosition,container_5p.getId());
+        container_5p.addSample(control_negative);
+        control_negative = new Sample(NegativeControlSampleType,negativeControlPosition,container_3s.getId());
+        container_3s.addSample(control_negative);
+        control_negative = new Sample(NegativeControlSampleType,negativeControlPosition,container_3op.getId());
+        container_3op.addSample(control_negative);
+        
+    }
     
     /**
      * insert process execution io for "generate oligo order" protocol

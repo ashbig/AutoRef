@@ -59,6 +59,7 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         String oligoPlateIds = ((ReceiveOligoOrdersForm)form).getOligoPlateIds();
         String receiveDate = ((ReceiveOligoOrdersForm)form).getReceiveDate();
         Researcher researcher = null;
+        Protocol protocol = null;
         
         // Validate the researcher barcode.
         try {
@@ -78,11 +79,11 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         ReceiveOligoOrdersForm formProper = (ReceiveOligoOrdersForm) form;
         List ids = formProper.getOligoPlateList();
         request.getSession().setAttribute("plateList",ids);
-  
+        
         Connection conn = null;
         ListIterator iter = ids.listIterator();
-        List containerList = null;
-        int containerId = -1;
+        //List containerList = null;
+        Container container = null;
         System.out.println("Total labels entered: "+ ids.size());
         
         //insert receive plates process execution record
@@ -91,33 +92,36 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             String label = (String)iter.next();
             System.out.println("The oligo plate label is: "+label);
             
+            // Validate container label with items in queue
             try{
-                containerId = findContainerId(label);
-                System.out.println("container ID is: " + containerId);
-            } catch(FlexCoreException coreEx){
-                System.out.println(coreEx);
-                return (new ActionForward(mapping.getInput()));
-            } catch(FlexDatabaseException dbEx){
-                System.out.println(dbEx);
-                //request.setAttribute(Action.EXCEPTION_KEY, ex);
+                protocol = new Protocol("receive oligo plates");
+                ContainerProcessQueue cpq = new ContainerProcessQueue();
+                LinkedList queueitems = cpq.getQueueItems(protocol);
+                QueueItem item = getValidPlate(queueitems, label);
+                container = (Container)item.getItem();
+                if(item == null) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", label));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                } //if
+            } catch(Exception e){
+                request.setAttribute(Action.EXCEPTION_KEY, e);
                 return (mapping.findForward("error"));
             }
-    
             
             try {
                 DatabaseTransaction t = DatabaseTransaction.getInstance();
                 conn = t.requestConnection();
-                Protocol protocol = new Protocol("receive oligo plates");
-                // Create a process and process object.
                 
+                // Create process and process object for receive oligo plates protocol.
                 edu.harvard.med.hip.flex.process.Process process =
                 new edu.harvard.med.hip.flex.process.Process(protocol,
                 edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
-                System.out.println("process created");
-                System.out.println("containerid is: "+ containerId);
+                System.out.println("process execution receive oligo plates created");
                 
+                // bugs!!!!!!!
                 ContainerProcessObject ioContainer =
-                new ContainerProcessObject(containerId,
+                new ContainerProcessObject(container.getId(),
                 process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.IO);
                 System.out.println("process object created");
@@ -127,24 +131,15 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
                 process.insert(conn);
                 
                 // Remove the container from the queue.
-                 LinkedList newItems = new LinkedList();
-                 //   newItems.addLast(item);
-                 //   ContainerProcessQueue queue = new ContainerProcessQueue();
-                 //   queue.removeQueueItems(newItems, conn);
                 
-                 // Add the new container to the queue.
-                 //   newItems.clear();
-                 //   newItems.addLast(new QueueItem(newContainer, protocol));
-                 //   queue.addQueueItems(newItems, conn);
+                // Commit the changes to the database.
+                DatabaseTransaction.commit(conn);
                 
-                 // Commit the changes to the database.
-                // DatabaseTransaction.commit(conn);
+                // Store the data in the session.
+                //    Location sLocation = new Location(sourceLocation);
+                //    request.getSession().setAttribute("dLocation", dLocation);
                 
-                 // Store the data in the session.
-                 //    Location sLocation = new Location(sourceLocation);
-                 //    request.getSession().setAttribute("dLocation", dLocation);
-                
-                 //    return (mapping.findForward("success"));
+                //    return (mapping.findForward("success"));
             } catch (Exception ex) {
                 DatabaseTransaction.rollback(conn);
                 request.setAttribute(Action.EXCEPTION_KEY, ex);
@@ -159,20 +154,42 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         // return (mapping.findForward("error"));
     } //flexPerform
     
+    // Validate the source plate barcode.
+    protected QueueItem getValidPlate(LinkedList queueItems, String sourcePlate) {
+        if(queueItems == null) {
+            return null;
+        }
+        
+        QueueItem found = null;
+        for(int i=0; i<queueItems.size(); i++) {
+            QueueItem item = (QueueItem)queueItems.get(i);
+            Container container = (Container)item.getItem();
+            if(container.isSame(sourcePlate)) {
+                found = item;
+            }
+        }
+        
+        return found;
+    }
+    
+    
     
     // Validate the plate barcode with containerids in the queue.
     private boolean plateExist(int id) throws FlexDatabaseException {
         boolean isExist = false;
         ResultSet rs = null;
+        Protocol protocol = new Protocol("receive oligo plates");
         
         String sql = "SELECT containerid FROM queue\n"
-        + "WHERE containerid = '" + id + "'";
+        + "WHERE containerid = " + id + "\n"
+        + "AND protocolid = " + protocol.getId();
         
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
             if (rs.next()) {
                 isExist = true;
+                
             }
         }catch (SQLException sqlex) {
             sqlex.printStackTrace();
@@ -180,13 +197,31 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }
-        
+        System.out.println("oligo plate "+ id + " exist is: "+ isExist);
         return isExist;
     } //PlateExist
     
+    private void updateQueue(int containerId, Connection conn) throws FlexDatabaseException {
+        Protocol protocol = new Protocol("generate PCR plates");
+        PlatesetProcessQueue platesetQueue = new PlatesetProcessQueue();
+        int platesetid = Plateset.findPlatesetId(containerId);
+        Plateset plateset = new Plateset(platesetid);
+        LinkedList platesetQueueItemList = new LinkedList();
+        QueueItem queueItem = new QueueItem(plateset, protocol);
+        platesetQueueItemList.add(queueItem);
+        
+        System.out.println("Adding generate PCR plates to queue...");
+        platesetQueue.addQueueItems(platesetQueueItemList, conn);
+        try{
+            DatabaseTransaction.commit(conn);
+        } catch(Exception e){
+            DatabaseTransaction.rollback(conn);
+        }
+    }
+    
     private int findContainerId(String label) throws FlexCoreException,
     FlexDatabaseException {
-         int id = -1;
+        int id = -1;
         String sql = "select c.containerid as containerid, "+
         "c.containertype as containertype, "+
         "c.label as label, "+
@@ -204,8 +239,8 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             
             while(rs.next()) {
                 
-                 id = rs.getInt("CONTAINERID");
-                 System.out.println("container ID is: "+ id);
+                id = rs.getInt("CONTAINERID");
+                System.out.println("container ID is: "+ id);
                 //Container curContainer = new Container(id);
             }
         } catch (NullPointerException ex) {

@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.5 2001-06-12 17:20:30 wenhong_mar Exp $
+ * $Id: NNPrimerCalculator.java,v 1.6 2001-07-09 16:35:18 wenhong_mar Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -176,14 +176,14 @@ public class NNPrimerCalculator implements PrimerCalculator
 			pos = 18;
 		}
 
-		// Tm calculation for oligos more than 40 bases seem to be underestimated
+		// Tm calculation for oligos more than 42 bases seem to be underestimated
 		// Also, longer primers tend to form internal loops
-		// All the oligos should be no more 40 bases long
-		if (pos > 40) {
-			pos = 40;
+		// All the oligos should be no more 42 bases long
+		if (pos > 42) {
+			pos = 42;
 		}
 
-		// The oligo sequence is the substring of parameter seq60
+		// The oligo sequence is the substring of parameter seq50
 		oligoSeq = subSeq.substring(0, pos+1);
 	
 		oligo = new Oligo(oligoType, oligoSeq, Tm);
