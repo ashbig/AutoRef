@@ -77,6 +77,7 @@
         <th>Status</th>
         <th>Construct</th>
         <th>Oligo</th>
+        <th>Predicted CDS Length</th>
         <logic:present name="process">
             <th>Result</th>
         </logic:present>
@@ -112,10 +113,9 @@
         <logic:notEqual name="sample" property="oligoid" value="-1">
             <td><bean:write name="sample" property="oligoid"/></td>
         </logic:notEqual>
-        
-        
-            
-        
+         
+        <td><bean:write name="sample" property="cdslength"/></td>       
+                    
           <logic:present name="process">
             <td>
             <flex:findResult processName="process" sampleName="sample" id="result"/>

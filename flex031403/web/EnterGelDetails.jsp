@@ -88,7 +88,7 @@
 
 <table border="1" cellpadding="2" cellspacing="0">
     <tr class="headerRow">
-        <th>Sample</th><th>Type</th><th>Cell</th><th>Result</th>
+        <th>Sample</th><th>Type</th><th>Cell</th><th>Result</th><th>Predicted CDS Length</th>
     </tr>
     
     <logic:iterate name="gelEntryForm" property="container.samples" id="curSample" 
@@ -139,17 +139,19 @@
              </logic:equal>
 
         </td>
-        
+        <td>
+            <flex:write name="curSample" property="cdslength"/>
+        </td>        
     </flex:row>
     </logic:iterate>
     <tr>
         <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
-            <td class="prompt">Please select the gel image you would like to upload:</td>
-            <td colspan="3"><html:file property="formFile" /></td>
+            <td colspan=3 class="prompt">Please select the gel image you would like to upload:</td>
+            <td colspan=2><html:file property="formFile" /></td>
         </logic:equal>
         <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
-            <td class="prompt">Gel image file:</td>
-            <td colspan="3"><bean:write name="gelEntryForm" property="formFile.fileName"/></td>
+            <td colspan=3 class="prompt">Gel image file:</td>
+            <td colspan=2><bean:write name="gelEntryForm" property="formFile.fileName"/></td>
         </logic:equal>
     </tr>
 
