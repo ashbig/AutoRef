@@ -8,7 +8,7 @@
 <head><title>Registration Confirmation</title></head>
 <body>
     <center>
-    <h1>Registration Confirmation</h1>
+    <h1>Registration  Confirmation</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>
