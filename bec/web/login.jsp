@@ -23,11 +23,11 @@
   <center>
   <table border="0" width="790" height="121" cellpadding="0">
     <tr>
-      <td width="542" height="1" valign="top" align="left" rowspan="2">
+     <td width="542" height="1" valign="top" align="left" rowspan="2">
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; <img border="0" src="./jpg/earth.gif" width="76" height="76">
+        &nbsp;&nbsp;&nbsp;&nbsp; <!--<img border="0" src="./jpg/earth.gif" width="76" height="76"> -->
 		<img border="0" src="./jpg/pc&woman.gif" width="96" height="76"></a>&nbsp;&nbsp;&nbsp;
-      </td>
+      </td> 
       <td width="238" height="1" valign="top" align="right">
         &nbsp;
         <p>
