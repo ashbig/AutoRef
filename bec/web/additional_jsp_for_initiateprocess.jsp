@@ -55,6 +55,10 @@ additional_jsp_buffer.append("<select NAME='isRunVectorTrimming' id='isRunVector
 additional_jsp_buffer.append("<option value='"+PhredPhrap.VECTOR_LIBRARY_NAME+"' selected> All available vectors");
 additional_jsp_buffer.append("<option value='"+PhredPhrap.VECTOR_LIBRARY_NAME_EMPTY+"' > No vector triming");
 additional_jsp_buffer.append("<option value='vector_pDonor221_altered.txt' > pDonor221 only");
+additional_jsp_buffer.append("<option value='pBY011_cleaned.txt' > pBY011 only");
+additional_jsp_buffer.append("<option value='pBY011_cleaned_201.txt' > pBY011 and pDONR201");
+additional_jsp_buffer.append("<option value='pDONR201_cleaned.txt' > pDonor201 only");
+
 additional_jsp_buffer.append("</select></td></tr>");
 
 if ( forwardName_int ==  Constants.PROCESS_FIND_GAPS)
