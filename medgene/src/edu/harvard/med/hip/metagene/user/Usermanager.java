@@ -106,7 +106,6 @@ public class Usermanager {
             
             stmt.close();
         } catch (SQLException ex) {
-            rt = true;
             System.out.println(ex);
         } finally {
             manager.disconnect();
