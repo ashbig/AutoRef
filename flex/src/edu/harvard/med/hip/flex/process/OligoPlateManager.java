@@ -83,7 +83,7 @@ public class OligoPlateManager {
         seqList = seqQueue.getQueueItems(protocol, cdsSizeGroup);
         
         //delete sequence queue record from the queue table
-        seqQueue.removeQueueItems(seqList, protocol, conn);
+        //seqQueue.removeQueueItems(seqList, protocol, conn);
         
         return seqList;
     }
@@ -95,12 +95,15 @@ public class OligoPlateManager {
         LinkedList seqList = new LinkedList();
         SequenceOligoQueue seqQueue = new SequenceOligoQueue();
         seqList = seqQueue.getQueueItems(protocol, cdsSizeGroupLowerLimit,
-        cdsSizeGroupUpperLimit);
+        cdsSizeGroupUpperLimit);        
         
-        //delete sequence queue record
-        //seqQueue.removeQueueItems(seqList, protocol, conn);
-        //System.out.println("removing sequences in queue with design construct protocl...");
         return seqList;
+    }
+    
+    private void removeQueueSequence(LinkedList seqList) throws FlexDatabaseException{
+        Protocol protocol = new Protocol(DESIGN_CONSTRUCTS);
+        SequenceOligoQueue seqQueue = new SequenceOligoQueue();
+        seqQueue.removeQueueItems(seqList, protocol, conn);
     }
     
     public void createOligoPlates() throws FlexDatabaseException, FlexCoreException, IOException{
@@ -119,8 +122,8 @@ public class OligoPlateManager {
         int i = 0;
         int j = 0;
         int numSeqsToProcess = 0;
-        for (i = 0; i < 3; ++i) {
-            
+        
+        for (i = 0; i < 3; ++i) {            
             seqList = getQueueSequence(limits[i],limits[i+1]);
             numPlatesToProcess = seqList.size() / totalWells;
             numSeqsToProcess = totalWells*numPlatesToProcess;
@@ -146,11 +149,15 @@ public class OligoPlateManager {
                     plater.createOligoPlates();
                     plater.insertProcessInputOutput();
                     plater.insertReceiveOligoQueue();
-                    System.out.println("inserting the receive oligo plates protocol into queue.");
+                    System.out.println("inserting the receive oligo plates protocol into queue.");                    
+                    
+                    //remove sequences from queue
+                    removeQueueSequence(seqList);
                     
                     DatabaseTransaction.commit(conn);
                 } catch(FlexDatabaseException sqlex){
-                    System.out.println(sqlex);
+                    //System.out.println(sqlex);
+                    System.out.println(sqlex.getMessage());
                     DatabaseTransaction.rollback(conn);
                     
                 }finally {

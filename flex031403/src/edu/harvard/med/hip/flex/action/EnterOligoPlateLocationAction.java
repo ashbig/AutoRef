@@ -62,6 +62,8 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         
         ActionErrors errors = new ActionErrors();
         Connection conn = null;
+        LinkedList containerList = (LinkedList)request.getSession().getAttribute("containerList");
+        
         int platesetid = -1;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -69,8 +71,6 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             
             // Set the location for the containers.
             Location oligoPlateLocation = new Location("FREEZER"); //to be modified
-            LinkedList containerList = (LinkedList)request.getSession().getAttribute("containerList");
-            System.out.println("The size of containerList: "+ containerList.size());
             ListIterator iter = containerList.listIterator();
             
             while (iter.hasNext()) {
@@ -96,6 +96,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             System.out.println("The plateset is ready for PCR: "+ complete);
             if (complete) {
                 insertPCRQueue(platesetid, conn);
+                removeReceiveOligoQueue(containerList, conn);
                 DatabaseTransaction.commit(conn);
             }
             
@@ -139,6 +140,38 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         
         return complete;
     } //checkPlateset
+    
+    /**
+     * remove receive oligo plates queue record
+     */
+    protected void removeReceiveOligoQueue (LinkedList items, Connection conn) throws FlexDatabaseException {
+        if (items == null)
+            return;
+        
+        Protocol protocol = new Protocol("receive oligo plates");
+        
+        String sql = "DELETE FROM queue\n" +
+        "WHERE protocolid = "+ protocol.getId()  + "\n" +
+        "AND containerid = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            Vector v = new Vector();
+            ListIterator iter = items.listIterator();
+            
+            while (iter.hasNext()) {
+                Container container = (Container) iter.next();
+                int containerid = container.getId();
+                stmt.setInt(1, containerid);
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException("Error occured while deleting oligo plates from queue\n"+sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+    }
     
     /**
      * insert "generate PCR plates" queue record for each plate created
