@@ -24,7 +24,8 @@ public class PhredWrapper
     public static final int            TRIMMING_TYPE_PHRED_ALT = 1;
     public static final int            TRIMMING_TYPE_NOT_TRIMMED = -1;
     
-     private static final String PhredExePath = "C:\\bio\\phred\\Phred.exe";
+   //  private static final String PhredExePath = "c:\\bio\\phred\\Phred.exe";
+      private static final String PhredExePath = "d:\\bio_programs\\phredPhrap\\phred.exe";
      public static final String SEQUENCE_DIR_NAME = "sequence_dir";
      public static final String QUALITY_DIR_NAME = "quality_dir";
      public static final String CHROMAT_DIR_NAME = "chromat_dir";
@@ -57,7 +58,7 @@ public class PhredWrapper
    private String m_ezyme_sequence = "";
     
    
-   private String m_phredFilePath = "c:\\phred\\phred.exe ";
+   private String m_phredFilePath = PhredExePath;
     /** Creates a new instance of PhredWrapper */
     public PhredWrapper(String phredFilePath)
     {

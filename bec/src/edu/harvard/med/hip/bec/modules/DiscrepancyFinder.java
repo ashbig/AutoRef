@@ -33,8 +33,12 @@ public class DiscrepancyFinder
 
     //store input & output blast files: do not allow to change
     private static final String INPUT = "/tmp/";
-    public static final String OUTPUT = "/needleoutput/";
-    private static final String LOG_FILE_NAME = "/kinaze/logfile.txt";
+    //public static final String OUTPUT = "/needleoutput/";
+    public static final String OUTPUT = "/output/needleoutput/";
+    
+    // private static final String LOG_FILE_NAME = "/needleoutput/logfile.txt";
+
+    private static final String LOG_FILE_NAME = "/output/needleoutput/logfile.txt";
 
     private SequencePair m_seqpair = null;
     private ArrayList    m_seqpairs = null;

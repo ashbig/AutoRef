@@ -19,6 +19,7 @@ import edu.harvard.med.hip.bec.coreobjects.endreads.*;
  */
 public class Contig
 {
+    private static final String OUTPUT_DIR = "/output/tmp_assembly/";
     private String              m_sequence = null;
     private String              m_scores = null;
     private String              m_name = null;
@@ -56,7 +57,7 @@ public class Contig
         nw.setRefSeq(refsequence.getText());
         nw.setGapOpen(20);
         nw.setGapExtend(0.05);
-        nw.setOutputFileDir("/tmp_assembly/");
+        nw.setOutputFileDir(OUTPUT_DIR);
         NeedleResult res_needle =  nw.runNeedle();
         
         //parse needle output
@@ -120,11 +121,7 @@ public class Contig
                 elements[3] = new SequenceElement(  q_index  , s_index , -1, sequence_query_n[count],sequence_subject_n[count]);
                 break;
             }
-            if (count == 547)
-            {
-                System.out.println(count);
-        }
-    
+          
         }
         return elements;
     }

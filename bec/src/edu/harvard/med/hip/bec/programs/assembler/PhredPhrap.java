@@ -29,11 +29,13 @@ public class PhredPhrap
 
     private String      m_reference = null;
     private int         m_ref_id =-1;
-
+ 
 
   
     //windows
-    private String  m_phredphrap_path = "perl C:\\programs_bio\\biolocal\\phredPhrap  ";
+    //local
+   // private String  m_phredphrap_path = "perl c:\\programs_bio\\biolocal\\phredPhrap  ";
+private String  m_phredphrap_path = "d:\programs\cygwin\bin\perl d:\\bio_programs\\phredphrap\\phredPhrap  ";
 
     //unix
 
