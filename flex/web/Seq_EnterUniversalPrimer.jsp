@@ -71,5 +71,49 @@
   </div>
 
 </html:form> 
+
+<HR>
+<HR>
+<h3>Available Sets </h3>
+<P> <font color="#2693A6" size="4"> <b>Set Name</b></font> 
+ <SELECT NAME="M13" >
+    <OPTION VALUE="Less than 1 year.">Set 1
+    <OPTION VALUE="1-5 years.">Set 2
+ </SELECT>
+
+ <table width="100%"  cellspacing="2" cellpadding="2">
+ 
+  <tr > 
+    <td width="21%">&nbsp;</td>
+    <td width="40%" > <div align="center"> <b><font size="+2">Forward Primer</font></b> 
+      </div></td>
+    <td width="39%"> <div align="center"><b><font size="+2">Reverse Primer</font></b> 
+      </div></td>
+  </tr>
+  <tr> 
+    <td  background="barbkgde.gif"><strong>Primer Name</strong> <P></td>
+    <td  background="barbkgde.gif"><b> 
+      M13-F
+      </b> <P></td>
+    <td  background="barbkgde.gif"><b> 
+      M13-R
+      </b> <P></td>
+  </tr>
+  <tr> 
+    <td  background="barbkgde.gif"><strong>Primer Sequence</strong> <P></td>
+    <td  background="barbkgde.gif">GTTTTCCCATCACGAC<P></td>
+    <td  background="barbkgde.gif">CAGGAAACAGCTATGACC<P></td>
+  </tr>
+  <tr> 
+    <td  background="barbkgde.gif"><strong>Primer Tm</strong> <P></td>
+    <td  background="barbkgde.gif">0     <P></td>
+    <td  background="barbkgde.gif">0      <P></td>
+  </tr>
+  <tr> 
+    <td  background="barbkgde.gif"><strong>Primer Start</strong> <P></td>
+    <td  background="barbkgde.gif">-40      <P></td>
+    <td  background="barbkgde.gif">0      <P></td>
+  </tr>
+</table> 
 </body>
 </html>

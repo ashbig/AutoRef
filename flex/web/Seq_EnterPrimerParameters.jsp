@@ -169,7 +169,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
 </html:form>
 <HR>
 <font color="#2693A6" size="4">
-        <b>Available Sets of Primer Picking Parameters</b>
+        <b>Available Sets for Primer Picking Parameters</b>
 		
 </font>
 
@@ -180,7 +180,11 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
 	<tr>
     <td width="50%" colspan="2" height="48"><font color="#2693A6" size="4">
         <b>Set Name</b></font></td>
-    <td width="50%" colspan="2" height="48">  <!--< %= set.getSetName() % > --> 
+    <td width="50%" colspan="2" height="48">  
+ <SELECT NAME="Set 1" >
+<OPTION VALUE="Less than 1 year.">Set 1
+<OPTION VALUE="1-5 years.">Set 2
+</SELECT>
 </td>
   </tr>
   <tr>
@@ -230,7 +234,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       GC%</b></td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
    
-        <p><b>Min:</b>&nbsp; <!-- < %= set.get -->PrimerGcMin()% ></p>
+        <p><b>Min:</b>&nbsp; <!-- < %= set.get PrimerGcMin()% >--></p>
      
     </td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">

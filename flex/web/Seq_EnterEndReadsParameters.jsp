@@ -17,14 +17,15 @@
 <body background='background.gif'>
 <h2><bean:message key="flex.name"/> : Set End Reads Parameters</h2>
 <hr>
-<html:errors/> <html:form action="/logon.do" > 
+<html:errors/> 
+<html:form action="/logon.do" > 
 <h3 >Set parameters for Sequence Trimming and Analysis of End Reads</h3>
 <i>If you are not sure about certain parameter settings, leave them unchanged 
 </i> <a href="helpSequenceTrimmingParam.htm">[parameter help file]</a>.</b> 
 <P> <font color="#2693A6" size="4"> <b>Set Name</b></font> 
-  <input type="text" name="set_name" size="53" value="">
+  <input type="text" name="set_name" size="53" value="default">
 <P><font color="#2693A6" size="4"><b> 
-  <input type="radio" name="radiobutton" value="radiobutton">
+  <input type="radio" name="radiobutton" value="Y">
   Ends Trimming Parameters</b></font> 
 <table border="0" CELLSPACING="4" width="95%">
   <tr> 
@@ -57,13 +58,7 @@
       <input type="text" name="primer_gc_min2" size="5" value="3">
       bases from 5prime end </b></td>
   </tr>
-  <tr> 
-    <td  background="barbkgde.gif"><b> 
-      <input type="checkbox" name="checkbox22" value="checkbox">
-      Always trim at least 
-      <input type="text" name="primer_gc_min" size="5" value="0">
-      consecutive bases remain off the scale</b></td>
-  </tr>
+  
   <tr> 
     <td>&nbsp;</td>
   </tr>
@@ -106,21 +101,26 @@
 </table>
 <p>&nbsp; 
 <p><font size="4" color="#2693A6"><b>
-  <input type="radio" name="radiobutton" value="radiobutton">
+  <input type="radio" name="radiobutton" value="N">
   Sequence Trimming Parameters</b></font> 
 <table border="0" cellspacing="4" width="95%">
   <tr> 
     <td width="758" background="barbkgde.gif" ><b> 
       <input type="checkbox" name="checkbox24" value="checkbox">
-      Trim sequence on the basis of trase quality using standard Modd algorithm 
-      (-trim option for Phred)</b></td>
+      Standard Modd algorithm (-trim option for Phred)</b></td>
   </tr>
   <tr> 
     <td background="barbkgde.gif" ><b> 
       <input type="checkbox" name="checkbox25" value="checkbox">
-      Trim sequence on the basis of trase quality using modified Modd algorithm 
-      (-trim_alt option for Phred) trimming error probability 
+      Modified Modd algorithm  (-trim_alt option for Phred)  
       <input name="textfield5" type="text" value="0.05" size="10">
+      </b></td>
+  </tr>
+<tr> 
+    <td background="barbkgde.gif" ><b> 
+      
+      Vectror sequence (optional)
+      <input name="textfield5" type="text" value="" size="50">
       </b></td>
   </tr>
 </table>
@@ -128,16 +128,20 @@
 <b><font size="4" color="#2693A6">End Reads Analysis</font></b> 
 <table border="0" cellspacing="4" width="95%">
   <tr> 
-    <td  background="barbkgde.gif"><b>Phred base score 
+    <td  background="barbkgde.gif"><b>Phred base score (high quality cut-off)
       <input name="textfield6" type="text" value="20" size="5">
       </b></td>
   </tr>
   <tr> 
-    <td  background="barbkgde.gif" ><b>Phred base score to count base as low quality but not disregard it
+    <td  background="barbkgde.gif" >
+  <input type="radio" name="radiobutton" value="N">
+  <b>Phred base score (low quality cut-off)
       <input name="textfield8" type="text" value="10" size="5"> </b></td>
   </tr>
   <tr> 
-    <td  background="barbkgde.gif" ><b>Discard up to 
+    <td  background="barbkgde.gif" >
+  <input type="radio" name="radiobutton" value="N">
+<b>Discard up to 
       <input name="textfield7" type="text" value="2" size="5">
       high quality bases surronded by no less than 
       <input name="textfield8" type="text" value="3" size="5">
@@ -155,15 +159,16 @@
 		  <tr> 
 			
           <td  background="barbkgde.gif" ><b>Silent mutation</b></td>
-			<td  background="barbkgde.gif" ><b><input name="textfield8" type="text" value="3" size="5"></b></td>
 			<td  background="barbkgde.gif" ><b>
-            <input name="textfield8" type="text" value="1" size="5">
+<input name="textfield8" type="text" value="2" size="5"></b></td>
+			<td  background="barbkgde.gif" ><b>
+<input name="textfield8" type="text" value="1" size="5">
             </b></td>
 		 </tr>
 		  <tr> 
 			<td  background="barbkgde.gif" ><b>Conservative mutation</b></td>
 			<td  background="barbkgde.gif" ><b>
-            <input name="textfield8" type="text" value="6" size="5">
+            <input name="textfield8" type="text" value="3" size="5">
             </b></td>
 			<td  background="barbkgde.gif" ><b>
             <input name="textfield8" type="text" value="1" size="5">

@@ -60,21 +60,21 @@ This workflow requeres use of PCR primers for end reads.
 </tr>
 </table>
 
-<h3>Select set of parameters for End Reads</h3>
+<h3>Parameters for End Reads</h3>
 <table border=0 cellspacing="4" width="90%">
 
  <% if (isUniversal.equals("Y"))
   { 
  %>
 <tr>
-<td  background="barbkgde.gif" >
+<td  background="barbkgde.gif" width="50%" >
      <p><b>End reads primers: Universal </b> 
       </td><td background="barbkgde.gif" >
         <% 
 
  if(mode_debug)
 {%>
-        <SELECT NAME="MY" >
+        <SELECT NAME="MY" width="50" >
           <OPTION VALUE="Less than 1 year.">MY 
           <OPTION VALUE="1-5 years.">YM 
         </SELECT>
@@ -119,14 +119,14 @@ else
 </tr>
 </table>
 <p>
-<h3>Select set of parameters for Full Squencing</h3>
+<h3>Parameters for Full Squencing</h3>
 <table border=0 cellspacing="4" width="90%">
 <tr>
 <td  background="barbkgde.gif" width="50%">
-     <b>Parameters to primer calculations</b>
+     <b>Parameters for primer calculations</b>
 </td>
 
-<TD background="barbkgde.gif" width="50%">
+<TD background="barbkgde.gif" >
 <%  
  if(mode_debug)
 {%>
@@ -149,7 +149,7 @@ else
 </tr>
 <tr>
 <td  background="barbkgde.gif">
-     <b>Parameters to full sequence analysis and assembling</b>
+     <b>Parameters for full sequence analysis and assembling</b>
 </td>
 
 <TD background="barbkgde.gif">
@@ -177,7 +177,7 @@ else
   <p>
   <div align="center"> <p> 
         <input type="submit" value="Submit" name="B1">
-        <input type="reset" value="Reset" name="B2">
+      
   </div>
 </html:form> 
 </body>
