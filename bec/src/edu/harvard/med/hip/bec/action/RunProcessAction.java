@@ -148,7 +148,7 @@ public class RunProcessAction extends ResearcherAction
                         {
                             master_container_labels.add(labels[i] );
                             plate_names += labels[i] + "\n";
-                            System.out.println(labels[i]);
+                           // System.out.println(labels[i]);
                         }
                     }
                     
@@ -166,7 +166,7 @@ public class RunProcessAction extends ResearcherAction
                     if (polymorphism_spec_id != -1)
                         runner.setPolymorphismSpec((PolymorphismSpec)Spec.getSpecById(polymorphism_spec_id, Spec.POLYMORPHISM_SPEC_INT));
                     runner.setUser(user);
-                    System.out.println(bioeval_spec_id+" "+endread_spec_id+" "+polymorphism_spec_id);
+                  //  System.out.println(bioeval_spec_id+" "+endread_spec_id+" "+polymorphism_spec_id);
                     t = new Thread(runner);           t.start();
                     break;
                 }
@@ -220,6 +220,25 @@ public class RunProcessAction extends ResearcherAction
                     {
                        request.setAttribute(Constants.JSP_TITLE,"approve Internal Primers");
                        request.setAttribute("forwardName",new Integer(-forwardName));
+                       //store all approved primer's ids for disapproval
+                       OligoCalculation ol = null;Oligo oligo = null;
+                       ArrayList forwardAllApprovedPrimerIds = new ArrayList();
+                       for (int index = 0; index < oligo_calculations.size();index++)
+                     {
+                        oligo_calculations_per_item = (ArrayList)oligo_calculations.get(index);
+                        for (int ol_count = 0; ol_count < oligo_calculations_per_item.size();ol_count++)
+                        {
+                            ol = (OligoCalculation)oligo_calculations_per_item.get(ol_count);
+                            for (int oligo_count = 0 ; oligo_count < ol.getOligos().size(); oligo_count++)
+                            {
+                                oligo = (Oligo)ol.getOligos().get(oligo_count);
+                                if (oligo.getStatus() == Oligo.STATUS_APPROVED && !forwardAllApprovedPrimerIds.contains(String.valueOf ( oligo.getId())))
+                                    forwardAllApprovedPrimerIds.add(String.valueOf ( oligo.getId()) );
+                            }
+                        }
+
+                     }
+                       request.setAttribute("forwardAllApprovedPrimerIds",Algorithms.convertStringArrayToString( forwardAllApprovedPrimerIds,Constants.DELIM_WHITE_SPACE));
                      //  oligo_calculations = OligoCalculation.sortByRefSequenceIdPrimerSpec(oligo_calculations);
                     
                     }
@@ -237,24 +256,44 @@ public class RunProcessAction extends ResearcherAction
                 {
                    
                     String[] primers = request.getParameterValues("chkPrimer");
+                    String old_approved_primers = (String) request.getParameter("forwardAllApprovedPrimerIds");
+                    
+                    ArrayList arr_old_approved_primers = null;
+                   if (old_approved_primers != null) 
+                        arr_old_approved_primers = Algorithms.splitString(old_approved_primers,Constants.DELIM_WHITE_SPACE);
                     String primer_ids_report = "";
                     String primer_ids_approved = "";
-                    String primer_ids_failed = "";
+                    String primer_ids_failed = "";String primer_ids_disapproved ="";
                     int primer_id = -1;
-                   
+                    //prepare statements
+                    PreparedStatement pst_update_primer_status = null;
+                    PreparedStatement pst_insert_process_object = null;
+                    int process_id =  -1;
+                    if (primers != null || arr_old_approved_primers != null)
+                    {
+                          process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_OLIGO_APPROVAL, new ArrayList(),user) ;
+                         pst_update_primer_status = conn.prepareStatement("update geneoligo set status = ? where oligoid = ? ");
+                          pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values("+process_id+",?,"+Constants.PROCESS_OBJECT_TYPE_OLIGO_ID+")");
+                    }
                     if(primers != null)
                     {
-                         int process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_OLIGO_APPROVAL, new ArrayList(),user) ;
-                        PreparedStatement pst_update_primer_status = conn.prepareStatement("update geneoligo set status = "+Oligo.STATUS_APPROVED +" where oligoid = ? ");
-                        PreparedStatement pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values("+process_id+",?,"+Constants.PROCESS_OBJECT_TYPE_OLIGO_ID+")");
+                        
                         for (int i = 0; i < primers.length; i ++)
                         {
-                             primer_id = Integer.parseInt( primers[i]);
+                            System.out.println("item "+primers[i]);
+                            if (arr_old_approved_primers != null && arr_old_approved_primers.contains(primers[i]))
+                            {
+                                arr_old_approved_primers.remove(primers[i]);
+                                System.out.println("remove "+primers[i]);
+                                continue;
+                            }
+                            primer_id = Integer.parseInt( primers[i]);
                             primer_ids_report += primers[i] + "\n";
                             try
                             {
-                               
-                                pst_update_primer_status.setInt(1,primer_id);
+                               System.out.println("approve "+primer_id);
+                                pst_update_primer_status.setInt(2,primer_id);
+                                pst_update_primer_status.setInt(1,Oligo.STATUS_APPROVED);
                                 DatabaseTransaction.executeUpdate(pst_update_primer_status);
                                 pst_insert_process_object.setInt(1,primer_id);
                                 DatabaseTransaction.executeUpdate(pst_insert_process_object);
@@ -267,11 +306,30 @@ public class RunProcessAction extends ResearcherAction
                             }
                          }
                     }
-                  
+          //disapprove unselected primers
+                    for (int i = 0; i < arr_old_approved_primers.size(); i ++)
+                    {
+                       try
+                       {
+                            primer_id = Integer.parseInt( (String)arr_old_approved_primers.get(i));
+                            System.out.println("disapprove "+primer_id);
+                            pst_update_primer_status.setInt(2,primer_id);
+                            pst_update_primer_status.setInt(1,Oligo.STATUS_DESIGNED);
+                            DatabaseTransaction.executeUpdate(pst_update_primer_status);
+                            pst_insert_process_object.setInt(1,primer_id);
+                            DatabaseTransaction.executeUpdate(pst_insert_process_object);
+                            primer_ids_disapproved += primer_id + "\n";
+                       }
+                       catch(Exception e)
+                       {
+                           primer_ids_failed += primer_id + "<P>";
+                       }
+                    }
                     request.setAttribute(Constants.JSP_TITLE,"request for Approval of Internal Primers is in process" );
                     String report = "Processing "+primer_ids_report +"  primers. <P>"+"Primer ids approved "+primer_ids_approved+". <P>"+
-                    "Primer ids failed "+primer_ids_failed+"\n\n";
+                    "Primer ids disapproved "+primer_ids_disapproved+".<P>Primer ids failed "+primer_ids_failed+"\n\n";
                     request.setAttribute(Constants.ADDITIONAL_JSP,report);
+                    conn.commit();
                     break;
                 }
                 
@@ -450,13 +508,18 @@ public class RunProcessAction extends ResearcherAction
                 }
                 case Constants.PROCESS_PROCESS_OLIGO_PLATE:
                 {
-                    String    order_comment =  (String)request.getParameter("order_comments");//get from form
-                    String    seq_comment =  (String)request.getParameter("sequencing_comments");//get from form
+                    
                     int     containerid = Integer.parseInt( (String)request.getParameter("containerid"));//get from form
                     int     status = Integer.parseInt( (String)request.getParameter("status"));//get from form
-                    OligoContainer.updateOrderComents(order_comment.trim(),  containerid,conn) ;
-                    OligoContainer.updateSequencingComents(seq_comment.trim(),  containerid,conn) ;
+                    String    order_comment =  (String)request.getParameter("order_comments");//get from form
+                    String    seq_comment =  (String)request.getParameter("sequencing_comments");//get from form
+                    
+                    if ( order_comment!= null && order_comment.trim().length() != 0)
+                        OligoContainer.updateOrderComents(order_comment.trim(),  containerid,conn) ;
+                    if ( seq_comment!= null && seq_comment.trim().length() != 0)
+                        OligoContainer.updateSequencingComents(seq_comment.trim(),  containerid,conn) ;
                     OligoContainer.updateStatus(status,  containerid,conn) ;
+                    DatabaseTransaction.commit(conn);
                     String process_description = null;
                     if ( status == OligoContainer.STATUS_ORDER_SENT )
                     {
@@ -466,17 +529,21 @@ public class RunProcessAction extends ResearcherAction
                     {
                         process_description = ProcessDefinition.RUN_OLIGO_ORDER_RECIEVED;
                     }
+                    else if (status == OligoContainer.STATUS_SENT_FOR_SEQUENCING)
+                    {
+                        process_description = ProcessDefinition.RUN_OLIGO_PLATE_USED_FOR_SEQUENCING;
+                    }
                     
                     int process_id = Request.createProcessHistory( conn, process_description, new ArrayList(),user) ;
                     DatabaseTransaction.executeUpdate("insert into process_object (processid,objectid,objecttype) values("+process_id+","+containerid+","+Constants.PROCESS_OBJECT_TYPE_CONTAINER+")",conn);
                 
                      OligoContainer oligo_container = OligoContainer.getById( containerid);
                     oligo_container.restoreSamples();
-   System.out.println("L1");                    
+                    
                     request.setAttribute(Constants.JSP_TITLE,"oligo Container has been processed");
                     request.setAttribute("container",oligo_container);
                     request.setAttribute("forwardName", new Integer(Constants.PROCESS_VIEW_OLIGO_PLATE));
- System.out.println("L2");                      
+              
                     return (mapping.findForward("display_oligo_container"));
                 }
             }
