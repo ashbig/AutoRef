@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.9 2001-06-18 17:22:05 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.10 2001-06-18 17:28:16 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -25,6 +25,9 @@ public class Process {
     
     // Process Executution status for a failed process
     public static final String FAILURE = "N";
+    
+    // Process Execution status for an inprocess process
+    public static final String INPROCESS = "I";
     
     private int executionid;
     private Protocol protocol;
