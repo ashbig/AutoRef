@@ -21,6 +21,7 @@ import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
@@ -49,13 +50,14 @@ public class Run_UploadPlatesAction extends ResearcherAction
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         
         // The form holding the status changes made by the user
-        ArrayList master_container_labels = null;//get from form
-        int     vectorid = -1;//get from form
-        int     linker3id = -1;//get from form
-        int     linker5id = -1;//get from form
-        int     put_plate_for_step = -1; //get from form 
+        String  container_labels = (String) request.getAttribute("plate_names");//get from form
+        int     vectorid = ((Integer) request.getAttribute(Constants.VECTOR_ID_KEY)).intValue();//get from form
+        int     linker3id = ((Integer) request.getAttribute("3LINKER")).intValue();//get from form
+        int     linker5id = ((Integer) request.getAttribute("5LINKER")).intValue();//get from form
+        int     put_plate_for_step = ((Integer) request.getAttribute("nextstep")).intValue(); //get from form 
         
-        
+        //parse plate names
+        ArrayList master_container_labels = Algorithms.splitString(container_labels);
         
         ActionRunner runner = new ActionRunner();
         runner.setContainerLabels(master_container_labels );
@@ -73,15 +75,24 @@ public class Run_UploadPlatesAction extends ResearcherAction
     
     class ActionRunner implements Runnable
     {
-        private ArrayList   i_master_container_labels = null;//get from form
+       private ArrayList   i_master_container_labels = null;//get from form
         private int         i_vector_id = -1;//get from form
         private int         i_linker3_id = -1;
         private int         i_linker5_id = -1;
         private int         i_isolate_status = -1;
         private User        i_user = null;
         private int         i_plate_info_type = -1;
-        
         private ArrayList   i_error_messages = null;
+
+
+        public void         setContainerLabels(ArrayList v)    { i_master_container_labels = v;}
+        public void         setVectorId(int vectorid )    { i_vector_id = vectorid;}
+        public void         setLinker3Id(int linker3id)    { i_linker3_id = linker3id;}
+        public void         setLinker5Id(int linker5id)    { i_linker5_id = linker5id;}
+        public void         setNextStep(int put_plate_for_step)    { i_isolate_status = put_plate_for_step;}
+        public void         setPlateInfoType(int plate_info_type){i_plate_info_type = PlateUploader.PLATE_NAMES;}
+        public  void        setUser(User v)    {i_user=v;}
+
         
         
         
@@ -89,21 +100,14 @@ public class Run_UploadPlatesAction extends ResearcherAction
         {
             i_error_messages = new ArrayList();
         }
-        public void         setContainerLabels(ArrayList v)        { i_master_container_labels = v;}
-        public void         setVectorId(int vectorid ){ i_vector_id = vectorid;}
-        public void         setLinker3Id(int linker3id){ i_linker3_id = linker3id;}
-        public void         setLinker5Id(int linker5id){ i_linker5_id = linker5id;}
-        public void         setNextStep(int put_plate_for_step){ i_isolate_status = put_plate_for_step;}
-        public  void        setUser(User v){i_user=v;}
-        public void         setPlateInfoType(int plate_info_type){i_plate_info_type = plate_info_type;}
-       
+      
          
         public void run()
-        {
-          // The database connection used for the transaction
+    {
+        // The database connection used for the transaction
         Connection conn = null;
         ArrayList master_plates = new ArrayList();
-     
+        i_error_messages = new ArrayList();
         String requested_plates = Algorithms.convertStringArrayToString(i_master_container_labels,",");
         PlateUploader pb = null;
         try
@@ -122,7 +126,7 @@ public class Run_UploadPlatesAction extends ResearcherAction
 
             if (cloning_startegy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET )
             {
-                CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,i_vector_id , i_linker3_id ,  i_linker5_id );
+                CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,i_vector_id , i_linker3_id ,  i_linker5_id ," ");
                 str.insert(conn);
                 conn.commit();
                 cloning_startegy_id = str.getId();
@@ -213,11 +217,12 @@ public class Run_UploadPlatesAction extends ResearcherAction
             catch(Exception e){System.out.println(e.getMessage());}
         }
             
-        }
+            
+            
         
-        
-        
-      
+    }
+    
+   
     }
     
     

@@ -10,6 +10,7 @@ import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import java.sql.*;
 import java.util.*;
+import java.io.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 /**
  *
@@ -18,10 +19,10 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
 public class NeedleResult
 {
     
-  
+   private static final String file_name = "c:\\blastoutput\\needleout.txt";
 
     private int m_id = -1;
-  
+    
     private int m_query_seqid = - 1;
     private int m_subject_seqid = - 1;
     
@@ -123,7 +124,7 @@ public class NeedleResult
         
     }
     
-    
+ 
      
     //public void setMutations(ArrayList s){ m_mutations =s;}
    public int getId (){ return m_id  ;}
@@ -144,6 +145,7 @@ public class NeedleResult
     public String       getQuery (){ return m_query  ;}
     public String       getSubject (){ return m_subject  ;}
    
+    
     public void         setId (int s){   m_id  = s;}
     public void         setQuerySequenceId(int s){   m_query_seqid   = s;}
     public void         setSubjectSequenceId (int s){   m_subject_seqid   = s;}
@@ -157,4 +159,40 @@ public class NeedleResult
     public void         setQuery (String s){   m_query  = s;}
     public void         setSubject (String s){   m_subject  = s;}
     
+    
+    public void recalculateIdentity()
+    {
+        char[] arr_query =  m_query.toCharArray();
+        char[] arr_subject =  m_subject.toCharArray();
+        int query_base_count = 0;
+        int match_count = 0;
+        int length = ( arr_query.length  >= arr_subject.length ) ?
+                arr_subject.length -1 : arr_query.length -1 ;
+       
+        for (int count = 0; count < length;count++)
+        {
+            if (arr_query[count] == arr_subject[count]) match_count++;
+            if (arr_query[count] != ' ' )
+            {
+                query_base_count++;
+            }
+          //  System.out.println(arr_query[count]+" "+arr_subject[count] +" "+match_count+" "+query_base_count);
+        }
+        if ( arr_query.length  > arr_subject.length) query_base_count+= (arr_query.length  - arr_subject.length);
+       
+                /*
+                try{
+            FileWriter fl = new FileWriter(file_name,true);
+            fl.write(""+m_query_seqid+"\t"+   m_subject_seqid+"\t"+ m_identity +"\t"+ ( 100 * match_count) / query_base_count
+            +"\t"+m_score+"\t"+m_similarity+"\t"+m_gaps +"\n");
+            fl.flush();
+            fl.close();
+            }catch(Exception e)
+            {System.out.println(e.getMessage());}
+System.out.println(""+m_query_seqid+"\t"+   m_subject_seqid+"\t"+ m_identity +"\t"+ ( 100 * match_count) / query_base_count
+            +"\t"+m_score+"\t"+m_similarity+"\t"+m_gaps );
+        */
+        m_identity = 100 * match_count / query_base_count;
+       // System.out.println(m_identity);
+    }
 }

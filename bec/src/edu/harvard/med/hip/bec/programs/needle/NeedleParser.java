@@ -126,6 +126,119 @@ public class NeedleParser
     }
     
     
+    public static String parsetoHTMLString(String foutput_name, 
+                                            int[] scores, int linker5length, int lenker3length) throws BecUtilException
+    {
+         if (m_instance == null)  m_instance = new NeedleParser();
+        StringBuffer output = new StringBuffer();
+        boolean isQuerySeq = true;
+        boolean isRefSeq = false;
+        boolean isStart  = false;
+        String line = null;
+        String query="";
+        String ref="";
+        char[] current_line = null;
+        int refseq_count = 1;int queryseq_count=1;
+        BufferedReader  fin = null;
+         try 
+        {
+            fin = new BufferedReader(new FileReader(foutput_name));
+            while ((line = fin.readLine()) != null)
+            {
+               
+               if (  isStart && !isQuerySeq &&                         isRefSeq)
+               {
+                   current_line = line.toCharArray();
+                   for (int count = 0; count < current_line.length;count++)
+                   {
+                       if (current_line[count]=='.')
+                       {
+                           output.append("<font color='blue'><b>"+current_line[count]+"</b></font>");
+                       }
+                       else if(count > 1 && current_line[count]==' ' && current_line[count-1]=='|')
+                       {
+                           output.append("<font color='red'>:</font>");
+                       }
+                       else
+                       {
+                           output.append(current_line[count]);
+                       }
+                   }
+                   output.append("\n");
+                   continue;
+               }
+               if ( p_sequence.match(line) )
+               {
+                  // System.out.println(line);
+                   if (isQuerySeq)
+                   {
+                    
+                         output.append(p_sequence.getParen(1));
+                          output.append(p_sequence.getParen(2));
+                          current_line = p_sequence.getParen(3).toCharArray();
+                          for (int count = 0; count < current_line.length;count++)
+                          {
+                               if ( scores != null)
+                                {
+                                    if( scores[queryseq_count] < 20)
+                                    {
+                                        output.append("<font color='blue'><b>"+current_line[count]+"</b></font>");
+                                    }
+                                    else if(scores[queryseq_count] >=20 && scores[queryseq_count] < 25)
+                                    {
+                                        output.append("<font color='green'><b>"+current_line[count]+"</b></font>");
+                                    }
+                                    else if ( scores[queryseq_count] >= 25)
+                                    {
+                                        output.append("<font color='red'><b>"+current_line[count]+"</b></font>");
+                                    }
+                                }
+                                else
+                                {
+                                    output.append(current_line[count]);
+                                }
+                               queryseq_count++;
+                          }
+                           output.append(p_sequence.getParen(4));
+                    //    System.out.println(p_sequence.getParen(3).length()+" "+p_sequence.getParen(3));
+                        isQuerySeq = false;
+                        isRefSeq = true;
+                        isStart = true;
+                   }
+                   else if (isRefSeq)
+                   {
+                        
+                          output.append(p_sequence.getParen(1));
+                          output.append(p_sequence.getParen(2));
+                          current_line = p_sequence.getParen(3).toCharArray();
+                          for (int count = 0; count < current_line.length;count++)
+                          {
+                          }
+                           output.append(p_sequence.getParen(4));
+                       //  System.out.println(p_sequence.getParen(3).length()+" "+p_sequence.getParen(3));
+                        isQuerySeq = false;
+                        isRefSeq = false;
+                       
+                   }
+                    output.append("\n");
+               }
+               else
+               {
+                   output.append(line+"\n");
+               }
+            }
+          
+            fin.close();
+            return output.toString();
+         }
+         catch(Exception e)
+         {
+             try{fin.close();}catch(Exception c){}
+             throw new  BecUtilException("Cannot parse needle output");
+         }
+    }
+    
+    
     
     
      //******************************************
@@ -141,15 +254,16 @@ public class NeedleParser
         }
      */
         
-        String queryFile = "c:\\needleATG.out";
+        String queryFile = "c:\\needleoutput\\needle10342_419.out";
         NeedleResult res = null;
         try
         {
              res = new NeedleResult();
             
-            NeedleParser.parse(queryFile,res);
-            res.recalculateIdentity();
-            
+          //  NeedleParser.parse(queryFile,res);
+          //  res.recalculateIdentity();
+            String g= NeedleParser.parsetoHTMLString(queryFile,           null, 0, 0);
+            System.out.println(g);
         }catch(Exception e){}
         System.exit(0);
     }

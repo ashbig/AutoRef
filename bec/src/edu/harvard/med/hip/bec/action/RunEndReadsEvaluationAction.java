@@ -171,7 +171,7 @@ public class RunEndReadsEvaluationAction extends ResearcherAction
                         isolate_ranker.setForwardReadSence( oligos[0].getOrientation() == Oligo.ORIENTATION_SENSE);
                     if (oligos[1] != null)
                         isolate_ranker.setReverseReadSence( oligos[1].getOrientation() == Oligo.ORIENTATION_SENSE) ; 
-                    isolate_ranker.run(conn, i_error_messages);
+                    isolate_ranker.run(conn);
                     conn.commit();
                 }
             }

@@ -25,7 +25,11 @@ public  class BaseSequence
     public static final int THEORETICAL_SEQUENCE = 3;
     public static final int ANALIZED_SCORED_SEQUENCE = 4;
     public static final int CLONE_SEQUENCE = 5;
-   //sequence info type
+  
+    public static final int READ_SEQUENCE = 6;//for display only
+   
+    
+    //sequence info type
     public static final int SEQUENCE_INFO_TEXT = 0;
     public static final int SEQUENCE_INFO_SCORE = 1;
     

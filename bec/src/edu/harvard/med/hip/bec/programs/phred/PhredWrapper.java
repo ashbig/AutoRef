@@ -160,13 +160,14 @@ public class PhredWrapper
                     read.setType(Read.TYPE_ENDREAD_FORWARD_FAIL);
             }
             read.setScore(Constants.SCORE_NOT_CALCULATED);
+            return read;
         }
         catch(Exception e)
         {
             e.printStackTrace();
             throw new BecUtilException("Phred output files do not exist");
         }
-	return read;
+	
    }
    
    

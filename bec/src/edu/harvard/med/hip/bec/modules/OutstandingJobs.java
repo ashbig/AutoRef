@@ -57,9 +57,9 @@ public class OutstandingJobs
             for (int read_count = 0; read_count < cur_engine.getEndReads().size(); read_count++)
             {
                 Read read = (Read)cur_engine.getEndReads().get(read_count);
-                if ( read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH ||
-                    read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH )
-                {
+             //   if ( read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH ||
+               //     read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH )
+               // {
                       // blast each against blastable database
                      //write query file
                     sequence = read.getTrimmedSequence();
@@ -81,7 +81,7 @@ public class OutstandingJobs
                     String match_info = confirmORFMatch(hits);
                     if (match_info != null)
                         messages.add( cur_engine.getId() + " "+ read.getId() + " "+ read.getSequence().getId()+ " "+ match_info );
-                }
+             //  }
             }
         }
         // output best match into file info
@@ -91,6 +91,16 @@ public class OutstandingJobs
         }
     }
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //_________________________________________________________________________
     private static void setDBforBlaster(int species,BlastWrapper blaster)
     {
          // set species db
@@ -151,6 +161,6 @@ public class OutstandingJobs
                 ot.setPassParamBlastMinimumStretch(10);
                 ot.findWriteORF();
         }
-        catch(Exception e){}
+        catch(Exception e){System.out.print(e.getMessage());}
   }
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.7 2003-05-30 16:45:08 Elena Exp $
+ * $Id: Container.java,v 1.8 2003-07-07 13:16:13 Elena Exp $
  *
  * File     	: Container.java
 
@@ -20,6 +20,8 @@ import  edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import sun.jdbc.rowset.*;
 import edu.harvard.med.hip.bec.*;
+import edu.harvard.med.hip.bec.sampletracking.mapping.*;
+
 /**
  * Generic representation of all types of containers.
  */
@@ -37,6 +39,7 @@ public class Container
     private String      m_label = null;
     private ArrayList   m_samples = new ArrayList();
     private int         m_status = -1;
+    private int         m_cloning_strategy_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     /**
      * Constructor.
      *
@@ -212,6 +215,43 @@ public class Container
         return containerList;
     }
     
+    
+      public static Container findContainerDescriptionFromLabel(String label) throws    BecDatabaseException
+    {
+        
+        ArrayList containerList = new ArrayList();
+        
+        String sql = "select  containerid, containertype,  label, status from containerheader where label = '"+ label+"'";
+        ResultSet rs = null;
+        Container container = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                container = new Container(
+                                    rs.getInt("CONTAINERID"), 
+                                    rs.getString("containertype") , 
+                                    rs.getString("label"), 
+                                        rs.getInt("status"));
+                
+            }
+            return container;
+        } catch (NullPointerException ex)
+        {
+            throw new BecDatabaseException("Error occured while initializing container with label: "+label+"\n"+ex.getMessage());
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while initializing container from labe: "+label+"\n"+"\nSQL: "+sqlE);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+       
+    }
+    
   
     public int          getId()    {        return m_id;    }
     public int          getStatus()    {        return m_status;}
@@ -250,9 +290,75 @@ public class Container
     }
     
    
+    public int getCloningStrategyId()throws BecDatabaseException
+    {
+        if (m_cloning_strategy_id!=-1) return m_cloning_strategy_id;
+        else
+        {
+            String sql = "select configid from processconfig where CONFIGTYPE = 6 and processid = "
++"(select processid from process_object where objectid="+m_id+" and objecttype=0)";
+            RowSet rs = null;
+          
+            try
+            {
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                rs = t.executeQuery(sql);
+
+                while(rs.next())
+                {
+
+                    m_cloning_strategy_id = rs.getInt("configid");
+                }
+                return m_cloning_strategy_id;
+           } catch (Exception sqlE)
+            {
+                throw new BecDatabaseException("Error occured while getting cloning strategy for container with id: "+m_id+"\n"+sqlE.getMessage()+"\nSQL: "+sql);
+            } finally
+            {
+                DatabaseTransaction.closeResultSet(rs);
+               
+            }
+        }
+        
+    }
     
     
-   
+    public static int getCloningStrategyId(int id)throws BecDatabaseException
+    {
+        int cloning_strategy = -1;
+        String sql = "select configid from processconfig where CONFIGTYPE = 6 and processid = "
++"(select processid from process_object where objectid="+id+" and objecttype=0)";
+            RowSet rs = null;
+          
+            try
+            {
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                rs = t.executeQuery(sql);
+
+                while(rs.next())
+                {
+
+                    cloning_strategy = rs.getInt("configid");
+                    
+                }
+                return cloning_strategy;
+           } catch (Exception sqlE)
+            {
+                throw new BecDatabaseException("Error occured while getting cloning strategy for container with id: "+id+"\n"+sqlE.getMessage()+"\nSQL: "+sql);
+            } finally
+            {
+                DatabaseTransaction.closeResultSet(rs);
+               
+            }
+     
+    }
+    
+    
+    public static CloningStrategy getCloningStrategy(int id)throws BecDatabaseException
+    {
+        int cloning_strategy = getCloningStrategyId(id);
+        return  CloningStrategy.getById(cloning_strategy);
+    }
     /**
      * Get the data from Sample table.
      *
@@ -346,7 +452,7 @@ public class Container
                     isolatetracking.setFlexInfo(fl);
                     s.setIsolaterTracking(isolatetracking);
                     m_samples.add(s);
-                    System.out.println(s.getId());
+                  //  System.out.println(s.getId());
                 }
             }
         } catch (SQLException sqlE)
@@ -359,6 +465,265 @@ public class Container
         }
          
     }
+    
+    
+     /**
+     * Get the data from Sample table.
+     *
+     * @exception BecDatabaseException.
+     */
+    public void restoreSampleWithResult(int[] result_types, boolean isConstruct_id) throws BecDatabaseException
+    {
+        
+        m_samples.clear();
+        String sql =  null;
+        if (isConstruct_id)
+        {
+             sql = "select s.sampleid as sampleid, position, constructid, sampletype "
+            +"  from  isolatetracking iso, sample s  where iso.sampleid=s.sampleid "
+            +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
+        }
+        else
+        {
+             sql = "select sampleid , position, sampletype  from   sample   where sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
+        }
+   
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        CachedRowSet crs = null; 
+        RowSet rs = null;RowSet rs1 = null;
+        String res_id = null; String res_value = null;int construct_id = -1;
+        Result result = null;
+         Sample s = null; IsolateTrackingEngine isolatetracking = null;FlexInfo fl = null;
+        try
+        {
+            crs = t.executeQuery(sql);
+            
+            while(crs.next())
+            {
+                int position = crs.getInt("position");
+                 int sampleid = crs.getInt("sampleid");
+                String sampletype = crs.getString("sampletype");
+                 s = new Sample(  sampleid, sampletype, position, m_id);
+                if (isConstruct_id)
+                {
+                     construct_id = crs.getInt("constructid");
+                     s.setConstructId(construct_id);
+                }
+               
+                
+              //get results
+                 
+                res_id = "select resultid,resultvalueid, resulttype from result where sampleid = "+sampleid+" and resulttype in ("+Algorithms.convertArrayToString(result_types,",")+")";
+                rs = t.executeQuery(res_id);
+            
+                while(rs.next())
+                {
+                    int value_id = rs.getInt("resultvalueid");
+                    int result_type = rs.getInt("resulttype");
+                    int result_id = rs.getInt("resultid");
+                    switch (result_type)
+                    {
+                        case Result.RESULT_TYPE_ENDREAD_FORWARD:
+                        case Result. RESULT_TYPE_ENDREAD_FORWARD_PASS:
+                        
+                         case Result. RESULT_TYPE_ENDREAD_REVERSE_PASS : 
+                        case Result. RESULT_TYPE_ENDREAD_REVERSE:
+                        {
+                            Read read = Read.getReadById(value_id);
+                            result = new Result(result_id,-1, s.getId(), read, result_type, value_id);
+                            s.addResult(result);
+                            break;
+                            
+                        }
+                         case Result. RESULT_TYPE_ENDREAD_FORWARD_FAIL:
+                         case Result. RESULT_TYPE_ENDREAD_REVERSE_FAIL : 
+                       
+                        {
+                             result = new Result(result_id,-1, s.getId(), null, result_type, -1);
+                            s.addResult(result);
+                            break;
+                            
+                        }
+                        case Result.RESULT_TYPE_OLIGO_CALCULATION:
+                        {
+                            break;
+                        }
+
+                        case Result.RESULT_TYPE_ASSEMBLED_SEQUENCE_PASS :
+                        {
+                            break;
+                        }
+                        case Result.RESULT_TYPE_ASSEMBLED_SEQUENCE_FAIL :
+                        {
+                            break;
+                        }
+                        case Result.RESULT_TYPE_FINAL_CLONE_SEQUENCE :
+                        {
+                            break;
+                        }
+                    }
+                }
+                
+                
+                m_samples.add(s);
+                  //  System.out.println(s.getId());
+            }
+            	Sample sampleq=null;
+		Read readq  = null;
+		System.out.println(this.getSamples().size());
+    for (int count = 0; count < this.getSamples().size(); count ++)
+    {
+	
+		sampleq = (Sample)this.getSamples().get(count);
+	System.out.println(sampleq.getPosition() +" ");
+		if ( sampleq.getResults() != null && sampleq.getResults().size() > 0)
+		{
+		
+			readq = (Read) ((Result)sampleq.getResults().get(0)).getValueObject();
+			if ( readq != null) System.out.println(" read id "+ readq.getId() +" ");
+		}
+		
+		 if ( sampleq.getConstructId()!= -1)
+		{
+		  System.out.println(sampleq.getConstructId() );
+		}
+		
+		}
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while initializing sample\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            
+            DatabaseTransaction.closeResultSet(crs);
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs1);
+        }
+         
+    }
+    
+    public void restoreSampleWithResultId(int[] result_types, boolean isConstruct_id) throws BecDatabaseException
+    {
+        
+        m_samples.clear();
+        String sql =  null;
+        if (isConstruct_id)
+        {
+             sql = "select s.sampleid as sampleid, position, constructid, sampletype "
+            +"  from  isolatetracking iso, sample s  where iso.sampleid=s.sampleid "
+            +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
+        }
+        else
+        {
+             sql = "select sampleid , position, sampletype  from   sample   where sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
+        }
+   
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        CachedRowSet crs = null; 
+        RowSet rs = null;RowSet rs1 = null;
+        String res_id = null; String res_value = null;int construct_id = -1;
+        Result result = null;
+         Sample s = null; IsolateTrackingEngine isolatetracking = null;FlexInfo fl = null;
+        try
+        {
+            crs = t.executeQuery(sql);
+            
+            while(crs.next())
+            {
+                int position = crs.getInt("position");
+                 int sampleid = crs.getInt("sampleid");
+                String sampletype = crs.getString("sampletype");
+                 s = new Sample(  sampleid, sampletype, position, m_id);
+                if (isConstruct_id)
+                {
+                     construct_id = crs.getInt("constructid");
+                     s.setConstructId(construct_id);
+                }
+               
+                
+              //get results
+               res_id = "  select r.resultid as resultid,resultvalueid, resulttype , readid,readsequenceid,score, trimmedstart,trimmedend ,localpath, basename "
++" from result r, readinfo read,resultfilereference f, filereference fr "
++" where sampleid = "+sampleid+" and read.resultid=r.resultid "
++" and r.resultid=f.resultid and f.filereferenceid=fr.filereferenceid and resulttype in ("+Algorithms.convertArrayToString(result_types,",")+")";
+              
+                rs = t.executeQuery(res_id);
+            
+                while(rs.next())
+                {
+                    int value_id = rs.getInt("resultvalueid");
+                    int result_type = rs.getInt("resulttype");
+                    int result_id = rs.getInt("resultid");
+                    switch (result_type)
+                    {
+                        case Result.RESULT_TYPE_ENDREAD_FORWARD:
+                        case Result. RESULT_TYPE_ENDREAD_FORWARD_PASS:
+                        
+                         case Result. RESULT_TYPE_ENDREAD_REVERSE_PASS : 
+                        case Result. RESULT_TYPE_ENDREAD_REVERSE:
+                        {
+                            Read read = new Read();//.getReadById(value_id);
+                            read.setId(rs.getInt("readid"));
+                            read.setScore(rs.getInt("score"));
+                            read.setSequenceId(rs.getInt("readsequenceid"));
+                            read.setTrimEnd(rs.getInt("trimmedend"));
+                            read.setTrimStart(rs.getInt("trimmedstart"));
+                            read.setTraceFileBaseName( rs.getString("basename"));
+                            read.setTraceFileName( rs.getString("localpath"));
+                            result = new Result(result_id,-1, s.getId(), read, result_type, value_id);
+                            s.addResult(result);
+                            break;
+                            
+                        }
+                         case Result. RESULT_TYPE_ENDREAD_FORWARD_FAIL:
+                         case Result. RESULT_TYPE_ENDREAD_REVERSE_FAIL : 
+                       
+                        {
+                             result = new Result(result_id,-1, s.getId(), null, result_type, -1);
+                            s.addResult(result);
+                            break;
+                            
+                        }
+                        case Result.RESULT_TYPE_OLIGO_CALCULATION:
+                        {
+                            break;
+                        }
+
+                        case Result.RESULT_TYPE_ASSEMBLED_SEQUENCE_PASS :
+                        {
+                            break;
+                        }
+                        case Result.RESULT_TYPE_ASSEMBLED_SEQUENCE_FAIL :
+                        {
+                            break;
+                        }
+                        case Result.RESULT_TYPE_FINAL_CLONE_SEQUENCE :
+                        {
+                            break;
+                        }
+                    }
+                }
+                
+                
+                m_samples.add(s);
+                  //  System.out.println(s.getId());
+            }
+            	
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while initializing sample\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            
+            DatabaseTransaction.closeResultSet(crs);
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs1);
+        }
+         
+    }
+    
     /**
      * Insert the container record into database.
      *
@@ -990,11 +1355,11 @@ public class Container
      */
       public static Oligo[] findEndReadsOligos(int container_id)throws BecDatabaseException
       {
-        String sql = "select position, type,orientation, p.primerid as primerid, name, sequence, tm "
-                    +" from vectorprimer v, commonprimer p where p.primerid=v.primerid "
+        String sql = "select position, type,orientation, p.primerid as primerid, name, sequence, tm, "
+                    +" leaderlength,leadersequence from vectorprimer v, commonprimer p where p.primerid=v.primerid "
                     +" and vectorprimerid in (select configid from processconfig where "
                     +"configtype = "+Spec.VECTORPRIMER_SPEC_INT +" and processid in "
-                    +"(select processid from processresult where resultid = "
+                    +"(select processid from process_object where objecttype=1 and objectid = "
                     + "(select min(resultid) from result where sampleid in(select sampleid from sample where containerid="+container_id
                     +") and resulttype in ("+Read.TYPE_ENDREAD_REVERSE+","+Read.TYPE_ENDREAD_FORWARD+"))))";
  
@@ -1020,6 +1385,8 @@ public class Container
                     forward.setName(crs.getString("name") );
                     forward.setSequence(crs.getString("sequence"));
                     forward.setOrientation(crs.getInt("orientation")) ;
+                    forward.setLeaderLength(crs.getInt("leaderlength"));
+                    forward.setLeaderSequence(crs.getString("leadersequence"));
                 }
                 else  if (position == Oligo.POSITION_REVERSE)
                 {
@@ -1030,6 +1397,8 @@ public class Container
                     reverse.setName(crs.getString("name") );
                     reverse.setSequence(crs.getString("sequence"));
                     reverse.setOrientation(crs.getInt("orientation")) ;
+                    reverse.setLeaderLength(crs.getInt("leaderlength"));
+                    reverse.setLeaderSequence(crs.getString("leadersequence"));
                 }
             }
             if (forward != null || reverse != null)
@@ -1052,7 +1421,108 @@ public class Container
         
     }
      
+      public static ArrayList getProcessHistoryItems(String label)throws BecDatabaseException
+      
+      {
+          
+          Container cont = findContainerDescriptionFromLabel(label);
+          if ( cont != null)
+            return getProcessHistory( cont.getId());
+          else return null;
+      }
     
+      private static ArrayList getProcessHistory(int containerid)throws BecDatabaseException
+      
+      {
+          //for upload process
+          String sql = "select p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,p.processid as processid, "
++"(select username from userprofile where userid=( select researcherid from request where requestid = "
++" p.requestid)) as username,(select configtype from processconfig where processid= p.processid) as configtype, "
++"(select configid from processconfig where processid= p.processid) as configid from process p, processdefinition pd, userprofile "
++"where pd.processdefinitionid=p.processdefinitionid and processid= "
++"(select processid from process_object where objectid = "+containerid+" and objecttype=0) order by EXECUTIONDATE desc";
+
+          ArrayList items = new ArrayList();
+          ArrayList item = new ArrayList();
+          DatabaseTransaction t = null;
+          RowSet crs = null; RowSet crs1 = null;
+         ProcessHistory pr_history = null;
+        try
+        {
+             t = DatabaseTransaction.getInstance();
+              crs = t.executeQuery(sql);
+            while(crs.next())
+            {
+                pr_history= new ProcessHistory();
+                pr_history.setId ( crs.getInt("processid") );
+                pr_history.setName ( crs.getString("processname") );
+                pr_history.setDate ( crs.getString("EXECUTIONDATE") );
+                pr_history.setUsername ( crs.getString("username") );
+                pr_history.addConfis (crs.getInt("configid"), crs.getInt("configtype"));
+              
+                items.add(pr_history);
+               
+            }
+              
+              //for all other first find process info
+      sql="select p.processid as processid, p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,(select username from userprofile where userid= "
++"( select researcherid from request where requestid = p.requestid)) as username "
++"from process p, processdefinition pd where pd.processdefinitionid=p.processdefinitionid and "
++"processid= (select processid from process_object where objectid in (select min(resultid) from result where sampleid in "
++"(select sampleid from sample where containerid="+containerid+")) and objecttype=1)";
+              crs = t.executeQuery(sql);
+            while(crs.next())
+            {
+                 pr_history= new ProcessHistory();
+                pr_history.setId ( crs.getInt("processid") );
+                pr_history.setName ( crs.getString("processname") );
+                pr_history.setDate ( crs.getString("EXECUTIONDATE") );
+                pr_history.setUsername ( crs.getString("username") );
+                sql="select CONFIGID,   CONFIGTYPE from processconfig  where processid="+pr_history.getId();
+                crs1 = t.executeQuery(sql);
+                while(crs1.next())
+                {
+                    pr_history.addConfis (crs1.getInt("configid"), crs1.getInt("configtype"));
+                }
+                items.add(pr_history);
+                              
+            }
+              
+  sql="select p.processid as processid,p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,(select username from userprofile where userid= "
++"( select researcherid from request where requestid ="
++" p.requestid)) as username from process p, processdefinition pd where pd.processdefinitionid=p.processdefinitionid and "
++"processid=(select processid from process_object where objectid in (select min(constructid) from isolatetracking where sampleid in "
++"(select sampleid from sample where containerid="+containerid+")) and objecttype=2)";
+              crs = t.executeQuery(sql);
+            while(crs.next())
+            {
+                 pr_history= new ProcessHistory();
+                pr_history.setId ( crs.getInt("processid") );
+                pr_history.setName ( crs.getString("processname") );
+                pr_history.setDate ( crs.getString("EXECUTIONDATE") );
+                pr_history.setUsername ( crs.getString("username") );
+                sql="select CONFIGID,   CONFIGTYPE from processconfig  where processid="+pr_history.getId();
+                crs1 = t.executeQuery(sql);
+                while(crs1.next())
+                {
+                    pr_history.addConfis (crs1.getInt("configid"), crs1.getInt("configtype"));
+                }
+                items.add(pr_history);
+                              
+            }
+
+            
+            return items;
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while initializing container history\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(crs1);
+            DatabaseTransaction.closeResultSet(crs);
+        }
+          
+      }
     //**************************************************************//
     //				Test				//
     //**************************************************************//
@@ -1060,13 +1530,16 @@ public class Container
     // These test cases also include tests for Sample class.
     public static void main(String args[]) throws Exception
     {
-        Oligo[] ol = null;
+       ArrayList c  = null;Container container =null;
         try
         {
-          //Container container = new Container( 16);
-         
-          //  container.restoreSampleIsolate();
-             ol = Container.findEndReadsOligos(30);
+              container = Container.findContainerDescriptionFromLabel("YGS000360-1");
+            
+             int i=container.getCloningStrategyId();
+             int[] result_types = {Result.RESULT_TYPE_ENDREAD_FORWARD,Result.RESULT_TYPE_ENDREAD_FORWARD_PASS, Result.RESULT_TYPE_ENDREAD_FORWARD_FAIL};
+            Oligo[] ol =container.findEndReadsOligos(container.getId());//   .restoreSampleWithResultId(result_types,true);
+            int constructid = -1;Read read = null;
+             
         }
         catch(Exception e)
         {

@@ -25,9 +25,10 @@ public class CloningStrategy
     private int         m_vector_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int         m_linker3_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int         m_linker5_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private String      m_name = null;
     
     /** Creates a new instance of CloningStrategy */
-    public CloningStrategy(int id, int vectorid, int linker3id, int linker5id)throws BecDatabaseException
+    public CloningStrategy(int id, int vectorid, int linker3id, int linker5id, String name)throws BecDatabaseException
     {
         if (id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
             m_id = m_id = BecIDGenerator.getID("strategyid");
@@ -36,16 +37,18 @@ public class CloningStrategy
         m_vector_id = vectorid;
         m_linker3_id = linker3id;
         m_linker5_id = linker5id;
+        m_name=name;
     }
     
     public int  getId(){ return  m_id ;}
     public int  getVectorId(){ return  m_vector_id ;}
     public int  getLinker3Id(){ return      m_linker3_id ;}
     public int  getLinker5Id(){ return      m_linker5_id;}
+    public String       getName(){ return m_name;}
     public void  setVectorId(int v){   m_vector_id = v;}
     public void  setLinker3Id(int v){       m_linker3_id = v;}
     public void  setLinker5Id(int v){       m_linker5_id = v;}
-    
+    public void setName(String s){m_name = s;}
     
     public void insert(Connection conn)throws BecDatabaseException
     {
@@ -93,14 +96,14 @@ public class CloningStrategy
     {
         
         ResultSet rs = null; CloningStrategy strategy = null;
-        String sql = " select strategyid, vectorid,linker3id,linker5id from cloningstrategy "+sql_where;
+        String sql = " select strategyid, name,vectorid,linker3id,linker5id from cloningstrategy "+sql_where;
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
             while(rs.next())
             {
-               return new CloningStrategy(rs.getInt("strategyid"), rs.getInt("vectorid"), rs.getInt("linker3id"), rs.getInt("linker5id"));
+               return new CloningStrategy(rs.getInt("strategyid"), rs.getInt("vectorid"), rs.getInt("linker3id"), rs.getInt("linker5id"),rs.getString("name"));
             }
             return null;
            

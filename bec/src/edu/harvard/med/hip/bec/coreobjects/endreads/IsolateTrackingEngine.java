@@ -45,6 +45,7 @@ public class IsolateTrackingEngine
     public static final int            PROCESS_STATUS_ER_ANALYZED = 4;
     public static final int            PROCESS_STATUS_ER_ANALYZED_NO_MATCH = 19;
     public static final int            PROCESS_STATUS_ER_NO_READS = 18;
+    public static final int            PROCESS_STATUS_ER_NO_LONG_READS = 21;
     public static final int            PROCESS_STATUS_ER_CONFIRMED = 5;
     
     public static final int            PROCESS_STATUS_READY_FOR_ASSEMBLY = 6;
@@ -172,6 +173,7 @@ public class IsolateTrackingEngine
             case PROCESS_STATUS_ER_ANALYZED : return "End reads analisys finished";
             case PROCESS_STATUS_ER_ANALYZED_NO_MATCH : return "No match";
             case PROCESS_STATUS_ER_NO_READS : return "No end reads";
+            case PROCESS_STATUS_ER_NO_LONG_READS: return "No long Reads";
             case PROCESS_STATUS_ER_CONFIRMED : return "End reads confirmed";
 
             case PROCESS_STATUS_READY_FOR_ASSEMBLY : return "Ready for assembly";
@@ -278,8 +280,10 @@ public class IsolateTrackingEngine
     public void setBlackRank(FullSeqSpec cutoff_spec, EndReadsSpec spec) throws BecDatabaseException
     {
         //if no match exit or no good reads are available for the isolate
-        if (m_status == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH
-            || m_status == IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS)
+        if (m_status == PROCESS_STATUS_SUBMITTED_EMPTY ||
+                      m_status == PROCESS_STATUS_ER_NO_READS ||
+                      m_status ==  PROCESS_STATUS_ER_ANALYZED_NO_MATCH ||
+                      m_status == PROCESS_STATUS_ER_NO_LONG_READS)
         { 
             m_rank = RANK_BLACK;
             m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
@@ -287,23 +291,17 @@ public class IsolateTrackingEngine
         }
         
      
+        //check for ambiquouty condition
+       ArrayList not_ambiquous_read = getReadPassedAmbiquoutyTest(cutoff_spec);
+       if ( not_ambiquous_read == null || not_ambiquous_read.size() == 0)
+       {
+           m_rank = RANK_BLACK;
+           m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+           return;
+       }
         
-        //check for number of ambiques bases
-        String read_sequence_text = null; int amb_bases_100base = 0;
-        for (int read_count = 0; read_count < m_endreads.size(); read_count++)
-        {
-           read_sequence_text = ((Read) m_endreads.get(read_count)).getTrimmedSequence();
-           int[] res = BaseSequence.analizeSequenceAmbiquty(read_sequence_text);
-           //check if boundry conditions reached
-           amb_bases_100base = (int)( res[0] / read_sequence_text.length());
-           if ( amb_bases_100base > cutoff_spec.getMaximumNumberOfAmbiquousBases() || 
-                res[1] > cutoff_spec.getNumberOfConsequativeAmbiquousBases())
-           {
-               m_rank = RANK_BLACK;
-               m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
-               return;
-           }
-        }
+       //check wherther reads are overlap
+       
         
         ArrayList discrepancies_pairs = new ArrayList();
         //get rna discrepancies for all reads not allow discrepancy duplication from different reads
@@ -378,7 +376,27 @@ public class IsolateTrackingEngine
          m_score = -(int) score * 10000/ reads_length;
     }
     
-    
+    //get not amb read
+    private ArrayList getReadPassedAmbiquoutyTest(FullSeqSpec cutoff_spec) throws BecDatabaseException
+    {
+        ArrayList reads = null;
+        //check for number of ambiques bases
+        String read_sequence_text = null; int amb_bases_100base = 0;
+        for (int read_count = 0; read_count < m_endreads.size(); read_count++)
+        {
+            Read cur_read = (Read) m_endreads.get(read_count);
+           read_sequence_text = cur_read.getTrimmedSequence();
+           int[] res = BaseSequence.analizeSequenceAmbiquty(read_sequence_text);
+           //check if boundry conditions reached
+           amb_bases_100base = (int)( res[0] / read_sequence_text.length());
+           if ( amb_bases_100base < cutoff_spec.getMaximumNumberOfAmbiquousBases() || 
+                res[1] < cutoff_spec.getNumberOfConsequativeAmbiquousBases())
+           {
+               reads.add(cur_read);
+           }
+        }
+        return reads;
+    }
     
     //function returns array of sequenceid for isolates whose status is in range
     // @paramin status[]- isolate status 
@@ -544,7 +562,41 @@ public class IsolateTrackingEngine
     }
     
     
-    
+    public void setStatusBasedOnReadStatus(int default_status )
+    {
+            if ( m_status == PROCESS_STATUS_SUBMITTED_EMPTY ||
+                      m_status == PROCESS_STATUS_ER_NO_READS ||
+                      m_status ==  PROCESS_STATUS_ER_ANALYZED_NO_MATCH ||
+                      m_status == PROCESS_STATUS_ER_NO_LONG_READS)
+           {
+               return;
+           }
+           //if at least one read - no match - isolate no match
+           int count_short_reads = 0;
+           for (int count =0; count < m_endreads.size(); count++)
+           {
+               Read read = (Read)m_endreads.get(count);
+               if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
+                                 read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH)
+               {
+                   m_status = PROCESS_STATUS_ER_ANALYZED_NO_MATCH;
+                   return;
+               }
+               if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT ||
+                                 read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT)
+               {
+                   count_short_reads++;
+               }
+           }
+        //if all reads too short - isolate no_long_reads
+            if ( m_endreads.size() > 0 && count_short_reads == m_endreads.size())
+            {
+                m_status = PROCESS_STATUS_ER_NO_LONG_READS;
+            }
+           //set default status 
+           if (default_status != PROCESS_STATUS_NOT_DEFINED)
+              m_status = default_status;
+     }
     
       //----------------------- private ------------------------------------------
     private void getEndReadFromDBs() throws BecDatabaseException

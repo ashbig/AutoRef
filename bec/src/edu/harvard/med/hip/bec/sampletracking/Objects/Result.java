@@ -106,7 +106,23 @@ public class Result
     public int              getProcessId()    {        return m_process_id;    }
     public Object           getValueObject(){ return m_value_object;}
     
-    
+    public String           getTypeAsString()
+    {
+        switch (m_type)
+        {
+            case RESULT_TYPE_ENDREAD_FORWARD: return  "FER";
+            case RESULT_TYPE_ENDREAD_FORWARD_PASS: return "FER Pass";
+            case RESULT_TYPE_ENDREAD_FORWARD_FAIL: return "FER Fail";
+            case RESULT_TYPE_ENDREAD_REVERSE_FAIL : return  "RER Fail";  
+            case RESULT_TYPE_ENDREAD_REVERSE_PASS : return  "RER Pass"; 
+            case RESULT_TYPE_ENDREAD_REVERSE : return  "RER";  
+            case RESULT_TYPE_OLIGO_CALCULATION: return "Oligo calculation";
+            case RESULT_TYPE_ASSEMBLED_SEQUENCE_PASS : return "ASeq Pass";
+            case RESULT_TYPE_ASSEMBLED_SEQUENCE_FAIL : return "ASeq Fail";
+            case RESULT_TYPE_FINAL_CLONE_SEQUENCE : return "Final clone sequence";
+            default: return "";
+        }
+    }
     public void              setType(int v)    {         m_type= v;    }
     public void               setValueId(int v)    {         m_value_id= v;    }
     public void              setId(int v)    {         m_id= v;    }

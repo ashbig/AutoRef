@@ -70,23 +70,23 @@ package edu.harvard.med.hip.bec.coreobjects.feature;
             || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1)
             && m_type == Mutation.LINKER_3P)
             {
-                type = Mutation.TYPE_LINKER_3_INS_DEL;
+                return Mutation.TYPE_LINKER_3_INS_DEL;
             }
             else if ( (o == null && m!= null) || (o != null && m == null)
             || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1)
             && m_type == Mutation.LINKER_5P)
             {
-                type = Mutation.TYPE_LINKER_5_INS_DEL;
+                return Mutation.TYPE_LINKER_5_INS_DEL;
             }
             else if ( (o != null && m!= null) && (o.length() ==  m.length() )
                      && m_type == Mutation.LINKER_3P)
             {
-                type = Mutation.TYPE_LINKER_3_SUBSTITUTION;
+                return Mutation.TYPE_LINKER_3_SUBSTITUTION;
             }
             else if ( (o != null && m!= null) && (o.length() ==  m.length() )
                      && m_type == Mutation.LINKER_5P)
             {
-                 type = Mutation.TYPE_LINKER_5_SUBSTITUTION;
+                 return Mutation.TYPE_LINKER_5_SUBSTITUTION;
             }
             
           

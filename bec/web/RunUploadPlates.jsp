@@ -1,83 +1,130 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="java.util.*" %>
-<%@ page import="edu.harvard.med.hip.flex.seqprocess.spec.*" %>
-<%@ page import="edu.harvard.med.hip.flex.seqprocess.core.oligo.*" %>
+
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-
+<%@ page import="edu.harvard.med.hip.bec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <html>
 
-<head>
 
-<title>Primer Calculating Parameters</title>
 
-<link href="FlexStyle.css" rel="stylesheet" type="text/css">
-</head>
+<body>
 
-<body background='background.gif'>
-<h2><bean:message key="bec.name"/> : Upload plates</h2>
-<hr>
+<% ArrayList linkers = (ArrayList ) request.getAttribute(Constants.LINKER_COL_KEY);
+   ArrayList vectors = (ArrayList ) request.getAttribute(Constants.VECTOR_COL_KEY);
+%>
+ 
+<jsp:include page="NavigatorBar_Administrator.jsp" />
+	<p><P>
+<br>
+<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
+    <tr>
+        <td >
+    <font color="#008000" size="5"><b> upload Plate Information from FLEX into BEC</font>
+    <hr>
+    
+    <p>
+    </td>
+    </tr>
+</table>
 
-<html:errors/>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr>
+      <td width="100%"><html:errors/></td>
+    </tr>
+	<tr>
+        <td><i>If you are not sure about certain settings, please, consult help</i> </i> <a href="/BEC/Help_PlateUploader.jsp">[parameter help file]</a>. 
+          </i></td>
+      </tr>
+  </table>
+  </center>
+</div>
+
+
 <html:form action="/RunProcess.do" >  
-<input name="forwardName" type="hidden" value="<%=forwardName%>" > 
-<h3 >&nbsp;</h3>
+<input name="forwardName" type="hidden" value="<%= request.getAttribute("forwardName") %>" > 
 
-<p><i>If you are not sure about certain settings, please, consult help </i> <a href="Help_SequenceEvaluation.html">[parameter 
-  help file]</a>.</b> </p>
+<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+  <tr> 
+		<td>
 
-
-<p>&nbsp;</p>
-
-<p><strong>Upload plate information: 
-  <input name="platefileinfo" type="text" id="platefileinfo">
-  <input type="submit" name="Submit" value="Browse...">
-  </strong> 
-<p><strong>Next step</strong> 
+<strong>Upload plate information: </strong><p></p></td>
+<td>
+ <textarea property="plate_names" rows="10">
+ </textarea>
+  </td>
+  </tr>
+  <tr>
+<td><strong>Next step</strong> </td><td>
   <select name="nextstep">
     <option selected value=1>Run end reads</option>
     <option value=2>Run clone evaluation</option>
   </select>
-  <strong> </strong> 
-<h3>Common parameters</h3>
-<table border=0 cellspacing="4" width="80%" align="center">
-  <tr> 
-    <td  background="barbkgde.gif" width="50%"> <b>Vector trimming sequence</b> 
+  </strong> </td> </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr>
+    <td colspan="2" bgcolor="#1145A6" height="29"> <font color="#FFFFFF"><strong>Common parameters </strong></font> 
     </td>
-    <TD background="barbkgde.gif" > 
-    <html:select property="VECTOR">
-    <html:options
-            collection="vectors"
-            property="id"
-            labelProperty="name"
-        /> 
-    </html:select> 
+  </tr>
+
+
+  <tr> 
+    <td  bgcolor="#e4e9f8" width="50%"> <b>Vector </b> 
+    </td>
+    <TD bgcolor="#e4e9f8" > 
+     <SELECT NAME="vectorid">
+        <% 
+        	
+        	for (int count = 0; count < vectors.size(); count++)
+        	
+        	{
+        		BioVector vector = (BioVector)vectors.get(count);
+        	%>
+        		<OPTION VALUE=<%= vector.getId() %>><%= vector.getName() %>
+        	<%
+        	}%>
+    	</SELECT>
        
       </div></td>
   </tr>
   <tr> 
-    <td  background="barbkgde.gif"><b>5' clone tail seqment</b></td>
-    <TD background="barbkgde.gif"> 
-     <html:select property="5TAIL"> 
-     <html:options
-            collection="tails"
-            property="id"
-            labelProperty="name"
-        /> 
-     </html:select> 
-      </div></td>
+    <td  bgColor="#b8c6ed"><b>5' clone linker seqment</b></td>
+    <TD bgColor="#b8c6ed"> 
+    <SELECT NAME="5linkerid">
+    <% 
+    	
+    	for (int count = 0; count < linkers.size(); count++)
+    	
+    	{
+    		BioLinker linker = (BioLinker)linkers.get(count);
+    	%>
+    		<OPTION VALUE=<%= linker.getId() %>><%= linker.getName() %>
+    	<%
+    	}%>
+    	</SELECT>
+     </div></td>
   </tr>
   <tr> 
-    <td  background="barbkgde.gif"> <b>3' clone tail seqment</b></td>
-    <TD background="barbkgde.gif">
-       <html:select property="3TAIL"> <html:options
-            collection="tails"
-            property="id"
-            labelProperty="name"
-        /> </html:select> 
+    <td  bgcolor="#e4e9f8"> <b>3' clone tail seqment</b></td>
+    <TD bgcolor="#e4e9f8">
+        <SELECT NAME="3linkerid">
+          <% 
+          	
+          	for (int count = 0; count < linkers.size(); count++)
+          	
+          	{
+          		BioLinker linker = (BioLinker)linkers.get(count);
+          	%>
+          		<OPTION VALUE=<%= linker.getId() %>><%= linker.getName() %>
+          	<%
+          	}%>
+    	</SELECT>
       
       </div></td>
   </tr>

@@ -65,31 +65,31 @@
             {
                 if (o != null && !o.substring( 0, 1).equals(m.substring( 0, 1)))
                 {
-                    type = Mutation.TYPE_AA_NO_TRANSLATION ;
+                    return Mutation.TYPE_AA_NO_TRANSLATION ;
                 }
                 else if(o != null && m != null && o.equals(m ) )
                 {
-                    type = Mutation.TYPE_AA_SILENT;
+                    return Mutation.TYPE_AA_SILENT;
                 }
             }
             else if(o != null &&  o.substring( 0, 1).equals("*") )
             {
                 if (m != null && !o.substring( 0, 1).equals(m.substring( 0, 1)))
                 {
-                    type = Mutation.TYPE_AA_POST_ELONGATION;
+                    return Mutation.TYPE_AA_POST_ELONGATION;
                 }
                 else if(m != null && o.equals(m) )
                 {
-                    type = Mutation.TYPE_AA_SILENT_CONSERVATIVE;
+                    return Mutation.TYPE_AA_SILENT_CONSERVATIVE;
                 }
             }
             else if(o!= null && m != null && o.equals(m))
             {
-                type = Mutation.TYPE_AA_SILENT_CONSERVATIVE;
+                return Mutation.TYPE_AA_SILENT_CONSERVATIVE;
             }
             else if(m != null && m.equals("*"))
             {
-                type = Mutation.TYPE_AA_TRUNCATION;
+                return Mutation.TYPE_AA_TRUNCATION;
             }
            
             else if(m == null || m.length() == 0 ||
@@ -98,7 +98,7 @@
                 type = Mutation.TYPE_AA_DELETION;
                 if (o != null && m != null)//?????????  && $o !~ $m && $o !~ $m) 
                 {
-                    type =Mutation.TYPE_AA_DELETION_COMPLEX; 
+                    return Mutation.TYPE_AA_DELETION_COMPLEX; 
                 }
             }
             else if(o== null || o.length() == 0 ||
@@ -107,7 +107,7 @@
                 type = Mutation.TYPE_AA_INSERTION;	
                 if (o!=null && m!= null)//??????????????? && $o !~ $m && $o !~ $m)
                 {
-                    type =Mutation.TYPE_AA_INSERTION_COMPLEX; 
+                    return Mutation.TYPE_AA_INSERTION_COMPLEX; 
                 }
             }
             else if  (o != null && m!=null && !o.equals(m) && o.length() == 1 

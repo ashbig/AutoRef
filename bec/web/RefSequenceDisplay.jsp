@@ -13,7 +13,7 @@
     
 </head>
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
+
 	<p><P>
 <br>
 

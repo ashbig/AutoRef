@@ -17,7 +17,7 @@ import java.sql.*;
  */
 public class RNAMutation extends Mutation {
     
-    public static final int RNA_STREAM_RANGE = 40;
+    public static final int RNA_STREAM_RANGE = 20;
     
     public static final int FLAG_POLYM_YES = 1;
     public static final int FLAG_POLYM_NO = -1;
@@ -253,20 +253,20 @@ public class RNAMutation extends Mutation {
            && !SequenceManipulation.isStartCodon (m_codon_mut)
             && ( m_position > 0 && m_position < 4))
          {
-             type = Mutation.TYPE_RNA_NO_TRANSLATION;
+             return Mutation.TYPE_RNA_NO_TRANSLATION;
          }
          //no stop codon
          else if( m_codon_ori != m_codon_mut && SequenceManipulation.isStopCodon(m_codon_ori)
             &&  !SequenceManipulation.isStopCodon(m_codon_mut))
          {
-             type = Mutation.TYPE_RNA_POST_ELONGATION;
+             return Mutation.TYPE_RNA_POST_ELONGATION;
              
          }
          //trancation in the middle
          else if( m_codon_ori != m_codon_mut && SequenceManipulation.isStopCodon(m_codon_mut)
             && !SequenceManipulation.isStopCodon(m_codon_ori))
          {
-             type = Mutation.TYPE_RNA_TRANCATION;
+             return Mutation.TYPE_RNA_TRANCATION;
          }
          else 
          {
@@ -274,14 +274,14 @@ public class RNAMutation extends Mutation {
              aa_mut = SequenceManipulation.translateCodonToAminoAcid(m_codon_mut);
              if (aa_ori.equals(aa_mut))
              {
-                type = Mutation.TYPE_RNA_SILENT;
+                return Mutation.TYPE_RNA_SILENT;
              }
              else
             {
                if ( edu.harvard.med.hip.bec.bioutil.BioConstants.getScore(aa_ori.charAt(0),aa_mut.charAt(0)) > 0 )
-                    type = Mutation.TYPE_RNA_NONSENSE;
+                    return Mutation.TYPE_RNA_NONSENSE;
                 else
-                    type = Mutation.TYPE_RNA_MISSENSE;
+                    return Mutation.TYPE_RNA_MISSENSE;
              }
          }
     }  
@@ -303,16 +303,16 @@ public class RNAMutation extends Mutation {
 	if (m == null ) 
         {
 	    if (type == Mutation.TYPE_RNA_INFRAME) 
-                    type = Mutation.TYPE_RNA_INFRAME_DELETION;
+                    return Mutation.TYPE_RNA_INFRAME_DELETION;
             else
-                 type = Mutation.TYPE_RNA_FRAMESHIFT_DELETION;
+                 return Mutation.TYPE_RNA_FRAMESHIFT_DELETION;
 	}
         else if(o==null ) 
         {
             if (type == Mutation.TYPE_RNA_INFRAME) 
-                    type = Mutation.TYPE_RNA_INFRAME_INSERTION;
+                    return Mutation.TYPE_RNA_INFRAME_INSERTION;
             else
-                 type = Mutation.TYPE_RNA_FRAMESHIFT_INSERTION;
+                 return Mutation.TYPE_RNA_FRAMESHIFT_INSERTION;
 	  
 	}
 	else
@@ -322,9 +322,9 @@ public class RNAMutation extends Mutation {
 	if (m_codon_ori != null && SequenceManipulation.isStopCodon(m_codon_ori) )
         {
              if (type == Mutation.TYPE_RNA_INFRAME) 
-                    type = Mutation.TYPE_RNA_INFRAME_STOP_CODON;
+                   return Mutation.TYPE_RNA_INFRAME_STOP_CODON;
             else
-                 type = Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON;
+                return Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON;
 	   
 	}
     }

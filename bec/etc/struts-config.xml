@@ -145,6 +145,7 @@
             <forward name="display_container_history" path="/ContainerHistory.jsp"/>
             <forward name="display_discrepancyreport" path="/DiscrepancyReport.jsp"/>
             <forward name="display_scoredsequence_details" path="/ScoredSequenceDisplay.jsp"/>
+            <forward name="display_needle_alignment" path="/NeedleAlignment.jsp"/>
 </action>
 
  

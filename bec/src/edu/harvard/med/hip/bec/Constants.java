@@ -162,6 +162,10 @@ public class Constants {
     public static final int            PROCESS_OBJECT_TYPE_CONTAINER = 0;
     public static final int            PROCESS_OBJECT_TYPE_CONSTRUCT = 2;
     
+    //read quality
+    public static final int            NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION = 50;
+    
+    
     // key used to find vector object in session.
     //jsp tags
     public static final String VECTOR_ID_KEY = "VECTORID";
@@ -208,7 +212,9 @@ public class Constants {
     public static final int CONTAINER_RESULTS_VIEW = 10;
      public static final int SCOREDSEQUENCE_DEFINITION_INT = 11;
        public static final int ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT = 12;
-    //submit data from file
+    public static final int READSEQUENCE_NEEDLE_ALIGNMENT_INT = 13;
+       
+       //submit data from file
     public static final String FILE_DESCRIPTION = "file_description";
     public static final String FILE_TITLE = "file_title";
     public static final String FILE_NAME =  "fileName";

@@ -69,8 +69,8 @@
   <tr> 
     <td><strong>Cloning Startegy</strong></td>
     <td> 
-      <a href="/BEC/Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategy() %>">
-	    <%= container.getCloningStrategy() %></A>
+      <a href="/BEC/Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
+	    <%= container.getCloningStrategyId() %></A>
     </td>
   </tr>
   
@@ -148,9 +148,9 @@
 		 </a>
 		 
 		 <%}else{%> &nbsp;<%}%>  </td>
-		<td <%= row_color %> align="center">
+		<td <%= row_color %> align="center"><%if (read != null ){%>
  <input type=BUTTON value=Report onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
-		  </td>
+		 <%}else{%> &nbsp;<%}%>    </td>
 		<td <%= row_color %>>&nbsp; </td>
 	</tr>
 	<%}%>

@@ -6,7 +6,7 @@
 
 package edu.harvard.med.hip.bec.modules;
 
-
+import edu.harvard.med.hip.bec.programs.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.programs.blast.*;
@@ -251,9 +251,9 @@ public class PolymorphismDetector
         runner.setSubjectInputFN(subjFile+".in");
         runner.setInputFN(queryFile+".in");
         runner.setOutputFN(queryFile+".out");
-         System.out.println("l");
+  
         runner.run();
-        System.out.println("l");
+     
         BlastResult blresult = edu.harvard.med.hip.bec.programs.blast.Blast2seqParser.parseBl2seqResult(queryFile+".out", 1);
         BlastAligment blaligment = (BlastAligment) blresult.getAligments().get(0);
         //check for identity

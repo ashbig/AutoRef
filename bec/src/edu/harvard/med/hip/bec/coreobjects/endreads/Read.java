@@ -32,9 +32,11 @@ public class Read
     public static final int TYPE_ENDREAD_REVERSE = -1;
     public static final int TYPE_ENDREAD_REVERSE_FAIL = -3;
     public static final int TYPE_ENDREAD_REVERSE_NO_MATCH = -4;
+    public static final int TYPE_ENDREAD_REVERSE_SHORT = -5;
     
     public static final int TYPE_NOT_SET = 0;
     
+    public static final int TYPE_ENDREAD_FORWARD_SHORT = 5;
     public static final int TYPE_ENDREAD_FORWARD_NO_MATCH = 4;
     public static final int TYPE_ENDREAD_FORWARD_FAIL = 3;
     public static final int TYPE_ENDREAD_FORWARD = 1;
@@ -382,28 +384,33 @@ public class Read
     private int calculateScoreBasedOnSpec(EndReadsSpec spec)throws BecDatabaseException,BecUtilException
     {
      //   ArrayList rna_discrepancies = m_readsequence.getDiscrepanciesByType(Mutation.RNA);
-        ArrayList discrepancy_pairs = DiscrepancyPair.assembleDiscrepanciesInPairs(m_readsequence.getDiscrepancies());
+        //no discrepancies
+        if (m_readsequence.getDiscrepancies() == null || m_readsequence.getDiscrepancies().size() == 0)
+            return m_trimmedstop -  m_trimmedstart;
+        
+      
         int score = Constants.SCORE_NOT_CALCULATED; 
         int dtype = -1; int dquality = -1; int penalty = 0;
         
-        //no mutations
-        if (discrepancy_pairs.size() == 0)
-            return m_trimmedstop -  m_trimmedstart;
+        ArrayList rna_discrepancies = m_readsequence.getDiscrepanciesByType(Mutation.RNA);
         Mutation disc = null;
-      /*
+      
        for (int ind = 0; ind < rna_discrepancies.size();ind++)
         {
             disc = (Mutation)rna_discrepancies.get(ind);
             penalty = spec.getPenalty(disc.getQuality(), disc.getChangeType());// by rna mutation
             //try to find pair and get its penalty
-            if (penalty == EndReadsSpec.PENALTY_NOT_DEFINED)
+           /* if (penalty == EndReadsSpec.PENALTY_NOT_DEFINED)
             {
                 disc = Mutation.getDiscrepancyPair(disc, Mutation.AA, m_readsequence.getDiscrepancies());
                 penalty = spec.getPenalty(disc.getQuality(), disc.getChangeType());// by rna mutation
             }
+            **/
             score += penalty;
         }
-       **/
+     
+      /*
+       ArrayList discrepancy_pairs = DiscrepancyPair.assembleDiscrepanciesInPairs(m_readsequence.getDiscrepancies());
         DiscrepancyPair pair =  null; 
         for (int ind = 0; ind < discrepancy_pairs.size();ind++)
         {
@@ -416,6 +423,7 @@ public class Read
             }
             score += penalty;
         }
+       **/
         score = (int) score * 10000/ (m_trimmedstop -  m_trimmedstart);
         return -score;
     }

@@ -84,6 +84,35 @@ public class NeedleWrapper
            
     }
     
+    
+    //runs needle return needle file name, no parsing
+     public  String runNeedleNoParsing() throws BecUtilException
+    {
+        
+        m_needle = new NeedleResult();
+        m_needle.setGapExtend(m_gapext);
+        m_needle.setGapOpen(m_gapopen);
+        m_needle.setQuerySequenceId(m_query_id);
+        m_needle.setSubjectSequenceId(m_ref_id);
+   
+        String query_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_query, "needle", String.valueOf(m_query_id));
+        String ref_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_reference, "needle", String.valueOf(m_ref_id));           
+        String output_name=m_output_file_dir+"needle"+m_query_id+"_"+m_ref_id+".out";
+         
+         //  String output_name="/c/tmp/needleout.out";
+        //  String query_file="/c/tmp/needle123.in";
+        //  String ref_file="/c/tmp/needle127.in";
+            m_needle.setFileName(output_name);
+            m_needle.setQuerySequenceId(m_query_id);
+            boolean res = run(query_file+".in",ref_file+".in",output_name);
+            if (res)
+            {
+                return output_name;
+            }
+            return output_name;
+           
+    }
+    
       public  NeedleResult runNeedleTest(String output_name) throws BecUtilException
     {
         m_needle = new NeedleResult();

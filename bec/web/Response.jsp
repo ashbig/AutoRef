@@ -54,5 +54,22 @@
   </center>
 </div>
 
+
+ <% 
+	 Object text = null;
+	 if (request.getAttribute(Constants.ADDITIONAL_JSP ) == null)
+	 { 
+	 	text =  request.getParameter(  Constants.ADDITIONAL_JSP  );
+	}
+	else
+	{
+		text = request.getAttribute( Constants.ADDITIONAL_JSP );
+	}
+        if (text != null)
+        {
+	%>
+	 
+		<%= title %>
+<%}%>
 </body>
 </html>

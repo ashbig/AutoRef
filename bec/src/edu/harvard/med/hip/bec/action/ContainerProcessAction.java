@@ -50,10 +50,11 @@ public class ContainerProcessAction extends ResearcherAction
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException
-    {
+    {System.out.println("ab");
         ActionErrors errors = new ActionErrors();
+         System.out.println("a");
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
-        
+         System.out.println("b");
         
         String label = (String)request.getParameter("CONTAINER_BARCODE");
         String title = (String)request.getParameter(Constants.JSP_TITLE);

@@ -1,5 +1,5 @@
 <%@page contentType="text/html"%>
-<html>
+<%@ page errorPage="ProcessError.do"%>
 <head><title>JSP Page</title></head>
 <body>
 <h2>Help: Container Labels</h2>

@@ -66,7 +66,7 @@ public class tester_plate_upload
         // The database connection used for the transaction
         Connection conn = null;
         ArrayList master_plates = new ArrayList();
-     
+        i_error_messages = new ArrayList();
         String requested_plates = Algorithms.convertStringArrayToString(i_master_container_labels,",");
         PlateUploader pb = null;
         try
@@ -85,7 +85,7 @@ public class tester_plate_upload
 
             if (cloning_startegy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET )
             {
-                CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,i_vector_id , i_linker3_id ,  i_linker5_id );
+                CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,i_vector_id , i_linker3_id ,  i_linker5_id ," ");
                 str.insert(conn);
                 conn.commit();
                 cloning_startegy_id = str.getId();

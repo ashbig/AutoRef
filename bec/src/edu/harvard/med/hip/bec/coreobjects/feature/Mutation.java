@@ -266,6 +266,9 @@ public abstract class Mutation
             case TYPE_RNA_SILENT: return "Silent";
             case TYPE_RNA_NONSENSE: return "Nonsense";
             case TYPE_RNA_MISSENSE: return "Missense";
+            case  TYPE_RNA_NO_TRANSLATION: return "No Translation";
+            case  TYPE_RNA_POST_ELONGATION : return "Post Elongation";
+             case  TYPE_RNA_TRANCATION : return "Trancation";
             
             case TYPE_LINKER_5_SUBSTITUTION : return "5' substitution";
             case TYPE_LINKER_3_SUBSTITUTION: return "3' substitution";
@@ -283,42 +286,44 @@ public abstract class Mutation
         
         switch (change_type)
         {
-            case TYPE_AA_NO_TRANSLATION : return  "AA - No Translation";
-            case TYPE_AA_OUT_OF_FRAME_TRANSLATION : return  "AA - OUT_OF_FRAME_TRANSLATION";
-            case TYPE_AA_FRAMESHIFT : return  "AA - Frameshift";
-            case TYPE_AA_INSERTION : return  "AA - Insertion";
-            case TYPE_AA_INSERTION_COMPLEX : return  "AA - Insertion complex";
-            case TYPE_AA_SILENT : return  "AA - Silent";
-            case TYPE_AA_POST_ELONGATION : return  "AA - Post Elongation";
-            case TYPE_AA_SILENT_CONSERVATIVE : return  "AA - Silent Conservative";
-            case TYPE_AA_TRUNCATION : return  "AA - Truncation";
-            case TYPE_AA_DELETION : return  "AA - Deletion";
-            case TYPE_AA_DELETION_COMPLEX : return  "AA - Deletion Complex";
-            case TYPE_AA_SUBSTITUTION : return  "AA - Substitution";
-            case TYPE_AA_CONSERVATIVE : return  "AA - Conservative Substitution";
-            case TYPE_AA_NONCONSERVATIVE : return  "AA - Non-Conservative Substitution";
+            case TYPE_AA_NO_TRANSLATION : return  "No Translation";
+            case TYPE_AA_OUT_OF_FRAME_TRANSLATION : return  "OUT_OF_FRAME_TRANSLATION";
+            case TYPE_AA_FRAMESHIFT : return  "Frameshift";
+            case TYPE_AA_INSERTION : return  "Insertion";
+            case TYPE_AA_INSERTION_COMPLEX : return  "Insertion complex";
+            case TYPE_AA_SILENT : return  "Silent";
+            case TYPE_AA_POST_ELONGATION : return  "Post Elongation";
+            case TYPE_AA_SILENT_CONSERVATIVE : return  "Silent Conservative";
+            case TYPE_AA_TRUNCATION : return  "Truncation";
+            case TYPE_AA_DELETION : return  "Deletion";
+            case TYPE_AA_DELETION_COMPLEX : return  "Deletion Complex";
+            case TYPE_AA_SUBSTITUTION : return  "Substitution";
+            case TYPE_AA_CONSERVATIVE : return  "Conservative Substitution";
+            case TYPE_AA_NONCONSERVATIVE : return  "Non-Conservative Substitution";
             
             //rna mutastion type
-            case TYPE_RNA_INFRAME: return  "RNA - Inframe";
-            case TYPE_RNA_FRAMESHIFT: return  "RNA - Frameshift";
-            case TYPE_RNA_INFRAME_DELETION: return "RNA - Inframe: Deletion";
-            case TYPE_RNA_INFRAME_INSERTION: return "RNA - Inframe: Insertion";
+            case TYPE_RNA_INFRAME: return  "Inframe";
+            case TYPE_RNA_FRAMESHIFT: return  "Frameshift";
+            case TYPE_RNA_INFRAME_DELETION: return "Inframe: Deletion";
+            case TYPE_RNA_INFRAME_INSERTION: return "Inframe: Insertion";
             
-            case TYPE_RNA_INFRAME_STOP_CODON: return "RNA - Inframe: Stop Codon";
-            case TYPE_RNA_FRAMESHIFT_DELETION: return "RNA - Frameshift: Deletion";
-            case TYPE_RNA_FRAMESHIFT_INSERTION: return "RNA - Frameshift: Insertion";
+            case TYPE_RNA_INFRAME_STOP_CODON: return "Inframe: Stop Codon";
+            case TYPE_RNA_FRAMESHIFT_DELETION: return "Frameshift: Deletion";
+            case TYPE_RNA_FRAMESHIFT_INSERTION: return "Frameshift: Insertion";
             
-            case TYPE_RNA_FRAMESHIFT_STOP_CODON: return "RNA - Frameshift: Stop Codon";
-            case TYPE_RNA_SILENT: return "RNA - Silent";
-            case TYPE_RNA_NONSENSE: return "RNA - Nonsense";
-            case TYPE_RNA_MISSENSE: return "RNA - Missense";
+            case TYPE_RNA_FRAMESHIFT_STOP_CODON: return "Frameshift: Stop Codon";
+            case TYPE_RNA_SILENT: return "Silent";
+            case TYPE_RNA_NONSENSE: return "Nonsense";
+            case TYPE_RNA_MISSENSE: return "Missense";
+            case  TYPE_RNA_NO_TRANSLATION: return "No Translation";
+            case  TYPE_RNA_POST_ELONGATION : return "Post Elongation";
+             case  TYPE_RNA_TRANCATION : return "Trancation";
             
             case TYPE_LINKER_5_SUBSTITUTION : return "5' substitution";
             case TYPE_LINKER_3_SUBSTITUTION: return "3' substitution";
             case TYPE_LINKER_5_INS_DEL : return "5' insertion/deletion";
             case TYPE_LINKER_3_INS_DEL : return "3' insertion/deletion";
-            default  : return "Not known";
-        }
+            default  : return "Not known";        }
         
         
     }
@@ -568,6 +573,10 @@ public abstract class Mutation
                 case Mutation.TYPE_RNA_SILENT:                { res[Mutation.TYPE_RNA_SILENT]++;break;}
                 case Mutation.TYPE_RNA_NONSENSE:                { res[Mutation.TYPE_RNA_NONSENSE]++;break;}
                 case Mutation.TYPE_RNA_MISSENSE :                { res[Mutation.TYPE_RNA_MISSENSE]++;break;}
+                 case  TYPE_RNA_NO_TRANSLATION:  { res[Mutation.TYPE_RNA_NO_TRANSLATION]++;break;}
+            case  TYPE_RNA_POST_ELONGATION :  { res[Mutation.TYPE_RNA_POST_ELONGATION]++;break;}
+             case  TYPE_RNA_TRANCATION :  { res[Mutation.TYPE_RNA_TRANCATION]++;break;}
+             
                 case Mutation.TYPE_AA_NO_TRANSLATION  :                { res[Mutation.TYPE_AA_NO_TRANSLATION]++;break;}
                 case Mutation.TYPE_AA_OUT_OF_FRAME_TRANSLATION  :                { res[Mutation.TYPE_AA_OUT_OF_FRAME_TRANSLATION]++;break;}
                 case Mutation.TYPE_AA_FRAMESHIFT  :                { res[Mutation.TYPE_AA_FRAMESHIFT]++;break;}

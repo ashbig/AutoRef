@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.5 2003-05-30 16:45:08 Elena Exp $
+ * $Id: Sample.java,v 1.6 2003-07-07 13:16:12 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -44,6 +44,14 @@ public class Sample
     private int           m_containerid = -1;
     private int           m_position = -1;
     private int           m_isolatetracking_id = -1;
+    private int           m_refsequnce_id = -1;
+    private int           m_clonesequence_id = -1;
+    
+    //used for display purposes
+    private ArrayList     m_results = null;
+    private int            m_construct_id =-1;
+    
+    
     private IsolateTrackingEngine           m_isolatetracking = null;
    
     /**
@@ -134,10 +142,44 @@ public class Sample
      * @return The sample type.
      */
     public String getType()    {        return m_type;    }
+    public int getRefSequenceId() throws BecDatabaseException
+    { 
+        if ( m_refsequnce_id != -1 ) return     m_refsequnce_id ;
+        else
+        {
+            String sql = "select refsequenceid from sequencingconstruct where constructid =(select constructid from isolatetracking where sampleid="+m_id+")";
+            RowSet rs = null;
+            
+            try
+            {
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                rs = t.executeQuery(sql);
+
+                while(rs.next())
+                {
+
+                    m_refsequnce_id = rs.getInt("refsequenceid");
+                }
+           } catch (Exception sqlE)
+            {
+                throw new BecDatabaseException("Error occured while getting refsequence id for  sample with id: "+m_id+"\n"+sqlE.getMessage()+"\nSQL: "+sql);
+            } finally
+            {
+               
+                DatabaseTransaction.closeResultSet(rs);
+            }
+            return m_refsequnce_id;
+        }
     
-    
+    }
+    public int getCloneSequenceId(){ return        m_clonesequence_id ;}
+     public void setRefSequenceId(int i){      m_refsequnce_id =i;}
+    public void setCloneSequenceId(int i){         m_clonesequence_id =i;}
       
-    
+     public ArrayList     getResults(){ return m_results ;}
+     public void addResult(Result r){ if (m_results == null) m_results=new ArrayList(); m_results.add(r);}
+    public int getConstructId(){ return   m_construct_id ;}
+    public void setConstructId(int i){    m_construct_id = i;}
        
     /**
      * Return the construct id.

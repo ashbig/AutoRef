@@ -7,10 +7,11 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page import="edu.harvard.med.hip.bec.*" %>
 <html>
 
 <head>
-<script language="JavaScript" src="navcond.js"></script>
+<script language="JavaScript" src="/BEC/navcond.js"></script>
 <script language="JavaScript">
 
 /*
@@ -36,14 +37,14 @@ myNavBar1.addMenu(dhtmlMenu);
 %>
 <% if (user.getUserGroup().equals("Administrator"))
 {
-        System.out.println("a");
+    
 %>
 	dhtmlMenu = new NavBarMenu(150, 290);
 	dhtmlMenu.addItem(new NavBarMenuItem("Configure System", ""));
 	dhtmlMenu.addItem(new NavBarMenuItem("End Reads Evaluation", "Seq_EnterEndReadsParameters.jsp"));
 	dhtmlMenu.addItem(new NavBarMenuItem("Biological Evaluation of Clones", "Seq_EnterFullSeqParameters.jsp"));
-	dhtmlMenu.addItem(new NavBarMenuItem("Primer Design", "SelectSpeciesForGeneGene.jsp"));
-	dhtmlMenu.addItem(new NavBarMenuItem("Polymorphism Finder", "SelectSpeciesForGeneDisease.jsp"));
+	dhtmlMenu.addItem(new NavBarMenuItem("Primer Design", "Seq_EnterPrimerParameters.jsp"));
+	dhtmlMenu.addItem(new NavBarMenuItem("Polymorphism Finder", "Seq_EnterPolymorphismParameters.jsp"));
 	dhtmlMenu.addItem(new NavBarMenuItem("Help", "Help_ConfigureSystem.jsp"));
 	myNavBar1.addMenu(dhtmlMenu);
 
@@ -55,8 +56,10 @@ myNavBar1.addMenu(dhtmlMenu);
 
 
 dhtmlMenu = new NavBarMenu(100, 220);
-dhtmlMenu.addItem(new NavBarMenuItem("History", ""));
-dhtmlMenu.addItem(new NavBarMenuItem("Container History", "ContainerScan.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("Search", ""));
+dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=container Process History"));
+dhtmlMenu.addItem(new NavBarMenuItem("Container Description", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_TITLE%>=container Description"));
+dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_TITLE%>=container Results"));
 dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "/BEC/logon.do"));
 dhtmlMenu.addItem(new NavBarMenuItem("Sample History", "ChipGeneGeneAnalysis_1.jsp"));
 myNavBar1.addMenu(dhtmlMenu);
@@ -117,9 +120,9 @@ function init() {
     <td width="80%"><font color="#3333CC"> 
       <h1><strong>Biological Evaluation of Clones (BEC)</strong></h1>
       </font></td>
-    <td > <img align="top" border="0" src="./jpg/earth.gif" width=76 height="76" > 
+    <td > <img align="top" border="0" src="file:///C|/Program%20Files/Apache%20Tomcat%204.0/webapps/BEC/./jpg/earth.gif" width=76 height="76" > 
     </td>
-    <td><img border="0" src="./jpg/pc&woman.gif"  width=96 height="76" ></td>
+    <td><img border="0" src="file:///C|/Program%20Files/Apache%20Tomcat%204.0/webapps/BEC/./jpg/pc&woman.gif"  width=96 height="76" ></td>
   </tr>
  
  

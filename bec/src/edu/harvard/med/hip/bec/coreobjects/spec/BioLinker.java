@@ -83,7 +83,7 @@ public class BioLinker
             
             while(rs.next())
             {
-               linker= new BioLinker( rs.getInt("linkerid"),rs.getString("name"), rs.getString("sequence"),rs.getInt("framestart") );
+               linker= new BioLinker( rs.getInt("linkerid"),rs.getString("name"), Algorithms.cleanChar(rs.getString("sequence"),'-'),rs.getInt("framestart") );
             }
             //get features
            

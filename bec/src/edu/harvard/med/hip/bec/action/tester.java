@@ -121,13 +121,9 @@ public class tester
                 for (int count = 0; count < master_plates.size(); count++)
                 {
                     //get all isolate tracking with status 'submitted'
-                    try
-                    {
-                        container = (Container) master_plates.get(count);
-                        processPlate( container,  file_list, conn, process.getId());
-                    }
-                    catch(Exception e)
-                    {}
+                    container = (Container) master_plates.get(count);
+                    processPlate( container,  file_list, conn, process.getId());
+                   
                 }
                 //send email to user
                 if (file_list != null && file_list.size()>0)
@@ -184,79 +180,86 @@ public class tester
             IsolateTrackingEngine istrk = null;
             Sample smp = null;
             boolean isStatusUpdated = false;
-            for (int sample_count = 0; sample_count < container.getSamples().size(); sample_count++)
+            try
             {
-                smp = (Sample) container.getSamples().get(sample_count);
-                isStatusUpdated = false;
-
-                //valid sample - create result
-                if (i_isForward)
+                for (int sample_count = 0; sample_count < container.getSamples().size(); sample_count++)
                 {
-                    cloneid = 0;
-                    if ( smp.isClone())
+                    smp = (Sample) container.getSamples().get(sample_count);
+                    isStatusUpdated = false;
+
+                    //valid sample - create result
+                    if (i_isForward)
                     {
-                         //create result for each not empty /not control sample per read
-                        istrk = smp.getIsolateTrackingEngine();
-
-                        result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,     process_id,
-                                                istrk.getSampleId(),       null,
-                                                Result.RESULT_TYPE_ENDREAD_FORWARD,
-                                                BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
-                        result.insert(conn, process_id );
-                        cloneid = istrk.getFlexInfo().getFlexCloneId();
-                        //change isolate status
-                        if ( !isStatusUpdated) 
+                        cloneid = 0;
+                        if ( smp.isClone())
                         {
+                             //create result for each not empty /not control sample per read
+                            istrk = smp.getIsolateTrackingEngine();
 
-                            IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
-                             isStatusUpdated = true;
+                            result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,     process_id,
+                                                    istrk.getSampleId(),       null,
+                                                    Result.RESULT_TYPE_ENDREAD_FORWARD,
+                                                    BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
+                            result.insert(conn, process_id );
+                            cloneid = istrk.getFlexInfo().getFlexCloneId();
+                            //change isolate status
+                            if ( !isStatusUpdated) 
+                            {
+
+                                IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
+                                 isStatusUpdated = true;
+                            }
+
                         }
 
+                        naming_file_entries_forward.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_FORWARD)  );
+                       // rearray_file_entries_forward.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-F", smp.getPosition()));
                     }
-                       
-                    naming_file_entries_forward.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_FORWARD)  );
-                   // rearray_file_entries_forward.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-F", smp.getPosition()));
+                    if (i_isReverse)
+                    {
+                        cloneid = 0;
+                        if ( smp.isClone())
+                        {
+                            istrk = smp.getIsolateTrackingEngine();
+                            cloneid = istrk.getFlexInfo().getFlexCloneId();
+                            result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,    process_id,
+                                                istrk.getSampleId(),     null,
+                                                Result.RESULT_TYPE_ENDREAD_REVERSE,     
+                                                BecIDGenerator.BEC_OBJECT_ID_NOTSET
+                                                );
+                            result.insert(conn, process_id);
+                             //change isolate status
+                             if ( !isStatusUpdated) 
+                            {
+                                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
+                                 isStatusUpdated = true;
+                             }
+                        }
+                        naming_file_entries_reverse.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_REVERSE )  );
+                        //rearray_file_entries_reverse.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-R", smp.getPosition()));
+
+                    }
+               }
+
+                //create files and append them to the file list
+                if (i_isForward)
+                {
+                    file = NamingFileEntry.createNamingFile(naming_file_entries_forward,"/tmp/"+ container.getLabel() + "_naming_endreads_f.txt");
+                    file_list.add(file);
+                   // file = RearrayFileEntry.createRearrayFile( rearray_file_entries_forward, "/tmp/"+ container.getLabel() + "rearray_endreads_f.txt");
+                  //  file_list.add(file);
                 }
                 if (i_isReverse)
                 {
-                    cloneid = 0;
-                    if ( smp.isClone())
-                    {
-                        istrk = smp.getIsolateTrackingEngine();
-                        cloneid = istrk.getFlexInfo().getFlexCloneId();
-                        result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,    process_id,
-                                            istrk.getSampleId(),     null,
-                                            Result.RESULT_TYPE_ENDREAD_REVERSE,     
-                                            BecIDGenerator.BEC_OBJECT_ID_NOTSET
-                                            );
-                        result.insert(conn, process_id);
-                         //change isolate status
-                         if ( !isStatusUpdated) 
-                        {
-                             IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
-                             isStatusUpdated = true;
-                         }
-                    }
-                    naming_file_entries_reverse.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_REVERSE )  );
-                    //rearray_file_entries_reverse.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-R", smp.getPosition()));
-                   
+                    file = NamingFileEntry.createNamingFile(naming_file_entries_reverse,"/tmp/"+ container.getLabel() + "_naming_endreads_r.txt");
+                    file_list.add(file);
+                 //   file = RearrayFileEntry.createRearrayFile( rearray_file_entries_reverse, "/tmp/"+ container.getLabel() + "rearray_endreads_r.txt");
+                 //   file_list.add(file);
                 }
-           }
-                    
-            //create files and append them to the file list
-            if (i_isForward)
+            }catch(Exception ex)
             {
-                file = NamingFileEntry.createNamingFile(naming_file_entries_forward,"/tmp/"+ container.getLabel() + "_naming_endreads_f.txt");
-                file_list.add(file);
-               // file = RearrayFileEntry.createRearrayFile( rearray_file_entries_forward, "/tmp/"+ container.getLabel() + "rearray_endreads_f.txt");
-              //  file_list.add(file);
-            }
-            if (i_isReverse)
-            {
-                file = NamingFileEntry.createNamingFile(naming_file_entries_reverse,"/tmp/"+ container.getLabel() + "_naming_endreads_r.txt");
-                file_list.add(file);
-             //   file = RearrayFileEntry.createRearrayFile( rearray_file_entries_reverse, "/tmp/"+ container.getLabel() + "rearray_endreads_r.txt");
-             //   file_list.add(file);
+                System.out.println(ex.getMessage());
+                throw new BecDatabaseException("Cannot process request for plate "+container.getLabel()+" Request will be aborted. Please try later.");
             }
     }
         
@@ -278,8 +281,15 @@ public class tester
      
     {
         ArrayList master_container_ids = new ArrayList();
-        master_container_ids.add(new Integer(92));
+    //    master_container_ids.add(new Integer(27));
+    //    master_container_ids.add(new Integer(28));
+    //  master_container_ids.add(new Integer(29));
+    //  master_container_ids.add(new Integer(36));
+    //   master_container_ids.add(new Integer(37));
+    //  master_container_ids.add(new Integer(38));
+      master_container_ids.add(new Integer(91));
      
+      
       
         tester runner = new tester();
         runner.setContainerIds(master_container_ids );

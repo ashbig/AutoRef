@@ -154,9 +154,13 @@ public class ScoredSequence extends BaseSequence
             {
                 res.append(text[i]);
             }
+            if(i%60 == 0 && i != 0)
+            {
+                 res.append("\n");
+            }
             if(i%60 == 0)
             {
-                res.append("\n");
+               
                 int pad_value = String.valueOf(seqIndex+1).length();
                 String pad = "";
                 for (int count = 1; count < 5; count++)
@@ -164,7 +168,7 @@ public class ScoredSequence extends BaseSequence
                     pad +="0";
                 }
                 
-                res.append(pad +(seqIndex+1) +" - ");
+                res.append(pad +(i+1) +" - ");
             }
             
        }

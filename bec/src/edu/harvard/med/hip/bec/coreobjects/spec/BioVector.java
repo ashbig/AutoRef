@@ -166,8 +166,8 @@ public class BioVector
     
     public static ArrayList getVectorPrimers(int vectorid)throws BecDatabaseException
     {
-        String sql = "select  cp.primerid as id,cp.tm as tm, cp.sequence as sequence, cp.type as type, cp.name as name, vp.position as position, vp.orientation as orientation"+
-        " from commonprimer cp, vectorprimer vp where vp.primerid=cp.primerid and vp.vectorid = "+vectorid;
+        String sql = "select  cp.primerid as id,cp.tm as tm, cp.sequence as sequence, cp.type as type, cp.name as name, vp.position as position, vp.orientation as orientation,"+
+        " leaderlength, leadersequence from commonprimer cp, vectorprimer vp where vp.primerid=cp.primerid and vp.vectorid = "+vectorid;
         RowSet rs = null;
         ArrayList pr = new ArrayList();
         try
@@ -186,6 +186,8 @@ public class BioVector
                 ol.setName(rs.getString("name") ) ;
                 ol.setSequence(rs.getString("sequence"));
                 ol.setOrientation(rs.getInt("orientation")) ;
+                ol.setLeaderLength(rs.getInt("leaderlength"));
+                ol.setLeaderSequence(rs.getString("leadersequence"));
                pr.add(ol); 
             }
             return pr;

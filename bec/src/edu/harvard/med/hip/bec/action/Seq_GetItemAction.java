@@ -18,7 +18,7 @@ package edu.harvard.med.hip.bec.action;
 import java.util.*;
 
 import java.sql.*;
-import java.io.IOException;
+import java.io.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,8 +33,10 @@ import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
+import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
+import edu.harvard.med.hip.bec.programs.needle.*;
 
 public class Seq_GetItemAction extends ResearcherAction
 {
@@ -75,7 +77,12 @@ public class Seq_GetItemAction extends ResearcherAction
                }
                else if (forwardName == Constants.SCOREDSEQUENCE_DEFINITION_INT || 
                forwardName == Constants.REFSEQUENCE_DEFINITION_INT ||
-               forwardName ==  Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT )
+               forwardName ==  Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT ||
+               forwardName == Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT ||
+               forwardName == Constants.VECTOR_DEFINITION_INT ||
+               forwardName == Constants.LINKER_DEFINITION_INT ||
+               forwardName == Constants.CLONING_STRATEGY_DEFINITION_INT
+               )
                {
                     id = Integer.parseInt( (String) request.getParameter("ID"));
                  
@@ -109,7 +116,7 @@ public class Seq_GetItemAction extends ResearcherAction
                 {
                     System.out.println("label "+label);
                     ArrayList pr_history = Container.getProcessHistoryItems( label);
-                    container.getCloningStrategy();
+                    container.getCloningStrategyId();
                     request.setAttribute("container",container) ;
                     System.out.println("Process historys "+pr_history);
                     request.setAttribute("process_items",pr_history);
@@ -121,7 +128,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     
                     container.restoreSampleIsolate();
                     System.out.println("Container samples "+container.getSamples().size());
-                    container.getCloningStrategy();
+                    container.getCloningStrategyId();
                     request.setAttribute("container",container);
                     return (mapping.findForward("display_container_details"));
                 }
@@ -146,7 +153,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     {
                        
                     }
-                    container.getCloningStrategy();
+                    container.getCloningStrategyId();
                     request.setAttribute("container",container);
                      System.out.println("send "+System.currentTimeMillis());
                     return (mapping.findForward("display_container_results_er"));
@@ -182,6 +189,27 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("sequence",sequence);
                     return (mapping.findForward("display_discrepancyreport"));
                 }
+                case Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT:
+                {
+                  //find file
+                    
+                    Utils ut= new Utils();
+                    String needle_output = ut.getHTMLtransformedNeedleAlignment(BaseSequence.READ_SEQUENCE,id);
+                    RefSequence refsequence = ut.getRefSequence();
+                    if (request.getParameter("trimstart") != null)
+                    {
+                        request.setAttribute("trimstart",request.getParameter("trimstart"));
+                    }
+                    if (request.getParameter("trimend") != null)
+                    {
+                        request.setAttribute("trimend",request.getParameter("trimend"));
+                    }
+                    request.setAttribute( "expsequenceid",new Integer(id));
+                    request.setAttribute( "expsequencetype", new Integer(BaseSequence.READ_SEQUENCE));
+                    request.setAttribute("refsequenceid" , new Integer(refsequence.getId()));
+                    request.setAttribute("alignment",needle_output);
+                    return (mapping.findForward("display_needle_alignment"));
+                }
               
             }
             
@@ -209,5 +237,9 @@ public class Seq_GetItemAction extends ResearcherAction
        
         return container;
     }
-
+    
+    
+    
+    
+    
 }

@@ -19,7 +19,7 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
 public class EndReadsSpec extends Spec
 {
     
-   public static final int PENALTY_NOT_DEFINED = -1;
+   public static final int PENALTY_NOT_DEFINED = 0;
     
     /** Creates a new instance of EndReadsSpec */
    
@@ -131,6 +131,7 @@ public class EndReadsSpec extends Spec
              case Mutation.TYPE_RNA_INFRAME_STOP_CODON :
              case Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON :
              case Mutation.TYPE_AA_TRUNCATION:
+             case Mutation.TYPE_RNA_TRANCATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -139,7 +140,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_TRANC_L");
              }
-             case Mutation.TYPE_AA_NO_TRANSLATION :
+             case Mutation.TYPE_AA_NO_TRANSLATION :case Mutation.TYPE_RNA_NO_TRANSLATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
@@ -148,7 +149,7 @@ public class EndReadsSpec extends Spec
                  else 
                      return this.getParameterByNameInt("ER_NOTRANSLATION_L");
              }
-             case Mutation.TYPE_AA_POST_ELONGATION :
+             case Mutation.TYPE_AA_POST_ELONGATION :case Mutation.TYPE_RNA_POST_ELONGATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {

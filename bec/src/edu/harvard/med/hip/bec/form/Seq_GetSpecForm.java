@@ -18,7 +18,9 @@ public class Seq_GetSpecForm extends ActionForm
     
     public void setForwardName(int forwardName)
     {
+         
         m_forwardName = forwardName;
+        
     }
     
     public int getForwardName()

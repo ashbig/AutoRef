@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.3 2003-06-03 19:21:18 Elena Exp $
+ * $Id: Oligo.java,v 1.4 2003-07-07 13:12:35 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -53,6 +53,11 @@ public class Oligo
     private int m_position = -1;// for full sequencing, start of the prime regarding sequence start
     private String          m_oligo_name = null;
     private int             m_orientation = ORIENTATION_NOTKNOWN;
+    
+    
+    //for not gene specific primers only
+    private int             m_leader_length = -1;
+    private String          m_leader_squence = null;
 
     private int m_calculationid = -1;
 
@@ -113,6 +118,9 @@ public class Oligo
     public String       getSequence() { return m_sequence ;}
     public int          getOrientation() { return m_orientation;}
     public int          getCalculationid(){ return m_calculationid;}
+    public int          getLeaderLength(){ return m_leader_length ;}
+    public String       getLeaderSequence(){ return   m_leader_squence ;}
+
 
     public void         setTm(double s )    {         m_Tm= s ;    }
     public void         setId(int s )    {         m_id= s ;    }
@@ -124,7 +132,12 @@ public class Oligo
     public void         setOrientation(int v) {  m_orientation = v;}
      public void        setSubmitterId(int v)    {         m_submitterid = v;    }
      public void        setOligoCalculationId(int v)    {         m_calculationid = v;    }
-      /**
+     
+      public void       setLeaderLength(int i){  m_leader_length =i;}
+    public void       setLeaderSequence(String v){    m_leader_squence =v;} 
+     
+     
+     /**
      * insert oligos into Oligo table.
      */
 

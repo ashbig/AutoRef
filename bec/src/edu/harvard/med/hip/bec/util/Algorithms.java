@@ -43,6 +43,7 @@ public class Algorithms
         return copy;
     }
     
+   
     public static int findFirstLetter(String str)
     {
   
@@ -73,6 +74,7 @@ public class Algorithms
         
         return copy;
     }
+   
     
     
     public static String replaceChar(String str, char oldch, char newchar)
@@ -91,10 +93,20 @@ public class Algorithms
         return copy.toString();
     }
     
+    
+     public static ArrayList splitString(String value)
+    {
+        return  splitString( value, null);
+    
+    }
     public static ArrayList splitString(String value, String spliter)
     {
         ArrayList res = new ArrayList();
-        StringTokenizer st = new StringTokenizer(value, spliter);
+        StringTokenizer st  = null;
+        if (spliter == null)
+            st = new StringTokenizer(value);
+        else
+            st = new StringTokenizer(value, spliter);
         while(st.hasMoreTokens())
         {
             String val = st.nextToken().trim();
@@ -217,27 +229,11 @@ public class Algorithms
     }
     public static void main(String args[])
     {
-        int i = 40;
-        int[] iii ={1};
-        convertArrayToString(iii,",");
-        String s = convertWellFromInttoA8_12(i);
-        System.out.println(i+" "+s); i =1;
-        s = convertWellFromInttoA8_12(i);
-        System.out.println(i+" "+s);i =10;
-        s = convertWellFromInttoA8_12(i);
-         System.out.println(i+" "+s);i =19;
-        s = convertWellFromInttoA8_12(i);
-         System.out.println(i+" "+s);i =41;
-        s = convertWellFromInttoA8_12(i);
-      System.out.println(i+" "+s);i =96;
-        s = convertWellFromInttoA8_12(i);
-    System.out.println(i+" "+s);i =24;
-        s = convertWellFromInttoA8_12(i);
-     System.out.println(i+" "+s);i =25;
-        s = convertWellFromInttoA8_12(i);
-      System.out.println(i+" "+s);
-        System.exit(0);
+        System.out.println( (int)Math.ceil( 3/3));
+        System.out.println( (int)Math.ceil( 4/3));
+        System.out.println( (int)Math.ceil( 5/3));
     }
+    
     
 }
 

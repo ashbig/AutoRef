@@ -52,6 +52,13 @@
 	<td  bgColor="#e4e9f8" ><strong>Sequence: </strong></td>
 	<td bgColor="#e4e9f8"> <%= linker.getSequence() %></td>
 </tr>
+<% if (linker.getFrameStart() != -1)
+{%>
+<tr> 
+	<td  bgColor="#e4e9f8" ><strong>Frame Start: </strong></td>
+	<td bgColor="#e4e9f8"> <%= linker.getFrameStart() %></td>
+</tr>
+<%}%>
 <tr> 
 	<td  bgColor="#b8c6ed" ><b>Linker Id:</b></td>
 	 <td bgColor="#b8c6ed"><%= linker.getId() %></td>   </tr>

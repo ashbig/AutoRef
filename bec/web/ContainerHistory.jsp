@@ -70,8 +70,8 @@
     <td><strong>Cloning Startegy</strong></td>
     <td> 
       <a href="/BEC/Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %> 
-	  &amp; + ID=<%= container.getCloningStrategy() %>">
-	    <%= container.getCloningStrategy() %></A>
+	  &amp; + ID=<%= container.getCloningStrategyId() %>">
+	    <%= container.getCloningStrategyId() %></A>
     </td>
   </tr>
   

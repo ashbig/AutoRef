@@ -69,8 +69,8 @@
   <tr> 
     <td><strong>Cloning Startegy</strong></td>
     <td> 
-      <a href="/BEC/Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategy() %>">
-	    <%= container.getCloningStrategy() %></A>
+      <a href="/BEC/Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
+	    <%= container.getCloningStrategyId() %></A>
     </td>
   </tr>
   
@@ -115,7 +115,7 @@
 
 		<!--<a href="/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>" > 
 		<%= sample.getRefSequenceId()%></a> -->
-		<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>');" > 
+		<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;" > 
 		<%= sample.getRefSequenceId()%></a>
 		
 	<%}%>	
