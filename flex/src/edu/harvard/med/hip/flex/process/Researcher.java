@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.6 2001-06-13 16:29:10 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.7 2001-06-14 14:19:40 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -66,7 +66,7 @@ public class Researcher {
                 barcode = rs.getString("RESEARCHERBARCODE");
                 isActive = rs.getString("ACTIVEFLAG_YN").trim();
             } else {
-                throw new FlexProcessException("Cannot initialize Researcher with barcode: "+barcode);
+                throw new FlexProcessException("Cannot find Researcher with barcode: "+barcode);
             }
             
             
