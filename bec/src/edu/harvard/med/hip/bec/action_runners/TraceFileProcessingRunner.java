@@ -65,7 +65,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
     }
     public void setOutputDirectory(String outputdir)
     { 
-        if (ApplicationHostDeclaration.IS_BIGHEAD) m_inputdir = OUTPUT_DIR;
+        if (ApplicationHostDeclaration.IS_BIGHEAD) m_outputdir = OUTPUT_DIR;
         else        m_outputdir = outputdir;
     }
     public void setDelete(String delete)
@@ -202,8 +202,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
             {
                 file_name = trace_files[i].getName();
                 br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
-                if ( br.isWriteFormat() ) file_names.add(br);
-                else (m_error_messages.add("File "+ br.getFileName()+" has wrong format"));
+                if ( br.isWriteFormat() ) 
+                    file_names.add(br);
+                else
+                    m_error_messages.add("File "+ br.getFileName()+" has wrong format");
             }
              file_names = SequencingFacilityFileName.sortByPlateWell(file_names);
             return file_names;
@@ -285,7 +287,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
         {
             fin = new BufferedReader(new InputStreamReader(m_input));
          }
-        catch(Exception e){ throw new BecDatabaseException ("Cannot open renaming file: "+e.getMessage());}
+        catch(Exception e){ System.out.println(e.getMessage());throw new BecDatabaseException ("Cannot open renaming file: "+e.getMessage());}
         try
         {
             while ((line = fin.readLine()) != null)
@@ -293,7 +295,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 file_names = Algorithms.splitString(line, "\t");
                 filename_org = m_inputdir + File.separator + (String)file_names.get(0);
                 filename_dest= m_outputdir + File.separator + (String)file_names.get(1);
-               
+               System.out.println(filename_org+" "+filename_dest);
                 try
                 {
                     dest_file = new File(filename_dest);
@@ -309,6 +311,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 }
                 catch(Exception e1)
                 {
+             
                     m_error_messages.add( "Cannot rename file "+filename_org+" into "+filename_dest  );
                 }
             }
