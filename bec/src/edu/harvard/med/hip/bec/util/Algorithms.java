@@ -43,6 +43,22 @@ public class Algorithms
         return copy;
     }
     
+    public static int findFirstLetter(String str)
+    {
+  
+        char[] ar =str.toCharArray();
+        return findFirstLetter(ar);
+    }
+     public static int findFirstLetter(char[] ar)
+    {
+       int count = 0;
+        for ( ; count < ar.length;  count++ )
+        {
+               if (Character.isLetter(ar[count]) ) break;
+        }
+        return count;
+    }
+    
     public static String cleanChar(String str, char ch)
     {
         String copy = "";  // The reversed copy.
@@ -89,7 +105,17 @@ public class Algorithms
     
     
    
-    
+     // used to create quevery where parameter in range
+    public static  String convertArrayToString(int[] arr, String delim)
+    {
+        String res = "";
+        for (int count = 0; count < arr.length;count++)
+        {
+            res += arr[count]+delim;
+            if (count != arr.length - 1) res += delim;
+        }
+        return res;
+    }
     
     public static int numberOf(String str, char ch)
     {

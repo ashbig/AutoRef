@@ -37,6 +37,12 @@ public class IsolateRanker
     private PolymorphismSpec  m_polymorphism_spec = null;
     private boolean           m_isRunPolymorphism = false;
     
+    //collection of end reads primers that define whether read was from plus strand
+    //or on compliment
+    // needle can not convert sequence to compliment sequences
+    private boolean           m_forward_read_sence = true;
+    private boolean           m_reverse_read_sence = true;
+    
     /** Creates a new instance of IsolateRanker */
     public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, ArrayList c)
     {
@@ -72,6 +78,10 @@ public class IsolateRanker
         if ( p != null) m_isRunPolymorphism = true;
     }
     
+    
+    
+     public void           setForwardReadSence(boolean b){m_forward_read_sence = b;}
+    public  void           setReverseReadSence(boolean b)   {       m_reverse_read_sence = b;}
     //main calling function : call action per construct
     public void run(Connection conn, ArrayList error_messages) throws BecUtilException, BecDatabaseException,ParseException
     {
@@ -106,7 +116,10 @@ public class IsolateRanker
             ArrayList reads = null;
 
             BaseSequence refsequence = construct.getRefSequenceForAnalysis();
+            refsequence.setId( construct.getRefSeqId());
 
+            
+            
             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
                 //we process only not yet analized isolates
@@ -120,12 +133,11 @@ public class IsolateRanker
                         runRead( read, refsequence, conn);
                     }
                     //check wether number of mutations exseedmax allowed
-                    it.setBlackRank(m_cutoff_spec);
+                    it.setBlackRank(m_cutoff_spec,m_penalty_spec);
                     //calculate rank if not black
                     if (it.getRank() != IsolateTrackingEngine.RANK_BLACK)
                         it.getScore();
-                   
-                    
+ 
                 }
                 
             }
@@ -147,18 +159,28 @@ public class IsolateRanker
         }
     }
     
+    //*****************************************************
     
     //function runs analysis of one read
-    public void  runRead( Read read, BaseSequence refsequence, Connection conn)
+    private void  runRead( Read read, BaseSequence refsequence, Connection conn)
             throws BecUtilException, BecDatabaseException, ParseException
     {
         
         //prepare detectors
         DiscrepancyFinder df = new DiscrepancyFinder();
        
-       
-        df.setSequencePair(new SequencePair( read.getSequence(),  refsequence));
+        // reasign sequence for only trimmed sequence
+        AnalyzedScoredSequence read_sequence =  read.getSequence();
+        read_sequence.setText(read.getTrimmedSequence());
+        //run read
+        
+        df.setSequencePair(new SequencePair(read.getSequence() ,  refsequence));
         df.setInputType(true);
+        //set compliment request
+        if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
+            df.setIsRunCompliment(! m_forward_read_sence );
+        else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
+            df.setIsRunCompliment(! m_reverse_read_sence);
         df.run();
         if (m_isRunPolymorphism)
         {
@@ -171,5 +193,5 @@ public class IsolateRanker
         read.updateScore(conn);
     }
 
-    
+   
 }

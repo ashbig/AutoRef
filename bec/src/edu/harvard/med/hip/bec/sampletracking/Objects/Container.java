@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.5 2003-05-09 19:53:14 Elena Exp $
+ * $Id: Container.java,v 1.6 2003-05-15 18:35:46 Elena Exp $
  *
  * File     	: Container.java
 
@@ -16,7 +16,8 @@ import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.user.*;
 import  edu.harvard.med.hip.bec.coreobjects.endreads.*;
-
+import  edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import sun.jdbc.rowset.*;
 
 /**
@@ -980,6 +981,76 @@ public class Container
         return c;
     }
      */
+    /**
+     * Static method to find the end read oligos for the container
+     *
+     * @param mgc The rearrayed MGC container.
+     * @return The DNA template plate. Return null if not found.
+     */
+      public static Oligo[] findEndReadsOligos(int container_id)throws BecDatabaseException
+      {
+        String sql = "select position, type,orientation, p.primerid as primerid, name, sequence, tm "
+                    +" from vectorprimer v, commonprimer p where p.primerid=v.primerid "
+                    +" and vectorprimerid in (select configid from processconfig where "
+                    +"configtype = "+Spec.VECTORPRIMER_SPEC_INT +" and processid in "
+                    +"(select processid from processresult where resultid = "
+                    + "(select min(resultid) from result where sampleid in(select sampleid from sample where containerid="+container_id
+                    +") and resulttype in ("+Read.TYPE_ENDREAD_REVERSE+","+Read.TYPE_ENDREAD_FORWARD+"))))";
+ 
+        DatabaseTransaction t = null;
+        CachedRowSet crs = null;
+        Container c = null;
+        Oligo forward = null;
+        Oligo reverse = null;
+        Oligo[] oligos = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            while (crs.next())
+            {
+                int position = crs.getInt("position");
+                
+                if (position == Oligo.POSITION_FORWARD)
+                {
+                    forward = new Oligo();
+                    forward.setId(crs.getInt("primerid") );
+                    forward.setType(crs.getInt("type"));//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
+                    forward.setStart(position); // for full sequencing, start of the prime regarding sequence start
+                    forward.setName(crs.getString("name") );
+                    forward.setSequence(crs.getString("sequence"));
+                    forward.setOrientation(crs.getInt("orientation")) ;
+                }
+                else  if (position == Oligo.POSITION_REVERSE)
+                {
+                    reverse = new Oligo();
+                    reverse.setId(crs.getInt("primerid") );
+                    reverse.setType(crs.getInt("type"));//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
+                    reverse.setStart(position); // for full sequencing, start of the prime regarding sequence start
+                    reverse.setName(crs.getString("name") );
+                    reverse.setSequence(crs.getString("sequence"));
+                    reverse.setOrientation(crs.getInt("orientation")) ;
+                }
+            }
+            if (forward != null || reverse != null)
+            {
+                oligos = new Oligo[2];
+                oligos[0] = forward;
+                oligos[1] = reverse;
+            }
+            return oligos;
+            
+        } catch (Exception ex)
+        {
+            System.out.println(ex);
+            throw new  BecDatabaseException("Cannot get common oligos for the plate"+sql+ex.getMessage());
+        } finally 
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+ 
+        
+    }
+     
     
     //**************************************************************//
     //				Test				//
@@ -988,11 +1059,13 @@ public class Container
     // These test cases also include tests for Sample class.
     public static void main(String args[]) throws Exception
     {
+        Oligo[] ol = null;
         try
         {
-          Container container = new Container( 16);
+          //Container container = new Container( 16);
          
-            container.restoreSampleIsolate();
+          //  container.restoreSampleIsolate();
+             ol = Container.findEndReadsOligos(30);
         }
         catch(Exception e)
         {

@@ -10,9 +10,10 @@ import java.util.*;
 import java.io.*;
 import org.apache.regexp.*;
 import edu.harvard.med.hip.bec.engine.*;
-import  edu.harvard.med.hip.bec.bioutil.*;
+//import  edu.harvard.med.hip.bec.bioutil.*;
 import  edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.*;
 /**
  *
  * @author  htaycher
@@ -133,7 +134,9 @@ public class PhredWrapper
                 read.setTrimType(m_trim_type_int);
                 read.setTraceFileName(traceDir + File.separator + traceFileName) ;
                 //if file noise - set it to fail
-                if (read.getTrimStart() == 0 && read.getTrimEnd() == 0)
+                // can be case when trimed start > trimmed end
+                if (read.getTrimStart() == 0 && read.getTrimEnd() == 0 ||
+                        read.getTrimStart() >= read.getTrimEnd() )
                 {
                     if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
                         read.setType(Read.TYPE_ENDREAD_REVERSE_FAIL);
@@ -156,6 +159,7 @@ public class PhredWrapper
                 else if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
                     read.setType(Read.TYPE_ENDREAD_FORWARD_FAIL);
             }
+            read.setScore(Constants.SCORE_NOT_CALCULATED);
         }
         catch(Exception e)
         {

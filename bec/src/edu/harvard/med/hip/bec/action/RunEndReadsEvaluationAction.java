@@ -109,10 +109,11 @@ public class RunEndReadsEvaluationAction extends ResearcherAction
         
         public void run()
         {
+           
             // The database connection used for the transaction
             Connection conn = null;
             ArrayList master_plates = new ArrayList();
-            ArrayList files = new ArrayList();
+           
             
             try
             {
@@ -125,8 +126,11 @@ public class RunEndReadsEvaluationAction extends ResearcherAction
                                             i_user.getId(),
                                             processes,
                                             Constants.TYPE_OBJECTS);
-
-                // Process object create
+               
+               
+              
+                  // Process object create
+                 //create specs array for the process
                 ArrayList specs = new ArrayList();
                 specs.add(i_fullseq_spec);
                 specs.add( i_endreads_spec );
@@ -142,24 +146,34 @@ public class RunEndReadsEvaluationAction extends ResearcherAction
                 processes.add(process);
                  //finally we must insert request
                 actionrequest.insert(conn);
-                // commit the transaction
-                conn.commit();
-
-                //get construct from db
-                
-                ArrayList constructs = Construct.getConstructsFromPlates(i_master_container_ids);
-                IsolateRanker isolate_ranker = null;
-                if (i_isRunPolymorphismFinder)
+               
+                int container_id = -1;
+                //get construct from db// synchronize block here
+                for (int plate_count = 0; plate_count < i_master_container_ids.size(); plate_count++)
                 {
-                    isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs,  i_polymorphism_spec);
+                    container_id = ((Integer)i_master_container_ids.get(plate_count)).intValue();
+                    //get common primers used for reads - assumption each plate run with the same primers
+// this staff will work only for one pair of end read primers !!!!!!!!!!!!
+                    // fix for multipal pairs
+                    Oligo[] oligos = Container.findEndReadsOligos(container_id);
                     
+                    ArrayList constructs = Construct.getConstructsFromPlate(container_id);
+                    IsolateRanker isolate_ranker = null;
+                    if (i_isRunPolymorphismFinder)
+                    {
+                        isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs,  i_polymorphism_spec);
+                    }
+                    else
+                    {
+                         isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs);
+                    }
+                    if (oligos[0] != null)
+                        isolate_ranker.setForwardReadSence( oligos[0].getOrientation() == Oligo.ORIENTATION_SENSE);
+                    if (oligos[1] != null)
+                        isolate_ranker.setReverseReadSence( oligos[1].getOrientation() == Oligo.ORIENTATION_SENSE) ; 
+                    isolate_ranker.run(conn, i_error_messages);
+                    conn.commit();
                 }
-                else
-                {
-                     isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs);
-                }
-                isolate_ranker.run(conn, i_error_messages);
-    
             }
 
             catch(Exception ex)
@@ -171,8 +185,8 @@ public class RunEndReadsEvaluationAction extends ResearcherAction
             {
                 DatabaseTransaction.closeConnection(conn);
             }
-        
-    }
+        }
+    
     
     }
     

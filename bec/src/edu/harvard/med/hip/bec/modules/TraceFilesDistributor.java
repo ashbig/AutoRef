@@ -25,8 +25,11 @@ import edu.harvard.med.hip.bec.file.*;
 public class TraceFilesDistributor
 {
     private ArrayList m_error_messages = null;
+    
     private boolean   m_isError_directory_exists = false;
     private boolean   m_isEmptySamples_directory_exists = false;
+    private ArrayList   m_name_of_files_to_distribute = null;
+    private boolean     m_isInnerReads = false;
     
     /** Creates a new instance of TraceFilesDistributor */
     public TraceFilesDistributor()
@@ -34,9 +37,9 @@ public class TraceFilesDistributor
         m_error_messages= new ArrayList();
     }
     
-    
-    public ArrayList getErrorMesages()
-    { return m_error_messages;}
+    public void      setNameOfFilesToDistibute(ArrayList file_names){m_name_of_files_to_distribute = file_names;}
+    public void      setIsInnerReads(boolean ir){m_isInnerReads = ir;}
+    public ArrayList getErrorMesages()    { return m_error_messages;}
     
      /* outputBaseDir specify the base directory for trace file distribution
       * inputTraceDir specify the directory where the trace files get dumped from sequencer
@@ -52,7 +55,7 @@ public class TraceFilesDistributor
         File sourceDir = new File(inputTraceDir); //trace file directory
         File [] sourceFiles = sourceDir.listFiles();
         
-        TraceFilesDistributor distributor = new TraceFilesDistributor();
+      //  TraceFilesDistributor distributor = new TraceFilesDistributor();
         
         //call file transfer and Phred moduels for each trace file
         //Phred output sequence and trace files are parsed and saved to reads.
@@ -63,7 +66,7 @@ public class TraceFilesDistributor
         for (int count = 0; count < sourceFiles.length; count++)
         {
             traceFile = sourceFiles[count];
-            //check for file format & abi file
+              //check for file format & abi file
             if (! isTraceFile( traceFile,  wrongformatfiles)  )
             {
                 continue;
@@ -75,13 +78,20 @@ public class TraceFilesDistributor
             {
                 continue;
             }
+            // check this file shoud be distibuted
+           if ( m_name_of_files_to_distribute == null ||
+                (m_name_of_files_to_distribute != null &&
+                   !m_name_of_files_to_distribute.contains(traceFile.getName()) 
+                   ))
+                continue;
+          
             
                     
             
             try
             {
                 //create file structure and distribute trace file into chromat_dir
-                destinationFileName = distributor.distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);
+                destinationFileName = distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);//distributor.distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);
                 destinationFile = new File(destinationFileName);
                 if (destinationFile != null)
                 {
@@ -233,7 +243,7 @@ public class TraceFilesDistributor
                 FileOperations.createDirectory(directory_move_to,true);
                 isDirectoryExists= true;
             }
-            FileOperations.moveFile(moving_file, new File(directory_move_to  +File.separator+ moving_file.getName()));
+            FileOperations.moveFile(moving_file, new File(directory_move_to  +File.separator+ moving_file.getName()), false, false);
         }
         catch(Exception e)
         {

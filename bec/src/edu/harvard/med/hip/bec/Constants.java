@@ -15,6 +15,8 @@ import java.text.*;
  */
 public class Constants {
    
+    public static final String DELIM_WHITE_SPACE = " ";
+    
     // constant for workflow (queue) admin group
     public static final String WORKFLOW_GROUP = "Workflow Admin";
     
@@ -28,7 +30,7 @@ public class Constants {
     public static final String RESEARCHER_GROUP="Researcher";
     
     //Constant for the System Admin group
-    public static final String SYSTEM_ADMIN_GROUP="System Admin";
+    public static final String SYSTEM_ADMIN_GROUP="Administrator";
     
     //Constant to denote edit mode
     public static final String EDIT_MODE="edit";
@@ -145,6 +147,10 @@ public class Constants {
     //constants for constructors
     public static final int TYPE_OBJECTS = 1;
     public static final int TYPE_ID = 2;
+    
+    
+    public static final int            SCORE_NOT_CALCULATED = -1;
+    public static final int            SCORE_NOT_CALCULATED_FOR_RANK_BLACK = 0;
     /**
      * get today's date in dd-mmm-yy format
      */

@@ -12,12 +12,15 @@ import org.apache.regexp.*;
 import edu.harvard.med.hip.bec.engine.*;
 import  edu.harvard.med.hip.bec.bioutil.*;
 import  edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 /**
  *
  * @author  htaycher
  */
 public class NeedleWrapper
 {
+    
     private double         m_gapopen = 10;
     private double         m_gapext = 0.5F;
     
@@ -28,10 +31,15 @@ public class NeedleWrapper
     private int         m_ref_id =-1;
     
     private NeedleResult m_needle = null;
-    //parsing
-    private String  m_output_file_dir = "/tmp/";
+    private String  m_output_file_dir = "/tmp/";//parsing
+    //windows
+    private String  m_needle_path = "c:\\EMBOSS-2.5.1\\emboss\\needle.exe  ";
     
+    //unix
   
+    
+    // debug mode 
+    private boolean isWindows = true;
     /** Creates a new instance of Needle */
     public NeedleWrapper()
     {
@@ -57,8 +65,8 @@ public class NeedleWrapper
         m_needle.setQuerySequenceId(m_query_id);
         m_needle.setSubjectSequenceId(m_ref_id);
    
-        String query_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_query,                                                                 "needle", String.valueOf(m_query_id));
-            String ref_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_reference,                                                                "needle", String.valueOf(m_ref_id));           
+        String query_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_query, "needle", String.valueOf(m_query_id));
+            String ref_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_reference, "needle", String.valueOf(m_ref_id));           
   String output_name=m_output_file_dir+"needle"+m_query_id+"_"+m_ref_id+".out";
          
          //  String output_name="/c/tmp/needleout.out";
@@ -88,7 +96,11 @@ public class NeedleWrapper
     {
         String cmd = null;
         
-        cmd = "c:\\EMBOSS-2.5.1\\emboss\\needle.exe  "+q_name+ " "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
+        // for windows /c/file_name
+        if (isWindows)
+            cmd = m_needle_path+" /c" + q_name+ " /c"+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile /c" + output_name;
+        else
+            cmd = m_needle_path+q_name+ " "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
         System.out.println(cmd);
         //blastcmd = "/usr/local/emboss/bin/needle "+q_name+ ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile "+.out ";
         
@@ -147,8 +159,21 @@ public class NeedleWrapper
         {
             NeedleResult res = new NeedleResult();
             NeedleWrapper nl = new NeedleWrapper();
-            nl.setQuerySeq("agcaacacacccagcaccagcattcccaccgctcctgaggtctgaaggcagctcgctgtggtctgagcggtgcggagggaagtgccctaagagatttaaaatgtgagaggtgggaggtgggaggttgggtcctctaggccttcccatcccacgtgcctgcatggagccctagtgctactcagtcatgcccccgccgcaggggtcaggtcac");
-            nl.setRefSeq("agcaacacacccagcaccagcattcccaccgctcctgaggtctgaaggcagctcgctgtggtctgagcggtgcggagggaagtgccctaagagatttaaaatgtgagaggtgggaggtgggaggttgggtcctctaaaccttcccatcccacctgcctgcatggaagtgctactcagtcatgcccccgccgcaggggtcaggtcac");
+            String ref ="ATGGTATACACTTCAACGTACAGACACACTATCGTTGTTGACCTTTTAGAATATTTGGGTATAGTGTCCAACTTAGAAACTTTACAGAGTGCCCGTGAAGATGAAACAAGAAAACCCGAGAATACCGATAAAAAAGAATGTAAACCCGACTATGATATAGAATGCGGTCCTAATAGATCGTGCTCTGAATCCTCTACCGATTCAGACTCTAGTGGTTCACAGATCGAAAAAAATGATCCTTTCAGGGTGGATTGGAACGGCCCCAGTGATCCTGAGAACCCACAAAACTGGCCCCTACTGAAAAAATCATTGGTAGTATTCCAAATAATGTTACTTACTTGCGTCACGTACATGGGATCCTCCATTTACACACCTGGCCAGGAATATATTCAAGAAGAGTTCCACGTTGGTCATGTAGTGGCAACATTAAATCTTTCTTTATATGTTCTTGGTTATGGTCTAGGTCCCATCATTTTTTCACCGCTATCAGAAACTGCACGCTATGGCCGTCTAAATCTGTACATGGTGACTTTATTTTTTTTCATGATCTTTCAAGTTGGTTGTGCTACTGTGCATAACATCGGCGGTTTAATCGTCATGCGTTTCATCAGTGGCATACTGTGCAGCCCATCGTTGGCCACTGGTGGCGGTACAGTGGCTGATATCATTTCACCAGAAATGGTTCCTCTCGTTTTAGGTATGTGGTCAGCCGGTGCTGTTGCTGCGCCAGTCTTGGCTCCCTTACTAGGCGCTGCTATGGTCGATGCTAAAAATTGGCGATTCATATTTTGGTTATTAATGTGGTTAAGTGCTGCCACTTTTATCTTGTTGGCATTTTTCTTCCCTGAAACACAACACCATAATATTTTGTACCGCCGTGCTTTGAAATTGAGAAAAGAAACTGGTGATGACAGGTACTATACTGAACAGGATAAACTCGATAGAGAAGTTGATGCAAGAACTTTTTTGATCAATACTTTGTATAGGCCTCTCAAAATGATTATCAAAGAGCCTGCAATTTTGGCTTTTGATCTCTATATCGCTGTTGCTTATGGTTGTTTCTACTTATTCTTTGAAGCATTCCCTATTGTATTTGTAGGTATATACCACTTCAGCTTAGTTGAAGTTGGCTTGGCCTATATGGGGTTTTGCGTAGGGTGCGTACTTGCTTATGGCTTATTCGGTATTTTAAACATGAGGATTATTGTACCACGTTTTAGAAACGGCACATTCACCCCGGAAGCTTTTTTAATCGTGGCAATGTGTGTCTGCTGGTGCCTGCCTCTGTCTTTGTTCTTATTTGGTTGGACTGCTCGAGTGCATTGGATTTTGCCAGTTATCTCGGAAGTTTTTTTTGTTTTAGCTGTCTTTAACATTTTCCAAGCAACTTTTGCATATTTGGCTACATGCTACCCAAAGTATGTTGCATCCGTTTTTGCAGGCAATGGTTTTTGTCGGGCTTCGTTTGCCTGTGCTTTTCCGTTGTTTGGTAGAGCAATGTATGACAATTTAGCTACTAAGAACTATCCTGTGGCATGGGGTTCGTCCTTAGTGGGGTTCCTAACTTTAGGTCTAGCTATTATCCCGTTTATACTTTATAAGTATGGGCCATCATTACGTACAAGATCTTCGTACACAGAGGAGTAG";
+String query_f ="ATGGCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCAATGCTTTCTTATAATGCCAACTTTGTACAAGAAAGCTGGGTATCCCCGGGAATTGCCATGCTACTCCTCTGTGTACGAAGATCTTGTACGTAATGATGGCCCATACTTATAAAGTATAAACGGGATAATAGCTAGACCTAAAGTTAGGAACCCCACTAAGGACGAACCCCATGCCACAGGATAGTTCTTAGTAGCTAAATTGTCATACATTGCTCTACCAAACAACGGAAAAGCACAGGCAAACGAAGCCCGACAAAAACCATTGCCTGCAAAAACGGATGCAACATACTTTGGGTAGCATGTAGCCAAATATGCAAAAGTTGCTTGGAAAATGTTAAAGACAGCTAAAACAAAAAAACTTCCGAGATAACTGGCAAAATCCAATGCACTCGAGCAGTCCAACCAAATAAGAACAAAGACAGAGGCAGGCACCAGCAGACACACATTGCCACGATTAAAAAAGCTCCCGGGGTGAATGTGTCGTTTCTAAAACGTGGTACAATAATCCTCATGTTTAAAATACCGAATAAGCCATAAGCAAGTACGCACCCTACGCAAAACCCCATATAGGCCAAGCCAACTTCAACTAAGCTGAAGTGGTATATACCTACAAATACAATAGGGGAATGCTTCAAAGAATAAGTAGA";
+            String query_r ="TGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTTCCAGCTGCCACCATGGTATACACTTCAACGTACAGACACACTATCGTTGTTGACCTTTTAGAATATTTGGGTATAGCGTCCAACTTAGAAACTTTACAGAGTGCCCGTGAAGATGAAACAAGAAAACCCGAGAATACCGATAAAAAAGAATGTAAACCCGACTATGATATAGAATGCGGTCCTAATAGATCGTGCTCTGAATCCTCTACCGATTCAGACTCTAGTGGTTCACAGATCGAAAAAAATGATCCTTTCAGGGTGGATTGGAACGGCCCCAGTGATCCTGAGAACCCACAAAACTGGCCCCTACTGAAAAAATCATTGGTAGTATTCCAAATAATGTTACTTACTTGCGTCACGTACATGGGATCCTCCATTTACACACCTGGCCAGGAATATATTCAAGAAGAGTTCCACGTTGGTCATGTAGTGGCAACATTAAATCTTTCTTTATATGTTCTTGGTTATGGTCTAGGTCCCATCATTTTTTCACCGCTATCAGAAACTGCACGCTATGGCCGTCTAAATCTGTACATGGTGACTTTATTTTTTTTCATGATCTTTCAAGTTGGTTGTGCTACTGTGCATAACATCGGCGGCTTAATCGTCATGCGTTTCATC";
+            RefSequence rf = new RefSequence(1188);
+            
+            Read rd_f = new Read(1244);
+            nl.setQuerySeq(rd_f.getSequence().getText());
+            nl.setRefSeq(rf.getCodingSequence());
+            nl.setQueryId(1);
+            nl.setReferenceId(1188);
+            nl.runNeedle();
+            
+            
+            nl.setQuerySeq(query_r);
+            nl.setQueryId(-1);
             nl.runNeedle();
         }catch(Exception e){}
         System.exit(0);

@@ -13,6 +13,7 @@ package edu.harvard.med.hip.bec.modules;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
+import edu.harvard.med.hip.bec.programs.blast.*;
 import edu.harvard.med.hip.bec.export.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.engine.*;
@@ -27,14 +28,18 @@ import java.math.BigDecimal;
 
 public class DiscrepancyFinder
 {
+    public static final int USE_BLAST = 0;
+     public static final int USE_NEEDLE = 1;
     
     //store input & output blast files
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/blastoutput/";
     
+    
     private SequencePair m_seqpair = null;
     private ArrayList    m_seqpairs = null;
     private double      m_identitycutoff = 60.0;
+    private boolean      m_isRunCompliment = false;
     
     private static final int IDENTITY_100 = 0;
     private static final int IDENTITY_60 = 1;
@@ -43,6 +48,7 @@ public class DiscrepancyFinder
      
      private boolean m_debug = false;
      private boolean  m_endreads_analysis = false;
+   
     
     /** Creates a new instance of DescrepancyFinder */
      public DiscrepancyFinder(SequencePair pair)
@@ -59,8 +65,11 @@ public class DiscrepancyFinder
     
     public void addSequencePair(SequencePair pair)    {        m_seqpairs.add(  pair);    }
     public void setSequencePair(SequencePair pair)    {        m_seqpair =  pair;    }
-    
+    // parameter requeres run query on compliment of query sequence
+    // needle is not capable on converting sequence for finding better aligment
+    public void setIsRunCompliment(boolean b){m_isRunCompliment = b;}
     public void setDebug(boolean b){ m_debug =b;}
+   
     public void setInputType(boolean v){m_endreads_analysis = v;}
     public void setIdentityCutoff(double d)
     { m_identitycutoff = d;}
@@ -74,10 +83,10 @@ public class DiscrepancyFinder
             {
                 SequencePair pr = (SequencePair) m_seqpairs.get(ind);
                 analizeUsingNeedle(pr);
+                
             }
         }
         else
-            
         {
             analizeUsingNeedle(m_seqpair);
         }
@@ -90,10 +99,7 @@ public class DiscrepancyFinder
     private void analizeUsingNeedle(SequencePair pair)throws  BecUtilException
     {
         NeedleResult res_needle = null;
-        if (m_debug )
-           res_needle= runNeedleTest(pair);
-        else
-           res_needle =  runNeedle( pair);
+        res_needle =  runNeedle( pair);
         ArrayList mutations = new ArrayList();
         //run blast n
         if (res_needle.getIdentity() != 100.0)
@@ -105,7 +111,6 @@ public class DiscrepancyFinder
             }
             else// not 100 on nucleotide level
             {
-               
                 mutations = run_analysis(res_needle, pair.getQuerySequence().getId(), pair.getRefSequence().getId() );
                 pair.getQuerySequence().setDiscrepancies(mutations);
                 pair.getQuerySequence().setStatus(BaseSequence.STATUS_ANALIZED_YES_DISCREPANCIES);
@@ -119,8 +124,69 @@ public class DiscrepancyFinder
         
     }
     
+    /*
+     //main function run full analysis for the experimental sequence
+    private void analizeUsingBlast2Seq(SequencePair pair)throws  BecUtilException
+    {
+        BlastResult res_blast2seq = null;
+       
+        res_blast2seq =  runBlast( pair);
+        if (res_blast2seq.getAligments() == null || res_blast2seq.getAligments().size() == 0)
+        {
+            return ;
+        }
+        BlastAligment bl_aligment = (BlastAligment)res_blast2seq.getAligments().get(0) ;
+        ArrayList mutations = new ArrayList();
+        //run blast n
+        if (bl_aligment.getIdentity() != 100.0)
+        {
+            if (!m_endreads_analysis && bl_aligment.getIdentity() <= m_identitycutoff)
+            {
+                pair.getQuerySequence().setStatus(BaseSequence.STATUS_NOMATCH);
+               
+            }
+            else// not 100 on nucleotide level
+            {
+               
+                mutations = run_analysis(bl_aligment, pair.getQuerySequence().getId(), pair.getRefSequence().getId() );
+                pair.getQuerySequence().setDiscrepancies(mutations);
+                pair.getQuerySequence().setStatus(BaseSequence.STATUS_ANALIZED_YES_DISCREPANCIES);
+            }
+        }
+        else//identity 100%
+        {
+            pair.getQuerySequence().setStatus(BaseSequence.STATUS_ANALIZED_NO_DISCREPANCIES);
+        }
+        
+        
+    }
+     **/
+    
     //function runs needle and parse output
     private NeedleResult runNeedle(SequencePair pair) throws BecUtilException
+    {
+        //run needle
+        NeedleWrapper nw = new NeedleWrapper();
+        nw.setQueryId(pair.getQuerySequence().getId());
+        nw.setReferenceId(pair.getRefSequence().getId());
+        if ( !m_isRunCompliment )
+            nw.setQuerySeq(pair.getQuerySequence().getText());
+        else
+            nw.setQuerySeq( SequenceManipulation.getCompliment(pair.getQuerySequence().getText()));
+        
+        nw.setRefSeq(pair.getRefSequence().getText());
+        nw.setGapOpen(10.0);
+        nw.setGapExtend(0.5);
+        nw.setOutputFileDir(OUTPUT);
+        
+        NeedleResult res_needle =  nw.runNeedle();
+        return res_needle;
+       
+    }
+    
+     //function runs needle and parse output
+    /*
+    private BlastResult runBlast(SequencePair pair) throws BecUtilException
     {
         //run needle
         NeedleWrapper nw = new NeedleWrapper();
@@ -133,11 +199,13 @@ public class DiscrepancyFinder
         nw.setGapExtend(0.5);
         nw.setOutputFileDir(OUTPUT);
         
-        NeedleResult res_needle =  nw.runNeedle();
-        return res_needle;
+        BlastResult res_blast = null;// nw.runNeedle();
+        return res_blast;
        
     }
+     **/
     
+    /**
      //function runs needle and parse output
     private NeedleResult runNeedleTest(SequencePair pair) throws BecUtilException
     {
@@ -149,9 +217,7 @@ public class DiscrepancyFinder
         return res_needle;
        
     }
-    
-    
-    
+    **/
     public ArrayList  run_analysis(NeedleResult res_needle,  int exper_sequence_id, int refseq_id)
     
     {
@@ -160,12 +226,46 @@ public class DiscrepancyFinder
         int length = 0;
         //check output of needle
         if (res_needle.getQuery() == null || res_needle.getSubject() == null) return null;
-       char[] sequence_query_n = res_needle.getQuery().toCharArray();
-       char[] sequence_subject_n = res_needle.getSubject().toCharArray();
-         
-       
-       length = ( sequence_query_n.length >= sequence_subject_n.length) ?
-                sequence_query_n.length -1 : sequence_subject_n.length -1;
+        //skip what ever before subject sequence started
+        
+        char[] sequence_query_n = res_needle.getQuery().toCharArray();
+        char[] sequence_subject_n = res_needle.getSubject().toCharArray();
+        int subject_start = Algorithms.findFirstLetter(sequence_subject_n);
+        return run_analysis( sequence_query_n,  sequence_subject_n,subject_start, exper_sequence_id, refseq_id);
+     }
+    
+    
+    /*
+    public ArrayList  run_analysis(BlastAligment blast_aligmnet,  int exper_sequence_id, int refseq_id)
+    
+    {
+        ArrayList res = new ArrayList();
+        
+        int length = 0;
+        //check output of needle
+        if (blast_aligmnet.getQSequence() == null || blast_aligmnet.getSSequence() == null) return null;
+        //skip what ever before subject sequence started
+        
+        char[] sequence_query_n = blast_aligmnet.getQSequence().toCharArray();
+        char[] sequence_subject_n = blast_aligmnet.getSSequence().toCharArray();
+        int subject_start = blast_aligmnet.getSStart();//Algorithms.findFirstLetter(sequence_subject_n);
+        return run_analysis( sequence_query_n,  sequence_subject_n,subject_start, exper_sequence_id, refseq_id);
+     }
+    
+    */
+    
+    private ArrayList  run_analysis(char[] sequence_query_n, char[] sequence_subject_n,
+                                    int subject_start,
+                                    int exper_sequence_id, int refseq_id)
+    
+    {
+        ArrayList res = new ArrayList();
+        
+        int length = 0;
+    
+        length = ( sequence_query_n.length - subject_start >= sequence_subject_n.length - subject_start) ?
+                sequence_query_n.length -1 - subject_start : 
+                    sequence_subject_n.length -1 - subject_start;
         
         
         boolean isInMutation = false;
@@ -182,8 +282,16 @@ public class DiscrepancyFinder
         
         try
         {
-            for (int count = 0; count < length; count++ )
+            for (int count = subject_start; count < length; count++ )
             {
+               if ( sequence_query_n[count] != sequence_subject_n[count ]
+                        && sequence_query_n[count] ==' ' )
+                {
+                    s_position++;
+                     if (s_position  % 3 == 1)  codon_number++;
+                    continue;
+                    //just loop
+                }
                 //preserve sequence and position
                 if ( ! isWrongChar(sequence_query_n[count])  )
                 {
@@ -200,35 +308,44 @@ public class DiscrepancyFinder
                 
                 if ( sequence_query_n[count] == sequence_subject_n[count ])
                 {
+                      // if either empty - get out - aligment finished - force last mutation to close up
+                    if (sequence_query_n[count] == ' ' || sequence_query_n[count] == ' ' )
+                    {
+                       isInMutation = true;
+                    }
                     // do nothing
                     if (isInMutation)//mutation finished
                     {
+                        
                         mut_count++;
                         //get upstream string
                         int upstream_start = ( (q_position - q_allel.length() - RNAMutation.RNA_STREAM_RANGE) > 0 ) ? q_position - q_allel.length() - RNAMutation.RNA_STREAM_RANGE: 0;
                         String up = q_sequence.toString().substring( upstream_start, q_position - q_allel.length() - 1);
                         //get downstream string
                         int pos = count; String dn = ""; int dn_length=0;
+                       
                         while(true)
                         {
+                            
                             if ( ! isWrongChar( sequence_query_n[pos] ))
                             {
-                                dn += sequence_query_n[pos] ;
+                                 dn += sequence_query_n[pos] ;
+                               
                                 dn_length++;
-                                if (dn_length == RNAMutation.RNA_STREAM_RANGE || pos == sequence_query_n.length - 1)
+                                if (dn_length == RNAMutation.RNA_STREAM_RANGE || pos == sequence_query_n.length - 1
+                                 || sequence_query_n[pos+1] ==' ' )
                                     break;
                             }
                             pos++;
                         }
-                        
+                         //System.out.println(count);
                         //  int codon_start = 3 * ( (int)Math.ceil( (count - s_allel.length() )/ 3 ) );
                         
-                        String cori = new String(sequence_subject_n, ( codon_start_mutation - 1) * 3  , 3);
-                        String corm = new String(sequence_query_n, (codon_start_mutation -1 ) * 3  , 3); //codon mutant
+                        String cori = new String(sequence_subject_n,subject_start + ( codon_start_mutation - 1) * 3  , 3);
+                        String corm = new String(sequence_query_n, subject_start+(codon_start_mutation -1 ) * 3  , 3); //codon mutant
                         cori =  cori.replace( ' ','-');
                         corm = corm.replace( ' ','-');
-                        
-                        
+                         
                         cur_rna_mutation = new RNAMutation();
                         
                         cur_rna_mutation.setPolymFlag(RNAMutation.FLAG_POLYM_NOKNOWN);
@@ -249,7 +366,7 @@ public class DiscrepancyFinder
                         cur_rna_mutation.getChangeType ( ) ;
                        
                           
-                        System.out.println(cur_rna_mutation.toString());
+                        System.out.println("New Mutation\n\n"+cur_rna_mutation.toString());
                         res.add(cur_rna_mutation);
                         if (    cur_rna_mutation.getType() != Mutation.TYPE_RNA_SILENT )
                         {
@@ -267,13 +384,20 @@ public class DiscrepancyFinder
                             
                             System.out.println(cur_aa_mutation.toString());
                         }
-                        
+                      
                         mut_start = -1;
                         s_allel="";
                         q_allel="";
                         isInMutation =false;
+                        // force get out on end of aligment
+                        if (sequence_query_n[count] == ' ' || sequence_query_n[count] == ' ' )
+                        {
+                           return res;
+                        }
                     }
                 }
+               
+                
                 else //not equal
                 {
                     isInMutation = true;
@@ -302,6 +426,8 @@ public class DiscrepancyFinder
     }
     
     
+    
+    
     private  boolean isWrongChar(char ch)
     {
         if (ch == '-' || ch =='['  || ch ==' ')
@@ -316,14 +442,18 @@ public class DiscrepancyFinder
         
         String seq = "TTTTTTTTTTTTTTGAATTTGATAATCCTCCTTTTATTcCATATTAAACTTTAAAATTTGTACCACATTATTAAAGTATTACTTTTACTCACAGTAGTATTATACATAGACTTAACACAATTTTTAAAAATGTGTTTACTTAAAACAATATAATTCTCCTTTACAAAAGCAACTTTATATAAAATGTTTGGCTTAAGACTGTCATTGCTATTATGCCTTTGAATGAAATTCCACTCTTTCGCCTCCATTGTCCAGAAACAGGCACATATCAGCTTGTTTTCTTTAATGAATATTCTGTAACAAGTTCCTGAAGTTTTCTAATTCTTTCACACTTGTAGAAATTCTTCCAAATGCGTTGAATAATGATACTATTTCTTGTCTGGTTAGATGGAATTCATAACTAGGTCCACTTTCTGGCATATTTGCTATCAATTTCTCAGAAAATAAGATCTTCAGAGCAGTGCCCAAACCCTGAGTCTGAAGCTTTCCCCACAGACGACATTTAAAACAACCAACACAATCCATAATT";
         // String seq="GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTATCAGTCGACACCATGCGCGAGATCGTGCACATCCAGGCGGGCCAGTGCGGCAACCAGATCGGCGCCAAGTTTTGGGAGGTCATCAGTGATGAGCATGGGATTGACCCCACTGGCAGTTACCATGGAGACAGTGATTTGCAGCTGGAGAGAATCAATGTTTACTACAATGAAGCCACTGGTAACAAATATGTTCCTCGGGCCATCCTCGTGGATCTGGAGCCAGGCACGATGGATTCGGTTAGGTCTGGACCATTCGGCCAGATCTTCAGACCAGACAATTTCGTGTTTGGCCAGAGTGGAGCCGGGAATAACTGGGCCAAGGGCCACTACACAGAGGGAGCCGAGCTGGTCGACTCGGTCCTGGATGTGGTGAGGAAGGAGTCAGAGAGCTGTGACTGTCTCCAGGGCTTCCAGCTGACCCACTCTCTGGGGGGCGGCACGGGGTCCGGGATGGGCACCCTGCTCATCAGCAAGATCCGGGAAGAGTACCCAGACCGCATCATGAACACCTTCAGCGTCATGCCCTCACCCAAGGTGTCAGACACGGTGGTGGAGCCCTACAACGCCACCCTCTCGGTCCACCAGCTGGTGGAAAACACAGATGAAACCTACTGCATTGACAACGAGGCCCTGTATGACATCTGCTTCCGCACCCTGAAGCTGACCACCCCCACCTACGGGGACCTCAACCACCTGGTGTCGGCCACCATGAGCGGGGTCACCACCTGCCTGCGCTTCCCGGGCCAGCTGAACGCAGACCTGCGCAAGCTGGCGGTGAACATGGTGCCCTTCCCTCGCCTGCACTTCTTCATGCCCGGCTTCGCGCCCCTGACCAGCCGGGGCAGCCAGCAGTACCGGGCGCTCACGGTGCCCGAGCTCACCCAGCAGATGTTCGACTCCAAGAACATGATGGCCGCCTGCGACCCGCGCCACGGCCGCTACCTGACGGTGGCTGCCATCTTCCGGGGCCGCATGTCCATGAAGGAGGTGGACGAGCAGATGCTCAACGTGCAGAACAAGAACAGCAGCTACTTCGTGGAGTGGATCCCCAACAACGTGAAGACGGCCGTGTGCGACATCCCGCCCCGCGGCCTGAAGATGTCGGCCACCTTCATCGGCAACAGCACGGCCATCCAGGAGCTGTTCAAGCGCATCTCCGAGCAGTTCACGGCCATGTTCCGGCGCAAGGCCTTCCTGCACTGGTACACGGGCGAGGGCATGGACGAGATGGAGTTCACCGAGGCCGAGAGCAACATGAACGACCTGGTGTCCGAGTACCAGCAGTACCAGGACGCCACGGCCGACGAACAAGGGGAGTTCGAGGAGGAGGAGGGCGAGGACGAGGCTTTGGGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC";
-          String queryFile = "c:\\blastoutput\\needle1203_-1.out";
+          String queryFile = "c:\\blastoutput\\needle1204_1188.out";
         try
         {
              NeedleResult res = new NeedleResult();
              DiscrepancyFinder d =new DiscrepancyFinder(new ArrayList());
             NeedleParser.parse(queryFile,res);
-            ArrayList m = d.run_analysis( res,  -1, 1203);
-           System.out.println(m.size());
+            ArrayList m = d.run_analysis( res,  1188, 1204);
+            
+            System.out.println("---------------------");
+            queryFile = "c:\\blastoutput\\needle1203_1188.out";
+             NeedleParser.parse(queryFile,res);
+             m = d.run_analysis( res,  1188, 1203);
       
         }catch(Exception e)
         {
