@@ -55,7 +55,8 @@ public class MGCPlateHandleAction extends ResearcherAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-                
+        int projectid = ((Integer)(request.getAttribute("projectid"))).intValue();
+        
         try {
             Workflow workflow = new Workflow(Workflow.MGC_PLATE_HANDLE_WORKFLOW);
             Vector flow = workflow.getFlow();

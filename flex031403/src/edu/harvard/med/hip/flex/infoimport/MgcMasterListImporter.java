@@ -91,7 +91,7 @@ public class MgcMasterListImporter {
         catch(Exception e) {return false;}
         
         try {
-            
+            line = in.readLine();
             while((line = in.readLine()) != null) 
             {
                 StringTokenizer st = new StringTokenizer(line, DILIM);
@@ -316,7 +316,7 @@ public class MgcMasterListImporter {
     //****************************Testing*******************************
     
     public static void main(String args[]) {
-        String file = "C:\\mgc_plate_info.txt";
+        String file = "G:\\Users\\HIP\\HTaycher\\docs\\mgc_plate_info.txt";
         InputStream input;
         
         try {

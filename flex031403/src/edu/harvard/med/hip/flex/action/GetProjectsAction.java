@@ -74,7 +74,7 @@ public class GetProjectsAction extends ResearcherAction {
             if(Constants.IMPORT_SEQUENCES.equals(forwardName)) {
                 return (mapping.findForward("success_import_sequence"));
             }
-                
+            
             request.setAttribute("forwardName", forwardName);
             
             return (mapping.findForward("success"));

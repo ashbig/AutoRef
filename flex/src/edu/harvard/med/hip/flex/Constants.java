@@ -153,6 +153,9 @@ public class Constants {
     //forward name used for import sequences after select the workflow.
     public static final String IMPORT_SEQUENCES = "IMPORT_SEQUENCES";
     
+    //forward name used for mgc plate handling.
+    public static final String MGC_PLATE_HANDLE = "MGC_PLATE_HANDLE";
+    
     /** Creates new Constants */
     private Constants() {
     }
