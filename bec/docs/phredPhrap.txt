@@ -53,7 +53,10 @@
 
 GetOptions("clonepath=s" => \$clone_path,
 		"vectorfile=s" => \$vectorfilename,
-		"outputfilename=s" => \$outputfilename);
+		"outputfilename=s" => \$outputfilename,
+		"trim_score=i" => \$trim_score,
+		"trim_first_base=i" => \$trim_first_base,
+		"trim_last_base=i" => \$trim_last_base,);
 $chromatDirPath = $clone_path."/chromat_dir";
 $phdDirPath = $clone_path."/phd_dir";
 #construct output file path
@@ -96,6 +99,10 @@ else
 {
 	$szDefaultVectorFile = $szVectorFilePath.$vectorfilename;
 }
+$trim_score_value = 0;$trim_first_base_value = 0;$trim_last_base = 0;
+if ($trim_score ne "") 	 { $trim_score_value = $trim_score ;}
+if ( $trim_first_base ne "") 	{ $trim_first_base_value = $trim_first_base ;}
+if ($trim_last_base ne "") 	{$trim_last_base_value = $trim_last_base ;}
 
 print "\n\n--".$szDefaultVectorFile."-----\n";
 # change this to reflect wherever you put the phredpar.dat file
@@ -499,7 +506,8 @@ print "--------------------------------------------------------\n\n\n";
 
 #$status = `/usr/bin/sh -c \"$java_pass -cp $java_trimming_script $clone_path  10\"`;
 #!system( "$java_pass -cp $java_trimming_script $clone_path  10 ") || die "some problem running crossmatch";
-!system("$c_trimming_script $clone_path./phd_dir/  10 50 700") ||  die "some problem running phd2fasta";
+#print "$c_trimming_script $clone_path./phd_dir/  $trim_score $trim_first_base trim_last_base ";
+!system("$c_trimming_script $clone_path./phd_dir/  $trim_score_value $trim_first_base_value trim_last_base_value ") ||  die "some problem running phd2fasta";
 
 
 
