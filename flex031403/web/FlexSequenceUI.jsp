@@ -14,8 +14,8 @@
  
  
  The following information is used by CVS
- $Revision: 1.1 $
- $Date: 2001-05-31 15:06:53 $
+ $Revision: 1.2 $
+ $Date: 2001-06-04 15:39:54 $
  $Author: dongmei_zuo $
  
  ******************************************************************************
@@ -46,28 +46,53 @@
 <H1><CENTER>HIP <bean:message key="flex.name"/> Database</CENTER></H1>
 <HR><BR>
 <TABLE WIDTH=80% ALIGN=CENTER>
-<TR><TD><B>Flex ID: </B><bean:write name="FLEX_SEQUENCE" property="id"/></TD></TR>
-<TR><TD COLSPAN=2><B>Sequence Description: </B> </B><bean:write name="FLEX_SEQUENCE" property="description"/></TD></TR>
-<TR><TD><B>Sequence Length: </B></B><bean:write name="FLEX_SEQUENCE" property="sequenceLength"/></TD></TR>
-<TR><TD><B>GI Number: </B></B><bean:write name="FLEX_SEQUENCE" property="gi"/></TD>
-<TD><B>Accession Number: </B></B><bean:write name="FLEX_SEQUENCE" property="accession"/></TD></TR>
-<TR><TD><B>Start Position: </B><bean:write name="FLEX_SEQUENCE" property="cdsstart"/></TD>
-<TD><B>Stop Position: </B><bean:write name="FLEX_SEQUENCE" property="cdsstop"/></TD></TR>
-<TR><TD><B>CDS Length: </B><bean:write name="FLEX_SEQUENCE" property="cdslength"/></TD></TR>
-<TR><TD><B>Species: </B><bean:write name="FLEX_SEQUENCE" property="species"/></TD></TR>
-<TR><TD><B>Quality: </B><bean:write name="FLEX_SEQUENCE" property="quality"/></TD></TR>
-<TR><TD><B>Date Added: </B><bean:write name="FLEX_SEQUENCE" property="dateadded"/></TD></TR>
-<TR><TD><B>GC content: </B><bean:write name="FLEX_SEQUENCE" property="gccontent"/></TD></TR>
-<TR><TD><B>Sequence: </B></TD></TR>
-<TR><TD COLSPAN=2><PRE>
-<%--
-make the cds region in red.
-NOTE: Sequence indexes start at 1 while String indexes start at 0
---%>
-<bean:write name="FASTA_COLOR_SEQUENCE" filter="false"/>
+    <TR>
+        <TD><B>Flex ID: </B><bean:write name="FLEX_SEQUENCE" property="id"/></TD>
+    </TR>
+    <TR>
+        <TD COLSPAN=2><B>Sequence Description: </B> </B><bean:write name="FLEX_SEQUENCE" property="description"/></TD>
+    </TR>
+    <TR>
+        <TD><B>Sequence Length: </B></B><bean:write name="FLEX_SEQUENCE" property="sequenceLength"/></TD>
+    </TR>
+    <TR>
+        <TD><B>GI Number: </B></B><bean:write name="FLEX_SEQUENCE" property="gi"/></TD>
+        <TD><B>Accession Number: </B></B><bean:write name="FLEX_SEQUENCE" property="accession"/></TD></TR>
+    <TR>
+        <TD><B>Start Position: </B><bean:write name="FLEX_SEQUENCE" property="cdsstart"/></TD>
+        <TD><B>Stop Position: </B><bean:write name="FLEX_SEQUENCE" property="cdsstop"/></TD>
+    </TR>
+    <TR>
+        <TD><B>CDS Length: </B><bean:write name="FLEX_SEQUENCE" property="cdslength"/></TD>
+    </TR>
+    <TR>
+        <TD><B>Species: </B><bean:write name="FLEX_SEQUENCE" property="species"/></TD>
+    </TR>
+    <TR>
+        <TD><B>Quality: </B><bean:write name="FLEX_SEQUENCE" property="quality"/></TD>
+    </TR>
+    <TR>
+        <TD><B>Date Added: </B><bean:write name="FLEX_SEQUENCE" property="dateadded"/></TD>
+    </TR>
+    <TR>
+        <TD><B>GC content: </B><bean:write name="FLEX_SEQUENCE" property="gccontent"/></TD>
+    </TR>
+    <TR>
+        <TD><B>Sequence: </B></TD>
+    </TR>
+    
+    <TR><TD COLSPAN=2>
+        <PRE>
+        <%--
+        make the cds region in red.
+        NOTE: Sequence indexes start at 1 while String indexes start at 0
+        --%>
+            <bean:write name="FASTA_COLOR_SEQUENCE" filter="false"/>
 
 
-</PRE></TD></TR>
+            </PRE>
+        </TD>
+    </TR>
 </TABLE>
 </body>
 </html>
