@@ -223,6 +223,7 @@ public class Constants {
     public static final int PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
     public static final int            PROCESS_ACTIVATE_CLONES = 59;
     public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 60;
+    public static final int             PROCESS_CREATE_REPORT = 61;
 
        //62
        
