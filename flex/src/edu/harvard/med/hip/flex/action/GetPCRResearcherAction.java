@@ -71,8 +71,8 @@ public class GetPCRResearcherAction extends ResearcherAction
         
         boolean isClosedOnly = false;
         boolean isOpenOnly = false;
-        if ( projectid == Project.YEAST)    isClosedOnly = true;
-        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE ) isOpenOnly = true;
+        if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE)    isClosedOnly = true;
+        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION) isOpenOnly = true;
         
         
         // Validate the researcher barcode.
