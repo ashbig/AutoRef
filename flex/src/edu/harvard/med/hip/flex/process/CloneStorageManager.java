@@ -123,9 +123,9 @@ public class CloneStorageManager {
         
     public void sendEmail(boolean isSuccessful, List ids) {
         String msg = "===========================================================\n";
-        String to = "dzuo@hms.harvard.edu";
-        String from = "dzuo@hms.harvard.edu";
-        String cc = "dzuo@hms.harvard.edu";
+        String to = "dongmei_zuo@hms.harvard.edu";
+        String from = "dongmei_zuo@hms.harvard.edu";
+        String cc = "dongmei_zuo@hms.harvard.edu";
         String subject = "CloneStorage table populating - ";
         
         java.util.Date d = new java.util.Date();
