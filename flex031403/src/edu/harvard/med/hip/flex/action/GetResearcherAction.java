@@ -32,6 +32,7 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.GetResearcherBarcodeForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
+import edu.harvard.med.hip.flex.util.PrintLabel;
 
 /**
  *
@@ -169,8 +170,9 @@ public class GetResearcherAction extends ResearcherAction{
         
             // Print the barcode
             for(int i=0; i<newContainers.size(); i++) {
-                Container newContainer = (Container)newContainers.elementAt(i);
-                System.out.println("Printing barcode: "+newContainer.getLabel());
+                Container newContainer = (Container)newContainers.elementAt(i);            
+                String status = PrintLabel.execute(newContainer.getLabel());
+                System.out.println("Printing barcode: "+status);
             }
 
             // Remove everything from the session.

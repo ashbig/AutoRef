@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.11 2001-07-09 22:06:26 dzuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.12 2001-07-10 15:48:49 dzuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -78,7 +78,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         "l.locationdescription as description,"+
         "c.label as label, " +
         "c.platesetid as platesetid, "+
-        "to_char(q.dateadded, 'fmMM-DD-YYYY') as dateadded\n" +
+        "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
         "from containerheader c, containerlocation l, queue q\n" +
         "where c.containerid = q.containerid\n" +
         "and c.locationid = l.locationid\n"+
@@ -109,7 +109,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         "l.locationdescription as description,"+
         "c.label as label, " +
         "c.platesetid as platesetid, "+
-        "to_char(q.dateadded, 'fmMM-DD-YYYY') as dateadded\n" +
+        "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
         "from containerheader c, containerlocation l, queue q, "+
         "processobject p, processexecution x\n" +
         "where c.containerid = q.containerid\n" +
