@@ -95,10 +95,12 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.SAMPLE_ISOLATE_RANKER_REPORT ||
                forwardName == Constants.READ_REPORT_INT ||
                forwardName == Constants.CONSTRUCT_DEFINITION_REPORT ||
-               forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT 
+               forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT ||
+               forwardName == Constants.STRETCH_REPORT_INT 
                )
                {
-                    id = Integer.parseInt( (String) request.getParameter("ID"));
+                   String str_id = (String) request.getParameter("ID");
+                   if ( str_id != null)  id = Integer.parseInt(str_id);
                        
                 }
             switch  (forwardName)
@@ -237,10 +239,17 @@ public class Seq_GetItemAction extends ResearcherAction
                     String discrepancy_report_for_endread = null;
                     ArrayList end_reads = createListOfUIReads(istr,discrepancy_report_for_endread, sample.getRefSequenceId());
                     ArrayList  clone_sequences = createListOfUICloneSequences(istr, sample.getRefSequenceId());
-                   
+                    ArrayList contigs = null;
+                    StretchCollection strcol = null;
+                    if ( clone_sequences== null || clone_sequences.size() < 1)
+                    {
+                        strcol = StretchCollection.getByIsolateTrackingId(id);
+                        contigs = StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_ISOLATETRASCKING_ID);
+                    }
                     request.setAttribute("container_label", request.getParameter("container_label"));
                     request.setAttribute("sample", sample);
                     request.setAttribute("end_read", end_reads);
+                    request.setAttribute("contigs", contigs);
                     request.setAttribute("clone_sequences",clone_sequences);
                     request.setAttribute("discrepancy_report_for_endread",discrepancy_report_for_endread);
                     return (mapping.findForward("display_sample_isolate_ranker_report"));
@@ -270,16 +279,33 @@ public class Seq_GetItemAction extends ResearcherAction
                     return (mapping.findForward("display_read_report"));
                     
                 }
+                case Constants.STRETCH_REPORT_INT:
+                {
+                    Stretch stretch = Stretch.getById(id);
+                    ArrayList discrepancies = null;
+                    String discrepancy_report_html = null;
+                    if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG || stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY)
+                    {
+                        discrepancies = stretch.getSequence().getDiscrepancies();
+                        discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.LINKER_5P, true);
+                         discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+                         discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.LINKER_3P, true);
+                         if (discrepancy_report_html.equals(""))
+                            discrepancy_report_html="<tr><td colspan=3><strong>No discrepancies</strong></td></tr>";
+                    }
+                    request.setAttribute("stretch", stretch);
+                    request.setAttribute("discrepancy_report",discrepancy_report_html);
+                    return (mapping.findForward("display_stretch_report"));
+                }
+         
                 case Constants.REFSEQUENCE_DEFINITION_INT :
                 {
-                   
                     RefSequence refsequence = new RefSequence(id);
                     request.setAttribute("refsequence",refsequence);
                     return (mapping.findForward("display_refsequence_details"));
                 }
                 case Constants.SCOREDSEQUENCE_DEFINITION_INT:
                 {
-                  
                     ScoredSequence scoredsequence = new ScoredSequence(id);
                     if (request.getParameter("trimstart") != null)
                     {
@@ -296,9 +322,21 @@ public class Seq_GetItemAction extends ResearcherAction
                 case   Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT :
                 {
                    // System.out.println("L");
-                    AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(id);
+                    if ( id == -1)//display subset of discrepancies
+                    {
+                        ArrayList discrepancies = new ArrayList();
+                        String discr_ids = (String) request.getParameter("DISCRIDS");
+                        discr_ids = Algorithms.replaceChar( discr_ids, '_', ',');
+                        if ( discr_ids.charAt(discr_ids.length() - 1) == ',') discr_ids = discr_ids.substring(0, discr_ids.length() - 1);
+                        discrepancies = Mutation.getByIds(discr_ids);
+                        request.setAttribute("discrepancies",discrepancies);
+                    }
+                    else
+                    {
+                        AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(id);
+                        request.setAttribute("sequence",sequence);
+                    }
                    // System.out.println("1L");
-                    request.setAttribute("sequence",sequence);
                     return (mapping.findForward("display_discrepancyreport"));
                 }
                 case Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT:
@@ -573,7 +611,8 @@ public class Seq_GetItemAction extends ResearcherAction
          return uireads;
     }
     
-    
+   
+        
      //for sample report: converts end reads list int o uireads
     private ArrayList  createListOfUICloneSequences(IsolateTrackingEngine istr,int ref_seqid)
                          throws BecDatabaseException
@@ -619,5 +658,29 @@ public class Seq_GetItemAction extends ResearcherAction
         
     }
                    
-  
+  public static void main(String args[])
+    {
+        try
+        {
+    //  ArrayList a = StretchCollection.createListOfUIContigs( 6206, Constants.ITEM_TYPE_ISOLATETRASCKING_ID) ;
+    Hashtable stretch_collections = new Hashtable();
+                     ArrayList items = Algorithms.splitString("123 6345 6947");
+                     StretchCollection strcol = null; int cloneid = 0;
+                     for (int index = 0; index < items.size();index++)
+                     {
+                         cloneid = Integer.parseInt( (String) items.get(index));
+                       //  strcol = StretchCollection.getByCloneId(cloneid);
+                         if ( strcol != null) 
+                         {
+                             strcol.setCloneId(cloneid);
+                             strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                              stretch_collections.put( (String) items.get(index), strcol);
+                         }
+                         else
+                              stretch_collections.put( (String) items.get(index), "");
+                        
+                     }
+        }
+        catch(Exception e){}
+      }
 }

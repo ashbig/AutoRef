@@ -145,6 +145,21 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
   </tr>
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_ALL_INT  %> >
+      View all contig collections 
+      </font></td>
+  </tr>
+ <tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_INT  %> >
+      View contigs 
+      <P></font></td>
+  </tr>
+
+
+
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_ORDER_INTERNAL_PRIMERS %> >
       Order internal primers</font></td>
   </tr>
@@ -158,6 +173,14 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
       Review oligo plate</font></td>
   </tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_FIND_GAPS %> >
+      Find gaps in clone coverage (settings required)</font></td>
+  </tr>
+
+
+
   <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Clone 
       Evaluation</font></b></td>
@@ -186,6 +209,11 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DECISION_TOOL%>>
       Run decision tool (settings required) </font> <P></td>
+  </tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.LQR_COLLECTION_REPORT_INT%>>
+      View Low Quality Regions for clone sequences </font> <P></td>
   </tr>
  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 

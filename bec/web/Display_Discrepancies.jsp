@@ -42,9 +42,15 @@
   </center>
 </div>
 <p></p>
-<% AnalyzedScoredSequence sequence = (AnalyzedScoredSequence)request.getAttribute("sequence") ;%>
+<% AnalyzedScoredSequence sequence = (AnalyzedScoredSequence)request.getAttribute("sequence") ;
+ ArrayList discrepancies = null;
+if ( sequence != null) discrepancies = sequence.getDiscrepancies() ;
+else discrepancies = (ArrayList)request.getAttribute("discrepancies") ;
+%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-  <tr> 
+<% if ( sequence != null)
+  {%>
+<tr> 
     <td width="19%"><strong>Sequence Id:</strong>
    
      <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.SCOREDSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sequence.getId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
@@ -52,9 +58,10 @@
 	</a>
 	</td>
   </tr>
+<%}%>
   <tr> 
     <td> </P> 
-        <%= Mutation.toHTMLString(sequence.getDiscrepancies() ) %>
+        <%= Mutation.toHTMLString(discrepancies ) %>
      </td></tr></table>
 </body>
 </html>

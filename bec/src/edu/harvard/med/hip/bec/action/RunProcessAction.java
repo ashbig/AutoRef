@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
+import edu.harvard.med.hip.bec.ui_objects.*;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.util.*;
@@ -251,6 +252,74 @@ public class RunProcessAction extends ResearcherAction
                     request.setAttribute("item_type",request.getParameter("item_type"));
                     return mapping.findForward("display_oligo_calculations");
                 }
+                
+                case Constants.STRETCH_COLLECTION_REPORT_INT:
+                case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
+                {
+                     String  item_ids = (String) request.getParameter("items");
+                    item_ids = item_ids.toUpperCase().trim();
+                    int item_type = Integer.parseInt(request.getParameter("item_type"));
+                    
+                     Hashtable stretch_collections = new Hashtable();
+                     ArrayList items = Algorithms.splitString(item_ids);
+                     StretchCollection strcol = null; int cloneid = 0;
+                     for (int index = 0; index < items.size();index++)
+                     {
+                         cloneid = Integer.parseInt( (String) items.get(index));
+                         if ( forwardName == Constants.STRETCH_COLLECTION_REPORT_ALL_INT)
+                         {
+                             ArrayList str_colections = StretchCollection.getAllByCloneId(cloneid);
+                             for ( int count = 0; count < str_colections.size(); count++)
+                             {
+                                 strcol = (StretchCollection) str_colections.get(count);
+                                 strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                             }
+                             stretch_collections.put( (String) items.get(index), str_colections);
+                         }
+                         else
+                         {
+                            strcol = StretchCollection.getLastByCloneId(cloneid);
+                            strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                            stretch_collections.put( (String) items.get(index), strcol);
+                         }
+                     }
+                    request.setAttribute(Constants.JSP_TITLE,"view Gaps and Contigs");
+                    request.setAttribute("stretch_collections",stretch_collections);
+                    request.setAttribute("items",items);
+                    request.setAttribute("item_type",request.getParameter("item_type"));
+                    return mapping.findForward("display_stretch_collections");
+                }
+                case Constants.LQR_COLLECTION_REPORT_INT:
+                {
+                     String  item_ids = (String) request.getParameter("items");
+                    item_ids = item_ids.toUpperCase().trim();
+                    int item_type = Integer.parseInt(request.getParameter("item_type"));
+                    
+                     ArrayList items = Algorithms.splitString(item_ids);
+                     StretchCollection lqr_for_clone = null; 
+                     int cloneid = 0;
+                     CloneSequence clone_sequence = null;
+                     //we trick system here writing html table 
+                     Hashtable display_items = new Hashtable();
+                     for (int index = 0; index < items.size();index++)
+                     {
+                            cloneid = Integer.parseInt( (String) items.get(index));
+                            clone_sequence = CloneSequence.getOneByCloneId(cloneid);
+                            if ( clone_sequence != null)
+                            {
+                                lqr_for_clone = StretchCollection.getByCloneSequenceId(clone_sequence.getId() , false);
+                            }
+                            StretchCollection.prepareStretchCollectionForDisplay(lqr_for_clone,clone_sequence);
+                            display_items.put( items.get(index), lqr_for_clone);
+ 
+                     }
+                    request.setAttribute(Constants.JSP_TITLE,"view Low Quality Regions for clone sequences");
+                    request.setAttribute("lqr_clone_stretch_collections",display_items);
+                     request.setAttribute("items",items);
+                    request.setAttribute("item_type",request.getParameter("item_type"));
+                    return mapping.findForward("display_lqr_collections");
+                }
+                
                 // approve primer
                 case -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :
                 {
@@ -341,6 +410,7 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
                 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
                 case Constants.PROCESS_NOMATCH_REPORT:
+                case Constants.PROCESS_FIND_GAPS:
                 {
                     String title = "";
                     ProcessRunner runner = null;
@@ -395,12 +465,21 @@ public class RunProcessAction extends ResearcherAction
                               title = "request for 'NO MATCH' report";
                               break;
                         }
+                        
+                        case Constants.PROCESS_FIND_GAPS:
+                        {
+                             runner = new GapMapperRunner();
+                              ((GapMapperRunner)runner).setMinContigLength(Integer.parseInt((String) request.getParameter("min_contig_length"))) ;
+                              ((GapMapperRunner)runner).setMinAvgContigScore( Integer.parseInt((String) request.getParameter("min_contig_avg_score"))) ;
+                              title = "request for Gap Mapper run";
+                              break;
+                        } 
                     }
                     
                     String  item_ids = (String) request.getParameter("items");
-                    runner.setItems(item_ids.toUpperCase().trim());
-                   runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
-                   runner.setUser(user);
+                    runner.setItems (item_ids.toUpperCase().trim());
+                    runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                    runner.setUser(user);
                     t = new Thread(runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,title);
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);

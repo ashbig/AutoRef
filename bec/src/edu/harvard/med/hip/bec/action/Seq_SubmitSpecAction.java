@@ -127,6 +127,17 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                     request.setAttribute("message", "The following specification was created.");
                      return (mapping.findForward("primer3_spec"));
                 }
+                case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:
+                {
+                    SlidingWindowTrimmingSpec spec = new SlidingWindowTrimmingSpec(params, spec_name, user.getId());
+                    spec.insert(conn);
+                    conn.commit();
+                    created_specs.add(spec);
+                    request.setAttribute("specs", created_specs);
+                    request.setAttribute("message", "The following specification was created.");
+                    return (mapping.findForward("slidingwindow_spec"));
+                }
+                
                /* case OligoPair.UNIVERSAL_PAIR_INT:
                 {
                     

@@ -82,6 +82,9 @@ public class Seq_GetSpecAction extends ResearcherAction
                         return (mapping.findForward("primer3_spec"));
                     case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
                         return (mapping.findForward("polymorphism_spec"));
+                     case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:
+                        return (mapping.findForward("slidingwindow_spec"));
+                 
                  }
             }
             
@@ -111,6 +114,14 @@ public class Seq_GetSpecAction extends ResearcherAction
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("polymorphism_spec"));
                 }
+                case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:
+                {
+                     specs = SlidingWindowTrimmingSpec.getAllSpecs();
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("slidingwindow_spec"));
+                }
+                
+                
                 case Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
                 {
                     specs = EndReadsSpec.getAllSpecsBySubmitter( user.getId());
@@ -135,7 +146,13 @@ public class Seq_GetSpecAction extends ResearcherAction
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("polymorphism_spec"));
                 }
-              /*
+                case Spec.TRIM_SLIDING_WINDOW_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
+                {
+                     specs = SlidingWindowTrimmingSpec.getAllSpecsBySubmitter( user.getId());
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("slidingwindow_spec"));
+                }
+                /*
                case OligoPair.UNIVERSAL_PAIR_INT:
                 {
                     OligoPair op = null;

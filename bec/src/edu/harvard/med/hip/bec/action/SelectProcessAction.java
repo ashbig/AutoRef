@@ -218,11 +218,16 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER://run discrepancy finder
                 case Constants.PROCESS_NOMATCH_REPORT:
                 case Constants.PROCESS_RUN_DECISION_TOOL:
+                case Constants.PROCESS_FIND_GAPS:
+                case Constants.STRETCH_COLLECTION_REPORT_INT:
+                case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
+                case Constants.LQR_COLLECTION_REPORT_INT:
                 {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
                     ArrayList control_names = new ArrayList();
                     String title = null;
+                     StringBuffer additional_jsp = new StringBuffer();
                     switch( forwardName)
                     {
                         case Constants.PROCESS_RUN_PRIMER3:
@@ -256,19 +261,24 @@ public class SelectProcessAction extends ResearcherAction
                         {title="order Internal Primers";break; }
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
                         {title="assemble Clone Sequences";break; }
+                        case Constants.STRETCH_COLLECTION_REPORT_INT:
+                        case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
+                        { title="view Contigs for Clone";break; } 
+                        
+                        case Constants.LQR_COLLECTION_REPORT_INT:
+                        { title="view Low Quality Regions for clone sequences";break; } 
                         case Constants.PROCESS_NOMATCH_REPORT:
                         { 
-                            StringBuffer additional_jsp = new StringBuffer();
-                            additional_jsp.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
-                            additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Database Name</strong></td>");
-                            additional_jsp.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> <OPTION VALUE='"+ BlastWrapper.getHumanDBLocation() +"'>" + BlastWrapper.HUMANDB_NAME );
-                            additional_jsp.append(" <OPTION VALUE='"+ BlastWrapper.getYeastDBLocation() +"'>");
-                            additional_jsp.append( BlastWrapper.YEASTDB_NAME);
-  additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getPseudomonasDBLocation() +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
-  additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getMGCDBLocation() +"'>"+ BlastWrapper.MGCDB_NAME );
- additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getYPDBLocation() +"'>"+ BlastWrapper.YPDB_NAME );
+additional_jsp.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
+additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Database Name</strong></td>");
+additional_jsp.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> <OPTION VALUE='"+ BlastWrapper.getHumanDBLocation() +"'>" + BlastWrapper.HUMANDB_NAME );
+additional_jsp.append(" <OPTION VALUE='"+ BlastWrapper.getYeastDBLocation() +"'>");
+additional_jsp.append( BlastWrapper.YEASTDB_NAME);
+additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getPseudomonasDBLocation() +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
+additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getMGCDBLocation() +"'>"+ BlastWrapper.MGCDB_NAME );
+additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getYPDBLocation() +"'>"+ BlastWrapper.YPDB_NAME );
 
-  additional_jsp.append("</SELECT></td> </tr>");
+additional_jsp.append("</SELECT></td> </tr>");
 additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
 additional_jsp.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
 additional_jsp.append("<OPTION VALUE=''> None");
@@ -277,10 +287,20 @@ additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.PANUMBER +"'>"+ PublicIn
 additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.SGD +"'>"+ PublicInfoItem.SGD );
 additional_jsp.append("</SELECT></td> </tr>");
 
-                            request.setAttribute(Constants.ADDITIONAL_JSP, additional_jsp.toString());
-                   
+                            
                             title="run 'NO MATCH' report";break;
                            
+                        }
+                        case Constants.PROCESS_FIND_GAPS:
+                        {
+                            
+additional_jsp.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
+additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Minimal Contig Length</strong></td>");
+additional_jsp.append("<td><input NAME='min_contig_length' id='min_contig_length' type = text value=50> </td></tr>");
+additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Minimal Contig Length</strong></td>");
+additional_jsp.append("<td><input NAME='min_contig_avg_score' id='min_contig_avg_score' type = text value=20> </td></tr>");
+
+                            title="run Gap Mapper";break;
                         }
                     }
                     if ( spec_names != null )
@@ -289,8 +309,10 @@ additional_jsp.append("</SELECT></td> </tr>");
                         request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
                         request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
                     }
-                   
-                        
+                    if (additional_jsp.length() != 0)
+                    {
+                        request.setAttribute(Constants.ADDITIONAL_JSP, additional_jsp.toString());
+                    }
                     request.setAttribute(Constants.JSP_TITLE,title);
                    
                     return (mapping.findForward("initiate_process"));
