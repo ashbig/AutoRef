@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.27 2001-07-09 22:17:18 jmunoz Exp $
+ * $Id: Process.java,v 1.28 2001-07-16 15:25:00 jmunoz Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -177,7 +177,6 @@ public class Process {
                 rs.getString("extrainformation"));
                 
             }
-            
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
         } finally {

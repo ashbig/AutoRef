@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2001-06-29 17:02:01 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.12 $
+ * $Date: 2001-07-16 15:25:00 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -57,8 +57,8 @@ import org.apache.struts.action.*;
  * process result for.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.11 $ $Date: 2001-06-29 17:02:01 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.12 $ $Date: 2001-07-16 15:25:00 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -141,7 +141,7 @@ public class EnterPlateAction extends ResearcherAction {
             saveErrors(request,errors);
             retForward = new ActionForward(mapping.getInput());
             return retForward;
-        }
+        } 
         
         // Find the right process
         Process process = null;
@@ -152,6 +152,15 @@ public class EnterPlateAction extends ResearcherAction {
             return mapping.findForward("error");
         } 
         
+        // if no process is found, then the container can't be processed
+        if(process == null) {
+            errors.add(ActionErrors.GLOBAL_ERROR, 
+                new ActionError("error.process.notfound", 
+                    container.getLabel(), protocol.getProcessname()));
+            retForward = new ActionForward(mapping.getInput());
+            saveErrors(request,errors);
+            return retForward;
+        }
         /*
          * make sure the researcher is the same as the one from the previous 
          * step.
