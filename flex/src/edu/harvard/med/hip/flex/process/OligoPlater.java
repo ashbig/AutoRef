@@ -360,7 +360,11 @@ public class OligoPlater
         container_3op = new Container(m_plateType, location,label_3op);
         //System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
         
-        plateset = generatePlateset(container_5p.getId(), container_3op.getId(),container_3s.getId(), m_mgcContainerId);
+        if(m_isPseudomonas) {
+            plateset = generatePlateset(container_5p.getId(), container_3op.getId(), -1, m_mgcContainerId);
+        } else {
+            plateset = generatePlateset(container_5p.getId(), container_3op.getId(),container_3s.getId(), m_mgcContainerId);
+        }
         
         String projectCode = "";
         Workflow wf = project.getWorkflow(workflow);
