@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.5 2001-05-12 20:44:55 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.6 2001-05-14 12:08:08 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java 
  * Date     : 05042001
@@ -9,6 +9,7 @@
 package flex.ApplicationCode.Java.gui;
 
 import java.util.*;
+import java.io.*;
 import javax.servlet.http.*;
 import flex.ApplicationCode.Java.database.*;
 import flex.ApplicationCode.Java.core.*;
@@ -211,16 +212,18 @@ public class CloneRequest {
 			Hashtable h = (Hashtable)homologs.get(gi);			
 			String [] gis = request.getParameterValues(gi);	
 			
-			for(int j=0; j<gis.length; j++) {
-				FlexSequence sequence = (FlexSequence)h.get(gis[j]);			
-				r.addSequence(sequence);			
+			if(gis != null) {
+				for(int j=0; j<gis.length; j++) {
+					FlexSequence sequence = (FlexSequence)h.get(gis[j]);			
+					r.addSequence(sequence);			
 			
-				if("NEW".equals(sequence.getFlexstatus())) {
-					QueueItem item = new QueueItem(sequence, p);
-					l.addLast(item);
+					if("NEW".equals(sequence.getFlexstatus())) {
+						QueueItem item = new QueueItem(sequence, p);
+						l.addLast(item);
+					}
 				}
-			}
-		}	
+			}	
+		}
 		}
 				
 		DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -233,6 +236,39 @@ public class CloneRequest {
 		t.disconnect();
 	}
 
+	/**
+	 * Return the blast alignment as a string.
+	 *
+	 * @return The blast alignment.
+	 */
+	public String getAlignment(String gi) throws FlexGuiException {
+		java.util.Date d = new java.util.Date();
+        java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM_dd_yyyy");
+        String fileName = gi+"_" + f.format(d)+".out";
+        try {
+        	BufferedReader in = new BufferedReader(new FileReader(fileName));
+			StringBuffer sb = new StringBuffer();
+        	boolean start = false;
+        	
+        	String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+				if(start) {
+					sb.append(inputLine+"\n");
+					continue;
+				}
+				
+				if(inputLine.indexOf(">")==0) {
+					sb.append(inputLine+"\n");
+					start = true;
+				}
+			}
+			in.close();
+			return sb.toString();
+		} catch (IOException e) {
+       		throw new FlexGuiException("Cannot display alignment");
+		}
+	}
+	
 	//call the parser with sequence gid, and set sequence values.
 	private void setSequenceInfo(FlexSequence sequence, String gi) throws FlexUtilException {
 		GenbankGeneFinder finder = new GenbankGeneFinder();
