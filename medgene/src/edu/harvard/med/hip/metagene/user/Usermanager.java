@@ -24,8 +24,6 @@ public class Usermanager {
     }
     
     public boolean authenticate(String username, String password) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
         
         Connection conn = pool.getConnection();
 
@@ -57,21 +55,12 @@ public class Usermanager {
                 e.printStackTrace();
             }
         }
-            //manager.disconnect();        
-            
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-                
+
         return rt;
     }
     
     public boolean userExist(String userid) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
-        
+       
         Connection conn = pool.getConnection();
         
         if (conn == null) {
@@ -101,21 +90,12 @@ public class Usermanager {
                 e.printStackTrace();
             }
         }
-            //manager.disconnect();        
-            
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
+
         return rt;
     }
     
     public boolean reminderUnique(String text) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
-        
+       
         Connection conn = pool.getConnection();
         
         if (conn == null) {
@@ -145,23 +125,14 @@ public class Usermanager {
                 e.printStackTrace();
             }
         }
-            //manager.disconnect();        
-            
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
+
         return (count<=1);
     }
     
     public boolean addUser(String userid, String email, String password,
     String organization, String reminder,
-    String firstname, String lastname, String phone) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
-        
+    String firstname, String lastname, String phone, String registration_date, int type) {
+       
         Connection conn = pool.getConnection();
         
         if (conn == null) {
@@ -171,10 +142,10 @@ public class Usermanager {
         
         String sql = "insert into userprofile"+
         " (userid, userpassword, remindtext, firstname, lastname,"+
-        " workphone, useremail, userinstitute)"+
-        " values('"+userid+"','"+password+"','"+reminder+
-        "','"+firstname+"','"+lastname+"','"+phone+
-        "','"+email+"','"+organization+"')";
+        " workphone, useremail, userinstitute, date_registration, type)"+
+        " values('" + userid + "','" + password + "','" + reminder +
+        "','" + firstname + "','" + lastname + "','" + phone +
+        "','" + email + "','" + organization + "','" + registration_date + "'," + type + ")";
         
         Statement stmt = null;
         boolean rt = false;
@@ -194,21 +165,12 @@ public class Usermanager {
                 e.printStackTrace();
             }
         }
-            //manager.disconnect();        
-            
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
+
         return rt;
     }
     
     public User getUser(String userid) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
-        
+       
         Connection conn = pool.getConnection();
         
         if (conn == null) {
@@ -246,21 +208,12 @@ public class Usermanager {
                 e.printStackTrace();
             }
         }
-            //manager.disconnect();        
-            
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
+
         return user;
     }
     
     public User findUser(String reminder) {
-        //DatabaseManager manager = new DatabaseManager();
-        //Connection conn = manager.connect();
-        
+ 
         Connection conn = pool.getConnection();
         
         if (conn == null) {
@@ -298,16 +251,80 @@ public class Usermanager {
                 e.printStackTrace();
             }
         }
-            //manager.disconnect();        
-            
-        try{
-            conn.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-        
+
         return user;
     }
+    
+    /**
+     * given user name, get user type
+     * different user type will result in different user interface
+     */
+    public int getUserType(String userid){
+
+        Connection conn = pool.getConnection();
+        int type = 0;
+        
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return 0;
+        }
+        
+        String sql = "select type from userprofile where userid = '"+userid+"'";
+        Statement stmt = null;        
+        
+        try {
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            if(rs.next()) {
+                type = rs.getInt(1);    
+            }
+            
+            stmt.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try{
+                conn.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return type;
+    }
+    
+    
+    public void addLog(String userid, String login_time){
+        
+        Connection conn = pool.getConnection();
+
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return;
+        }
+        
+        String sql = "insert into usage"+
+        " (userid, login_time)"+
+        " values('" + userid + "', '" + login_time + "')"; 
+ 
+        Statement stmt = null;        
+        try {
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);          
+            stmt.close();
+            conn.commit();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            try{
+                conn.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }        
+    }
+        
     
     public static void main(String [] args) {
         Usermanager manager = new Usermanager();
