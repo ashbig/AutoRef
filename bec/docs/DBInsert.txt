@@ -1,5 +1,6 @@
 insert into usergroup values('Administrator');
 insert into usergroup values('Researcher');
+insert into usergroup values('Manager');
 
 
  insert into menuitem values (menuitemid.nextval, 'seqSelectProcess',3,'Select Process','Sequencing Project');
@@ -172,7 +173,7 @@ insert into config_parameter_name (paramname) values ('ER_3DI_L');
 insert into config_parameter_name (paramname) values ('ER_3DI_H');
 
 insert into config_parameter_name (paramname) values ('FS_5S_PASS_H');
- insert into config_parameter_name (paramname) values ('FS_5DI_PASS_L');
+   insert into  config_parameter_name (paramname) values ('FS_5S_PASS_L') ;
   insert into config_parameter_name (paramname) values ('FS_5S_FAIL_H');
   insert into config_parameter_name (paramname) values ('FS_5S_FAIL_L');
  insert into config_parameter_name (paramname) values ('FS_5DI_PASS_H');
@@ -187,6 +188,8 @@ insert into config_parameter_name (paramname) values ('FS_5S_PASS_H');
   insert into config_parameter_name (paramname) values ('FS_3DI_PASS_L');
  insert into config_parameter_name (paramname) values ('FS_3DI_FAIL_H');
   insert into config_parameter_name (paramname) values ('FS_3DI_FAIL_L');
+
+
  
 
 insert into config_parameter_name (paramname) values ('PL_BASES'); 
@@ -231,14 +234,11 @@ values (vectorid.nextval,'5p linker','GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTAT
 values (vectorid.nextval,'3p linker','-GGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC');                              
 
 
-
-
+//for yeast
 insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'Waugh','TCGCGTTAACGCTAGCATGGATCTCG',2);
 insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'Reverse','GTAACATCAGAGATTTTGAGACAC',2);
 insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'PBY011_50_3','CAAAAATTGTTAATATACCTCTATAC',2);
 insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'PBY011_60_5','TGTTGTGTGGAATTGTGAGCGG',2);
-
-
 insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
 values(vectorid.nextval, 
 (select vectorid from vector where vectorname='pDONR201'),
@@ -257,17 +257,33 @@ values(vectorid.nextval,
 (select primerid from commonprimer where name='PBY011_60_5'),
 3,
 -1);
-
-
-
-
-
 insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
 values(vectorid.nextval, 
 (select vectorid from vector where vectorname='pDONR201'),
 (select primerid from commonprimer where name='Waugh'),
 5,
 1);
+
+//for pseudomonas
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'Gateway_FarF1','NN',2);
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'SEQL_B','NN',2);
+
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR201'),
+(select primerid from commonprimer where name='SEQL_B'),
+3,
+-1);
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR201'),
+(select primerid from commonprimer where name='Gateway_FarF1'),
+5,
+1);
+
+
+
+
   insert into vectorfeature values( vectorid.nextval,'recombination site','attP2',-1,(select vectorid from vector where vectorname='pDONR201'));                                         
  insert into vectorfeature values(vectorid.nextval,'antibiotic selection marker','KanR',0,(select vectorid from vector where vectorname='pDONR201'));                                       
  insert into vectorfeature values(              vectorid.nextval,'antibiotic marker','CmR (reverse orientation)',-1,(select vectorid from vector where vectorname='pDONR201'));                                         
