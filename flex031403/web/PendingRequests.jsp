@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.14 2001-07-19 17:15:09 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.15 2001-07-19 22:14:12 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -20,7 +20,10 @@
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Pending Requests</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Pending Requests</title>
+    <LINK REL=StyleSheet HREF="table.css" TYPE="text/css" MEDIA=screen>
+ </head>
 <body>
     
     <h2><bean:message key="flex.name"/> : Pending Requests</h2>
@@ -29,44 +32,55 @@
     <p>
     <html:form action="ProcessQueue.do">
     
-    <logic:present name="PAGES">
-        Jump to page: 
-        <logic:iterate name="PAGES" id="pageLink">
-            <logic:notEqual name="CURRENT_PAGE" value="<%=pageLink.toString()%>">
-                <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="pageLink">
-                    <bean:write name="pageLink"/>
-                </html:link>
-            </logic:notEqual>
-            <logic:equal name="CURRENT_PAGE" value="<%=pageLink.toString()%>">
-                <bean:write name="pageLink"/>
-            </logic:equal>
-        </logic:iterate>
-        &nbsp;
-    </logic:present>
-
-    <br>
-
-    <logic:present name="prevPage">
-        <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="prevPage">
-        << Previous
-        </html:link>
-    </logic:present>
-   
-    <logic:notPresent name="prevPage">
-        << Previous
-    </logic:notPresent>
-    |
-    <logic:present name="nextPage">
-        <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="nextPage">
-            Next >>
-        </html:link>
-    </logic:present>
-    <logic:notPresent name="nextPage">
-        Next >>
-    </logic:notPresent>
     
-    <TABLE BORDER>
-    <TR>
+    
+    <TABLE border="1" cellpadding="2" cellspacing="0">
+        <tr class="navRow">
+            <td colspan="6">
+            <table border="0" cellpading="0" cellspacing="0">
+                <tr>
+                    <td width=85%>
+                        <logic:present name="PAGES">
+                            Jump to page: 
+                            <logic:iterate name="PAGES" id="pageLink">
+                                <logic:notEqual name="CURRENT_PAGE" value="<%=pageLink.toString()%>">
+                                    <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="pageLink">
+                                        <bean:write name="pageLink"/>
+                                    </html:link>
+                                </logic:notEqual>
+                                <logic:equal name="CURRENT_PAGE" value="<%=pageLink.toString()%>">
+                                    <bean:write name="pageLink"/>
+                                </logic:equal>
+                        </logic:iterate>
+                        &nbsp;
+                    </logic:present>
+                    </td>
+                    <td width="15%" ALIGN="RIGHT"><center>
+                        <logic:present name="prevPage">
+                            <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="prevPage">
+                                << Previous
+                            </html:link>
+                        </logic:present>
+   
+                        <logic:notPresent name="prevPage">
+                            << Previous
+                        </logic:notPresent>
+                        |
+                        <logic:present name="nextPage">
+                            <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="nextPage">
+                                Next >>
+                            </html:link>
+                        </logic:present>
+    
+                        <logic:notPresent name="nextPage">
+                            Next >>
+                        </logic:notPresent>
+                </center></td>
+            </tr>
+        </table>
+        </td>
+        </tr>
+    <tr class="headerRow">
         <TH>FLEX Id</TH>
         <TH>Description</TH>
         <TH>Quality</TH>
@@ -79,7 +93,7 @@
     <!-- keep track of the count -->
 
     <logic:iterate indexId="seqCount" id="curQueueItem" name="<%=edu.harvard.med.hip.flex.Constants.QUEUE_ITEM_LIST_KEY%>"> 
-        <TR>
+        <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
             <TD>
                 <flex:linkFlexSequence sequenceName="curQueueItem" seqProperty="item">
                     <bean:write name="curQueueItem" property="item.id"/>
@@ -114,7 +128,7 @@
                     <html:option value="Accepted">Accepted</html:option>
                 </html:select>
             </TD>
-        </TR>
+        </flex:row>
     </logic:iterate> 
 
 
