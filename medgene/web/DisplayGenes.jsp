@@ -11,7 +11,13 @@
     </head>
     <body>
     <center>
-    <h1>Gene List</h1>
+    <h1>Top 
+    <logic:present name="number">
+        <bean:write name="number"/>
+    </logic:present>
+        Genes Associated With <bean:write name="disease"/>
+        By Statistic Method Of "<bean:write name="stat" property="type"/>"
+    </h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td> 

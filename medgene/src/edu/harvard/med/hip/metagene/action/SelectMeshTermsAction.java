@@ -67,15 +67,27 @@ public class SelectMeshTermsAction extends MetageneAction {
         if("Get Genes".equals(submit)) {
             DiseaseGeneManager manager = new DiseaseGeneManager();
             Vector allAssociations = new Vector();
+            String allDiseaseTerms = null;
             
             for(int i=0; i<diseases.length; i++) {
                 int disease = diseases[i];
                 Vector associations = manager.getAssociationsByDisease(disease, stat, -1);
                 allAssociations.addElement(associations);
+                
+                Disease d = manager.queryDiseaseById(disease);
+                if(allDiseaseTerms == null) {
+                    allDiseaseTerms = d.getTerm();
+                } else {
+                    allDiseaseTerms = allDiseaseTerms+", "+d.getTerm();
+                }
             }
             
             Vector commonAssociations = Association.mergeAssociations(allAssociations);
             request.setAttribute("associations", commonAssociations);
+            request.setAttribute("disease", allDiseaseTerms);
+            Statistics s = manager.queryStatById(stat);
+            request.setAttribute("stat", s);
+            
             return (mapping.findForward("success"));
         }
         

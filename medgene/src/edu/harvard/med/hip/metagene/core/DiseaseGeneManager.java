@@ -399,7 +399,7 @@ public class DiseaseGeneManager {
         " from gene_index i, search_term s, index_type t"+
         " where i.gene_index_id=s.gene_index_id"+
         " and i.index_type_id=t.index_type_id"+
-        " and s.gene_term=?";
+        " and s.gene_term = ?";
         Vector geneIndexes = new Vector();
         
         try {
@@ -540,4 +540,118 @@ public class DiseaseGeneManager {
         manager.disconnect();
         return associations;
     }
+    
+    public Disease queryDiseaseById(int id) {
+        DatabaseManager manager = new DatabaseManager();
+        Connection conn = manager.connect();
+        
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        String sql = "select * from disease_list where hip_disease_id="+id;
+        Disease disease = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            
+            if(rs.next()) {
+                int diseaseid = rs.getInt(1);
+                String term = rs.getString(2);
+                String date = rs.getString(3);
+                disease = new Disease(diseaseid, term, date);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            manager.disconnect();
+            return null;
+        }
+        
+        manager.disconnect();
+        return disease;
+    }
+    
+    public Statistics queryStatById(int id) {
+        DatabaseManager manager = new DatabaseManager();
+        Connection conn = manager.connect();
+        
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        String sql = "select * from statistic_type where statistic_id="+id;
+        Statistics stat = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            
+            if(rs.next()) {
+                int statid = rs.getInt(1);
+                String type = rs.getString(2);
+                stat = new Statistics(statid, type);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            manager.disconnect();
+            return null;
+        }
+        
+        manager.disconnect();
+        return stat;
+    }        
+    
+    public GeneIndex queryGeneIndexById(int id) {
+        DatabaseManager manager = new DatabaseManager();
+        Connection conn = manager.connect();
+        
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        String sql = "select * from gene_index where gene_index_id="+id;
+        GeneIndex geneIndex = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            
+            if(rs.next()) {
+                int indexid = rs.getInt(1);
+                String geneIndexString = rs.getString(2);
+                String type = rs.getString(3);
+                String date = rs.getString(4);
+                geneIndex = new GeneIndex(indexid, geneIndexString, type, date);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            manager.disconnect();
+            return null;
+        }
+        
+        manager.disconnect();
+        return geneIndex;
+    }                
 }

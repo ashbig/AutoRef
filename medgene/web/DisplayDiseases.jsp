@@ -11,7 +11,10 @@
     </head>
     <body>
     <center>
-    <h1>Disease List</h1>    
+    <h1>Top <bean:write name="number"/> Diseases Associated With 
+        <bean:write name="gene" property="index"/>
+        By Statistic Method Of "<bean:write name="stat" property="type"/>"
+    </h1>    
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>

@@ -68,6 +68,13 @@ public class SearchGenesAction extends MetageneAction {
             DiseaseGeneManager manager = new DiseaseGeneManager();
             Vector associations = manager.getAssociationsByGeneIndex(indexid, stat, number);
             request.setAttribute("associations", associations);
+            
+            GeneIndex g = manager.queryGeneIndexById(indexid);
+            Statistics s = manager.queryStatById(stat);
+            request.setAttribute("gene", g);
+            request.setAttribute("stat", s);
+            request.setAttribute("number", new Integer(number));
+            
             return (mapping.findForward("success"));
         }
         
