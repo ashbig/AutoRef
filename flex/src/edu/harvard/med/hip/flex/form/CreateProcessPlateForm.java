@@ -79,24 +79,6 @@ public class CreateProcessPlateForm extends ActionForm {
     public String getResearcherBarcode() {
         return researcherBarcode;
     }
-
-    /**
-     * Set the source location to the given value.
-     *
-     * @param sourceLocation The value to be set to.
-     */
-    public void setSourceLocation(int sourceLocation) {
-        this.sourceLocation = sourceLocation;
-    }
-    
-    /**
-     * Return the source location.
-     *
-     * @return The source location.
-     */
-    public int getSourceLocation() {
-        return sourceLocation;
-    }
     
     /**
      * Set the destination location.

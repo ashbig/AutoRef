@@ -88,12 +88,12 @@ public class ContainerMapper {
      * @return The new Container object.
      * @exception FlexDatabaseException.
      */    
-    public Container mapContainer(Container sourceContainer, Protocol protocol, Location destLocation) throws FlexDatabaseException {
+    public Container mapContainer(Container sourceContainer, Protocol protocol, Location destLocation, Vector sampleLineageSet) throws FlexDatabaseException {
         String newContainerType = getContainerType(protocol.getProcessname());
         String newBarcode = Container.getLabel(protocol.getProcesscode(), sourceContainer.getPlatesetid(), getSubThread(sourceContainer));        
         Container newContainer = new Container(newContainerType, destLocation, newBarcode);
         sourceContainer.restoreSample();
-        mappingSamples(sourceContainer, newContainer, protocol); 
+        mappingSamples(sourceContainer, newContainer, protocol, sampleLineageSet); 
         return newContainer;
     }
  
@@ -105,7 +105,7 @@ public class ContainerMapper {
     }
 
     // Creates the new samples from the samples of the previous plate.
-    private void mappingSamples(Container container, Container newContainer, Protocol protocol) throws FlexDatabaseException { 
+    private void mappingSamples(Container container, Container newContainer, Protocol protocol, Vector sampleLineageSet) throws FlexDatabaseException { 
         String type;
         Vector oldSamples = container.getSamples();
         Enumeration enum = oldSamples.elements();
@@ -125,6 +125,7 @@ public class ContainerMapper {
             
             Sample newSample = new Sample(type, s.getPosition(), newContainer.getId(), s.getOligoid(), Sample.GOOD);
             newContainer.addSample(newSample);
+            sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
         }
     }   
     
@@ -133,9 +134,9 @@ public class ContainerMapper {
         edu.harvard.med.hip.flex.process.Process p = 
         edu.harvard.med.hip.flex.process.Process.findProcess(container, protocol);
         Result result = Result.findResult(s, p);
-        if(edu.harvard.med.hip.flex.process.Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())
-            || edu.harvard.med.hip.flex.process.Result.MANY.equals(result.getValue()) || Result.FEW.equals(result.getValue())) {
-            type = Sample.getType(protocol.getProcessname());
+        if(Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())
+            || Result.MANY.equals(result.getValue()) || Result.FEW.equals(result.getValue())) {
+                type = Sample.getType(protocol.getProcessname());
         } else {
             type = Sample.EMPTY;
         }

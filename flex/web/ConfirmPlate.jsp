@@ -15,9 +15,9 @@
 <table width=100% align=center>
     <tr>
     <td><b>Source Plate ID:</b></td>
-    <td><bean:write name="oldContainer" property="label"/></td>
+    <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="oldContainer" property="id"/>"><bean:write name="oldContainer" property="label"/></a></td>
     <td><b>Source Plate Location:</b></td>
-    <td><bean:write name="sLocation" property="type"/></td>
+    <td><bean:write name="oldContainer" property="location.type"/></td>
     </tr>
 
     <tr>

@@ -29,8 +29,9 @@ import org.apache.struts.util.MessageResources;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.form.GetProcessPlateInputForm;
+import edu.harvard.med.hip.flex.form.CreateProcessPlateForm;
 import edu.harvard.med.hip.flex.process.Process;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
@@ -59,7 +60,7 @@ public class GetInputAction extends ResearcherAction{
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        String barcode = ((GetProcessPlateInputForm)form).getResearcherBarcode();
+        String barcode = ((CreateProcessPlateForm)form).getResearcherBarcode();
         Researcher researcher = null;
 
         // Validate the researcher barcode.
@@ -75,7 +76,7 @@ public class GetInputAction extends ResearcherAction{
         }
         
         // Validate container label.
-        String sourcePlate = ((GetProcessPlateInputForm)form).getSourcePlate();
+        String sourcePlate = ((CreateProcessPlateForm)form).getSourcePlate();
         LinkedList queueItems = (LinkedList)request.getSession().getAttribute("queueItems"); 
         QueueItem item = getValidPlate(queueItems, sourcePlate);
         if(item == null) {
@@ -84,8 +85,7 @@ public class GetInputAction extends ResearcherAction{
             return (new ActionForward(mapping.getInput()));
         }
 
-        int sourceLocation = ((GetProcessPlateInputForm)form).getSourceLocation();
-        int destLocation = ((GetProcessPlateInputForm)form).getDestLocation();
+        int destLocation = ((CreateProcessPlateForm)form).getDestLocation();
         Protocol protocol = (Protocol)request.getSession().getAttribute("protocol");        
         Connection conn = null;
         try {
@@ -95,13 +95,14 @@ public class GetInputAction extends ResearcherAction{
             // Create the new plate and samples.        
             Location dLocation = new Location(destLocation);
             Container container = (Container)item.getItem();
+            Vector sampleLineageSet = new Vector();
             ContainerMapper mapper = new ContainerMapper();
-            Container newContainer = mapper.mapContainer(container, protocol, dLocation);
-System.out.println(newContainer.getId());
+            Container newContainer = mapper.mapContainer(container, protocol, dLocation, sampleLineageSet);
+
             // Insert the new container and samples into database.
             newContainer.insert(conn);
             
-            // Create a process and process object.
+            // Create a process, process object and sample lineage record.
             Process process = new Process(protocol, 
             edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
             ProcessContainer inputContainer = 
@@ -113,7 +114,8 @@ System.out.println(newContainer.getId());
                 process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
             process.addProcessObject(inputContainer);
-            process.addProcessObject(outputContainer);            
+            process.addProcessObject(outputContainer);  
+            process.setSampleLineageSet(sampleLineageSet);            
             
             // Insert the process and process objects into database.
             process.insert(conn);
@@ -124,19 +126,24 @@ System.out.println(newContainer.getId());
             ContainerProcessQueue queue = new ContainerProcessQueue();
             queue.removeQueueItems(newItems, conn);
 
-            // Add the new container to the queue.
-            newItems.clear();
-            newItems.addLast(new QueueItem(newContainer, protocol));
-            queue.addQueueItems(newItems, conn);
+            // Get the next protocols from the workflow.
+            Workflow wf = new Workflow();
+            Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
+            
+            // Add the new container to the queue for each protocol.
+            for(int i=0; i<nextProtocols.size(); i++) {
+                newItems.clear();
+                newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));
+                queue.addQueueItems(newItems, conn);
+            }
             
             // Commit the changes to the database.
-            DatabaseTransaction.commit(conn);
+            DatabaseTransaction.rollback(conn);
             
             // Store the data in the session.
-            Location sLocation = new Location(sourceLocation);        
+            Location sLocation = container.getLocation();        
             request.getSession().setAttribute("oldContainer", container); 
             request.getSession().setAttribute("newContainer", newContainer);  
-            request.getSession().setAttribute("sLocation", sLocation);
             request.getSession().setAttribute("dLocation", dLocation);
             
             return (mapping.findForward("success"));            

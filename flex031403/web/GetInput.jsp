@@ -25,18 +25,7 @@
     </tr>
 
     <tr>
-    <td><b>Select new location for the source plate:</b></td>
-    <td><html:select property="sourceLocation">
-        <html:options
-        collection="locations"
-        property="id"
-        labelProperty="type"
-        />
-        </html:select>
-    </td>
-
-    <tr>
-    <td><b>Select new location for the destination plate:</b></td>
+    <td><b>Select the location for the destination plate:</b></td>
     <td><html:select property="destLocation">
         <html:options
         collection="locations"
