@@ -267,9 +267,17 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
 </tr><tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_SEQUENCE %>>
-      Delete clone sequence</font></td>
+      Delete clone sequence</font><P></td>
 </tr>
- 
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_GET_TRACE_FILE_NAMES  %>>
+      Get trace files' names</font></td>
+</tr><tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_TRACE_FILES %> disabled>
+      Delete trace files from hard drive</font></td>
+</tr> 
 <tr> 
     <td> <br> <b><font color="#1145A6">Please make a selection and submit.</font></b> </center> 
       <p align="left">     <input type="submit" value="continue" name="submit">    <br>
