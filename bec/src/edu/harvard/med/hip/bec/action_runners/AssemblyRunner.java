@@ -472,7 +472,7 @@ public class AssemblyRunner extends ProcessRunner
         ResultSet rs = null;
         int sequenceid = -1;
         ArrayList sequences = new ArrayList();
-        String contig_sequence = contig.getSequence().toUpperCase();
+       // String contig_sequence = contig.getSequence().toUpperCase();
         ScoredSequence sequence = null; String text = null; String scores = null;
         try
         {
@@ -491,13 +491,15 @@ public class AssemblyRunner extends ProcessRunner
          {
              throw new BecDatabaseException("Cannot extract sequence information\nsql "+sql);
          }
-        
-         for (int count = 0; count < sequences.size(); count++)
-         {
-             if (contig_sequence.equalsIgnoreCase( ((ScoredSequence) sequences.get(count)).getText() ))
-                 return true;
-         }
-        return false;
+        if (sequence == null) return false;
+       ScoredSequence contig_sequence = new ScoredSequence(contig.getSequence(),contig.getScores());
+        return sequence.isTheSame( contig_sequence );
+       //  for (int count = 0; count < sequences.size(); count++)
+       //  {
+       //      if (contig_sequence.equalsIgnoreCase( ((ScoredSequence) sequences.get(count)).getText() ))
+       //          return true;
+        // }
+        //return false;
      }
      private int createProcessHistory(Connection conn) throws BecDatabaseException
      {
@@ -597,7 +599,7 @@ public static void main(String args[])
          runner.setUser( AccessManager.getInstance().getUser("htaycher345","htaycher"));
         runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
          runner.setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
-         runner.setItems("44046 44142 43950");
+             runner.setItems("118741	118465	118469	");
         runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
                                       
         runner.run();           
