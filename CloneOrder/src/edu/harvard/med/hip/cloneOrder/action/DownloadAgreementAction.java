@@ -35,7 +35,7 @@ public class DownloadAgreementAction extends Action {
         
         try {
 
-            in = new BufferedInputStream(new FileInputStream("c://Clone Order//FLEXGeneMTA.doc") );
+            in = new BufferedInputStream(new FileInputStream("c://cloneorder//FLEXGeneMTA.doc") );
             //in = new BufferedInputStream(new FileInputStream(".//Agreement.doc") );
             
             int ch;
