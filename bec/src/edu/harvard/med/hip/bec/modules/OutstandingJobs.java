@@ -24,7 +24,7 @@ import sun.jdbc.rowset.*;
 public class OutstandingJobs
 {
      //store input & output blast files
-    private static final String INPUT = "/tmp/";
+    private static final String INPUT = edu.harvard.med.hip.bec.Constants.getTemporaryFilesPath();
   //  private static final String OUTPUT = "/blastoutput/";
     private static final String OUTPUT = "/output/blastoutput/";
     private int          m_species = RefSequence.SPECIES_NOT_SET;
