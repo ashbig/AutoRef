@@ -1,5 +1,5 @@
 /**
- * $Id: OligoContainer.java,v 1.4 2005-02-10 18:05:29 Elena Exp $
+ * $Id: OligoContainer.java,v 1.5 2005-02-11 20:59:27 Elena Exp $
  *
  * File     	: Container.java
 
@@ -63,7 +63,15 @@ public class OligoContainer
     }
     
     
-    
+    public OligoContainer(String label, int status, int userid, 
+            String ordcomment, String seqcomment) 
+    {
+         m_label = label;
+        m_status = status;
+        m_userid = userid;
+        m_comment_order =  ordcomment;
+        m_comment_sequencing =  seqcomment;
+    }
       
     public OligoContainer() throws BecDatabaseException
     {
