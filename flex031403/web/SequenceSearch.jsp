@@ -27,7 +27,7 @@
     <td><b>Search Species:</b></td>
     <td><select name="species">
         <option value="all">All
-        <logic:iterate id="oneSpecies" name="species">
+        <logic:iterate id="oneSpecies" name="species" scope="request">
             <option value="<bean:write name="oneSpecies"/>"><bean:write name="oneSpecies"/>
         </logic:iterate>
     </td>
@@ -48,7 +48,7 @@
 <dd>3. Use AND, OR, NOT for boolean searches
 </dl>
 
-<logic:present name="customerRequest">
+<logic:present name="customerRequest" scope="request">
 <p><b>You have the following cloning requests:</b>
 <logic:iterate id="oneRequest" name="customerRequest">
 <p>Date: <bean:write name="oneRequest" property="date"/>
