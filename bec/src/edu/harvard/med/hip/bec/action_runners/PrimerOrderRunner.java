@@ -53,10 +53,10 @@ public class PrimerOrderRunner extends ProcessRunner
       private boolean                m_is_full_plates = false;
       
       //prepared statments
-      PreparedStatement m_pst_insert_process_object = null;
-      PreparedStatement m_pst_update_primer_status = null;
-      PreparedStatement m_pst_insert_oligo_sample = null;
-      PreparedStatement m_pst_insert_oligo_plate = null;
+    private   PreparedStatement m_pst_insert_process_object = null;
+    private  PreparedStatement m_pst_update_primer_status = null;
+    private   PreparedStatement m_pst_insert_oligo_sample = null;
+    private   PreparedStatement m_pst_insert_oligo_plate = null;
    
     public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
     public void         setPrimerNumber(int v){ m_primer_number = v;}

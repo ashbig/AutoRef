@@ -136,7 +136,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
             ArrayList renaming_file_entries = getRenamingFileEnties(sequencing_facility_file_items, 
                                                                  hip_clone_items,
                                                                     plate_map_names);
-            printRenamingFile(renaming_file_entries);
+            Algorithms.writeArrayIntoFile( renaming_file_entries, true, m_inputdir + File.separator +m_renaming_file_name);
            
          }
           File renaming_file =   new File(m_inputdir + File.separator +m_renaming_file_name );
@@ -224,7 +224,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
         }
         catch(Exception e)
         {
-            throw new BecDatabaseException ("Cannot process files in input directory "+e.getMessage());
+            throw new BecDatabaseException ("Cannot process files in input directory "+file_name);
         }
          
         
@@ -299,7 +299,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
         {
             fin = new BufferedReader(new InputStreamReader(m_input));
          }
-        catch(Exception e){ System.out.println(e.getMessage());throw new BecDatabaseException ("Cannot open renaming file: "+e.getMessage());}
+        catch(Exception e)
+        { 
+            throw new BecDatabaseException ("Cannot open renaming file: "+e.getMessage());
+        }
         try
         {
             while ((line = fin.readLine()) != null)
@@ -329,7 +332,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
             }
             fin.close();
         }
-        catch(Exception e){throw new BecDatabaseException("Cannot read renaming file:" + e.getMessage());}
+        catch(Exception e)
+        {
+            throw new BecDatabaseException("Cannot read renaming file:" + e.getMessage());}
         
    
      }
@@ -481,8 +486,8 @@ public class TraceFileProcessingRunner extends ProcessRunner
           runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
             runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
             runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
-            runner.setInputDirectory("E:\\Sequences for ACE\\files_to_transfer");
-runner.setRenamingFile(new  FileInputStream("E:\\Sequences for ACE\\files_to_transfer\\mapping.txt"));
+            runner.setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
+runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\files_to_transfer\\mapping.txt"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        
            
