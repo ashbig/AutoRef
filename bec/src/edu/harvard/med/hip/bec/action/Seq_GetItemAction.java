@@ -287,9 +287,9 @@ public class Seq_GetItemAction extends ResearcherAction
               //  case Constants.CLONE_SEQUENCE_DEFINITION_INT :
                 case   Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT :
                 {
-                    System.out.println("L");
+                   // System.out.println("L");
                     AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(id);
-                    System.out.println("1L");
+                   // System.out.println("1L");
                     request.setAttribute("sequence",sequence);
                     return (mapping.findForward("display_discrepancyreport"));
                 }
