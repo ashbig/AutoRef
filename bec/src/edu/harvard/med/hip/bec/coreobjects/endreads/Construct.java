@@ -191,25 +191,59 @@ public class Construct
   //  public void                  setVectorId(int v){    m_vector_id = v;}	
    // public void                  setLinker5Id(int v){    m_linker5_id = v;}	
  
-    
+     public static  BaseSequence         getRefSequenceForAnalysis(String startCodon,
+                            String fusionStopCodon,String closedStopCodon,
+                            String codingsequence, int format)
+                            throws BecDatabaseException
+    { 
+        
+          if ( !startCodon.equalsIgnoreCase("NON"))
+         {
+             codingsequence = startCodon + codingsequence.substring(3);
+         }
+        // seq = seq.substring(3, seq.length()-3);
+         if (format == FORMAT_OPEN)
+         {
+             codingsequence =  codingsequence.substring( 0,codingsequence.length()-3 )+ fusionStopCodon;
+         }
+         else if (format == FORMAT_CLOSE && !closedStopCodon.equalsIgnoreCase("NON"))
+         {
+              codingsequence = codingsequence.substring( 0,codingsequence.length()-3) + closedStopCodon;
+         }
+             
+         BaseSequence refsequence_for_analysis =  new BaseSequence(codingsequence, BaseSequence.BASE_SEQUENCE );
+         return refsequence_for_analysis;
+     }
+     
     public BaseSequence         getRefSequenceForAnalysis(String startCodon,
-                            String fusionStopCodon,String closedStopCodon)throws BecDatabaseException
+                            String fusionStopCodon,String closedStopCodon)
+                            throws BecDatabaseException
       { 
          if(m_refsequence == null) 
             m_refsequence = new RefSequence(m_refsequence_id);
-         String seq = m_refsequence.getCodingSequence();
-         seq = seq.substring(3, seq.length()-3);
+         String codingsequence = m_refsequence.getCodingSequence();
+          m_refsequence_for_analysis =  getRefSequenceForAnalysis( startCodon,
+                             fusionStopCodon, closedStopCodon,
+                             codingsequence, m_format);
+         return m_refsequence_for_analysis;
+         /*
+         if ( !startCodon.equalsIgnoreCase("NONE"))
+         {
+             seq = startCodon + seq.substring(3);
+         }
+        // seq = seq.substring(3, seq.length()-3);
          if (m_format == FORMAT_OPEN)
          {
-             seq = startCodon + seq + fusionStopCodon;
+             seq =  seq.substring( seq.length()-3 )+ fusionStopCodon;
          }
-         else if (m_format == FORMAT_CLOSE)
+         else if (m_format == FORMAT_CLOSE && !closedStopCodon.equalsIgnoreCase("NONE"))
          {
-              seq = startCodon + seq + closedStopCodon;
+              seq = seq.substring( seq.length()-3) + closedStopCodon;
          }
              
          m_refsequence_for_analysis =  new BaseSequence(seq, BaseSequence.BASE_SEQUENCE );
          return m_refsequence_for_analysis;
+          **/
      }
     /*
     public void calculateRank()
@@ -458,7 +492,9 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
                     if (istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED 
                     || istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED 
                     ||istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED
-                    || istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS)
+                    || istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS
+                    || istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_SUBMITTED_BY_SEQUENCING_FACILITY
+                    )
                     {
                         if (mode == 1)
                         {
@@ -519,9 +555,12 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
      
     {
         try{
-        ArrayList master_container_ids = new ArrayList();
-        master_container_ids.add(new Integer(16));  
-        ArrayList co =Construct.getConstructsFromPlates(master_container_ids,"0","0",1);
+        BaseSequence bc =     getRefSequenceForAnalysis("NONE",
+                           "GGG","NONE",
+                            "aaaaaaactgtgtgtgtgggggttttcccccc", 0);
+       // ArrayList master_container_ids = new ArrayList();
+      //  master_container_ids.add(new Integer(16));  
+      //  ArrayList co =Construct.getConstructsFromPlates(master_container_ids,"0","0",1);
         System.exit(0);
         }catch(Exception e){}
    }
