@@ -54,15 +54,10 @@ public class DiscrepancyFinder
         m_seqpairs = pairs;
     }
     
-     public DiscrepancyFinder()
-    {
-    }
+     public DiscrepancyFinder()    {    }
     
-    public void addSequencePair(SequencePair pair)
-    {
-        m_seqpairs.add(  pair);
-    }
-    
+    public void addSequencePair(SequencePair pair)    {        m_seqpairs.add(  pair);    }
+    public void setSequencePair(SequencePair pair)    {        m_seqpair =  pair;    }
     
     public void setDebug(boolean b){ m_debug =b;}
     public void setIdentityCutoff(double d)

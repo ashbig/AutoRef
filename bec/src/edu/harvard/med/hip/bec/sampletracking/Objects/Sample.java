@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.2 2003-04-07 18:47:02 Elena Exp $
+ * $Id: Sample.java,v 1.3 2003-04-16 17:49:40 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -45,8 +45,6 @@ public class Sample
     private int           m_isolatetracking_id = -1;
     private int           m_clone_id = -1;
     private int           m_refseq_id = -1; //artifax for connection to FLEX and creation of naming files
-    
-    private int           m_oligoid = -1;
     private int             m_cloneid = -1; //clone id from flex uniqe for clone identification
     private Result          m_result = null;
     
@@ -67,7 +65,7 @@ public class Sample
      * @return A Sample object.
      */
     public Sample(int id, String type, int position, 
-            int containerid, int agarid, int oligoid)
+            int containerid)
             throws BecDatabaseException
     {
         if ( id == BecIDGenerator.BEC_OBJECT_ID_NOTSET) 
@@ -77,9 +75,7 @@ public class Sample
         m_type = type;
         m_position = position;
         m_containerid = containerid;
-        m_isolatetracking_id = agarid;
-        m_oligoid = oligoid;
-     
+       
     }
     
    
@@ -177,12 +173,6 @@ public class Sample
     
     
       
-    /**
-     * Return the oligo id.
-     *
-     * @return The oligo id.
-     */
-    public int getOligoid()    {        return m_oligoid;    }
     
        
     /**
@@ -260,14 +250,6 @@ public class Sample
      */
     public void setIsolaterTrackingid(int id)    {        m_isolatetracking_id = id;    }
     
-    /**
-     * Set the oligo id to the given value.
-     *
-     * @param oligoid The value to be set to.
-     */
-    public void setOligoid(int oligoid)    {        m_oligoid = oligoid;   }
-    
-   
     
     /**
      * Set the cdslength to the given value.

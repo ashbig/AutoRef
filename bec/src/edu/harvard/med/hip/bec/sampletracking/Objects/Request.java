@@ -26,7 +26,7 @@ public class Request
     public static final int REQUEST_NOT_FINISHED = -1;
     
     private int m_id = -1;
-    private java.util.Date m_submitiondate = null;
+    private java.util.Date m_submissiondate = null;
     private int m_submitter_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private User m_submitter = null;
     private ArrayList m_process_ids = null;
@@ -44,7 +44,7 @@ public class Request
             m_id = BecIDGenerator.getID("requestid");
         else
             m_id = id;
-         m_submitiondate = d;
+         m_submissiondate = d;
          m_submitter  = u;
          m_submitter_id = u.getId();
          if (mode == Constants.TYPE_ID)
@@ -59,7 +59,7 @@ public class Request
             m_id = BecIDGenerator.getID("requestid");
         else
             m_id = id;
-         m_submitiondate = d;
+         m_submissiondate = d;
          m_submitter_id = u;
          
         if (mode == Constants.TYPE_ID)
@@ -70,7 +70,7 @@ public class Request
     
     //getters
     public int getId (){ return m_id  ;}
-    public java.util.Date getSubmitionDate (){ return m_submitiondate;}
+    public java.util.Date getSubmissionDate(){ return m_submissiondate;}
     public int getSubmitterId (){ return m_submitter_id  ;}
     public User getSubmitter (){ return m_submitter  ;} 
     public ArrayList getProcessIds (){ return m_process_ids  ;}
@@ -102,7 +102,7 @@ public class Request
     {
          
         String sql = "insert into request(requestid, submittiondate, userid)"+
-        " values ("+m_id +","+ m_submitiondate +","+m_submitter_id + ")";
+        " values ("+m_id +","+ m_submissiondate +","+m_submitter_id + ")";
         
       
         Statement stmt = null;

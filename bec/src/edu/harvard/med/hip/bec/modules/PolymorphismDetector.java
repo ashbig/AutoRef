@@ -48,6 +48,7 @@ public class PolymorphismDetector
     
     
     /** Creates a new instance of DetectorRunner */
+    public PolymorphismDetector(){}
     public PolymorphismDetector(AnalyzedScoredSequence fl, PolymorphismSpec spec) throws BecUtilException
     {
         m_sequence = fl;
@@ -63,6 +64,21 @@ public class PolymorphismDetector
         m_spec = spec;
         if (spec != null)extractParameters(m_spec);
     }
+    
+    
+    
+    public void setSpec(PolymorphismSpec spec) throws BecUtilException
+    {
+        m_spec = spec;
+        if (spec != null) extractParameters(m_spec);
+    }
+    
+   
+    public void setSequence(AnalyzedScoredSequence fl) 
+    {
+        m_sequence = fl;
+    }
+    
     
     private void extractParameters(PolymorphismSpec spec) throws BecUtilException
     {
@@ -82,8 +98,7 @@ public class PolymorphismDetector
     
     
     //for testing only
-    public void setDB(String s)
-    {m_dbFileName = s;}
+    public void setDB(String s)    {m_dbFileName = s;}
     
     //main calling function for polymorphism finder
     public void run()throws BecDatabaseException,ParseException,BecUtilException

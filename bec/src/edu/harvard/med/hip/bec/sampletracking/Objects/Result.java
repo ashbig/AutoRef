@@ -37,32 +37,32 @@ public class Result
     
     // result type for a GEL
     public static final int RESULT_TYPE_GEL = 1;
-   
-    // result type for an agar plate
-    public static final int RESULT_TYPE_AGAR=2;
+    public static final int RESULT_TYPE_ENDREAD_REVERSE = 7;   
+    public static final int RESULT_TYPE_OLIGO_CALCULATION=2;
      // result type for DNA GEL
-    public static final int RESULT_TYPE_DNA_GEL =3;
-    public static final int RESULT_TYPE_READ=4;
-    public static final int RESULT_TYPE_CLONE_SEQUENCE =5;
-    public static final int RESULT_TYPE_CONSEQ_SEQUENCE =6;
+    public static final int RESULT_TYPE_ASSEMBLED_SEQUENCE_PASS =3;
+    public static final int RESULT_TYPE_ENDREAD_FORWRD=4;
+    public static final int RESULT_TYPE_FINAL_CLONE_SEQUENCE =5;
+    public static final int RESULT_TYPE_ASSEMBLED_SEQUENCE_FAIL =6;
     
  
     // id for this result
     private int         m_id = -1;
     // The process used to generate this result
-    private int m_executionid = -1;
+    private int m_process_id = -1;
       // The sample used to generate this result
     private int     m_sample_id = -1;
     
     // The type of the result.
     private int     m_type = -1;
      // The value of the result
-    private String m_value = null;
+    private int m_value_id = -1;
   
     //if result not string but object - object (read, sequence ..)
     //or array of objects
-    private Object m_result_object = null;
+    private Object m_value_object = null;
   
+    
     
     /**
      * Constructor.
@@ -73,56 +73,36 @@ public class Result
      * @param type The type of the result.
      * @param value The value of the result.
      */
-    public Result(int id, int executionid, int sampleid, Object result_object, int type, String value)
+    public Result(int id, int executionid, int sampleid, Object result_object, int type, int valueid)
                     throws BecDatabaseException
     {
          if (id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
             m_id = BecIDGenerator.getID("resultid");
         else
             m_id = id;
-        m_executionid = executionid;
+        m_process_id = executionid;
         m_sample_id = sampleid;
         m_type = type;
-        m_value= value;
-        m_result_object = result_object;
+        m_value_id= valueid;
+        m_value_object = result_object;
     }
     
-    /**
-     * Return the result type.
-     *
-     * @return The result type.
-     */
-    public int getType()    {        return m_type;    }
-    
-    /**
-     * Return the result value.
-     *
-     * @return The result value.
-     */
-    public String getValue()    {        return m_value;    }
-    
-    /**
-     * Accessor for the id
-     *
-     * @return id of this result.
-     */
-    public int getId()    {        return m_id;    }
-    
-    /**
-     * Accessor for the sampleid.
-     *
-     * @return the sample this is the result for.
-     */
    
-    public int    getSampleId()    {        return m_sample_id;    }
-    /**
-     * Accessor for the processes this result
-     *
-     * @return process for this result
-     */
+    public int              getType()    {        return m_type;    }
+    public int               getValueId()    {        return m_value_id;    }
+    public int              getId()    {        return m_id;    }
+    public int              getSampleId()    {        return m_sample_id;    }
+    public int              getProcessId()    {        return m_process_id;    }
+    public Object           getValueObject(){ return m_value_object;}
     
-    public int     getExecutionId()    {        return m_executionid;    }
-    public Object   getResultObject(){ return m_result_object;}
+    
+    public void              setType(int v)    {         m_type= v;    }
+    public void               setValueId(int v)    {         m_value_id= v;    }
+    public void              setId(int v)    {         m_id= v;    }
+    public void              setSampleId(int v)    {         m_sample_id= v;    }
+    public void              setProcessId(int v)    {         m_process_id= v;    }
+    public void             setValueObject(Object v){  m_value_object= v;}
+
     /**
      * Inserts this Result into the database.
      *
@@ -139,9 +119,9 @@ public class Result
             m_id = BecIDGenerator.getID("RESULTID");
             ps.setInt(1,m_id);
             ps.setInt(2,m_sample_id);
-            ps.setInt(3, m_executionid);
+            ps.setInt(3, m_process_id);
             ps.setInt(4,m_type);
-            ps.setString(5,m_value);
+            ps.setInt(5,m_value_id);
             dt.executeUpdate(ps);
             
         } catch (SQLException sqlE)
@@ -184,7 +164,7 @@ public class Result
         {
             ps = conn.prepareStatement(sql);
             ps.setInt(1, sample.getId());
-            ps.setInt(2, m_executionid);
+            ps.setInt(2, m_process_id);
             
             rs = dt.executeQuery(ps);
             
@@ -256,17 +236,7 @@ public class Result
     } //getFileReferences
     */
     
-    
-    /**
-     * String representation of the result which is the value.
-     *
-     * @return value of the result.
-     */
-    public String toString()
-    {
-        return m_value;
-    }
-    
+   
     public static void main(String [] args) throws Exception
     {
         
@@ -274,8 +244,4 @@ public class Result
 } // End class Result
 
 
-/*
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
-|<---            this code is formatted to fit into 80 columns             --->|
- */
+

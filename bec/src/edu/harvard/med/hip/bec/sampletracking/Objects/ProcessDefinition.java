@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.2 2003-04-07 18:47:01 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.3 2003-04-16 17:49:40 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -18,14 +18,17 @@ import java.sql.*;
  */
 public class ProcessDefinition
 {
+    public static final     String    RUN_ENDREADS_SEQUENCING = "Run End Reads Sequencing";
+    public static final     String    RUN_ENDREADS_WRAPPER = "Run End Reads Wrapper";
+    public static final     String    RUN_ENDREADS_EVALUATION = "Run End Reads Evaluation";
+    public static final     String    RUN_ENDREADS_CONFIRM_RANK = "Confirm clone rank";
     
     private int             m_id = -1;
-    private String          m_process_code = null;
     private String          m_process_name = null;
     private ArrayList       m_spectype_ids = null;
     
-    public static final     int  END_READ_CONTAINER_CREATIONS = 0;
-    public static final     String  CODE_END_READ_CONTAINER_CREATIONS = "ER";
+   // public static final     int  END_READ_CONTAINER_CREATIONS = 0;
+   // public static final     String  CODE_END_READ_CONTAINER_CREATIONS = "ER";
     
     private static   ArrayList   m_process_definitions = null;
     
@@ -39,16 +42,18 @@ public class ProcessDefinition
     {
       
     }
-    protected ProcessDefinition(int id, String code, String name, ArrayList ids) 
+    public ProcessDefinition(int id,  String name, ArrayList ids) 
     {
        m_id = id;
-       m_process_code = code;
        m_process_name = name;
        m_spectype_ids = ids;
     }
     
     
-    
+    public int      ProcessIdFromProcessName(String name)
+    {
+        return 0;
+    }
     
     /**
      * Finds all processes available on the system 

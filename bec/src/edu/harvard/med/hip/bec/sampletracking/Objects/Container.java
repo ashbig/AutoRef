@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.2 2003-04-07 18:47:01 Elena Exp $
+ * $Id: Container.java,v 1.3 2003-04-16 17:49:40 Elena Exp $
  *
  * File     	: Container.java
 
@@ -23,30 +23,28 @@ import sun.jdbc.rowset.*;
  */
 public class Container
 {
-    public static final String TYPE_ER_REVERSE_CONTAINER = "ER_REVERSE_CONTAINER";
-    public static final String TYPE_ER_FORWARD_CONTAINER = "ER_FORWARD_CONTAINER";
-    public static final String TYPE_ER_CONTAINER = "ER_CONTAINER";
-    public static final String TYPE_MASTER_CONTAINER = "MASTER_CONTAINER";
+   // public static final String TYPE_ER_REVERSE_CONTAINER = "ER_REVERSE_CONTAINER";
+  //  public static final String TYPE_ER_FORWARD_CONTAINER = "ER_FORWARD_CONTAINER";
+  //  public static final String TYPE_ER_CONTAINER = "ER_CONTAINER";
+    public static final String TYPE_SEQUENCING_CONTAINER = "MASTER_CONTAINER";
    
     //status for master plate
-    public static final int STATUS_MASTER_SUBMITTED = 0;
-    public static final int STATUS_ER_PROCESS = 1;
-    public static final int STATUS_ER_FINISH = 2;
-    public static final int STATUS_ER_ANALYZED = 3;
+    public static final int STATUS_SUBMITTED = 0;
+    public static final int STATUS_ANALYSIS_FINISHED = 1;
+  //  public static final int STATUS_ER_FINISH = 2;
+    public static final int STATUS_ANALYSIS_INPROCESS = 3;
    
     
     
     
-    public static final String SUF_ER_REVERSE_CONTAINER = "R";
-    public static final String SUF_ER_FORWARD_CONTAINER = "F";
+  //  public static final String SUF_ER_REVERSE_CONTAINER = "R";
+  //  public static final String SUF_ER_FORWARD_CONTAINER = "F";
+    
     
     private int         m_id = -1;
     private String      m_type = null;
-    private Location    m_location = null;
-    private int         m_locationid = -1;
     private String      m_label = null;
     private ArrayList   m_samples = new ArrayList();
-    private int         m_threadid = -1;
     private int         m_status = -1;
     /**
      * Constructor.
@@ -60,7 +58,7 @@ public class Container
     {
         m_id = id;
         
-        String sql = "select c.containerid as containerid, "+
+  /*      String sql = "select c.containerid as containerid, "+
         "c.containertype as containertype, "+
         "c.label as label, "+
         "c.locationid as locationid, "+
@@ -70,7 +68,9 @@ public class Container
         "from containerheader c, containerlocation l\n"+
         "where c.locationid = l.locationid\n"+
         "and c.containerid = "+id;
-        
+        */
+          String sql = "select  containerid,  containertype,  label, status "+
+            "from containerheader where containerid = "+id;
         CachedRowSet crs = null;
         try
         {
@@ -87,10 +87,10 @@ public class Container
             {
                 
                 m_type = crs.getString("CONTAINERTYPE");
-                int m_locationid = crs.getInt("LOCATIONID");
+              //  int m_locationid = crs.getInt("LOCATIONID");
                 m_label = crs.getString("LABEL");
-                m_threadid = crs.getInt("THREADID");
-                m_status = crs.getInt("");
+          //      m_threadid = crs.getInt("THREADID");
+                m_status = crs.getInt("STATUS");
             }
         } catch (NullPointerException ex)
         {
@@ -118,15 +118,16 @@ public class Container
      * @return The Container object.
      * @exception BecDatabaseException.
      */
+    /*
     public Container(int id, String type, Location location, String label, 
                     int status, int threadid) throws BecDatabaseException
     {
         m_type = type;
-        m_location = location;
+        //m_location = location;
         m_status = status;
-        m_locationid = m_location.getId();
+       // m_locationid = m_location.getId();
         m_label = label;
-        m_threadid = threadid;
+      //  m_threadid = threadid;
         if (id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
             m_id = BecIDGenerator.getID("containerid");
         else
@@ -146,6 +147,21 @@ public class Container
         else
             m_id = id;
     }
+     **/
+    
+    
+    
+    public Container(int id, String type, String label, 
+                    int status) throws BecDatabaseException
+    {
+        m_type = type;
+        m_status = status;
+        m_label = label;
+        if (id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+            m_id = BecIDGenerator.getID("containerid");
+        else
+            m_id = id;
+    }
     
     /**
      * Finds all containers with the specified label.
@@ -155,12 +171,12 @@ public class Container
      * @return A list of Container object with the given label.
      * @exception BecUtilException, BecDatabaseException.
      */
-    public static List findContainers(String label) throws BecUtilException,
+    public static ArrayList findContainersFromLabel(String label) throws BecUtilException,
     BecDatabaseException
     {
         
-        List containerList = new LinkedList();
-        
+        ArrayList containerList = new ArrayList();
+        /*
         String sql = "select c.containerid as containerid, "+
         "c.containertype as containertype, "+
         "c.label as label, "+
@@ -171,6 +187,9 @@ public class Container
         "from containerheader c, containerlocation l\n"+
         "where c.locationid = l.locationid\n"+
         "and c.label = '"+ label+"'";
+         **/
+        String sql = "select  containerid, containertype,  label, status "+
+        "from containerheader where label = '"+ label+"'";
         ResultSet rs = null;
         try
         {
@@ -179,9 +198,13 @@ public class Container
             
             while(rs.next())
             {
-                
                 int id = rs.getInt("CONTAINERID");
-                Container curContainer = new Container(id);
+                Container curContainer = new Container(
+                                    rs.getInt("CONTAINERID"), 
+                                    rs.getString("containertype") , 
+                                    rs.getString("label"), 
+                                        rs.getInt("status"));
+             
                 curContainer.restoreSample();
                 containerList.add(curContainer);
             }
@@ -198,145 +221,22 @@ public class Container
         return containerList;
     }
     
-    /**
-     * Finds all containers with the specified label.
-     *
-     * @param label The container label.
-     *
-     * @return A list of Container object with the given label.
-     * @exception BecUtilException, BecDatabaseException.
-     */
-    public static List findContainersFromView(String label) throws BecUtilException,
-    BecDatabaseException
-    {
-        
-        List containerList = new LinkedList();
-        
-        String sql = "select containerid, containertype, label, locationid, "+
-        "threadid, locationtype,  description "+
-        "from CONTAINER_BY_LABEL where label = '"+ label+"'";
-        ResultSet rs = null;
-        try
-        {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            
-            while(rs.next())
-            {
-                
-                int id = rs.getInt("CONTAINERID");
-                Container curContainer = new Container(id);
-                curContainer.restoreSample();
-                containerList.add(curContainer);
-            }
-        } catch (NullPointerException ex)
-        {
-            throw new BecUtilException("Error occured while initializing container with label: "+label+"\n"+ex.getMessage());
-        } catch (SQLException sqlE)
-        {
-            throw new BecDatabaseException("Error occured while initializing container from labe: "+label+"\n"+"\nSQL: "+sqlE);
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(rs);
-        }
-        return containerList;
-    }
+  
+    public int          getId()    {        return m_id;    }
+    public int          getStatus()    {        return m_status;}
+    public String       getLabel()    {        return m_label;    }
+    public String      getType()    {        return m_type;    }
+    public ArrayList getSamples()    {        return m_samples;    } 
     
-    /**
-     * Return the container id.
-     *
-     * @return The container id.
-     */
-    public int getId()    {        return m_id;    }
-    public int getStatus()    {        return m_status;}
-    /**
-     * Return the label of this container.
-     *
-     * @return The label string.
-     */
-    public String getLabel()    {        return m_label;    }
-    
-    /**
-     * Static method to construct the label from process code,
-     * plateset id, and subthread id.
-     *
-     * @param projectCode The code related to the project.
-     * @param processcode The process code related to this container label.
-     * @param threadid The thread id related to this container label.
-     * @param subthreadid The subthreadid if there is any.
-     * @return The label.
-     */
-    
-    /*
-    public static String getLabel(String projectCode, String processcode, int threadid, String subthreadid)
-    {
-        java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
-        fmt.setMaximumIntegerDigits(6);
-        fmt.setMinimumIntegerDigits(6);
-        fmt.setGroupingUsed(false);
-        
-        if((subthreadid == null) || (subthreadid.trim().length() == 0))
-            return (projectCode+processcode+fmt.format(threadid));
-        else
-            return (projectCode+processcode+fmt.format(threadid)+"-"+subthreadid);
-    }
-    */
-    /**
-     * Return the location of the container.
-     *
-     * @return The location of the container.
-     */
-    public Location getLocation()  throws BecDatabaseException  ,BecUtilException
-    {       
-        if (m_location == null) 
-            m_location = new Location(m_locationid); 
-        return m_location;   
-    }
-     public int    getLocationId()    {        return m_locationid;    }
-    /**
-     * Set the container location to the given value.
-     *
-     * @param location The location to be set to.
-     */
-    public void setLocation(Location location)    {        m_location = location;    }
-    
-    /**
-     * Return the threadid.
-     *
-     * @return The thread id.
-     */
-    public int getThreadid()    {        return m_threadid;    }
-    
+    public void             addSample(Sample sample)    {        m_samples.add(sample);    }
+    public void             setLabel(String label)    {        m_label = label;    }
+    public void             setStatus(int status)    {        m_status = status;    }
+    public void             setSamples(ArrayList arr)    {         m_samples = arr;  }
+   
     public ArrayList getContainerHistory()    {        return null;    }
     public static ArrayList getContainerHistory(int containerid)    {        return null;    }
     
-    /**
-     * Set the threadid.
-     *
-     * @param threadid The value to be set to.
-     */
-    public void setThreadid(int threadid)    {        m_threadid = threadid;    }
-    
-    /**
-     * Set the container label
-     * @param label The label to be set to.
-     */
-    public void setLabel(String label)    {        m_label = label;    }
-    public void setStatus(int status)    {        m_status = status;    }
-    /**
-     * Return the type of the container.
-     *
-     * @return The container type.
-     */
-    public String getType()    {        return m_type;    }
-    
-    /**
-     * Return a list of Sample objects.
-     *
-     * @return A list of Sample objects.
-     */
-    public ArrayList getSamples()    {        return m_samples;    }
-    
+   
     /**
      * Get the Sample object at a certain position.
      *
@@ -358,12 +258,8 @@ public class Container
         }
     }
     
-    /**
-     * Add a Sample object to a list of Sample objects.
-     *
-     * @param sample A Sample object to be added to the list.
-     */
-    public void addSample(Sample sample)    {        m_samples.add(sample);    }
+   
+    
     
    
     /**
@@ -373,10 +269,10 @@ public class Container
      */
     public void restoreSample() throws BecDatabaseException
     {
-        /*
-        samples.removeAllElements();
         
-        String sql = "select * from sample where containerid="+id+" order by CONTAINERPOSITION";
+        m_samples.clear();
+        
+        String sql = "select sampleid, position, sampletype from sample where containerid="+m_id+" order by POSITION";
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         CachedRowSet crs = t.executeQuery(sql);
@@ -388,38 +284,9 @@ public class Container
                 
                 int sampleid = crs.getInt("SAMPLEID");
                 String sampletype = crs.getString("SAMPLETYPE");
-                int containerposition = crs.getInt("CONTAINERPOSITION");
-                
-                int constructid = -1;
-                Object construct = crs.getObject("CONSTRUCTID");
-                if(construct != null)
-                    constructid = ((BigDecimal)construct).intValue();
-                
-                int oligoid = -1;
-                Object oligo = crs.getObject("OLIGOID");
-                if(oligo != null)
-                    oligoid = ((BigDecimal)oligo).intValue();
-                
-                String status = crs.getString("STATUS_GB");
-                
-                Sample s = new Sample(sampleid, sampletype, containerposition, id, constructid, oligoid, status);
-                int cdslength = -1;
-                
-                if(!Sample.CONTROL_POSITIVE.equals(sampletype)&&!Sample.CONTROL_NEGATIVE.equals(sampletype))
-                {
-                    String newSql = "select distinct f.cdslength as cdslength from flexsequence f, "+
-                    "constructdesign c, sample s where f.sequenceid = "+
-                    "c.sequenceid and (s.constructid = c.constructid "+
-                    "or s.oligoid=c.oligoid_5p) and s.sampleid = "+sampleid;
-                    rs = t.executeQuery(newSql);
-                    if(rs.next())
-                    {
-                        cdslength = rs.getInt("CDSLENGTH");
-                    }
-                }
-                
-                s.setCdslength(cdslength);
-                m_addSample(s);
+                int position = crs.getInt("position");
+                Sample s = new Sample(  sampleid, sampletype, position, m_id);
+                m_samples.add(s);
             }
         } catch (SQLException sqlE)
         {
@@ -429,7 +296,7 @@ public class Container
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeResultSet(crs);
         }
-         **/
+         
     }
     /**
      * Insert the container record into database.
@@ -440,8 +307,8 @@ public class Container
     public void insert(Connection conn) throws BecDatabaseException
     {
         String sql = 	"insert into containerheader " +
-        "(containerid, containertype, locationid, label, threadid) "+
-        "values ("+m_id+",'"+m_type+"',"+m_location.getId()+",'"+m_label+"',"+m_threadid+")";
+        "(containerid, containertype,  label, status) "+
+        "values ("+m_id+",'"+m_type+"','"+m_label+"',"+m_status+")";
         
         DatabaseTransaction.executeUpdate(sql,conn);
         
@@ -456,27 +323,6 @@ public class Container
     
    
     
-    
-    /**
-     * Two containers are equal when there ids are set and are equal
-     *
-     * @param obj The object to compare to
-     *
-     * @return true when equal, false otherwise
-     */
-    public boolean equals(Container container)
-    {
-        boolean retValue= false;
-        if (container !=null)
-        {
-           
-            if(container.getId() >0 && container.getId() == m_id)
-            {
-                retValue = true;
-            }
-        }
-        return retValue;
-    }
     
     
     /**
@@ -494,6 +340,7 @@ public class Container
         m_status = status;
         DatabaseTransaction.executeUpdate(sql, c);
     }
+     
     
     
     /**
@@ -503,6 +350,7 @@ public class Container
      * @param c The connection used for database update.
      * @exception The BecDatabaseException.
      */
+    /*
     public void updateLocation(int locationid, Connection c) throws BecDatabaseException
     {
         String sql = "update containerheader "+
@@ -513,7 +361,7 @@ public class Container
     }
     
    
-  
+  /*
     public String[] labelParsing()
     {
         String output[] = new String[2];
@@ -525,7 +373,7 @@ public class Container
         return output;
     }
     
-    
+    */
     
     // ***** statis methods **********************************
     
@@ -537,6 +385,7 @@ public class Container
      * @param c The connection used for database update.
      * @exception The BecDatabaseException.
      */
+    /*
     public static void updateLocation(int locationid ,int containerid, Connection c) throws BecDatabaseException
     {
         String sql = "update containerheader "+
@@ -545,7 +394,7 @@ public class Container
         
         DatabaseTransaction.executeUpdate(sql, c);
     }
-    
+    */
     
     // function returns araay of containers of type == container type
     // that have status one in container statuses
@@ -1040,10 +889,10 @@ public class Container
         try
         {
             System.out.println(System.currentTimeMillis());
-            Container.findContainers("MAB000206-F");
-            System.out.println(System.currentTimeMillis());
-            Container.findContainersFromView("MAB000206-F");
-            System.out.println(System.currentTimeMillis());
+           // Container.findContainers("MAB000206-F");
+           // System.out.println(System.currentTimeMillis());
+           // Container.findContainersFromView("MAB000206-F");
+           // System.out.println(System.currentTimeMillis());
         }
         catch(Exception e)
         {

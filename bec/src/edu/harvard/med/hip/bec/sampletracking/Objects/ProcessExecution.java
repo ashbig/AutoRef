@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessExecution.java,v 1.1 2003-04-07 18:46:50 Elena Exp $
+ * $Id: ProcessExecution.java,v 1.2 2003-04-16 17:49:40 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -24,8 +24,8 @@ public class ProcessExecution
     public static final int     STATUS_INITIATED = 2;
     public static final int     STATUS_FINISHED = 1;
     
-    private int             m_executionid = -1;
-    private String          m_process_code = null;//for plate labeling
+    private int m_id = -1;
+    //for plate labeling
     private int             m_processdefinition_id = -1;
     private int          m_request_id = -1;
     
@@ -41,14 +41,14 @@ public class ProcessExecution
       
     }
     
-    public ProcessExecution(int id, String code, int processdef, int requestid, ArrayList specar, int mode) throws BecDatabaseException
+    public ProcessExecution(int id, int processdef, int requestid, ArrayList specar, int mode) throws BecDatabaseException
     {
        if (id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
-            m_executionid = BecIDGenerator.getID("executionid");
+            m_id = BecIDGenerator.getID("processid");
         else
-            m_executionid = id;
+            m_id = id;
        //m_date = ;
-       m_process_code = code;
+      
        m_processdefinition_id = processdef;
        if (mode == Constants.TYPE_OBJECTS)
         {
@@ -64,18 +64,18 @@ public class ProcessExecution
     }
     
     
-    public int             getExecutionId (){ return m_executionid  ;}
-    public String          getProcessCode (){ return m_process_code  ;}//for plate labeling
-    public int             getProcessDefinitionId (){ return m_processdefinition_id  ;}
+    public int getId(){ return m_id  ;}
+    //for plate labeling
+    public int              getProcessDefinitionId (){ return m_processdefinition_id  ;}
     public int              getRequestId (){ return m_request_id  ;}
-    public int             getStatus (){ return m_status  ;}
-    public java.util.Date  getDate (){ return m_date  ;}
+    public int              getStatus (){ return m_status  ;}
+    public java.util.Date   getDate (){ return m_date  ;}
     //specs for the process to execute (can be none)
-    public static   ArrayList   getSpecs (){ return m_specs  ;}
-    public ArrayList       getSpecIds (){ return m_spec_ids  ;}
+    public ArrayList        getSpecs (){ return m_specs  ;}
+    public ArrayList        getSpecIds (){ return m_spec_ids  ;}
     
     
-    
+    public void             addSpecIds (int v){  m_spec_ids.add(new Integer(v))  ;}
     public void              setRequestId (int v){  m_request_id = v ;}
     
     
@@ -86,15 +86,15 @@ public class ProcessExecution
         if (m_spec_ids == null)
         {
             sql = "insert into processexecution "+
-            "(executionid, processcode, requestid, processdefinitionid, executiondate, status)"+
-            " values ("+m_executionid +","+ m_process_code +","+m_request_id 
+            "(executionid,  requestid, processdefinitionid, executiondate, status)"+
+            " values ("+m_id +","+m_request_id 
             +","+ m_processdefinition_id +","+m_date +","+ m_status +","+m_request_id +")";
         }
         else
         {
             sql = "insert into processexecution "+
-            "(executionid, processcode, requestid, processdefinitionid, executiondate, status,spec)"+
-            " values ("+m_executionid +","+ m_process_code +","+m_request_id 
+            "(executionid,  requestid, processdefinitionid, executiondate, status,spec)"+
+            " values ("+m_id +","+m_request_id 
             +","+ m_processdefinition_id +","+m_date +","+ m_status +","+m_request_id +")";
         
         }
