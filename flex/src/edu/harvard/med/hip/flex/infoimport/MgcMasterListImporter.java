@@ -76,7 +76,7 @@ public class MgcMasterListImporter
         ArrayList containerCol = new ArrayList();
         Hashtable existingClones = new Hashtable();
         System.out.println(System.currentTimeMillis());
-        System.out.println(m_username);
+       
         boolean res = true;
         writeToFile("Log file for MGC master list upload\n");        
         if (res) res =  getExistingClonesFromDB(existingClones);
@@ -84,9 +84,9 @@ public class MgcMasterListImporter
         if (res) res = readCloneInfo(  input,  fileName, containerCol, existingClones) ;
        System.out.println("read finish");
         if (res) res = readSeqences(containerCol, sequenceCol) ;
-       System.out.println("seq");
+       System.out.println("read sequences finished");
         if (res) res = uploadToDatabase(containerCol, sequenceCol) ;
-       System.out.println(m_username);
+       System.out.println("upload to DB finished");
         if (m_username != null)
         {
             try
