@@ -43,6 +43,10 @@ public class OligoPlateManager {
     protected boolean isMedium = false;
     protected boolean isLarge = false;
     
+    protected boolean isSetOpenClose = false;
+    protected boolean isOpenOnly = false;
+    protected boolean isCloseOnly = false;
+    
     /**
      * Constructor
      * Creates new OligoPlateManager
@@ -131,6 +135,10 @@ public class OligoPlateManager {
         if(protocol == null)
             setProtocol();
     }
+    
+    public void setIsSetOpenClose(boolean b) {this.isSetOpenClose = b;}
+    public void setIsOpenOnly(boolean b) {this.isOpenOnly = b;}
+    public void setIsCloseOnly(boolean b) {this.isCloseOnly = b;}
     
     /**
      * Set the protocol.
@@ -282,6 +290,12 @@ public class OligoPlateManager {
         
         try{
             cg = new ConstructGenerator(seqList,conn, project, workflow, protocol);
+            
+            if(isSetOpenClose) {
+                cg.setIsOpenOnly(isOpenOnly);
+                cg.setIsCloseOnly(isCloseOnly);
+            }
+            
             cg.generateOligoAndConstructs();
             cg.insertProcessInputOutput();
             cg.insertConstructQueue();
@@ -291,6 +305,8 @@ public class OligoPlateManager {
             //three text files for order oligos will be generated
             plater = new OligoPlater(oligoPatternList, cg.getConstructList(),
             conn, project, workflow);
+            plater.setIsOnlyClose(isCloseOnly);
+            plater.setIsOnlyOpen(isOpenOnly);
             plater.setTotalWells( totalWells );
             plater.setPlateType( m_plateType);
             plater.setReorderRequest(m_isReorderSequences);
@@ -327,9 +343,9 @@ public class OligoPlateManager {
     }
     
     public void sendOligoOrders() throws MessagingException{
-        String to = "etaycher@hms.harvard.edu";
+        String to = "dzuo@hms.harvard.edu";
         String from = "dzuo@hms.harvard.edu";
-        String cc = "flexgene_manager@hms.harvard.edu";
+        String cc = "dzuo@hms.harvard.edu";
         String subject = "Oligo order for project - "+project.getName();
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
