@@ -76,6 +76,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
         } catch (FlexProcessException ex) {
             request.setAttribute("workflowid", new Integer(workflowid));
             request.setAttribute("projectid", new Integer(projectid));
+            request.setAttribute("templateid", new Integer(templateid));
             
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
