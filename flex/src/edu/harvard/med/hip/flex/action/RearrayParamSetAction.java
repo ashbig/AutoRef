@@ -171,8 +171,10 @@ public class RearrayParamSetAction extends ResearcherAction {
         if(GenericRearrayForm.REARRAYCLONE.equals(rearrayType))
             manager.setIsClone(true);
         
-        if("format2".equals(fileFormat))
+        if("format2".equals(fileFormat)) {
             manager.setIsDestPlateSet(true);
+            isSourceDup = true;
+        }
         
         if("number".equals(plateFormat))
             manager.setIsPlateAsLabel(false);
