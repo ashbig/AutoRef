@@ -36,6 +36,8 @@ public class OligoPlateManager {
     protected int totalWells = 94;
     protected Protocol protocol = null;
     protected boolean isGroupBySize = true;
+    protected boolean     m_isReorderSequences = true;
+    protected String      m_plateType = "96 WELL OLIGO PLATE";
     
     /**
      * Constructor
@@ -83,17 +85,17 @@ public class OligoPlateManager {
     public OligoPlateManager(Connection conn, Project project, Workflow workflow,
     int totalWells, boolean isFull, boolean isGroupBySize, Protocol protocol) 
     throws FlexDatabaseException {
-        this.conn = conn;
-        this.project = project;
-        this.workflow = workflow;
+        this( conn, project, workflow);
         this.totalWells = totalWells;
+        // m_plateType = 
         this.isOnlyFullPlate = isFull;
         this.isGroupBySize = isGroupBySize;
         this.protocol = protocol;
         
-        if(protocol == null)
-            setProtocol();        
+        if(protocol == null)            setProtocol();        
     }
+    
+     
     
     /**
      * Set the protocol.
@@ -101,6 +103,12 @@ public class OligoPlateManager {
     protected void setProtocol() throws FlexDatabaseException {
         this.protocol = new Protocol(PROTOCOL);
     }
+    
+    /**
+     *Set isResort parameter (whether sequences will be reordered by OligoPlater
+     */
+     protected void setIsReorder(boolean isReorder) {m_isReorderSequences = isReorder;}
+       
     
     /**
      * Check the total number of sequences in the Queue table belong to the
@@ -246,8 +254,14 @@ public class OligoPlateManager {
             
             //all of the oligo plate header and sample info are inserted in DB
             //three text files for order oligos will be generated
-            plater = new OligoPlater(oligoPatternList, cg.getConstructList(), conn, project, workflow);
+            plater = new OligoPlater(oligoPatternList, cg.getConstructList(), 
+                                    conn, project, workflow);
+            plater.setTotalWells( totalWells );
+            plater.setPlateType( m_plateType);
+            plater.setReorderRequest(m_isReorderSequences);
             plater.setMgcContainerId(mgcContainerId);
+            
+            
             plater.generateOligoOrder();
             plater.removeOrderOligoQueue();
             
@@ -272,14 +286,16 @@ public class OligoPlateManager {
         }
 
         
-        
-        fileList = plater.generateOligoOrderFiles();
+        if (fileList == null || fileList.size() == 0)
+            fileList = plater.generateOligoOrderFiles() ;
+        else
+            fileList.addAll( plater.generateOligoOrderFiles() );
     }
     
     public void sendOligoOrders() throws MessagingException{
         String to = "dzuo@hms.harvard.edu";
         String from = "wmar@hms.harvard.edu";
-        String cc = "dzuo@hms.harvard.edu";
+        String cc = "etaycher@hms.harvard.edu";
 //        String cc = "flexgene_manager@hms.harvard.edu";
         String subject = "Oligo order for project - "+project.getName();
         String msgText = "The attached files are our oligo order.\n"+
@@ -358,7 +374,7 @@ public class OligoPlateManager {
             w = new Workflow(6);
             
             //OligoPlateManager om = new OligoPlateManager(c, p, w);
-            OligoPlateManager om = new OligoPlateManager(c, p, w, 94, false, true, null);
+            OligoPlateManager om = new OligoPlateManager(c, p, w, 10, false, true, null);
             System.out.println("About to start thread");
             om.orderOligo();
             System.out.println("finished calling thread");
