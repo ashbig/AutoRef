@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2003-09-25 13:17:36 $
+ * $Revision: 1.10 $
+ * $Date: 2003-09-26 18:06:26 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.9 $ $Date: 2003-09-25 13:17:36 $
+ * @version    $Revision: 1.10 $ $Date: 2003-09-26 18:06:26 $
  */
 
 public class Mailer
@@ -269,8 +269,8 @@ public static void notifyUser(String user_name, String file_name, String subject
 private static File writeFile(Vector fileData, String file_name)
 throws IOException
 {
-    //File fl = new File( "/tmp/"  + file_name);
-    File fl = new File( "G:\\"  + file_name);
+    File fl = new File( "/tmp/"  + file_name);
+    //File fl = new File( "G:\\"  + file_name);
     FileWriter fr = new FileWriter(fl);
     
     for (int count = 0; count < fileData.size(); count++)
