@@ -51,12 +51,19 @@
     <form-bean      name="customerRegistrationForm"
                     type="edu.harvard.med.hip.flex.form.CustomerRegistrationForm"/>
 
+
+    <!-- Customer receive oligo orders form bean -->
+    <form-bean      name="ReceiveOligoOrdersForm"
+                    type="edu.harvard.med.hip.flex.form.ReceiveOligoOrdersForm"/>
+
+
     <!-- Find registration form bean -->
     <form-bean      name="findRegistrationForm"
                     type="edu.harvard.med.hip.flex.form.FindRegistrationForm"/>
 
 
   </form-beans>
+
 
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -219,6 +226,15 @@
                input="/SelectProtocol.do">
       <forward  name="success"   path="/ConfirmPlate.jsp"/>
     </action>  
+
+    <!-- Process the receiving of new oligo plates -->
+    <action    path="/ReceiveOligoPlates"
+               type="edu.harvard.med.hip.flex.action.ReceiveOligoPlatesAction"
+               name="ReceiveOligoOrdersForm"
+               scope="request"
+               input="/ReceiveOligoOrders.jsp">
+      <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
+    </action>
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
