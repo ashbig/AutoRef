@@ -17,13 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
+import org.apache.struts.action.*;
+
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.process.*;
@@ -63,22 +58,33 @@ public class SelectProtocolAction extends FlexAction
     HttpServletResponse response)
     throws ServletException, IOException
     {
+        ActionErrors errors = new ActionErrors();
+        
         String processname = ((PickColonyForm)form).getProcessname();
         int workflowid = ((PickColonyForm)form).getWorkflowid();
         int projectid = ((PickColonyForm)form).getProjectid();
         String projectname = ((PickColonyForm)form).getProjectname();
-        
+   
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
-        
+        request.setAttribute("projectname", projectname);
+        request.setAttribute(Constants.PROTOCOL_NAME_KEY, processname);
+         request.setAttribute("processname", processname);
+         
+ 
         ProcessQueue queue = null;
         LinkedList items = null;
         
         try
         {
-            Protocol protocol = new Protocol(processname);
+            
+           
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
+            request.setAttribute("workflowname", workflow.getName());  
+           
+             Protocol protocol = new Protocol(processname);
+          // System.out.println(protocol.getId() +"_"+ project.getId()+"_"+ workflow.getId());
             
             if(Protocol.GENERATE_PCR_PLATES.equals(processname) ||
             Protocol.DILUTE_OLIGO_PLATE.equals(processname))
@@ -93,6 +99,8 @@ public class SelectProtocolAction extends FlexAction
             {
                 SequenceOligoQueue seqQueue = new SequenceOligoQueue();
                 LinkedList seqList = seqQueue.getQueueItems(protocol, project, workflow);
+             
+                
                 int numOfSeqs = seqList.size();
                 
                 //  checks for duplicates on queue
@@ -118,9 +126,6 @@ public class SelectProtocolAction extends FlexAction
                     request.setAttribute("duplicatedSequences", duplicates);
                     request.setAttribute("number_of_duplicates",  new Integer(duplicates.size() ));
                     request.setAttribute("sequences_count", new Integer(numOfSeqs));
-                    request.setAttribute("projectname", projectname);
-                    request.setAttribute("processname", processname);
-                    request.setAttribute("workflowname", workflow.getName());
                     request.getSession().setAttribute("not_duplicated_sequences", seqNoDuplicates);
                     return (mapping.findForward("success_mgc_process_duplicate_plates"));
                 }
@@ -154,10 +159,30 @@ public class SelectProtocolAction extends FlexAction
                // request.setAttribute("platesInfo", plates);
                // request.setAttribute("full_plates", new Integer( plates.size() ));
                 request.setAttribute("sequences_count", new Integer(numOfSeqs));
-                request.setAttribute("projectname", projectname);
-                request.setAttribute("processname", processname);
-                request.setAttribute("workflowname", workflow.getName());
                 return (mapping.findForward("success_mgc_process_full_plates"));
+            }
+            else if (Protocol.REARRAY_PLATES_BASED_ON_SEQUENCING_RESULTS.equals(processname))
+            {
+                //check if all plates recieved
+  
+                 SequenceOligoQueue seqQueue = new SequenceOligoQueue();
+                 Protocol protocol_prev = new Protocol(Protocol.RECEIVE_SEQUENCING_RESULTS);
+                 items = seqQueue.getQueueItems(protocol_prev, project, workflow);
+                 if (items.size() > 0)
+                 {
+                      errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.notallplates.recieved"));
+                      saveErrors(request, errors);
+                      return new ActionForward(mapping.getInput());
+                 }
+      
+                  return (mapping.findForward("success_rearray"));
+            
+            }
+            else if (Protocol.REARRAY_PCR_PLATES.equals(processname))
+            {
+               
+                  return (mapping.findForward("success_rearray"));
+            
             }
             else
             {
@@ -170,15 +195,29 @@ public class SelectProtocolAction extends FlexAction
             
             if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname))
             {
+  
                 return (mapping.findForward("success_culture"));
-            } else if(Protocol.PICK_COLONY.equals(processname))
+            } 
+            else if(Protocol.PICK_COLONY.equals(processname))
             {
                 return (mapping.findForward("success_pick_colony"));
-            } else if(Protocol.ENTER_MGC_CULTURE_RESULTS.equals(processname))
+            } 
+            else if(Protocol.ENTER_MGC_CULTURE_RESULTS.equals(processname))
             {
                 request.setAttribute(Constants.PROTOCOL_NAME_KEY, processname);
                 return (mapping.findForward("success_enter_result"));
-            } else
+            } 
+           
+            else if(Protocol.RECEIVE_SEQUENCING_RESULTS.equals(processname) )
+            {
+               
+                request.setAttribute("protocolid", new Integer(protocol.getId()));
+                DateFormatter date = new DateFormatter();
+                String currentDate = date.getDateString();
+                request.setAttribute("receiveDate", currentDate);
+                return (mapping.findForward("success_recieve_plates"));
+            } 
+            else
             {
                 return (mapping.findForward("success"));
             }
