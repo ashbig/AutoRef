@@ -123,13 +123,14 @@ public class Algorithms
     public static String cleanWhiteSpaces(String str)
     {
         String copy = "";  // The reversed copy.
-        char[] ar =copy.toCharArray();
+        char[] ar =str.toCharArray();
         //       from str.length() - 1 down to 0.
         for ( int i = 0; i < ar.length;  i++ )
         {
             if (Character.isLetterOrDigit(ar[i]) ) copy += ar[i];
           
         }
+        
         return copy;
     }
     
@@ -140,7 +141,9 @@ public class Algorithms
     {
         
         
-        
+        String s = "ff f f f f f f fd ffff ";
+        s = Algorithms.cleanWhiteSpaces(s);
+        System.out.println(s);
     }
 }
 
