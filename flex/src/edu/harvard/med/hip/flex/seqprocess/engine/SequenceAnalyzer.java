@@ -311,7 +311,7 @@ public class SequenceAnalyzer
             BlastResult res_p1 = analyzer.run_bl2seq( sequence, Blaster.BLAST_PROGRAM_BLASTP,5);
             // BlastResult res_n = analyzer.parseResult("/tmp/b2n-1.out", Blaster.BLAST_PROGRAM_BLASTN, sequence.getId(),"", 3);
            // BlastResult res_p = analyzer.parseResult("/tmp/b2tp-1.out", Blaster.BLAST_PROGRAM_BLASTX,  sequence.getId(),"", 3);
-            Mutation.run_mutation_analysis(res_n, res_p,(FullSequence)fl,sequence);
+          //  Mutation.run_mutation_analysis(res_n, res_p,(FullSequence)fl,sequence);
             
            // analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_TBLASTX,3);
            // analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_BLASTP,3);

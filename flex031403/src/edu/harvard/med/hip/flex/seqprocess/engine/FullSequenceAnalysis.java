@@ -53,7 +53,7 @@ public class FullSequenceAnalysis
     
     
     //main function run full analysis for the experimental sequence
-    
+    /*
     public void analize()throws FlexDatabaseException
     {
         BlastResult res_n = null;
@@ -104,7 +104,7 @@ public class FullSequenceAnalysis
         
     }
     
-    
+    */
      //main function run full analysis for the experimental sequence
     
     public void analizeUsingNeedle()throws FlexDatabaseException
@@ -137,7 +137,8 @@ public class FullSequenceAnalysis
                                                                 
                                                                 m_full_sequence.getId(), 
                                                                 m_t_sequence.getId() );
-                     setSequenceStatus(mutations);
+                     m_full_sequence.setMutation(mutations);
+                     m_full_sequence.setQuality(m_spec);
                      m_full_sequence.setStatus(FullSequence.STATUS_ANALIZED);
 
                 }
