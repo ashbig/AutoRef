@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.15 2001-08-07 19:40:59 dzuo Exp $
+ * $Id: Protocol.java,v 1.16 2001-08-14 20:22:37 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -75,7 +75,7 @@ public class Protocol {
     public Protocol(int id) throws FlexDatabaseException {
            String sql = "select protocolid, processcode, processname " +
         "from processprotocol " +
-        "where protocolid = '" + id +"'";
+        "where protocolid = " + id;
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         // only one result should be returned if any

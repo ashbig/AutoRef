@@ -148,18 +148,16 @@ public class GetPCRResearcherAction extends ResearcherAction {
 
             // Get the next protocols from the workflow.
             Workflow wf = new Workflow();
-            Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
+            Vector nextProtocols = wf.getNextProtocol(protocol);
             
             // Add the new container to the queue for each protocol.
             ContainerProcessQueue q = new ContainerProcessQueue();
             for(int i=0; i<nextProtocols.size(); i++) {
                 newItems.clear();
-                newItems.addLast(new QueueItem(pcrOpenContainer, new Protocol((String)nextProtocols.elementAt(i))));
-                newItems.addLast(new QueueItem(pcrClosedContainer, new Protocol((String)nextProtocols.elementAt(i))));
+                newItems.addLast(new QueueItem(pcrOpenContainer, (Protocol)nextProtocols.elementAt(i)));
+                newItems.addLast(new QueueItem(pcrClosedContainer, (Protocol)nextProtocols.elementAt(i)));
                 q.addQueueItems(newItems, conn);
             }
-            
-           
         
             // Print the barcode
             String status = PrintLabel.execute(pcrOpenContainer.getLabel());

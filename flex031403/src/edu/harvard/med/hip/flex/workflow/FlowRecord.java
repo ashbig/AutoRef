@@ -10,6 +10,7 @@
 package edu.harvard.med.hip.flex.workflow;
 
 import java.util.*;
+import edu.harvard.med.hip.flex.process.*;
 
 /**
  *
@@ -17,49 +18,48 @@ import java.util.*;
  * @version 
  */
 public class FlowRecord {
-    private String current;
+    private Protocol current;
     private Vector next;
 
     /** Creates new FlowRecord 
      * 
-     * @param current The current protocol name.
-     * @param next A collection of next protocol names.
+     * @param current The current protocol object.
+     * @param next A collection of next protocol objects.
      *
      * @return The FlowRecord object.
      */
-    public FlowRecord(String current, Vector next) {
+    public FlowRecord(Protocol current, Vector next) {
         this.current = current;
         this.next = next;
     }
     
     /**
-     * Return true if the given protocol name if equal to the
-     * current protocol name; false otherwise.
+     * Return true if the given protocol is equal to the
+     * current protocol; false otherwise.
      *
-     * @param protocol The protocol name to be compared to.
-     * @return True if the given name is equal to the current
-     *  protocol name; false otherwise.
+     * @param protocol The protocol to be compared to.
+     * @return True if the given protocol is equal to the current
+     *  protocol; false otherwise.
      */
-    public boolean isEqual(String protocol) {
-        return (current.equals(protocol));
+    public boolean isEqual(Protocol protocol) {
+        return (current.getId() == (protocol.getId()));
     }
     
     /**
-     * Return the next protocol names as a Vector.
+     * Return the next protocols as a Vector.
      *
-     * @return The next protocol names.
+     * @return The next protocols as a Vector.
      */
     public Vector getNext() {
         return next;
     }
     
     /**
-     * Accessor to the current protocol name.
+     * Accessor to the current protocol.
      *
-     * @return current protocol name.
+     * @return current protocol.
      */
-    public String getCurrent() {
+    public Protocol getCurrent() {
         return this.current;
-    }
-    
+    }    
 }

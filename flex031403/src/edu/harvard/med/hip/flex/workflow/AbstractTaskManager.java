@@ -42,7 +42,7 @@ public abstract class AbstractTaskManager implements TaskManager {
         queue.removeQueueItems(removedItems, conn);
         
         // Get the next protocols from the workflow.
-        Vector nextProtocols = workflow.getNextProtocol(protocol.getProcessname());
+        Vector nextProtocols = workflow.getNextProtocol(protocol);
         
         // Add the new items to the queue for each protocol.
         queue = makeAddedItemsQueue();
@@ -51,7 +51,7 @@ public abstract class AbstractTaskManager implements TaskManager {
             Iterator iter = objects.iterator();
             while(iter.hasNext()) {
                 Object o = iter.next();
-                newItems.add(new QueueItem(o, new Protocol((String)nextProtocols.elementAt(i))));
+                newItems.add(new QueueItem(o, (Protocol)nextProtocols.elementAt(i)));
             }
             queue.addQueueItems(newItems, conn);
         }

@@ -127,7 +127,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
             
             // Get the next protocols from the workflow.
             Workflow wf = new Workflow();
-            Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
+            Vector nextProtocols = wf.getNextProtocol(protocol);
             
             PlatesetProcessQueue q = new PlatesetProcessQueue();
             LinkedList oldItems = new LinkedList();
@@ -137,7 +137,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
             LinkedList newItems = new LinkedList();            
             for(int i=0; i<nextProtocols.size(); i++) {
                 newItems.clear();
-                newItems.addLast(new QueueItem(pset, new Protocol((String)nextProtocols.elementAt(i))));
+                newItems.addLast(new QueueItem(pset, (Protocol)nextProtocols.elementAt(i)));
                 q.addQueueItems(newItems, conn);
             }
             
