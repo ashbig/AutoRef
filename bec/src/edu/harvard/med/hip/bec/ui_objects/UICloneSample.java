@@ -26,6 +26,7 @@ public class UICloneSample
     private String          m_sample_type = null;
     private int             m_sample_id = -1;
     private int             m_refsequence_id = -1;
+    private int             m_flex_refsequence_id = -1;
     private int             m_construct_id = -1;
     private int             m_isolatetracking_id = -1;
     private int             m_clone_id = -1;
@@ -62,6 +63,8 @@ public class UICloneSample
      public int             getScore(){ return  m_clone_score;}
     public int             getSampleId(){ return m_sample_id ;}
     public int             getRefSequenceId(){ return m_refsequence_id ;}
+    public int             getFLEXRefSequenceId(){ return m_flex_refsequence_id ;}
+    
     public int             getCloneSequenceCdsStart (){ return m_clone_sequence_cds_start ;}
    public int             getCloneSequenceCdsStop (){ return m_clone_sequence_cds_stop ;}
    public String           getTraceFilesDirectory(){ return m_tracefiles_dir;}
@@ -81,6 +84,7 @@ public class UICloneSample
       public void             setScore(int v){  m_clone_score = v;}
      public void             setSampleId(int v){   m_sample_id = v;}
     public void             setRefSequenceId(int v){   m_refsequence_id = v;}
+     public void             setFLEXRefSequenceId(int v){   m_flex_refsequence_id = v;}
     public void             setCloneSequenceCdsStart (int v){  m_clone_sequence_cds_start =v;}
    public void             setCloneSequenceCdsStop (int v){  m_clone_sequence_cds_stop =v;}
    public void           setTraceFilesDirectory(String v){  m_tracefiles_dir = v;} 
