@@ -321,15 +321,11 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
             sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
 + Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
 + sql_where+")";   sql_for_deletion.add(sql);      
-sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_REVERSE+" where resulttype in ("
-+Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
-+ sql_where+")";   sql_for_deletion.add(sql);  
+
         }
         if ( m_action_type ==  Constants.PROCESS_DELETE_CLONE_REVERSE_READ)
         {
-            sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_FORWARD+" where resulttype in ("
-+ Read.TYPE_ENDREAD_FORWARD+","+ Read.TYPE_ENDREAD_FORWARD_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
-+ sql_where+")";   sql_for_deletion.add(sql);      
+            
 sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYPE_ENDREAD_REVERSE+" where resulttype in ("
 +Read.TYPE_ENDREAD_REVERSE+","+ Read.TYPE_ENDREAD_REVERSE_FAIL+") and sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
 + sql_where+")";   sql_for_deletion.add(sql);  
@@ -479,7 +475,8 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
             input.setUser(user);
             
            
-            input.setActionType(Constants.PROCESS_DELETE_TRACE_FILES);
+            input.setActionType(Constants.PROCESS_DELETE_CLONE_REVERSE_READ);
+            ArrayList   del=   input.getSqlReads("776", Constants.PROCESS_DELETE_CLONE_REVERSE_READ);
         //   input.setItems("c:\\bio\\plate_analysis\\clone_samples\\1879\\776\\chromat_dir\\5947_C01_1879_776_R0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_F0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_R0.ab1");
            input.run();
           //   input.setItems("    734 345 ");
