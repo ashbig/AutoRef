@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-21 16:31:45 $
+ * $Revision: 1.4 $
+ * $Date: 2001-06-22 11:25:38 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -52,6 +52,7 @@ import org.apache.struts.upload.*;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.file.*;
 import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.process.Process;
@@ -64,7 +65,7 @@ import edu.harvard.med.hip.flex.process.Result;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-21 16:31:45 $
+ * @version    $Revision: 1.4 $ $Date: 2001-06-22 11:25:38 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -184,14 +185,16 @@ public class SaveResultAction extends ResearcherAction {
                 // the image file
                 FormFile image = gelForm.getGelImage();
                 
+                
                 // the directory name is the month preappended with the year.
                 Calendar cal = Calendar.getInstance();
                 String subDirName = Integer.toString(cal.get(Calendar.YEAR)) + 
                     Integer.toString(cal.get(Calendar.MONTH));
-                String fullPath=Constants.GEL_IMAGE_REPOSITORY_PATH + 
+                String fullPath="";
+                /*Constants.GEL_IMAGE_REPOSITORY_PATH + 
                         subDirName + "/" + process.getExecutionid()+
                         image.getFileName();
-                
+                */
                 OutputStream bos = 
                     new FileOutputStream(fullPath);
                 
