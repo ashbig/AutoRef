@@ -6,7 +6,7 @@
     <head><title><bean:message key="flex.name"/> : Login</title></head>
     <body> 
     <center>
-    <h2>Welcome to <bean:message key="flex.name"/></h2>
+    <h1>Welcome to <bean:message key="flex.name"/></h1>
     <hr>
     <html:errors/>
     <p>
