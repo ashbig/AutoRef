@@ -26,7 +26,7 @@ public class PhredWrapper
     
    //  private static final String PhredExePath = "c:\\bio\\phred\\Phred.exe";
       private static final String PhredExePath = "d:\\bio_programs\\phredPhrap\\phred.exe";
-      private static final boolean isUnix = true;
+      private static final boolean isUnix = false;
       
       public static final String SEQUENCE_DIR_NAME = "sequence_dir";
      public static final String QUALITY_DIR_NAME = "quality_dir";
