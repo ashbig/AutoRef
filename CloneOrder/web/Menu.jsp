@@ -26,7 +26,7 @@
     </td>
   </tr>
   <tr>
-    <td width="50%" align="center"><a href="Agreement.jsp"><img border="0" src="jpg/button21.jpg" width="250" height="31"></a>
+    <td width="50%" align="center"><a href="NoNewReservations.jsp"><img border="0" src="jpg/button21.jpg" width="250" height="31"></a>
     </td>
   </tr>
   <tr>
