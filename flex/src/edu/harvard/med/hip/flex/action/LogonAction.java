@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-05-29 19:20:04 $
+ * $Revision: 1.4 $
+ * $Date: 2001-05-30 13:11:09 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -39,6 +39,7 @@ package edu.harvard.med.hip.flex.action;
 
 
 import java.util.Hashtable;
+import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -62,7 +63,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: dongmei_zuo $
- * @version $Revision: 1.3 $ $Date: 2001-05-29 19:20:04 $
+ * @version $Revision: 1.4 $ $Date: 2001-05-30 13:11:09 $
  */
 
 public final class LogonAction extends Action {
@@ -86,7 +87,7 @@ public final class LogonAction extends Action {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException {
+    throws ServletException, IOException {
         
         
         
