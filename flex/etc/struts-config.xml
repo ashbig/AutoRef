@@ -56,6 +56,10 @@
     <form-bean      name="ReceiveOligoOrdersForm"
                     type="edu.harvard.med.hip.flex.form.ReceiveOligoOrdersForm"/>
 
+    <!-- Customer receive oligo orders form bean -->
+    <form-bean      name="EnterOligoPlateLocationForm"
+                    type="edu.harvard.med.hip.flex.form.EnterOligoPlateLocationForm"/>
+
 
     <!-- Find registration form bean -->
     <form-bean      name="findRegistrationForm"
