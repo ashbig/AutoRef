@@ -304,7 +304,7 @@ public class SummaryTablePopulator {
                     " where sequenceid in ("+
                     " select distinct sequenceid from constructdesign"+
                     " where constructid=?)";
-        String sql4 = "insert into cloningprogress values(?, "+ConstructInfo.CLONE_OBTAINED_ID+")";
+        String sql4 = "insert into cloningprogress values(?, "+ConstructInfo.FAILED_CLONING_ID+")";
         String sql5 = "update flexsequence set flexstatus='"+FlexSequence.FAILED_CLONING+"' where sequenceid=?";
         
         DatabaseTransaction t = null;
@@ -395,13 +395,32 @@ public class SummaryTablePopulator {
         //containers.add(new Integer(7151));
         //containers.add(new Integer(7152));
         //containers.add(new Integer(7153));
-        containers.add(new Integer(8214));
+        
+        //containers.add(new Integer(8214));
         //containers.add(new Integer(8215));
         //containers.add(new Integer(8216));
-        //containers.add(new Integer(8217));
+        //containers.add(new Integer(8217));        
+        //containers.add(new Integer(8219));       
+        //containers.add(new Integer(8220));       
+        //containers.add(new Integer(8221));       
+        //containers.add(new Integer(8222));
+        
+        List samples = new ArrayList();
+        samples.add(new Integer(100271));
+        samples.add(new Integer(100276));
+        samples.add(new Integer(105601));
+        samples.add(new Integer(105872));
+        samples.add(new Integer(105867));
+        samples.add(new Integer(105805));
+        samples.add(new Integer(105878));
+        samples.add(new Integer(123236));
+        samples.add(new Integer(123262));
+        samples.add(new Integer(123371));
+        samples.add(new Integer(123316));
+        samples.add(new Integer(123197));
         
         /**
-        List samples = getSamples();
+         List samples = getSamples();
         
         if(samples == null) {
             System.out.println("failed");
