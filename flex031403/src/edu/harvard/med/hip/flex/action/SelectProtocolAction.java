@@ -56,11 +56,14 @@ public class SelectProtocolAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        int protocolid = ((CreateProcessPlateForm)form).getProtocol();
-        Protocol protocol = new Protocol(protocolid);
-        ContainerProcessQueue queue = new ContainerProcessQueue();
+        //remove the attributes from the session.
+        if(request.getSession().getAttribute("queueItems") != null)
+            request.getSession().removeAttribute("queueItems");
         
-        try {
+        ContainerProcessQueue queue = new ContainerProcessQueue();
+        try {        
+            String processname = ((CreateProcessPlateForm)form).getProtocol();
+            Protocol protocol = new Protocol(processname);
             LinkedList items = queue.getQueueItems(protocol);
             
             if(items.size() > 0) {

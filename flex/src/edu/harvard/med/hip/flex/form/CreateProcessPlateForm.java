@@ -20,14 +20,14 @@ import org.apache.struts.action.ActionMapping;
  * @version 
  */
 public class CreateProcessPlateForm extends ActionForm {
-    private int protocol;
+    private String protocol;
     
     /**
      * Set the protocol to the given value.
      *
      * @param protocol The value to be set to.
      */
-    public void setProtocol(int protocol) {
+    public void setProtocol(String protocol) {
         this.protocol = protocol;
     }
     
@@ -36,7 +36,7 @@ public class CreateProcessPlateForm extends ActionForm {
      *
      * @return The protocol.
      */
-    public int getProtocol() {
+    public String getProtocol() {
         return protocol;
     }   
 }
