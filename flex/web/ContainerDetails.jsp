@@ -1,4 +1,4 @@
-<%@page contentType="text/html"%>
+<%@ page contentType="text/html"%>
 <%@ page language="java" %>
 <%@ page import="edu.harvard.med.hip.flex.*" %>
 <%@ page import="edu.harvard.med.hip.flex.core.*" %>
@@ -22,13 +22,23 @@
         <td><bean:write name="container" property="id"/></td>
     </tr>
     <tr>
+        <td>Plate Set Id:</td>
+        <td><bean:write name="container" property="platesetid"/></td>
+    </tr>
+    <tr>
         <td>Type:</td>
         <td><bean:write name="container" property="type"/></td>
+    </tr>
+    <tr>
+        <td>Location</td>
+        <td><bean:write name="container" property="location.type"/></td>
     </tr>
     <tr>
         <td>Label:</td>
         <td><bean:write name="container" property="label"/></td>
     </tr>
+    
+
 
 </table>
 <!-- display the container sample info.-->
@@ -47,8 +57,18 @@
         <td><bean:write name="sample" property="type"/></td>
         <td><bean:write name="sample" property="position"/></td>
         <td><bean:write name="sample" property="status"/></td>
-        <td><bean:write name="sample" property="constructid"/></td>
-        <td><bean:write name="sample" property="oligoid"/></td>
+        <logic:equal name="sample" property="constructid" value="-1">
+            <td>&nbsp;</td>
+        </logic:equal>
+        <logic:notEqual name="sample" property="constructid" value="-1">
+            <td><bean:write name="sample" property="constructid"/></td>
+        </logic:notEqual>
+        <logic:equal name="sample" property="oligoid" value="-1">
+            <td>&nbsp;</td>
+        </logic:equal>
+        <logic:notEqual name="sample" property="oligoid" value="-1">
+            <td><bean:write name="sample" property="oligoid"/></td>
+        </logic:notEqual>
     </tr>
     </logic:iterate>
 </table>
