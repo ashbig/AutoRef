@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-29 17:01:32 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.5 $
+ * $Date: 2002-05-31 18:48:52 $
+ * $Author: Elena $
  *
  ******************************************************************************
  *
@@ -49,11 +49,12 @@ import javax.mail.internet.*;
  *
  * Utility class to send simple messages.
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-29 17:01:32 $
+ * @author     $Author: Elena $
+ * @version    $Revision: 1.5 $ $Date: 2002-05-31 18:48:52 $
  */
 
-public class Mailer {
+public class Mailer
+{
     
     public final static String SMTP_HOST ="hms.harvard.edu";
     
@@ -69,20 +70,25 @@ public class Mailer {
      */
     public static void sendMessage(String to, String from,
     String cc, String subject, String msgText, Collection fileCol)
-    throws MessagingException {
+    throws MessagingException
+    {
         Properties props = new Properties();
         props.put("mail.smtp.host",SMTP_HOST);
         Session session = Session.getDefaultInstance(props,null);
         
         
         
-        try{
+        try
+        {
             // create a message
             MimeMessage msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from));
-            InternetAddress[] address = {new InternetAddress(to)};
-            if(cc != null) {
-                InternetAddress[] ccAddresses = {new InternetAddress(cc)};
+            InternetAddress[] address =
+            {new InternetAddress(to)};
+            if(cc != null)
+            {
+                InternetAddress[] ccAddresses =
+                {new InternetAddress(cc)};
                 msg.setRecipients(Message.RecipientType.CC, ccAddresses);
             }
             msg.setRecipients(Message.RecipientType.TO, address);
@@ -100,10 +106,12 @@ public class Mailer {
             
             mp.addBodyPart(mbp);
             
-            if(fileCol !=null ) {
+            if(fileCol !=null )
+            {
                 // now attach all the files if there are any.
                 Iterator fileIter = fileCol.iterator();
-                while(fileIter.hasNext()) {
+                while(fileIter.hasNext())
+                {
                     BodyPart filePart = new MimeBodyPart();
                     File curFile = (File)fileIter.next();
                     DataSource source = new FileDataSource(curFile);
@@ -120,10 +128,91 @@ public class Mailer {
             
             // send the message
             Transport.send(msg);
-        } catch(MessagingException mex) {
+        } catch(MessagingException mex)
+        {
             mex.printStackTrace();
             Exception ex = null;
-            if((ex = mex.getNextException()) !=null) {
+            if((ex = mex.getNextException()) !=null)
+            {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * Utility Method to send a message
+     *
+     * @param to The address to send to.
+     * @param from Email address of who is sending the message.
+     * @param cc Email address to send a carbon copy
+     * @param subject The subject of the message.
+     * @param msgText The text of the message.
+     * @param file_name of file object.
+     */
+    public static void sendMessageWithAttachedFile(String to, String from,
+    String cc, String subject, String msgText, File fl)
+    throws MessagingException
+    {
+        Properties props = new Properties();
+        props.put("mail.smtp.host",SMTP_HOST);
+        Session session = Session.getDefaultInstance(props,null);
+        
+        
+        
+        try
+        {
+            // create a message
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(from));
+            InternetAddress[] address =
+            {new InternetAddress(to)};
+            if(cc != null)
+            {
+                InternetAddress[] ccAddresses =
+                {new InternetAddress(cc)};
+                msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+            }
+            msg.setRecipients(Message.RecipientType.TO, address);
+            msg.setSubject(subject);
+            msg.setSentDate(new Date());
+            
+            // create the message body part
+            MimeBodyPart mbp = new MimeBodyPart();
+            mbp.setText(msgText);
+            
+            
+            
+            // create the multipart and put the message into it.
+            Multipart mp = new MimeMultipart();
+            
+            mp.addBodyPart(mbp);
+            
+            if(fl !=null )
+            {
+                // now attach  file if there are any.
+                
+                BodyPart filePart = new MimeBodyPart();
+                
+                DataSource source = new FileDataSource(fl);
+                filePart.setDataHandler(new DataHandler(source));
+                filePart.setFileName(fl.getAbsolutePath());
+                
+                mp.addBodyPart(filePart);
+                
+            }
+            
+            
+            // add the multipart to the message
+            msg.setContent(mp);
+            
+            // send the message
+            Transport.send(msg);
+        } catch(MessagingException mex)
+        {
+            mex.printStackTrace();
+            Exception ex = null;
+            if((ex = mex.getNextException()) !=null)
+            {
                 ex.printStackTrace();
             }
         }
@@ -137,11 +226,13 @@ public class Mailer {
      * @param msgText The text of the message.
      */
     public static void sendMessage(String to, String from, String subject,
-    String msgText) throws MessagingException {
+    String msgText) throws MessagingException
+    {
         Mailer.sendMessage(to,from,null,subject,msgText, null);
     }
     
-    public static void main(String [] args) throws Exception {
+    public static void main(String [] args) throws Exception
+    {
         Collection fileCol = new LinkedList();
         fileCol.add(new File("/NETLOG.TXT"));
         fileCol.add(new File("/j0272560(t).gif"));
