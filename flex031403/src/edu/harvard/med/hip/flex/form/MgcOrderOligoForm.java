@@ -16,26 +16,33 @@ import java.sql.*;
  *
  * @author  htaycher
  */
-public class MgcOrderOligoForm extends ProjectWorkflowForm
-{
-    private boolean         m_isFullPlate = false;
-    private String          m_processname=null;
+public class MgcOrderOligoForm extends ProjectWorkflowForm {
+    private boolean isFullPlate = true;
+    private String processname = null;
+        
+    public void setIsFullPlate(boolean isFullPlate) {
+        this.isFullPlate = isFullPlate;
+    }
     
+    public boolean getIsFullPlate() {
+        return isFullPlate;
+    }
     
-    public void             setIsFullPlate(boolean f){ m_isFullPlate = f;}
-    public boolean          getIsFullPlate(){ return m_isFullPlate;}
-    public void             setProcessname(String pn){ m_processname = pn;}
-    public String           getProcessname(){ return m_processname;}
+    public void setProcessname(String processname) {
+        this.processname = processname;
+    }
     
-  /**
+    public String getProcessname() {
+        return processname;
+    }
+    
+    /**
      * Reset all properties to their default values.
      *
      * @param mapping The mapping used to select this instance
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        m_isFullPlate = true;
-       
-    }   
-    
+        isFullPlate = true;
+    }    
 }

@@ -17,19 +17,15 @@
 <html:errors/>
 <p>
 <html:form action="MgcOrderOligo.do">
-<html:hidden property="projectid" />
-<html:hidden property="forwardName" />
-<html:hidden property="workflowid" />
-<html:hidden property="processname" />
-
-
+<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
+<input type="hidden" name="processname" value="<bean:write name="processname"/>">
 
 <table>
     <tr>
     <td class="prompt">Project name:</td>
     <td><bean:write name="projectname" /></td>
     </tr>
-
     <tr>
     <td class="prompt">Workflow name:</td>
     <td><bean:write name="workflowname" /></td>
@@ -40,19 +36,14 @@
     </tr>
     <tr>
     <td class="prompt">Number of clones:</td>
-    <td><bean:write name="sequence_count" /></td>
+    <td><bean:write name="sequences_count" /></td>
     </tr>
 <tr>
     <td class="prompt">Number of full plates:</td>
     <td><bean:write name="full_plates" /></td>
     </tr>
 
- 
-    <% 
-//not full plates exists
-if ( !request.getAttribute("wells_on_not_full_palte").toString().equals("0"))
-{
-   %> 
+<logic:present name="wells_on_not_full_plate">
 <tr>
     <td class="prompt">Number of clones on not full plate:</td>
     <td><bean:write name="wells_on_not_full_plate" /></td>
@@ -63,12 +54,10 @@ if ( !request.getAttribute("wells_on_not_full_palte").toString().equals("0"))
         <html:radio property="isFullPlate" value="false"/>No
     </td>
 </tr> 
-  
-<%
-}
-%>
+</logic:present>
 </table>
-<p><P>
+
+<p>
     <html:submit property="submit" value="Submit"/>
    
 

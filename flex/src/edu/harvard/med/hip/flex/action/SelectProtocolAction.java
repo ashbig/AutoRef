@@ -82,25 +82,19 @@ public class SelectProtocolAction extends FlexAction {
                 items = queue.getQueueItems(protocol, project, workflow);
                 storeInSession(request, items, protocol);
                 return (mapping.findForward("success_pcr"));
-            } else {
-                queue = new ContainerProcessQueue();
-            }
-            items = queue.getQueueItems(protocol, project, workflow);
-            
-            if (Protocol.MGC_DESIGN_CONSTRUCTS.equals(processname))
-            {
-                //get total number of genes in queue
+            } else if (Protocol.MGC_DESIGN_CONSTRUCTS.equals(processname)) {
+                queue = new SequenceProcessQueue();
+                items = queue.getQueueItems(protocol, project, workflow);
                 
-                request.setAttribute("projectname", projectname);
-               
+                //get total number of genes in queue
                 request.setAttribute("sequences_count", new Integer(items.size()));
-                request.setAttribute("full_plates", new Integer( (int)Math.ceil((double)items.size() / 94 )));
+                request.setAttribute("full_plates", new Integer( items.size() / 94 ));
                 if (items.size() % 94 != 0)
-                    request.setAttribute("not_full_plates", new Integer( 1));
-                else
-                    request.setAttribute("not_full_plates", new Integer(0));
+                    request.setAttribute("wells_on_not_full_plate", new Integer(items.size()));
+
+                request.setAttribute("projectname", projectname);
                 request.setAttribute("processname", processname);
-                request.setAttribute("worlflowname", workflow.getName());
+                request.setAttribute("workflowname", workflow.getName());
                 
                 return (mapping.findForward("success_mgc_process_full_plates"));
                 //arrange sequences 
@@ -111,8 +105,11 @@ public class SelectProtocolAction extends FlexAction {
               //  MgcOligoPlateManager om = new MgcOligoPlateManager(project, workflow);
                 
               //  om.orderOligo();               
+            } else {
+                queue = new ContainerProcessQueue();
             }
-           
+            items = queue.getQueueItems(protocol, project, workflow);
+          
             storeInSession(request, items, protocol);
        
             if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {

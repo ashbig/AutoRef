@@ -23,7 +23,7 @@
 <logic:present name="workflowid">
     <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 </logic:present>
-
+<input type="hidden" name="projectname" value="<bean:write name="projectname"/>">
 
 
 
