@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.24 $
- * $Date: 2002-06-27 19:19:26 $
+ * $Revision: 1.25 $
+ * $Date: 2002-08-01 18:47:42 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.24 $ $Date: 2002-06-27 19:19:26 $
+ * @version    $Revision: 1.25 $ $Date: 2002-08-01 18:47:42 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -241,6 +241,11 @@ public class SaveResultAction extends ResearcherAction {
             
             retForward=mapping.findForward("success");
         }
+        
+        if(Project.MGC_PROJECT == project.getId()) {
+            return mapping.findForward("success_mgc");
+        } 
+        
         return retForward;
     } //end flexPerform
     

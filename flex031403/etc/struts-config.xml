@@ -382,6 +382,7 @@
                 scope="session"
                 input="/EnterCultureDetails.jsp">
          <forward name="success" path="/PickResultType.jsp"/>
+         <forward name="success_mgc" path="/MgcEnterResultSuccess.jsp" />
          <forward name="confirm" path="/EnterCultureDetails.jsp?EDIT_MODE=read"/>
     </action>
 
