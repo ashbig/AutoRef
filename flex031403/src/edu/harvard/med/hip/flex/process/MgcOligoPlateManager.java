@@ -210,6 +210,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
             }
             
             Sample s = new Sample(type, count+2, contId);
+            s.setStatus(Sample.GOOD);
             cont.addSample(s);
             sampleLineageSet.addElement(new SampleLineage(sd.getSampleId(), s.getId()));
         }
