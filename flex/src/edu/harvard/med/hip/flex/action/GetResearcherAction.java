@@ -81,6 +81,8 @@ public class GetResearcherAction extends ResearcherAction{
         LinkedList items = (LinkedList)request.getSession().getAttribute("EnterSourcePlateAction.items");
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sampleLineageSet");
+        SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
+        String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
         
         Connection conn = null;
         try {
@@ -98,45 +100,11 @@ public class GetResearcherAction extends ResearcherAction{
                 Container newContainer = (Container)newContainers.elementAt(i);
                 newContainer.insert(conn);
             }
-/*            
-            // Create a process, process object and sample lineage record.
-            String executionStatus = null;
-            executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
-            Process process = new Process(protocol, executionStatus, researcher);
-            SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
-            process.setSubprotocol(subprotocol.getName());
-            // Add old container as input container.
-            for(int i=0; i<oldContainers.size(); i++) {
-                Container oldContainer = (Container)oldContainers.elementAt(i);
-                ContainerProcessObject inputContainer =
-                new ContainerProcessObject(oldContainer.getId(),
-                process.getExecutionid(),
-                edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-                process.addProcessObject(inputContainer);
-            }
-            
-            // Add new containers as output containers.
-            for(int i=0; i<newContainers.size(); i++) {
-                Container newContainer = (Container)newContainers.elementAt(i);
-                ContainerProcessObject outputContainer =
-                new ContainerProcessObject(newContainer.getId(),
-                process.getExecutionid(),
-                edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
-                process.addProcessObject(outputContainer);
-            }
-            
-            // Add sampleLineageSet object.
-            process.setSampleLineageSet(sampleLineageSet);
-            
-            // Insert the process and process objects into database.
-            process.insert(conn);
-*/
-            String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
-            SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
 
             WorkflowManager manager = new WorkflowManager("ProcessPlateManager");
-            manager.createProcessRecord(executionStatus, protocol, researcher, subprotocol, oldContainers, newContainers, null,
-                                    sampleLineageSet, conn);            
+            manager.createProcessRecord(executionStatus, protocol, researcher, 
+                                        subprotocol, oldContainers, newContainers, 
+                                        null, sampleLineageSet, conn);            
             manager.processQueue(items, newContainers, protocol, conn);
             
             // Commit the changes to the database.
