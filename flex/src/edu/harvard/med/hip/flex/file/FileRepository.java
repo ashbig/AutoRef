@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2003-09-15 20:08:15 $
+ * $Revision: 1.3 $
+ * $Date: 2003-09-15 20:21:22 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.core.Container;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.2 $ $Date: 2003-09-15 20:08:15 $
+ * @version    $Revision: 1.3 $ $Date: 2003-09-15 20:21:22 $
  */
 
 public class FileRepository {
@@ -81,12 +81,11 @@ public class FileRepository {
         
         // the full path where the file will be placed.
         String fullPath= fullDir + fileRef.getBaseName();
-        System.out.println(fullPath);
+        
         // if the directory doesn't exist create it.
         File dirFile = new File(fullDir);
         if(! dirFile.exists()) {
             dirFile.mkdirs();
-            System.out.println("here");
         }
         
         // write the file.
