@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.17 2001-07-23 21:13:23 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.18 2001-07-24 22:03:29 dzuo Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -113,12 +113,14 @@
             </TD>
             <TD>
                 <logic:iterate id="curUser" name="curQueueItem" property="item.requestingUsers" indexId="userCount">
-                    <A HREF="mailto:<bean:write name="curUser" property="userEmail"/>">
-                        <bean:write name="curUser" property="username"/>
-                    </A>
+                    
                     <logic:notEqual name="userCount" value="0">
                         <br>
                     </logic:notEqual>
+                    <A HREF="mailto:<bean:write name="curUser" property="userEmail"/>">
+                        <bean:write name="curUser" property="username"/>
+                    </A>
+                    
                 </logic:iterate>
             </TD>
             <TD>
