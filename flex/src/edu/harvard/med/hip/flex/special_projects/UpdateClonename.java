@@ -284,6 +284,80 @@ public class UpdateClonename {
         }
     }
     
+    public void correctConstructid() {
+        String sqlQuery="select s.sampleid, s.constructid"+
+                        " from sample s, obtainedmasterclone o"+
+                        " where s.sampleid=o.sampleid"+
+                        " and s.constructid<>o.constructid";
+        String sqlUpdate="update obtainedmasterclone"+
+                        " set constructid=?"+
+                        " where sampleid=?";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmtUpdate = null;
+        ResultSet rs = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmtUpdate = conn.prepareStatement(sqlUpdate);
+            rs = t.executeQuery(sqlQuery);
+            int n=1;
+            while(rs.next()) {
+                int sampleid=rs.getInt(1);
+                int constructid=rs.getInt(2);
+                stmtUpdate.setInt(1, constructid);
+                stmtUpdate.setInt(2, sampleid);
+                DatabaseTransaction.executeUpdate(stmtUpdate);
+                System.out.println(n+": "+sampleid+"\t"+constructid);
+                n++;
+            }
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmtUpdate);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public void correctConstructidForClones() {
+        String sqlQuery="select o.mastercloneid, o.constructid"+
+                        " from obtainedmasterclone o, clones c"+
+                        " where o.mastercloneid=c.mastercloneid"+
+                        " and o.constructid<>c.constructid";
+        String sqlUpdate="update clones"+
+                        " set constructid=?"+
+                        " where mastercloneid=?";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmtUpdate = null;
+        ResultSet rs = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmtUpdate = conn.prepareStatement(sqlUpdate);
+            rs = t.executeQuery(sqlQuery);
+            int n=1;
+            while(rs.next()) {
+                int mastercloneid=rs.getInt(1);
+                int constructid=rs.getInt(2);
+                stmtUpdate.setInt(1, constructid);
+                stmtUpdate.setInt(2, mastercloneid);
+                DatabaseTransaction.executeUpdate(stmtUpdate);
+                System.out.println(n+": "+mastercloneid+"\t"+constructid);
+                n++;
+            }
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmtUpdate);
+            DatabaseTransaction.closeConnection(conn);
+        }        
+    }
+    
     public class Clone {
         private int cloneid;
         private int sampleid;
@@ -322,10 +396,14 @@ public class UpdateClonename {
          * u.updateCloneid(clones);
          */
         //u.updateDestCloneid("(7275,7276)");
+       /**
         try {
             u.updateRearrayPlateCloneid(7389);
         } catch (Exception ex) {
             System.out.println(ex);
         }
+        **/
+        //u.correctConstructid();
+        u.correctConstructidForClones();
     }
 }
