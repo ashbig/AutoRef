@@ -45,11 +45,11 @@
 
 <table border="0" cellpadding="2" cellspacing="0">
     <tr>
-        <td>Plate ID:</td> <td><bean:write name="gelEntryForm" property="container.id"/></td>
-        <td>Plate Type:</td> <td><bean:write name="gelEntryForm" property="container.type"/></td>
+        <td class="label">Plate ID:</td> <td><bean:write name="gelEntryForm" property="container.id"/></td>
+        <td class="label">Plate Type:</td> <td><bean:write name="gelEntryForm" property="container.type"/></td>
     </tr>
     <tr>
-        <td>Process Date:</td> <td><bean:write name="<%=Constants.QUEUE_ITEM_KEY%>" property="date"/></td><td></td>
+        <td class="label">Process Date:</td> <td><bean:write name="<%=Constants.QUEUE_ITEM_KEY%>" property="date"/></td><td></td>
     </tr>
 </table>
 

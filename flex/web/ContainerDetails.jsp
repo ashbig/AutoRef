@@ -120,9 +120,6 @@
             </logic:notPresent>
           </logic:present>
           
-          <logic:notPresent name="process">
-            &nbsp;
-          </logic:notPresent>
             </td>
         
     </flex:row>
@@ -133,7 +130,7 @@
 <br>
 <%-- Display all files associated with this container --%>
 <TABLE border="1" cellpadding="2" cellspacing="0">
-    <tr class="rowHeader">
+    <tr class="headerRow">
         <th>Name</th><th>Type</th>
     </tr>
 <logic:iterate id="file" name="container" property="fileReferences">
