@@ -160,6 +160,7 @@
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
+    <forward    name="help"         path="/Help.jsp"/>
     <forward    name="login"        path="/login.jsp"/>
     <forward    name="logout"       path="/Logout.do"/>
     <forward    name="home"         path="/overview.jsp"/>
