@@ -14,7 +14,7 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.bioutil.*;
-import edu.harvard.med.hip.bec.Constants;
+import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
@@ -346,26 +346,8 @@ public class PlateUploader
             while(rs.next())
             {
                 String species = rs.getString("SPECIES");
-                if (species.equalsIgnoreCase("Homo sapiens"))
-                {
-                    ref_sequence.setSpecies(RefSequence.SPECIES_HUMAN);
-                }
-                else if (species.equalsIgnoreCase("Saccharomyces cerevisiae"))
-                {
-                    ref_sequence.setSpecies(RefSequence.SPECIES_YEAST);
-                }
-                else if (species.equalsIgnoreCase("Pseudomonas aeruginosa"))
-                {
-                    ref_sequence.setSpecies(RefSequence.SPECIES_PSEUDOMONAS);
-                }
-                else if (species.equalsIgnoreCase("Yersinia pestis"))
-                {
-                    ref_sequence.setSpecies(RefSequence.SPECIES_YP);
-                }
-                else if (species.equalsIgnoreCase("Francisella tularensis"))
-                {
-                    ref_sequence.setSpecies(RefSequence.SPECIES_FT);
-                }
+               ref_sequence.setSpecies( DatabaseToApplicationDataLoader.getSpeciesId(species) );
+               
                 ref_sequence.setCdsStart(rs.getInt("CDSSTART") );
                 ref_sequence.setCdsStop( rs.getInt("CDSSTOP") );
                 ref_sequence.setGCcontent(rs.getInt("GCCONTENT"));

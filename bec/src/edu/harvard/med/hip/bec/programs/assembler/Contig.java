@@ -19,15 +19,8 @@ import edu.harvard.med.hip.bec.modules.*;
 
 public class Contig
 {
-   
-    
-    private   String m_needle_output_path = null;
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-            m_needle_output_path = "d:\\output\\tmp_assembly\\";
-        else
-            m_needle_output_path = "c:\\tmp_assembly\\";
-    }
+  
+    private   String m_needle_output_path = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("NEEDLE_OUTPUT_TMP_PATH") + java.io.File.separator;
     
     private String              m_sequence = null;
     private String              m_scores = null;
@@ -157,64 +150,7 @@ public class Contig
          return gaps;
          
      }
-             /*
-    public static ArrayList            findGaps(ScoredElement[][] bases_array)
-    { 
-        ArrayList gaps = new ArrayList();
-        ScoredElement[] base_aligment = null;
-        boolean isBaseReadCovered = false;
-        boolean isInsideGap = false;
-          Stretch gap = null;
-        //find out how namy 'reads' - first is contig, second - reference sequence are in contig
-        
-        int number_of_reads = bases_array[0].length;
-        int bases_in_contig = bases_array.length;
-        int base_count = 0;
-        for (; base_count < bases_in_contig; base_count++)
-        {
-              //no requered refsequence
-             if ( bases_array[base_count][1].getBase() == '\u0000') continue;
-             if ( bases_array[base_count][1].getBase() == '\u0000' && base_count != 0 ) break;
-             isBaseReadCovered = false;
-             for (int read_count = 2; read_count <  number_of_reads; read_count++)
-             {
-               
-                if ( bases_array[base_count][read_count].getBase() != '\u0000')
-                {
-                    isBaseReadCovered = true;
-                    break;
-                }
-                 
-             }
-             //close gap
-             if ( isInsideGap && isBaseReadCovered)
-             {
-                 gap.setCdsStop (bases_array[base_count][1].getIndex());
-                 gaps.add(gap);
-                 gap = null;
-                 isInsideGap = false;
-             }
-             //open gap
-             else if ( !isBaseReadCovered && !isInsideGap )
-             {
-                 gap = new Stretch();
-                 gap.setCdsStart (bases_array[base_count][1].getIndex() ); //(int vclone sequence coordinates for low quality)
-                gap.setType ( Stretch.GAP_TYPE_GAP );
-                gap.setStatus( Stretch.STATUS_DETERMINED );
-                isInsideGap = true;
-             }
-        }
-         //close last  gap
-         if ( isInsideGap && gap!= null)
-         {
-             gap.setCdsStop (bases_array[base_count-1][1].getIndex() );
-             gaps.add(gap);
-         }
-        return gaps;
-    }
-    
-    */
-    
+          
     //uses horizontal array  returns array of stretch elemnts
     public static ArrayList            findContigs(ScoredElement[][] bases_array, 
             int refseq_length, int linker5_length, SlidingWindowTrimmingSpec spec,

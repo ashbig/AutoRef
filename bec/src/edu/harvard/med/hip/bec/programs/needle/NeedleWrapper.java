@@ -34,11 +34,11 @@ public class NeedleWrapper
     private NeedleResult m_needle = null;
 
     
-    private String  m_output_file_dir =null;//parsing
-    private String  m_needle_path = null;
+    private String  m_output_file_dir =edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("NEEDLE_OUTPUT_TMP_PATH") + File.separator;//parsing
+    private String  m_needle_path = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("NEEDLE_EXE_PATH") ;
 
      
-    {
+   /* {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
             m_needle_path = "d:\\bio_programs\\EMBOSS-2.5.1\\emboss\\needle.exe  ";
@@ -51,10 +51,10 @@ public class NeedleWrapper
             m_needle_path = "c:\\EMBOSS-2.5.1\\emboss\\needle.exe  ";
         }
     }
-  
+  */
     
     // debug mode 
-    private boolean isWindows = true;
+    
     /** Creates a new instance of Needle */
     public NeedleWrapper()
     {
@@ -142,11 +142,11 @@ public class NeedleWrapper
         String cmd = null;
         
         // for windows /c/file_name
-        if (isWindows)
-            cmd = m_needle_path+Algorithms.convertWindowsFileNameIntoUnix( q_name)+ " "+Algorithms.convertWindowsFileNameIntoUnix( ref_name) + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
+        if (edu.harvard.med.hip.bec.util.BecProperties.getInstance().isWindowsOS() )
+            cmd = m_needle_path +" "+Algorithms.convertWindowsFileNameIntoUnix( q_name)+ " "+Algorithms.convertWindowsFileNameIntoUnix( ref_name) + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
         else
-            cmd = m_needle_path+q_name+ " "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
-     //   System.out.println(cmd);
+            cmd = m_needle_path+" "+q_name+ " "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
+  //      System.out.println(cmd);
         //blastcmd = "/usr/local/emboss/bin/needle "+q_name+ ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile "+.out ";
         
         try
@@ -180,7 +180,7 @@ public class NeedleWrapper
                     }
                     catch(Exception e)
                     {
-                        throw new BecUtilException("Cannot run phredphrap");
+                        throw new BecUtilException("Cannot run needle program");
                     }
                 }
                 else
@@ -220,19 +220,13 @@ public class NeedleWrapper
      //******************************************
     public static void main(String args[])
     {
-        /*
-        try{
-            RE letters = new RE("Identities\\s*=\\s*(\\d+)\\/(\\d+)\\s*\\((\\d+) %\\)");
-           
-        }catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-     */
+       
         ArrayList re = null;
-        String queryFile = "c:\\bio\\ex1.txt";
-        try
+         try
         {
+             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+      
             NeedleResult res = new NeedleResult();
             NeedleWrapper nl = new NeedleWrapper();
             String ref ="ATGGTATACACTTCAACGTACAGACACACTATCGTTGTTGACCTTTTAGAATATTTGGGTATAGTGTCCAACTTAGAAACTTTACAGAGTGCCCGTGAAGATGAAACAAGAAAACCCGAGAATACCGATAAAAAAGAATGTAAACCCGACTATGATATAGAATGCGGTCCTAATAGATCGTGCTCTGAATCCTCTACCGATTCAGACTCTAGTGGTTCACAGATCGAAAAAAATGATCCTTTCAGGGTGGATTGGAACGGCCCCAGTGATCCTGAGAACCCACAAAACTGGCCCCTACTGAAAAAATCATTGGTAGTATTCCAAATAATGTTACTTACTTGCGTCACGTACATGGGATCCTCCATTTACACACCTGGCCAGGAATATATTCAAGAAGAGTTCCACGTTGGTCATGTAGTGGCAACATTAAATCTTTCTTTATATGTTCTTGGTTATGGTCTAGGTCCCATCATTTTTTCACCGCTATCAGAAACTGCACGCTATGGCCGTCTAAATCTGTACATGGTGACTTTATTTTTTTTCATGATCTTTCAAGTTGGTTGTGCTACTGTGCATAACATCGGCGGTTTAATCGTCATGCGTTTCATCAGTGGCATACTGTGCAGCCCATCGTTGGCCACTGGTGGCGGTACAGTGGCTGATATCATTTCACCAGAAATGGTTCCTCTCGTTTTAGGTATGTGGTCAGCCGGTGCTGTTGCTGCGCCAGTCTTGGCTCCCTTACTAGGCGCTGCTATGGTCGATGCTAAAAATTGGCGATTCATATTTTGGTTATTAATGTGGTTAAGTGCTGCCACTTTTATCTTGTTGGCATTTTTCTTCCCTGAAACACAACACCATAATATTTTGTACCGCCGTGCTTTGAAATTGAGAAAAGAAACTGGTGATGACAGGTACTATACTGAACAGGATAAACTCGATAGAGAAGTTGATGCAAGAACTTTTTTGATCAATACTTTGTATAGGCCTCTCAAAATGATTATCAAAGAGCCTGCAATTTTGGCTTTTGATCTCTATATCGCTGTTGCTTATGGTTGTTTCTACTTATTCTTTGAAGCATTCCCTATTGTATTTGTAGGTATATACCACTTCAGCTTAGTTGAAGTTGGCTTGGCCTATATGGGGTTTTGCGTAGGGTGCGTACTTGCTTATGGCTTATTCGGTATTTTAAACATGAGGATTATTGTACCACGTTTTAGAAACGGCACATTCACCCCGGAAGCTTTTTTAATCGTGGCAATGTGTGTCTGCTGGTGCCTGCCTCTGTCTTTGTTCTTATTTGGTTGGACTGCTCGAGTGCATTGGATTTTGCCAGTTATCTCGGAAGTTTTTTTTGTTTTAGCTGTCTTTAACATTTTCCAAGCAACTTTTGCATATTTGGCTACATGCTACCCAAAGTATGTTGCATCCGTTTTTGCAGGCAATGGTTTTTGTCGGGCTTCGTTTGCCTGTGCTTTTCCGTTGTTTGGTAGAGCAATGTATGACAATTTAGCTACTAAGAACTATCCTGTGGCATGGGGTTCGTCCTTAGTGGGGTTCCTAACTTTAGGTCTAGCTATTATCCCGTTTATACTTTATAAGTATGGGCCATCATTACGTACAAGATCTTCGTACACAGAGGAGTAG";

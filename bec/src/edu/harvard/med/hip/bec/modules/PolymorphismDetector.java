@@ -29,23 +29,10 @@ import edu.harvard.med.hip.utility.*;
 public class PolymorphismDetector
 {
     //store input & output blast files
-    private  String INPUT = null;
+    private  String INPUT = Constants.getTemporaryFilesPath();
    // private static final String OUTPUT = "/blastoutput/";
-    private  String OUTPUT = null;
+    private  String OUTPUT = Constants.getTemporaryFilesPath();
   
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-        {
-            INPUT = Constants.getTemporaryFilesPath();
-           OUTPUT = "d:\\output\\blastoutput\\";
-        }
-        else
-        {
-            INPUT = Constants.getTemporaryFilesPath();
-           OUTPUT = "/output/blastoutput/";
-        }
-    }
-    
     //submition data
     private AnalyzedScoredSequence m_sequence = null;
     private ArrayList m_sequences = null;

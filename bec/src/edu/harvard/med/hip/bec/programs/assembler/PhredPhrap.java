@@ -38,13 +38,16 @@ public class PhredPhrap
     private String      m_reference = null;
     private int         m_ref_id =-1;
  
-    private String      m_phredphrap_path = null;
-    private String      m_vector_file_name = null;
+    private String      m_phredphrap_path = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PERL_PATH")
+  +" "+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHREDPHAP_SCRIPT_PATH");
+  
+    private String      m_vector_file_name = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("VECTOR_FN_LIBRARY_DEFAULT");
+  
     
     private int         m_quality_trimming_phd_score = 0;
     private int         m_quality_trimming_phd_first_base = 0;
     private int         m_quality_trimming_phd_last_base = 0;
-    
+   /* 
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
@@ -58,7 +61,7 @@ public class PhredPhrap
         }
     }
   
-  
+  */
     /** Creates a new instance of Needle */
     public PhredPhrap()    {    }
     public void         setVectorFileName(String s){ if ( s != null && s.trim().length()>1) m_vector_file_name =  s;}
@@ -97,7 +100,7 @@ public class PhredPhrap
         
         }
         cmd += getQualityTrimmingParams();        
-       // System.out.println(cmd);
+        System.out.println(cmd);
         try
         {
             Runtime r = Runtime.getRuntime();

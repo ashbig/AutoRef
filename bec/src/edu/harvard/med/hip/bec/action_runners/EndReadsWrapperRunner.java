@@ -31,10 +31,11 @@ import edu.harvard.med.hip.utility.*;
 public class EndReadsWrapperRunner extends ProcessRunner
 {
      // outputBaseDir specify the base directory for trace file distribution
-    private static  String OUTPUT_BASE_ROOT = null;
+    private static  String OUTPUT_BASE_ROOT = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_OUTPUT_PATH_ROOT") + java.io.File.separator;
     //inputTraceDir specify the directory where the trace files get dumped from sequencer
-    private static  String INPUT_BASE_DIR = null;
-    {
+    private static  String INPUT_BASE_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR") + java.io.File.separator;
+
+   /* {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
              OUTPUT_BASE_ROOT = "d:/trace_files_root/";
@@ -54,7 +55,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
         }
     }
   
-   
+   */
     //errorDir specify  the  directory for trace files for controls are stored
     private static final String CONTROLS_DIR = "controls";
     //errorDir specify  the directory for  trace files with wrong name
@@ -64,7 +65,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
        // specify the directory for trace files of clones
     private static final String CLONES_DIR = "clone_samples";
     
-    private static final int MAX_ROW_NUMBER = 96*2+1;
+  //  private static final int MAX_ROW_NUMBER = 96*2+1;
     
     
     private String      m_outputBaseDir = null;
@@ -296,27 +297,26 @@ public class EndReadsWrapperRunner extends ProcessRunner
     }
      public static void main(String args[])
     {
+      
+         User user  = null;
         try
         {
-         EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
-        runner.setUser( AccessManager.getInstance().getUser("htaycher1","htaycher"));
-    //  runner.run();
+            user = AccessManager.getInstance().getUser("lena","htaycher");
+        }
+        catch(Exception e){}
         
-        TraceFilesDistributor tfb = new TraceFilesDistributor();
-        
-          Connection       conn = DatabaseTransaction.getInstance().requestConnection();
-           ArrayList expected_chromat_file_names = new ArrayList();
-           expected_chromat_file_names.add("7364_A02_12894_43935_F0.T0.scf");
-           expected_chromat_file_names.add("7364_A02_12894_43935_R0.T0.scf");
-                     //if (expected_chromat_file_names.size() == 0)   break; 
-                      //distribute chromat files 
-            tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
-            ArrayList chromat_files_names = tfb.distributeEndReadsChromatFiles(runner.getInputDir(), runner.getOuputBaseDir());
-            ArrayList er =  tfb.getErrorMesages();
-            runner.runPhredandParseOutput( chromat_files_names,   conn);      
+        //Thread t = new Thread(runner);
+       // t.start();
+       BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+       ProcessRunner runner =  new EndReadsWrapperRunner();
+        runner.setInputData( edu.harvard.med.hip.bec.Constants.ITEM_TYPE_PLATE_LABELS, "SAE000769");
+         runner.setUser(user);
+        runner.run();
          
-        }catch(Exception e){}
         System.exit(0);
+
+    
      }
      
      

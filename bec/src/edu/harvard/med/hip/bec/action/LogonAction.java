@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2003-09-17 18:52:10 $
+ * $Revision: 1.6 $
+ * $Date: 2005-01-20 16:55:43 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -58,13 +58,14 @@ import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.database.*;
+import edu.harvard.med.hip.bec.util.*;
 
 import edu.harvard.med.hip.bec.Constants;
 /**
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: Elena $
- * @version $Revision: 1.5 $ $Date: 2003-09-17 18:52:10 $
+ * @version $Revision: 1.6 $ $Date: 2005-01-20 16:55:43 $
  */
 
 public final class LogonAction extends Action
@@ -100,7 +101,6 @@ public final class LogonAction extends Action
         String username = ((LogonForm) form).getUsername();
         String password = ((LogonForm) form).getPassword();
         User user =  null;
-        
         // get the access manager to verify they usernam/password combo.
         AccessManager accessManager = AccessManager.getInstance();
         try
@@ -117,7 +117,14 @@ public final class LogonAction extends Action
             request.setAttribute(Action.EXCEPTION_KEY, th);
             return mapping.findForward("error");
         }
-        
+        //verify application settings from property file
+         BecProperties.getInstance().verifyApplicationSettings();
+         if ( !BecProperties.getInstance().isSettingsVerified()  )
+       {
+            errors.add(ActionErrors.GLOBAL_ERROR, 
+             new ActionError("error.exception", "<li>not verified</li>"));
+       }
+         DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
         // Report any errors we have discovered back to the original form
         if (!errors.empty())
         {
@@ -127,7 +134,7 @@ public final class LogonAction extends Action
             return (new ActionForward(mapping.getInput()));
         }
         ArrayList menu = null;
-        try
+        /*try
         {
           //  menu = UserGroup.getMenu(user.getUserGroup());
             
@@ -136,8 +143,8 @@ public final class LogonAction extends Action
             request.setAttribute(Action.EXCEPTION_KEY,e );
             return mapping.findForward("error");
             
-        }
-        request.getSession().setAttribute("menulist",menu);
+        }*/
+       // request.getSession().setAttribute("menulist",menu);
         // Save our logged-in user in the session
         HttpSession session = request.getSession();
         session.setAttribute(Constants.USER_KEY, user);

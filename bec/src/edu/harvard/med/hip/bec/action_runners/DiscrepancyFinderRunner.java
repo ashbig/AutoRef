@@ -393,23 +393,28 @@ public class DiscrepancyFinderRunner extends ProcessRunner
 
     {
        // InputStream input = new InputStream();
+        
         FileInputStream input = null;
         User user  = null;
         try
         {
-            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+            user = AccessManager.getInstance().getUser("lena","htaycher");
         }
         catch(Exception e){}
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
        
-        runner.setInputData( Constants.ITEM_TYPE_CLONEID, "1032 112384 112388 ");
+        runner.setInputData( Constants.ITEM_TYPE_CLONEID, "143905 ");
     //    runner.setItems(item_ids.toUpperCase().trim());
       //  runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
         runner.setUser(user);
         //Thread t = new Thread(runner);
        // t.start();
+       BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+       
         runner.run();
+         
         System.exit(0);
 
     }

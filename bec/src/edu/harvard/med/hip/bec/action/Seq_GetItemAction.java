@@ -38,7 +38,7 @@ import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.ui_objects.*;
-import edu.harvard.med.hip.bec.Constants;
+import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 
@@ -500,7 +500,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     }
                     else
                     {
-                         container_names.append("<script language='JavaScript' src='"+edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION+"scripts.js'></script> ");
+                         container_names.append("<script language='JavaScript' src='"+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"scripts.js'></script> ");
                        
                         for (int index = 0; index < labels.size(); index ++)
                         {
@@ -522,7 +522,7 @@ public class Seq_GetItemAction extends ResearcherAction
                                     container_names.append("</tr><tr>");
                                 }
                                  
-                                container_names.append("<tr><td><INPUT onclick='javascript:showhide(\""+cur_label.charAt(0) +"\", this.checked);' type=checkbox CHECKED value=1 name=show> "+getProjectName(cur_label.charAt(0)));
+                                container_names.append("<tr><td><INPUT onclick='javascript:showhide(\""+cur_label.charAt(0) +"\", this.checked);' type=checkbox CHECKED value=1 name=show> "+ DatabaseToApplicationDataLoader.getProjectName(cur_label.charAt(0)));
                                 container_names.append("<DIV ID='"+cur_label.charAt(0) +"' STYLE='  position:relative;  clip:rect(0px 120px 120px 0px); '>");
                                 container_names.append("<p><table border = 0>");
                                 cur_column=1;
@@ -591,29 +591,9 @@ public class Seq_GetItemAction extends ResearcherAction
         return container;
     }
     
-    private String getProjectName(char project_code)
-    {
-        project_code = Character.toUpperCase(project_code);
-        switch (project_code)
-        {
-            case         'A': return  "NIDDK Diabetis - Human";
-            case         'B': return  " Breast Cancer"; 
-            case         'C': return  " Clontech"; 
-            case         'D': return  " NIDDK Diabetis - Mouse"; 
-            case         'G': return  " Prostate Cancer"; 
-            case         'H': return  " Human"; 
-            case         'K': return  " Kinase"; 
-            case         'M': return  " MGC"; 
-            case         'P': return  " Pseudomonas"; 
-            case         'S': return  " Yersinia pestis"; 
-            case         'T': return  " Transcription Factor";
-            case         'Y': return  " Yeast";
-            case        'F': return " Francisella tularentsis";
-            default: return String.valueOf(project_code);
-        }
-
-    }
+   
     
+     
     //for sample report: converts end reads list int o uireads
     private ArrayList  createListOfUIReads(IsolateTrackingEngine istr, String discrepancy_report_for_endread, int ref_seqid)
                         throws BecDatabaseException
@@ -707,6 +687,10 @@ public class Seq_GetItemAction extends ResearcherAction
     {
         try
         {
+            
+            
+            
+       
     //  ArrayList a = StretchCollection.createListOfUIContigs( 6206, Constants.ITEM_TYPE_ISOLATETRASCKING_ID) ;
     Hashtable stretch_collections = new Hashtable();
                      ArrayList items = Algorithms.splitString("123 6345 6947");

@@ -33,7 +33,8 @@ import java.util.*;
 public class DeleteObjectRunner extends ProcessRunner 
 {
     //public static final int         Constants.PROCESS_UPDATE_REFERENCE_SEQUENCE = 5;
-    private static  String MOVE_TRACE_FILES_BASE_DIR = null;
+    private static  String MOVE_TRACE_FILES_BASE_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("MOVE_TRACE_FILES_BASE_DIR") + java.io.File.separator;
+/*
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
@@ -45,7 +46,7 @@ public class DeleteObjectRunner extends ProcessRunner
           MOVE_TRACE_FILES_BASE_DIR = "f:\\trace_files_root\\trace_files_temporary_removed\\";
         }
     }
-    
+    */
     private int                     m_action_type = -1;
      public String       getTitle()    
      {  
@@ -470,7 +471,7 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         // delete all end reads
         sql.addAll( getSqlReads(sql_items, Constants.PROCESS_DELETE_CLONE_READS)) ;
         //delete upload history record 
-        sql.add("delete from process_object where objecttype = "+Constants.PROCESS_OBJECT_TYPE_CONTAINER+" and objectid in (select containerid from containerheader where label in ("+sql_items+")");
+        sql.add("delete from process_object where objecttype = "+Constants.PROCESS_OBJECT_TYPE_CONTAINER+" and objectid in (select containerid from containerheader where label in ("+sql_items+"))");
         // delete all results
         sql.add("delete from result where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+")))");
         String sql_ids = " select constructid as id from isolatetracking  where sampleid in ( select sampleid from sample where containerid in(select containerid from containerheader where label  in ( "+sql_items+")))";

@@ -31,19 +31,16 @@ public class DiscrepancyFinder
 {
    
     //store input & output blast files: do not allow to change
-    private  String INPUT = null;
-    public  String OUTPUT = "/output/needleoutput/";
+    private  String INPUT = Constants.getTemporaryFilesPath();
+    public  String OUTPUT = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("NEEDLE_OUTPUT_PATH") + java.io.File.separator;
+    /*
     
-    // private static final String LOG_FILE_NAME = "/needleoutput/logfile.txt";
-
-    private  String LOG_FILE_NAME = "/output/needleoutput/logfile.txt";
-    {
+      {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
             INPUT = Constants.getTemporaryFilesPath();
             OUTPUT = "d:\\output\\needleoutput\\";
-            LOG_FILE_NAME = "d:\\output\\needleoutput\\logfile.txt";
-            if (ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
+             if (ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
             {
                  OUTPUT = "d:\\output\\eval_needleoutput\\";
             }
@@ -52,9 +49,10 @@ public class DiscrepancyFinder
         {
             INPUT = Constants.getTemporaryFilesPath();
             OUTPUT = "c:\\needleoutput\\";
-            LOG_FILE_NAME = "c:\\needleoutput\\logfile.txt";
-        }
-    }
+            }
+    }*
+     */
+    
     private SequencePair m_seqpair = null;
     private ArrayList    m_seqpairs = null;
     //one based; this parameters defined as start / stop of ref sequence,

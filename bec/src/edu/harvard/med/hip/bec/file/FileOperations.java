@@ -22,13 +22,7 @@ public class FileOperations
      */
     private final static int BUFFER_SIZE = 1024;
     private static boolean      m_isSameComputer = false;
-     {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-             m_isSameComputer = true;
-        else
-            m_isSameComputer = false;
-    }
-    
+   
     public static boolean isFileExists(String file_name)
     {
         File fl = new File(file_name);
