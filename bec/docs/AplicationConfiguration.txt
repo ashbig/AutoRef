@@ -2,38 +2,7 @@
 Application configuration:
 
 
-Application is configured by three variables
-defined in 
-            package edu.harvard.med.hip.utility
-            class   ApplicationHostDeclaration
- a. IS_BIGHEAD sets all class passes to third party programs and 
-server directories according to OS of the server;
- b. IS_BIGHEAD_FOR_EXPRESSION_EVALUATION sets all if blocks inside java 
-code for DIFFERENT versions of ACE package code ;
- c.  JSP_REDIRECTION sets jsp redirection for each version of application;
-
-
-should ACE package run on more than two possible server machines, variables 
-IS_BIGHEAD  and IS_BIGHEAD_FOR_EXPRESSION_EVALUATION
-                a. renamed to SERVER_MACHINE
-                b. get type int
-                c. all server machines should get own value
-
-
-
-
-
-
-1.	To configure new application for the same server:
-            
-            set JSP_REDIRECTION and IS_BIGHEAD_FOR_EXPRESSION_EVALUATION;
-
-
-
-
-2.	To reconfigure from one server machine to another (make sure your setting are according to OS)
-            set IS_BIGHEAD;
-
+a. change ApplicationHostSettings file
 a. build the following directories (min set)
 
             - trace_files_damp
@@ -106,3 +75,19 @@ transferConsensusTags.perl
 
 3. copy phredpar.dat to some location
 
+
+Programs testing
+1. assembler
+
+perl c:\\programs_bio\\biolocal\\phredPhrap   --clonepath  /C/bio/plate_analysis/clone_samples/46691/151110 --outputfilename a
+
+
+2. needle
+c:\EMBOSS-2.5.1\emboss\needle.exe /c/tmp_assembly/needle1.in /c/tmp_assembly/needle1188.in -gapopen 10.0 -gapextend 0.5 -outfile c:\tmp_assembly\needle1_1188.out
+
+      
+3. primer3
+
+4. phred compiled for windows
+
+5. blast
