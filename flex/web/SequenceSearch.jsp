@@ -16,9 +16,28 @@
 <html:errors/>
 
 <html:form action="/SequenceSearch.do" focus="searchString">
-    <p><b>Please enter the search key word:</b>
-    <html:text property="searchString" size="40"/>
-    <html:submit property="submit" value="Search"/>
+<table>
+    <tr>
+    <td><b>Please enter the search key word:</b></td>
+    <td><html:text property="searchString" size="40"/></td>
+    </tr>
+
+    <logic:present name="species">
+    <tr>
+    <td><b>Search Species:</b></td>
+    <td><select name="species">
+        <option value="all">All
+        <logic:iterate id="oneSpecies" name="species">
+            <option value="<bean:write name="oneSpecies"/>"><bean:write name="oneSpecies"/>
+        </logic:iterate>
+    </td>
+    </tr>
+    </logic:present>
+  
+    <tr>
+    <td></td><td><html:submit property="submit" value="Search"/></td>
+    </tr>
+</table>
 </html:form>
 
 <p>
