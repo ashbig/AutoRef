@@ -338,10 +338,11 @@ public class RunProcessAction extends ResearcherAction
                         for (int i = 0; i < chkStr.length; i++)
                         {
                             istr_id = Integer.parseInt(chkStr[i]);
-                            sql = "update isolatetracking set status=-status where isolatetrackingid="+ istr_id;
+                            sql = "update isolatetracking set status=-status where iso latetrackingid="+ istr_id;
                             DatabaseTransaction.executeUpdate(sql, conn);
                             
                         }
+                        conn.commit();
                     }
                     request.setAttribute(Constants.JSP_TITLE,"Request for clones status change" );
                     request.setAttribute(Constants.ADDITIONAL_JSP,"For " +chkStr.length+ " clones from plate "+ request.getParameter("containerLabel") +" status have been changes" );
