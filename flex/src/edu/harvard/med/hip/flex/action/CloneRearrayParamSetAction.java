@@ -102,6 +102,12 @@ public class CloneRearrayParamSetAction extends RearrayParamSetAction {
         } else if("dna".equals(sourceFormat)) {
             manager.setStorageForm(StorageForm.DNA);
             manager.setStorageType(StorageType.ORIGINAL);
+        } else if("currentGlycerol".equals(sourceFormat)) {
+            manager.setStorageForm(StorageForm.GLYCEROL);
+            manager.setStorageType(StorageType.CURRENT);
+        } else if("currentDna".equals(sourceFormat)) {
+            manager.setStorageForm(StorageForm.DNA);
+            manager.setStorageType(StorageType.CURRENT);
         }
     }    
 }
