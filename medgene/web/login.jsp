@@ -14,8 +14,8 @@
     <center>
     <h1>Welcome to the MedGene<b style='mso-bidi-font-weight:normal'><sup><span
   style='font-size:14.0pt;mso-bidi-font-size:24.0pt'>SM  </span></sup></b>Database</h1>
-<A HREF="http://www.hip.harvard.edu"><font size=4><b>Institute of Proteomics</b></font></A><BR>
-<A HREF="http://www.hms.harvard.edu"><font size=4><b>Harvard Medical School</b></font></A><BR>
+<A HREF="http://www.hip.harvard.edu" target="_new"><font size=4><b>Institute of Proteomics</b></font></A><BR>
+<A HREF="http://www.hms.harvard.edu" target="_new"><font size=4><b>Harvard Medical School</b></font></A><BR>
 
     <hr>
     <html:errors/>

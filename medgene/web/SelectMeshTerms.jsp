@@ -42,7 +42,7 @@
         labelProperty = "type" 
         />
     </html:select>
-    [<a href="statistic_menu.jsp">help</a>]
+    [<a href="statistic_menu.jsp" target="_new">help</a>]
 
     <p>
     <html:submit property="submit" value="Get Genes"/>

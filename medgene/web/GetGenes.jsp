@@ -38,7 +38,7 @@
         labelProperty = "type" 
         />
     </html:select>
-    [<a href="statistic_menu.jsp">help</a>]
+    [<a href="statistic_menu.jsp" target="_new">help</a>]
 
     <p>Please choose the number of genes for your list:
     <html:select property="number">

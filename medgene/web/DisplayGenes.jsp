@@ -20,13 +20,13 @@
     <p>
     <TABLE border="1" cellpadding="2" cellspacing="0">
     <TR bgcolor="gray">
-        <TH><A HREF="KeySearchTerm.jsp">Key Search Term</A></TH>
-        <TH><A HREF="SearchType.jsp">Search Type</A></TH>
-        <TH><A HREF="GeneSymbol.jsp">Gene Symbol</A></TH>
-        <TH><A HREF="AllSearchTerms.jsp">All Search Terms</A></TH>
-        <TH><A HREF="GOAnnotation.jsp">GO Annotations</A></TH>
-        <TH><A HREF="statistic_menu.jsp">Statistical Score</A></TH>
-        <TH><A HREF="NumberOfPapers.jsp">Number of Papers</A></TH>
+        <TH><A HREF="KeySearchTerm.jsp" target="_new">Key Search Term</A></TH>
+        <TH><A HREF="SearchType.jsp" target="_new">Search Type</A></TH>
+        <TH><A HREF="GeneSymbol.jsp" target="_new">Gene Symbol</A></TH>
+        <TH><A HREF="AllSearchTerms.jsp" target="_new">All Search Terms</A></TH>
+        <TH><A HREF="GOAnnotation.jsp" target="_new">GO Annotations</A></TH>
+        <TH><A HREF="statistic_menu.jsp" target="_new">Statistical Score</A></TH>
+        <TH><A HREF="NumberOfPapers.jsp" target="_new">Number of Papers</A></TH>
     </TR>
 
     <logic:iterate id="association" name="associations"> 
