@@ -1,4 +1,4 @@
-/* $Id: StaticQueueFactory.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $ 
+/* $Id: StaticQueueFactory.java,v 1.2 2001-05-25 18:16:50 dongmei_zuo Exp $ 
  *
  * File     : StaticQueueFactory.java 
  * Date     : 04182001
@@ -26,7 +26,7 @@ public class StaticQueueFactory implements QueueFactory {
 	 */
 	public ProcessQueue makeQueue (String type) throws FlexProcessException {
 		try {
-    			Class classs = Class.forName ("flex.ApplicationCode.Java.process." + type);
+    			Class classs = Class.forName ("edu.harvard.med.hip.flex.process." + type);
       			Constructor constructor = classs.getConstructor (null);
       
       			return (ProcessQueue) constructor.newInstance (null);
