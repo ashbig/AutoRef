@@ -31,10 +31,15 @@ public class ManyToManyContainerMapper extends OneToOneContainerMapper {
     protected int [] emptyWellList;
     protected int totalWellsDest;
     protected int destWellIndex;
+    protected List sourceContainerLabels;
+    protected List destContainerLabels;
     
     protected List rearrayMappingList;
     
     public List getRearrayMappingList() {return rearrayMappingList;}
+    public List getSourceContainerLabels() {return sourceContainerLabels;}
+    public List getDestContainerLabels() {return destContainerLabels;}
+    public int getNumOfSamples() {return rearrayMappingList.size();}
     
     /** Creates a new instance of ManyToManyMapper */
     public ManyToManyContainerMapper() {
@@ -56,6 +61,8 @@ public class ManyToManyContainerMapper extends OneToOneContainerMapper {
     public Vector doMapping(Vector containers, Protocol protocol, Project project, Workflow workflow) throws FlexDatabaseException {
         String newContainerType = getContainerType(protocol.getProcessname());
         Vector newContainers = new Vector();
+        sourceContainerLabels = new ArrayList();
+        destContainerLabels = new ArrayList();
         
         String projectCode = getProjectCode(project, workflow);
         
@@ -66,6 +73,7 @@ public class ManyToManyContainerMapper extends OneToOneContainerMapper {
         Enumeration enum = containers.elements();
         while (enum.hasMoreElements()) {
             Container container = (Container)enum.nextElement();
+            sourceContainerLabels.add(container.getLabel());
             getSamples(container);
             Vector oldSamples = container.getSamples();
             for (int i=0; i<oldSamples.size(); i++) {
@@ -74,6 +82,7 @@ public class ManyToManyContainerMapper extends OneToOneContainerMapper {
                     newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), threadid, getSubThread(container));
                     newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
                     isNewPlate = false;
+                    destContainerLabels.add(newBarcode);
                 }
                 
                 boolean isMapped = false;
@@ -129,7 +138,26 @@ public class ManyToManyContainerMapper extends OneToOneContainerMapper {
     public File createRearrayFile() throws IOException {
         File file = new File(FILEPATH+REARRAY_OUTPUT);
         FileWriter fr = new FileWriter(file);
-        fr.write("Original plate label"+DILIM+"Original plate well"+DILIM+"Destination plate label"+ DILIM+  "Destination plate well\n");
+        
+        fr.write("Source containers:\n");
+        if(sourceContainerLabels != null) {
+            for(int i=0; i<sourceContainerLabels.size(); i++) {
+                String label = (String)sourceContainerLabels.get(i);
+                fr.write("\t"+label+"\n");
+            }
+        }
+        
+        fr.write("\nDestination containers:\n");
+        if(destContainerLabels != null) {
+            for(int i=0; i<destContainerLabels.size(); i++) {
+                String label = (String)destContainerLabels.get(i);
+                fr.write("\t"+label+"\n");
+            }
+        }
+        
+        fr.write("\nTotal number of samples: "+getNumOfSamples()+"\n");
+        
+        fr.write("\nOriginal plate label"+DILIM+"Original plate well"+DILIM+"Destination plate label"+ DILIM+  "Destination plate well\n");
         for(int i=0; i<rearrayMappingList.size(); i++) {
             RearrayInputSample sample = (RearrayInputSample)rearrayMappingList.get(i);
             fr.write(sample.getSourcePlate()+DILIM+sample.getSourceWell()+DILIM+sample.getDestPlate()+DILIM+sample.getDestWell()+"\n");
