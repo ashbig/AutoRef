@@ -48,8 +48,9 @@ public class OligoPlateManager {
         ResultSet rs = null;
         
         // get the protocol id for "DESIGN_CONSTRUCT" protocol
-        int protocolId = (ProcessProtocol.DESIGN_CONSTRUCT).getId();
-        protocolId = 3; //for testing
+        Protocol protocol = new Protocol(DESIGN_CONSTRUCTS);
+        int protocolId = protocol.getId();
+        
         String sql = "SELECT COUNT(q.sequenceid) " +
         "FROM queue q, flexsequence s \n" +
         "WHERE q.sequenceid = s.sequenceid \n" +
@@ -82,9 +83,6 @@ public class OligoPlateManager {
         SequenceOligoQueue seqQueue = new SequenceOligoQueue();
         seqList = seqQueue.getQueueItems(protocol, cdsSizeGroup);
         
-        //delete sequence queue record from the queue table
-        //seqQueue.removeQueueItems(seqList, protocol, conn);
-        
         return seqList;
     }
     
@@ -95,7 +93,7 @@ public class OligoPlateManager {
         LinkedList seqList = new LinkedList();
         SequenceOligoQueue seqQueue = new SequenceOligoQueue();
         seqList = seqQueue.getQueueItems(protocol, cdsSizeGroupLowerLimit,
-        cdsSizeGroupUpperLimit);        
+        cdsSizeGroupUpperLimit);
         
         return seqList;
     }
@@ -123,7 +121,7 @@ public class OligoPlateManager {
         int j = 0;
         int numSeqsToProcess = 0;
         
-        for (i = 0; i < 3; ++i) {            
+        for (i = 0; i < 3; ++i) {
             seqList = getQueueSequence(limits[i],limits[i+1]);
             numPlatesToProcess = seqList.size() / totalWells;
             numSeqsToProcess = totalWells*numPlatesToProcess;
@@ -146,22 +144,22 @@ public class OligoPlateManager {
                     //all of the oligo plate header and sample info are inserted in DB
                     //three text files for order oligos will be generated
                     plater = new OligoPlater(oligoPatternList, cg.getConstructList(), conn);
-
+                    
                     plater.generateOligoOrder();
                     plater.removeOrderOligoQueue();
                     
                     //remove sequences from queue
                     removeQueueSequence(seqList);
                     
-                  //  DatabaseTransaction.commit(conn);
+                    DatabaseTransaction.commit(conn);
                 } catch(FlexDatabaseException sqlex){
-
+                    
                     System.out.println(sqlex.getMessage());
-                    DatabaseTransaction.rollback(conn);                    
+                    DatabaseTransaction.rollback(conn);
                 } catch(IOException ioe){
                     System.out.println("Error occurred while writing to oligo order files");
                     System.out.println(ioe.getMessage());
-
+                    
                     DatabaseTransaction.rollback(conn);
                 }
                 finally {
@@ -182,7 +180,7 @@ public class OligoPlateManager {
         String subject = "New Testing Oligo Order";
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
-        Mailer.sendMessage(to, from, cc, subject, msgText, fileList);   
+        Mailer.sendMessage(to, from, cc, subject, msgText, fileList);
     }
     
     
