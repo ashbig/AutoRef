@@ -10,7 +10,7 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 <html>
 <head>
-<script language="JavaScript" src="/BEC/scripts.js"></script>
+<script language="JavaScript" src="<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>scripts.js"></script>
 
  <title> <bean:message key="bec.name"/> : <%=Constants.JSP_TITLE%></title>
    
@@ -118,9 +118,9 @@ Select Oligo Set </strong></td></tr><%}%> -->
 {%><tr><td><strong>&nbsp;&nbsp;<input type=checkbox name=<%= chkName %> value=""  onclick="SetChecked(this, this.checked, '<%= chkName %>')" >Change Status</strong></td></tr><%}%>
     <tr><td ><strong>&nbsp;&nbsp;  Primer3 Specification: </strong></td>
 <td   ><strong>
-<a href="/BEC/Seq_GetSpec.do?forwardName=<%= olc.getPrimer3SpecId()  * Spec.SPEC_SHOW_SPEC %> "> <%= olc.getPrimer3SpecId()%></a></strong></td></TR>
+<a href="<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetSpec.do?forwardName=<%= olc.getPrimer3SpecId()  * Spec.SPEC_SHOW_SPEC %> "> <%= olc.getPrimer3SpecId()%></a></strong></td></TR>
     <tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence Id: </strong></td>
-<td   ><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= olc.getSequenceId()%>','<%=olc.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= olc.getSequenceId()%></a></strong></td></TR>
+<td   ><a href="#" onCLick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= olc.getSequenceId()%>','<%=olc.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= olc.getSequenceId()%></a></strong></td></TR>
  <% if ( ocalc_ids.containsKey(new Integer(olc.getId()) ))
 {%><tr><td colspan=2>See Primers above</td></tr><% continue;}%>  
  <tr><td colspan='2'>

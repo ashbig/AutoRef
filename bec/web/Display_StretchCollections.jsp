@@ -10,7 +10,7 @@
 <%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
 <html>
 <head>
-<script language="JavaScript" src="/BEC/scripts.js"></script>
+<script language="JavaScript" src="<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>scripts.js"></script>
 
  <title> <bean:message key="bec.name"/> : <%=Constants.JSP_TITLE%></title>
    
@@ -99,7 +99,7 @@ for (int index = 0; index < items.size(); index ++)
 {   %>
 
 <tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence Id: </strong></td>
-<td   ><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%>','<%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%></a></strong></td></TR>
+<td   ><a href="#" onCLick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%>','<%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= ((StretchCollection)stretchColl.get(0)).getRefSequenceId()%></a></strong></td></TR>
 <tr><td colspan='2'><P>
 
 <%
@@ -129,7 +129,7 @@ for (int index = 0; index < items.size(); index ++)
      <td width="15%">
 <% if (  contig.getType() == Stretch.GAP_TYPE_CONTIG)
 {%>
- <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.STRETCH_REPORT_INT%>&amp;ID=<%= contig.getId()%>','<%= contig.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+ <A HREF="" onClick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.STRETCH_REPORT_INT%>&amp;ID=<%= contig.getId()%>','<%= contig.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 		 <%= contig.getId() %>	 </a>
 <%} else {%> <%= contig.getId() %> <%}%>
 </td>
@@ -150,7 +150,7 @@ else
 if ( contig.getType() == Stretch.GAP_TYPE_GAP )
 { %> &nbsp <%}
 else if (contig.isAlignmentExists())
-{%> <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= contig.getSequenceId()%>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE %>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= strcol.getRefSequenceId ()%>','<%= "A"+contig.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"><%}
+{%> <input type=BUTTON value=Alignment onClick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= contig.getSequenceId()%>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE %>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= strcol.getRefSequenceId ()%>','<%= "A"+contig.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"><%}
 else {%>Not available<%}%>		 </td>
 <td ><% 
 if ( contig.getType() == Stretch.GAP_TYPE_GAP )
@@ -158,7 +158,7 @@ if ( contig.getType() == Stretch.GAP_TYPE_GAP )
 else 
 if (contig.isDiscrepancies())
 {%>		
-<input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= contig.getSequenceId()%>','<%= "D"+contig.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<input type=BUTTON value="Discrepancy Report"  onClick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= contig.getSequenceId()%>','<%= "D"+contig.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 <%}
 else {%>No discrepancies<%}%> 
 </td>       </tr>       <%}%>      </table>

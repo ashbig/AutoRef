@@ -56,7 +56,7 @@
  <TR> 
     <TD >Reference Sequence Id:</td>
     <td>
-        <a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= request.getAttribute("refsequence_id")%>');" > 
+        <a href="#" onCLick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= request.getAttribute("refsequence_id")%>');" > 
         <%= request.getAttribute("refsequence_id") %>
         </a></TD>
   </TR>

@@ -16,7 +16,7 @@
 <link href="/FlexStyle.css" rel="stylesheet" type="text/css">
 
 
-<script language="JavaScript" src="/BEC/scripts.js"></script>
+<script language="JavaScript" src="<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>scripts.js"></script>
 
 </head>
 
@@ -42,7 +42,7 @@
     </tr>
 	<tr>
         <td><i>If you are not sure about certain parameter settings, leave them 
-          unchanged </i> <a href="file:///C|/BEC/web/Help_ConfigureSystem.jsp">[parameter help file]</a>. 
+          unchanged </i> <a href="<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Help_ConfigureSystem.jsp">[parameter help file]</a>. 
           </i></td>
       </tr>
   </table>

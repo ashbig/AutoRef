@@ -53,7 +53,7 @@ else discrepancies = (ArrayList)request.getAttribute("discrepancies") ;
 <tr> 
     <td width="19%"><strong>Sequence Id:</strong>
    
-     <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.SCOREDSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sequence.getId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
+     <A HREF="" onClick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION%>Seq_GetItem.do?forwardName=<%=Constants.SCOREDSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sequence.getId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
     	<%= sequence.getId()%>
 	</a>
 	</td>
