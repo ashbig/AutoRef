@@ -1,11 +1,11 @@
-/* $Id: StaticQueueFactory.java,v 1.1 2001-04-20 14:51:50 dongmei_zuo Exp $ 
+/* $Id: StaticQueueFactory.java,v 1.2 2001-04-25 18:37:59 dongmei_zuo Exp $ 
  *
  * File     : StaticQueueFactory.java 
  * Date     : 04182001
  * Author	: Dongmei Zuo
  */
 
-package flex.process;
+package flex.ApplicationCode.Java.process;
 
 import java.lang.reflect.Constructor;
 
@@ -26,12 +26,12 @@ public class StaticQueueFactory implements QueueFactory {
 	 */
 	public Queue makeQueue (String type) throws FlexProcessException {
 		try {
-    			Class classs = Class.forName ("flex.process." + type);
+    			Class classs = Class.forName ("flex.ApplicationCode.Java.process." + type);
       		Constructor constructor = classs.getConstructor (null);
       
       		return (Queue) constructor.newInstance (null);
     		} catch (Exception e) {
-      		throw new FlexProcessException ("Unable to load queue" + type);
+      		throw new FlexProcessException ("Unable to load queue " + type);
     		}
 	}
 }

@@ -1,12 +1,12 @@
 /*
- * $Id: QueueItem.java,v 1.1 2001-04-20 14:51:50 dongmei_zuo Exp $
+ * $Id: QueueItem.java,v 1.2 2001-04-25 18:37:59 dongmei_zuo Exp $
  *
  * File     : QueueItem.java 
  * Date     : 04162001
  * Author	: Dongmei Zuo, Wendy Mar
  */ 
 
-package flex.process;
+package flex.ApplicationCode.Java.process;
 
 /**
  * This class represents an item on a queue.

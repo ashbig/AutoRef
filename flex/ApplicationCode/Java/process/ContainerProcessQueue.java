@@ -1,17 +1,18 @@
-/* $Id: ContainerProcessQueue.java,v 1.1 2001-04-20 14:51:50 dongmei_zuo Exp $ 
+/* $Id: ContainerProcessQueue.java,v 1.2 2001-04-25 18:37:59 dongmei_zuo Exp $ 
  *
  * File     : ContainerProcessQueue.java 
  * Date     : 04162001
  * Author	: Dongmei Zuo, Wendy Mar
  */
 
-package flex.process;
+package flex.ApplicationCode.Java.process;
 
-import flex.core.*;
-import flex.database.*;
-import flex.util.*;
+import flex.ApplicationCode.Java.core.*;
+import flex.ApplicationCode.Java.database.*;
+import flex.ApplicationCode.Java.util.*;
 
 import java.util.*;
+import java.math.*;
 
 /**
  * The container queue that contains all the queued containers
@@ -39,7 +40,7 @@ public class ContainerProcessQueue implements ProcessQueue {
 						"c.containertype as type, " +
 						"c.locationid as locationid, " +
 						"c.label as label, " +
-						"to_char(q.dateadded, 'fmMM-DD-YYYY') as dateadded\n" +
+						"to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
 						"from containerheader c, queue q\n" +
 						"where c.containerid = q.containerid\n" +
 						"and q.protocolid = "+protocolid);
@@ -72,7 +73,7 @@ public class ContainerProcessQueue implements ProcessQueue {
 						"from containerheader c, queue q\n" +
 						"where c.containerid = q.containerid\n" +
 						"and q.protocolid = "+protocolid+
-						"and dateadded = "+date);
+						"and to_char(dateadded, 'fmYYYY-MM-DD') = "+date);
 		try {
 			LinkedList items = restore(protocol, sql, t);
 			return items;
@@ -94,8 +95,8 @@ public class ContainerProcessQueue implements ProcessQueue {
 			return;
 
 		String sql = new String("insert into queue\n" +
-						"(protocolid, dateadded, containerid\n" +
-						"values(?, sysdate, ?");
+						"(protocolid, dateadded, containerid)\n" +
+						"values(?, sysdate, ?)");
 
 		Vector v = new Vector();
 		ListIterator iter = items.listIterator();
@@ -137,7 +138,7 @@ public class ContainerProcessQueue implements ProcessQueue {
 		
 		String sql = "delete from queue\n" +
 				 "where protocolid = ?\n" +
-				 "and dateadded = ?\n" +
+				 "and to_char(dateadded, 'fmYYYY-MM-DD') = ?\n" +
 				 "and containerid = ?";
 
 		Vector v = new Vector();
@@ -191,12 +192,11 @@ public class ContainerProcessQueue implements ProcessQueue {
 
 			while(enum.hasMoreElements()) {
 				Hashtable h = (Hashtable)enum.nextElement();
-				int id = ((Integer)h.get(new Object("id"))).intValue();
-System.out.println(id);
-				String type = (String)h.get("type");
-				int locationid = ((Integer)h.get("locationid")).intValue();
-				String label = (String)h.get("label");
-				String date = (String)h.get("dateadded");
+				int id = ((BigDecimal)h.get("ID")).intValue();
+				String type = (String)h.get("TYPE");
+				int locationid = ((BigDecimal)h.get("LOCATIONID")).intValue();
+				String label = (String)h.get("LABEL");
+				String date = (String)h.get("DATEADDED");
 
 				try {
 					Container c = factory.getContainer(type);

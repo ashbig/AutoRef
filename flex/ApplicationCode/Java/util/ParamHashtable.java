@@ -1,11 +1,11 @@
-/* $Id: ParamHashtable.java,v 1.1 2001-04-20 14:51:50 dongmei_zuo Exp $ 
+/* $Id: ParamHashtable.java,v 1.2 2001-04-25 18:38:56 dongmei_zuo Exp $ 
  *
  * File     : ParamHashtable.java 
  * Date     : 04182001
  * Author	: Dongmei Zuo
  */
 
-package flex.util;
+package flex.ApplicationCode.Java.util;
 
 import java.util.*;
 

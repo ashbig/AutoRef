@@ -1,15 +1,15 @@
 /*
- * $Id: ProcessQueue.java,v 1.1 2001-04-20 14:51:50 dongmei_zuo Exp $
+ * $Id: ProcessQueue.java,v 1.2 2001-04-25 18:37:59 dongmei_zuo Exp $
  *
  * File     : ProcessQueue.java 
  * Date     : 04162001
  * Author	: Wendy Mar, Dongmei Zuo
  */
 
-package flex.process;
+package flex.ApplicationCode.Java.process;
 
 import java.util.*;
-import flex.database.*;
+import flex.ApplicationCode.Java.database.*;
 
 /**
  * Represents the queue which contains all the item 

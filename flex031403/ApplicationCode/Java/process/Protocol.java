@@ -1,24 +1,54 @@
-//package flex.process;
-import java.util.*;
+/**
+ * $Id: Protocol.java,v 1.3 2001-04-25 18:37:59 dongmei_zuo Exp $
+ *
+ * File     : FlexProcessException.java 
+ * Date     : 04162001
+ * Author	: Wendy Mar, Dongmei Zuo
+ */
 
-public class Protocol
-{
-   public static final Protocol IDENTIFY_SEQUENCE = new Protocol();
-   public static final Protocol APPROVE_SEQUENCE = new Protocol();
-   public static final Protocol DESIGN_CONSTRUCTS = new Protocol();
-   public static final Protocol CREATE_OLIGO_ORDER = new Protocol();
-   public static final Protocol RECEIVE_OLIGO_ORDER = new Protocol();
-   public static final Protocol CREATE_PCR = new Protocol();
-   public static final Protocol CREATE_GEL = new Protocol();
-   public static final Protocol CREATE_FILTER = new Protocol();
-   public static final Protocol CREATE_BP = new Protocol();
-   public static final Protocol CREATE_TRANSFORMATION = new Protocol();
-   public static final Protocol CREATE_CULTURE = new Protocol();
-   public static final Protocol CREATE_DNA = new Protocol();
+package flex.ApplicationCode.Java.process;
 
-   public void check()
-   {}
+/**
+ * Represents the protocol object corresponding to the
+ * protocol table.
+ */
+public class Protocol {
+	private int id;
+	private String processcode;
+	private String processname;
 
-   private Protocol()
-   {}
-} // Protocol
+	/**
+	 * Constructor.
+	 *
+	 * @param id The protocol id.
+	 * @param processcode The process code of the protocol.
+	 * @param processname The process name of the protocol.
+	 *
+	 * @return The Protocol object.
+	 */
+	public Protocol (int id, String processcode, String processname) {
+		this.id = id;
+		this.processcode = processcode;
+		this.processname = processname;
+	}
+
+	/**
+	 * Return the protocol id.
+	 *
+	 * @return The protocol id.
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * Return the process code.
+	 *
+	 * @return The process code.
+	 */
+	public String getProcesscode() {
+		return processcode;
+	}
+}
+
+

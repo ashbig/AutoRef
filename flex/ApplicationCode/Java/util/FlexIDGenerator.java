@@ -1,15 +1,17 @@
 /**
- * $Id: FlexIDGenerator.java,v 1.1 2001-04-20 14:51:50 dongmei_zuo Exp $
+ * $Id: FlexIDGenerator.java,v 1.2 2001-04-25 18:38:56 dongmei_zuo Exp $
  *
- * File     : FlexIDGenerator.java 
- * Date     : 04182001
+ * File     	: FlexIDGenerator.java 
+ * Date     	: 04182001
  * Author	: Dongmei Zuo
  */
 
-package flex.util;
+package flex.ApplicationCode.Java.util;
 
 import java.util.*;
-import flex.database.*;
+import java.math.BigDecimal;
+
+import flex.ApplicationCode.Java.database.*;
 
 /**
  * This class gets the next primary key from the database
@@ -24,7 +26,7 @@ public class FlexIDGenerator {
 	 * 	    generated from.
 	 * @return An integer representing the primary key.
 	 */
-	public static int getID (String sequenceName) {
+	public static int getID (String sequenceName) throws FlexUtilException {
 		int id = 0;
 		String sql = "select "+sequenceName+".nextval as id from dual";
 
@@ -34,12 +36,23 @@ public class FlexIDGenerator {
 			Enumeration enum = results.elements();
 			while (enum.hasMoreElements()) {
 				Hashtable h = (Hashtable)enum.nextElement();
-				id = ((Integer)h.get("id")).intValue();
+				id = ((BigDecimal)h.get("ID")).intValue();
 			}		
 		} catch (FlexDatabaseException e) {
-			System.out.println(e.getMessage());
-			System.exit(0);
+			throw new FlexUtilException(e.getMessage());
 		}
 		return id;
+	}
+	
+	//******************************************************//
+	//			Test				//
+	//******************************************************//
+	public static void main(String [] args) {
+		try {
+			int id = FlexIDGenerator.getID("sampleid");
+			System.out.println(id);
+		} catch (FlexUtilException e) {
+			System.out.println(e);
+		}		
 	}
 }
