@@ -164,7 +164,7 @@ public class OligoPlateManager {
         if(project.getId() == Project.PSEUDOMONAS || project.getId() == Project.KINASE) {
             setIsOpenOnly(true);
             setIsSetOpenClose(true);
-        } else if(project.getId() == Project.YEAST || project.getId() == Project.YP) {
+        } else if(project.getId() == Project.YEAST || project.getId() == Project.YP || project.getId() == Project.FT) {
             setIsCloseOnly(true);
             setIsSetOpenClose(true);
         }

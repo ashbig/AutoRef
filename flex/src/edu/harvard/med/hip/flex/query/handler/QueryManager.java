@@ -499,11 +499,10 @@ public class QueryManager {
     }
     
     private void setConstructInfo(List founds, List constructInfoList) {
-        System.out.println("Enter setConstructInfo method");
         if(founds == null || founds.size() == 0 || constructInfoList == null || constructInfoList.size() == 0) {
             return;
         }
-        System.out.println("Enter setConstructInfo method 1");
+
         for(int i=0; i<constructInfoList.size(); i++) {
             ConstructInfoBean infoBean = (ConstructInfoBean)constructInfoList.get(i);
             int seqid = infoBean.getSequenceid();

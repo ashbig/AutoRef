@@ -251,17 +251,18 @@ public class UpdateClonename {
     }
     
     public List readClones() {
-        /*
+        
         String sql = "select s.cloneid, s.storagesampleid"+
                     " from clonestorage s, clones c"+
                     " where s.cloneid=c.cloneid"+
                     " and c.status='SEQUENCE VERIFIED'"+
                     " and c.clonename is null";
-         **/
+         /*
         String sql = "select s.cloneid, s.storagesampleid"+
         " from clonestorage s, sample p"+
         " where s.storagesampleid=p.sampleid"+
         " and p.cloneid is null";
+          **/
         DatabaseTransaction t = null;
         ResultSet rs = null;
         List clones = new ArrayList();
@@ -372,20 +373,20 @@ public class UpdateClonename {
     }
     
     public static void main(String args[]) throws Exception {
-        /**   DatabaseTransaction t = DatabaseTransaction.getInstance();
-         * String sql = "select c.cloneid from clones c"+
-         * " where c.clonename is null"+
-         * " and c.status='SEQUENCE VERIFIED'";
-         * ResultSet rs = t.executeQuery(sql);
-         * List clones = new ArrayList();
-         * while(rs.next()) {
-         * int cloneid = rs.getInt(1);
-         * clones.add(new Integer(cloneid));
-         * }
-         *
-         * UpdateClonename u = new UpdateClonename();
-         * u.updateName(clones);
-         */
+          DatabaseTransaction t = DatabaseTransaction.getInstance();
+          String sql = "select c.cloneid from clones c"+
+          " where c.clonename is null"+
+          " and c.status='SEQUENCE VERIFIED'";
+          ResultSet rs = t.executeQuery(sql);
+          List clones = new ArrayList();
+          while(rs.next()) {
+          int cloneid = rs.getInt(1);
+          clones.add(new Integer(cloneid));
+          }
+         
+          UpdateClonename u = new UpdateClonename();
+          u.updateName(clones);
+         /**
         UpdateClonename u = new UpdateClonename();
         /**       List clones = u.readClones();
          * if(clones == null) {
@@ -394,7 +395,7 @@ public class UpdateClonename {
          * }
          * System.out.println(clones.size());
          * u.updateCloneid(clones);
-         */
+  
         //u.updateDestCloneid("(7275,7276)");
 
         try {
@@ -402,7 +403,7 @@ public class UpdateClonename {
         } catch (Exception ex) {
             System.out.println(ex);
         }
-       
+       */
         //u.correctConstructid();
         //u.correctConstructidForClones();
     }

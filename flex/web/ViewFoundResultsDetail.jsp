@@ -52,6 +52,11 @@
             </html:select>
 <html:hidden property="searchid"/>
 <html:hidden property="condition"/>
+
+<logic:present name="lastFounds">
+    <input type="hidden" name="lastFounds" value="<bean:write name="lastFounds"/>">
+</logic:present>
+
 <html:submit property="submitButton" value="Go"/>
 <html:submit property="submitButton" value="Export"/>
 
@@ -148,11 +153,10 @@
                         <td>
                             <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&isCloneStorageDisplay=1">
                             <flex:write name="clone" property="cloneid"/>
-                            <A>
+                            </A>
                             <bean:define id="selectedClone" name="clone" property="exportId"/>
                             <bean:define id="form" name="queryFlexForm"/>
-                            <input type=checkbox name=checkedClone[<%=index%>] value=<bean:write name="clone" property="exportId"/> 
-                                <%
+                            <input type="checkbox" name="checkedClone[<%=index%>]" value="<bean:write name="clone" property="exportId"/>" <%
                                     List selectedClones = ((QueryFlexForm)form).getSelectedClones();
                                     if(selectedClones != null) {
                                         for(int i=0; i<selectedClones.size(); i++) {
@@ -162,12 +166,10 @@
                                                 break;
                                             }
                                         }
-                                    }
-                                %>
-                            />
-                            <input type=hidden name=allClone[<%=index%>] value=<bean:write name="clone" property="exportId"/> />
-                            <% index++; %>
+                                    }%>>
                         </td>
+                            <input type="hidden" name="allClone[<%=index%>]" value="<bean:write name="clone" property="exportId"/>">
+                            <% index++; %>
                         <td><flex:write name="clone" property="clonename"/></td>
                         <td><flex:write name="clone" property="clonetype"/></td>
                         <td><flex:write name="clone" property="cloningstrategy.name"/></td>
@@ -186,14 +188,9 @@
 
 <logic:present name="selectedClones">
     <logic:iterate name="selectedClones" id="sc" indexId="count">
-        <input type=hidden name=selectedClone[<%=count%>] value=<bean:write name="sc"/> />
+        <input type="hidden" name="selectedClone[<%=count%>]" value="<bean:write name="sc"/>">
     </logic:iterate>
 </logic:present>
-
-<logic:present name="lastFounds">
-    <html:hidden property="lastFounds" name="lastFounds"/>
-</logic:present>
-
 </html:form>
 
 </body>

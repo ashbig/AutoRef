@@ -69,7 +69,6 @@ public class QueryFlexForm extends ActionForm {
     }
        
     public void setCheckedClone(int index, String value) {
-        System.out.println("here:"+value);
         checkedClones.add(value);
     }
     

@@ -190,7 +190,7 @@ public class CloningStrategy {
                 return HUMAN_GATEWAY;
             if(projectid == Project.PSEUDOMONAS)
                 return PSEUDOMONAS_GATEWAY;
-            if(projectid == Project.YP || projectid == Project.YEAST)
+            if(projectid == Project.YP || projectid == Project.YEAST || projectid == Project.FT)
                 return YP_GATEWAY;
         }
         
