@@ -42,7 +42,7 @@
     </tr>
 
     <tr>
-    <td class="label">3P open oligo plate barcode:</td>
+    <td class="label">3P fusion oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></td>
     <td class="prompt">Location:</td>
     <td><html:select property="threepOpenSourceLocation">

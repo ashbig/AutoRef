@@ -36,7 +36,7 @@
     </tr>
 
     <tr>
-    <td class="label">3P open oligo plate barcode:</td>
+    <td class="label">3P fusion oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.threepOpen" property="id"/>"><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></a></td>
     <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="location.type"/></td>

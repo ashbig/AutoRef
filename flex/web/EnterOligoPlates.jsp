@@ -29,7 +29,7 @@
     </tr>
 
     <tr>
-    <td class="prompt">Enter 3P open oligo plate barcode:</td>
+    <td class="prompt">Enter 3P Fusion oligo plate barcode:</td>
     <td><html:text property="threepOpenPlate" size="40"/></td>
     </tr>
 
