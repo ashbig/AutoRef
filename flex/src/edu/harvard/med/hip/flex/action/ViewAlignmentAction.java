@@ -67,7 +67,7 @@ public class ViewAlignmentAction extends FlexAction {
         java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM_dd_yyyy");
         String fileName = request.getParameter("gi")+"_" + f.format(d)+".out";
 
-        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        BufferedReader in = new BufferedReader(new FileReader("/tmp/"+fileName));
         StringBuffer sb = new StringBuffer();
         boolean start = false;
             
