@@ -25,7 +25,7 @@ import sun.jdbc.rowset.*;
  * @author  DZuo
  */
 public class ExpressionCloneContainer extends CloneContainer {
-    public static final String EXPRESSION_CONTAINER_TYPE = "96 WELL EXPRESSION PLATE";
+    public static final String EXPRESSION_CONTAINER_TYPE = "96 WELL EXP PLATE";
     
     public ExpressionCloneContainer(int id, String type, Location location, String label) {
         super(id,type,location,label);
