@@ -340,7 +340,7 @@
                type="edu.harvard.med.hip.flex.action.EnterOligoPlatesAction"
                name="createPCRPlateForm"
                scope="request"
-               validate="true"
+               validate="false"
                input="/EnterOligoPlates.jsp">
       <forward  name="success"   path="/GetPCRLocation.jsp"/>
       <forward  name="success_oligo_dilute"   path="/GetNewOligoLocation.jsp"/>
@@ -401,9 +401,10 @@
                type="edu.harvard.med.hip.flex.action.GetResearcherAction"
                name="getResearcherBarcodeForm"
                scope="request"
-               validate="true"
+               validate="false"
                input="/GetResearcher.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
+      <forward  name="fail"   path="/ProcessPlatesFail.jsp"/>
     </action> 
 
     <!-- Process the researcher barcode input -->
@@ -411,9 +412,10 @@
                type="edu.harvard.med.hip.flex.action.GetPCRResearcherAction"
                name="getResearcherBarcodeForm"
                scope="request"
-               validate="true"
+               validate="false"
                input="/GetPCRResearcher.jsp">
       <forward  name="success"   path="/PrintPCRBarcode.jsp"/>
+      <forward  name="fail"   path="/ProcessPlatesFail.jsp"/>
     </action> 
 
     <!-- Process the researcher barcode input -->
@@ -421,9 +423,10 @@
                type="edu.harvard.med.hip.flex.action.GetNewOligoResearcherAction"
                name="getResearcherBarcodeForm"
                scope="request"
-               validate="true"
+               validate="false"
                input="/GetNewOligoResearcher.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
+      <forward  name="fail"   path="/ProcessPlatesFail.jsp"/>
     </action> 
 
     <!-- Print more barcodes -->

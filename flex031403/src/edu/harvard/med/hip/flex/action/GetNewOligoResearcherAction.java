@@ -56,7 +56,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public synchronized ActionForward flexPerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -71,6 +71,9 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
         try {
             researcher = new Researcher(barcode);
         } catch (FlexProcessException ex) {
+            request.setAttribute("workflowid", new Integer(workflowid));
+            request.setAttribute("projectid", new Integer(projectid));            
+            
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
@@ -85,6 +88,12 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
         Container fivep = (Container)request.getSession().getAttribute("EnterOligoPlateAction.fivep");
         Container threepOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepOpen");
         Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
+
+        if(fivepOligoD == null || threepOpenD == null ||
+        threepClosedD == null || fivep == null || threepOpen == null ||
+        threepClosed == null) {
+            return (mapping.findForward("fail"));
+        }
         
         Vector oldContainers = new Vector();
         oldContainers.addElement(fivep);

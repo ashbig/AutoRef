@@ -55,7 +55,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public synchronized ActionForward flexPerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -70,6 +70,9 @@ public class GetPCRResearcherAction extends ResearcherAction {
         try {
             researcher = new Researcher(barcode);
         } catch (FlexProcessException ex) {
+            request.setAttribute("workflowid", new Integer(workflowid));
+            request.setAttribute("projectid", new Integer(projectid));            
+            
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
@@ -87,7 +90,14 @@ public class GetPCRResearcherAction extends ResearcherAction {
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterOligoPlateAction.sampleLineageSet");
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterOligoPlateAction.subprotocol");
-                
+
+        if(fivep == null || threepOpen == null || threepClosed == null ||
+        pcrOpenContainer == null || pcrClosedContainer == null ||
+        item == null || protocol == null || sampleLineageSet == null ||
+        subprotocol == null) {
+            return (mapping.findForward("fail"));
+        }
+        
         Connection conn = null;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();

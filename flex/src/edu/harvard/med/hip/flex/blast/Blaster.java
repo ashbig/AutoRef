@@ -205,7 +205,7 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits; 
- */
+*/ 
          return blastcmd;
     }
     

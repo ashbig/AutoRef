@@ -81,6 +81,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
                 // Validate container label.
                 QueueItem item = getValidPlate(queueItems, container);
                 if(item == null) {
+                    request.setAttribute("workflowid", new Integer(workflowid));
+                    request.setAttribute("projectid", new Integer(projectid));
+                    
                     errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", container));
                     saveErrors(request, errors);
                     return (new ActionForward(mapping.getInput()));
@@ -115,7 +118,7 @@ public class EnterSourcePlateAction extends ResearcherAction {
             request.getSession().setAttribute("EnterSourcePlateAction.sampleLineageSet", sampleLineageSet);
             request.getSession().setAttribute("EnterSourcePlateAction.locations", locationList);
             request.getSession().setAttribute("EnterSourcePlateAction.items", items);
-            request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);            
+            request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);
             request.setAttribute("workflowid", new Integer(workflowid));
             request.setAttribute("projectid", new Integer(projectid));
             

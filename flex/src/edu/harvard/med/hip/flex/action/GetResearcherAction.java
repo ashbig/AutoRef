@@ -55,7 +55,7 @@ public class GetResearcherAction extends ResearcherAction{
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public synchronized ActionForward flexPerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -71,6 +71,9 @@ public class GetResearcherAction extends ResearcherAction{
         try {
             researcher = new Researcher(barcode);
         } catch (FlexProcessException ex) {
+            request.setAttribute("workflowid", new Integer(workflowid));
+            request.setAttribute("projectid", new Integer(projectid));
+            
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
@@ -86,6 +89,12 @@ public class GetResearcherAction extends ResearcherAction{
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sampleLineageSet");
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
         String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
+        
+        if(newContainers == null || oldContainers == null ||
+        items == null || protocol == null || sampleLineageSet == null ||
+        subprotocol == null) {
+            return (mapping.findForward("fail"));
+        }
         
         Connection conn = null;
         try {
