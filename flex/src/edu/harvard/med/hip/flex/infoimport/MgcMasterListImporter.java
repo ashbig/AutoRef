@@ -249,6 +249,10 @@ public class MgcMasterListImporter
      */
     public FlexSequence createFlexSequence(Hashtable seqData, Vector genBankData)
     {
+        //can get empty seqData filled by default values
+        String seqText = (String)seqData.get("sequencetext");
+        if (seqText == null || seqText.equals("")) return null;
+        
         int start = ((Integer)seqData.get("start")).intValue();
         int stop = ((Integer)seqData.get("stop")).intValue();
         String seqQuality;
@@ -296,10 +300,9 @@ public class MgcMasterListImporter
             publicInfo.add(pubinfo_entry_locus_link);
         }
         
-        gccont =  (int) gc_content((String)seqData.get("sequencetext"));
+        gccont =  (int) gc_content(seqText);
         FlexSequence seq = new FlexSequence(-1, FlexSequence.NEW,
-        "Homo sapiens", null,
-        (String)seqData.get("sequencetext"), start, stop,
+        "Homo sapiens", null, seqText, start, stop,
         cdsLength, gccont, publicInfo);
         seq.setQuality(seqQuality);
         return seq;
