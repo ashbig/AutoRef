@@ -65,6 +65,7 @@ public class SearchFlexAction extends FlexAction {
         String searchTermType = ((SearchFlexForm)form).getSearchTermType();
         int pid = ((SearchFlexForm)form).getPid();
         int length = ((SearchFlexForm)form).getLength();
+        int hits = ((SearchFlexForm)form).getHits();
         String searchDatabase = ((SearchFlexForm)form).getSearchDatabase();
         String searchTerm = null;
         FormFile filename = null;
@@ -115,6 +116,7 @@ public class SearchFlexAction extends FlexAction {
         params.add(new Param(Param.BLASTPID, (new Integer(pid)).toString()));
         params.add(new Param(Param.BLASTLENGTH, (new Integer(length)).toString()));
         params.add(new Param(Param.BLASTDB, searchDatabase));
+        params.add(new Param(Param.BLASTHIT, (new Integer(hits)).toString()));
         
         ThreadedSearchManager manager = new ThreadedSearchManager(searchRecord, params, searchTermList);
         new Thread(manager).start();   

@@ -24,12 +24,15 @@ import org.apache.struts.upload.*;
 public class QueryFlexForm extends ActionForm {
     protected int searchid;
     protected String condition;
+    protected String outputFile;
     
     public void setSearchid(int i) {this.searchid = i;}
     public void setCondition(String s) {this.condition = s;}
+    public void setOutputFile(String s) {this.outputFile = s;}
     
     public int getSearchid() {return searchid;}
     public String getCondition() {return condition;}
+    public String getOutputFile() {return outputFile;}
     
     /** Creates a new instance of QueryFlexForm */
     public QueryFlexForm() {

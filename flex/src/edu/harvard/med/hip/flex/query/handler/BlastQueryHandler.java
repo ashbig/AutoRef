@@ -180,7 +180,7 @@ public class BlastQueryHandler extends QueryHandler {
                     }
                     
                     if(isFound) {
-                        BlastHit hit = new BlastHit(sequenceid, queryLength, subLength, alignments);
+                        BlastHit hit = new BlastHit(queryLength, subLength, alignments, output);
                         MatchFlexSequence mfs = new MatchFlexSequence("F", sequenceid, hit);
                         hits.add(mfs);
                     }

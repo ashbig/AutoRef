@@ -80,6 +80,12 @@
 
     <tr>
     <td></td>
+    <td class="prompt">Maximum Hits:
+    <td><html:text property="hits"/></td>
+    </tr>
+
+    <tr>
+    <td></td>
     <td class="prompt">Database:
     <td><html:select property="searchDatabase">
         <html:options

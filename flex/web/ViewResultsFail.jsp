@@ -19,7 +19,7 @@
 
 <h3>We cannot display this page because of the following errors:</H3>
 <ul>
-<li><bean:write property="error"/>
+<li><bean:write name="error"/>
 </ul>
 
 </body>
