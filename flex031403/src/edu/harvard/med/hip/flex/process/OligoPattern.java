@@ -1,5 +1,5 @@
 /*
- * $Id: OligoPattern.java,v 1.5 2001-07-16 20:28:46 wendy Exp $
+ * $Id: OligoPattern.java,v 1.6 2001-07-17 19:30:29 wendy Exp $
  * OligoPattern.java
  *
  * Created on May 29, 2001, 12:40 PM
@@ -25,6 +25,8 @@ public class OligoPattern {
     private String oligoseq_5p;
     private String oligoseq_3s;
     private String oligoseq_3op;
+    private int closeid;
+    private int openid;
     private int cdsLength;
     
     /**
@@ -50,6 +52,35 @@ public class OligoPattern {
         this.cdsLength = cdsLength;
     }
     
+    /**
+     * Constructor.
+     * Creates new OligoPattern
+     * @param oligoId_5p The 5 prime oligoId
+     * @param oligoId_3s The 3 prime stop oligoId
+     * @param oligoId_3op The 3 prime open oligoId
+     * @param oligoseq_5p The 5p oligo sequence
+     * @param oligoseq_3s The 3p stop oligo sequence
+     * @param oligoseq_3op The 3p open oligo sequence
+     * @param closeid The constructid for the close form construct
+     * @param openid The constructid for the open form construct
+     * @param cdsLength The CDS Length of the sequence
+     */
+    
+    public OligoPattern(int oligoId_5p, int oligoId_3s, int oligoId_3op,
+    String oligoseq_5p, String oligoseq_3s, String oligoseq_3op, 
+    int closeid, int openid, int cdsLength) {
+        this.oligoId_5p = oligoId_5p;
+        this.oligoId_3s = oligoId_3s;
+        this.oligoId_3op = oligoId_3op;
+        this.oligoseq_5p = oligoseq_5p;
+        this.oligoseq_3s = oligoseq_3s;
+        this.oligoseq_3op = oligoseq_3op;
+        this.closeid = closeid;
+        this.openid = openid;
+        this.cdsLength = cdsLength;
+    }
+    
+    
     public int getOligoId_5p() {
         return oligoId_5p;
     }
@@ -74,6 +105,14 @@ public class OligoPattern {
         return oligoseq_3op;
     }
     
+    public int getCloseConstructid(){
+        return closeid;
+    }
+    
+    public int getOpenConstructid() {
+        return openid;
+    }
+        
     public int getCDSLength() {
         return cdsLength;
     }

@@ -15,7 +15,7 @@ import org.apache.struts.action.*;
  * @version
  */
 public class ReceiveOligoOrdersForm extends ActionForm{
-    public final static String DELIMITER = "\n\t, ";
+    public final static String DELIMITER = "\t\n\r\f, ";
     private String oligoPlateIds = null;
     private String receiveDate = null;
     private String researcherBarcode = null;
@@ -74,6 +74,7 @@ public class ReceiveOligoOrdersForm extends ActionForm{
         this.receiveDate = receiveDate;
 
     }
+    
     
     /**
      * Set the researcher barcode to the given value.
@@ -139,4 +140,7 @@ public class ReceiveOligoOrdersForm extends ActionForm{
         
         return oligoPlateList;
     } //parseOligoPlateIds
+    
+    
+    
 }
