@@ -135,13 +135,13 @@
  <!-- Process display item -->
     <action     path="/Seq_GetItem"
                 name="seqGetSpecForm"
- scope="request"
+                scope="request"
                 input="/ContainerScan.jsp"
                 type="edu.harvard.med.hip.bec.action.Seq_GetItemAction">
             <forward name="display_vector" path="/Display_Vector.jsp"/>
             <forward name="display_linker" path="/Display_Linker.jsp"/>
             <forward name="display_refsequence_details" path="/Display_RefSequence.jsp"/>
-              <forward name="display_container_results_er" path="/ContainerResultsEndReads.jsp"/>
+            <forward name="display_container_results_er" path="/ContainerResultsEndReads.jsp"/>
             <forward name="display_clone" path="/CloneInfoDisplay.jsp"/>
             <forward name="display_cloning_strategy" path="/Display_CloningStrategy.jsp"/>
             <forward name="display_container_details" path="/ContainerDetails.jsp"/>
@@ -156,7 +156,7 @@
             <forward name="show_clone_status_list" path="/ContainerCloneStatus.jsp"/>
              <forward name="construct_report" path="/ConstructReport.jsp"/>
               <forward name="display_clone_sequence" path="/Display_CloneSequence.jsp"/>
-            
+             <forward name="display_info" path="/ConfirmProcess.jsp"/>
 </action>
 
  

@@ -56,7 +56,7 @@ public class Seq_GetItemAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         String label = null;int id = -1;Container container = null;
-       
+ 
      
         try
         {
@@ -80,7 +80,7 @@ public class Seq_GetItemAction extends ResearcherAction
                             new ActionError("error.container.querry.parameter", 
                                 "Unable to find container with label "+label));
                             saveErrors(request,errors);
-                             System.out.println("Container "+ container+mapping.getInput());
+                          //   System.out.println("Container "+ container+mapping.getInput());
                             return new ActionForward(mapping.getInput());
                     }
                }
@@ -94,8 +94,7 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.SAMPLE_ISOLATE_RANKER_REPORT ||
                forwardName == Constants.READ_REPORT_INT ||
                forwardName == Constants.CONSTRUCT_DEFINITION_REPORT ||
-               forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT
-               
+               forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT 
                )
                {
                     id = Integer.parseInt( (String) request.getParameter("ID"));
@@ -409,6 +408,45 @@ public class Seq_GetItemAction extends ResearcherAction
                     String title = "clone Data for container " + label;
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("show_clone_status_list"));
+                }
+                case Constants.AVAILABLE_CONTAINERS_INT:
+                {
+                    String title = "available Containers";
+                   ArrayList labels = Container.findAllContainerLabels();
+                     StringBuffer container_names= new StringBuffer();
+                    int cur_column=1;String cur_label = null;
+                    if (labels == null || labels.size() < 1)
+                    {
+                        container_names.append( "No containers known by BEC");
+                    }
+                    else
+                    {
+                        container_names.append("<table border = 0>");
+                        for (int index = 0; index < labels.size(); index ++)
+                        {
+                            cur_label = (String)labels.get(index);
+                          //  System.out.println(cur_label);
+                            if (index == 0) container_names.append("<tr>");
+                            if ( cur_column == 5)
+                            {
+                                container_names.append("</tr><tr>");
+                                cur_column =1;
+                            }
+                                
+                            if (index != 0 && cur_label.charAt(0) != ((String)labels.get(index-1)).charAt(0))
+                            {
+                                container_names.append("</tr><tr>&nbsp</tr><tr>");
+                                cur_column=1;
+                            }
+                            container_names.append( "<td><b>"+cur_label+"</b></td>");
+                            cur_column ++;
+                        }
+                        container_names.append("</table>");
+                    }
+                 
+                    request.setAttribute( Constants.ADDITIONAL_JSP, container_names.toString()) ;
+                    request.setAttribute(Constants.JSP_TITLE,title);
+                    return (mapping.findForward("display_info"));
                 }
              
             }

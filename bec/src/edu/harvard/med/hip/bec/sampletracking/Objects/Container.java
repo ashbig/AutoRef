@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.21 2003-10-16 17:17:21 Elena Exp $
+ * $Id: Container.java,v 1.22 2003-10-17 18:42:02 Elena Exp $
  *
  * File     	: Container.java
 
@@ -349,6 +349,40 @@ public class Container
         {
             DatabaseTransaction.closeResultSet(rs);
             if ( rsCheckParam != null) DatabaseTransaction.closeResultSet(rsCheckParam);
+        }
+       
+    }
+    
+     
+    public static ArrayList findAllContainerLabels() throws    BecDatabaseException
+    {
+        //define isolatetracking id statuses for the process
+        String sql = null;
+     
+      sql = "select  label from containerheader order by label";
+        
+        ArrayList container_labels = new ArrayList();
+        
+        String label = null;
+        ResultSet rs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+        
+            while(rs.next())
+            {
+                
+                container_labels.add(   rs.getString("label")  );
+            }
+            return container_labels;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured searching for containers for the process\nSQL: "+sqlE);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+            
         }
        
     }
@@ -1737,10 +1771,7 @@ public class Container
       
         try
         {
-            container = Container.findContainerDescriptionFromLabel("YGS000357-1");
-            ArrayList ui_clones = container.restoreUISamples(container);
-            UICloneSample.setCloneSequences(ui_clones, null);
-            container.setSamples(ui_clones);
+            c = Container.findAllContainerLabels();
              
              
         }
