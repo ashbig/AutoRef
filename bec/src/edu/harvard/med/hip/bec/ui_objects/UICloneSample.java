@@ -45,11 +45,10 @@ public class UICloneSample
     private int             m_clone_score = -1;
     private int             m_clone_assembly_status = -1;
     private String          m_tracefiles_dir = null;
-    /** Creates a new instance of CloneSample */
+     /** Creates a new instance of CloneSample */
     public UICloneSample()
     {
     }
-    
     
     public String          getPlateLabel (){ return m_plate_lable  ;}
     public int             getPosition (){ return m_poisition  ;}
@@ -76,7 +75,9 @@ public class UICloneSample
    public int             getCloneSequenceCdsStop (){ return m_clone_sequence_cds_stop ;}
    public String           getTraceFilesDirectory(){ return m_tracefiles_dir;}
     
-    public void             setPlateLabel (String v){  m_plate_lable  = v ;}
+   
+   
+   public void             setPlateLabel (String v){  m_plate_lable  = v ;}
     public void             setPosition (int v){  m_poisition  = v ;}
     public void             setSampleType (String v){  m_sample_type  = v ;}
     public void             setCloneId (int v){  m_clone_id  = v ;}
@@ -96,7 +97,7 @@ public class UICloneSample
    public void             setCloneSequenceCdsStop (int v){  m_clone_sequence_cds_stop =v;}
    public void           setTraceFilesDirectory(String v){  m_tracefiles_dir = v;} 
    public void              setCloneAssemblyStatus(int v){  m_clone_assembly_status = v;}
-     
+    
      public static CloneSequence setCloneSequence(UICloneSample clone_sample,int[] sequence_analysis_status ) throws BecDatabaseException
     {
             String clone_sequence_analysis_status =  null;
@@ -259,7 +260,7 @@ public class UICloneSample
                     "POSITION, SAMPLETYPE , " +
                     "LABEL ";
         from_str = " from flexinfo f,isolatetracking i, sample s, containerheader c ";
-        orderby_str = " order by c.containerid,position desc";  
+        orderby_str = " order by c.containerid,position , a.submissiondate desc";  
          if ( isAssembledSequenceInfo)
         {
             from_str += ", assembledsequence a ";
