@@ -44,9 +44,9 @@
 </div>
 <p></p>
 <% Sample sample = (Sample)request.getAttribute("sample") ;
-	ArrayList end_read = (ArrayList)request.getAttribute("end_read");
-	ArrayList clone_sequences = (ArrayList)request.getAttribute("clone_sequences");
-	%>
+ArrayList end_read = (ArrayList)request.getAttribute("end_read");
+ArrayList clone_sequences = (ArrayList)request.getAttribute("clone_sequences");
+%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
     <td width="39%"><strong>Container Label:</strong></td>
@@ -144,16 +144,16 @@ else {%>No discrepancies<%}%>
           for (int seq_count =0; seq_count < clone_sequences.size(); seq_count ++)
           {
             clonesequence = (UISequence) clone_sequences.get(seq_count);
-        %>
+%>
         <tr>
           <td width="17%"><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= clonesequence.getId()%>','<%= clonesequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 		<%= clonesequence.getId() %></a></td>
          <td width="17%"><%= clonesequence.getCloneSequenceTypeAsString() %></td>
          <td width="17%"><%= clonesequence.getAnalysisStatusAsString() %></td>
           <td>
-<% if (clonesequence.isAlignmentExists())
+<%if (clonesequence.isAlignmentExists())
 {%>		
-<input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= clonesequence.getId() %>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= clonesequence.getId() %>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= clonesequence.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 <%}
 else
  {%>Not available<%}%> 
