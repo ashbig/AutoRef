@@ -17,6 +17,7 @@ public class SequencingFacilityFileName
 {
     public final static int      SEQUENCING_FACILITY_BROAD = 1;
     public final static int      SEQUENCING_FACILITY_AGENCORD = 2;
+    public final static int      SEQUENCING_FACILITY_HTMBC = 3;
    
      
     private String          m_file_name = null;
@@ -35,6 +36,7 @@ public class SequencingFacilityFileName
          {
              case SEQUENCING_FACILITY_BROAD : {broadFileName( file_name);break;}
              case SEQUENCING_FACILITY_AGENCORD :{agencortFileName(file_name);break;}
+             case SEQUENCING_FACILITY_HTMBC :{htmbcFileName(file_name);break;}
          }
    
     }
@@ -102,6 +104,22 @@ public class SequencingFacilityFileName
         if (m_well_number > 0 && m_plate_name != null &&  m_version != null &&  m_orientation != null)
             m_isProperName = true;
     }
+     private  void htmbcFileName(String htmbc_file_name)
+     {
+         // IP#_JasonWell_order_hipPlateName_HipWellName_F/R_number.ab1
+        ArrayList items = Algorithms.splitString(htmbc_file_name,"_");
+         if ( items.size() != 7) return;
+        m_file_name = htmbc_file_name;
+      
+        m_well_name = (String)items.get(4);
+        m_well_number = Algorithms.convertWellFromA8_12toInt(m_well_name);
+        m_extention = htmbc_file_name.substring(htmbc_file_name.indexOf('.') + 1);
+        m_orientation = ((String)items.get(5)).toUpperCase();
+        if (m_well_number != -1 && ( m_orientation.equalsIgnoreCase("F") || m_orientation.equalsIgnoreCase("R")))
+             m_isProperName = true;
+        
+         m_plate_name = (String)items.get(3);
+    }
 //    PRG000548_A01_F.ab1
       private  void agencortFileName(String agnc_file_name)
      {
@@ -122,7 +140,7 @@ public class SequencingFacilityFileName
     }
       public static void main(String args[])
     {
-        SequencingFacilityFileName br= new SequencingFacilityFileName(" PRG000548_A01_F.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD);
+        SequencingFacilityFileName br= new SequencingFacilityFileName("000000262271_H10_F.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD);
       SequencingFacilityFileName br1= new SequencingFacilityFileName("D248P100FA1.T0.scf", SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD);
       
         System.exit(0);
