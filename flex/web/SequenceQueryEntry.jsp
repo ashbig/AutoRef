@@ -48,7 +48,7 @@
     <p>
     <dd>
     <html:submit property="submit" value="Continue"/>
-    <html:submit property="reset" value="Reset"/>
+    <html:reset/>
     </dd>
     </dl>
 </html:form>
