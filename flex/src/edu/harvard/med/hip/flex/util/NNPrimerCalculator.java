@@ -1,6 +1,9 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.10 2001-11-30 19:34:01 wendy Exp $
+ * $Id: NNPrimerCalculator.java,v 1.11 2001-12-13 21:19:38 wendy Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
+ *
+ * modified 12/13/01 All of the stop (close) oligos now use the universal stop
+ * codon "TAG" instead of the native stop codon
  *
  * @File     	: NNPrimerCalculator.java 
  * @Date     	: 04162001
@@ -17,7 +20,8 @@ public class NNPrimerCalculator implements PrimerCalculator
 	private static final double R = 1.9872;     // Gas Constant
 	private static final double InitH = 0.6;    // Initial H value
 	private static final double InitS = -9.0;   // Initial S value 
-	private static double DesiredTM = 60.0;  // The desired Tm is around 60 C 
+	private static double DesiredTM = 60.0;  // The desired Tm is around 60 C
+        private static final String  UniversalStop = "CTA"; //used for the Pseudomonas project
 
 	private double[][] paramH;
 	private double[][] paramS;
@@ -306,6 +310,10 @@ public class NNPrimerCalculator implements PrimerCalculator
 		//System.out.println(sequence.getSeqFragmentStop());
 		//convert seq fragment to its reverse compliment
 		subSeq = getReverseComplement(sequence.getSeqFragmentStop());
+                //new algorithem: get rid of the native stop codon
+                //and use a universal stop "TAG" instead
+		subSeq = subSeq.substring(0, (subSeq.length()-3));
+                subSeq =  UniversalStop + subSeq;
 		threepOligo = calTm(subSeq, type);
 
 		return threepOligo;		
