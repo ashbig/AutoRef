@@ -83,7 +83,7 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
                 } else {
                     type = Sample.getType(protocol.getProcessname());
                 }
-            
+System.out.println("Generating new sample");            
                 Sample newSample = new Sample(type, i+1, newContainer.getId(), s1.getConstructid(), -1, Sample.GOOD);
                 newContainer.addSample(newSample);
                 sampleLineageSet.addElement(new SampleLineage(s1.getId(), newSample.getId()));
