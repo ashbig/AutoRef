@@ -50,6 +50,8 @@ public class Stretch
     private int             m_status = STATUS_DETERMINED;
     private String          i_refsequence_stretch = null; // for not contigs
     private String          i_html_description = null; 
+    
+    
     /** Creates a new instance of BioGap */
     public Stretch()
     {
@@ -102,8 +104,11 @@ public class Stretch
     
     public String toString()
     {
-        return  "Type " +" "+ getStretchTypeAsString(m_type)
+        String result = "Type " +" "+ getStretchTypeAsString(m_type)
         +" Cds Start "+m_cds_start +" Cds Stop "+ m_cds_stop ;
+        if ( m_sequence_id != -1) 
+            result +=" Sequence Id: "+ m_sequence_id;
+        return  result;
         
      }
     
@@ -158,6 +163,14 @@ public class Stretch
          String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , STATUS "
          +"  ,ORIENTATION  ,TYPE  ,ANALYSISSTATUS  ,COLLECTIONID   from  STRETCH "
          +"  where COLLECTIONID ="+collection_id ;
+         return getByRule( sql, isSequenceIncluded);
+     }
+     
+      public static ArrayList getBySequenceIdType( int sequenceid, int stretch_type, boolean isSequenceIncluded) throws Exception
+     {
+         String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , STATUS "
+         +"  ,ORIENTATION  ,TYPE  ,ANALYSISSTATUS  ,COLLECTIONID   from  STRETCH "
+         +"  where sequenceid ="+sequenceid +" and type = " +stretch_type  ;
          return getByRule( sql, isSequenceIncluded);
      }
      public static Stretch getById( int id) throws Exception

@@ -15,6 +15,7 @@
 <html>
 
 <head>
+
 <title> <bean:message key="bec.name"/> : <%=Constants.JSP_TITLE%></title>
   
 <%
@@ -108,12 +109,7 @@ if ((specs != null && names != null && control_names != null)
             </SELECT></td>
        </tr>
     <%}%>
-<tr><td colspan='2'>
-    <% if (forwardName_int == Constants.PROCESS_RUN_PRIMER3)
-    {
-    %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b>
-    <%}%>
-</td></tr>
+
 <%}%>
 
 <% if ( forwardName_int ==  Constants.PROCESS_ORDER_INTERNAL_PRIMERS)
@@ -126,14 +122,22 @@ if ((specs != null && names != null && control_names != null)
   <input type=text value='1' name="primer_number"  ></td></tr>
 </table>
 </td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b></td></tr>
     
 <%}%>
-
-
 <% if ( request.getAttribute(Constants.ADDITIONAL_JSP) != null)
 {%> <%=request.getAttribute(Constants.ADDITIONAL_JSP) %> <%}%>
+<tr><td colspan='2'>
+    <% if (forwardName_int == Constants.PROCESS_RUN_PRIMER3
+           || forwardName_int == Constants.PROCESS_FIND_GAPS
+           || forwardName_int == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE
+           || forwardName_int ==  Constants.PROCESS_ORDER_INTERNAL_PRIMERS)
+    {
+    %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b>
+    <%}%>
+</td></tr>
+
+
+
 </table>
 
 

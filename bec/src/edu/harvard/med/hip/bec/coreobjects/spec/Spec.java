@@ -21,7 +21,7 @@ public abstract class Spec
     public static final String END_READS_SPEC = "END_READS_SPEC";
     public static final String FULL_SEQ_SPEC = "FULL_SEQ_SPEC";
     public static final String POLYMORPHISM_SPEC = "POLYMORPHISM_SPEC";
-    public static final String TRIM_SLIDING_WINDOW_SPEC = "POLYMORPHISM_SPEC";
+    public static final String TRIM_SLIDING_WINDOW_SPEC = "SLIDING_WINDOW_SPEC";
     public static final String NONE_SPEC = "None";
     
     public static final int PRIMER3_SPEC_INT = 3;

@@ -58,6 +58,7 @@ if ( forwardName_int == Constants.PROCESS_SHOW_CLONE_HISTORY
 ||  forwardName_int == Constants.STRETCH_COLLECTION_REPORT_INT
 ||  forwardName_int == Constants.STRETCH_COLLECTION_REPORT_ALL_INT
 ||  forwardName_int == Constants.LQR_COLLECTION_REPORT_INT
+|| forwardName_int == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE
 )
 {
 isCloneIdOnly = true;

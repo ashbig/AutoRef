@@ -63,7 +63,7 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
 </td></tr> -->
   <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Transfer 
-      plate information from FLEX into BEC</font></b></td>
+      of plate information from FLEX into BEC</font></b></td>
   </tr>
   <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
@@ -72,13 +72,13 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       </font> <font color="#ECECFF">a</font></td>
   </tr>
   <tr> 
-    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Run 
-      End reads and Rank isolates based on End Reads Evaluation</font></b></td>
+    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Manipulation of 
+      end reads and isolates ranking</font></b></td>
   </tr>
   <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_VECTOR_FOR_END_READS   %> >
-      Request end reads sequencing (settings required)</font></td>
+      Put request for end reads sequencing (settings required)</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
@@ -90,11 +90,7 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  %> >
       Run assembler for end reads</font></td>
   </tr>
-  <tr> 
-    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY %>>
-      Check whether all reads are available</font></td>
-  </tr>
+ 
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ISOLATE_RUNKER  %>>
@@ -112,14 +108,9 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_PUT_CLONES_ON_HOLD %>>
-      Put clones on hold </font></td>
-  </tr>
-  <tr> 
-    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      Put clones on hold 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_ACTIVATE_CLONES %>>
-      Activate clone</font> </td>
-  </tr>
-  <td width="100%" height="25" bgcolor="#DCE8FC"> &nbsp; </font> </td>
+      Activate clone<P></font> </td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
@@ -134,28 +125,8 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_APPROVE_INTERNAL_PRIMERS %> >
-      Approve internal primers</font></td>
+      Approve internal primers<P></font></td>
   </tr>
-
-  <tr> 
-    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> >
-      View internal primers 
-      <P></font></td>
-  </tr>
-<tr> 
-    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_ALL_INT  %> >
-      View all contig collections 
-      </font></td>
-  </tr>
- <tr> 
-    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_INT  %> >
-      View contigs 
-      <P></font></td>
-  </tr>
-
 
 
 <tr> 
@@ -166,25 +137,18 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_PROCESS_OLIGO_PLATE %> >
-      Process oligo plate</font></td>
+      Process oligo plate<P></font></td>
   </tr>
- <tr> 
-    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
-      Review oligo plate</font></td>
-  </tr>
+ 
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_FIND_GAPS %> >
-      Find gaps in clone coverage (settings required)</font></td>
+      Run Gap Mapper (settings required)</font></td>
   </tr>
 
-
-
-  <tr> 
-    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Clone 
-      Evaluation</font></b></td>
-  </tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Clone Evaluation</font></b></td>
+</tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS  %>>
@@ -217,39 +181,63 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DECISION_TOOL%>>
       Run decision tool (settings required) </font> <P></td>
   </tr>
-<tr> 
-    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.LQR_COLLECTION_REPORT_INT%>>
-      View Low Quality Regions for clone sequences </font> <P></td>
-  </tr>
+
  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_NOMATCH_REPORT%>>
       Run report for clone that show no match to the expected ORF </font> <P></td>
   </tr>
 
+<tr> 
+    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">View Options</font></b></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY %>>
+      View end reads availability</font></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> >
+      View internal primers </font></td>
+  </tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
+      Review oligo plate<P></font></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_ALL_INT  %> >
+      View all contig collections       </font></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input   type="radio" name="forwardName" value=<%= Constants.STRETCH_COLLECTION_REPORT_INT  %> >
+      View contigs       <P></font></td>
+</tr>
 
-  <tr>
-    <td>&nbsp; </td>
-  </tr>
-  <tr> 
-    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Stand 
-      alone processes</font></b></td>
-  </tr>
-  <tr> 
-    <td width="100%" height="29" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+    <input type="radio" name="forwardName" value=<%= Constants.LQR_COLLECTION_REPORT_INT%>>
+    View Low Quality Regions for clone sequences </font> <P></td>
+</tr>
+
+<tr> 
+    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Stand alone processes</font></b></td>
+</tr>
+<tr> 
+        <td width="100%" height="29" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE %> >
       Run Discrepancy Finder on set of sequences<br>
       </font> <font color="#ECECFF">a</font></td>
-  </tr>
-  <tr> 
+</tr>
+<tr> 
     <td> <br> <b><font color="#1145A6">Please make a selection and submit.</font></b> </center> 
-      <p align="left"> 
-        <input type="submit" value="continue" name="submit">
-        <br>
+      <p align="left">     <input type="submit" value="continue" name="submit">    <br>
     </td>
-  </tr>
-  <p> 
+</tr>
+
 </table>
 
 

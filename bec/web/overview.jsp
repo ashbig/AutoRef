@@ -4,7 +4,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %> 
-<HTML><HEAD><TITLE>HIP bec Database</TITLE></HEAD>
+<HTML><HEAD><TITLE>HIP ACE Database</TITLE></HEAD>
 	<BODY>
 		<H2><bean:message key="bec.name"/> : Overview</H2>
                 <HR>
@@ -24,7 +24,7 @@
 		<UL>
 			<li><b>View All Genes</b> ? this is a comprehensive list of all genes in the database in the order by which they were added to the database.</li>
 			<li><b>View All Cloned Genes</b> ? this is a list of all genes that have been physically captured into plasmids.  They have not necessarily been sequence-verified.</li>
-			<li><b>Search bec Database</b> ? this is a way to search for genes that meet specific criteria.  Users can look for all genes that have ?cyclin? in the gene or ?cdk? in the gene symbol.   Users can also use Boolean logic.</li>
+			<li><b>Search ACE Database</b> ? this is a way to search for genes that meet specific criteria.  Users can look for all genes that have ?cyclin? in the gene or ?cdk? in the gene symbol.   Users can also use Boolean logic.</li>
 		</ul>
 	</BODY>
 <HTML>

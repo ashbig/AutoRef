@@ -284,6 +284,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     Stretch stretch = Stretch.getById(id);
                     ArrayList discrepancies = null;
                     String discrepancy_report_html = null;
+                    StringBuffer lqr_report_html = new StringBuffer();
                     if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG || stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY)
                     {
                         discrepancies = stretch.getSequence().getDiscrepancies();
@@ -293,8 +294,29 @@ public class Seq_GetItemAction extends ResearcherAction
                          if (discrepancy_report_html.equals(""))
                             discrepancy_report_html="<tr><td colspan=3><strong>No discrepancies</strong></td></tr>";
                     }
+                    //get assosiated lqr
+                    
+                  if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG )
+                  {
+                      Stretch lqr=null;
+                         
+                      ArrayList lqrs = Stretch.getBySequenceIdType(stretch.getSequenceId(), Stretch.GAP_TYPE_LOW_QUALITY, false);
+                      if ( lqrs != null && lqrs.size() > 0)
+                      {
+                          lqr_report_html.append( " <th>Name </th><th>Cds Region</th><th>Sequence Region</th>");
+                          for (int count = 0; count < lqrs.size(); count++)
+                          {
+                             lqr = (Stretch) lqrs.get(count);
+                              lqr_report_html.append("<tr><TD>"+lqr.getStretchTypeAsString(lqr.getType()) + " "+ (count + 1) +"</TD>");
+                              lqr_report_html.append("<TD>"+ (  lqr.getCdsStart()+ stretch.getCdsStart()  )
+                                    +" - "+ ( lqr.getCdsStop() +  stretch.getCdsStart() )  +"</TD>");
+                              lqr_report_html.append("<TD>"+lqr.getCdsStart() +" - "+ lqr.getCdsStop() +"</TD></tr>");
+                          }
+                      }
+                  }
                     request.setAttribute("stretch", stretch);
                     request.setAttribute("discrepancy_report",discrepancy_report_html);
+                    request.setAttribute("lqr_report",lqr_report_html.toString());
                     return (mapping.findForward("display_stretch_report"));
                 }
          

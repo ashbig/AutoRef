@@ -34,6 +34,7 @@ public class SlidingWindowTrimmingSpec extends Spec
      public static final int AMBIQUATY_NUMBER_LOW_QUALITY_BASES_CONQ = 2;
      public  static final int MIN_DISTANCE_BETWEEN_CONTIGS = 50;
      public static final int TRIM_TYPE = TRIM_TYPE_MOVING_WINDOW;
+     public  static final int        MIN_CONTIG_LENGTH = 50;
     
      public static final String PNAME_Q_WINDOW_SIZE = "SW_Q_WINDOW_SIZE"; 
     public static final String PNAME_Q_NUMBER_LOW_QUALITY_BASES = "SW_Q_NUMBER_LOW_QUALITY_BASES"; 
@@ -44,6 +45,7 @@ public class SlidingWindowTrimmingSpec extends Spec
     public static final String PNAME_A_NUMBER_LOW_QUALITY_BASES_CONQ = "SW_A_N_LOW_QUALITY_BASES_CONQ";
     public  static final String PNAME_MIN_DISTANCE_BETWEEN_CONTIGS = "SW_MIN_DISTANCE_BTW_CONTIGS";
     public static final String PNAME_TRIM_TYPE = "SW_TRIM_TYPE";
+    public static final String PNAME_MIN_CONTIG_LENGTH = "SW_MIN_CONTIG_LENGTH";
    
    
     
@@ -57,6 +59,7 @@ public class SlidingWindowTrimmingSpec extends Spec
     private int m_ambiquaty_low_quality_bases_in_window   = -1 ; 
     private int m_ambiquaty_conq_low_quality_bases_in_window   = -1 ; 
     private int m_min_distance_between_two_stretches_to_collapse = -1;
+    private int m_min_stretch_length_to_collapse = -1;
     
     /** Creates a new instance of SlidingWindowTrimmingSpec */
     public static SlidingWindowTrimmingSpec getDefaultSpec()
@@ -72,6 +75,7 @@ public class SlidingWindowTrimmingSpec extends Spec
         params.put("SW_A_N_LOW_QUALITY_BASES_CONQ", String.valueOf(AMBIQUATY_NUMBER_LOW_QUALITY_BASES_CONQ) ); 
         params.put( "SW_MIN_DISTANCE_BTW_CONTIGS", String.valueOf(MIN_DISTANCE_BETWEEN_CONTIGS) ); 
         params.put( "SW_TRIM_TYPE", String.valueOf(TRIM_TYPE_MOVING_WINDOW_NODISC) ); 
+        params.put( "SW_MIN_CONTIG_LENGTH", String.valueOf( MIN_CONTIG_LENGTH) ); 
         SlidingWindowTrimmingSpec spec = new SlidingWindowTrimmingSpec( params,  "NA", -1);
         return spec;
     }
@@ -105,7 +109,12 @@ public class SlidingWindowTrimmingSpec extends Spec
             m_max_number_conq_low_quality_bases_in_window = this.getParameterByNameInt("SW_Q_N_LOW_QUALITY_BASES_CONQ")   ;
         return m_max_number_conq_low_quality_bases_in_window;
     } 
-    
+    public int getMinContigLength ()throws Exception
+    { 
+        if ( m_min_stretch_length_to_collapse == -1)
+            m_min_stretch_length_to_collapse = this.getParameterByNameInt("SW_MIN_CONTIG_LENGTH")   ;
+        return m_min_stretch_length_to_collapse;
+    } 
     
     public int getQCutOff ()throws Exception
     { 
@@ -166,6 +175,14 @@ public class SlidingWindowTrimmingSpec extends Spec
         m_max_number_conq_low_quality_bases_in_window     = v;
         m_params.put("SW_Q_N_LOW_QUALITY_BASES_CONQ", String.valueOf(v) ); 
     } 
+    
+    public void setMinContigLength (int v)throws Exception
+    { 
+        m_min_stretch_length_to_collapse     = v;
+        m_params.put("SW_MIN_CONTIG_LENGTH", String.valueOf(v) ); 
+      
+    } 
+    
     public void setQCutOff (int v)
     { 
         m_quality_cutoff     = v;

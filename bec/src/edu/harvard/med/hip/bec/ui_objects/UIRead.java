@@ -20,6 +20,7 @@ public class UIRead
     private int             m_type = Read.TYPE_NOT_SET;
     private boolean         m_isAlignmentExists = false;
     private boolean         m_isDiscrepancy = false;
+    private boolean         m_isProperty = false;
     private int             m_trim_start = -1;
     private int             m_trim_stop = -1;
     private String          m_name = null;
@@ -39,6 +40,7 @@ public class UIRead
     public int             getTrimStart (){ return m_trim_start;}
     public int             getTrimStop (){ return m_trim_stop;}
     public String          getName(){ return m_name;}
+    public boolean          getIsProperty(){ return m_isProperty;}
     
     public void             setId (int v){ m_id  = v;} 
     public void             setSequenceId (int v){ m_sequence_id  = v;}
@@ -48,4 +50,5 @@ public class UIRead
     public void             setTrimStart (int v){  m_trim_start = v;}
     public void            setTrimStop (int v){  m_trim_stop =v;}
     public void             setName(String v){ m_name = v;}
+    public void             setIsProperty(boolean v){ m_isProperty = v;}
 }

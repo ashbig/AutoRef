@@ -62,6 +62,10 @@
         </tr>
       </table></td>
   </TR>
+ <TR>     <TD colspan="2" ><strong>LQR Report: </strong> 
+      <P></P><table align="center" border='1'>
+    	<%= request.getAttribute("lqr_report") %></table></TD>
+  </TR>
   <TR>     <TD colspan="2" ><strong>Discrepancy Report: </strong> 
       <P></P><table align="center" border='1'>
      <tr><td>Type</td><TD>Number</td><TD>Quality</td></tr></TR>

@@ -9,7 +9,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>BEC (Biological Evaluation of CLones) login</title>
+<title>ACE (<i>A</i>utomatic <i>E</i>valuation of <i>C</i>lones) login</title>
 </head>
 
 <body>
@@ -65,7 +65,7 @@
     <html:form action="logon.do" focus="username">
     <table width="153" bordercolor="#0033CC" border="1" cellspacing="0" cellpadding="0" height="468">  
      <tr>
-              <td width="142" height="19" bgcolor="#0033CC">&nbsp;&nbsp; <b><font color="#FFFFFF">BEC 
+              <td width="142" height="19" bgcolor="#0033CC">&nbsp;&nbsp; <b><font color="#FFFFFF">ACE 
                 Login</font></b></td>      
      </tr>
      <tr>
@@ -113,7 +113,7 @@
         <table border="0" width="99%" height="105">
           <tr> 
             <td width="100%" bgcolor="#0066FF" height="21"><font color="#FFFFFF"><b>Welcome 
-              to BEC&nbsp;</b></font></td>
+              to ACE&nbsp;</b></font></td>
           </tr>
           <tr> 
             <td width="100%" bgcolor="#EBEFFA" height="78" valign="top" align="left"> 

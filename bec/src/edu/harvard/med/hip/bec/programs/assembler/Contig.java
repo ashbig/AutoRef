@@ -265,7 +265,7 @@ public class Contig
                          contig.setCdsStop (bases_array[base_count][1].getIndex());
                     sequence = ScoredElement.trimStretch( current_contig,  contig,  spec);
                    
-                     if ( sequence != null && sequence.getText().length() > GapMapper.MIN_CONTIG_LENGTH)
+                     if ( sequence != null && sequence.getText().length() > spec.getMinContigLength())
                       {
                           contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
                           contigs.add(contig);
@@ -291,9 +291,9 @@ public class Contig
              if ( isInsideContig && contig!= null)
              {
                  contig.setCdsStop (bases_array[base_count][1].getIndex() -1);
-                   sequence = ScoredElement.trimStretch( current_contig,  contig,  spec);
+                 sequence = ScoredElement.trimStretch( current_contig,  contig,  spec);
                   
-                  if ( sequence != null && sequence.getText().length() > GapMapper.MIN_CONTIG_LENGTH)
+                  if ( sequence != null && sequence.getText().length() > spec.getMinContigLength())
                   {
                       contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
                       contigs.add(contig);
@@ -303,6 +303,7 @@ public class Contig
         }
         catch(Exception e)
         {
+           // System.out.println(e.getMessage());
             throw new BecUtilException("Cannot build collection of contigs for the clone");
         }
     }
@@ -347,14 +348,14 @@ public class Contig
               base_count =  read.getStart() + read.getQualityStart() -2;
               for (;  current_base  <  read.getQualityEnd()-1;)
              {
-            //   System.out.println(read_count +" "+base_count+" "+current_base+" "+sequence[current_base]);
+        //      System.out.println(read_count +" "+base_count+" "+current_base+" "+sequence[current_base]);
                  bases_array[current_read][base_count].setIndex( current_base);
                  bases_array[current_read][base_count].setScore(read.getScoresIncludingStar()[current_base]);
                  bases_array[current_read][base_count++].setBase( sequence[current_base++]);
          //sequence[current_base++];
              }
          }
-         /*
+     /*    
          for ( base_count = 0; base_count < m_sequence.length(); base_count++)
          {
                 System.out.print(bases_array[0][base_count].getIndex()+" "+ bases_array[0][base_count].getBase() +" " + bases_array[0][base_count].getScore());
@@ -363,7 +364,7 @@ public class Contig
                 System.out.print( " "+bases_array[3][base_count] .getIndex()+" "+ bases_array[3][base_count].getBase() +" " + bases_array[3][base_count].getScore());
                  System.out.println("" );
          }
-          **/
+      */    
 
          return bases_array;
     }
@@ -409,7 +410,7 @@ public class Contig
               base_count =  read.getStart() + read.getQualityStart() -2;
               for (;  current_base  <  read.getQualityEnd()-1;)
              {
-            //   System.out.println(read_count +" "+base_count+" "+current_base+" "+sequence[current_base]);
+              // System.out.println(read_count +" "+base_count+" "+current_base+" "+sequence[current_base]);
                  if ( current_read == 1 && sequence[current_base] != '*') // for indexing for sequence, * excluded
                  {
                        if ( refseq_index == 0) refseq_index =1 ;
@@ -430,7 +431,7 @@ public class Contig
                 System.out.print(bases_array[base_count][read_count].getIndex()+"\t'"+ bases_array[base_count][read_count].getBase() +"'\t" + bases_array[base_count][read_count].getScore()+"\t");
                  
              }
-             
+              System.out.println();
          }
 */
          return bases_array;

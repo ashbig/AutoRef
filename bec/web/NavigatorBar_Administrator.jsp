@@ -143,7 +143,7 @@ function init() {
 <table width="90%" border="0" cellspacing="2" cellpadding="2">
   <tr> 
     <td width="80%"><font color="#3333CC"> 
-      <h1><strong>Biological Evaluation of Clones (BEC)</strong></h1>
+      <h1><strong>Automatic Evaluation of Clones (ACE)</strong></h1>
       </font></td>
     <!--<td > <img align="top" border="0" src="./jpg/earth.gif" width=76 height="76" > -->
     </td>

@@ -105,7 +105,7 @@ public abstract class ProcessRunner implements Runnable
          try
          {
  //send errors
-            if (m_error_messages.size()>0)
+            if (m_error_messages != null && m_error_messages.size()>0)
             {
                  Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
                 "hip_informatics@hms.harvard.edu", 

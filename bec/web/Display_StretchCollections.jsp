@@ -114,6 +114,7 @@ for (int index = 0; index < items.size(); index ++)
         <th>Contig Id </th>
         <th>Cds Start </th>
         <th>Cds Stop</th>
+        <th>LQR defined</th>
         <th>Alignment </th>
         <th>Discrepancy Report </th>
         <%
@@ -134,7 +135,17 @@ for (int index = 0; index < items.size(); index ++)
 </td>
    <td width="10%" align="right"><%= contig.getTrimStart() %></td>
   <td width="10%" align="right"><%= contig.getTrimStop() %></td>
-    <td width="25%">
+    
+<td width="10%">
+<% 
+if ( contig.getType() == Stretch.GAP_TYPE_GAP ){ %> &nbsp <%}
+else 
+    if (contig.getIsProperty()) {%> Yes  <%}
+    else {%>  No  <%}%>
+<td >
+
+
+
 <% 
 if ( contig.getType() == Stretch.GAP_TYPE_GAP )
 { %> &nbsp <%}

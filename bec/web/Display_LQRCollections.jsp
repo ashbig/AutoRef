@@ -7,6 +7,7 @@
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
 <html>
 <head>
@@ -93,6 +94,10 @@ for (int index = 0; index < items.size(); index ++)
 <tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Id: </strong></td>
 <td   >
 <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId() %>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= str_collection.getRefSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"></td></tr>
+
+<tr> <td  ><strong>&nbsp;&nbsp; Specification for LQR definition: </strong></td>
+<td ><a href="/BEC/Seq_GetSpec.do?forwardName=<%= str_collection.getSpecId() * Spec.SPEC_SHOW_SPEC %>" > <%= str_collection.getSpecId() %></a></strong></td></TR>
+<tr><td colspan='2'>&nbsp; </td></tr>
 <tr><td colspan='2'>
 <table width="90%" border="1" align="center" cellpadding="2" cellspacing="2">
 

@@ -214,11 +214,12 @@ public class IsolateRankerRunner implements Runnable
     {
         try{
         IsolateRankerRunner runner = new IsolateRankerRunner();
-        ArrayList master_container_ids = new ArrayList(); master_container_ids.add(new Integer(65));
+        ArrayList master_container_ids = new ArrayList(); 
+        master_container_ids.add(new Integer(65));
         runner.setContainerIds(master_container_ids );
         runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(4, Spec.FULL_SEQ_SPEC_INT));
         runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(1, Spec.END_READS_SPEC_INT));
-       runner.setUser(  AccessManager.getInstance().getUser("htaycher345","htaycher"));
+       runner.setUser(  AccessManager.getInstance().getUser("htaycher123","htaycher"));
         runner.run();
         }catch(Exception e){}
         System.exit(0);

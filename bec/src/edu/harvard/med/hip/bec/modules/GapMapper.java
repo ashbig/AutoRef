@@ -21,16 +21,17 @@ import java.io.*;
 // work on clone base
 public class GapMapper
 {
-    private int                     m_clone_id = -1;
-    private ArrayList               m_error_messages = null;
-    private CloningStrategy         m_cloning_startegy = null;
-    private StretchCollection       m_stretch_collection = null;
+    private int                         m_clone_id = -1;
+    private ArrayList                   m_error_messages = null;
+    private CloningStrategy             m_cloning_startegy = null;
+    private StretchCollection           m_stretch_collection = null;
     private SlidingWindowTrimmingSpec       m_trimming_spec = null;
+    private boolean                         m_isRunLQRFinderForContigs = false;
    
-    public  static final int        MIN_CONTIG_LENGTH = 50;
+   
     
    // private int                     m_min_contig_avg_score = 20;
-     private int                     m_min_contig_length = MIN_CONTIG_LENGTH;
+    // private int                     m_min_contig_length = MIN_CONTIG_LENGTH;
     /** Creates a new instance of GapMapper */
     public GapMapper()
     {
@@ -38,9 +39,11 @@ public class GapMapper
     }
     
     public void                 setCloneId(int v){ m_clone_id = v;}
+    
+    public void                 setIsRunLQR(boolean v){m_isRunLQRFinderForContigs = v;}
     public ArrayList            getErrorMessages(){ return m_error_messages; }
     public StretchCollection    getStretchCollection(){ return   m_stretch_collection ;}
-    public void                 setMinContigLength(int v){ m_min_contig_length = v;}
+   // public void                 setMinContigLength(int v){ m_min_contig_length = v;}
    // public void                 setMinAvgContigScore(int v){  m_min_contig_avg_score = v;}
     public void         setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
   
@@ -49,7 +52,6 @@ public class GapMapper
         //get refsequence & linker information
         try
         {
-             System.out.println("clone id "+m_clone_id);
             int clone_id = m_clone_id;
             CloneDescription clone_description = CloneDescription.getCloneDescription( clone_id);
             if ( clone_description== null) 
@@ -112,6 +114,7 @@ public class GapMapper
                 ScoredElement[][]  bases = contig.prepareContigAligmentHorizontalStructure("refsequence", linker5_length);
                // ArrayList gaps = Contig.findGaps(bases);
                 ArrayList contigs = Contig.findContigs(bases, clone_refsequence.getText().length(), linker5_length, m_trimming_spec);
+               
                 ArrayList gaps = Contig.findGaps(contigs, linker5_length, clone_refsequence.getText().length() );
                 ArrayList stretches = contigs;
                 stretches.addAll(gaps);
@@ -120,12 +123,13 @@ public class GapMapper
                 {
                 //return calculate gap positions to refseq coordinates - linkers?
                   // ArrayList stretches = recalculateStretches(gaps, contigs);
-                   m_stretch_collection = new StretchCollection();
-                   m_stretch_collection.setType ( StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS);
+                    m_stretch_collection = new StretchCollection();
+                    m_stretch_collection.setType ( StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS);
                     m_stretch_collection.setRefSequenceId (  clone_description.getBecRefSequenceId());
                     m_stretch_collection.setIsolatetrackingId ( clone_description.getIsolateTrackingId());
                     m_stretch_collection.setCloneId (clone_description.getCloneId());
                      m_stretch_collection.setStretches( stretches);
+                      
                 }
             }
             
@@ -139,78 +143,7 @@ public class GapMapper
     
     //_______________________
     
-    //goal -> recalculate positions , colaps items if they are less than 50 bp
- /*
-  private ArrayList recalculateStretches(ArrayList gaps, ArrayList contigs)
-    {
-        ArrayList result = new ArrayList();
-        int linker5_length = m_cloning_startegy.getLinker5().getSequence().length();
-        Stretch stretch = null; Stretch new_gap = null;
-        int cds_start = -1; int cds_end =-1;
-        ArrayList stretches = gaps;
-        stretches.addAll(contigs);
-        Stretch.sortByPosition(stretches);
-        ArrayList collapsed_gaps = new ArrayList();
-        ArrayList collapsed_contigs = new ArrayList();
-        for (int stretch_count = 0; stretch_count < stretches.size(); stretch_count++)
-        {
-            stretch = (Stretch) stretches.get(stretch_count);
-        
-           
-            if (stretch.getType() == Stretch.GAP_TYPE_CONTIG )
-            {
-                if ( stretch.getSequence().getText().length() < MIN_CONTIG_LENGTH
-                ||  ( (int) stretch.getSequence().getTotalScore()/ stretch.getSequence().getText().length())< m_min_contig_avg_score)
-                {
-                    if (stretch_count == 0)//first short contig
-                    {
-                        stretch_count+=2;
-                        cds_start = stretch.getCdsStart();
-                        cds_end = ((Stretch) stretches.get(stretch_count+1)).getCdsStop();
-                    }
-                    else if ( stretch_count == ( stretches.size()-1)) //last contig
-                    {
-                        stretch_count = stretches.size() ;
-                         cds_start =  ((Stretch) stretches.get(stretch_count-1)).getCdsStart();;
-                        cds_end =stretch.getCdsStop() ;
-                    }
-                    else
-                    {                                             
-                        stretch_count+=2;
-                        cds_start = ((Stretch) stretches.get(stretch_count-1)).getCdsStart();
-                        cds_end = ((Stretch) stretches.get(stretch_count+1)).getCdsStop();
-                 
-                    }
-                    new_gap = new Stretch();
-                    new_gap.setCdsStart ( cds_start ); //(int vclone sequence coordinates for low quality)
-                    new_gap.setCdsStop ( cds_end);
-                    new_gap.setType ( Stretch.GAP_TYPE_GAP );
-                    new_gap.setStatus( Stretch.STATUS_DETERMINED );
-                    collapsed_gaps.add(new_gap);
-                }
-                else
-                {
-                    collapsed_contigs.add(stretch);
-                }
-                    
-            }
-            else
-                collapsed_gaps.add(stretch);
-        }
-        result = collapsed_gaps;
-        result.addAll(collapsed_contigs);
-        //reasign coordinates
-        for (int count = 0; count < result.size(); count ++)
-        {
-            stretch = (Stretch)result.get(count);
-            stretch.setCdsStart(stretch.getCdsStart() - linker5_length);
-            stretch.setCdsStop(stretch.getCdsStop() - linker5_length);
-        }
-      
-        return result;
-    }
-  *
-  */
+   
     private boolean          isCallForGapMapperRelevant(CloneDescription clone_description)throws Exception
     {
         //check 1. there is no assembled sequence
@@ -222,12 +155,11 @@ public class GapMapper
         int assembly_run_status = CloneAssembly.isAssemblerRunNeeded(clone_description.getReadFilePath());
         switch(assembly_run_status)
         {
-           /* case  CloneAssembly.ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE :
+            case  CloneAssembly.ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE :
             {
                  m_error_messages.add("Call for GapMapper on Clone : "+clone_description.getCloneId()+" is irrelevant: no trace files exists for the clone.");
                 return false;
             }
-            **/
             case CloneAssembly.ASSEMBLY_RUN_STATUS_NOT_ALL_TRACE_FILES_INCLUDED :
             {
                  m_error_messages.add("Call for GapMapper on Clone : "+clone_description.getCloneId()+" is irrelevant: assembly was not run on all existing chromat files.");

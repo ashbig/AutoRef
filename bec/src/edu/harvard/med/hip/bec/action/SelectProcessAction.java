@@ -222,6 +222,7 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.STRETCH_COLLECTION_REPORT_INT:
                 case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
                 case Constants.LQR_COLLECTION_REPORT_INT:
+                case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
                 {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
@@ -267,6 +268,27 @@ public class SelectProcessAction extends ResearcherAction
                         
                         case Constants.LQR_COLLECTION_REPORT_INT:
                         { title="view Low Quality Regions for clone sequences";break; } 
+                         case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
+                         case Constants.PROCESS_FIND_GAPS:
+                         {
+                             spec_collection.add( SlidingWindowTrimmingSpec.getAllSpecNames() );
+                             spec_names.add("Sliding Window Algorithm Parameters:");
+                             control_names.add(Spec.TRIM_SLIDING_WINDOW_SPEC);
+                             if ( forwardName ==  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE)
+                             {
+                                 title="run Low Quality Regions Findeer for clone sequences";
+                             }
+                             else if (forwardName ==  Constants.PROCESS_FIND_GAPS)
+                             {
+additional_jsp.append("<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input NAME='isRunLQR' id='isRunLQR' type = checkbox value=0>");
+additional_jsp.append("<strong>Run LQR Finder on contig sequences</strong></td></tr>");
+
+                                title="run Gap Mapper";
+                             }
+                             
+                             break;
+                         }
+ 
                         case Constants.PROCESS_NOMATCH_REPORT:
                         { 
 additional_jsp.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
@@ -277,7 +299,9 @@ additional_jsp.append( BlastWrapper.YEASTDB_NAME);
 additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getPseudomonasDBLocation() +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
 additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getMGCDBLocation() +"'>"+ BlastWrapper.MGCDB_NAME );
 additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getYPDBLocation() +"'>"+ BlastWrapper.YPDB_NAME );
-
+additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getFTDBLocation()+"'>"+ BlastWrapper.FTDB_NAME );
+additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getClontechDBLocation()+"'>"+ BlastWrapper.ClontechDB_NAME );
+additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getNIDDKDBLocation()+"'>"+ BlastWrapper.NIDDKDB_NAME );
 additional_jsp.append("</SELECT></td> </tr>");
 additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
 additional_jsp.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
@@ -291,17 +315,7 @@ additional_jsp.append("</SELECT></td> </tr>");
                             title="run 'NO MATCH' report";break;
                            
                         }
-                        case Constants.PROCESS_FIND_GAPS:
-                        {
-                            
-additional_jsp.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
-additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Minimal Contig Length</strong></td>");
-additional_jsp.append("<td><input NAME='min_contig_length' id='min_contig_length' type = text value=50> </td></tr>");
-additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Minimal Contig Length</strong></td>");
-additional_jsp.append("<td><input NAME='min_contig_avg_score' id='min_contig_avg_score' type = text value=20> </td></tr>");
-
-                            title="run Gap Mapper";break;
-                        }
+                       
                     }
                     if ( spec_names != null )
                     {

@@ -101,13 +101,19 @@ else if (sets.size() > 0 )
     <td bgColor="#e4e9f8"><b><font color="#000080">Max number of consequative ambiquous bases (not implemented):</font></b> </td>
     <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("SW_A_N_LOW_QUALITY_BASES_CONQ") %> </td>
   </tr>
+<TR><TD COlspan=2>&nbsp</TD></TR>
 <tr> 
     <td bgColor="#b8c6ed"><b><font color="#000080">Minimum distance between stretches:</font></b> </td>
     <td bgColor="#b8c6ed"><%= spec.getParameterByNameString("SW_MIN_DISTANCE_BTW_CONTIGS")%></td>
   </tr>
 <tr> 
-    <td bgColor="#e4e9f8"><b><font color="#000080">Sequence Trimming Type:</font></b> </td>
-    <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("SW_TRIM_TYPE" )%></td>
+    <td bgColor="#e4e9f8"><b><font color="#000080">Minimum contig length ( used by GAp Mapper only) :</font></b> </td>
+    <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("SW_MIN_CONTIG_LENGTH")%></td>
+  </tr>
+<TR><TD COlspan=2>&nbsp</TD></TR>
+<tr> 
+    <td bgColor="#b8c6ed"><b><font color="#000080">Sequence Trimming Type:</font></b> </td>
+    <td bgColor="#b8c6ed"><%= spec.getParameterByNameString("SW_TRIM_TYPE" )%></td>
   </tr>
 </table>
 

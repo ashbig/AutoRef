@@ -222,6 +222,7 @@ public class Constants {
      public static final int            PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER = 70;
 
      public static final int            PROCESS_FIND_GAPS  = 71;
+     public static final int            PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  = 72;
        //69
        
     //items for display 1-40

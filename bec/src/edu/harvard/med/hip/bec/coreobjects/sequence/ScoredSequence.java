@@ -315,7 +315,8 @@ public class ScoredSequence extends BaseSequence
            if ( count_not_pass_criteria_bases == spec.getQMaxNumberLowQualityBases() - 1 
                 && delta > 0 )
            {
-               if ( ((Integer)boundaries.get( boundaries.size() - 1)).intValue() < (count - window_end) )
+               if ( boundaries.size() == 0 ||
+                        ((Integer)boundaries.get( boundaries.size() - 1)).intValue() < (count - window_end) )
                      boundaries.add(new Integer(count - window_end + 1 ));
                else
                    boundaries.remove( boundaries.size() - 1);
@@ -341,7 +342,7 @@ public class ScoredSequence extends BaseSequence
     {
         int[] stretch_params =  new int[2];
        ArrayList new_bondaries = new ArrayList();
-     
+      if ( boundaries == null || boundaries.size() == 0 ) return new ArrayList();
        // collaps contigs
        if ( boundaries.size() == 2 )
        {

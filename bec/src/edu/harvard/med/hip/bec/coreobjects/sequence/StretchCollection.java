@@ -40,6 +40,7 @@ vi.	Type of definition (coverage low quality / no coverage )
     private int         m_refsequence_id = -1;
     private int         m_isolatetracking_id = -1;
     private int         m_clone_sequence_id = -1;
+    private int         m_spec_id = -1;
     private CloneSequence   m_clone_sequence = null;
     private int         m_clone_id = -1;
     private String      m_submission_date  = null;
@@ -48,10 +49,7 @@ vi.	Type of definition (coverage low quality / no coverage )
     
     private String      i_html_description = null;
     /** Creates a new instance of GapCollection */
-    public StretchCollection()
-    {
-    }
-    
+    public StretchCollection() {}
     
     public int         getId (){ return m_id  ; }
     public int         getType (){ return m_type  ; }
@@ -59,6 +57,7 @@ vi.	Type of definition (coverage low quality / no coverage )
     public int         getIsolatetrackingId (){ return m_isolatetracking_id  ; }
     public int         getCloneSequenceId (){ return m_clone_sequence_id  ; }
     public int         getCloneId (){ return m_clone_id  ; }
+    public int         getSpecId (){ return m_spec_id ; }
     public ArrayList    getStretches(){ return m_stretches;}
     public String       getHTMLDescription(){ return i_html_description; }
     
@@ -68,15 +67,17 @@ vi.	Type of definition (coverage low quality / no coverage )
     public void         setIsolatetrackingId ( int v){ m_isolatetracking_id  = v ; }
     public void         setCloneSequenceId ( int v){ m_clone_sequence_id  = v ; }
     public void         setCloneId ( int v){ m_clone_id  = v ; }
+    public void         setSpecId (int v){  m_spec_id = v; }
     public void         setStretches(ArrayList v){  m_stretches = v;}
-    public void         addStretche(Stretch g){ if (m_stretches == null) m_stretches = new ArrayList(); m_stretches.add(g);}
+    public void         addStretch(Stretch g){ if (m_stretches == null) m_stretches = new ArrayList(); m_stretches.add(g);}
+    public void         addStretches(ArrayList ar){ if (m_stretches == null) m_stretches = new ArrayList(); m_stretches.addAll(ar);}
     
     
     public void         setHTMLDescription(String s){ i_html_description = s;}
     
     
     
-     public void insert(Connection conn) throws BecDatabaseException
+    public void insert(Connection conn) throws BecDatabaseException
     {
         if ( m_stretches == null || m_stretches.size() < 1) return;
         Statement stmt = null;Stretch stretch = null;
@@ -86,14 +87,14 @@ vi.	Type of definition (coverage low quality / no coverage )
             if (m_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
                      m_id = BecIDGenerator.getID("stretchid");
             if ( m_clone_sequence_id == -1)
-                sql = "INSERT INTO STRETCH_COLLECTION ( COLLECTIONID  ,REFSEQUENCEID  , "
-            +" SUBMISSIONDATE  ,TYPE  ,ISOLATETRACKINGID ) VALUES(" +m_id+ ","  +
-            m_refsequence_id + ",sysdate,"  +m_type+ ","  +m_isolatetracking_id+ ")" ;
+                sql = "INSERT INTO STRETCH_COLLECTION ( COLLECTIONID  ,REFSEQUENCEID  , CONFIGID,  "
+                +" SUBMISSIONDATE  ,TYPE  ,ISOLATETRACKINGID ) VALUES(" +m_id+ ","  +
+                m_refsequence_id + "," + m_spec_id + ",sysdate,"  +m_type+ ","  +m_isolatetracking_id+ ")" ;
          
             else
-                sql = "INSERT INTO STRETCH_COLLECTION ( COLLECTIONID  ,REFSEQUENCEID  ,CLONESEQUENCEID "
+                sql = "INSERT INTO STRETCH_COLLECTION ( COLLECTIONID  ,REFSEQUENCEID  , CONFIGID, CLONESEQUENCEID "
             +"  ,SUBMISSIONDATE  ,TYPE  ,ISOLATETRACKINGID ) VALUES(" +m_id+ ","  +
-            m_refsequence_id + ","  +m_clone_sequence_id+ ",sysdate,"  +m_type+ ","  +m_isolatetracking_id+ ")" ;
+            m_refsequence_id +  "," + m_spec_id + ","  +m_clone_sequence_id+ ",sysdate,"  +m_type+ ","  +m_isolatetracking_id+ ")" ;
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             for (int count = 0; count < m_stretches.size(); count++)
@@ -117,7 +118,7 @@ vi.	Type of definition (coverage low quality / no coverage )
      public static Object getByCloneId(int clone_id, boolean isSequenceIncluded, boolean isFirstLastOnly)throws Exception
      {
          StretchCollection strcol = null;
-          String sql = " select  COLLECTIONID  ,REFSEQUENCEID   ,CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
+          String sql = " select  COLLECTIONID  ,REFSEQUENCEID   , CONFIGID, CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
         +" ,ISOLATETRACKINGID   from STRETCH_COLLECTION   where ISOLATETRACKINGID IN (SELECT ISOLATETRACKINGID "
         +" FROM FLEXINFO WHERE FLEXCLONEID =" +clone_id+    " ) order by COLLECTIONID desc";
          ArrayList col = getByRule( sql,  isSequenceIncluded);
@@ -157,16 +158,24 @@ vi.	Type of definition (coverage low quality / no coverage )
       //-------------------------------
      public static StretchCollection     getByCloneSequenceId(int clone_sequence_id, boolean isSequenceIncluded)throws Exception
      {
-           String sql = " select  COLLECTIONID  ,REFSEQUENCEID   ,CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
+           String sql = " select  COLLECTIONID  ,REFSEQUENCEID   , CONFIGID, CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
         +" ,ISOLATETRACKINGID   from STRETCH_COLLECTION   where clonesequenceid ="+clone_sequence_id +" order by COLLECTIONID desc";
          ArrayList col = getByRule( sql,  isSequenceIncluded);
          if (col != null && col.size() > 0 ) return (StretchCollection) col.get(0);
          return null;
      }
     
+     public static StretchCollection     getByCloneSequenceIdAndSpecId(int clone_sequence_id, int spec_id)throws Exception
+     {
+           String sql = " select  COLLECTIONID  ,REFSEQUENCEID   , CONFIGID, CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
+        +" ,ISOLATETRACKINGID   from STRETCH_COLLECTION   where clonesequenceid ="+clone_sequence_id +"and  CONFIGID= "+spec_id+" order by COLLECTIONID desc";
+         ArrayList col = getByRule( sql,  false);
+         if (col != null && col.size() > 0 ) return (StretchCollection) col.get(0);
+         return null;
+     }
      public static StretchCollection getByIsolateTrackingId(int is_id, boolean isSequenceIncluded)throws Exception
      {
-          String sql = " select  COLLECTIONID  ,REFSEQUENCEID   ,CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
+          String sql = " select  COLLECTIONID  ,REFSEQUENCEID   ,CONFIGID, CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
         +" ,ISOLATETRACKINGID   from STRETCH_COLLECTION   where ISOLATETRACKINGID ="+is_id +" order by COLLECTIONID desc";
          ArrayList col = getByRule( sql,  isSequenceIncluded);
          if (col != null && col.size() > 0 ) return (StretchCollection) col.get(0);
@@ -174,7 +183,7 @@ vi.	Type of definition (coverage low quality / no coverage )
      }
      public static StretchCollection     getById(int collection_id, boolean isSequenceIncluded) throws Exception
      {
-         String sql = " select  COLLECTIONID  ,REFSEQUENCEID   ,CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
+         String sql = " select  COLLECTIONID  ,REFSEQUENCEID   ,CONFIGID, CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
         +" ,ISOLATETRACKINGID   from STRETCH_COLLECTION   where COLLECTIONID ="+collection_id ;
          ArrayList col = getByRule( sql,  isSequenceIncluded);
          if (col != null && col.size() > 0 ) return (StretchCollection) col.get(0);
@@ -221,6 +230,7 @@ vi.	Type of definition (coverage low quality / no coverage )
      public static  void prepareStretchCollectionForDisplay
                         (StretchCollection lqr_for_clone,CloneSequence clone_sequence)
      {
+         if (lqr_for_clone == null ) return;
          Stretch lqr = null;
          StringBuffer stretch_collection_html_description = new StringBuffer();
          StringBuffer stretch_html_description = null;
@@ -299,7 +309,7 @@ vi.	Type of definition (coverage low quality / no coverage )
                 sc.setRefSequenceId ( rs.getInt("REFSEQUENCEID") ); 
                 sc.setIsolatetrackingId ( rs.getInt("ISOLATETRACKINGID"));
                 sc.setCloneSequenceId ( rs.getInt("CLONESEQUENCEID"));
-               // sc.setCloneId ( rs.getInt("CLONEID"));
+                sc.setSpecId ( rs.getInt("CONFIGID"));
                 stretches= Stretch.getByStretchCollectionId(sc.getId()  ,  isSequenceIncluded);
                 sc.setStretches(stretches);
                
@@ -329,15 +339,28 @@ vi.	Type of definition (coverage low quality / no coverage )
         if (strcol == null) return null;
         int number_of_gaps = 1; int number_of_contigs = 1;
         int number_of_lqs=1;
+        ArrayList lqrs = new ArrayList();
+        Hashtable lqr_sequence_ids = new Hashtable();
         ArrayList stretch_collection = Stretch.sortByPosition(strcol.getStretches() );
+        
+        for (int count = 0; count < stretch_collection.size(); count++)
+        {
+          stretch = (Stretch) stretch_collection.get(count);
+          if (stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY && stretch.getSequenceId() != -1)
+            lqr_sequence_ids.put(new Integer(stretch.getSequenceId()), "");
+        }
          for (int count = 0; count < stretch_collection.size(); count++)
         {
             stretch = (Stretch) stretch_collection.get(count);
+            if (stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY && stretch.getSequenceId() != -1)
+                 continue;
             uiread = new UIRead();
             uiread.setId (stretch.getId());
             uiread.setType (stretch.getType());
             uiread.setTrimStart ( stretch.getCdsStart() );
             uiread.setTrimStop (stretch.getCdsStop() );
+            if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG && lqr_sequence_ids.get(new Integer(stretch.getSequenceId()))  != null)
+                uiread.setIsProperty(true);
             //determine needle file exists
             switch (stretch.getType())
             {
@@ -376,6 +399,7 @@ vi.	Type of definition (coverage low quality / no coverage )
             uireads.add(uiread);
            // discrepancies.addAll( stretch.getSequence().getDiscrepancies() );
         }
+       
          /*
         discrepancies = DiscrepancyDescription.getDiscrepancyNoDuplicates(discrepancies);
    
@@ -416,7 +440,7 @@ vi.	Type of definition (coverage low quality / no coverage )
                              display_items.put( items.get(index), lqr_for_clone);
  
                      }     
-              **/
+              
          String stic = "23880_23881_23882_23883_23884_23885_23886_23887_23888_23889_";
          stic = Algorithms.replaceChar( stic, '_', ',');
           if ( stic.charAt(stic.length() - 1) == ',') stic = stic.substring(0, stic.length() - 1);
@@ -424,8 +448,12 @@ vi.	Type of definition (coverage low quality / no coverage )
           ArrayList discrepancies = Mutation.getByIds(stic);
                       
          String sa =  Mutation.toHTMLString(discrepancies);
-         System.out.println(sa);
-         }
+         */
+     StretchCollection   strcol = StretchCollection.getLastByCloneId(3558);
+                            if ( strcol != null)
+                            {
+                                strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                              }   }
          catch(Exception e){System.out.println(e.getMessage());}
      }
                            

@@ -104,14 +104,21 @@
     <td bgColor="#e4e9f8"><input name="SW_A_N_LOW_QUALITY_BASES_CONQ" type="text" 
     id="SW_A_N_LOW_QUALITY_BASES_CONQ"     value="<%= SlidingWindowTrimmingSpec.AMBIQUATY_NUMBER_LOW_QUALITY_BASES_CONQ %>"  ></td>
   </tr>
+<TR><TD COlspan=2>&nbsp</TD></TR>
 <tr> 
     <td bgColor="#b8c6ed"><b><font color="#000080">Minimum distance between stretches:</font></b> </td>
     <td bgColor="#b8c6ed"><input name="SW_MIN_DISTANCE_BTW_CONTIGS" type="text" 
     id="SW_MIN_DISTANCE_BTW_CONTIGS"     value="<%= SlidingWindowTrimmingSpec.MIN_DISTANCE_BETWEEN_CONTIGS %>"  ></td>
   </tr>
 <tr> 
-    <td bgColor="#e4e9f8"><b><font color="#000080">Sequence Trimming Type:</font></b> </td>
-    <td bgColor="#e4e9f8"><input name="SW_TRIM_TYPE" type="text" 
+    <td bgColor="#e4e9f8"><b><font color="#000080">Minimum contig length ( used by GAp Mapper only) :</font></b> </td>
+    <td bgColor="#e4e9f8"><input name="SW_MIN_CONTIG_LENGTH" type="text" 
+    id="SW_MIN_CONTIG_LENGTH"     value="<%= SlidingWindowTrimmingSpec.MIN_CONTIG_LENGTH %>"  ></td>
+  </tr>
+<TR><TD COlspan=2>&nbsp</TD></TR>
+<tr> 
+    <td bgColor="#b8c6ed"><b><font color="#000080">Sequence Trimming Type:</font></b> </td>
+    <td bgColor="#b8c6ed"><input name="SW_TRIM_TYPE" type="text" 
     id="SW_TRIM_TYPE"     value="<%= SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW_NODISC %>"  ></td>
   </tr>
    

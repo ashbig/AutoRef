@@ -23,14 +23,19 @@ public class BlastWrapper
     public static final String PSEUDOMONASDB_NAME="Pseudomonas aeruginosa";
     public static final String MGCDB_NAME="MGC";
     public static final String YPDB_NAME="Yersinia Pastis";
-   
+    public static final String FTDB_NAME="Francisella tularensis";
+    public static final String ClontechDB_NAME="Clontech";
+    public static final String NIDDKDB_NAME="NIDDK";
     
     public static  String HUMANDB=null;
     public static  String YEASTDB=null;
     public static  String PSEUDOMONASDB=null;
     public static  String MGCDB=null;
     public static  String YPDB=null;
-   
+    public static  String FTDB=null;
+    public static  String ClontechDB=null;
+    public static  String NIDDKDB=null;
+
     public static  String BLAST_PASS =  null;
     
     {
@@ -42,6 +47,9 @@ public class BlastWrapper
             MGCDB="d:\\blast_db\\MGC\\genes";
             YPDB="d:\\blast_db\\YP\\genes";
             BLAST_PASS =  "D:\\bio_programs\\Blast\\";
+            FTDB="d:\\blast_db\\FT\\genes";
+            ClontechDB="d:\\blast_db\\Clontech\\genes";
+            NIDDKDB="d:\\blast_db\\NIDDKDB\\genes";
         }
             
         else
@@ -52,12 +60,30 @@ public class BlastWrapper
             PSEUDOMONASDB="c:\\blast_db\\Pseudomonas\\genes";
             MGCDB="c:\\blast_db\\MGC\\genes";
             YPDB="c:\\blast_db\\YP\\genes";
+             FTDB="c:\\blast_db\\FT\\genes";
+            ClontechDB="c:\\blast_db\\Clontech\\genes";
+            NIDDKDB="c:\\blast_db\\NIDDKDB\\genes";
         }
     }
     public   static String getHumanDBLocation()
     {  
         BlastWrapper wr = new BlastWrapper();
         return HUMANDB;
+    }
+     public   static String getFTDBLocation()
+    {  
+        BlastWrapper wr = new BlastWrapper();
+        return FTDB;
+    }
+      public   static String getClontechDBLocation()
+    {  
+        BlastWrapper wr = new BlastWrapper();
+        return ClontechDB;
+    }
+       public   static String getNIDDKDBLocation()
+    {  
+        BlastWrapper wr = new BlastWrapper();
+        return NIDDKDB;
     }
     public   static String getYeastDBLocation()
     {
@@ -245,7 +271,7 @@ public class BlastWrapper
     public void run() throws BecUtilException
     {
         String blastcmd = null;
-         System.out.println("ll");
+       //  System.out.println("ll");
         if (m_blast_type == BLASTALL  && m_db == null )
         {
         
@@ -264,7 +290,7 @@ public class BlastWrapper
             int x;
             while ((x = bin.read()) != -1)
             {
-                System.out.write(x);
+                //System.out.write(x);
             }
             p.waitFor();
             if (p.exitValue() != 0)
@@ -390,7 +416,7 @@ public class BlastWrapper
              + " -I "  + m_gi;
         else if (m_blast_type == BLAST2SEQ )
             blastcmd = BLAST_PASS + "bl2seq "  + " -j " + m_subjectinputf +" "+blastcmd;
-        System.out.println(blastcmd);
+  //      System.out.println(blastcmd);
         return blastcmd;
     }
 

@@ -103,7 +103,16 @@ insert into config_parameter_name (paramname) values ('P_PRIMER_GC_OPT');
 insert into config_parameter_name (paramname) values ('P_UPSTREAM_DISTANCE');
 insert into config_parameter_name (paramname) values ('P_EST_SEQ');
 
-
+insert into config_parameter_name (paramname) values ('SW_Q_WINDOW_SIZE'); 
+insert into config_parameter_name (paramname) values ('SW_Q_NUMBER_LOW_QUALITY_BASES');  
+insert into config_parameter_name (paramname) values ('SW_Q_N_LOW_QUALITY_BASES_CONQ'); 
+insert into config_parameter_name (paramname) values ('SW_Q_CUTT_OFF'); 
+insert into config_parameter_name (paramname) values ('SW_A_WINDOW_SIZE'); 
+insert into config_parameter_name (paramname) values ('SW_A_NUMBER_BASES'); 
+insert into config_parameter_name (paramname) values ('SW_A_N_LOW_QUALITY_BASES_CONQ'); 
+insert into config_parameter_name (paramname) values ('SW_MIN_DISTANCE_BTW_CONTIGS'); 
+insert into config_parameter_name (paramname) values ('SW_TRIM_TYPE'); 
+insert into config_parameter_name (paramname) values ('SW_MIN_CONTIG_LENGTH'); 
 
 
 
@@ -378,6 +387,20 @@ values(vectorid.nextval,
 5,
 1,78);
 
+
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation,leaderlength)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDNR-Dual'),
+(select primerid from commonprimer where name='M13R'),
+3,
+-1,78);
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation,leaderlength)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDNR-Dual'),
+(select primerid from commonprimer where name='M13F'),
+5,
+1,78);
+
 //--------------------------------------------------------
 
 //for yeast
@@ -518,7 +541,11 @@ insert into processdefinition  (PROCESSDEFINITIONID,processname)
  values (16,'Oligo plate used for sequencing');
 
 
+insert into processdefinition (processdefinitionid, processname) values
+(17, 'Run Gap Mapper')
 
+insert into processdefinition (processdefinitionid, processname) values
+(18, 'Run Gap Mapper to identify Low Quality Regions')
 
 
 insert into commonprimer (primerid, name,sequence,type,tm) values(oligoid.nextval,'pDONRATG','GTACAAAAAAGCAGGCTCC',2,58.3);

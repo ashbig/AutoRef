@@ -121,7 +121,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
          Hashtable plate_map_names =  readPlateMapping();
          ////read directory && parse file names
          //returns  arrays  of file entries, sort by plate and well
-         ArrayList sequencing_facility_file_items = parseTraceFileNames();
+        ArrayList sequencing_facility_file_items = parseTraceFileNames();
          //get plates that we will rename: one renaming file can include a 
          //lot of plate names that are not in the folder
          ArrayList plate_names_for_processing =  getPlateNames( sequencing_facility_file_items, plate_map_names);
@@ -181,7 +181,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 sequencing_facility_plate =  (String)plate_names.get(0);
                 hip_name =(String)plate_names.get(1);
                plate_map.put( sequencing_facility_plate, hip_name);
-                
+        System.out.println(sequencing_facility_plate +" "+ hip_name);        
             }
             fin.close();
             return plate_map;
@@ -468,9 +468,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
           TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
           runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
             runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
-            runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD);
-            runner.setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
-runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Pseudomonas\\New Plates 4_28_04\\mapping.txt"));
+            runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
+            runner.setInputDirectory("E:\\Sequences for BEC\\Tularensis\\Reads to be submitted");
+runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Tularensis\\Reads to be submitted\\mapping.txt"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        
            

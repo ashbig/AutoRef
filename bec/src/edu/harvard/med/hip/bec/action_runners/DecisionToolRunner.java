@@ -243,13 +243,12 @@ import edu.harvard.med.hip.bec.ui_objects.*;
       
     try
     {
-         runner.setUser( AccessManager.getInstance().getUser("htaycher345","htaycher"));
+         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
          runner.setItems("582 ");
          runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
                     runner.setSpecId(4);
                       runner.run();
-                    ArrayList clone_data = runner.getClones();
-           
+                
        
     }catch(Exception e){}
     System.exit(0);

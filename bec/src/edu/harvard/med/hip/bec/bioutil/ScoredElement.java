@@ -58,17 +58,17 @@ public class ScoredElement
             throws Exception
     {
         ScoredSequence sequence = null;
-        if ( spec.getType() == SlidingWindowTrimmingSpec.TRIM_TYPE_NONE )
+        if ( spec.getTrimmingType() == SlidingWindowTrimmingSpec.TRIM_TYPE_NONE )
         {
                 sequence = ScoredElement.createScoredSequence( current_contig  );
          }
          else
          {
             ScoredElement[] sequence_elements = ScoredElement.createScoredSequence(  current_contig, false);
-            int[] high_quality_start_stop =  ScoredElement.trimSequenceMovingWindowAlgorithm(sequence_elements,  SlidingWindowTrimmingSpec.getDefaultSpec() );
+            int[] high_quality_start_stop =  ScoredElement.trimSequenceMovingWindowAlgorithm(sequence_elements,  spec );
             if (high_quality_start_stop != null)
             {
-                if ( spec.getType() == SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW_NODISC )
+                if ( spec.getTrimmingType() == SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW_NODISC )
                 {
                      current_contig = ScoredElement.preserveNotMutatedLowQualityBases( sequence_elements, high_quality_start_stop);
                 }
@@ -149,88 +149,72 @@ public class ScoredElement
                         throws Exception
    {
        if ( scored_elements.length < spec.getQWindowSize() ) return null;
-       int start_of_quality_sequence =  getIndexOfFirstQualityElement(scored_elements,0,scored_elements.length-1,spec);
+       int start_of_quality_sequence =  getIndexOfFirstQualityElement(scored_elements,spec);
        if ( scored_elements.length - start_of_quality_sequence < spec.getQWindowSize()) return null;
-       int end_of_quality_sequence = getIndexOfLastQualityElement( scored_elements, 0,scored_elements.length-1, spec);
+       int end_of_quality_sequence = getIndexOfLastQualityElement( scored_elements,  spec);
        int[] result = {start_of_quality_sequence, end_of_quality_sequence};
        return result;
    }
    
    
   public static int  getIndexOfFirstQualityElement(ScoredElement[] scored_elements, 
-                    int first_element, int last_element, 
-                    SlidingWindowTrimmingSpec spec)
-                     throws Exception
+                    SlidingWindowTrimmingSpec spec)    throws Exception
    {
        int count_not_pass_criteria_bases = 0;
-       boolean isFirstWindow = true;
-       int window_start = first_element;
-       int window_end = window_start + spec.getQWindowSize();
-       int start_of_quality_sequence = first_element;
-       for (; window_end < last_element; window_end++)
+       int current_element_index = 0;
+       //collect data for the first window as base for calculatons
+       for ( ; current_element_index < spec.getQWindowSize(); current_element_index++)
        {
-           if (isFirstWindow)
-           {
-               isFirstWindow = false;
-               window_start++;
-               //collect data for the first window as base for calculatons
-               for (int count = window_start; count < window_end; count++)
-               {
-                  if ( scored_elements[count].getScore() < spec.getQCutOff() )
-                        count_not_pass_criteria_bases++;
-               }
-               continue;
-           }
-           if ( scored_elements[window_start].getScore() < spec.getQCutOff() )
-               count_not_pass_criteria_bases--;
-           if ( scored_elements[window_end].getScore() < spec.getQCutOff() )
-               count_not_pass_criteria_bases++;
-           if ( count_not_pass_criteria_bases >= spec.getQMaxNumberLowQualityBases() )
-                   start_of_quality_sequence++;
-           else
-               break;
-           window_start++;
+          if ( scored_elements[current_element_index].getScore() < spec.getQCutOff() )
+                count_not_pass_criteria_bases++;
        }
-       return start_of_quality_sequence;
+       if ( count_not_pass_criteria_bases <= spec.getQMaxNumberLowQualityBases())
+           return 0;       
+       for (  current_element_index = spec.getQWindowSize(); current_element_index < scored_elements.length  ; current_element_index++)
+       {
+         
+           if ( scored_elements[current_element_index].getScore() < spec.getQCutOff() )
+               count_not_pass_criteria_bases++;
+           if ( scored_elements[current_element_index - spec.getQWindowSize()].getScore() < spec.getQCutOff() )
+               count_not_pass_criteria_bases--;
+           if ( count_not_pass_criteria_bases <= spec.getQMaxNumberLowQualityBases() )
+                  break;
+          
+       }
+       return current_element_index  - spec.getQWindowSize() ;
    }
     
   
   public  static int  getIndexOfLastQualityElement(
                     ScoredElement[] scored_elements, 
-                    int first_element, int last_element, 
                     SlidingWindowTrimmingSpec spec)
                      throws Exception
    {
        int count_not_pass_criteria_bases = 0;
-       boolean isFirstWindow = true;
-       int window_start = last_element; int window_end = last_element - spec.getQWindowSize();
-       int end_of_quality_sequence= last_element;
-       for (; window_end > first_element; window_end--)
+       int current_element_index = scored_elements.length - 1;
+       for (; current_element_index > scored_elements.length - 1 - spec.getQWindowSize(); current_element_index--)
        {
-           if (isFirstWindow)
-           {
-               isFirstWindow = false;
-               window_start--;
-               for (int count = window_end; count < window_start; count++)
-               {
-                  if ( scored_elements[count].getScore() < spec.getQCutOff() )
-                        count_not_pass_criteria_bases++;
-               }
-               continue;
-           }
-           if ( scored_elements[window_start].getScore() < spec.getQCutOff() )
-               count_not_pass_criteria_bases--;
-           if ( scored_elements[window_end].getScore() < spec.getQCutOff() )
-               count_not_pass_criteria_bases++;
-           if ( count_not_pass_criteria_bases >= spec.getQMaxNumberLowQualityBases() )
-           {
-               end_of_quality_sequence--;
-           }
-           else
-               break;
-           window_start--;
+       //    System.out.print(current_element_index+" "+scored_elements[current_element_index].getScore()+" "+count_not_pass_criteria_bases+"\n");
+          if ( scored_elements[current_element_index].getScore() < spec.getQCutOff() )
+                count_not_pass_criteria_bases++;
        }
-       return end_of_quality_sequence;
+       if ( count_not_pass_criteria_bases <=  spec.getQMaxNumberLowQualityBases() )
+           return scored_elements.length - 1;
+       for (; current_element_index >= spec.getQWindowSize(); current_element_index--)
+       {
+           
+           if ( scored_elements[current_element_index + spec.getQWindowSize()].getScore() < spec.getQCutOff() )
+               count_not_pass_criteria_bases--;
+           if ( scored_elements[current_element_index].getScore() < spec.getQCutOff() )
+               count_not_pass_criteria_bases++;
+         //  System.out.print(current_element_index+" "+count_not_pass_criteria_bases+
+      //     " "+scored_elements[current_element_index].getScore()+ " " +
+         //  scored_elements[current_element_index - spec.getQWindowSize()].getScore() +"\n");
+        
+           if ( count_not_pass_criteria_bases <= spec.getQMaxNumberLowQualityBases() )
+              break;
+       }
+       return current_element_index;
    }
     
     

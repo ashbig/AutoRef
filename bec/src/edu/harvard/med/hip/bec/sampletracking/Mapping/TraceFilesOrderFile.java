@@ -57,27 +57,12 @@ i.	SF Trace file name
     
     private static String  m_filePath =Constants.getTemporaryFilesPath();
        
-    public TraceFilesOrderFile()    
-    {     
-            m_cloneid = 0;
-        m_sequenceid_hip = 0;
-        m_platelabel_hip = "";
-        m_plateid_hip = 0;
-        m_wellid_hip = "";  
-        m_filename_hip = "";
-
-        m_read_direction = "";//forward /reverse
-        m_read_type = "";//internal/end read
-
-        m_platenumber_sf = "";
-        m_wellid_sf = "";
-        m_filename_sf = "";
-    }
+    public TraceFilesOrderFile()    {     }
      
     public int     getCloneId () { return m_cloneid  ; }
     public int     getFlexSequenceId () { return m_sequenceid_hip  ; }
     public String  getHipPlateLabel () { return m_platelabel_hip  ; }
-    public int  getHipPlateId () { return m_plateid_hip  ; }
+    public int      getHipPlateId () { return m_plateid_hip  ; }
     public String  getHipWellId () { return m_wellid_hip  ; }  
     public String  getHipFilename () { return m_filename_hip  ; }
 
@@ -91,15 +76,15 @@ i.	SF Trace file name
     
     public void     setCloneId (int v) {   m_cloneid  = v ; }
     public void     setFlexSequenceId (int v) {   m_sequenceid_hip  = v ; }
-    public void  setHipPlateLabel (String v) {   m_platelabel_hip  = v ; }
-    public void  setHipPlateId (int v) {   m_plateid_hip  = v ; }
-    public void  setHipWellId (String v) {   m_wellid_hip  = v ; }  
-    public void  setHipFilename (String v) {   m_filename_hip  = v ; }
-    public void  setReadDirection (String v) {   m_read_direction  = v ; }//forward /reverse
-    public void  setReadType (String v) {   m_read_type  = v ; }//internal/end read
-    public void  setSFPlateLabel (String v) {   m_platenumber_sf  = v ; }
-    public void  setSFWellId (String v) {   m_wellid_sf  = v ; }
-    public void  setSFFilenae (String v) {   m_filename_sf  = v ; }
+    public void     setHipPlateLabel (String v) {   m_platelabel_hip  = v ; }
+    public void     setHipPlateId (int v) {   m_plateid_hip  = v ; }
+    public void     setHipWellId (String v) {   m_wellid_hip  = v ; }  
+    public void     setHipFilename (String v) {   m_filename_hip  = v ; }
+    public void     setReadDirection (String v) {   m_read_direction  = v ; }//forward /reverse
+    public void     setReadType (String v) {   m_read_type  = v ; }//internal/end read
+    public void     setSFPlateLabel (String v) {   m_platenumber_sf  = v ; }
+    public void     setSFWellId (String v) {   m_wellid_sf  = v ; }
+    public void     setSFFilenae (String v) {   m_filename_sf  = v ; }
 
 
        
