@@ -94,6 +94,24 @@
     </tr>
     </logic:iterate>
 </table>
+<br>
+<CENTER><h3>Files</h3></CENTER>
+<br>
+<%-- Display all files associated with this container --%>
+<table>
+<tr><th>Name</th><th>Type</th></tr>
+<logic:iterate id="file" name="container" property="fileReferences">
+    
+    <tr>
+        <td>
+            <html:link page='<%="/"+file.toString()%>'>
+                <bean:write name="file" property="baseName"/>
+            </html:link>
+        </td>
+        <td><bean:write name="file" property="fileType"/></td>
+    </tr>
+</logic:iterate>
+</table>
 </logic:iterate>
 </body>
 </html>

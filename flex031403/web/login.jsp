@@ -13,7 +13,7 @@
    <html:errors/>
 
 
-    <form:form action="logon.do" focus="username">
+    <form:form action="logon.do" focus="username" target="_top">
         <table>
             <tr>
                 <td bgcolor="lightgrey"><b>User Name:</b></td>
