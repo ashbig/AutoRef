@@ -21,7 +21,7 @@
     var str =  trim(formElement.fileName.value);
     if (( formElement.fileName.value == null) || ( str == "" ) )
 	{
-		alert('Please submit valid file.')
+		alert('Please submit valid file name.')
         formElement.fileName.focus()
         return false
    	}

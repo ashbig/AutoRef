@@ -59,6 +59,9 @@ public class Primer3Spec extends Spec
          try
          {
             cleanup_parameters("P_");
+            m_params.remove("P_DOWNSTREAM_DISTANCE_VIEW");
+            m_params.remove("P_UPSTREAM_DISTANCE_VIEW");
+	
         }
          catch(Exception e1)
          {

@@ -33,6 +33,7 @@ function fnShowVectorDetails()
 
 <% 
    ArrayList vectors = (ArrayList ) request.getAttribute(Constants.VECTOR_COL_KEY);
+
    int vectorid_value = -1;
 %>
  

@@ -189,7 +189,7 @@ public class BioVector
                 ol.setId(rs.getInt("id") )   ;
                 ol.setType(rs.getInt("type") );//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
 
-                ol.setStart(rs.getInt("position"));// for full sequencing, start of the prime regarding sequence start
+                ol.setPosition(rs.getInt("position"));// for full sequencing, start of the prime regarding sequence start
                 ol.setName(rs.getString("name") ) ;
                 ol.setSequence(rs.getString("sequence"));
                 ol.setOrientation(rs.getInt("orientation")) ;

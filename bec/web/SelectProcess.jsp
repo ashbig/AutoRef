@@ -25,7 +25,8 @@
 	<p><P>
 <br>
 
-<% User user = (User)session.getAttribute(Constants.USER_KEY);
+<% 
+User user = (User)session.getAttribute(Constants.USER_KEY);
  boolean isAdmin = false;
  if (user.getUserGroup().equals("Administrator") )
 {
@@ -127,17 +128,17 @@
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER  %> DISABLED>
+      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER  %> >
       Add new internal primer</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_APPROVE_INTERNAL_PRIMERS %> DISABLED>
+      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_APPROVE_INTERNAL_PRIMERS %> >
       Approve internal primers</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> DISABLED>
+      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> >
       View internal primers 
       <P></font></td>
   </tr>
@@ -157,12 +158,12 @@
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER %> DISABLED>
+      <input <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER %> >
       Run discrepancy finder</font> </td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %> DISABLED>
+      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %> >
       Run polymorphism finder(settings required)</font> </td>
   </tr>
   <tr> 

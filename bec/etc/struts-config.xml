@@ -196,6 +196,7 @@
             <forward name="processing" path="/ConfirmProcess.jsp"/>
             <forward name="desicion_tool_report" path="/DesicionToolReport.jsp"/>
             <forward name="display_item_history" path="/Display_ItemHistory.jsp"/>
+            <forward name="display_oligo_calculations" path="/Display_OligoCalculation.jsp"/>
             
     </action>
 
