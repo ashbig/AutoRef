@@ -61,6 +61,15 @@ public class SampleLineage {
     public int getTo() {
         return to;
     }
+ 
+    /**
+     * Set the executionid to the given value.
+     *
+     * @param executionid The value to be set to.
+     */
+    public void setExecutionid(int executionid) {
+        this.executionid = executionid;
+    }
     
     /**
      * Insert the record into samplelineage table.
