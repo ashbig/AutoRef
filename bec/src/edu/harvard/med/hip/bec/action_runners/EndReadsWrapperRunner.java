@@ -124,7 +124,7 @@ public class EndReadsWrapperRunner implements Runnable
                      //if (expected_chromat_file_names.size() == 0)   break; 
                       //distribute chromat files 
                     tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
-                    ArrayList chromat_files_names = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir);
+                    ArrayList chromat_files_names = tfb.distributeEndReadsChromatFiles(m_inputTraceDir, m_outputBaseDir);
                     m_error_messages.addAll( tfb.getErrorMesages());
                     runPhredandParseOutput( chromat_files_names,   conn);
                 //}
@@ -203,7 +203,7 @@ public class EndReadsWrapperRunner implements Runnable
                                 plate_id,    Algorithms.convertWellFromInttoA8_12( position), 
                                sequence_id,   0);
                // System.out.println(entry.toString());
-                res.add( entry.toString() );
+                res.add( entry.getNamingFileEntyInfo() );
                 m_min_clone_id = clone_id;
             }
             return res;
@@ -297,7 +297,21 @@ public class EndReadsWrapperRunner implements Runnable
         {
          EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
         runner.setUser( AccessManager.getInstance().getUser("htaycher1","htaycher"));
-      runner.run();
+    //  runner.run();
+        
+        TraceFilesDistributor tfb = new TraceFilesDistributor();
+        
+          Connection       conn = DatabaseTransaction.getInstance().requestConnection();
+           ArrayList expected_chromat_file_names = new ArrayList();
+           expected_chromat_file_names.add("7364_A02_12894_43935_F0.T0.scf");
+           expected_chromat_file_names.add("7364_A02_12894_43935_R0.T0.scf");
+                     //if (expected_chromat_file_names.size() == 0)   break; 
+                      //distribute chromat files 
+            tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
+            ArrayList chromat_files_names = tfb.distributeEndReadsChromatFiles(runner.getInputDir(), runner.getOuputBaseDir());
+            ArrayList er =  tfb.getErrorMesages();
+            runner.runPhredandParseOutput( chromat_files_names,   conn);      
+         
         }catch(Exception e){}
         System.exit(0);
      }
