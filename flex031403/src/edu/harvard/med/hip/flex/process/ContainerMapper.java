@@ -116,9 +116,9 @@ public class ContainerMapper {
             } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
                 type = Sample.CONTROL_NEGATIVE;
             } else if(Sample.GEL.equals(s.getType())) {
-                type = getSampleType(container, s, protocol);
+                type = getGelSampleType(container, s, protocol);
             } else if(Sample.TRANSFORMATION.equals(s.getType())) {
-                type = getSampleType(container, s, protocol);
+                type = getTransformationSampleType(container, s, protocol);
             } else {
                 type = Sample.getType(protocol.getProcessname());
             }
@@ -129,14 +129,31 @@ public class ContainerMapper {
         }
     }   
     
-    private String getSampleType(Container container, Sample s, Protocol protocol) throws FlexDatabaseException {
+    private String getGelSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
+        Protocol protocol = new Protocol(Protocol.RUN_PCR_GEL);
         String type = null;
         edu.harvard.med.hip.flex.process.Process p = 
-        edu.harvard.med.hip.flex.process.Process.findProcess(container, protocol);
+        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);    
         Result result = Result.findResult(s, p);
-        if(Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())
-            || Result.MANY.equals(result.getValue()) || Result.FEW.equals(result.getValue())) {
-                type = Sample.getType(protocol.getProcessname());
+        if(Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())) {
+            type = Sample.getType(newProtocol.getProcessname());
+System.out.println("Sample type is :"+type);
+System.out.println("Process:"+ newProtocol.getProcessname());
+        } else {
+            type = Sample.EMPTY;
+        }
+        
+        return type;
+    }
+
+    private String getTransformationSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
+        Protocol protocol = new Protocol(Protocol.PERFORM_TRANSFORMATION);
+        String type = null;
+        edu.harvard.med.hip.flex.process.Process p = 
+        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
+        Result result = Result.findResult(s, p);
+        if(Result.MANY.equals(result.getValue()) || Result.FEW.equals(result.getValue())) {
+                type = Sample.getType(newProtocol.getProcessname());
         } else {
             type = Sample.EMPTY;
         }

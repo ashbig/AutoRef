@@ -252,15 +252,8 @@
                scope="session"
                validate="true"
                input="/GetResearcher.jsp">
-      <forward  name="success"   path="/CreatePlate.jsp"/>
-    </action> 
-
-    <!-- Create the plate and commit to the database -->
-    <action    path="/CreatePlate"
-               type="edu.harvard.med.hip.flex.action.CreatePlateAction"
-               input="/CreatePlate.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
-    </action>  
+    </action> 
 
     <!-- Process the receiving of new oligo plates -->
     <action    path="/ReceiveOligoPlates"
