@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.8 2002-05-10 13:48:12 Elena Exp $
+ * $Id: GenbankGeneFinder.java,v 1.9 2002-07-09 21:11:52 dzuo Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -48,14 +48,28 @@ public class GenbankGeneFinder {
                 if(inputLine.indexOf("<dd>") == 0) {
                     String desc = inputLine.substring(inputLine.indexOf("<dd>")+4, inputLine.indexOf("<br>"));
                     StringTokenizer st = new StringTokenizer(inputLine.substring(inputLine.indexOf("<br>")+4));
-                    if (st.hasMoreTokens()) {
-                        String giIgnore = st.nextToken("|<");
-                        String gi = st.nextToken("|<");
-                        String gbIgnore = st.nextToken("|<");
-                        String gb = st.nextToken("|<");
-                        GenbankSequence sequence = new GenbankSequence(gb, gi, desc);
-                        v.addElement(sequence);
+                    String token1 = null;
+                    String gi = null;
+                    String gb = null;
+                    
+                    while (st.hasMoreTokens()) {
+                        if(token1 == null)
+                            token1 = st.nextToken("|<");
+                        
+                        String token2 = null;
+                        if(st.hasMoreTokens())
+                            token2 = st.nextToken("|<");
+                        
+                        if(token2.indexOf("[") != -1) {
+                            gi = token2.substring(1, token2.length()-1);
+                            gb = token1;
+                            break;
+                        } else {
+                            token1 = token2;
+                        }
                     }
+                    GenbankSequence sequence = new GenbankSequence(gb, gi, desc);
+                    v.addElement(sequence);
                 }
             }
             in.close();
@@ -90,18 +104,16 @@ public class GenbankGeneFinder {
             int cdscount = 0;
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-
+                
                 if(inputLine.trim().indexOf("/organism=") == 0) {
                     organism = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\""));
                 }
                 // /db_xref="LocusID:<a href=http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=71>71</a>"
-                if(inputLine.indexOf("LocusID:") != -1 && locus_link_id.equals("") )
-                {
+                if(inputLine.indexOf("LocusID:") != -1 && locus_link_id.equals("") ) {
                     locus_link_id = inputLine.substring(inputLine.indexOf(">")+1, inputLine.lastIndexOf("<") - 1);
                 }
                 //  /gene="CKMT2"
-                if(inputLine.indexOf("/gene=") != -1 && gene_name.equals("") ) 
-                {
+                if(inputLine.indexOf("/gene=") != -1 && gene_name.equals("") ) {
                     gene_name = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\"") - 1);
                 }
                 if(inputLine.indexOf(">CDS</a>") != -1) {
@@ -179,7 +191,7 @@ public class GenbankGeneFinder {
     public static void main(String [] args) {
         GenbankGeneFinder finder = new GenbankGeneFinder();
         try{
-            Vector v = finder.search("human kinase");
+            Vector v = finder.search("Human kinase");
             Enumeration enum = v.elements();
             while(enum.hasMoreElements()) {
                 GenbankSequence sequence = (GenbankSequence)enum.nextElement();
