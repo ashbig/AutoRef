@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.2 2001-05-23 19:23:26 dongmei_zuo Exp $
  *
  * File     	: GenbankGeneFinder.java 
  * Date     	: 05052001
@@ -12,7 +12,7 @@ import java.net.*;
 import java.io.*;
 import java.lang.*;
 import java.util.*;
-import flex.ApplicationCode.Java.core.GenbankSequence;
+import edu.harvard.med.hip.flex.core.GenbankSequence;
 
 /**
  * GeneBankGeneFinder is an html parser class that performs genbank

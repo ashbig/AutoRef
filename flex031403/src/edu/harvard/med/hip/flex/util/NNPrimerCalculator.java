@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $
+ * $Id: NNPrimerCalculator.java,v 1.2 2001-05-23 19:23:26 dongmei_zuo Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -8,7 +8,7 @@
  */
  
 package edu.harvard.med.hip.flex.util;
-import flex.ApplicationCode.Java.core.*;
+import edu.harvard.med.hip.flex.core.*;
 import java.math.*;
  
 public class NNPrimerCalculator implements PrimerCalculator

@@ -1,7 +1,7 @@
 /**
- * $Id: FlexIDGenerator.java,v 1.2 2001-05-23 16:25:19 dongmei_zuo Exp $
+ * $Id: FlexIDGenerator.java,v 1.3 2001-05-23 19:23:26 dongmei_zuo Exp $
  *
- * File     	: FlexIDGenerator.java 
+ * File     	: FlexIDGenerator.java
  * Date     	: 04182001
  * Author	: Dongmei Zuo
  */
@@ -10,6 +10,8 @@ package edu.harvard.med.hip.flex.util;
 
 import java.util.*;
 import java.math.BigDecimal;
+import java.sql.*;
+import javax.sql.*;
 
 import edu.harvard.med.hip.flex.database.*;
 
@@ -18,39 +20,42 @@ import edu.harvard.med.hip.flex.database.*;
  * for any given table.
  */
 public class FlexIDGenerator {
-	/**
-	 * This is a static method to get the primary key for the given table
-	 * from the database.
-	 *
-	 * @param sequenceName The given sequence that the primary key is 
-	 * 	    generated from.
-	 * @return An integer representing the primary key.
-	 * @exception FlexDatabaseException.
-	 */
-	public static int getID (String sequenceName) throws FlexDatabaseException {
-		int id = 0;
-		String sql = "select "+sequenceName+".nextval as id from dual";
-
-		DatabaseTransaction t = DatabaseTransaction.getInstance();
-		Vector results = t.executeSql(sql);
-		Enumeration enum = results.elements();
-		while (enum.hasMoreElements()) {
-			Hashtable h = (Hashtable)enum.nextElement();
-			id = ((BigDecimal)h.get("ID")).intValue();
-		}		
-
-		return id;
-	}
-	
-	//******************************************************//
-	//			Test				//
-	//******************************************************//
-	public static void main(String [] args) {
-		try {
-			int id = FlexIDGenerator.getID("sampleid");
-			System.out.println(id);
-		} catch (FlexDatabaseException e) {
-			System.out.println(e);
-		} 		
-	}
+    /**
+     * This is a static method to get the primary key for the given table
+     * from the database.
+     *
+     * @param sequenceName The given sequence that the primary key is
+     * 	    generated from.
+     * @return An integer representing the primary key.
+     * @exception FlexDatabaseException.
+     */
+    public static int getID(String sequenceName) throws FlexDatabaseException {
+        int id = 0;
+        String sql = "select "+sequenceName+".nextval as id from dual";
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        
+        RowSet rs = t.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                
+                id = rs.getInt("ID");
+            }
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        }
+        return id;
+    }
+    
+    //******************************************************//
+    //			Test				//
+    //******************************************************//
+    public static void main(String [] args) {
+        try {
+            int id = FlexIDGenerator.getID("sampleid");
+            System.out.println(id);
+        } catch (FlexDatabaseException e) {
+            System.out.println(e);
+        }
+    }
 }

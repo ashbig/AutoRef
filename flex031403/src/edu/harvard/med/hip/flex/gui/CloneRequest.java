@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.2 2001-05-23 16:25:19 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.3 2001-05-23 19:23:26 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java
  * Date     : 05042001
@@ -174,7 +174,8 @@ public class CloneRequest {
      * @param username The name of the requestor.
      * @exception FlexDatabaseException.
      */
-    public void insertRequest(HttpServletRequest request, String username) throws FlexDatabaseException {
+    public void insertRequest(HttpServletRequest request, String username) 
+    throws FlexDatabaseException {
         Request r = new Request(username);
         LinkedList l = new LinkedList();
         Protocol p = new Protocol("approve sequences");

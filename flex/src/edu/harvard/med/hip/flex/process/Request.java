@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $
+ * $Id: Request.java,v 1.2 2001-05-23 19:23:26 dongmei_zuo Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -8,10 +8,11 @@
 
 package edu.harvard.med.hip.flex.process;
 
-import flex.ApplicationCode.Java.core.*;
-import flex.ApplicationCode.Java.database.*;
-import flex.ApplicationCode.Java.util.*;
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.util.*;
 import java.util.*;
+import java.sql.*;
 
 /**
  * This class corresponds to the request table in the database.
@@ -107,10 +108,10 @@ public class Request {
      * Insert the request into request table. Also insert the 
      * requested sequence records.
      *
-     * @param t The DatabaseTransaction object.
+     * @param conn <code>Connection</code> to user for insert
      * @exception FlexDatabaseException.
      */
-    public void insert(DatabaseTransaction t) throws FlexDatabaseException {
+    public void insert(Connection conn) throws FlexDatabaseException {
     	if(sequences.size() == 0) 
     		return;
     		
@@ -122,17 +123,18 @@ public class Request {
 	    "(requestid, username, requestdate)\n"+
 	    "values("+id+",'"+username+"',sysdate)";
 
-	t.executeSql(sql);
+	DatabaseTransaction.executeUpdate(sql, conn);
 
 	// Insert the sequence record.
 	Enumeration enum = sequences.elements();
 	while(enum.hasMoreElements()) {
 	    FlexSequence sequence = (FlexSequence)enum.nextElement();
 	    if("NEW".equals(sequence.getFlexstatus()))
- 			sequence.insert(t);
+ 			sequence.insert(conn);
 	    String reqSql = "insert into requestsequence\n"+
 				 		"values ("+id+","+sequence.getId()+")";
-		t.executeSql(reqSql);			   
+		DatabaseTransaction.executeUpdate(reqSql,conn);
+        
 	}
 }
 
@@ -145,11 +147,14 @@ public class Request {
 		}
 		try {
 			DatabaseTransaction t = DatabaseTransaction.getInstance();
-			r.insert(t);
-			t.abort();
+            Connection conn = t.requestConnection();
+			r.insert(conn);
+			conn.rollback();
 		} catch (FlexDatabaseException e) {
 			System.out.println(e);
-		}
+		} catch (SQLException sqlE) {
+            System.out.println(sqlE);
+        }
 	}
 }
 

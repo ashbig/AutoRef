@@ -8,7 +8,7 @@
  */
  
 package edu.harvard.med.hip.flex.util;
-import flex.ApplicationCode.Java.core.*;
+import edu.harvard.med.hip.flex.core.*;
  
 public interface PrimerCalculator
 {
