@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-07-24 18:46:07 $
- * $Author: jmunoz $
+ * $Revision: 1.3 $
+ * $Date: 2001-08-07 19:05:52 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -54,8 +54,8 @@ import edu.harvard.med.hip.flex.database.*;
 /**
  * Action called when requesting to view the process history of a container
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.2 $ $Date: 2001-07-24 18:46:07 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.3 $ $Date: 2001-08-07 19:05:52 $
  */
 
 public class ViewContainerProcessHistoryAction extends ResearcherAction{
@@ -90,19 +90,19 @@ public class ViewContainerProcessHistoryAction extends ResearcherAction{
         String containerBarcode =
         request.getParameter(Constants.CONTAINER_BARCODE_KEY);
         
-        int plateSetId = -1;
+        int threadid = -1;
         try {
             if(containerIdS!=null && containerIdS.length() !=0 ) {
                 
                 container = new Container(Integer.parseInt(containerIdS));
-                plateSetId = container.getPlatesetid();
+                threadid = container.getThreadid();
                 
             } else if(containerBarcode!=null && containerBarcode.length() !=0) {
                 List containerList =
                 Container.findContainers(containerBarcode);
                 if(containerList.size() >0) {
                     container = (Container)containerList.get(0);
-                    plateSetId = container.getPlatesetid();
+                    threadid = container.getThreadid();
                 }
                 
                 
@@ -111,7 +111,7 @@ public class ViewContainerProcessHistoryAction extends ResearcherAction{
                 throw new FlexCoreException("Unable to find any containers with label " + containerBarcode);
             }
             
-            if(plateSetId <1) {
+            if(threadid <1) {
                 
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.container.no.process.history"));
@@ -141,7 +141,7 @@ public class ViewContainerProcessHistoryAction extends ResearcherAction{
         } else {
             try {
                 retForward=mapping.findForward("success");
-                ContainerThread thread = ContainerThread.findContainerThread(plateSetId);
+                ContainerThread thread = ContainerThread.findContainerThread(threadid);
                 request.setAttribute(Constants.THREAD_KEY, thread);
                 request.setAttribute(Constants.CONTAINER_KEY, container);
             } catch(Exception e) {

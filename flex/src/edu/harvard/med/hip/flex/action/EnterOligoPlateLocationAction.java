@@ -63,9 +63,6 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
         Connection conn = null;
         LinkedList containerList = (LinkedList)request.getSession().getAttribute("containerList");
-        
-        int current_platesetid = -1;
-        int old_platesetid = -1;
         LinkedList platesetList = new LinkedList();
         
         try {
@@ -75,10 +72,9 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             int locationid = oligoPlateLocation.getId();
             
             ListIterator iter = containerList.listIterator();
-            Container container = (Container)iter.next();
-            current_platesetid = container.getPlatesetid();
-            Plateset plateset = new Plateset(current_platesetid);
-            platesetList.add(plateset);           
+            Container container = (Container)iter.next();           
+            Plateset pset = Plateset.findPlateset(container);
+            platesetList.add(pset);           
             
             //oligo plates received may belong to more than one plateset
             while (iter.hasNext()){
@@ -87,15 +83,13 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
                 container.updateLocation(locationid, conn);
               //  addOligoPlate2List(container);
                 System.out.println("update the location for container: "+container.getLabel());
-                                
-                old_platesetid = current_platesetid;
+                                  
                 container = (Container)iter.next();
-                current_platesetid = container.getPlatesetid();
+                pset = Plateset.findPlateset(container);
                 
-                if (old_platesetid != current_platesetid){
-                    plateset = new Plateset(current_platesetid);
-                    platesetList.add(plateset);
-                    System.out.println("next platesetid is: "+ plateset.getId());
+                if (!found(platesetList, pset)){
+                    platesetList.add(pset);
+                    System.out.println("next platesetid is: "+ pset.getId());
                 } //if
                 
             } //while
@@ -119,7 +113,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             System.out.println("Total plateset received: "+ platesetList.size());
             while (iter.hasNext()){
                 Plateset plateset = (Plateset)iter.next();
-                boolean complete = checkPlateset(plateset.getId());
+                boolean complete = checkPlateset(plateset);
                 
                 if (complete) {
                     System.out.println("inserting generate PCR plate queue...");
@@ -133,38 +127,22 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
-        
-        
+                
         return (mapping.findForward("success"));
     }
     
-    private boolean checkPlateset(int platesetid) throws FlexDatabaseException {
-        
-        String sql = "SELECT containerid, locationid FROM containerheader\n" +
-        "WHERE platesetid ="+ platesetid;
-        ResultSet rs = null;
-        int count = 0;
+    private boolean checkPlateset(Plateset plateset) throws FlexCoreException, FlexDatabaseException {
+        Container fivep = plateset.getFivepContainer();
+        Container threepFusion = plateset.getThreepOpenContainer();
+        Container threepClosed = plateset.getThreepClosedContainer();
+
         boolean complete = true;
-        try {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            //check the location. Unavaiable means oligoplate not received yet
-            while(rs.next()) {
-                ++count;
-                int locationid = rs.getInt("LOCATIONID");
-                //to be modified. locationid for unavailable is 1
-                if (locationid == 1){
-                    complete = false;
-                }  //if
-            }//while
-            if (count < 3) {
-                complete = false;
-            }
-        } catch (SQLException sqlE) {
-            throw new FlexDatabaseException("Error occured while check plateset: "+platesetid+"\n"+"\nSQL: "+sqlE);
-        } finally {
-            DatabaseTransaction.closeResultSet(rs);
-        }
+
+        if(Location.UNAVAILABLE.equals(fivep.getLocation().getType()) ||
+           Location.UNAVAILABLE.equals(threepFusion.getLocation().getType()) ||
+           Location.UNAVAILABLE.equals(threepClosed.getLocation().getType())) {           
+            complete = false;
+        } 
         
         return complete;
     } //checkPlateset
@@ -219,6 +197,18 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             throw new FlexDatabaseException("Error occured while inserting plateset into queue for PCR\n");
         }
     } //insertPCRQueue
-    
+ 
+    // Return true if the given plateset is found in the list; return false otherwise.
+    private boolean found(LinkedList platesetList, Plateset pset) {
+        Iterator iter = platesetList.iterator();
+        while(iter.hasNext()) {
+            Plateset plateset = (Plateset)iter.next();
+            if(plateset.isSame(pset)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
 

@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.13 2001-07-31 19:40:48 dzuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.14 2001-08-07 19:05:52 dzuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -45,7 +45,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         "c.containertype as type, " +
         "c.locationid as locationid, " +
         "c.label as label, " +
-        "c.platesetid as platesetid, "+
+        "c.threadid as threadid, "+
         "l.locationtype as locationtype, "+
         "l.locationdescription as description, "+
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
@@ -77,7 +77,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         "l.locationtype as locationtype," +
         "l.locationdescription as description,"+
         "c.label as label, " +
-        "c.platesetid as platesetid, "+
+        "c.threadid as threadid, "+
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
         "from containerheader c, containerlocation l, queue q\n" +
         "where c.containerid = q.containerid\n" +
@@ -108,7 +108,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         "l.locationtype as locationtype," +
         "l.locationdescription as description,"+
         "c.label as label, " +
-        "c.platesetid as platesetid, "+
+        "c.threadid as threadid, "+
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
         "from containerheader c, containerlocation l, queue q, "+
         "processobject p, processexecution x\n" +
@@ -234,12 +234,12 @@ public class ContainerProcessQueue implements ProcessQueue {
             String locationtype = rs.getString("LOCATIONTYPE");
             String description = rs.getString("DESCRIPTION");
             String label = rs.getString("LABEL");
-            int platesetid = rs.getInt("PLATESETID");
+            int threadid = rs.getInt("THREADID");
             String date = rs.getString("DATEADDED");
             Location location = new Location(locationid, locationtype,description);
             
             Container c = new Container(id, type, location, label);
-            c.setPlatesetid(platesetid);
+            c.setThreadid(threadid);
             QueueItem item = new QueueItem(c, protocol, date);
             items.addLast(item);
         }

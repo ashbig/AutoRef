@@ -47,7 +47,7 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
         Container c2 = (Container)containers.elementAt(1);
         
         // Get the new container barcode.
-        String newBarcode = Container.getLabel(protocol.getProcesscode(), c1.getPlatesetid(), getSubThread(c1));        
+        String newBarcode = Container.getLabel(protocol.getProcesscode(), c1.getThreadid(), getSubThread(c1));        
         if(c1.getLabel().charAt(1) == FUSION || c2.getLabel().charAt(1) == FUSION) {
             newBarcode = newBarcode+"-"+FUSION;
         }
@@ -55,7 +55,7 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
             newBarcode = newBarcode+"-"+CLOSED;
         }
                   
-        Container newContainer = new Container(newContainerType, null, newBarcode, c1.getPlatesetid());
+        Container newContainer = new Container(newContainerType, null, newBarcode, c1.getThreadid());
         c1.restoreSample();
         c2.restoreSample();       
         mappingSamples(c1, c2, newContainer, protocol); 

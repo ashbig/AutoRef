@@ -313,6 +313,7 @@
                validate="true"
                input="/EnterOligoPlates.jsp">
       <forward  name="success"   path="/GetPCRLocation.jsp"/>
+      <forward  name="success_oligo_dilute"   path="/GetNewOligoLocation.jsp"/>
     </action> 
 
     <!-- Process the agar plate input -->
@@ -345,6 +346,16 @@
       <forward  name="success"   path="/GetPCRResearcher.jsp"/>
     </action> 
 
+    <!-- Process the oligo plate input -->
+    <action    path="/GetNewOligoLocation"
+               type="edu.harvard.med.hip.flex.action.GetNewOligoLocationAction"
+               name="createPCRPlateForm"
+               scope="request"
+               validate="false"
+               input="/GetNewOligoLocation.jsp">
+      <forward  name="success"   path="/GetNewOligoResearcher.jsp"/>
+    </action>
+
     <!-- Process the source plate input -->
     <action    path="/GetAgarLocation"
                type="edu.harvard.med.hip.flex.action.GetAgarLocationAction"
@@ -373,6 +384,16 @@
                validate="true"
                input="/GetPCRResearcher.jsp">
       <forward  name="success"   path="/PrintPCRBarcode.jsp"/>
+    </action> 
+
+    <!-- Process the researcher barcode input -->
+    <action    path="/GetNewOligoResearcher"
+               type="edu.harvard.med.hip.flex.action.GetNewOligoResearcherAction"
+               name="getResearcherBarcodeForm"
+               scope="request"
+               validate="true"
+               input="/GetNewOligoResearcher.jsp">
+      <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action> 
 
     <!-- Print more barcodes -->

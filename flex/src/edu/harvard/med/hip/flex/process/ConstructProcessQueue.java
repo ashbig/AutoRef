@@ -51,7 +51,7 @@ public class ConstructProcessQueue implements ProcessQueue {
         "c.platesetid as platesetid, " +
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
         "from constructdesign c, queue q\n" +
-        "where c.constructid = q.platesetid\n" +
+        "where c.constructid = q.constructid\n" +
         "and q.protocolid = "+protocolid);
         
         LinkedList items = restore(protocol, sql);
@@ -96,7 +96,7 @@ public class ConstructProcessQueue implements ProcessQueue {
         "c.platesetid as platesetid, " +
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
         "from constructdesign c, queue q\n" +
-        "where c.constructid = q.platesetid\n" +
+        "where c.constructid = q.constructid\n" +
         "and q.protocolid = "+protocolid+
         "and to_char(dateadded, 'fmYYYY-MM-DD') = '"+date+"'");
         

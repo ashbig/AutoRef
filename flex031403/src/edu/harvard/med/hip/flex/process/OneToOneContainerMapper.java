@@ -80,10 +80,10 @@ public class OneToOneContainerMapper implements ContainerMapper {
             if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                 newBarcode = container.getLabel()+"-"+DAUGHTER_OLIGO_PLATE_SUB_THREAD;
             } else {
-                newBarcode = Container.getLabel(protocol.getProcesscode(), container.getPlatesetid(), getSubThread(container));        
+                newBarcode = Container.getLabel(protocol.getProcesscode(), container.getThreadid(), getSubThread(container));        
             }
             
-            Container newContainer = new Container(newContainerType, null, newBarcode, container.getPlatesetid());
+            Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
             container.restoreSample();
             mappingSamples(container, newContainer, protocol); 
             newContainers.addElement(newContainer);
@@ -118,6 +118,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 type = Sample.EMPTY;
             } else if(Sample.GEL.equals(s.getType())) {
                 type = getGelSampleType(container, s, protocol);
+            } else if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
+                type = s.getType();
             } else {
                 type = Sample.getType(protocol.getProcessname());
             }

@@ -46,8 +46,8 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
         Vector newContainers = new Vector();
         String newContainerType = getContainerType(protocol.getProcessname());
         String subthread = getSubThread(f1);
-        String newBarcode = Container.getLabel(protocol.getProcesscode(), f1.getPlatesetid(), subthread);     
-        Container newContainer = new Container(newContainerType, null, newBarcode, f1.getPlatesetid());
+        String newBarcode = Container.getLabel(protocol.getProcesscode(), f1.getThreadid(), subthread);     
+        Container newContainer = new Container(newContainerType, null, newBarcode, f1.getThreadid());
 
         int index = 0;
         Enumeration enum = containers.elements();

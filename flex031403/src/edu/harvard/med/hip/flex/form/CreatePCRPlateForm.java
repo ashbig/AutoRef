@@ -29,6 +29,9 @@ public class CreatePCRPlateForm extends ActionForm {
     private int fivepSourceLocation;
     private int threepOpenSourceLocation;
     private int threepClosedSourceLocation;
+    private int fivepDaughterLocation;
+    private int threepOpenDaughterLocation;
+    private int threepClosedDaughterLocation;
     private int pcrOpenLocation;
     private int pcrClosedLocation;
     private String subProtocolName = null;
@@ -140,7 +143,31 @@ public class CreatePCRPlateForm extends ActionForm {
     public int getThreepClosedSourceLocation() {
         return threepClosedSourceLocation;
     }
- 
+
+    public void setFivepDaughterLocation(int fivepDaughterLocation) {
+        this.fivepDaughterLocation = fivepDaughterLocation;
+    }
+    
+    public int getFivepDaughterLocation() {
+        return fivepDaughterLocation;
+    }
+    
+    public void setThreepOpenDaughterLocation(int threepOpenDaughterLocation) {
+        this.threepOpenDaughterLocation = threepOpenDaughterLocation;
+    }
+    
+    public int getThreepOpenDaughterLocation() {
+        return threepOpenDaughterLocation;
+    }
+
+    public void setThreepClosedDaughterLocation(int threepClosedDaughterLocation) {
+        this.threepClosedDaughterLocation = threepClosedDaughterLocation;
+    }
+    
+    public int getThreepClosedDaughterLocation() {
+        return threepClosedDaughterLocation;
+    }
+    
     /**
      * Set the PCR open plate location.
      *

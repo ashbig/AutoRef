@@ -51,8 +51,8 @@ public class AgarContainerMapper extends OneToOneContainerMapper {
             
             for(int i=0; i<processCodes.length; i++) {
                 String processCode = processCodes[i];
-                String newBarcode = Container.getLabel(processCode, container.getPlatesetid(), getSubThread(container));        
-                Container newContainer = new Container(newContainerType, null, newBarcode, container.getPlatesetid());
+                String newBarcode = Container.getLabel(processCode, container.getThreadid(), getSubThread(container));        
+                Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
                 mappingSamples(container, newContainer, protocol, i); 
                 newContainers.addElement(newContainer);
             }

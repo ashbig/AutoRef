@@ -28,8 +28,8 @@ public class OligoPlater {
     
     private static final int positiveControlPosition = 1;
     private static final int negativeControlPosition = 96;
-    private static final String PositiveControlSampleType = "CONTROL_POSITIVE";
-    private static final String NegativeControlSampleType = "CONTROL_NEGATIVE";
+    private static final String PositiveControlSampleType = Sample.CONTROL_POSITIVE;
+    private static final String NegativeControlSampleType = Sample.CONTROL_NEGATIVE;
     private static final String oligoFivePrefix = "OU";
     private static final String oligoClosePrefix = "OC";
     private static final String oligoFusionPrefix = "OF";
@@ -77,11 +77,11 @@ public class OligoPlater {
         plateset.insert(conn);
         
         //update the platesetid column in containerheader table
-        int platesetId = plateset.getId();
+/*        int platesetId = plateset.getId();
         container_5p.updatePlatesetId(platesetId,conn);
         container_3s.updatePlatesetId(platesetId,conn);
         container_3op.updatePlatesetId(platesetId,conn);
-        
+*/        
         //insert process output: oligo containers
         insertProcessOutput();
         
@@ -378,14 +378,21 @@ public class OligoPlater {
         //System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
         
         plateset = new Plateset(container_5p.getId(), container_3op.getId(),container_3s.getId());
-        int platesetId = plateset.getId();
-        label_5p = Container.getLabel(oligoFivePrefix, platesetId,null); //upstream
-        label_3s = Container.getLabel(oligoClosePrefix, platesetId,null); //closed
-        label_3op = Container.getLabel(oligoFusionPrefix, platesetId,null); //fusion
+        
+        int threadid = FlexIDGenerator.getID("threadid");
+        label_5p = Container.getLabel(oligoFivePrefix, threadid, null); //upstream
+        label_3s = Container.getLabel(oligoClosePrefix, threadid, null); //closed
+        label_3op = Container.getLabel(oligoFusionPrefix, threadid, null); //fusion
         
         container_5p.setLabel(label_5p);
         container_3s.setLabel(label_3s);
         container_3op.setLabel(label_3op);
+        
+        // Update the threadid for each container.
+        container_5p.setThreadid(threadid);
+        container_3s.setThreadid(threadid);
+        container_3op.setThreadid(threadid);
+        
         System.out.println("5p oligo plate label: "+ label_5p);
         System.out.println("3s oligo plate label: "+ label_3s);
         System.out.println("3op oligo plate label: "+ label_3op);

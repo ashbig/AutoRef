@@ -45,8 +45,8 @@
         <td><bean:write name="container" property="id"/></td>
     </tr>
     <tr>
-        <td class="label">Plate Set Id:</td>
-        <td><bean:write name="container" property="platesetid"/></td>
+        <td class="label">Thread Id:</td>
+        <td><bean:write name="container" property="threadid"/></td>
     </tr>
     <tr>
         <td class="label">Type:</td>

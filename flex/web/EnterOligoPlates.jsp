@@ -39,7 +39,7 @@
     </tr>
 
     <tr>
-    <td class="prompt">Select protocol used for PCR reaction:</td>
+    <td class="prompt">Select protocol:</td>
     <td><html:select property="subProtocolName">
         <bean:define id="subprotocols" name="SelectProtocolAction.protocol" property="subprotocol"/>
         <html:options
