@@ -11,6 +11,7 @@
 <center><b>c: papers studying neither the disease nor the gene</b><BR></center>
 <center><b>n = a+b+c+d, total number of papers</b><BR></center><br>
 <center><font size=5 face=Arial color=blue><b> chi square = (n*(|a*d-b*c|-n/2)*(|a*d-b*c|-n/2))/((a+b)(c+d)(a+c)(b+d))</b></font><BR></center>
+<center><b>The less negative the log value, the greater the correlation.</b><BR></center><br>
 <BR>
 <center><b>For example, the distribution of chi square (log value) for all the breast cancer related genes.</b></center>
 <center><img src="chi_square.jpg"></center>

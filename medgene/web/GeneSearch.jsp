@@ -10,13 +10,13 @@
     </head>
     <body>
     <center>
-    <h1>Diseases Associated with a Certain Gene</h1>
+    <h1>Diseases Associated with a Particular Gene</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
-    <p>Please type in a gene term and you will be confirmed with the 
-       corresponding official gene symbol(s).</p>
+    <p>Please type in a gene term.  The 
+       corresponding official gene symbol(s) will be displayed.</p>
 
     <html:form action="GeneSearch.do">   
     <table width="80%" align="center">
@@ -31,7 +31,7 @@
         </tr>
         <tr>
             <td></td>
-            <td><html:submit property="submit" value="Submit"/></td>
+            <td><html:submit property="submit" value="continue"/></td>
         </tr>
     </table>
     </html:form>

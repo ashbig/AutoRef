@@ -10,13 +10,12 @@
     </head>
     <body>
     <center>
-    <h1>Genes Associated with a Certain Disease</h1>
+    <h1>Genes Associated with a Particular Disease</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
-    <p>Please type in a disease name. You may type in any term you like and 
-    will be confirmed with the corresponding MeSH term(s).</p>
+    <p>Please type in a disease name. You may type in any name you like.  The corresponding MeSH term(s) will be displayed.</p>
 
     <html:form action="diseaseSearch.do">   
     <table width="80%" align="center">
@@ -26,12 +25,13 @@
         </tr>
         <tr>
             <td></td>
-            <td><html:submit property="submit" value="Submit"/></td>
+            <td><html:submit property="submit" value="continue"/></td>
         </tr>
     </html:form>
 <p>
     </table>
 <BR><BR><A HREF="http://www.nlm.nih.gov/mesh/" target="_blank"><b>Link to MeSH home</b></A><BR>
+<BR>
 <A HREF="DiseaseList.jsp" target="_blank"><b>Show all disease MeSH terms</b></A>
 <jsp:include page="links.jsp" flush="true"/>
 

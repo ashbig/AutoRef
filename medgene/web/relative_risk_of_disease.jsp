@@ -11,6 +11,7 @@
 <center><b>c: papers studying neither the disease nor the gene</b><BR></center>
 <center><b>n = a+b+c+d, total number of papers</b><BR></center><br>
 <center><font size=5 face=Arial color=blue><b>relative risk of disease = (b/(b+d))/(a/(a+c))</b></font><BR></center>
+<center><b>The less negative the log value, the greater the correlation.</b><BR></center><br>
 <BR>
 <center><b>For example, the distribution of relative risk of disease (log value) for all the breast cancer related genes</b></center>
 <center><img src="relative_risk_disease.jpg"></center>

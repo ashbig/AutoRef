@@ -16,8 +16,7 @@
     <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
     <p>Please type in all the disease names you want to search for,
-    separated by comma (,). You may type in any term you like and 
-    will be confirmed with the corresponding MeSH terms. The order of
+    separated by comma (,). You may type in any name you like. The corresponding MeSH terms will be displayed. The order of
     the gene list will be sorted by the order of the entry.</p>
 
     <html:form action="MultipleDiseaseSearch.do">   
@@ -28,13 +27,14 @@
         </tr>
         <tr>
             <td></td>
-            <td><html:submit property="submit" value="Submit"/></td>
+            <td><html:submit property="submit" value="continue"/></td>
         </tr>
     </table>
     </html:form>
 
 <p>
 <BR><BR><A HREF="http://www.nlm.nih.gov/mesh/" target="_blank"><b>Link to MeSH home</b></A><BR>
+<BR>
 <A HREF="DiseaseList.jsp" target="_blank"><b>Show all disease MeSH terms</b></A>
 <jsp:include page="links.jsp" flush="true"/>
 </td></tr></table></body>

@@ -12,7 +12,7 @@
     <body>
 
     <center>
-    <h1>Genes Associated with a Certain Disease</h1>
+    <h1>Genes Associated with a Particular Disease</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td> 
@@ -30,7 +30,7 @@
         />
     </html:select>
 
-    <p>Please choose a statistical method to rank the gene list:
+    <p>Please choose a <a href="statistic_menu.jsp" target="_blank">statistical method</a> to rank the gene list:
     <html:select property="stat">
         <html:options
         collection = "stats"
@@ -38,7 +38,6 @@
         labelProperty = "type" 
         />
     </html:select>
-    [<a href="statistic_menu.jsp" target="_blank">help</a>]
 
     <p>Please choose the number of genes for your list:
     <html:select property="number">

@@ -7,6 +7,7 @@
 <center><font size=5 face=Arial color=blue><b>Probability = Y/(X+Y+Z)</b></font><BR></center>
 <center><b>Y: papers studying both the gene and the disease</b><BR></center>
 <center><b>X+Y+Z: papers studying either the gene or the disease</b><BR></center>
+<center><b>The less negative the log value, the greater the correlation.</b><BR></center><br>
 <BR>
 <center><b>For example, the distribution of probability (log value) for all the breast cancer related genes</b></center>
 <center><img src="probability.jpg"></center>

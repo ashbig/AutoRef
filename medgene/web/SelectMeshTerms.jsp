@@ -34,7 +34,7 @@
     </p>
     </logic:iterate>
 
-    <p>Please choose a statistical method to rank the gene list:
+    <p>Please choose a <a href="statistic_menu.jsp" target="_blank">statistical method</a> to rank the gene list:
     <html:select property="stat">
         <html:options
         collection = "stats"
@@ -42,7 +42,6 @@
         labelProperty = "type" 
         />
     </html:select>
-    [<a href="statistic_menu.jsp" target="_blank">help</a>]
 
     <p>
     <html:submit property="submit" value="Get Genes"/>
