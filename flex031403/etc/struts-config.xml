@@ -37,11 +37,11 @@
                     type="edu.harvard.med.hip.flex.form.PlateEntryForm"/>
     <!-- transformation plate details page -->
     <form-bean      name="transformEntryForm"
-                    type="edu.harvard.med.hip.flex.form.TransformDetailsForm"/>
+                    type="edu.harvard.med.hip.flex.form.ContainerResultsForm"/>
 
     <!-- gel plate details page -->
     <form-bean      name="gelEntryForm"
-                    type="edu.harvard.med.hip.flex.form.GelDetailsForm"/>
+                    type="edu.harvard.med.hip.flex.form.GelResultsForm"/>
 
     <!-- Create process plate form bean -->
     <form-bean      name="createProcessPlateForm"
