@@ -161,6 +161,7 @@ public class AssemblyRunner extends ProcessRunner
             finally
             {
                 if ( conn != null) DatabaseTransaction.closeConnection(conn);
+                System.out.println("l assembler");
                 sendEMails( getTitle() );
             }
 
