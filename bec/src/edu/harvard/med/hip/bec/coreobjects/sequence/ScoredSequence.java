@@ -11,7 +11,7 @@ import java.sql.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.*;
-
+import edu.harvard.med.hip.bec.programs.phred.*;
 import java.util.*;
 
 /**
@@ -26,7 +26,8 @@ public class ScoredSequence extends BaseSequence
     protected String m_scores = null;
     protected int[] m_scores_numbers = null;
     
-    
+    protected int m_trim_start = -1;
+    protected int m_trim_end = -1;
     /** Creates a new instance of FuzzySequence */
     public ScoredSequence(int id) throws BecDatabaseException
     {  
@@ -123,6 +124,13 @@ public class ScoredSequence extends BaseSequence
     
     public void setScoresAsArray(int[] v){m_scores_numbers =v;}
     public void setScores(String v){m_scores =v;}
+    
+    //for sequence quality check
+    public void setTrimStart(int v){ m_trim_start = v;}
+    public void setTrimEnd( int v){ m_trim_end = v;}
+    
+    public int      getTrimStart(){ return m_trim_start ;}
+    public int      getTrimEnd( ){return m_trim_end ;}
      
    public String toHTMLString()
    {
@@ -181,14 +189,131 @@ public class ScoredSequence extends BaseSequence
        return res.toString();
    }
    
+   
+   //quality conformation
+   public static boolean isPassQualityCheck(ScoredSequence sequence , int coverage_start, int coverage_end)
+   {
+       trimSequence(sequence);
+       if (sequence.getTrimStart() > coverage_start || sequence.getTrimEnd() < coverage_end) return false;
+       if (! isPassQualityCheck(sequence)) return false;
+       if ( ! isPassAmbiguityCheck(sequence)) return false;
+       return true;
+   }
+   private static boolean  isPassQualityCheck(ScoredSequence sequence)
+   {
+       if ((sequence.getTrimEnd() == 0 && sequence.getTrimStart() == 0)
+           || (sequence.getTrimEnd() - sequence.getTrimStart()) < INTERNAL_QUALITY_WINDOW_SIZE) return false;
+       int count_not_pass_criteria_bases = 0;
+       int window_start = sequence.getTrimStart();
+       int window_end = window_start + INTERNAL_QUALITY_WINDOW_SIZE;
+       boolean isFirstWindow = true;
+       for (; window_end < sequence.getTrimEnd(); window_end++)
+       {
+           if (isFirstWindow)
+           {
+               isFirstWindow = false;
+               window_start++;
+               for (int count = window_start; count < window_end; count++)
+               {
+                  if ( sequence.getScoresAsArray()[count] < BaseSequence.INTERNAL_QUALITY_CUTT_OFF)
+                        count_not_pass_criteria_bases++;
+               }
+               if ( count_not_pass_criteria_bases >= BaseSequence.INTERNAL_QUALITY_NUMBER_LOW_QUALITY_BASES)
+                   return false;
+               continue;
+           }
+           if ( sequence.getScoresAsArray()[window_start] < BaseSequence.INTERNAL_QUALITY_CUTT_OFF)
+               count_not_pass_criteria_bases--;
+           if ( sequence.getScoresAsArray()[window_end] < BaseSequence.INTERNAL_QUALITY_CUTT_OFF)
+               count_not_pass_criteria_bases++;
+           if ( count_not_pass_criteria_bases >= BaseSequence.INTERNAL_QUALITY_NUMBER_LOW_QUALITY_BASES)
+                   return false;
+           window_start++;
+       }
+       return true;
+   }
+    private static boolean  isPassAmbiguityCheck(ScoredSequence sequence)
+   {
+       if ((sequence.getTrimEnd() == 0 && sequence.getTrimStart() == 0)
+           || (sequence.getTrimEnd() - sequence.getTrimStart()) < BaseSequence.INTERNAL_AMBIQUATY_WINDOW_SIZE) 
+           return false;
+       int count_not_pass_criteria_bases = 0;
+       int window_start = sequence.getTrimStart();
+       int window_end = window_start + BaseSequence.INTERNAL_AMBIQUATY_WINDOW_SIZE;
+       char[] sequence_char = sequence.getText().toUpperCase().toCharArray();
+       boolean isFirstWindow = true;
+       for (; window_end < sequence.getTrimEnd(); window_end++)
+       {
+           if (isFirstWindow)
+           {
+               isFirstWindow = false;
+               window_start++;
+               for (int count = window_start; count < window_end; count++)
+               {
+                  if ( sequence_char[count] == 'N')
+                        count_not_pass_criteria_bases++;
+               }
+               if ( count_not_pass_criteria_bases >= BaseSequence.INTERNAL_AMBIQUATY_NUMBER_BASES)
+                   return false;
+               continue;
+           }
+           if ( sequence_char[window_start] == 'N')     count_not_pass_criteria_bases--;
+           if ( sequence_char[window_end] == 'N')  count_not_pass_criteria_bases++;
+           if ( count_not_pass_criteria_bases >= BaseSequence.INTERNAL_AMBIQUATY_NUMBER_BASES)
+                   return false;
+           window_start++;
+       }
+       return true;
+   }
+    private static void     trimSequence(ScoredSequence sequence)
+    {
+        //** Find the maximum scoring subsequence.
+          int start       = 0;          int end       = 0;
+          int tbg       = 0;
+          float probScore = 0.0F;          float maxScore  = 0.0F;
+          float qualScore = 0.0F;          float maxQualScore = 0.0F;
+          int count = 0;
+          for(; count < sequence.getScoresAsArray().length; ++count )
+          {
+            probScore += PhredWrapper.MIN_PRB_VAL - (float)Math.pow( (double)10.0, (double)( -sequence.getScoresAsArray()[count] / 10.0 ) );
+            qualScore += (float)sequence.getScoresAsArray()[count];
+            if( probScore <= 0.0 )
+            {
+              probScore = 0.0F;
+              qualScore = 0.0F;
+              tbg = count + 1;
+            }
+            if( probScore > maxScore )
+            {
+              start          = tbg;
+              end          = count;
+              maxScore     = probScore;
+              maxQualScore = qualScore;
+            }
+          }
+           /*
+          ** Filter out very short sequences and sequences
+          ** with low overall quality.
+          */
+          if( end - start + 1 < PhredWrapper.MIN_SEQ_LEN ||
+              ( maxQualScore / (float)( end - start + 1 ) ) < PhredWrapper.MIN_AVG_QUAL )
+          {
+            start = 0;
+            end = 0;
+          }
+          sequence.setTrimStart(start);
+          sequence.setTrimEnd(end);
+
+    }
+   
+   
      public static void main(String [] args)
     {
         try
         {
-            String str = "AAACCCGGGGAGAGAGAGAGAGAGTTTTTAGAGGGATTTTTTAGATAGATAGATGAATATTATATATATATGGGGGGGGGAGAGAGAGGAGAGGAGAGAGGAGAGAGGAGAGAGAGAGGAAGAAACCCGGGGAGAGAGAGAGAGAGTTTTTAGAGGGATTTTTTAGATAGATAGATGAATATTATATATATATGGGGGGGGGAGAGAGAGGAGAGGAGAGAGGAGAGAGGAGAGAGAGAGGAAGAAACCCGGGGAGAGAGAGAGAGAGTTTTTAGAGGGATTTTTTAGATAGATAGATGAATATTATATATATATGGGGGGGGGAGAGAGAGGAGAGGAGAGAGGAGAGAGGAGAGAGAGAGGAAG";
-            String scores="3 3 30 30 13 14 14 15 15 60 60 60 23 23 23 23 24 23 21 23 24 24 25 25 12 12 12 12 12 12 13 16 16 16 16 16 30 30 80 80 80 80 90 90 90 90 90 90 90 90 12 12 12 12 12 12 34 32 34 32 34 12 13 13 13 13 14 4 4 4 4 4 4 4 4 4 4 6 7 12 12 12 34 34 34 34 34 34 34 34 34 56 56 24 24 22 22 22 22 22 22 22 22 22 22 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 3 3 30 30 13 14 14 15 15 60 60 60 23 23 23 23 24 23 21 23 24 24 25 25 12 12 12 12 12 12 13 16 16 16 16 16 30 30 80 80 80 80 90 90 90 90 90 90 90 90 12 12 12 12 12 12 34 32 34 32 34 12 13 13 13 13 14 4 4 4 4 4 4 4 4 4 4 6 7 12 12 12 34 34 34 34 34 34 34 34 34 56 56 24 24 22 22 22 22 22 22 22 22 22 22 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 3 3 30 30 13 14 14 15 15 60 60 60 23 23 23 23 24 23 21 23 24 24 25 25 12 12 12 12 12 12 13 16 16 16 16 16 30 30 80 80 80 80 90 90 90 90 90 90 90 90 12 12 12 12 12 12 34 32 34 32 34 12 13 13 13 13 14 4 4 4 4 4 4 4 4 4 4 6 7 12 12 12 34 34 34 34 34 34 34 34 34 56 56 24 24 22 22 22 22 22 22 22 22 22 22 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44 44";
-            ScoredSequence s = new ScoredSequence(str, scores);
-            System.out.println(s.toHTMLString());
+            ScoredSequence s = new ScoredSequence( 13608);
+            ;
+            System.out.println(ScoredSequence.isPassQualityCheck(s , 46,1240));
         }
         catch(Exception e){}
         System.exit(0);
