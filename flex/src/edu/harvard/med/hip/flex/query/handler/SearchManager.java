@@ -203,7 +203,7 @@ public class SearchManager {
         String message = null;
         if(SearchRecord.COMPLETE.equals(searchRecord.getSearchStatus())) {
             message = "Your search has been finished successfully. You can find your search results in our database.";
-            Mailer.sendMessage(userEmail, "dzuo@hms.harvard.edu","FLEXGene search - "+searchRecord.getSearchName(), message);
+            Mailer.sendMessage(userEmail, "dongmei_zuo@hms.harvard.edu","FLEXGene search - "+searchRecord.getSearchName(), message);
         } else {
             message = "Your search failed at the following reason. We have attached your search file to this email.\n\n"+error;
             String file = FILEPATH+searchRecord.getSearchName();
@@ -217,8 +217,8 @@ public class SearchManager {
             Collection fileCol = new ArrayList();
             fileCol.add(new File(file));
             
-            Mailer.sendMessage(userEmail, "dzuo@hms.harvard.edu",
-            "dzuo@hms.harvard.edu","FLEXGene search - "+searchRecord.getSearchName(), message, fileCol);
+            Mailer.sendMessage(userEmail, "dongmei_zuo@hms.harvard.edu",
+            "dongmei_zuo@hms.harvard.edu","FLEXGene search - "+searchRecord.getSearchName(), message, fileCol);
         }
     }
     
@@ -321,7 +321,7 @@ public class SearchManager {
                 manager.insertSearchResults(conn);
                 manager.updateSearchRecord(conn, SearchRecord.COMPLETE);
                 DatabaseTransaction.commit(conn);
-                manager.sendEmail("dzuo@hms.harvard.edu");
+                manager.sendEmail("dongmei_zuo@hms.harvard.edu");
             } catch (Exception ex) {
                 System.out.println(ex);
                 DatabaseTransaction.rollback(conn);

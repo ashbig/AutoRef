@@ -54,7 +54,7 @@ public class OutstandingJobs
                if (res >=1) files.add(blastfile);
 
                 String to = "etaycher@hms.harvard.edu";
-                String from = "dzuo@hms.harvard.edu";
+                String from = "dongmei_zuo@hms.harvard.edu";
                 String cc = "flexgene_manager1@hms.harvard.edu1";
                 String subject = "Blast files ";
                 String msgText = "The attached files are blast output for not matched sequences.";

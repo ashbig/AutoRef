@@ -364,7 +364,7 @@ public class FastaFileGenerator {
     }
     
     private static void sendEmail(String message) {
-        String to = "dzuo@hms.harvard.edu";
+        String to = "dongmei_zuo@hms.harvard.edu";
         String from = "flex@hms.harvard.edu";
         String subject = "FLEX sequence export failed.";
         

@@ -325,8 +325,8 @@ public class RearrayManager {
      * @exception Exception.
      */
     public void sendRobotFiles(String userEmail) throws Exception {
-        String to = "dzuo@hms.harvard.edu";
-        String from = "dzuo@hms.harvard.edu";
+        String to = "dongmei_zuo@hms.harvard.edu";
+        String from = "dongmei_zuo@hms.harvard.edu";
         String cc = userEmail;
         String subject = "Rearraed plates for the project - "+project.getName();
         String msgText = "The attached files are robot file(s) for rearrayed plates.\n";
@@ -782,7 +782,7 @@ public class RearrayManager {
             conn = t.requestConnection();
             manager.createAllPlates(conn);
             manager.writeOutputFiles();
-            manager.sendRobotFiles("dzuo@hms.harvard.edu");
+            manager.sendRobotFiles("dongmei_zuo@hms.harvard.edu");
             DatabaseTransaction.commit(conn);
         } catch (Exception e) {
             DatabaseTransaction.rollback(conn);
