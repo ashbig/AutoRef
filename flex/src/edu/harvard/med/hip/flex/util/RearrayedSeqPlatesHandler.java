@@ -80,7 +80,7 @@ public class RearrayedSeqPlatesHandler {
             Container c = (Container)containers.get(i);
             fileCol.add(new File(filepath+c.getLabel()));
         }
-        Mailer.sendMessage("dzuo@hms.harvard.edu",user.getUserEmail(),"dzuo@hms.harvard.edu","Files for rearrayed sequencing plates","Attached are your files for rearrayed sequencing plates", fileCol);
+        Mailer.sendMessage(user.getUserEmail(),"dzuo@hms.harvard.edu","dzuo@hms.harvard.edu","Files for rearrayed sequencing plates","Attached are your files for rearrayed sequencing plates", fileCol);
     }
     
     public static void main(String args[]) {
