@@ -152,4 +152,34 @@ public class Request
     }
     
     
+    
+     public static int createProcessHistory(Connection conn, String process_name,ArrayList specs,User user) throws BecDatabaseException
+     {
+         ArrayList processes = new ArrayList();
+         try
+         {
+            Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                        new java.util.Date(),
+                                        user.getId(),
+                                        processes,
+                                        Constants.TYPE_OBJECTS);
+
+            // Process object create
+             //create specs array for the process
+            ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                                        ProcessDefinition.ProcessIdFromProcessName( process_name ),
+                                                        actionrequest.getId(),
+                                                        specs,
+                                                        Constants.TYPE_OBJECTS) ;
+            processes.add(process);
+             //finally we must insert request
+            actionrequest.insert(conn);
+           
+            return process.getId();
+         } 
+         catch(Exception e)
+         {
+             throw new BecDatabaseException("Cannot create process");
+         }
+     }
 }
