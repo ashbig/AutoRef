@@ -39,6 +39,7 @@ public class CloneInfo extends CDNASequence {
     protected CloningStrategy cloningstrategy;
     protected NameInfo nameinfo;
     protected List storages;
+    protected String flexstatus;
     
     protected String pubhit;
     protected String resultexpect;
@@ -78,6 +79,7 @@ public class CloneInfo extends CDNASequence {
     public String getMatchexpect() {return matchexpect;}
     public String getMatchpubhit() {return matchpubhit;}
     public String getKeyword() {return keyword;}
+    public String getFlexstatus() {return flexstatus;}
     
     public void setCloneid(int cloneid) {this.cloneid=cloneid;}
     public void setClonename(String clonename) {this.clonename=clonename;}
@@ -102,13 +104,14 @@ public class CloneInfo extends CDNASequence {
     public void setMatchexpect(String s) {matchexpect=s;}
     public void setMatchpubhit(String s) {matchpubhit=s;}
     public void setKeyword(String s) {keyword=s;}
+    public void setFlexstatus(String s) {this.flexstatus = s;}
     
     public void restoreClone(int id) throws Exception {
         String sql = "select c.cloneid, c.clonename, c.clonetype, c.mastercloneid, c.comments, c.status,"+
         " c.sequenceid, f.genusspecies, cd.constructid,  cd.constructtype, cd.projectid, cd.workflowid,"+
         " c.strategyid, cs.strategyname, cs.vectorname, cs.linkerid_5p, cs.linkerid_3p,"+
         " cl.pubhit, cl.resultexpect, cl.resultpubhit, cl.matchexpect, cl.matchpubhit,"+
-        " l5.linkersequence, l3.linkersequence"+
+        " l5.linkersequence, l3.linkersequence, f.flexstatus"+
         " from clones c, flexsequence f, constructdesign cd, cloningstrategy cs, clonesequencing g, clonesequence cl, linker l5, linker l3"+
         " where c.constructid=cd.constructid"+
         " and f.sequenceid=cd.sequenceid"+
@@ -154,6 +157,7 @@ public class CloneInfo extends CDNASequence {
                 
                 String linker5p = rs.getString(23);
                 String linker3p = rs.getString(24);
+                flexstatus = rs.getString(25);
                 
                 CloneVector cv = new CloneVector(vectorname);
                 CloneLinker l5p = new CloneLinker(linkerid5p, null, linker5p);
