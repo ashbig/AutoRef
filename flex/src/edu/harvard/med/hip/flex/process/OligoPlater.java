@@ -350,7 +350,7 @@ public class OligoPlater
             plateOutFileName3 = filePath + container_3op.getLabel();
             plateWriter_3op = new FileWriter(plateOutFileName3);
             fileNameList.add(plateOutFileName3);
-            createOligoFileHeader();
+            //createOligoFileHeader();
         }
         
     }
