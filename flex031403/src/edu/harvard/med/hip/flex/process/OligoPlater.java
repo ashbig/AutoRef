@@ -179,7 +179,7 @@ public class OligoPlater {
                     plate_oligo.clear();
                 }
             }
-            if (plate_oligo.size() != 0)//if last plate is not full add it
+            if ( plate_oligo.size() != 0)//if last plate is not full add it
                 orderedOligos.addAll(Algorithms.rearangeSawToothPatternInOligoPattern(plate_oligo));
         }
         else {
@@ -202,9 +202,12 @@ public class OligoPlater {
             //System.out.println("The lower gene index is: "+ currentGeneIndex);
             outputGene( currentGene , current_well);
             current_well++;
-            if (current_well == m_negativeControlPosition ) isNewPlate = true;
+            if (current_well == negativeControl )
+            {
+                isNewPlate = true;
+            }
             //System.out.println("Update oligo plates.");
-            if (isNewPlate) {
+            if (isNewPlate  ) {
                 updateOligoPlates();
                 plateWriter_5p.flush();
                 plateWriter_5p.close();
