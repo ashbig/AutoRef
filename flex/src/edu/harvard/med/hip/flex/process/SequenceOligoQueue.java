@@ -117,6 +117,32 @@ public class SequenceOligoQueue {
         return result; //return the LinkedList
     } // getQueueItems
     
+        /**
+     * Retrieve all the queued sequences which are waiting for
+     * oligo primer calculation (construct design)
+     *
+     * @param protocol The process protocol.
+     * @param project The project that all the queue items belong to.
+     * @param workflow The workflow that all the queue items belong to.
+     *
+     * @return A LinkedList of Sequence objects
+     */
+        public LinkedList getQueueItems(Protocol protocol, Project project,
+        Workflow workflow)         throws FlexDatabaseException {
+        //The result list stores a list of sequence objects
+        LinkedList result = new LinkedList();
+        
+        String sql = "SELECT s.sequenceid as seqid, s.cdsstart, s.cdsstop \n"+
+        "FROM FLEXSEQUENCE s, QUEUE q\n" +
+        "WHERE s.sequenceid = q.sequenceid\n" +
+        "AND q.protocolid = "+ protocol.getId() + "\n" +
+        "AND q.projectid = "+ project.getId() + "\n" +
+        "AND q.workflowid = "+ workflow.getId() ;
+        result = restore(sql);
+        
+        return result; //return the LinkedList
+    } // getQueueItems
+    
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table
