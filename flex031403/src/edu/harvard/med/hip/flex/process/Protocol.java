@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.30 2002-12-17 15:02:53 Elena Exp $
+ * $Id: Protocol.java,v 1.31 2003-01-07 20:51:59 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -89,6 +89,8 @@ public class Protocol {
     //yeast revised orf
      public static final String REARRAY_PLATES_BASED_ON_SEQUENCING_RESULTS = 
         "Rearray plates based on sequencing results";
+     public static final String REARRAY_CULTURE_PLATES_BASED_ON_SEQUENCING_RESULTS = 
+        "Rearray culture plates based on sequencing results";
      public static final String REARRAY_PCR_PLATES = 
         "Rearray PCR plates";
      public static final String GENERATE_SEQUENCING_GLYCEROL_PLATES = 
