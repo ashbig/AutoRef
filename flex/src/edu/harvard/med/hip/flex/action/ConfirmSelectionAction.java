@@ -79,7 +79,7 @@ public class ConfirmSelectionAction extends FlexAction {
         
         try {        
             Protocol p = new Protocol(Protocol.APPROVE_SEQUENCES);
-            Workflow workflow = new Workflow(1);
+            Workflow workflow = new Workflow(Workflow.COMMON_WORKFLOW);
             Request humanProject = new Request(username, new Project(Project.HUMAN));
             Request yeastProject = new Request(username, new Project(Project.YEAST));
             Request currentProject = null;

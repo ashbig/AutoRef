@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.12 $
- * $Date: 2001-08-20 19:06:21 $
+ * $Revision: 1.13 $
+ * $Date: 2001-08-28 17:07:24 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.12 $ $Date: 2001-08-20 19:06:21 $
+ * @version    $Revision: 1.13 $ $Date: 2001-08-28 17:07:24 $
  */
 public class ProcessQueueAction extends WorkflowAction {
     
@@ -280,7 +280,10 @@ public class ProcessQueueAction extends WorkflowAction {
         } catch(FlexProcessException fpe){
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.process.error", fpe));
-            
+        } catch(Exception ex) {   
+            DatabaseTransaction.rollback(conn);         
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
         } finally {
             
             if(errors.size() > 0) {

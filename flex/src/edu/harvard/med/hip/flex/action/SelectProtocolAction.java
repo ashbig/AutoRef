@@ -69,17 +69,19 @@ public class SelectProtocolAction extends FlexAction {
         
         try {
             Protocol protocol = new Protocol(processname);
+            Project project = new Project(projectid);
+            Workflow workflow = new Workflow(workflowid);
             
             if(Protocol.GENERATE_PCR_PLATES.equals(processname) ||
             Protocol.DILUTE_OLIGO_PLATE.equals(processname)) {
                 queue = new PlatesetProcessQueue();
-                items = queue.getQueueItems(protocol);
+                items = queue.getQueueItems(protocol, project, workflow);
                 storeInSession(request, items, protocol);
                 return (mapping.findForward("success_pcr"));
             } else {
                 queue = new ContainerProcessQueue();
             }
-            items = queue.getQueueItems(protocol);
+            items = queue.getQueueItems(protocol, project, workflow);
             storeInSession(request, items, protocol);
             
             if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {
