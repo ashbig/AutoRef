@@ -1,9 +1,13 @@
 /**
- * $Id: Researcher.java,v 1.3 2001-05-24 14:49:04 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.4 2001-06-07 19:43:30 wenhong_mar Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
  * Author	: Dongmei Zuo
+ *
+ * Modified     : Wendy Mar
+ * Date         : 06-07-2001
+ *              Added a new constructor for the default user: SYSTEM
  */
 
 package edu.harvard.med.hip.flex.process;
@@ -76,6 +80,25 @@ public class Researcher {
     }
     
     /**
+     * Constructor for user: SYSTEM.
+     *
+     * @param id The researcher id.
+     * @return The Researcher object.
+     */
+    public Researcher(int id) {
+        this.id = id;
+        this.name = "SYSTEM";
+        this.barcode = "DEFAULT";
+        this.isActive = "Y";
+    }
+    
+    /**
+     * default constructor
+     */
+    public Researcher() {
+    }
+    
+    /**
      * Return the researcher id.
      *
      * @return The researcher id.
@@ -91,6 +114,32 @@ public class Researcher {
      */
     public String getName() {
         return name;
+    }
+    
+    /**
+     * @param name .
+     *
+     * @return The researcher id.
+     */
+    public int getId(String name) throws FlexDatabaseException {
+        int Id = -1;
+        String sql = "select researcherid from researcher where researchername = '" + name + "'";
+        ResultSet rs = null;
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if (rs.next()) {
+                Id = rs.getInt(1);
+            } else {
+                return Id;
+            }
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return Id;
     }
     
     //******************************************************//
@@ -116,6 +165,14 @@ public class Researcher {
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
-    }
+        
+        try{
+            Researcher r = new Researcher();
+            int Id = r.getId("SYSTEM");
+            System.out.println("The Id for user SYSTEM is " + Id);
+        } catch (FlexDatabaseException e){
+            System.out.println(e);
+        }
+    } //main
     
 }
