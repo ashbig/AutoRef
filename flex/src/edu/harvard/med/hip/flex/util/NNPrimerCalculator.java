@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.4 2001-05-31 15:13:53 wenhong_mar Exp $
+ * $Id: NNPrimerCalculator.java,v 1.5 2001-06-12 17:20:30 wenhong_mar Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -187,7 +187,12 @@ public class NNPrimerCalculator implements PrimerCalculator
 		oligoSeq = subSeq.substring(0, pos+1);
 	
 		oligo = new Oligo(oligoType, oligoSeq, Tm);
-
+                   
+                //testing...
+                int oligoId = oligo.getOligoID();
+                System.out.println("OligoId: " + oligoId);
+                System.out.println("OligoSeq: " + oligoSeq);
+                
 		return oligo;
 	} //calTm
 
@@ -274,6 +279,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 		String subSeq;
 		
 		subSeq = sequence.getSeqFragmentStart();
+                System.out.println("seq 5p fragment: "+ subSeq);
 		fivepOligo = calTm(subSeq, type);		
 
 		return fivepOligo;		
@@ -322,11 +328,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 		return threepOpenOligo;		
 	} 
 
-	public static void main(String[] args)
-	{
-		NNPrimerCalculator calculator = new NNPrimerCalculator();
-		//calculator.test();
-	}
+	
 
 	//Test methuod for oligo calculation
 	public void test () throws FlexDatabaseException
