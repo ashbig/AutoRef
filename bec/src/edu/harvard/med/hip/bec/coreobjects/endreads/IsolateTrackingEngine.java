@@ -183,7 +183,15 @@ public class IsolateTrackingEngine
     public int              getRank(){ return m_rank;} ;// results of the end read analysis
     public int              getSampleId(){ return m_sample_id ;}// resulting from the full sequencing
     public int[]            getCloneSequenceReadsId(){ return m_fullseq_reads_id;}
-    public CloneSequence    getCloneSequence( ){ return m_clone_sequence ;}
+    public CloneSequence    getCloneSequence( ) throws Exception
+    { 
+        if ( m_clone_sequence == null)
+        {
+            m_clone_sequence = CloneSequence.getOneByIsolateTrackingId(m_id,null,null);
+        }
+        
+        return m_clone_sequence ;
+    }
     public ArrayList        getCloneSequences(){ return m_clone_sequences;}
     public int              getScore()    {    return m_score;    }
     public  String getStatusAsString()    {        return getStatusAsString(m_status);    }
