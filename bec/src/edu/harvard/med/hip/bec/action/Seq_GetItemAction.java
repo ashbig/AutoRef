@@ -553,7 +553,7 @@ public class Seq_GetItemAction extends ResearcherAction
         switch (project_code)
         {
             case         'A': return  "NIDDK Diabetis - Human";
-            case 'B': return  " Breast Cancer"; 
+            case         'B': return  " Breast Cancer"; 
             case         'C': return  " Clontech"; 
             case         'D': return  " NIDDK Diabetis - Mouse"; 
             case         'G': return  " Prostate Cancer"; 
@@ -564,6 +564,7 @@ public class Seq_GetItemAction extends ResearcherAction
             case         'S': return  " Yersinia pestis"; 
             case         'T': return  " Transcription Factor";
             case         'Y': return  " Yeast";
+            case        'F': return " Francisella tularentsis";
             default: return String.valueOf(project_code);
         }
 
