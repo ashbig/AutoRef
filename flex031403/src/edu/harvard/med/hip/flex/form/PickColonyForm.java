@@ -217,36 +217,44 @@ public class PickColonyForm extends ProjectWorkflowForm
         
         ActionErrors errors = new ActionErrors();
         boolean isReturn = false;
-        
+       
         if((agarPlateF1 == null) || (agarPlateF1.trim().length()==0))
         {
             errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
-            return errors;
+             return errors;
         }
         
         if(pickingMethod.equals("interleaved"))
         {
-            if(projectid != Project.YEAST && (agarPlateF1.trim().length()!=11) || (agarPlateF1.charAt(LASTINDEX) != 'F'))
+            if(projectid == Project.YEAST)
             {
-                errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
-                isReturn = true;
+                if ( agarPlateF1.trim().length()!=11 || agarPlateF1.charAt(LASTINDEX) != 'C' )
+                {
+              
+                    errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
+                    isReturn = true;
+                }
             }
-            
-            if(projectid == Project.YEAST && (agarPlateF1.trim().length()!=11) || (agarPlateF1.charAt(LASTINDEX) != 'C'))
+            else
             {
-                errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
-                isReturn = true;
+                if (agarPlateF1.trim().length()!=11 || agarPlateF1.charAt(LASTINDEX) != 'F')
+               {
+                      
+                        errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
+                        isReturn = true;
+                }
             }
-            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE && projectid != Project.YEAST)
+            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE)
             {
                 if((agarPlateC1 == null) || (agarPlateC1.trim().length()!=11))
                 {
+                  
                     errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
                     isReturn = true;
                 }
             }
         }
-        
+ 
         if(isReturn)
         {
             return errors;
@@ -254,18 +262,11 @@ public class PickColonyForm extends ProjectWorkflowForm
         
         if(pickingMethod.equals("interleaved"))
         {
-            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE )
+            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE)
             {
-                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11 && (agarPlateC1.charAt(LASTINDEX) != 'F'))
+                if(agarPlateC1 != null && agarPlateC1.trim().length() >= 11 && (agarPlateC1.charAt(LASTINDEX) != 'F'))
                 {
-                    errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
-                    isReturn = true;
-                }
-            } 
-            if(projectid == Project.YEAST )
-            {
-                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11 && (agarPlateC1.charAt(LASTINDEX) != 'C'))
-                {
+              
                     errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
                     isReturn = true;
                 }
@@ -274,6 +275,7 @@ public class PickColonyForm extends ProjectWorkflowForm
             {
                 if((agarPlateC1.charAt(LASTINDEX) != 'C'))
                 {
+                 
                     errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
                     isReturn = true;
                 }
@@ -285,21 +287,21 @@ public class PickColonyForm extends ProjectWorkflowForm
             }
             
             // Check whether the two pairs matching with each other.
-            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || projectid == Project.YEAST)
+            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE ||  projectid == Project.YEAST )
             {
                 if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11)
                 {
                     if(!(agarPlateF1.substring(3, 9).equals(agarPlateC1.substring(3, 9))))
                     {
+                      
                         errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
                     }
                 }
-            } 
-            
-            else
+            } else
             {
                 if(!(agarPlateF1.substring(0, 3).equals(agarPlateC1.substring(0, 3))))
                 {
+                  
                     errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
                 }
             }
