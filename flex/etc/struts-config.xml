@@ -153,6 +153,11 @@
     <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>
     <forward    name="importSequence" path="/GetProjects.do?forwardName=IMPORT_SEQUENCES"/>
     <forward    name="addResearcher" path="/AddResearcher.jsp"/>
+    <forward    name="mgcPlateHandle" path="/MGCPlateHandle.do"/>
+    <forward    name="importMGCMaster" path="/ImportMGCMaster.jsp"/>
+    <forward    name="requestMGC" path="/RequestMGC.jsp"/>
+    <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>
+    
   </global-forwards>
   
 
@@ -677,6 +682,12 @@
             input="/SaveContaierDetail.jsp">
       <forward name="success" path="/SaveContainerInfo.jsp"/>
       <forward name="fail" path="/SaveContainerInfoFail.jsp"/>
+    </action>
+
+    <!-- Export container detail information to a file -->
+    <action path="/MGCPlateHandle"
+            type="edu.harvard.med.hip.flex.action.MGCPlateHandleAction">
+      <forward name="success" path="/SelectProtocol.jsp"/>
     </action>
 
     <!-- The standard administrative actions available with Struts -->
