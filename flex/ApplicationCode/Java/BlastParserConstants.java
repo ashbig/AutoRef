@@ -1,4 +1,6 @@
-/** define all lexical tokens used in parsing */
+/** Store a table of all lexical constants for BlastParser and 
+ *  BlastParserTokenManager 
+ */
 public interface BlastParserConstants {
 
   int EOF = 0;

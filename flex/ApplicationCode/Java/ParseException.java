@@ -1,12 +1,7 @@
-
 /**
  * This exception is thrown when parse errors are encountered.
  * You can explicitly create objects of this exception type by
- * calling the method generateParseException in the generated
- * parser.
- *
- * You can modify this class to customize your error reporting
- * mechanisms so long as you retain the public fields.
+ * calling the method generateParseException.
  */
 public class ParseException extends Exception {
 
@@ -40,8 +35,7 @@ public class ParseException extends Exception {
    * manner makes the exception behave in the normal way - i.e., as
    * documented in the class "Throwable".  The fields "errorToken",
    * "expectedTokenSequences", and "tokenImage" do not contain
-   * relevant information.  The JavaCC generated code does not use
-   * these constructors.
+   * relevant information.  
    */
 
   public ParseException() {

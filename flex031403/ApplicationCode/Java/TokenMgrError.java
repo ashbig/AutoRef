@@ -1,4 +1,4 @@
-
+/** describe a lexical error BlastParserTokenManager generates. */
 public class TokenMgrError extends Error
 {
    /*

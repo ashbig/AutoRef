@@ -1,114 +1,272 @@
+/*
+ * @(#)BlastParser.java	1.00 04/023/01
+ * 
+ * Copyright 2001-2001 Harvard Institute of Proteomics. All Rights Reserved.
+ * 
+ * @author  Tao Wei
+ * @version 1.00
+ *
+ * Usage of the class is very simple. Construct a BlastParser object with 
+ * a blast output result file. Call parseBlast() and then call accessor methods
+ * to obtain information you are interested.
+ */
 
 import java.io.*;
 import java.util.*;
 
 public class BlastParser implements BlastParserConstants {
     /** store query information, such as name and sequence length. */
-    static Hashtable qryInfoHT = new Hashtable();
+    Hashtable qryInfoHT = new Hashtable();
     /** store blast database information, such as path and size. */
-    static Hashtable dbInfoHT  = new Hashtable();
+    Hashtable dbInfoHT  = new Hashtable();
     /** store blast search information, such as program used, matrix etc. */
-    static Hashtable srchInfoHT = new Hashtable();
+     Hashtable srchInfoHT = new Hashtable();
     /** store a set of <code>HomologItem</code> objects
      *  which captures information such as subject sequence name, score, evalue
      *  and <code>Alignment</code> object
      */
-    static ArrayList homologList = new ArrayList();
+     ArrayList homologList = new ArrayList();
     /** specify how many hits to be parsed */
-    static int hits = 1;
+     int hits = 5;
 
     /** Constructor takes two parameters:
-     *  @param in specifies an InputStream instance. 
-     *  @param hits specifies how many hits are parsed. 
+     *  @param InputStream in specifies an InputStream instance. 
+     *  @param int hits specifies how many hits are parsed. Not implemented yet.
      */
     public BlastParser(InputStream in, int hits) {
         this(in);
         this.hits = hits;
     }
 
-    // accessors
-    public static Hashtable getQuryInfo()      { return qryInfoHT;     }
-    public static Hashtable getDBInfo()        { return dbInfoHT;      }
-    public static Hashtable getSearchInfo()    { return srchInfoHT;    }
-    public static ArrayList getHomologList()   { return homologList;   }
-    public static void      setHits(int n)     { hits = n;             }
+    /** Constructor takes a file name which then open the file as a
+     *  FileInputStream instance and construct the parser
+     */
+    public BlastParser(String fname) {
+        this(System.in);
+        FileInputStream fin;
+        try {
+            fin = new FileInputStream(fname);
+            ReInit(fin);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** To access query information which returns a Properties object */
+    public  Hashtable getQuryInfo()      { return qryInfoHT;     }
+
+    /** Return query sequence ID as a String object */
+    public  String getQuerySeqID() { return (String)qryInfoHT.get("qry_name"); }
+
+    /** Return query sequence length as a String object */
+    public  String getQuerySeqLength() { return (String)qryInfoHT.get("qry_length"); }
+
+    /** Return blast search program used */
+    public  String getBlastProgram() {
+        return (String)srchInfoHT.get("program");
+    }
+
+    /** Return matrix used in blast search */
+    public  String getMatrix() {
+        return (String)srchInfoHT.get("matrix");
+    }
+
+    /** Return gap penalties in blast alignment */
+    public  String getGapPenalties() { return (String)srchInfoHT.get("gaps"); }
+
+    /** Return blast database path */
+    public  String getDBPath() { return (String)srchInfoHT.get("dbpath"); }
+
+    /** Return the number of sequence in current blast database */
+    public  String getDBSize() { return (String)srchInfoHT.get("dbsize"); }
+
+    /** Return the total number of residues in current blast database */
+    public  String getDBLetters() { return (String)srchInfoHT.get("dbletters"); }
+
+    /** To access database information which returns a Hashtable object */
+    public  Hashtable getDBInfo()        { return dbInfoHT;      }
+
+    /** To access blast search information again returning a Hashtable object */
+    public  Hashtable getSearchInfo()    { return srchInfoHT;    }
+
+    /** To access parsed homologs found by blast search. See <code>
+     *  HomologItem</code> for its API. 
+     */
+    public  ArrayList getHomologList()   { return homologList;   }
+
+    /** Set the number of homologs to parse. Current implementation parses all
+     *  homologs in the blast result file.
+     */
+    public  void      setHits(int n)     { hits = n;             }
 
     /** HomologItem as an inner class to store information of identified
      *  homologs.
      */
-    static class HomologItem {
+     class HomologItem {
+        /** subID, homolog sequence ID */
         String subID = null;
+        /** subLen, homolog sequence length */
         int subLen = 0;
+        /** alignList, an ArrayList of local Alignment objects */
         ArrayList alignList = new ArrayList();
 
         public void setSubID(String id)           { subID  = id;  }
         public void setSubLen(int len)            { subLen = len; }
         public void addAlignItem(Alignment align) { alignList.add(align); }
 
+        /** Return homolog sequence ID */
         public String getSubID()                  { return subID;  }
+
+        /** Return homolog sequence length */
         public int getSubLen()                    { return subLen; }
+
+        /** Return a local Alignment object at specified index */
         public Alignment getAlignItem(int index)  {
             return (Alignment)alignList.get(index);
         }
+
+        /** Return the number of local Alignment objects */
         public int getSize() { return alignList.size(); }
     }
 
     /** LOCAL alignments found by blast as significant */
-    static class Alignment {
+     class Alignment {
+        /** alignInfo, store information of a local Alignment */
         Properties alignInfo = new Properties();
 
+        /** qryStart and qryEnd are query sequence offsets 
+         *  starting this local alignment */
         int qryStart, qryEnd = 0;
+
+        /** sbjSeq, a region of database sequence participating 
+         *  this local alignment 
+         */
         StringBuffer qrySeq = new StringBuffer();
+
+        /** sbjStart and sbjEnd are database sequence offsets 
+         *  starting this local alignment 
+         */
         int sbjStart, sbjEnd = 0;
+
+        /** sbjSeq, a region of database sequence participating 
+         *  this local alignment 
+         */
         StringBuffer sbjSeq = new StringBuffer();
 
-        public void setScore(String score) {
+        private void setScore(String score) {
             alignInfo.setProperty("score", score);
         }
 
-        public void setEvalue(String evalue) {
+        private void setEvalue(String evalue) {
             alignInfo.setProperty("evalue", evalue);
         }
 
-        public void setIdentity(String ident) {
+        private void setIdentity(String ident) {
             alignInfo.setProperty("identity", ident);
         }
 
-        public void setGap(String gap) {
+        private void setGap(String gap) {
             alignInfo.setProperty("gap", gap);
         }
 
-        public void setStrand(String strand) {
+        private void setStrand(String strand) {
             alignInfo.setProperty("strand", strand);
         }
 
+        /** Return similarity scores of a local alignment */
         public String getScore()    { return alignInfo.getProperty("score");    }
+
+        /** Return E value of a local alignment */
         public String getEvalue()   { return alignInfo.getProperty("evalue");   }
+
+        /** Return identities of residues of a local alignment */
         public String getIdentity() { return alignInfo.getProperty("identity"); }
+
+        /** Return sum of gaps of both aligned strands */
         public String getGap()      { return alignInfo.getProperty("gap");      }
-        public String getStrand()   { return alignInfo.getProperty("strand");   }
+        /** Return relative direction of aligned two strands */
+        private String getStrand()   { return alignInfo.getProperty("strand");   }
 
-        public void setQryStart(int start) { qryStart = start;   }
-        public void setQryEnd(int end)     { qryEnd   = end;     }
-        public void setQrySeq(String seq)  { qrySeq.append(seq); }
+        private void setQryStart(int start) { qryStart = start;   }
+        private void setQryEnd(int end)     { qryEnd   = end;     }
+        private void setQrySeq(String seq)  { qrySeq.append(seq); }
 
-        public void setSbjStart(int start) { sbjStart = start;   }
-        public void setSbjEnd(int end)     { sbjEnd   = end;     }
-        public void setSbjSeq(String seq)  { sbjSeq.append(seq); }
+        private void setSbjStart(int start) { sbjStart = start;   }
+        private void setSbjEnd(int end)     { sbjEnd   = end;     }
+        private void setSbjSeq(String seq)  { sbjSeq.append(seq); }
 
-        public int getQryStart()  { return qryStart; }
-        public int getQryEnd()    { return qryEnd;   }
-        public String getQrySeq() { return qrySeq.toString();   }
+        private int getQryStart()  { return qryStart; }
+        private int getQryEnd()    { return qryEnd;   }
+        private String getQrySeq() { return qrySeq.toString();   }
 
-        public int getSbjStart()  { return sbjStart; }
-        public int getSbjEnd()    { return sbjEnd;   }
-        public String getSbjSeq() { return sbjSeq.toString();   }
+        private int getSbjStart()  { return sbjStart; }
+        private int getSbjEnd()    { return sbjEnd;   }
+        private String getSbjSeq() { return sbjSeq.toString();   }
 
     }
 
     public static void main(String args[]) throws ParseException {
-        BlastParser parser = new BlastParser(System.in, 5);
+        BlastParser parser = new BlastParser(System.in, 10);
         parser.parseBlast();
+        parser.displayParsed();
+    }
+
+    /** Display parsed results */
+    public  void displayParsed() {
+        // print out query info
+        System.out.println("Query sequence name:    " + getQuerySeqID());
+        System.out.println("Query sequence length:  " + getQuerySeqLength());
+        System.out.println();
+
+        // print out search info
+        System.out.println("Blast program:     " + getBlastProgram());
+        System.out.println("Score matrix:      " + getMatrix());
+        System.out.println("Gap penalties:     " + getGapPenalties());
+        System.out.println("Database path:     " + getDBPath());
+        System.out.println("Database size:     " + getDBSize());
+        System.out.println("Database letters:  " + getDBLetters());
+        System.out.println();
+
+        //System.out.println(srchInfoHT.toString());
+
+        // print out how many homologs found
+        System.out.println("TOTAL HOMOLOGS PARSED : " + homologList.size());
+
+        // print out details
+        for (int i=0; i<homologList.size(); i++) {  // loop through all homologs
+            int count = i + 1;
+            System.out.println("Homolog : " + count);
+            System.out.println("------------");
+            HomologItem x = (HomologItem)homologList.get(i);
+            System.out.println("\tHomolog ID:    " + x.getSubID());
+            System.out.println("\tHomolog LEN:   " + x.getSubLen());
+            System.out.println();
+            for (int j=0; j<x.getSize(); j++) { // each homolog has one or more Alignment
+                count = j + 1;
+                System.out.println("\t\tLOCAL ALIGNMENT : " + count);
+                System.out.println("\t\t--------------------");
+                Alignment y = (Alignment)x.getAlignItem(j);
+                System.out.println("\t\tScore:        " + y.getScore());
+                System.out.println("\t\tEvalue:       " + y.getEvalue());
+                System.out.println("\t\tIdentity:     " + y.getIdentity());
+                System.out.println("\t\tGaps:         " + y.getGap());
+                System.out.println("\t\tStrand:       " + y.getStrand());
+
+                System.out.println("\t\tQuery Start:  " + y.getQryStart());
+                System.out.println("\t\tQuery End:    " + y.getQryEnd());
+                System.out.println("\t\tQuery seq:    " + y.getQrySeq());
+
+                System.out.println("\t\tSbjct Start:  " + y.getSbjStart());
+                System.out.println("\t\tSbjct End:    " + y.getSbjEnd());
+                System.out.println("\t\tSbjct seq:    " + y.getSbjSeq());
+
+                System.out.println();
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
                         // END OF PARSER DEF
@@ -118,7 +276,7 @@ public class BlastParser implements BlastParserConstants {
  *  calling any other methods to extract interested information about
  *  the blast search.
  */
-  static final public void parseBlast() throws ParseException {
+  final public void parseBlast() throws ParseException {
     Token qryID = null, qryLen = null;
     Token dbPath = null, dbSize = null, dbLett = null;
     Token program = null, matrix = null, gaps = null;
@@ -279,31 +437,28 @@ public class BlastParser implements BlastParserConstants {
         break;
       case MATRIX:
         matrix = jj_consume_token(MATRIX);
-            System.out.println("Matrix:           " + matrix.image);
+            //System.out.println("Matrix:           " + matrix.image);
             srchInfoHT.put("matrix", matrix.image);
         break;
       case GAP:
         gaps = jj_consume_token(GAP);
-            System.out.println("Gaps:             " + gaps.image);
+            //System.out.println("Gaps:             " + gaps.image);
             srchInfoHT.put("gaps", gaps.image);
         break;
       case DBSIZE:
         dbSize = jj_consume_token(DBSIZE);
-            System.out.println("Database size:    " + dbSize.image);
+            //System.out.println("Database size:    " + dbSize.image);
             srchInfoHT.put("dbsize", dbSize.image);
         break;
       case QRYLENGTH:
         qryLen = jj_consume_token(QRYLENGTH);
-            System.out.println("Query length:     " + qryLen.image);
+            //System.out.println("Query length:     " + qryLen.image);
             qryInfoHT.put("qry_length", qryLen.image);
         break;
       case DBLETTERS:
         dbLett = jj_consume_token(DBLETTERS);
-            System.out.println("Database letters: " + dbLett.image);
+            //System.out.println("Database letters: " + dbLett.image);
             srchInfoHT.put("dbletters", dbLett.image);
-        break;
-      case 0:
-        jj_consume_token(0);
         break;
       default:
         jj_la1[0] = jj_gen;
@@ -311,7 +466,6 @@ public class BlastParser implements BlastParserConstants {
         throw new ParseException();
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 0:
       case PROGRAM:
       case ID:
       case DBPATH:
@@ -340,6 +494,8 @@ public class BlastParser implements BlastParserConstants {
         break label_1;
       }
     }
+    jj_consume_token(0);
+
         // save the last one parsed
                 aAlign.setQryStart(Integer.parseInt((String)qryOffsets.get(0)));
                 aAlign.setQryEnd(Integer.parseInt(
@@ -350,23 +506,26 @@ public class BlastParser implements BlastParserConstants {
                 aAlign.setSbjEnd(Integer.parseInt(
                                  (String)sbjOffsets.get(sbjOffsets.size() - 1)));
                 aAlign.setSbjSeq(subjectSeq.toString());
-
+        /*
         // print out query info
         System.out.println("Query sequence name:    " + qryInfoHT.get("qry_name"));
         System.out.println("Query sequence length:  " + qryInfoHT.get("qry_length"));
         System.out.println();
 
         // print out search info
-        System.out.println("Blast program:  " + (String)srchInfoHT.get("program"));
-        System.out.println("Score matrix:   " + (String)srchInfoHT.get("matrix"));
-        System.out.println("Gap penalties:  " + (String)srchInfoHT.get("gaps"));
-        System.out.println("Database path:  " + (String)srchInfoHT.get("dbpath"));
-        System.out.println("Database size:  " + (String)srchInfoHT.get("dbsize"));
+        System.out.println("Blast program:     " + (String)srchInfoHT.get("program"));
+        System.out.println("Score matrix:      " + (String)srchInfoHT.get("matrix"));
+        System.out.println("Gap penalties:     " + (String)srchInfoHT.get("gaps"));
+        System.out.println("Database path:     " + (String)srchInfoHT.get("dbpath"));
+        System.out.println("Database size:     " + (String)srchInfoHT.get("dbsize") + " sequences");
+        System.out.println("Database letters:  " + (String)srchInfoHT.get("dbletters") + " residues");
         System.out.println();
+        
+        //System.out.println(srchInfoHT.toString());
 
         // print out how many homologs found
         System.out.println("TOTAL HOMOLOGS PARSED : " + homologList.size());
-
+        
         // print out details
         for (int i=0; i<homologList.size(); i++) {  // loop through all homologs
             int count = i + 1;
@@ -378,8 +537,8 @@ public class BlastParser implements BlastParserConstants {
             System.out.println();
             for (int j=0; j<x.getSize(); j++) { // each homolog has one or more Alignment
                 count = j + 1;
-                System.out.println("\t\tLOCAL ALIGNMENT " + count + ":");
-                System.out.println("\t\t------------------");
+                System.out.println("\t\tLOCAL ALIGNMENT : " + count);
+                System.out.println("\t\t--------------------");
                 Alignment y = (Alignment)x.getAlignItem(j);
                 System.out.println("\t\tScore:        " + y.getScore());
                 System.out.println("\t\tEvalue:       " + y.getEvalue());
@@ -394,31 +553,26 @@ public class BlastParser implements BlastParserConstants {
                 System.out.println("\t\tSbjct Start:  " + y.getSbjStart());
                 System.out.println("\t\tSbjct End:    " + y.getSbjEnd());
                 System.out.println("\t\tSbjct seq:    " + y.getSbjSeq());
-
+                
                 System.out.println();
             }
             System.out.println();
         }
         System.out.println();
+        */
+
   }
 
-  static private boolean jj_initialized_once = false;
-  static public BlastParserTokenManager token_source;
-  static ASCII_CharStream jj_input_stream;
-  static public Token token, jj_nt;
-  static private int jj_ntk;
-  static private int jj_gen;
-  static final private int[] jj_la1 = new int[2];
-  static final private int[] jj_la1_0 = {0x1,0x1,};
-  static final private int[] jj_la1_1 = {0x3cb2fff1,0x3cb2fff1,};
+  public BlastParserTokenManager token_source;
+  ASCII_CharStream jj_input_stream;
+  public Token token, jj_nt;
+  private int jj_ntk;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[2];
+  final private int[] jj_la1_0 = {0x0,0x0,};
+  final private int[] jj_la1_1 = {0x3cb2fff1,0x3cb2fff1,};
 
   public BlastParser(java.io.InputStream stream) {
-    if (jj_initialized_once) {
-      System.out.println("\n   ERROR: Second call to the constructor of a static ASCII_CharStream. " +
-                         "You must use ReInit() to reset the parser.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     jj_input_stream = new ASCII_CharStream(stream, 1, 1);
     token_source = new BlastParserTokenManager(jj_input_stream);
     token = new Token();
@@ -427,7 +581,7 @@ public class BlastParser implements BlastParserConstants {
     for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
-  static public void ReInit(java.io.InputStream stream) {
+  public void ReInit(java.io.InputStream stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -437,13 +591,6 @@ public class BlastParser implements BlastParserConstants {
   }
 
   public BlastParser(java.io.Reader stream) {
-    if (jj_initialized_once) {
-      System.out.println("\n   ERROR: Second call to the constructor of a static ASCII_CharStream.  " +
-                       "You must use ReInit() to reset the parser.");
-
-      throw new Error();
-    }
-    jj_initialized_once = true;
     jj_input_stream = new ASCII_CharStream(stream, 1, 1);
     token_source = new BlastParserTokenManager(jj_input_stream);
     token = new Token();
@@ -452,7 +599,7 @@ public class BlastParser implements BlastParserConstants {
     for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
-  static public void ReInit(java.io.Reader stream) {
+  public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -462,12 +609,6 @@ public class BlastParser implements BlastParserConstants {
   }
 
   public BlastParser(BlastParserTokenManager tm) {
-    if (jj_initialized_once) {
-      System.out.println("\n   ERROR: Second call to the constructor of a static ASCII_CharStream.  " +
-                       "You must use ReInit() to reset the parser.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
@@ -483,7 +624,7 @@ public class BlastParser implements BlastParserConstants {
     for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
-  static final private Token jj_consume_token(int kind) throws ParseException {
+  final private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -497,7 +638,7 @@ public class BlastParser implements BlastParserConstants {
     throw generateParseException();
   }
 
-  static final public Token getNextToken() {
+  final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
@@ -505,7 +646,7 @@ public class BlastParser implements BlastParserConstants {
     return token;
   }
 
-  static final public Token getToken(int index) {
+  final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
@@ -514,18 +655,18 @@ public class BlastParser implements BlastParserConstants {
     return t;
   }
 
-  static final private int jj_ntk() {
+  final private int jj_ntk() {
     if ((jj_nt=token.next) == null)
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.Vector jj_expentries = new java.util.Vector();
-  static private int[] jj_expentry;
-  static private int jj_kind = -1;
+  private java.util.Vector jj_expentries = new java.util.Vector();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
 
-  static final public ParseException generateParseException() {
+  final public ParseException generateParseException() {
     jj_expentries.removeAllElements();
     boolean[] la1tokens = new boolean[62];
     for (int i = 0; i < 62; i++) {
@@ -561,10 +702,10 @@ public class BlastParser implements BlastParserConstants {
     return new ParseException(token, exptokseq, tokenImage);
   }
 
-  static final public void enable_tracing() {
+  final public void enable_tracing() {
   }
 
-  static final public void disable_tracing() {
+  final public void disable_tracing() {
   }
 
 }

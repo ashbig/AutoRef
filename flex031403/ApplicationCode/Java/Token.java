@@ -1,13 +1,11 @@
-
 /**
- * Describes the input token stream.
+ * Describes an input token.
  */
 
 public class Token {
 
   /**
-   * An integer that describes the kind of this token.  This numbering
-   * system is determined by Java Compliler Compiler Parser, and a table of these numbers is
+   * An integer that describes the kind of this token.  A table of these numbers is
    * stored in the file BlastParserConstants.java.
    */
   public int kind;
