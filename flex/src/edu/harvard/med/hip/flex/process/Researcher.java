@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.9 2001-06-14 14:57:36 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.10 2001-06-21 10:32:26 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -141,6 +141,15 @@ public class Researcher {
         return Id;
     }
 
+    /**
+     * Gets the reseacher's barcode.
+     *
+     * @return the researcher's barcode.
+     */
+    public String getBarcode() {
+        return this.barcode;
+    }
+    
     /**
      * Return true if the barcode is valid; false otherwise.
      *
