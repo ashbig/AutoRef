@@ -368,7 +368,7 @@
   </tr>
   <tr>
     <td colspan="2"> <p><b> Maximum acceptable number of discrepancies 
-        introdused by ambiquous bases: </b>
+        introduced by ambiquous bases: </b>
 		<input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show </p>
       <p></p>

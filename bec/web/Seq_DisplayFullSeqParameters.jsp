@@ -365,7 +365,7 @@ else if (sets.size() > 0 )
   <tr> 
     <td colspan=2> 
      
-      <p><b>Maximum acceptable number of discrepancies introdused by ambiquous 
+      <p><b>Maximum acceptable number of discrepancies introduced by ambiquous 
         bases:</b>
 		<input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show </p>
