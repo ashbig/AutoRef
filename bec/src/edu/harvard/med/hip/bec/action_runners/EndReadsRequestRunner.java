@@ -42,7 +42,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
  *
  * @author  htaycher
  */
-  public class EndReadsRequestRunner implements Runnable
+  public class EndReadsRequestRunner// implements Runnable
 {
     
     /** Creates a new instance of tester */
@@ -287,7 +287,37 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
             return entry;
         }
     
-    
+     public static void main(String args[])
+    {
+        try
+        {
+          ArrayList master_container_ids = new ArrayList();
+          ArrayList  master_container_labels = new ArrayList();
+           master_container_labels.add("YMG000488");
+           // master_container_labels.add("YMG000489");
+          //  master_container_labels.add("YMG000490");
+          //  master_container_labels.add("YMG000491");
+          //  master_container_labels.add("YMG000492");
+          //  master_container_labels.add("YMG000493");
+          //  master_container_labels.add("YMG000494");
+          //  master_container_labels.add("YMG000495");
+                   
+            master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
+
+
+            int forward_primer_id = 1 ;
+            int reverse_primer_id = -1;
+
+            EndReadsRequestRunner runner = new EndReadsRequestRunner();
+            runner.setContainerIds(master_container_ids );
+            if ( forward_primer_id != -1) runner.setForwardPrimerId( forward_primer_id );
+            if ( reverse_primer_id != -1)runner.setRevercePrimerId(reverse_primer_id);
+            runner.setUser(AccessManager.getInstance().getUser("htaycher123","htaycher"));
+            runner.run();
+
+        }catch(Exception e){}
+        System.exit(0);
+     }
     
      
     
