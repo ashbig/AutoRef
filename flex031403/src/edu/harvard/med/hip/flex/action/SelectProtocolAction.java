@@ -1,6 +1,8 @@
 /*
  * SelectProtocolAction.java
  *
+ * This class gets all the queue items for a selected protocol.
+ *
  * Created on June 12, 2001, 4:10 PM
  */
 
@@ -57,8 +59,8 @@ public class SelectProtocolAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         //remove the attributes from the session.
-        if(request.getSession().getAttribute("queueItems") != null)
-            request.getSession().removeAttribute("queueItems");
+        if(request.getSession().getAttribute("SelectProtocolAction.queueItems") != null)
+            request.getSession().removeAttribute("SelectProtocolAction.queueItems");
         
         ContainerProcessQueue queue = new ContainerProcessQueue();
         try {       
@@ -67,13 +69,10 @@ public class SelectProtocolAction extends FlexAction {
             LinkedList items = queue.getQueueItems(protocol);
             
             if(items.size() > 0) {
-                request.getSession().setAttribute("queueItems", items);
+                request.getSession().setAttribute("SelectProtocolAction.queueItems", items);
             }
 
-            // Get the location from the database.
-            Vector locations = Location.getLocations();
             request.getSession().setAttribute("SelectProtocolAction.protocol", protocol);
-            request.setAttribute("locations", locations);
             
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {

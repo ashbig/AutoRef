@@ -69,7 +69,7 @@ public class CreateProcessPlateAction extends FlexAction {
                 protocol.addElement(p);
             }
             
-            request.setAttribute("protocols", protocol);
+            request.setAttribute("CreateProcessPlateAction.protocols", protocol);
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {
              return (mapping.findForward("error"));

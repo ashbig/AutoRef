@@ -229,7 +229,7 @@
                scope="session"
                validate="true"
                input="/EnterSourcePlate.jsp">
-      <forward  name="success"   path="/GetInput.jsp"/>
+      <forward  name="success"   path="/GetLocation.jsp"/>
     </action> 
  
     <!-- Process the process plate creation (get input) -->
