@@ -14,6 +14,7 @@ import org.apache.regexp.*;
 import  edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.*;
+import edu.harvard.med.hip.utility.*;
 /**
  *
  * @author  htaycher
@@ -24,9 +25,7 @@ public class PhredWrapper
     public static final int            TRIMMING_TYPE_PHRED_ALT = 1;
     public static final int            TRIMMING_TYPE_NOT_TRIMMED = -1;
     
-   //  private static final String PhredExePath = "c:\\bio\\phred\\Phred.exe";
-      private static final String PhredExePath = "d:\\bio_programs\\phredPhrap\\phred.exe";
-      private static final boolean isUnix = false;
+  
       
       public static final String SEQUENCE_DIR_NAME = "sequence_dir";
      public static final String QUALITY_DIR_NAME = "quality_dir";
@@ -38,6 +37,18 @@ public class PhredWrapper
  
      public static final String SEQ_FILE_EXT = ".seq";
      public static final String QUAL_FILE_EXT = ".qual";
+     
+     
+     //  private static final String 
+    
+      private static final boolean isUnix = false; 
+     private   String m_phredFilePath = null;
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+            m_phredFilePath = "d:\\bio_programs\\phred\\phred.exe";
+        else
+            m_phredFilePath = "c:\\bio\\phred\\Phred.exe";
+    }
     //-id 		Read and process files in .
     private String m_IDN = " -id ";
     private String m_input_directoryname = null ;
@@ -60,7 +71,7 @@ public class PhredWrapper
    private String m_ezyme_sequence = "";
     
    
-   private String m_phredFilePath = PhredExePath;
+  
     /** Creates a new instance of PhredWrapper */
     public PhredWrapper(String phredFilePath)
     {
@@ -68,7 +79,7 @@ public class PhredWrapper
     }
      public PhredWrapper()
     {
-     m_phredFilePath=PhredExePath;
+     
     }
     
     //getters & setters
