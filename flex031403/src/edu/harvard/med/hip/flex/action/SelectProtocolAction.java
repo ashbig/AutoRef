@@ -8,8 +8,8 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.LinkedList;
-import java.util.Vector;
+
+import java.util.*;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -63,6 +63,8 @@ public class SelectProtocolAction extends FlexAction {
         String processname = ((PickColonyForm)form).getProcessname();
         int workflowid = ((PickColonyForm)form).getWorkflowid();
         int projectid = ((PickColonyForm)form).getProjectid();
+        String projectname = ((PickColonyForm)form).getProjectname();
+        
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
         
@@ -84,8 +86,35 @@ public class SelectProtocolAction extends FlexAction {
                 queue = new ContainerProcessQueue();
             }
             items = queue.getQueueItems(protocol, project, workflow);
-            storeInSession(request, items, protocol);
             
+            if (Protocol.MGC_DESIGN_CONSTRUCTS.equals(processname))
+            {
+                //get total number of genes in queue
+                
+                request.setAttribute("projectname", projectname);
+               
+                request.setAttribute("sequences_count", new Integer(items.size()));
+                request.setAttribute("full_plates", new Integer( (int)Math.ceil((double)items.size() / 94 )));
+                if (items.size() % 94 != 0)
+                    request.setAttribute("not_full_plates", new Integer( 1));
+                else
+                    request.setAttribute("not_full_plates", new Integer(0));
+                request.setAttribute("processname", processname);
+                request.setAttribute("worlflowname", workflow.getName());
+                
+                return (mapping.findForward("success_mgc_process_full_plates"));
+                //arrange sequences 
+                /*
+                 * now run the oligo plate manager to see if oligos
+                 * need to be ordered
+                 */
+              //  MgcOligoPlateManager om = new MgcOligoPlateManager(project, workflow);
+                
+              //  om.orderOligo();               
+            }
+           
+            storeInSession(request, items, protocol);
+       
             if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {
                 return (mapping.findForward("success_culture"));
             } else if(Protocol.PICK_COLONY.equals(processname)) {
