@@ -201,9 +201,9 @@ public class IsolateRanker
                         case 1:
                         {
                             clonesequence = it.getCloneSequence();
-                            System.out.println("Get clone sequence for it "+it.getId());
+                         //   System.out.println("Get clone sequence for it "+it.getId());
                             processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
-                             System.out.println("processed clone sequence for it "+it.getId());
+                       //      System.out.println("processed clone sequence for it "+it.getId());
                             if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
                             {
                                 it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
