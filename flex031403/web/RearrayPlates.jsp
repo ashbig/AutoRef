@@ -53,13 +53,6 @@
         <td ><input type="text" name="wellsOnPlate" value = "96" align="right"/></td>
     </tr>
 
-    <tr>
-    <td class="prompt">Is full plate required?</td>
-    <td>
-        <html:radio property="isFullPlate" value="true"/>Yes
-        <html:radio property="isFullPlate" value="false"/>No
-    </td>
-</tr>
 <tr>
     <td class="prompt">Put sequences on queue for processing?</td>
         <td >
@@ -67,13 +60,24 @@
             <input type="radio" name="isPutOnQueue" checked value="false">No
         </td>
 </tr>
+    <tr>
+
+    <td class="prompt">Is full plate required?</td>
+    <td>
+        <html:radio property="isFullPlate" value="true"/>Yes
+        <html:radio property="isFullPlate" value="false"/>No
+    </td>
+</tr>
+
 <tr>
-     <td class="prompt">Is controls requered?</td>
+     <td class="prompt">Are controls required?</td>
      <td>
         <html:radio property="isControls" value="true"/>Yes
         <html:radio property="isControls" value="false"/>No
     </td>
 </tr>
+
+
 <tr>
      <td class="prompt">Is sort by saw-tooth patern?</td>
          <td>
@@ -81,6 +85,7 @@
         <html:radio property="isSortBySawToothpatern" value="false"/>No
     </td>
 </tr>
+
     </table>
 
         <b>Choose sequences that you want to group together:</b> 
