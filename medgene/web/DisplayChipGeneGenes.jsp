@@ -39,10 +39,11 @@
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
     <TR> <b>First degree associations</b> <br><br> </TR>
     <TR bgcolor="#cccccc">
-        <TH width="10%">Rank</TH>
-        <TH width="30%">Locus ID</TH>
-        <TH width="30%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
-        <TH width="30%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="7%">Rank</TH>
+        <TH width="26%">Locus ID</TH>
+        <TH width="26%"><A HREF="GeneSymbol.jsp" target="_blank">Gene Symbol</A></TH>
+        <TH width="26%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="15%">Selected Papers</TH>
     </TR>
 
     <logic:iterate id="directChipGene" name="direct_genes"> 
@@ -52,12 +53,23 @@
                 <a href="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="directChipGene" property="locus_id"/>" target="_blank">
                 <bean:write name="directChipGene" property="locus_id"/></a>
             </TD>
+
+            <logic:equal name="directChipGene" property="gene_symbol" value="null">
+            <TD align="center"> - </TD>            
+            </logic:equal>
+            <logic:notEqual name="directChipGene" property="gene_symbol" value="null">
             <TD align="center">
                 <a href="DisplayLinks.do?geneSymbol=<bean:write name="directChipGene" property="gene_symbol"/>" target="_blank"> 
                 <bean:write name="directChipGene" property="gene_symbol"/></a>               
-            </TD>
+            </TD>           
+            </logic:notEqual>
+
             <TD align="center">
                 <bean:write name="directChipGene" property="score"/>
+            </TD>
+            <TD align="center">
+                <A HREF="DisplayPaperLinks_GeneGene.do?source_gene_index=<bean:write name="gene_symbol"/>&target_gene_locusid=<bean:write name="directChipGene" property="locus_id"/>" target="_blank" >
+                Link</A>
             </TD>
         </tr>
     </logic:iterate> 
@@ -83,10 +95,15 @@
                 <a href="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="indirectChipGene" property="locus_id"/>" target="_blank">
                 <bean:write name="indirectChipGene" property="locus_id"/></a>
             </TD>
+            <logic:equal name="indirectChipGene" property="gene_symbol" value="null">
+            <TD align="center"> - </TD>            
+            </logic:equal>
+            <logic:notEqual name="indirectChipGene" property="gene_symbol" value="null">
             <TD align="center">
                 <a href="DisplayLinks.do?geneSymbol=<bean:write name="indirectChipGene" property="gene_symbol"/>" target="_blank">
                 <bean:write name="indirectChipGene" property="gene_symbol"/></a>
             </TD>
+            </logic:notEqual>
             <TD align="center">
                 <bean:write name="indirectChipGene" property="score"/>
             </TD>
@@ -124,7 +141,7 @@
             </logic:equal>
             <logic:notEqual name="newChipGene" property="gene_symbol" value="null">
             <TD align="center"> <a href="DisplayLinks.do?geneSymbol=<bean:write name="newChipGene" property="gene_symbol"/>" target="_blank">
-                <bean:write name="newChipGene" property="gene_symbol"/></a> </TD>
+                <bean:write name="newChipGene" property="gene_symbol"/></a> &nbsp; </TD>
             </logic:notEqual>
 
             <TD align="center"> - <TD>
