@@ -12,7 +12,11 @@ package edu.harvard.med.hip.utility;
  */
 public class ApplicationHostDeclaration
 {
-    
-    public static final boolean   IS_BIGHEAD = true;
-    
+    /*the only constant defines the computer 
+where application is currently running 
+allowing first shift between debug/server mode
+     */
+    public static final boolean   IS_BIGHEAD = false;
+    public static final boolean   IS_BIGHEAD_FOR_EXPRESSION_EVALUATION = false;
+    //ApplicationHostDeclaration.IS_BIGHEAD
 }
