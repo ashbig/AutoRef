@@ -65,7 +65,9 @@ public class PhredResult
         Read read = new Read();
      
         read.setType(prfn.getReadType()) ;
-        read.setTraceFileName( qfile.substring(1, qfile.indexOf('.')) + "abi") ;
+        // file name hase format ffffff.ab1(scf).qual  -> ffffff.ab1(scf)
+        String fname= Algorithms.replaceString(qfile,".qual","");
+        read.setTraceFileName(fname) ;
         //read.setMachine(prfn.get) ;
         //read.setCapilarity(String v)  ;
         read.setTrimStart(m_trimmingStart)  ;
@@ -189,12 +191,13 @@ public class PhredResult
    public static void main(String args[])
  { 
      PhredResult result = new PhredResult();
+     Read r = null;
     try
       {
-       String ql="C:\\bio\\phred\\out\\205169\\1321\\quality_dir\\107980_C10_205169_1321_F00.ab1.qual";
-       String sf = "C:\\bio\\phred\\out\\205169\\1321\\sequence_dir\\107980_C10_205169_1321_F00.ab1.seq";
+       String ql="C:\\bio\\plate_analysis\\clone_samples\\12894\\43935\\quality_dir\\7170_F12_1003_110994_R1.ab1.qual";
+       String sf = "C:\\bio\\plate_analysis\\clone_samples\\12894\\43935\\sequence_dir\\7170_F12_1003_110994_R1.ab1.seq";
        
-       result.parsePhredOutput(ql,sf);
+       r=result.parsePhredOutputIntoRead(ql,sf);
        
       }
       catch (Exception e)
