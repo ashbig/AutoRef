@@ -72,6 +72,9 @@ public class Constants {
     // key used to find the list of rejected seqeunces
     public static final String REJECTED_SEQUENCE_LIST_KEY = "REJECTED_SEQUENCE_LIST";
     
+    // key used to find the page number
+    public static final String PAGE_KEY="PAGE";
+    
     // key to use to find the number of pending request in the queue
     public static final String PENDING_SEQ_NUM_KEY = "PENDING_SEQ_NUM";
     
