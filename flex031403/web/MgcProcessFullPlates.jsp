@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
+<%@ page import="java.util.*" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -42,25 +43,56 @@
     <td class="prompt">Number of full plates:</td>
     <td><bean:write name="full_plates" /></td>
     </tr>
+</table>
+<% 
+ArrayList plates = (ArrayList)request.getAttribute("platesInfo") ;
+if (plates.size() > 0)
+{      
+ 
+ %>
+<h3>Plates Information:</h3>
 
-<logic:present name="wells_on_not_full_plate">
+<table  cellpadding=0 cellspacing=2 border=1>
+    <tr class="headerRow">
+        <TH>Plate Number</TH>
+        <TH>Sequences</TH>
+        <TH>Marker</TH>
+    </TR>
+<% 
+int plate_number = 1;
+for (int plate_count = 0 ; plate_count < plates.size();      )
+{
+%>
 <tr>
-    <td class="prompt">Number of clones on not full plate:</td>
-    <td><bean:write name="wells_on_not_full_plate" /></td>
-</tr>
-<tr>   
-    <td class="prompt">Is full plate required?</td>
-    <td><html:radio property="isFullPlate" value="true"/>Yes
-        <html:radio property="isFullPlate" value="false"/>No
+        <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+            <TD> <%= plate_number %>  </TD>
+            <TD> <%= plates.get(plate_count)     %> </TD>
+            <TD> <%= plates.get(plate_count + 1) %>    </TD>
+          </flex:row>
+          </tr>
+  
+<% 
+plate_count += 2;
+ plate_number++;
+}
+%>
+</TABLE>
+
+<table>
+ <td class="prompt">Is full plate required?</td>
+    <td>
+         
+         <html:radio property="isFullPlate" value="false"/>Yes
+       <html:radio property="isFullPlate" value="true"/>No
     </td>
 </tr> 
-</logic:present>
 </table>
+
 
 <p>
     <html:submit property="submit" value="Submit"/>
    
-
+<%}%>
 </html:form>
 
 </body>
