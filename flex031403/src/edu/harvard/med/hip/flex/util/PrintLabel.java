@@ -32,7 +32,7 @@ public class PrintLabel {
        public PrintLabel() {
        }
 
-       public String execute(String label) {
+       public static String execute(String label) {
            /** 
             * the status message that going to return
             **/
@@ -106,8 +106,8 @@ public class PrintLabel {
       * Testing
       **/
      public static void main(String[] args) {
-            PrintLabel printlabel = new PrintLabel();
-            String status = printlabel.execute("Pr0000001-8");
+          
+            String status = PrintLabel.execute("Pr0000001-8");
             System.out.println("Print Status: " + status);
      }
 } 
