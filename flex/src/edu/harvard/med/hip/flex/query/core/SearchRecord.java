@@ -111,4 +111,28 @@ public class SearchRecord {
         DatabaseTransaction.executeUpdate(stmt);
         DatabaseTransaction.closeStatement(stmt);
     }
+    
+    public static void main(String args[]) {
+        SearchRecord sr = new SearchRecord("Test1", SearchRecord.GI, SearchRecord.INPROCESS, "dzuo");
+        System.out.println("searchName: "+sr.getSearchName());
+        System.out.println("searchType: "+sr.getSearchType());
+        System.out.println("searchStatus: "+sr.getSearchStatus());
+        System.out.println("username: "+sr.getUsername());
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            sr.setSearchid(1);
+            sr.persist(conn);
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.rollback(conn);
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+            System.exit(0);
+        }
+    }
 }
