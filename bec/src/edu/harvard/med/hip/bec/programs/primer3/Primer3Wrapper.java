@@ -15,6 +15,7 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.programs.*;
 import edu.harvard.med.hip.bec.file.*;
 import java.sql.*;
+import edu.harvard.med.hip.utility.*;
 /**
  *
  * @author  htaycher
@@ -23,8 +24,7 @@ public class Primer3Wrapper
 {
     
     public static final String NEW_LINE = "\n";
-    private static final String PRIMER3_EXE =  "c://blast//primer3.exe";
-    
+  
     //in parameters
     
     private ArrayList           m_sequences = null;
@@ -35,6 +35,14 @@ public class Primer3Wrapper
     private String              m_file_output = "/tmp/primer3output.txt";
     private String              m_file_error = "/tmp/primer3err.txt";
     private ArrayList           m_failed_sequences = null;
+    
+     private   String m_PRIMER3_EXE = null;
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+            m_PRIMER3_EXE = "d:\\bio_programs\\primer3\\primer3.exe";
+        else
+            m_PRIMER3_EXE =  "c://blast//primer3.exe";
+    }
     /** Creates a new instance of Primer3Caller */
     public Primer3Wrapper(Primer3Spec spec, ArrayList seq_info)
     {
@@ -251,7 +259,7 @@ public class Primer3Wrapper
      */
     private boolean run(String input, String output)
     {
-        String cmd =  PRIMER3_EXE;
+        String cmd =  m_PRIMER3_EXE;
          // String cmd = "/kotel/data/blast/bl2seq ";
          InputStream fis = null;
           OutputStream fos = null;

@@ -21,6 +21,7 @@ import java.util.*;
 import java.sql.Date;
 import java.io.*;
 import java.math.BigDecimal;
+import edu.harvard.med.hip.utility.*;
 /**
  *
  * @author  htaycher
@@ -28,8 +29,22 @@ import java.math.BigDecimal;
 public class PolymorphismDetector
 {
     //store input & output blast files
-    private static final String INPUT = "/tmp/";
-    private static final String OUTPUT = "/blastoutput/";
+    private  String INPUT = null;
+   // private static final String OUTPUT = "/blastoutput/";
+    private  String OUTPUT = null;
+  
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+        {
+            INPUT = "d:\\tmp\\";
+           OUTPUT = "d:\\output\\blastoutput\\";
+        }
+        else
+        {
+            INPUT = "/tmp/";
+           OUTPUT = "/output/blastoutput/";
+        }
+    }
     
     //submition data
     private AnalyzedScoredSequence m_sequence = null;

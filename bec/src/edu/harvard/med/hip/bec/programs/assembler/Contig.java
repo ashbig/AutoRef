@@ -13,13 +13,21 @@ import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.utility.*;
 /**
  *
  * @author  htaycher
  */
 public class Contig
 {
-    private static final String OUTPUT_DIR = "/output/tmp_assembly/";
+    private   String m_needle_output_path = null;
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+            m_needle_output_path = "d:\\output\\tmp_assembly\\";
+        else
+            m_needle_output_path = "/tmp_assembly/";
+    }
+    
     private String              m_sequence = null;
     private String              m_scores = null;
     private String              m_name = null;
@@ -57,7 +65,7 @@ public class Contig
         nw.setRefSeq(refsequence.getText());
         nw.setGapOpen(20);
         nw.setGapExtend(0.05);
-        nw.setOutputFileDir(OUTPUT_DIR);
+        nw.setOutputFileDir(m_needle_output_path);
         NeedleResult res_needle =  nw.runNeedle();
         
         //parse needle output
