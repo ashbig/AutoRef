@@ -47,7 +47,7 @@ public class ProcessPlateManager implements TaskManager {
             Iterator iter = containers.iterator();
             while(iter.hasNext()) {
                 Container newContainer = (Container)iter.next();
-                newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));
+                newItems.add(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));
             }
             queue.addQueueItems(newItems, conn);
         }        
