@@ -366,7 +366,6 @@ public class Seq_GetItemAction extends ResearcherAction
               //  case Constants.CLONE_SEQUENCE_DEFINITION_INT :
                 case   Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT :
                 {
-                   // System.out.println("L");
                     if ( id == -1)//display subset of discrepancies
                     {
                         ArrayList discrepancies = new ArrayList();
