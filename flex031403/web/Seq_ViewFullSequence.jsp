@@ -3,6 +3,9 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page import="edu.harvard.med.hip.flex.Constants"%>
+<%@ page import="edu.harvard.med.hip.flex.seqprocess.core.sequence.*" %>
+<%@ page import="java.util.*" %>
 
 <html>
 <head>
@@ -56,7 +59,7 @@
         </TD>
     </TR>
     <TR>
-<% if fl.getAllMutations() != null && fl.getAllMutations().size !=0)
+<% if ( fl.getAllMutations() != null && fl.getAllMutations().size() !=0)
 {%>
     <TD class="label">Mutations:</td>
         <table border='1'>
