@@ -39,10 +39,10 @@ import edu.harvard.med.hip.flex.util.*;
  * @author  dzuo
  * @version
  */
-public class GetResearcherAction extends ResearcherAction{        
+public class GetResearcherAction extends ResearcherAction{
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
-    public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
-//    public final static String BARCODEFILE = "/tmp/barcode.txt";
+    //    public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
+    public final static String BARCODEFILE = "/tmp/barcode.txt";
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -136,7 +136,7 @@ public class GetResearcherAction extends ResearcherAction{
             //Print the barcode to the file.
             if(writeBarcode == 1) {
                 PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(BARCODEFILE)));
-
+                
                 for(int i=0; i<oldContainers.size(); i++) {
                     Container oldContainer = (Container)oldContainers.elementAt(i);
                     pr.println(oldContainer.getLabel());
@@ -145,10 +145,24 @@ public class GetResearcherAction extends ResearcherAction{
                 for(int i=0; i<newContainers.size(); i++) {
                     Container newContainer = (Container)newContainers.elementAt(i);
                     pr.println(newContainer.getLabel());
-                }   
+                }
                 
                 pr.close();
                 request.setAttribute("writeBarcode", new Integer(1));
+            }
+            
+            if(Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname())) {
+                MgcContainer mgcContainer = (MgcContainer)MgcContainer.findMGCContainerFromCulture((Container)oldContainers.elementAt(0));
+                if(mgcContainer == null) {
+                    request.setAttribute("workflowid", new Integer(workflowid));
+                    request.setAttribute("projectid", new Integer(projectid));
+                    DatabaseTransaction.rollback(conn);
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.mgc.notfound"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+                mgcContainer.updateGlycerolContainer(((Container)newContainers.elementAt(0)).getId(), conn);
             }
             
             // Commit the changes to the database.

@@ -31,6 +31,7 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.workflow.*;
+import edu.harvard.med.hip.flex.Constants;
 
 /**
  *
@@ -89,6 +90,9 @@ public class SelectProtocolAction extends FlexAction {
                 return (mapping.findForward("success_culture"));
             } else if(Protocol.PICK_COLONY.equals(processname)) {
                 return (mapping.findForward("success_pick_colony"));
+            } else if(Protocol.ENTER_MGC_CULTURE_RESULTS.equals(processname)) {
+                request.setAttribute(Constants.PROTOCOL_NAME_KEY, processname);                
+                return (mapping.findForward("success_enter_result"));
             } else {
                 return (mapping.findForward("success"));
             }
@@ -102,8 +106,8 @@ public class SelectProtocolAction extends FlexAction {
         //remove the attributes from the session.
         if(request.getSession().getAttribute("SelectProtocolAction.queueItems") != null)
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
-
-        request.getSession().removeAttribute("SelectProtocolAction.protocol");  
+        
+        request.getSession().removeAttribute("SelectProtocolAction.protocol");
         
         if(items.size() > 0) {
             request.getSession().setAttribute("SelectProtocolAction.queueItems", items);
