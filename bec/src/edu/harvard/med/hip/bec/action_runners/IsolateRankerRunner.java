@@ -76,8 +76,8 @@ public class IsolateRankerRunner implements Runnable
                     // fix for multipal pairs
                     Oligo[] oligos = Container.findEndReadsOligos(container_id);
                      requested_plates += container_id;
-                    ArrayList constructs = Construct.getConstructsFromPlate(container_id);
-                      CloningStrategy container_cloning_strategy = Container.getCloningStrategy(container_id);
+                    ArrayList constructs = getConstructs(container_id);
+                     CloningStrategy container_cloning_strategy = Container.getCloningStrategy(container_id);
                     
                      int linker3_length = 0;   int linker5_length = 0;
                       if (container_cloning_strategy != null)
@@ -181,4 +181,21 @@ public class IsolateRankerRunner implements Runnable
 
     }
 
+    
+     private ArrayList getConstructs(int container_id) throws BecDatabaseException
+        {
+            ArrayList constructs = new ArrayList();
+             int[] sequence_analysis_status = {
+                BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,
+                BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED ,
+                 };
+            String clone_sequence_analysis_status = Algorithms.convertArrayToString(sequence_analysis_status, ",");
+            int[] sequence_type = {BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED };
+            String clone_sequence_type = Algorithms.convertArrayToString(sequence_type, ",");
+         
+            constructs = Construct.getConstructsFromPlate(container_id,clone_sequence_analysis_status,clone_sequence_type,1);
+            return constructs;
+        }
 }

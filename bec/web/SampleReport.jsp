@@ -13,7 +13,8 @@
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
-
+<%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
+<%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
 <html>
 
 <body>
@@ -43,8 +44,8 @@
 </div>
 <p></p>
 <% Sample sample = (Sample)request.getAttribute("sample") ;
-	ArrayList reads = sample.getIsolateTrackingEngine().getEndReads();
-	
+	ArrayList end_read = (ArrayList)request.getAttribute("end_read");
+	ArrayList clone_sequences = (ArrayList)request.getAttribute("clone_sequences");
 	%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
@@ -76,59 +77,98 @@
     <td>&nbsp;</td>
     <td>&nbsp; </td>
   </tr>
-  <tr> 
-    <td colspan="2"><strong>Discrepancy Report:</strong>
-<table align="center" border='1'>
-<tr><td>Type</td><TD>Number</td><TD>Quality</td></tr></TR>
-	<%= request.getAttribute("discrepancy_report") %></table> </td>
-  </tr>
+  
   <tr> 
     <td colspan="2"><p><strong>End Reads:</strong></p>
-      <table width="74%" border="0" align="center" cellpadding="2" cellspacing="2">
-	  <%Read read   = null;
-        for (int read_count = 0; read_count < reads.size(); read_count++)
+      <table width="90%" border="1" align="center" cellpadding="2" cellspacing="2">
+	 <th>Read Type </th>
+        <th>Read Id </th>
+        <th>Alignment </th>
+        <th>Discrepancy Report </th>
+        <%
+
+        UIRead read   = null;
+        for (int read_count = 0; read_count < end_read.size(); read_count++)
 	  {
-	  		 read  = (Read)reads.get(read_count);
+	  		 read  = (UIRead)end_read.get(read_count);
 			%>
         <tr>
-          <td width="37%"><%= read.getTypeAsString() %></td>
-          <td width="33%">
+          <td width="20%"><%= read.getTypeAsString() %></td>
+          <td width="15%">
 		 <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READ_REPORT_INT%>&amp;ID=<%= read.getId()%>','<%= read.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 		 <%= read.getId() %>
 		 </a></td>
-          <td width="30%">
+          <td >
+<% if (read.isAlignmentExists())
+{%>
  <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= read.getSequenceId()%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<%}
+else
+ {%>Not available<%}%>
 		 </td>
         
 <td width="30%">
-		
+<% if (read.isDiscrepancies())
+{%>		
 <input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
- 
+<%}
+else {%>No discrepancies<%}%> 
 
 </td>
         </tr>
        <%}%>
       </table>
-       <table width="74%" border="0" align="center" cellpadding="2" cellspacing="2">
-	  <%CloneSequence clonesequence = (CloneSequence)sample.getIsolateTrackingEngine().getCloneSequence();
-	  if ( clonesequence != null)
-        {%>
+</td></tr>
+<% if (request.getAttribute("discrepancy_report_for_endread") != null)
+{%>
+<tr> 
+    <td colspan="2"><strong>Discrepancy Report based on End Reads Analysis:</strong>
+<table align="center" border='1'>
+<tr><td>Type</td><TD>Number</td><TD>Quality</td></tr></TR>
+	<%= request.getAttribute("discrepancy_report_for_endread") %></table>
+ </td> </tr>
+<%}%>
+ <tr>     <td colspan="2">&nbsp;</td></tr>
+<% if ( clone_sequences != null && clone_sequences.size()>0)
+{%>
+<tr>
+    <td colspan="2"><p><strong>Clone Sequences:</strong></p>
+
+       <table width="90%" border="1" align="center" cellpadding="2" cellspacing="2">
+        <th>Sequence Id </th>
+        <th>Type </th>
+        <th>Status </th>
+        <th>Alignment </th>
+        <th>Discrepancy Report </th>
+	  <%UISequence clonesequence = null;
+          for (int seq_count =0; seq_count < clone_sequences.size(); seq_count ++)
+          {
+            clonesequence = (UISequence) clone_sequences.get(seq_count);
+        %>
         <tr>
           <td width="17%"><%= clonesequence.getId() %></td>
-          <td width="33%">
-		 &nbsp;
-          <td width="30%">
- <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= clonesequence.getId() %>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
-		 </td>
+         <td width="17%"><%= clonesequence.getCloneSequenceTypeAsString() %></td>
+         <td width="17%"><%= clonesequence.getAnalysisStatusAsString() %></td>
+          <td>
+<% if (clonesequence.isAlignmentExists())
+{%>		
+<input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= clonesequence.getId() %>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<%}
+else
+ {%>Not available<%}%> 
+ </td>
 <td >
-		
+<% if (clonesequence.isDiscrepancies())
+{%>		
 <input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clonesequence.getId()%>','<%= clonesequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
- 
+<%}
+else
+ {%>No Discrepancies<%}%>  
 
 </td>
         </tr>
 
-       <%}%>
+       <%}}%>
       </table>
       <p><strong></strong></p></td>
   </tr>
