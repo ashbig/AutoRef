@@ -60,7 +60,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
      
     public void setInputDirectory(String inputdir)
     {
-        if (ApplicationHostDeclaration.IS_BIGHEAD) m_inputdir = INPUT_DIR;
+        if (ApplicationHostDeclaration.IS_BIGHEAD && m_process_name == Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER) m_inputdir = INPUT_DIR;
         else         m_inputdir = inputdir;
     }
     public void setOutputDirectory(String outputdir)
@@ -209,7 +209,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
         }
         catch(Exception e)
         {
-            throw new BecDatabaseException ("Cannot process files in input directory");
+            throw new BecDatabaseException ("Cannot process files in input directory "+e.getMessage());
         }
          
         
