@@ -39,7 +39,7 @@ public class MgcRequestImporter
     public static final String DEFAULT = "NA";
 
     public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
-    //public static final String BLASTABLE_DATABASE_NAME = "E:\\tmp\\MGC\\genes";    
+ //   public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";    
     //public static final String BLASTABLE_DATABASE_NAME = "e:\\Users\\HIP\\HTaycher\\MGC\\genes";
 
     private Project             m_Project = null;
@@ -49,7 +49,7 @@ public class MgcRequestImporter
     private int                 m_SuccessCount = 0;
     private int                 m_FailCount = 0;
     private int                 m_TotalCountRequests = 0;
-    private double              m_percent_indentity = 0.95;
+    private double              m_percent_indentity = 0.90;
     private int                 m_cdslengthLimit = 70;
     private boolean             m_isPutOnQueue = true;
     
@@ -93,19 +93,19 @@ public class MgcRequestImporter
         ArrayList  sequenceNotFound = new ArrayList();
         boolean prev_step = true;
         //parse file and fill list of GI;
-        // System.out.println("status " + prev_step +" start to read file");
+         System.out.println("status " + prev_step +" start to read file");
         prev_step =  parseRequestFile( requestInput  , requestGI) ;
-        // System.out.println("status " + prev_step +" finished to read file");
+         System.out.println("status " + prev_step +" finished to read file");
         //search db for the sequences of MgcClones;
         //add matching sequences to request GI numbers;
         ArrayList notMatchedGI = new ArrayList();
         if (prev_step ) prev_step = matchGINumbersToMgcClones(requestGI, sequencesMatchedByGI, notMatchedGI);
         //get sequence for not matching GI
-       // System.out.println("status " + prev_step +" matched GI");
+       System.out.println("status " + prev_step +" matched GI");
         Hashtable sequencesToBlat = new Hashtable();
         if (prev_step) prev_step = readSequences(notMatchedGI, sequencesToBlat, sequenceNotFound) ;
         //blast sequences for not matching GI;
-       // System.out.println("status " + prev_step + " get sequences");
+        System.out.println("status " + prev_step + " get sequences");
         if (prev_step) prev_step = blastSequences(sequencesToBlat, sequencesMatchedByBlast,
                                                     sequencesNotMatchedByBlast,  errorsOnBlastGI);
         //save request to db
@@ -132,7 +132,7 @@ public class MgcRequestImporter
 
             }catch(Exception e)
             {
-                //System.out.println(e);
+                System.out.println(e);
             }
         }
         //somthing went wrong notify user and myself
@@ -254,7 +254,7 @@ public class MgcRequestImporter
     {
         BufferedReader in = new BufferedReader(new InputStreamReader(requestInput));
         String line = null;
-        
+        String gi = null;
         try
         {
             while((line = in.readLine()) != null)
@@ -262,7 +262,10 @@ public class MgcRequestImporter
                 StringTokenizer st = new StringTokenizer(line, DILIM);
                 while(st.hasMoreTokens())
                 {
-                    gi_numbers.add( st.nextToken().trim() );
+                    gi = st.nextToken().trim();
+                    //eliminate duplicates
+                    if (! gi_numbers.contains(gi))
+                        gi_numbers.add( gi );
                 }
             }
             requestInput.close();
@@ -298,12 +301,7 @@ public class MgcRequestImporter
     {
         
         ArrayList temp = new ArrayList();
-        //htaycher: handle duplicates of GI in the request
-        for (int count = 0; count < requestGI.size(); count++)
-        {
-            if ( !temp.contains( requestGI.get(count) ) )
-                temp.add(requestGI.get(count));
-        }
+    
         
         String sql = "select n.namevalue as gi, n.sequenceid as sequence_id "+
         "from  mgcclone mc , name n \n" +
@@ -326,7 +324,6 @@ public class MgcRequestImporter
                     FlexSequence fc = new FlexSequence( current_seq_id, FlexSequence.GOOD, null, null, null, 0, 0, 0, 0, null, null, null);
                     m_Request.addSequence(fc);
                     sequencesMatchedByGI.add(new Integer(current_gi)  );
-                    temp.remove( temp.indexOf( Integer.toString(current_gi) ) );
                 }
             }
             
@@ -338,8 +335,13 @@ public class MgcRequestImporter
         {
             DatabaseTransaction.closeResultSet(crs);
         }
-        not_matching_gi_numbers.addAll(temp);
         
+        //create array not matched gi
+        for (int count = 0; count < requestGI.size(); count++)
+        {
+            if (! sequencesMatchedByGI.contains(requestGI.get(count)) )
+                    not_matching_gi_numbers.add(requestGI.get(count));
+        }
         return true;
     }
     
@@ -380,6 +382,14 @@ public class MgcRequestImporter
                     if (((String)seqData.get("species")).equals("Homo sapiens"))
                     {
                         fs = ms.createFlexSequence( seqData,(GenbankSequence) genBankSeq.get(0));
+                         if (fs == null)//can not create sequence
+                         {
+                            sequenceNotFound.add(current_gi +"(Reason not known)");
+                         }  
+                         else
+                         {
+                             sequences.put( current_gi, fs );
+                         }
                         /** 
                              * The sequence doesn't have to be MGC sequence (i.e. start with "BC")
                              * because we need to get the sequence to blast against MGC sequence db.
@@ -395,25 +405,22 @@ public class MgcRequestImporter
                         }
                        */
                     }
-                    else
+                    else 
                     {
                         sequenceNotFound.add(current_gi+ "(Not human)");
-                    }
-                    if (fs == null)//can not create sequence
-                    {
-                        m_messages.add("Can not find sequence for MGC : " + current_gi);
                         continue;
                     }
-                    sequences.put( current_gi, fs );
+                                  
                     current_gi = null;
                 }
                 
             }catch(Exception e)
             {
                 m_messages.add("Can not find sequence for GI : " + current_gi);
-                sequenceNotFound.add(current_gi+ "(Exact reason not known: more likely not human)\n");
+                sequenceNotFound.add(current_gi+ "(Exact reason not known)\n");
             }
         }
+        
         return true;
     }
     
@@ -475,47 +482,54 @@ public class MgcRequestImporter
         Vector ms = new Vector();
         
         ms.add( "Request Id: " + m_Request.getId() + "\n");
-        
-        ms.add( "\n\nGI numbers from request: \n");
+       
+        ms.add( "\n\nGI numbers from request: "+ requestGI.size() + "\n");
         for (int count = 0; count< requestGI.size(); count++)
         {
+          
             ms.add( requestGI.get(count) + "\t");
             if ( (count + 1) % 5 == 0 ) ms.add("\n");
         }
         
-        ms.add("\n\nSequences matched to Mgc clones by GI number: \n");
+        ms.add("\n\nSequences matched to Mgc clones by GI number: "+seqMatchedByGI.size()+"\n");
+      
         for (int count = 0; count< seqMatchedByGI.size(); count++)
         {
             ms.add(seqMatchedByGI.get(count) + "\t");
             if ( (count + 1) % 5 == 0 ) ms.add("\n");
         }
-        ms.add( "\n\nSequences matched to Mgc clones by blast: \n");
+        ms.add( "\n\nSequences matched to Mgc clones by blast:"+sequencesMatchedByBlast.size()+" \n");
         for (int count = 0; count< sequencesMatchedByBlast.size(); count++)
         {
+               //System.out.println( sequencesMatchedByBlast.get(count) + "\t");
             ms.add( sequencesMatchedByBlast.get(count) + "\t");
             if ( (count + 1) % 5 == 0 ) ms.add("\n");
         }
-        ms.add( "\n\nSequences not matched to Mgc clones: \n");
+        ms.add( "\n\nSequences not matched to Mgc clones: "+sequencesNotMatchedByBlast.size()+"\n");
+
         for (int count = 0; count< sequencesNotMatchedByBlast.size(); count++)
         {
+           //  System.out.println(sequencesNotMatchedByBlast.get(count) + "\t");
             ms.add( sequencesNotMatchedByBlast.get(count) + "\t");
             if ( (count + 1) % 5 == 0 ) ms.add("\n");
         }
         
-        ms.add( "\n\nGI that does not have sequences: \n");
+        ms.add( "\n\nGI that does not have sequences: "+sequenceNotFound.size()+"\n");
         for (int count = 0; count< sequenceNotFound.size(); count++)
         {
             ms.add( sequenceNotFound.get(count) + "\t");
             if ( (count + 1) % 5 == 0 ) ms.add("\n");
         }
-        ms.add( "\n\nSequences failed on blast: \n");
+        ms.add( "\n\nSequences failed on blast: "+errorsOnBlastGI.size()+"\n");
+     //   System.out.println(errorsOnBlastGI.size());
         for (int count = 0; count< errorsOnBlastGI.size(); count++)
         {
+          //  System.out.println(errorsOnBlastGI.get(count) );
             ms.add( errorsOnBlastGI.get(count) + "\t");
             if ( (count + 1) % 5 == 0 ) ms.add("\n");
         }
         
-        ms.add( "\n\nContainers for request: \n");
+        ms.add( "\n\nContainers for request: "+contNames.size()+"\n");
         for (int count = 0; count< contNames.size(); count++)
         {
             ms.add( contNames.get(count) + "\t");
@@ -613,8 +627,8 @@ public class MgcRequestImporter
     {
         
         
-       /*
-        String file = "C:\\GI.txt";
+       
+        String file = "C:\\lisa_old.txt";
         InputStream input;
         
         try
@@ -637,6 +651,7 @@ public class MgcRequestImporter
             MgcRequestImporter importer = new MgcRequestImporter(new Project(5),new Workflow(7),"htaycher");
             importer.setPercentIndentity(95);
             importer.setCdslengthLimit(70);
+            importer.setIsPutOnQueue(false);
             importer.performImport(input,conn) ;
         }
         
@@ -645,7 +660,7 @@ public class MgcRequestImporter
         finally
         { DatabaseTransaction.closeConnection(conn); }
         
-        */
+        /*
         
         GenbankGeneFinder gb = new GenbankGeneFinder();
         Vector genBankSeq = new Vector();
@@ -676,7 +691,7 @@ public class MgcRequestImporter
              
             }catch(Exception e)
             {}
-        
+        */
        
         System.exit(0);
     }
