@@ -9,7 +9,7 @@ package edu.harvard.med.hip.bec.action;
 import java.util.*;
 import java.text.*;
 import java.sql.*;
-import java.io.IOException;
+import java.io.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -261,7 +261,27 @@ public class SelectProcessAction extends ResearcherAction
                         case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
                         {title="order Internal Primers";break; }
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
-                        {title="assemble Clone Sequences";break; }
+                        {
+                            title="assemble Clone Sequences";
+                            /*
+                            ArrayList vectors = BioVector.getAllVectors();
+                            if ( vectors != null)
+                            {
+                                BioVector vector = null;
+                                additional_jsp.append("<tr><td colspan=2 bgColor='#1145A6'> <font color='#FFFFFF'><strong>Select vectors to trim</font></td></tr><tr><td colspan=2 >");
+                                for (int count = 0; count < vectors.size(); count++)
+                                {
+                                    vector = (BioVector)vectors.get(count);
+                                    additional_jsp.append("&nbsp&nbsp&nbsp<INPUT NAME='vectors_file_name' TYPE='CHECKBOX' VALUE='"   
+                                    +vector.getFilePath() + File.separator + vector.getFileName() +"'>"+vector.getName()+"<P>");
+                                    if ( count != 0 && count % 4 == 0 ) additional_jsp.append("<P>");
+
+                                }
+                                additional_jsp.append("</td></tr>");
+                            }
+                             **/
+                            break;
+                        }
                         case Constants.STRETCH_COLLECTION_REPORT_INT:
                         case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
                         { title="view Contigs for Clone";break; } 
@@ -305,7 +325,7 @@ additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getNIDDKDBLocation()+"'>"+
 additional_jsp.append("</SELECT></td> </tr>");
 additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
 additional_jsp.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
-additional_jsp.append("<OPTION VALUE=''> None");
+additional_jsp.append("<OPTION VALUE='NONE'> None");
 additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.GI +"'>"+ PublicInfoItem.GI);
 additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.PANUMBER +"'>"+ PublicInfoItem.PANUMBER );
 additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.SGD +"'>"+ PublicInfoItem.SGD );
