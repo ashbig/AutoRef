@@ -15,7 +15,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import edu.harvard.med.hip.flex.process.Protocol;
 import edu.harvard.med.hip.flex.database.FlexDatabaseException;
-import edu.harvard.med.hip.flex.process.Location;
+import edu.harvard.med.hip.flex.core.Location;
 
 /**
  *
@@ -28,7 +28,7 @@ public class CreateProcessPlateForm extends ActionForm {
     private String sourcePlate = null;
     private String researcherBarcode = null;
     private int sourceLocation;
-    private int destLocation = Location.DESTROYED;
+    private int destLocation;
     
     /**
      * Set the page to the given value.

@@ -212,7 +212,7 @@
       <forward  name="success"   path="/SelectProtocol.jsp"/>
     </action>  
 
-    <!-- Process the protocol selection -->
+    <!-- Process protocol selection -->
     <action    path="/SelectProtocol"
                type="edu.harvard.med.hip.flex.action.SelectProtocolAction"
                name="createProcessPlateForm"
@@ -222,23 +222,41 @@
       <forward  name="success"   path="/EnterSourcePlate.jsp"/>
     </action> 
 
-    <!-- Process the protocol selection -->
+    <!-- Process the source plate input -->
     <action    path="/EnterSourcePlate"
                type="edu.harvard.med.hip.flex.action.EnterSourcePlateAction"
                name="createProcessPlateForm"
                scope="session"
-               validate="true"
+               validate="false"
                input="/EnterSourcePlate.jsp">
       <forward  name="success"   path="/GetLocation.jsp"/>
     </action> 
- 
-    <!-- Process the process plate creation (get input) -->
-    <action    path="/GetInput"
-               type="edu.harvard.med.hip.flex.action.GetInputAction"
+
+    <!-- Process the location selection -->
+    <action    path="/GetLocation"
+               type="edu.harvard.med.hip.flex.action.GetLocationAction"
                name="createProcessPlateForm"
                scope="session"
-               input="/SelectProtocol.do">
-      <forward  name="success"   path="/ConfirmPlate.jsp"/>
+               validate="false"
+               input="/EnterSourcePlate.jsp">
+      <forward  name="success"   path="/GetResearcher.jsp"/>
+    </action> 
+
+     <!-- Process the researcher barcode input -->
+    <action    path="/GetResearcher"
+               type="edu.harvard.med.hip.flex.action.GetResearcherAction"
+               name="createProcessPlateForm"
+               scope="session"
+               validate="true"
+               input="/GetResearcher.jsp">
+      <forward  name="success"   path="/CreatePlate.jsp"/>
+    </action> 
+
+    <!-- Create the plate and commit to the database -->
+    <action    path="/CreatePlate"
+               type="edu.harvard.med.hip.flex.action.CreatePlateAction"
+               input="/CreatePlate.jsp">
+      <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action>  
 
     <!-- Process the receiving of new oligo plates -->
