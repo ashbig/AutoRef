@@ -93,7 +93,6 @@
               scope="request"
               input="/SequenceSearch.jsp">
       <forward  name="success"   path="/SequenceSelection.jsp"/>
-      <forward  name="failure"  path="/SequenceSearch.jsp"/>
     </action>    
     
     <!-- Process a customer request -->
@@ -103,7 +102,6 @@
               scope="request"
               input="/SequenceSelection.jsp">
       <forward  name="success"   path="/ConfirmSelection.jsp"/>
-      <forward  name="failure"  path="/SequenceSearch.jsp"/>
       <forward  name="empty" path="/SubmissionEmpty.jsp"/>
     </action> 
 
@@ -114,7 +112,6 @@
               scope="request"
               input="/ConfirmSelection.jsp">
       <forward  name="success"   path="/SequenceSearch.jsp"/>
-      <forward  name="failure"  path="/SequenceSearch.jsp"/>
     </action> 
 
     <!-- Process a customer request -->
