@@ -51,6 +51,7 @@ public class MgcImportRequestAction extends AdminAction
         int      workflowid = ((MgcImportRequestForm)form).getWorkflowid();
         int      projectid      = ((MgcImportRequestForm)form).getProjectid();
         Project project = null;
+        Workflow workflow = null;
         InputStream input = null;
         
         //put them back to request
@@ -77,6 +78,7 @@ public class MgcImportRequestAction extends AdminAction
         try
         {
             project = new Project(projectid);
+            workflow = new Workflow(workflowid);
         } catch (FlexDatabaseException ex)
         {
             errors.add("projectid", new ActionError("error.workflow.project.invalid", ex.getMessage()));
@@ -87,7 +89,7 @@ public class MgcImportRequestAction extends AdminAction
         String username = ((User)request.getSession().getAttribute(Constants.USER_KEY)).getUsername();
         
         ImportInformationRunner import_info =
-        new ImportInformationRunner(input, project, workflowid, username);
+        new ImportInformationRunner(input, project, workflow, username);
         Thread t = new Thread(import_info);
         t.start();
         return mapping.findForward("proccessing");
@@ -95,18 +97,18 @@ public class MgcImportRequestAction extends AdminAction
     
     class ImportInformationRunner implements Runnable
     {
-        private InputStream m_Input = null;
+        private InputStream     m_Input = null;
         private Project         m_project = null;
-        private int         m_workflowid = -1;
-        private String      m_username = null;
+        private Workflow        m_workflow = null;
+        private String          m_username = null;
         
         
         
-        public ImportInformationRunner(InputStream in, Project project, int wfid, String username)
+        public ImportInformationRunner(InputStream in, Project project, Workflow wf, String username)
         {
             m_Input = in;
             m_project = project;
-            m_workflowid = wfid;
+            m_workflow = wf;
             m_username = username;
         }
         
@@ -116,15 +118,16 @@ public class MgcImportRequestAction extends AdminAction
             DatabaseTransaction t = null;
             Connection conn = null;
             
-            MgcRequestImporter importer = new MgcRequestImporter( m_project, m_username);
+            MgcRequestImporter importer = new MgcRequestImporter( m_project,  m_workflow, m_username);
             try
             {
                 t = DatabaseTransaction.getInstance();
                 conn = t.requestConnection();
                 //read request file, get all sequences for request, insert request
                 // return all sequences from request
-                ArrayList sequences = importer.performImport(m_Input, conn) ;
+                importer.performImport(m_Input, conn) ;
                 //get all containers for the request
+                /*
                 Rearrayer r = new Rearrayer();
                 r.findMgcContainers( sequences);
                 containers = r.getContainers();
@@ -174,6 +177,7 @@ public class MgcImportRequestAction extends AdminAction
                 }
                 SequenceProcessQueue sequences_q = new SequenceProcessQueue();
                 sequences_q.addQueueItems( sequences_items, conn);
+                 */
                 
             }
             catch (Exception e){}
