@@ -16,14 +16,17 @@
 @ copy ypgenes c:\blast_db\YP\genes /y
 @ del c:\blast_db\ypgenes
 @ c:\blast_new\formatdb -pF -oT -i c:\blast_db\YP\genes
-@ copy ypgenes c:\blast_db\FT\genes /y
+@ copy ftgenes c:\blast_db\FT\genes /y
 @ del c:\blast_db\ftgenes
 @ c:\blast_new\formatdb -pF -oT -i c:\blast_db\FT\genes
-@ copy ypgenes c:\blast_db\Clontech\genes /y
+@ copy clontechgenes c:\blast_db\Clontech\genes /y
 @ del c:\blast_db\clontechgenes
 @ c:\blast_new\formatdb -pF -oT -i c:\blast_db\Clontech\genes
-@ copy ypgenes c:\blast_db\NIDDK\genes /y
+@ copy niddkgenes c:\blast_db\NIDDK\genes /y
 @ del c:\blast_db\NIDDKgenes
 @ c:\blast_new\formatdb -pF -oT -i c:\blast_db\NIDDK\genes
+@ copy vcgenes c:\blast_db\VC\genes /y
+@ del c:\blast_db\VCgenes
+@ c:\blast_new\formatdb -pF -oT -i c:\blast_db\VC\genes
 @ cd..
 

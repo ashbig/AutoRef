@@ -7,9 +7,9 @@ get /kotel/data/FLEXRepository/Blast/MGC/genes mgcgenes
 get /kotel/data/FLEXRepository/Blast/Pseudomonas/genes pseudomonasgenes
 get /kotel/data/FLEXRepository/Blast/YP/genes ypgenes
 get /kotel/data/FLEXRepository/Blast/FT/genes ftgenes
-get /kotel/data/FLEXRepository/Blast/Clontech/genes ftgenes
-get /kotel/data/FLEXRepository/Blast/NIDDK/genes ftgenes
-get /kotel/data/FLEXRepository/Blast/VC/genes ftgenes
+get /kotel/data/FLEXRepository/Blast/Clontech/genes clontechgenes
+get /kotel/data/FLEXRepository/Blast/NIDDK/genes nddkgenes
+get /kotel/data/FLEXRepository/Blast/VC/genes vcgenes
 quit
 
                        
