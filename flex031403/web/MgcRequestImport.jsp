@@ -92,8 +92,8 @@ The request uploading may take some time. The e-mail notification will be sent t
     <tr>
          <td class="prompt">Put sequences on queue for processing?<td>
         <td align="right">
-            <html:radio property="isPutOnQueue" value="true"/>Yes
-            <html:radio property="isPutOnQueue" value="false"/>No
+            <html:radio property="isPutOnQueue" value="false"/>Yes
+            <html:radio property="isPutOnQueue" value="true"/>No
         </td>
     </tr>
 </table>
