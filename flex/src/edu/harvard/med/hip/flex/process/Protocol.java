@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.26 2002-07-29 14:20:11 dzuo Exp $
+ * $Id: Protocol.java,v 1.27 2002-10-02 17:50:24 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -14,7 +14,7 @@ import edu.harvard.med.hip.flex.database.*;
 import java.sql.*;
 import javax.sql.*;
 import sun.jdbc.rowset.*;
-
+import edu.harvard.med.hip.flex.Constants;
 /**
  * Represents the protocol object corresponding to the
  * protocol table.
@@ -97,10 +97,22 @@ public class Protocol {
      * @param id The protocol id.
      */
     public Protocol(int id) throws FlexDatabaseException {
+        
+        
+        if (Constants.s_protocols_id != null && Constants.s_protocols_id.get(String.valueOf(id)) != null)
+        {
+            Protocol pr = (Protocol)Constants.s_protocols_id.get(String.valueOf(id));
+            this.id = id;
+            this.processcode = pr.getProcesscode();
+            this.processname = pr.getProcessname();
+            this.subprotocol = pr.getSubprotocol();
+            System.out.println("return");
+            return;
+        }
            String sql = "select protocolid, processcode, processname " +
         "from processprotocol " +
         "where protocolid = " + id;
-        
+   
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         // only one result should be returned if any
         //Vector protocolVect = t.executeSql(sql);
@@ -163,6 +175,17 @@ public class Protocol {
      * @exception FlexDatabaseException
      */
     public Protocol(String processname) throws FlexDatabaseException {
+        
+        if (Constants.s_protocols_name != null && Constants.s_protocols_name.get(processname) != null)
+        {
+            Protocol pr = (Protocol)Constants.s_protocols_name.get(processname);
+            this.id = id;
+            this.processcode = pr.getProcesscode();
+            this.processname = pr.getProcessname();
+            this.subprotocol = pr.getSubprotocol();
+            return;
+        }
+        
         String sql = "select protocolid, processcode, processname " +
         "from processprotocol " +
         "where processname = '" + processname +"'";

@@ -12,6 +12,7 @@ import java.util.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.Constants;
 
 /**
  *
@@ -47,7 +48,22 @@ public class Project {
      * @return The Project object.
      * @exception FlexDatabaseException.
      */
-    public Project(int id) throws FlexDatabaseException {       
+    public Project(int id) throws FlexDatabaseException {  
+        //try to get from memory
+       
+        if (Constants.s_projects != null && Constants.s_projects.get(String.valueOf(id) ) != null)
+        {
+            
+            Project p = (Project)Constants.s_projects.get(String.valueOf(id) );
+            this.id = id;
+            this.name = p.getName();
+            this.workflows = p.getWorkflows();
+            this.description = p.getDescription();
+            this.version = p.getVersion();
+            return ;
+        }
+        
+       
         String sql = "select * from project where projectid = "+id;
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
@@ -173,18 +189,29 @@ public class Project {
      * @exception The FlexDatabaseException.
      */
     public static Vector getAllProjects() throws FlexDatabaseException {
+        
+        Vector projects = new Vector();  
+        if (Constants.s_projects != null)
+        {
+            
+           projects= new Vector( Constants.s_projects.values()  );
+            sortProjectsByName(projects);
+           return projects;
+        }
+       
         String sql = "select * from project";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
-        Vector projects = new Vector();  
+        
         
         try{                   
             while(rs.next()) {
                 int projectid = rs.getInt("PROJECTID");
-                String name = rs.getString("NAME");
-                String description = rs.getString("DESCRIPTION");
-                String version = rs.getString("VERSION");
-                Project p = new Project(projectid, name, description, version);
+              //  String name = rs.getString("NAME");
+               // String description = rs.getString("DESCRIPTION");
+               // String version = rs.getString("VERSION");
+               // Project p = new Project(projectid, name, description, version);
+                Project p = new  Project(projectid);
                 projects.addElement(p);
             }                
         } catch(SQLException sqlE) {
@@ -196,6 +223,18 @@ public class Project {
         return projects;
     }
 
+    private static void sortProjectsByName(Vector projects)
+    {
+        Collections.sort(projects, new Comparator()
+       {
+            public int compare(Object cont1, Object cont2)
+            {
+                Project p1 =(Project) cont1;
+                Project p2 = (Project) cont2;
+                return  p1.getName().compareToIgnoreCase(p2.getName() ) ;
+           }
+       });
+    }
     /**
      * Populate the workflow record from the database for this project.
      *

@@ -6,6 +6,7 @@
 
 package edu.harvard.med.hip.flex;
 
+import java.util.*;
 /**
  *
  * @author  jmunoz
@@ -15,7 +16,10 @@ public class Constants {
     /*
      * Application constants
      */
-    
+    public static Hashtable s_projects = null;
+    public static Hashtable s_workflows = null;
+    public static Hashtable s_protocols_id = null;
+     public static Hashtable s_protocols_name = null;
     // constant for workflow (queue) admin group
     public static final String WORKFLOW_GROUP = "Workflow Admin";
     

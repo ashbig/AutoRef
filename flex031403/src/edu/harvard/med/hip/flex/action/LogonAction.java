@@ -12,9 +12,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2001-07-26 18:43:50 $
- * $Author: jmunoz $
+ * $Revision: 1.9 $
+ * $Date: 2002-10-02 17:49:39 $
+ * $Author: Elena $
  *
  ******************************************************************************
  *
@@ -58,12 +58,14 @@ import edu.harvard.med.hip.flex.*;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.database.*;
-
+import edu.harvard.med.hip.flex.workflow.*;
+import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.Constants;
 /**
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
- * @author $Author: jmunoz $
- * @version $Revision: 1.8 $ $Date: 2001-07-26 18:43:50 $
+ * @author $Author: Elena $
+ * @version $Revision: 1.9 $ $Date: 2002-10-02 17:49:39 $
  */
 
 public final class LogonAction extends Action {
@@ -148,6 +150,64 @@ public final class LogonAction extends Action {
                 session.removeAttribute(mapping.getAttribute());
         }
         
+        
+        //get all project/workflow/protocol information and store it
+        try{
+            Vector pr = Project.getAllProjects();
+          
+            Constants.s_projects = new Hashtable(pr.size());
+            Constants.s_workflows = new Hashtable();
+            Constants.s_protocols_id = new Hashtable();
+            Constants.s_protocols_name = new Hashtable();
+            for (int i = 0 ; i < pr.size();i++)
+            {
+                
+                Project p = (Project)pr.get(i);
+                Constants.s_projects.put( String.valueOf(p.getId()), p);
+                for (int w_count = 0; w_count < p.getWorkflows().size();w_count++)
+                {
+                     Workflow w = (Workflow)p.getWorkflows().get(w_count);
+                     if ( !Constants.s_workflows.containsKey(String.valueOf(w.getId()) ))
+                     {
+                            Constants.s_workflows.put( String.valueOf(w.getId()),w);
+                            Vector prot = w.getFlow();
+                            for (int pr_count = 0; pr_count < prot.size(); pr_count++)
+                            {
+                                FlowRecord fr = (FlowRecord)prot.get(pr_count);
+                                Protocol pr_curr = fr.getCurrent();
+                                Vector pr_next = fr.getNext();
+                                if (! Constants.s_protocols_name.contains(pr_curr))
+                                {
+                                    Constants.s_protocols_name.put(pr_curr.getProcessname(), pr_curr);
+                                    Constants.s_protocols_id.put(String.valueOf(pr_curr.getId()), pr_curr);
+
+                                }
+                                for (int next_count = 0; next_count < pr_next.size();next_count++)
+                                {
+                                    Protocol curr = (Protocol)pr_next.get(next_count);
+                                    if (! Constants.s_protocols_name.contains(curr))
+                                    {
+                                        Constants.s_protocols_name.put(curr.getProcessname(), curr);
+                                        Constants.s_protocols_id.put(String.valueOf(curr.getId()), curr);
+                                   }
+                                }
+                                
+                                
+                            }
+                            
+                     }
+                }
+ 
+            }
+            
+ 
+          }
+        catch(Exception e)
+          {
+            request.setAttribute(Action.EXCEPTION_KEY,e );
+            return mapping.findForward("error");
+        }
+            
         // Forward control to the specified success URI
         
         return (mapping.findForward("success"));

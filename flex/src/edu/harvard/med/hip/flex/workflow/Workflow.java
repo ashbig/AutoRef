@@ -13,7 +13,7 @@ import java.util.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.process.Protocol;
 import edu.harvard.med.hip.flex.database.*;
-
+import edu.harvard.med.hip.flex.Constants;
 /**
  *
  * @author  dzuo
@@ -142,6 +142,15 @@ public class Workflow {
      */
     public Workflow(int id) throws FlexDatabaseException {
         this.id = id;
+        if (Constants.s_workflows != null && Constants.s_workflows.get(String.valueOf(id)) != null)
+        {
+            Workflow w = (Workflow)Constants.s_workflows.get(String.valueOf(id));
+            this.description = w.getDescription();
+            this.name = w.getName();
+            this.flow = w.getFlow();
+            return;
+        }
+        
         
         flow = new Vector();
         
@@ -154,7 +163,7 @@ public class Workflow {
                 name = rs.getString("NAME");
                 description = rs.getString("DESCRIPTION");
             }
-            
+         
             sql = "select currentprotocolid, nextprotocolid "+
             "from workflowtask where workflowid = "+id+
             " order by currentprotocolid";
@@ -260,6 +269,14 @@ public class Workflow {
     }
 
     public static Vector getAllWorkflows() throws FlexDatabaseException {
+        
+        if (Constants.s_workflows != null)
+        {
+            Collection s = Constants.s_workflows.values();
+            Collections.sort((List) s);
+            return (Vector) s;
+        }
+       
         String sql = "select * from workflow";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
