@@ -266,17 +266,19 @@ public class MgcMasterListImporter
             cdsLength = stop -start +1;
         }
         
+        
         Hashtable pubinfo_entry_gi = new Hashtable();
         pubinfo_entry_gi.put(FlexSequence.NAMETYPE,FlexSequence.GI);
         pubinfo_entry_gi.put(FlexSequence.NAMEVALUE,((GenbankSequence)genBankData.get(0)).getGi() );
         pubinfo_entry_gi.put(FlexSequence.DESCRIPTION,((GenbankSequence)genBankData.get(0)).getDescription() );
         publicInfo.add(pubinfo_entry_gi);
         
+       
         Hashtable pubinfo_entry_gb = new Hashtable();
         pubinfo_entry_gb.put(FlexSequence.NAMETYPE,FlexSequence.GENBANK_ACCESSION);
         pubinfo_entry_gb.put(FlexSequence.NAMEVALUE,((GenbankSequence)genBankData.get(0)).getAccession() );
         publicInfo.add(pubinfo_entry_gb);
-        
+       
         if (seqData.containsKey("gene_name") )
         {
             Hashtable pubinfo_entry_gene_name = new Hashtable();
@@ -361,14 +363,14 @@ public class MgcMasterListImporter
                 }//end loop clone
                 cont.insert(conn);
                 commit_count++;
-              //  if ( (commit_count % 10) == 0 ) DatabaseTransaction.commit(conn);
-                DatabaseTransaction.commit(conn);
+                //if ( (commit_count % 10) == 0 ) DatabaseTransaction.commit(conn);
+               DatabaseTransaction.commit(conn);
             }//end loop container_count
         } catch (FlexDatabaseException ex1)
         {   DatabaseTransaction.rollback(conn);  }
         catch (Exception ex)
         {  DatabaseTransaction.rollback(conn);   }
-        DatabaseTransaction.commit(conn);
+        //DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
         return true;
     }

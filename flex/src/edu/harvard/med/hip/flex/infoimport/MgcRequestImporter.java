@@ -114,9 +114,10 @@ public class MgcRequestImporter {
       */
     private  ArrayList  matchGINumbersToMgcClones(ArrayList requestGI) {
         ArrayList not_matching_gi_numbers = new ArrayList();
+        ArrayList temp = new ArrayList();
         String sql = "select n.namevalue as gi, n.sequenceid as sequence_id "+
         "from  mgcclone mc , name n \n" +
-        "where ( mc.sequenceid = n.sequenceid and n.nametype = 'GI' and mc.sequenceid <> NULL ) ";
+        "where ( mc.sequenceid = n.sequenceid and n.nametype = 'GI'  ) ";
         int current_gi = 0;
         int current_seq_id = 0;
         CachedRowSet crs = null;
@@ -134,11 +135,10 @@ public class MgcRequestImporter {
                 if ( requestGI.contains( Integer.toString(current_gi)) ) {//create dummy flexsequence and add it to request
                     FlexSequence fc = new FlexSequence( current_seq_id, FlexSequence.GOOD, null, null, null, 0, 0, 0, 0, null, null, null);
                     m_Request.addSequence(fc);
+                    temp.add( Integer.toString(current_gi) );
                     requestGI.remove( requestGI.indexOf( Integer.toString(current_gi) ) );
                 }
-                else {
-                    not_matching_gi_numbers.add(Integer.toString(current_gi));
-                }
+                
             }
             
         } catch (Exception e) {
@@ -146,6 +146,10 @@ public class MgcRequestImporter {
         } finally {
             DatabaseTransaction.closeResultSet(crs);
         }
+        not_matching_gi_numbers.addAll(requestGI);
+        requestGI.clear();
+        requestGI.addAll(temp);
+        
         return not_matching_gi_numbers;
     }
     
@@ -167,6 +171,8 @@ public class MgcRequestImporter {
             for (int gi_count = 0; gi_count < not_matching_gi_numbers.size(); gi_count++) {
                 {
                     current_gi = (String)not_matching_gi_numbers.get(gi_count);
+                    genBankSeq = gb.search(current_gi );
+                    if (genBankSeq.isEmpty() ) continue;
                     seqData = gb.searchDetail( current_gi );
                     gi_data.add(current_gi);
                     FlexSequence fs = ml.createFlexSequence( seqData, gi_data);
@@ -233,6 +239,38 @@ public class MgcRequestImporter {
         
         //match thr GI, match thr cds sequence, not matched
         Mailer.sendMessage( to,  from,  subject, msgText)  ;
+    }
+    
+    
+      //****************************Testing*******************************
+    
+    public static void main(String args[])
+    {
+        String file = "c:\\request.txt";
+        InputStream input;
+        
+        try
+        {
+            input = new FileInputStream(file);
+            
+        } catch (FileNotFoundException ex)
+        {
+            System.out.println(ex);
+            return;
+        }
+         DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        
+        try
+        {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            MgcRequestImporter importer = new MgcRequestImporter(null,"dzuo");
+            importer.performImport(input, conn) ;
+        }
+        catch(Exception e){}
+        System.exit(0);
     }
     
     
