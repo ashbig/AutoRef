@@ -32,6 +32,7 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.CreateProcessPlateForm;
+import edu.harvard.med.hip.flex.form.PickColonyForm;
 import edu.harvard.med.hip.flex.form.ProjectWorkflowForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
@@ -111,7 +112,20 @@ public class EnterSourcePlateAction extends ResearcherAction {
             Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
-            ContainerMapper mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
+            
+            ContainerMapper mapper = null;
+            if(Protocol.PICK_COLONY.equals(protocol.getProcessname())) {
+                String pickingMethod = ((PickColonyForm)form).getPickingMethod();
+                
+                if("nonInterleaved".equals(pickingMethod)) {
+                    mapper = new NonInterleavedColonyPicking();
+                } else {
+                    mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
+                }
+            } else {
+                mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
+            }
+                
             Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
             Vector sampleLineageSet = mapper.getSampleLineageSet();
 

@@ -36,6 +36,8 @@ public class PickColonyForm extends ProjectWorkflowForm {
     private int [] destLocations;
     private String subProtocolName = null;
     
+    private String pickingMethod = "interleaved";
+    
     /**
      * Set the processname to the given value.
      *
@@ -162,6 +164,14 @@ public class PickColonyForm extends ProjectWorkflowForm {
         return subProtocolName;
     }
     
+    public void setPickingMethod(String method) {
+        this.pickingMethod = method;
+    }
+    
+    public String getPickingMethod() {
+        return pickingMethod;
+    }
+    
     /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any
@@ -178,15 +188,22 @@ public class PickColonyForm extends ProjectWorkflowForm {
         ActionErrors errors = new ActionErrors();
         boolean isReturn = false;
         
-        if((agarPlateF1 == null) || (agarPlateF1.trim().length()!=11) || (agarPlateF1.charAt(LASTINDEX) != 'F')) {
+        if((agarPlateF1 == null) || (agarPlateF1.trim().length()==0)) {
             errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
-            isReturn = true;
+            return errors;
         }
         
-        if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
-            if((agarPlateC1 == null) || (agarPlateC1.trim().length()!=11)) {
-                errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
+        if(pickingMethod.equals("interleaved")) {
+            if((agarPlateF1.trim().length()!=11) || (agarPlateF1.charAt(LASTINDEX) != 'F')) {
+                errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
                 isReturn = true;
+            }
+            
+            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
+                if((agarPlateC1 == null) || (agarPlateC1.trim().length()!=11)) {
+                    errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
+                    isReturn = true;
+                }
             }
         }
         
@@ -194,28 +211,34 @@ public class PickColonyForm extends ProjectWorkflowForm {
             return errors;
         }
         
-        if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE) {
-            if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11 && (agarPlateC1.charAt(LASTINDEX) != 'F')) {
-                errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
-                isReturn = true;
-            }
-        } else {
-            if((agarPlateC1.charAt(LASTINDEX) != 'C')) {
-                errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
-                isReturn = true;
-            }
-        }
-        
-        // Check whether the two pairs matching with each other.
-        if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE) {
-            if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11) {
-                if(!(agarPlateF1.substring(3, 9).equals(agarPlateC1.substring(3, 9)))) {
-                    errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
+        if(pickingMethod.equals("interleaved")) {
+            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE) {
+                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11 && (agarPlateC1.charAt(LASTINDEX) != 'F')) {
+                    errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
+                    isReturn = true;
+                }
+            } else {
+                if((agarPlateC1.charAt(LASTINDEX) != 'C')) {
+                    errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
+                    isReturn = true;
                 }
             }
-        } else {
-            if(!(agarPlateF1.substring(0, 3).equals(agarPlateC1.substring(0, 3)))) {
-                errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
+            
+            if(isReturn) {
+                return errors;
+            }
+        
+            // Check whether the two pairs matching with each other.
+            if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE) {
+                if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11) {
+                    if(!(agarPlateF1.substring(3, 9).equals(agarPlateC1.substring(3, 9)))) {
+                        errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
+                    }
+                }
+            } else {
+                if(!(agarPlateF1.substring(0, 3).equals(agarPlateC1.substring(0, 3)))) {
+                    errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
+                }
             }
         }
         

@@ -55,6 +55,12 @@
     </logic:notEqual>
     <td><html:text property="agarPlateC1" size="20"/></td>
     </tr>
+    <tr></tr>
+    <tr>
+    <td class="prompt">Picking Method:</td>
+    <td><html:radio property="pickingMethod" value="interleaved"/>Interleaved (Standard Production)</td>
+    <td><html:radio property="pickingMethod" value="nonInterleaved"/>Non Interleaved</td>
+    </tr>
 
     <tr>
     <td></td><td><html:submit property="submit" value="Continue"/></td>

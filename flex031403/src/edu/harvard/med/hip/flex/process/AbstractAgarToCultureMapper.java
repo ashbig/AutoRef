@@ -49,7 +49,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
             String subthread = getSubThread(f1, i+1);
             String newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), f1.getThreadid(), subthread);
             Container newContainer = new Container(newContainerType, null, newBarcode, f1.getThreadid());
-            
+    
             int index = 0;
             Enumeration enum = containers.elements();
             boolean addNewContainer = false;
@@ -83,7 +83,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         while(n*COLONYNUM<(platenum+1)*row*column/platenumOnDest && n<oldSamples.size()) {
             Sample s = (Sample)oldSamples.elementAt(n);
             type = getType(container, s, protocol);
-            
+
             for(int i=0; i<COLONYNUM; i++) {
                 Sample newSample = new Sample(type[i], index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
                 newContainer.addSample(newSample);
