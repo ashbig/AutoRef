@@ -12,10 +12,6 @@
  * See COPYRIGHT file for copyright information
  *
  *
- * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2001-06-29 12:59:29 $
- * $Author: dongmei_zuo $
  *
  ******************************************************************************
  *
@@ -25,6 +21,9 @@
  *    your 3 letters initials.
  *
  *    Jun-18-2001 : JMM - Class created.
+ * 
+ * Revision:    07-03-2001  [wmar]
+ *              added getFilereferences() method
  *
  */
 
@@ -48,8 +47,8 @@ import edu.harvard.med.hip.flex.util.*;
 /**
  * Represents the result of a process execution for a sample.
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.11 $ $Date: 2001-06-29 12:59:29 $
+ * @author     $Author: wenhong_mar $
+ * @version    $Revision: 1.12 $ $Date: 2001-07-05 11:24:07 $
  */
 
 public class Result {
@@ -243,6 +242,18 @@ public class Result {
         }
         this.fileRef = fileRef;
     }
+    
+    /**
+     * Retrieves all of the filereferences linked to a result object.
+     *
+     * @return fileRefList The list of fileReference objects
+     */
+    public LinkedList getFileReferences() throws FlexDatabaseException{
+       LinkedList fileRefList = FileReference.findFile(this); 
+       return fileRefList;        
+        
+    } //getFileReferences
+    
     /**
      * String representation of the result which is the value.
      *
