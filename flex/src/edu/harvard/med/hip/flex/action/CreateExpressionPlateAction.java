@@ -126,7 +126,7 @@ public class CreateExpressionPlateAction extends ResearcherAction {
         //If the new label already exists in the database, return to user.
         try {
             if(Container.plateExistsInDB(label)) {
-                errors.add("sourcePlate", new ActionError("error.plate.expression.exists"));
+                errors.add("sourcePlate", new ActionError("error.plate.expression.exists", label));
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }

@@ -71,7 +71,7 @@ public class ManyToManyContainerMapper extends OneToOneContainerMapper {
             for (int i=0; i<oldSamples.size(); i++) {
                 if(isNewPlate) {
                     int threadid = FlexIDGenerator.getID("threadid");
-                    newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), threadid, null);
+                    newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), threadid, getSubThread(container));
                     newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
                     isNewPlate = false;
                 }
@@ -87,8 +87,10 @@ public class ManyToManyContainerMapper extends OneToOneContainerMapper {
                         newSample.setCloneid(s.getCloneid());
                         newContainer.addSample(newSample);
                         sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
-                        RearrayInputSample rs = new RearrayInputSample(container.getLabel(), (new Integer(s.getPosition())).toString(), newContainer.getLabel(), (new Integer(destWellIndex)).toString(), false);
-                        rearrayMappingList.add(rs);
+                        if(!type.equals(Sample.EMPTY)) {
+                            RearrayInputSample rs = new RearrayInputSample(container.getLabel(), (new Integer(s.getPosition())).toString(), newContainer.getLabel(), (new Integer(destWellIndex)).toString(), false);
+                            rearrayMappingList.add(rs);
+                        }
                         
                         destWellIndex++;
                         isMapped = true;

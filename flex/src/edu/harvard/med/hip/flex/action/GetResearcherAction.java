@@ -234,7 +234,7 @@ public class GetResearcherAction extends ResearcherAction{
                 new Thread(handler).start();
             }
             
-            if(Protocol.PERIMETER_REARRAY.equals(protocol.getProcessname())) {
+            if(Protocol.CREATE_TRANSFECTION.equals(protocol.getProcessname())) {
                 List fileCol = (ArrayList)request.getSession().getAttribute("PerimeterRearrayInputAction.files");
                 List emails = (ArrayList)request.getSession().getAttribute("PerimeterRearrayInputAction.emails");
                 Mailer.sendMessages("dzuo@hms.harvard.edu","dzuo@hms.harvard.edu", emails, "Cell Culture Perimeter Rearray", "Attached are your rearray file and worklist.", fileCol);

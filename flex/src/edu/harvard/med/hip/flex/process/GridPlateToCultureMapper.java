@@ -37,10 +37,10 @@ public abstract class GridPlateToCultureMapper extends AbstractAgarToCultureMapp
         String processcode = c.getLabel().substring(1, 3);
         
         if(processcode.equals("AA")) {
-            return Integer.toString(index);
+            return "-"+Integer.toString(index);
         }
         if(processcode.equals("AB")) {
-            return Integer.toString(index+4);
+            return "-"+Integer.toString(index+4);
         }
         return null;
     }    
