@@ -528,7 +528,8 @@ public class RearrayManager {
      ********************************************************************************/
     public static void main(String args[]) {
         //String file = "G:\\rearraytest1.txt";
-        String file = "G:\\rearraytest2.txt";
+        //String file = "G:\\rearraytest2.txt";
+        String file = "G:\\rearraytest4.txt";
         
         DatabaseTransaction t = null;
         Connection conn = null;
