@@ -239,6 +239,8 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+                case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:
+                
                 case Constants.PROCESS_DELETE_PLATE :
                 case Constants.PROCESS_DELETE_CLONE_READS :
                 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :
@@ -263,6 +265,8 @@ public class SelectProcessAction extends ResearcherAction
                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title="get Trace Files' names";break; }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  {title="get Order List for resequencing of End Reads";break; }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : {title="get Order List for resequencing of Internal Reads";break; }
+                         case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY: {title="create Trace Files Quality Report";break; }
+               
                         case Constants.PROCESS_RUN_END_READS_WRAPPER: {title="run End Reads Wrapper";break; }
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: {title="run Assembler for End Reads";break; }
                         case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{title="add new Internal Primer";break; }

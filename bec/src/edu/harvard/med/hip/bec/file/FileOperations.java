@@ -118,6 +118,40 @@ public class FileOperations
         moveFile(source_file,  destination_file, false, true);
     } // moveFileToFile
     
+    
+     public static void sortArrayOfFiles(File[] files) 
+    {
+        Arrays.sort(files, new Comparator() {
+            public int compare(Object a, Object b) {
+                File filea = (File)a;
+                File fileb = (File)b;
+                //--- Sort directories before files, 
+                //    otherwise alphabetical ignoring case.
+                if (filea.isDirectory() && !fileb.isDirectory()) {
+                    return -1;
+                } else if (!filea.isDirectory() && fileb.isDirectory()) {
+                    return 1;
+                } else {
+                    return filea.getName().compareToIgnoreCase(fileb.getName());
+                }
+            }
+        });
+
+    }
+    
+    
+    public static File[] getSortArrayOfFiles(String dir_name) 
+    {
+        File dir = new File(dir_name);
+        File[] files = dir.listFiles();
+        sortArrayOfFiles(files) ;
+        return files;
+    }
+
+
+
+  //-----------------------------------------------------------------  
+  
     /**
      * Move a file from one location to another.  An attempt is made to rename
      * the file and if that fails, the file is copied and the old file deleted.
@@ -167,7 +201,8 @@ public class FileOperations
          }
     }
     
-    /**
+    
+     /**
      * Copy the data from the input stream to the output stream.
      *
      * @param in data source
@@ -211,12 +246,13 @@ public class FileOperations
     {
         try
         {
-            File sourceFile = new File("c:\\bio\\test.txt");
+            File sourceFile = new File("c:\\bio\\remaping_test.txt");
             File destination_file = new File("c:\\test.txt");
             //copyFile( sourceFile,  destination_file,   true) ;
-            boolean overwrite = true;
-            boolean mode_remove = true;
-            moveFile(sourceFile, destination_file,overwrite,  mode_remove) ;
+            System.out.println( sourceFile.getName());
+            System.out.println( sourceFile.getAbsolutePath());
+            System.out.println( sourceFile.getParent());
+            System.out.println( sourceFile.getPath());
  
         }
         catch (Exception e)

@@ -446,6 +446,7 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:    
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+                case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:
                 case Constants.PROCESS_DELETE_PLATE :
                 case Constants.PROCESS_DELETE_CLONE_READS://
                 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ ://
@@ -485,13 +486,19 @@ public class RunProcessAction extends ResearcherAction
                         }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+                            case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:
                         {
                               runner = new SpecialReportsRunner();
-                              if (  forwardName == Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  )
-                                     title = "request for Order List for resequencing of End Reads";
-                              else if ( forwardName ==  Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  )
-                                     title = "request for Order List for resequencing of Internal Reads";
                               ((SpecialReportsRunner)runner).setReportType(forwardName);
+                              switch (  forwardName )
+                              {
+                                  case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
+                                  { title = "request for Order List for resequencing of End Reads"; break;}
+                                  case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+                                  {title = "request for Order List for resequencing of Internal Reads";break;}
+                                case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  :
+                                  {title = "request for Trace Files Quality Report";break;}
+                              }
                               break;//run end reads wrapper
                          }
                          case Constants.PROCESS_RUN_END_READS_WRAPPER:

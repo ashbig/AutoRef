@@ -19,8 +19,13 @@ import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
+import edu.harvard.med.hip.bec.programs.phred.*;
 import edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.bec.ui_objects.*;
+import edu.harvard.med.hip.bec.file.*;
+import edu.harvard.med.hip.bec.programs.phred.*;
+
+
   import java.util.*;
   import edu.harvard.med.hip.utility.*;
 /**
@@ -53,6 +58,10 @@ public class SpecialReportsRunner extends ProcessRunner
             {
                return "Request for sequencing facility order list for internal reads report.";
            }
+            case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:
+            {
+                return "Request for Trace Files quality report.";
+            }
             default: return "Not known type of report.";
         }  
     }
@@ -62,6 +71,9 @@ public class SpecialReportsRunner extends ProcessRunner
     public void run()
     {
         String title = null;
+        int pass_score = 0; int first_base =  0; int last_base = 0;    int min_length = 0;
+         //get triming parameters
+        
         try
         {
            String  report_file_name =    Constants.getTemporaryFilesPath() + "SpecialReport"+ System.currentTimeMillis()+ ".txt";
@@ -84,6 +96,20 @@ public class SpecialReportsRunner extends ProcessRunner
                        title = "";
                        break;
                    }
+                   case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:
+                    {
+                        
+                        pass_score = Integer.parseInt( edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_SCORE_PASS") );
+                        first_base =  Integer.parseInt(edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_FIRST_BASE") );
+                        last_base =  Integer.parseInt(edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_LAST_BASE") ) ;
+                        min_length = Integer.parseInt( edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_MIN_LENGTH"));
+                    
+                        print_items = getTraceFilesQualityData((String)sql_groups_of_items.get(count),
+                                       pass_score , first_base ,last_base , min_length );
+                        print_items.add(0, "CloneId"+Constants.TAB_DELIMETER + "Trace File Name"+Constants.TAB_DELIMETER +"Quality Status");
+                        break;
+                        
+                    }
                 }
                 
                 Algorithms.writeArrayIntoFile(print_items, true , report_file_name);
@@ -158,7 +184,185 @@ public class SpecialReportsRunner extends ProcessRunner
          result.addAll(reverse_reads);
          return result;
      }
+   
      
+     //------------------------------------------------------------
+     
+     private ArrayList getTraceFilesQualityData(String sql_items,
+             int  pass_score , int first_base ,
+             int last_base ,int min_length) 
+     {
+         ArrayList print_items = new ArrayList();
+         String sql = constructQueryStringForTraceFilesQualityCheck( sql_items);
+        //get clone data
+         if ( sql == null || sql.trim().length() == 0) return print_items;
+         Hashtable clone_directories =  getCloneDirectories( sql);
+         //run thr. clone directory
+         if ( clone_directories == null || clone_directories.size() < 1 ) return print_items;
+         print_items = checkTraceFilesQuality(clone_directories ,   pass_score , first_base ,last_base ,min_length );
+         return print_items;
+         
+     }
+     
+     
+     private ArrayList checkTraceFilesQuality(Hashtable clone_directories,
+                   int pass_score , int first_base ,int last_base ,
+                   int min_length) 
+     {
+         ArrayList print_items = new ArrayList();
+         String cloneid = null; String clone_directory = null;
+         for ( Enumeration cloneinfo = clone_directories.keys(); cloneinfo.hasMoreElements();)
+         {
+             try
+             {
+                 cloneid =  (String) cloneinfo.nextElement() ;
+                 clone_directory = (String) clone_directories.get( cloneid );
+                 print_items.addAll( processCloneTraceFiles(cloneid, clone_directory,  pass_score , first_base ,last_base ,min_length ) );
+        
+             }catch (Exception e)
+             {
+                 m_error_messages.add("Cannot get data for clone " + cloneid);
+             }
+         }
+         return print_items;
+     }
+     
+     
+     private ArrayList     processCloneTraceFiles(String cloneid, String clone_directory,
+                    int pass_score , int first_base ,int last_base ,
+                    int min_length) 
+     {
+         ArrayList print_items = new ArrayList();
+         boolean isGoodQualityTraceFile = false;
+         File[] traceFiles = FileOperations.getSortArrayOfFiles( clone_directory + File.separator +PhredWrapper.CHROMAT_DIR_NAME );
+         File[] phdFiles = FileOperations.getSortArrayOfFiles( clone_directory + File.separator +PhredWrapper.PHD_DIR_NAME );
+         
+         int trace_files_count = 0; int phd_files_count = 0;
+         int trace_files_number = traceFiles.length; int phd_files_number = phdFiles.length;
+         String trace_file_name_key = null; String phd_file_name_key = null;
+         int compare_result = 0;
+         for (; trace_files_count < trace_files_number; )
+         {
+             phd_file_name_key = phdFiles[phd_files_count].getName();
+             phd_file_name_key = phd_file_name_key.substring(0,phd_file_name_key.indexOf('.'));
+             trace_file_name_key = traceFiles[trace_files_count].getName();
+             trace_file_name_key = trace_file_name_key.substring(0,trace_file_name_key.indexOf('.'));
+            
+             compare_result = trace_file_name_key.compareToIgnoreCase(phd_file_name_key);
+             if ( compare_result == 0)
+             {
+                 isGoodQualityTraceFile = isTraceFilePassQualityCheck( phdFiles[phd_files_count],  pass_score , first_base ,last_base ,min_length );
+                  if ( isGoodQualityTraceFile )
+                      print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getName() + Constants.TAB_DELIMETER + "PASS");
+                  else
+                     print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getName() + Constants.TAB_DELIMETER + "FAIL");
+                     trace_files_count++;phd_files_count++;
+             }
+             else if ( compare_result < 0 )
+             {
+                 print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getName()+ Constants.TAB_DELIMETER + "N/A");
+                 trace_files_count++;
+             }
+             else if ( compare_result > 0 )
+             {
+                  phd_files_count++;
+             }
+           
+          }
+          return print_items;
+     }
+     
+     
+     private boolean            isTraceFilePassQualityCheck( File trace_file_phd, 
+                    int pass_score , int first_base ,int last_base ,
+                    int min_length )
+     {
+        BufferedReader input = null;
+        boolean isInsideRead = false;
+        String line = null; 
+        boolean isBeforeDNAEnd = true; boolean isBeforeDNAStart = true;
+        ArrayList elements = new ArrayList();
+       PhredScoredElement element = null;
+       
+        try
+        {
+             input = new BufferedReader(new FileReader(trace_file_phd));
+             while ((line = input.readLine()) != null)
+            {
+                if ( !isInsideRead && line.indexOf("BEGIN_DNA" ) != -1)
+                {
+                    isInsideRead = true; continue;
+                }
+                if ( line.indexOf("END_DNA" ) != -1 )
+                    return  PhredScoredElement.isGoodQuality( elements,  first_base, 
+                                                 last_base,  pass_score,  min_length);
+                if ( isInsideRead )
+                {
+                   element = new PhredScoredElement(line) ;
+                   if (element == null) throw new Exception();
+                   elements.add(element);
+                }
+
+            }
+        }
+        catch(Exception e)
+        {
+            m_error_messages.add("Cannot process file "+ trace_file_phd.getAbsolutePath());
+        }
+        return false;
+     }
+        
+     
+           
+     
+     
+     
+     private String    constructQueryStringForTraceFilesQualityCheck(String sql_items)
+     {
+        
+          switch ( m_items_type)
+          {
+              case Constants.ITEM_TYPE_PLATE_LABELS:
+              {
+                   return "select flexcloneid, flexsequenceid from flexinfo where isolatetrackingid in "
+                   +" ( select isolatetrackingid from isolatetracking where sampleid in "
+                   +" (select sampleid from sample where containerid in "
+                   +" (select containerid from containerheader where label in (" + sql_items +"))))";
+              }
+              case Constants.ITEM_TYPE_CLONEID:
+                  return " select flexcloneid, flexsequenceid from flexinfo where flexcloneid in (" + sql_items +")"; 
+              default : return "";
+          }
+     }
+     private Hashtable getCloneDirectories(String sql)
+     {
+        ResultSet rs = null;Hashtable read_directories = new Hashtable();
+        String directory_root  = null;int cloneid = 0; int refseqid = 0;
+        String directory = null;
+       try
+        {
+            EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
+            directory_root= erw.getOuputBaseDir() + File.separator;
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next())
+            {
+                refseqid = rs.getInt("flexsequenceid");
+                cloneid = rs.getInt("flexcloneid");
+                directory = directory_root +refseqid + File.separator + cloneid;
+                read_directories.put( String.valueOf(cloneid) , directory);
+            }
+            return read_directories;
+        } catch (Exception sqlE)
+        {
+            m_error_messages.add("Error occured while exstracting inforamation for clones:\nSQL: "+sql);
+            return read_directories;
+        } finally
+        {
+            DatabaseTransactionLocal.closeResultSet(rs);
+        }
+     }
+     //--------------------------------------------------------------
      private ArrayList createOrderListForInternalRepeats(String sql_items)throws Exception
      {
            ArrayList result = new ArrayList();
@@ -595,17 +799,14 @@ public class SpecialReportsRunner extends ProcessRunner
      
     {   try
          {
-             
+              BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+      
           SpecialReportsRunner runner = new SpecialReportsRunner();
-           runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
-           runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-            runner.setReportType(Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING);
-         //   runner.setItems(" BSA000768   ");
-            
-            
-       //     runner.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
-            
-         runner.run();
+            runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+            runner.setReportType(Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY);
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID," 143490   ");
+          runner.run();
              
          }catch(Exception e){}
          System.exit(0);

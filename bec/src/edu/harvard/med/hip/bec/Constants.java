@@ -228,6 +228,7 @@ public class Constants {
    public static final int         PROCESS_MOVE_TRACE_FILES = 82;
   public static final int         PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID = 83;
     public static final int         PROCESS_RUN_DECISION_TOOL_NEW  = 84;
+ public static final int         PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  = 85;
 
      //69
        
