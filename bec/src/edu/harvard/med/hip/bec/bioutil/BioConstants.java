@@ -10,7 +10,7 @@ package edu.harvard.med.hip.bec.bioutil;
  *
  * @author  Administrator
  */
-public class Constants {
+public class BioConstants {
     
     /** Creates a new instance of Constants */
    /*#  Matrix made by matblas from blosum62.iij#  
