@@ -466,7 +466,7 @@ public class IsolateRanker
       //function runs analysis of one read
     private void  processContigs( ArrayList contigs, BaseSequence refsequence, 
             int cdststart, int cdsstop, Connection conn)
-            throws BecUtilException, BecDatabaseException, ParseException
+            throws Exception
     {
         
    //prepare discrepancy finder
