@@ -320,7 +320,7 @@ values (vectorid.nextval,'5p Short Pseudomonas linker','CCAACTTTGTACAAAAAAGCAGGC
 insert into linker (linkerid, name,sequence)
 values (vectorid.nextval,'3p Short Pseudomonas linker','-GACCCAGCTTTCTTGTACAAAGTGGT');                                         
         
-//----------------------------
+//---------------------------- Yersinia
 insert into linker (linkerid, name,sequence)
 values (vectorid.nextval,'5p Yersinia linker','-GTACAAAAAAGCAGGCTCCACC');                             
 insert into linker (linkerid, name,sequence)
