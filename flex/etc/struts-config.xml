@@ -251,13 +251,13 @@
     <action      path="/SelectWorkflow"
                 name="projectWorkflowForm"
                 type="edu.harvard.med.hip.flex.action.SelectWorkflowAction">
-        <forward name="success_approve_sequences" path="/ViewPendingRequests.do"/>
-        <forward name="success_create_process_plates" path="/CreateProcessPlate.do"/>
-        <forward name="success_mgc_request_import" path="/MgcRequestImport.jsp"/>
-        <forward name="success_mgc_plate_handle" path="/MGCPlateHandle.do"/>
-        <forward name="success_special_oligo_order" path="/SpecialOligoOrder.jsp"/>
-        <forward name="success_result_entry" path="/PickResultType.jsp"/>
-        <forward    name="success"   path="/SelectProject.jsp"/>
+            <forward name="success_approve_sequences" path="/ViewPendingRequests.do"/>
+            <forward name="success_create_process_plates" path="/CreateProcessPlate.do"/>
+            <forward name="success_mgc_request_import" path="/MgcRequestImport.jsp"/>
+            <forward name="success_mgc_plate_handle" path="/MGCPlateHandle.do"/>
+            <forward name="success_special_oligo_order" path="/SpecialOligoOrder.jsp"/>
+            <forward name="success_result_entry" path="/PickResultType.jsp"/>
+            <forward    name="success"   path="/SelectProject.jsp"/>
     </action>
 
     <!-- Process a customer request -->
@@ -268,11 +268,11 @@
 
     <!-- Process a customer request -->
     <action    path="/DisplayRequest"
-               type="edu.harvard.med.hip.flex.action.DisplayRequestAction"
+                type="edu.harvard.med.hip.flex.action.DisplayRequestAction"
                 name="customerRequestForm"
                 scope="request"
                 validate="false"
-              input="/SequenceSearch.jsp">
+                input="/SequenceSearch.jsp">
       <forward  name="success"   path="/DisplayRequest.jsp"/>
     </action> 
 
@@ -398,6 +398,7 @@
       <forward  name="success_culture"   path="/EnterAgarPlates.jsp"/>
       <forward  name="success_pick_colony"   path="/EnterColonyPlates.jsp"/>
       <forward  name="success_enter_result"   path="/EnterProcessResults.jsp"/>
+      <forward  name="success_mgc_process_duplicate_plates" path="/MgcProcessDuplicateSequences.jsp" />
       <forward  name="success_mgc_process_full_plates" path="/MgcProcessFullPlates.jsp" />
     </action> 
 
@@ -718,6 +719,7 @@
             scope="request"
             input="/ImportMgcCloneList.jsp">
       <forward name="proccessing" path="/ImportMgcMasterListResponse.jsp"/>
+
     </action>
     
     <!-- Action mapping for MGC new plates print barcode -->
@@ -766,6 +768,14 @@
             scope="request"
             input="/MgcProcessFullPlates.jsp">
       <forward name="success" path="/ProcessSpecialOligoOrder.jsp"/>
+     </action>
+
+      <action path="/MgcDeleteDuplicatedSequences"
+            type="edu.harvard.med.hip.flex.action.MgcDeleteDuplicatedSequencesAction"
+            name="mgcOrderOligoForm"
+            scope="request"
+            input="/MgcProcessDuplicateSequences.jsp">
+      <forward name="success" path="/MgcProcessFullPlates.jsp"/>
      </action>
 
     <!-- Action mapping for MGC request import -->
