@@ -82,7 +82,8 @@ public class IsolateTrackingEngine
      public static final int           ASSEMBLY_STATUS_FAILED_NO_MATCH = -10;  
     public static final int            ASSEMBLY_STATUS_PASS = 11;
     public static final int            ASSEMBLY_STATUS_SUBMITTED_BY_SEQUENCING_FACILITY = 12;
-    
+     public static final int            ASSEMBLY_STATUS_NOT_RUN = -1;
+     
     public static final int            ASSEMBLY_STATUS_CONFIRMED = 13;
     
      
@@ -96,7 +97,7 @@ public class IsolateTrackingEngine
     private     int     m_userchangedrank_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;//date of end reads analysis
     private	int     m_flexinfo_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;//  isolate id
     private	int     m_sample_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET ;// resulting from the full sequencing
-    private     int     m_assembly_status = -1;
+    private     int     m_assembly_status = ASSEMBLY_STATUS_NOT_RUN;
        
     private     FlexInfo    m_flexinfo = null;
     
@@ -249,21 +250,30 @@ public class IsolateTrackingEngine
         }
     }
     
-    /*
-    public String getAssemblyStatusAsString()
+    
+    public static String getAssemblyStatusAsString(int status)
     {
-        switch (m_assembly_status)
+        switch (status)
         {
-              case ASSEMBLY_STATUS_PASS : return "Assembled with sucess";
-            case ASSEMBLY_STATUS_N_CONTIGS :return "Assembly failed";
+            case ASSEMBLY_STATUS_SUBMITTED_BY_SEQUENCING_FACILITY: return "Sequence submitted by sequencing facility";
+            case ASSEMBLY_STATUS_PASS : return "Assembled";
+            case ASSEMBLY_STATUS_N_CONTIGS :return "Assembly failed: no contigs";
             case ASSEMBLY_STATUS_CONFIRMED : return "Assembly confirmed";
-            case ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED : return "Assembly failed: cds not covered";
-            case ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED : return "Assembly failed: linker 5 not covered";
-            case ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED : return "Assembly failed: linker 3 not covered";
+            case ASSEMBLY_STATUS_NO_CONTIGS: return "Assembly failed: more than one contig";
+            case ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED : return "Assembly pass: sequence is not submitted: cds not covered";
+            case  ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED: return "Assembly pass: sequence is not submitted: both linkers are not covered";
+            case ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED : return "Assembly pass: sequence is not submitted: linker 5 not covered";
+            case ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED : return "Assembly pass: sequence is not submitted: linker 3 not covered";
+            case ASSEMBLY_STATUS_FAILED_NO_MATCH : return "Assembly pass: sequence is not submitted: no match or gaps in coverage";
+            case ASSEMBLY_STATUS_NOT_RUN: return "Assembler not run";
             default: return "Not known";
         }
     }
-    */
+    public  String getAssemblyStatusAsString()
+    {
+        return getAssemblyStatusAsString (m_assembly_status);
+       
+    }
     
     public FlexInfo  getFlexInfo()throws BecDatabaseException
     {
