@@ -1,7 +1,7 @@
-/* $Id: ContainerProcessQueue.java,v 1.2 2001-04-25 18:37:59 dongmei_zuo Exp $ 
+/* $Id: ContainerProcessQueue.java,v 1.3 2001-04-26 14:26:12 dongmei_zuo Exp $ 
  *
- * File     : ContainerProcessQueue.java 
- * Date     : 04162001
+ * File     	: ContainerProcessQueue.java 
+ * Date     	: 04162001
  * Author	: Dongmei Zuo, Wendy Mar
  */
 
@@ -40,9 +40,12 @@ public class ContainerProcessQueue implements ProcessQueue {
 						"c.containertype as type, " +
 						"c.locationid as locationid, " +
 						"c.label as label, " +
+						"l.locationtype as locationtype, "+
+						"l.locationdescription as description, "+
 						"to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
-						"from containerheader c, queue q\n" +
+						"from containerheader c, containerlocation l, queue q\n" +
 						"where c.containerid = q.containerid\n" +
+						"and c.locationid = l.locationid\n"+
 						"and q.protocolid = "+protocolid);
 
 		try {
@@ -68,10 +71,13 @@ public class ContainerProcessQueue implements ProcessQueue {
 		String sql = new String("select c.containerid as id, "+
 						"c.containertype as type, " +
 						"c.locationid as locationid, " +
+						"l.locationtype as locationtype," +
+						"l.locationdescription as description,"+
 						"c.label as label, " +
 						"to_char(q.dateadded, 'fmMM-DD-YYYY') as dateadded\n" +
-						"from containerheader c, queue q\n" +
+						"from containerheader c, containerlocation l, queue q\n" +
 						"where c.containerid = q.containerid\n" +
+						"and c.locationid = l.locationid\n"+
 						"and q.protocolid = "+protocolid+
 						"and to_char(dateadded, 'fmYYYY-MM-DD') = "+date);
 		try {
@@ -195,19 +201,15 @@ public class ContainerProcessQueue implements ProcessQueue {
 				int id = ((BigDecimal)h.get("ID")).intValue();
 				String type = (String)h.get("TYPE");
 				int locationid = ((BigDecimal)h.get("LOCATIONID")).intValue();
+				String locationtype = (String)h.get("LOCATIONTYPE");
+				String description = (String)h.get("DESCRIPTION");
 				String label = (String)h.get("LABEL");
 				String date = (String)h.get("DATEADDED");
+				Location location = new Location(locationid, locationtype,description);
 
-				try {
-					Container c = factory.getContainer(type);
-					c.setId(id);
-					c.setLocation(locationid);
-					c.setLabel(label);
-					QueueItem item = new QueueItem(c, protocol, date);
-					items.addLast(item);
-				} catch (FlexCoreException exception) {
-					throw new FlexProcessException(exception.getMessage());
-				}
+				Container c = new Container(id, type, location, label);
+				QueueItem item = new QueueItem(c, protocol, date);
+				items.addLast(item);
 			}
 			return items;
 		} catch (FlexDatabaseException exception) {
@@ -216,16 +218,17 @@ public class ContainerProcessQueue implements ProcessQueue {
 	}
 
 	public static void main(String [] args) {
-		ContainerProcessQueue queue = new ContainerProcessQueue();
-		Protocol protocol = new Protocol(10, "test", "test");
-
 		try {
+			QueueFactory factory = new StaticQueueFactory();
+			ContainerProcessQueue queue = (ContainerProcessQueue)factory.makeQueue("ContainerProcessQueue");
+			Protocol protocol = new Protocol(10, "test", "test");
+		
 			DatabaseTransaction t = DatabaseTransaction.getInstance();
 			t.executeSql("insert into containerlocation values (1, 'test',null)");
 			t.executeSql("insert into containertype values ('PCR')");
 			for(int i=1; i<6; i++) 
 				t.executeSql("insert into containerheader values ("+i+",'PCR', 1, 'PCR1')");
-			t.executeSql("insert into processprotocol values (10, 'test', 'test')");
+			t.executeSql("insert into processprotocol values (10, 'test', 'test', null)");
 	
 			System.out.println("Insert into queue:");
 			for(int i=1; i<6; i++) {
