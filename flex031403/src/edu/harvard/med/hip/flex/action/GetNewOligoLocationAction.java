@@ -67,12 +67,14 @@ public class GetNewOligoLocationAction extends ResearcherAction {
         int fivepDaughterLocation = ((CreatePCRPlateForm)form).getFivepDaughterLocation();
         int threepOpenDaughterLocation = ((CreatePCRPlateForm)form).getThreepOpenDaughterLocation();
         int threepClosedDaughterLocation = ((CreatePCRPlateForm)form).getThreepClosedDaughterLocation();
+        int templateid = ((CreatePCRPlateForm)form).getTemplateid();
         
         // Get the workflow and project from the form and store in request.
         int workflowid = ((CreatePCRPlateForm)form).getWorkflowid();
         int projectid = ((CreatePCRPlateForm)form).getProjectid();
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
+        request.setAttribute("templateid", new Integer(templateid));
         
         try {
             

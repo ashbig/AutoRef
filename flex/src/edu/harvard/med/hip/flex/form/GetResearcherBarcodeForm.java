@@ -26,6 +26,7 @@ public class GetResearcherBarcodeForm extends ProjectWorkflowForm {
     private String researcherBarcode = null;
     
     private int writeBarcode = 0;
+    private int templateid;
     
     /**
      * Set the flag to the given value.
@@ -62,7 +63,25 @@ public class GetResearcherBarcodeForm extends ProjectWorkflowForm {
     public String getResearcherBarcode() {
         return researcherBarcode;
     }
-      
+
+    /**
+     * Set the templateid.
+     *
+     * @param templateid The value to be set to.
+     */
+    public void setTemplateid(int templateid) {
+        this.templateid = templateid;
+    }
+    
+    /**
+     * Return the templateid.
+     *
+     * @return The templateid.
+     */
+    public int getTemplateid() {
+        return templateid;
+    }
+    
     /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any

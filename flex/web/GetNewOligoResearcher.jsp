@@ -18,7 +18,10 @@
 <p>
 <html:form action="/GetNewOligoResearcher.do" focus="researcherBarcode">
 <input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
-<input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+<input type="hidden" name="projectid" value=<bean:write name="projectid"/>>
+<logic:present name="templateid">
+    <input type="hidden" name="templateid" value=<bean:write name="templateid"/>> 
+</logic:present> 
 <table>
     <tr>
     <td class="label">Process name:</td>

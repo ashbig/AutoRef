@@ -66,6 +66,9 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
         Researcher researcher = null;
         int workflowid = ((GetResearcherBarcodeForm)form).getWorkflowid();
         int projectid = ((GetResearcherBarcodeForm)form).getProjectid();
+        int templateid = ((GetResearcherBarcodeForm)form).getTemplateid();
+        if(templateid == 0)
+            templateid = -1;
         
         // Validate the researcher barcode.
         try {
@@ -145,8 +148,8 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
             if(threepClosedD != null) {
                 threepClosedDid = threepClosedD.getId();
             }
-            
-            Plateset pset = new Plateset(fivepOligoD.getId(), threepOpenD.getId(), threepClosedDid);
+                        
+            Plateset pset = new Plateset(fivepOligoD.getId(), threepOpenD.getId(), threepClosedDid, templateid);
             pset.insert(conn);
             
             Project project = new Project(projectid);

@@ -35,6 +35,7 @@ public class CreatePCRPlateForm extends ProjectWorkflowForm {
     private int pcrOpenLocation;
     private int pcrClosedLocation;
     private String subProtocolName = null;
+    private int templateid;
     
     /**
      * Set the fivePlate to the given value.
@@ -220,6 +221,24 @@ public class CreatePCRPlateForm extends ProjectWorkflowForm {
      */
     public String getSubProtocolName() {
         return subProtocolName;
+    }
+   
+    /**
+     * Set the templateid.
+     *
+     * @param templateid The value to be set to.
+     */
+    public void setTemplateid(int templateid) {
+        this.templateid = templateid;
+    }
+    
+    /**
+     * Return the templateid.
+     *
+     * @return The templateid.
+     */
+    public int getTemplateid() {
+        return templateid;
     }
     
     /**

@@ -115,6 +115,29 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 threepClosed = ps.getThreepClosedContainer();
             }
             
+            Container mgc = null;
+            Container template = null;
+            if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW) {
+                try {
+                    mgc = ps.getMgcContainer();
+                } catch (Exception ex) {}
+                
+                if(mgc != null) {
+                    template = Container.findTemplateFromRearrayedMgc(mgc);
+                    if(template == null) {
+                        errors.add("fivepPlate", new ActionError("error.mgc.template.unavailable"));
+                        saveErrors(request, errors);
+                        return (new ActionForward(mapping.getInput()));
+                    }
+                }
+                
+                if(mgc == null) {
+                    errors.add("fivepPlate", new ActionError("error.mgc.rearray.notfound"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+            }
+            
             ((CreatePCRPlateForm)form).setFivepSourceLocation(fivep.getLocation().getId());
             ((CreatePCRPlateForm)form).setThreepOpenSourceLocation(threepOpen.getLocation().getId());
             
@@ -161,6 +184,10 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 }
                 
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
+                
+                if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW) {
+                    request.setAttribute("templateid", new Integer(template.getId()));
+                }
                 return (mapping.findForward("success_oligo_dilute"));
             } else {
                 //map the container to the new container
