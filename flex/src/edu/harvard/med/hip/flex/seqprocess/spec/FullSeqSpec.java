@@ -17,10 +17,10 @@ import edu.harvard.med.hip.flex.util.*;
  */
 public class FullSeqSpec extends Spec
 {
-    public static final String FULL_SEQ_SPEC = "FULL_SEQ_SPEC";
-    public static final int FULL_SEQ_SPEC_INT = 1;
+    
     
     //values
+    
     public static final String FS_SILENT= "FS_SILENT";
      public static final String FS_CONSERVATIVE= "FS_CONSERVATIVE";
      public static final String FS_NON_CONSERVATIVE= "FS_NUN_CONSERVATIVE"; 
@@ -28,50 +28,71 @@ public class FullSeqSpec extends Spec
      public static final String FS_STOP= "FS_STOP";
      public static final String FS_N_100= "FS_N_100";
     public static final String FS_N_ROW= "FS_N_ROW";
+     
     /** Creates a new instance of EndReadsSpec */
    
-    public FullSeqSpec(Hashtable p, String na)
+    public FullSeqSpec(Hashtable p, String na, String submitter)
     {
-         super( p,  na, FULL_SEQ_SPEC);
+         super( p,  na, submitter,FULL_SEQ_SPEC_INT);
+         cleanup_parameters();
     }
     
-     public FullSeqSpec(Hashtable p, String na,int id) 
+     public FullSeqSpec(Hashtable p, String na, String submitter,int id) 
     {
-         super( p,  na, FULL_SEQ_SPEC,id);
+         super( p,  na, submitter, FULL_SEQ_SPEC_INT,id);
+         cleanup_parameters();
     }
      
-    public FullSeqSpec(int id) throws FlexDatabaseException
-    {
-         super( id, FULL_SEQ_SPEC);
-    }
+   
     
  
     
      public static ArrayList getAllSpecs() throws FlexDatabaseException
      {
-         return getAllSpecs(FULL_SEQ_SPEC);
+         return getAllSpecsByType(FULL_SEQ_SPEC_INT, true);
+     }
+     public static ArrayList getAllSpecNames() throws FlexDatabaseException
+     {
+         return getAllSpecsByType(FULL_SEQ_SPEC_INT, false);
      }
      
+     public static ArrayList getAllSpecsBySubmitter(String submitter) throws FlexDatabaseException
+     {
+         return getAllSpecsByTypeAndSubmitter(Spec.FULL_SEQ_SPEC_INT, submitter);
+     }
+     
+     
+     //cleans up not neaded parameters submitted by html form
      protected void cleanup_parameters()
      {
-           String k = null;
-         
-         for (Enumeration e = m_params.keys() ; e.hasMoreElements() ;)
+         try
+        {
+            cleanup_parameters("FS_");
+        }
+         catch(Exception e1)
          {
-                k = (String)e.nextElement();
-             
-                if ( k.length() < 4)
-               {
-                   m_params.remove(k);
-                   continue;
-               }
-                if (! k.substring(0,3).toUpperCase().equalsIgnoreCase("FS_") )
-                {
-                    m_params.remove(k);
-                    
-                }
-                
+             System.out.println(e1.getMessage());
          }
      }
      
+     public boolean validateParameters()
+     {
+         return true;
+     }
+     
+     
+      //-------------------- mani -----------------------
+     public static void main(String [] args) 
+     {
+        Connection c = null;
+  ArrayList specs =null;
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+             specs =  FullSeqSpec.getAllSpecsBySubmitter("htaycher");
+            System.out.print(specs.size());
+        }
+        catch(Exception e){ System.out.print(specs.size());}
+        System.exit(0);
+     }
 }

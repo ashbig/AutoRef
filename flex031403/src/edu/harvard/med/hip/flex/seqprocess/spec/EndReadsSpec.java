@@ -18,31 +18,38 @@ import edu.harvard.med.hip.flex.util.*;
 public class EndReadsSpec extends Spec
 {
     
-    public static final String END_READS_SPEC = "END_READS_SPEC";
-    public static final int    END_READS_SPEC_INT = 0;
+   
     
     /** Creates a new instance of EndReadsSpec */
    
-    public EndReadsSpec(Hashtable p, String na) 
+    public EndReadsSpec(Hashtable p, String na, String submitter) 
     {
-         super( p,  na, END_READS_SPEC);
+        super( p,  na, submitter, END_READS_SPEC_INT);
+        cleanup_parameters();
     }
     
-     public EndReadsSpec(Hashtable p, String na, int id) 
+     public EndReadsSpec(Hashtable p, String na, String submitter,int id) 
     {
-         super( p,  na, END_READS_SPEC, id);
-    }
-    public EndReadsSpec(int id) throws FlexDatabaseException
-    {
-              super(id, END_READS_SPEC);
+         super( p,  na, submitter,END_READS_SPEC_INT, id);
+         cleanup_parameters();
     }
     
-    
+      
  
     
      public static ArrayList getAllSpecs() throws FlexDatabaseException
      {
-         return getAllSpecs(END_READS_SPEC);
+         return getAllSpecsByType(END_READS_SPEC_INT, true);
+     }
+     
+     public static ArrayList getAllSpecNames() throws FlexDatabaseException
+     {
+         return getAllSpecsByType(END_READS_SPEC_INT, false);
+     }
+     
+     public static ArrayList getAllSpecsBySubmitter(String submitter) throws FlexDatabaseException
+     {
+         return getAllSpecsByTypeAndSubmitter(Spec.END_READS_SPEC_INT, submitter);
      }
      
      public String getPhredParams() throws FlexDatabaseException
@@ -54,6 +61,9 @@ public class EndReadsSpec extends Spec
          return res;
      }
      
+     
+     
+     /*
      protected void cleanup_parameters()
      {
           String k = null;
@@ -189,5 +199,127 @@ public class EndReadsSpec extends Spec
                 
          }
      }
+      **/
+      protected void cleanup_parameters()
+     {
+         String k = null;
+         
+             try
+             {
+                cleanup_parameters("ER_");
+             
+                //analysis
+               /* if ( m_params.get("E_isLowScore").equals("0"))
+                {
+                    
+                        m_params.remove("E_ER_HQ_SILENT");
+                        m_params.remove("E_ER_LQ_SILENT");
+                        m_params.remove("E_ER_HQ_CONSERVATIVE");
+                        m_params.remove("E_ER_LQ_CONSERVATIVE");
+                        m_params.remove("E_ER_HQ_NON_CONSERVATIVE" );
+                        m_params.remove("E_ER_LQ_NON_CONSERVATIVE");
+                        m_params.remove("E_ER_HQ_FRAMESHIFT");
+                        m_params.remove("E_ER_LQ_FRAMESHIFT" );
+                        m_params.remove("E_ER_HQ_STOP");
+                        m_params.remove("E_ER_LQ_STOP");
+                }
+                **/
+               if ( m_params.get("E_isLowScore").equals("0"))
+              {
+                    m_params.remove("E_ER_HIGH_QUAL");
+                    m_params.remove("E_ER_LOW_QUAL");
+              }
+                //trimming
+              if ( m_params.get("E_isTrim").equals("0"))//no trimming
+              {
+                  m_params.remove("E_ER_VECTOR" );
+                  m_params.remove("E_isPhredTrimMode");
+                  m_params.remove("E_ER_PHRED_TRIM_PR");
+              }
+              else
+              {
+                  if ( m_params.get("E_isPhredTrimMode").equals("0") )//phred trimming using
+                  {
+                        m_params.remove("E_ER_PHRED_TRIM_PR");
+                  }
+              }
+          
+            
+         }
+         catch(Exception e1)
+         {
+             System.out.println(e1.getMessage());
+         }
+              
+     }
      
+     public boolean validateParameters()
+     {
+         return true;
+     }
+     
+     
+     
+     
+     
+     
+     //-------------------- mani -----------------------
+     public static void main(String [] args) {
+        Connection c = null;
+        int oligoid = 1;
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            c = t.requestConnection();
+            Hashtable h = new Hashtable();
+          
+         h.put("ER_LQ_STOP","50");
+h.put("ER_LOW_QUAL","3");
+h.put("ER_LQ_FRAMESHIFT","50");
+h.put("isTrim","1");
+h.put("ER_HQ_NON_CONSERVATIVE","18");
+h.put("ER_PHRED_TRIM_PR","0.05");
+h.put("ER_LQ_NON_CONSERVATIVE","3");
+h.put("ER_HQ_CONSERVATIVE","3");
+h.put("ER_HIGH_QUAL","2");
+h.put("B1","Submit");
+h.put("ER_LQ_CONSERVATIVE","1");
+h.put("ER_VECTOR","");
+h.put("SET_NAME","default");
+h.put("ER_LQ_SILENT","1");
+h.put("ER_PHRED_CUT_OFF","20");
+h.put("ER_HQ_SILENT","2");
+h.put("ER_PHRED_LOW_CUT_OFF","10");
+h.put("ER_HQ_STOP","100");
+h.put("isPhredTrimMode","1");
+h.put("ER_HQ_FRAMESHIFT","100");
+h.put("forwardName","1");
+//check for name unique, if not add _1 to user selected name
+            String spec_name_suffix = "";
+            spec_name_suffix = Spec.getNameSuffix("default", Spec.END_READS_SPEC_INT) ;
+            String spec_name = "default"+spec_name_suffix;
+            
+            EndReadsSpec s = new EndReadsSpec(h,spec_name,"htaycher");
+          
+            //s.insert(c);      
+           // c.commit();
+           
+          
+      //       Primer3Spec s = new Primer3Spec(9);
+         /*
+           ArrayList a = Spec.getAllSpecsByType(Primer3Spec.PRIMER3_SPEC_INT);
+              // a = Spec.getAllSpecs(EndReadsSpec.END_READS_SPEC);
+               
+               for (int count = 0; count < a.size() ; count++)
+    {
+	Primer3Spec spec = (Primer3Spec) a.get(count);
+               spec.getParameterByNameString("p_primer_min".toUpperCase());
+               spec.getParameterByNameInt("p_primer_opt".toUpperCase());
+        }*/
+        }
+        catch(Exception e)
+        {}
+        System.exit(0);
+     }
+   
 }
