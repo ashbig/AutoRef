@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.1 2001-05-08 09:28:34 dongmei_zuo Exp $ 
+/* $Id: SequenceProcessQueue.java,v 1.2 2001-05-08 18:54:42 dongmei_zuo Exp $ 
  *
  * File     	: SequenceProcessQueue.java 
  * Date     	: 05072001
@@ -195,14 +195,15 @@ public class SequenceProcessQueue implements ProcessQueue {
 			t.executeSql("insert into processprotocol values (10, 'test', 'test', null)");
 			
 			for (int i=1; i<5; i++) {
-				t.executeSql("insert into flexsequence(sequenceid, flexstatus, genusspecies) values("+i+", 'REJECTED', Test Species')");
+				t.executeSql("insert into flexsequence(sequenceid, flexstatus, genusspecies) values("+i+", 'REJECTED', 'Test Species')");
+			}
 			
 			System.out.println("Insert into queue:");
 			for(int i=1; i<5; i++) {
 				System.out.println("Sequence ID: "+i);
-				t.executeSql("insert into queue values(10, sysdate, null, null, null,"+i+")");
+				t.executeSql("insert into queue(protocolid, dateadded, sequenceid) values(10, sysdate,"+i+")");
 			}
-
+System.out.println("OK");
 			LinkedList items = queue.getQueueItems(protocol, t);
 			ListIterator iter = items.listIterator();
 
