@@ -246,7 +246,8 @@ public class TraceFileProcessingRunner extends ProcessRunner
               hip_file_entry.setOrientation(original_file_info.getOrientation());
               file_name = createHipFileName( hip_file_entry, original_file_info);
               if ( original_file_info.getVersion() != null) file_name+="."+original_file_info.getVersion();
-             file_name+="."+original_file_info.getExtension();
+              file_name+="."+original_file_info.getExtension();
+             
              renaming_file_entries.add(original_file_info.getFileName()+"\t"+file_name);
           }
          
@@ -467,8 +468,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
              if (m_sequencing_facility == SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC )
              {
                  //5236_H12_JLJK_OPLATE000333_A01_R_082.ab1	jPlateNumber_joplatewell__flexsequenceid_cloneid_R/F1.ab1
-                 fn = original_file_info.getVersion()+"_"+original_file_info.getWellName() +
-                 "_"+ entry.getSequenceId() +"_"+entry.getCloneID()+"_"+original_file_info.getOrientation() +"1."+original_file_info.getExtension();
+                 fn = original_file_info.getAdditionalInfo()+"_"+original_file_info.getWellName() +
+                 "_"+ entry.getSequenceId() +"_"+entry.getCloneID()+"_"+original_file_info.getOrientation() +"1";
+                
              }
              else
              {
@@ -486,13 +488,13 @@ public class TraceFileProcessingRunner extends ProcessRunner
     {   try
          {
           TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
-          runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
-            runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
-            runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
-            runner.setInputDirectory("E:\\Sequences for BEC\\Tularensis\\test");
+runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
+runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
+runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
+runner.setInputDirectory("E:\\Sequences for BEC\\Tularensis\\test");
 runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Tularensis\\test\\mapping.txt"));
-     runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-       
+runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+
            
          //         runner.setReadDirection("F");
              //       runner.setReadType("I");

@@ -29,6 +29,8 @@ public class SequencingFacilityFileName
     private String          m_extention = null;
     private boolean         m_isProperName = false;
     
+    private String          m_additional_info = null;
+    
     /** Creates a new instance of BroadFileName */
     public SequencingFacilityFileName(String file_name, int seq_facility_code)
     {
@@ -51,7 +53,10 @@ public class SequencingFacilityFileName
     public String          getOrientation (){ return m_orientation ;}
     public String          getExtension(){ return m_extention;}
     public boolean         isWriteFormat (){ return m_isProperName ;}
-
+//used as temporary holder
+     public void          setAdditionalInfo (String s){  m_additional_info =s  ;}
+     public String        getAdditionalInfo ( ){return  m_additional_info  ;}
+     
     public static ArrayList sortByPlateWell(ArrayList file_names)
     {
            //sort array by cds length
@@ -111,7 +116,7 @@ public class SequencingFacilityFileName
          if ( items.size() != 7) return;
         m_file_name = htmbc_file_name;
         
-        m_version = (String)items.get(0);//run plate id
+        m_additional_info = (String)items.get(0);//run plate id
         m_well_name = (String)items.get(4);
         m_well_number = Algorithms.convertWellFromA8_12toInt(m_well_name);
         m_extention = htmbc_file_name.substring(htmbc_file_name.indexOf('.') + 1);
