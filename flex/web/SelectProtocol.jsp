@@ -17,7 +17,7 @@
     <tr>
     <td><b>Select process protocol:</b></td>
     <td><select name="protocol">
-        <logic:iterate id="oneProtocol" name="protocol" scope="request">
+        <logic:iterate id="oneProtocol" name="protocol" scope="session">
             <option value="<bean:write name="oneProtocol" property="id"/>"><bean:write name="oneProtocol" property="processname"/>
         </logic:iterate>
     </td>
