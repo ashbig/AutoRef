@@ -13,6 +13,7 @@ import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.programs.*;
+import edu.harvard.med.hip.bec.file.*;
 import java.sql.*;
 /**
  *
@@ -362,7 +363,7 @@ public class Primer3Wrapper
             ht.put("P_EST_SEQ","50");
 
             re = new ArrayList();
-            Primer3Spec ps = new Primer3Spec(ht,"htaycher",null);
+            Primer3Spec ps = new Primer3Spec(ht,null,1);
             String str = "ATGGAGATGCTCCAGGGGCTGCTGCTGTTGCTGCTGCTGAGCATGGGCGGGGCATGGGCATCCAGGGAGCCGCTTCGGCCATGGTGCCACCCCATCAATGCCATCCTGGCTGTGGAGAAGGAGGGCTGCCCCGTGTGCATCACCGTCAACACCACCATCTGTGCCGGCTACTGCCCCACCATGATGCGCGTGCTGCAGGCGGTCCTGCCGCCCCTGCCTCAGGTGGTGTGCACCTACCGTGATGTGCGCTTCGAGTCCATCCGGCTCCCTGGCTGCCCGCGTGGCGTGGACCCCGTGGTCTCCTTCCCTGTGGCTCTCAGCTGTCGCTGTGGACCCTGCCGCCGCAGCACCTCTGACTGTGGGGGTCCCAAAGACCACCCCTTGACCTGTGACCACCCCCAACTCTCAGGCCTCCTCTTCCTCTAA";
             RefSequence tr = new RefSequence(1);
             tr.setText(str);

@@ -40,14 +40,18 @@ public class User
      */
     public User(String name, String email, String group)throws BecDatabaseException
     {
-       
-            m_id = BecIDGenerator.getID("nameid");
-       
-        m_name = name;
+       m_name = name;
         m_email = email;
         m_group = group;
     }
-    
+     public User(int id, String name, String email, String password, String group)throws BecDatabaseException
+    {
+       m_name = name;
+        m_email = email;
+        m_group = group;
+        m_id = id;
+        m_password = password;
+    }
     /**
      * Constructor. Return an User object.
      *
@@ -58,8 +62,7 @@ public class User
      */
     public User(String name, String password)throws BecDatabaseException
     {
-        m_id = BecIDGenerator.getID("nameid");
-        
+       
         m_name = name;
         m_password = password;
     }
@@ -257,8 +260,8 @@ public class User
     {
         try
         {
-            User user = new User("Allison Halleck", "m_password");
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            User user = new User("htaycher", "htaycher");
+            DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
             Connection conn = t.requestConnection();
             String m_group = user.getUserGroup();
             

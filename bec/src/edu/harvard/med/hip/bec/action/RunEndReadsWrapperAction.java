@@ -99,38 +99,47 @@ public class RunEndReadsWrapperAction extends ResearcherAction
              int resultid = -1; 
             try
             {
-                  EndReadsWrapper ew = new EndReadsWrapper(i_traceFilesDir,i_inputTraceDir,i_errorDir, i_outputBaseDir_WrongFormatFiles,i_empty_samples_directory);
-                  ArrayList reads = ew.run();
-                  // insert reads into db
-                  Read read = null; int[] istr_info = new int[2];
-                  for (int count = 0; count < reads.size(); count++)
+                
+                 conn = DatabaseTransaction.getInstance().requestConnection();
+                EndReadsWrapper ew = new EndReadsWrapper(i_traceFilesDir,i_inputTraceDir,i_errorDir, i_outputBaseDir_WrongFormatFiles,i_empty_samples_directory);
+                ArrayList reads = ew.run(conn);
+             
+        
+              Read read = null; int[] istr_info = new int[2];
+              for (int count = 0; count < reads.size(); count++)
+              {
+                  read = (Read) reads.get(count);
+                  istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
+                  read.setIsolateTrackingId( istr_info[0]);
+                  //get reasult id
+                  if ( read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL)
                   {
-                      read = (Read) reads.get(count);
-                      istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
-                      read.setIsolateTrackingId( istr_info[0]);
-                      //get reasult id
-                      if ( read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL)
-                      {
-                          resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_REVERSE);
-                      }
-                      if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
-                      {
-                          resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_FORWARD);
-                      }
-                      //insert read data
-                      if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_REVERSE)
-                      {
-                          read.insert(conn);
-                          Result.updateResultValueId( resultid,read.getId(), conn);
-                      }
-                      
-                      Result.updateType( resultid,read.getType(), conn);
-                      if (istr_info[1] == IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED)
-                      {
-                        IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN, istr_info[0],  conn );
-                      }
-                      conn.commit();
+                      resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_REVERSE);
                   }
+                  if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
+                  {
+                      resultid = read.findResultIdFromFlexInfo(Result.RESULT_TYPE_ENDREAD_FORWARD);
+                  }
+                  //insert read data
+                  if ( read.getType() == Read.TYPE_ENDREAD_FORWARD || read.getType() == Read.TYPE_ENDREAD_REVERSE)
+                  {
+                      read.setResultId(resultid);
+                      read.insert(conn);
+                      Result.updateResultValueId( resultid,read.getId(), conn);
+                  }
+
+                  Result.updateType( resultid,read.getType(), conn);
+                  if (istr_info[1] == IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED)
+                  {
+                    IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN, istr_info[0],  conn );
+                  }
+                  conn.commit();
+                  String org_trace_file_name = read.getTraceFileName().substring( read.getTraceFileName().lastIndexOf(File.separator));
+                  File org_trace_file = new File(i_inputTraceDir+org_trace_file_name);
+                  org_trace_file.delete();
+             }
+             
+        
                   
             }
             catch(Exception ex)
@@ -140,6 +149,12 @@ public class RunEndReadsWrapperAction extends ResearcherAction
             }
             finally
             {
+                try
+                {
+         //send errors
+                     Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                    "elena_taycher@hms.harvard.edu", "Request for end reads wrapper: error messages.", "Errors\n Processing request for end read wrapper:\n" ,i_error_messages);
+                }catch(Exception e){}
                 DatabaseTransaction.closeConnection(conn);
             }
         }

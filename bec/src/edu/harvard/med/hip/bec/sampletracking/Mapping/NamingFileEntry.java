@@ -19,7 +19,7 @@ public class NamingFileEntry
     private static final String FILE_PATH = "/tmp/";
     
     private int     m_plateid = -1;
-    private int     m_wellid = -1;
+    private String  m_wellid = null;
     private int     m_cloneid = -1;
     private int     m_sequenceid = -1;
     private int     m_readnum = -1;
@@ -27,7 +27,7 @@ public class NamingFileEntry
     
     private static String  m_filePath =FILE_PATH;
        
-        public NamingFileEntry(int cloneid,String orientation,int  plateid, int wellid, int sequenceid,
+        public NamingFileEntry(int cloneid,String orientation,int  plateid, String wellid, int sequenceid,
         int readnum)
         {
             m_plateid = plateid;
@@ -41,7 +41,7 @@ public class NamingFileEntry
         
        
        public int     getPlateId (){ return m_plateid  ;}
-        public int     getWellId (){ return m_wellid  ;}
+        public String     getWellId (){ return m_wellid  ;}
         public int     getCloneID (){ return m_cloneid  ;}
         public int     getSequenceId (){ return m_sequenceid  ;}
         public int     getReadNum (){ return m_readnum  ;}
@@ -49,7 +49,7 @@ public class NamingFileEntry
      
         public String toString()
         {
-            return m_plateid+DILIM+m_wellid+DILIM+m_sequenceid+DILIM+m_cloneid+"."+m_orientation+m_readnum;
+            return m_plateid+DILIM+m_wellid+DILIM+m_sequenceid+DILIM+m_cloneid+DILIM+m_orientation+m_readnum+".ab1";
         }
         
         //function writes robot file

@@ -4,13 +4,8 @@
  * Created on April 7, 2003, 1:48 PM
  */
 
-/*
- * CreatEndReadContainersAction.java
- *
- * Created on April 4, 2003, 3:34 PM
- */
-
 package edu.harvard.med.hip.bec.action;
+
 
 /**
  *
@@ -28,6 +23,8 @@ import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
@@ -42,10 +39,10 @@ public class RunEndReadsEvaluationAction extends ResearcherAction
     
     
     public ActionForward becPerform(ActionMapping mapping,
-                    ActionForm form,
-                    HttpServletRequest request,
-                    HttpServletResponse response)
-                    throws ServletException, IOException
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws ServletException, IOException
     {
         // place to store errors
         ActionErrors errors = new ActionErrors();
@@ -55,77 +52,129 @@ public class RunEndReadsEvaluationAction extends ResearcherAction
         // The form holding the status changes made by the user
         ArrayList master_container_ids = null;//get from form
         int     specid_penalty_values = -1;//get from form
-        int    specid_maximum_values = -1;//get from form
+        int     specid_maximum_values = -1;//get from form
         boolean isRunPolymorphismFinder = false;//
         int     specid_polymorphism = -1;
         
-        
-        // The database connection used for the transaction
-        Connection conn = null;
-        ArrayList master_plates = new ArrayList();
-        
+         //create specs array for the process
+         ArrayList specs = new ArrayList();
         try
         {
-           
-            //request object
-            ArrayList processes = new ArrayList();
-            Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
-                                new java.util.Date(),
-                                user.getId(),
-                                processes,
-                                Constants.TYPE_OBJECTS);
-           
-            // conncection to use for transactions
-            conn = DatabaseTransaction.getInstance().requestConnection();
-            
-            // create a new processes Object per each master plate in
-            // er container out
-            
-       
-            
-             /*
-              * finally we must insert all new objects
-              */
-           
-            // commit the transaction
-            conn.commit();
-            // if we get here, we are error free
-            //request.setAttribute(Constants.APPROVED_SEQUENCE_LIST_KEY, "");
-            return mapping.findForward("success");
-            
+            ActionRunner runner = new ActionRunner();
+            runner.setContainerIds(master_container_ids );
+            runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(specid_maximum_values, Spec.FULL_SEQ_SPEC_INT));
+            runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(specid_penalty_values, Spec.END_READS_SPEC_INT));
+            runner.setPolymorphismSpec((PolymorphismSpec)Spec.getSpecById(specid_polymorphism, Spec.POLYMORPHISM_SPEC_INT));
+            runner.setUser(user);
+            Thread t = new Thread(runner);
+            t.start();
+            return mapping.findForward("proccessing");
         }
-        
-        catch(Exception ex)
+         catch(Exception ex)
         {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.process.error", ex));
-            DatabaseTransaction.rollback(conn);
+            errors.add(ActionErrors.GLOBAL_ERROR,     new ActionError("error.process.error", ex));
             request.setAttribute(Action.EXCEPTION_KEY, ex);
-            DatabaseTransaction.rollback(conn);
             return (mapping.findForward("error"));
         }
-        finally
+        
+        
+       
+    
+    }
+    
+    class ActionRunner implements Runnable
+    {
+        private ArrayList           i_master_container_ids = null;//get from form
+        private boolean             i_isRunPolymorphismFinder = false;//get from form
+        
+        private FullSeqSpec         i_fullseq_spec = null;
+        private EndReadsSpec        i_endreads_spec = null;
+        private PolymorphismSpec    i_polymorphism_spec = null;
+        private User                i_user = null;
+        
+        private ArrayList   i_error_messages = null;
+        
+        public ActionRunner()
         {
-            DatabaseTransaction.closeConnection(conn);
+            i_error_messages = new ArrayList();
         }
+        public void         setContainerIds(ArrayList v)        { i_master_container_ids = v;}
+        public void         setCutoffValuesSpec(FullSeqSpec specs)        {i_fullseq_spec = specs;}
+        public void         setPenaltyValuesSpec(EndReadsSpec specs)        {i_endreads_spec = specs;}
+        public void         setPolymorphismSpec(PolymorphismSpec specs)        {i_polymorphism_spec = specs; i_isRunPolymorphismFinder = true;}
+        
+        
+        
+        public  void        setUser(User v){i_user=v;}
+        
+        public void run()
+        {
+            // The database connection used for the transaction
+            Connection conn = null;
+            ArrayList master_plates = new ArrayList();
+            ArrayList files = new ArrayList();
+            
+            try
+            {
+                // conncection to use for transactions
+                conn = DatabaseTransaction.getInstance().requestConnection();
+                //request object
+                ArrayList processes = new ArrayList();
+                Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                            new java.util.Date(),
+                                            i_user.getId(),
+                                            processes,
+                                            Constants.TYPE_OBJECTS);
+
+                // Process object create
+                ArrayList specs = new ArrayList();
+                specs.add(i_fullseq_spec);
+                specs.add( i_endreads_spec );
+                if ( i_polymorphism_spec != null)
+                {
+                    specs.add(i_polymorphism_spec);
+                }
+                ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                                            ProcessDefinition.ProcessIdFromProcessName(ProcessDefinition.RUN_ENDREADS_EVALUATION),
+                                                            actionrequest.getId(),
+                                                            specs,
+                                                            Constants.TYPE_OBJECTS) ;
+                processes.add(process);
+                 //finally we must insert request
+                actionrequest.insert(conn);
+                // commit the transaction
+                conn.commit();
+
+                //get construct from db
+                
+                ArrayList constructs = Construct.getConstructsFromPlates(i_master_container_ids);
+                IsolateRanker isolate_ranker = null;
+                if (i_isRunPolymorphismFinder)
+                {
+                    isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs,  i_polymorphism_spec);
+                    
+                }
+                else
+                {
+                     isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs);
+                }
+                isolate_ranker.run(conn, i_error_messages);
+    
+            }
+
+            catch(Exception ex)
+            {
+                i_error_messages.add(ex.getMessage());
+                DatabaseTransaction.rollback(conn);
+            }
+            finally
+            {
+                DatabaseTransaction.closeConnection(conn);
+            }
         
     }
     
+    }
     
     
-    
-     /*-	new request-
-        new process(es) records
-         1.	new ER Container
-         2.	sample lineage
-         3.	new processObject per ER container
-         4.	new plateset record per master platenaming file for sequencing
-      *
-      *Master plate status – in ER
-      * function create new ER containers , rearray file for each plate and naming file for each plate
-      */
-  
-   
 }
-
-    

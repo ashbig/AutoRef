@@ -42,6 +42,7 @@ public class DiscrepancyFinder
      
      
      private boolean m_debug = false;
+     private boolean  m_endreads_analysis = false;
     
     /** Creates a new instance of DescrepancyFinder */
      public DiscrepancyFinder(SequencePair pair)
@@ -60,6 +61,7 @@ public class DiscrepancyFinder
     public void setSequencePair(SequencePair pair)    {        m_seqpair =  pair;    }
     
     public void setDebug(boolean b){ m_debug =b;}
+    public void setInputType(boolean v){m_endreads_analysis = v;}
     public void setIdentityCutoff(double d)
     { m_identitycutoff = d;}
     
@@ -96,7 +98,7 @@ public class DiscrepancyFinder
         //run blast n
         if (res_needle.getIdentity() != 100.0)
         {
-            if (res_needle.getIdentity() <= m_identitycutoff)
+            if (!m_endreads_analysis && res_needle.getIdentity() <= m_identitycutoff)
             {
                 pair.getQuerySequence().setStatus(BaseSequence.STATUS_NOMATCH);
                
@@ -150,7 +152,7 @@ public class DiscrepancyFinder
     
     
     
-    private ArrayList  run_analysis(NeedleResult res_needle,  int exper_sequence_id, int refseq_id)
+    public ArrayList  run_analysis(NeedleResult res_needle,  int exper_sequence_id, int refseq_id)
     
     {
         ArrayList res = new ArrayList();
@@ -314,18 +316,15 @@ public class DiscrepancyFinder
         
         String seq = "TTTTTTTTTTTTTTGAATTTGATAATCCTCCTTTTATTcCATATTAAACTTTAAAATTTGTACCACATTATTAAAGTATTACTTTTACTCACAGTAGTATTATACATAGACTTAACACAATTTTTAAAAATGTGTTTACTTAAAACAATATAATTCTCCTTTACAAAAGCAACTTTATATAAAATGTTTGGCTTAAGACTGTCATTGCTATTATGCCTTTGAATGAAATTCCACTCTTTCGCCTCCATTGTCCAGAAACAGGCACATATCAGCTTGTTTTCTTTAATGAATATTCTGTAACAAGTTCCTGAAGTTTTCTAATTCTTTCACACTTGTAGAAATTCTTCCAAATGCGTTGAATAATGATACTATTTCTTGTCTGGTTAGATGGAATTCATAACTAGGTCCACTTTCTGGCATATTTGCTATCAATTTCTCAGAAAATAAGATCTTCAGAGCAGTGCCCAAACCCTGAGTCTGAAGCTTTCCCCACAGACGACATTTAAAACAACCAACACAATCCATAATT";
         // String seq="GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTATCAGTCGACACCATGCGCGAGATCGTGCACATCCAGGCGGGCCAGTGCGGCAACCAGATCGGCGCCAAGTTTTGGGAGGTCATCAGTGATGAGCATGGGATTGACCCCACTGGCAGTTACCATGGAGACAGTGATTTGCAGCTGGAGAGAATCAATGTTTACTACAATGAAGCCACTGGTAACAAATATGTTCCTCGGGCCATCCTCGTGGATCTGGAGCCAGGCACGATGGATTCGGTTAGGTCTGGACCATTCGGCCAGATCTTCAGACCAGACAATTTCGTGTTTGGCCAGAGTGGAGCCGGGAATAACTGGGCCAAGGGCCACTACACAGAGGGAGCCGAGCTGGTCGACTCGGTCCTGGATGTGGTGAGGAAGGAGTCAGAGAGCTGTGACTGTCTCCAGGGCTTCCAGCTGACCCACTCTCTGGGGGGCGGCACGGGGTCCGGGATGGGCACCCTGCTCATCAGCAAGATCCGGGAAGAGTACCCAGACCGCATCATGAACACCTTCAGCGTCATGCCCTCACCCAAGGTGTCAGACACGGTGGTGGAGCCCTACAACGCCACCCTCTCGGTCCACCAGCTGGTGGAAAACACAGATGAAACCTACTGCATTGACAACGAGGCCCTGTATGACATCTGCTTCCGCACCCTGAAGCTGACCACCCCCACCTACGGGGACCTCAACCACCTGGTGTCGGCCACCATGAGCGGGGTCACCACCTGCCTGCGCTTCCCGGGCCAGCTGAACGCAGACCTGCGCAAGCTGGCGGTGAACATGGTGCCCTTCCCTCGCCTGCACTTCTTCATGCCCGGCTTCGCGCCCCTGACCAGCCGGGGCAGCCAGCAGTACCGGGCGCTCACGGTGCCCGAGCTCACCCAGCAGATGTTCGACTCCAAGAACATGATGGCCGCCTGCGACCCGCGCCACGGCCGCTACCTGACGGTGGCTGCCATCTTCCGGGGCCGCATGTCCATGAAGGAGGTGGACGAGCAGATGCTCAACGTGCAGAACAAGAACAGCAGCTACTTCGTGGAGTGGATCCCCAACAACGTGAAGACGGCCGTGTGCGACATCCCGCCCCGCGGCCTGAAGATGTCGGCCACCTTCATCGGCAACAGCACGGCCATCCAGGAGCTGTTCAAGCGCATCTCCGAGCAGTTCACGGCCATGTTCCGGCGCAAGGCCTTCCTGCACTGGTACACGGGCGAGGGCATGGACGAGATGGAGTTCACCGAGGCCGAGAGCAACATGAACGACCTGGTGTCCGAGTACCAGCAGTACCAGGACGCCACGGCCGACGAACAAGGGGAGTTCGAGGAGGAGGAGGGCGAGGACGAGGCTTTGGGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC";
-        
+          String queryFile = "c:\\blastoutput\\needle1203_-1.out";
         try
         {
-            AnalyzedScoredSequence fl = new AnalyzedScoredSequence(seq,127);
-            fl.setId(123);
-            BaseSequence tr = new BaseSequence(seq, BaseSequence.BASE_SEQUENCE);
-            tr.setId(127);
-            SequencePair pair = new SequencePair( fl,  tr);
-            DiscrepancyFinder df= new DiscrepancyFinder(pair);
-            df.setDebug(true);
-            df.run();
-            
+             NeedleResult res = new NeedleResult();
+             DiscrepancyFinder d =new DiscrepancyFinder(new ArrayList());
+            NeedleParser.parse(queryFile,res);
+            ArrayList m = d.run_analysis( res,  -1, 1203);
+           System.out.println(m.size());
+      
         }catch(Exception e)
         {
             System.out.println(e.getMessage());}

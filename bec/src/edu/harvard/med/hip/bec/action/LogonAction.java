@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2003-04-07 18:47:42 $
+ * $Revision: 1.3 $
+ * $Date: 2003-05-09 19:53:59 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.bec.Constants;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: Elena $
- * @version $Revision: 1.2 $ $Date: 2003-04-07 18:47:42 $
+ * @version $Revision: 1.3 $ $Date: 2003-05-09 19:53:59 $
  */
 
 public final class LogonAction extends Action
@@ -100,22 +100,15 @@ public final class LogonAction extends Action
         String username = ((LogonForm) form).getUsername();
         String password = ((LogonForm) form).getPassword();
         User user =  null;
-        try
-        {
-             user = new User(username,password);
-        }
-        catch(Exception e){}
         
         // get the access manager to verify they usernam/password combo.
         AccessManager accessManager = AccessManager.getInstance();
-        
-        
         try
         {
             // ask accessManager if the username and password are valid
-            if(!accessManager.authenticate(username,password))
+            user = accessManager.getUser(username,password);
+            if( user == null)
             {
-                
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.password.mismatch"));
             }
@@ -138,11 +131,6 @@ public final class LogonAction extends Action
         {
             menu = UserGroup.getMenu(user.getUserGroup());
             
-            System.out.println(menu.size());
-            for (int i=0; i<menu.size();i++)
-            {
-                System.out.println( ((MenuItem)menu.get(i)).getDescription());
-            }
         }catch(Exception e)
         {
             request.setAttribute(Action.EXCEPTION_KEY,e );

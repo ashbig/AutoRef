@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.*;
 import org.apache.regexp.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
+import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 /**
  *

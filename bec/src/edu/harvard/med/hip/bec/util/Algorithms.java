@@ -105,18 +105,103 @@ public class Algorithms
         
         return res;
     }
+    //array manipulation
+    // mode define type of array members
+  
+    public static ArrayList findArrayOverlap(ArrayList array1, ArrayList array2)
+    {
+        ArrayList res = new ArrayList();
+        ArrayList small_array = null;ArrayList large_array = null;
+        if (array1.size() <= array2.size())
+        {
+            small_array = array1;
+            large_array = array2;
+        }
+        else
+        {
+            large_array = array1;
+             small_array = array2;
+        }
+        for (int ind = 0; ind <  small_array.size(); ind++)
+        {
+            if (  large_array.contains( small_array.get(ind)))
+            {
+                res.add(small_array.get(ind));
+            }
+        }
+        return res;
+    }
     
+    //convert well nomenculature from A10 to int
+    public static int convertWellFromA8_12toInt( String well) 
+    {
+        int position = -1;
+        well = well.toLowerCase();
+        int row = (int)well.charAt(0);
+        int column = Integer.parseInt(well.substring(1));
+        int a_value = (int) 'a';
+        int first_char_value = 0;
+        int second_char_value = 0;
+        int row_value = 0;
+               
+        
+        row_value = row - a_value + 1;
+     
+        return (column - 1) * 8 +  row_value ;
+        
+  
+    }
+     //convert well nomenculature from A10 to int
+    public static String convertWellFromInttoA8_12( int well) 
+    {
+        String position = null;
+                
+        int a_value = (int) 'A';
+        int row_value = well % 8;
+        int column = (int) well / 8  +1 ;   
+        char rowname = (char) (a_value + row_value - 1);
+        String column_string ="";
+        
+        if (row_value == 0 )
+        {
+             if (column - 1 < 10)
+                return "H" +  "0"+(column -1 );
+            else
+                return "H" +  (column -1);
+        }
+     
+        else
+        {
+            if (column < 10)
+                return "" +  rowname+"0"+column;
+            else
+                return "" +  rowname+column;
+        }
+        
+  
+    }
     public static void main(String args[])
     {
-        
-        String s = "//1	gi|28363213|gb|CB241569.1|CB241569	99.21	253	0	1	1	251	1	253	6e-136	480.2";
-        ArrayList ar = new ArrayList();
-        ar = Algorithms.splitString(s,"\t");
-        ar = Algorithms.splitString((String) ar.get(1),"|");
-         s = "ff f f f f f f fd ffff ";
-        s = Algorithms.cleanWhiteSpaces(s);
-        System.out.println(s);
+        int i = 40;
+        String s = convertWellFromInttoA8_12(i);
+        System.out.println(i+" "+s); i =1;
+        s = convertWellFromInttoA8_12(i);
+        System.out.println(i+" "+s);i =10;
+        s = convertWellFromInttoA8_12(i);
+         System.out.println(i+" "+s);i =19;
+        s = convertWellFromInttoA8_12(i);
+         System.out.println(i+" "+s);i =41;
+        s = convertWellFromInttoA8_12(i);
+      System.out.println(i+" "+s);i =96;
+        s = convertWellFromInttoA8_12(i);
+    System.out.println(i+" "+s);i =24;
+        s = convertWellFromInttoA8_12(i);
+     System.out.println(i+" "+s);i =25;
+        s = convertWellFromInttoA8_12(i);
+      System.out.println(i+" "+s);
+        System.exit(0);
     }
+    
 }
 
 

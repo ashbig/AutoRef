@@ -58,7 +58,7 @@ public class PhredResult
     }
     
    
-    public  Read parsePhredOutputIntoRead(String qfile, String sfile)throws BecUtilException
+    public  Read parsePhredOutputIntoRead(String qfile, String sfile)throws Exception
     {
         parsePhredOutput( qfile,  sfile);
         PhredOutputFileName prfn = new PhredOutputFileName(qfile, PhredOutputFileName.FORMAT_OURS);

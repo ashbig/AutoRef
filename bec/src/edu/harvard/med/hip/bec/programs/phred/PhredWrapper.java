@@ -19,8 +19,9 @@ import edu.harvard.med.hip.bec.coreobjects.endreads.*;
  */
 public class PhredWrapper
 {
-    public static int   TRIMMING_TYPE_PHRED_ALT = 1;
-    public static int   TRIMMING_TYPE_PHRED = 2;
+    public static final int            TRIMMING_TYPE_PHRED = 0;
+    public static final int            TRIMMING_TYPE_PHRED_ALT = 1;
+    public static final int            TRIMMING_TYPE_NOT_TRIMMED = -1;
     
      private static final String PhredExePath = "C:\\bio\\phred\\Phred.exe";
      public static final String SEQUENCE_DIR_NAME = "sequence_dir";
@@ -49,6 +50,8 @@ public class PhredWrapper
    // and end of the sequence on the basis of      trace quality
    private String m_trim_alg = " -trim_alt ";
    private String m_trim_type = " 0.05";
+   //should be changed together with algorithm
+   private int      m_trim_type_int = TRIMMING_TYPE_PHRED_ALT;
    //enzyme sequence
    private String m_ezyme_sequence = "";
     
@@ -78,6 +81,7 @@ public class PhredWrapper
    //Perform sequence trimming on the current         sequence.  Bases are trimmed from the start
    // and end of the sequence on the basis of      trace quality
    public void setTrimmingValue (String v){ m_trim_type =  v ;}
+   public void setTrimType (int v){ m_trim_type_int =  v ;}
    //enzyme sequence
    public void setEnzymSequence (String v){ m_ezyme_sequence =  v ;}
    public void setPhredEXECPath(String v){ m_phredFilePath = v;}
@@ -126,6 +130,7 @@ public class PhredWrapper
             {
                 PhredResult pr = new PhredResult();
                 read = pr.parsePhredOutputIntoRead( qualOutputFileName, seqOutputFileName);
+                read.setTrimType(m_trim_type_int);
                 read.setTraceFileName(traceDir + File.separator + traceFileName) ;
                 //if file noise - set it to fail
                 if (read.getTrimStart() == 0 && read.getTrimEnd() == 0)

@@ -73,8 +73,8 @@ public class PlateUploader
          Connection  bec_connection = null;
         try
         {
-            // m_flex_connection = DatabaseTransaction.getInstance(DatabaseTransaction.FLEX_url , DatabaseTransaction.FLEX_username, DatabaseTransaction.FLEX_password).requestConnection();
-            // m_bec_connection = DatabaseTransaction.getInstance(DatabaseTransaction.BEC_url, DatabaseTransaction.BEC_username, DatabaseTransaction.BEC_password).requestConnection();
+             flex_connection = DatabaseTransactionLocal.getInstance(DatabaseTransactionLocal.FLEX_url , DatabaseTransactionLocal.FLEX_username, DatabaseTransactionLocal.FLEX_password).requestConnection();
+             bec_connection = DatabaseTransaction.getInstance().requestConnection();
         }
         catch(Exception e)
         {
@@ -89,7 +89,7 @@ public class PlateUploader
         try
         {
             flex_connection.close();
-            flex_connection.close();
+            bec_connection.close();
      
         }
         catch(Exception e)
@@ -100,13 +100,14 @@ public class PlateUploader
     }
     
     //function uploads data for one plate into BEC
-    public   void uploadPlate( String platename, Connection flex_connection, 
+    private   void uploadPlate( String platename, Connection flex_connection, 
     Connection bec_connection)
     {
         //hash for flex sequences
         try
         {
               Hashtable flex_sequence_ids = new Hashtable();
+              
               // get all needed info from flex
 
               // get all related sample info from flex
@@ -154,12 +155,12 @@ public class PlateUploader
         " and c.sequencingsampleid(+)=s.sampleid"+
         " and s.constructid=cd.constructid(+)"+
         " order by containerposition";
- 
+
         ResultSet rs = null;
         try
         {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql,flex_connection);
+           // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
+            rs = DatabaseTransactionLocal.executeQuery(sql,flex_connection);
             
             while(rs.next())
             {
@@ -176,12 +177,16 @@ public class PlateUploader
                     sample.setSequenceId (rs.getInt("sequenceid") );
                     sample.setFormat (rs.getString("format") );
                     
-                    flex_sequence_ids.put(new Integer(sample.getSequenceId () ), null);
+                    flex_sequence_ids.put(new Integer(sample.getSequenceId () ), new Integer(-1));
                 }
                 //not empty sample
                 if ( !sample.isEmpty() )
                 {
                     sample.setCloneId (rs.getInt("cloneid"));
+                }
+                else
+                {
+                    sample.setCloneId (0);
                 }
                 samples.add(sample);
             }
@@ -190,7 +195,7 @@ public class PlateUploader
             throw new BecDatabaseException("Error occured while getting construct ids for the plate: "+platename+"\n"+sqlE+"\nSQL: "+sql);
         } finally
         {
-            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransactionLocal.closeResultSet(rs);
         }
         return samples;
     }
@@ -220,9 +225,9 @@ public class PlateUploader
         ResultSet rs = null;
          try
         {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql,bec_connection);
-            
+            //DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
+           // rs = DatabaseTransactionLocal.executeQuery(sql,bec_connection);
+            rs = DatabaseTransaction.executeQuery(sql, bec_connection);
             while(rs.next())
             {
                 flex_sequence_ids.put( new Integer(rs.getInt("flexsequenceid") ),
@@ -244,15 +249,24 @@ public class PlateUploader
                                         Connection bec_connection)
                                         throws Exception
     {
+        RefSequence fl = null;
+        
         for (Enumeration e = flex_sequences.keys(); e.hasMoreElements() ;)
         {
             Object key = e.nextElement();
-            if ( flex_sequences.get(key) == null)
+            
+            if ( flex_sequences.get(key) instanceof Integer &&  ((Integer)flex_sequences.get(key)).intValue() == -1)
             { 
-                RefSequence fl = getRefSequenceFormFlex( ((Integer) key).intValue(), flex_connection);
+             System.out.println(((Integer) key).intValue());
+                fl = getRefSequenceFormFlex( ((Integer) key).intValue(), flex_connection);
+                fl.setId( getId("sequenceid", bec_connection));
+                   
+                   if (((Integer) key).intValue()==341)
+                        System.out.println("get"+((Integer) key).intValue());
                 fl.insert(bec_connection);
-                bec_connection.commit();
+                   System.out.println("ins"+((Integer) key).intValue());
                 flex_sequences.put(key, fl);
+             
             }
         }
     }
@@ -266,10 +280,10 @@ public class PlateUploader
         RefSequence ref_sequence ;ResultSet rs = null;
         try
         {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
+           // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
             //get sequence
             sql = "select * from sequencetext where sequenceid="+id+" order by sequenceorder";
-            rs = t.executeQuery(sql, flex_connection);
+            rs = DatabaseTransactionLocal.executeQuery(sql, flex_connection);
             while(rs.next())
             {
                 sequencetext += rs.getString("SEQUENCETEXT");
@@ -278,9 +292,9 @@ public class PlateUploader
             
             //get sequence characteristics
            sql = "select s.genusspecies as species,s.cdsstart as cdsstart,"+
-            "s.cdsstop as cdsstop,s.gccontent as gccontent,"+
+            "s.cdsstop as cdsstop,s.gccontent as gccontent, cdnasource,chromosome "+
             "from flexsequence s where s.sequenceid="+id;
-           rs = t.executeQuery(sql,flex_connection);
+           rs = DatabaseTransactionLocal.executeQuery(sql,flex_connection);
        
             while(rs.next())
             {
@@ -300,20 +314,22 @@ public class PlateUploader
                 ref_sequence.setCdsStart(rs.getInt("CDSSTART") );
                 ref_sequence.setCdsStop( rs.getInt("CDSSTOP") );
                 ref_sequence.setGCcontent(rs.getInt("GCCONTENT"));
+                ref_sequence.setCdnaSource(rs.getString("cdnasource"));
+                ref_sequence.setChromosome(rs.getString("chromosome"));
             }
 
         // public info stuff
                 sql = "select nametype, namevalue,nameurl,description from name where sequenceid="+id;
 
-                rs = t.executeQuery(sql,flex_connection);
+                rs = DatabaseTransactionLocal.executeQuery(sql,flex_connection);
                 ArrayList public_info = new ArrayList();
                 
                 while(rs.next())
                 {
                     public_info.add(new PublicInfoItem(rs.getString("nametype"),
                                                        rs.getString("namevalue"),
-                                                       rs.getString("nameurl"),
-                                                       rs.getString("description")));
+                                                       rs.getString("description"),
+                                                        rs.getString("nameurl")));
                 }
                 if (public_info != null)
                     ref_sequence.setPublicInfo(public_info);
@@ -322,6 +338,7 @@ public class PlateUploader
               
             } catch (Exception sqlE)
             {
+                System.out.println(sqlE.getMessage());
                 throw new BecDatabaseException("Error occured while restoring sequence with id "+id+"\n"+sqlE+"\nSQL: "+sql);
             } finally
             {
@@ -344,42 +361,57 @@ public class PlateUploader
     {
         //create container in bec
        
-        Container container = new Container(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+        Container container = new Container( getId("containerid", bec_connection)  ,
                                             Container.TYPE_SEQUENCING_CONTAINER,
                                             platename,  -1);
     
         //create samples and flex info and isolatetracking (optional)
+        Hashtable bec_construct_ids = new Hashtable();
          FlexInfo flex_info;
-         IsolateTrackingEngine istr;
+         IsolateTrackingEngine istr = null;
          Sample sample; SampleInfo sample_info; 
         for (int sample_count = 0; sample_count < samples.size(); sample_count++)
         {    
             sample_info = ( SampleInfo )samples.get(sample_count);
-            //create flex info record
-            flex_info = new FlexInfo();
             
-            flex_info.setFlexSampleId ( sample_info.getId () );
-            flex_info.setFlexConstructId ( sample_info.getConstructId());
-            flex_info.setFlexPlateId ( sample_info.getPlateId() );
-            flex_info.setFlexSequenceId ( sample_info. getSequenceId ());
-            flex_info.setFlexCloneId ( sample_info.getCloneId() );
+                //create flex info record
+                flex_info = new FlexInfo( getId("flexinfoid", bec_connection),
+                    BecIDGenerator.BEC_OBJECT_ID_NOTSET ,
+                    sample_info.getId () , 
+                    sample_info.getConstructId(),
+                    sample_info.getPlateId(),
+                    sample_info. getSequenceId (), 
+                    sample_info.getCloneId());
+
+       //create  isolate tracking             
+                istr = new IsolateTrackingEngine();
+                istr.setId( getId("isolatetrackingid", bec_connection));
+                if ( sample_info.isControl() ||  sample_info.isEmpty())
+                {
+                    istr.setStatus(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY);
+                }
+                else
+                {
+                    istr.setStatus( m_plate_sabmitted_for);
+                }
+                istr.setFlexInfo(flex_info);
+        //link flex info with isolate tracking 
+                flex_info.setIsolateTrackingId ( istr.getId() );
+
+        // create construct 
+                if (! sample_info.isControl())
+                {
+                    int constructid = getConstructId( bec_construct_ids,
+                                            sample_info.getConstructId(), 
+                                            sample_info.getFormat(), 
+                                            sample_info.getSequenceId(),
+                                            flex_sequence_ids, 
+                                            bec_connection);
+                    istr.setConstructId( constructid );
+                }
             
-   //create  isolate tracking             
-            istr = new IsolateTrackingEngine();
-            istr.setStatus( m_plate_sabmitted_for);
-            istr.setFlexInfo(flex_info);
-    //link flex info with isolate tracking 
-            flex_info.setIsolateTrackingId ( istr.getId() );
-            
-    // create construct 
-            int constructid = getConstructId( sample_info.getConstructId(), 
-                                    sample_info.getFormat(), 
-                                    sample_info.getSequenceId(),
-                                    flex_sequence_ids, 
-                                    bec_connection);
-            istr.setConstructId( constructid );
-            
-            sample = new Sample(BecIDGenerator.BEC_OBJECT_ID_NOTSET, 
+
+            sample = new Sample( getId("sampleid", bec_connection), 
                                         sample_info.getType(), 
                                         sample_info.getPosition(),   
                                         container.getId());
@@ -402,7 +434,8 @@ public class PlateUploader
     
     
     
-    private int  getConstructId( int flexconstructId, 
+    private int  getConstructId( Hashtable bec_construct_ids,
+                                    int flexconstructId, 
                                     int constructformat, 
                                     int flex_sequenceid,
                                     Hashtable flex_sequence_ids,
@@ -411,8 +444,13 @@ public class PlateUploader
     {
         Construct construct;
         int construct_id = -1;
+        // first check for the same construct on the same plate
+        if (bec_construct_ids.containsKey(new Integer(flexconstructId)))
+        {
+            return ((Integer) bec_construct_ids.get(new Integer(flexconstructId))).intValue();
+        }
         //check wether BEC database contains this construct: we relay to user
-        construct = Construct.getConstructByFlexConstructId(flexconstructId);
+        construct = getConstructByFlexConstructId(flexconstructId, bec_connection);
         if (construct != null)
         {
             //check if construct has the same vector & linker info
@@ -436,17 +474,50 @@ public class PlateUploader
         {
             sequence_id = ((RefSequence) seq).getId();
         }
+        construct.setId(getId("constructid", bec_connection));
         construct.setRefSeqId( sequence_id );
         construct.setFormat(constructformat);
         construct.setLinker3Id(m_linker3_id);
         construct.setVectorId(m_linker5_id);
         construct.setLinker5Id(m_linker5_id);
         construct.insert(bec_connection);
-        return construct_id;
+        //add to hash eliminate creation of the same construct
+        bec_construct_ids.put(new Integer(flexconstructId), new Integer(construct.getId() ));
+        return construct.getId();
     }
     
     
-    
+    private Construct getConstructByFlexConstructId(int flexconstructId, Connection bec_connection) throws BecDatabaseException
+    {
+        Construct construct = null;
+        String sql ="select REFSEQUENCEID  ,FORMAT,VECTORID,LINKER3ID,LINKER5ID,BECCONSTRUCTID,FLEXCONSTRUCTID "+
+        " from VIEW_FLEXBECCONSTRUCT where FLEXCONSTRUCTID = "+ flexconstructId;
+        ResultSet rs = null;
+        try
+        {
+          //  DatabaseTransaction t = DatabaseTransaction.getInstance(); 
+            //rs = t.executeQuery(sql);
+            rs = DatabaseTransaction.executeQuery(sql,bec_connection);
+            while(rs.next())
+            {
+                  construct = new Construct(rs.getInt("BECCONSTRUCTID"), -1, 
+                                  rs.getInt("REFSEQUENCEID"), rs.getInt("FORMAT"), 
+                                  rs.getInt("VECTORID"), rs.getInt("LINKER3ID"),
+                                  rs.getInt("LINKER5ID") ); 
+              
+            } 
+            return construct;
+        }
+        catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while restoring construct with flexid "+flexconstructId+"\n"+sqlE+"\nSQL: "+sql);
+        } 
+        finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+       
+    }
     
     
     //*******************************************************************************
@@ -522,4 +593,42 @@ public class PlateUploader
         public int  getFlexRefseqid()        { return i_flex_ref_seq_id;}
         public int  getBecRefseqid()        { return i_bec_ref_seq_id;}
     }
+    
+    
+    
+    private  int getId(String sequenceName, Connection conn) throws BecDatabaseException
+    {
+        int id = 0;
+        String sql = "select "+sequenceName+".nextval as id from dual";
+        
+        
+        
+        ResultSet rs = rs = DatabaseTransaction.executeQuery(sql,conn);
+        try
+        {
+            while (rs.next())
+            {
+                
+                id = rs.getInt("ID");
+            }
+        } catch(SQLException sqlE)
+        {
+            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return id;
+    }
+    
+     public static void main(String args[]) 
+     
+    {
+        ArrayList plates = new ArrayList();
+        plates.add("YGS000357-4");
+         PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 1, 
+                       4, 5, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
+         pb.upload();
+        System.exit(0);
+     }
 }

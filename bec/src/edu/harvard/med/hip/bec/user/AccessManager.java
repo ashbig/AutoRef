@@ -16,12 +16,15 @@ import java.util.*;
  *          Added group authorization
  */
 
-public class AccessManager {
+public class AccessManager
+{
     private static AccessManager _instance = null;
     
     // Usage: AccessManager manager = AccessManager.getInstance();
-    public static AccessManager getInstance() {
-        if (_instance == null) {
+    public static AccessManager getInstance()
+    {
+        if (_instance == null)
+        {
             _instance = new AccessManager();
         }
         return _instance;
@@ -31,16 +34,18 @@ public class AccessManager {
      * Constructor.
      * @return A AccessManager object.
      */
-    private AccessManager(){}
+    private AccessManager()
+    {}
     
     /**
      * change user password.
      *
      * @param String pw The User password as String.
      */
-    public void changePassword(String pw) {
+    public void changePassword(String pw)
+    {
         // needs to be modified
-      
+        
     }
     
     /**
@@ -64,13 +69,17 @@ public class AccessManager {
         sql = "SELECT username FROM Userprofile"
         + " WHERE username = '" + name+"'";
         
-        try {
+        try
+        {
+            
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
             isExist = rs.next();
-        }catch (SQLException sqlex) {
+        }catch (SQLException sqlex)
+        {
             sqlex.printStackTrace();
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
         
@@ -85,7 +94,8 @@ public class AccessManager {
      * @return boolean An Yes or No to indicate whether the reminder
      * text is unique in the userprofile table.
      */
-    public boolean reminderUnique(String reminder) throws BecDatabaseException {
+    public boolean reminderUnique(String reminder) throws BecDatabaseException
+    {
         boolean isUnique = false;
         String sql;
         ResultSet rs = null;
@@ -97,15 +107,19 @@ public class AccessManager {
         sql = "SELECT count(PASSWORDREMINDERSTRING) FROM Userprofile"
         + " WHERE PASSWORDREMINDERSTRING = '" + reminder+"'";
         
-        try {
+        try
+        {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            if(rs.next()) {
+            if(rs.next())
+            {
                 count = rs.getInt(1);
             }
-        }catch (SQLException sqlex) {
+        }catch (SQLException sqlex)
+        {
             sqlex.printStackTrace();
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
         if ((count ==1)|| (count==0)) isUnique = true;
@@ -113,7 +127,7 @@ public class AccessManager {
     }
     
     
-   /**
+    /**
      * Determins if the logged in user is authorized to execute this action
      * based on his/her group membership.
      *
@@ -124,10 +138,12 @@ public class AccessManager {
      * @param The user in question.
      * @param group The group to see if the user belongs to.
      */
-    public boolean isUserAuthorize(User user, String group) {
+    public boolean isUserAuthorize(User user, String group)
+    {
         boolean retValue = false;
         
-        try {
+        try
+        {
             
             //array of groups with the correct privilages
             
@@ -141,14 +157,18 @@ public class AccessManager {
              
              int userIndex = groupList.indexOf(user.getUserGroup());
              
-             if(requiredIndex == -1 || userIndex == -1) {
+             if(requiredIndex == -1 || userIndex == -1)
+             {
                  retValue = false;
-             }else if(userIndex >= requiredIndex) {
+             }else if(userIndex >= requiredIndex)
+             {
                  retValue = true;
-             } else {
+             } else
+             {
                  retValue = false;
              }
-        } catch (BecDatabaseException fde) {
+        } catch (BecDatabaseException fde)
+        {
             retValue = false;
         }
         return retValue;
@@ -162,7 +182,8 @@ public class AccessManager {
      * @param username.
      * @return the user password
      */
-    public String getPassword(String username) throws BecDatabaseException {
+    public String getPassword(String username) throws BecDatabaseException
+    {
         String pswd = null; //password
         String sql;
         ResultSet rs = null;
@@ -173,22 +194,26 @@ public class AccessManager {
         sql = "SELECT userpassword FROM Userprofile"
         + " WHERE username = '" + username+"'";
         
-        try {
+        try
+        {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            if(rs.next()) {
+            if(rs.next())
+            {
                 pswd = rs.getString(1);
             }
-        }catch (SQLException sqlex) {
+        }catch (SQLException sqlex)
+        {
             sqlex.printStackTrace();
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
         
         return pswd;
     }
     
-     /**
+    /**
      * This method retrieves the user email address from
      * the userprofile table for a given username.
      * pre-condition: the given username must exist
@@ -196,7 +221,8 @@ public class AccessManager {
      * @param username.
      * @return the user email address
      */
-    public String getEmail(String username) throws BecDatabaseException {
+    public String getEmail(String username) throws BecDatabaseException
+    {
         String email = null; //password
         String sql;
         ResultSet rs = null;
@@ -207,15 +233,19 @@ public class AccessManager {
         sql = "SELECT useremail FROM Userprofile"
         + " WHERE username = '" + username+"'";
         
-        try {
+        try
+        {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            if(rs.next()) {
+            if(rs.next())
+            {
                 email = rs.getString(1);
             }
-        }catch (SQLException sqlex) {
+        }catch (SQLException sqlex)
+        {
             sqlex.printStackTrace();
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
         
@@ -229,7 +259,8 @@ public class AccessManager {
      * @param reminder text.
      * @return the username
      */
-    public String findUser(String reminder) throws BecDatabaseException {
+    public String findUser(String reminder) throws BecDatabaseException
+    {
         String username = null; //password
         String sql;
         ResultSet rs = null;
@@ -240,21 +271,63 @@ public class AccessManager {
         sql = "SELECT username FROM Userprofile"
         + " WHERE passwordreminderstring = '" + reminder+"'";
         
-        try {
+        try
+        {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
-            if(rs.next()) {
+            if(rs.next())
+            {
                 username = rs.getString(1);
             }
-        }catch (SQLException sqlex) {
+        }catch (SQLException sqlex)
+        {
             sqlex.printStackTrace();
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
         
         return username;
     }
-    
+    /**
+     * This method use username and password to get
+     * user information from db
+     * @param username The username as String.
+     * @param pw The User password as String.
+     * @return boolean An Yes or No to indicate whether the user
+     * authentication fail.
+     */
+    public User getUser(String username,String password)
+    throws BecDatabaseException
+    {
+        // make the username and password oracle friendly.
+        username = DatabaseTransaction.prepareString(username);
+        password = DatabaseTransaction.prepareString(password);
+        
+        String sql = "select userid, username,useremail,userpassword,usergroup from userprofile\n"+
+        "where username='"+username+ "' and userpassword='"+password+"'";
+        ResultSet rs = null;
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        User user = null;
+        try
+        {
+            rs = t.executeQuery(sql);
+            if(rs.next())
+            {
+                user = new User(rs.getInt("userid"), rs.getString("username"), 
+                            rs.getString("useremail"), rs.getString("userpassword")
+                            , rs.getString("usergroup"));
+            
+            }
+            return user;
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
     /**
      * This method use username and password to do
      * user authentication during user login
@@ -265,8 +338,9 @@ public class AccessManager {
      * authentication fail.
      */
     
-    public boolean authenticate(String username, String pw) 
-    throws BecDatabaseException {
+    public boolean authenticate(String username, String pw)
+    throws BecDatabaseException
+    {
         
         // make the username and password oracle friendly.
         username = DatabaseTransaction.prepareString(username);
@@ -277,16 +351,21 @@ public class AccessManager {
         "and userpassword='"+pw+"'";
         ResultSet rs = null;
         DatabaseTransaction t = DatabaseTransaction.getInstance();
-        try {
+        try
+        {
             rs = t.executeQuery(sql);
-            if(rs.next()) {
+            if(rs.next())
+            {
                 return true;
-            } else {
+            } else
+            {
                 return false;
             }
-        } catch (SQLException sqlE) {
+        } catch (SQLException sqlE)
+        {
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
@@ -305,11 +384,12 @@ public class AccessManager {
      * @param info the user contact info.
      */
     
-    public void addUser(String username, String email,String pswd,String org, 
-    String group, String reminder, String firstname, String lastname, 
-    String address1, String address2, String city, String state, 
-    String province, String zip, String country, String telephone) 
-    throws BecDatabaseException{
+    public void addUser(String username, String email,String pswd,String org,
+    String group, String reminder, String firstname, String lastname,
+    String address1, String address2, String city, String state,
+    String province, String zip, String country, String telephone)
+    throws BecDatabaseException
+    {
         String sql1;
         String sql2;
         
@@ -332,32 +412,38 @@ public class AccessManager {
         country = DatabaseTransaction.prepareString(country);
         telephone = DatabaseTransaction.prepareString(telephone);
         
-        sql1 = "insert into userprofile" + "(username, useremail, userpassword, userorganization, usergroup, passwordreminderstring)"
-              +"values (" + "'"+ username +"', '"+ email +"', '"+ pswd +"', '"+ org +"', '"+ group +"', '"+ reminder +"')";
-        sql2 = "insert into useraddress" + "(username, firstname, lastname, organization, addressline1,addressline2,city,state,province,zipcode,country,telephone1)"
-              +"values (" + "'"+ username +"', '"+ firstname+"', '"+ lastname +"', '"+ org +"', '"+ address1 +"', '"+ address2 +"','"+ city +"', '"+ state +"', '"+ province +"', '"+ zip +"', '"+ country +"', '"+ telephone +"' )";
+        sql1 = "insert into userprofile (userid, username, useremail, userpassword, userorganization, usergroup, passwordreminderstring)"
+        +"values (userid.nextval" + ",'"+ username +"', '"+ email +"', '"+ pswd +"', '"+ org +"', '"+ group +"', '"+ reminder +"')";
+        //sql2 = "insert into useraddress" + "(username, firstname, lastname, organization, addressline1,addressline2,city,state,province,zipcode,country,telephone1)"
+        //  +"values (" + "'"+ username +"', '"+ firstname+"', '"+ lastname +"', '"+ org +"', '"+ address1 +"', '"+ address2 +"','"+ city +"', '"+ state +"', '"+ province +"', '"+ zip +"', '"+ country +"', '"+ telephone +"' )";
+        
+        
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         DatabaseTransaction.executeUpdate(sql1,conn);
-        DatabaseTransaction.executeUpdate(sql2,conn);
+        //DatabaseTransaction.executeUpdate(sql2,conn);
         DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
     }
     
-    public void deleteUser() {
+    public void deleteUser()
+    {
         //sql code to delete a row from userprofile table
     }
     
-    public void writeUserLog() {
+    public void writeUserLog()
+    {
         //To be determined by use case
     }
     
     //**************************************************************//
     //						Test									//
     //**************************************************************//
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         AccessManager manager = AccessManager.getInstance();
-        try {
+        try
+        {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             
             if(manager.authenticate("Larry Shumway", "three"))
@@ -365,7 +451,8 @@ public class AccessManager {
             else
                 System.out.println("Testing method authenticate - ERROR");
             
-        } catch (BecDatabaseException e) {
+        } catch (BecDatabaseException e)
+        {
             System.out.println(e);
         }
     }

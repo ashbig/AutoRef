@@ -59,6 +59,7 @@ public final class CustomerRegistrationAction extends Action
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
+     
         String user_id = ((CustomerRegistrationForm) form).getUserID();
         String email = ((CustomerRegistrationForm) form).getEmail();
         String password = ((CustomerRegistrationForm) form).getPassword();
@@ -86,11 +87,11 @@ public final class CustomerRegistrationAction extends Action
         {
             // get the access manager to check if the user_id has been used.
             AccessManager accessManager = AccessManager.getInstance();
-            
+          
             // ask accessManager if the user_id has been used
             if(accessManager.userExist(user_id))
             {
-                
+               
                 errors.add("userID",
                 new ActionError("error.userid.used", user_id));
                 saveErrors(request, errors);
@@ -99,10 +100,11 @@ public final class CustomerRegistrationAction extends Action
                 //System.out.println("******UserID is used!**********");
                 return (mapping.findForward("failure"));
             }
-            
+           
             // ask accessManager if the reminder text is unique.
             else if (accessManager.reminderUnique(reminder)==false)
             {
+               
                 errors.add("reminder", new ActionError("error.reminder.used",reminder));
                 saveErrors(request, errors);
                 return (mapping.findForward("failure"));
@@ -110,12 +112,13 @@ public final class CustomerRegistrationAction extends Action
             // if the userId has not been used and reminder text is unique, insert a new user record into the database
             else
             {
+               
                 accessManager.addUser(user_id,email,password,organization,usergroup,reminder,firstname,lastname,street1,street2,city,state,province,zipcode,country,phone);
                 return (mapping.findForward("success"));
             }
         } catch (Throwable th)
         {
-            //System.out.println(th);
+           // System.out.println(th);
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error",th));
             return (mapping.findForward("error"));

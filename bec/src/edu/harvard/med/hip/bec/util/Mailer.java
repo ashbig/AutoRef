@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-14 21:13:30 $
+ * $Revision: 1.2 $
+ * $Date: 2003-05-09 19:51:35 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-03-14 21:13:30 $
+ * @version    $Revision: 1.2 $ $Date: 2003-05-09 19:51:35 $
  */
 
 public class Mailer
@@ -248,6 +248,17 @@ public class Mailer
     String msgText) throws MessagingException
     {
         Mailer.sendMessage(to,from,cc,subject,msgText, null);
+    }
+    
+    public static void sendMessage(String to, String from, String cc, String subject,
+    String title, ArrayList msgs) throws MessagingException
+    {
+        String errors = "";
+        for (int ind = 0; ind < msgs.size(); ind++)
+        {
+            errors += "\n"+(String) msgs.get(ind);
+        }
+        Mailer.sendMessage(to,from,cc,subject,title+errors, null);
     }
     
      

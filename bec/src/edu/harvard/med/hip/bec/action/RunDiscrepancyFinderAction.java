@@ -78,8 +78,9 @@ public class RunDiscrepancyFinderAction extends ResearcherAction
            IsolateTrackingEngine it = null;
            // process one clone
            for (int isolate_count = 0 ; isolate_count < isolate_trackings.size(); isolate_count++)
-               
+             
            {
+                /* 
                it = (IsolateTrackingEngine)isolate_trackings.get(isolate_count);
                
                AnalyzedScoredSequence clonesequence = new AnalyzedScoredSequence( it.getCloneSeqId() );
@@ -109,6 +110,7 @@ public class RunDiscrepancyFinderAction extends ResearcherAction
                      BaseSequence.updateStatus(clonesequence.getId(), BaseSequence.STATUS_ANALIZED_NO_DISCREPANCIES, conn);
                     it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED, it.getId(),  conn );
                }
+  */
            }
            
             // commit the transaction

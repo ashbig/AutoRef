@@ -164,19 +164,9 @@ public class RunEndReadsRequestAction extends ResearcherAction
                     Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
                     "elena_taycher@hms.harvard.edu", "Request for end reads sequencing", "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates, file_list);
                 }
-               //send errors
-                String errors = "";
-                for (int ind = 0; ind < i_error_messages.size(); ind++)
-                {
-                    errors += "\n"+(String) i_error_messages.get(ind);
-                }
-                Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Request for end reads sequencing: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates + errors);
-                // commit the transaction
+                     // commit the transaction
                 conn.commit();
-              
-                
-            }
+           }
             
             catch(Exception ex)
             {
@@ -187,6 +177,12 @@ public class RunEndReadsRequestAction extends ResearcherAction
             }
             finally
             {
+                try
+                {
+         //send errors
+                     Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                    "elena_taycher@hms.harvard.edu", "Request for end reads sequencing: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates ,i_error_messages);
+                }catch(Exception e){}
                 DatabaseTransaction.closeConnection(conn);
             }
             

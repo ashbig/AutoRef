@@ -93,7 +93,7 @@ public class RunPolymorphismFinderAction extends ResearcherAction
            {
                it = (IsolateTrackingEngine)isolate_trackings.get(isolate_count);
                
-               AnalyzedScoredSequence clonesequence = new AnalyzedScoredSequence( it.getCloneSeqId() );
+               AnalyzedScoredSequence clonesequence = null;//= new AnalyzedScoredSequence( it.getCloneSeqId() );
                finder.setSequence(clonesequence);
                 finder.run();
      //update objectd in db
@@ -110,7 +110,7 @@ public class RunPolymorphismFinderAction extends ResearcherAction
               // change status per each isolate 
                it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED, it.getId(),  conn );
                //change sequence status
-               BaseSequence.updateStatus( clonesequence.getId(),BaseSequence.STATUS_SEQUENCING_FINISHED, conn);
+               ScoredSequence.updateStatus( clonesequence.getId(),BaseSequence.STATUS_FINISHED, conn);
               
            }
            
