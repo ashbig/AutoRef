@@ -31,18 +31,12 @@ import edu.harvard.med.hip.flex.form.PickColonyForm;
 import edu.harvard.med.hip.flex.form.ProjectWorkflowForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
-import edu.harvard.med.hip.flex.util.WorklistGenerator;
 
 /**
  *
  * @author  DZuo
  */
 public class PerimeterRearrayInputAction extends ResearcherAction {
-    private String filePath = RearrayManager.FILEPATH;
-    private String mediaWorklist = "media_worklist.gwl";
-    private String dnaWorklist = "dna_worklist.gwl";
-    private String mixWorklist = "mix_worklist.gwl";
-    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -86,14 +80,6 @@ public class PerimeterRearrayInputAction extends ResearcherAction {
         int volumn = ((PerimeterRearrayInputForm)form).getVolumn();
         String labels = ((PerimeterRearrayInputForm)form).getLabels();
         String emails = ((PerimeterRearrayInputForm)form).getEmails();
-        String mediaPlate = ((PerimeterRearrayInputForm)form).getMediaPlate();
-        String mixPlate = ((PerimeterRearrayInputForm)form).getMixPlate();
-        String mediaPlateType = ((PerimeterRearrayInputForm)form).getMediaPlateType();
-        String mixPlateType = ((PerimeterRearrayInputForm)form).getMixPlateType();
-        int mediaVolumn = ((PerimeterRearrayInputForm)form).getMediaVolumn();
-        int mixVolumn = ((PerimeterRearrayInputForm)form).getMixVolumn();
-        int maxMediaVolumn = ((PerimeterRearrayInputForm)form).getMaxMediaVolumn();
-        int maxMixVolumn = ((PerimeterRearrayInputForm)form).getMaxMixVolumn();
         
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
@@ -147,25 +133,10 @@ public class PerimeterRearrayInputAction extends ResearcherAction {
             Vector sampleLineageSet = mapper.getSampleLineageSet();
             Vector locationList = Location.getLocations();
             File rearrayFile = mapper.createRearrayFile();
-            
-            List destLabels = new ArrayList();
-            for(int i=0; i<newContainers.size(); i++) {
-                Container c = (Container)newContainers.get(i);
-                destLabels.add(c.getLabel());
-            }
-            
-            List mediaSampleMapping = generateFullPlateMapping(mediaPlate, destLabels);
-            List dnaSampleMapping = mapper.getRearrayMappingList();
-            List mixSampleMapping = getSampleMapping(mixPlate, dnaSampleMapping);
-            
-            File mediaFile = WorklistGenerator.createWorklist(mediaSampleMapping, mediaPlateType, destPlateType, maxMediaVolumn, mediaVolumn, filePath+mediaWorklist);
-            File dnaFile = WorklistGenerator.createWorklist(dnaSampleMapping, sourcePlateType, destPlateType, volumn, volumn, filePath+dnaWorklist);
-            File mixFile = WorklistGenerator.createWorklist(mixSampleMapping, mixPlateType, destPlateType, maxMixVolumn, mixVolumn, filePath+mixWorklist);
+            File worklist = mapper.createWorklist(sourcePlateType, destPlateType, volumn);
             Collection fileCol = new ArrayList();
             fileCol.add(rearrayFile);
-            fileCol.add(mediaFile);
-            fileCol.add(dnaFile);
-            fileCol.add(mixFile);
+            fileCol.add(worklist);
             
             request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", containers);
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);
@@ -196,38 +167,5 @@ public class PerimeterRearrayInputAction extends ResearcherAction {
         }
         
         return labelList;
-    }
-    
-    protected List getSampleMapping(String sourcePlate, List sampleMapping) {
-        List newMapping = new ArrayList();
-        for(int i=0; i<sampleMapping.size(); i++) {
-            RearrayInputSample sample = (RearrayInputSample)sampleMapping.get(i);
-            /**
-            int well = Integer.parseInt(sample.getSourceWell());
-            if(well > 8) {
-                well = well%8;
-                if(well == 0) {
-                    well = 8;
-                }
-            }
-            */
-            RearrayInputSample newSample = new RearrayInputSample(sourcePlate, (new Integer(1)).toString(), sample.getDestPlate(), sample.getDestWell(), false);
-            newMapping.add(newSample);
-        }
-        
-        return newMapping;
-    }
-    
-    protected List generateFullPlateMapping(String sourcePlate, List destLabels) {
-        List newMapping = new ArrayList();
-        for(int i=0; i<destLabels.size(); i++) {
-            String label = (String)destLabels.get(i);
-            for(int j=0; j<96; j++) {
-                RearrayInputSample newSample = new RearrayInputSample(sourcePlate, (new Integer(j)).toString(), label, (new Integer(j)).toString(), false); 
-                newMapping.add(newSample);
-            }
-        }
-        
-        return newMapping;
     }
 }

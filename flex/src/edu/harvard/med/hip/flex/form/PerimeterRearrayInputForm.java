@@ -19,44 +19,20 @@ import org.apache.struts.upload.*;
  * @author  DZuo
  */
 public class PerimeterRearrayInputForm extends ProjectWorkflowForm {
-    protected String mediaPlate;
-    protected String mixPlate;
-    protected String mediaPlateType;
-    protected String mixPlateType;
     protected String sourcePlateType;
     protected String destPlateType;
-    protected int volumn;
-    protected int mediaVolumn;
-    protected int mixVolumn;
-    protected int maxMediaVolumn;
-    protected int maxMixVolumn;
+    protected int volumn = 5;
     protected String labels;
     protected String emails;
     protected int [] sourceLocations;
     protected int [] destLocations;
     
-    public String getMediaPlate() {return mediaPlate;}
-    public String getMixPlate() {return mixPlate;}
-    public String getMediaPlateType() {return mediaPlateType;}
-    public String getMixPlateType() {return mixPlateType;}
-    public int getMediaVolumn() {return mediaVolumn;}
-    public int getMixVolumn() {return mixVolumn;}
-    public int getMaxMediaVolumn() {return maxMediaVolumn;}
-    public int getMaxMixVolumn() {return maxMixVolumn;}
     public String getSourcePlateType() {return sourcePlateType;}
     public String getDestPlateType() {return destPlateType;}
     public int getVolumn() {return volumn;}
     public String getLabels() {return labels;}
     public String getEmails() {return emails;}
     
-    public void setMediaPlate(String s) {this.mediaPlate = s;}
-    public void setMixPlate(String s) {this.mixPlate = s;}
-    public void setMediaPlateType(String s) {this.mediaPlateType = s;}
-    public void setMixPlateType(String s) {this.mixPlateType = s;}
-    public void setMediaVolumn(int i) {this.mediaVolumn = i;}
-    public void setMixVolumn(int i) {this.mixVolumn = i;}
-    public void setMaxMediaVolumn(int i) {this.maxMediaVolumn = i;}
-    public void setMaxMixVolumn(int i) {this.maxMixVolumn = i;}
     public void setSourcePlateType(String s) {this.sourcePlateType=s;}
     public void setDestPlateType(String s) {this.destPlateType=s;}
     public void setVolumn(int i) {this.volumn=i;}
