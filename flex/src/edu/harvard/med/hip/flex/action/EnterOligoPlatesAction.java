@@ -296,44 +296,38 @@ public class EnterOligoPlatesAction extends ResearcherAction
                 //map the 3p open oligo plate.
                 Vector oldContainers = new Vector();
                 oldContainers.addElement(fivep);
+                Vector oldContainersClose = new Vector();
+                oldContainersClose.addElement(fivep);
                 
                 if ( ! isOnlyClosed) 
                 {
-                    oldContainers.addElement(threepOpen);
+                    oldContainers.addElement(threepOpen);                    
                 }
                 if(! isOnlyOpen) 
                 {
-                    oldContainers.addElement(threepClosed);
+                    oldContainersClose.addElement(threepClosed);
                 }
                
                 if(mgc != null)
                 {
                     oldContainers.addElement(mgc);
+                    oldContainersClose.addElement(mgc);
                 }
                 
-                Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
-                sampleLineageSet = mapper.getSampleLineageSet();
                 Container pcrOpen = null; 
                 Container pcrClosed = null;
-                 if ( isOnlyOpen) 
-                {
-                     pcrOpen =  (Container)newContainers.elementAt(0);
-                     request.getSession().setAttribute("EnterOligoPlateAction.pcrOpen", pcrOpen);
-                }
-                else if(isOnlyClosed) 
-                {
-                    pcrClosed = (Container)newContainers.elementAt(0);
-                    request.getSession().setAttribute("EnterOligoPlateAction.pcrClosed", pcrClosed);
-                }
-                else
-                {
+                if( ! isOnlyClosed) {
+                    Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
                     pcrOpen =  (Container)newContainers.elementAt(0);
-                    pcrClosed = (Container)newContainers.elementAt(1);
                     request.getSession().setAttribute("EnterOligoPlateAction.pcrOpen", pcrOpen);
+                }
+                if (! isOnlyOpen) 
+                {                    
+                    Vector newContainersClose = mapper.doMapping(oldContainersClose, protocol, project, workflow);                     
+                    pcrClosed = (Container)newContainersClose.elementAt(0);
                     request.getSession().setAttribute("EnterOligoPlateAction.pcrClosed", pcrClosed);
                 }
-                
-            
+                sampleLineageSet = mapper.getSampleLineageSet();            
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
                 
                 return (mapping.findForward("success"));
