@@ -65,7 +65,7 @@ public class Association {
     }
     
     public boolean geneInCommon(Association a) {
-        if(this.getGene().getHipGeneId() == a.getGene().getHipGeneId())
+        if(this.getGeneIndex().getIndexid() == a.getGeneIndex().getIndexid())
             return true;
         else
             return false;
