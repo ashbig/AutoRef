@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.5 2001-06-12 17:18:33 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.6 2001-06-12 18:51:39 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -141,6 +141,15 @@ public class Protocol {
      */
     public String getProcesscode() {
         return processcode;
+    }
+ 
+    /**
+     * Return the process name.
+     *
+     * @return The process name.
+     */
+    public String getProcessname() {
+        return processname;
     }
     
     /**
