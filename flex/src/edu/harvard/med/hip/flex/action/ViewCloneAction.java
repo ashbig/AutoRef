@@ -53,6 +53,7 @@ public class ViewCloneAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         int cloneid = ((ViewCloneForm)form).getCloneid();
+        int isDisplay = ((ViewCloneForm)form).getIsCloneStorageDisplay();
         ActionErrors errors = new ActionErrors();
 
         try {
@@ -60,6 +61,7 @@ public class ViewCloneAction extends FlexAction {
             clone.restoreClone(cloneid);
             List storages = clone.getStorages();
             request.setAttribute("clone", clone);
+            request.setAttribute("isCloneStorageDisplay", new Integer(isDisplay));
             return mapping.findForward("success");
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);

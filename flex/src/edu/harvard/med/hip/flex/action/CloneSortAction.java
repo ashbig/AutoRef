@@ -28,6 +28,8 @@ import edu.harvard.med.hip.flex.query.BrowseFlexManager;
 import edu.harvard.med.hip.flex.action.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.core.CloneInfo.RefseqidComparator;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.Constants;
 
 /**
  *
@@ -87,7 +89,7 @@ public class CloneSortAction extends FlexAction {
         int prev = 0;
         int next = 0;
         
-        if("Prev".equals(prevButton)) 
+        if("Prev".equals(prevButton))
             pageindex = pageindex-1;
         
         if("Next".equals(prevButton))
@@ -107,7 +109,7 @@ public class CloneSortAction extends FlexAction {
         } else {
             currentInfo = info.subList((pageindex-1)*pagerecord, info.size());
         }
-        
+  
         request.setAttribute("prev", new Integer(prev));
         request.setAttribute("next", new Integer(next));
         request.setAttribute("pageindex", new Integer(pageindex));
@@ -115,6 +117,14 @@ public class CloneSortAction extends FlexAction {
         request.setAttribute("currentInfo", currentInfo);
         request.setAttribute("isSort", new Integer(isSort));
         request.setAttribute("totalClones", new Integer(info.size()));
+        
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
+        if(retValue) {
+            request.setAttribute("isCloneStorageDisplay", new Integer(1));
+        } else {
+            request.setAttribute("isCloneStorageDisplay", new Integer(0));
+        }
         
         return (mapping.findForward("success"));
     }

@@ -86,6 +86,7 @@
     </TR>
 </TABLE>
 
+<logic:equal name="isCloneStorageDisplay" value="1">
 <p>
 <b>Available Clones:</b>
     <bean:define id="allstorages" name="clone" property="storages"/>
@@ -114,6 +115,7 @@
             </logic:iterate>
         </table>
     </td></tr></table>
+</logic:equal>
 
 <p>
 <b>Sequence:</b>
