@@ -230,7 +230,7 @@
         <tagclass>edu.harvard.med.hip.flex.tag.RowTag</tagclass>
         <bodycontent>JSP</bodycontent>
         <info>
-          Format a HTML Table Row (i.e. <TR>....</TR>)
+          Format a HTML Table Row
         </info>
         <attribute><name>match</name></attribute>
         <attribute><name>property</name></attribute>

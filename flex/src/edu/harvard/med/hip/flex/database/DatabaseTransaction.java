@@ -12,9 +12,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.17 $
- * $Date: 2001-07-26 16:02:23 $
- * $Author: jmunoz $
+ * $Revision: 1.18 $
+ * $Date: 2003-03-07 16:35:10 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -25,6 +25,8 @@
  *
  *    May-22-2001 : JMM - Class created.
  *
+ *    Feb-21-2002: DZ - Modified the API to use Java's DataSource class for
+ *                  connection pooling to get rid of poolman.
  */
 
 /*
@@ -53,8 +55,8 @@ import sun.jdbc.rowset.*;
  *
  * DatabaseTransaction is implemented as a singleton.
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.17 $ $Date: 2001-07-26 16:02:23 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.18 $ $Date: 2003-03-07 16:35:10 $
  */
 
 public class DatabaseTransaction {
@@ -65,43 +67,14 @@ public class DatabaseTransaction {
     // the datasource to get the pooled connections from
     private static DataSource ds = null;
     
-    // initalize this thing if it isn't allready
-    static {
-        // look up the Datasource
-        try {
-            Context ctx = new InitialContext();
-            
-            //check to see if pool man is started.
-            ctx.lookup("jndi-walldb");
-        } catch (NamingException ne) {
-            // if the data source is not found, start it up
-            try {
-                com.codestudio.sql.PoolMan.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
-    }
     // Private constructor method. Autocommit is set to false.
-    protected DatabaseTransaction() throws FlexDatabaseException {
-        
-        // look up the Datasource
-        try {
-            Context ctx = new InitialContext();
-            
-            // Get the datasource
-            ds = (DataSource) ctx.lookup("jndi-walldb");
-        } catch (NamingException ne) {
-            ne.printStackTrace();
-            throw new FlexDatabaseException(ne);
-        }
-        // ds = PoolMan.findDataSource("jndi-walldb");
-        
-        
-        
+    protected DatabaseTransaction(DataSource ds) {
+        this.ds = ds;
     } // end constructor
     
+    public static void init(DataSource ds) {
+        instance = new DatabaseTransaction(ds);
+    }
     
     /**
      * This class is implemented as a Singleton.
@@ -112,7 +85,7 @@ public class DatabaseTransaction {
     public static DatabaseTransaction getInstance()
     throws FlexDatabaseException {
         if (instance == null) {
-            instance = new DatabaseTransaction();
+            throw new FlexDatabaseException("Pool not initialized.");
         }
         
         return instance;
