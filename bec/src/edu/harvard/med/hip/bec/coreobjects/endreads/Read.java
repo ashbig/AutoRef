@@ -45,7 +45,8 @@ public class Read
     public static final int TYPE_INNER_REVERSE = -2;
     public static final int TYPE_INNER_FORWARD = 2;
     
-         
+    public static final int STATUS_ANALIZED = 1;     
+    public static final int STATUS_NOT_ANALIZED = 0;  
     
     private int         m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int         m_isolatetrackingid = BecIDGenerator.BEC_OBJECT_ID_NOTSET; 
@@ -61,6 +62,7 @@ public class Read
     private String      m_capilarity = null;
     private int         m_trimmingtype = PhredWrapper.TRIMMING_TYPE_NOT_TRIMMED;
     private int         m_score = Constants.SCORE_NOT_CALCULATED;
+    private int         m_status = STATUS_NOT_ANALIZED;
     
     private int         m_trimmedstart = -1;
     private int         m_trimmedstop = -1;
@@ -156,8 +158,8 @@ public class Read
                 m_readsequence.insert(conn);
                 m_readsequence_id = m_readsequence.getId();
             }
-            sql = "insert into readinfo (readid, readsequenceid, trimmedtype,trimmedstart,trimmedend,readtype, score ";
-            values = " values(" + m_id + ","+ m_readsequence_id  +","+m_trimmingtype+","+m_trimmedstart+","+m_trimmedstop +","+m_type +","+m_score;
+            sql = "insert into readinfo (readid, readsequenceid, trimmedtype,trimmedstart,trimmedend,readtype, score,status ";
+            values = " values(" + m_id + ","+ m_readsequence_id  +","+m_trimmingtype+","+m_trimmedstart+","+m_trimmedstop +","+m_type +","+m_score+","+m_status;
              
             if ( m_isolatetrackingid != BecIDGenerator.BEC_OBJECT_ID_NOTSET)
             {
@@ -191,7 +193,11 @@ public class Read
         String sql = "update readinfo set score="+ m_score +   " where readid="+m_id;
         DatabaseTransaction.executeUpdate(sql, conn);
     }
-   
+   public void updateStatus(Connection conn) throws BecDatabaseException
+    {
+        String sql = "update readinfo set status="+ m_status +   " where readid="+m_id;
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
     public  void updateType(Connection conn) throws BecDatabaseException
     {
         String sql = "update readinfo set readtype="+ m_type +   " where readid="+m_id;
@@ -272,6 +278,7 @@ public class Read
      public int         getCdsStart(){ return m_cdsstart ;}
     public int         getCdsStop(){ return m_cdsstop ;}
     public String       getTypeAsString() {return getTypeAsString(m_type);}
+    
     public static String       getTypeAsString(int type)
     {
         switch (type)
@@ -290,6 +297,17 @@ public class Read
             default : return "";
         }
     }
+    public int              getStatus(){ return m_status;}
+    public String          getStatusAsString(int status)
+    { 
+        switch(status)
+        {
+            case  STATUS_ANALIZED : return "Read sequence analized";
+            case STATUS_NOT_ANALIZED : return "Read sequence not analized";
+            default : return "";
+        }
+    }
+    
    public void         setId(int v){  m_id  = v;}
     public void         setIsolateTrackingId(int v){  m_isolatetrackingid  = v;} 
 
@@ -309,6 +327,7 @@ public class Read
     public void         setTrimEnd(int v){  m_trimmedstop  = v;}
     public void         setCdsStart(int v){  m_cdsstart =v;}
     public void         setCdsStop(int v){ m_cdsstop = v ;}
+    public void         setStatus(int v){ m_status = v;}
     public void         setSequence(String text, String scores, int refseqid)
     {
         m_readsequence = new AnalyzedScoredSequence(text,scores,refseqid);
@@ -379,7 +398,7 @@ public class Read
         ArrayList reads = new ArrayList();
         String sql = "select  READID  ,MACHINE  ,CAPILARITY  ,READSEQUENCEID ,TRIMMEDTYPE "
         +"  ,TRIMMEDSTART  ,TRIMMEDEND  ,READTYPE  ,ASSEMBLEDSEQUENCEID  ,RESULTID  ,SCORE "
-        +" ,ISOLATETRACKINGID , cdsstart,cdsstop from READINFO where " + rule;
+        +" ,ISOLATETRACKINGID , cdsstart,cdsstop, status from READINFO where " + rule;
        
         ResultSet rs = null; Read read = null;
         try
@@ -403,6 +422,7 @@ public class Read
                 read.setSequence ( read.getSequenceId() );
                 read.setCdsStart( rs.getInt("cdsstart"));
                 read.setCdsStop( rs.getInt("cdsstop"));
+                read.setStatus(rs.getInt("status"));
                 reads.add(read);
             }
             return reads;
@@ -477,153 +497,7 @@ public class Read
        return length;
     }
     
-   
-    
-    /*
-    //function reformats scored sequence text according to spec
-    //ei inserts N instead of all bases that are not qualified for the analysis
-    private String reformatQuerySequence(EndReadsSpec spec) throws BecUtilException
-    {
-       
-        //get spec params needed for formating
-        try
-        {
-            int format_type = spec.getParameterByNameInt("E_isLowScore");
-            if (format_type == 0)
-            {               
-                int hh_bases = spec.getParameterByNameInt("E_ER_HIGH_QUAL");
-                int ll_bases = spec.getParameterByNameInt("E_ER_LOW_QUAL");
-                int phred_cutoff = spec.getParameterByNameInt("E_ER_PHRED_CUT_OFF");
-                return reformatSequenceFormat0(   ll_bases,  hh_bases, phred_cutoff);
-            }
-            else
-            {
-               
-               int prhred_low_score = spec.getParameterByNameInt("E_ER_PHRED_LOW_CUT_OFF");
-               //<input name="E_ER_PHRED_LOW_CUT_OFF" type="text" >     //replace all bases with score < number_low to 'N'
-                return reformatSequenceFormat1(prhred_low_score);
-            }
-        }
-        catch(Exception e)
-        {
-            throw new  BecUtilException("Can not format sequence.");
-        }
-    
-    }
-    
-    //function formates sequence for the case
-    //when user choose to delete n HQ bases between m LQ bases
-    private String reformatSequenceFormat0( int ll_bases, int hh_bases, int phred_cuttof)
-    {
-        /*
-            //Discard up to 
-      //<input name="E_ER_HIGH_QUAL" >  high quality bases surronded by no less than 
-      //<input name="E_ER_LOW_QUAL" >  low quality bases
-            int h_quality_in_row = 0;
-            int l_quality_in_row = 0;
-            int h_range_start = 0; 
-            int h_range_end = 0;
-            boolean isInRange = false;
-            char[] scored_text = m_scoredsequence.getText().toCharArray();
-            char[] result = new char[m_scoredsequence.getText().length()];
-            
-            for (int count = 0; count < scored_text.length; count++)
-            {
-                //set hq base not in range
-                if (  m_scoredsequence.getScoresAsArray()[count] >= phred_cuttof)
-                {
-                    result[count] = scored_text[count];
-                }
-                //lq bases started, not in range
-                if (! isInRange && m_scoredsequence.getScoresAsArray()[count] < phred_cuttof)
-                {
-                    isInRange = true;
-                    l_quality_in_row++;
-                }
-                //hq bases started after lq bases not in range
-                if ( isInRange && h_range_start == 0 && m_scoredsequence.getScoresAsArray()[count] >= phred_cuttof)
-                {
-                    //less lq bases than requered for the range
-                   if (l_quality_in_row < ll_bases)
-                   {
-                       isInRange = false;
-                       l_quality_in_row = 0;
-                   }
-                   //enough lq bases to continue range
-                   else
-                   {
-                        h_quality_in_row++;
-                        l_quality_in_row = 0;
-                        h_range_start = count; 
-                   }
-                    
-                }
-                //lq bases started after hq in range
-                //lq bases started, not in range
-                if ( isInRange && m_scoredsequence.getScoresAsArray()[count] < phred_cuttof)
-                {
-                    if (h_quality_in_row >= hh_bases)
-                    {
-                        l_quality_in_row = 1;
-                    }
-                    else
-                    {
-                        l_quality_in_row++;
-                        h_range_end = count - 1;
-                    }
-                }
-              //hq bases started after lq bases  in range
-                if ( isInRange && h_range_start != 0 && m_scoredsequence.getScoresAsArray()[count] >= phred_cuttof)
-                {
-                    
-                    //more lq bases than requered for the range: update range
-                   if (l_quality_in_row >= ll_bases)
-                   {
-                       for (int inner =h_range_start; inner < h_range_end; inner ++)
-                       {
-                           result[count] = 'N';
-                       }
-                    }
-                    isInRange = false;
-                    l_quality_in_row = 0;
-                     h_range_start = 0;
-                     h_range_end = 0;
-                }
-                //ll not in range
-                if (  m_scoredsequence.getScoresAsArray()[count] < phred_cuttof)
-                {
-                    result[count] = 'N';
-                }
-            }
-            return new String(result);
-        
-        return null;
-    }
-    
-    //delete all bases with qualyty score less than phred low score
-    private String reformatSequenceFormat1(int prhred_low_score)
-    {
-        /*
-          //put sequence text and scores into array
-            char[] scored_text = m_scoredsequence.getText().toCharArray();
-            char[] result = new char[m_scoredsequence.getText().length()];
-            //check if arrays are equal by size
-            if (scored_text.length != m_scoredsequence.getScoresAsArray().length) return null;
-
-            //<input name="E_ER_PHRED_LOW_CUT_OFF" type="text" >     //replace all bases with score < number_low to 'N'
-            for (int count = 0; count < scored_text.length; count++)
-            {
-                if (m_scoredsequence.getScoresAsArray()[count] < prhred_low_score)
-                    result[count] = 'N';
-                else
-                    result[count] = scored_text[count];
-            }
-            return new String(result);
-         
-        return null;
-    }
-    
-   */
+  
       public static void main(String args[])
     {
         Read r = null;
