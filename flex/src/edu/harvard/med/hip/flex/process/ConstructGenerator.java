@@ -35,11 +35,12 @@ public class ConstructGenerator {
      * Constructor
      * Creates new ConstructGenerator
      */
-    public ConstructGenerator(LinkedList seqList, Connection c) {
+    public ConstructGenerator(LinkedList seqList, Connection c) throws FlexDatabaseException {
         this.seqList = seqList;
         this.conn = c;
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
+        this.platesetId = setPlatesetId(); //create new plateset ID
     }
     
     /**
@@ -73,8 +74,6 @@ public class ConstructGenerator {
         // insert design constructs protocl process execution
         // insertProcessExecution();
         NNPrimerCalculator pc = new NNPrimerCalculator();
-        setPlatesetId(); //create new plateset ID
-        System.out.println("The new plateset ID is: " + platesetId);
         ListIterator iter = seqList.listIterator();
         
         while (iter.hasNext()) {
@@ -89,11 +88,11 @@ public class ConstructGenerator {
             // and insert oligo infor into the oligo table
             try{
                 result_5p = pc.calculateFivepOligo(seq);
-                result_5p.insert(conn);
+                //result_5p.insert(conn);
                 result_3s = pc.calculateThreepCloseOligo(seq);
-                result_3s.insert(conn);
+                //result_3s.insert(conn);
                 result_3op = pc.calculateThreepOpenOligo(seq);
-                result_3op.insert(conn);
+                //result_3op.insert(conn);
             } catch(FlexDatabaseException sqlex){
                 throw new FlexDatabaseException(sqlex);
             }
@@ -223,13 +222,14 @@ public class ConstructGenerator {
      *
      * @return The platesetId
      */
-    private void setPlatesetId() throws FlexDatabaseException {
+    private int setPlatesetId() throws FlexDatabaseException {
+        int platesetId = -1;
         try{
             platesetId = FlexIDGenerator.getID("platesetid");
-            //return platesetId;
         }catch(FlexDatabaseException sqlex){
             throw new FlexDatabaseException(sqlex);
         }
+        return platesetId;
     }
     
     private int setPairId() throws FlexDatabaseException {
