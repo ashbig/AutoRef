@@ -16,6 +16,8 @@ import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.database.*;
@@ -166,6 +168,8 @@ public class PrimerOrderRunner extends ProcessRunner
         {
             clone_description = (CloneDescription)sorted_clone_description.get(clone_count);
             clone_primers = getClonePrimers( clone_description );
+            IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_READY_FOR_INTERNAL_READS, clone_description.getIsolateTrackingId(),  conn );
+                
             if ( clone_primers != null && clone_primers.size() >0)
             {
                 primers.addAll(clone_primers);

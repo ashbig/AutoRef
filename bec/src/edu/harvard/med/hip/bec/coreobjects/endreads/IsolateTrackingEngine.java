@@ -59,6 +59,7 @@ public class IsolateTrackingEngine
     public static final int            PROCESS_STATUS_OLIGODESIGNER_RUN = 8;
     public static final int            PROCESS_STATUS_OLIGODESIGNER_CONFIRMED = 9;
     public static final int            PROCESS_STATUS_INTERNAL_READS_FINISHED = 10;
+    public static final int            PROCESS_STATUS_CLONE_SEQUENCE_ASSEMBLED_FROM_INTERNAL_READS = 33;
    
     //sequence submitted from outside
      public static final int            PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE = 11;
@@ -183,16 +184,22 @@ public class IsolateTrackingEngine
     public int[]            getCloneSequenceReadsId(){ return m_fullseq_reads_id;}
     public CloneSequence    getCloneSequence( ){ return m_clone_sequence ;}
     public ArrayList        getCloneSequences(){ return m_clone_sequences;}
-    public int              getScore() 
-    { 
-       
-        return m_score;
-    }
-     public  String getStatusAsString()
+    public int              getScore()    {    return m_score;    }
+    public  String getStatusAsString()    {        return getStatusAsString(m_status);    }
+    
+    
+    public static String getRankAsString(int rank)
     {
-        return getStatusAsString(m_status);
-        
-     }
+        switch (rank)
+        {
+            case RANK_BLACK : return "Not acceptable clone";
+            case   RANK_NOT_APPLICABLE : return "Not applicable";
+            case -1: return "Not analized";
+            case 1: return "Best clone";
+            case 2:case 3: case 4: case 5: case 6: case 7: case 8: return rank + " clone for the gene";
+            default: return "";
+        }
+    }
     public static String getStatusAsString(int status)
     {
         switch(status)
@@ -221,6 +228,7 @@ public class IsolateTrackingEngine
             case PROCESS_STATUS_OLIGODESIGNER_RUN : return "Primer designer finished";
             case PROCESS_STATUS_OLIGODESIGNER_CONFIRMED : return "Internal primers confirmed";
             case PROCESS_STATUS_INTERNAL_READS_FINISHED : return "Full sequencing finished";
+            case PROCESS_STATUS_CLONE_SEQUENCE_ASSEMBLED_FROM_INTERNAL_READS: return "Clone sequence assembly finished";
 
             case PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED : return "Discrepancy finder finished";
             case PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED : return "Polymorphism finder finished";
@@ -938,7 +946,7 @@ public class IsolateTrackingEngine
        }
        
         int sequence_penalty = 0;
-        ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( m_clone_sequence.getDiscrepancies());
+        ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( m_clone_sequence.getDiscrepancies());
      
        if ( DiscrepancyDescription.isMaxNumberOfDiscrepanciesReached( discrepancy_descriptions ,cutoff_spec ))
        {   
@@ -968,6 +976,7 @@ public class IsolateTrackingEngine
            return;
        }
         ArrayList discrepancies_pairs = new ArrayList();
+         ArrayList discrepancies_descriptions = null;
        //check wherther reads are overlap
        //case of one read or no overlap
          Read read = null; int overlap_length = 0; int isolate_penalty = 0;
@@ -978,8 +987,10 @@ public class IsolateTrackingEngine
                read  = (Read)not_ambiquous_read.get(read_count);
                 isolate_penalty +=  read.getScore();
                 overlap_length += read.refsequenceCoveredLength();
-                discrepancies_pairs.addAll( DiscrepancyDescription.assembleDiscrepanciesInPairs(
-                     read.getSequence().getDiscrepancies())); 
+                discrepancies_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions(
+                     read.getSequence().getDiscrepancies());
+                if ( ! (discrepancies_descriptions == null || discrepancies_descriptions.size() == 0))
+                    discrepancies_pairs.addAll(discrepancies_descriptions); 
            }
            if ( DiscrepancyDescription.isMaxNumberOfDiscrepanciesReached(discrepancies_pairs,cutoff_spec) )
            {   
@@ -994,7 +1005,7 @@ public class IsolateTrackingEngine
        }
        // case of two read and overlap
         
-        discrepancies_pairs = DiscrepancyDescription.getDiscrepancyPairsNoDuplicates(
+        discrepancies_pairs = DiscrepancyDescription.getDiscrepancyDescriptionsNoDuplicates(
                      ((Read) m_endreads.get(0)).getSequence().getDiscrepancies(), 
                       ((Read) m_endreads.get(1)).getSequence().getDiscrepancies());
      
@@ -1031,7 +1042,7 @@ public class IsolateTrackingEngine
     {
         try
         {
-        int[] istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(5946, 1);
+      //  int[] istr_info = IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(20554);
         }
         catch(Exception e){}
       }
