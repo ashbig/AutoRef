@@ -1,0 +1,40 @@
+/*
+ * UIRead.java
+ *
+ * Created on September 12, 2003, 12:00 PM
+ */
+
+package edu.harvard.med.hip.bec.ui_objects;
+
+
+import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+/**
+ *
+ * @author  HTaycher
+ */
+public class UIRead
+{
+    private int             m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private int             m_sequence_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private int             m_type = Read.TYPE_NOT_SET;
+    private boolean         m_isAlignmentExists = false;
+    private boolean         m_isDiscrepancy = false;
+    /** Creates a new instance of UIRead */
+    public UIRead()
+    {
+    }
+    public int             getId (){ return m_id  ;}
+    public int             getSequenceId (){ return m_sequence_id  ;}
+    public int             getType (){ return m_type  ;}
+    public String          getTypeAsString (){ return Read.getTypeAsString(m_type)  ;}
+    public boolean         isAlignmentExists (){ return m_isAlignmentExists  ;}
+    public boolean         isDiscrepancies (){ return m_isDiscrepancy  ;}
+    
+    
+    public void             setId (int v){ m_id  = v;} 
+    public void             setSequenceId (int v){ m_sequence_id  = v;}
+    public void             setType (int v){ m_type  = v;}
+    public void             setIsAlignmentExists (boolean v){ m_isAlignmentExists  = v;}
+    public void             setIsDiscrepancies (boolean v){ m_isDiscrepancy  = v;}
+}
