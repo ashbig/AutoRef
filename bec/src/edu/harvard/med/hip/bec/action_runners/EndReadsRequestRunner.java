@@ -42,7 +42,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
  *
  * @author  htaycher
  */
-  public class EndReadsRequestRunner// implements Runnable
+  public class EndReadsRequestRunner implements Runnable
 {
     
     /** Creates a new instance of tester */
