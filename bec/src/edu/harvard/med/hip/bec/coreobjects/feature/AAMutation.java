@@ -119,12 +119,11 @@
                 && m.length()  == 1 )
             {
                 type = Mutation.TYPE_AA_SUBSTITUTION;
-                int similarity_score = -1;
+                int similarity_score = -1000;
                 similarity_score = edu.harvard.med.hip.bec.bioutil.BioConstants.getScore(o.charAt(0),m.charAt(0));
-                if (similarity_score != -1) 
+                if (similarity_score != -1000) 
                 {
                     type = (similarity_score < 0) ? Mutation.TYPE_AA_NONCONSERVATIVE : Mutation.TYPE_AA_CONSERVATIVE;
-                    
                 }
             } 
             else 
