@@ -36,6 +36,10 @@ public abstract class Mutation
     public static final int QUALITY_LOW = 1;
     
     
+    public static final int FLAG_POLYM_YES = 1;
+    public static final int FLAG_POLYM_NO = -1;
+    public static final int FLAG_POLYM_NOKNOWN = 0;
+    
     //mutation types
     public static final int TYPE_NOT_DEFINE = 0;
      public static final int TYPE_NOTRESOLVED=23;
