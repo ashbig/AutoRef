@@ -28,6 +28,7 @@
     <mkdir dir="${deploy.home}"/>
     <copy todir="${deploy.home}">
       <fileset dir="web"/>
+      <fileset dir="image"/>
     </copy>
     <mkdir dir="${deploy.home}/WEB-INF"/>
     <copy file="etc/web.xml" tofile="${deploy.home}/WEB-INF/web.xml"/>
