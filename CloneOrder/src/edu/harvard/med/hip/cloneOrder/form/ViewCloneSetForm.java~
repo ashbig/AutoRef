@@ -1,0 +1,19 @@
+/*
+ * ViewCloneSetForm.java
+ *
+ * Created on March 27, 2003, 10:32 AM
+ */
+
+package edu.harvard.med.hip.cloneOrder.form;
+
+/**
+ *
+ * @author  yanhui
+ */
+public class ViewCloneSetForm {
+    
+    /** Creates a new instance of ViewCloneSetForm */
+    public ViewCloneSetForm() {
+    }
+    
+}

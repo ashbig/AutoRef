@@ -1,0 +1,19 @@
+/*
+ * CancelReservationForm.java
+ *
+ * Created on March 28, 2003, 12:13 PM
+ */
+
+package edu.harvard.med.hip.cloneOrder.form;
+
+/**
+ *
+ * @author  yanhui
+ */
+public class CancelReservationForm {
+    
+    /** Creates a new instance of CancelReservationForm */
+    public CancelReservationForm() {
+    }
+    
+}
