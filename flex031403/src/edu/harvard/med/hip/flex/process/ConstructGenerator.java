@@ -31,11 +31,12 @@ import java.util.*;
 
 public class ConstructGenerator {
     private LinkedList seqList;
-    private Connection conn;
+    private Connection conn = null;
     private LinkedList oligoPatternList;
     private LinkedList constructList;
-    private Project project;
-    private Workflow workflow;
+    private Project project = null;
+    private Workflow workflow = null;
+    private Protocol m_protocol = null;
     
     /**
      * Constructor
@@ -46,7 +47,7 @@ public class ConstructGenerator {
         this.conn = c;
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
-        
+        m_protocol = new Protocol("design constructs");
     }
     
     /**
@@ -61,14 +62,29 @@ public class ConstructGenerator {
      */
     public ConstructGenerator(LinkedList seqList, Connection c, Project project,
     Workflow workflow) throws FlexDatabaseException {
-        this.seqList = seqList;
-        this.conn = c;
+        this(seqList,c );
         this.project = project;
         this.workflow = workflow;
+        
+    }
+    
+    /**
+     * Constructor.
+     *
+     * @param seqList The list of sequences for construct design.
+     * @param c The Connection object for database transaction.
+     * @param project The project for the sequence construct design.
+     * @param workflow The workflow for the sequence construct design.
+     *
+     * @return The ConstructGenerator object.
+     */
+    public ConstructGenerator(LinkedList seqList, Connection c, Project project,
+    Workflow workflow, Protocol protocol) throws FlexDatabaseException {
+        this(  seqList,  c,  project, workflow);
+        m_protocol = protocol;
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
     }
-    
     /**
      * Precondition: there is a group of 94 sequences in the
      * same size class in the Queue table awaiting for
@@ -250,14 +266,14 @@ public class ConstructGenerator {
      */
     protected void insertProcessInputOutput() throws FlexDatabaseException {
         Process process = null;
-        Protocol protocol = new Protocol("design constructs");
+        
         Researcher r = new Researcher();
         String status = "S"; //SUCCESS
         
         int userId = r.getId("SYSTEM");
         r = new Researcher(userId);
         // insert process execution record into process execution table
-        process = new Process(protocol,status,r, project, workflow);
+        process = new Process(m_protocol,status,r, project, workflow);
         int executionId = process.getExecutionid();
         process.insert(conn);
         //System.out.println("Insert process execution for design constructs...");
