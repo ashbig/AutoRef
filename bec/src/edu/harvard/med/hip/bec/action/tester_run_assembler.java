@@ -429,7 +429,7 @@ public class tester_run_assembler
                     sql_sample = "select distinct localpath from filereference where filereferenceid in "
                     +" (select filereferenceid from resultfilereference "
                     +" where resultid in (select resultid from result where sampleid="+seq_desc.getSampleId()+"))";
-                    rs_ref = DatabaseTransaction.executeQuery(sql_sample, conn);
+                   rs_ref = DatabaseTransaction.executeQuery(sql_sample, conn);
                     if(rs_ref.next())
                     {
                         seq_desc.setReadFilePath(rs_ref.getString("LOCALPATH"));
@@ -474,8 +474,8 @@ public class tester_run_assembler
             CloneSequence clone_seq = new CloneSequence( contig.getSequence(),  contig.getScores(), sequence_definition.getBecRefSequenceId());
             clone_seq.setResultId( result.getId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
             clone_seq.setIsolatetrackingId ( sequence_definition.getIsolateTrackingId() );//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
-            clone_seq.setCloneSequenceStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED);
-            clone_seq.setCloneSequenceType (BaseSequence.CLONE_SEQUENCE_TYPE_ASSESMBLED); //final\conseq\final editied
+            clone_seq.setCloneSequenceStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
+            clone_seq.setCloneSequenceType (BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED); //final\conseq\final editied
             clone_seq.setCdsStart( contig.getCdsStart() );
             clone_seq.setCdsStop( contig.getCdsStop() );
             clone_seq.insert(conn);

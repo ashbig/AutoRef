@@ -51,6 +51,9 @@ public class tester_plate_upload
     private User        i_user = null;
     private int         i_plate_info_type = -1;
     private ArrayList   i_error_messages = null;
+    private String      i_start_codon = null;
+    private String      i_fusion_stop_codon = null;
+    private String      i_close_stop_codon = null;
     
     
     public void         setContainerLabels(ArrayList v)    { i_master_container_labels = v;}
@@ -60,6 +63,9 @@ public class tester_plate_upload
     public void         setNextStep(int put_plate_for_step)    { i_isolate_status = put_plate_for_step;}
     public void         setPlateInfoType(int plate_info_type){i_plate_info_type = PlateUploader.PLATE_NAMES;}
     public  void        setUser(User v)    {i_user=v;}
+    public  void        setStartCodon(String v){i_start_codon = v;}
+    public  void        setFusionStopCodon(String v){i_fusion_stop_codon = v;}
+    public  void        setClosedStopCodon(String v){i_close_stop_codon = v;}
     
     public void run()
     {
@@ -81,11 +87,11 @@ public class tester_plate_upload
           
             int cloning_startegy_id ;
            //get clonningstategy, if it does not exist - create new
-         cloning_startegy_id = CloningStrategy.getCloningStrategyIdByVectorLinkerInfo( i_vector_id , i_linker3_id ,  i_linker5_id );
+         cloning_startegy_id = CloningStrategy.getCloningStrategyIdByVectorLinkerInfo( i_vector_id , i_linker3_id ,  i_linker5_id,i_start_codon ,i_fusion_stop_codon ,i_close_stop_codon );
 
             if (cloning_startegy_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET )
             {
-                CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,i_vector_id , i_linker3_id ,  i_linker5_id ," ");
+                CloningStrategy str = new CloningStrategy(BecIDGenerator.BEC_OBJECT_ID_NOTSET ,i_vector_id , i_linker3_id ,  i_linker5_id ,i_start_codon ,i_fusion_stop_codon ,i_close_stop_codon," ");
                 str.insert(conn);
                 conn.commit();
                 cloning_startegy_id = str.getId();
@@ -210,7 +216,10 @@ public class tester_plate_upload
         runner.setLinker5Id(7) ;//bec_test
         runner.setNextStep(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER) ;
         runner.setPlateInfoType(PlateUploader.PLATE_NAMES);
-    runner.run();
+        runner.setFusionStopCodon("GGA");
+        runner.setStartCodon("ATG");
+        runner.setClosedStopCodon("TAG");
+        runner.run();
         System.exit(0);
     }
     

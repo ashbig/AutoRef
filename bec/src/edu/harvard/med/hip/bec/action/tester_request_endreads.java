@@ -30,7 +30,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
  *
  * @author  htaycher
  */
-  public class tester_request_endreads implements Runnable
+  public class tester_request_endreads 
 {
     
     /** Creates a new instance of tester */
@@ -287,14 +287,14 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
     //  master_container_ids.add(new Integer(36));
     //   master_container_ids.add(new Integer(37));
     //  master_container_ids.add(new Integer(38));
-      master_container_ids.add(new Integer(96));
+        master_container_ids.add(new Integer(67));
      
       
       
         tester_request_endreads runner = new tester_request_endreads();
         runner.setContainerIds(master_container_ids );
-        runner.setForwardPrimerId(5 );
-        runner.setRevercePrimerId(6);
+        runner.setForwardPrimerId(9 );
+        runner.setRevercePrimerId(10);
         User user  = null;
         try
         {
@@ -302,8 +302,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
         }
         catch(Exception e){}
         runner.setUser(user);
-        Thread t = new Thread();
-        t.start();
+        runner.run();
         System.exit(0);
      }
     
