@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.24 2001-06-29 12:50:19 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.25 2001-06-29 17:14:42 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -191,7 +191,7 @@ public class Process {
         "x.processdate, x.subprotocolname, x.extrainformation "+
         "from processexecution x, processobject o "+
         "WHERE "+
-        "o.containerid=? AND "+
+        "o.executionid=x.executionid AND o.containerid=? AND "+
         "x.protocolid=?";
         DatabaseTransaction dt = DatabaseTransaction.getInstance();
         
