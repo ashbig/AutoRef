@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2001-06-22 12:54:58 $
+ * $Revision: 1.11 $
+ * $Date: 2001-06-22 14:47:23 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.10 $ $Date: 2001-06-22 12:54:58 $
+ * @version    $Revision: 1.11 $ $Date: 2001-06-22 14:47:23 $
  */
 
 public class DatabaseTransaction {
@@ -94,7 +94,7 @@ public class DatabaseTransaction {
      *
      * @return A <code>DatabaseTransaction</code> object.
      */
-    public static DatabaseTransaction getInstance() 
+    public static DatabaseTransaction getInstance()
     throws FlexDatabaseException {
         if (instance == null) {
             instance = new DatabaseTransaction();
@@ -108,7 +108,7 @@ public class DatabaseTransaction {
     /**
      * Requests a Connection from the pool.
      *
-     * @param   autoCommit <code>boolean</code> whether or not the connection 
+     * @param   autoCommit <code>boolean</code> whether or not the connection
      *          should use autocommit.  True for autocommit, false otherwise.
      *
      * @return A <code>Connection</code> object from the pool.
@@ -126,7 +126,7 @@ public class DatabaseTransaction {
             DatabaseTransaction.closeConnection(conn);
             throw new FlexDatabaseException("Cannot get Connection.\n"+sqlE.getMessage());
             
-        } 
+        }
         
     } // end requestConnection()
     
@@ -154,7 +154,7 @@ public class DatabaseTransaction {
      *
      * @throws FlexDatabaseException
      */
-    public static int executeUpdate(PreparedStatement ps) 
+    public static int executeUpdate(PreparedStatement ps)
     throws FlexDatabaseException{
         try {
             return ps.executeUpdate();
@@ -262,7 +262,7 @@ public class DatabaseTransaction {
      * Set the parameters for the <code>PreparedStatement</code> object.
      *
      * @param stmt  The <code>PreparedStatement</code> to set values for
-     * @param h     The <code>HashTable</code> of values used to set values in 
+     * @param h     The <code>HashTable</code> of values used to set values in
      *              the prepared statement
      *
      * @throws FlexDatabaseException
@@ -299,9 +299,9 @@ public class DatabaseTransaction {
      */
     public static void closeConnection(Connection conn) {
         try{
-            System.out.println("about to close connectin");
+            
             conn.close();
-            System.out.println("connection closed");
+            
         } catch(Throwable t) {
             System.out.println("error clossing connection : ");
             t.printStackTrace();
@@ -361,52 +361,30 @@ public class DatabaseTransaction {
         Connection conn = null;
         PreparedStatement ps = null;
         
-        // test prepared statements
-        try {
-            dt = DatabaseTransaction.getInstance();
-            conn = dt.requestConnection();
-            ps = conn.prepareStatement("Select * from UserProfile");
-            rs = dt.executeQuery(ps);
-            while(rs.next()) {
-                System.out.println("username: " + rs.getString("Username"));
-            }
-        } catch (FlexDatabaseException fde) {
-            fde.printStackTrace();
-        } catch(SQLException sqlE) {
-            sqlE.printStackTrace();
-        } finally {
-            try {
-                rs.close();
-            } catch(Throwable t) {}
-            try {
-                ps.close();
-            } catch(Throwable t) {}
-            try {
-                conn.close();
-            } catch(Throwable t) {}
-            
-        }
+        
         
         // test execute sql
         try {
             
             dt = DatabaseTransaction.getInstance();
-            rs = dt.executeQuery("select * from USERPROFILE");
-            rs = dt.executeQuery("select * from USERPROFILE");
-            rs = dt.executeQuery("select * from USERPROFILE");
-            rs = dt.executeQuery("select * from USERPROFILE");
-            
+            for (int i = 0 ; i < 300 ; i++) {
+                System.out.println("i: " + i);
+               edu.harvard.med.hip.flex.process.Process.findProcess(new edu.harvard.med.hip.flex.core.Container(200),new edu.harvard.med.hip.flex.process.Protocol(8));
+               // rs = dt.executeQuery("select * from dual");
+               
+            }
         } catch(FlexDatabaseException fde) {
             fde.printStackTrace();
+       } catch(edu.harvard.med.hip.flex.core.FlexCoreException core) {
+            core.printStackTrace();
+        
         }
         finally {
-            System.out.println("Hello");
-            try {
-                rs.close();
-            } catch (Exception e) {}
+            DatabaseTransaction.closeResultSet(rs);
+            
         }
-    
-       
+        
+        
         
         System.out.println("End of Main");
     } // end main()
