@@ -90,3 +90,19 @@ package edu.harvard.med.hip.bec.programs.needle;
 class    NeedleWrapper
 
 recompile trimming script and configure phrepPhap to run it
+
+
+
+PhredPhrap setup
+1. set perl scripts
+
+addReads2Consed.perl
+findSequenceMatchesForConseq.perl
+phredPhrap.perl
+tagRepeats.perl
+transferConsensusTags.perl
+
+2. copy vector libraries to some location and update ApplicationHostSettings
+
+3. copy phredpar.dat to some location
+
