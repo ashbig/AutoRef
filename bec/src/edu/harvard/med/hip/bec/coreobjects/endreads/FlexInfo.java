@@ -154,4 +154,11 @@ public class FlexInfo
     public void setFlexSequenceId ( int v){   m_flexsequence_id  = v;}
     public void setFlexCloneId ( int v){   m_flexclone_id  = v;}
     
+    
+     public String toString()
+     {
+          return "FlexInfo: id " + m_id +" sampleid "+ m_flexsample_id
+          +" constructid "+m_flexconstruct_id +" collection id "+ m_flexplate_id 
+          +" refsequenceid "+ m_flexsequence_id +" cloneid "+ m_flexclone_id ;
+     }
 }

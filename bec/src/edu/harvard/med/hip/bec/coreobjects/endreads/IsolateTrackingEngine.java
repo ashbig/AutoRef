@@ -117,10 +117,16 @@ public class IsolateTrackingEngine
     /** Creates a new instance of IsolateTrackingEngine */
      public IsolateTrackingEngine() throws BecDatabaseException
     {
-      
-    
+       
     }
        
+      public String toString()
+     {
+         String result = "\nIsolatetracking: id "+   m_id+" constructid "+
+       m_construct_id +" status "+  m_status +" sampleid "+   m_sample_id ;
+       if ( m_flexinfo != null ) result+=m_flexinfo.toString();
+       return result;
+      }
     
        
     public void insert(Connection conn)throws BecDatabaseException
