@@ -51,13 +51,13 @@ public class MgcMasterListImporter {
      *main function for the class
      *@param master list file name
      */
-    public boolean importMgcCloneInfoIntoDB(InputStream input, String fileName,  Connection conn)
+    public boolean importMgcCloneInfoIntoDB(InputStream input, String fileName)
     {
         Hashtable sequenceCol = new Hashtable();
         ArrayList containerCol = new ArrayList();
         if (! readCloneInfo(  input,  fileName, containerCol) ) return false;
         if (! readSeqences(containerCol, sequenceCol) ) return false;
-        if (! uploadToDatabase(containerCol, sequenceCol, conn) ) return false;
+        if (! uploadToDatabase(containerCol, sequenceCol) ) return false;
         return true;
    
     }
@@ -126,16 +126,19 @@ public class MgcMasterListImporter {
                 }
 
                    
-                MgcSample clone = new MgcSample( -1, "", -1,  
+                MgcSample clone = new MgcSample( -1,  -1,  
                                                 Integer.parseInt(info [1]), Integer.parseInt(info[0]), 
-                                                info[8], info[11], Integer.parseInt(info[12]) );
+                                                info[8], info[11], Integer.parseInt(info[12]),
+                                                MgcSample.STATUS_AVAILABLE);
                 
                 cont.addSample(clone);
                 m_successCount++;
             }
-            
+            input.close();  
             return true;
-        }catch (Exception ex) {            return false;        }
+        }catch (Exception ex)
+        {    try{input.close(); }catch(Exception e){ return false;}  
+             return false;        }
     }
     
     /**
@@ -262,12 +265,18 @@ public class MgcMasterListImporter {
    
     /**Load sequence, mgc container and mgc sample information into database
      */
-    private boolean uploadToDatabase( ArrayList containerCol, Hashtable sequenceCol, Connection conn)
+    private boolean uploadToDatabase( ArrayList containerCol, Hashtable sequenceCol)
     {
         String current_key ;
         int fs_key; 
         MgcSample current_clone = null;
-        try{
+        DatabaseTransaction t = null;
+        Connection conn = null;
+ 
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+       
             for (int container_count = 0; container_count < containerCol.size(); container_count++)
             {
 
@@ -279,19 +288,26 @@ public class MgcMasterListImporter {
                  current_clone = (MgcSample)sampl.get(sample_count);
                  current_key = Integer.toString(current_clone.getMgcId());
                  FlexSequence fs = (FlexSequence)sequenceCol.get( current_key);
-                 if (fs != null) 
-                {
+                 if (fs != null && !fs.getQuality().equals(FlexSequence.QUESTIONABLE)  ) 
+                 {
                     fs_key = FlexIDGenerator.getID("sequenceid");
                     current_clone.setSequenceId(fs_key);
                     fs.insert(conn);
+                 }
+                 else
+                 {
+                     current_clone.setStatus(MgcSample.STATUS_NOT_AVAILABLE);
                  }
 
                }//end loop clone 
                cont.insert(conn);
             }//end loop container_count
-        }catch(Exception e){return false;}
+        } catch (FlexDatabaseException ex) {   DatabaseTransaction.rollback(conn);  }
+        catch (Exception ex) {  DatabaseTransaction.rollback(conn);   } 
+        DatabaseTransaction.closeConnection(conn);
        return true;
     }
+        
     public int getFailedCount(){ return m_failCount ;}
     public int getTotalCount(){ return m_totalCount; }
     public int getSuccessCount(){ return m_successCount ;}
@@ -311,30 +327,9 @@ public class MgcMasterListImporter {
             return;
         }
         
-     
-        
         MgcMasterListImporter importer = new MgcMasterListImporter();
-        DatabaseTransaction t = null;
-        Connection conn = null;
-        
-        try {
-            t = DatabaseTransaction.getInstance();
-            conn = t.requestConnection();
-            
-            if(importer.importMgcCloneInfoIntoDB(input, file, conn)) {
-                DatabaseTransaction.commit(conn);
-               
-            } else {
-                DatabaseTransaction.rollback(conn);
-                System.out.println("Import aborted.");
-            }
-        } catch (FlexDatabaseException ex) {
-            DatabaseTransaction.rollback(conn);
-            System.out.println(ex);
-        } finally {
-            DatabaseTransaction.closeConnection(conn);
-            System.exit(0);
-        }
+        importer.importMgcCloneInfoIntoDB(input, file) ;
+        System.exit(0);
     }
     
     
