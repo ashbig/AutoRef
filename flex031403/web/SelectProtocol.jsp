@@ -24,7 +24,19 @@
     <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 </logic:present>
 
+
+
+
 <table>
+    <tr>
+    <td class="prompt">Project name:</td>
+    <td><bean:write name="projectname" /></td>
+    </tr>
+    <tr>
+    <td class="prompt">Workflow name:</td>
+    <td><bean:write name="workflowname" /></td>
+    </tr>
+
     <tr>
     <td class="prompt">Select the process name:</td>
     <td><html:select property="processname">
