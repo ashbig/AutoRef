@@ -9,6 +9,7 @@ package edu.harvard.med.hip.bec.programs.blast;
 import java.io.*;
 import java.util.*;
 import org.apache.regexp.*;
+import edu.harvard.med.hip.bec.programs.*;
 
 /**
  *
@@ -235,7 +236,7 @@ public class Blast2seqParser
         ArrayList hits = new ArrayList();
         int sstrand = -1; int qstrand = -1; int qframe = -1; int sframe = -1;int gaps = -1;
         String strand = null;
-        
+ 
         ArrayList parsed_hits = parse( queryFile,  hits_number);
         for (int hit_count = 0; hit_count < parsed_hits.size(); hit_count++)
         {
@@ -466,15 +467,15 @@ public class Blast2seqParser
             System.out.println(e.getMessage());
         }
          */
-        String queryFile = "C:\\blastoutput\\b2n31462.out";
+        String queryFile = "C:\\blastoutput\\outbl_1188-1204.txt";
         try
         {
             // String sa = formatBlastOutputToHTML("c:\\blastoutput\\b2n31482.out", Blast2seqParser.BLAST_FILE_TYPE_N);
             //  String o = formatBlastOutputToHTML("c:\\blastoutput\\b2tp31482.out",Blast2seqParser.BLAST_FILE_TYPE_P);
             // System.out.println(sa);
             // System.out.println(o);
-            ArrayList a = Blast2seqParser.parse(queryFile,2);
-            a.size();
+            BlastResult a = Blast2seqParser.parseBl2seqResult(queryFile,2);
+            a.getAligments().size();
         }catch(Exception e)
         {}
     }

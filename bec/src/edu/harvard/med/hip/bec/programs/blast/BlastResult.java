@@ -115,7 +115,7 @@ public class BlastResult
     public void insert(Connection conn) throws BecDatabaseException
     {
         
-        //!!! update blasthitid for each blasthit !!!!!!!!!!! 
+        //!!! update BlastAligmentid for each BlastAligment !!!!!!!!!!! 
           if (m_id == -1) m_id = BecIDGenerator.getID("blastid");
        
         PreparedStatement pstmt = null;
@@ -139,7 +139,7 @@ public class BlastResult
             DatabaseTransaction.executeUpdate(pstmt);
             for (int count = 0; count < m_aligments.size(); count++)
             {
-                BlastHit h = (BlastHit)m_aligments.get(count);
+                BlastAligment h = (BlastAligment)m_aligments.get(count);
                 h.setBlastId(m_id);
                 h.insert(conn);
             }
@@ -198,7 +198,7 @@ public class BlastResult
         ArrayList res = new ArrayList();
            
         String sql = "select  sequenceid,score,identity,expect,pvalue,qstop,qstart,qstrand,qframe,"+
-        "sstart,sstop,sframe,sstrand,pscore,blastid,gaps from blasthit where blastid= "+m_id;
+        "sstart,sstop,sframe,sstrand,pscore,blastid,gaps from BlastAligment where blastid= "+m_id;
         
         ResultSet rs = null;
         try
@@ -223,7 +223,7 @@ public class BlastResult
                 int subject_stop = rs.getInt("sstop");//-The offset in the subject of the end of the match
                 int gaps = rs.getInt("gaps");
                 int pscore = rs.getInt("pscore");
-                BlastHit hit = new  BlastHit(  hit_seqid,
+                BlastAligment hit = new  BlastAligment(  hit_seqid,
                           score ,    identity ,
                           expect ,    pvalue ,
                           query_strand ,    subject_strand,
@@ -236,7 +236,7 @@ public class BlastResult
             }
         } catch (SQLException sqlE)
         {
-            throw new BecDatabaseException("Error occured while initializing blasthit with id: "+m_id+"\n"+sqlE+"\nSQL: "+sql);
+            throw new BecDatabaseException("Error occured while initializing BlastAligment with id: "+m_id+"\n"+sqlE+"\nSQL: "+sql);
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);
@@ -253,9 +253,9 @@ public class BlastResult
        {
             public int compare(Object cont1, Object cont2)
             {
-                BlastHit p1 =(BlastHit) cont1;
-                BlastHit p2 = (BlastHit) cont2;
-                return  p1.getScore() - p2.getScore()  ;
+                BlastAligment p1 =(BlastAligment) cont1;
+                BlastAligment p2 = (BlastAligment) cont2;
+                return  (int)(p1.getScore() - p2.getScore() ) ;
            }
        });
     }
@@ -266,8 +266,8 @@ public class BlastResult
        {
             public int compare(Object cont1, Object cont2)
             {
-                BlastHit p1 =(BlastHit) cont1;
-                BlastHit p2 = (BlastHit) cont2;
+                BlastAligment p1 =(BlastAligment) cont1;
+                BlastAligment p2 = (BlastAligment) cont2;
                 if (  p1.getIdentity() > p2.getIdentity())
                     return 1;
                 else if  (  p1.getIdentity() < p2.getIdentity())
@@ -290,7 +290,7 @@ public class BlastResult
          *    DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection conn =  t.requestConnection();
             ArrayList hits = new ArrayList();
-        BlastHit hit = new BlastHit(
+        BlastAligment hit = new BlastAligment(
                     -1,
                      12,90,"e10-9",  
                       -1, 1 ,  1,

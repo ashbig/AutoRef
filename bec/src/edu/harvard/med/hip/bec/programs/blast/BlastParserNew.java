@@ -9,8 +9,9 @@ package edu.harvard.med.hip.bec.programs.blast;
 import java.util.*;
 import java.io.*;
 import org.apache.regexp.*;
+import  edu.harvard.med.hip.bec.programs.*;
+import  edu.harvard.med.hip.bec.util.*;
 
-import edu.harvard.med.hip.bec.util.*;
 /**
  *
  * @author  htaycher
