@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.2 2001-05-22 14:28:09 wenhong_mar Exp $
+ * $Id: NNPrimerCalculator.java,v 1.3 2001-05-23 14:51:51 wenhong_mar Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -9,6 +9,7 @@
  
 package flex.ApplicationCode.Java.util;
 import flex.ApplicationCode.Java.core.*;
+import flex.ApplicationCode.Java.database.*;
 import java.math.*;
  
 public class NNPrimerCalculator implements PrimerCalculator
@@ -113,7 +114,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 * @param oligoType A String object indicates the types of oligos
 	 * @return A Oligo object
 	 */
-	private Oligo calTm (String subSeq, String oligoType)
+	private Oligo calTm (String subSeq, String oligoType) throws FlexDatabaseException
 	{
 		double Tm = 0;
 		double preTm = 0;
@@ -184,8 +185,11 @@ public class NNPrimerCalculator implements PrimerCalculator
 
 		// The oligo sequence is the substring of parameter seq60
 		oligoSeq = subSeq.substring(0, pos+1);
+		
+		// new oligoID needs to be generated
+		int oligoID = FlexIDGenerator.getID("oligo");
 	
-		oligo = new Oligo(oligoType, oligoSeq, Tm);
+		oligo = new Oligo(oligoID, oligoType, oligoSeq, Tm);
 
 		return oligo;
 	} //calTm
@@ -266,14 +270,16 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 * @param sequence  A Sequence object
 	 * @return  An Oligo object represents a 5p oligo
 	 */
-	public Oligo calculateFivepOligo (Sequence sequence)
+	public Oligo calculateFivepOligo (Sequence sequence) throws FlexDatabaseException
 	{
 		Oligo fivepOligo = null;
-		String type = "5p";
+		String type = "fivep";
 		String subSeq;
 		
 		subSeq = sequence.getSeqFragmentStart();
-		fivepOligo = calTm(subSeq, type);		
+		
+		fivepOligo = calTm(subSeq, type);
+				
 
 		return fivepOligo;		
 	}
@@ -283,10 +289,10 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 * @param sequence  A Sequence object
 	 * @return  An Oligo object represents a 3p closed oligo
 	 */
-	public Oligo calculateThreepCloseOligo (Sequence sequence)
+	public Oligo calculateThreepCloseOligo (Sequence sequence) throws FlexDatabaseException
 	{
 		Oligo threepOligo = null;
-		String type = "3s";
+		String type = "threeStop";
 		String subSeq;
 		System.out.println("The 3s fragment is:");
 		System.out.println(sequence.getSeqFragmentStop());
@@ -302,10 +308,10 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 * @param sequence  A Sequence object
 	 * @return  An Oligo object represents a 3p open oligo
 	 */
-	public Oligo calculateThreepOpenOligo (Sequence sequence)
+	public Oligo calculateThreepOpenOligo (Sequence sequence) throws FlexDatabaseException
 	{
 		Oligo threepOpenOligo = null;
-		String type = "3op";
+		String type = "threeOpen";
 		String subSeq;		
 
 		subSeq = sequence.getSeqFragmentStop();
@@ -324,11 +330,15 @@ public class NNPrimerCalculator implements PrimerCalculator
 	public static void main(String[] args)
 	{
 		NNPrimerCalculator calculator = new NNPrimerCalculator();
-		calculator.test();
+		try {
+			calculator.test();
+		} catch (FlexDatabaseException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	//Test methuod for oligo calculation
-	public void test ()
+	public void test () throws FlexDatabaseException
 	{	
 		String seqText = "ATGGCGTTTCTCCGAAGCATGTGGGGCGTGCTGACTGCCCTGGGAAGGTCTGGAGCAGAGCTGTGCACCGGCTGTGGAAGTCGACTGCGCTCCCCCTTCAGGTAG";
 		String seqID = "HSQ1";

@@ -9,6 +9,7 @@
  
 package flex.ApplicationCode.Java.util;
 import flex.ApplicationCode.Java.core.*;
+import flex.ApplicationCode.Java.database.*;
  
 public interface PrimerCalculator
 {
@@ -17,21 +18,21 @@ public interface PrimerCalculator
 	 * @param sequence A Sequence object
 	 * @return An Oligo object   
  	 */
-	 public Oligo calculateFivepOligo (Sequence sequence);
+	 public Oligo calculateFivepOligo (Sequence sequence) throws FlexDatabaseException;
 	
 	 /**
 	 * Calculate the three prime closed oligo of a given sequence
 	 * @param sequence A Sequence object
 	 * @return An Oligo object   
  	 */
-	 public Oligo calculateThreepCloseOligo(Sequence sequence);
+	 public Oligo calculateThreepCloseOligo(Sequence sequence) throws FlexDatabaseException;
 
 	 /**
 	 * Calculate the three prime open oligo of a given sequence
 	 * @param sequence A Sequence object
 	 * @return An Oligo object   
  	 */
-	 public Oligo calculateThreepOpenOligo(Sequence sequence);
+	 public Oligo calculateThreepOpenOligo(Sequence sequence) throws FlexDatabaseException;
 
 }
 
