@@ -44,10 +44,7 @@
   <servlet>
     <servlet-name>action</servlet-name>
     <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>org.apache.struts.webapp.example.ApplicationResources</param-value>
-    </init-param>
+    
     <init-param>
       <param-name>config</param-name>
       <param-value>/WEB-INF/struts-config.xml</param-value>
@@ -67,6 +64,16 @@
     <load-on-startup>2</load-on-startup>
   </servlet>
 
+  <!-- Action Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+  <!-- Welcome-file-list -->
+  <welcome-file-list>
+    <welcome-file>login.jsp</welcome-file>
+  </welcome-file-list>
 
     <taglib>
       <taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>

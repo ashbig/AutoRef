@@ -1,4 +1,37 @@
+/*
+ * File : LogonForm.java
+ * Classes : LogonForm
+ *
+ * Description :
+ *
+ * Form used when logging in.  Records the username and password.
+ *
+ * Author : Juan Munoz (jmunoz@3rdmill.com)
+ *
+ * See COPYRIGHT file for copyright information
+ *
+ *
+ * The following information is used by CVS
+ * $Revision: 1.2 $
+ * $Date: 2001-05-29 15:57:54 $
+ * $Author: dongmei_zuo $
+ *
+ ******************************************************************************
+ *
+ * Revision history (Started on May 29, 2001) :
+ *
+ *    Add entries here when updating the code. Remember to date and insert
+ *    your 3 letters initials.
+ *
+ *    May-29-2001 : JMM - Class created.
+ *
+ */
 
+/*
+|<---            this code is formatted to fit into 80 columns             --->|
+|<---            this code is formatted to fit into 80 columns             --->|
+|<---            this code is formatted to fit into 80 columns             --->|
+ */
 
 package edu.harvard.med.hip.flex.form;
 
@@ -19,7 +52,7 @@ import org.apache.struts.action.ActionMapping;
  * </ul>
  *
  * @author $Author: dongmei_zuo $
- * @version $Revision: 1.1 $ $Date: 2001-05-25 11:50:30 $
+ * @version $Revision: 1.2 $ $Date: 2001-05-29 15:57:54 $
  */
 
 public final class LogonForm extends ActionForm {

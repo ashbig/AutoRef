@@ -1,4 +1,37 @@
+/*
+ * File : LogonAction.java
+ * Classes : LogonAction
+ *
+ * Description :
+ *
+ *    Action used when a user logs on to the system.
+ *
+ * Author : Juan Munoz (jmunoz@3rdmill.com)
+ *
+ * See COPYRIGHT file for copyright information
+ *
+ *
+ * The following information is used by CVS
+ * $Revision: 1.2 $
+ * $Date: 2001-05-29 15:57:54 $
+ * $Author: dongmei_zuo $
+ *
+ ******************************************************************************
+ *
+ * Revision history (Started on May 29, 2001) :
+ *
+ *    Add entries here when updating the code. Remember to date and insert
+ *    your 3 letters initials.
+ *
+ *    May-29-2001 : JMM - Class created.
+ *
+ */
 
+/*
+|<---            this code is formatted to fit into 80 columns             --->|
+|<---            this code is formatted to fit into 80 columns             --->|
+|<---            this code is formatted to fit into 80 columns             --->|
+ */
 
 
 package edu.harvard.med.hip.flex.action;
@@ -29,11 +62,11 @@ import edu.harvard.med.hip.flex.database.*;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: dongmei_zuo $
- * @version $Revision: 1.1 $ $Date: 2001-05-25 11:50:30 $
+ * @version $Revision: 1.2 $ $Date: 2001-05-29 15:57:54 $
  */
 
 public final class LogonAction extends Action {
-
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -50,58 +83,64 @@ public final class LogonAction extends Action {
      * @exception ServletException if a servlet exception occurs
      */
     public ActionForward perform(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws ServletException {
-
-	// Extract attributes we will need
-	
-	User user = null;
-
-	// Validate the request parameters specified by the user
-	ActionErrors errors = new ActionErrors();
-	String username = ((LogonForm) form).getUsername();
-	String password = ((LogonForm) form).getPassword();
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws ServletException {
+        
+        
+        
+        
+        // Validate the request parameters specified by the user
+        ActionErrors errors = new ActionErrors();
+        String username = ((LogonForm) form).getUsername();
+        String password = ((LogonForm) form).getPassword();
+        
+        User user = new User(username,password);
+        
+        
+        // get the access manager to verify they usernam/password combo.
         AccessManager accessManager = AccessManager.getInstance();
         
-        try {
-        // ask accessManager if the username and password are valid
         
-        if(accessManager.authenticate(username,password)) {
+        try {
+            // ask accessManager if the username and password are valid
+            if(!accessManager.authenticate(username,password)) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.password.mismatch"));
+            }
+        } catch (Throwable th) {
             errors.add(ActionErrors.GLOBAL_ERROR,
-                           new ActionError("error.password.mismatch"));
+            new ActionError("error.database.error",th));
         }
-        } catch (FlexDatabaseException fde) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                       new ActionError("error.database.problem"));
-
-        }
+        
         // Report any errors we have discovered back to the original form
-	if (!errors.empty()) {
-	    saveErrors(request, errors);
-	    return (new ActionForward(mapping.getInput()));
-	}
-
-	// Save our logged-in user in the session
-	HttpSession session = request.getSession();
-	session.setAttribute(Constants.USER_KEY, user);
-	if (servlet.getDebug() >= 1)
-	    servlet.log("LogonAction: User '" + user.getUsername() +
-	                "' logged on in session " + session.getId());
-
+        if (!errors.empty()) {
+            
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+        
+        
+        // Save our logged-in user in the session
+        HttpSession session = request.getSession();
+        session.setAttribute(Constants.USER_KEY, user);
+        if (servlet.getDebug() >= 1)
+            servlet.log("LogonAction: User '" + user.getUsername() +
+            "' logged on in session " + session.getId());
+        
         // Remove the obsolete form bean
-	if (mapping.getAttribute() != null) {
+        if (mapping.getAttribute() != null) {
             if ("request".equals(mapping.getScope()))
                 request.removeAttribute(mapping.getAttribute());
             else
                 session.removeAttribute(mapping.getAttribute());
         }
-
-	// Forward control to the specified success URI
-	return (mapping.findForward("success"));
-
+        
+        // Forward control to the specified success URI
+        return (mapping.findForward("success"));
+        
     }
-
-
+    
+    
 }

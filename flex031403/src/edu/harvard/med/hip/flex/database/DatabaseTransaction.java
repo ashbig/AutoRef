@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-05-29 11:39:42 $
+ * $Revision: 1.4 $
+ * $Date: 2001-05-29 15:57:54 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-05-29 11:39:42 $
+ * @version    $Revision: 1.4 $ $Date: 2001-05-29 15:57:54 $
  */
 
 public class DatabaseTransaction {
@@ -73,7 +73,12 @@ public class DatabaseTransaction {
             ds = PoolMan.findDataSource("jndi-walldb");
         }
         catch( SQLException e ) {
-            
+            System.out.println("unable to find datasource");
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
             FlexDatabaseException fde =
             new FlexDatabaseException(e.getMessage());
             
