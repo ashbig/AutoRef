@@ -480,6 +480,7 @@ public class DiscrepancyFinder
 		cur_linker_mutation.setNumber (mut_number) ;
 		cur_linker_mutation.getChangeType ( ) ;
                 cur_linker_mutation.setQuality( quality );
+                cur_linker_mutation.setExpPosition ( elements[mut_start].getQueryIndex());
                 return cur_linker_mutation;
     }
 
