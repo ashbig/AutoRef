@@ -93,6 +93,30 @@ public class TraceFileProcessingAction extends ResearcherAction
                     } 
                     break;
                 }
+                case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
+                {
+                    request.setAttribute(Constants.JSP_TITLE,"processing Request for Creating Reanaming File for Trace Files");
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"Application will put renaming file into input directory. Report will be send to you by e-mail.");
+             
+                    String inputdir = (String)request.getParameter("inputdir");
+                    runner.setInputDirectory(inputdir);
+                    runner.setReadType((String)request.getParameter("read_type"));
+                    runner.setSequencingFacility(Integer.parseInt((String)request.getParameter("sequencing_facility")));
+                    FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
+                    InputStream input = null;
+                    try
+                    {
+                        input = requestFile.getInputStream();
+                        runner.setRenamingFile(input);
+                    }
+                    catch (Exception ex)
+                    {
+                        errors.add("fileName", new ActionError("bec.infoimport.file", ex.getMessage()));
+                        saveErrors(request,errors);
+                        return new ActionForward(mapping.getInput());
+                    } 
+                    break;
+                }
             }
                 runner.setUser(user);
                 t = new Thread(runner);                   

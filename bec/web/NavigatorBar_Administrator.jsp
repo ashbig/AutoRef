@@ -65,9 +65,11 @@ dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "/BEC/Seq_
     
 %>      dhtmlMenu = new NavBarMenu(100, 200);
 	dhtmlMenu.addItem(new NavBarMenuItem("Trace Files", ""));
-        dhtmlMenu.addItem(new NavBarMenuItem ("Create File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create file for sequencing facility"));
-        dhtmlMenu.addItem(new NavBarMenuItem("Upload", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=upload trace files"));
-	myNavBar1.addMenu(dhtmlMenu);
+       <!-- dhtmlMenu.addItem(new NavBarMenuItem ("Create File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create file for sequencing facility"));-->
+        dhtmlMenu.addItem(new NavBarMenuItem("Create Renaming File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create renaming file for trace files"));
+        dhtmlMenu.addItem(new NavBarMenuItem("Upload Trace Files", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=upload trace files"));
+		
+myNavBar1.addMenu(dhtmlMenu);
 <%}%>
 
 dhtmlMenu = new NavBarMenu(100, 220);
