@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.3 2003-05-01 18:51:39 yanhui Exp $
+ * $Id: Sample.java,v 1.4 2003-05-14 17:59:19 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -65,7 +65,10 @@ public class Sample {
     protected String label;
     
     protected int cdslength = -1;
-    
+    protected int sequenceid = -1;
+
+    public Sample() {}
+        
     /**
      * Constructor.
      *
@@ -254,6 +257,13 @@ public class Sample {
         return type;
     }
     
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    public void setPosition(int position) {
+        this.position = position;
+    }
     
     /**
      * Return the sample type.
@@ -420,6 +430,14 @@ public class Sample {
      */
     public int getCdslength() {
         return cdslength;
+    }
+    
+    public int getSequenceid() {
+        return sequenceid;
+    }
+    
+    public void setSequenceid(int sequenceid) {
+        this.sequenceid = sequenceid;
     }
     
     /**
