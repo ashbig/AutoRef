@@ -10,6 +10,7 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.process.Result;
+import edu.harvard.med.hip.flex.process.*;
 
 import java.util.*;
 import java.io.*;
@@ -32,6 +33,11 @@ public class ContainerInfoExporter {
     private boolean gccontent = false;
     private boolean sequencetext = false;
     private boolean cds = false;
+    private boolean gi = false;
+    private boolean genesymbol = false;
+    private boolean pcr = false;
+    private boolean agar = false;
+    private boolean culture = false;
     private boolean isEmpty = false;
     
     /** Creates new ContainerInfoExporter */
@@ -40,7 +46,8 @@ public class ContainerInfoExporter {
     
     public ContainerInfoExporter(boolean sampleid, boolean type, boolean position,
     boolean status, boolean result, boolean sequenceid, boolean cdsstart, boolean cdsstop,
-    boolean cdslength, boolean gccontent, boolean sequencetext, boolean cds, boolean isEmpty) {
+    boolean cdslength, boolean gccontent, boolean sequencetext, boolean cds, boolean gi,
+    boolean genesymbol, boolean pcr, boolean agar, boolean culture, boolean isEmpty) {
         this.sampleid = sampleid;
         this.type = type;
         this.position = position;
@@ -53,6 +60,11 @@ public class ContainerInfoExporter {
         this.gccontent = gccontent;
         this.sequencetext = sequencetext;
         this.cds = cds;
+        this.gi = gi;
+        this.genesymbol = genesymbol;
+        this.pcr = pcr;
+        this.agar = agar;
+        this.culture = culture;
         this.isEmpty = isEmpty;
     }
     
@@ -75,6 +87,12 @@ public class ContainerInfoExporter {
                 out.print("Sample Status\t");
             if(result)
                 out.print("Sample Result\t");
+            if(pcr)
+                out.print("PCR Gel Result\t");
+            if(agar)
+                out.print("Agar Result\t");
+            if(culture)
+                out.print("Culture Result\t");
             if(sequenceid)
                 out.print("Sequence ID\t");
             if(cdsstart)
@@ -88,7 +106,11 @@ public class ContainerInfoExporter {
             if(sequencetext)
                 out.print("Sequence Text\t");
             if(cds)
-                out.print("CDS");
+                out.print("CDS\t");
+            if(gi)
+                out.print("GI\t");
+            if(genesymbol)
+                out.print("Gene Symbol\t");
             out.println();
             
             for(int i=0; i<samples.size(); i++) {
@@ -113,6 +135,43 @@ public class ContainerInfoExporter {
                     }
                 }
                 
+                Vector results = null;
+                if(pcr || agar || culture) {
+                    results = SampleLineage.getPrevLineagesWithResults(sample.getId());
+                }
+                
+                if(results == null) {
+                    System.out.println("Error while getting the results");
+                    return false;
+                }
+                
+                if(pcr) {
+                    Result r = getPcrResult(results);
+                    
+                    if(r == null)
+                        out.print("\t");
+                    else
+                        out.print(r.getValue()+"\t");
+                }
+                
+                if(agar) {
+                    Result r = getAgarResult(results);
+                    
+                    if(r == null)
+                        out.print("\t");
+                    else
+                        out.print(r.getValue()+"\t");
+                }
+                
+                if(culture) {
+                    Result r = getCultureResult(results);
+                    
+                    if(r == null)
+                        out.print("\t");
+                    else
+                        out.print(r.getValue()+"\t");
+                }
+                                
                 if(Sample.CONTROL_POSITIVE.equals(sample.getType()) ||
                 Sample.CONTROL_NEGATIVE.equals(sample.getType())){
                     out.println();
@@ -138,7 +197,12 @@ public class ContainerInfoExporter {
                 if(sequencetext)
                     out.print(sequence.getSequencetext()+"\t");
                 if(cds)
-                    out.print(sequence.getSequencetext().substring(sequence.getCdsstart()-1,sequence.getCdsstop()));
+                    out.print(sequence.getSequencetext().substring(sequence.getCdsstart()-1,sequence.getCdsstop())+"\t");
+                if(gi)
+                    out.print(sequence.getGiString()+"\t");
+                if(genesymbol)
+                    out.print(sequence.getGenesymbolString()+"\t");
+
                 out.println();
             }
         } catch (FlexCoreException ex) {
@@ -150,5 +214,47 @@ public class ContainerInfoExporter {
         }
         
         return true;
+    }
+    
+    private Result getPcrResult(Vector results) {
+        if(results.size() == 0) {
+            return null;
+        }
+        
+        for(int i=0; i<results.size(); i++) {
+            Result r = (Result)results.elementAt(i);
+            if(Result.PCR_GEL_TYPE.equals(r.getType()))
+                return r;
+        }
+        
+        return null;
+    }
+    
+    private Result getAgarResult(Vector results) {
+        if(results.size() == 0) {
+            return null;
+        }
+        
+        for(int i=0; i<results.size(); i++) {
+            Result r = (Result)results.elementAt(i);
+            if(Result.AGAR_PLATE_TYPE.equals(r.getType()))
+                return r;
+        }
+        
+        return null;
+    }
+    
+    private Result getCultureResult(Vector results) {
+        if(results.size() == 0) {
+            return null;
+        }
+        
+        for(int i=0; i<results.size(); i++) {
+            Result r = (Result)results.elementAt(i);
+            if(Result.CULTURE_PLATE_TYPE.equals(r.getType()))
+                return r;
+        }
+        
+        return null;
     }
 }

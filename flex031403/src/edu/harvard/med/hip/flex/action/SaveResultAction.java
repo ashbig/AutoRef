@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.22 $
- * $Date: 2002-04-02 21:02:54 $
+ * $Revision: 1.23 $
+ * $Date: 2002-04-18 20:45:08 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.22 $ $Date: 2002-04-02 21:02:54 $
+ * @version    $Revision: 1.23 $ $Date: 2002-04-18 20:45:08 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -139,11 +139,11 @@ public class SaveResultAction extends ResearcherAction {
         String resultType = null;
         if(form instanceof GelResultsForm) {
             resultType = Result.PCR_GEL_TYPE;
-        } else if(form instanceof ContainerResultsForm) {
-            resultType = Result.AGAR_PLATE_TYPE;
         } else if(form instanceof CultureResultsForm) {
             resultType = Result.CULTURE_PLATE_TYPE;
-        }
+        } else if(form instanceof ContainerResultsForm) {
+            resultType = Result.AGAR_PLATE_TYPE;
+        } 
         
         ResultForm resultForm = (ResultForm) form;
 

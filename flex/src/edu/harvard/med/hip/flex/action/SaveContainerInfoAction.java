@@ -54,6 +54,11 @@ public class SaveContainerInfoAction extends CollaboratorAction {
         boolean gccontent = ((SaveContainerInfoForm)form).getGccontent();
         boolean sequencetext = ((SaveContainerInfoForm)form).getSequencetext();
         boolean cds = ((SaveContainerInfoForm)form).getCds();
+        boolean gi = ((SaveContainerInfoForm)form).getGi();
+        boolean genesymbol = ((SaveContainerInfoForm)form).getGenesymbol();
+        boolean pcr = ((SaveContainerInfoForm)form).getPcr();
+        boolean agar = ((SaveContainerInfoForm)form).getAgar();
+        boolean culture = ((SaveContainerInfoForm)form).getCulture();
         boolean isEmpty = ((SaveContainerInfoForm)form).getIsEmpty();
         
         response.setContentType("application/ms-excel");
@@ -61,7 +66,7 @@ public class SaveContainerInfoAction extends CollaboratorAction {
         
         try {
             PrintWriter out = response.getWriter();
-            ContainerInfoExporter exporter = new ContainerInfoExporter(sampleid, type, position, status, result, sequenceid, cdsstart, cdsstop, cdslength, gccontent, sequencetext, cds, isEmpty);
+            ContainerInfoExporter exporter = new ContainerInfoExporter(sampleid, type, position, status, result, sequenceid, cdsstart, cdsstop, cdslength, gccontent, sequencetext, cds, gi, genesymbol, pcr, agar, culture, isEmpty);
             ret = exporter.doExport(id, executionid, out);
             out.close();
         } catch (IOException ex) {

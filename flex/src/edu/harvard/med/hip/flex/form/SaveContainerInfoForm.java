@@ -35,6 +35,11 @@ public class SaveContainerInfoForm extends ActionForm {
     private boolean sequencetext = false;
     private boolean cds = false;
     private boolean isEmpty = false;
+    private boolean gi = false;
+    private boolean genesymbol = false;
+    private boolean pcr = false;
+    private boolean agar = false;
+    private boolean culture = false;
     
     /** Creates new SaveContainerInfoForm */
     public SaveContainerInfoForm() {
@@ -160,6 +165,46 @@ public class SaveContainerInfoForm extends ActionForm {
         this.isEmpty = isEmpty;
     }
     
+    public boolean getGi() {
+        return gi;
+    }
+    
+    public void setGi(boolean gi) {
+        this.gi = gi;
+    }
+    
+    public boolean getGenesymbol() {
+        return genesymbol;
+    }
+    
+    public void setGenesymbol(boolean genesymbol) {
+        this.genesymbol = genesymbol;
+    }
+    
+    public boolean getPcr() {
+        return pcr;
+    }
+        
+    public void setPcr(boolean pcr) {
+        this.pcr = pcr;
+    }
+    
+    public boolean getAgar() {
+        return agar;
+    }
+    
+    public void setAgar(boolean agar) {
+        this.agar = agar;
+    }
+    
+    public boolean getCulture() {
+        return culture;
+    }
+    
+    public void setCulture(boolean culture) {
+        this.culture = culture;
+    }
+    
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         sampleid = false;
         type = false;
@@ -174,5 +219,10 @@ public class SaveContainerInfoForm extends ActionForm {
         sequencetext = false;
         cds = false;
         isEmpty = false;
+        gi = false;
+        genesymbol = false;
+        pcr = false;
+        agar = false;
+        culture = false;
     }    
 }
