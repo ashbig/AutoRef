@@ -124,7 +124,7 @@
       <b>Primer Picking Parameters</b></font></td>
   </tr>
   <tr> 
-    <td colspan="2"> <table>
+    <td colspan="2"> <table width="100%">
         <tr> 
           <td width="25%" valign="top" height="1" bgColor="#e4e9f8"> <font color="#000080"><b>Primer 
             Length (bp)</b></font></td>
@@ -219,10 +219,17 @@
         <input type="text" name="p_buffer_window_len" size="20" value="50">
         bases</p></td>
   </tr>
+<tr> 
+    <td width="100%" height="3" bgColor="#b8c6ed" valign="top"><font color="#000080"><b>
+Distance between sequencing primer and start of high quality read length</b></font></td>
+    <td width="50%" height="3" bgColor="#b8c6ed"> <p> 
+        <input type="text" name="P_EST_SEQ" size="20" value="50">
+        bases</p></td>
+  </tr>
   <tr> 
-    <td width="100%" height="3" align="center" valign="top"  bgcolor="#b8c6ed"> 
+    <td width="100%" height="3" align="center" valign="top"  bgcolor="#e4e9f8"> 
       <p align="left"><font color="#000080"><b>Number of strands to sequence</b></font></td>
-    <td width="50%" height="3" align="center" valign="bottom"  bgcolor="#b8c6ed"> 
+    <td width="50%" height="3" align="center" valign="bottom"  bgcolor="#e4e9f8"> 
       <p align="left"> 
         <input type="radio" value="0" name="p_number_of_strands">
         <b>Single Strand</b> (Coding strand, forward primers only)</p>

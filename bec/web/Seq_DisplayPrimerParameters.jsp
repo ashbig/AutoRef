@@ -65,10 +65,10 @@ else
 	%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
-    <td colspan ="2"><b>Set Name</b><%= spec.getName() %> <P></P></td>
+    <td colspan ="2"><b>Set Name</b>&nbsp;&nbsp<%= spec.getName() %> <P></P></td>
   </tr>
   <tr> 
-    <td colspan="2" height="48"  bgcolor="#1145A6"> <font color="white" size="4"> 
+    <td colspan="4" height="48"  bgcolor="#1145A6"> <font color="white" size="4"> 
       <b>Primer Picking Parameters</b></font></td>
   </tr>
   <tr> 
@@ -92,7 +92,7 @@ else
   <tr> 
     <td width="35%" height="1" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Primer 
       GC%</b></font></td>
-    <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></font></p></td>
+    <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></p></td>
     <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Opt:</b> 
         <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></font></p></td>
     <td width="25%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Max:</b>&nbsp; 
@@ -110,26 +110,37 @@ else
     <td colspan="2" height="44" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Distance 
       between 5p Universal Primer and START codon</b>&nbsp;&nbsp;&nbsp; <font size="2"><b>(For 
       a left primer, primer start position is the position of the leftmost base)</b></font></font></td>
-    <td colspan="2" height="44" bgColor="#e4e9f8" > <p><%= spec.getParameterByNameString("p_upstream_distance".toUpperCase()) %> 
+    <td colspan="2" height="44" bgColor="#e4e9f8" > <p>
+<font color="#000080"><b><%= spec.getParameterByNameString("p_upstream_distance".toUpperCase()) %> 
         bases</p></td>
   </tr>
   <tr> 
     <td colspan="2" height="44" bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Distance 
       between 3p Universal Primer and STOP codon&nbsp;&nbsp; <font size="2">(For 
       a right primer, primer start position is the position of the rightmost base)&nbsp;&nbsp;</font></b></font></td>
-    <td colspan="2" height="44" bgcolor="#b8c6ed"> <p><%= spec.getParameterByNameString("p_downstream_distance".toUpperCase())%> 
+    <td colspan="2" height="44" bgcolor="#b8c6ed"> <p>
+<font color="#000080"><b><%= spec.getParameterByNameString("p_downstream_distance".toUpperCase())%> 
         bases</p></td>
   </tr>
   <tr> 
     <td colspan="2" height="44" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Estimated 
       high quality read length (ERL)</b></font></td>
-    <td colspan="2" height="44" bgColor="#e4e9f8" > <p><%= spec.getParameterByNameString("p_single_read_length".toUpperCase())%> 
+    <td colspan="2" height="44" bgColor="#e4e9f8" > <p>
+<font color="#000080"><b><%= spec.getParameterByNameString("p_single_read_length".toUpperCase())%> 
         bases</p></td>
   </tr>
   <tr> 
     <td colspan="2" height="3" bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Window 
       size for testing primers</b></font></td>
-    <td colspan="2" height="3" bgcolor="#b8c6ed"> <p><%= spec.getParameterByNameString("p_buffer_window_len".toUpperCase())%> 
+    <td colspan="2" height="3" bgcolor="#b8c6ed"> <p>
+<font color="#000080"><b><%= spec.getParameterByNameString("p_buffer_window_len".toUpperCase())%> 
+        bases</p></td>
+  </tr>
+<tr> 
+    <td colspan="2"  width="100%" height="3" bgColor="#e4e9f8" valign="top"><font color="#000080"><b>
+Distance between sequencing primer and start of high quality read length</b></font></td>
+    <td  colspan="2"  height="3" bgColor="#e4e9f8"> <p> 
+<font color="#000080"><b><%= spec.getParameterByNameString("P_EST_SEQ".toUpperCase()) %> 
         bases</p></td>
   </tr>
   <tr> 
@@ -140,10 +151,10 @@ else
 
 	
 if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals("1") )
-     { %>
+     { %><font color="#000080">
       <p><b>Single Strand</b> (Coding strand, forward primers)</p>
       <%}else{%>
-      <b>Both Strands</b> (Both forward and reverse primers)</p> 
+      <font color="#000080"><b>Both Strands</b> (Both forward and reverse primers)</p> 
       <%}%>
     </td>
   </tr>
