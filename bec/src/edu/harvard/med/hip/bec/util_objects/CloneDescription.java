@@ -15,7 +15,7 @@ public class CloneDescription
     
    
          private int        m_flex_sequenceid = -1;
-         private int        m_flex_cloneid = -1;
+         private int        m_cloneid = -1;
          private int        m_resultid = -1;
          private String     m_read_filepath = null;
          private int        m_becrefsequenceid = -1;
@@ -36,7 +36,7 @@ public class CloneDescription
          int v7, int v8, String v6, int v10,int v11, int v12, int v13,int v14,int v15, int v16,int v17)
          {
              m_flex_sequenceid = v1;
-             m_flex_cloneid = v2;
+             m_cloneid = v2;
              m_resultid = v3;
               m_becrefsequenceid = v4;
              m_isolatetrackingid = v5;
@@ -57,7 +57,7 @@ public class CloneDescription
         public int        getCloneSequenceType (){ return m_clone_sequence_type  ;}
         public int        getCloneSequenceStatus (){ return m_clone_sequence_status  ;}
          public int        getFlexSequenceId (){ return m_flex_sequenceid   ;}
-         public int        getFlexCloneId (){ return m_flex_cloneid   ;}
+         public int        getCloneId (){ return m_cloneid   ;}
          public int        getResultId (){ return m_resultid   ;}
          public int        getBecRefSequenceId (){ return m_becrefsequenceid   ;}
          public int        getIsolateTrackingId (){ return m_isolatetrackingid   ;}
@@ -72,7 +72,7 @@ public class CloneDescription
 
          public void        setReadFilePath(String c){ m_read_filepath=c;}
          public void        setFlexSequenceId  ( int v){  m_flex_sequenceid =v  ;}
-         public void        setFlexCloneId ( int v){  m_flex_cloneid   =v;}
+         public void        setCloneId ( int v){  m_cloneid   =v;}
          public void        setResultId ( int v){  m_resultid =v  ;}
           public void        setBecRefSequenceId (int v){  m_becrefsequenceid =v  ;}
          public void          setIsolateTrackingId (int v){  m_isolatetrackingid =v  ;}

@@ -203,7 +203,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 clone = new CloneDescription();
                 clone.setFlexSequenceId  ( rs.getInt("flexsequenceid") );
                 if ( clone.getFlexSequenceId() == -1) clone.setFlexSequenceId(0);
-                clone.setFlexCloneId ( rs.getInt("flexcloneid") );
+                clone.setCloneId ( rs.getInt("flexcloneid") );
                 clone.setPosition(rs.getInt("position") );
                 clone.setContainerId(rs.getInt("containerid"));
                // sample.setType ( rs.getString("sampletype") );
@@ -228,7 +228,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
          {
              clone = (CloneDescription) clone_descriptions.get(count);
              entry = new  TraceFilesOrderFile()    ;
-             entry.setCloneId ( clone.getFlexCloneId()) ;
+             entry.setCloneId ( clone.getCloneId()) ;
             entry.setFlexSequenceId (clone.getFlexSequenceId()) ;
             entry.setHipPlateLabel (label);
             entry.setHipPlateId ( clone.getContainerId());
@@ -249,7 +249,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
          String fn = "";
          if (  m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR) )
          {
-             NamingFileEntry entry =new  NamingFileEntry(clone.getFlexCloneId()
+             NamingFileEntry entry =new  NamingFileEntry(clone.getCloneId()
                         , m_read_direction,
                         clone.getContainerId(),
                         Algorithms.convertWellFromInttoA8_12(clone.getPosition()), 
@@ -259,7 +259,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
          }
          else if (  m_read_type.equals( Constants.READ_TYPE_INTERNAL_STR) )
          {
-             NamingFileEntry entry =new  NamingFileEntry(clone.getFlexCloneId()
+             NamingFileEntry entry =new  NamingFileEntry(clone.getCloneId()
                         , m_read_direction,
                         clone.getContainerId(),
                         Algorithms.convertWellFromInttoA8_12(clone.getPosition()), 

@@ -153,7 +153,7 @@ public class Constants {
     public static final int            PROCESS_OBJECT_TYPE_CLONE_SEQUENCE = 5;
     public static final int            PROCESS_OBJECT_TYPE_OLIGO_ID = 6;
       public static final int            PROCESS_OBJECT_TYPE_OLIGOCALCULATION = 7;
-     // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 8;
+      public static final int            PROCESS_OBJECT_TYPE_CLONEID = 8;
     
     
     //read quality

@@ -88,7 +88,7 @@ public class NamingFileEntry
         if (m_filePath == null) m_filePath = Constants.getTemporaryFilesPath();
         
         try{
-            fl =   new File(m_filePath + ((NamingFileEntry) file_entries.get(0)).getPlateId()+ ".txt");
+            fl =   new File(m_filePath);
             fr =  new FileWriter(fl);
             fr.write("Plate number"+DILIM+"well"+DILIM+"sequence id"+ DILIM+  "clone id\n");
              

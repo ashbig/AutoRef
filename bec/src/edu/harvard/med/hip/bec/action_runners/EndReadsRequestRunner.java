@@ -120,13 +120,11 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                 Result result = null;
                 IsolateTrackingEngine istrk = null;
                 
-               
-                ArrayList file_list = new ArrayList();
                 for (int count = 0; count < master_plates.size(); count++)
                 {
                     //get all isolate tracking with status 'submitted'
                     container = (Container) master_plates.get(count);
-                    processPlate( container,  file_list, conn, process.getId());
+                    processPlate( container,  m_file_list_reports, conn, process.getId());
                    
                 }
                 // commit the transaction
@@ -224,14 +222,14 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                 //create files and append them to the file list
                 if (i_isForward)
                 {
-                    file = NamingFileEntry.createNamingFile(naming_file_entries_forward,"/tmp/"+ container.getLabel() + "_naming_endreads_f.txt");
+                    file = NamingFileEntry.createNamingFile(naming_file_entries_forward, Constants.getTemporaryFilesPath()+ container.getLabel() + "_naming_endreads_f.txt");
                     file_list.add(file);
                    // file = RearrayFileEntry.createRearrayFile( rearray_file_entries_forward, "/tmp/"+ container.getLabel() + "rearray_endreads_f.txt");
                   //  file_list.add(file);
                 }
                 if (i_isReverse)
                 {
-                    file = NamingFileEntry.createNamingFile(naming_file_entries_reverse,"/tmp/"+ container.getLabel() + "_naming_endreads_r.txt");
+                    file = NamingFileEntry.createNamingFile(naming_file_entries_reverse,Constants.getTemporaryFilesPath()+ container.getLabel() + "_naming_endreads_r.txt");
                     file_list.add(file);
                  //   file = RearrayFileEntry.createRearrayFile( rearray_file_entries_reverse, "/tmp/"+ container.getLabel() + "rearray_endreads_r.txt");
                  //   file_list.add(file);
@@ -262,15 +260,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
           ArrayList master_container_ids = new ArrayList();
           ArrayList  master_container_labels = new ArrayList();
            master_container_labels.add("YMG000488");
-           // master_container_labels.add("YMG000489");
-          //  master_container_labels.add("YMG000490");
-          //  master_container_labels.add("YMG000491");
-          //  master_container_labels.add("YMG000492");
-          //  master_container_labels.add("YMG000493");
-          //  master_container_labels.add("YMG000494");
-          //  master_container_labels.add("YMG000495");
-                   
-            master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
+           master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
 
 
             int forward_primer_id = 1 ;
@@ -280,7 +270,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
             runner.setContainerIds(master_container_ids );
             if ( forward_primer_id != -1) runner.setForwardPrimerId( forward_primer_id );
             if ( reverse_primer_id != -1)runner.setRevercePrimerId(reverse_primer_id);
-            runner.setUser(AccessManager.getInstance().getUser("htaycher123","htaycher"));
+            runner.setUser(AccessManager.getInstance().getUser("htaycher345","htaycher"));
             runner.run();
 
         }catch(Exception e){}

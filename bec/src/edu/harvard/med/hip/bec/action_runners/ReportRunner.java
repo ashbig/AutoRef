@@ -171,7 +171,7 @@ public class ReportRunner extends ProcessRunner
     {
         ArrayList clones = new ArrayList();
         String sql = null;
-        UICloneSample clone = null;
+        UICloneSample clone = null;UICloneSample previous_clone = null;
         ResultSet rs = null;
         sql = constructQueryString(submission_type,items);
         try
@@ -201,7 +201,12 @@ public class ReportRunner extends ProcessRunner
                  clone.setCloneSequenceCdsStop(rs.getInt("clonesequencecdsstop"));
                  if ( m_dir_name )
                     clone.setTraceFilesDirectory( getTraceFilesDirName( clone.getSampleId() ));
-                 clones.add(clone);
+                 
+                 if ( previous_clone == null || ( previous_clone != null && previous_clone.getCloneId () != clone.getCloneId()))
+                 {
+                    clones.add(clone);
+                    previous_clone = clone;
+                 }
             }
            
             
@@ -235,7 +240,7 @@ public class ReportRunner extends ProcessRunner
 +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
 +" and s.containerid in (select containerid from containerheader where label in ("
-+plate_names.toString()+")) order by s.containerid,position, a.submissiondate ";
++plate_names.toString()+")) order by s.containerid,position, a.submissiondate desc";
         } 
         else if (submission_type == Constants.ITEM_TYPE_CLONEID)
         {
@@ -245,7 +250,7 @@ public class ReportRunner extends ProcessRunner
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where rownum<300 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-+"  and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") order by a.submissiondate ";
++"  and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") order by s.containerid,position, a.submissiondate desc";
         }
        
         else if (submission_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)//bec sequence id
@@ -256,7 +261,7 @@ public class ReportRunner extends ProcessRunner
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where rownum<300 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-+"  and a.SEQUENCEID in ("+Algorithms.convertStringArrayToString(items,"," )+") a.submissiondate ";
++"  and a.SEQUENCEID in ("+Algorithms.convertStringArrayToString(items,"," )+") order by s.containerid,position,  a.submissiondate desc";
         }
         return sql;
     }

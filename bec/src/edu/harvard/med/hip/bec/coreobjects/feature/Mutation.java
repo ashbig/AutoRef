@@ -106,7 +106,7 @@ public abstract class Mutation
                    // |
                    // |
                     //update
-         public static final int MAXIMUM_CHANGE_TYPE = 60;
+         public static final int MAXIMUM_CHANGE_TYPE = 61;
    
    // global mutation types used for spec query
     public static final int MACRO_SPECTYPE_SILENT = -1;

@@ -72,7 +72,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
      {
         ArrayList clones = new ArrayList();String additional_id = null;
         String sql = null;
-        UICloneSample clone = null;
+        UICloneSample clone = null; UICloneSample previous_clone = null;
         ResultSet rs = null;
         sql = constructQueryString(items);
         try
@@ -93,9 +93,14 @@ import edu.harvard.med.hip.bec.ui_objects.*;
                  clone.setPlateLabel (rs.getString("LABEL"));
                  clone.setPosition (rs.getInt("POSITION"));
                  clone.setIsolateTrackingId (rs.getInt("ISOLATETRACKINGID"));
-                clone.setCloneStatus(rs.getInt("CLONESTATUS"));
+                 clone.setCloneStatus(rs.getInt("CLONESTATUS"));
                  clone.setSequenceAnalisysStatus(rs.getInt("analysisstatus"));
-                 clones.add(clone);
+                 
+                 if ( previous_clone == null || ( previous_clone != null && previous_clone.getCloneId () != clone.getCloneId()))
+                 {
+                    clones.add(clone);
+                    previous_clone = clone;
+                 }
             }
             return clones;
             
@@ -130,7 +135,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
      +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
      +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
       +" and s.containerid in (select containerid from containerheader where label in ("
-   + plate_names.toString()+")) order by s.containerid,position";
+   + plate_names.toString()+")) order by c.containerid,position, a.submissiondate desc";
  
             } 
             case Constants.ITEM_TYPE_CLONEID:
@@ -140,7 +145,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
     +" from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a , "
      +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
      +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-      +" and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") ";
+      +" and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") order by  c.containerid,position, a.submissiondate desc";
             }
             default : return "";
         }

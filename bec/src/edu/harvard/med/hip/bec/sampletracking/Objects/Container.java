@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.24 2003-11-14 19:20:00 Elena Exp $
+ * $Id: Container.java,v 1.25 2004-03-30 17:19:57 Elena Exp $
  *
  * File     	: Container.java
 
@@ -34,7 +34,7 @@ public class Container
   //  public static final String TYPE_ER_FORWARD_CONTAINER = "ER_FORWARD_CONTAINER";
   //  public static final String TYPE_ER_CONTAINER = "ER_CONTAINER";
     public static final String TYPE_SEQUENCING_CONTAINER = "SEQUENCING_CONTAINER";
-   
+    public static final String TYPE_OLIGO_CONTAINER = "OLIGO_CONTAINER";
   
     
     private int         m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -399,9 +399,7 @@ public class Container
     public void             setStatus(int status)    {        m_status = status;    }
     public void             setSamples(ArrayList arr)    {         m_samples = arr;  }
    
-    public ArrayList getContainerHistory()    {        return null;    }
-    public static ArrayList getContainerHistory(int containerid)    {        return null;    }
-    
+      
    
     /**
      * Get the Sample object at a certain position.
@@ -1663,14 +1661,14 @@ public class Container
           
           Container cont = findContainerDescriptionFromLabel(label);
           if ( cont != null)
-            return getProcessHistory( String.valueOf(cont.getId()));
+            return getProcessHistory( label );
           else return null;
       }
     
-      private static ArrayList getProcessHistory(String containerid)throws Exception
+      private static ArrayList getProcessHistory(String label)throws Exception
       
       {
-          ItemHistory history = (ItemHistory)edu.harvard.med.hip.bec.util_objects.ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_PLATE_LABELS, containerid).get(0);
+          ItemHistory history = (ItemHistory)edu.harvard.med.hip.bec.util_objects.ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_PLATE_LABELS, label).get(0);
           if ( history.getStatus() == ItemHistory.HISTORY_PROCESSED)
               return history.getHistory();
           else

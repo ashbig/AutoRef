@@ -57,163 +57,184 @@ public class ProcessHistory
     {
         ArrayList items = Algorithms.splitString( object_ids);
         ArrayList process_items = new ArrayList();
-        String item_id = null; 
+         //get clone descriptions 
+        ArrayList clone_descriptions = getCloneInfo(  object_type,  items);
+        
         ArrayList process_items_per_item = new ArrayList();
         PreparedStatement   pstm_config_info = DatabaseTransaction.getInstance().requestConnection().prepareStatement("select CONFIGID,   CONFIGTYPE from processconfig  where processid=?");
-        ItemHistory item_entry = null;
+        CloneDescription clone = null;
         
-        for (int index = 0; index < items.size(); index ++)
+        for (int index = 0; index < clone_descriptions.size(); index ++)
         {
-            item_id = (String) items.get(index);
+            clone = (CloneDescription) clone_descriptions.get(index);
             try
-            {
-                process_items_per_item = getProcessItemsForSearchItem(object_type,item_id ,pstm_config_info);
-                item_entry = new ItemHistory(item_id, process_items_per_item, ItemHistory.HISTORY_PROCESSED);
-                process_items.add(item_entry);
+            { 
+               if (  object_type ==  Constants.ITEM_TYPE_CLONEID )
+                  process_items.add(  getCloneHistory(clone ,pstm_config_info) );
+               else if  (  object_type ==  Constants.ITEM_TYPE_PLATE_LABELS )
+                  process_items.add(  getContainerHistory(clone ,pstm_config_info) );
             }
             catch (Exception e)
             {
                 ArrayList err_array = new ArrayList();
                 err_array.add("Error processing item history "+e.getMessage());
-                process_items.add( new ItemHistory(item_id,err_array , ItemHistory.HISTORY_FAILED));
+                process_items.add( new ItemHistory(String.valueOf( clone.getCloneId()),err_array , ItemHistory.HISTORY_FAILED));
             }
         }
+         
         return process_items;
     }
     
     
     //--------------------
-    
-    
-    
-    private static ArrayList          getProcessItemsForSearchItem(int object_type, String  item, PreparedStatement pstm_config_info) throws Exception
+    private static ItemHistory   getCloneHistory(CloneDescription clone, PreparedStatement pstm_config_info)throws Exception
     {
-        String sql = getSqlString( object_type,  item);
-        if (sql != null)
-            return getProcessItems(sql, pstm_config_info);
-        else
-            return null;
+        ArrayList history = new ArrayList(); String sql = null;
+        //upload plate
+        ArrayList process_items = getProcessItemsForSearchItem(null,Constants.PROCESS_OBJECT_TYPE_CONTAINER, clone.getContainerId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+        
+         //order end reads - result
+        sql = "select resultid from result where sampleid  in ("+ clone.getSampleId() +")";
+       process_items = getProcessItemsForSearchItem(sql,Constants.PROCESS_OBJECT_TYPE_RESULT, clone.getContainerId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+    
+      //clone evaluation
+        process_items = getProcessItemsForSearchItem(null,Constants.PROCESS_OBJECT_TYPE_CONSTRUCT, clone.getConstructId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+   //design oligo     
+        process_items = getProcessItemsForSearchItem(null,Constants.PROCESS_OBJECT_TYPE_OLIGOCALCULATION, clone.getBecRefSequenceId(),pstm_config_info);  
+       if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+      
+        //oligo order (containerid - oligo container
+        sql = "select oligocontainerid from oligosample where cloneid = "+clone.getCloneId();
+        process_items = getProcessItemsForSearchItem(sql,Constants.PROCESS_OBJECT_TYPE_CONTAINER, clone.getCloneId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+        
+        //approve oligo PROCESS_OBJECT_TYPE_OLIGO_ID
+        sql = "select oligoid from geneoligo where oligocalculationid in ( select oligocalculationid from oligo_calculation where sequenceid = "+clone.getBecRefSequenceId() +")";
+          process_items = getProcessItemsForSearchItem(sql,Constants.PROCESS_OBJECT_TYPE_OLIGO_ID, clone.getBecRefSequenceId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+    
+    //run discrepancy finder    
+          sql = "select sequenceid from assembledsequence where isolatetrackingid = " + clone.getIsolateTrackingId();
+        process_items = getProcessItemsForSearchItem(sql,Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE, clone.getCloneSequenceId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+     
+       sortByDate(history);
+       return new ItemHistory(String.valueOf(clone.getCloneId() ), history, ItemHistory.HISTORY_PROCESSED);
+     
     }
     
-    private static String             getSqlString(int object_type, String item)
+    private static ItemHistory   getContainerHistory(CloneDescription clone, PreparedStatement pstm_config_info)throws Exception
+    {
+        ArrayList history = new ArrayList(); String sql = null;
+        //upload plate
+        ArrayList process_items = getProcessItemsForSearchItem(null,Constants.PROCESS_OBJECT_TYPE_CONTAINER, clone.getContainerId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+      //clone evaluation
+        process_items = getProcessItemsForSearchItem(null,Constants.PROCESS_OBJECT_TYPE_CONSTRUCT, clone.getConstructId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+         //order end reads - result
+        sql = "select resultid from result where sampleid  in ("+ clone.getSampleId() +")";
+       process_items = getProcessItemsForSearchItem(sql,Constants.PROCESS_OBJECT_TYPE_RESULT, clone.getContainerId(),pstm_config_info);  
+        if ( process_items!= null && process_items.size() > 0 ) history.addAll(process_items);
+   
+       sortByDate(history);
+       return new ItemHistory(String.valueOf(clone.getCloneId() ), history, ItemHistory.HISTORY_PROCESSED);
+     
+    }
+    
+  
+    
+     private static  ArrayList getCloneInfo( int object_type, ArrayList items) throws BecDatabaseException
+     {
+        ArrayList clones = new ArrayList();String additional_id = null;
+        String sql = null;
+        CloneDescription clone = null;
+        ResultSet rs = null;
+        sql = constructQueryString( object_type,items);
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                 clone = new CloneDescription();
+                 clone.setCloneId (rs.getInt("CLONEID"));
+                 clone.setConstructId (rs.getInt("CONSTRUCTID"));
+                 clone.setContainerId (rs.getInt("CONTAINERID"));
+                 clone.setBecRefSequenceId( rs.getInt("REFSEQUENCEID"));
+                 clone.setPosition (rs.getInt("POSITION"));
+                 clone.setIsolateTrackingId (rs.getInt("ISOLATETRACKINGID"));
+                 clone.setSampleId(rs.getInt("SAMPLEID"));
+                 clones.add(clone);
+            }
+            return clones;
+            
+        }
+        catch(Exception e)
+        {
+          throw new BecDatabaseException("Cannot get data for clone "+e.getMessage() +"\n"+sql);
+        }
+    }
+    
+      
+   
+    private static String constructQueryString(int object_type, ArrayList items)
     {
         String sql = null;
-        String resultid =  getQuerySqlStringPerObjectType( object_type, item,  Constants.PROCESS_OBJECT_TYPE_RESULT);
-        String containerid =getQuerySqlStringPerObjectType( object_type, item,  Constants.PROCESS_OBJECT_TYPE_CONTAINER);
-        String constructid = getQuerySqlStringPerObjectType( object_type, item,  Constants.PROCESS_OBJECT_TYPE_CONSTRUCT);
-        String clonesequenceid = getQuerySqlStringPerObjectType( object_type, item,  Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE);
-        String refsequenceid  =getQuerySqlStringPerObjectType( object_type, item,  Constants.PROCESS_OBJECT_TYPE_REFSEQUENCE);
-        boolean isAddOr = false;
-        sql = "select p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,p.processid as processid, "
-        +" (select username from userprofile where userid=( select researcherid from request where requestid = "
-        +"  p.requestid)) as username "
-        //+" ,(select configtype from processconfig where processid= p.processid) as configtype "
-       // +" ,(select configid from processconfig where processid= p.processid) as configid 
-        +" from process p, processdefinition pd "
-        +" where pd.processdefinitionid=p.processdefinitionid and processid in (select processid from process_object where (";
-        if ( resultid != null)
+        switch (object_type)
         {
-            isAddOr = true;
-            sql+= " (objectid in (" + resultid +") and objecttype=" +Constants.PROCESS_OBJECT_TYPE_RESULT+") ";
+            case Constants.ITEM_TYPE_PLATE_LABELS://plates
+            {
+              return "select s.containerid, POSITION, s.sampleid as sampleid,  flexcloneid  as CLONEID, sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID  "
+ +" from flexinfo f,isolatetracking i, sample s,  sequencingconstruct sc, containerheader ch   where  f.isolatetrackingid=i.isolatetrackingid and "
++" i.sampleid=s.sampleid and ch.containerid=s.containerid   and sc.constructid=i.constructid  and s.sampleid in "
++" (select min(sampleid ) from sample where sampletype='ISOLATE' and containerid in (select containerid from containerheader where label ='"+items.get(0)+"') )";
+
+            } 
+            case Constants.ITEM_TYPE_CLONEID:
+            {
+                 return "select containerid, POSITION,  s.sampleid as sampleid,flexcloneid  as CLONEID, sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID  "
+        +"  from flexinfo f,isolatetracking i, sample s,  sequencingconstruct sc "
+        +"  where  f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
+        +"  and sc.constructid=i.constructid and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") ";
+            }
+            default : return "";
         }
-        if ( containerid != null)
-        {
-            if ( isAddOr) sql +=" or ";
-            isAddOr =true;
-            sql +=" (objectid in ( "+containerid +") and objecttype="+Constants.PROCESS_OBJECT_TYPE_CONTAINER+")  " ;
-        }
-        if ( constructid != null)
-        {
-            if ( isAddOr) sql +=" or ";
-            isAddOr = true;
-            sql +="  (objectid in ("+constructid+") and objecttype="+Constants.PROCESS_OBJECT_TYPE_CONSTRUCT+")  ";
-        }
-        if ( refsequenceid != null)
-        {
-            if ( isAddOr) sql +=" or ";
-            isAddOr =true;
-            sql +="  (objectid in ("+refsequenceid+") and objecttype="+Constants.PROCESS_OBJECT_TYPE_REFSEQUENCE+")  ";
-        }
-        if ( clonesequenceid!= null)
-        {
-            if ( isAddOr) sql +=" or ";
-            sql +="  (objectid in ("+clonesequenceid+") and objecttype="+Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE+"))";
-        }
-        sql +=" ) order by processid desc";
-        
-        return sql;
-        
+       
+   
     }
+   
+   
     
-    
-    private static String             getQuerySqlStringPerObjectType(int object_type, String item, int processed_as_object_type)
+    private static ArrayList          getProcessItemsForSearchItem(String sql ,int object_type, int object_id, PreparedStatement pstm_config_info) throws Exception
     {
-        String sql = null;
-        switch ( processed_as_object_type)
+        if ( sql == null)
         {
-            case Constants.PROCESS_OBJECT_TYPE_CONTAINER:
-            {
-                switch (object_type)
-                {
-                    case Constants.ITEM_TYPE_CLONEID :
-                    {
-                        return "(select containerid from sample where sampleid = (select sampleid from isolatetracking where isolatetrackingid =(select isolatetrackingid from flexinfo where flexcloneid="+item+")))";
-                    }
-                    case Constants.ITEM_TYPE_PLATE_LABELS :
-                    {
-                        //return "(select containerid from containerheader where label='"+item+"'))";
-                         return item+")";
-                    }
-                }
-                
-            }
-            case Constants.PROCESS_OBJECT_TYPE_RESULT:
-            {
-                switch (object_type)
-                {
-                    case Constants.ITEM_TYPE_CLONEID :
-                    {
-                        return "(select resultid from result where sampleid = (select sampleid from isolatetracking where isolatetrackingid =(select isolatetrackingid from flexinfo where flexcloneid="+item+")))";
-                    }
-                    case Constants.ITEM_TYPE_PLATE_LABELS :
-                    {
-                    }
-                }
-            }
-            case Constants.PROCESS_OBJECT_TYPE_CONSTRUCT :
-            {
-                switch (object_type)
-                {
-                    case Constants.ITEM_TYPE_CLONEID :
-                        return "(select constructid from sequencingconstruct where constructid = (select constructid from isolatetracking where isolatetrackingid =(select isolatetrackingid from flexinfo where flexcloneid="+item+")))";
-                    case Constants.ITEM_TYPE_PLATE_LABELS : 
-                       // return "(select min(constructid) from sequencingconstruct where constructid = (select constructid from isolatetracking where sampleid =(select min(sampleid) from sample where sampletype='ISOLATE' and containerid=( select containerid from containerheader where label='" +item+"'))))";
-                        return "(select min(constructid) from sequencingconstruct where constructid = (select constructid from isolatetracking where sampleid =(select min(sampleid) from sample where sampletype='ISOLATE' and containerid=" +item+")))";
-                }
-            }
-            case Constants.PROCESS_OBJECT_TYPE_REFSEQUENCE :
-            {
-                switch (object_type)
-                {
-                    case Constants.ITEM_TYPE_CLONEID :
-                        return "(select refsequenceid from sequencingconstruct where constructid = (select constructid from isolatetracking where isolatetrackingid =(select isolatetrackingid from flexinfo where flexcloneid="+item+")))";
-                    case Constants.ITEM_TYPE_PLATE_LABELS :
-                }
-            }
-            case Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE:
-            {
-                switch (object_type)
-                {
-                    case Constants.ITEM_TYPE_CLONEID :
-                        return "(select sequenceid from assembledsequence where isolatetrackingid =(select isolatetrackingid from flexinfo where flexcloneid="+item+"))";
-                    case Constants.ITEM_TYPE_PLATE_LABELS :
-                }
-                
-            }
+            sql =  "select p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,p.processid as processid, "
+            +" (select username from userprofile where userid=( select researcherid from request where requestid = "
+            +"  p.requestid)) as username  from process p, processdefinition pd "
+            +" where pd.processdefinitionid=p.processdefinitionid and processid in (select processid from process_object where ("
+            +" (objectid in ( "+object_id +") and objecttype="+object_type+")  )) order by processid desc";
         }
-        return sql;
+        else 
+       {
+            sql =  "select p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,p.processid as processid, "
+            +" (select username from userprofile where userid=( select researcherid from request where requestid = "
+            +"  p.requestid)) as username  from process p, processdefinition pd "
+            +" where pd.processdefinitionid=p.processdefinitionid and processid in (select processid from process_object where ("
+            +" (objectid in ( "+sql +") and objecttype="+object_type+")  )) order by processid desc";
+        }
+       
+            
+        return getProcessItems(sql, pstm_config_info);
+       
     }
     
+     
     private static ArrayList          getProcessItems(String query_sql,PreparedStatement pstm_config_info) throws Exception
     {
         if ( query_sql == null) return null;
@@ -270,8 +291,8 @@ public class ProcessHistory
     
      public static void main(String [] args) throws Exception
     {
-         // ArrayList h = ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_CLONEID, "8703\n837\n650");
-          ArrayList h = ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_PLATE_LABELS, "67");
+          ArrayList h = ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_CLONEID, "8687\t8688\t8789");
+    //      ArrayList h = ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_PLATE_LABELS, "YGS000357-1");
          
           System.out.print(h.size());
     

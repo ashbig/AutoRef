@@ -115,7 +115,7 @@ public class PrimerOrderRunner extends ProcessRunner
             {
                 clone_description = new CloneDescription();
                 clone_description.setFlexSequenceId  ( rs.getInt("flexsequenceid") );
-                clone_description.setFlexCloneId (  rs.getInt("cloneid") );
+                clone_description.setCloneId (  rs.getInt("cloneid") );
                 clone_description.setBecRefSequenceId ( rs.getInt("becrefsequenceid") );
                 clone_description.setContainerId( rs.getInt("flexcontainerid") );
                 clone_description.setPosition( rs.getInt("position") );
@@ -182,7 +182,7 @@ public class PrimerOrderRunner extends ProcessRunner
     
     private ArrayList           getClonePrimers(CloneDescription clone_description) throws Exception
     {
-        ArrayList clone_primers = Oligo.getByCloneId(clone_description.getFlexCloneId(), Oligo.STATUS_APPROVED );
+        ArrayList clone_primers = Oligo.getByCloneId(clone_description.getCloneId(), Oligo.STATUS_APPROVED );
         //trick here : replace orientation by clone id
         ArrayList result = new ArrayList();
         for (int count = 0; count < clone_primers.size(); count++)
@@ -190,7 +190,7 @@ public class PrimerOrderRunner extends ProcessRunner
             if ( m_primer_placement_format == PLACEMENT_FORMAT_N_PRIMER 
                 && count != m_primer_number -1)
                     continue;
-            ((Oligo) clone_primers.get(count)).setType( clone_description.getFlexCloneId() );
+            ((Oligo) clone_primers.get(count)).setType( clone_description.getCloneId() );
             result.add(clone_primers.get(count));
         }
         
@@ -227,17 +227,17 @@ public class PrimerOrderRunner extends ProcessRunner
             while(true)
             {
                  oligo = (Oligo) primers.get(primer_counter  );
-                 if ( oligo.getType() != clone_description.getFlexCloneId())
+                 if ( oligo.getType() != clone_description.getCloneId())
                             break;
                  //create history and update oligo status
-                 int oligosample_id = createOligoRecord( oligo.getId(), container.getId(), well_counter ,clone_description.getFlexCloneId());
+                 int oligosample_id = createOligoRecord( oligo.getId(), container.getId(), well_counter ,clone_description.getCloneId());
                 temp= oligosample_id +"\t"+ container.getLabel()+"\t"+ (well_counter )
                         +"\t"+Algorithms.convertWellFromInttoA8_12(well_counter )+
-                        "\t"+clone_description.getFlexCloneId() +"\t"+oligo.getId()
+                        "\t"+clone_description.getCloneId() +"\t"+oligo.getId()
                         +"\t"+oligo.getSequence() +"\t"+oligo.getTm() +"\t"+oligo.getSequence().length();
                 items_oligo.add(temp);
                naming_entry = new  NamingFileEntry(
-                    clone_description.getFlexCloneId()
+                    clone_description.getCloneId()
                     , NamingFileEntry.getOrientation(oligo.getOrientation() ),
                     clone_description.getContainerId(),
                     Algorithms.convertWellFromInttoA8_12( well_counter ), 
@@ -245,7 +245,7 @@ public class PrimerOrderRunner extends ProcessRunner
                     Integer.parseInt( oligo.getName().substring(1)) ) ;
                 
                 naming_file_entries.add( naming_entry);
-                temp = clone_description.getFlexCloneId()+"\t"
+                temp = clone_description.getCloneId()+"\t"
                      + clone_description.getContainerId() +"\t"
                      + clone_description.getPosition() +"\t"
                      + container.getLabel() +"\t"

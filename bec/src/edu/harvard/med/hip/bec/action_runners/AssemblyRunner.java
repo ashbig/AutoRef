@@ -135,7 +135,7 @@ public class AssemblyRunner extends ProcessRunner
                                                         IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED,
                                                         clone_definition.getIsolateTrackingId(),  conn);
                                     conn.commit();
-                                     System.out.println("Sequence too long. Clone "+clone_definition.getFlexCloneId() +" "+clone_definition.getFlexSequenceId());
+                                     System.out.println("Sequence too long. Clone "+clone_definition.getCloneId() +" "+clone_definition.getFlexSequenceId());
                                     continue;
                                 }
                                 cds_start = linker5.getSequence().length();
@@ -254,7 +254,7 @@ public class AssemblyRunner extends ProcessRunner
                 IsolateTrackingEngine.updateAssemblyStatus(
                                 IsolateTrackingEngine.ASSEMBLY_STATUS_NO_CONTIGS,
                                 clone_definition.getIsolateTrackingId(),  conn);
-                System.out.println("Assembly null. Clone "+clone_definition.getFlexCloneId() +" "+clone_definition.getFlexSequenceId());
+                System.out.println("Assembly null. Clone "+clone_definition.getCloneId() +" "+clone_definition.getFlexSequenceId());
            }
            else if( clone_assembly.getContigs().size() != 1   && m_assembly_mode == END_READS_ASSEMBLY )
            {
@@ -267,7 +267,7 @@ public class AssemblyRunner extends ProcessRunner
            {
                //check coverage
                Contig contig = (Contig) clone_assembly.getContigs().get(0);
-               int result = contig.checkForCoverage(clone_definition.getFlexCloneId(), cds_start,  cds_stop,  refsequence);
+               int result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  refsequence);
 
                if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS
                 || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED
@@ -302,7 +302,7 @@ public class AssemblyRunner extends ProcessRunner
             //call phredphrap
             PhredPhrap pp = new PhredPhrap();
             if (m_vector_file_name != null)pp.setVectorFileName(m_vector_file_name);
-            String output_file_name =  sequence_definition.getFlexCloneId()+ ".fasta.screen.ace.1";
+            String output_file_name =  sequence_definition.getCloneId()+ ".fasta.screen.ace.1";
             //delete quality and sequence files from end read processing
             deleteTrimmedFiles(trace_files_directory_path);
             
@@ -407,11 +407,11 @@ public class AssemblyRunner extends ProcessRunner
                 seq_desc.setContainerId(rs.getInt("containerid"));
                 seq_desc.setSampleId(rs.getInt("sampleid"));
                 seq_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
-                seq_desc.setFlexCloneId(  rs.getInt("flexcloneid"));
+                seq_desc.setCloneId(  rs.getInt("flexcloneid"));
 
                 if (seq_desc.getSampleId() != -1)
                 {
-                        seq_desc.setReadFilePath(trace_files_path +File.separator +seq_desc.getFlexSequenceId() + File.separator + seq_desc.getFlexCloneId() );
+                        seq_desc.setReadFilePath(trace_files_path +File.separator +seq_desc.getFlexSequenceId() + File.separator + seq_desc.getCloneId() );
                         res.add( seq_desc );
                 }
                // System.out.println(entry.toString());

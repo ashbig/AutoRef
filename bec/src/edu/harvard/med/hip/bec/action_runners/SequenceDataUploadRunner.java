@@ -142,7 +142,7 @@ public class SequenceDataUploadRunner implements Runnable
                     return;
                      //throw new BecDatabaseException("Cannot submit data for clobne with sampleid "+flex_sample_id);
                  }
-                  if (sequence_definition != null && sequence_definition.getFlexCloneId() == 0)
+                  if (sequence_definition != null && sequence_definition.getCloneId() == 0)
                  {
                      m_report.add("Cannot submit data for clone with sampleid "+flex_sample_id+".Sample is not submitted for sequencing");
                     return;
@@ -209,7 +209,7 @@ public class SequenceDataUploadRunner implements Runnable
                 seq_description.setContainerId(rs.getInt("containerid"));
                 seq_description.setSampleId(rs.getInt("sampleid"));
                 seq_description.setFlexSequenceId(rs.getInt( "flexsequenceid"));
-                seq_description.setFlexCloneId(  rs.getInt("flexcloneid"));
+                seq_description.setCloneId(  rs.getInt("flexcloneid"));
             }
            return seq_description;
         } catch (Exception sqlE)
@@ -247,7 +247,7 @@ public class SequenceDataUploadRunner implements Runnable
         base_refsequence.setId(refsequence.getId());
           
            //check coverage
-           int result = contig.checkForCoverage(clone_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
+           int result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  base_refsequence);
            return result;
 
   }
