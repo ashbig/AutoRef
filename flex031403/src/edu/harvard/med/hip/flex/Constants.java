@@ -108,6 +108,8 @@ public class Constants {
     // key used to find the thread
     public static final String THREAD_KEY="THREAD";
    
+    // key used to find the list of name types
+    public static final List NAME_TYPE_LIST_KEY="NAME_TYPE_LIST";
     
     /** Creates new Constants */
     private Constants() {
