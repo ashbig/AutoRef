@@ -137,7 +137,7 @@ public class NoMatchReportRunner extends ProcessRunner
                     plate_names.append( "'");
                     plate_names.append((String)items.get(index));
                     plate_names.append("'");
-                    if (index == 3) break;
+                    if (index == 12) break;
                     if ( index != items.size()-1 ) plate_names.append(",");
                 }
                 return "select FLEXSEQUENCEID,LABEL, POSITION, flexcloneid  as CLONEID,"
