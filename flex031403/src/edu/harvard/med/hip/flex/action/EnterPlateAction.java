@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-18 15:07:27 $
+ * $Revision: 1.3 $
+ * $Date: 2001-06-18 17:22:05 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -57,7 +57,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-18 15:07:27 $
+ * @version    $Revision: 1.3 $ $Date: 2001-06-18 17:22:05 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -85,7 +85,7 @@ public class EnterPlateAction extends ResearcherAction {
         
         QueueFactory queueFactory = new StaticQueueFactory();
         ProcessQueue containerQueue = null;
-        Protocol enterTransform = null;
+        Protocol runPCRGel = null;
         List transformItems = null;
         // the queueItem and container corresponding to the barcode
         QueueItem queueItem= null;
@@ -94,8 +94,8 @@ public class EnterPlateAction extends ResearcherAction {
             containerQueue =
             queueFactory.makeQueue("ContainerProcessQueue");
             // transform protocol
-            enterTransform = new Protocol("enter transformation results");
-            transformItems = containerQueue.getQueueItems(enterTransform);
+            runPCRGel = new Protocol(Protocol.RUN_PCR_GEL);
+            transformItems = containerQueue.getQueueItems(runPCRGel);
         } catch(FlexProcessException fpe) {
             request.setAttribute(Action.EXCEPTION_KEY, fpe);
             return mapping.findForward("error");
@@ -117,7 +117,8 @@ public class EnterPlateAction extends ResearcherAction {
                 break;
             }
         }
-        // check to see if an error has occured
+        
+        // check to see if the container was in the queue.
         if(queueItem == null || container ==null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.queue.notfound",barcode));
@@ -125,6 +126,8 @@ public class EnterPlateAction extends ResearcherAction {
             retForward = new ActionForward(mapping.getInput());
             return retForward;
         }
+        
+        
         
         /*
          * otherwise, we can get the info we need and put it into the request

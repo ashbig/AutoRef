@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-18 15:07:27 $
+ * $Revision: 1.4 $
+ * $Date: 2001-06-18 17:22:05 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -47,6 +47,7 @@ import javax.servlet.http.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.*;
+import edu.harvard.med.hip.flex.process.*;
 
 import org.apache.struts.action.*;
 /**
@@ -54,7 +55,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-18 15:07:27 $
+ * @version    $Revision: 1.4 $ $Date: 2001-06-18 17:22:05 $
  */
 
 public class EnterTransformDetailsAction extends ResearcherAction {
@@ -82,7 +83,8 @@ public class EnterTransformDetailsAction extends ResearcherAction {
     throws ServletException, IOException {
         ActionForward retForward = null;
         TransformDetailsForm transForm = (TransformDetailsForm) form;
-        Vector samples = transForm.getContainer().getSamples();
+        Container container =transForm.getContainer();
+        Vector samples = container.getSamples();
         
         Connection conn = null;
         
@@ -91,9 +93,10 @@ public class EnterTransformDetailsAction extends ResearcherAction {
         try {
             // Crete the protocol for the transform plates
             Protocol transformProtocol = 
-                new Protocol("enter transformation results");
+            new Protocol(Protocol.ENTER_TRANSFORMATION_RESULTS);
             
-            
+            // create a new process 
+    
             
             conn = DatabaseTransaction.getInstance().requestConnection();
             for(int i = 0; transForm != null &&i <transForm.size() ;i++) {

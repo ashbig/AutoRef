@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.8 2001-06-18 16:49:25 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.9 2001-06-18 17:22:05 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -86,7 +86,7 @@ public class Process {
      * @return the process specified by the container and protocol or null
      *      if no process is found.
      */
-    public Process findProcess(Container container, Protocol protocol)
+    public static Process findProcess(Container container, Protocol protocol)
     throws FlexDatabaseException {
         Process retProcess = null;
         String sql=
