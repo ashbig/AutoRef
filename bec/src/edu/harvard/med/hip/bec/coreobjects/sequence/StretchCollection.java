@@ -224,8 +224,7 @@ vi.	Type of definition (coverage low quality / no coverage )
      // sequence id - cds start for the refsequence subsequence
      public  ArrayList getStretchBoundaries(int cloneid, 
                 int cds_length, 
-                int type_of_lqr_coverage , 
-                boolean isStartFromFirstDiscrepancy)throws Exception
+                int type_of_lqr_coverage )throws Exception
      {
       
          Stretch stretch = null;
@@ -234,6 +233,7 @@ vi.	Type of definition (coverage low quality / no coverage )
          int[] element = null; 
          int stretch_start = 0;          int stretch_end =0;
          boolean isInclude = true;
+         Mutation discrepancy = null;
          AnalyzedScoredSequence sequence = null;
          for (  int count_stretches = 0; count_stretches < m_stretches.size(); count_stretches++)
          {
@@ -245,37 +245,82 @@ vi.	Type of definition (coverage low quality / no coverage )
              {
                  boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
              }
-             //lqr collection
-             else if ( stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY )
+             else 
              {
                  switch ( type_of_lqr_coverage)
                  {
-                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_NONE : break;
-                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR:
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_NONE :{ break;} 
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR :
                      {
-                         boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
+                        if ( stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY )
+                        {
+                             boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
+                        }
+                        break;
+                     }
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY :
+                     {
+                        if ( stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY )
+                        {
+                            sequence = getSequenceForStretch( cloneid, sequence, stretch );
+                             discrepancies = getDiscrepanciesInRegion(stretch, sequence , cds_length, cloneid);
+                             if ( discrepancies != null && discrepancies.size() > 0)
+                                  boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
+                        }
+                        break;
+                     }
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS :
+                     {
+                        if ( stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY )
+                        {
+                             sequence = getSequenceForStretch( cloneid, sequence, stretch );
+                             discrepancies = getDiscrepanciesInRegion(stretch, sequence , cds_length, cloneid);
+                             if ( discrepancies != null && discrepancies.size() > 0)
+                             {
+                                int first_discr_start = ((Mutation)discrepancies.get(0)).getPosition(); 
+                                int last_discr_end = ((Mutation)discrepancies.get( discrepancies.size() -1 )).getPosition() +
+                                    ((Mutation)discrepancies.get( discrepancies.size() -1 )).getLength(); ; 
+                                boundaries.add( constructBoundaryElementFromStretch( first_discr_start,  last_discr_end, cds_length) );
+                             }
+                        }
                          break;
                      }
-                    case PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY :
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY:
                      {
-                         sequence = getSequenceForStretch( cloneid, sequence, stretch );
-                         discrepancies = getDiscrepanciesInRegion(stretch, sequence , cds_length, cloneid);
-                         if ( discrepancies != null && discrepancies.size() > 0)
-                              boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
-                         break;
-                         
+                        if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG )
+                        {
+                             sequence = getSequenceForStretch( cloneid, sequence, stretch );
+                             discrepancies = Mutation.getDiscrepanciesBySequenceType(sequence.getDiscrepancies() , Mutation.RNA);
+                             if ( discrepancies != null && discrepancies.size() > 0)
+                             {
+                                 for (int d_count = 0; d_count < discrepancies.size(); d_count++)
+                                 {
+                                     discrepancy = (Mutation)discrepancies.get(d_count); 
+                                    boundaries.add( constructBoundaryElementFromStretch( discrepancy.getPosition(),  discrepancy.getPosition() + discrepancy.getLength() + 1, cds_length) );
+                                 }
+                             }
+                        }
+                        
+                        break;
                      }
-                    case PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS:
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY:
                      {
-                         sequence = getSequenceForStretch( cloneid, sequence, stretch );
-                         discrepancies = getDiscrepanciesInRegion(stretch, sequence , cds_length, cloneid);
-                         if ( discrepancies != null && discrepancies.size() > 0)
-                         {
-                            int first_discr_start = ((Mutation)discrepancies.get(0)).getPosition(); 
-                            int last_discr_end = ((Mutation)discrepancies.get( discrepancies.size() -1 )).getPosition() +
-                                ((Mutation)discrepancies.get( discrepancies.size() -1 )).getLength(); ; 
-                            boundaries.add( constructBoundaryElementFromStretch( first_discr_start,  last_discr_end, cds_length) );
-                         }
+                        if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG )
+                        {
+                            sequence = getSequenceForStretch( cloneid, sequence, stretch );
+                             discrepancies = Mutation.getDiscrepanciesBySequenceType(sequence.getDiscrepancies() , Mutation.RNA);
+                             if ( discrepancies != null && discrepancies.size() > 0)
+                             {
+                                 for (int d_count = 0; d_count < discrepancies.size(); d_count++)
+                                 {
+                                    discrepancy = (Mutation)discrepancies.get(d_count); 
+                                    if ( discrepancy.getQuality() == Mutation.QUALITY_LOW)
+                                    {
+                                        boundaries.add( constructBoundaryElementFromStretch( discrepancy.getPosition(),  discrepancy.getPosition() + discrepancy.getLength() + 1, cds_length) );
+                                    }
+                                 }
+                             }
+                        }
                          break;
                      }
                  }
@@ -326,7 +371,7 @@ vi.	Type of definition (coverage low quality / no coverage )
                   {
                       discr_ids += ((Mutation)discrepancies.get(discr_count)).getId() + "_";
                   }
-                  discrepancy_report_button_text = "<input type=BUTTON value=\"Discrepancy Report\"  onClick=\"window.open('"+edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION +"Seq_GetItem.do?forwardName="+Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT +"&amp;"
+                  discrepancy_report_button_text = "<input type=BUTTON value=\"Discrepancy Report\"  onClick=\"window.open('"+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="+Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT +"&amp;"
                   +"DISCRIDS="+discr_ids+"','D"+clone_sequence.getId() +"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\">";
               }
                   
