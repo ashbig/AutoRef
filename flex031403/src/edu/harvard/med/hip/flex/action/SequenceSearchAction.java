@@ -85,7 +85,8 @@ public class SequenceSearchAction extends FlexAction {
             //((CustomerRequestForm)form).setSearchResult(searchResult);
             return (mapping.findForward("success"));
         } catch (Exception ex) {
-            return (mapping.findForward("failure"));
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
         }
     }
 }

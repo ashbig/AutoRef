@@ -101,14 +101,14 @@ public class ConfirmSelectionAction extends FlexAction {
         } catch (Exception sqlE) {
             try {
                 conn.rollback();
-                return (mapping.findForward("fail"));
+                request.setAttribute(Action.EXCEPTION_KEY, sqlE);
+                return (mapping.findForward("error"));
             } catch (Exception e) {           
-                return (mapping.findForward("fail"));
+                request.setAttribute(Action.EXCEPTION_KEY, e);
+                return (mapping.findForward("error"));
             } 
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
-    }
-    
-
+    }    
 }
