@@ -24,7 +24,9 @@ import edu.harvard.med.hip.bec.file.*;
  */
 public class TraceFilesDistributor
 {
-    ArrayList m_error_messages = null;
+    private ArrayList m_error_messages = null;
+    private boolean   m_isError_directory_exists = false;
+    private boolean   m_isEmptySamples_directory_exists = false;
     
     /** Creates a new instance of TraceFilesDistributor */
     public TraceFilesDistributor()
@@ -33,13 +35,14 @@ public class TraceFilesDistributor
     }
     
     
-    public ArrayList getErrorMesages(){ return m_error_messages;}
+    public ArrayList getErrorMesages()
+    { return m_error_messages;}
     
      /* outputBaseDir specify the base directory for trace file distribution
-     * inputTraceDir specify the directory where the trace files get dumped from sequencer
-     * errorDir specify where the error log is stored for trace files failed Phred run
-     */
-    public ArrayList distributeChromatFiles(String inputTraceDir, String outputBaseDir, String wrongformatfiles)
+      * inputTraceDir specify the directory where the trace files get dumped from sequencer
+      * errorDir specify where the error log is stored for trace files failed Phred run
+      */
+    public ArrayList distributeChromatFiles(String inputTraceDir, String outputBaseDir, String wrongformatfiles, String emptysamples_directory)
     {
         ArrayList chromat_files = new ArrayList();
         //obtain file path for base directory for trace file distribution
@@ -50,59 +53,29 @@ public class TraceFilesDistributor
         File [] sourceFiles = sourceDir.listFiles();
         
         TraceFilesDistributor distributor = new TraceFilesDistributor();
-            
+        
         //call file transfer and Phred moduels for each trace file
         //Phred output sequence and trace files are parsed and saved to reads.
         File destinationFile = null; //destination trace file dir after file transfer
         File traceFile = null;
         boolean isError_directory_exists = false;
-        String destinationFileName ; String destination_directory;
+        String destinationFileName  ; String destination_directory = null;
         for (int count = 0; count < sourceFiles.length; count++)
         {
             traceFile = sourceFiles[count];
             //check for file format & abi file
-            if (!traceFile.getName().endsWith(".ab1"))
+            if (! isTraceFile( traceFile,  wrongformatfiles)  )
             {
-                m_error_messages.add("File "+traceFile.getName() +" is not abi file");
-                try
-                {
-                    if ( ! isError_directory_exists)
-                    {
-                        FileOperations.createDirectory(wrongformatfiles,true);
-                        isError_directory_exists= true;
-                    }
-                    FileOperations.moveFile(traceFile, new File(wrongformatfiles  +File.separator+ traceFile.getName()));
-                }
-                catch(Exception e)
-                {
-                    m_error_messages.add("Cannot move file "+traceFile.getName());
-                }
                 continue;
             }
             
-            PhredOutputFileName pr = new PhredOutputFileName(traceFile.getName());
-            if ( pr.isWriteFileFormat( PhredOutputFileName.FORMAT_OURS ))
+            //check for file format // control //empty samples
+            if (! isWriteNamingFormat( traceFile,  wrongformatfiles,     emptysamples_directory,     destination_directory ) || destination_directory == null )
             {
-                destination_directory = pr.getSequenceid() +File.separator+pr.getCloneid();
-            }
-            else
-            {
-                m_error_messages.add("File "+traceFile +" has wrong format.");
-                try
-                {
-                    if ( ! isError_directory_exists)
-                    {
-                        isError_directory_exists= true;
-                    }
-                    FileOperations.moveFile(traceFile, new File(wrongformatfiles  +File.separator+ traceFile.getName()));
-                }
-                catch(Exception e)
-                {
-                    m_error_messages.add("Cannot move file "+traceFile.getName());
-                }
                 continue;
             }
-                
+            
+                    
             
             try
             {
@@ -111,9 +84,9 @@ public class TraceFilesDistributor
                 destinationFile = new File(destinationFileName);
                 if (destinationFile != null)
                 {
-                  chromat_files.add(destinationFileName);
+                    chromat_files.add(destinationFileName);
                 }
-              
+                
             }
             catch(Exception e)
             {
@@ -138,12 +111,12 @@ public class TraceFilesDistributor
             catch(Exception e)
             {}
         } // for
-        
+     
     } // distributeFiles
-    */
+     */
     public  String distributeFile(File file, String base_directory, String destination_dir) throws BecUtilException,Exception
     {
-                      
+        
         //create clone file distirution tree : each clone has 7 dir
         createDirectories(base_directory + File.separator+ destination_dir);
         
@@ -157,32 +130,33 @@ public class TraceFilesDistributor
     
     //__________________________________________
     
-     //generate file path for isolate directory 
+    //generate file path for isolate directory
     public  String getDestinationFilePath(String trace_file_name)throws Exception
     {
         PhredOutputFileName pr = new PhredOutputFileName(trace_file_name, PhredOutputFileName.FORMAT_OURS);
         String sequenceId = pr.getSequenceid();
         String isolateId = pr.getCloneid();
-      
+        
         return pr.getSequenceid() +File.separator+pr.getCloneid();
-      
+        
     } // getDestinationFilePath
     
     //create sequence_dir, quality_dir, contig_dir and consensus_dir
     private  void createDirectories(String destination_parent_directory)throws Exception
     {
         try
-        {   
+        {
             
-        FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.CHROMAT_DIR_NAME, true);
-        FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.SEQUENCE_DIR_NAME,true);
-        FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.PHD_DIR_NAME,true);
-        FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.EDIT_DIR_NAME,true);
-        FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.QUALITY_DIR_NAME,true);
-        FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.CONTIG_DIR_NAME,true);
-        FileOperations.createDirectory( destination_parent_directory+File.separator+PhredWrapper.CONSENSUS_DIR_NAME,true);
+            FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.CHROMAT_DIR_NAME, true);
+            FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.SEQUENCE_DIR_NAME,true);
+            FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.PHD_DIR_NAME,true);
+            FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.EDIT_DIR_NAME,true);
+            FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.QUALITY_DIR_NAME,true);
+            FileOperations.createDirectory(destination_parent_directory+File.separator+PhredWrapper.CONTIG_DIR_NAME,true);
+            FileOperations.createDirectory( destination_parent_directory+File.separator+PhredWrapper.CONSENSUS_DIR_NAME,true);
         }
-        catch(Exception e){}
+        catch(Exception e)
+        {}
         /*
         File chromatdir = new File(destination_parent_directory,PhredWrapper.CHROMAT_DIR_NAME);
         FileOperations.createDirectory(chromatdir);
@@ -201,5 +175,69 @@ public class TraceFilesDistributor
          **/
     }//createAdditionalDirectories
     
+    private boolean isTraceFile(File traceFile, String wrongformatfiles)
+    {
+        if (!traceFile.getName().endsWith(".ab1"))
+        {
+            m_error_messages.add("File "+traceFile.getName() +" is not abi file");
+            moveFile(traceFile, wrongformatfiles, m_isError_directory_exists);
+            return false;
+        }
+        return true;
+    }
     
+    
+    private boolean isWriteNamingFormat(File traceFile, String wrongformatfiles,
+    String emptysamples_directory,
+    String destination_directory )
+    {
+        //check for file format
+        PhredOutputFileName pr = new PhredOutputFileName(traceFile.getName());
+        if ( pr.isWriteFileFormat( PhredOutputFileName.FORMAT_OURS ))
+        {
+            //check if control - put them into error directory
+            if ( pr.getCloneidNumber() == 0 && pr.getSequenceidNumber() == 0)
+            {
+                
+                moveFile(traceFile, wrongformatfiles, m_isError_directory_exists);
+                return false;
+            }
+            // check if empty well
+            else if (pr.getCloneidNumber() == 0 && pr.getSequenceidNumber() != 0)
+            {
+                moveFile(traceFile, emptysamples_directory, m_isEmptySamples_directory_exists);
+                return false;
+            }
+            //file ok
+            destination_directory = pr.getSequenceid() +File.separator+pr.getCloneid();
+            return true;
+        }
+        else
+        {
+            m_error_messages.add("File "+traceFile +" has wrong format.");
+            moveFile(traceFile, wrongformatfiles, m_isError_directory_exists);
+            return false;
+            
+        }
+   
+    }
+    
+    
+    private void moveFile(File moving_file, String directory_move_to, boolean isDirectoryExists)
+    {
+        try
+        {
+            if ( ! isDirectoryExists)
+            {
+                FileOperations.createDirectory(directory_move_to,true);
+                isDirectoryExists= true;
+            }
+            FileOperations.moveFile(moving_file, new File(directory_move_to  +File.separator+ moving_file.getName()));
+        }
+        catch(Exception e)
+        {
+            m_error_messages.add("Cannot move file "+moving_file.getName());
+        }
+        
+    }
 }
