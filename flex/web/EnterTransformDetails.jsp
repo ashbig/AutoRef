@@ -88,8 +88,8 @@
                     <%
                     if(curSample.getType().toUpperCase().indexOf("CONTROL")  !=-1) {
                      %>
-                        <html:option value="<%=Result.FAILED%>">Failed</html:option>
                         <html:option value="<%=Result.SUCCEEDED%>">Succeeded</html:option>
+                        <html:option value="<%=Result.FAILED%>">Failed</html:option>
                     <%
                     } else  {
                     %>

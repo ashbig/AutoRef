@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2001-06-14 14:53:42 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.7 $
+ * $Date: 2001-07-19 17:15:08 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -46,7 +46,9 @@ import javax.servlet.http.*;
 
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.util.*;
 
 import org.apache.struts.action.*;
 
@@ -54,8 +56,8 @@ import org.apache.struts.action.*;
  * Action that takes care of setting up objects to use in the ViewPendingRequestUI.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.6 $ $Date: 2001-06-14 14:53:42 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.7 $ $Date: 2001-07-19 17:15:08 $
  */
 
 public class ViewPendingRequestsAction extends WorkflowAction{
@@ -80,33 +82,100 @@ public class ViewPendingRequestsAction extends WorkflowAction{
         
         // where we will forward to.
         ActionForward retForward = null;
+        
+        // get the session
+        HttpSession session = request.getSession();
+        
+        
         try {
-            HttpSession session = request.getSession();
+            
             
             QueueFactory queueFactory = new StaticQueueFactory();
             SequenceProcessQueue sequenceQueue =
             (SequenceProcessQueue)queueFactory.makeQueue("SequenceProcessQueue");
             
             Protocol approveProtocol = new Protocol("approve sequences");
+            
+            // figure out the offset for the table of pending sequences.
+            
+            /* first find the page to display, if none is displayed
+             * display page 1
+             */
+            int pageNum=1;
+            String pageS = request.getParameter(Constants.PAGE_KEY);
+            if(pageS != null) {
+                pageNum = Integer.parseInt(pageS);
+            }
+            
+            // get the number of items to display per page
+            int itemsPerPage =
+            Integer.parseInt(FlexProperties.getInstance().
+            getProperty("flex.approvesequences.pagesize"));
+            
+            // get the total number of sequences to approve.
+            int queueLength = sequenceQueue.getQueueSize(approveProtocol);
+            // find out how many pages we will need.
+            int pageCount = queueLength/itemsPerPage;
+            
+            // make an array with all the page numbers
+            ArrayList pages = new ArrayList(pageCount);
+            
+            for (int i = 1; i <= pageCount; i++) {
+                pages.add(i-1,String.valueOf(i));
+                
+            }
+            
+            // finally we can calculate the offset
+            int offset = (pageNum -1) * itemsPerPage;
+            
+            
+            
+            // now we can get the list of sequences to display
             List approveSeqList =
-            sequenceQueue.getQueueItems(approveProtocol);
+            sequenceQueue.getQueueItems(approveProtocol,offset,itemsPerPage);
             
+            // create a form that will be the UI for each item in the queue
+            PendingRequestsForm seqForm = new PendingRequestsForm();
+            seqForm.setQueueItems(approveSeqList);
+            
+            
+            
+            // put the table display info into the request
+            request.setAttribute("CURRENT_PAGE",new Integer(pageNum));
+            
+            request.setAttribute("PAGES", pages);
+            
+            // figure out if we need to display the next and/or previous page 
+            // links
+            if(pageNum < pageCount) {
+                request.setAttribute("nextPage", new Integer(pageNum+1));
+            }
+            
+            if(pageNum > 1) {
+                request.setAttribute("prevPage", new Integer(pageNum-1));
+            }
+            
+            // shove stuff we need into the session
+            session.setAttribute("pendingRequestForm",seqForm);
             session.setAttribute(Constants.APPROVE_PROTOCOL_KEY, approveProtocol);
-            
             session.setAttribute(Constants.QUEUE_ITEM_LIST_KEY,approveSeqList );
             session.setAttribute(Constants.SEQUENCE_QUEUE_KEY,sequenceQueue);
             
             retForward = mapping.findForward("success");
         } catch (FlexProcessException fpe) {
+            fpe.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.process.error", fpe));
             
         } catch (FlexDatabaseException fde) {
+            fde.printStackTrace();
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error", fde));
             
         } finally {
+            
             if(errors.size() > 0) {
+                System.out.println("found error");
                 saveErrors(request,errors);
                 retForward = new ActionForward(mapping.getInput());
             }

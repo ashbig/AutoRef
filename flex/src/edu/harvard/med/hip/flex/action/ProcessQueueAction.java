@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2001-07-19 14:48:10 $
- * $Author: dzuo $
+ * $Revision: 1.9 $
+ * $Date: 2001-07-19 17:15:08 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -50,6 +50,7 @@ import javax.servlet.http.*;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.user.*;
@@ -61,8 +62,8 @@ import org.apache.struts.action.*;
  * Class description - Class to process items from the approve sequence queue.
  *
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.8 $ $Date: 2001-07-19 14:48:10 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.9 $ $Date: 2001-07-19 17:15:08 $
  */
 public class ProcessQueueAction extends WorkflowAction {
     
@@ -91,6 +92,9 @@ public class ProcessQueueAction extends WorkflowAction {
         ActionErrors errors = new ActionErrors();
         
         User user = (User)session.getAttribute(Constants.USER_KEY);
+        
+        // The form holding the status changes made by the user
+        PendingRequestsForm requestForm = (PendingRequestsForm)form;
         
         /*
          * Get the researcher barcode from the connected user who is assumed to
@@ -145,23 +149,17 @@ public class ProcessQueueAction extends WorkflowAction {
             
             // Create the protocol for the next phase (design construct);
             Protocol designProtocol = new Protocol("design constructs");
-            while(paramEnum.hasMoreElements()) {
+            
+            for(int itemIndex = 0; itemIndex < requestForm.getQueueSize(); itemIndex++){
                 
+                String status = requestForm.getStatus(itemIndex);
                 
-                String index  = (String)paramEnum.nextElement();
-                
-                //List Indexes start with 'INDEX', ignore the rest
-                if( ! index.startsWith("INDEX")) {
-                    continue;
-                }
-                String status = request.getParameter(index);
-                
-                queueItem = (QueueItem)queueItemList.get(Integer.parseInt(index.substring(5)));
+                queueItem = (QueueItem)queueItemList.get(itemIndex);
                 FlexSequence curSeq = (FlexSequence)queueItem.getItem();
                 
                 // create a new processes Object
                 ProcessObject processObj =
-                new SequenceProcessObject(curSeq.getId(),process.getExecutionid(),"B");
+                new SequenceProcessObject(curSeq.getId(),process.getExecutionid(),ProcessObject.IO);
                 
                 if(status == null) {
                     errors.add(ActionErrors.GLOBAL_ERROR,
@@ -178,7 +176,7 @@ public class ProcessQueueAction extends WorkflowAction {
                     process.addProcessObject(processObj);
                     
                 } else if(status.equalsIgnoreCase("Pending")) {
-                    
+                    curSeq.updateStatus(FlexSequence.PENDING, conn);
                 } else{
                     errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.sequence.status", "unkown status"));

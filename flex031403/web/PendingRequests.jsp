@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.13 2001-07-18 15:03:05 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.14 2001-07-19 17:15:09 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -27,11 +27,47 @@
     <hr>
     <html:errors/>
     <p>
-    <FORM method="POST" action="ProcessQueue.do">
+    <html:form action="ProcessQueue.do">
+    
+    <logic:present name="PAGES">
+        Jump to page: 
+        <logic:iterate name="PAGES" id="pageLink">
+            <logic:notEqual name="CURRENT_PAGE" value="<%=pageLink.toString()%>">
+                <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="pageLink">
+                    <bean:write name="pageLink"/>
+                </html:link>
+            </logic:notEqual>
+            <logic:equal name="CURRENT_PAGE" value="<%=pageLink.toString()%>">
+                <bean:write name="pageLink"/>
+            </logic:equal>
+        </logic:iterate>
+        &nbsp;
+    </logic:present>
 
+    <br>
+
+    <logic:present name="prevPage">
+        <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="prevPage">
+        << Previous
+        </html:link>
+    </logic:present>
+   
+    <logic:notPresent name="prevPage">
+        << Previous
+    </logic:notPresent>
+    |
+    <logic:present name="nextPage">
+        <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="nextPage">
+            Next >>
+        </html:link>
+    </logic:present>
+    <logic:notPresent name="nextPage">
+        Next >>
+    </logic:notPresent>
+    
     <TABLE BORDER>
     <TR>
-        <TH>FLEX id</TH>
+        <TH>FLEX Id</TH>
         <TH>Description</TH>
         <TH>Quality</TH>
         <TH>GenBank</TH>
@@ -41,8 +77,8 @@
     
     <!-- iterate through each QueueItem (sequence) that is in the queue -->
     <!-- keep track of the count -->
-    <% int seqCount = 0;%>
-    <logic:iterate id="curQueueItem" name="<%=edu.harvard.med.hip.flex.Constants.QUEUE_ITEM_LIST_KEY%>"> 
+
+    <logic:iterate indexId="seqCount" id="curQueueItem" name="<%=edu.harvard.med.hip.flex.Constants.QUEUE_ITEM_LIST_KEY%>"> 
         <TR>
             <TD>
                 <flex:linkFlexSequence sequenceName="curQueueItem" seqProperty="item">
@@ -62,18 +98,21 @@
                 </A>
             </TD>
             <TD>
-                <logic:iterate id="curUser" name="curQueueItem" property="item.requestingUsers">
+                <logic:iterate id="curUser" name="curQueueItem" property="item.requestingUsers" indexId="userCount">
                     <A HREF="mailto:<bean:write name="curUser" property="userEmail"/>">
                         <bean:write name="curUser" property="username"/>
                     </A>
+                    <logic:notEqual name="userCount" value="0">
+                        <br>
+                    </logic:notEqual>
                 </logic:iterate>
             </TD>
             <TD>
-                <SELECT name="INDEX<%=seqCount++%>">
-                    <Option> Pending</option>
-                    <Option> Rejected</option>
-                    <Option> Accepted</option>
-                </SELECT>   
+                <html:select property='<%="status["+seqCount+"]"%>'>
+                    <html:option value="Pending">Pending</html:option>
+                    <html:option value="Rejected">Rejected</html:option>
+                    <html:option value="Accepted">Accepted</html:option>
+                </html:select>
             </TD>
         </TR>
     </logic:iterate> 
@@ -82,10 +121,10 @@
 </TABLE>
 
 <br>
-
-<INPUT title="Process Requests" name="Process Requests" type="submit">
+<p>
+<INPUT title="Process Requests" name="Process Requests" type="submit" value="Process Requests">
 <INPUT type="reset">
-</FORM>
+</html:form>
 </body>
 
 

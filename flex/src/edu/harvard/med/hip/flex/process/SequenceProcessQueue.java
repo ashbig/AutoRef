@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.9 2001-07-09 22:05:59 dzuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.10 2001-07-19 17:15:08 jmunoz Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -48,6 +48,63 @@ public class SequenceProcessQueue implements ProcessQueue {
     }
     
     /**
+     * Gets queue items for the protocol starting at offset, with length length
+     *
+     * @param protocol the protocol to get items from the queue with.
+     * @param offset The offset to get at
+     * @param legnth The number of rows to get back.
+     */
+    public List getQueueItems(Protocol protocol, int offset, int length)
+    throws FlexDatabaseException {
+        String sql = "select * from "+
+        "(select q.sequenceid as id, " +
+        "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded " +
+        "from queue q " +
+        "where q.protocolid =  " + protocol.getId() + " " +
+        "order by q.dateadded) " +
+        "where ROWNUM <  "+ (offset + 1 + length) +" " +
+        "Minus ( " +
+        "select * from ( "+
+        "select q.sequenceid as id, "+
+        "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded "+
+        "from queue q "+
+        "where q.protocolid =  "+ protocol.getId() + " "+
+        "order by q.dateadded " +
+        ") " +
+        "where rownum < " + (offset + 1) +
+        ")";
+        LinkedList items = restore(protocol, sql);
+        return items;
+    }
+    
+    /**
+     * Finds the number of items in the queue for a protocol.
+     *
+     * @param protocol Protocol to count items for.
+     *
+     * @return number of items in the queue for the given protocol.
+     */
+    public int getQueueSize(Protocol protocol) throws FlexDatabaseException{
+        String sql = "select count(*) as queue_size " +
+        "from queue q " +
+        "where q.protocolid =  " + protocol.getId();
+        int size =0;
+        
+        try {
+            
+            ResultSet rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            if (rs.next()) {
+                size = rs.getInt("queue_size");
+            }
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        }
+        
+        return size;
+    }
+    
+    
+    /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table
      *
@@ -67,7 +124,7 @@ public class SequenceProcessQueue implements ProcessQueue {
         LinkedList items = restore(protocol, sql);
         return items;
     }
- 
+    
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table,
@@ -179,7 +236,7 @@ public class SequenceProcessQueue implements ProcessQueue {
     /**
      * Get all the queued items that from the database.
      */
-    protected LinkedList restore(Protocol protocol, String sql) 
+    protected LinkedList restore(Protocol protocol, String sql)
     throws FlexDatabaseException {
         ResultSet rs = null;
         try {
@@ -227,10 +284,10 @@ public class SequenceProcessQueue implements ProcessQueue {
             System.out.println("Insert into queue:");
             for(int i=1; i<5; i++) {
                 System.out.println("Sequence ID: "+i);
-                DatabaseTransaction.executeUpdate("insert into queue(protocolid, dateadded, sequenceid) values(1, sysdate,"+i+")", c);              
+                DatabaseTransaction.executeUpdate("insert into queue(protocolid, dateadded, sequenceid) values(1, sysdate,"+i+")", c);
             }
             c.commit();
-              
+            
             System.out.println("OK");
             LinkedList items = queue.getQueueItems(protocol);
             ListIterator iter = items.listIterator();
@@ -278,7 +335,7 @@ public class SequenceProcessQueue implements ProcessQueue {
                 QueueItem item = (QueueItem) iter.next();
                 FlexSequence seq = (FlexSequence)item.getItem();
                 System.out.println("Sequence ID: "+seq.getId());
-            }                       
+            }
         } catch (FlexDatabaseException exception) {
             System.out.println(exception.getMessage());
         } catch (FlexProcessException exception) {
@@ -286,7 +343,7 @@ public class SequenceProcessQueue implements ProcessQueue {
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         } finally {
-            DatabaseTransaction.closeConnection(c);           
+            DatabaseTransaction.closeConnection(c);
         }
     }
 }

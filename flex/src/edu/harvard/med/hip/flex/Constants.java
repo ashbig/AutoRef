@@ -120,6 +120,12 @@ public class Constants {
     // key used to find the thread
     public static final String THREAD_KEY="THREAD";
    
+    // key used to find the length of a table
+    public static final String TABLE_LENGTH_KEY="TABLE_LENGTH";
+    
+    // key used to find the offset for a table
+    public static final String TABLE_OFFSET_KEY="TABLE_OFFSET";
+    
     // key used to find the list of name types
     public static final String NAME_TYPE_LIST_KEY="NAME_TYPE_LIST";
     

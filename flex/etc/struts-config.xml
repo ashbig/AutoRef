@@ -31,7 +31,9 @@
     <form-bean      name="customerRequestForm"
                     type="edu.harvard.med.hip.flex.form.CustomerRequestForm"/>
 
-   
+    <!-- Form used to let queue Manger accept and/or reject sequences -->
+    <form-bean      name="pendingRequestForm"
+                    type="edu.harvard.med.hip.flex.form.PendingRequestsForm"/>
     <!-- Plate entry form bean-->
     <form-bean      name="plateEntryForm"
                     type="edu.harvard.med.hip.flex.form.PlateEntryForm"/>
@@ -215,6 +217,8 @@
     <!-- Process a accept/discard pending sequence request-->
     <action     path="/ProcessQueue"
                 type="edu.harvard.med.hip.flex.action.ProcessQueueAction"
+                name="pendingRequestForm"
+                scope="session"
                 input="/ViewPendingRequests.do">
         <forward name="success" path="/ProcessQueue.jsp"/>
     </action>
