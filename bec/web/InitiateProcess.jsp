@@ -15,9 +15,7 @@
 
 <head>
 <title> <bean:message key="bec.name"/> : <%=Constants.JSP_TITLE%></title>
-  <script defer="defer" type="text/javascript"><!--
   
-
 <%
         Object forwardName = null;
         if ( request.getAttribute("forwardName") != null)
@@ -44,7 +42,6 @@
 	
 %>
 
-<link href="FlexStyle.css" rel="stylesheet" type="text/css">
 </head>
 
 <body> <jsp:include page="NavigatorBar_Administrator.jsp" /> 
