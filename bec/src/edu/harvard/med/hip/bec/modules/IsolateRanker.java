@@ -185,51 +185,58 @@ public class IsolateRanker
             
             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
-                //we process only not yet analized isolates
-                it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
-                //get what kind of data we have : 0 - none; 1 - clone sequence; 2 - contigs; 3 - er
-                items_to_analize = findWhatTypeOfDataAreAvailable(it);
-                switch ( items_to_analize )
+                try
                 {
-                    case 0:
+                    //we process only not yet analized isolates
+                    it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
+                    //get what kind of data we have : 0 - none; 1 - clone sequence; 2 - contigs; 3 - er
+                    items_to_analize = findWhatTypeOfDataAreAvailable(it);
+                    switch ( items_to_analize )
                     {
-                        it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
-                        break;
-                    }
-                    case 1:
-                    {
-                        clonesequence = it.getCloneSequence();
-                        processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
-                        if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+                        case 0:
                         {
-                            it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
+                            it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
+                            break;
                         }
-                        else
+                        case 1:
                         {
-                            it.setStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                            clonesequence = it.getCloneSequence();
+                            processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
+                            if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+                            {
+                                it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
+                            }
+                            else
+                            {
+                                it.setStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                            }
+                            break;
                         }
-                        break;
+                        case 2:
+                        {
+                            processContigs(it.getContigs(),refsequence,cdsstart,cdsstop,conn);
+                            it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                            break;
+                        }
+                        case 3:
+                        {
+                            reads =  it.getEndReads();
+                            processReads(it,refsequence,cdsstart,cdsstop, conn);
+                            it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                            break;
+                        }
                     }
-                    case 2:
-                    {
-                        processContigs(it.getContigs(),refsequence,cdsstart,cdsstop,conn);
-                        it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
-                        break;
-                    }
-                    case 3:
-                    {
-                        reads =  it.getEndReads();
-                        processReads(it,refsequence,cdsstart,cdsstop, conn);
-                        it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
-                        break;
-                    }
+                     //check wether number of mutations exseedmax allowed
+                    if (it.getRank() == IsolateTrackingEngine.RANK_BLACK) it.setRank(-1);
+                    it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length(),items_to_analize);
                 }
-                 //check wether number of mutations exseedmax allowed
-                if (it.getRank() == IsolateTrackingEngine.RANK_BLACK) it.setRank(-1);
-                it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length(),items_to_analize);
+                catch(Exception e)
+                {
+                    m_error_messages.add("Error processing clone with isolatetrackingid "+ it.getId() );
+                }
             }
             construct.calculateRank( refsequence.getText().length() ,m_cutoff_spec);
-             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
+            for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
                 //update database
                 it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
@@ -238,13 +245,13 @@ public class IsolateRanker
             }
             construct.updateCurrentIndex( construct.getCurrentIsolateId(),conn);
             
-           conn.commit();
+            conn.commit();
             m_finished_constructs.add(new Integer( construct.getId()));
         }
         catch(Exception ex)
         {
-             ex.printStackTrace();
-            System.out.println(ex.getMessage());
+           //  ex.printStackTrace();
+         //   System.out.println(ex.getMessage());
             m_error_messages.add(ex.getMessage());
             DatabaseTransaction.rollback(conn);
         }
