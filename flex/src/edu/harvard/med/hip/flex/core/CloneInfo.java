@@ -21,6 +21,8 @@ public class CloneInfo extends CDNASequence {
     public static final String IN_PROCESS = "IN PROCESS";
     public static final String SUCESSFUL = "SUCESSFUL";
     public static final String FAIL = "FAIL";
+    public static final String MASTER_CLONE = "Master";
+    public static final String EXPRESSION_CLONE = "Expression";
     
     protected int cloneid;
     protected String clonename;

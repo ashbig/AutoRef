@@ -25,19 +25,17 @@ public class FlexSeqBatchRetriever extends SeqBatchRetriever {
     
     /**
      * Retrive the sequences from FLEXGene database. Populate foundList
-     * and noFoundList. Return a list of GIs that are found in the database.
+     * and noFoundList. 
      *
-     * @return A list of GIs that are found in the database.
      * @exception QueryException
      * @exception FlexDatabaseException
      * @exception SQLException
      */
-    public List retrieveSequence() throws QueryException, FlexDatabaseException, SQLException {
-        if(giList == null) {
-            throw new QueryException("No query list provided.");
+    public void retrieveSequence() throws Exception {
+        if(giList == null || giList.size() == 0) {
+            return;
         }
         
-        List foundGi = new ArrayList();
         String sql = "select * from girecord where gi=?";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
@@ -46,24 +44,70 @@ public class FlexSeqBatchRetriever extends SeqBatchRetriever {
         
         for(int i=0; i<giList.size(); i++) {
             String element = (String)giList.get(i);
-            stmt.setInt(1, Integer.parseInt(element));
-            rs = DatabaseTransaction.executeQuery(stmt);
             
+            try {
+                stmt.setInt(1, Integer.parseInt(element));
+                rs = DatabaseTransaction.executeQuery(stmt);
+            } catch (NumberFormatException ex) {
+                NoFound nf = new NoFound(element, NoFound.INVALID_GI);
+                noFoundList.put(element,  nf);
+                continue;
+            }
+                        
             if (rs.next()) {
-                String type = rs.getString("TYPE");
+                String genbank = rs.getString("ACCESSION");
                 int gi = rs.getInt("GI");
                 String sequenceFile = rs.getString("SEQUENCEFILE");
-                GiRecord giRecord = new GiRecord(gi, sequenceFile);
-                giRecord.setType(type);
-                foundList.add(giRecord);
-                foundGi.add(element);
+                GiRecord giRecord = new GiRecord(gi, genbank, sequenceFile);
+                foundList.put(element, giRecord);
             } else {
-                NoFound nf = new NoFound(element, null);
-                noFoundList.add(nf);
+                NoFound nf = new NoFound(element, NoFound.GI_NOT_IN_FLEX);
+                noFoundList.put(element, nf);
             }
         }
         
         DatabaseTransaction.closeResultSet(rs);
-        return foundGi;
     }
+    
+    public static void main(String args[]) {
+        List giList = new ArrayList();
+        giList.add("32450632");
+        giList.add("21961206");
+        giList.add("33869456");
+        giList.add("33469967");
+        giList.add("33469918");
+        giList.add("33469916");
+        giList.add("16936529");
+        giList.add("37550355");
+        giList.add("16923985");
+        giList.add("34851998");
+        
+        SeqBatchRetriever retriever = new FlexSeqBatchRetriever(giList);
+        
+        try {
+            retriever.retrieveSequence();
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        
+        Map founds = retriever.getFoundList();
+        System.out.println("Found List: ");
+        Set keys = founds.keySet();
+        Iterator iter = keys.iterator();
+        while(iter.hasNext()) {
+            String key = (String)iter.next();
+            GiRecord gr = (GiRecord)founds.get(key);
+            System.out.println("\t"+key+"\t"+gr.getCdsStart()+"\t"+gr.getCdsStop()+"\t"+gr.getGenbankAccession()+"\t"+gr.getSequenceFile());
+        }
+        
+        Map noFounds = retriever.getNoFoundList();
+        System.out.println("\nNo Found:");
+        keys = noFounds.keySet();
+        iter = keys.iterator();
+        while(iter.hasNext()) {
+            String key = (String)iter.next();
+            NoFound nf = (NoFound)noFounds.get(key);
+            System.out.println("\t"+key+"\t"+nf.getReason());
+        }
+    }    
 }

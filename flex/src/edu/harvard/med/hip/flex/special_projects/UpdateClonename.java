@@ -80,6 +80,46 @@ public class UpdateClonename {
         }
     }
     
+    public void updateDestCloneid(String containerids) {
+        String sql = "update sample set cloneid=? where sampleid=? and cloneid is null";
+        String sql2 = "select s1.cloneid, s2.sampleid"+
+                     " from sample s1, sample s2, samplelineage sl"+
+                     " where s1.sampleid=sl.sampleid_from"+
+                     " and sl.sampleid_to=s2.sampleid"+
+                     " and s2.sampletype='ISOLATE'"+
+                     " and s2.containerid in "+containerids;
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            
+            rs = t.executeQuery(sql2);
+            System.out.println(sql2);
+            while(rs.next()) {
+                int cloneid = rs.getInt(1);
+                int sampleid = rs.getInt(2);
+                
+                System.out.println(cloneid+"\t"+sampleid);
+                
+                stmt.setInt(1, cloneid);
+                stmt.setInt(2, sampleid);
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            System.out.println(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
     public void updateCloneid(List clones) {
         String sql = "update sample set cloneid=? where sampleid=?";
         String sql2 = "select cloneid from sample where sampleid=?";
@@ -173,11 +213,10 @@ public class UpdateClonename {
     }
     
     public static void main(String args[]) throws Exception {
-        /*
+     /**   
           DatabaseTransaction t = DatabaseTransaction.getInstance();
-          String sql = "select c.cloneid from clonesequencing s, clones c"+
-                        " where s.cloneid=c.cloneid"+
-                        " and c.clonename is null"+
+          String sql = "select c.cloneid from clones c"+
+                        " where c.clonename is null"+
                         " and c.status='SEQUENCE VERIFIED'";
           ResultSet rs = t.executeQuery(sql);
           List clones = new ArrayList();
@@ -188,15 +227,17 @@ public class UpdateClonename {
          
           UpdateClonename u = new UpdateClonename();
          u.updateName(clones);
-        */ 
-        
+        **/ 
+       
         UpdateClonename u = new UpdateClonename();
-        List clones = u.readClones();
+ /**       List clones = u.readClones();
         if(clones == null) {
             System.out.println("Error");
             System.exit(0);
         }
         System.out.println(clones.size());
         u.updateCloneid(clones);
+    */  
+      u.updateDestCloneid("(7275,7276)");
     }
 }

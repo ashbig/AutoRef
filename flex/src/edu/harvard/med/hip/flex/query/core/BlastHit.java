@@ -13,8 +13,7 @@ import java.util.*;
  * @author  dzuo
  */
 public class BlastHit {
-    private int id;
-    private int sequenceid;
+    private int matchFlexId;
     private int queryLength;
     private int subjectLength;
     private List alignments;
@@ -23,35 +22,25 @@ public class BlastHit {
     public BlastHit() {
     }
     
-    public BlastHit(int sequenceid, int queryLength, int subjectLength, List alignments) {
-        this.sequenceid = sequenceid;
+    public BlastHit(int queryLength, int subjectLength, List alignments) {
         this.queryLength = queryLength;
         this.subjectLength = subjectLength;
         this.alignments = alignments;
     }
     
-    public BlastHit(int id, int sequenceid, int queryLength, int subjectLength, List alignments) {
-        this.id = id;
-        this.sequenceid = sequenceid;
+    public BlastHit(int id, int queryLength, int subjectLength, List alignments) {
+        this.matchFlexId = id;
         this.queryLength = queryLength;
         this.subjectLength = subjectLength;
         this.alignments = alignments;
     }
     
-    public void setId(int id) {
-        this.id = id;
+    public void setMatchFlexId(int id) {
+        this.matchFlexId = id;
     }
     
-    public int getId() {
-        return id;
-    }
-    
-    public void setSequenceid(int sequenceid) {
-        this.sequenceid = sequenceid;
-    }
-    
-    public int getSequenceid() {
-        return sequenceid;
+    public int getMatchFlexId() {
+        return matchFlexId;
     }
     
     public void setQueryLength(int queryLength) {

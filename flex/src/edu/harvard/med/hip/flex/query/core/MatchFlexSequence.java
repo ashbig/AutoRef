@@ -11,26 +11,31 @@ package edu.harvard.med.hip.flex.query.core;
  * @author  dzuo
  */
 public class MatchFlexSequence {
+    public static final String MATCH_BY_GI = "T";
+    public static final String NO_MATCH_BY_GI = "F";
+    
     private int matchFlexId;
     private int flexsequenceid;
     private String isMatchByGi;
-    private String meetBlastCriteria;
-    private int matchGenbankId;
-    private int searchResultId;
     private BlastHit blastHit;
+    private int matchGenbankId;
     
     /** Creates a new instance of MatchFlexSequence */
     public MatchFlexSequence() {
     }
-    
-    public MatchFlexSequence(boolean b, int sequenceid) {
-    }
-    
-    public MatchFlexSequence(String isMatchByGi, String meetBlast, int id, BlastHit hit) {
+        
+    public MatchFlexSequence(String isMatchByGi, int id, BlastHit hit) {
         this.isMatchByGi = isMatchByGi;
-        this.meetBlastCriteria = meetBlast;
         this.flexsequenceid = id;
         this.blastHit = hit;
+    }
+    
+    public int getMatchFlexId() {
+        return matchFlexId;
+    }
+    
+    public void setMatchFlexId(int id) {
+        this.matchFlexId = id;
     }
     
     public int getFlexsequenceid() {
@@ -49,35 +54,19 @@ public class MatchFlexSequence {
         this.isMatchByGi = b;
     }
     
-    public String getMeetBlastCriteria() {
-        return meetBlastCriteria;
-    }
-    
-    public void setMeetBlastCriteria(String b) {
-        this.meetBlastCriteria = b;
-    }   
-    
-    public int getMatchGenbankId() {
-        return matchGenbankId;
-    }
-    
-    public void setMatchGenbankId(int matchGenbankId) {
-        this.matchGenbankId = matchGenbankId;
-    }
-    
-    public int getSearchResultId() {
-        return searchResultId;
-    }
-    
-    public void setSearchResultId(int id) {
-        this.searchResultId = id;
-    }
-    
     public BlastHit getBlastHit() {
         return blastHit;
     }
     
     public void setBlastHit(BlastHit hit) {
         this.blastHit = hit;
+    }
+    
+    public void setMatchGenbankId(int id) {
+        this.matchGenbankId = id;
+    }
+    
+    public int getMatchGenbankId() {
+        return matchGenbankId;
     }
 }

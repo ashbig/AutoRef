@@ -11,6 +11,8 @@ package edu.harvard.med.hip.flex.query.core;
  * @author  dzuo
  */
 public class SequenceRecord {
+    public static final String GENOMIC = "g";
+    
     private String genbank;
     private int locusid;
     private String type;
@@ -23,6 +25,13 @@ public class SequenceRecord {
     public SequenceRecord(int gi, String genbank, String type) {
         this.genbank = genbank;
         this.gi = gi;
+        this.type = type;
+    }
+    
+    public SequenceRecord(String genbank, int gi, int locusid, String type) {
+        this.genbank = genbank;
+        this.gi = gi;
+        this.locusid = locusid;
         this.type = type;
     }
     

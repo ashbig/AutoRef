@@ -6,6 +6,7 @@
 
 package edu.harvard.med.hip.flex.core;
 
+import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.database.*;
 import java.util.*;
 import java.sql.*;
@@ -15,6 +16,15 @@ import java.sql.*;
  * @author  dzuo
  */
 public class CloningStrategy {
+    public static final int YEAST_GATEWAY = 1;
+    public static final int HUMAN_GATEWAY = 2;
+    public static final int PSEUDOMONAS_GATEWAY = 3;
+    public static final int CREATOR = 4;
+    public static final int YEAST_GATEWAY_EXPRESSION = 5;
+    public static final int HUMAN_GATEWAY_EXPRESSION = 6;
+    public static final int PSEUDOMONAS_GATEWAY_EXPRESSION = 7;
+    public static final int YP_GATEWAY = 8;
+    
     protected int id;
     protected String name;
     protected CloneVector clonevector;
@@ -154,5 +164,26 @@ public class CloningStrategy {
             DatabaseTransaction.closeResultSet(rs);
         }
         return l;
+    }
+    
+    public static int getStrategyid(int projectid, int workflowid) {
+        if(workflowid == Workflow.CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR
+        || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION
+        || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE) 
+            return CREATOR;
+        
+        if(workflowid == Workflow.STANDARD_WORKFLOW || workflowid == Workflow.PSEUDOMONAS_WORKFLOW
+        || workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.GATEWAY_WORKFLOW) {
+            if(projectid == Project.HUMAN) 
+                return HUMAN_GATEWAY;
+            if(projectid == Project.YEAST)
+                return YEAST_GATEWAY;
+            if(projectid == Project.PSEUDOMONAS)
+                return PSEUDOMONAS_GATEWAY;
+            if(projectid == Project.YP)
+                return YP_GATEWAY;
+        }
+        
+        return 0;
     }
 }

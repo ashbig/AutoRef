@@ -204,7 +204,7 @@ public class CreateOligoForBC {
                  cont_5p.addSample(ol5);
                  Sample ol3 = new Sample("OLIGO_3C", wellid, cont_3p.getId(), construct.getId(), ol_3.getOligoID(),"G");
                  cont_3p.addSample(ol3);
-                 Sample ol3f = new Sample("OLIGO_3F", wellid, cont_3f.getId(), construct.getId(), ol_3f.getOligoID(),"G");
+                 Sample ol3f = new Sample("OLIGO_3F", wellid, cont_3f.getId(), construct_fusion.getId(), ol_3f.getOligoID(),"G");
                  cont_3f.addSample(ol3f);
                  Sample s_temp = new Sample("DNA", wellid, cont_temp.getId(), construct.getId(), -1, "G");
                  cont_temp.addSample(s_temp);

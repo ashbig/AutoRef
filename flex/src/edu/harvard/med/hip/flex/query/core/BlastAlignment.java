@@ -12,7 +12,7 @@ package edu.harvard.med.hip.flex.query.core;
  */
 public class BlastAlignment {
     private int id;
-    private int blastHitId;
+    private int matchFlexId;
     private String evalue;
     private String gap;
     private String identity;
@@ -41,11 +41,11 @@ public class BlastAlignment {
             this.strand = strand;
     }
     
-    public BlastAlignment(int id, int blastHitId, String evalue, String gap, 
+    public BlastAlignment(int id, int matchFlexId, String evalue, String gap, 
         String identity, int queryStart, int queryEnd, int subStart, 
         int subEnd, String score, String strand) {
             this.id = id;
-            this.blastHitId = blastHitId;
+            this.matchFlexId = matchFlexId;
             this.evalue = evalue;
             this.gap = gap;
             this.identity = identity;
@@ -61,8 +61,16 @@ public class BlastAlignment {
         return id;
     }
     
-    public int getBlastHitId() {
-        return blastHitId;
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public int getMatchFlexId() {
+        return matchFlexId;
+    }
+    
+    public void setMatchFlexId(int id) {
+        this.matchFlexId = id;
     }
     
     public String getEvalue() {

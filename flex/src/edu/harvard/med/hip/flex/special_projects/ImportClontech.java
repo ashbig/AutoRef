@@ -399,10 +399,12 @@ public class ImportClontech {
     
     
     public static void main(String arg[]) {
-        String file = "G:\\ct_rejected_mgc.txt";
+        //String file = "G:\\ct_rejected_mgc.txt";
+        String file = "G:\\clontech_import_439539.txt";
         String outfile = "G:\\seqids.txt";
         
-        String seqfile = "G:\\CTSequence.txt";
+        //String seqfile = "G:\\CTSequence.txt";
+        String seqfile = "G:\\clontech_5_21_03.txt";
         String logfile = "G:\\clontech.log";
         
         Logger log = new Logger(logfile);

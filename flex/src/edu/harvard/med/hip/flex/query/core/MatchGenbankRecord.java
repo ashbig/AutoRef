@@ -13,22 +13,33 @@ import java.util.*;
  * @author  dzuo
  */
 public class MatchGenbankRecord {
+    public static final String DIRECT_SEARCH = "DIRECT_SEARCH";
+    public static final String RELATED_SEARCH = "RELATED_SEARCH";
+    
+    private int matchGenbankId;
     private String genbankAccession;
     private String gi;
-    private boolean isFlexFound;
-    private boolean isSearchBySelf;
     private List matchFlexSequence;
+    private String searchMethod;
+    private int searchResultid;
     
     /** Creates a new instance of MatchGenbankRecord */
     public MatchGenbankRecord() {
     }
 
-    public MatchGenbankRecord(String genbank, String gi, boolean isFlexFound, boolean isSearchBySelf) {
+    public MatchGenbankRecord(String genbank, String gi, String searchMethod, List matchFlexSequence) {
         this.genbankAccession = genbank;
         this.gi = gi;
-        this.isFlexFound = isFlexFound;
-        this.isSearchBySelf = isSearchBySelf;
-        matchFlexSequence = new ArrayList();
+        this.searchMethod = searchMethod;
+        this.matchFlexSequence = matchFlexSequence;
+    }
+    
+    public void setMatchGenbankId(int id) {
+        this.matchGenbankId = id;
+    }
+    
+    public int getMatchGenbankId() {
+        return matchGenbankId;
     }
     
     public void setGenbankAccession(String genbankAccession) {
@@ -47,24 +58,16 @@ public class MatchGenbankRecord {
         return gi;
     }
     
-    public void setIsFlexFound(boolean isFlexFound) {
-        this.isFlexFound = isFlexFound;
-    }
-    
-    public boolean getIsFlexFound() {
-        return isFlexFound;
-    }
-    
-    public void setIsSearchBySelf(boolean isSearchBySelf) {
-        this.isSearchBySelf = isSearchBySelf;
-    }
-    
-    public boolean getIsSearchBySelf() {
-        return isSearchBySelf;
-    }
-    
     public List getMatchFlexSequence() {
         return matchFlexSequence;
+    }
+    
+    public String getSearchMethod() {
+        return searchMethod;
+    }
+    
+    public void setSearchMethod(String s) {
+        this.searchMethod = s;
     }
     
     public void setMatchFlexSequence(List l) {
@@ -74,4 +77,12 @@ public class MatchGenbankRecord {
     public void addMatchFlexSequence(MatchFlexSequence f) {
         matchFlexSequence.add(f);
     }        
+    
+    public void setSearchResultid(int id) {
+        this.searchResultid = id;
+    }
+    
+    public int getSearchResultid() {
+        return searchResultid;
+    }
 }

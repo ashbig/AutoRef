@@ -17,7 +17,6 @@ public class GiRecord {
     protected int cdsStart;
     protected int cdsStop;
     protected String sequenceText;
-    protected String type;
     
     /** Creates a new instance of GiRecord */
     public GiRecord(int gi, String sequenceFile) {
@@ -31,10 +30,10 @@ public class GiRecord {
         this.sequenceFile = sequenceFile;
     }
     
-    public GiRecord(int gi, String genbankAccession, String sequenceFile, int cdsStart, int cdsStop) {
+    public GiRecord(int gi, String genbankAccession, String sequenceText, int cdsStart, int cdsStop) {
         this.gi = gi;
         this.genbankAccession = genbankAccession;
-        this.sequenceFile = sequenceFile;
+        this.sequenceText = sequenceText;
         this.cdsStart = cdsStart;
         this.cdsStop = cdsStop;
     }
@@ -59,11 +58,15 @@ public class GiRecord {
         return sequenceFile;
     }
     
-    public void setType(String type) {
-        this.type = type;
+    public void setSequenceFile(String file) {
+        this.sequenceFile = file;
     }
     
-    public String getType() {
-        return type;
+    public int getCdsStart() {
+        return cdsStart;
+    }
+    
+    public int getCdsStop() {
+        return cdsStop;
     }
 }

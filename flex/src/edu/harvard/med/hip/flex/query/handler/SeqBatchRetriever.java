@@ -18,8 +18,8 @@ import edu.harvard.med.hip.flex.query.QueryException;
  */
 abstract public class SeqBatchRetriever {
     protected List giList;
-    protected List foundList;
-    protected List noFoundList;
+    protected Map foundList;
+    protected Map noFoundList;
     
     /** Creates a new instance of SeqBatchRetriever */
     public SeqBatchRetriever() {
@@ -27,21 +27,21 @@ abstract public class SeqBatchRetriever {
 
     public SeqBatchRetriever(List giList) {
         this.giList = giList;
-        this.foundList = new ArrayList();
-        this.noFoundList = new ArrayList();
+        this.foundList = new HashMap();
+        this.noFoundList = new HashMap();
     }
     
     public List getGiList() {
         return giList;
     }
     
-    public List getFoundList() {
+    public Map getFoundList() {
         return foundList;
     }
     
-    public List getNoFoundList() {
+    public Map getNoFoundList() {
         return noFoundList;
     }
     
-   abstract public List retrieveSequence() throws QueryException, Exception;
+   abstract public void retrieveSequence() throws Exception;
 }

@@ -13,16 +13,38 @@ import java.util.*;
  * @author  dzuo
  */
 public class SearchResult {
+    public static final String GENBANK_FOUND = "T";
+    public static final String GENBANK_NOT_FOUND = "F";
+    
+    private int searchResultid;
     private String searchTerm; 
-    private boolean isGenbankFound;
-    private String reason;
-    private List matchGenbankRecord;
-    private List relatedSeqs;
+    private String isGenbankFound;
+    private List found;
+    private NoFound noFound;
     
     /** Creates a new instance of SearchResult */
     public SearchResult() {
     }
+    
+    public SearchResult(String searchTerm) {
+        this.searchTerm = searchTerm;
+    }
+    
+    public SearchResult(String searchTerm, String isGenbankFound, List found, NoFound noFound) {
+        this.searchTerm = searchTerm;
+        this.isGenbankFound = isGenbankFound;
+        this.found = found;
+        this.noFound = noFound;
+    }
 
+    public int getSearchResultid() {
+        return searchResultid;
+    }
+    
+    public void setSearchResultid(int id) {
+        this.searchResultid = id;
+    }
+    
     public String getSearchTerm() {
         return searchTerm;
     }
@@ -31,35 +53,27 @@ public class SearchResult {
         this.searchTerm = searchTerm;
     }
     
-    public boolean getIsGenbankFound() {
+    public String getIsGenbankFound() {
         return isGenbankFound;
     }
     
-    public void setIsGenbankFound(boolean b) {
+    public void setIsGenbankFound(String b) {
         this.isGenbankFound = b;
     }
     
-    public List getMatchGenbankRecord() {
-        return matchGenbankRecord;
+    public List getFound() {
+        return found;
     }
     
-    public void setMatchGenbankRecord(List l) {
-        this.matchGenbankRecord = l;
+    public void setFound(List l) {
+        this.found = l;
     }
     
-    public String getReason() {
-        return reason;
+    public NoFound getNoFound() {
+        return noFound;
     }
     
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-    
-    public List getRelatedSeqs() {
-        return relatedSeqs;
-    }
-    
-    public void setRelatedSeqs(List relatedSeqs) {
-        this.relatedSeqs = relatedSeqs;
+    public void setNoFound(NoFound l) {
+        this.noFound = l;
     }
 }
