@@ -13,7 +13,7 @@ import org.apache.struts.action.*;
  */
 public class Seq_GetSpecForm extends ActionForm
 {
-    protected String m_forwardName = null;
+    private String m_forwardName = null;
    
     
     public void setForwardName(String forwardName)
