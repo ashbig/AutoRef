@@ -97,7 +97,7 @@ public class PhredPhrap
         
         }
         cmd += getQualityTrimmingParams();        
-        System.out.println(cmd);
+       // System.out.println(cmd);
         try
         {
             Runtime r = Runtime.getRuntime();

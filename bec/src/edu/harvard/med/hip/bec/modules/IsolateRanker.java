@@ -201,7 +201,9 @@ public class IsolateRanker
                         case 1:
                         {
                             clonesequence = it.getCloneSequence();
+                            System.out.println("Get clone sequence for it "+it.getId());
                             processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
+                             System.out.println("processed clone sequence for it "+it.getId());
                             if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
                             {
                                 it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
@@ -232,7 +234,7 @@ public class IsolateRanker
                 }
                 catch(Exception e)
                 {
-                    m_error_messages.add("Error processing clone with isolatetrackingid "+ it.getId() );
+                    m_error_messages.add("Error processing clone with isolatetrackingid "+ it.getId() + e.getMessage());
                 }
             }
             construct.calculateRank( refsequence.getText().length() ,m_cutoff_spec);
@@ -261,11 +263,19 @@ public class IsolateRanker
     private int findWhatTypeOfDataAreAvailable(IsolateTrackingEngine it)throws Exception
     {
         int result = 0;
+        try
+        {
         if ( it.getCloneSequence() != null) return 1;
         ArrayList contigs = it.getContigs();
         if (contigs != null && contigs.size() > 0) return 2;
         if (it.getEndReads() != null && it.getEndReads().size() > 0 )return 3;
         return 0;
+        }
+        catch( Exception e)
+        {
+            m_error_messages.add("Cannot get object to analyze for isolate "+ it.getId());
+            throw new BecDatabaseException("Cannot get object to analyze for isolate "+ it.getId());
+        }
     }
                   
     //process isolate tracking based on reads
