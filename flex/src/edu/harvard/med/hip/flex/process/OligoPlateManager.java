@@ -18,6 +18,8 @@ import java.io.*;
 
 
 public class OligoPlateManager {
+    public static final String DESIGN_CONSTRUCTS= "design constructs";
+    
     private Connection conn;
     private LinkedList fileList;
     /**
@@ -27,6 +29,7 @@ public class OligoPlateManager {
     public OligoPlateManager() throws FlexDatabaseException {
         try{
             this.conn = DatabaseTransaction.getInstance().requestConnection();
+            
         } catch(FlexDatabaseException sqlex){
             throw new FlexDatabaseException(sqlex);
         }
@@ -70,30 +73,30 @@ public class OligoPlateManager {
      * @return LinkedList A list of sequence objects
      */
     private LinkedList getQueueSequence(int cdsSizeGroup) throws FlexDatabaseException {
-        int protocolId = 3;  // to be modified
-        //int cdsSizeGroup = 2000;
+        Protocol protocol = new Protocol(DESIGN_CONSTRUCTS);
+        
         LinkedList seqList = new LinkedList();
         SequenceOligoQueue seqQueue = new SequenceOligoQueue();
-        seqList = seqQueue.getQueueItems(protocolId, cdsSizeGroup);
+        seqList = seqQueue.getQueueItems(protocol, cdsSizeGroup);
         
         //delete sequence queue record from the queue table
-        //seqQueue.removeQueueItems(seqList, protocolId, conn);
+        seqQueue.removeQueueItems(seqList, protocol, conn);
         
         return seqList;
     }
     
     private LinkedList getQueueSequence(int cdsSizeGroupLowerLimit,
     int cdsSizeGroupUpperLimit) throws FlexDatabaseException {
-        int protocolId = 3;  // to be modified
-        //int cdsSizeGroup = 2000;
+        
+        Protocol protocol = new Protocol(DESIGN_CONSTRUCTS);
         LinkedList seqList = new LinkedList();
         SequenceOligoQueue seqQueue = new SequenceOligoQueue();
-        seqList = seqQueue.getQueueItems(protocolId, cdsSizeGroupLowerLimit,
+        seqList = seqQueue.getQueueItems(protocol, cdsSizeGroupLowerLimit,
         cdsSizeGroupUpperLimit);
         
-        //delete sequence queue record from the queue table
-        //seqQueue.removeQueueItems(seqList, protocolId, conn);
-        
+        //delete sequence queue record 
+        //seqQueue.removeQueueItems(seqList, protocol, conn);
+        //System.out.println("removing sequences in queue with design construct protocl...");
         return seqList;
     }
     
@@ -145,11 +148,13 @@ public class OligoPlateManager {
                     plater.createOligoPlates();
                     plater.insertProcessInputOutput();
                     plater.insertReceiveOligoQueue();
+                    System.out.println("inserting the receive oligo plates protocol into queue.");
                     
                     DatabaseTransaction.commit(conn);
                 } catch(FlexDatabaseException sqlex){
                     System.out.println(sqlex);
                     DatabaseTransaction.rollback(conn);
+                
                 }finally {
                     DatabaseTransaction.closeConnection(conn);
                 }
@@ -165,8 +170,8 @@ public class OligoPlateManager {
         String to = "wenhongm@hotmail.com";
         String from = "wmar@hms.harvard.edu";
         String cc = "jmunoz@3rdmill.com";
-        String subject = "Oligo Order";
-        String msgText = "The attached files is our oligo order.\n"+
+        String subject = "Testing Oligo Order";
+        String msgText = "The attached files are our oligo order.\n"+
                         "Thank you!";
         try{
         Mailer.sendMessage(to, from, cc, subject, msgText, fileList);
@@ -189,7 +194,7 @@ public class OligoPlateManager {
             System.out.println("Calculating oligos...");
             om.createOligoPlates();
             om.sendOligoOrders();
-            
+            System.out.println("Oligo order files have been mailed!");
         } catch (FlexDatabaseException e) {
             e.printStackTrace();
         } catch (FlexCoreException ex){
