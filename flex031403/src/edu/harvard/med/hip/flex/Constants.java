@@ -62,6 +62,9 @@ public class Constants {
     
     // key used to find the id of a plate
     public static final String PLATE_ID_KEY = "PLATE_ID";
+  
+    // key used to find the customer request
+    public static final String CUSTOMER_REQUEST_KEY = "CUSTOMER_REQUEST";
     
     /** Creates new Constants */
     private Constants() {
