@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.19 2001-07-26 22:07:13 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.20 2001-08-17 20:38:26 dzuo Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -31,8 +31,9 @@
     <html:errors/>
     <p>
     <html:form action="ProcessQueue.do">
-    
-    
+
+    <input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
+    <input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
     
     <TABLE border="1" cellpadding="2" cellspacing="0">
         <tr class="navRow">

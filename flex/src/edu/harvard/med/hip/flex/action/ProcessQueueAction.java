@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2001-07-19 18:00:38 $
- * $Author: jmunoz $
+ * $Revision: 1.11 $
+ * $Date: 2001-08-17 20:35:52 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -54,6 +54,7 @@ import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 
 import org.apache.struts.action.*;
@@ -62,8 +63,8 @@ import org.apache.struts.action.*;
  * Class description - Class to process items from the approve sequence queue.
  *
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.10 $ $Date: 2001-07-19 18:00:38 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.11 $ $Date: 2001-08-17 20:35:52 $
  */
 public class ProcessQueueAction extends WorkflowAction {
     
@@ -95,6 +96,8 @@ public class ProcessQueueAction extends WorkflowAction {
         
         // The form holding the status changes made by the user
         PendingRequestsForm requestForm = (PendingRequestsForm)form;
+        int workflowid = requestForm.getWorkflowid();
+        int projectid = requestForm.getProjectid();       
         
         /*
          * Get the researcher barcode from the connected user who is assumed to
@@ -138,17 +141,19 @@ public class ProcessQueueAction extends WorkflowAction {
         Enumeration paramEnum = request.getParameterNames();
         QueueItem queueItem = null;
         
-        try {
-            
+        try {            
+            Project project = new Project(projectid);
+            Workflow workflow = new Workflow(workflowid);
             
             // Process object
             Process process = new Process(approveProtocol,Process.SUCCESS,
-                new Researcher(researcherBarcode));
+                new Researcher(researcherBarcode), project, 
+                new Workflow(Workflow.COMMON_WORKFLOW));
             // conncection to use for transactions
             conn = DatabaseTransaction.getInstance().requestConnection();
             
-            // Create the protocol for the next phase (design construct);
-            Protocol designProtocol = new Protocol("design constructs");
+            // Create the protocol for the next phase (design construct);            
+            List nextProtocols = workflow.getNextProtocol(approveProtocol);
             
             for(int itemIndex = 0; itemIndex < requestForm.getQueueSize(); itemIndex++){
                 
@@ -197,14 +202,22 @@ public class ProcessQueueAction extends WorkflowAction {
                 
                 sequenceQueue.removeQueueItems(rejectedList,conn);
                 sequenceQueue.removeQueueItems(acceptedList,conn);
+                
                 /*
                  * we must also add the sequences to the queue for the
                  * design construct phase.
                  */
-                Iterator iter = acceptedList.iterator();
-                while(iter.hasNext()) {
-                    QueueItem item = (QueueItem)iter.next();
-                    item.setProtocol(designProtocol);
+                Iterator protocolIter = nextProtocols.iterator();
+                while(protocolIter.hasNext()) {
+                    Protocol nextProtocol = (Protocol)protocolIter.next();
+                    
+                    Iterator iter = acceptedList.iterator();
+                    while(iter.hasNext()) {
+                        QueueItem item = (QueueItem)iter.next();
+                        item.setProtocol(nextProtocol);
+                        item.setWorkflow(workflow);
+                    }
+                    sequenceQueue.addQueueItems(acceptedList, conn);
                 }
                 
                 /*
@@ -213,16 +226,12 @@ public class ProcessQueueAction extends WorkflowAction {
                  */
                 OligoPlateManager om = new OligoPlateManager();
                 om.orderOligo();
-               
-                
-                sequenceQueue.addQueueItems(acceptedList, conn);
                 
                 /*
                  * finally we must insert into the process and
                  * process object tables
                  */
                 process.insert(conn);
-                
             }
             
             // if there are errors, save them and report them
@@ -239,7 +248,7 @@ public class ProcessQueueAction extends WorkflowAction {
                 
                 // find the number of items left in the queue
                 SequenceProcessQueue approveQueue= new SequenceProcessQueue();
-                int queueSize = approveQueue.getQueueSize(approveProtocol);
+                int queueSize = approveQueue.getQueueSize(approveProtocol, project, workflow);
                 
                 // put the list of accepted sequences into request
                 request.setAttribute(Constants.APPROVED_SEQUENCE_LIST_KEY, acceptedList);

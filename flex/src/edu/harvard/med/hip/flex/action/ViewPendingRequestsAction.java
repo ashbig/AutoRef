@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2001-07-20 19:53:15 $
+ * $Revision: 1.10 $
+ * $Date: 2001-08-17 20:35:52 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -49,6 +49,7 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 import org.apache.struts.action.*;
 
@@ -57,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.9 $ $Date: 2001-07-20 19:53:15 $
+ * @version    $Revision: 1.10 $ $Date: 2001-08-17 20:35:52 $
  */
 
 public class ViewPendingRequestsAction extends WorkflowAction{
@@ -85,16 +86,18 @@ public class ViewPendingRequestsAction extends WorkflowAction{
         
         // get the session
         HttpSession session = request.getSession();
-        
+                
+        int projectid = ((Integer)(request.getAttribute("projectid"))).intValue();
+        int workflowid = ((Integer)(request.getAttribute("workflowid"))).intValue();
         
         try {
-            
-            
+            Project project = new Project(projectid);   
+            Workflow workflow = new Workflow(Workflow.COMMON_WORKFLOW);
             QueueFactory queueFactory = new StaticQueueFactory();
             SequenceProcessQueue sequenceQueue =
             (SequenceProcessQueue)queueFactory.makeQueue("SequenceProcessQueue");
             
-            Protocol approveProtocol = new Protocol("approve sequences");
+            Protocol approveProtocol = new Protocol(Protocol.APPROVE_SEQUENCES);
             
             // figure out the offset for the table of pending sequences.
             
@@ -113,7 +116,7 @@ public class ViewPendingRequestsAction extends WorkflowAction{
             getProperty("flex.approvesequences.pagesize"));
             
             // get the total number of sequences to approve.
-            int queueLength = sequenceQueue.getQueueSize(approveProtocol);
+            int queueLength = sequenceQueue.getQueueSize(approveProtocol, project, workflow);
             // find out how many pages we will need.
             int pageCount = (int)Math.ceil((double)queueLength/itemsPerPage);
             
@@ -132,7 +135,7 @@ public class ViewPendingRequestsAction extends WorkflowAction{
             
             // now we can get the list of sequences to display
             List approveSeqList =
-            sequenceQueue.getQueueItems(approveProtocol,offset,itemsPerPage);
+            sequenceQueue.getQueueItems(approveProtocol, project, workflow, offset,itemsPerPage);
             
             // create a form that will be the UI for each item in the queue
             PendingRequestsForm seqForm = new PendingRequestsForm();
@@ -144,6 +147,8 @@ public class ViewPendingRequestsAction extends WorkflowAction{
             // put the table display info into the request
             request.setAttribute("CURRENT_PAGE",new Integer(pageNum));
             request.setAttribute("PAGES", pages);
+            request.setAttribute("workflowid", new Integer(workflowid));
+            request.setAttribute("projectid", new Integer(projectid));
             
             // figure out if we need to display the next and/or previous page 
             // links
@@ -161,7 +166,6 @@ public class ViewPendingRequestsAction extends WorkflowAction{
             session.setAttribute(Constants.SEQUENCE_QUEUE_KEY,sequenceQueue);
             //put the form into the session
             session.setAttribute("pendingRequestForm",seqForm);
-             
             retForward = mapping.findForward("success");
         } catch (FlexProcessException fpe) {
             fpe.printStackTrace();

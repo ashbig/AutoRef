@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-20 14:23:12 $
- * $Author: jmunoz $
+ * $Revision: 1.2 $
+ * $Date: 2001-08-17 20:36:50 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -51,13 +51,17 @@ import edu.harvard.med.hip.flex.process.*;
 /**
  * Form for accepting rejecting sequences in the queue.
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.1 $ $Date: 2001-07-20 14:23:12 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.2 $ $Date: 2001-08-17 20:36:50 $
  */
 
 public class PendingRequestsForm extends ActionForm  {
     // list of statuses to track.
     public List statusList= null;
+    
+    private int workflowid;
+    
+    private int projectid;
     
     /**
      * makes the form represent this queue
@@ -110,6 +114,22 @@ public class PendingRequestsForm extends ActionForm  {
      */
     public int getQueueSize() {
         return this.statusList.size();
+    }
+
+    public void setWorkflowid(int workflowid) {
+        this.workflowid = workflowid;
+    }
+    
+    public int getWorkflowid() {
+        return workflowid;
+    }
+
+    public void setProjectid(int projectid) {
+        this.projectid = projectid;
+    }
+    
+    public int getProjectid() {
+        return projectid;
     }
     
     public void reset(ActionMapping mapping, HttpServletRequest request) {

@@ -35,6 +35,7 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.Constants;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
@@ -73,16 +74,30 @@ public class ConfirmSelectionAction extends FlexAction {
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         String username = user.getUsername();
         Hashtable sequences = (Hashtable)request.getSession().getAttribute("sequences");
-        Request r = new Request(username);
         LinkedList l = new LinkedList();        
         Connection conn = null;
         
         try {        
             Protocol p = new Protocol(Protocol.APPROVE_SEQUENCES);
- 
+            Workflow workflow = new Workflow(1);
+            Request humanProject = new Request(username, new Project(Project.HUMAN));
+            Request yeastProject = new Request(username, new Project(Project.YEAST));
+            Request currentProject = null;
+            
             for(int i=0; i<selection.length; i++) {
                 String gi = selection[i];
                 FlexSequence sequence = (FlexSequence)sequences.get(gi);
+                Project project = null;
+                
+                if("Homo sapiens".equals(sequence.getSpecies())) {
+                    currentProject = humanProject;
+                    project = new Project(Project.HUMAN);
+                }
+                
+                if("Saccharomyces cerevisiae".equals(sequence.getSpecies())) {
+                    currentProject = yeastProject;
+                    project = new Project(Project.YEAST);
+                }
                 
                 if(FlexSequence.NEW.equals(sequence.getFlexstatus())) {
                     // Check the database to see if it is in the database.
@@ -90,12 +105,12 @@ public class ConfirmSelectionAction extends FlexAction {
                     if(found != null) {
                         sequence = found;
                     } else {
-                        QueueItem item = new QueueItem(sequence, p);
+                        QueueItem item = new QueueItem(sequence, p, project, workflow);
                         l.addLast(item);
                     }
                 }
                 
-                if(!r.addSequence(sequence)) {
+                if(!currentProject.addSequence(sequence)) {
                     errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.request.exists", (new Integer(sequence.getId())).toString()));
                     saveErrors(request, errors);
                     return (mapping.findForward("fail"));
@@ -104,7 +119,8 @@ public class ConfirmSelectionAction extends FlexAction {
 
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            r.insert(conn);
+            humanProject.insert(conn);
+            yeastProject.insert(conn);
         
             SequenceProcessQueue queue = new SequenceProcessQueue();
             queue.addQueueItems(l, conn);

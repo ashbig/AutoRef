@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.28 2001-07-16 15:25:00 jmunoz Exp $
+ * $Id: Process.java,v 1.29 2001-08-17 20:37:48 dzuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -11,6 +11,7 @@ package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 import java.util.*;
 import java.sql.*;
@@ -38,6 +39,8 @@ public class Process {
     private String extrainfo;
     private Vector sampleLineageSet = new Vector();
     private Vector processObjects = new Vector();
+    private Project project;
+    private Workflow workflow;
     
     /**
      * Constructor.
@@ -55,6 +58,28 @@ public class Process {
         this.researcher = researcher;
         this.executionid = FlexIDGenerator.getID("executionid");
     }
+
+    /**
+     * Constructor.
+     *
+     * @param protocol The protocol used for this process.
+     * @param executionStatus The execution status of the process.
+     * @param researcher The researcher who executes the process.
+     * @param project The project for this process.
+     * @param workflow The workflow of this process.
+     * @return The Process object.
+     * @exception FlexDatabaseException.
+     */
+    public Process(Protocol protocol, String executionStatus,
+    Researcher researcher, Project project, Workflow workflow) 
+    throws FlexDatabaseException {
+        this.protocol = protocol;
+        this.executionStatus = executionStatus;
+        this.researcher = researcher;
+        this.project = project;
+        this.workflow = workflow;
+        this.executionid = FlexIDGenerator.getID("executionid");
+    }    
     
     /**
      * Constructor.
@@ -415,6 +440,16 @@ public class Process {
         if(extrainfo != null) {
             sql = sql + ",extrainformation";
             valueSql = valueSql + ",'"+extrainfo+"'";
+        }
+
+        if(project != null) {
+            sql = sql + ", projectid";
+            valueSql = valueSql + ","+project.getId();
+        }
+        
+        if(workflow != null) {
+            sql = sql + ", workflowid";
+            valueSql = valueSql + ","+workflow.getId();
         }
         
         sql = sql+")\n"+valueSql+")";

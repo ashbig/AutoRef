@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.7 2001-07-26 22:44:35 dzuo Exp $
+ * $Id: Request.java,v 1.8 2001-08-17 20:37:48 dzuo Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -11,6 +11,7 @@ package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 import java.util.*;
 import java.sql.*;
 
@@ -23,6 +24,7 @@ public class Request {
     private String username;
     private String date;
     private Vector sequences;
+    private Project project;
     
     /**
      * Constructor. It takes an ID and queries the database to get the data.
@@ -92,9 +94,13 @@ public class Request {
     
     /**
      * Constructor.
+     *
+     * @param project The project for this request.
+     * @return The new Request object.
      */
-    public Request(String username) {
+    public Request(String username, Project project) {
         this.username = username;
+        this.project = project;
         this.sequences = new Vector();
     }
     
@@ -232,10 +238,10 @@ public class Request {
             FlexSequence sequence = (FlexSequence)enum.nextElement();
             if(FlexSequence.NEW.equals(sequence.getFlexstatus()))
                 sequence.insert(conn);
-            String reqSql = "insert into requestsequence\n"+
-            "values ("+id+","+sequence.getId()+")";
-            DatabaseTransaction.executeUpdate(reqSql,conn);
             
+            String reqSql = "insert into requestsequence\n"+
+            "values ("+id+","+sequence.getId()+","+project.getId()+")";
+            DatabaseTransaction.executeUpdate(reqSql,conn);            
         }
     }
 
@@ -260,7 +266,13 @@ public class Request {
     }
     
     public static void main(String [] args) {
-        Request r = new Request("Larry Shumway");
+        Request r = null;
+        try {
+            r = new Request("Larry Shumway", new Project(Project.HUMAN));
+        } catch(FlexDatabaseException ex) {
+            System.out.println(ex);
+        }
+        
         for(int i=1; i<5; i++) {
             FlexSequence seq = new FlexSequence(i);
             seq.setFlexstatus(FlexSequence.NEW);

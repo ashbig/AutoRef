@@ -19,6 +19,10 @@ import edu.harvard.med.hip.flex.process.*;
  * @version 
  */
 public class Project {
+    public final static int HUMAN = 1;
+    public final static int YEAST = 2;
+    
+    private int id;
     private String name;
     private String description;
     private String version;
@@ -48,22 +52,39 @@ public class Project {
                 description = rs.getString("DESCRIPTION");
                 version = rs.getString("VERSION");
             }
-            
-            sql = "select * from projectworkflow where projectid = "+id;
-            rs = t.executeQuery(sql);
-            
-            workflows = new Vector();         
-            while(rs.next()) {
-                int workflowid = rs.getInt("WORKFLOWID");
-                String code = rs.getString("CODE");
-                Workflow workflow = new ProjectWorkflow(code, workflowid);
-                workflows.addElement(workflow);
-            }                    
+            this.id = id;
+            populateWorkflows();
         } catch(SQLException sqlE) {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param id The project id.
+     * @param name The project name.
+     * @param description The project description.
+     * @param version The project version.
+     * @exception The FlexDatabaseException.
+     */
+    public Project(int id, String name, String description, String version) throws FlexDatabaseException {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.version = version;
+        populateWorkflows();
+    }
+    
+    /**
+     * Return the project id.
+     *
+     * @return The project id.
+     */
+    public int getId() {
+        return id;
     }
     
     /**
@@ -101,6 +122,85 @@ public class Project {
     public String getVersion() {
         return version;
     }
+
+    /**
+     * Return a workflow for a given workflow id.
+     *
+     * @param workflowid The work flow id.
+     * @return A Workflow object.
+     */
+    public Workflow getWorkflow(int workflowid) {
+        Iterator iter = workflows.iterator();
+        while(iter.hasNext()) {
+            Workflow workflow = (Workflow)iter.next();
+            
+            if(workflow.getId() == workflowid) {
+                return workflow;
+            }
+        }
+        
+        return null;
+    }
+            
+    /**
+     * Return all the projects in the database as a Vector.
+     *
+     * @return All the projects in the database as a Vector.
+     * @exception The FlexDatabaseException.
+     */
+    public static Vector getAllProjects() throws FlexDatabaseException {
+        String sql = "select * from project";
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        ResultSet rs = t.executeQuery(sql);
+        Vector projects = new Vector();  
+        
+        try{                   
+            while(rs.next()) {
+                int projectid = rs.getInt("PROJECTID");
+                String name = rs.getString("NAME");
+                String description = rs.getString("DESCRIPTION");
+                String version = rs.getString("VERSION");
+                Project p = new Project(projectid, name, description, version);
+                projects.addElement(p);
+            }                
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return projects;
+    }
+
+    /**
+     * Populate the workflow record from the database for this project.
+     *
+     * @exception The FlexDatabaseException.
+     */
+    protected void populateWorkflows() throws FlexDatabaseException {
+        String sql = "select * from projectworkflow where projectid = "+id;
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        ResultSet rs = t.executeQuery(sql);
+        try{
+            rs = t.executeQuery(sql);
+            
+            workflows = new Vector();         
+            while(rs.next()) {
+                int workflowid = rs.getInt("WORKFLOWID");
+                String code = rs.getString("CODE");
+                Workflow workflow = new ProjectWorkflow(code, workflowid);
+                workflows.addElement(workflow);
+            }                
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }        
+    }
+    
+    //**************************************************************//
+    //                  Testing Methods                             //
+    //**************************************************************//
     
     public static void main(String []  args) {
         try {

@@ -20,9 +20,12 @@ import edu.harvard.med.hip.flex.database.*;
  * @version 
  */
 public class Workflow {
+    protected int id;
     protected String name;
     protected String description;
     protected Vector flow;
+    
+    public static final int COMMON_WORKFLOW = 1;
     
     /** Creates new Workflow */
     public Workflow() {
@@ -130,6 +133,8 @@ public class Workflow {
      * @exception FlexDatabaseException.
      */
     public Workflow(int id) throws FlexDatabaseException {
+        this.id = id;
+        
         flow = new Vector();
         
         String sql = "select name, description from workflow "+
@@ -175,7 +180,16 @@ public class Workflow {
             DatabaseTransaction.closeResultSet(rs);
         }
     }
-        
+
+    /**
+     * Return the workflow id.
+     *
+     * @return The workflow id.
+     */
+    public int getId() {
+        return id;
+    }
+    
     /**
      * Return the next protocol name for the given protocol name.
      *

@@ -25,6 +25,9 @@ public class WorkflowManager {
     //The current workflow.
     private Workflow workflow = null;
     
+    //The current project.
+    private Project project = null;
+    
     //The current TaskManager object.
     private TaskManager manager = null;
     
@@ -36,8 +39,8 @@ public class WorkflowManager {
      * @exception FlexWorkflowException
      */
     public WorkflowManager(String taskName) throws FlexWorkflowException {
-        workflow = new Workflow();
-        manager = StaticTaskManagerFactory.createTaskManager(taskName);
+        this.workflow = new Workflow();
+        this.manager = StaticTaskManagerFactory.createTaskManager(taskName);
     }
     
     /**
@@ -46,8 +49,36 @@ public class WorkflowManager {
      * @param manager The TaskManager object.
      * @return The WorkflowManager object.
      */
-    public WorkflowManager(TaskManager manager, Protocol protocol) {
-        workflow = new Workflow();
+    public WorkflowManager(TaskManager manager) {
+        this.workflow = new Workflow();
+        this.manager = manager;
+    }
+
+    /**
+     * Constructor. 
+     *
+     * @param project The current project object.
+     * @param workflow The current workflow.
+     * @param taskName The class name of the TaskManager class.
+     * @return The WorkflowManager object.
+     */
+    public WorkflowManager(Project project, Workflow workflow, String taskName) throws FlexWorkflowException {
+        this.project = project;
+        this.workflow = workflow;
+        this.manager = StaticTaskManagerFactory.createTaskManager(taskName);
+    }
+    
+    /**
+     * Constructor. 
+     *
+     * @param project The current project object.
+     * @param workflow The current workflow.
+     * @param manager The TaskManager object.
+     * @return The WorkflowManager object.
+     */
+    public WorkflowManager(Project project, Workflow workflow, TaskManager manager) {
+        this.project = project;
+        this.workflow = workflow;
         this.manager = manager;
     }
     

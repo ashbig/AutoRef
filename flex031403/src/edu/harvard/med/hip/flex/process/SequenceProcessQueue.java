@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.11 2001-07-31 19:40:48 dzuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.12 2001-08-17 20:37:48 dzuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -10,6 +10,7 @@ package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 import java.sql.*;
 import java.util.*;
@@ -42,7 +43,7 @@ public class SequenceProcessQueue implements ProcessQueue {
         "from queue q\n" +
         "where q.protocolid = "+protocolid;
         
-        LinkedList items = restore(protocol, sql);
+        LinkedList items = restore(protocol, null, null, sql);
         return items;
         
     }
@@ -51,16 +52,19 @@ public class SequenceProcessQueue implements ProcessQueue {
      * Gets queue items for the protocol starting at offset, with length length
      *
      * @param protocol the protocol to get items from the queue with.
+     * @param project The project to get items from the queue with.
      * @param offset The offset to get at
      * @param legnth The number of rows to get back.
      */
-    public LinkedList getQueueItems(Protocol protocol, int offset, int length)
+    public LinkedList getQueueItems(Protocol protocol, Project project, Workflow workflow, int offset, int length)
     throws FlexDatabaseException {
         String sql = "select * from "+
         "(select q.sequenceid as id, " +
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded " +
         "from queue q " +
         "where q.protocolid =  " + protocol.getId() + " " +
+        "and q.projectid = " + project.getId() + " " +
+        "and q.workflowid = " + workflow.getId() + " " +
         "order by q.dateadded) " +
         "where ROWNUM <  "+ (offset + 1 + length) +" " +
         "Minus ( " +
@@ -69,11 +73,13 @@ public class SequenceProcessQueue implements ProcessQueue {
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded "+
         "from queue q "+
         "where q.protocolid =  "+ protocol.getId() + " "+
+        "and q.projectid = " + project.getId() + " " +
+        "and q.workflowid = " + workflow.getId() + " " +
         "order by q.dateadded " +
         ") " +
         "where rownum < " + (offset + 1) +
         ")";
-        LinkedList items = restore(protocol, sql);
+        LinkedList items = restore(protocol, project, workflow, sql);
         return items;
     }
     
@@ -81,13 +87,16 @@ public class SequenceProcessQueue implements ProcessQueue {
      * Finds the number of items in the queue for a protocol.
      *
      * @param protocol Protocol to count items for.
+     * @param project The project to count items for.
      *
-     * @return number of items in the queue for the given protocol.
+     * @return number of items in the queue for the given protocol and project.
      */
-    public int getQueueSize(Protocol protocol) throws FlexDatabaseException{
+    public int getQueueSize(Protocol protocol, Project project, Workflow workflow) throws FlexDatabaseException{
         String sql = "select count(*) as queue_size " +
         "from queue q " +
-        "where q.protocolid =  " + protocol.getId();
+        "where q.protocolid =  " + protocol.getId()+
+        " and q.workflowid = " + workflow.getId() + 
+        " and q.projectid = "+project.getId();
         int size =0;
         
         try {
@@ -121,7 +130,7 @@ public class SequenceProcessQueue implements ProcessQueue {
         "where q.protocolid = "+protocolid+
         "and to_char(dateadded, 'fmYYYY-MM-DD') = '"+date+"'";
         
-        LinkedList items = restore(protocol, sql);
+        LinkedList items = restore(protocol, null, null, sql);
         return items;
     }
     
@@ -153,8 +162,8 @@ public class SequenceProcessQueue implements ProcessQueue {
             return;
         
         String sql = new String("insert into queue\n" +
-        "(protocolid, dateadded, sequenceid)\n" +
-        "values(?, sysdate, ?)");
+        "(protocolid, dateadded, sequenceid, projectid, workflowid)\n" +
+        "values(?, sysdate, ?, ?, ?)");
         PreparedStatement stmt = null ;
         try {
             stmt= c.prepareStatement(sql);
@@ -164,12 +173,16 @@ public class SequenceProcessQueue implements ProcessQueue {
             while (iter.hasNext()) {
                 QueueItem item = (QueueItem) iter.next();
                 Protocol protocol = item.getProtocol();
-                int protocolid = protocol.getId();
+                Project project = item.getProject();
+                Workflow workflow = item.getWorkflow();
+
                 FlexSequence s = (FlexSequence)item.getItem();
                 int sequenceid = s.getId();
                 
-                stmt.setInt(1, protocolid);
+                stmt.setInt(1, protocol.getId());
                 stmt.setInt(2, sequenceid);
+                stmt.setInt(3, project.getId());
+                stmt.setInt(4, workflow.getId());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (SQLException sqlE) {
@@ -194,7 +207,10 @@ public class SequenceProcessQueue implements ProcessQueue {
         String sql = "delete from queue\n" +
         "where protocolid = ?\n" +
         "and to_char(dateadded, 'fmYYYY-MM-DD') = ?\n" +
-        "and sequenceid = ?";
+        "and sequenceid = ?\n" +
+        "and projectid = ?\n" +
+        "and workflowid = ?";
+        
         PreparedStatement stmt = null;
         try {
             stmt = c.prepareStatement(sql);
@@ -212,6 +228,9 @@ public class SequenceProcessQueue implements ProcessQueue {
                 stmt.setInt(1, protocolid);
                 stmt.setString(2, date);
                 stmt.setInt(3, sequenceid);
+                stmt.setInt(4, item.getProject().getId());
+                stmt.setInt(5, item.getWorkflow().getId());
+                
                 DatabaseTransaction.executeUpdate(stmt);
             }
             
@@ -236,7 +255,7 @@ public class SequenceProcessQueue implements ProcessQueue {
     /**
      * Get all the queued items that from the database.
      */
-    protected LinkedList restore(Protocol protocol, String sql)
+    protected LinkedList restore(Protocol protocol, Project project, Workflow workflow, String sql)
     throws FlexDatabaseException {
         ResultSet rs = null;
         try {
@@ -247,7 +266,7 @@ public class SequenceProcessQueue implements ProcessQueue {
                 int id = rs.getInt("ID");
                 String date = rs.getString("DATEADDED");
                 FlexSequence s = new FlexSequence(id);
-                QueueItem item = new QueueItem(s, protocol, date);
+                QueueItem item = new QueueItem(s, protocol, date, project, workflow);
                 items.addLast(item);
             }
             return items;

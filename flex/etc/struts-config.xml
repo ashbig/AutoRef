@@ -27,6 +27,10 @@
     <form-bean      name="logonForm"
                     type="edu.harvard.med.hip.flex.form.LogonForm"/>
 
+    <!-- Form bean for project and workflow selection -->                   
+    <form-bean      name="projectWorkflowForm"
+                    type="edu.harvard.med.hip.flex.form.ProjectWorkflowForm"/>
+
     <!-- Customer request form bean -->
     <form-bean      name="customerRequestForm"
                     type="edu.harvard.med.hip.flex.form.CustomerRequestForm"/>
@@ -109,7 +113,7 @@
     <forward    name="findRegistration" path="/FindRegistration.jsp"/>
     <forward    name="error"        path="/ProcessError.do"/>
     <forward    name="customerRequest"  path="/CustomerRequest.do"/>
-    <forward    name="approveSequences" path="/ViewPendingRequests.do"/>
+    <forward    name="approveSequences" path="/GetProjects.do?forwardName=APPROVE_SEQUENCES"/>
     <forward    name="receiveOligoOrders" path="/SetReceiveDate.do"/>
     <forward    name="createProcessPlate" path="/CreateProcessPlate.do"/>
     <forward    name="enterProcessResults" path="/PickResultType.jsp"/>
@@ -168,6 +172,28 @@
         <forward    name="success"   path="/FlexSequenceUI.jsp"/>
     </action>
 
+    <!-- Gets projects from the database and display the projects -->
+    <action      path="/GetProjects"
+                name="projectWorkflowForm"
+                type="edu.harvard.med.hip.flex.action.GetProjectsAction">
+        <forward    name="success"   path="/SelectProject.jsp"/>
+    </action>
+
+    <!-- Process user's selection of a project -->
+    <action      path="/SelectProject"
+                name="projectWorkflowForm"
+                type="edu.harvard.med.hip.flex.action.SelectProjectAction">
+        <forward    name="success"   path="/SelectWorkflow.jsp"/>
+    </action>
+
+    <!-- Process user's selection of a workflow -->
+    <action      path="/SelectWorkflow"
+                name="projectWorkflowForm"
+                type="edu.harvard.med.hip.flex.action.SelectWorkflowAction">
+        <forward name="success_approve_sequences" path="/ViewPendingRequests.do"/>
+        <forward    name="success"   path="/SelectProject.jsp"/>
+    </action>
+
     <!-- Process a customer request -->
     <action    path="/CustomerRequest"
                type="edu.harvard.med.hip.flex.action.CustomerRequestAction">
@@ -222,6 +248,7 @@
 
     <!-- Process  view pending sequence requests-->
     <action     path ="/ViewPendingRequests"
+                name="pendingRequestForm"
                 type="edu.harvard.med.hip.flex.action.ViewPendingRequestsAction">
         <forward name="success" path="/PendingRequests.jsp"/>
     </action>
