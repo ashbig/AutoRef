@@ -42,7 +42,15 @@ public class ChipGeneAnalysis_2b_Action extends MetageneAction{
         FormFile geneInputFile = ((ChipGeneAnalysis_2b_Form)form).getChipGeneInputFile();
         String submit = ((ChipGeneAnalysis_2b_Form)form).getSubmit();
         String s;
-         
+        int max_input; // the max size of gene input is allowed
+        
+        HttpSession session = request.getSession();
+        int user_type = ((Integer)(session.getAttribute("user_type"))).intValue();
+        if(user_type == 1)
+            max_input = 10000;
+        else
+            max_input = 2000; 
+        
         String gene_input="";
         int input_type = 1;;
         
@@ -85,8 +93,8 @@ public class ChipGeneAnalysis_2b_Action extends MetageneAction{
             HashMap homolog = gda.hashHomolog(gene_input, input_type);        
             gda.hashDirectGenes(disease_id, stat_id, gda.LOCUS_ID_INPUT);
             //gda.hashDirectGenes(2031, 1, 2);                                     
-            gda.hashIndirectGenes(gda.toHsHomologInput(homolog), gda.getSource_for_indirect_genes(), gda.LOCUS_ID_INPUT, stat_id);
-            gda.analyzeInputChipGenes(gene_input, homolog);
+            gda.hashIndirectGenes(gda.toHsHomologInput(homolog), gda.getSource_for_indirect_genes(), gda.LOCUS_ID_INPUT, stat_id, max_input);
+            gda.analyzeInputChipGenes(gene_input, homolog, max_input);
 
             }catch(NumberFormatException e){
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
@@ -114,8 +122,7 @@ public class ChipGeneAnalysis_2b_Action extends MetageneAction{
             request.setAttribute("disease_mesh_term", disease_mesh_term);
             request.setAttribute("stat", stat);
             request.setAttribute("input_type", new Integer(input_type));
-            //request.setAttribute("species", request.getAttribute("species"));
-            
+ 
             return (mapping.findForward("success"));
         }
                                     

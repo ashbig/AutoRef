@@ -170,11 +170,10 @@ public long start, end2;
         } finally{
             manager.disconnect(con);
         }
-        
-        
-   System.out.println("************ hash direct genes done ************");
-   System.out.println(" we have the number of non-family pairs    " + direct_gene_hashmap.size());     
-   System.out.println(" we have the number of children pairs      " + direct_children_gene_hashmap.size());
+                
+        System.out.println("************ hash direct genes done ************");
+        System.out.println(" we have the number of non-family pairs    " + direct_gene_hashmap.size());     
+   //System.out.println(" we have the number of children pairs      " + direct_children_gene_hashmap.size());
 
         
         
@@ -219,7 +218,7 @@ public long start, end2;
      */
     
     public void hashIndirectGenes(String input_genes, Vector source_for_indirect_genes,
-                                      int input_type, int stat_id){
+                                      int input_type, int stat_id, int max_input){
         DBManager manager = new DBManager();
         Connection con = manager.connect();
 
@@ -229,10 +228,10 @@ public long start, end2;
         }
                
         String input = ""; 
-        int k=0;
+        int k=0; // counter 
         StringTokenizer st = new StringTokenizer(input_genes);
         while(st.hasMoreTokens()){               
-            if (k < 2000) {
+            if (k < max_input) {
                 if(input_type == GENE_SYMBOL_INPUT)
                     input = input + "'" + st.nextToken() + "'" + ", ";            
                 if(input_type == LOCUS_ID_INPUT)
@@ -242,17 +241,11 @@ public long start, end2;
             else
                 break;           
         }
-        
-        
-        //System.out.println("--------------------------  " + k);
-        
+         
         String elements = "";
         for (int i = 0; i<source_for_indirect_genes.size(); i++){
             elements = elements + ((Integer)(source_for_indirect_genes.elementAt(i))).intValue() + ", ";
         }
-        
-        
-        //System.out.println(input_genes);
         
         String sql_1 = 
             "SELECT gl.symbol_value,  gl.locus_id, " + 
@@ -340,35 +333,41 @@ public long start, end2;
         } finally{
             manager.disconnect(con);
         }
-                        System.out.println("----------- indirect hash done ----------");
+                        //System.out.println("indirect hashmap size = " + indirect_gene_hashmap.size() + " --------");
+        System.out.println("----------- indirect hash done ----------");
     }
+    
         
     /** parse the text file of chip genes, 
      *  construct the ChipGene objects and put them
      *  into TreeSet data structures according to 
      *  their relationship to the disease
      */
-    public void analyzeInputChipGenes(String input_genes, int input_type){
+    public void analyzeInputChipGenes(String input_genes, int input_type, int max_input){
         
         int k = 0;
         StringTokenizer st = new StringTokenizer(input_genes);
         if(input_type == GENE_SYMBOL_INPUT){
             while(st.hasMoreTokens()){
-                if(k < 2000){ 
+                if(k < max_input){ 
                     classify(st.nextToken());
                     k++;
                 }
+                else
+                    break;
             }
         }
         if(input_type == LOCUS_ID_INPUT){
             while(st.hasMoreTokens()){
-                if(k < 2000){
+                if(k < max_input){
                     classify(Integer.parseInt(st.nextToken()));
                     k++;
                 }
+                else
+                    break;
             }
         }
-        
+        //System.out.println("total processed input size = " + k + " ------------------///");
     }
     
     
@@ -382,7 +381,7 @@ public long start, end2;
                 direct_children_gene_tree.add((ChipGene)(direct_children_gene_hashmap.get(gene_symbol)));        
             }
         }
-        
+      
         else if(direct_children_gene_hashmap.containsKey(gene_symbol)){
             direct_children_gene_tree.add((ChipGene)(direct_children_gene_hashmap.get(gene_symbol)));        
         }
@@ -454,21 +453,33 @@ public long start, end2;
     
     ///////////////////////////////////////////////////////////////////////////////////////////
     
+    public void join(TreeSet tree1, TreeSet tree2){
+        TreeSet tree = new TreeSet();
+        Iterator t = tree1.iterator();        
+        while (t.hasNext()){
+            tree.add( ((ChipGene)(t.next())).getGene_symbol() );                        
+        }        
+        Iterator tt = tree2.iterator();        
+        while (tt.hasNext()){
+            tree.add( ((ChipGene)(tt.next())).getGene_symbol() );                        
+        }  
+        System.out.println("direct tree + children direct tree = " + tree.size());
+    }
     
     public static void main(String[] args){
 
-        //String text = "";
-
+        String text = "";
+/*
         String text =
         "13CDNA73\n 6H9A\n AADAC\n AARS\n AASDHPPT\n ABCA12\n ABCA2\n ABCA4\n ABCA5\n" + 
         "ABCA6\n ABCA8\n ABCB1\n ABCB11\n ABCB6\n ABCC1\n ABCC2\n ABCC5\n ABCC5\n" + 
         "ABCC9\n ABCC9\n ABCD2\n ABCD3\n ABCE1\n" +
         "TNF GP2 CD14\n NUDT6\n HHHH\n ESR1\n ESR2\n";             
-        
-        /*
+     */   
+       
         try{
          
-        BufferedReader in = new BufferedReader(new FileReader("c:\\test.txt"));       
+        BufferedReader in = new BufferedReader(new FileReader("c:\\temp\\array.txt"));       
         
         String s;
         
@@ -480,7 +491,7 @@ public long start, end2;
         }catch(Exception e){
             System.out.println(e);
         }
-        */
+        
         
 
          
@@ -488,19 +499,25 @@ public long start, end2;
                                                                                         
         ChipGeneDiseaseAnalysis ana = new ChipGeneDiseaseAnalysis();  
         ana.hashDirectGenes(483, 1, ana.GENE_SYMBOL_INPUT);  //402 483
-        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1);       
-        ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT);
+        
+System.out.println("source for indirect gene hash = " + ana.source_for_indirect_genes.size());
+        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1, 10000);       
+        ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT, 10000);
         
         
         TreeSet direct = ana.getDirect_gene_tree();        
         System.out.println("direct tree:     " + direct.size());
         TreeSet children_direct = ana.getDirect_children_gene_tree();
         System.out.println("children_direct tree:     " + children_direct.size());
+        
+        ana.join(direct, children_direct);
+        
+        
         TreeSet indirect = ana.getIndirect_gene_tree();
         System.out.println("indirect tree:     " + indirect.size());       
         TreeSet new_genes = ana.getNew_gene_tree();
         
-       
+        
         
         Iterator it = direct.iterator();
         System.out.println("direct genes -------------------------------------");
@@ -536,6 +553,7 @@ public long start, end2;
         
         System.out.println("-----------------done--------------");
         System.out.println("time cost 2: " + (ana.end2 - ana.start)/1000 + " seconds");
+         
     }
          
  /***********************************************************************************/       

@@ -41,8 +41,16 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
         String geneInputText = ((ChipGeneAnalysis_2_Form)form).getChipGeneInput();
         FormFile geneInputFile = ((ChipGeneAnalysis_2_Form)form).getChipGeneInputFile();
         String submit = ((ChipGeneAnalysis_2_Form)form).getSubmit();
-        String s;
-         
+        String s;      
+        int max_input; // the max size of gene input is allowed
+        
+        HttpSession session = request.getSession();
+        int user_type = ((Integer)(session.getAttribute("user_type"))).intValue();
+        if(user_type == 1)
+            max_input = 10000;
+        else
+            max_input = 2000;
+        
         String gene_input="";
         int input_type = 1;;
         
@@ -64,8 +72,7 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
                     return new ActionForward(mapping.getInput());
                 }
             }
-            else
-            
+            else            
                 gene_input = geneInputText;
            
             // determine gene input_type value
@@ -73,15 +80,7 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
                 input_type = 1;
             if (inputType.equalsIgnoreCase("Locus ID"))
                 input_type = 2;
-         
-          /*  
-             gene_input =  
-            "13CDNA73\n 6H9A\n AADAC\n AARS\n AASDHPPT\n ABCA12\n ABCA2\n ABCA4\n ABCA5\n" + 
-        "ABCA6\n ABCA8\n ABCB1\n ABCB11\n ABCB6\n ABCC1\n ABCC2\n ABCC5\n ABCC5\n" + 
-        "ABCC9\n ABCC9\n ABCD2\n ABCD3\n ABCE1\n" +
-        "TNF GP2 CD14\n NUDT6\n HHHH\n ESR1\n, ESR2\n";          
-            */
-            
+                    
             // analysis input genes
             ActionErrors errors = new ActionErrors();    
             ChipGeneDiseaseAnalysis gda = new ChipGeneDiseaseAnalysis();  
@@ -89,8 +88,8 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
             //gda.hashDirectGenes(402, 1, input_type);  //402 483
             
             try{
-            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type, stat_id);       
-            gda.analyzeInputChipGenes(gene_input, input_type);
+            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type, stat_id, max_input);       
+            gda.analyzeInputChipGenes(gene_input, input_type, max_input);
             }catch(NumberFormatException e){
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
                 saveErrors(request, errors);

@@ -92,7 +92,10 @@
      
         <tr>
             <td>
-            The maxium input size is <b>2000</b>. If there are more than 2000 genes, only the first 2000 will be processed.<br>
+            <% int i = ((Integer)(session.getAttribute("user_type"))).intValue();
+               if (i != 1) { %>
+                The maxium input size is <b>2000</b>. If there are more than 2000 genes, only the first 2000 will be processed.<br>
+            <% } %>
             You can paste your gene list here. &nbsp;&nbsp;  [<a href="ChipGeneInputSample_b.jsp" target="_blank">sample input</a>]<BR>
             We currently support the following delimiters: new line(\n), tab(\t).<BR><BR>
             <html:textarea property="chipGeneInput" rows="15" cols="50"/><BR>

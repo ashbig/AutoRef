@@ -40,7 +40,15 @@ public class ChipGeneGeneAnalysis_2_Action extends MetageneAction{
         FormFile geneInputFile = ((ChipGeneGeneAnalysis_2_Form)form).getChipGeneInputFile();
         String submit = ((ChipGeneGeneAnalysis_2_Form)form).getSubmit();
         String s;
-         
+        int max_input; // the max size of gene input is allowed
+        
+        HttpSession session = request.getSession();
+        int user_type = ((Integer)(session.getAttribute("user_type"))).intValue();
+        if(user_type == 1)
+            max_input = 10000;
+        else
+            max_input = 2000;
+        
         String gene_input="";
         int input_type = 1;;
         
@@ -80,8 +88,8 @@ public class ChipGeneGeneAnalysis_2_Action extends MetageneAction{
             //gda.hashDirectGenes(531, 1, input_type);  
             
             try{
-            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type, stat_id);       
-            gda.analyzeInputChipGenes(gene_input, input_type);
+            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type, stat_id, max_input);       
+            gda.analyzeInputChipGenes(gene_input, input_type, max_input);
             }catch(NumberFormatException e){
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
                 saveErrors(request, errors);

@@ -526,13 +526,17 @@ public class DiseaseGeneManager {
         return geneIndexes;
     }
     
+    
+    /** Get gene-disease association by gene_index_id
+     *  @param geneIndexid  The gene Index ID
+     *  @param statid       Statistics ID 
+     *  @param number       How many diseases the user wants to obtain?
+     *  @return             The vector of all associations betweeen this gene and all related diseases
+     */
     public Vector getAssociationsByGeneIndex(int geneIndexid, int statid, int number) {
+
         DBManager manager = new DBManager();
-        Connection conn = manager.connect();
- 
-        
-        //Connection conn = pool.getConnection();
-        
+        Connection conn = manager.connect();         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -599,10 +603,13 @@ public class DiseaseGeneManager {
         return associations;
     }
     
+    /** get disease by disease ID
+     *@param id     disease ID
+     *@return disease
+     */
     public Disease queryDiseaseById(int id) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
-
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -637,6 +644,10 @@ public class DiseaseGeneManager {
         return disease;
     }
     
+    /** get Statistics object by statistics id
+     *  @param id   statistics id
+     *  @return     Statistics
+     */
     public Statistics queryStatById(int id) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
@@ -673,6 +684,10 @@ public class DiseaseGeneManager {
         return stat;
     }        
     
+    /** get GeneIndex by gene index id
+     *  @param id   gene index id
+     *  @return     GeneIndex
+     */
     public GeneIndex queryGeneIndexById(int id) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
@@ -711,7 +726,11 @@ public class DiseaseGeneManager {
         return geneIndex;
     }       
     
-    
+    /** get MedlineRecords by disease id and gene index
+     *  @param disease_id   disease id
+     *  @param gene_index   gene index
+     *  @return             The vector of Medline Records ID
+     */
     public Vector getMedlineRecords(int disease_id, String gene_index){
         DBManager dbm = new DBManager();
         Connection con = dbm.connect();
@@ -746,7 +765,11 @@ public class DiseaseGeneManager {
         return pubmed_ids;
     }
     
-    
+    /** get MedlineRecords by disease mesh term and gene symbol
+     *  @param disease_mesh_term   disease mesh term
+     *  @param gene_symbol         gene index
+     *  @return                    The vector of Medline Records ID
+     */
     public Vector getMedlineRecords(String disease_mesh_term, String gene_symbol){
         DBManager dbm = new DBManager();
         Connection con = dbm.connect();
@@ -782,7 +805,11 @@ public class DiseaseGeneManager {
         return pubmed_ids;
     }
     
-    
+    /** get MedlineRecords by disease mesh term and child gene symbol if this gene is a child gene of a family
+     *  @param disease_term         disease mesh term
+     *  @param child_gene_name      child gene symbol
+     *  @return                    The vector of Medline Records ID
+     */
     public Vector getMedlineRecordsByFamily(String disease_term, String child_gene_name) {
         DBManager dbm = new DBManager();
         Connection con = dbm.connect();
@@ -820,6 +847,70 @@ public class DiseaseGeneManager {
         return pubmed_ids;
     }
      
+    /** get human gene index id by non-human homolog
+     *  @param non_hs_homolog   Non-human homolog id
+     *  @param type             homolog input type (locus_id | unigene | accession)
+     *  @return                 corresponding human gene index id 
+     *                          if no such human homolog, return -1.
+     */
+    public int getHsGeneIndexIDByHomolog(String non_hs_homolog, int type){
         
-    
+        int LOCUSID = 1;
+        int UNIGENE = 2;
+        int ACCESSION = 3;
+        
+        DBManager manager = new DBManager();
+        Connection con = manager.connect();
+        int gene_index_id = -1;         
+        if (con == null) {
+            System.out.println("Cannot connect to the database.");
+            return gene_index_id;
+        }
+
+        try
+        {
+        PreparedStatement pstmt = null;
+        String sql = "";
+        if(type == LOCUSID){
+            sql = "select distinct gl.gene_index_id from Homolog_Mapping hm, Gene_List gl " +
+                  "where hm.homolog_locusid = ? and hm.h_locusid = gl.locus_id "; 
+            pstmt = con.prepareStatement(sql);    
+            pstmt.setInt(1, Integer.parseInt(non_hs_homolog));
+        }
+        else if(type == UNIGENE){
+            sql = "select distinct gl.gene_index_id from Homolog_Mapping hm, Gene_List gl " +
+                  "where hm.homolog_unigene = ? and hm.h_locusid = gl.locus_id "; 
+            pstmt = con.prepareStatement(sql);    
+            pstmt.setInt(1, Integer.parseInt(non_hs_homolog));
+        }            
+        else if(type == ACCESSION){
+            sql = "select distinct gl.gene_index_id from Homolog_Mapping hm, Gene_List gl " +
+                  "where hm.homolog_accession = ? and hm.h_locusid = gl.locus_id "; 
+            pstmt = con.prepareStatement(sql);    
+            pstmt.setString(1, non_hs_homolog);
+        }            
+
+        ResultSet rs = pstmt.executeQuery();        
+        while(rs.next()){
+            gene_index_id = rs.getInt(1);
+        }
+        rs.close();
+        pstmt.close();
+        
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+        
+        return gene_index_id;
+    }
+       
+    public static void main(String[] args){
+        DiseaseGeneManager m = new DiseaseGeneManager();
+        int gene_index_id = m.getHsGeneIndexIDByHomolog("29634", 1);
+        Vector associations = m.getAssociationsByGeneIndex(gene_index_id, 1, 25);
+        for(int i=0; i<associations.size(); i++){
+            System.out.println(((Association)(associations.elementAt(i))).getDisease().getTerm());
+        }
+    }
+        
 }

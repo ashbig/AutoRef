@@ -69,10 +69,11 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
             while(rs.next()){
                 h_locusID = rs.getInt(1);
             }
+            rs.close();
             if(h_locusID != -1)
                 homolog_mapping.put(non_hs_homolog, new Integer(h_locusID));
         }
-        
+        pstmt.close();
         }catch(SQLException e){
             System.out.println(e);
         }
@@ -99,17 +100,20 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
      *  into TreeSet data structures according to their relationship to the disease
      *  @param input_genes  non-human input genes
      *  @param homolog_mapping homolog mapping hashmap
+     *  @param max_input    the max size of gene input
      */
     
-    public void analyzeInputChipGenes(String input_genes, HashMap homolog_mapping){
+    public void analyzeInputChipGenes(String input_genes, HashMap homolog_mapping, int max_input){
         
         int k = 0;
         StringTokenizer st = new StringTokenizer(input_genes);
         while(st.hasMoreTokens()){
-            if(k < 2000){ 
+            if(k < max_input){ 
                 classify(st.nextToken(), homolog_mapping);
                 k++;
             }
+            else
+                break;
         }        
     }
     
@@ -189,8 +193,8 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
         
         
         ana.hashDirectGenes(2031, 1, 2);
-        ana.hashIndirectGenes(ana.toHsHomologInput(homolog), ana.source_for_indirect_genes, 2, 1);
-        ana.analyzeInputChipGenes(text, homolog);
+        ana.hashIndirectGenes(ana.toHsHomologInput(homolog), ana.source_for_indirect_genes, 2, 1, 4000);
+        ana.analyzeInputChipGenes(text, homolog, 4000);
         
         TreeSet direct = ana.getDirect_gene_tree();        
         System.out.println("direct tree:     " + direct.size());
