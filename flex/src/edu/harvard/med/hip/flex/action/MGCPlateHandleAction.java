@@ -68,7 +68,8 @@ public class MGCPlateHandleAction extends ResearcherAction {
                 Vector p = record.getNext();
                 protocol.addAll(p);
             }
-            
+
+            request.setAttribute("workflowid", new Integer(Workflow.MGC_PLATE_HANDLE_WORKFLOW));            
             request.setAttribute("CreateProcessPlateAction.protocols", protocol);
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {
