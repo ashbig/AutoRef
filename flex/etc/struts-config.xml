@@ -134,6 +134,11 @@
     <form-bean      name="mgcCloneInfoImportForm"
                     type="edu.harvard.med.hip.flex.form.MgcCloneInfoImportForm"/>
 
+     <!-- Form used to import MGC reuest -->
+    <form-bean      name="mgcImportRequestForm"
+                    type="edu.harvard.med.hip.flex.form.MgcImportRequestForm"/>
+
+
     </form-beans>
     
    
@@ -380,6 +385,7 @@
       <forward  name="success_culture"   path="/EnterAgarPlates.jsp"/>
       <forward  name="success_pick_colony"   path="/EnterColonyPlates.jsp"/>
       <forward  name="success_enter_result"   path="/EnterProcessResults.jsp"/>
+      <forward  name="success_mgc_process_full_plates" path="/MgcProcessFullPlates.jsp" />
     </action> 
 
     <!-- Process the source plate input -->
@@ -698,7 +704,16 @@
             name="mgcCloneInfoImportForm"
             scope="request"
             input="/ImportMgcCloneList.jsp">
-      <forward name="proccessing" path="/MgcCloneImportResponse.jsp"/>
+      <forward name="proccessing" path="/ImportMgcMasterListResponse.jsp"/>
+    </action>
+
+    <!-- Action mapping for MGC request import -->
+    <action path="/MgcImportRequest"
+            type="edu.harvard.med.hip.flex.action.MgcImportRequestAction"
+            name="mgcImportRequestForm"
+            scope="request"
+            input="/MgcRequestImport.jsp">
+      <forward name="proccessing" path="/MgcImportRequestResponse.jsp"/>
     </action>
 
     <!-- Export container detail information to a file -->
