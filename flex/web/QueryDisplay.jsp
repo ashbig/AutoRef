@@ -80,11 +80,11 @@
     <logic:iterate id="info" name="output">
     <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
         <logic:present name="id">
-        <td><flex:write name="info" property="id"/></td>
+        <td><a href="/FLEX/ViewSequence.do?FLEX_SEQUENCE_ID=<bean:write name="info" property="id"/>" target="_blank"><flex:write name="info" property="id"/></td>
         </logic:present>
 
         <logic:present name="gi">
-        <td><flex:write name="info" property="gi"/></td>
+        <td><A target="_blank" HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="info" property="gi"/>&dopt=GenBank"> <flex:write name="info" property="gi"/></td>
         </logic:present>
 
         <logic:present name="genename">
@@ -104,7 +104,7 @@
         </logic:present>
 
         <logic:present name="label">
-        <td><flex:write name="info" property="label"/></td>
+        <td><a href="/FLEX/ViewContainerDetails.do?CONTAINER_ID=<bean:write name="info" property="plateid"/>" target="_blank"><flex:write name="info" property="label"/></td>
         </logic:present>
 
         <logic:present name="well">
