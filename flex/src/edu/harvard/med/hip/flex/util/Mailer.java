@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2003-10-20 18:19:36 $
+ * $Revision: 1.12 $
+ * $Date: 2004-02-18 22:04:18 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.11 $ $Date: 2003-10-20 18:19:36 $
+ * @version    $Revision: 1.12 $ $Date: 2004-02-18 22:04:18 $
  */
 
 public class Mailer
@@ -90,6 +90,90 @@ public class Mailer
             {
                 InternetAddress[] ccAddresses =
                 {new InternetAddress(cc)};
+                msg.setRecipients(Message.RecipientType.CC, ccAddresses);
+            }
+            msg.setRecipients(Message.RecipientType.TO, address);
+            msg.setSubject(subject);
+            msg.setSentDate(new Date());
+            
+            // create the message body part
+            MimeBodyPart mbp = new MimeBodyPart();
+            mbp.setText(msgText);
+            
+            
+            
+            // create the multipart and put the message into it.
+            Multipart mp = new MimeMultipart();
+            
+            mp.addBodyPart(mbp);
+            
+            if(fileCol !=null )
+            {
+                // now attach all the files if there are any.
+                Iterator fileIter = fileCol.iterator();
+                while(fileIter.hasNext())
+                {
+                    BodyPart filePart = new MimeBodyPart();
+                    File curFile = (File)fileIter.next();
+                    DataSource source = new FileDataSource(curFile);
+                    filePart.setDataHandler(new DataHandler(source));
+                    filePart.setFileName(curFile.getAbsolutePath());
+                    
+                    mp.addBodyPart(filePart);
+                }
+            }
+            
+            
+            // add the multipart to the message
+            msg.setContent(mp);
+            
+            // send the message
+            Transport.send(msg);
+        } catch(MessagingException mex)
+        {
+            mex.printStackTrace();
+            Exception ex = null;
+            if((ex = mex.getNextException()) !=null)
+            {
+                ex.printStackTrace();
+            }
+        }
+    }
+       
+    /**
+     * Utility Method to send a message
+     *
+     * @param to The address to send to.
+     * @param from Email address of who is sending the message.
+     * @param ccs Email addresses to send a carbon copy
+     * @param subject The subject of the message.
+     * @param msgText The text of the message.
+     * @param fileCol Collection of file objects.
+     */
+    public static void sendMessages(String to, String from,
+    List ccs, String subject, String msgText, Collection fileCol)
+    throws MessagingException
+    {
+        Properties props = new Properties();
+        props.put("mail.smtp.host",SMTP_HOST);
+        Session session = Session.getDefaultInstance(props,null);
+        
+        
+        
+        try
+        {
+            // create a message
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(from));
+            InternetAddress[] address =
+            {new InternetAddress(to)};
+            if(ccs != null)
+            {
+                InternetAddress[] ccAddresses = new InternetAddress[ccs.size()];
+                for(int i=0; i<ccs.size(); i++) {
+                    String cc = (String)ccs.get(i);
+                    ccAddresses[i] = new InternetAddress(cc);
+                }
                 msg.setRecipients(Message.RecipientType.CC, ccAddresses);
             }
             msg.setRecipients(Message.RecipientType.TO, address);
