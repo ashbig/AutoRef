@@ -430,7 +430,7 @@ public class Read
         int score = Constants.SCORE_NOT_CALCULATED; 
         int dtype = -1; int dquality = -1; int penalty = 0;
         
-        ArrayList discrepancy_definitions = DiscrepancyDescription.assembleDiscrepanciesInPairs(
+        ArrayList discrepancy_definitions = DiscrepancyDescription.assembleDiscrepancyDefinitions(
                                                 m_readsequence.getDiscrepancies());
         score = DiscrepancyDescription.getPenalty( discrepancy_definitions, spec);
         int length_to_normalize = refsequenceCoveredLength();
@@ -476,6 +476,9 @@ public class Read
         }
        return length;
     }
+    
+   
+    
     /*
     //function reformats scored sequence text according to spec
     //ei inserts N instead of all bases that are not qualified for the analysis
