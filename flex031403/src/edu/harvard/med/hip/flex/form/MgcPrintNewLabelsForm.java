@@ -17,46 +17,23 @@ import java.util.Hashtable;
  *
  * @author  htaycher
  */
-public class MgcPrintNewLabelsForm {
+public class MgcPrintNewLabelsForm extends ActionForm {
+    private String forwardName = null;
+    private String[] chkPrint = null;
+    public void setForwardName(String forwardName) {
+        this.forwardName = forwardName;
+    }
     
-/**
- * This is the form bean for printing labels for new mgc plates.
- */
-
-    private String [] selection = null;
-    private String action = null;
+    public String getForwardName() {
+        return forwardName;
+    }
+   public void setChkPrint(String[] l) {
+        this.chkPrint = l;
+    }
     
-   
-
-    /**
-     * Return the selection field.
-     *
-     * @return The selection field.
-     */
-    public String [] getSelection() {     return selection;   }
-    
-    /**
-     * Set the selection field to the given value.
-     *
-     * @param selection The value to be set to.
-     */
-    public void setSelection(String [] selection) {     this.selection = selection;  }
-    
-    /**
-     * Return the action name (Print /Print All).
-     *
-     * @return The action name.
-     */
-    public String getAction() {     return action; }
-    
-    /**
-     * Set the action name.
-     *
-     * @param action name.
-     */
-    public void setAction(String action) {  this.action = action;  }
-    
-    
+    public String[] getChkPrint() {
+        return chkPrint;
+    }
 
     
 }
