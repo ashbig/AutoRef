@@ -32,6 +32,7 @@ public class CloneDescription
          private int        m_position = -1;
          private int        m_constructid = -1;
          private int        m_construct_format = -1;
+         private int        m_clone_status = -1;
          private int        m_cloning_strategy_id = -1;
          private int        m_clone_sequence_id = -1;
          private int        m_clone_sequence_type = -1;
@@ -77,6 +78,7 @@ public class CloneDescription
          public int         getIsolateStatus(){ return m_isolate_status;}
          public int         getPosition(){ return m_position;}
           public String      getPlateName(){ return m_plate_name;}
+          public int            getCloneStatus(){ return m_clone_status;}
           
           
           public void      setPlateName(String v){  m_plate_name = v;} 
@@ -96,6 +98,7 @@ public class CloneDescription
         public void        setCloneSequenceStatus (int v){   m_clone_sequence_status  = v ;}
         public void        setIsolateStatus(int v){ m_isolate_status = v;}
         public void         setPosition(int v){  m_position =v;}
+        public void         setCloneStatus(int v){ m_clone_status = v;}
 
         
         public static ArrayList getClonesDescription( ArrayList clones_to_process)throws BecDatabaseException
@@ -106,7 +109,7 @@ public class CloneDescription
                String sql_sample = null;
               CloneDescription seq_desc = null;
               String cloneids_as_string =Algorithms.convertStringArrayToString(clones_to_process,"," );
-            String sql =  "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+            String sql =  "select flexcloneid, iso.status as status, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and f.flexcloneid in ("+cloneids_as_string+")   order by containerid ,refsequenceid";
@@ -129,6 +132,7 @@ public class CloneDescription
                 seq_desc.setSampleId(rs.getInt("sampleid"));
                 seq_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
                 seq_desc.setCloneId(  rs.getInt("flexcloneid"));
+                seq_desc.setCloneStatus( rs.getInt("Status"));
                 seq_desc.setReadFilePath(trace_files_path +File.separator +seq_desc.getFlexSequenceId() + File.separator + seq_desc.getCloneId() );
                 res.add( seq_desc );
                 
@@ -148,7 +152,7 @@ public class CloneDescription
     {
           ResultSet rs = null;
            CloneDescription clone_desc = null;
-            String sql =  "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
+            String sql =  "select flexcloneid, flexsequenceid, iso.status as status, refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and f.flexcloneid in ("+clone_id+")   order by containerid ,refsequenceid";
@@ -168,6 +172,7 @@ public class CloneDescription
                 clone_desc.setSampleId(rs.getInt("sampleid"));
                 clone_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
                 clone_desc.setCloneId(  rs.getInt("flexcloneid"));
+                clone_desc.setCloneStatus( rs.getInt("Status"));
                 clone_desc.setReadFilePath(trace_files_path +File.separator +clone_desc.getFlexSequenceId() + File.separator + clone_desc.getCloneId() );
             }
             return clone_desc;
