@@ -40,4 +40,16 @@ public class User {
         this.useremail = useremail;
         this.institute = institute;
     }
+    
+    public String getPassword() {
+        return password;
+    }
+    
+    public String getEmail() {
+        return useremail;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
 }

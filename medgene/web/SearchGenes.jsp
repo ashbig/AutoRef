@@ -3,32 +3,29 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
     <head>
-        <title>METAGENE : Disease Search</title>
+        <title>METAGENE : Gene Search</title>
     </head>
     <body> 
-    <table width="80%" align="center"><tr><td>
-
+    <table width="80%" align="center"><tr><td> 
     <center>
-    <h1>Genes Associated with Disease(s)</h1>
+    <h1>Diseases Associated with Gene(s)</h1>
     <html:errors/>
     </center>
 
-    <p>Following are the correspondng MeSH term(s). Please choose one:</p>
+    <p>Following are the corresponding gene symbol(s). Please choose one:</p>
 
-    <html:form action="GetGenes.do">   
+    <html:form action="SearchGenes.do">  
 
-    <html:select property="diseaseTerm">
+    <html:select property="gene">
         <html:options
-        collection="diseases"
-        property="id"
-        labelProperty="term"
+        collection="geneIndexes"
+        property="indexid"
+        labelProperty="index"
         />
     </html:select>
-
     <p>Please choose a statistic method to rank the gene list:
     <html:select property="stat">
         <html:options
@@ -44,11 +41,15 @@
         <html:option key="top 25" value="25"/>
         <html:option key="top 50" value="50"/>
         <html:option key="top 100" value="100"/>
+        <html:option key="top 500" value="500"/>
+        <html:option key="top 1000" value="1000"/>
     </html:select>
 
     <p>
-    <html:submit property="submit" value="Get Genes"/>
+    <html:submit property="submit" value="Get Diseases"/>
     <html:submit property="submit" value="New Search"/>
+
+
     </html:form>
 
     </td></tr></table>

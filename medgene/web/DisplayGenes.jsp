@@ -17,7 +17,7 @@
 
     <p>
     <TABLE border="1" cellpadding="2" cellspacing="0">
-    <TR>
+    <TR bgcolor="gray">
         <TH>Gene Name</TH>
         <TH>Search Type</TH>
         <TH>Gene Symbol</TH>
@@ -42,10 +42,10 @@
                 <bean:write name="association" property="gene.nicknamesString"/>&nbsp
             </TD>
             <TD>
-                <bean:write name="association" property="gene.go"/>&nbsp
+                <bean:write name="association" property="gene.gosString"/>&nbsp
             </TD>
             <TD>
-                <bean:write name="association" property="gene.proteome"/>&nbsp
+                <bean:write name="association" property="gene.proteomesString"/>&nbsp
             </TD>
             <TD>
                 <bean:write name="association" property="gene.locusid"/>&nbsp
@@ -53,5 +53,7 @@
         </tr>
     </logic:iterate> 
 </TABLE>
+
+<jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>

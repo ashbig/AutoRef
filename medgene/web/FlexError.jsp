@@ -7,8 +7,9 @@
 <%@page isErrorPage="true"%>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Error</title></head>
+<head><title>Error</title></head>
 <body>
+<center>
     <h2>METAGENE : Error</h2>
     <hr>
     <html:errors/>
@@ -19,5 +20,7 @@
     <logic:present name="exception">
         <bean:write name="exception"/>
     </logic:present>
+</center>
+<jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>

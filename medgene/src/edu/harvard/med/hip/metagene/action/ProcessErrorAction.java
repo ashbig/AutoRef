@@ -16,8 +16,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2002-01-28 22:31:48 $
+ * $Revision: 1.2 $
+ * $Date: 2002-02-13 16:32:46 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -59,10 +59,10 @@ import org.apache.struts.action.*;
  * to this action to process the exception.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2002-01-28 22:31:48 $
+ * @version    $Revision: 1.2 $ $Date: 2002-02-13 16:32:46 $
  */
 
-public class ProcessErrorAction extends Action {
+public class ProcessErrorAction extends MetageneAction {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -78,7 +78,7 @@ public class ProcessErrorAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ActionForward retForward = null;

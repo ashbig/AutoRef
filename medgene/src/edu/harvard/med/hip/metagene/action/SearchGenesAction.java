@@ -1,12 +1,13 @@
 /*
- * LogonAction.java
+ * SearchGenesAction.java
  *
- * Created on December 5, 2001, 2:22 PM
+ * Created on February 7, 2002, 2:57 PM
  */
 
 package edu.harvard.med.hip.metagene.action;
 
 import java.io.*;
+import java.util.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,18 +22,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.metagene.form.LogonForm;
-import edu.harvard.med.hip.metagene.database.*;
-import edu.harvard.med.hip.metagene.user.*;
-import edu.harvard.med.hip.metagene.Constants;
+import edu.harvard.med.hip.metagene.form.SearchGenesForm;
+import edu.harvard.med.hip.metagene.core.*;
 
 /**
  *
  * @author  dzuo
- * @version
+ * @version 
  */
-
-public final class LogonAction extends Action {
+public class SearchGenesAction extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -49,7 +47,7 @@ public final class LogonAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -57,29 +55,22 @@ public final class LogonAction extends Action {
         
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        String username = ((LogonForm) form).getUsername();
-        String password = ((LogonForm) form).getPassword();
+        int indexid = ((SearchGenesForm)form).getGene();
+        int stat = ((SearchGenesForm)form).getStat();
+        int number = ((SearchGenesForm)form).getNumber();   
+        String submit = ((SearchGenesForm)form).getSubmit();
         
-        Usermanager manager = new Usermanager();
-        if(manager.authenticate(username, password)) {
-            // Save our logged-in user in the session
-            User user = new User(username, password);
-            HttpSession session = request.getSession();
-            session.setAttribute(Constants.USER_KEY, user);
-            
-            // Remove the obsolete form bean
-            if (mapping.getAttribute() != null) {
-                if ("request".equals(mapping.getScope()))
-                    request.removeAttribute(mapping.getAttribute());
-                else
-                    session.removeAttribute(mapping.getAttribute());
-            }
-            
-            return (mapping.findForward("success"));
-        } else {
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.login.invalid"));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
+        if("New Search".equals(submit)) {
+            return (mapping.findForward("newsearch"));
         }
-    }
+        
+        if("Get Diseases".equals(submit)) {
+            DiseaseGeneManager manager = new DiseaseGeneManager();
+            Vector diseases = manager.getDiseasesByGeneIndex(indexid, stat, number);
+            request.setAttribute("diseases", diseases);
+            return (mapping.findForward("success"));
+        }
+        
+        return (mapping.findForward("error"));     
+    }   
 }

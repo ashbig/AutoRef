@@ -13,6 +13,7 @@
     <h1>Genes Associated with Disease(s)</h1>
     </center>
 
+    <html:errors/>
     <p>Please type in a disease name. You may type in any term you like and 
     will be confirmed with the corresponding MeSH term(s).</p>
 
@@ -20,7 +21,7 @@
     <table width="80%" align="center">
         <tr>
             <td>Disease term:</td>
-            <td><html:text property="searchTerm" /></td>
+            <td><html:text property="searchTerm" size="50" /></td>
         </tr>
         <tr>
             <td></td>
@@ -28,5 +29,7 @@
         </tr>
     </table>
     </html:form>
+
+<jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>

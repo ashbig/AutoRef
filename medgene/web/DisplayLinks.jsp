@@ -27,5 +27,7 @@
     </logic:iterate> 
     </ul>
 </td></tr></TABLE>
+
+<jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>

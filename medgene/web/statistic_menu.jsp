@@ -2,7 +2,8 @@
 <HEAD><A NAME="0"></A>
 <title>Statistic Menu</title>
 </HEAD>
-<BODY background="canvas.gif">
+<BODY>
+<table width="80%" align="center" border="0"><tr><td>
 <center><h1>Detailed Information of Statistic Analysis<BR></H1></center>
 <P>
 <HR>
@@ -20,5 +21,8 @@
 <A HREF="relative_risk_of_disease.jsp"><font size=3 face=Arial><b> *  Relative risk of disease</b></font></A><BR>
 </p>
 
+</td></tr></table>
+
+<jsp:include page="links.jsp" flush="true"/>
 </BODY>
 </HTML>

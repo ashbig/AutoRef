@@ -23,6 +23,7 @@ public class Statistics {
     public static final String FISCHER = "Fischer exact test";
     public static final String RELATIVE_RISK_OF_GENE = "Relative risk of gene";
     public static final String RELATIVE_RISK_OF_DISEASE = "Relative risk of disease";
+    public static final int FISCHERID = 4;
     
     private int id;
     private String type;

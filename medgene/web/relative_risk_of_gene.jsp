@@ -11,6 +11,8 @@
 <center><font size=3 face=Arial color=black><b>c: papers studying neither the disease nor the gene</b></font><BR></center>
 <center><font size=3 face=Arial color=black><b>n = a+b+c+d, total number of papers</b></font><BR></center><br>
 <center><font size=5 face=Arial color=black><b>relative risk of gene = (b/(b+a))/(d/(d+c))</b></font><BR></center>
+
+<jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>
 

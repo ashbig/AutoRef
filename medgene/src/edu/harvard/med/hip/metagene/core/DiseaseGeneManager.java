@@ -141,8 +141,12 @@ public class DiseaseGeneManager {
         " and a.data_id=s.data_id"+
         " and s.statistic_id = st.statistic_id"+
         " and s.statistic_id="+statid+
-        " and dg.hip_disease_id="+diseaseid+
-        " order by s.statistic_score";
+        " and dg.hip_disease_id="+diseaseid;
+        
+        if(statid == Statistics.FISCHERID)
+            sql = sql + " order by s.statistic_score";
+        else 
+            sql = sql + " order by s.statistic_score desc";
         
         Statement stmt = null;
         ResultSet rs = null;
@@ -300,4 +304,144 @@ public class DiseaseGeneManager {
         
         return existed;
     }
+    
+    public Vector queryGeneIndexBySearchTerm(String term) {
+        DatabaseManager manager = new DatabaseManager();
+        Connection conn = manager.connect();
+        
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }    
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        String sql = "select i.gene_index_id, i.gene_index, t.index_type, i.date_added"+
+                    " from gene_index i, search_term s, index_type t"+
+                    " where i.gene_index_id=s.gene_index_id"+
+                    " and i.index_type_id=t.index_type_id"+
+                    " and s.gene_term='"+term+"'";   
+        Vector geneIndexes = new Vector();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            
+            while(rs.next()) {
+                int id = rs.getInt(1);
+                String index = rs.getString(2);
+                String type = rs.getString(3);
+                String date = rs.getString(4);
+                GeneIndex geneIndex = new GeneIndex(id, index, type, date);
+                geneIndexes.addElement(geneIndex);
+            }
+            
+            rs.close();
+            stmt.close();            
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            manager.disconnect();
+            return null;
+        }
+        
+        manager.disconnect();
+        return geneIndexes;   
+    }
+    
+    public Vector queryGeneIndexByLocusid(int locusid) {
+        DatabaseManager manager = new DatabaseManager();
+        Connection conn = manager.connect();
+        
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }    
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        String sql = "select i.gene_index_id, i.gene_index, t.index_type, i.date_added"+
+                    " from gene_index i, gene_list l, index_type t"+
+                    " where i.gene_index_id=l.gene_index_id"+
+                    " and i.index_type_id=t.index_type_id"+
+                    " and l.locus_id="+locusid;   
+        Vector geneIndexes = new Vector();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            
+            if(rs.next()) {
+                int id = rs.getInt(1);
+                String index = rs.getString(2);
+                String type = rs.getString(3);
+                String date = rs.getString(4);
+                GeneIndex geneIndex = new GeneIndex(id, index, type, date);
+                geneIndexes.addElement(geneIndex);
+            }
+            
+            rs.close();
+            stmt.close();            
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            manager.disconnect();
+            return null;
+        }
+        
+        manager.disconnect();
+        return geneIndexes;   
+    }   
+    
+    public Vector getDiseasesByGeneIndex(int geneIndex, int stat, int number) {
+        DatabaseManager manager = new DatabaseManager();
+        Connection conn = manager.connect();
+        
+        if (conn == null) {
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        String sql = "select d.hip_disease_id, d.disease_mesh_term, d.date_added"+
+                    " from disease_list d, disease_and_gene_association a,"+
+                    " association_data ad, statistic_analysis s"+
+                    " where d.hip_disease_id=a.hip_disease_id"+
+                    " and a.association_id=ad.association_id"+
+                    " and ad.data_id=s.data_id"+
+                    " and a.gene_index_id="+geneIndex+
+                    " and s.statistic_id="+stat;
+        
+        if(stat == Statistics.FISCHERID)
+            sql = sql + " order by s.statistic_score";
+        else 
+            sql = sql + " order by s.statistic_score desc";  
+        
+        Vector diseases = new Vector();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            
+            while(rs.next()) {
+                if(diseases.size() == number)
+                    break;
+                
+                int id = rs.getInt(1);
+                String term = rs.getString(2);
+                String date = rs.getString(3);
+                Disease disease = new Disease(id, term, date);
+                diseases.addElement(disease);
+            }
+            
+            rs.close();
+            stmt.close();            
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            manager.disconnect();
+            return null;
+        }
+        
+        manager.disconnect();
+        return diseases;
+    }    
 }

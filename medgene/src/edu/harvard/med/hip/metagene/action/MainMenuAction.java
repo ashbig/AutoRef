@@ -28,7 +28,7 @@ import edu.harvard.med.hip.metagene.form.MainForm;
  * @author  dzuo
  * @version 
  */
-public class MainMenuAction extends Action {
+public class MainMenuAction extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -45,7 +45,7 @@ public class MainMenuAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -53,7 +53,7 @@ public class MainMenuAction extends Action {
         
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        String selected = ((MainForm)form).getGeneDiseaseSelect();                
+        String selected = ((MainForm)form).getGeneDiseaseSelect();       
         
         if("geneDisease".equals(selected)) {
             return (mapping.findForward("success_disease"));

@@ -27,6 +27,14 @@
     <form-bean      name="logonForm"
                     type="edu.harvard.med.hip.metagene.form.LogonForm"/>
 
+    <!-- Customer registration form bean -->
+    <form-bean      name="customerRegistrationForm"
+                    type="edu.harvard.med.hip.metagene.form.CustomerRegistrationForm"/>
+
+    <!-- Customer registration form bean -->
+    <form-bean      name="findRegistrationForm"
+                    type="edu.harvard.med.hip.metagene.form.FindRegistrationForm"/>
+
     <!-- main page form bean -->
     <form-bean      name="mainForm"
                     type="edu.harvard.med.hip.metagene.form.MainForm"/>
@@ -43,11 +51,25 @@
     <form-bean      name="displayLinksForm"
                     type="edu.harvard.med.hip.metagene.form.DisplayLinksForm"/>
 
+    <!-- get genes page form bean -->
+    <form-bean      name="geneSearchForm"
+                    type="edu.harvard.med.hip.metagene.form.GeneSearchForm"/>
+
+    <!-- get genes page form bean -->
+    <form-bean      name="searchGenesForm"
+                    type="edu.harvard.med.hip.metagene.form.SearchGenesForm"/>
+
   </form-beans>
 
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
+    <forward    name="login"        path="/login.jsp"/>
+    <forward    name="logout"       path="/Logout.do"/>
+    <forward    name="home"         path="/overview.jsp"/>
+    <forward    name="register"     path="/CustomerRegistration.jsp"/>
+    <forward    name="findRegistration" path="/FindRegistration.jsp"/>
+    <forward    name="error"        path="/ProcessError.do"/>
   </global-forwards>
   
 
@@ -63,6 +85,28 @@
               input="/login.jsp">
       <forward  name="success"   path="/main.jsp"/>
       <forward  name="failure"  path="/login.jsp"/>
+    </action>
+
+    <action path="/Logout" type="edu.harvard.med.hip.metagene.action.LogoutAction">
+    <forward name="success" path="/login.jsp" /> 
+    </action>
+
+    <!--  Process a customer registration --> 
+    <action     path="/CustomerRegistration" 
+                type="edu.harvard.med.hip.metagene.action.CustomerRegistrationAction" 
+                name="customerRegistrationForm" 
+                input="/CustomerRegistration.jsp">
+        <forward name="success" path="/RegistrationConfirm.jsp" /> 
+        <forward name="failure" path="/CustomerRegistration.jsp" /> 
+    </action>
+
+    <!--  Process a find registration --> 
+    <action     path="/FindRegistration" 
+                type="edu.harvard.med.hip.metagene.action.FindRegistrationAction" 
+                name="findRegistrationForm" 
+                input="/FindRegistration.jsp">
+        <forward name="success" path="/FindRegistrationConfirm.jsp" /> 
+        <forward name="failure" path="/FindRegistration.jsp" /> 
     </action>
 
     <!-- Process a user selection in the main page -->
@@ -92,6 +136,7 @@
               scope="request"
               input="/GetGenes.jsp">
       <forward  name="success"   path="/DisplayGenes.jsp"/>
+      <forward  name="newsearch"   path="/DiseaseSearch.jsp"/>
     </action>
 
     <!-- Process the link display -->
@@ -104,8 +149,28 @@
       <forward  name="fail"   path="/DisplayLinksFail.jsp"/>
     </action>
 
+    <!-- Process gene search -->
+    <action    path="/GeneSearch"
+               type="edu.harvard.med.hip.metagene.action.GeneSearchAction"
+               name="geneSearchForm"
+              scope="request"
+              input="/GeneSearch.jsp">
+      <forward  name="success"   path="/SearchGenes.jsp"/>
+      <forward  name="failure"   path="/error.do"/>
+    </action>
+
+    <!-- Process gene search -->
+    <action    path="/SearchGenes"
+               type="edu.harvard.med.hip.metagene.action.SearchGenesAction"
+               name="searchGenesForm"
+              scope="request"
+              input="/SearchGenes.jsp">
+      <forward  name="success"   path="/DisplayDiseases.jsp"/>
+      <forward  name="newsearch"   path="/GeneSearch.jsp"/>
+    </action>
+
     <action     path="/ProcessError"
-                type="edu.harvard.med.hip.flex.action.ProcessErrorAction">
+                type="edu.harvard.med.hip.metagene.action.ProcessErrorAction">
        <forward name="displayError" path="/FlexError.jsp"/>                
     </action>
 

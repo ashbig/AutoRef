@@ -77,30 +77,40 @@ public class Gene {
         this.information = information;
     }
     
-    public String getGo() {
+    public String getGosString() {
         if(information == null)
             return "";
         
+        String go = null;
         for(int i=0; i<information.size(); i++) {
             Geneinfo info = (Geneinfo)information.elementAt(i);
-            if(Geneinfo.GO.equals(info.getType())) 
-                return info.getValue();
+            if(Geneinfo.GO.equals(info.getType())) {
+                if(go == null)
+                    go = info.getValue();
+                else
+                    go = go+","+info.getValue();
+            }
         }
         
-        return "";
+        return go;
     }
     
-    public String getProteome() {
+    public String getProteomesString() {
         if(information == null)
             return "";
-        
+
+        String proteome = null;
         for(int i=0; i<information.size(); i++) {
             Geneinfo info = (Geneinfo)information.elementAt(i);
-            if(Geneinfo.PROTEOME.equals(info.getType())) 
-                return info.getValue();
+            if(Geneinfo.GO.equals(info.getType())) {
+                if(proteome == null)
+                    proteome = info.getValue();
+                else
+                    proteome = proteome+","+info.getValue();
+            }
         }
         
-        return "";
+        return proteome;
     }
     
     public int getLocusid() {

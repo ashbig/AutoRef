@@ -5,5 +5,6 @@
 
 <p>Error to display the links.
 
+<jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>

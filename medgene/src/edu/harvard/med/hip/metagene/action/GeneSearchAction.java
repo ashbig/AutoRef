@@ -1,12 +1,13 @@
 /*
- * LogonAction.java
+ * GeneSearchAction.java
  *
- * Created on December 5, 2001, 2:22 PM
+ * Created on February 7, 2002, 1:35 PM
  */
 
 package edu.harvard.med.hip.metagene.action;
 
 import java.io.*;
+import java.util.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,18 +22,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.metagene.form.LogonForm;
-import edu.harvard.med.hip.metagene.database.*;
-import edu.harvard.med.hip.metagene.user.*;
-import edu.harvard.med.hip.metagene.Constants;
+import edu.harvard.med.hip.metagene.form.GeneSearchForm;
+import edu.harvard.med.hip.metagene.core.*;
 
 /**
  *
  * @author  dzuo
  * @version
  */
-
-public final class LogonAction extends Action {
+public class GeneSearchAction extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -49,7 +47,7 @@ public final class LogonAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -57,29 +55,42 @@ public final class LogonAction extends Action {
         
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        String username = ((LogonForm) form).getUsername();
-        String password = ((LogonForm) form).getPassword();
+        String term = ((GeneSearchForm)form).getTerm();
+        String searchTerm = ((GeneSearchForm)form).getSearchTerm();
         
-        Usermanager manager = new Usermanager();
-        if(manager.authenticate(username, password)) {
-            // Save our logged-in user in the session
-            User user = new User(username, password);
-            HttpSession session = request.getSession();
-            session.setAttribute(Constants.USER_KEY, user);
+        DiseaseGeneManager manager = new DiseaseGeneManager();
+        Vector geneIndexes = null;
+        
+        if(GeneSearchForm.GENENAME.equals(term) ||
+        GeneSearchForm.GENESYMBOL.equals(term)) {
+            geneIndexes = manager.queryGeneIndexBySearchTerm(searchTerm);
+        } else {
+            int locusid;
             
-            // Remove the obsolete form bean
-            if (mapping.getAttribute() != null) {
-                if ("request".equals(mapping.getScope()))
-                    request.removeAttribute(mapping.getAttribute());
-                else
-                    session.removeAttribute(mapping.getAttribute());
+            try {
+                locusid = Integer.parseInt(searchTerm);
+            } catch (NumberFormatException ex) {
+                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.invalid", searchTerm));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
             }
             
-            return (mapping.findForward("success"));
-        } else {
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.login.invalid"));
+            geneIndexes = manager.queryGeneIndexByLocusid(locusid);
+        }
+        
+        if(geneIndexes == null) {
+            return (mapping.findForward("failure"));
+        }
+        
+        if(geneIndexes.size() == 0) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.invalid", searchTerm));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
+        
+        Vector stats = Statistics.getAllStatistics();
+        request.setAttribute("stats", stats);
+        request.setAttribute("geneIndexes", geneIndexes);
+        return (mapping.findForward("success"));
     }
 }

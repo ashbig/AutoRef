@@ -7,6 +7,6 @@
 <center><font size=3 face=Arial color=black><b>product of incidence = (Y/(X+Y))*(Y/(Y+Z))</b></font><BR></center>
 <center><font size=3 face=Arial color=black><b>Y/(X+Y): incidence rate of this disease out of the papers studying this gene</b></font><BR></center>
 <center><font size=3 face=Arial color=black><b>Y/(Y+Z): incidence rate of this gene out of the papers studying this disease</b></font><BR></center>
- 
+<jsp:include page="links.jsp" flush="true"/> 
 </body>
 </html>

@@ -18,18 +18,22 @@
     <html:form action="logon.do" focus="username" target="_top">
         <table>
             <tr>
-                <TD class="prompt">User Name:</TD>
+                <TD>User Name:</TD>
                 <td><html:text property="username"/></td>
             </tr>
             <tr> 
-                <td class="prompt">Password:</td>
+                <td>Password:</td>
                 <td><html:password property="password"/></td>
             </tr>
         </table>
         <p>
         <html:submit property="submit" value="Submit"/>
     </html:form>
- 
+
+     <html:link forward="register" target="_top">Customer registration</html:link>
+    <br>
+    <html:link forward="findRegistration" target="_top">Forgot your password?</html:link>
+
 </center>
 </body>
 </html>

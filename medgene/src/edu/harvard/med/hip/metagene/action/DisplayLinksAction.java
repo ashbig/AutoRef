@@ -33,7 +33,7 @@ import java.sql.*;
  * @author  dzuo
  * @version
  */
-public class DisplayLinksAction extends Action {
+public class DisplayLinksAction extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -50,7 +50,7 @@ public class DisplayLinksAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)

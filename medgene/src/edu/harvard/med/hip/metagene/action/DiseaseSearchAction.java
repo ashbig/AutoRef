@@ -31,7 +31,7 @@ import java.util.*;
  * @author  dzuo
  * @version
  */
-public class DiseaseSearchAction extends Action {
+public class DiseaseSearchAction extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -48,7 +48,7 @@ public class DiseaseSearchAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -61,7 +61,7 @@ public class DiseaseSearchAction extends Action {
         DiseaseGeneManager manager = new DiseaseGeneManager();
         Vector diseases = manager.findDiseases(searchTerm);
         
-        if(diseases == null) {
+        if(diseases == null || diseases.size() == 0) {
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchTerm.notfound", searchTerm));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));

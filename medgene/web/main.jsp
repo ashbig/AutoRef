@@ -25,6 +25,6 @@
         <html:submit property="submit" value="Submit"/>
     </td></tr></table>
     </html:form>
-
+<jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>
