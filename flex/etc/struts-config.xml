@@ -97,7 +97,7 @@
     <forward    name="error"        path="/ProcessError.do"/>
     <forward    name="customerRequest"  path="/CustomerRequest.do"/>
     <forward    name="approveSequences" path="/ViewPendingRequests.do"/>
-    <forward    name="receiveOligoOrders" path="/ReceiveOligoOrders.jsp"/>
+    <forward    name="receiveOligoOrders" path="/SetReceiveDate.do"/>
     <forward    name="createProcessPlate" path="/CreateProcessPlate.do"/>
     <forward    name="enterProcessResults" path="/EnterProcessResults.jsp"/>
     <forward    name="containerProcessHistory" path="/ContainerScan.jsp"/>
@@ -356,7 +356,15 @@
                validate="false"
                input="/PrintPCRBarcode.jsp">
       <forward  name="success"   path="/PrintPCRBarcode.jsp"/>
-    </action> 
+    </action>             
+
+    <!-- Process the receiving of new oligo plates -->
+    <action    path="/SetReceiveDate"
+               type="edu.harvard.med.hip.flex.action.SetReceiveDateAction"
+               name="ReceiveOligoOrdersForm"
+               scope="request">
+      <forward  name="success"   path="/ReceiveOligoOrders.jsp"/>
+    </action>
 
     <!-- Process the receiving of new oligo plates -->
     <action    path="/ReceiveOligoPlates"
