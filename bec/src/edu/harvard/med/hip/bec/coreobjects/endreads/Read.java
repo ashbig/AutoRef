@@ -134,9 +134,68 @@ public class Read
     
     public static ArrayList getReadByIsolateTrackingId(int istr_id  )throws BecDatabaseException
     {
-        return getReadByRule("ISOLATETRACKINGID="+istr_id);
+        ArrayList result = new ArrayList();
+        ArrayList reads =  getReadByRule("ISOLATETRACKINGID="+istr_id);
+        if ( reads == null || reads.size() < 1 ) return reads;
+        //get last reverse and last forward
+        // order by readid 
+        Collections.sort(reads, new Comparator()
+        {
+            public int compare(Object o1, Object o2)
+            {
+                return ((Read) o1).getId() - ((Read) o2).getId();
+            }
+            public boolean equals(java.lang.Object obj)    {      return false;  }
+        } ); 
+        boolean if_f_read_in = false; boolean if_r_read_in = false;
+        Read read = null;
+        for ( int count = 0; count < reads.size(); count++)
+        {
+            read = (Read)reads.get(count);
+            if ( !if_f_read_in && isForwardRead( read.getType())  ) 
+            { 
+                result.add(read);
+                if_f_read_in=true;
+            }
+            if ( !if_r_read_in && isReverseRead( read.getType())  )
+            { 
+                result.add(read);
+                if_r_read_in=true;
+            }
+            
+        }
+        return result;
     }
     
+    
+    //----------------------------------
+    
+    private static boolean  isForwardRead(int type)
+    {
+        switch(type)
+        {
+            case TYPE_ENDREAD_FORWARD :
+            case TYPE_ENDREAD_FORWARD_FAIL :
+            case TYPE_ENDREAD_FORWARD_NO_MATCH :
+            case TYPE_ENDREAD_FORWARD_SHORT :
+                return true;
+            default: return false;
+        }
+    }   
+    private static boolean  isReverseRead(int type)
+    {
+        switch(type)
+        {
+            case TYPE_ENDREAD_REVERSE :
+            case TYPE_ENDREAD_REVERSE_FAIL :
+            case TYPE_ENDREAD_REVERSE_NO_MATCH :
+            case TYPE_ENDREAD_REVERSE_SHORT :
+                return true;
+            default: return false;
+        }
+    }   
+
+       
     public static Read getReadById(int id  )throws BecDatabaseException
     {
         return (Read)getReadByRule("readID="+id).get(0);
