@@ -408,7 +408,7 @@ public long start, end2;
             }
         }
         
-        if(direct_children_gene_hashmap.containsKey(new Integer(locus_id))){
+        else if(direct_children_gene_hashmap.containsKey(new Integer(locus_id))){
             direct_children_gene_tree.add((ChipGene)(direct_children_gene_hashmap.get(new Integer(locus_id))));        
         }                
                 
@@ -479,7 +479,7 @@ public long start, end2;
        
         try{
          
-        BufferedReader in = new BufferedReader(new FileReader("c:\\temp\\array.txt"));       
+        BufferedReader in = new BufferedReader(new FileReader("c:\\data\\test.txt"));       
         
         String s;
         
@@ -498,11 +498,11 @@ public long start, end2;
 //////////////////////////////////
                                                                                         
         ChipGeneDiseaseAnalysis ana = new ChipGeneDiseaseAnalysis();  
-        ana.hashDirectGenes(483, 1, ana.GENE_SYMBOL_INPUT);  //402 483
+        ana.hashDirectGenes(483, 1, ana.LOCUS_ID_INPUT);  //402 483
         
 System.out.println("source for indirect gene hash = " + ana.source_for_indirect_genes.size());
-        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1, 10000);       
-        ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT, 10000);
+        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.LOCUS_ID_INPUT, 1, 10000);       
+        ana.analyzeInputChipGenes(text, ana.LOCUS_ID_INPUT, 10000);
         
         
         TreeSet direct = ana.getDirect_gene_tree();        

@@ -26,8 +26,13 @@ public class GeneComparator implements Comparator{
                 return 1;
             else if (((ChipGene)o1).getGene_symbol().compareToIgnoreCase(((ChipGene)o2).getGene_symbol()) < 0)
                 return -1;
-            else 
+            else {
+                if (((ChipGene)o1).getLocus_id() > ((ChipGene)o2).getLocus_id()) 
+                    return 1;
+                else if (((ChipGene)o1).getLocus_id() > ((ChipGene)o2).getLocus_id())
+                    return -1;
                 return 0;
+            }
         }
     }
 }
