@@ -22,6 +22,7 @@ package edu.harvard.med.hip.flex.infoimport;
 import java.io.*;
 import java.util.*;
 import java.sql.*;
+import sun.jdbc.rowset.*;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
@@ -53,8 +54,10 @@ public class MgcMasterListImporter {
     public boolean importMgcCloneInfoIntoDB(InputStream input, String fileName) {
         Hashtable sequenceCol = new Hashtable();
         ArrayList containerCol = new ArrayList();
+        Hashtable existingSeqCol = new Hashtable();
         if (! readCloneInfo(  input,  fileName, containerCol) ) return false;
-        if (! readSeqences(containerCol, sequenceCol) ) return false;
+        if (! checkForMgcIDMatches(existingSeqCol) ) return false;
+        if (! readSeqences(containerCol, sequenceCol, existingSeqCol) ) return false;
         if (! uploadToDatabase(containerCol, sequenceCol) ) return false;
         return true;
         
@@ -139,35 +142,71 @@ public class MgcMasterListImporter {
     }
     
     /**
-     * Function loops through all  mgc clones quering ncbi for their sequences.
+     *Function checks for duplication of MgcID to prevent inserting duplicated sequences into DB
+     */
+    
+    private boolean checkForMgcIDMatches(Hashtable existingSeqCol)
+    {
+        String sql = "select mgcid, sequenceid from mgcclone";
+        int mgc_id = 0;
+        int seq_id = 0;
+        CachedRowSet crs = null;
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+             while(crs.next()) 
+             {
+                existingSeqCol.put(new Integer(crs.getInt("mgcid")), new Integer(crs.getInt("sequenceid")));
+             }
+             return true;
+         }
+         catch (Exception e){return false;}
+       
+    }
+   
+    /**
+     * Function loops through all  mgc clones,
+     checks if mgc_id already exists in db if not quering ncbi for their sequences.
      *@param cloneCol - hashtable of all clones from master list
      *@param sequenceCol - hashtable of sequences that will be filled by method
+     *@param existingSeqCol - hashtable of mgc_id (and sequence _id ) from database
+     *
      *
      *@return true - no exception was raised, false otherwise
      *
      */
-    private boolean readSeqences(ArrayList containerCol, Hashtable sequenceCol) {
+    private boolean readSeqences(ArrayList containerCol, Hashtable sequenceCol, Hashtable existingSeqCol) {
         GenbankGeneFinder gb = new GenbankGeneFinder();
         Vector genBankSeq = new Vector();
         Hashtable seqData = new Hashtable();
         int current_key ;
         String current_gi = null;
+        int duplicate_id = 0;
         
         for (int container_count = 0; container_count < containerCol.size(); container_count++) {
             Vector sampl = ((MgcContainer)containerCol.get(container_count)).getSamples();
             for (int sample_count = 0; sample_count < sampl.size() ; sample_count++) {
                 current_key = ((MgcSample)sampl.get(sample_count)).getMgcId();
+                 try {
+                if ( ! existingSeqCol.contains(new Integer(current_key)) )
+                {
+                   
+                        genBankSeq = gb.search("\"MGC:" + current_key +"\"");
+                        current_gi = ((GenbankSequence)genBankSeq.get(0)).getGi();
+                        if (current_gi == null || current_gi.equals("") ) continue;
+                        seqData = gb.searchDetail(current_gi);
+                        FlexSequence fs = createFlexSequence( seqData, genBankSeq);
+                        sequenceCol.put( Integer.toString(current_key), fs );
+                        current_gi = null;
+                    }
                 
-                try {
-                    genBankSeq = gb.search("\"MGC:" + current_key +"\"");
-                    current_gi = ((GenbankSequence)genBankSeq.get(0)).getGi();
-                    if (current_gi == null || current_gi.equals("") ) continue;
-                    seqData = gb.searchDetail(current_gi);
-                    FlexSequence fs = createFlexSequence( seqData, genBankSeq);
-                    sequenceCol.put( Integer.toString(current_key), fs );
-                    current_gi = null;
+                else
+                 {
+                    duplicate_id = ((Integer)existingSeqCol.get( new Integer(current_key))).intValue();
+                   ((MgcSample)sampl.get(sample_count)).setSequenceId( duplicate_id );
                 }
-                catch(Exception e) {  }
+                }catch(Exception e) {return false;  }
                 
             }
         }//end loop container_count
@@ -186,7 +225,7 @@ public class MgcMasterListImporter {
      *@param        genBankData vector of GenebankSeq objects (gi, gb_accession, description
      *returns flexseq object
      */
-    private FlexSequence createFlexSequence(Hashtable seqData, Vector genBankData) {
+    public FlexSequence createFlexSequence(Hashtable seqData, Vector genBankData) {
         int start = ((Integer)seqData.get("start")).intValue();
         int stop = ((Integer)seqData.get("stop")).intValue();
         String seqQuality;
