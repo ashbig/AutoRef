@@ -32,7 +32,7 @@
     <shrinkBy>10</shrinkBy>
 
     
-    <debugging>true</debugging>
+    <debugging>false</debugging>
 
     <!-- Query Cache Attributes-->
 
