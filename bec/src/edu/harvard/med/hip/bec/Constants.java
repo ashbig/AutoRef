@@ -7,19 +7,14 @@
 package edu.harvard.med.hip.bec;
 
 import java.util.*;
+import java.text.*;
 /**
  *
  * @author  jmunoz
  * @version
  */
 public class Constants {
-    /*
-     * Application constants
-     */
-    public static Hashtable s_projects = null;
-    public static Hashtable s_workflows = null;
-    public static Hashtable s_protocols_id = null;
-     public static Hashtable s_protocols_name = null;
+   
     // constant for workflow (queue) admin group
     public static final String WORKFLOW_GROUP = "Workflow Admin";
     
@@ -52,7 +47,7 @@ public class Constants {
     public static final String RESEARCHER_BARCODE_KEY = "RESEARCHER_BARCODE";
     
     // key used to find The flex sequence id.
-    public static final String FLEX_SEQUENCE_ID_KEY = "FLEX_SEQUENCE_ID";
+    public static final String SEQUENCE_ID_KEY = "SEQUENCE_ID";
    
     
     // key used to find the fasta formated colorized sequence
@@ -60,37 +55,13 @@ public class Constants {
     "FASTA_COLOR_SEQUENCE";
     
     // key used to find the flex sequence
-    public static final String FLEX_SEQUENCE_KEY = "FLEX_SEQUENCE";
+    public static final String SEQUENCE_KEY = "SEQUENCE";
     
-    // key used to find the aprove sequence protocol object
-    public static final String APPROVE_PROTOCOL_KEY = "APPROVE_PROTOCOL";
-    
-    // key used to find the name of a protocol
-    public static final String PROTOCOL_NAME_KEY = "PROTOCOl_NAME";
-    
-    // key used to find the Queue item list object
-    public static final String QUEUE_ITEM_LIST_KEY = "QUEUE_ITEM_LIST";
-    
-    // key used to find the qeue item object
-    public static final String QUEUE_ITEM_KEY = "QUEUE_ITEM";
-    
-    // key used to find the sequence queue.
-    public static final String SEQUENCE_QUEUE_KEY = "SEQEUENCE_QUEUE";
-    
-    // key used to find the list of accepted seqeunces
-    public static final String APPROVED_SEQUENCE_LIST_KEY = "APPROVE_SEQUENCE_LIST";
-    
-    // key used to find the list of rejected seqeunces
-    public static final String REJECTED_SEQUENCE_LIST_KEY = "REJECTED_SEQUENCE_LIST";
-    
-    // key used to find the page number
+     // key used to find the page number
     public static final String PAGE_KEY="PAGE";
     
-    // key to use to find the number of pending request in the queue
-    public static final String PENDING_SEQ_NUM_KEY = "PENDING_SEQ_NUM";
+   
     
-    // key to use to find the number of requests processed
-    public static final String PROCESSED_SEQ_NUM_KEY = "PROCESESSED_SEQ_NUM";
     
     // key used to find the id of a plate
     public static final String PLATE_ID_KEY = "PLATE_ID";
@@ -155,21 +126,7 @@ public class Constants {
     //forward name used for create process plates after select the workflow.
     public static final String CREATE_PROCESS_PLATES = "CREATE_PROCESS_PLATES";
 
-    //forward name used for import sequences after select the workflow.
-    public static final String IMPORT_SEQUENCES = "IMPORT_SEQUENCES";
-    
-    //forward name used for mgc plate handling.
-    public static final String MGC_PLATE_HANDLE = "MGC_PLATE_HANDLE";
-    
-    //forward name for mgc request import
-    public static final String MGC_REQUEST_IMPORT = "MGC_REQUEST_IMPORT";
-    
-    //forward name for mgc request import
-    public static final String SPECIAL_OLIGO_ORDER = "SPECIAL_OLIGO_ORDER";
-    
-    //forward name for enter result
-    public static final String ENTER_RESULT = "ENTER_RESULT";
-    
+     
     
     //forward name for set project parameters for sequencing 
     public static final String SEQ_SET_PROJECT_PARAMS = "SEQ_SET_PROJECT_PARAMS";
@@ -185,7 +142,17 @@ public class Constants {
         "FULL_SEQUENCE_BLAST_N_FORMATED";
     public static final String FULL_SEQUENCE_BLAST_P_FORMATED = 
         "FULL_SEQUENCE_BLAST_P_FORMATED";
-    
-    
-    
+    //constants for constructors
+    public static final int TYPE_OBJECTS = 1;
+    public static final int TYPE_ID = 2;
+    /**
+     * get today's date in dd-mmm-yy format
+     */
+    public static String getCurrentDate()
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
+        java.util.Date currentDate = new java.util.Date();
+        return  formatter.format(currentDate);
+        
+    }
 }
