@@ -36,13 +36,13 @@
 
     <tr>
     <td><b>Select library:</b></td>
-    <td><select name="cdnaLibrary">        
-        <option value="human cDNA mix brain/placental_1:4">human cDNA mix brain/placental_1:4
-        <option value="human placental cDNA template">Human placental cDNA template
-        <option value="human brain cDNA template">Human brain cDNA template
-        <option value="yeast genomic DNA">yeast genomic DNA
-        <option value="yeast cDNA">yeast cDNA
-        </select>
+    <td><html:select property="cdnaLibrary">
+        <html:options
+        collection="SelectProtocolAction.cdnalibrary"
+        property="id"
+        labelProperty="description"
+        />
+        </html:select>
     </td>
     </tr>
 

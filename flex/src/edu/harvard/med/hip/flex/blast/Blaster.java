@@ -182,7 +182,7 @@ public class Blaster extends java.lang.Object {
     }
 
     private String makeBlastCmd(String query, String output) {
-        
+/*        
          String blastcmd = "/kotel/data/blast/blastall " +                  
                           program + " " +                
                           "-d" + dbPath +  " " +                
@@ -192,9 +192,9 @@ public class Blaster extends java.lang.Object {
                           gapOpen + " " +                
                           gapExtend + " " +              
                           filter + " " +                 
-                          hits;                          
-        //System.out.println("cmd: " + blastcmd);
-/*        
+                          hits;                    
+ */
+       
          String blastcmd = "E:\\flexDev\\blast\\blastall " +                  
                           program + " " +                
                           "-d " + dbPath +  " " +                
@@ -205,7 +205,7 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits; 
- */  
+   
          return blastcmd;
     }
     

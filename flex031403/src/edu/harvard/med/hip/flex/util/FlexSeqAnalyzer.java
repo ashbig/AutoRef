@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.9 2001-07-06 17:56:10 dongmei_zuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.10 2001-07-12 14:21:58 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java 
  * Date     : 05102001
@@ -22,8 +22,8 @@ import java.io.*;
  * homologous to any flex sequence.
  */
 public class FlexSeqAnalyzer {
-    private static final String BLASTDB = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/blast/BlastDB/genes";
-    //private static final String BLASTDB="E:/flexDev/BlastDB/genes";
+    //private static final String BLASTDB = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/blast/BlastDB/genes";
+    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
         private static final double PERCENTIDENTITY = 0.9;

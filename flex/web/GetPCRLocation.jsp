@@ -21,7 +21,7 @@
 
     <tr>
     <td><b>Library:</b></td>
-    <td><bean:write name="EnterOligoPlateAction.cdnaLibrary" /></td>
+    <td><bean:write name="EnterOligoPlateAction.cdnaLibrary" property="description"/></td>
     </tr>
 
     <tr>
