@@ -79,19 +79,25 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
-    <td ><strong>Label:</strong></td>
+    <td ><strong>Plate Label:</strong></td>
     <td > 
       <%= container.getLabel() %>
     </td>
   </tr>
   <tr> 
-    <td><strong>Container Id:</strong></td>
+    <td><strong>Plate Id:</strong></td>
     <td> 
       <%= container.getId() %>
     </td>
   </tr>
+  <tr> 
+    <td><strong>Order Date:</strong></td>
+    <td> 
+      <%= container.getDate() %>
+    </td>
+  </tr>
    <tr> 
-    <td><strong>Container Status:</strong></td>
+    <td><strong>Plate Status:</strong></td>
     <td><%= container.getStatusAsString() %></td>
   </tr> 
 <% if ( forwardName_int == Constants.PROCESS_PROCESS_OLIGO_PLATE)
@@ -100,7 +106,7 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
     <td><strong>Set Container Status:</strong></td>
    <td>
      <select name="status">
-        <option  value="<%= OligoContainer.STATUS_ORDER_SENT%>" >Ordered </option>
+      <!--  <option  value="<%= OligoContainer.STATUS_ORDER_SENT%>" >Ordered </option> -->
         <option value="<%=  OligoContainer.STATUS_RECIEVED%>">Recieved</option>
         <option value="<%=  OligoContainer.STATUS_SENT_FOR_SEQUENCING%>">Used for sequencing</option>
       </select>
