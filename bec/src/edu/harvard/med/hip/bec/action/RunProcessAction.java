@@ -207,27 +207,23 @@ public class RunProcessAction extends ResearcherAction
             case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER : // add new internal primer
             {
             }
-
+/*
             case Constants.PROCESS_VIEW_INTERNAL_PRIMERS : //view internal primers
             {
             }
-
             case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS : //approve internal primers
             {
             }
-
             case Constants.PROCESS_RUN_PRIMER3: //run primer3
             {
             }
-
             case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder
             {
             }
-
             case Constants.PROCESS_RUN_DISCREPANCY_FINDER: //run discrepancy finder
             {
             }
-
+*/
             case Constants.PROCESS_RUN_DECISION_TOOL : //run decision tool
             {
                 //get spec
