@@ -105,7 +105,7 @@
 
     <init-param>
       <param-name>user</param-name>
-      <param-value>medgene_0802</param-value>
+      <param-value>medgene_final</param-value>
     </init-param>
     <init-param>
         <param-name>password</param-name>

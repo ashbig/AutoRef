@@ -13,7 +13,7 @@
 </head>
 
 <body>
-<jsp:include page="NavigatorBar.jsp" flush="true"/>
+<jsp:include page="NavigatorBar.jsp" flush='true'/>
 <div align="center">
 <p align="left"><br>
 </p>

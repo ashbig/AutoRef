@@ -17,7 +17,7 @@ import edu.harvard.med.hip.metagene.database.*;
  * @version
  */
 public class Statistics {
-    public static final String PRODUCT_OF_INCIDENCE = "Product of incidence";
+    public static final String PRODUCT_OF_INCIDENCE = "Product of frequency";
     public static final String PROBABILITY = "Probability";
     public static final String CHI_SQUARE = "Chi square analysis";
     public static final String FISCHER = "Fischer exact test";
