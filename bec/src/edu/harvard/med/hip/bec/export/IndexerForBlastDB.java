@@ -20,13 +20,19 @@ public class IndexerForBlastDB
     public static final int ACESSES_INDEX = 2;
     public static final int ACESSES_INDEX_BASE = 3;
   
-    private static final String db_pass = "C:\\GenBankMonth\\est_human";
+    private static final String db_pass = "C:\\GenBankMonth\\est_human_1";
     
     private static final String GI_INDEX_DB = "C:\\GenBankMonth\\gi_index";
     private static final String ACESSES_INDEX_DB = "C:\\GenBankMonth\\as_index";
     private static final String ACESSESBASE_INDEX_DB = "C:\\GenBankMonth\\asbase_index";
     
+    //hold index in memory
+    private static final Hashtable m_giindex_hash = new Hashtable();
+     private static final Hashtable m_acindex_hash = new Hashtable();
+      private static final Hashtable m_acbaseindex_hash = new Hashtable();
+    
     private static final char LINE_DELIMITER = '\n';
+    private static final char FIELD_DELIMITER = '|';
     /** Creates a new instance of IndexerForBlastDB */
     public IndexerForBlastDB()
     {
@@ -119,30 +125,88 @@ CCAAGAAGAAGAAG*/
     
     private static void writeIndexData(String ac, long start,long end,DataOutputStream dout_ac) throws Exception
     {
-        dout_ac.write( ac.getBytes());
+        char[] arr_ac = ac.toCharArray();
+        for (int i = 0; i < arr_ac.length;i++)
+        {
+            dout_ac.writeChar( arr_ac[i]);
+        }
+        
+        dout_ac.writeChar(FIELD_DELIMITER);
         dout_ac.writeLong(start);
+       // dout_ac.writeChar('|');
         dout_ac.writeLong(end);
         dout_ac.writeChar(LINE_DELIMITER);
         
     }
-    
+    //-------------------------------------------------------
+    //bring index to memory
+    public static void getIndexInMemory(int index_type)
+    {
+        switch (index_type)
+        {
+            case IndexerForBlastDB.GI_INDEX:
+            {
+               readGIIndex(null);
+               break;
+            }
+            
+            case IndexerForBlastDB.ACESSES_INDEX:
+            {
+               readAcessesionIndex(null, IndexerForBlastDB.ACESSES_INDEX);
+               break;
+            }
+            case IndexerForBlastDB.ACESSES_INDEX_BASE:
+            {
+               readAcessesionIndex(null, IndexerForBlastDB.ACESSES_INDEX_BASE);
+               break;
+            }
+        }
+    }
     //--------------------------------------------------------------
     private static  long[] getSequencePosition( String id, int index_type)
     {
         long[] coordinates = new long[2];
         
-        if (index_type == GI_INDEX)
-            coordinates = readGIIndex(id);
-        else if (index_type == ACESSES_INDEX || index_type == ACESSES_INDEX_BASE)
-            coordinates = readAcessesionIndex(id);
+        switch (index_type)
+        {
+            case GI_INDEX:
+            {
+                coordinates = readGIIndex(id);
+                break;
+            }
+            case ACESSES_INDEX:
+            {
+                coordinates = readAcessesionIndex(id,ACESSES_INDEX);
+                 break;
+            }
+            case ACESSES_INDEX_BASE:
+            {
+                coordinates = readAcessesionIndex(id,ACESSES_INDEX_BASE);
+                break;
+            }
+        }
         
         return coordinates;
     }
     
     private static  long[] readGIIndex( String id)
     {
-        long gi_id = Long.parseLong(id);
-        long[] coordinates = new long[2];
+        long[] coordinates = {-1,-1};
+        //first try to get from memory
+        if (m_giindex_hash.size() != 0)
+        {
+            coordinates = (long[])m_giindex_hash.get(id);
+            if (coordinates[0] != -1 && coordinates[1] != -1)
+                return coordinates;
+        }
+        
+        //
+        long gi_id = -1;
+        if (id != null) 
+        {
+             gi_id = Long.parseLong(id);
+        }
+        
         FileInputStream fis;
         DataInputStream dis;
         try
@@ -158,43 +222,18 @@ CCAAGAAGAAGAAG*/
                 coord1  = dis.readLong();
                 coord2 = dis.readLong();
                 dis.readChar();
-                if (gi == gi_id)
+                if (id != null && gi == gi_id)
                 {
                     coordinates[0] = coord1;
                     coordinates[1] = coord2;
                     break;
                 }
-            }
-        } catch (EOFException eof)
-        {System.out.println( "EOF reached " ); }
-        catch (IOException ioe)
-        {System.out.println( "IO error: " + ioe );}
-        
-        return coordinates;
-    }
-    
-    
-    
-    private static  long[] readAcessesionIndex( String id)
-    {
-        long[] coordinates = new long[2];
-        FileReader fis;
-        BufferedReader dis;
-        String line = null;ArrayList data = null;
-        try
-        {
-            fis = new FileReader(ACESSES_INDEX_DB);
-            
-            dis =  new BufferedReader(fis);
-            while ( (line = dis.readLine()) != null)
-            {
-                data = Algorithms.splitString(line, "|");
-                String ac = (String ) data.get(0);
-                if (ac.equalsIgnoreCase(id))
+                if (id == null)//take index in memory
                 {
-                    coordinates[0] = Long.parseLong( (String) data.get(1));
-                    coordinates[1] = Long.parseLong( (String) data.get(2));
-                    break;
+                    coordinates[0] = coord1;
+                    coordinates[1] = coord2;
+                    m_giindex_hash.put(String.valueOf(gi), coordinates);
+                    coordinates = new long[2];
                 }
             }
         } catch (EOFException eof)
@@ -204,6 +243,137 @@ CCAAGAAGAAGAAG*/
         
         return coordinates;
     }
+    
+    
+    
+    private static  long[] readAcessesionIndex( String id, int mode)
+    {
+        long[] coordinates = {-1,-1};
+        
+        if (IndexerForBlastDB.ACESSES_INDEX == mode && m_acindex_hash.size() != 0)
+        {
+            coordinates = (long[])m_acindex_hash.get(id);
+            if (coordinates[0] != -1 && coordinates[1] != -1)
+                return coordinates;
+        }
+        if (IndexerForBlastDB.ACESSES_INDEX_BASE == mode && m_acbaseindex_hash.size() != 0)
+        {
+            coordinates = (long[])m_acbaseindex_hash.get(id);
+            if (coordinates[0] != -1 && coordinates[1] != -1)
+                return coordinates;
+        }
+        FileInputStream fis = null;
+        DataInputStream dis = null;
+        String ac = "";
+        try
+        {
+            if (mode == IndexerForBlastDB.ACESSES_INDEX)
+                fis = new FileInputStream(ACESSES_INDEX_DB);
+            else if (mode ==IndexerForBlastDB.ACESSES_INDEX_BASE)
+                fis = new FileInputStream(ACESSESBASE_INDEX_DB);
+            dis =  new DataInputStream(fis);
+            char cur_char ;long coord1; long coord2; StringBuffer acb = new StringBuffer();
+            while ( true )
+            {
+               //read acession
+                while ( (cur_char = dis.readChar()) != FIELD_DELIMITER)
+                {
+                    acb.append( cur_char);
+                }
+               ac=acb.toString();
+                coord1  = dis.readLong();
+                coord2 = dis.readLong();
+                dis.readChar();
+                
+                if (id != null && ac.equalsIgnoreCase(id))
+                {
+                    coordinates[0] = coord1;
+                    coordinates[1] = coord2;
+                    break;
+                }
+                if (id == null)//take index in memory
+                {
+                    coordinates[0] = coord1;
+                    coordinates[1] = coord2;
+                     if (mode == IndexerForBlastDB.ACESSES_INDEX)
+                        m_acindex_hash.put(ac, coordinates);
+                    else if (mode ==IndexerForBlastDB.ACESSES_INDEX_BASE)
+                        m_acbaseindex_hash.put(ac, coordinates);
+                    coordinates = new long[2];
+                }
+                ac  = ""; 
+            }
+            dis.close();
+        }
+        catch (EOFException eof)
+            {System.out.println( "EOF reached " ); }
+        catch (IOException ioe)
+            {System.out.println( "IO error: " + ioe );}
+        finalise 
+        {
+            try {dis.close();}catch(Exception e){}
+        }
+        return coordinates;
+    }
+    
+    /*
+    private static  long[] readAcessesionIndex( String id, int mode)
+    {
+        long[] coordinates = {-1,-1};
+        
+        if (IndexerForBlastDB.ACESSES_INDEX == mode && m_acindex_hash.size() != 0)
+        {
+            coordinates = (long[])m_acindex_hash.get(id);
+            if (coordinates[0] != -1 && coordinates[1] != -1)
+                return coordinates;
+        }
+        if (IndexerForBlastDB.ACESSES_INDEX_BASE == mode && m_acbaseindex_hash.size() != 0)
+        {
+            coordinates = (long[])m_acbaseindex_hash.get(id);
+            if (coordinates[0] != -1 && coordinates[1] != -1)
+                return coordinates;
+        }
+        FileReader fis = null;
+        BufferedReader dis = null;
+        String line = null;ArrayList data = null;
+        try
+        {
+            if (mode == IndexerForBlastDB.ACESSES_INDEX)
+                fis = new FileReader(ACESSES_INDEX_DB);
+            else if (mode ==IndexerForBlastDB.ACESSES_INDEX_BASE)
+                fis = new FileReader(ACESSESBASE_INDEX_DB);
+            dis =  new BufferedReader(fis);
+            while ( (line = dis.readLine()) != null)
+            {
+                data = Algorithms.splitString(line, "|");
+                String ac = (String ) data.get(0);
+                long coord1 = Long.parseLong( (String) data.get(1));
+                long    coord2 = Long.parseLong( (String) data.get(2));
+                if (id != null && ac.equalsIgnoreCase(id))
+                {
+                    coordinates[0] = coord1;
+                    coordinates[1] = coord2;
+                    break;
+                }
+                if (id == null)//take index in memory
+                {
+                    coordinates[0] = coord1;
+                    coordinates[1] = coord2;
+                     if (mode == IndexerForBlastDB.ACESSES_INDEX)
+                        m_acindex_hash.put(ac, coordinates);
+                    else if (mode ==IndexerForBlastDB.ACESSES_INDEX_BASE)
+                        m_acbaseindex_hash.put(ac, coordinates);
+                    coordinates = new long[2];
+                }
+            }
+        } catch (EOFException eof)
+        {System.out.println( "EOF reached " ); }
+        catch (IOException ioe)
+        {System.out.println( "IO error: " + ioe );}
+        
+        return coordinates;
+    }
+    */
     //-----------------------------------------------------------------------
     public static String getSequence(String id, int index_type)
     {
@@ -239,17 +409,20 @@ CCAAGAAGAAGAAG*/
     
     public static void main(String [] args)
     {
-        IndexerForBlastDB.buildIndex();
+       // IndexerForBlastDB.buildIndex();
+        getIndexInMemory(IndexerForBlastDB.GI_INDEX);
+         getIndexInMemory(IndexerForBlastDB.ACESSES_INDEX_BASE);
+          getIndexInMemory(IndexerForBlastDB.ACESSES_INDEX);
      
-      System.out.println( IndexerForBlastDB.getSequence("28436319",GI_INDEX)) ;
-      System.out.println( "--------------");
-      System.out.println( IndexerForBlastDB.getSequence("28436320",GI_INDEX)) ;
-       System.out.println( "--------------");
-       System.out.println( IndexerForBlastDB.getSequence("28289948",GI_INDEX)) ;
-       System.out.println( "--------------");
-       System.out.println( IndexerForBlastDB.getSequence("28289949",GI_INDEX)) ;
-         // System.out.println( IndexerForBlastDB.getSequence("CB185049.1",ACESSES_INDEX)) ;
-   // System.out.println( IndexerForBlastDB.getSequence("CB185049",ACESSES_INDEX_BASE));
+    //  System.out.println( IndexerForBlastDB.getSequence("28436319",GI_INDEX)) ;
+    //  System.out.println( "--------------");
+    //  System.out.println( IndexerForBlastDB.getSequence("28436320",GI_INDEX)) ;
+    //   System.out.println( "--------------");
+     //  System.out.println( IndexerForBlastDB.getSequence("28289948",GI_INDEX)) ;
+     //  System.out.println( "--------------");
+     //  System.out.println( IndexerForBlastDB.getSequence("28289949",GI_INDEX)) ;
+          System.out.println( IndexerForBlastDB.getSequence("CB185049.1",ACESSES_INDEX)) ;
+   System.out.println( IndexerForBlastDB.getSequence("CB185049",ACESSES_INDEX_BASE));
        
             
     }
