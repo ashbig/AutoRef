@@ -122,8 +122,7 @@ public class ConstructGenerator {
             close.insert(conn);
             open.insert(conn);
             System.out.println("close construct ID: " + close.getId());
-            System.out.println("open construct ID: " + open.getId());
-            
+            System.out.println("open construct ID: " + open.getId());           
         } //while
     } //generateOligoAndConstructs
     
