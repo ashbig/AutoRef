@@ -220,18 +220,30 @@ insert into linker (linkerid,sequence, name)
 values (vectorid.nextval,'CAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTTCCAGCTGACCACC-','5p Yeast Linker');
 insert into linker (linkerid,sequence, name)
 values (vectorid.nextval,'-CATGGCAATTCCCGGGGATACCCAGCTTTCTTGTACAAAGTTGGCATTATAAGAAAGCATTGCTTATCAATTTGTTGC','3p Yeast Linker');
+insert into linker (linkerid,sequence, name)
+values (vectorid.nextval,'GCCAACTTTGTACAAAAAAGCAGGCTTCCAGCTGACCACC-','5p Yeast Short Linker');
+insert into linker (linkerid,sequence, name)
+values (vectorid.nextval,'-CATGGCAATTCCCGGGGATACCCAGCTTTCTTGTACAAAG','3p Yeast Short Linker');
+
+
 insert into linker (linkerid, name,sequence)
 values (vectorid.nextval,'5p Human linker','GCAGGCTCCACC-');                                                      
 insert into linker (linkerid, name,sequence)
 values (vectorid.nextval,'3p Human linker','-AGAAAGCTGGGTC');                                                      
          insert into linker (linkerid, name,sequence)
-values (vectorid.nextval,'5p Pseudomonas linker','ACAAGTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACC-');                             
+values (vectorid.nextval,'5p Pseudomonas linker','CAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACC-');                             
          insert into linker (linkerid, name,sequence)
-values (vectorid.nextval,'3p Pseudomonas linker','-GACCCAGCTTTCTTGTACAAAGTGGT');                                         
+values (vectorid.nextval,'3p Pseudomonas linker','-GACCCAGCTTTCTTGTACAAAGTTGGCATTATAAGAAAGCATTGCTTATCAATTTGTTGC');                                         
         insert into linker (linkerid, name,sequence)
 values (vectorid.nextval,'5p linker','GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTATCAGTCGACACC-');               
          insert into linker (linkerid, name,sequence)
 values (vectorid.nextval,'3p linker','-GGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC');                              
+
+insert into linker (linkerid, name,sequence)
+values (vectorid.nextval,'5p Short Pseudomonas linker','ACAAGTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACC-');                             
+insert into linker (linkerid, name,sequence)
+values (vectorid.nextval,'3p Short Pseudomonas linker','-GACCCAGCTTTCTTGTACAAAGTGGT');                                         
+        
 
 
 //for yeast
@@ -354,6 +366,25 @@ insert into processdefinition  (PROCESSDEFINITIONID,processname)
 
 insert into processdefinition  (PROCESSDEFINITIONID,processname)
  values (11,'Run oligo design');
+
+insert into processdefinition  (PROCESSDEFINITIONID,processname)
+ values (12,'Approve oligos');
+
+insert into processdefinition  (PROCESSDEFINITIONID,processname)
+ values (13,'Run oligo order');
+
+insert into processdefinition  (PROCESSDEFINITIONID,processname)
+ values (14,'Recieve oligo order');
+
+insert into processdefinition  (PROCESSDEFINITIONID,processname)
+ values (15,'Send oligo order');
+
+
+insert into processdefinition  (PROCESSDEFINITIONID,processname)
+ values (16,'Oligo plate used for sequencing');
+
+
+
 
 
 insert into commonprimer (primerid, name,sequence,type,tm) values(oligoid.nextval,'pDONRATG','GTACAAAAAAGCAGGCTCC',2,58.3);
