@@ -1,5 +1,5 @@
 /*
- * $Id: OligoPattern.java,v 1.2 2001-06-29 11:46:29 wenhong_mar Exp $
+ * $Id: OligoPattern.java,v 1.3 2001-07-16 19:50:58 wendy Exp $
  * OligoPattern.java
  *
  * Created on May 29, 2001, 12:40 PM
@@ -10,7 +10,7 @@ package edu.harvard.med.hip.flex.process;
 /**
  * This class groups three oligoIDs which derived from the same sequence
  * together with its oligo sequence and CDS length. When oligo plates are
- * generated, the oligo samples must be arranged in a saw-tooth pattern. 
+ * generated, the oligo samples must be arranged in a saw-tooth pattern.
  * The set of three oligo samples should be in the same position of each plate.
  * This class facilitates the arrangement of the oligo pattern.
  * @file OligoPattern.java
@@ -25,6 +25,8 @@ public class OligoPattern {
     private String oligoseq_5p;
     private String oligoseq_3s;
     private String oligoseq_3op;
+    private int constructid_close;
+    private int constructid_open;
     private int cdsLength;
     
     /**
@@ -39,14 +41,17 @@ public class OligoPattern {
      * @param cdsLength The CDS Length of the sequence
      */
     
-    public OligoPattern(int oligoId_5p, int oligoId_3s, int oligoId_3op, 
-        String oligoseq_5p, String oligoseq_3s, String oligoseq_3op, int cdsLength) {
+    public OligoPattern(int oligoId_5p, int oligoId_3s, int oligoId_3op,
+    String oligoseq_5p, String oligoseq_3s, String oligoseq_3op,
+    int close, int open, int cdsLength) {
         this.oligoId_5p = oligoId_5p;
         this.oligoId_3s = oligoId_3s;
         this.oligoId_3op = oligoId_3op;
         this.oligoseq_5p = oligoseq_5p;
         this.oligoseq_3s = oligoseq_3s;
         this.oligoseq_3op = oligoseq_3op;
+        this.constructid_close = close;
+        this.constructid_open = open;
         this.cdsLength = cdsLength;
     }
     
@@ -56,6 +61,14 @@ public class OligoPattern {
     
     public int getOligoId_3s() {
         return oligoId_3s;
+    }
+    
+    public int getConstructid_close(){
+        return constructid_close;
+    }
+    
+    public int getConstructid_open(){
+        return constructid_open;
     }
     
     public int getOligoId_3op() {
