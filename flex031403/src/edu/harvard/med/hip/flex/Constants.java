@@ -40,6 +40,11 @@ public class Constants {
     // key used to find the list of rejected seqeunces
     public static final String REJECTED_SEQUENCE_LIST_KEY = "REJECTED_SEQUENCE_LIST";
     
+    // key to use to find the number of pending request in the queue
+    public static final String PENDING_SEQ_NUM_KEY = "PENDING_SEQ_NUM";
+    
+    // key to use to find the number of requests processed
+    public static final String PROCESSED_SEQ_NUM_KEY = "PROCESESSED_SEQ_NUM";
     
     /** Creates new Constants */
     private Constants() {
