@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.2 2001-05-23 19:23:26 dongmei_zuo Exp $
+ * $Id: NNPrimerCalculator.java,v 1.3 2001-05-25 18:41:59 wenhong_mar Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -9,6 +9,7 @@
  
 package edu.harvard.med.hip.flex.util;
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.database.*;
 import java.math.*;
  
 public class NNPrimerCalculator implements PrimerCalculator
@@ -113,7 +114,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 * @param oligoType A String object indicates the types of oligos
 	 * @return A Oligo object
 	 */
-	private Oligo calTm (String subSeq, String oligoType)
+	private Oligo calTm (String subSeq, String oligoType) throws FlexDatabaseException
 	{
 		double Tm = 0;
 		double preTm = 0;
@@ -266,7 +267,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 * @param sequence  A Sequence object
 	 * @return  An Oligo object represents a 5p oligo
 	 */
-	public Oligo calculateFivepOligo (Sequence sequence)
+	public Oligo calculateFivepOligo(Sequence sequence) throws FlexDatabaseException
 	{
 		Oligo fivepOligo = null;
 		String type = "5p";
@@ -283,7 +284,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 * @param sequence  A Sequence object
 	 * @return  An Oligo object represents a 3p closed oligo
 	 */
-	public Oligo calculateThreepCloseOligo (Sequence sequence)
+	public Oligo calculateThreepCloseOligo(Sequence sequence) throws FlexDatabaseException
 	{
 		Oligo threepOligo = null;
 		String type = "3s";
@@ -302,7 +303,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 * @param sequence  A Sequence object
 	 * @return  An Oligo object represents a 3p open oligo
 	 */
-	public Oligo calculateThreepOpenOligo (Sequence sequence)
+	public Oligo calculateThreepOpenOligo(Sequence sequence) throws FlexDatabaseException
 	{
 		Oligo threepOpenOligo = null;
 		String type = "3op";
@@ -331,11 +332,13 @@ public class NNPrimerCalculator implements PrimerCalculator
 	public void test ()
 	{	
 		String seqText = "ATGGCGTTTCTCCGAAGCATGTGGGGCGTGCTGACTGCCCTGGGAAGGTCTGGAGCAGAGCTGTGCACCGGCTGTGGAAGTCGACTGCGCTCCCCCTTCAGGTAG";
-		String seqID = "HSQ1";
+		int seqID = 1;
 
 		int Start = 0;
 		int Stop = 104;
 		Sequence testSeq = new Sequence(seqID,Start,Stop,seqText);
+                
+                try{
 		Oligo result = calculateFivepOligo(testSeq);
 		System.out.println(result.getSequence());
 		System.out.println(result.getOligoLength());
@@ -356,6 +359,10 @@ public class NNPrimerCalculator implements PrimerCalculator
 		System.out.println(result2.getGatewaySequence());
 		System.out.println(result2.getType());
 		System.out.println(result2.getTm());
+                }
+                catch(FlexDatabaseException e){
+                  System.out.println(e.getMessage());  
+                }
 	}
 
 }
