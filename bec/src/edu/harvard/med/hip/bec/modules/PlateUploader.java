@@ -38,24 +38,35 @@ public class PlateUploader
     public static final int PLATE_IDS = 2;
     
     private ArrayList m_plate_names = null;
+    private int       m_plate_sabmitted_for = -1;//initial status for isolate ranking
+    private int       m_vectorid = -1;
+    private int       m_linker3_id = -1;
+    private int       m_linker5_id = -1;
     private int       m_array_type = -1;
     
+    private ArrayList m_error_messages = null;
     
     
    
     /** Creates a new instance of PlateUploader */
-    public PlateUploader(ArrayList plate_names, int mode)
+    public PlateUploader(ArrayList plate_names, int mode, int vectorid, 
+                        int l3id, int l5id, int isltrstatus)
     {
         m_plate_names = plate_names;
         m_array_type = mode;
-        
+        m_plate_sabmitted_for = isltrstatus;//initial status for isolate ranking
+        m_vectorid = vectorid;
+        m_linker3_id = l3id;
+        m_linker5_id = l5id;
+        m_error_messages = new ArrayList();
     }
     
     
+    public ArrayList getErrors(){ return m_error_messages;}
     
-    public ArrayList  upload()
+    public void  upload()
     {
-        ArrayList errors = new ArrayList();
+     
         //get all reference sequences from bec: to prevent multipal upload of the same sequence
         //Hashtable refsequences = getAllRefSequences(m_bec_connection);
          Connection  flex_connection = null;
@@ -67,46 +78,64 @@ public class PlateUploader
         }
         catch(Exception e)
         {
-            errors.add("Cannot open connection to database");
-            return errors;
+            m_error_messages.add("Cannot open connection to database");
+          
         }
         for (int count = 0 ; count < m_plate_names.size(); count++)
         {
-            try
-            {
-                uploadPlate( (String) m_plate_names.get(count) , flex_connection, bec_connection);
-            }
-            catch(BecDatabaseException e)
-            {
-                errors.add(e.getMessage());
-            }
+            uploadPlate( (String) m_plate_names.get(count) , flex_connection, bec_connection);
+           
         }
         try
         {
             flex_connection.close();
             flex_connection.close();
-            return errors;
+     
         }
         catch(Exception e)
         {
-            errors.add("Cannot close connection to database");
-            return errors;
+            m_error_messages.add("Cannot close connection to database");
+           
         }
     }
     
     //function uploads data for one plate into BEC
-    public void uploadPlate( String platename, Connection flex_connection, Connection bec_connection)throws BecDatabaseException
+    public   void uploadPlate( String platename, Connection flex_connection, 
+    Connection bec_connection)
     {
         //hash for flex sequences
-          Hashtable flex_sequence_ids = new Hashtable();
-          // get all related sample info from flex
-          ArrayList samples = getSampleInfoFromFLEX( platename,  flex_sequence_ids,  flex_connection);
-          // check for sequence duplicates in BEC
-          checkForSequencePresenceInBEC(flex_sequence_ids,bec_connection,flex_connection);
-          //get new for BEC sequences from FLEX
-           getMissingFlexSequences(flex_sequence_ids, flex_connection);
+        try
+        {
+              Hashtable flex_sequence_ids = new Hashtable();
+              // get all needed info from flex
+
+              // get all related sample info from flex
+              ArrayList samples = getSampleInfoFromFLEX( platename,  flex_sequence_ids,  flex_connection);
+              // check for sequence duplicates in BEC
+              checkForSequencePresenceInBEC(flex_sequence_ids,bec_connection,flex_connection);
+              //get new for BEC sequences from FLEX
+               getMissingFlexSequences(flex_sequence_ids, flex_connection,bec_connection);
+
+               insertPlateInfo(platename, samples, flex_sequence_ids,bec_connection);
+
+               //commit plate info into bec
+               bec_connection.commit();
+        }
+        catch(Exception e)
+        {
+            m_error_messages.add(e.getMessage());
+            try
+            {
+                bec_connection.rollback();
+            }catch(Exception ee){}
+        }
         
     }
+    
+    
+    //*******************************************************************************
+    
+    // the following function get plate related info from FLEX
     
     // finds construct ids for the plate samples
     private ArrayList getSampleInfoFromFLEX(String platename, Hashtable flex_sequence_ids, Connection flex_connection) throws BecDatabaseException
@@ -127,6 +156,7 @@ public class PlateUploader
             {
                 sample = new SampleInfo();
                 sample.setId ( rs.getInt("sampleid") );
+                sample.setPlateId( rs.getInt("plateid") );
                 sample.setPosition ( rs.getInt("position") );
                 
                 sample.setType ( rs.getString("sampletype") );
@@ -196,9 +226,10 @@ public class PlateUploader
     }
     
     
-    private void getMissingFlexSequences(Hashtable flex_sequences,
-                                        Connection flex_connection)
-                                        throws BecDatabaseException
+    private synchronized void getMissingFlexSequences(Hashtable flex_sequences,
+                                        Connection flex_connection,
+                                        Connection bec_connection)
+                                        throws Exception
     {
         for (Enumeration e = flex_sequences.keys(); e.hasMoreElements() ;)
         {
@@ -206,6 +237,8 @@ public class PlateUploader
             if ( flex_sequences.get(key) == null)
             { 
                 RefSequence fl = getRefSequenceFormFlex( ((Integer) key).intValue(), flex_connection);
+                fl.insert(bec_connection);
+                bec_connection.commit();
                 flex_sequences.put(key, fl);
             }
         }
@@ -284,7 +317,126 @@ public class PlateUploader
     }
     
     
+    //*******************************************************************************
     
+    
+    
+    //*******************************************************************************
+    //the following functions create new plate in bec
+    
+    
+    private   synchronized void insertPlateInfo(String platename, ArrayList samples, 
+    Hashtable flex_sequence_ids,Connection bec_connection)
+     throws BecDatabaseException
+    {
+        //create container in bec
+       
+        Container container = new Container(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                            Container.TYPE_SEQUENCING_CONTAINER,
+                                            platename,  -1);
+    
+        //create samples and flex info and isolatetracking (optional)
+         FlexInfo flex_info;
+         IsolateTrackingEngine istr;
+         Sample sample; SampleInfo sample_info; 
+        for (int sample_count = 0; sample_count < samples.size(); sample_count++)
+        {    
+            sample_info = ( SampleInfo )samples.get(sample_count);
+            //create flex info record
+            flex_info = new FlexInfo();
+            
+            flex_info.setFlexSampleId ( sample_info.getId () );
+            flex_info.setFlexConstructId ( sample_info.getConstructId());
+            flex_info.setFlexPlateId ( sample_info.getPlateId() );
+            flex_info.setFlexSequenceId ( sample_info. getSequenceId ());
+            flex_info.setFlexCloneId ( sample_info.getCloneId() );
+            
+   //create  isolate tracking             
+            istr = new IsolateTrackingEngine();
+            istr.setStatus( m_plate_sabmitted_for);
+            istr.setFlexInfo(flex_info);
+    //link flex info with isolate tracking 
+            flex_info.setIsolateTrackingId ( istr.getId() );
+            
+    // create construct 
+            int constructid = getConstructId( sample_info.getConstructId(), 
+                                    sample_info.getFormat(), 
+                                    sample_info.getSequenceId(),
+                                    flex_sequence_ids, 
+                                    bec_connection);
+            istr.setConstructId( constructid );
+            
+            sample = new Sample(BecIDGenerator.BEC_OBJECT_ID_NOTSET, 
+                                        sample_info.getType(), 
+                                        sample_info.getPosition(),   
+                                        container.getId());
+          
+            sample.setIsolaterTracking(istr);
+     //link isolate tracking with sample
+            istr.setSampleId( sample.getId() );
+            
+            container.addSample(sample);
+        }
+         container.insert(bec_connection);
+        
+        //construct
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    private int  getConstructId( int flexconstructId, 
+                                    int constructformat, 
+                                    int flex_sequenceid,
+                                    Hashtable flex_sequence_ids,
+                                    Connection bec_connection)
+                                     throws BecDatabaseException
+    {
+        Construct construct;
+        int construct_id = -1;
+        //check wether BEC database contains this construct: we relay to user
+        construct = Construct.getConstructByFlexConstructId(flexconstructId);
+        if (construct != null)
+        {
+            //check if construct has the same vector & linker info
+            if (construct.getVectorId() == m_linker5_id && 
+                construct.getLinker3Id()==  m_linker3_id &&
+                construct.getLinker5Id() ==    m_linker5_id )
+            {
+               return construct.getId();
+            }
+        }
+        // create new construct
+        construct = new Construct();
+        //get bec sequence id
+        int sequence_id = -1;
+        Object seq = flex_sequence_ids.get(new Integer(flex_sequenceid ));
+        if ( seq instanceof Integer)
+        {
+            sequence_id = ((Integer)seq).intValue();
+        }
+        else if (seq instanceof RefSequence)
+        {
+            sequence_id = ((RefSequence) seq).getId();
+        }
+        construct.setRefSeqId( sequence_id );
+        construct.setFormat(constructformat);
+        construct.setLinker3Id(m_linker3_id);
+        construct.setVectorId(m_linker5_id);
+        construct.setLinker5Id(m_linker5_id);
+        construct.insert(bec_connection);
+        return construct_id;
+    }
+    
+    
+    
+    
+    
+    //*******************************************************************************
     
     
     
@@ -409,6 +561,7 @@ public class PlateUploader
     class SampleInfo
     {
         private int i_sampleid  = -1;
+        private int i_plateid = -1;
         private int i_position = -1;
         private int i_cloneid = -1;
         private String i_type = null;
@@ -418,7 +571,9 @@ public class PlateUploader
         private int i_format = -1;
         
         public SampleInfo(){}
+        
         public int getId (){ return i_sampleid   ;}
+        public int getPlateId (){ return i_plateid;}
         public int getPosition (){ return i_position  ;}
         public int getCloneId (){ return i_cloneid  ;}
         public String getType (){ return i_type  ;}
@@ -428,6 +583,7 @@ public class PlateUploader
         public int getFormat (){ return i_format  ;}
         
         public void setId (int v){  i_sampleid   = v;}
+        public void setPlateId (int v){  i_plateid = v;}
         public void setPosition (int v){  i_position  = v;}
         public void setCloneId (int v){  i_cloneid  = v;}
         public void setType (String v){  i_type  = v;}
