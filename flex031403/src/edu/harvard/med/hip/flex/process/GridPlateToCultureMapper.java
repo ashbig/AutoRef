@@ -16,11 +16,12 @@ import java.util.*;
  * @author  dzuo
  * @version
  */
-public class GridPlateToCultureMapper extends AbstractAgarToCultureMapper {
+public abstract class GridPlateToCultureMapper extends AbstractAgarToCultureMapper {
 //    public static final int AGARWELLNUM = 48;
     protected int NumOfDestPlates = 4;
     protected int startIndexes[] = {1, 5};
     protected int column = 12;
+    protected int row = 8;
     
     /**
      * Constructor.
@@ -55,5 +56,10 @@ public class GridPlateToCultureMapper extends AbstractAgarToCultureMapper {
     protected int getColumn() {
         return column;
     }
+
+    protected int getRow() {
+        return row;
+    }
     
+    abstract protected int getPlatenumOnDest();    
 }

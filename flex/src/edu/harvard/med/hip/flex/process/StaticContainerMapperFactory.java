@@ -34,7 +34,7 @@ public class StaticContainerMapperFactory {
         } else if(Protocol.GENERATE_GRID_PLATE.equals(processname)) {
             return new OneToTwoMapper();
         } else if(Protocol.PICK_COLONY.equals(processname)) {
-            return new GridPlateToCultureMapper();
+            return new InterleavedColonyPicking();
         } else if(Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(processname)
                 || Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(processname)) {
             return new OneToOneNewContainerMapper();

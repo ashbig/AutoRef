@@ -58,7 +58,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
                 c.restoreSample();
                 
                 //addNewContainer = true;
-                if(c.getSamples().size() - i*getColumn() > 0) {
+                if(c.getSamples().size()*COLONYNUM - i*getRow()*getColumn()/getPlatenumOnDest() > 0) {
                     addNewContainer = true;
                     mappingSamples(c, newContainer, protocol, getStartIndex(index), i);
                 }
@@ -77,8 +77,10 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         Vector oldSamples = container.getSamples();
         
         int column = getColumn();
-        int n=platenum*column;
-        while(n<platenum*column+column && n<oldSamples.size()) {
+        int row = getRow();
+        int platenumOnDest = getPlatenumOnDest();
+        int n=platenum*row*column/platenumOnDest/COLONYNUM;
+        while(n*COLONYNUM<(platenum+1)*row*column/platenumOnDest && n<oldSamples.size()) {
             Sample s = (Sample)oldSamples.elementAt(n);
             type = getType(container, s, protocol);
             
@@ -87,7 +89,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
                 newContainer.addSample(newSample);
                 sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
             }
-            index = index+COLONYNUM*2;
+            index = index+COLONYNUM*getPlatenumOnDest();
             n++;
         }
     }
@@ -180,4 +182,11 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
     abstract protected int getStartIndex(int index);
     
     abstract protected int getColumn();
+    
+    abstract protected int getRow();
+    
+    /**
+     * Return the number of plates mapped to one destination plate.
+     */
+    abstract protected int getPlatenumOnDest();
 }
