@@ -176,7 +176,7 @@ public class NeedleParser
         String query="";
         String ref="";
         char[] current_line = null;
-        int refseq_count = 1;int queryseq_count=1;
+        int refseq_count = 1;int queryseq_count=0;
         BufferedReader  fin = null;
          try 
         {
@@ -235,7 +235,11 @@ public class NeedleParser
                               if (current_line[count] ==' '){ output.append(' '); continue;}
                                if ( scores != null && queryseq_count < scores.length)
                                 {
-                                    if( scores[queryseq_count] < 20)
+                                    if( scores[queryseq_count] < 10)
+                                    {
+                                        output.append("<font color='ORANGE'><b>"+current_line[count]+"</b></font>");
+                                    }
+                                    if( scores[queryseq_count] >= 10 && scores[queryseq_count] < 20)
                                     {
                                         output.append("<font color='blue'><b>"+current_line[count]+"</b></font>");
                                     }
@@ -252,7 +256,7 @@ public class NeedleParser
                                 {
                                     output.append(current_line[count]);
                                 }
-                               queryseq_count++;
+                               if (current_line[count] != '-') queryseq_count++;
                           }
                            output.append(line.substring(seq_end));
                            
