@@ -10,7 +10,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <html>
-<head><title><bean:message key="flex.name"/> : Container Process History</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Container Process History</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
     <h2><bean:message key="flex.name"/> : Container Process History</h2>
     <hr>

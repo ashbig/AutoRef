@@ -18,7 +18,11 @@
 </logic:present>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Container Details</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Container Details</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
+
 <body>
 <h2><bean:message key="flex.name"/> : Container Details</h2>
 <hr>
@@ -35,34 +39,32 @@
 <%--Loop through all the containers and display all their details--%>
 <logic:iterate id="container" name="<%=Constants.CONTAINER_LIST_KEY%>">
 <!--display general info about the container.-->
-<table>
+<TABLE border="0" cellpadding="2" cellspacing="0">
     <tr>
-        <td>Id:</td>
+        <td class="label">Id:</td>
         <td><bean:write name="container" property="id"/></td>
     </tr>
     <tr>
-        <td>Plate Set Id:</td>
+        <td class="label">Plate Set Id:</td>
         <td><bean:write name="container" property="platesetid"/></td>
     </tr>
     <tr>
-        <td>Type:</td>
+        <td class="label">Type:</td>
         <td><bean:write name="container" property="type"/></td>
     </tr>
     <tr>
-        <td>Location:</td>
+        <td class="label">Location:</td>
         <td><bean:write name="container" property="location.type"/></td>
     </tr>
     <tr>
-        <td>Label:</td>
+        <td class="label">Label:</td>
         <td><bean:write name="container" property="label"/></td>
     </tr>
-    
-
-
 </table>
+<br>
 <!-- display the container sample info.-->
-<table>
-    <tr>
+<TABLE border="1" cellpadding="2" cellspacing="0">
+    <tr class="headerRow">
         <th>ID</th> 
         <th>Type</th>
         <th>Position</th>
@@ -74,7 +76,7 @@
         </logic:present>
     </tr>
     <logic:iterate id="sample" name="container" property="samples">
-    <tr>
+    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
         <td>
             <logic:present name="process">
                 <flex:linkSample name="sample" process="process">
@@ -111,33 +113,38 @@
           <logic:present name="process">
             <flex:findResult processName="process" sampleName="sample" id="result"/>
             <logic:present name="result">
-                <bean:write name="result"/>
+                <flex:write name="result"/>
             </logic:present>
+            <logic:notPresent name="result">
+                &nbsp;
+            </logic:notPresent>
           </logic:present>
+          
           <logic:notPresent name="process">
             &nbsp;
           </logic:notPresent>
             </td>
         
-    </tr>
+    </flex:row>
     </logic:iterate>
 </table>
 <br>
 <CENTER><h3>Files</h3></CENTER>
 <br>
 <%-- Display all files associated with this container --%>
-<table>
-<tr><th>Name</th><th>Type</th></tr>
+<TABLE border="1" cellpadding="2" cellspacing="0">
+    <tr class="rowHeader">
+        <th>Name</th><th>Type</th>
+    </tr>
 <logic:iterate id="file" name="container" property="fileReferences">
-    
-    <tr>
+    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
         <td>
             <flex:linkFileRef name="file">
                 <bean:write name="file" property="baseName"/>
             </flex:linkFileRef>
         </td>
         <td><bean:write name="file" property="fileType"/></td>
-    </tr>
+    </flex:row>
 </logic:iterate>
 </table>
 </logic:iterate>

@@ -25,6 +25,7 @@
     <table>
     <logic:present name="<%=Constants.CONTAINER_KEY%>">
         <bean:write name="<%=Constants.CONTAINER_KEY%>" property="label"/> was processed sucessfully.
+        <hr>
     </logic:present>
     <tr>
         <td colspan="2">

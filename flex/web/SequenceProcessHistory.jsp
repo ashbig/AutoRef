@@ -15,9 +15,12 @@
 
 
 <html>
-<head><title><bean:message key="flex.name"/> : Sequence Process History</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Clone Process History</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
-    <h2><bean:message key="flex.name"/> : Sequence Process History</h2>
+    <h2><bean:message key="flex.name"/> : Clone Process History</h2>
     <hr>
     <html:errors/>
     <p>
@@ -30,19 +33,18 @@
     </logic:present>
     </p>
     <br>
-    <table>
-    <tr>
+    <TABLE border="1" cellpadding="2" cellspacing="0">
+    <tr class="headerRow">
         <th>Protocol</th>
         <th>Execution Date</th>
         <th>Subprotocol</th>
         <th>Researcher</th>
-        <th>Notes</th>
         <th>Container</th>
         <th>Sample</th>
     </tr>
  
     <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
-        <tr>
+        <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
 
         <bean:define id="process" name="threadElem" property="process"/>
         <bean:define id="protocol" name="process" property="protocol"/>
@@ -51,9 +53,8 @@
         <bean:define id="container" name="sample" property="container"/>
             <td><bean:write name="protocol" property="processname"/></td>
             <td><bean:write name="process" property="date"/></td>
-            <td><bean:write name="process" property="subprotocol"/></td>
+            <td><flex:write name="process" property="subprotocol"/></td>
             <td><bean:write name="process" property="researcher.name"/></td>
-            <td><bean:write name="process" property="extrainfo"/></td>
             <td><flex:linkContainer name="container" process="process">
                             <bean:write name="container" property="label"/>
                         </flex:linkContainer>
@@ -64,7 +65,7 @@
                         <bean:write name="sample" property="id"/>
                     </flex:linkSample>
            </td>
-        </tr>
+        </flex:row>
     </logic:iterate>
     </table>
 </body>

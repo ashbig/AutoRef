@@ -30,7 +30,10 @@
 <bean:define name="sample" property="container" id="container"/>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Sample Details</title></head> 
+<head>
+    <title><bean:message key="flex.name"/> : Sample Details</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head> 
 <body>
 <h2><bean:message key="flex.name"/> : Sample Details</h2>
 <hr>
@@ -38,9 +41,8 @@
 <p>
 
 
-<table>
-
-<tr>
+<TABLE border="1" cellpadding="2" cellspacing="0">
+<tr class="headerRow">
     <th>Sample Id</th>
     <th>Sequence</th>
     <th>Type</th>
@@ -54,7 +56,7 @@
     </logic:notEqual>
     <th>Well</th>
     </tr>
-    <tr>
+    <tr class="evenRow">
     <td>
         <bean:write name="sample" property="id"/>
     </td>
@@ -114,20 +116,20 @@
     
     <bean:write name="result" property="value"/>
     <%-- No go through and display the files --%>
-    <table>
-        <tr>
-        <th>File Type</th>
-        <th>File</th>
+    <TABLE border="1" cellpadding="2" cellspacing="0">
+        <tr class="rowHeader">
+            <th>File Type</th>
+            <th>File</th>
         </tr>
     <logic:iterate name="result" property="fileReferences" id="fileRef">
-        <tr>
+        <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
             <td><bean:write name="fileRef" property="fileType"/></td>
             <td>
-                <html:link page='<%="/"+fileRef.toString()%>'>
+                <flex:linkFileRef name="fileRef">
                     <bean:write name="fileRef" property="baseName"/>
-                </html:link>    
+                </flex:linkFileRef>
             </td>
-        </tr>
+        </flex:row>
     </logic:iterate>
     </table>
 </logic:present>

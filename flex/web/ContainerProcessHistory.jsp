@@ -26,7 +26,6 @@
         <th>Execution Date</th>
         <th>Subprotocol</th>
         <th>Researcher</th>
-        <th>Notes</th>
         <th>Container</th>
         <th>Container Type</th>
         <th>Container Label</th>
@@ -40,7 +39,6 @@
             <td><flex:write name="process" property="date"/></td>
             <td><flex:write name="process" property="subprotocol"/></td>
             <td><flex:write name="process" property="researcher.name"/></td>
-            <td><flex:write name="process" property="extrainfo"/></td>
             <td><flex:linkContainer name="container" process="process">
                             <bean:write name="container" property="id"/>
                         </flex:linkContainer>

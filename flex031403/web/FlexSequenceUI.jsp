@@ -14,8 +14,8 @@
  
  
  The following information is used by CVS
- $Revision: 1.9 $
- $Date: 2001-07-20 20:10:11 $
+ $Revision: 1.10 $
+ $Date: 2001-07-23 21:13:23 $
  $Author: jmunoz $
  
  ******************************************************************************
@@ -40,7 +40,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Flex Sequence Info</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Flex Sequence Info</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
 
 <H2><bean:message key="flex.name"/> : Flex Sequence Info</h2>
@@ -49,39 +52,51 @@
 <p>
 <TABLE WIDTH=80% ALIGN=CENTER>
     <TR>
-        <TD>Flex ID:</td><td><bean:write name="FLEX_SEQUENCE" property="id"/></TD>
+        <TD class="label">Flex ID:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="id"/></TD>
     </TR>
     <TR>
-        <TD COLSPAN=2>Sequence Description:</td><td<bean:write name="FLEX_SEQUENCE" property="description"/></TD>
+        <TD class="label">Sequence Description:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="description"/></TD>
     </TR>
     <TR>
-        <TD>Sequence Length:</td><td<bean:write name="FLEX_SEQUENCE" property="sequenceLength"/></TD>
+        <TD class="label">Sequence Length:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="sequenceLength"/></TD>
     </TR>
     <TR>
-        <TD>GI Number:</td><td><bean:write name="FLEX_SEQUENCE" property="gi"/></TD>
-        <TD>Accession Number:</td><td<bean:write name="FLEX_SEQUENCE" property="accession"/></TD>
+        <TD class="label">GI Number:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="gi"/></TD>
+        <TD class="label">Accession Number:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="accession"/></TD>
     </TR>
     <TR>
-        <TD>Start Position:</td><td><bean:write name="FLEX_SEQUENCE" property="cdsstart"/></TD>
-        <TD>Stop Position:</td><td><bean:write name="FLEX_SEQUENCE" property="cdsstop"/></TD>
+        <TD class="label">Start Position:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="cdsstart"/></TD>
+        <TD class="label">Stop Position:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="cdsstop"/></TD>
     </TR>
     <TR>
-        <TD>CDS Length:</td><td><bean:write name="FLEX_SEQUENCE" property="cdslength"/></TD>
+        <TD class="label">CDS Length:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="cdslength"/></TD>
     </TR>
     <TR>
-        <TD>Species:</td><td><bean:write name="FLEX_SEQUENCE" property="species"/></TD>
+        <TD class="label">Species:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="species"/></TD>
     </TR>
     <TR>
-        <TD>Quality</td><td><bean:write name="FLEX_SEQUENCE" property="quality"/></TD>
+        <TD class="label">Quality</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="quality"/></TD>
     </TR>
     <TR>
-        <TD>Date Added:</td><td><bean:write name="FLEX_SEQUENCE" property="dateadded"/></TD>
+        <TD class="label">Date Added:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="dateadded"/></TD>
     </TR>
     <TR>
-        <TD>GC content:</td><td><bean:write name="FLEX_SEQUENCE" property="gccontent"/></TD>
+        <TD class="label">GC content:</td>
+        <td><bean:write name="FLEX_SEQUENCE" property="gccontent"/></TD>
     </TR>
     <TR>
-        <TD>Sequence:</TD>
+        <TD class="label">Sequence:</TD>
     </TR>
     
     <TR><TD COLSPAN=2>
@@ -95,7 +110,3 @@
 </TABLE>
 </body>
 </html>
-
-
-
-

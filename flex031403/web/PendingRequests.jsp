@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.16 2001-07-20 19:13:27 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.17 2001-07-23 21:13:23 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -39,7 +39,7 @@
             <td colspan="6">
             <table border="0" cellpading="0" cellspacing="0">
                 <tr>
-                    <td width=85%>
+                    <td width=100%>
                         <logic:present name="PAGES">
                             Jump to page: 
                             <logic:iterate name="PAGES" id="pageLink">
@@ -55,7 +55,7 @@
                         &nbsp;
                     </logic:present>
                     </td>
-                    <td width="15%" ALIGN="RIGHT"><center>
+                    <%--<td width="15%" ALIGN="RIGHT"><center>
                         <logic:present name="prevPage">
                             <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="prevPage">
                                 << Previous
@@ -75,7 +75,7 @@
                         <logic:notPresent name="nextPage">
                             Next >>
                         </logic:notPresent>
-                </center></td>
+                </center></td>--%>
             </tr>
         </table>
         </td>
