@@ -190,6 +190,7 @@ public class IsolateRanker
                 else if (clonesequence != null )//sequence exists process it
                 {
                     processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
+                    
                     if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
                     {
                         it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
@@ -202,6 +203,7 @@ public class IsolateRanker
                 
                 
                     //check wether number of mutations exseedmax allowed
+                if (it.getRank() == IsolateTrackingEngine.RANK_BLACK) it.setRank(-1);
                 it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length());
             }
             construct.calculateRank( refsequence.getText().length() ,m_cutoff_spec);
