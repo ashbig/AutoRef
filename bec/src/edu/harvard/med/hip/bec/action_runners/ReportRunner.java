@@ -407,7 +407,7 @@ public class ReportRunner extends ProcessRunner
     }    
     if( m_rank)
     {
-        if ( clone.getSampleType().equals("ISOLATE")   )     { cloneinfo.append(clone.getRank()+"\t");}
+        if ( clone.getSampleType().equals("ISOLATE")   )     { cloneinfo.append( IsolateTrackingEngine.getRankAsString(clone.getRank())+"\t");}
         else       { cloneinfo.append("\t");}
     }
       //get directories
@@ -473,7 +473,9 @@ public class ReportRunner extends ProcessRunner
     if( m_clone_seq_id )
     { 
         cloneinfo.append(clone.getSequenceId ()+"\t");
-        cloneinfo.append(BaseSequence.getCloneSequenceTypeAsString(clone.getSequenceType ()) + "\t");
+        if ( clone.getSequenceId () != 0)
+            cloneinfo.append(BaseSequence.getCloneSequenceTypeAsString(clone.getSequenceType ()));
+        cloneinfo.append( "\t");
     }//      Clone Sequence Id
     if( m_clone_status){ cloneinfo.append(BaseSequence.getSequenceAnalyzedStatusAsString( clone.getSequenceAnalisysStatus ())+"\t");}//      Clone Sequence Analysis Status
     if (m_clone_seq_cds_start){cloneinfo.append( clone.getCloneSequenceCdsStart ()+"\t");}
