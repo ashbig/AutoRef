@@ -161,7 +161,7 @@ public class OligoCalculation
         String sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded   "
 +" from  oligo_calculation where sequenceid = "
 +" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
-+" (select isolatetrackingid from flexinfo where flexsequenceid="+flexsequenceid+"))) order by oligocalculationid";
++" (select max(isolatetrackingid) from flexinfo where flexsequenceid="+flexsequenceid+"))) order by oligocalculationid";
         return getByRule(sql);
    }
    
