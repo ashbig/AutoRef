@@ -53,7 +53,11 @@ public class Constants {
     public static String       LINE_SEPARATOR = "\n";//System.getProperty("line.separator") ;
     
     public static final String DELIM_WHITE_SPACE = " ";
+    // for UI to show menu 
+    public static final String NO_MENU_TO_SHOW = "NO_MENU_TO_SHOW";
     
+    
+    // FLEX ----------------------------------------------
     // constant for workflow (queue) admin group
     public static final String WORKFLOW_GROUP = "Workflow Admin";
     

@@ -31,7 +31,10 @@ import java.util.*;
     private int                             m_spec_id = -1;
     private boolean                         m_isRunLQRFinderForContigs = false;
     private String                          m_vector_file_name = null;
-       
+    private int         m_quality_trimming_phd_score = 0;
+    private int         m_quality_trimming_phd_first_base = 0;
+    private int         m_quality_trimming_phd_last_base = 0;
+      
 
     // only for LQR report how many bases will be covered by end reads
     private int				m_number_of_bases_covered_by_forward_er = 300;
@@ -47,7 +50,10 @@ import java.util.*;
     public void         setIsRunLQR(boolean v){ m_isRunLQRFinderForContigs = v ;}
 
     public void         setVectorFileName(String v){m_vector_file_name = v;}
-       
+    public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
+    public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
+    public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
+      
     public void         setNumberOfBasesCoveredByForwardER(int v){m_number_of_bases_covered_by_forward_er = v ;}
     public void         setNumberOfBasesCoveredByReverseER(int v){m_number_of_bases_covered_by_reverse_er = v;}
 
@@ -204,6 +210,10 @@ import java.util.*;
         {
             GapMapper mapper = new GapMapper();
             mapper.setCloneId(clone_id);
+            mapper.setQualityTrimmingScore (m_quality_trimming_phd_score);
+            mapper.setQualityTrimmingLastBase(m_quality_trimming_phd_last_base);
+            mapper.setQualityTrimmingFirstBase (m_quality_trimming_phd_first_base);
+
             mapper.setVectorFileName(m_vector_file_name );
        
             mapper.setTrimmingSpec( trimming_spec);
@@ -488,16 +498,16 @@ import java.util.*;
         try
         {
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setInputData( Constants.ITEM_TYPE_CLONEID,"   1575  4627 ");
-             
-             
+             runner.setInputData( Constants.ITEM_TYPE_CLONEID,"  132311  130447  129793  122007  122015  122023  122031  122119  122127  122167  122231  122239  122247  122255  122263  122271  122279  122287  122295  122405  122483  122491   129985   121979   122393   122915   123129   123137   127133   		  ");
+            
              runner.setProcessType(Constants.PROCESS_FIND_GAPS);
              runner.setIsTryMode(false);
              //SlidingWindowTrimmingSpec spec =   SlidingWindowTrimmingSpec.getDefaultSpec();
           //   spec.setTrimmingType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);
              //spec.setQWindowSize( 10);
              runner.setSpecId(32);
-             runner.setIsRunLQR(true);
+             runner.setVectorFileName("vector_pDonor221_altered.txt");
+             runner.setIsRunLQR(false);
              runner.run();
             /* spec.setType( SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW);
              runner.setTrimmingSpec(spec);

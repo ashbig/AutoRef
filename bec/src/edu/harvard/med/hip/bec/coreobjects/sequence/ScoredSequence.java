@@ -174,6 +174,9 @@ public class ScoredSequence extends BaseSequence
        return res.toString();
     }
     
+   
+    
+    
    public String toHTMLString()
    {
        StringBuffer res = new StringBuffer();

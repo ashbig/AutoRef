@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.11 2004-03-09 17:44:35 Elena Exp $
+ * $Id: Oligo.java,v 1.12 2004-11-10 20:43:44 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -175,7 +175,9 @@ public class Oligo
     public void         setGCContent(int s ) {  m_gc_content = s ;}
     public void         setPosition(int s ) {  m_position= s ;}// for full sequencing, start of the prime regarding sequence start
     public void         setName(String s ) {  m_oligo_name = s ;}
-    public void         setSequence(String s){ m_sequence = s;}
+    public void         setSequence(String s)
+    {
+        m_sequence = s;}
     public void         setOrientation(int v) {  m_orientation = v;}
      public void        setSubmitterId(int v)    {         m_submitterid = v;    }
      public void        setOligoCalculationId(int v)    {         m_calculationid = v;    }
@@ -269,7 +271,7 @@ public class Oligo
     public String toString()
     {
         return "Sequence : "+ m_sequence+"\tTm: " + m_Tm +"\tType: "+ m_type +
-        "Gccont: " + m_gc_content + "\tStart: "+ m_position +"\tName: " + m_oligo_name;
+        "Gccont: " + m_gc_content + "\tStart: "+ m_position +"\tName: " + m_oligo_name+"\tstatus"+m_status;
     }
 
 

@@ -21,7 +21,7 @@ public class ScoredElement
     private int m_index = DEFAULT_COORDINATE;
     private int m_base_score = 0;
     private char m_base ='\u0000'; 
-    private boolean      m_isDiscrepancy = false;
+     private boolean      m_isDiscrepancy = false;
   
     /** Creates a new instance of ScoredElement */
     public ScoredElement()    {    }
@@ -32,25 +32,24 @@ public class ScoredElement
         m_index = index;
         m_base_score = base_score;
         m_base = base;
-    }
+       }
      public ScoredElement( int index  ,int base_score,char base, boolean isDiscrepancy)
     {
         m_index = index;
         m_base_score = base_score;
         m_base = base;
         m_isDiscrepancy = isDiscrepancy;
-    }
+         }
   
     public int          getIndex (){ return m_index    ; }
     public int          getScore (){ return m_base_score    ; }
     public char         getBase (){ return m_base   ; }
     public boolean      isDiscrepancy(){ return m_isDiscrepancy;}
-
+   
     public void setIndex (int v){  m_index    = v; }
     public void setScore (int v){  m_base_score    = v; }
     public void setBase (char v){  m_base   = v; }
     public void setIsDiscrepancy(boolean isDiscrepancy){ m_isDiscrepancy = isDiscrepancy;}
-    
     public String toString(){ return m_index + " "+ m_base +" "+m_base_score; }
     
     public static ScoredSequence trimStretch 
@@ -265,7 +264,7 @@ public class ScoredElement
     {
         /* 
          *first column -> our scored elements
-         matrix   A   C   G   T   N   * /-
+         matrix   A   C   G   T   N   * X x/-
         read 1
         read 2
         read 3
@@ -363,10 +362,10 @@ public class ScoredElement
      //    System.out.println( transferScoreToProbability(56) );
      //    System.out.println( transferScoreToProbability(34) );
         ScoredElement[] base_data = new ScoredElement[3];
-        base_data[0] = new ScoredElement(34, 51,'A');
-        base_data[1] = new ScoredElement(34, 56, 'A');
-        base_data[2] = new ScoredElement(34, 34, 'A');
-        ScoredElement result = createScoreElementFromListOfElements( base_data, 34, 'A');
-    System.out.println( result.toString() );
+       // base_data[0] = new ScoredElement(34, 51,'A');
+       // base_data[1] = new ScoredElement(34, 56, 'A');
+       // base_data[2] = new ScoredElement(34, 34, 'A');
+       // ScoredElement result = createScoreElementFromListOfElements( base_data, 34, 'A');
+   // System.out.println( result.toString() );
     }
 }

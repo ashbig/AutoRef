@@ -210,6 +210,31 @@ public class IsolateTrackingEngine
             default: return "";
         }
     }
+    
+    public static String getRankStatusAsString(int rank, int status)
+    {
+        switch (rank)
+        {
+            case RANK_BLACK : 
+            {
+                switch (status)
+                {
+                    case PROCESS_STATUS_SUBMITTED_EMPTY : return "Not acceptable clone: Submitted empty";
+
+                    case PROCESS_STATUS_ER_ANALYZED_NO_MATCH : return "Not acceptable clone: No match";
+                    case PROCESS_STATUS_ER_NO_READS : return "Not acceptable clone: No end reads after initial submission";
+                    case PROCESS_STATUS_ER_NO_LONG_READS : return "Not acceptable clone: No long end reads after initial submission";
+                }
+                return "Not acceptable clone";
+            }
+            case   RANK_NOT_APPLICABLE : return "Not applicable";
+            case -1: return "Not analized";
+            case 1: return "Best clone";
+            case 2:case 3: case 4: case 5: case 6: case 7: case 8: return rank + " clone for the gene";
+            default: return "";
+        }
+    }
+    
     public static String getStatusAsString(int status)
     {
         switch(status)

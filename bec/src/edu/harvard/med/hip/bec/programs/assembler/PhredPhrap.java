@@ -26,6 +26,12 @@ public class PhredPhrap
     public static final String      VECTOR_LIBRARY_NAME_EMPTY = "vector_empty.seq";
     public static final String      VECTOR_LIBRARY_NAME = "vector.seq";
 
+    //for UI 
+    public static final String       QUALITY_TRIMMING_SCORE ="QUALITY_TRIMMING_SCORE";
+    public static final String       QUALITY_TRIMMING_FIRST_BASE = "QUALITY_TRIMMING_FIRST_BASE";
+    public static final String       QUALITY_TRIMMING_LAST_BASE ="QUALITY_TRIMMING_LAST_BASE";
+
+
     private String      m_query = null;
     private int         m_query_id=-1;
 
@@ -34,6 +40,10 @@ public class PhredPhrap
  
     private String      m_phredphrap_path = null;
     private String      m_vector_file_name = null;
+    
+    private int         m_quality_trimming_phd_score = 0;
+    private int         m_quality_trimming_phd_first_base = 0;
+    private int         m_quality_trimming_phd_last_base = 0;
     
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
@@ -53,7 +63,10 @@ public class PhredPhrap
     public PhredPhrap()    {    }
     public void         setVectorFileName(String s){ if ( s != null && s.trim().length()>1) m_vector_file_name =  s;}
     public String       getVectorFileName(){ return m_vector_file_name ;}
-
+    public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
+    public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
+   public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
+   
    
    
     public boolean run(String clone_path, String output_file_name)throws BecUtilException
@@ -83,7 +96,8 @@ public class PhredPhrap
             }*/
         
         }
-                System.out.println(cmd);
+        cmd += getQualityTrimmingParams();        
+        System.out.println(cmd);
         try
         {
             Runtime r = Runtime.getRuntime();
@@ -212,6 +226,17 @@ public class PhredPhrap
 
     }
 
+    private String getQualityTrimmingParams()
+    {
+        String command = "";
+        if ( m_quality_trimming_phd_score == 0) return "";
+        command = " "+ m_quality_trimming_phd_score ;
+        if (  m_quality_trimming_phd_first_base == 0) return command;
+        command += " "+ m_quality_trimming_phd_first_base;
+        if (m_quality_trimming_phd_last_base == 0) return command;
+        command += " "+ m_quality_trimming_phd_last_base ;
+        return command;
+    }
      //******************************************
     public static void main(String args[])
     {

@@ -51,7 +51,7 @@ public class CloneAssembly
             int assembly_run_status = -1;
             File trace_dir = new File( clone_trace_files_location +File.separator +PhredWrapper.CHROMAT_DIR_NAME); //trace file directory
             File [] trace_files = trace_dir.listFiles(); //trace file directory
-            if (    trace_files.length < 3)
+            if (   trace_files == null || trace_files.length < 2)
                  return ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE;
             File phd_dir = new File( clone_trace_files_location +File.separator +PhredWrapper.PHD_DIR_NAME); //trace file directory
             File [] phd_files = phd_dir.listFiles(); //trace file directory

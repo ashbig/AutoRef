@@ -132,14 +132,15 @@ public class Contig
          {
              Stretch contig = (Stretch)contigs.get(contig_number);
             // check if first contig covers 5 prime
-             if ( contig_number == 0 && contig.getCdsStart() != ScoredElement.DEFAULT_COORDINATE )
+             if ( contig_number == 0 && contig.getCdsStart() != ScoredElement.DEFAULT_COORDINATE && contig.getCdsStart() != -linker5_length )
              {
                 gap = new Stretch(Stretch.GAP_TYPE_GAP, Stretch.STATUS_DETERMINED, ScoredElement.DEFAULT_COORDINATE , contig.getCdsStart() - 1 , 0,0,Constants.ORIENTATION_FORWARD);
                 gaps.add( gap);
                
               }
              //create gap after last contig if needed
-             if ( contig_number == contigs.size() - 1 && contig.getCdsStop() != ScoredElement.DEFAULT_COORDINATE )
+             if ( contig_number == contigs.size() - 1 && contig.getCdsStop() != ScoredElement.DEFAULT_COORDINATE &&
+                    contig.getCdsStop() != clone_refsequence_length)
              {
                 gap = new Stretch(Stretch.GAP_TYPE_GAP, Stretch.STATUS_DETERMINED, contig.getCdsStop() + 1,ScoredElement.DEFAULT_COORDINATE , 0,0,  Constants.ORIENTATION_FORWARD);
                 gaps.add( gap);
@@ -216,16 +217,19 @@ public class Contig
     
     //uses horizontal array  returns array of stretch elemnts
     public static ArrayList            findContigs(ScoredElement[][] bases_array, 
-            int refseq_length, int linker5_length, SlidingWindowTrimmingSpec spec)throws Exception
+            int refseq_length, int linker5_length, SlidingWindowTrimmingSpec spec,
+            boolean isContigComplement)throws Exception
     { 
         ArrayList contigs = new ArrayList();
         ArrayList current_contig = null;//array of scored elements
         Stretch contig = null;
+        String compliment_seq = null;
+        int[] compliment_scores = null;
         ScoredElement current_base_of_contig = null;ScoredSequence sequence = null;
         boolean isBaseReadCovered = false;
         boolean isInsideContig = false;
         //find out how namy 'reads' - first is contig, second - reference sequence are in contig
-        
+        AnalyzedScoredSequence contig_sequence = null;
         int number_of_reads = bases_array[0].length;
         int bases_in_contig = bases_array.length;
         int base_count = 0;
@@ -267,7 +271,25 @@ public class Contig
                    
                      if ( sequence != null && sequence.getText().length() > spec.getMinContigLength())
                       {
-                          contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
+                          if ( isContigComplement )// compliment sequence
+                          {
+                               compliment_scores = SequenceManipulation.getScoresComplement(sequence.getScores() );
+                              compliment_seq = SequenceManipulation.getComplimentCaseSencetive(sequence.getText());
+                              contig_sequence = new AnalyzedScoredSequence(compliment_seq,  Algorithms.convertArrayToString(compliment_scores," ")  , -1);
+                              int start = contig.getCdsStart(); int stop = contig.getCdsStop();
+                              
+                              if (start != ScoredElement.DEFAULT_COORDINATE)
+                                contig.setCdsStop( refseq_length - start);
+                              else
+                                  contig.setCdsStop(ScoredElement.DEFAULT_COORDINATE);
+                              if (stop != ScoredElement.DEFAULT_COORDINATE)
+                                contig.setCdsStart( refseq_length - stop);
+                              else
+                                  contig.setCdsStart(ScoredElement.DEFAULT_COORDINATE);
+                          }
+                          else
+                              contig_sequence = new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) ;
+                          contig.setSequence (contig_sequence);
                           contigs.add(contig);
                       }
                      contig = null;        
@@ -296,7 +318,26 @@ public class Contig
                   if ( sequence != null && sequence.getText().length() > spec.getMinContigLength())
                   {
                      // System.out.println(sequence.getText());
-                      contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
+                      if ( isContigComplement )// compliment sequence
+                      {
+                          compliment_scores = SequenceManipulation.getScoresComplement(sequence.getScores() );
+                              compliment_seq = SequenceManipulation.getComplimentCaseSencetive(sequence.getText());
+                              contig_sequence = new AnalyzedScoredSequence(compliment_seq,  Algorithms.convertArrayToString(compliment_scores," ")  , -1);
+                                int start = contig.getCdsStart(); int stop = contig.getCdsStop();
+                              
+                              if (start != ScoredElement.DEFAULT_COORDINATE)
+                                contig.setCdsStop( refseq_length - start);
+                              else
+                                  contig.setCdsStop(ScoredElement.DEFAULT_COORDINATE);
+                              if (stop != ScoredElement.DEFAULT_COORDINATE)
+                                contig.setCdsStart( refseq_length - stop);
+                              else
+                                  contig.setCdsStart(ScoredElement.DEFAULT_COORDINATE);
+                        
+                      }
+                      else
+                          contig_sequence = new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) ;
+                      contig.setSequence (contig_sequence);
                       contigs.add(contig);
                   }
              }
@@ -304,7 +345,7 @@ public class Contig
         }
         catch(Exception e)
         {
-           // System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
             throw new BecUtilException("Cannot build collection of contigs for the clone");
         }
     }
@@ -356,7 +397,7 @@ public class Contig
          //sequence[current_base++];
              }
          }
-        /*
+        
          for ( base_count = 0; base_count < m_sequence.length(); base_count++)
          {
                 System.out.print(bases_array[0][base_count].getIndex()+" "+ bases_array[0][base_count].getBase() +" " + bases_array[0][base_count].getScore());
@@ -366,7 +407,7 @@ public class Contig
                  System.out.println("" );
          }
           
-*/
+
          return bases_array;
     }
     
@@ -411,39 +452,41 @@ public class Contig
                  current_read = 1;
              else 
                  current_read = not_refseq_current_read++;
-              current_base = read.getAlignStart()-1;
-              base_count =  read.getStart() + read.getAlignStart() -2;
-              for (;  current_base  <  read.getAlignEnd()-1;)
+              current_base = read.getQualityStart()-1;//read.getAlignStart()-1;
+              base_count =   read.getStart() + read.getQualityStart() -2;//read.getStart() + read.getAlignStart() -2;
+              // hack
+              if(base_count < 0)base_count=0;
+              for (;  current_base  <  read.getQualityEnd()-2;)//read.getAlignEnd()-2;)
              {
-              // System.out.println(read_count +" "+base_count+" "+current_base+" "+sequence[current_base]);
+             // System.out.println(read_count +" "+base_count+" "+current_base+" "+sequence[current_base]);
                if(current_base >= contig_array.length )              break;
                if ( current_read == 1 && sequence[current_base] != '*') // for indexing for sequence, * excluded
                  {
                        if ( refseq_index == 0 ) refseq_index = 1 ;
                        bases_array[base_count][current_read].setIndex( refseq_index++);
                  }
-             //    else
-                   //  bases_array[base_count][current_read].setIndex( current_base);
                  bases_array[base_count][current_read].setScore(read.getScoresIncludingStar()[current_base]);
-                 bases_array[base_count++][current_read].setBase( sequence[current_base++]);
+                 bases_array[base_count][current_read].setBase( sequence[current_base++]);
+                 base_count++;
          //sequence[current_base++];
              }
          }
-         /*
-        
+       /*
+       
          for ( base_count = 0; base_count < m_sequence.length(); base_count++)
          {
              for (int read_count = 0; read_count <m_num_of_reads_in_contig+1;read_count++)
              {
-                System.out.print(bases_array[base_count][read_count].getIndex()+"\t'"+ bases_array[base_count][read_count].getBase() +"'\t" + bases_array[base_count][read_count].getScore()+"\t");
+                   System.out.print(bases_array[base_count][read_count].getIndex()+"\t'"+    bases_array[base_count][read_count].getBase()+"'\t"+bases_array[base_count][read_count].getScore()+"\t");
                  
              }
               System.out.println();
          }
-*/
+        */
          return bases_array;
-        }catch(Exception e)
+        }catch(Exception err)
         {
+            System.out.println(err.getMessage());
             throw new BecUtilException("Cannot build assembly chema for the clone.");
         }
     }
@@ -454,7 +497,8 @@ public class Contig
         ArrayList real_bases_in_column = new ArrayList();
         for (int element = 2; element < contig_column.length;element++)
          {
-             if ( contig_column[element].getBase() == '\u0000' ||contig_column[0].getBase()== '*') continue;
+             if ( contig_column[element].getBase() == '\u0000' ||contig_column[0].getBase()== '*'
+                ||contig_column[element].getBase()== 'x' ||contig_column[element].getBase()== 'X') continue;
              real_bases_in_column.add( contig_column[element]);
          }
         

@@ -57,11 +57,20 @@ public class AssemblyRunner extends ProcessRunner
         private User        m_user = null;
         private String      m_vector_file_name = null;
         private int         m_assembly_mode = END_READS_ASSEMBLY;
-
+        private int         m_quality_trimming_phd_score = 0;
+        private int         m_quality_trimming_phd_first_base = 0;
+        private int         m_quality_trimming_phd_last_base = 0;
+   
         public  void        setUser(User v){m_user=v;}
         public void         setResultType(String v){ m_result_type=v;}
         public void         setVectorFileName(String v){m_vector_file_name = v;}
         public void         setAssemblyMode(int mode){ m_assembly_mode = mode;}
+        public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
+        public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
+        public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
+   
+   
+   
         public String       getTitle(){ return "Request for sequence assembler run.";}
 
 
@@ -263,6 +272,15 @@ public class AssemblyRunner extends ProcessRunner
                Contig contig = (Contig) clone_assembly.getContigs().get(0);
                int result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  refsequence);
 
+               if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_NO_MATCH)
+               {
+                   //check maybe contig is compliment
+                    contig.setSequence(SequenceManipulation.getComplimentCaseSencetive(contig.getSequence()));
+                    int[] complement_scores = SequenceManipulation.getScoresComplement( contig.getScores() );
+                    contig.setScores( Algorithms.convertArrayToString(complement_scores, " "));
+                    result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  refsequence);
+
+               }
                if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS
                 || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED
                  || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED
@@ -272,6 +290,7 @@ public class AssemblyRunner extends ProcessRunner
                         clone_sequence_id = insertSequence(clone_definition, contig,   process_id,conn );
                         if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
                 }
+             
                  IsolateTrackingEngine.updateStatus(isolate_status_pass,clone_definition.getIsolateTrackingId(),  conn );
                 IsolateTrackingEngine.updateAssemblyStatus( result,clone_definition.getIsolateTrackingId(),  conn);
             }
@@ -295,6 +314,13 @@ public class AssemblyRunner extends ProcessRunner
           
             //call phredphrap
             PhredPhrap pp = new PhredPhrap();
+            pp.setQualityTrimmingScore (m_quality_trimming_phd_score);
+            pp.setQualityTrimmingLastBase(m_quality_trimming_phd_last_base);
+            pp.setQualityTrimmingFirstBase (m_quality_trimming_phd_first_base);
+
+
+   
+           
             if (m_vector_file_name != null)pp.setVectorFileName(m_vector_file_name);
             String output_file_name =  sequence_definition.getCloneId()+ ".fasta.screen.ace.1";
             //delete quality and sequence files from end read processing
@@ -567,7 +593,8 @@ public static void main(String args[])
          runner.setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
        //      runner.setItems("116384	");
       // runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-                                      
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID,"134897");  
+            runner.setVectorFileName("vector_empty.seq");
         runner.run();           
         /*
         CloneDescription clone_definition = new CloneDescription();

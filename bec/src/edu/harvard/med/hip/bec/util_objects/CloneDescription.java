@@ -173,6 +173,7 @@ public class CloneDescription
                 clone_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
                 clone_desc.setCloneId(  rs.getInt("flexcloneid"));
                 clone_desc.setCloneStatus( rs.getInt("Status"));
+                
                 clone_desc.setReadFilePath(trace_files_path +File.separator +clone_desc.getFlexSequenceId() + File.separator + clone_desc.getCloneId() );
             }
             return clone_desc;

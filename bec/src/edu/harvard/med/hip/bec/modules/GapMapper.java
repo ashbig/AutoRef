@@ -31,6 +31,9 @@ public class GapMapper
     private SlidingWindowTrimmingSpec       m_trimming_spec = null;
     private boolean                         m_isRunLQRFinderForContigs = false;
     private String                      m_vector_file_name = null;
+    private int         m_quality_trimming_phd_score = 0;
+    private int         m_quality_trimming_phd_first_base = 0;
+    private int         m_quality_trimming_phd_last_base = 0;
       
    
     
@@ -44,7 +47,10 @@ public class GapMapper
     
     public void                 setCloneId(int v){ m_clone_id = v;}
     public void         setVectorFileName(String v){m_vector_file_name = v;}
-       
+    public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
+    public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
+    public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
+     
     
     public void                 setIsRunLQR(boolean v){m_isRunLQRFinderForContigs = v;}
     public ArrayList            getErrorMessages(){ return m_error_messages; }
@@ -66,6 +72,11 @@ public class GapMapper
                 m_error_messages.add("Clone "+clone_id+" does not exist.");
                 return ;
             }
+             if ( clone_description.getCloneStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH) 
+            {
+                m_error_messages.add("Clone "+clone_id+" does not match exspected sequence: Gap Mapper run aborted.");
+                return ;
+            }
             if ( !isCallForGapMapperRelevant(clone_description) ) return;
                  
             //refsequence includes linker sequences 
@@ -73,6 +84,10 @@ public class GapMapper
             // build refsequence file
             PhredPhrap pp = new PhredPhrap();
             pp.setVectorFileName(m_vector_file_name);
+            pp.setQualityTrimmingScore (m_quality_trimming_phd_score);
+            pp.setQualityTrimmingLastBase(m_quality_trimming_phd_last_base);
+            pp.setQualityTrimmingFirstBase (m_quality_trimming_phd_first_base);
+
                 //delete all .phd files from previous processing
             FileOperations.deleteAllFilesFormDirectory(clone_description.getReadFilePath() + File.separator +"phd_dir");
       
@@ -99,7 +114,11 @@ public class GapMapper
                     m_error_messages.addAll(not_assembled_reads);
                 return;
             }
+            int linker5_length = m_cloning_startegy.getLinker5().getSequence().length();
+    int linker3_length = m_cloning_startegy.getLinker3().getSequence().length();
+    
             ReadInAssembly read = null;
+            boolean isContigComplement = false;
             for (int contig_count = 0; contig_count<   clone_assembly.getContigs().size(); contig_count++)
             {
                 Contig contig =(Contig)clone_assembly.getContigs().get(contig_count);
@@ -120,26 +139,21 @@ public class GapMapper
                     // are in original direction
                     if ( read.getOrientation() == Constants.ORIENTATION_REVERSE)
                     {
-                        int[] compliment_scores = new int[scores_as_array.length];
-                        for (int ii =  scores_as_array.length ;  ii > 0; ii--)
-                        {
-                            compliment_scores[scores_as_array.length - ii ] = scores_as_array[ii - 1];
-                        }
-                        scores_as_array = compliment_scores;
+                        scores_as_array = SequenceManipulation.complimentScores(scores_as_array);
+                        if ( read.getName().indexOf("refsequence") != -1 )
+                            isContigComplement = true;
                     }
                     if ( read.getName().toUpperCase().indexOf( "REFSEQUENCE") != -1)
-                         refsequence_start = read.getAlignStart();//QualityStart();
+                         refsequence_start = read.getQualityStart();//read.getAlignStart();//
                     read.setScores(scores_as_array);
                 }
-                int linker5_length = m_cloning_startegy.getLinker5().getSequence().length();
-    
+                
                 ScoredElement[][]  bases = contig.prepareContigAligmentHorizontalStructure("refsequence", refsequence_start, linker5_length);
                // ArrayList gaps = Contig.findGaps(bases);
                 ArrayList contigs = Contig.findContigs(bases, 
-                                clone_refsequence.getText().length(),
+                                clone_refsequence.getText().length() - linker5_length - linker3_length,
                                 linker5_length,
-                                m_trimming_spec);
-               
+                                m_trimming_spec, isContigComplement);
                 ArrayList gaps = Contig.findGaps(contigs, linker5_length, clone_refsequence.getText().length() );
                 ArrayList stretches = contigs;
                 stretches.addAll(gaps);

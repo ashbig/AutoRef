@@ -76,7 +76,7 @@ additional_jsp_buffer.append("<option value='pBY011_cleaned_201.txt' > pBY011 an
 additional_jsp_buffer.append("<option value='pDONR201_cleaned.txt' > pDonor201 only");
 additional_jsp_buffer.append("<option value='vector_pDonorDual_altered.txt' > pDonorDual only");
 additional_jsp_buffer.append("</select></td> </tr>");
-additional_jsp_buffer.append("<tr> <td colspan='2'><strong> <input type='checkbox' name='all' id='all' onClick='isTrimm(this, this.checked)'>");
+additional_jsp_buffer.append("<tr> <td colspan='2'><strong> <input type='checkbox' checked name='all' id='all' onClick='isTrimm(this, this.checked)'>");
 additional_jsp_buffer.append(" Perform quality trimming:</strong></td> </tr>");
  additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Phred score&nbsp;&nbsp; </td>");
  additional_jsp_buffer.append(" <td><input type = text value = 10 name='"+PhredPhrap.QUALITY_TRIMMING_SCORE+"' ></td> </tr>");

@@ -96,7 +96,8 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.READ_REPORT_INT ||
                forwardName == Constants.CONSTRUCT_DEFINITION_REPORT ||
                forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT ||
-               forwardName == Constants.STRETCH_REPORT_INT 
+               forwardName == Constants.STRETCH_REPORT_INT ||
+               forwardName == Constants.STRETCH_COLLECTION_REPORT_INT
                )
                {
                    String str_id = (String) request.getParameter("ID");
@@ -105,6 +106,28 @@ public class Seq_GetItemAction extends ResearcherAction
                 }
             switch  (forwardName)
             {
+                case Constants.STRETCH_COLLECTION_REPORT_INT:
+                {
+                     Hashtable stretch_collections = new Hashtable();
+                     StretchCollection strcol = null; int cloneid = 0;
+                    strcol = StretchCollection.getById(id);
+                    int clone_id = Integer.parseInt((String)request.getParameter("cloneid"));
+                    if ( strcol != null)
+                    {
+                        strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                        if ( strcol.getType() == StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) 
+                        {
+                            stretch_collections.put( String.valueOf(clone_id), strcol);
+                         }
+                    }
+                    ArrayList items = new ArrayList(); items.add(String.valueOf(clone_id));
+                    request.setAttribute(Constants.JSP_TITLE,"view Gaps and Contigs");
+                    request.setAttribute("stretch_collections",stretch_collections);
+                    request.setAttribute("items", items);
+                    request.setAttribute("caller", Constants.NO_MENU_TO_SHOW);
+                    request.setAttribute("item_type", String.valueOf(Constants.ITEM_TYPE_CLONEID));
+                    return mapping.findForward("display_stretch_collections");
+                }
                 case Constants.VECTOR_DEFINITION_INT:
                 {
                     BioVector vector = BioVector.getVectorById(id);

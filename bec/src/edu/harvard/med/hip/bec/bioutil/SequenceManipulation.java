@@ -76,6 +76,7 @@ public class SequenceManipulation
         return res;
     }
     
+    
     public static  int[]      getScoresComplement(String scores)
     {
         ArrayList arr_scores = Algorithms.splitString(scores);
@@ -112,6 +113,40 @@ public class SequenceManipulation
                 { newStr.append(']'); break;}
                 case ']':
                 { newStr.append('['); break;}
+                case '/' :
+                { newStr.append(ch); break;}
+                
+            }
+            i--;
+        }
+        return newStr.toString();
+    }
+    
+    
+    public static String getComplimentCaseSencetive(String old)
+    {
+        StringBuffer newStr = new StringBuffer();
+        char ch;
+        int i = old.length() - 1;
+        while ( i >= 0 )
+        {
+            ch = old.charAt(i);
+            switch(ch)
+            {
+                case 'a':{newStr.append( "t");break;}
+                case 'A':{newStr.append( "T");break;}
+                case 't' : case  'u':    {newStr.append("a");break;}
+                case 'T': case 'U':   {newStr.append("A");break;}
+                case  'C': {newStr.append("G");break;}
+                case  'c' :   {newStr.append("g");break;}
+                case  'g' :  {newStr.append("c");break;}
+                case  'G':   {newStr.append("C");break;}
+                case  'n' :  {newStr.append("n");break;}
+                 case  'N':          {newStr.append("N");break;}
+                case  'x':          {newStr.append("x");break;}
+                 case  'X':          {newStr.append("X");break;}
+                case '['  :                { newStr.append(']'); break;}
+                case ']':                { newStr.append('['); break;}
                 case '/' :
                 { newStr.append(ch); break;}
                 
