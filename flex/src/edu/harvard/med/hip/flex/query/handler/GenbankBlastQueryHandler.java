@@ -92,6 +92,14 @@ public class GenbankBlastQueryHandler extends QueryHandler {
                 String gi = sr.getGi();
                 if(foundByGi.containsKey(gi)) {
                     List mgrs = (List)foundByGi.get(gi);
+                    
+                    for(int n=0; n<mgrs.size(); n++) {
+                        MatchGenbankRecord mgr = (MatchGenbankRecord)mgrs.get(n);
+                        if(sr.getLocusid() != null) {
+                            mgr.setLocusid(sr.getLocusid());
+                        }
+                    }
+                    
                     matchGenbankRecords.addAll(mgrs);
                 } 
             }

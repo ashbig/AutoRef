@@ -1,7 +1,7 @@
 /*
- * LocusBlastQueryHandler.java
+ * GeneSymbolBlastQueryHandler.java
  *
- * Created on February 19, 2004, 5:50 PM
+ * Created on February 23, 2004, 3:35 PM
  */
 
 package edu.harvard.med.hip.flex.query.handler;
@@ -13,27 +13,26 @@ import edu.harvard.med.hip.flex.query.core.*;
  *
  * @author  DZuo
  */
-public class LocusBlastQueryHandler extends QueryHandler {
-    private QueryHandler genbankBlastQueryHandler;
+public class GeneSymbolBlastQueryHandler extends QueryHandler {
+    private QueryHandler locusBlastQueryHandler;
     
-    /** Creates a new instance of LocusBlastQueryHandler */
-    public LocusBlastQueryHandler() {
+    /** Creates a new instance of GeneSymbolBlastQueryHandler */
+    public GeneSymbolBlastQueryHandler() {
     }
-       
-    /** Creates a new instance of GenbankBlastQueryHandler */
-    public LocusBlastQueryHandler(List params) {
+    
+    /** Creates a new instance of GeneSymbolBlastQueryHandler */
+    public GeneSymbolBlastQueryHandler(List params) {
         super(params);
-        genbankBlastQueryHandler = new GenbankBlastQueryHandler(params);
-    }
-        
+        locusBlastQueryHandler = new LocusBlastQueryHandler(params);
+    }  
+    
     /**
-     * Query FLEXGene database for a list of locus id numbers and populate foundList and
-     * noFoundList. It first query FLEXGene database or NCBI to get lists of SequenceRecord objects
-     * which contains genbank accession numbers. It then use GenbankBlastQueryHandler to query 
-     * for a list of accession numbers.
+     * Query FLEXGene database for a list of gene symbols and populate foundList and
+     * noFoundList. It first query FLEXGene database to get lists of SequenceRecord objects
+     * which contains locus IDs. It then use LocusBlastQueryHandler to query for a list of locus numbers.
      *
-     *  foundList:      locusid => ArrayList of MatchGenbankRecord objects
-     *  noFoundList:    locusid => NoFound object
+     *  foundList:      gene symbol => ArrayList of MatchGenbankRecord objects
+     *  noFoundList:    gene symbol => NoFound object
      *
      * @param searchTerms A list of GI numbers as search terms.
      * @exception Exception
@@ -46,31 +45,32 @@ public class LocusBlastQueryHandler extends QueryHandler {
             return;
         }
 
-        GenbankBatchRetriever retriever = new LocusGenbankBatchRetriever(searchTerms);
+        GenbankBatchRetriever retriever = new LocusSymbolBatchRetriever(searchTerms);
         retriever.retrieveGenbank();
         Map founds = retriever.getFoundList();
         noFoundList = retriever.getNoFoundList();
         
-        //get all the accession numbers for the found gene records.
-        Set genbanks = new TreeSet();
+        //get all the locus IDs for the found gene records.
+        Set locusids = new TreeSet();
         Collection values = founds.values();
         Iterator iter = values.iterator();
         while(iter.hasNext()) {
             List matchs = (List)iter.next();
             for(int i=0; i<matchs.size(); i++) {
-                SequenceRecord sr = (SequenceRecord)matchs.get(i);
-                String genbank = sr.getGenbank();
-                genbanks.add(genbank);
+                GeneRecord sr = (GeneRecord)matchs.get(i);
+                String locusid = sr.getLocusid();
+                locusids.add(locusid);
             }
         }
-        List genbankTermsList = new ArrayList();
-        genbankTermsList.addAll(genbanks);
-        
-        //Query by GI terms
-        genbankBlastQueryHandler.handleQuery(genbankTermsList);
+              
+        List locusidList = new ArrayList();
+        locusidList.addAll(locusids);
+          
+        //Query by locus id
+        locusBlastQueryHandler.handleQuery(locusidList);
         
         //handle found.
-        Map foundByGenbank = genbankBlastQueryHandler.getFoundList();
+        Map foundByLocus = locusBlastQueryHandler.getFoundList();
         Set terms = founds.keySet();
         iter = terms.iterator();
         Map leftTerms = new HashMap();
@@ -79,15 +79,18 @@ public class LocusBlastQueryHandler extends QueryHandler {
             List matchs = (List)founds.get(term);
             List matchGenbankRecords = new ArrayList();
             for(int i=0; i<matchs.size(); i++) {
-                SequenceRecord sr = (SequenceRecord)matchs.get(i);
-                String genbank = sr.getGenbank();
-                if(foundByGenbank.containsKey(genbank)) {
-                    List mgrs = (List)foundByGenbank.get(genbank);
+                GeneRecord sr = (GeneRecord)matchs.get(i);
+                String locusid = sr.getLocusid();
+                if(foundByLocus.containsKey(locusid)) {
+                    List mgrs = (List)foundByLocus.get(locusid);
                     
                     for(int n=0; n<mgrs.size(); n++) {
                         MatchGenbankRecord mgr = (MatchGenbankRecord)mgrs.get(n);
                         if(sr.getLocusid() != null) {
                             mgr.setLocusid(sr.getLocusid());
+                        }
+                        if(sr.getUnigeneid() != null) {
+                            mgr.setUnigene(sr.getUnigeneid());
                         }
                     }
                     
@@ -102,7 +105,7 @@ public class LocusBlastQueryHandler extends QueryHandler {
         }
 
         //handle no found
-        Map noFoundByGenbank = genbankBlastQueryHandler.getNoFoundList();
+        Map noFoundByLocus = locusBlastQueryHandler.getNoFoundList();
         terms = leftTerms.keySet();
         iter = terms.iterator();
         while(iter.hasNext()) {
@@ -110,10 +113,10 @@ public class LocusBlastQueryHandler extends QueryHandler {
             List matchs = (List)leftTerms.get(term);
             String reason = NoFound.NO_MATCH_GI_QUERY;
             for(int i=0; i<matchs.size(); i++) {
-                SequenceRecord sr = (SequenceRecord)matchs.get(i);
-                String genbank = sr.getGenbank();
-                if(noFoundByGenbank.containsKey(genbank)) {
-                    NoFound nf = (NoFound)noFoundByGenbank.get(genbank);
+                GeneRecord sr = (GeneRecord)matchs.get(i);
+                String locusid = sr.getLocusid();
+                if(noFoundByLocus.containsKey(locusid)) {
+                    NoFound nf = (NoFound)noFoundByLocus.get(locusid);
                     reason = reason+". Query by genbank accession: "+sr.getGenbank()+" - "+nf.getReason();
                 } else {
                     reason = reason+". Query by genbank accession: "+sr.getGenbank()+" - "+NoFound.UNKNOWN;
@@ -126,18 +129,18 @@ public class LocusBlastQueryHandler extends QueryHandler {
     
     protected void setQueryParams(List params) {
     }
-   
+    
     public static void main(String args[]) {
-        List locusList = new ArrayList();
-        locusList.add("1");
-        locusList.add("10");
-        locusList.add("abc");
+        List symbols = new ArrayList();
+        symbols.add("BCR1");
+        symbols.add("CDK2");
+        symbols.add("ABCDE");
         
         List params = new ArrayList();
         
-        QueryHandler handler = new LocusBlastQueryHandler(params);
+        QueryHandler handler = new GeneSymbolBlastQueryHandler(params);
         try {
-            handler.handleQuery(locusList);
+            handler.handleQuery(symbols);
         } catch (Exception ex) {
             System.out.println(ex);
             System.exit(0);
@@ -157,6 +160,8 @@ public class LocusBlastQueryHandler extends QueryHandler {
                 System.out.println("Genbank Acc: "+mgr.getGanbankAccession());
                 System.out.println("GI: "+mgr.getGi());
                 System.out.println("Search Method: "+mgr.getSearchMethod());
+                System.out.println("Locus ID: "+mgr.getLocusid());
+                System.out.println("Unigene: "+mgr.getUnigene());
                 List mfss = (List)mgr.getMatchFlexSequence();
                 
                 for(int n=0; n<mfss.size(); n++) {
@@ -204,5 +209,5 @@ public class LocusBlastQueryHandler extends QueryHandler {
         }
         
         System.exit(0);
-    }    
+    }        
 }

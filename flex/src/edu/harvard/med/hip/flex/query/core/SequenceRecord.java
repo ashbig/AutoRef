@@ -14,7 +14,7 @@ public class SequenceRecord {
     public static final String GENOMIC = "g";
     
     private String genbank;
-    private int locusid;
+    private String locusid;
     private String type;
     private String gi;
 
@@ -28,7 +28,7 @@ public class SequenceRecord {
         this.type = type;
     }
     
-    public SequenceRecord(String genbank, String gi, int locusid, String type) {
+    public SequenceRecord(String genbank, String gi, String locusid, String type) {
         this.genbank = genbank;
         this.gi = gi;
         this.locusid = locusid;
@@ -36,12 +36,12 @@ public class SequenceRecord {
     }
     
     public String getGenbank() {return genbank;}
-    public int getLocusid() {return locusid;}
+    public String getLocusid() {return locusid;}
     public String getType() {return type;}
     public String getGi() {return gi;}
     
     public void setGenbank(String genbank) {this.genbank = genbank;}
-    public void setLocusid(int locusid) {this.locusid = locusid;}
+    public void setLocusid(String locusid) {this.locusid = locusid;}
     public void setType(String type) {this.type = type;}
     public void setGi(String gi) {this.gi = gi;}
 }

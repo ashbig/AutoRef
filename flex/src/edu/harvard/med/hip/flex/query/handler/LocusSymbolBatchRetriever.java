@@ -1,7 +1,7 @@
 /*
- * LocusGenbankBatchRetriever.java
+ * LocusSymbolBatchRetriever.java
  *
- * Created on February 19, 2004, 5:58 PM
+ * Created on February 23, 2004, 3:44 PM
  */
 
 package edu.harvard.med.hip.flex.query.handler;
@@ -16,20 +16,20 @@ import edu.harvard.med.hip.flex.query.core.*;
  *
  * @author  DZuo
  */
-public class LocusGenbankBatchRetriever extends GenbankBatchRetriever {
+public class LocusSymbolBatchRetriever extends GenbankBatchRetriever {
     
-    /** Creates a new instance of LocusGenbankBatchRetriever */
-    public LocusGenbankBatchRetriever() {
+    /** Creates a new instance of LocusSymbolBatchRetriever */
+    public LocusSymbolBatchRetriever() {
     }
     
-    public LocusGenbankBatchRetriever(List locusList) {
-        super(locusList);
+    public LocusSymbolBatchRetriever(List symbols) {
+        super(symbols);
     }
     
-    /** Retrive the Genbank record from FLEXGene database for a list of locus ID numbers.
+    /** Retrive the locus record from FLEXGene database for a list of gene symbols.
      * Populate foundList and noFoundList.
-     *      foundList:      locus ID => list of SequenceRecord object
-     *      noFoundList:    locus ID => NoFound object
+     *      foundList:      gene symbol => list of SequenceRecord object
+     *      noFoundList:    gene symbol => NoFound object
      *
      * @exception Exception
      *
@@ -39,7 +39,8 @@ public class LocusGenbankBatchRetriever extends GenbankBatchRetriever {
             return;
         }
         
-        String sql = "select * from sequencerecord where locusid=?";
+        String sql = "select * from generecord where locusid in"+
+                    " (select locusid from genesymbol where symbol=?)";
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
@@ -47,38 +48,41 @@ public class LocusGenbankBatchRetriever extends GenbankBatchRetriever {
         ResultSet rs = null;
         
         for(int i=0; i<genbankList.size(); i++) {
-            String locusid = (String)genbankList.get(i);
-            stmt.setString(1, locusid);
+            String symbol = (String)genbankList.get(i);
+            stmt.setString(1, symbol);
             rs = DatabaseTransaction.executeQuery(stmt);
             List matchs = new ArrayList();
             while(rs.next()) {
-                String accession = rs.getString(1);
-                String gi = rs.getString(2);
-                String locus = rs.getString(3);
-                String type = rs.getString(4);
-                SequenceRecord sr = new SequenceRecord(accession, gi, locus, type);
-                matchs.add(sr);
+                String locusid = rs.getString(1);
+                String isConfirmed = rs.getString(2);
+                String organism = rs.getString(3);
+                String status = rs.getString(4);
+                String geneName = rs.getString(5);
+                String unigene = rs.getString(6);
+                GeneRecord gr = new GeneRecord(locusid,isConfirmed,organism,status,geneName,unigene);
+                matchs.add(gr);
             }
             
             if(matchs.size()>0) {
-                foundList.put(locusid, matchs);
+                foundList.put(symbol, matchs);
             } else {
-                NoFound nf = new NoFound(locusid, NoFound.LOCUSID_NOT_FOUND);
-                noFoundList.put(locusid, nf);
+                NoFound nf = new NoFound(symbol, NoFound.SYMBOL_NOT_FOUND);
+                noFoundList.put(symbol, nf);
             }
         }
         
         DatabaseTransaction.closeResultSet(rs);
         DatabaseTransaction.closeStatement(stmt);
         DatabaseTransaction.closeConnection(conn);            
-    }
-    
+    }   
+
     public static void main(String args[]) {
-        List locusList = new ArrayList();
-        locusList.add("1");
-        locusList.add("10");
+        List symbols = new ArrayList();
+        symbols.add("BCR1");
+        symbols.add("CDK2");
+        symbols.add("ABCDE");
         
-        GenbankBatchRetriever retriever = new LocusGenbankBatchRetriever(locusList);
+        GenbankBatchRetriever retriever = new LocusSymbolBatchRetriever(symbols);
         try {
             retriever.retrieveGenbank();
             Map founds = retriever.getFoundList();
@@ -92,11 +96,13 @@ public class LocusGenbankBatchRetriever extends GenbankBatchRetriever {
                 
                 List matchs = (List)founds.get(term);
                 for(int i=0; i<matchs.size(); i++) {
-                    SequenceRecord sr = (SequenceRecord)matchs.get(i);
-                    System.out.println("\tAccession: "+sr.getGenbank());
-                    System.out.println("\tGi: "+sr.getGi());
-                    System.out.println("\tLocus: "+sr.getLocusid());
-                    System.out.println("\tType: "+sr.getType());
+                    GeneRecord gr = (GeneRecord)matchs.get(i);
+                    System.out.println("\tLocusID: "+gr.getLocusid());
+                    System.out.println("\tIs confirmed: "+gr.getIsconfirmed());
+                    System.out.println("\tStatus: "+gr.getStatus());
+                    System.out.println("\tOrganism: "+gr.getOrganism());
+                    System.out.println("\tgene name: "+gr.getGenename());
+                    System.out.println("\tUnigene: "+gr.getUnigeneid());
                 }
             }
             

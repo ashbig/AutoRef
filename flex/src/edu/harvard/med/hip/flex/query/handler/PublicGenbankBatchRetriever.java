@@ -47,7 +47,7 @@ public class PublicGenbankBatchRetriever extends GenbankBatchRetriever {
             List matchs = new ArrayList();
             for(int j=0; j<ret.size(); j++) {
                 GenbankSequence seq = (GenbankSequence)ret.get(j);
-                SequenceRecord sr = new SequenceRecord(seq.getAccession(), seq.getGi(), 0, null);
+                SequenceRecord sr = new SequenceRecord(seq.getAccession(), seq.getGi(), null, null);
                 matchs.add(sr);
             } 
                         

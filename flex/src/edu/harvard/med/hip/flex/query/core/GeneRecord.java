@@ -31,6 +31,15 @@ public class GeneRecord {
         this.locusid = locusid;
     }
 
+    public GeneRecord(String locusid, String isConfirmed, String organism, String status, String genename, String unigene) {
+        this.locusid = locusid;
+        this.isconfirmed = isConfirmed;
+        this.organism = organism;
+        this.status = status;
+        this.genename = genename;
+        this.unigeneid = unigene;
+    }
+    
     public String getLocusid() {return locusid;}
     public String getIsconfirmed() {return isconfirmed;}
     public String getOrganism() {return organism;}
