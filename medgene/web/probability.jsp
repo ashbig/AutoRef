@@ -9,8 +9,8 @@
 <center><b>X+Y+Z: papers studying either the gene or the disease</b><BR></center>
 <center><b>The less negative the log value, the greater the correlation.</b><BR></center><br>
 <BR>
-<center><b>For example, the distribution of probability (log value) for all the breast cancer related genes</b></center>
-<center><img src="probability.jpg"></center>
+<!-- <center><b>For example, the distribution of probability (log value) for all the breast cancer related genes</b></center>
+<center><img src="probability.jpg"></center> -->
 <jsp:include page="links.jsp" flush="true"/> 
 </body>
 </html>

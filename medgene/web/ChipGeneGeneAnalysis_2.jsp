@@ -77,7 +77,7 @@
            <td>
                <html:radio property="geneInputType" value="Gene Symbol" />Gene Symbol (official gene symbol from <a href="http://www.ncbi.nlm.nih.gov/LocusLink/" target="_blank">NCBI locus link)</a> 
                <br>
-               <html:radio property="geneInputType" value="Locus ID"/>Locus ID (<a href="locus_id_from_Access_Number.jsp" target="_blank">how </a>to get Locus ID from Access Number)
+               <html:radio property="geneInputType" value="Locus ID"/>LocusID (<a href="locus_id_from_Access_Number.jsp" target="_blank">how </a>to get LocusID or official gene symbol)
            </td>
         </tr>  
     

@@ -23,10 +23,12 @@
 </center>
 <A><font size=3>The accelerated pace of biological research and the advent of genomics and proteomics have resulted in the collection of prodigious amounts of data on diseases and the genes that play a role in them.  Computational methods are needed to assimilate this surfeit of information.  The MedGene project was designed to develop the automated extraction of biomedical knowledge from Medline database to create a human gene-to-disease co-occurrence network for all named human genes and all human diseases by automated analysis of MeSH indexes, title and abstracts in over 11 million Medline records.  Statistical analysis is applied to score the association between a known human gene and a particular human disease based on the frequency with which they were co-cited in Medline records.  Users can review:</font></A><BR>
 <BR>
-<A><font size=3>1. A list of genes associated with a particular disease in ranking order</A></font><BR>
-<A><font size=3>2. A list of genes associated with multiple diseases in ranking order</A></font><BR>
-<A><font size=3>3. A list of diseases associated with a particular gene in ranking order</A></font><BR>
-<A><font size=3>4. A list of genes associated with a particular gene in ranking order</A></font><BR>
+<A><font size=3>1. A list of human genes associated with a particular human disease in ranking order</A></font><BR>
+<A><font size=3>2. A list of human genes associated with multiple human diseases in ranking order</A></font><BR>
+<A><font size=3>3. A list of human diseases associated with a particular human gene in ranking order</A></font><BR>
+<A><font size=3>4. A list of human genes associated with a particular human gene in ranking order</A></font><BR>
+<A><font size=3>5. The analyzed gene list from other disease related high-throughput experiments, such as micro-array</A></font><BR>
+<A><font size=3>6. The analyzed gene list from other gene related high-throughput experiments, such as micro-array</A></font><BR>
 <center>
     <html:form action="logon.do" focus="username" target="_top">
 <br><br>

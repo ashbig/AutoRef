@@ -13,8 +13,8 @@
 <center><font size=5 face=Arial color=blue><b>p = (a+b)!(c+d)!(a+c)!(b+d)!/(n!a!b!c!d!)</b></font><BR></center>
 <center><b>The more negative the log value, the greater the correlation.</b><BR></center><br>
 <BR>
-<center><b>For example, the distribution of fischer exact test (log value) for all the breast cancer related genes</b></center>
-<center><img src="fischer.jpg"></center>
+<!-- <center><b>For example, the distribution of fischer exact test (log value) for all the breast cancer related genes</b></center>
+<center><img src="fischer.jpg"></center> -->
 <jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>
