@@ -1,5 +1,5 @@
 /**
- * $Id: OligoContainer.java,v 1.2 2003-12-17 20:58:44 Elena Exp $
+ * $Id: OligoContainer.java,v 1.3 2005-01-20 20:14:49 Elena Exp $
  *
  * File     	: Container.java
 
@@ -77,9 +77,11 @@ public class OligoContainer
     public  String      getCommentOrder (){ return m_comment_order ;}
     public  String      getCommentSequencing (){ return m_comment_sequencing;}
     public  java.util.Date        getCreateDate(){ return m_create_date;}
-    public String       getStatusAsString()
+    public String       getStatusAsString(){ return OligoContainer.getStatusAsString(m_status);}
+    
+    public static String       getStatusAsString(int status)
     {
-        switch(m_status)
+        switch(status)
         {
             case STATUS_ORDER_CREATED: return "Created";
             case STATUS_ORDER_SENT : return "Ordered";
