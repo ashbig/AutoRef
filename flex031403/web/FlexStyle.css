@@ -1,10 +1,12 @@
-// styles to be used for navigation/menus
+/* styles for prompts */
+EM, TD.prompt {font-style: normal; color: black; font-weight: bold}
+
+/* styles for navigation */
 body.nav {background: #7a8a9a}
-//table.nav {background: #9bbad6}
-table.nav {background: #white}
+table.nav {background: white}
 div.nav {margin: .3em .3em .3em .3em}
 
-// styles to be used for tablular data entry or viewing
+/* styles for tables */
 tr.oddRow {background: #ffffff}
 tr.evenRow {background: #eeeeee}
 tr.headerRow {background: #999999}
