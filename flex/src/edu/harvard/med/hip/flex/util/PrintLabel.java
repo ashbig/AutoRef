@@ -25,7 +25,7 @@ public class PrintLabel {
        static final String printerName = "zebra";
        static final int labelWidth = 25;
        //static final int labelHeight = 15;
-       static final int labelHeight = 6;
+       static final int labelHeight = -12;
        
        /** 
         * Creates new PrintLabel 
