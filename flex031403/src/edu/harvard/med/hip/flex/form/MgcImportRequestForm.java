@@ -32,7 +32,8 @@ public class MgcImportRequestForm extends ActionForm
     protected int projectid;
     protected int workflowid;
     protected FormFile mgcRequestFile = null;
-    
+    protected String workflowname = null;
+    protected String projectname = null;
     
     /**
      * Set the mgc request file to the given value.
@@ -59,6 +60,27 @@ public class MgcImportRequestForm extends ActionForm
     {
         return forwardName;
     }
+    
+    public void setWorkflowname(String name)
+    {
+        this.workflowname = name;
+    }
+    
+    public String getWorkflowname()
+    {
+        return workflowname;
+    }
+    
+    public void setProjectname(String name)
+    {
+        projectname = name;
+    }
+    
+    public String getProjectname()
+    {
+        return projectname;
+    }
+    
     public void setProjectid(int projectid)
     {
         this.projectid = projectid;
