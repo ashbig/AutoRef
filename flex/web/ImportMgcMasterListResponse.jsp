@@ -14,9 +14,7 @@
 <h2><bean:message key="flex.name"/> : Master list of MGC clones: import information </h2>
 <hr>
 
-<p>Information is uploading.
-It can take up to an hour based on number of clones.
-The e-mail notification will be sent to you upon completion.
+<p><%= request.getAttribute("message") %>
 
 
 </body>
