@@ -138,11 +138,11 @@ public class ContainerInfoExporter {
                 Vector results = null;
                 if(pcr || agar || culture) {
                     results = SampleLineage.getPrevLineagesWithResults(sample.getId());
-                }
-                
-                if(results == null) {
-                    System.out.println("Error while getting the results");
-                    return false;
+                    
+                    if(results == null) {
+                        System.out.println("Error while getting the results");
+                        return false;
+                    }
                 }
                 
                 if(pcr) {
@@ -171,7 +171,7 @@ public class ContainerInfoExporter {
                     else
                         out.print(r.getValue()+"\t");
                 }
-                                
+                
                 if(Sample.CONTROL_POSITIVE.equals(sample.getType()) ||
                 Sample.CONTROL_NEGATIVE.equals(sample.getType())){
                     out.println();
@@ -202,7 +202,7 @@ public class ContainerInfoExporter {
                     out.print(sequence.getGiString()+"\t");
                 if(genesymbol)
                     out.print(sequence.getGenesymbolString()+"\t");
-
+                
                 out.println();
             }
         } catch (FlexCoreException ex) {
