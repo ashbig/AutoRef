@@ -319,7 +319,7 @@ public class ConstructGenerator
                 result_5p.insert(conn);
                 
                 //all 3p fusion oligos mutated their stop codon to lysine: CAA
-                result_3c = pc.calculateThreepCloseOligo(seq);
+                result_3c = pc.calculateThreepOpenOligo(seq);
                 result_3c.setTagSequence_3p_Close(project, workflow);
                 result_3c.insert(conn);
             } catch(FlexDatabaseException sqlex)
