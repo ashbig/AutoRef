@@ -64,6 +64,7 @@ public class OligoPlater
     private boolean     m_isPseudomonas = false;
     private String      m_plateType = "96 WELL OLIGO PLATE";
     
+    private boolean     m_isOnlyClose = false;
     protected int       m_mgcContainerId = -1;
     
     /**
@@ -78,7 +79,10 @@ public class OligoPlater
         this.conn = c;
         this.project = project;
         this.workflow = workflow;
-        if (project.getId() == Project.PSEUDOMONAS) m_isPseudomonas = true;
+        if (project.getId() == Project.PSEUDOMONAS  )
+            m_isPseudomonas = true;
+        if ( project.getId() == Project.YEAST)
+            m_isOnlyClose = true;
         m_protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
         m_nextProtocols = workflow.getNextProtocol(m_protocol);
     }
@@ -133,7 +137,7 @@ public class OligoPlater
         container_5p.insert(conn);
         
         if( ! m_isPseudomonas)        {  container_3s.insert(conn);     }
-        container_3op.insert(conn);
+        if ( !m_isOnlyClose) { container_3op.insert(conn);}
         plateset.insert(conn);
         //insert process output: oligo containers
         insertProcessOutput();
@@ -244,9 +248,11 @@ public class OligoPlater
                     plateWriter_3s.flush();
                     plateWriter_3s.close();
                 }
-                
-                plateWriter_3op.flush();
-                plateWriter_3op.close();
+                if (! m_isOnlyClose)
+                {
+                    plateWriter_3op.flush();
+                    plateWriter_3op.close();
+                }
             }
             
         } //outter while to fill oligo plates
@@ -285,14 +291,17 @@ public class OligoPlater
             plateWriter_3s.write(cont);
         }
         
-        oligoSample_3op = generateOligoSample(currentGene,"3op", container_3op.getId(), well);
-        //System.out.println("PlateID: "+container_3op.getId()+"; " + "3op lower oligo well: "+ well + "; "
-        //+ "sampleID: "+ oligoSample_3op.getId() +"; "+oligoSample_3op.getConstructid()+"; " +currentGene.getCDSLength());
-        
-        container_3op.addSample(oligoSample_3op);
-        cont = container_3op.getLabel()+"\t" + currentGene.getOligoId_3op()+"\t";
-        cont += currentGene.getOligoseq_3op()+"\t" + oligoSample_3op.getPosition()+"\n";
-        plateWriter_3op.write(cont);
+        if ( !m_isOnlyClose)
+        {
+            oligoSample_3op = generateOligoSample(currentGene,"3op", container_3op.getId(), well);
+            //System.out.println("PlateID: "+container_3op.getId()+"; " + "3op lower oligo well: "+ well + "; "
+            //+ "sampleID: "+ oligoSample_3op.getId() +"; "+oligoSample_3op.getConstructid()+"; " +currentGene.getCDSLength());
+
+            container_3op.addSample(oligoSample_3op);
+            cont = container_3op.getLabel()+"\t" + currentGene.getOligoId_3op()+"\t";
+            cont += currentGene.getOligoseq_3op()+"\t" + oligoSample_3op.getPosition()+"\n";
+            plateWriter_3op.write(cont);
+        }
     }
     
     protected void createOligoFileHeader() throws IOException
@@ -304,7 +313,10 @@ public class OligoPlater
             plateWriter_3s.write("Label \t OligoID \t OligoSequence \t Well \n");
         }
         
-        plateWriter_3op.write("Label \t OligoID \t OligoSequence \t Well \n");
+        if (! m_isOnlyClose)
+        {
+            plateWriter_3op.write("Label \t OligoID \t OligoSequence \t Well \n");
+        }
     }
     
     /*
@@ -323,11 +335,13 @@ public class OligoPlater
             plateWriter_3s = new FileWriter(plateOutFileName2);
             fileNameList.add(plateOutFileName2);
         }
-        
-        plateOutFileName3 = filePath + container_3op.getLabel();
-        plateWriter_3op = new FileWriter(plateOutFileName3);
-        fileNameList.add(plateOutFileName3);
-        createOligoFileHeader();
+        if ( ! m_isOnlyClose)
+        {
+            plateOutFileName3 = filePath + container_3op.getLabel();
+            plateWriter_3op = new FileWriter(plateOutFileName3);
+            fileNameList.add(plateOutFileName3);
+            createOligoFileHeader();
+        }
         
     }
     /**
@@ -357,13 +371,23 @@ public class OligoPlater
             container_3s = new Container(m_plateType, location,label_3s);
             //System.out.println("Created the 3s oligo plate: "+ container_3s.getId());
         }
-        
-        container_3op = new Container(m_plateType, location,label_3op);
+        if ( !m_isOnlyClose)
+        {
+            container_3op = new Container(m_plateType, location,label_3op);
         //System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
+        }
         
-        if(m_isPseudomonas) {
+        if(m_isPseudomonas)
+        {
             plateset = generatePlateset(container_5p.getId(), container_3op.getId(), -1, m_mgcContainerId);
-        } else {
+        } 
+        else if(m_isOnlyClose)
+        {
+             plateset = generatePlateset(container_5p.getId(),  -1, container_3s.getId(), m_mgcContainerId);
+        }
+        
+        else 
+        {
             plateset = generatePlateset(container_5p.getId(), container_3op.getId(),container_3s.getId(), m_mgcContainerId);
         }
         
@@ -375,31 +399,23 @@ public class OligoPlater
         }
         int threadid = FlexIDGenerator.getID("threadid");
         label_5p = Container.getLabel(projectCode, oligoFivePrefix, threadid, null); //upstream
-        
-        if( ! m_isPseudomonas )
-        {
-            label_3s = Container.getLabel(projectCode, oligoClosePrefix, threadid, null); //closed
-        }
-        
-        label_3op = Container.getLabel(projectCode, oligoFusionPrefix, threadid, null); //fusion
         container_5p.setLabel(label_5p);
-        
-        if( ! m_isPseudomonas)
-        {
-            container_3s.setLabel(label_3s);
-        }
-        
-        container_3op.setLabel(label_3op);
-        
-        // Update the threadid for each container.
+         // Update the threadid for each container.
         container_5p.setThreadid(threadid);
         
         if( ! m_isPseudomonas )
         {
+            label_3s = Container.getLabel(projectCode, oligoClosePrefix, threadid, null); //closed
+            container_3s.setLabel(label_3s);
             container_3s.setThreadid(threadid);
         }
-        
-        container_3op.setThreadid(threadid);
+        if (! m_isOnlyClose )
+        {
+            label_3op = Container.getLabel(projectCode, oligoFusionPrefix, threadid, null); //fusion
+            container_3op.setLabel(label_3op);
+            container_3op.setThreadid(threadid);
+        }
+     
         
         //System.out.println("5p oligo plate label: "+ label_5p);
         //System.out.println("3s oligo plate label: "+ label_3s);
@@ -415,6 +431,10 @@ public class OligoPlater
         {
             plateset = new Plateset(fivepId, threepOpenId, -1);
         } 
+        else if(m_isOnlyClose)
+        {
+            plateset = new Plateset(fivepId,   -1, threepClosedId);
+        }
         else
         {
             plateset = new Plateset(fivepId, threepOpenId, threepClosedId, containerId);
@@ -473,9 +493,11 @@ public class OligoPlater
             control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3s.getId());
             container_3s.addSample(control_positive);
         }
-        
-        control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3op.getId());
-        container_3op.addSample(control_positive);
+        if ( ! m_isOnlyClose)
+        {
+            control_positive = new Sample(PositiveControlSampleType,positiveControlPosition,container_3op.getId());
+            container_3op.addSample(control_positive);
+        }
         
         //add negative samples
         control_negative = new Sample(NegativeControlSampleType,negativeControl,container_5p.getId());
@@ -486,9 +508,11 @@ public class OligoPlater
             control_negative = new Sample(NegativeControlSampleType,negativeControl,container_3s.getId());
             container_3s.addSample(control_negative);
         }
-        
-        control_negative = new Sample(NegativeControlSampleType,negativeControl,container_3op.getId());
-        container_3op.addSample(control_negative);
+        if ( ! m_isOnlyClose)
+        {
+            control_negative = new Sample(NegativeControlSampleType,negativeControl,container_3op.getId());
+            container_3op.addSample(control_negative);
+        }
         
     }
     
@@ -547,10 +571,12 @@ public class OligoPlater
             new ContainerProcessObject(container_3s.getId(),process.getExecutionid(),ioType);
             platepo_3s.insert(conn);
         }
-        
-        ContainerProcessObject platepo_3op =
-        new ContainerProcessObject(container_3op.getId(),process.getExecutionid(),ioType);
-        platepo_3op.insert(conn);
+         if ( ! m_isOnlyClose)
+        {
+            ContainerProcessObject platepo_3op =
+            new ContainerProcessObject(container_3op.getId(),process.getExecutionid(),ioType);
+            platepo_3op.insert(conn);
+         }
     }
     
     /**
@@ -576,9 +602,11 @@ public class OligoPlater
                 queueItem = new QueueItem(container_3s, nextProtocol, project, workflow);
                 containerQueueItemList.add(queueItem);
             }
-            
-            queueItem = new QueueItem(container_3op, nextProtocol, project, workflow);
-            containerQueueItemList.add(queueItem);
+             if ( ! m_isOnlyClose)
+            {
+                queueItem = new QueueItem(container_3op, nextProtocol, project, workflow);
+                containerQueueItemList.add(queueItem);
+            }
             
             //System.out.println("Adding receive oligo plates to queue...");
             containerQueue.addQueueItems(containerQueueItemList, conn);

@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionMapping;
 import edu.harvard.med.hip.flex.process.Protocol;
 import edu.harvard.med.hip.flex.database.FlexDatabaseException;
 import edu.harvard.med.hip.flex.core.Location;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
@@ -298,10 +299,13 @@ public class CreatePCRPlateForm extends ProjectWorkflowForm {
             errors.add("fivepPlate", new ActionError("error.plate.invalid.barcode", fivepPlate));
         }
         
-        if((threepOpenPlate == null) || (threepOpenPlate.trim().length()<1)) {
-            errors.add("threepOpenPlate", new ActionError("error.plate.invalid.barcode", threepOpenPlate));
+        if (getProjectid() != Project.YEAST)
+        {
+            if((threepOpenPlate == null) || (threepOpenPlate.trim().length()<1)) {
+                errors.add("threepOpenPlate", new ActionError("error.plate.invalid.barcode", threepOpenPlate));
+            }
         }
-/*        
+/*       
         if((threepClosedPlate == null) || (threepClosedPlate.trim().length()<1)) {
             errors.add("threepClosedPlate", new ActionError("error.plate.invalid.barcode", threepClosedPlate));
         }       
