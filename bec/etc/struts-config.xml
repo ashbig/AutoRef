@@ -138,23 +138,24 @@
  scope="request"
                 input="/ContainerScan.jsp"
                 type="edu.harvard.med.hip.bec.action.Seq_GetItemAction">
-            <forward name="display_vector" path="/VectorDisplay.jsp"/>
-            <forward name="display_linker" path="/LinkerDisplay.jsp"/>
-            <forward name="display_refsequence_details" path="/RefSequenceDisplay.jsp"/>
+            <forward name="display_vector" path="/Display_Vector.jsp"/>
+            <forward name="display_linker" path="/Display_Linker.jsp"/>
+            <forward name="display_refsequence_details" path="/Display_RefSequence.jsp"/>
               <forward name="display_container_results_er" path="/ContainerResultsEndReads.jsp"/>
             <forward name="display_clone" path="/CloneInfoDisplay.jsp"/>
-            <forward name="display_cloning_strategy" path="/CloningStrategyDisplay.jsp"/>
+            <forward name="display_cloning_strategy" path="/Display_CloningStrategy.jsp"/>
             <forward name="display_container_details" path="/ContainerDetails.jsp"/>
             <forward name="display_container_history" path="/ContainerHistory.jsp"/>
-            <forward name="display_discrepancyreport" path="/DiscrepancyReport.jsp"/>
-            <forward name="display_scoredsequence_details" path="/ScoredSequenceDisplay.jsp"/>
+            <forward name="display_discrepancyreport" path="/Display_Discrepancies.jsp"/>
+            <forward name="display_scoredsequence_details" path="/Display_ScoredSequence.jsp"/>
             <forward name="display_needle_alignment" path="/NeedleAlignment.jsp"/>
             <forward name="display_isolate_ranker_report" path="/ContainerQualityReport.jsp"/>
-             <forward name="display_sample_isolate_ranker_report" path="/SampleReport.jsp"/>
-            <forward name="display_read_report" path="/ReadReport.jsp"/>
+             <forward name="display_sample_isolate_ranker_report" path="/Display_Sample.jsp"/>
+            <forward name="display_read_report" path="/Display_Read.jsp"/>
              <forward name="show_activate_list" path="/CloneList.jsp"/>
             <forward name="show_clone_status_list" path="/ContainerCloneStatus.jsp"/>
              <forward name="construct_report" path="/ConstructReport.jsp"/>
+              <forward name="display_clone_sequence" path="/Display_CloneSequence.jsp"/>
             
 </action>
 
