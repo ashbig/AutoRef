@@ -206,7 +206,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
             fin.close();
             return plate_map;
         }
-        catch(Exception e){throw new BecDatabaseException("Cannot open or read mapping file: "+e.getMessage());}
+        catch(Exception e){
+            throw new BecDatabaseException("Cannot open or read mapping file: "+e.getMessage());
+        }
       
      }
      
@@ -336,10 +338,11 @@ public class TraceFileProcessingRunner extends ProcessRunner
                
                     if (org_file.exists() && !dest_file.exists())
                     {
-                        if ( m_isDelete )//copy
-                            FileOperations.moveFile(org_file, dest_file, true, true);
-                       else
-                           FileOperations.moveFile(org_file, dest_file, true, false);
+                       FileOperations.moveFile(org_file, dest_file, true, false);
+                        if ( m_isDelete && org_file.exists())//copy
+                        {
+                            org_file.delete();
+                        }
                     }
                 }
                 catch(Exception e1)
@@ -501,13 +504,14 @@ public class TraceFileProcessingRunner extends ProcessRunner
     {   try
          {
 TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
-runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
+runner.setProcessType(Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER);
 runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
 runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
-runner.setInputDirectory("C:\\bio\\original_files");
-runner.setRenamingFile(new  FileInputStream("C:\\bio\\original_files\\map.txt"));
+runner.setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
+runner.setOutputDirectory( "C:\\bio\\original_files");
+runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\files_to_transfer\\rename1099341664500.txt"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-       
+       runner.setDelete("YES");
            
          //         runner.setReadDirection("F");
              //       runner.setReadType("I");
