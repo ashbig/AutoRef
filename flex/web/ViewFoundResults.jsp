@@ -32,7 +32,7 @@
 </html:form>
 <TABLE border=1>
     <tr bgcolor="#9bbad6">
-    <th>Search Term</th><th>Match Genbank</th><th>Match FLEXGene</th><th>Status</th><th>Found By</th><th>Alignments</th><th>Search Method</th>
+    <th>Search Term</th><th>Match Genbank</th><th>Locus ID</th><th>Match FLEXGene</th><th>Status</th><th>Found By</th><th>Alignments</th><th>Search Method</th>
     </tr>
     <logic:iterate name="results" id="result">
     <tr>
@@ -42,6 +42,13 @@
             <A target="_blank" HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="mgr" property="gi"/>&dopt=GenBank"> 
                 <flex:write name="mgr" property="ganbankAccession"/>
             </A>
+            </td>
+            <td rowspan="<bean:write name="mgr" property="numOfMatchFlexSequence"/>">
+                <logic:iterate name="mgr" property="locusidList" id="locusid">
+                <A target="_blank" HREF="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="locusid"/>"> 
+                    <flex:write name="locusid"/>
+                </A>&nbsp;
+                </logic:iterate>
             </td>
             <logic:iterate name="mgr" property="matchFlexSequence" id="mfs">
                 <td>

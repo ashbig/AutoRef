@@ -129,9 +129,10 @@ public class LocusBlastQueryHandler extends QueryHandler {
    
     public static void main(String args[]) {
         List locusList = new ArrayList();
-        locusList.add("1");
-        locusList.add("10");
-        locusList.add("abc");
+        locusList.add("1012");
+        //locusList.add("1");
+        //locusList.add("10");
+        //locusList.add("abc");
         
         List params = new ArrayList();
         
@@ -155,7 +156,7 @@ public class LocusBlastQueryHandler extends QueryHandler {
             for(int i=0; i<mgrs.size(); i++) {
                 MatchGenbankRecord mgr = (MatchGenbankRecord)mgrs.get(i);
                 System.out.println("Genbank Acc: "+mgr.getGanbankAccession());
-                System.out.println("GI: "+mgr.getGi());
+                System.out.println("GI: "+mgr.getGi());System.out.println("Locus: "+mgr.getLocusid());
                 System.out.println("Search Method: "+mgr.getSearchMethod());
                 List mfss = (List)mgr.getMatchFlexSequence();
                 

@@ -75,8 +75,7 @@ public class LocusGenbankBatchRetriever extends GenbankBatchRetriever {
     
     public static void main(String args[]) {
         List locusList = new ArrayList();
-        locusList.add("1");
-        locusList.add("10");
+        locusList.add("1012");
         
         GenbankBatchRetriever retriever = new LocusGenbankBatchRetriever(locusList);
         try {

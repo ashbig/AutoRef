@@ -56,7 +56,7 @@ public class SearchManager {
         this.searchTerms = searchTerms;
     }
     
-    public void insertSearchRecord(Connection conn) throws FlexDatabaseException, SQLException {
+    public synchronized void insertSearchRecord(Connection conn) throws FlexDatabaseException, SQLException {
         int searchid = FlexIDGenerator.getMaxid("search", "searchid");
         //       int searchResultid = FlexIDGenerator.getMaxid("searchresult", "searchresultid");
         
@@ -78,12 +78,12 @@ public class SearchManager {
         //        searchResultSet.persist(conn, searchRecord.getSearchid());
     }
     
-    public void updateSearchRecord(Connection conn, String status) throws FlexDatabaseException, SQLException {
+    public synchronized void updateSearchRecord(Connection conn, String status) throws FlexDatabaseException, SQLException {
         searchRecord.setSearchStatus(status);
         searchRecord.updateStatus(conn);
     }
     
-    public void insertSearchResults(Connection conn) throws FlexDatabaseException, SQLException {
+    public synchronized void insertSearchResults(Connection conn) throws FlexDatabaseException, SQLException {
         int searchResultid = FlexIDGenerator.getMaxid("searchresult", "searchresultid");
         int matchGenbankid = FlexIDGenerator.getMaxid("matchgenbankrecord", "matchgenbankid");
         int matchFlexid = FlexIDGenerator.getMaxid("matchflexsequence", "matchflexid");
@@ -228,13 +228,14 @@ public class SearchManager {
     }
     
     public static void main(String args[]) {
-        SearchRecord searchRecord = new SearchRecord("Test search", SearchRecord.GI, SearchRecord.INPROCESS, "dzuo");
+        SearchRecord searchRecord = new SearchRecord("Test search", SearchRecord.LOCUSID, SearchRecord.INPROCESS, "dzuo");
         List searchTerms = new ArrayList();
-        searchTerms.add("33469916");
-        searchTerms.add("21961206");
-        searchTerms.add("33469967");
-        searchTerms.add("1234");
-        searchTerms.add("345");
+        //searchTerms.add("33469916");
+        //searchTerms.add("21961206");
+        //searchTerms.add("33469967");
+        //searchTerms.add("1234");
+        //searchTerms.add("345");
+        searchTerms.add("1012");
         
         SearchManager manager = new SearchManager(searchRecord, null, searchTerms);
         
@@ -263,6 +264,7 @@ public class SearchManager {
                         MatchGenbankRecord mgr = (MatchGenbankRecord)matchGenbanks.get(j);
                         System.out.println("\tGenbank Acc: "+mgr.getGanbankAccession());
                         System.out.println("\tGI: "+mgr.getGi());
+                        System.out.println("\tLocus: "+mgr.getLocusid());
                         System.out.println("\tSearch Method: "+mgr.getSearchMethod());
                         
                         List matchFlexSequences = mgr.getMatchFlexSequence();

@@ -122,7 +122,7 @@
 <tr>
     <td>
         <small>
-        <address><a href="mailto:flexgene_support@hms.harvard.edu">FLEXGene Support</a></address>
+        <address><a href="mailto:HIP_Informatics@hms.harvard.edu">FLEXGene Support</a></address>
         </small>
      </td>
 </tr>

@@ -134,6 +134,9 @@ public class GenbankBlastQueryHandler extends QueryHandler {
     }    
     
     protected void setQueryParams(List params) {
+        if(params == null || params.size() == 0)
+            return;
+        
         for(int i=0; i<params.size(); i++) {
             Param p = (Param)params.get(i);
             if(Param.ISRELATEDSEQ.equals(p.getName()) && p.getValue() != null && p.getValue().length()!=0) {

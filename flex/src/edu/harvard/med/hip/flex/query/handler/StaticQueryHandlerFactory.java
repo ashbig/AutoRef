@@ -24,6 +24,10 @@ public class StaticQueryHandlerFactory {
             return new GiBlastQueryHandler(params);
         if(SearchRecord.GENBANK.equals(type))
             return new GenbankBlastQueryHandler(params);
+        if(SearchRecord.LOCUSID.equals(type))
+            return new LocusBlastQueryHandler(params);
+        if(SearchRecord.GENESYMBOL.equals(type))
+            return new GeneSymbolBlastQueryHandler(params);
         
         return null;
     }

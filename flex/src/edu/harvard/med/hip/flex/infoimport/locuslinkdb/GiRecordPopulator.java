@@ -101,7 +101,7 @@ public class GiRecordPopulator {
     
     public void updateAccession() {
         String sql="update girecord set accession=("+
-                    " select distinct accession from sequencerecord where gi=?) where gi=?";
+        " select distinct accession from sequencerecord where gi=?) where gi=?";
         String sqlQuery="select gi from girecord where accession is null";
         
         DatabaseTransaction t = null;
@@ -129,11 +129,116 @@ public class GiRecordPopulator {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeStatement(stmt);
             DatabaseTransaction.closeConnection(conn);
-        }        
+        }
+    }
+    
+    
+    public void updateLocus() {
+        String sqlUpdate="update girecord set locusid=? where gi=?";
+        String sql = "select distinct locusid from sequencerecord where gi=?";
+        String sqlQuery="select gi from girecord where locusid is null";
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmtUpdate = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmtUpdate = conn.prepareStatement(sqlUpdate);
+            rs = t.executeQuery(sqlQuery);
+            while(rs.next()) {
+                String gi = rs.getString(1);
+                stmt.setString(1, gi);
+                
+                rs1 = DatabaseTransaction.executeQuery(stmt);
+                String locusid = null;
+                while(rs1.next()) {
+                    if(locusid == null) {
+                        locusid = rs1.getString(1);
+                    } else {
+                        locusid = locusid + "," + rs1.getString(1);
+                    }
+                }
+                
+                stmtUpdate.setString(1, locusid);
+                stmtUpdate.setString(2, gi);
+                DatabaseTransaction.executeUpdate(stmtUpdate);
+                
+                System.out.println("update: "+gi+" - "+locusid);
+            }
+            
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            System.out.println(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs1);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmtUpdate);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public void updateUnigene() {
+        String sqlUpdate="update girecord set unigene=? where gi=?";
+        String sql = "select distinct unigeneid from generecord where locusid in (select distinct locusid from sequencerecord where gi=?)";
+        String sqlQuery="select gi from girecord where unigene is null";
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmtUpdate = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmtUpdate = conn.prepareStatement(sqlUpdate);
+            rs = t.executeQuery(sqlQuery);
+            while(rs.next()) {
+                String gi = rs.getString(1);
+                stmt.setString(1, gi);
+                
+                rs1 = DatabaseTransaction.executeQuery(stmt);
+                String unigeneid = null;
+                while(rs1.next()) {
+                    if(unigeneid == null) {
+                        unigeneid = rs1.getString(1);
+                    } else {
+                        unigeneid = unigeneid + "," + rs1.getString(1);
+                    }
+                }
+                
+                if(unigeneid != null) {
+                    stmtUpdate.setString(1, unigeneid);
+                    stmtUpdate.setString(2, gi);
+                    DatabaseTransaction.executeUpdate(stmtUpdate);
+                    
+                    System.out.println("update: "+gi+" - "+unigeneid);
+                }
+            }
+            
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            DatabaseTransaction.commit(conn);
+            System.out.println(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs1);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(stmtUpdate);
+            DatabaseTransaction.closeConnection(conn);
+        }
     }
     
     public static void main(String args[]) {
-     /**   List giList = new ArrayList();
+        /**   List giList = new ArrayList();
         giList.add("32450632");
         giList.add("21961206");
         giList.add("33869456");
@@ -144,7 +249,7 @@ public class GiRecordPopulator {
         giList.add("37550355");
         giList.add("16923985");
         giList.add("34851998");
-        
+      
         SeqBatchRetriever retriever = new GenbankSeqBatchRetriever(giList);
         try {
             retriever.retrieveSequence();
@@ -153,8 +258,10 @@ public class GiRecordPopulator {
         }
         ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((Collection)(retriever.getFoundList().values()));
         populator.persistRecords();
-      **/
+         **/
         GiRecordPopulator populator = new GiRecordPopulator();
-        populator.updateAccession();
+        //populator.updateAccession();
+        populator.updateLocus();
+        populator.updateUnigene();
     }
 }

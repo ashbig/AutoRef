@@ -58,12 +58,12 @@ public class Loc2accParser {
         for(int i=0; i<records.size(); i++) {
             SequenceRecord gene = (SequenceRecord)records.get(i);
             String acc = gene.getGenbank();
-            int locusid = gene.getLocusid();
+            String locusid = gene.getLocusid();
             String type = gene.getType();
             
             System.out.println("Update: "+acc+", "+locusid);
             stmt.setString(1,  acc);
-            stmt.setInt(2, locusid);
+            stmt.setString(2, locusid);
             stmt.setString(3,  type);
             DatabaseTransaction.executeUpdate(stmt);
         }
@@ -73,7 +73,7 @@ public class Loc2accParser {
     
     protected SequenceRecord getGene(String line) {
         StringTokenizer st = new StringTokenizer(line, "\t");
-        int locusid = Integer.parseInt(st.nextToken());
+        String locusid = st.nextToken();
         String acc = st.nextToken();
         String gistring = st.nextToken();
         String type = st.nextToken();

@@ -246,30 +246,31 @@ public class SummaryTablePopulator {
     
     public static void main(String args[]) {
         List containers = new ArrayList();
-        containers.add(new Integer(6728));
-        containers.add(new Integer(6827));
-        containers.add(new Integer(6828));
-        containers.add(new Integer(6841));
-        containers.add(new Integer(6840));
-        containers.add(new Integer(6839));
-        containers.add(new Integer(6834));
-        containers.add(new Integer(6833));
-        containers.add(new Integer(6832));
-        containers.add(new Integer(6831));
-        containers.add(new Integer(6830));
-        containers.add(new Integer(6829));
-        containers.add(new Integer(6727));
-        containers.add(new Integer(6726));
-        containers.add(new Integer(6725));
-        containers.add(new Integer(6724));
-        containers.add(new Integer(6723));
-        containers.add(new Integer(6722));
-        containers.add(new Integer(6721));
-        containers.add(new Integer(6450));
-        containers.add(new Integer(6449));
-        containers.add(new Integer(6448));
-        containers.add(new Integer(6447));
-        containers.add(new Integer(6446));
+        containers.add(new Integer(7045));
+      containers.add(new Integer(7046));
+      containers.add(new Integer(7047));
+      containers.add(new Integer(7048));
+      containers.add(new Integer(7049));
+      containers.add(new Integer(7050));
+      containers.add(new Integer(7051));
+      containers.add(new Integer(7052));
+      containers.add(new Integer(7053));
+      containers.add(new Integer(7054));
+      containers.add(new Integer(7055));
+      containers.add(new Integer(7056));
+      containers.add(new Integer(7057));
+      containers.add(new Integer(7058));
+      containers.add(new Integer(7059));
+      containers.add(new Integer(7060));
+      containers.add(new Integer(7061));
+      containers.add(new Integer(7062));
+      containers.add(new Integer(7063));
+      containers.add(new Integer(7064));
+      containers.add(new Integer(7108));
+      containers.add(new Integer(7109));
+      containers.add(new Integer(7110));
+      containers.add(new Integer(7111));
+      containers.add(new Integer(7112));
 
         //change cloning strategy accordingly.
         int cloningStrategyid = 4;
