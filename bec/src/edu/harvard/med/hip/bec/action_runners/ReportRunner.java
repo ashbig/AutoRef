@@ -173,6 +173,8 @@ public class ReportRunner extends ProcessRunner
         ArrayList clones = new ArrayList();
         String sql = null;
         UICloneSample clone = null;UICloneSample previous_clone = null;
+        Hashtable processed_clone_ids = new Hashtable();
+        Integer current_clone_id = null;
         ResultSet rs = null;
         sql = constructQueryString(submission_type, sql_items);
         try
@@ -183,11 +185,22 @@ public class ReportRunner extends ProcessRunner
             while(rs.next())
             {
                  clone = new UICloneSample();
+                 clone.setCloneId (rs.getInt("CLONEID"));
+                 if (clone.getCloneId() > 0 )
+                 {
+                    current_clone_id = new Integer(clone.getCloneId());
+                    if (  processed_clone_ids.contains( current_clone_id ))
+                    {
+                        continue;
+                    }
+                 }
+                 else 
+                     current_clone_id = null;
                  clone.setCloneAssemblyStatus   (rs.getInt("assembly_status"));
                  clone.setPlateLabel (rs.getString("LABEL"));
                  clone.setPosition (rs.getInt("POSITION"));
                  clone.setSampleType (rs.getString("SAMPLETYPE"));
-                 clone.setCloneId (rs.getInt("CLONEID"));
+                 
                  clone.setCloneStatus (rs.getInt("ISOLATESTATUS"));
                  clone.setSequenceId (rs.getInt("CLONESEQUENCEID"));
                  clone.setSequenceAnalisysStatus (rs.getInt("analysisSTATUS"));
@@ -203,16 +216,11 @@ public class ReportRunner extends ProcessRunner
                  clone.setCloneSequenceCdsStop(rs.getInt("clonesequencecdsstop"));
                  if ( m_dir_name )
                     clone.setTraceFilesDirectory( getTraceFilesDirName( clone.getSampleId() ));
-                 if ( clone.getSampleType().indexOf("CONTROL") != 1)
+                 if (  current_clone_id != null)
                  {
-                     clones.add(clone);
-                     continue;
+                     processed_clone_ids.put(current_clone_id, current_clone_id );
                  }
-                 if ( previous_clone == null || ( previous_clone != null && previous_clone.getCloneId () != clone.getCloneId()))
-                 {
-                    clones.add(clone);
-                    previous_clone = clone;
-                 }
+                 clones.add(clone);
             }
             return clones;
         }
