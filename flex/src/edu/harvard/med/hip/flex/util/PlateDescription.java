@@ -56,4 +56,9 @@ public class PlateDescription
         return first.getContainerDescription().getMarker()  ;
     }
     public ArrayList            getContainers()    { return m_container_descriptions;}
+    //huk for now : vector is in 1 to 1 relation with rearray_collection 
+    public String               getVector()
+    {
+        SequenceDescription sd = (SequenceDescription) m_Sequence_descriptions.get(0);
+        return sd.getVector() ;}
 }
