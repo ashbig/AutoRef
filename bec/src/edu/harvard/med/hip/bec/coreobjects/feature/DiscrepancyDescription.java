@@ -24,153 +24,175 @@ import java.util.*;
 public class DiscrepancyDescription
 {
     private AAMutation      m_aa = null;
-    private RNAMutation     m_rna = null;
+    private ArrayList       m_rna_describes_aa = null;
+    private Mutation        m_rna_without_aa = null;
     private LinkerMutation  m_linker = null;
+    private int             m_discrepancydefinition_type = TYPE_AA;
     
-    private int             m_discrepancydefinition_type = TYPE_RNA;
-    
-    public static final int      TYPE_RNA = 0;
-    public static final int      TYPE_LINKER = 1;
+    public static final int      TYPE_AA = 0;
+    public static final int      TYPE_NOT_AA_LINKER = 1;
+    public static final int      TYPE_NOT_AA_AMBIQUOUS = 2;
     
     /** Creates a new instance of DiscrepancyDefinition */
+    /*
     public DiscrepancyDescription(RNAMutation rna, AAMutation a)
     {
         m_aa = a;
-        m_rna = rna;
-        m_discrepancydefinition_type = TYPE_RNA;
+        m_rna_describes_aa = new ArrayList();
+        m_rna_describes_aa.add( rna);
+        m_discrepancydefinition_type = TYPE_AA;
+    }
+     public DiscrepancyDescription(ArrayList rna, AAMutation a)
+    {
+        m_aa = a;
+        m_rna_describes_aa = rna;
+        m_discrepancydefinition_type = TYPE_AA;
     }
     public DiscrepancyDescription(LinkerMutation linker)
     {
        m_linker = linker;
-       m_discrepancydefinition_type = TYPE_LINKER;
+       m_discrepancydefinition_type = TYPE_NOT_AA_LINKER;
     }
-    
+    public DiscrepancyDescription(RNAMutation rna)
+    {
+       m_rna_without_aa = rna;
+       m_discrepancydefinition_type = TYPE_NOT_AA_AMBIQUOUS;
+    }
+    */
     public DiscrepancyDescription(){}
     
-    
-    public AAMutation       getAADiscrepancy(){ return m_aa;}
-    public RNAMutation      getRNADiscrepancy(){ return m_rna;}
-    public LinkerMutation   getLinkerDiscrepancy(){ return m_linker;}
+    public void             setDiscrepancies(ArrayList discrepancies)
+    {  
+        ArrayList rna_discr = new ArrayList();
+        for (int count = 0; count < discrepancies.size(); count++)
+        {
+            if (discrepancies.get(count) instanceof RNAMutation)
+            {
+                rna_discr.add( (RNAMutation)discrepancies.get(count));
+            }
+            else if (discrepancies.get(count) instanceof AAMutation)
+            {
+                 m_aa = (AAMutation)discrepancies.get(count);
+                 m_rna_describes_aa = new ArrayList();
+                 m_discrepancydefinition_type = TYPE_AA;
+            }
+            else if (discrepancies.get(count) instanceof LinkerMutation)
+            {
+                 m_linker = (LinkerMutation)discrepancies.get(count);
+                 m_discrepancydefinition_type = TYPE_NOT_AA_LINKER;
+                 
+            }
+        }
+        if (m_discrepancydefinition_type == TYPE_AA)
+        { 
+            rna_discr = Mutation.sortDiscrepanciesByPosition(rna_discr);
+            
+            m_rna_describes_aa.addAll(rna_discr);
+        }
+        
+    }
+    public ArrayList        getRNACollection(){ return m_rna_describes_aa;}
+    public Mutation         getAADefinition()    {       return m_aa;    }
     public int              getDiscrepancyDefintionType(){ return m_discrepancydefinition_type ;}
     public Mutation         getRNADefinition()
     {
-        if ( m_discrepancydefinition_type == DiscrepancyDescription.TYPE_RNA)
+        if ( m_discrepancydefinition_type == DiscrepancyDescription.TYPE_NOT_AA_AMBIQUOUS)
         {
-            return m_rna;
+            return m_rna_without_aa;
         }
-        else if( m_discrepancydefinition_type == DiscrepancyDescription.TYPE_LINKER)
+        else if( m_discrepancydefinition_type == DiscrepancyDescription.TYPE_NOT_AA_LINKER)
         {
             return m_linker;
         }
         return null;
     }
-    public Mutation         getAADefinition()
-    {
-       return m_aa;
-    }
     
-    public void             setAADiscrepancy(AAMutation a){  m_aa = a;}
-    public void             setRNADiscrepancy(RNAMutation a){  m_rna = a;m_discrepancydefinition_type = TYPE_RNA;}
-    public void             setLinkerDiscrepancy(LinkerMutation a){  m_linker = a;m_discrepancydefinition_type = TYPE_LINKER;}
     
-    public static ArrayList   assembleDiscrepanciesInPairs(ArrayList discrepancies)
+    public static ArrayList   assembleDiscrepancyDefinitions(ArrayList discrepancies)
     {
-        Mutation discrepancy = null;
-        if (discrepancies == null) return null;
-        int discrepancy_number  = -1;
-        ArrayList pairs = new ArrayList();DiscrepancyDescription new_pair = null;
-        discrepancies =Mutation.sortDiscrepanciesByNumberAndType(discrepancies);
-        //we can count that rna discrepancy comes first in pair
-        for(int i = 0; i < discrepancies.size(); i++)
+        if (discrepancies == null || discrepancies.size() == 0) return null;
+        
+        ArrayList definitions = new ArrayList();
+        ArrayList discr_in_definition = new ArrayList();
+        DiscrepancyDescription new_definition = null;
+        discrepancies = Mutation.sortDiscrepanciesByNumberAndType(discrepancies);
+        int discrepancy_number  = ((Mutation)discrepancies.get(0)).getNumber();
+        //we can count that rna discrepancy comes first in set for those that have aa && rna definition
+        for(int count = 0; count < discrepancies.size(); count++)
         {
-            discrepancy = (Mutation)discrepancies.get(i);
-            //start new pair
-            if ( discrepancy_number  != discrepancy.getNumber())
+            //start new definition
+            if ( discrepancy_number  != ((Mutation)discrepancies.get(count)).getNumber())
             {
-                new_pair = new DiscrepancyDescription();
-                pairs.add(new_pair);
-                discrepancy_number  = discrepancy.getNumber();
+                new_definition = new DiscrepancyDescription();
+                new_definition.setDiscrepancies(discr_in_definition);
+                definitions.add(new_definition);
+                discr_in_definition = new ArrayList();
+                discrepancy_number  = ((Mutation)discrepancies.get(count)).getNumber();
             }
-            if (discrepancies.get(i) instanceof RNAMutation)
-            {
-                new_pair.setRNADiscrepancy( (RNAMutation)discrepancies.get(i));
-            }
-            else if (discrepancies.get(i) instanceof AAMutation)
-            {
-                 new_pair.setAADiscrepancy( (AAMutation)discrepancies.get(i));
-            }
-            else if (discrepancies.get(i) instanceof LinkerMutation)
-            {
-                 new_pair.setLinkerDiscrepancy( (LinkerMutation)discrepancies.get(i));
-            }
-           
+            discr_in_definition.add(discrepancies.get(count));
+  
         }
-        return pairs;
+        if (discr_in_definition!= null && discr_in_definition.size() > 0)
+        {  
+            new_definition = new DiscrepancyDescription();
+            new_definition.setDiscrepancies(discr_in_definition);
+            definitions.add(new_definition);
+        }
+        return definitions;
     }
     
     //get in array of discrepancydefinitions
     //remember linker3 and gene specific mutations have their one position definition system
-    public static ArrayList   getDiscrepancyPairsNoDuplicates(ArrayList arr2,ArrayList arr1)
+    public static ArrayList   getDiscrepancyDescriptionsNoDuplicates(ArrayList arr2,ArrayList arr1)
     {
         if (arr1 == null && arr2 == null) return null;
-        if (arr1 != null & arr2 == null) return assembleDiscrepanciesInPairs(arr1);
-        if (arr1 == null && arr2 != null) return assembleDiscrepanciesInPairs(arr2);
-        ArrayList res1 = assembleDiscrepanciesInPairs(arr1);
-        ArrayList res2 = assembleDiscrepanciesInPairs(arr2);
-        Hashtable discrepancy_positions = new Hashtable();
-        Hashtable discrepancy_positions_linker3 = new Hashtable();
-         DiscrepancyDescription pair =  null; 
+        if (arr1 != null & arr2 == null) return assembleDiscrepancyDefinitions(arr1);
+        if (arr1 == null && arr2 != null) return assembleDiscrepancyDefinitions(arr2);
+        ArrayList res1 = assembleDiscrepancyDefinitions(arr1);
+        ArrayList res2 = assembleDiscrepancyDefinitions(arr2);
+         DiscrepancyDescription discr_definition_res1 =  null; 
+         DiscrepancyDescription discr_definition_res2 =  null; 
          ArrayList result = new ArrayList();
          int position = 0;
-        for (int count = 0; count < res1.size(); count++)
+         int length = (res1.size() <= res2.size()? res1.size(): res2.size());
+         int res1_pointer = 0; int res2_pointer = 0;
+         int isEqualDiscrepancies = 0;
+        while(true)
         {
-            pair =  (DiscrepancyDescription) res1.get(count);
-            position = pair.getRNADefinition().getPosition();
-            if (pair.getRNADefinition().getType() != Mutation.LINKER_3P)
+            discr_definition_res1 =  (DiscrepancyDescription) res1.get(res1_pointer);
+            discr_definition_res2 =  (DiscrepancyDescription) res2.get(res2_pointer);
+            //equal discreapancies? 
+            isEqualDiscrepancies = discr_definition_res1.isEqual(discr_definition_res2);
+            if ( isEqualDiscrepancies < 0)//first discr located before second
             {
-                discrepancy_positions.put( new Integer(position) , pair);
+                result.add( discr_definition_res1  );
+                res1_pointer++; 
+                if ( res1_pointer >= res1.size() ) break;
             }
-            else
+            else if ( isEqualDiscrepancies > 0)//second discr located before second
             {
-                discrepancy_positions_linker3.put( new Integer(position) , pair);
+                result.add( discr_definition_res2 );
+                res2_pointer++;
+                if ( res2_pointer >= res2.size() ) break;
+            }
+            else if ( isEqualDiscrepancies == 0)// discr located at the same place
+            {
+                  // select one that has higher quality
+                result.add( getMaxQualityDiscrepancy(discr_definition_res1,discr_definition_res2) );
+                res1_pointer++; res2_pointer++;
+                if ( res1_pointer >= res1.size() || res2_pointer >= res2.size() ) break;
             }
         }
+         //put the rest
+         for (int count = res1_pointer; count < res1.size(); count++)
+         {
+             result.add(res1.get(count) );
+         }
+         for (int count = res2_pointer; count < res2.size(); count++)
+         {
+             result.add( res2.get(count) );
+         }
         
-         for (int count = 0; count < res2.size(); count++)
-         {
-             pair =  (DiscrepancyDescription) res2.get(count);
-             position = pair.getRNADefinition().getPosition();
-             
-             if (pair.getRNADefinition().getType() != Mutation.LINKER_3P
-                && discrepancy_positions.containsKey(new Integer( position)))
-             {
-                 if ( isMaxDiscrepancy (pair, (DiscrepancyDescription)discrepancy_positions.get( new Integer(position) )))
-                 {
-                     discrepancy_positions.put(new Integer( position), pair);
-                 }
-                else
-                     discrepancy_positions.put(new Integer( position), pair);
-             }
-             else if(pair.getRNADefinition().getType() == Mutation.LINKER_3P
-                && discrepancy_positions_linker3.containsKey(new Integer( position)))
-             {
-                 if ( isMaxDiscrepancy (pair, (DiscrepancyDescription)discrepancy_positions.get( new Integer(position) )))
-                 {
-                     discrepancy_positions_linker3.put(new Integer( position), pair);
-                 }
-                else
-                     discrepancy_positions_linker3.put(new Integer( position), pair);
-             }
-         }
-         for (Enumeration e = discrepancy_positions.elements() ; e.hasMoreElements() ;) 
-         {
-             result.add(e.nextElement());
-         }
-         for (Enumeration e = discrepancy_positions_linker3.elements() ; e.hasMoreElements() ;) 
-         {
-             result.add(e.nextElement());
-         }
-
         return  result;
         
     }
@@ -207,39 +229,6 @@ public class DiscrepancyDescription
     }
     
    
-    /*
-   
-    
-      public static ArrayList sortByRNADefinitionByChangeTypeQuality(ArrayList discrepancies)
-    {
-        ArrayList result = new ArrayList();
-        for (int i=0; i< discrepancies.size();i++)
-            
-            //sort array by cds length
-            Collections.sort(discrepancies, new Comparator()
-            {
-                public int compare(Object o1, Object o2)
-                {
-                    Mutation discrepancy_1 =  ((DiscrepancyDescription) o1).getRNADefinition();
-                    Mutation discrepancy_2 = ((DiscrepancyDescription) o2).getRNADefinition();
-                    int res = discrepancy_1.getChangeType() - discrepancy_2.getChangeType();
-                    if (res == 0)//same type
-                    {
-                        return discrepancy_1.getQuality() - discrepancy_2.getQuality();
-                    }
-                    else
-                        return res;
-                }
-                // Note: this comparator imposes orderings that are inconsistent with equals. 
-                public boolean equals(java.lang.Object obj)
-                {      return false;  }
-                // compare
-            } );
-            
-            
-            return discrepancies;
-    }
-      */
     public static boolean isMaxNumberOfDiscrepanciesReached(ArrayList discrepancy_descriptions ,
                                                             FullSeqSpec cutoff_spec )
                                                             throws BecDatabaseException
@@ -250,21 +239,23 @@ public class DiscrepancyDescription
         int global_change_type = Mutation.TYPE_NOT_DEFINE;
  //get total number of discrepancies per each global type
         int quality = Mutation.QUALITY_NOTKNOWN;
-        DiscrepancyDescription pair = null;
+        DiscrepancyDescription discr_definition = null;
         int[] total_discrepancy_numbers_pass_high_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
         int[] total_discrepancy_numbers_pass_low_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
-        for (int pair_count = 0; pair_count < discrepancy_descriptions.size(); pair_count++)
+        for (int count = 0; count < discrepancy_descriptions.size(); count++)
         {
             global_change_type = Mutation.TYPE_NOT_DEFINE;
-            pair = (DiscrepancyDescription)discrepancy_descriptions.get(pair_count);
-            quality = pair.getRNADefinition().getQuality();
-            if ( pair.getAADefinition() != null)
+            discr_definition = (DiscrepancyDescription)discrepancy_descriptions.get(count);
+            
+            if ( discr_definition.getAADefinition() != null)
             {
-                global_change_type = Mutation.getMacroChangeType(pair.getAADefinition().getChangeType());
+                quality = discr_definition.getAADefinition().getQuality();
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType());
             }
-            if (pair.getAADefinition() == null ||  global_change_type == Mutation.TYPE_NOT_DEFINE)
+            else if(discr_definition.getAADefinition() == null && discr_definition.getRNADefinition() != null)
             {
-                global_change_type = Mutation.getMacroChangeType(pair.getRNADefinition().getChangeType());
+                quality = discr_definition.getRNADefinition().getQuality();
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType());
             }
             if (global_change_type != Mutation.TYPE_NOT_DEFINE)
             {
@@ -307,21 +298,23 @@ public class DiscrepancyDescription
         int global_change_type = Mutation.TYPE_NOT_DEFINE;
  //get total number of discrepancies per each global type
         int quality = Mutation.QUALITY_NOTKNOWN;
-        DiscrepancyDescription pair = null;
+        DiscrepancyDescription discr_definition = null;
         int[] total_discrepancy_numbers_pass_high_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
         int[] total_discrepancy_numbers_pass_low_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
-        for (int pair_count = 0; pair_count < discrepancy_descriptions.size(); pair_count++)
+        for (int count = 0; count < discrepancy_descriptions.size(); count++)
         {
             global_change_type = Mutation.TYPE_NOT_DEFINE;
-            pair = (DiscrepancyDescription)discrepancy_descriptions.get(pair_count);
-            quality = pair.getRNADefinition().getQuality();
-            if ( pair.getAADefinition() != null)
+            discr_definition = (DiscrepancyDescription)discrepancy_descriptions.get(count);
+            
+            if ( discr_definition.getAADefinition() != null)
             {
-                global_change_type = Mutation.getMacroChangeType(pair.getAADefinition().getChangeType());
+                quality = discr_definition.getAADefinition().getQuality();
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType());
             }
-            if (pair.getAADefinition() == null ||  global_change_type == Mutation.TYPE_NOT_DEFINE)
+            else if(discr_definition.getAADefinition() == null &&   discr_definition.getRNADefinition() != null)
             {
-                global_change_type = Mutation.getMacroChangeType(pair.getRNADefinition().getChangeType());
+                quality = discr_definition.getRNADefinition().getQuality();
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType());
             }
             if (global_change_type != Mutation.TYPE_NOT_DEFINE)
             {
@@ -382,29 +375,31 @@ public class DiscrepancyDescription
             return 0;
          int discrepancy_number = 0; int total_penalty = 0 ;
          int penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
-         DiscrepancyDescription pair = null; int score = 0;
+         DiscrepancyDescription discr_definition = null; int score = 0;
          int global_change_type = Mutation.TYPE_NOT_DEFINE;
-        for (int pair_count = 0; pair_count< discrepancy_descriptions.size(); pair_count++)
+        for (int count = 0; count< discrepancy_descriptions.size(); count++)
         {
             penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
-            pair = (DiscrepancyDescription)discrepancy_descriptions.get(pair_count);
-            if ( pair.getAADefinition() != null)
+            discr_definition = (DiscrepancyDescription)discrepancy_descriptions.get(count);
+            if ( discr_definition.getAADefinition() != null)
             {
-                global_change_type = Mutation.getMacroChangeType(pair.getAADefinition().getChangeType());
-                if ( global_change_type != Mutation.TYPE_NOT_DEFINE)
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType());
+               if ( global_change_type != Mutation.TYPE_NOT_DEFINE)
                 {
-                    penalty = spec.getPenalty(pair.getAADefinition().getQuality(),    global_change_type);// by aa mutation
+                    penalty = spec.getPenalty(discr_definition.getAADefinition().getQuality(),    global_change_type);// by aa mutation
                 }
+                /*
                 else
                 {
                     global_change_type = Mutation.getMacroChangeType(pair.getRNADefinition().getChangeType());
                     penalty = spec.getPenalty(pair.getRNADefinition().getQuality(),global_change_type);// by rna mutation
                 }
+               **/
             }
-            else
+            else if ( discr_definition.getAADefinition() == null && discr_definition.getRNADefinition() != null)
             {
-                global_change_type = Mutation.getMacroChangeType(pair.getRNADefinition().getChangeType());
-                penalty = spec.getPenalty(pair.getRNADefinition().getQuality(),global_change_type);// by rna mutation
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType());
+                penalty = spec.getPenalty(discr_definition.getRNADefinition().getQuality(),global_change_type);// by rna mutation
             }
             total_penalty += penalty ;
          }
@@ -412,10 +407,72 @@ public class DiscrepancyDescription
         return -total_penalty;
     }
        
-      //---------------------------------------------------------------------
-      private static boolean isMaxDiscrepancy(DiscrepancyDescription pair_one, DiscrepancyDescription pair_two)
+    public int getPosition()
+    {
+        if ( m_discrepancydefinition_type == DiscrepancyDescription.TYPE_AA)
+             return this.getAADefinition().getPosition();
+        else
+            return this.getRNADefinition().getPosition();
+            
+    }
+    public int isInSameRegion(  DiscrepancyDescription object)
+    {
+        int this_type = this.getDiscrepancyDefintionType();
+        int object_type = object.getDiscrepancyDefintionType();
+        int this_linker_type = -1;int object_linker_type = -1;
+        if ( this_type == TYPE_NOT_AA_LINKER )
+            this_linker_type = ( (LinkerMutation)this.getRNADefinition()).getType() ;
+        if ( object_type == TYPE_NOT_AA_LINKER )
+             object_linker_type = ( (LinkerMutation)object.getRNADefinition()).getType() ;
+        
+        if ( (this_type == TYPE_AA && object_type == TYPE_AA)
+            || ( ( this_type == TYPE_NOT_AA_LINKER &&  object_type == TYPE_NOT_AA_LINKER ) && ( object_linker_type ==  this_linker_type ) ))
+            return 0;
+        if ( ( this_type == TYPE_AA && object_type == TYPE_NOT_AA_LINKER && object_type == Mutation.LINKER_3P)
+                || ( object_type == TYPE_AA && this_type == TYPE_NOT_AA_LINKER && this_type == Mutation.LINKER_5P))
+            return -1;
+        if (( this_type == TYPE_AA && object_type == TYPE_NOT_AA_LINKER && object_type == Mutation.LINKER_5P)
+            || ( object_type == TYPE_AA && this_type == TYPE_NOT_AA_LINKER && this_type == Mutation.LINKER_3P))
+            return 1;
+        else
+            return 0;
+        
+    }
+    public int isEqual(DiscrepancyDescription object)
+    {
+          int isInSameRegion = this.isInSameRegion(object);
+          int this_position = this.getPosition() ;
+          int object_position = object.getPosition();
+          
+          if ( isInSameRegion == 0) //same type of discrepancy -> compare position
+          {
+              return this_position - object_position;
+          }
+          else 
+              return isInSameRegion;
+            
+          
+    }
+     //---------------------------------------------------------------------
+    private static DiscrepancyDescription getMaxQualityDiscrepancy(DiscrepancyDescription description_one, DiscrepancyDescription description_two)
       {
-          return  pair_one.getRNADefinition().getQuality() > pair_two.getRNADefinition().getQuality();
+          int quality_one = Mutation.QUALITY_NOTKNOWN;
+          int quality_two = Mutation.QUALITY_NOTKNOWN;
+          if ( description_one.getAADefinition() != null )
+          {
+              quality_one = description_one.getAADefinition().getQuality() ;
+              quality_two=          description_two.getAADefinition().getQuality();
+          }
+          else
+          {
+               quality_one=  description_one.getRNADefinition().getQuality() ; 
+                quality_two   =     description_two.getRNADefinition().getQuality();
+          }
+          
+          if ( quality_one >= quality_two)
+              return  description_one;
+          else
+                  return description_two;
            
       }
        private static boolean isMaxDiscrepancy(Mutation mut_one, Mutation mut_two)
@@ -434,24 +491,21 @@ public class DiscrepancyDescription
             try
             {
        
-              CloneSequence cl= new CloneSequence(13858);
-               ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( cl.getDiscrepancies());
-               edu.harvard.med.hip.bec.coreobjects.spec.FullSeqSpec spec = (FullSeqSpec ) Spec.getSpecById(11);
-               int c = defineQuality( discrepancy_descriptions ,spec);
-              System.out.print(c);   
-                 cl= new CloneSequence(13839);
-                discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( cl.getDiscrepancies());
-           //    edu.harvard.med.hip.bec.coreobjects.spec.FullSeqSpec spec = (FullSeqSpec ) Spec.getSpecById(11);
-                c = defineQuality( discrepancy_descriptions ,spec);
-               
-                 System.out.print(c);
-                 cl= new CloneSequence(13872);
-                discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepanciesInPairs( cl.getDiscrepancies());
-          //     edu.harvard.med.hip.bec.coreobjects.spec.FullSeqSpec spec = (FullSeqSpec ) Spec.getSpecById(11);
-                c = defineQuality( discrepancy_descriptions ,spec);
-                        //discrepancies.addAll( read.getSequence().getDiscrepancies() );
-       
-                    System.out.print(c);
+              CloneSequence cl= new CloneSequence(1695);
+              System.out.println(Mutation.toHTMLString(cl.getDiscrepancies()));
+              ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( cl.getDiscrepancies());
+              /// edu.harvard.med.hip.bec.coreobjects.spec.FullSeqSpec spec = (FullSeqSpec ) Spec.getSpecById(11);
+             
+             //  int c = defineQuality( discrepancy_descriptions ,spec);
+              System.out.print("L");   
+                CloneSequence cl1= new CloneSequence(13839);
+                discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( cl.getDiscrepancies());
+            System.out.println(Mutation.toHTMLString(cl1.getDiscrepancies()));
+                //    edu.harvard.med.hip.bec.coreobjects.spec.FullSeqSpec spec = (FullSeqSpec ) Spec.getSpecById(11);
+                  discrepancy_descriptions = DiscrepancyDescription.getDiscrepancyDescriptionsNoDuplicates(cl.getDiscrepancies(),cl1.getDiscrepancies());
+             //   c = defineQuality( discrepancy_descriptions ,spec);
+                System.out.print("L");   
+                
 
             }
             catch(Exception e)
