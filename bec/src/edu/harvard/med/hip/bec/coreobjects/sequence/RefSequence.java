@@ -28,6 +28,13 @@ public class RefSequence extends BaseSequence
     public static final int SPECIES_YEAST = 2;
     public static final int SPECIES_MOUSE = 3;
     public static final int SPECIES_PSEUDOMONAS = 4;
+   // public static final int SPECIES_HOLDER = 5;
+     // public static final int SPECIES_HOLDER = 6;
+     // public static final int SPECIES_HOLDER = 7;
+     // public static final int SPECIES_HOLDER = 8;
+     // public static final int SPECIES_HOLDER = 9;
+     // public static final int SPECIES_HOLDER = 10;
+     // public static final int SPECIES_HOLDER = 11;
     
     private int m_species = -1;
     private String m_dateadded= null;
