@@ -416,7 +416,7 @@ public class IsolateTrackingEngine
     //get not amb read
     private ArrayList getReadPassedAmbiquoutyTest(FullSeqSpec cutoff_spec) throws BecDatabaseException
     {
-        ArrayList reads = null;
+        ArrayList reads = new ArrayList();
         //check for number of ambiques bases
         String read_sequence_text = null; int amb_bases_100base = 0;
         for (int read_count = 0; read_count < m_endreads.size(); read_count++)

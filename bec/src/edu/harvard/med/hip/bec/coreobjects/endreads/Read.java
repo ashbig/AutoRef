@@ -341,7 +341,7 @@ public class Read
     public int  calculateScore(EndReadsSpec spec) throws BecDatabaseException,BecUtilException
     { 
         
-        if (m_score == Constants.SCORE_NOT_CALCULATED)
+        if (m_type == Read.TYPE_ENDREAD_FORWARD || m_type == Read.TYPE_ENDREAD_REVERSE)
         {
             m_score = calculateScoreBasedOnSpec(spec );
         }
@@ -399,6 +399,8 @@ public class Read
     {
      //   ArrayList rna_discrepancies = m_readsequence.getDiscrepanciesByType(Mutation.RNA);
         //no discrepancies
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//####################################
         if (m_readsequence.getDiscrepancies() == null || m_readsequence.getDiscrepancies().size() == 0)
             return m_trimmedstop -  m_trimmedstart;
         
@@ -413,31 +415,12 @@ public class Read
         {
             disc = (Mutation)rna_discrepancies.get(ind);
             penalty = spec.getPenalty(disc.getQuality(), disc.getChangeType());// by rna mutation
-            //try to find pair and get its penalty
-           /* if (penalty == EndReadsSpec.PENALTY_NOT_DEFINED)
-            {
-                disc = Mutation.getDiscrepancyPair(disc, Mutation.AA, m_readsequence.getDiscrepancies());
-                penalty = spec.getPenalty(disc.getQuality(), disc.getChangeType());// by rna mutation
-            }
-            **/
             score += penalty;
         }
      
-      /*
-       ArrayList discrepancy_pairs = DiscrepancyPair.assembleDiscrepanciesInPairs(m_readsequence.getDiscrepancies());
-        DiscrepancyPair pair =  null; 
-        for (int ind = 0; ind < discrepancy_pairs.size();ind++)
-        {
-             pair = (DiscrepancyPair) discrepancy_pairs.get(ind);
-            penalty = spec.getPenalty(pair.getRNADiscrepancy().getQuality(), pair.getRNADiscrepancy().getChangeType());// by rna mutation
-            //try to find pair and get its penalty
-            if (penalty == EndReadsSpec.PENALTY_NOT_DEFINED)
-                           penalty = spec.getPenalty(pair.getAADiscrepancy().getQuality(), pair.getAADiscrepancy().getChangeType());// by rna mutation
-            }
-            score += penalty;
-        }
-       **/
         int length_to_normalize = refsequenceCoveredLength();
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//####################################
         if ( length_to_normalize == 0)
             length_to_normalize = m_trimmedstop -  m_trimmedstart;
         score = (int) score * 10000/ (length_to_normalize);
@@ -450,19 +433,23 @@ public class Read
         int length = 0;
          if (m_cdsstart != 0 && m_cdsstop != 0)//whole sequence is covered by one read
         {
-            length = Math.abs(m_cdsstart - m_cdsstop);
+            length = Math.abs( m_cdsstop - m_cdsstart);
         }
-        else if (m_cdsstart > 0 && m_cdsstop == 0)//whole sequence is covered by one read
+        else if (m_cdsstart > 0 && m_cdsstop == 0)//forward read, sequence not covered
         {
             length = m_trimmedstop - m_cdsstart ;
         }
-        else if (m_cdsstart == 0 && m_cdsstop > 0)//whole sequence is covered by one read
+        else if (m_cdsstart == 0 && m_cdsstop > 0)//reverse read, not compliment,sequence not covered
         {
             length = m_cdsstop - m_trimmedstart;
         }
-         else if (m_cdsstart < 0 && m_cdsstop == 0)//whole sequence is covered by one read
+         else if (m_cdsstart < 0 && m_cdsstop == 0)//forward read, compliment,sequence not covered
         {
             length = Math.abs(m_cdsstart) - m_trimmedstart ;
+        }
+           else if (m_cdsstart == 0 && m_cdsstop < 0)//reverse read, compliment,sequence not covered
+        {
+            length = m_trimmedstop - Math.abs(m_cdsstop)   ;
         }
        return length;
     }

@@ -22,10 +22,7 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
 public class CloneSequence extends AnalyzedScoredSequence
 {
  
-    private String    m_blast_n = null;
-    private String    m_blast_p = null;
-    private String    m_needle = null;
-      
+       
      //obtained/analyzed/mutations cleared/final
   
     private int        m_sequence_type = -1 ; //final\conseq\final editied
@@ -34,15 +31,26 @@ public class CloneSequence extends AnalyzedScoredSequence
     private int         m_result_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int         m_isolatetracking_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int         m_analize_status = -1;
+    private int         m_cds_start = -1;
+    private int         m_cds_stop = -1;
  
-    private String     m_submited_date = null;
-    /** Creates a new instance of FuzzySequence */
+    private String     m_submission_date = null;
+  
+    
+    
+    public CloneSequence( String text,  int refseqid)
+    {
+        super( Algorithms.cleanWhiteSpaces(text) , refseqid);
+        m_type = CLONE_SEQUENCE;
+        m_analize_status = STATUS_OBTAINED;
+       
+    }
     public CloneSequence(int id) throws BecDatabaseException
     {  
-         super(id);
+        super( id);
          m_type = CLONE_SEQUENCE;
-         String sql = "select APPROVEDBYID ,  SUBMISSIONDATE, isolatetrackingid, resultid, refsequenceid, "
-            + " sequencetype, analysisstatus from assembledsequence where sequenceid="+id;
+         String sql = "select (SEQUENCEID ,ANALYSISSTATUS ,SEQUENCETYPE ,REFSEQUENCEID,RESULTID ,ISOLATETRACKINGID "
+ +"  ,APROVEDBYID   ,SUBMISSIONDATE ,CDSSTART   ,CDSSTOP   ) from ASSEMBLEDSEQUENCE where sequenceid="+id;
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             ResultSet rs = null;
         try
@@ -50,18 +58,16 @@ public class CloneSequence extends AnalyzedScoredSequence
             rs = t.executeQuery(sql);
             while(rs.next())
             {
-                m_analize_status =rs.getInt("analysisstatus"); //obtained/analyzed/mutations cleared/final
-                m_approved_by_id = rs.getInt("APPROVEDBYID");
-                m_submited_date = rs.getString("SUBMITIONDATE");
-                m_refsequence_id = rs.getInt("refsequenceid");
-                m_sequence_type = rs.getInt("sequencetype");
-                m_result_id = rs.getInt("resultid");
-                m_isolatetracking_id = rs.getInt("isolatetrackingid");
+                m_sequence_type = rs.getInt("SEQUENCETYPE");// -1  rs.getInt(""); //final\conseq\final editied
+                m_approved_by_id = rs.getInt("APROVEDBYID");// BecIDGenerator.BEC_OBJECT_ID_NOTSET rs.getInt("");
+                m_refsequence_id = rs.getInt("REFSEQUENCEID");//  BecIDGenerator.BEC_OBJECT_ID_NOTSET rs.getInt("");
+                m_result_id = rs.getInt("RESULTID");//  BecIDGenerator.BEC_OBJECT_ID_NOTSET rs.getInt("");
+                m_isolatetracking_id = rs.getInt("ISOLATETRACKINGID");//  BecIDGenerator.BEC_OBJECT_ID_NOTSET rs.getInt("");
+                m_analize_status = rs.getInt("ANALYSISSTATUS");// -1 rs.getInt("");
+                m_cds_start = rs.getInt("CDSSTART");// -1 rs.getInt("");
+                m_cds_stop = rs.getInt("CDSSTOP");// -1 rs.getInt("");
             }
-           // getDiscrepancies();
-            //getDiscrepancySummary();
-          //  getAllBlasts();
-        
+           getDiscrepancies();
         } catch (SQLException sqlE)
         {
             throw new BecDatabaseException("Error occured while restoring sequence with id "+sqlE+"\nSQL: "+sql);
@@ -74,34 +80,17 @@ public class CloneSequence extends AnalyzedScoredSequence
     
     
     
-    public CloneSequence(int id,String text, int refseqid)
-    {
-        super(Algorithms.cleanWhiteSpaces(text), null, refseqid,STATUS_OBTAINED);
-        m_type =  FULL_SEQUENCE;
-       
-    }
+  
     
     public CloneSequence( String text, String score, int refseqid)
     {
         super( text,score,refseqid,STATUS_OBTAINED);
-        m_type =  FULL_SEQUENCE;
+        m_type =  CLONE_SEQUENCE;
    
     }
-    public CloneSequence(String text, int refseqid, int status, int quality) 
-    {
-        super( text,null,refseqid,STATUS_OBTAINED);
   
-    }
-     //obtained/analyzed/mutations cleared/final
-    public String       getBlastnFileName()  {return m_blast_n ;}
-    public String       getBlastpFileName()  {return m_blast_p ;}
-    public int          getApprovedById()  {return m_approved_by_id ;}
-   
-    public String       getDate()  {return m_submited_date ;}
-     //obtained/analyzed/mutations cleared/final
-   
-    public void         setApprovedById(int s)  { m_approved_by_id =s;}
     
+   
     /*
     public void         setQuality(FullSeqSpec spec)  throws BecDatabaseException
     { 
@@ -199,35 +188,52 @@ public class CloneSequence extends AnalyzedScoredSequence
     
     public synchronized void insert (Connection conn) throws BecDatabaseException
     {
-        
-        /*
-        String sql = "";
-        Statement stmt =null;
-        if (this.getText() == null || this.getText().length() == 0) return;
-        if(m_id == -1)    m_id = BecIDGenerator.getID("sequenceid");
-        if (m_approved_by == null) m_approved_by = " ";
+       String sql =null;
+       Statement stmt = null;
         try
         {
-            stmt = conn.createStatement();
-            sql = "insert into fullsequence(sequenceid, APPROVEDBY , submittedby,SUBMITIONDATE,FLAG_QUALITY "
-                +",FLAG_STATUS, refsequenceid) values("
-                +m_id+",'"+m_approved_by+"','"+ m_submitted_by + "',sysdate," +m_flag_quality+","
-                +m_analize_status+","+m_refsequenceid+")";;
-                   
-            stmt.executeUpdate(sql);
-           super.insert(conn);
-        }
-        catch (Exception sqlE)
+            if (m_id ==  BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+                    m_id = BecIDGenerator.getID("sequenceid");
+                    
+              sql = 	"insert into ASSEMBLEDSEQUENCE "+
+            " (SEQUENCEID ,ANALYSISSTATUS ,SEQUENCETYPE ,REFSEQUENCEID,RESULTID ,ISOLATETRACKINGID "
+  +" ,APROVEDBYID   ,SUBMISSIONDATE ,CDSSTART   ,CDSSTOP   ) "+
+            "values ("+m_id+ ","+m_analize_status + ","  +m_sequence_type+","+m_refsequence_id+"," 
+            +m_result_id+","+m_isolatetracking_id+","+m_approved_by_id+",sysdate,"+m_cds_start+","+m_cds_stop +")";
+             DatabaseTransaction.executeUpdate(sql,conn);
+        
+        //insert into sequencetext table.
+            BaseSequence.insertSequence( conn, this.getText(),m_id, BaseSequence.SEQUENCE_INFO_TEXT);
+            BaseSequence.insertSequence( conn, this.getScores(),m_id, BaseSequence.SEQUENCE_INFO_SCORE);
+          
+        } catch (Exception sqlE)
         {
-            System.out.println(sqlE.getMessage());
             throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
         } finally
         {
-          
             DatabaseTransaction.closeStatement(stmt);
         }
-         **/
     }
+    
+    public int          getType (){ return m_sequence_type   ;} //final\conseq\final editied
+    public int          getApprovedById (){ return m_approved_by_id ;} //BecIDGenerator.BEC_OBJECT_ID_NOTSET;}
+    public int          getRefSequenceId (){ return m_refsequence_id;}   //BecIDGenerator.BEC_OBJECT_ID_NOTSET;}
+    public int          getResultId (){ return m_result_id   ;}//BecIDGenerator.BEC_OBJECT_ID_NOTSET;}
+    public int          getIsolatetrackingId (){ return m_isolatetracking_id  ;} //BecIDGenerator.BEC_OBJECT_ID_NOTSET;}
+    public int          getStatus (){ return m_analize_status  ;}
+    public String       getSubmissionDate (){ return m_submission_date  ;}
+    public int          getCdsStart(){ return m_cds_start ;}
+    public int          getCdsStop(){ return m_cds_stop ;}
+    
+    public void         setType (int v){  m_sequence_type   = v;} //final\conseq\final editied
+    public void         setApprovedById (int v){  m_approved_by_id = v;} //BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+    public void         setRefSequenceId (int v){  m_refsequence_id= v;}   //BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+    public void         setResultId (int v){  m_result_id   = v;}//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+    public void         setIsolatetrackingId (int v){  m_isolatetracking_id  = v;} //BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+    public void         setStatus (int v){  m_analize_status  = v;}
+    public void         setSubmissionDate (String v){  m_submission_date  = v;}
+    public void          setCdsStart(int v){  m_cds_start = v;}
+    public void          setCdsStop(int v){  m_cds_stop = v;}
     /*
     public void updateQuality(Connection conn)    throws BecDatabaseException
     {
@@ -247,7 +253,7 @@ public class CloneSequence extends AnalyzedScoredSequence
         }
     }
      **/
-     public void updateApproved(Connection conn)    throws BecDatabaseException
+     public void updateApprovedBy(Connection conn)    throws BecDatabaseException
     {
         Statement stmt =null;
         try
@@ -267,7 +273,7 @@ public class CloneSequence extends AnalyzedScoredSequence
      
      public static void updateStatus(int id,  int status, Connection conn)    throws BecDatabaseException
     {
-        String sql = "update assembledsequence  set analysisstatus="+status+      " where sequenceid="+id;
+        String sql = "update assembledsequence  set ANALYSISSTATUS="+status+      " where sequenceid="+id;
         
         DatabaseTransaction.executeUpdate(sql,conn);
      }

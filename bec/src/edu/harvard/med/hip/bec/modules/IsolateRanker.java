@@ -161,21 +161,21 @@ public class IsolateRanker
             {
                 //we process only not yet analized isolates
                 it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
-                if (it.getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN)
+                reads =  it.getEndReads();
+                if (reads == null || reads.size() == 0)
                 {
-                    reads =  it.getEndReads();
-                    if (reads == null || reads.size() == 0)
+                    it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
+                  //  it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS, it.getId(),conn);
+                }
+                else
+                {
+                    for (int reads_count = 0; reads_count < reads.size(); reads_count ++)
                     {
-                        it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
-                      //  it.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS, it.getId(),conn);
-                                
-                    }
-                    else
-                    {
-                        for (int reads_count = 0; reads_count < reads.size(); reads_count ++)
+                        Read read  = (Read) reads.get(reads_count);
+                          //not analyzed isolates
+                        if (it.getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN)
                         {
-                            Read read  = (Read) reads.get(reads_count);
-                              //check for read length
+                 //check for read length
                             if ( !isReadLong(read,conn)) continue;
                             runRead( read, refsequence, conn);
                             if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
@@ -186,12 +186,13 @@ public class IsolateRanker
                                 break;
                             }
                         }
+                        read.calculateScore(m_penalty_spec);
+                        read.updateScore(conn);
                     }
                 }
                 it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
                     //check wether number of mutations exseedmax allowed
                 it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length());
-  
             }
             construct.calculateRank();
              for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
@@ -229,9 +230,7 @@ public class IsolateRanker
         if (read.getScore() == Constants.SCORE_NOT_CALCULATED && 
             (read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_FORWARD))
         {
-        
-          
-            //prepare detectors
+   //prepare detectors
             DiscrepancyFinder df = new DiscrepancyFinder();
             df.setNeedleGapOpen(40.0);
             df.setNeedleGapExt(0.05);
@@ -239,19 +238,14 @@ public class IsolateRanker
             df.setIdentityCutoff(60.0);
             df.setMaxNumberOfDiscrepancies(20);
             // reasign sequence for only trimmed sequence
-            
-            
-            
-            AnalyzedScoredSequence read_sequence =  read.getSequence();
+             AnalyzedScoredSequence read_sequence =  read.getSequence();
             //store values
             String read_sequence_text=read_sequence.getText();
             int[] read_scores = read.getScoresAsArray();
             try
             {
+                //reasign scores and sequencde for only trimmed scores
                 read_sequence.setText(read.getTrimmedSequence());
-
-
-                //reasign scores for only trimmed scores
                 int[] trimmed_scores = read.getTrimmedScoresAsArray();
                 read_sequence.setScoresAsArray(trimmed_scores);
             }
@@ -260,10 +254,7 @@ public class IsolateRanker
                  e.printStackTrace();
                 System.out.println("Can not get trimmed sequence; readid " + read.getId());
             }
-           
-           
-            
-            //run read
+    //run read
 
             df.setSequencePair(new SequencePair(read.getSequence() ,  refsequence));
             df.setInputType(true);
@@ -286,11 +277,7 @@ public class IsolateRanker
                 read.setCdsStart( -(read_sequence.getText().length() + 1 - df.getCdsStart() + read.getTrimStart() ) );
                 read.setCdsStop( -(read_sequence.getText().length() + 1 - df.getCdsStop() + read.getTrimStart() ));
             }
-            if ( !( read.getCdsStart() == 0 && read.getCdsStop() == 0) )
-            {
-                read.updateCdsStartStop(conn);
-            }
-            
+            read.updateCdsStartStop(conn);
             if (m_isRunPolymorphism)
             {
                  PolymorphismDetector pf = new PolymorphismDetector();
@@ -308,22 +295,20 @@ public class IsolateRanker
                 if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
                 {
                     read.setType(Read.TYPE_ENDREAD_FORWARD_NO_MATCH);
-                    
                 }
                 else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
                 {
                     read.setType(Read.TYPE_ENDREAD_REVERSE_NO_MATCH);
-                   
                 }
-                 read.updateType(conn);
+                read.updateType(conn);
                 return;
             }
             else
               // insert mutations
                 read.getSequence().insertMutations(conn);
         }
-        read.calculateScore(m_penalty_spec);
-        read.updateScore(conn);
+      //  read.calculateScore(m_penalty_spec);
+       // read.updateScore(conn);
     }
 
     

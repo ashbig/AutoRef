@@ -111,7 +111,8 @@ public class EndReadsWrapper
         +" from flexinfo f, isolatetracking iso, result r, sample s "
         +" where f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
         +" and iso.sampleid=s.sampleid and iso.sampleid in"
-        +" (select sampleid from  result where resultvalueid is null and resulttype in (12, 13))";
+        +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
+        Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE +"))";
         
         ResultSet rs = null;NamingFileEntry entry = null;
         String orientation_str = "";
