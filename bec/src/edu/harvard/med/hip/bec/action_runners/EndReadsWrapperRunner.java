@@ -230,7 +230,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
            //   {
                     if (! isSufficientQualityRead(read) )  
                     {
-                        m_error_messages.add("Read " + read.getTraceFileBaseName()+" was not submitted into ACE, because of read low quality");
+                        m_error_messages.add("Read " + read.getTraceFileName()+" was not submitted into ACE, because of read low quality");
                         return;
                     }
            //   }
