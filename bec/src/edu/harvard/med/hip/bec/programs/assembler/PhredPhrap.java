@@ -124,8 +124,6 @@ public class PhredPhrap
             throw new  BecUtilException("Cannot run phredphrap");
         } catch (InterruptedException e)
         {
-
-            
             throw new  BecUtilException("Cannot run phredphrap");
         }
         
@@ -133,9 +131,70 @@ public class PhredPhrap
         return true;
     }
 
+    public void createFakeTraceFile(String sequence, int seq_id, int quality, String file_location, String file_name)throws BecUtilException
+    {
+        //replasement for # fasta2Phd.perl
+        String refseq_read_name = file_name;
+        file_name = file_location +File.separator + "phd_dir" +File.separator + file_name +".phd.1";
+        FileWriter in = null;
+        try
+        {
+            in =  new FileWriter( new File(file_name));
 
 
+            in.write("BEGIN_SEQUENCE "+refseq_read_name+"\n\n");
+            in.write( "BEGIN_COMMENT\n\n" );
+            in.write("CHROMAT_FILE: none\n");
+            in.write("ABI_THUMBPRINT: none\n");
+            in.write("PHRED_VERSION: not called by phred\n");
+            in.write("CALL_METHOD: fasta2Phd.perl\n" );
+            in.write( "QUALITY_LEVELS: 2\n" );
 
+            in.write("TIME: \n" );
+            in.write("END_COMMENT\n\n" );
+            in.write("BEGIN_DNA\n" );
+        
+            char[] bases = sequence.toCharArray();
+            for (int count =0; count < bases.length; count++)
+            {
+                in.write(bases[count]+" "+quality +" 0\n");
+            }
+
+            in.write("END_DNA\n\n" );
+            in.write("END_SEQUENCE\n" );
+            in.flush();in.close();
+            
+        }
+        catch(Exception e){throw new BecUtilException("Cannot write fake trace file "+file_name);}
+
+    }
+
+    public static String getScoresFromPhdFile(String file_name, String file_location)throws BecUtilException
+    {
+        //replasement for # fasta2Phd.perl
+        file_name = file_location +File.separator + file_name+ ".phd.1";
+        BufferedReader in = null; String line = null;
+        StringBuffer  scores = new StringBuffer(); boolean isStartOfSequenceData = false;
+        try
+        {
+            in =  new BufferedReader(new FileReader( new File(file_name)));
+            while( ( line = in.readLine()) != null)
+            {
+                if ( line.indexOf("BEGIN_DNA") != -1)  
+                {
+                    isStartOfSequenceData = true;
+                    continue;
+                }
+                if ( !isStartOfSequenceData) continue;
+                if (   line.indexOf("END_DNA") != -1) break;
+                scores.append( (String) Algorithms.splitString ( line, " ").get(1) +" ");
+            }
+            in.close();
+            return scores.toString();
+        }
+        catch(Exception e){throw new BecUtilException("Cannot write fake trace file "+file_name);}
+
+    }
 
      //******************************************
     public static void main(String args[])
@@ -150,12 +209,15 @@ public class PhredPhrap
         }
      */
         ArrayList re = null;
-        String queryFile = "f:\\clone_files\\215\\1916";
-        String o = "1916.fasta.screen.ace.1";
+        String queryFile = "7178_E05_1114_112365_F9.ab1";
+        String o = "C:\\BEC_RESEARCH\\1114\\112365\\phd_dir";
         try
         {
          PhredPhrap pp = new PhredPhrap();
-         pp.run(queryFile,o);
+        String scores =  pp.getScoresFromPhdFile(queryFile,o);
+        
+            System.out.println(scores);
+       
         }catch(Exception e){}
         System.exit(0);
     }

@@ -11,6 +11,7 @@ import  edu.harvard.med.hip.bec.*;
 import  edu.harvard.med.hip.bec.database.*;
 import java.sql.*;
 import java.util.*;
+import edu.harvard.med.hip.bec.bioutil.*;
 
 /**
  *
@@ -18,6 +19,7 @@ import java.util.*;
  */
 public class Stretch
 {
+    
     public static final int   GAP_TYPE_LOW_QUALITY = 0;
     public static final int   GAP_TYPE_GAP = 1;
     public static final int   GAP_TYPE_CONTIG = 2;
@@ -39,8 +41,8 @@ public class Stretch
     private int             m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int             m_sequence_id = -1;//Sequence (pointer to analized sequence for contigs)
     private AnalyzedScoredSequence m_sequence = null;
-    private int             m_cds_start = -1; //(clone sequence coordinates for low quality)
-    private int             m_cds_stop = -1;
+    private int             m_cds_start = ScoredElement.DEFAULT_COORDINATE; //(clone sequence coordinates for low quality)
+    private int             m_cds_stop = ScoredElement.DEFAULT_COORDINATE;
     private int             m_orientation = Constants.ORIENTATION_FORWARD;
     private int             m_analysis_status = -1;//(not analyzed / analyzed no discrepancies / analyzed yes discrepancies)
     private int             m_collection_id = -1;//Group id (for connection of contigs);
@@ -52,8 +54,15 @@ public class Stretch
     public Stretch()
     {
     }
-    
-    public int              getId (){ return m_id ;}
+    public Stretch(int type, int status, int cds_start, int cds_stop, int orientation)
+    {
+        m_cds_start = cds_start; //(clone sequence coordinates for low quality)
+        m_cds_stop = cds_stop;
+        m_orientation = orientation;
+        m_type = type;
+        m_status = status;
+    }
+     public int              getId (){ return m_id ;}
     public int             getSequenceId (){ return m_sequence_id  ;}//Sequence (pointer to analized sequence for contigs)
     public AnalyzedScoredSequence getSequence (){ return m_sequence  ;}
     public int             getCdsStart (){ return m_cds_start  ;} //(clone sequence coordinates for low quality)
@@ -119,7 +128,19 @@ public class Stretch
         }
      }
      
-     
+     public void   trimContigToHighQuality(int min_contig_length)
+     {
+             //cut out not ends of low quality
+            m_sequence.setTrimStart(0);
+            m_sequence.setTrimEnd(m_sequence.getText().length());
+            ScoredSequence.isPassQualityCheck5Prime(m_sequence);
+             m_cds_start =  m_cds_start + m_sequence.getTrimStart();
+            ScoredSequence.isPassQualityCheck3Prime(m_sequence);
+            m_cds_stop -= (m_sequence.getText().length()- m_sequence.getTrimEnd());
+            if ( (m_cds_stop -  m_cds_start) < min_contig_length ) { m_sequence = null; return ;}
+            m_sequence.getTrimmedSequence();
+            
+     }
      
      public static ArrayList sortByPosition(ArrayList stretches)
     {

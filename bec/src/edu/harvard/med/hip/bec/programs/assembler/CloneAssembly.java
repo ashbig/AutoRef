@@ -8,8 +8,10 @@ package edu.harvard.med.hip.bec.programs.assembler;
 
 
 import java.util.*;
+import java.io.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import  edu.harvard.med.hip.bec.programs.phred.*;
 /**
  *
  * @author  HTaycher
@@ -17,6 +19,9 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 public class CloneAssembly
 {
     public static int       STATUS_ASSEMBLY_NOT_KNOWN = -1000;
+    public static final int   ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE = 0;
+    public static final int   ASSEMBLY_RUN_STATUS_NOT_ALL_TRACE_FILES_INCLUDED = 1;
+    
      
     private ArrayList       m_contigs = null;
     private int             m_number_of_reads = -1;
@@ -41,7 +46,21 @@ public class CloneAssembly
     public ArrayList        getContigs(){ return m_contigs;}
     public int              getStatus(){ return             m_contig_coverage ;}
     
-   
+    public static int isAssemblerRunNeeded( String clone_trace_files_location )throws Exception
+        {
+            int assembly_run_status = -1;
+            File trace_dir = new File( clone_trace_files_location +File.separator +PhredWrapper.CHROMAT_DIR_NAME); //trace file directory
+            File [] trace_files = trace_dir.listFiles(); //trace file directory
+            if (   trace_files.length == 0 )
+                 return ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE;
+            File phd_dir = new File( clone_trace_files_location +File.separator +PhredWrapper.PHD_DIR_NAME); //trace file directory
+            File [] phd_files = phd_dir.listFiles(); //trace file directory
+            if (   trace_files.length > phd_files.length ) 
+                return ASSEMBLY_RUN_STATUS_NOT_ALL_TRACE_FILES_INCLUDED;
+            return assembly_run_status;
+    }
+     
+
     
     
 }
