@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.30 2002-05-30 21:07:05 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.31 2002-07-02 13:56:34 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -27,7 +27,7 @@ public class FlexSeqAnalyzer {
     private static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     private static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
 
-//    private static final String HUMANDB="E:/flexDev/BlastDB/genes";
+    //private static final String HUMANDB="E:/flexDev/BlastDB/genes";
     //    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
@@ -148,8 +148,8 @@ public class FlexSeqAnalyzer {
         Blaster blaster = new Blaster();
         blaster.setHits(1);
         
-        blaster.setDBPath(BLAST_BASE_DIR+BLAST_DB_DIR + dbFileName);
-        
+        blaster.setDBPath(dbFileName);
+        //blaster.setDBPath(BLAST_BASE_DIR+BLAST_DB_DIR + dbFileName);        
         blaster.blast(queryFile+".in", queryFile+".out");
         BlastParser parser = new BlastParser(queryFile+".out");
         parser.parseBlast();
