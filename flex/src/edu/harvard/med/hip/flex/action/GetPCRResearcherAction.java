@@ -63,6 +63,8 @@ public class GetPCRResearcherAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
         String barcode = ((GetResearcherBarcodeForm)form).getResearcherBarcode();
         Researcher researcher = null;        
+        int workflowid = ((GetResearcherBarcodeForm)form).getWorkflowid();
+        int projectid = ((GetResearcherBarcodeForm)form).getProjectid();
         
         // Validate the researcher barcode.
         try {
@@ -100,9 +102,13 @@ public class GetPCRResearcherAction extends ResearcherAction {
             pcrOpenContainer.insert(conn);
             pcrClosedContainer.insert(conn);
             
+            Project project = new Project(projectid);
+            Workflow workflow = new Workflow(workflowid);
+            
             // Create a process, process object and sample lineage record.
             Process process = new Process(protocol, 
-            edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
+            edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher,
+            project, workflow);
             process.setSubprotocol(subprotocol.getName());
             ContainerProcessObject fivepInputContainer = 
                 new ContainerProcessObject(fivep.getId(), 
@@ -147,15 +153,14 @@ public class GetPCRResearcherAction extends ResearcherAction {
             queue.removeQueueItems(newItems, conn);
 
             // Get the next protocols from the workflow.
-            Workflow wf = new Workflow();
-            Vector nextProtocols = wf.getNextProtocol(protocol);
+            Vector nextProtocols = workflow.getNextProtocol(protocol);
             
             // Add the new container to the queue for each protocol.
             ContainerProcessQueue q = new ContainerProcessQueue();
             for(int i=0; i<nextProtocols.size(); i++) {
                 newItems.clear();
-                newItems.addLast(new QueueItem(pcrOpenContainer, (Protocol)nextProtocols.elementAt(i)));
-                newItems.addLast(new QueueItem(pcrClosedContainer, (Protocol)nextProtocols.elementAt(i)));
+                newItems.addLast(new QueueItem(pcrOpenContainer, (Protocol)nextProtocols.elementAt(i), project, workflow));
+                newItems.addLast(new QueueItem(pcrClosedContainer, (Protocol)nextProtocols.elementAt(i), project, workflow));
                 q.addQueueItems(newItems, conn);
             }
         

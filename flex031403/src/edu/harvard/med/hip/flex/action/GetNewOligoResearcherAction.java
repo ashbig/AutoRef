@@ -64,6 +64,8 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
         String barcode = ((GetResearcherBarcodeForm)form).getResearcherBarcode();
         Researcher researcher = null;
+        int workflowid = ((GetResearcherBarcodeForm)form).getWorkflowid();
+        int projectid = ((GetResearcherBarcodeForm)form).getProjectid();
         
         // Validate the researcher barcode.
         try {
@@ -119,15 +121,16 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
             // Crate the plateset record for the new oligo containers.
             Plateset pset = new Plateset(fivepOligoD.getId(), threepOpenD.getId(), threepClosedD.getId());
             pset.insert(conn);
-            
-            WorkflowManager manager = new WorkflowManager("ProcessPlateManager");
+ 
+            Project project = new Project(projectid);
+            Workflow workflow = new Workflow(workflowid);
+            WorkflowManager manager = new WorkflowManager(project, workflow, "ProcessPlateManager");
             manager.createProcessRecord(executionStatus, protocol, researcher,
             subprotocol, oldContainers, newContainers,
             null, sampleLineageSet, conn);
             
             // Get the next protocols from the workflow.
-            Workflow wf = new Workflow();
-            Vector nextProtocols = wf.getNextProtocol(protocol);
+            Vector nextProtocols = workflow.getNextProtocol(protocol);
             
             PlatesetProcessQueue q = new PlatesetProcessQueue();
             LinkedList oldItems = new LinkedList();
@@ -137,7 +140,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
             LinkedList newItems = new LinkedList();            
             for(int i=0; i<nextProtocols.size(); i++) {
                 newItems.clear();
-                newItems.addLast(new QueueItem(pset, (Protocol)nextProtocols.elementAt(i)));
+                newItems.addLast(new QueueItem(pset, (Protocol)nextProtocols.elementAt(i), project, workflow));
                 q.addQueueItems(newItems, conn);
             }
             

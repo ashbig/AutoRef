@@ -17,6 +17,8 @@
 <html:errors/>
 <p>
 <html:form action="/GetPCRLocation.do" focus="researcherBarcode">
+<input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
+<input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
 <table>
     <tr>
     <td class="label">Process name:</td>

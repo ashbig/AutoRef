@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.16 2001-08-21 15:36:29 dzuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.17 2001-08-21 18:55:11 dzuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -94,6 +94,41 @@ public class ContainerProcessQueue implements ProcessQueue {
         return items;
     }
     
+    /**
+     * Retrieve all of the queued items which are waiting for the
+     * next workflow process from the Queue table
+     *
+     * @param protocol The protocol object.
+     * @param project The current project to work with.
+     * @param workflow The current workflow to work with.
+     * @return A LinkedList of QueueItem objects.
+     * @exception FlexDatabaseException.
+     */
+    public LinkedList getQueueItems(Protocol protocol, Project project, Workflow workflow) 
+    throws FlexDatabaseException {
+        int protocolid = protocol.getId();
+        String sql = new String("select c.containerid as id, "+
+        "c.containertype as type, " +
+        "c.locationid as locationid, " +
+        "c.label as label, " +
+        "c.threadid as threadid, "+
+        "q.projectid as projectid, " +
+        "q.workflowid as workflowid, "+
+        "l.locationtype as locationtype, "+
+        "l.locationdescription as description, "+
+        "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
+        "from containerheader c, containerlocation l, queue q\n" +
+        "where c.containerid = q.containerid\n" +
+        "and c.locationid = l.locationid\n"+
+        "and q.projectid = "+project.getId()+"\n"+
+        "and q.workflowid = "+workflow.getId()+"\n"+
+        "and q.protocolid = "+protocolid);
+        
+        LinkedList items = restore(protocol, sql);
+        return items;
+        
+    }
+        
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table,

@@ -73,6 +73,10 @@ public class SelectWorkflowAction extends WorkflowAction {
             if(Constants.APPROVE_SEQUENCES.equals(forwardName)) {
                 return mapping.findForward("success_approve_sequences");
             }
+
+            if(Constants.CREATE_PROCESS_PLATES.equals(forwardName)) {
+                return mapping.findForward("success_create_process_plates");
+            }
             
             return (mapping.findForward("success"));
         } catch (Exception e) {

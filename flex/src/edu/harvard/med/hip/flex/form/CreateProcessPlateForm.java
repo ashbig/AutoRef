@@ -22,7 +22,7 @@ import edu.harvard.med.hip.flex.core.Location;
  * @author  dzuo
  * @version 
  */
-public class CreateProcessPlateForm extends ActionForm {
+public class CreateProcessPlateForm extends ProjectWorkflowForm {
     private String processname = null;
     private String sourcePlate = null;
     private String destPlate = null;

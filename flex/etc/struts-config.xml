@@ -191,6 +191,7 @@
                 name="projectWorkflowForm"
                 type="edu.harvard.med.hip.flex.action.SelectWorkflowAction">
         <forward name="success_approve_sequences" path="/ViewPendingRequests.do"/>
+        <forward name="success_create_process_plates" path="/CreateProcessPlate.do"/>
         <forward    name="success"   path="/SelectProject.jsp"/>
     </action>
 
@@ -306,6 +307,8 @@
 
     <!-- Process the protocol retieval and display -->
     <action    path="/CreateProcessPlate"
+               name="createProcessPlateForm"
+               validate="false"
                type="edu.harvard.med.hip.flex.action.CreateProcessPlateAction">
       <forward  name="success"   path="/SelectProtocol.jsp"/>
     </action>  

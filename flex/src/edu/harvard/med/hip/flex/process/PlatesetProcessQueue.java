@@ -10,6 +10,7 @@ package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 import java.util.*;
 import java.sql.*;
@@ -45,6 +46,8 @@ public class PlatesetProcessQueue implements ProcessQueue {
         "ps.containerid_5p as oligo5p, " +
         "ps.containerid_3pfusion as oligo3pf, " +
         "ps.containerid_3pclosed as oligo3pc, " +
+        "q.projectid as projectid, " +
+        "q.workflowid as workflowid, " +
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
         "from plateset ps, queue q\n" +
         "where ps.platesetid = q.platesetid\n" +
@@ -71,6 +74,8 @@ public class PlatesetProcessQueue implements ProcessQueue {
         "ps.containerid_5p as oligo5p, " +
         "ps.containerid_3pfusion as oligo3pf, " +
         "ps.containerid_3pclosed as oligo3pc, " +
+        "q.projectid as projectid, " +
+        "q.workflowid as workflowid, " +
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
         "from plateset ps, queue q\n" +
         "where ps.platesetid = q.platesetid\n" +
@@ -80,7 +85,37 @@ public class PlatesetProcessQueue implements ProcessQueue {
         LinkedList items = restore(protocol, sql);
         return items;
     }
- 
+    
+    /**
+     * Retrieve all of the queued items which are waiting for the
+     * next workflow process from the Queue table
+     *
+     * @param protocol The protocol object.
+     * @param project The project to work with.
+     * @param workflow The current workflow to work with.
+     * @return A LinkedList of QueueItem objects.
+     * @exception FlexDatabaseException.
+     */
+    public LinkedList getQueueItems(Protocol protocol, Project project, Workflow workflow) throws FlexDatabaseException {
+        int protocolid = protocol.getId();
+        String sql = new String("select ps.platesetid as id, "+
+        "ps.containerid_5p as oligo5p, " +
+        "ps.containerid_3pfusion as oligo3pf, " +
+        "ps.containerid_3pclosed as oligo3pc, " +
+        "q.projectid as projectid, " +
+        "q.workflowid as workflowid, " +
+        "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
+        "from plateset ps, queue q\n" +
+        "where ps.platesetid = q.platesetid\n" +
+        "and q.projectid = "+project.getId()+"\n"+
+        "and q.workflowid = "+workflow.getId()+"\n"+
+        "and q.protocolid = "+protocolid);
+        
+        LinkedList items = restore(protocol, sql);
+        return items;
+        
+    }
+    
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table,
@@ -210,9 +245,11 @@ public class PlatesetProcessQueue implements ProcessQueue {
             int oligo5p = rs.getInt("OLIGO5P");
             int oligo3pf = rs.getInt("OLIGO3PF");
             int oligo3pc = rs.getInt("OLIGO3PC");
+            int projectid = rs.getInt("PROJECTID");
+            int workflowid = rs.getInt("WORKFLOWID");
             String date = rs.getString("DATEADDED");
             Plateset ps = new Plateset(id, oligo5p, oligo3pf, oligo3pc);
-            QueueItem item = new QueueItem(ps, protocol, date);
+            QueueItem item = new QueueItem(ps, protocol, date, new Project(projectid), new Workflow(workflowid));
             items.addLast(item);
         }
         

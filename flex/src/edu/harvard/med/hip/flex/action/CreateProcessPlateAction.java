@@ -55,7 +55,10 @@ public class CreateProcessPlateAction extends FlexAction {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException {                
+        int projectid = ((Integer)(request.getAttribute("projectid"))).intValue();
+        int workflowid = ((Integer)(request.getAttribute("workflowid"))).intValue();
+        
         String sql = "select * from processprotocol where processname like 'generate%' or processname like 'run%' or processname like 'perform%' or processname like 'dilute%'";
         Vector protocol = new Vector();
         try {        
@@ -72,7 +75,9 @@ public class CreateProcessPlateAction extends FlexAction {
                 Protocol p = new Protocol(protocolid, processcode, processname);
                 protocol.addElement(p);
             }
-            
+
+            request.setAttribute("workflowid", new Integer(workflowid));
+            request.setAttribute("projectid", new Integer(projectid));            
             request.setAttribute("CreateProcessPlateAction.protocols", protocol);
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {     

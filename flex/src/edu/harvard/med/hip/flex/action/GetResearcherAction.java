@@ -62,6 +62,9 @@ public class GetResearcherAction extends ResearcherAction{
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String barcode = ((GetResearcherBarcodeForm)form).getResearcherBarcode();
+        int workflowid = ((GetResearcherBarcodeForm)form).getWorkflowid();
+        int projectid = ((GetResearcherBarcodeForm)form).getProjectid();
+        
         Researcher researcher = null;
         
         // Validate the researcher barcode.
@@ -100,11 +103,13 @@ public class GetResearcherAction extends ResearcherAction{
                 Container newContainer = (Container)newContainers.elementAt(i);
                 newContainer.insert(conn);
             }
-
-            WorkflowManager manager = new WorkflowManager("ProcessPlateManager");
-            manager.createProcessRecord(executionStatus, protocol, researcher, 
-                                        subprotocol, oldContainers, newContainers, 
-                                        null, sampleLineageSet, conn);            
+            
+            Workflow workflow = new Workflow(workflowid);
+            Project project = new Project(projectid);
+            WorkflowManager manager = new WorkflowManager(project, workflow, "ProcessPlateManager");
+            manager.createProcessRecord(executionStatus, protocol, researcher,
+            subprotocol, oldContainers, newContainers,
+            null, sampleLineageSet, conn);
             manager.processQueue(items, newContainers, protocol, conn);
             
             // Commit the changes to the database.

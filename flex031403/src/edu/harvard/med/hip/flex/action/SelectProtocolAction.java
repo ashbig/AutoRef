@@ -59,6 +59,11 @@ public class SelectProtocolAction extends FlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         String processname = ((CreateProcessPlateForm)form).getProcessname();
+        int workflowid = ((CreateProcessPlateForm)form).getWorkflowid();
+        int projectid = ((CreateProcessPlateForm)form).getProjectid();        
+        request.setAttribute("workflowid", new Integer(workflowid));
+        request.setAttribute("projectid", new Integer(projectid));
+        
         ProcessQueue queue = null;
         LinkedList items = null;
         

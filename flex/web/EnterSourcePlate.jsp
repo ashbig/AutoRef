@@ -17,6 +17,10 @@
 <html:errors/>
 <p>
 <html:form action="/EnterSourcePlate.do" focus="sourcePlate">
+
+<input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
+<input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+
 <table>
     <tr>
     <td class="prompt">Process name:</td>

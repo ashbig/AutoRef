@@ -33,10 +33,11 @@ public abstract class AbstractTaskManager implements TaskManager {
      * @param addedItems The objects to be added.
      * @param protocol The current protocol.
      * @param conn The database connection.
+     * @param project The current project to work with.
      * @param workflow The current workflow.
      * @exception FlexDatabaseException.
      */
-    public void processQueue(List removedItems, List objects, Protocol protocol, Connection conn, Workflow workflow) throws FlexDatabaseException {
+    public void processQueue(List removedItems, List addedItems, Protocol protocol, Connection conn, Project project, Workflow workflow) throws FlexDatabaseException {
         // Remove the container from the queue.
         ProcessQueue queue = makeRemovedItemQueue();
         queue.removeQueueItems(removedItems, conn);
@@ -48,22 +49,21 @@ public abstract class AbstractTaskManager implements TaskManager {
         queue = makeAddedItemsQueue();
         for(int i=0; i<nextProtocols.size(); i++) {
             List newItems = new LinkedList();
-            Iterator iter = objects.iterator();
+            Iterator iter = addedItems.iterator();
             while(iter.hasNext()) {
                 Object o = iter.next();
-                newItems.add(new QueueItem(o, (Protocol)nextProtocols.elementAt(i)));
+                newItems.add(new QueueItem(o, (Protocol)nextProtocols.elementAt(i), project, workflow));
             }
             queue.addQueueItems(newItems, conn);
         }
     }
     
-    public Process createProcessRecord(String executionStatus, Protocol protocol,
-                                    Researcher researcher, SubProtocol subprotocol,
-                                    List iObjects, List oObjects, List ioObjects,
-                                    Vector sampleLineageSet, Connection conn)
-                                    throws FlexDatabaseException {
+    public Process createProcessRecord(String executionStatus, Protocol protocol, 
+    Researcher researcher, SubProtocol subprotocol, List iObjects, List oObjects, 
+    List ioObjects, Vector sampleLineageSet, Connection conn, Project project, 
+    Workflow workflow) throws FlexDatabaseException {
         // Create a process, process object and sample lineage record.
-        Process process = new Process(protocol, executionStatus, researcher);
+        Process process = new Process(protocol, executionStatus, researcher, project, workflow);
         
         if(subprotocol != null) {
             process.setSubprotocol(subprotocol.getName());

@@ -22,7 +22,7 @@ import edu.harvard.med.hip.flex.core.Location;
  * @author  dzuo
  * @version 
  */
-public class CreateCultureBlockForm extends ActionForm {
+public class CreateCultureBlockForm extends ProjectWorkflowForm {
     public static final int LASTINDEX = 9;
     
     private String agarPlateF1 = null;

@@ -72,4 +72,12 @@ public class GetAgarLocationAction extends GetLocationAction {
         request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateC2");
         request.getSession().setAttribute("EnterSourcePlateAction.oldContainers", containers);    
     }
+        
+    // Get the workflow and project from the form and store in request.
+    protected void storeProjectWorkflow(HttpServletRequest request, ActionForm form) {
+        int workflowid = ((CreateCultureBlockForm)form).getWorkflowid();
+        int projectid = ((CreateCultureBlockForm)form).getProjectid();
+        request.setAttribute("workflowid", new Integer(workflowid));
+        request.setAttribute("projectid", new Integer(projectid));
+    }     
 }

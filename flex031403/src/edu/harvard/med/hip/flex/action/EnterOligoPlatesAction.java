@@ -63,6 +63,12 @@ public class EnterOligoPlatesAction extends ResearcherAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         
+        // Get the workflow and project from the form and store in request.
+        int workflowid = ((CreatePCRPlateForm)form).getWorkflowid();
+        int projectid = ((CreatePCRPlateForm)form).getProjectid();
+        request.setAttribute("workflowid", new Integer(workflowid));
+        request.setAttribute("projectid", new Integer(projectid));
+        
         try {
             // Validate container label.
             String fivepPlate = ((CreatePCRPlateForm)form).getFivepPlate();
@@ -136,7 +142,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
                 
                 return (mapping.findForward("success"));
-            }            
+            }
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));

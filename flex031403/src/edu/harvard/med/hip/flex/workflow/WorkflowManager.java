@@ -92,7 +92,7 @@ public class WorkflowManager {
      * @exception FlexDatabaseException.
      */
     public void processQueue(List removedItems, List addedItems, Protocol protocol, Connection conn) throws FlexDatabaseException {
-        manager.processQueue(removedItems, addedItems, protocol, conn, workflow);
+        manager.processQueue(removedItems, addedItems, protocol, conn, project, workflow);
     }
     
     public Process createProcessRecord(String executionStatus, Protocol protocol,
@@ -102,6 +102,6 @@ public class WorkflowManager {
         return manager.createProcessRecord(executionStatus, protocol,
         researcher, subprotocol,
         iObjects, oObjects, ioObjects,
-        sampleLineageSet, conn);
+        sampleLineageSet, conn, project, workflow);
     }
 }

@@ -144,6 +144,9 @@ public class Constants {
     // forward name used for approve sequence after select the workflow.
     public static final String APPROVE_SEQUENCES = "APPROVE_SEQUENCES";
     
+    //forward name used for create process plates after select the workflow.
+    public static final String CREATE_PROCESS_PLATES = "CREATE_PROCESS_PLATES";
+    
     /** Creates new Constants */
     private Constants() {
     }

@@ -76,6 +76,9 @@ public class GetLocationAction extends ResearcherAction{
                 newContainer.setLocation(dLocation);  
             }
             
+            // Get the workflow and project from the form and store in request.
+            storeProjectWorkflow(request, form);
+            
             return (mapping.findForward("success"));            
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
@@ -99,4 +102,12 @@ public class GetLocationAction extends ResearcherAction{
         request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
         request.getSession().setAttribute("EnterSourcePlateAction.oldContainers", oldContainers);    
     }
+       
+    // Get the workflow and project from the form and store in request.
+    protected void storeProjectWorkflow(HttpServletRequest request, ActionForm form) {
+        int workflowid = ((CreateProcessPlateForm)form).getWorkflowid();
+        int projectid = ((CreateProcessPlateForm)form).getProjectid();
+        request.setAttribute("workflowid", new Integer(workflowid));
+        request.setAttribute("projectid", new Integer(projectid));
+    }     
 }

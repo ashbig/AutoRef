@@ -30,18 +30,20 @@ public interface TaskManager {
      * @param addedItems The queue items to be added.
      * @param protocol The current protocol.
      * @param conn The database connection.
-     * @param workflow The current workflow.
+     * @param project The project to work with.
+     * @param workflow The current workflow to work with.
      *
      * @return Process for the parameters provided
      *
      * @exception FlexDatabaseException
      */
-    public void processQueue(List removedItems, List addedItems, Protocol protocol, Connection conn, Workflow workflow) throws FlexDatabaseException;
+    public void processQueue(List removedItems, List addedItems, Protocol protocol, Connection conn, Project project, Workflow workflow) throws FlexDatabaseException;
 
     public Process createProcessRecord(String executionStatus, Protocol protocol,
                                     Researcher researcher, SubProtocol subprotocol,
                                     List iObjects, List oObjects, List ioObjects,
-                                    Vector sampleLineageSet, Connection conn)
+                                    Vector sampleLineageSet, Connection conn,
+                                    Project project, Workflow workflow)
                                     throws FlexDatabaseException;    
 }
 

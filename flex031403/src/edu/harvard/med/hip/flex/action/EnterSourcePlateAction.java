@@ -32,6 +32,7 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.CreateProcessPlateForm;
+import edu.harvard.med.hip.flex.form.ProjectWorkflowForm;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.workflow.*;
 
@@ -112,6 +113,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
             request.getSession().setAttribute("EnterSourcePlateAction.items", items);
             request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);
             
+            // Get the workflow and project from the form and store in request.
+            storeProjectWorkflow(request, form);
+            
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
@@ -161,5 +165,13 @@ public class EnterSourcePlateAction extends ResearcherAction {
     // Store the source container in the session.
     protected void storeSourceContainerInSession(HttpServletRequest request, Vector oldContainers) {
         request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", (Container)oldContainers.elementAt(0));
+    }
+    
+    // Get the workflow and project from the form and store in request.
+    protected void storeProjectWorkflow(HttpServletRequest request, ActionForm form) {
+        int workflowid = ((CreateProcessPlateForm)form).getWorkflowid();
+        int projectid = ((CreateProcessPlateForm)form).getProjectid();
+        request.setAttribute("workflowid", new Integer(workflowid));
+        request.setAttribute("projectid", new Integer(projectid));
     }
 }

@@ -22,7 +22,7 @@ import edu.harvard.med.hip.flex.core.Location;
  * @author  dzuo
  * @version 
  */
-public class GetResearcherBarcodeForm extends ActionForm {
+public class GetResearcherBarcodeForm extends ProjectWorkflowForm {
     private String researcherBarcode = null;
 
     /**

@@ -22,7 +22,7 @@ import edu.harvard.med.hip.flex.core.Location;
  * @author  dzuo
  * @version 
  */
-public class CreatePCRPlateForm extends ActionForm {
+public class CreatePCRPlateForm extends ProjectWorkflowForm {
     private String fivepPlate = null;
     private String threepOpenPlate = null;
     private String threepClosedPlate = null;

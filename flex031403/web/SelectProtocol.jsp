@@ -17,6 +17,10 @@
 <html:errors/>
 <p>
 <html:form action="/SelectProtocol.do">
+
+<input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
+<input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+
 <table>
     <tr>
     <td class="prompt">Select the process name:</td>

@@ -69,6 +69,12 @@ public class GetPCRLocationAction extends ResearcherAction{
         int pcrOpenLocation = ((CreatePCRPlateForm)form).getPcrOpenLocation();  
         int pcrClosedLocation = ((CreatePCRPlateForm)form).getPcrClosedLocation();  
         
+        // Get the workflow and project from the form and store in request.
+        int workflowid = ((CreatePCRPlateForm)form).getWorkflowid();
+        int projectid = ((CreatePCRPlateForm)form).getProjectid();
+        request.setAttribute("workflowid", new Integer(workflowid));
+        request.setAttribute("projectid", new Integer(projectid));
+          
         try {
 
             // Set the location for the containers.   
