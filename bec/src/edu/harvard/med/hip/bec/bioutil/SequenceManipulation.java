@@ -26,20 +26,39 @@ public class SequenceManipulation
     public final static int FASTA_BASES_PER_LINE = 60;
     
     
-    public static boolean isStopCodon(String codon)
+    //translation tables
+    public  static final int TRANSLATION_TABLE_STANDARD = 0;
+    
+    
+    
+    
+     public static boolean isStopCodon(String codon)
+    {
+        return  isStopCodon( codon, TRANSLATION_TABLE_STANDARD);
+     }
+    public static boolean isStopCodon(String codon, int coding_table)
     {
         codon=codon.toUpperCase();
-        if (codon.equalsIgnoreCase("TGA") || codon.equalsIgnoreCase("TAA") ||
-        codon.equalsIgnoreCase("TAG") || codon.equalsIgnoreCase("UGA") || codon.equalsIgnoreCase("UAA") ||
-        codon.equalsIgnoreCase("UAG")  )
+        //replace U -> t
+        codon = Algorithms.replaceChar(codon, 'U','T');
+        codon = translateCodonToAminoAcid(codon);
+        if (codon.equalsIgnoreCase("*") )
             return true;
         else
             return false;
     }
+    
     public static boolean isStartCodon(String codon)
     {
+        return isStartCodon( codon, TRANSLATION_TABLE_STANDARD);
+    }
+    public static boolean isStartCodon(String codon, int coding_table)
+    {
         codon=codon.toUpperCase();
-        if (codon.equalsIgnoreCase("ATG") || codon.equalsIgnoreCase("AUG")   )
+        //replace U -> t
+        codon = Algorithms.replaceChar(codon, 'U','T');
+        codon = translateCodonToAminoAcid(codon);
+        if (codon.equalsIgnoreCase("M")   )
             return true;
         else
             return false;
@@ -101,28 +120,66 @@ public class SequenceManipulation
         }
         return newStr.toString();
     }
+    
+    
+    
+    
+      public static String getSequenceTranslation(String seq)
+      {
+        return getSequenceTranslation( seq, ONE_LETTER_TRANSLATION_NO_SPACE, TRANSLATION_TABLE_STANDARD);
+      }
+      public static String getSequenceTranslation(String seq, int coding_table)
+    {
+        return getSequenceTranslation( seq, ONE_LETTER_TRANSLATION_NO_SPACE, coding_table);
+      }
+     public static String getSequenceTranslation(String seq, int mode, int coding_table)
+    {
+        StringBuffer newSeq = new StringBuffer();
+        StringBuffer codon = new StringBuffer();
+        char[] char_arr = seq.toCharArray();
+        int i = 0;
+        while ( i + 2 <  char_arr.length)
+        {
+          
+           codon = new StringBuffer();
+           codon.append( char_arr[i++] );
+           codon.append( char_arr[i++] );
+           codon.append( char_arr[i++] );
+           newSeq.append( getTranslation(codon.toString(),  mode, coding_table) );
+        }
+        return newSeq.toString();
+    }
     //function translate sequence to the amino acid
     //mode specify if output will in one / three letter format
-    public static String getTranslation(String old, int mode)
+      public static String getTranslation(String old, int mode)
+    {
+        return getTranslation( old,  mode, TRANSLATION_TABLE_STANDARD);
+      }
+    public static String getTranslation(String old, int mode, int coding_table)
     {
         StringBuffer  newSeq = new StringBuffer(old.length());
         int number_of_codons = old.length() / 3;
         int chPos = 0;
         for( int pos = 0; pos < number_of_codons; pos++)
         {
-            String res = translateToAminoAcid(old.charAt(chPos++),
-            old.charAt(chPos++),
-            old.charAt(chPos++)
-            , mode) ;
-            if (res.equals("")) return "";
+            String res = translateToAminoAcid(old.charAt(chPos++), old.charAt(chPos++), old.charAt(chPos++), mode, coding_table) ;
+            //if no translation is availabel return null for non amb case
+            if (res.equals("") )
+            {
+                if ( old.indexOf("-") != -1) return "";
+                else if (old.indexOf("-") == -1 && old.indexOf("N") != -1) return "X";
+            }
             newSeq.append(res );
         }
         return newSeq.toString();
     }
     
     
-    
-    public static  String translateCodonToAminoAcid(String codon)
+     public static  String translateCodonToAminoAcid(String codon)
+    {
+        return translateCodonToAminoAcid( codon, TRANSLATION_TABLE_STANDARD);
+     }
+    public static  String translateCodonToAminoAcid(String codon, int coding_table)
     {
         if (codon.length() != 3) return "";
         int first_index = getIndexOfBase(codon.charAt(0));
@@ -132,7 +189,10 @@ public class SequenceManipulation
         if (first_index == 4 || second_index == 4 || third_index ==4) return "";
         int codon_index = first_index * 16 + second_index * 4 + third_index;
         
-        return  "" + amino_acid_symbol_names[codon_index];
+        if ( coding_table == TRANSLATION_TABLE_STANDARD)
+            return  "" + amino_acid_symbol_names_standard[codon_index];
+        else
+            return "";
         
     }
     
@@ -140,7 +200,7 @@ public class SequenceManipulation
     
     private static  String translateToAminoAcid(char firstCh,
     char secondCh,
-    char thirdCh, int mode)
+    char thirdCh, int mode, int coding_table)
     {
         int first_index = getIndexOfBase(firstCh);
         if (first_index >= 4)
@@ -155,12 +215,17 @@ public class SequenceManipulation
         {        return "";        }
         
         int codon_index = first_index * 16 + second_index * 4 + third_index;
-        if (mode == THREE_LETTER_TRANSLATION)
-            return amino_acid_abbreviated_names[codon_index];
-        else if ( mode == ONE_LETTER_TRANSLATION_NO_SPACE)
-            return  "" + amino_acid_symbol_names[codon_index];
+        if ( coding_table == TRANSLATION_TABLE_STANDARD)
+        {
+            if (mode == THREE_LETTER_TRANSLATION)
+                return amino_acid_abbreviated_names_standard[codon_index];
+            else if ( mode == ONE_LETTER_TRANSLATION_NO_SPACE)
+                return  "" + amino_acid_symbol_names_standard[codon_index];
+            else
+                return  " " + amino_acid_symbol_names_standard[codon_index] + " ";
+        }
         else
-            return  " " + amino_acid_symbol_names[codon_index] + " ";
+            return "";
     }
     
     /**
@@ -253,7 +318,7 @@ public class SequenceManipulation
      *  There is one entry for each codon and the
      *  entries are in this order: TTT, TTC, TTA, TTG, TCT, TCC, ...
      **/
-    public final static   char[] amino_acid_symbol_names =
+    public final static   char[] amino_acid_symbol_names_standard =
     {
         'F', 'F', 'L', 'L',
         'S', 'S', 'S', 'S',
@@ -276,7 +341,7 @@ public class SequenceManipulation
         'G', 'G', 'G', 'G',
     };
     
-    public  static final  String [] amino_acid_abbreviated_names =
+    public  static final  String [] amino_acid_abbreviated_names_standard =
     {
         "Phe", "Phe", "Leu", "Leu",
         "Ser", "Ser", "Ser", "Ser",
@@ -341,21 +406,9 @@ public class SequenceManipulation
     
     public static void main(String [] args)
     {
-        String str="ATATGAAACAATTNGAAACGCAAAATTTCAGAATCACAAGCCGTAATCCAACTGGACGATC"
-+"TTCGTCGCCGTAAAAGAGTTTGCGCCGTTTAGGATTTTGTACTCCTAATGACATTATTGA"
-+"ACTGAAAGGTAGAGTTGCATGTGAAATATCTAGTGGTGATGGACTGTTACTAACAGAATT"
-+"GATCTTCAATGGTAATTTCAATGAGTTGAAANCCGGAACAAGCGGCAGCATTATTATCATG"
-+"CTTTGCATTCCAAGAACGCTGTAAAGAAGCGCCTAGATTGAAACCAGAGCTTGCCGAACC"
-+"TTTGAAGGCTATGAGAGAAATTGCAGCAAAGATCGCTAAGATAATGGAGGATTCTAAAAT"
-+"TGAAGTTGTAGAAAAGGACTACGTTGAAAGCTTCAGACATGAACTAATGGAAGTTGTTTA"
-+"CGAATGGTGTAGAGGAGCTACTTTTACGCAAATCTGTAAAATGACCGACGTTTACGAAGG"
-+"TTCGTTGATCAGAATGTTCAAGAGATTAGAGGAATTGGTGAAGGAGCTGGTAGACGTCGC"
-+"CAATACCATTGGTAACTCTTCACTTAAGGAGAAGATGGAAGCTGTCTTGAAATTAATTCA"
-+"TAGAGATATCGTATCTGCTGGTTCTTTGTATTTATAGCATGGCAATTCCCGGGGATACCC"
-+"AGCTTTCTTGTACAAAGTTGGCATTATAAGAAAGCATTGCTTATCAATTTGTGCAACGAA"
-+"CAGGTCACTATCAGTCAAAATAAAATCATTATTGCCATCCAG";
-
-        System.out.println(getCompliment(str));
+        System.out.println( SequenceManipulation.isStartCodon("TGA"));
+        System.out.println( SequenceManipulation.isStartCodon("ATG"));
+        System.out.println( SequenceManipulation.isStartCodon("AUG"));
        
     }
 }
