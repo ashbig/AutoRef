@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2002-06-04 21:03:16 $
+ * $Revision: 1.7 $
+ * $Date: 2002-06-05 19:10:16 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -43,14 +43,14 @@ import java.util.*;
 import javax.activation.*;
 import javax.mail.*;
 import javax.mail.internet.*;
-
+import edu.harvard.med.hip.flex.user.*;
 
 /**
  *
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.6 $ $Date: 2002-06-04 21:03:16 $
+ * @version    $Revision: 1.7 $ $Date: 2002-06-05 19:10:16 $
  */
 
 public class Mailer
@@ -237,8 +237,47 @@ public class Mailer
         Mailer.sendMessage(to,from,cc,subject,msgText, null);
     }
     
+     
+     
+     //send e-mail to the user with all GI separated to three groups
+public static void notifyUser(String user_name, String file_name, String subject, String msg, Vector messages) throws Exception
+    {
+        if (messages.size()==0) return;
+        AccessManager am = AccessManager.getInstance();
+        String to = am.getEmail( user_name );
+        String cc = "etaycher@hms.harvard.edu";
+        String from = "etaycher@hms.harvard.edu";
+        File fl = writeFile(messages, file_name)  ;
+        Mailer.sendMessageWithAttachedFile( to,  from, cc, subject, msg, fl);
+    }
+
+
+private static File writeFile(Vector fileData, String file_name)
+throws IOException
+{
+    File fl = new File( "/tmp/"  + file_name);
+    FileWriter fr = new FileWriter(fl);
+    
+    for (int count = 0; count < fileData.size(); count++)
+    {
+        fr.write((String)fileData.get(count));
+    }
+    fr.flush();
+    fr.close();
+ 
+    return fl;
+}
+
+
+
+
     public static void main(String [] args) throws Exception
     {
+        
+        Vector messages = new Vector();
+        messages.add("lll\n");messages.add("lll\n");messages.add("lll\n");messages.add("lll\n");messages.add("lll\n");
+            
+        notifyUser("htaycher", "report.txt", "test","test",  messages);
         Collection fileCol = new LinkedList();
         fileCol.add(new File("/NETLOG.TXT"));
         fileCol.add(new File("/j0272560(t).gif"));
