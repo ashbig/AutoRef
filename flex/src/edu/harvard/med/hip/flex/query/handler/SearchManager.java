@@ -13,8 +13,7 @@ import javax.mail.*;
 import edu.harvard.med.hip.flex.query.core.*;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.util.FlexIDGenerator;
-import edu.harvard.med.hip.flex.util.Mailer;
+import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.user.*;
 
 /**
@@ -22,7 +21,7 @@ import edu.harvard.med.hip.flex.user.*;
  * @author  dzuo
  */
 public class SearchManager {
-    public static final String FILEPATH = "/tmp/";
+    public static final String FILEPATH = FlexProperties.getInstance().getProperty("tmp");
     
     protected SearchRecord searchRecord;
     protected List params;
@@ -42,6 +41,8 @@ public class SearchManager {
     public String getError() {
         return error;
     }
+    
+    public List getSearchResults() {return searchResults;}
     
     /** Creates a new instance of SearchManager */
     public SearchManager(List searchTerms, String searchType, List params, String searchName, User user) {
@@ -82,8 +83,10 @@ public class SearchManager {
         
         searchRecord.persist(conn);
         
-        ParamSet paramset = new ParamSet(params);
-        paramset.persist(conn, searchRecord.getSearchid());
+        if(params != null) {
+            ParamSet paramset = new ParamSet(params);
+            paramset.persist(conn, searchRecord.getSearchid());
+        }
         
         //        SearchResultSet searchResultSet = new SearchResultSet(searchResults);
         //        searchResultSet.persist(conn, searchRecord.getSearchid());
@@ -169,7 +172,14 @@ public class SearchManager {
         nfs.persist(conn);
     }
     
-    public void doSearch() {
+    /**
+     * Perform the appropriate search for all terms stored in searchTerms by initiating
+     * the correct QueryHandler object. It populates searchResults if search if
+     * successful. If search is failed, it stores the error message in error.
+     *
+     * @return true if search is successful; false otherwise.
+     */
+    public boolean doSearch() {
         QueryHandler handler = StaticQueryHandlerFactory.makeQueryHandler(searchRecord.getSearchType(), params);
         try {
             handler.handleQuery(searchTerms);
@@ -191,9 +201,11 @@ public class SearchManager {
             }
             
             searchRecord.setSearchStatus(SearchRecord.COMPLETE);
+            return true;
         } catch (Exception ex) {
             error = ex.getMessage();
             searchRecord.setSearchStatus(SearchRecord.FAIL);
+            return false;
         }
     }
     
@@ -217,6 +229,97 @@ public class SearchManager {
             
             Mailer.sendMessage(user.getUserEmail(), "dzuo@hms.harvard.edu",
             "dzuo@hms.harvard.edu","FLEXGene search - "+searchRecord.getSearchName(), message, fileCol);
+        }
+    }
+    
+    public static void main(String args[]) {
+        SearchRecord searchRecord = new SearchRecord("Test search", SearchRecord.GI, SearchRecord.INPROCESS, "dzuo");
+        List searchTerms = new ArrayList();
+        searchTerms.add("33469916");
+        searchTerms.add("21961206");
+        searchTerms.add("33469967");
+        searchTerms.add("1234");
+        searchTerms.add("345");
+        
+        SearchManager manager = new SearchManager(searchRecord, null, searchTerms);
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            manager.insertSearchRecord(conn);
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.rollback(conn);
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        
+        if(manager.doSearch()) {
+            List searchResults = manager.getSearchResults();
+            
+            for(int i=0; i<searchResults.size(); i++) {
+                SearchResult result = (SearchResult)searchResults.get(i);
+                System.out.println("found genbank: "+result.getIsGenbankFound());
+                System.out.println("search term: "+result.getSearchTerm());
+                
+                List matchGenbanks = result.getFound();
+                System.out.println("==========found======");
+                if(matchGenbanks != null) {
+                    for (int j=0; j<matchGenbanks.size(); j++) {
+                        MatchGenbankRecord mgr = (MatchGenbankRecord)matchGenbanks.get(j);
+                        System.out.println("\tGenbank Acc: "+mgr.getGanbankAccession());
+                        System.out.println("\tGI: "+mgr.getGi());
+                        System.out.println("\tSearch Method: "+mgr.getSearchMethod());
+                        
+                        List matchFlexSequences = mgr.getMatchFlexSequence();
+                        if(matchFlexSequences != null) {
+                            for(int k=0; k<matchFlexSequences.size(); k++) {
+                                MatchFlexSequence mfs = (MatchFlexSequence)matchFlexSequences.get(k);
+                                System.out.println("\t\tFlex ID: "+mfs.getFlexsequenceid());
+                                System.out.println("\t\tIs match by GI: "+mfs.getIsMatchByGi());
+                                
+                                BlastHit blastHit = mfs.getBlastHit();
+                                if(blastHit != null) {
+                                    System.out.println("\t\t\tFlex ID: "+blastHit.getMatchFlexId());
+                                    System.out.println("\t\t\tQuery length: "+blastHit.getQueryLength());
+                                    System.out.println("\t\t\tSub length: "+blastHit.getSubjectLength());
+                                    
+                                    List alignments = blastHit.getAlignments();
+                                    if(alignments != null) {
+                                        for(int n=0; n<alignments.size(); n++) {
+                                            BlastAlignment ba = (BlastAlignment)alignments.get(n);
+                                            System.out.println("\t\t\tE value: "+ba.getEvalue());
+                                            System.out.println("\t\t\t\tGap: "+ba.getGap());
+                                            System.out.println("\t\t\t\tID: "+ba.getId());
+                                            System.out.println("\t\t\t\tIdentity: "+ba.getIdentity());
+                                            System.out.println("\t\t\t\tFlex ID: "+ba.getMatchFlexId());
+                                            System.out.println("\t\t\t\tQuery start: "+ba.getQueryStart());
+                                            System.out.println("\t\t\t\tQuery end: "+ba.getQueryEnd());
+                                            System.out.println("\t\t\t\tScore: "+ba.getScore());
+                                            System.out.println("\t\t\t\tStrand: "+ba.getStrand());
+                                            System.out.println("\t\t\t\tSub start: "+ba.getSubStart());
+                                            System.out.println("\t\t\t\tSub end: "+ba.getSubEnd());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                System.out.println("\t=========== no found=========");
+                NoFound nf = result.getNoFound();
+                if(nf != null) {
+                    System.out.println("\tReason: "+nf.getReason());
+                    System.out.println("\tSearch term: "+nf.getSearchTerm());
+                }
+            }
+        } else {
+            System.out.println("search failed");
+            System.out.println("errors: "+manager.getError());
         }
     }
 }
