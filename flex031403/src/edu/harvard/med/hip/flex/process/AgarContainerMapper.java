@@ -73,8 +73,10 @@ public class AgarContainerMapper extends OneToOneContainerMapper {
                 type = Sample.CONTROL_POSITIVE;
             } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
                 type = Sample.CONTROL_NEGATIVE;
+            } else if(Sample.EMPTY.equals(s.getType())) {
+                type = Sample.EMPTY;
             } else {
-                type = Sample.getType(protocol.getProcessname());
+                type = getTransformationSampleType(container, s, protocol);
             }
             
             Sample newSample = new Sample(type, position, newContainer.getId(), s.getOligoid(), Sample.GOOD);

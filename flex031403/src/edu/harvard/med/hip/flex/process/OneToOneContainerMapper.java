@@ -133,6 +133,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 type = Sample.CONTROL_POSITIVE;
             } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
                 type = Sample.CONTROL_NEGATIVE;
+            } else if(Sample.EMPTY.equals(s.getType())) {
+                type = Sample.EMPTY;
             } else if(Sample.GEL.equals(s.getType())) {
                 type = getGelSampleType(container, s, protocol);
             } else if(Sample.TRANSFORMATION.equals(s.getType())) {

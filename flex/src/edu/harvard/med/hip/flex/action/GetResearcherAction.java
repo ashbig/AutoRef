@@ -133,12 +133,11 @@ public class GetResearcherAction extends ResearcherAction{
             newItems.addLast(item);
             ContainerProcessQueue queue = new ContainerProcessQueue();
             queue.removeQueueItems(newItems, conn);
-
-            newItems.clear();
             
             // for gel and transformation protocols, we use the same protocol for queue.
             if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
                 Protocol.PERFORM_TRANSFORMATION.equals(protocol.getProcessname())) {
+                newItems.clear();
                 for(int i=0; i<newContainers.size(); i++) {
                     Container newContainer = (Container)newContainers.elementAt(i);
                     newItems.addLast(new QueueItem(newContainer, protocol));
@@ -151,8 +150,9 @@ public class GetResearcherAction extends ResearcherAction{
 
                 // Add the new containers to the queue for each protocol.
                 for(int i=0; i<nextProtocols.size(); i++) {
+                    newItems.clear();
                     for(int j=0; j<newContainers.size(); j++) {
-                        Container newContainer = (Container)newContainers.elementAt(i);
+                        Container newContainer = (Container)newContainers.elementAt(j);
                         newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));                        
                     }
                     queue.addQueueItems(newItems, conn);

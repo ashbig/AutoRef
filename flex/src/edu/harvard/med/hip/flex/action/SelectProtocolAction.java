@@ -70,11 +70,16 @@ public class SelectProtocolAction extends FlexAction {
                 items = queue.getQueueItems(protocol);
                 storeInSession(request, items, protocol);
                 return (mapping.findForward("success_pcr"));
-            } else {                
+            } else {               
                 queue = new ContainerProcessQueue();
                 items = queue.getQueueItems(protocol);
                 storeInSession(request, items, protocol);
-                return (mapping.findForward("success"));
+                
+                if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {
+                    return (mapping.findForward("success_culture"));
+                } else {
+                    return (mapping.findForward("success"));
+                }
             }
         } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);

@@ -78,6 +78,8 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
                     type = Sample.CONTROL_POSITIVE;
                 } else if(Sample.CONTROL_NEGATIVE.equals(s1.getType())) {
                     type = Sample.CONTROL_NEGATIVE;
+                } else if(Sample.EMPTY.equals(s1.getType())) {
+                    type = Sample.EMPTY;
                 } else {
                     type = Sample.getType(protocol.getProcessname());
                 }

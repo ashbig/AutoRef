@@ -54,6 +54,10 @@
     <!-- Create process plate form bean -->
     <form-bean      name="createPCRPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreatePCRPlateForm"/>
+
+    <!-- Create process plate form bean -->
+    <form-bean      name="createCultureBlockForm"
+                    type="edu.harvard.med.hip.flex.form.CreateCultureBlockForm"/>
     
     <!-- Customer registration form bean -->
     <form-bean      name="customerRegistrationForm"
@@ -252,7 +256,7 @@
       <forward  name="success"   path="/GetLocation.jsp"/>
     </action> 
 
-    <!-- Process the source plate input -->
+    <!-- Process the oligo plate input -->
     <action    path="/EnterOligoPlates"
                type="edu.harvard.med.hip.flex.action.EnterOligoPlatesAction"
                name="createPCRPlateForm"
@@ -260,6 +264,16 @@
                validate="true"
                input="/EnterOligoPlates.jsp">
       <forward  name="success"   path="/GetPCRLocation.jsp"/>
+    </action> 
+
+    <!-- Process the agar plate input -->
+    <action    path="/EnterAgarPlates"
+               type="edu.harvard.med.hip.flex.action.EnterAgarPlatesAction"
+               name="createCultureBlockForm"
+               scope="request"
+               validate="true"
+               input="/EnterAgarPlates.jsp">
+      <forward  name="success"   path="/GetAgarLocation.jsp"/>
     </action> 
 
     <!-- Process the location selection -->
@@ -280,6 +294,16 @@
                validate="false"
                input="/GetPCRLocation.jsp">
       <forward  name="success"   path="/GetPCRResearcher.jsp"/>
+    </action> 
+
+    <!-- Process the source plate input -->
+    <action    path="/GetAgarLocation"
+               type="edu.harvard.med.hip.flex.action.GetAgarLocationAction"
+               name="createCultureBlockForm"
+               scope="request"
+               validate="false"
+               input="/GetAgarLocation.jsp">
+      <forward  name="success"   path="/GetAgarResearcher.jsp"/>
     </action> 
 
      <!-- Process the researcher barcode input -->
