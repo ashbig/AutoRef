@@ -114,7 +114,7 @@
 
   <!-- Welcome-file-list -->
   <welcome-file-list>
-    <welcome-file>mainmenu.jsp</welcome-file>
+    <welcome-file>Menu.jsp</welcome-file>
   </welcome-file-list>
 
     <taglib>
