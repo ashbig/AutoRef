@@ -203,9 +203,47 @@ public class OligoPlateManager {
     }
     
     
-    public void orderOligo(){
-        java.lang.Thread thread = new OligoThread();
-        thread.start();
+    public synchronized void orderOligo(){
+//        java.lang.Thread thread = new OligoThread();
+//        thread.start();
+            System.out.println("Thread started");
+            int totalQueue = 0;
+            try {
+                for (int i = 0; i < LIMITS.length-1; ++i) {
+                    LinkedList seqList = getQueueSequence(LIMITS[i],LIMITS[i+1]);
+                    totalQueue = seqList.size();
+                    System.out.println("There are total of " + totalQueue + " sequences belong to the same size group in the queue");
+                    if (totalQueue >= 94){
+                        createOligoPlates(seqList);
+                        //avoid sending out empty email without files attached
+                        if (fileList.size() >= 1){
+                            sendOligoOrders();
+                            System.out.println("Oligo order files have been mailed!");
+                            DatabaseTransaction.commit(conn);
+                        } //inner if
+                        else{
+                            System.out.println("File error, no order is mailed!");
+                            DatabaseTransaction.rollback(conn);
+                        } //inner else
+                    } else {
+                        System.out.println("There are not enough sequences in queue to create an oligo plate!");
+                    }
+                }
+            } catch (FlexDatabaseException e) {
+                e.printStackTrace();
+            } catch (FlexCoreException ex){
+                ex.printStackTrace();
+            } catch (IOException IOex){
+                DatabaseTransaction.rollback(conn);
+                IOex.printStackTrace();
+            } catch (MessagingException msgex){
+                DatabaseTransaction.rollback(conn);
+                msgex.printStackTrace();
+            }finally {
+                //   DatabaseTransaction.closeConnection(conn);
+            }
+            
+            System.out.println("Thread finished");        
     }
     
     //******************************************************//
