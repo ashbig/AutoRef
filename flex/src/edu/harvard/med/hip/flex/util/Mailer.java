@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2002-06-05 19:10:16 $
+ * $Revision: 1.8 $
+ * $Date: 2002-06-06 18:25:52 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -44,13 +44,14 @@ import javax.activation.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.database.*;
 
 /**
  *
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.7 $ $Date: 2002-06-05 19:10:16 $
+ * @version    $Revision: 1.8 $ $Date: 2002-06-06 18:25:52 $
  */
 
 public class Mailer
@@ -149,6 +150,19 @@ public class Mailer
      * @param msgText The text of the message.
      * @param file_name of file object.
      */
+    public static void sendMessageWithAttachedFile(String user_name, String subject,
+                                                    String msgText, File fl) 
+                                                    throws MessagingException,
+                                                    FlexDatabaseException
+    {
+        AccessManager am = AccessManager.getInstance();
+        String to = am.getEmail( user_name );
+        String cc = "etaycher@hms.harvard.edu";
+        String from = "etaycher@hms.harvard.edu";
+        sendMessageWithAttachedFile( to,  from, cc, subject,  msgText,  fl);
+    }
+    
+    
     public static void sendMessageWithAttachedFile(String to, String from,
     String cc, String subject, String msgText, File fl)
     throws MessagingException
