@@ -38,21 +38,23 @@ public class DisplayPaperLinks_GeneGene_Action extends MetageneAction{
                                          HttpServletRequest request, 
                                          HttpServletResponse response) 
                                   throws ServletException, IOException {
-        String source_gene_index = ((DisplayPaperLinks_GeneGene_Form)form).getSource_gene_index(); 
-        String target_gene_symbol = ((DisplayPaperLinks_GeneGene_Form)form).getTarget_gene_symbol();
+        String source_gene_index = ((DisplayPaperLinks_GeneGene_Form)form).getSource_gene_index();         
         String target_gene_name = ((DisplayPaperLinks_GeneGene_Form)form).getTarget_gene_name();
+        int target_gene_locusid = ((DisplayPaperLinks_GeneGene_Form)form).getTarget_gene_locusid();
 
         Vector records = new Vector();        
-        GeneGeneManager m = new GeneGeneManager();        
-        if(target_gene_symbol != null && target_gene_symbol.trim().length()!= 0)
-            records = m.getMedlineRecords_gg(source_gene_index, target_gene_symbol);
+        GeneGeneManager m = new GeneGeneManager();       
+        
+        if(target_gene_locusid != -1){
+            records = m.getMedlineRecords_gg(source_gene_index, target_gene_locusid);
+            target_gene_name = ((GeneIndex)(m.queryGeneIndexByLocusid(target_gene_locusid).elementAt(0))).getIndex();
+        }
         else{
-            records = m.getMedlineRecords_gg(source_gene_index, target_gene_name);
-            target_gene_symbol = target_gene_name;
+            records = m.getMedlineRecords_gg(source_gene_index, target_gene_name);            
         }
                
         request.setAttribute("source_gene_name", source_gene_index);
-        request.setAttribute("target_gene_name", target_gene_symbol);
+        request.setAttribute("target_gene_name", target_gene_name);
         request.setAttribute("medline_records", records);
         return (mapping.findForward("success"));             
 

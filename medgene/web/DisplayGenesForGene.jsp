@@ -95,7 +95,7 @@
 
             <TD align="center">
                 <a href="DisplayPaperLinks_GeneGene.do?source_gene_index=<bean:write name="source_gene_index"/>
-&target_gene_symbol=<bean:write name="association" property="target_gene.symbol"/>
+&target_gene_locusid=<bean:write name="association" property="target_gene.locusid"/>
 &target_gene_name=<bean:write name="association" property="target_gene.name"/>" target="_blank">
                 <bean:write name="association" property="asso_data.doublehit"/></a>&nbsp
             </TD>

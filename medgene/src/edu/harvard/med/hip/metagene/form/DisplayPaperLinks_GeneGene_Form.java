@@ -18,27 +18,27 @@ import org.apache.struts.action.ActionMapping;
  */
 public class DisplayPaperLinks_GeneGene_Form extends ActionForm{
     private String source_gene_index;
-    private String target_gene_symbol;
-    private String target_gene_name;
+    private int target_gene_locusid = -1;
+    private String target_gene_name;    
     
     public String getSource_gene_index(){
         return source_gene_index;
     }
-    public String getTarget_gene_symbol(){
-        return target_gene_symbol;
-    }
     public String getTarget_gene_name(){
         return target_gene_name;
     }
-
+    public int getTarget_gene_locusid(){
+        return target_gene_locusid;
+    }
+    
     public void setSource_gene_index(String index){
         this.source_gene_index = index;
     }
-    public void setTarget_gene_symbol(String symbol){
-        this.target_gene_symbol = symbol;
-    }
     public void setTarget_gene_name(String name){
         this.target_gene_name = name;
+    }
+    public void setTarget_gene_locusid(int locusid){
+        this.target_gene_locusid = locusid;
     }
 
     

@@ -214,5 +214,41 @@ public class GeneGeneManager extends DiseaseGeneManager {
      
      }
          
-         
+     public Vector getMedlineRecords_gg(String source_gene_index, int target_gene_locusid){
+        DBManager dbm = new DBManager();
+        Connection con = dbm.connect();
+        if(con == null){
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Vector pubmed_ids = new Vector();
+        
+        String sql = "select pubmedid from medline_records_gene_assoc mrga, gene_index gi, gene_list gl " +
+                     "where (mrga.gene_index1 = ? and mrga.gene_index2 = gi.gene_index and gi.gene_index_id = gl.gene_index_id and gl.locus_id = ? ) " +
+                     "or (mrga.gene_index2 = ? and mrga.gene_index1 = gi.gene_index and gi.gene_index_id = gl.gene_index_id and gl.locus_id = ? )" +
+                     "order by pubmedid desc ";
+        try{
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, source_gene_index);
+            pstmt.setInt(2, target_gene_locusid);
+            pstmt.setString(3, source_gene_index);
+            pstmt.setInt(4, target_gene_locusid);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                int pubmed_id = rs.getInt(1);
+                pubmed_ids.add(new Integer(pubmed_id).toString());
+            }
+            rs.close();
+            pstmt.close();
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            dbm.disconnect(con);
+        }
+        return pubmed_ids;
+     
+     }         
 }

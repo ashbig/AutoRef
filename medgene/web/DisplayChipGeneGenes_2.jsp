@@ -40,7 +40,7 @@
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
     <TR> <b>First degree associations</b> <br><br> </TR>
     <TR bgcolor="#cccccc">
-        <TH width="10%">Rank</TH>
+        <TH width="5%">Rank</TH>
 
         <logic:equal name="input_type" value="1">
         <TH width="20%">LocusID</TH>
@@ -52,9 +52,10 @@
         <TH width="20%">Accession</TH>
         </logic:equal>
 
-        <TH width="25%">Homo sapiens Locus ID</TH>
+        <TH width="20%">Homo sapiens Locus ID</TH>
         <TH width="25%"><A HREF="GeneSymbol.jsp" target="_blank">Homo sapiens Gene Symbol</A></TH>
         <TH width="20%"><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>
+        <TH width="10%">Selected Papers</TH>
     </TR>
 
     <logic:iterate id="directChipGene" name="direct_genes"> 
@@ -73,6 +74,10 @@
             </TD>
             <TD align="center">
                 <bean:write name="directChipGene" property="score"/>
+            </TD>
+            <TD align="center">
+                <A HREF="DisplayPaperLinks_GeneGene.do?source_gene_index=<bean:write name="gene_index"/>&target_gene_locusid=<bean:write name="directChipGene" property="locus_id"/>" target="_blank" >
+                Link</A>
             </TD>
         </tr>
     </logic:iterate> 
