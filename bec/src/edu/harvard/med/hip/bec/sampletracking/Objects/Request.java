@@ -4,7 +4,7 @@
  * Created on March 27, 2003, 11:00 AM
  */
 
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.user.*;

@@ -1,5 +1,5 @@
 /**
- * $Id: Location.java,v 1.1 2003-03-27 17:30:28 Elena Exp $
+ * $Id: Location.java,v 1.1 2003-03-27 17:45:42 Elena Exp $
  *
  * File     	: Location.java
  * Date     	: 04262001
@@ -13,7 +13,7 @@
  *                added new constructor
  */
 
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;

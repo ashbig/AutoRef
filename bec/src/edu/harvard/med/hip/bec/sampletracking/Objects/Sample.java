@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.1 2003-03-27 17:30:27 Elena Exp $
+ * $Id: Sample.java,v 1.1 2003-03-27 17:45:41 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -8,7 +8,7 @@
 
  */
 
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;

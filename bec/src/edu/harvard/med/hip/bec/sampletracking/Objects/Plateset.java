@@ -9,7 +9,7 @@
  *
  * modified 07-01-2001 wmar:    added new constructor
  */
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;

@@ -1,10 +1,10 @@
 /**
- * $Id: Container.java,v 1.1 2003-03-27 17:30:28 Elena Exp $
+ * $Id: Container.java,v 1.1 2003-03-27 17:45:42 Elena Exp $
  *
  * File     	: Container.java
 
  */
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import java.util.*;
 import java.math.BigDecimal;

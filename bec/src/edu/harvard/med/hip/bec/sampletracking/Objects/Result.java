@@ -16,7 +16,7 @@
 |<---            this code is formatted to fit into 80 columns             --->|
  */
 
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import java.sql.*;
 import java.util.*;

@@ -1,12 +1,12 @@
 /**
- * $Id: ProcessDefinition.java,v 1.1 2003-03-27 17:30:28 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.1 2003-03-27 17:45:42 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
  * describes actions available on the system
  * it is read only class: all available process set on system before delivery
  */
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;

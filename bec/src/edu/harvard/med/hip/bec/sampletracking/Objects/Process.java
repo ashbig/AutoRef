@@ -1,11 +1,11 @@
 /**
- * $Id: Process.java,v 1.1 2003-03-27 17:30:28 Elena Exp $
+ * $Id: Process.java,v 1.1 2003-03-27 17:45:42 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
  * define actual action that was requested by user
  **/
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;

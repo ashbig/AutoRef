@@ -6,7 +6,7 @@
  * Author	: Dongmei Zuo
  */
 
-package edu.harvard.med.hip.bec.sampletracking;
+package edu.harvard.med.hip.bec.sampletracking.Objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import java.sql.*;
