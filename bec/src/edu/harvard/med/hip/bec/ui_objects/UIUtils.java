@@ -53,7 +53,17 @@ public class UIUtils
     
     public  String getHTMLtransformedNeedleAlignmentForTrimedRead(int[] scores, int sequence_id) throws Exception
     {
-       
+       //try get scores if possible
+         String scores_str = BaseSequence.getSequenceInfo(sequence_id, BaseSequence.SEQUENCE_INFO_SCORE);
+         if (scores == null && scores_str != null)
+         {
+                ArrayList scores_parsed = Algorithms.splitString(scores_str," ");
+                scores = new int[scores_parsed.size()];
+                for (int count = 0; count < scores_parsed.size(); count++)
+                {
+                   scores[count] =  (Integer.parseInt( (String) scores_parsed.get(count)));
+                }
+         }
        String needle_file_name = null;
         //if needle was already run retrive file
         if (m_refsequence_id != -1)
@@ -237,7 +247,8 @@ public class UIUtils
         {
             
             UIUtils ut= new UIUtils();
-            String g = ut.getHTMLtransformedNeedleAlignment(BaseSequence.READ_SEQUENCE,1715) ;
+            ut.setRefSequenceId(14584);
+            String g = ut.getHTMLtransformedNeedleAlignmentForTrimedRead(null,14800) ;
         System.out.print(g);
         }catch(Exception e){}
         System.exit(0);
