@@ -350,7 +350,79 @@ public abstract class Mutation
         return res;
     }
     
+    public static String toHTMLString (ArrayList discrepancies)
+    {
+        StringBuffer report = new StringBuffer();
+        String row_color = " bgColor='#e4e9f8'";
+        Mutation mut = null;
+        LinkerMutation linker = null;
+        RNAMutation rm = null;
+        AAMutation am = null; 
+        int cur_number =1;
+
+        report.append("<table border=1 cellpadding=0 cellspacing=0 width=90% align=center>");
+        report.append("<tr >");
+        report.append("<th width='13%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Number</font></strong></th>");
+        report.append("<th width='31%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Description</font></strong></th>");
+        report.append("<th width='25%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Proteine Description</font></strong></th>");
+        report.append("<th width='17%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Polymorphism</font></strong></th>");
+        report.append("<th width='14%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Confidence</font></strong></th>");
+        report.append("</tr>");
+	
+	
     
+    for (int count = 0; count < discrepancies.size(); count ++)
+	{
+	
+		if (count % 2 == 0)
+		{
+		  row_color = " bgColor='#e4e9f8'";
+		}
+		else
+		{
+			row_color =" bgColor='#b8c6ed'";
+		}
+	    mut = (Mutation)discrepancies.get(count);
+        if (mut.getType() == Mutation.RNA)
+		{
+
+			rm = (RNAMutation)discrepancies.get(count);
+			report.append("<tr><td  "+row_color +">" + rm.getNumber() +"</td>");
+            report.append("<td "+ row_color+" > "+ rm.toHTMLString()+"</td>");
+  			if ( discrepancies.size() >= count )
+	   		{
+				mut= (Mutation) discrepancies.get(count+1);
+
+				if (mut.getType() == Mutation.AA)
+				{
+
+					am = (AAMutation)discrepancies.get(count+1);
+					count++;
+					report.append("<td "+ row_color +">"+ am.toHTMLString() +"</td>");
+ 				}
+ 				else
+ 				{
+					report.append(" <td  "+ row_color +">&nbsp;</td> ");
+				}
+			}
+			report.append(" <td  "+ row_color +">"+ rm.getPolymorphismFlagAsString()+"</td>");  
+			report.append(" <td  "+ row_color +">"+ rm.getQualityAsString()+"</td>");  
+		    report.append("</tr> ");               
+		}
+	   else if (mut.getType() == Mutation.LINKER_3P || mut.getType() == Mutation.LINKER_5P)
+	   {
+	   	linker = (LinkerMutation) discrepancies.get(count);
+		report.append("<tr>");
+		report.append("<td  "+ row_color +">"+ linker.getNumber() +"</td> ");
+        report.append("<td  "+ row_color +">"+ linker.toHTMLString()+"</td>");   
+		report.append("<td  "+ row_color +">&nbsp;</td><td  "+ row_color +">&nbsp;</td> ");       
+		report.append("<td  "+ row_color +">"+ linker.getQualityAsString() +"</td>  ");  
+		report.append("</tr>");                
+	}}
+	
+        report.append("</table>");
+        return report.toString();
+    }
     public String toHTMLString()
     {
         String res = "";
