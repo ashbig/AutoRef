@@ -114,13 +114,13 @@ public class ContainerMapper {
         while(enum.hasMoreElements()) {
             Sample s = (Sample)enum.nextElement();
             
-            if(edu.harvard.med.hip.flex.core.Sample.CONTROL_POSITIVE.equals(s.getType())) {
-                type = edu.harvard.med.hip.flex.core.Sample.CONTROL_POSITIVE;
-            } else if(edu.harvard.med.hip.flex.core.Sample.CONTROL_NEGATIVE.equals(s.getType())) {
-                type = edu.harvard.med.hip.flex.core.Sample.CONTROL_NEGATIVE;
-            } else if(edu.harvard.med.hip.flex.core.Sample.GEL.equals(s.getType())) {
+            if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
+                type = Sample.CONTROL_POSITIVE;
+            } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
+                type = Sample.CONTROL_NEGATIVE;
+            } else if(Sample.GEL.equals(s.getType())) {
                 type = getSampleType(container, s, protocol);
-            } else if(edu.harvard.med.hip.flex.core.Sample.TRANSFORMATION.equals(s.getType())) {
+            } else if(Sample.TRANSFORMATION.equals(s.getType())) {
                 type = getSampleType(container, s, protocol);
             } else {
                 type = Sample.getType(protocol.getProcessname());
@@ -136,11 +136,11 @@ public class ContainerMapper {
         edu.harvard.med.hip.flex.process.Process p = 
         edu.harvard.med.hip.flex.process.Process.findProcess(container, protocol);
         Result result = Result.findResult(s, p);
-        if(edu.harvard.med.hip.flex.process.Result.CORRECT.equals(result.getValue()) || edu.harvard.med.hip.flex.process.Result.MUL_W_CORRECT.equals(result.getValue())
-            || edu.harvard.med.hip.flex.process.Result.MANY.equals(result.getValue()) || edu.harvard.med.hip.flex.process.Result.FEW.equals(result.getValue())) {
+        if(edu.harvard.med.hip.flex.process.Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())
+            || edu.harvard.med.hip.flex.process.Result.MANY.equals(result.getValue()) || Result.FEW.equals(result.getValue())) {
             type = Sample.getType(protocol.getProcessname());
         } else {
-            type = edu.harvard.med.hip.flex.core.Sample.EMPTY;
+            type = Sample.EMPTY;
         }
         
         return type;
