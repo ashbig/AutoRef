@@ -239,7 +239,8 @@
                input="/ReceiveOligoOrders.jsp">
       <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
     </action>
-
+     
+    
     <!-- Process the receiving of new oligo plates -->
     <action    path="/EnterOligoPlateLocation"
                type="edu.harvard.med.hip.flex.action.EnterOligoPlateLocationAction"
@@ -247,6 +248,13 @@
                scope="request"
                input="/EnterOligoPlateLocation.jsp">
       <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
+    </action>
+
+    <!-- Displays the container details page -->
+    <action     path="/ViewContainerDetails"
+                type="edu.harvard.med.hip.flex.action.ViewContainerDetailsAction"
+                input="">
+        <forward   name="success"  path="/ContainerDetails.jsp"/>
     </action>
 
     <!-- The standard administrative actions available with Struts -->
