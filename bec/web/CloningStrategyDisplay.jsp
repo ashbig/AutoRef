@@ -24,7 +24,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         <td >
-    <font color="#008000" size="5"><b> cloning Startegy </font>
+    <font color="#008000" size="5"><b> cloning Strategy </font>
     <hr>
     
     <p>
@@ -43,15 +43,30 @@
   </center>
 </div>
 
-<% BioLinker linker3 = (BioLinker) request.getAttribute("linker3");
-	BioLinker linker5 = (BioLinker) request.getAttribute("linker5");
-	BioVector vector = (BioVector) request.getAttribute("vector");
+<% CloningStrategy cs =(CloningStrategy) request.getAttribute("cloning_strategy");
+BioLinker linker5 = cs.getLinker5();
+BioLinker linker3 = cs.getLinker3();	
+BioVector vector= cs.getVector();
 %>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<tr>
+	<td width="25%" bgColor="#e4e9f8">  <b>Start Codon</b>  </td>
+	<td width="75%" bgColor="#e4e9f8"><%= cs.getStartCodon() %></td>
+</tr>
+<tr>
+	<td width="25%" bgColor="#e4e9f8">  <b>Fusion Stop Codon</b>  </td>
+	<td width="75%" bgColor="#e4e9f8"><%= cs.getFusionStopCodon() %></td>
+</tr>
+<tr>
+	<td width="25%" bgColor="#e4e9f8">  <b>Closed Stop Codon</b>  </td>
+	<td width="75%" bgColor="#e4e9f8"><%= cs.getOpenStopCodon() %></td>
+</tr>
+<TR><TD colspan=2>&nbsp;</TD></TR>
 <tr>
 	<td colspan=2 bgcolor="#1145A6" height="26"><strong><font color="#FFFFFF"> 5' Linker </font> </td>
 	
 </tr>
+
 
 <tr>
 	<td width="25%" bgColor="#e4e9f8">  <b>Linker Name</b>  </td>
@@ -119,10 +134,10 @@ else
 	<td  bgColor="#e4e9f8" ><b>Linker Id:</b></td>
 	 <td bgColor="#e4e9f8" height="29"><%= linker3.getId() %></td>   </tr>
 
- 
-  <TR><TD colspan="2">
-Vector Information <P></P>
- <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+ <TR><TD colspan=2>&nbsp;</TD></TR>
+  <TR><TD colspan="2" bgcolor="#1145A6" height="26">
+Vector Information </TD></TR>
+
 <tr>
 	<td width="25%" bgColor="#b8c6ed">  <b>Vector Name</b>  </td>
 	<td width="75%" bgColor="#b8c6ed"><%= vector.getName() %></td>
@@ -130,7 +145,7 @@ Vector Information <P></P>
 <tr> 
 	<td  bgColor="#e4e9f8" ><b>Vector Id:</b></td>
 	 <td bgColor="#e4e9f8"><%= vector.getId() %></td>  
-	  </tr>
+</tr>
  
 <tr> 
 
@@ -146,7 +161,7 @@ Vector Information <P></P>
 	  </tr>
  
 <tr> 
-<td colspan=2>
+<td colspan=2 align=center>
 <p><b><P></P>Vector Features</b> </p> 
      
       <table width="85%" border="0" align="center">
@@ -181,7 +196,7 @@ Vector Information <P></P>
 		</table>
 </td>
 </tr>
-  </table>
+ 
   </TD></TR>
 
   </table>
