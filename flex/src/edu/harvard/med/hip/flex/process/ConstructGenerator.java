@@ -18,6 +18,8 @@
  *              removed the setPlatesetId method and the platsetId data member
  * Revision:    01-28-2002  [wmar]
  *              The 5p and 3p tag added to oligos are project specific
+ *Revision:    07-2002  [htaycher]
+ *             rewritten
  */
 
 package edu.harvard.med.hip.flex.process;
@@ -335,9 +337,9 @@ public class ConstructGenerator
     {
        // Protocol protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);
         Vector nextProtocols = null;
-        if (  m_protocol.getProcessname() == Protocol.DESIGN_CONSTRUCTS )//design constructs
+        if (  m_protocol.getProcessname().equalsIgnoreCase( Protocol.DESIGN_CONSTRUCTS) )//design constructs
             nextProtocols = workflow.getNextProtocol(m_protocol);
-        else if (  m_protocol.getProcessname() == Protocol.MGC_DESIGN_CONSTRUCTS )
+        else if (  m_protocol.getProcessname().equalsIgnoreCase(Protocol.MGC_DESIGN_CONSTRUCTS ) )
         {
             nextProtocols = new Vector();
             nextProtocols.add(new Protocol(Protocol.RECEIVE_OLIGO_PLATES)  );
@@ -347,21 +349,21 @@ public class ConstructGenerator
         ConstructProcessQueue constructQueue = new ConstructProcessQueue();
         QueueItem queueItem = null;
         Construct construct = null;
-        
+     
         
         Iterator protocolIter = nextProtocols.iterator();
         while(protocolIter.hasNext())
         {
             Protocol nextProtocol = (Protocol)protocolIter.next();
-            
+           
             //form a linkedlist of construct queue items
             LinkedList constructQueueItemList = new LinkedList();
             while (iter.hasNext())
             {
-                construct = (Construct)iter.next();
-                queueItem = new QueueItem(construct, nextProtocol, project, workflow);
-                constructQueueItemList.add(queueItem);
-            } //while
+                 construct = (Construct)iter.next();
+                 queueItem = new QueueItem(construct, nextProtocol, project, workflow);
+                 constructQueueItemList.add(queueItem);
+                         } //while
             
             //System.out.println("Adding constructs to queue...");
             constructQueue.addQueueItems(constructQueueItemList, conn);
