@@ -121,6 +121,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 type = Sample.EMPTY;
             } else if(Sample.GEL.equals(s.getType())) {
                 type = getGelSampleType(container, s, protocol);
+            } else if(Sample.ISOLATE.equals(s.getType())) {
+                type = getCultureSampleType(container, s, protocol);
             } else if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                 type = s.getType();
             } else {
@@ -149,6 +151,21 @@ public class OneToOneContainerMapper implements ContainerMapper {
         
         return type;
     }
+
+    protected String getCultureSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
+        Protocol protocol = new Protocol(Protocol.ENTER_CULTURE_RESULTS);
+        String type = null;
+        edu.harvard.med.hip.flex.process.Process p =
+        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
+        Result result = Result.findResult(s, p);
+        if(Result.GROW.equals(result.getValue())) {
+            type = Sample.getType(newProtocol.getProcessname());
+        } else {
+            type = Sample.EMPTY;
+        }
+        
+        return type;
+    }    
     
     protected String getProjectCode(Project project, Workflow workflow) {
         String projectCode = "";

@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.17 $ $Date: 2002-02-08 18:34:01 $
+ * @version    $Revision: 1.18 $ $Date: 2002-04-02 21:04:59 $
  */
 
 public class Result {
@@ -65,6 +65,9 @@ public class Result {
     // result type for an agar plate
     public static final String AGAR_PLATE_TYPE="AGAR PLATE";
     
+    // result type for a culture plate
+    public static final String CULTURE_PLATE_TYPE="CULTURE PLATE";
+    
     // result type for DNA GEL
     public static final String DNA_GEL_TYPE="DNA GEL";
     
@@ -75,6 +78,8 @@ public class Result {
     public final static String MUL_WO_CORRECT = "Multiple without correct";
     public final static String NO_PRODUCT = "No product";    
     public final static String NO_BAND = "No visible band with cloning attempt";
+    public final static String GROW = "Grow";
+    public final static String NOGROW = "Not Grow";
     
     // the following defines the result values for TRANSFORMATION.
     public final static String MORE = "4+";

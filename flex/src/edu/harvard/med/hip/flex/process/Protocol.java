@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.17 2001-11-13 20:58:58 dzuo Exp $
+ * $Id: Protocol.java,v 1.18 2002-04-02 21:04:59 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -67,6 +67,7 @@ public class Protocol {
         "generate agar plates (48 well grid plate)";
     public static final String PICK_COLONY = 
         "generate culture blocks for isolates from 48 well plates";
+    public static final String ENTER_CULTURE_RESULTS = "enter culture results";
     
     private int id;
     private String processcode;

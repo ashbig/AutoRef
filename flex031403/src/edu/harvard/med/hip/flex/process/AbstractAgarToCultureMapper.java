@@ -72,13 +72,13 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         int n=platenum*column;
         while(n<platenum*column+column) {
             Sample s = (Sample)oldSamples.elementAt(n);
-            type = getType(container, s, protocol); 
+            type = getType(container, s, protocol);
             
             for(int i=0; i<COLONYNUM; i++) {
                 Sample newSample = new Sample(type[i], index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
                 newContainer.addSample(newSample);
                 sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
-            }            
+            }
             index = index+COLONYNUM*2;
             n++;
         }
@@ -101,7 +101,7 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
             }
         } else {
             type = getAgarSampleType(container, s, newProtocol);
-        } 
+        }
         
         return type;
     }
@@ -113,57 +113,63 @@ public abstract class AbstractAgarToCultureMapper extends OneToOneContainerMappe
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
         Result result = Result.findResult(s, p);
         
-        if(Result.MORE.equals(result.getValue())) {
-            for(int i=0; i<COLONYNUM; i++) {
-                type[i] = Sample.getType(newProtocol.getProcessname());
-            }
-        } else {
-            try {
-                int colony = Integer.parseInt(result.getValue());
-                
-                if(colony == 0) {
-                    for(int i=0; i<COLONYNUM; i++) {
-                        type[i] = Sample.EMPTY;
-                    }
-                }
-                if(colony == 1) {
-                    type[0] = Sample.getType(newProtocol.getProcessname());
-                    for(int i=1; i<COLONYNUM; i++) {
-                        type[i] = Sample.EMPTY;
-                    }
-                }
-                if(colony == 2) {
-                    for(int i=0; i<2; i++) {
-                        type[i] = Sample.getType(newProtocol.getProcessname());
-                    }
-                    for(int i=2; i<COLONYNUM; i++) {
-                        type[i] = Sample.EMPTY;
-                    }
-                }
-                if(colony == 3) {
-                    for(int i=0; i<3; i++) {
-                        type[i] = Sample.getType(newProtocol.getProcessname());
-                    }
-                    for(int i=3; i<COLONYNUM; i++) {
-                        type[i] = Sample.EMPTY;
-                    }
-                }
-            } catch (NumberFormatException ex) {
+        /**        if(Result.MORE.equals(result.getValue())) {
+         * for(int i=0; i<COLONYNUM; i++) {
+         * type[i] = Sample.getType(newProtocol.getProcessname());
+         * }
+         * } else {
+         **/
+        try {
+            int colony = Integer.parseInt(result.getValue());
+            
+            if(colony == 0) {
                 for(int i=0; i<COLONYNUM; i++) {
                     type[i] = Sample.EMPTY;
                 }
             }
+            if(colony == 1) {
+                type[0] = Sample.getType(newProtocol.getProcessname());
+                for(int i=1; i<COLONYNUM; i++) {
+                    type[i] = Sample.EMPTY;
+                }
+            }
+            if(colony == 2) {
+                for(int i=0; i<2; i++) {
+                    type[i] = Sample.getType(newProtocol.getProcessname());
+                }
+                for(int i=2; i<COLONYNUM; i++) {
+                    type[i] = Sample.EMPTY;
+                }
+            }
+            if(colony == 3) {
+                for(int i=0; i<3; i++) {
+                    type[i] = Sample.getType(newProtocol.getProcessname());
+                }
+                for(int i=3; i<COLONYNUM; i++) {
+                    type[i] = Sample.EMPTY;
+                }
+            }
+            if(colony >= 4) {
+                for(int i=0; i<COLONYNUM; i++) {
+                    type[i] = Sample.getType(newProtocol.getProcessname());
+                }
+            }
+        } catch (NumberFormatException ex) {
+            for(int i=0; i<COLONYNUM; i++) {
+                type[i] = Sample.EMPTY;
+            }
         }
+        //    }
         
         return type;
     }
-       
+    
     // Return the subthreadid for culture plate from agar plate.
     abstract protected String getSubThread(Container c, int index);
     
     abstract protected int getNumOfDestPlates();
-
+    
     abstract protected int getStartIndex(int index);
     
-    abstract protected int getColumn();    
+    abstract protected int getColumn();
 }
