@@ -391,7 +391,7 @@ public class FastaFileGenerator {
             " from mgcclone m, flexsequence f "+
             " where f.sequenceid > "+seq+
             " and m.sequenceid=f.sequenceid"+
-            " and f.genusspecies = '"+HUMAN+"'"+
+            " and f.genusspecies = "+HUMAN +
             " order by f.sequenceid";
         }
         
