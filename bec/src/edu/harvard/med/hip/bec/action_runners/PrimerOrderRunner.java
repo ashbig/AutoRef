@@ -42,15 +42,19 @@ public class PrimerOrderRunner extends ProcessRunner
     public static final int          PLACEMENT_FORMAT_ALL_TOGETHER = 1;
     public static final int          PLACEMENT_FORMAT_N_PRIMER = 2;
     
-    
+    public static final int          OLIGO_SELECTION_FORMAT_STRETCH_COOLECTION_ONLY = 1;
+    public static final int          OLIGO_SELECTION_FORMAT_REFSEQ_ONLY = 2;
+    public static final int          OLIGO_SELECTION_FORMAT_STRETCH_COLLECTION_REFSEQ = 3;
+
     private static final int           CLONE_NOT_PROCESSED = 0;
     private static final int           CLONE_PROCESSED = 1;
-    
-     private boolean                 m_isTryMode = false;
-     private int                     m_primer_placement_format = PLACEMENT_FORMAT_ALL_TOGETHER;
-     private int                     m_primer_number = -1;
-     private int                     m_wells_per_plate = 96;
-      private boolean                m_is_full_plates = false;
+
+    private boolean                 m_isTryMode = false;
+    private int                     m_primer_placement_format = PLACEMENT_FORMAT_ALL_TOGETHER;
+    private int                     m_primer_number = -1;
+    private int                     m_wells_per_plate = 96;
+    private int                     m_primers_selection_rule = OLIGO_SELECTION_FORMAT_REFSEQ_ONLY;
+    private boolean                m_is_full_plates = false;
       
       //prepared statments
     private   PreparedStatement m_pst_insert_process_object = null;
@@ -62,7 +66,9 @@ public class PrimerOrderRunner extends ProcessRunner
     public void         setPrimerNumber(int v){ m_primer_number = v;}
     public void         setPrimerPlacementFormat(int v){ m_primer_placement_format = v;}
     public void         setNumberOfWellsOnPlate(int v){ m_wells_per_plate = v;}
-    public void         isFullPlatesOnlye(boolean v){ m_is_full_plates =v;}
+    public void         isFullPlatesOnly(boolean v){ m_is_full_plates =v;}
+    public void         setPrimersSelectionRule(int v){ m_primers_selection_rule = v;}
+    
     public String       getTitle()    { return "Request for Primer order";}
     
     public void run()
@@ -80,8 +86,7 @@ public class PrimerOrderRunner extends ProcessRunner
           //  ArrayList sorted_clone_description = sortCloneDescriptions(clone_description);
              ArrayList sorted_clone_description = clone_description;
             processClones(sorted_clone_description,m_wells_per_plate,   conn);
-            if ( m_isTryMode ) 
-                DatabaseTransaction.rollback(conn);
+           // if ( m_isTryMode ) DatabaseTransaction.rollback(conn);
         }
         catch(Exception e)
         {
@@ -169,11 +174,16 @@ public class PrimerOrderRunner extends ProcessRunner
         {
             clone_description = (CloneDescription)sorted_clone_description.get(clone_count);
             clone_primers = getClonePrimers( clone_description );
-            IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_READY_FOR_INTERNAL_READS, clone_description.getIsolateTrackingId(),  conn );
+            if ( !m_isTryMode )
+                IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_READY_FOR_INTERNAL_READS, clone_description.getIsolateTrackingId(),  conn );
                 
             if ( clone_primers != null && clone_primers.size() >0)
             {
                 primers.addAll(clone_primers);
+            }
+            else
+            {
+                m_error_messages.add("There is no primers for clone " + clone_description.getCloneId());
             }
         }
         if (primers.size() > 0)
@@ -182,7 +192,7 @@ public class PrimerOrderRunner extends ProcessRunner
     
     private ArrayList           getClonePrimers(CloneDescription clone_description) throws Exception
     {
-        ArrayList clone_primers = Oligo.getByCloneId(clone_description.getCloneId(), Oligo.STATUS_APPROVED );
+        ArrayList clone_primers = Oligo.getByCloneId(clone_description.getCloneId(), Oligo.STATUS_APPROVED , m_primers_selection_rule);
         //trick here : replace orientation by clone id
         ArrayList result = new ArrayList();
         for (int count = 0; count < clone_primers.size(); count++)
@@ -218,8 +228,20 @@ public class PrimerOrderRunner extends ProcessRunner
         CloneDescription clone_description = null;
         Oligo oligo = null;String temp= null;
         NamingFileEntry naming_entry = null;
+        String plate_label = null;
+        int container_counter_try_mode = 1;
         
-        OligoContainer container = createOligoContainer();
+        OligoContainer container = null;
+        if ( ! m_isTryMode )     
+        {
+            container = createOligoContainer();
+            plate_label = container.getLabel();
+        }
+        else
+        {
+             plate_label = "OPLATE"+Constants.formatIntegerToString( container_counter_try_mode++, 6);
+        }
+       
         int primer_counter = 0;int well_counter = 1;
         for (int clone_counter = 0; clone_counter < sorted_clone_description.size(); clone_counter++)
         {
@@ -230,8 +252,12 @@ public class PrimerOrderRunner extends ProcessRunner
                  if ( oligo.getType() != clone_description.getCloneId())
                             break;
                  //create history and update oligo status
-                 int oligosample_id = createOligoRecord( oligo.getId(), container.getId(), well_counter ,clone_description.getCloneId());
-                temp= oligosample_id +"\t"+ container.getLabel()+"\t"+ (well_counter )
+                 int oligosample_id = 0;
+                if ( ! m_isTryMode)
+                {
+                     oligosample_id = createOligoRecord( oligo.getId(), container.getId(), well_counter ,clone_description.getCloneId());
+                }
+                 temp= oligosample_id +"\t"+ plate_label+"\t"+ (well_counter )
                         +"\t"+Algorithms.convertWellFromInttoA8_12(well_counter )+
                         "\t"+clone_description.getCloneId() +"\t"+oligo.getId()
                         +"\t"+oligo.getSequence() +"\t"+oligo.getTm() +"\t"+oligo.getSequence().length();
@@ -248,22 +274,30 @@ public class PrimerOrderRunner extends ProcessRunner
                 temp = clone_description.getCloneId()+"\t"
                      + clone_description.getContainerId() +"\t"
                      + clone_description.getPosition() +"\t"
-                     + container.getLabel() +"\t"
+                     + plate_label +"\t"
                      +   (well_counter );
                 items_template.add(temp);
                 
                 if (well_counter == m_wells_per_plate   || primer_counter == primers.size() - 1)
                 {
-                    m_file_list_reports.add( NamingFileEntry.createNamingFile(naming_file_entries,Constants.getTemporaryFilesPath() + container.getLabel()+"_naming_reads.txt"));
-                    m_file_list_reports.add( FileOperations.writeFile(items_template,  "Clone Id\tOrg plate\tOrg well\tDestination plate\tDestination well\n",  Constants.getTemporaryFilesPath() + container.getLabel() +"_template.txt"));
-                    m_file_list_reports.add( FileOperations.writeFile(items_oligo ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  Constants.getTemporaryFilesPath() + container.getLabel() +"_oligo.txt"));
+                    m_file_list_reports.add( NamingFileEntry.createNamingFile(naming_file_entries,Constants.getTemporaryFilesPath() + plate_label+"_naming_reads.txt"));
+                    m_file_list_reports.add( FileOperations.writeFile(items_template,  "Clone Id\tOrg plate\tOrg well\tDestination plate\tDestination well\n",  Constants.getTemporaryFilesPath() + plate_label +"_template.txt"));
+                    m_file_list_reports.add( FileOperations.writeFile(items_oligo ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  Constants.getTemporaryFilesPath() + plate_label +"_oligo.txt"));
                              
                     if (! m_isTryMode ) 
                             conn.commit();
                      if ( primer_counter == primers.size() - 1)
                         return ;
                     
-                    container = createOligoContainer();
+                    if ( ! m_isTryMode )     
+                    {
+                        container = createOligoContainer();
+                        plate_label = container.getLabel();
+                    }
+                    else
+                    {
+                         plate_label = "OPLATE"+Constants.formatIntegerToString( container_counter_try_mode++, 6);
+                    }
                      naming_file_entries  = new ArrayList();
                      items_template  = new ArrayList();
                      items_oligo  = new ArrayList();
@@ -311,7 +345,7 @@ public class PrimerOrderRunner extends ProcessRunner
         String plate_name = "OPLATE"+Constants.formatIntegerToString( BecIDGenerator.getID("THREDID"), 6);
         OligoContainer container = new OligoContainer();
         container.setLabel(  plate_name.toUpperCase());
-        container.setStatus( OligoContainer.STATUS_ORDER_CREATED);  
+        container.setStatus( OligoContainer.STATUS_ORDER_SENT);  
           //create oligo plate record
         m_pst_insert_oligo_plate.setInt(1,container.getId());
         m_pst_insert_oligo_plate.setString(2,container.getLabel() );
@@ -344,7 +378,7 @@ public class PrimerOrderRunner extends ProcessRunner
             //input.setPrimerNumber();
             input.setPrimerPlacementFormat(PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER );
             input.setNumberOfWellsOnPlate(76 );
-            input.isFullPlatesOnlye(false);
+            input.isFullPlatesOnly(false);
             input.setIsTryMode(true);
             input.run();
         }

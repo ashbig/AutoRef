@@ -88,11 +88,34 @@ public abstract class ProcessRunner implements Runnable
   
     
        public ArrayList prepareItemsListForSQL()
-        {
-         return    prepareItemsListForSQL(m_items_type, m_items);
+       {
+          int item_increment = 0;
+       
+          switch ( m_items_type)
+          {
+              case Constants.ITEM_TYPE_PLATE_LABELS:
+              {
+                   item_increment = 5; break;
+              }
+              case Constants.ITEM_TYPE_CLONEID:
+              case Constants.ITEM_TYPE_BECSEQUENCE_ID:
+              case Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
+              case Constants.ITEM_TYPE_ISOLATETRASCKING_ID :
+             {
+                   item_increment = 100; break;
+              }
+          }
+              
+         return    prepareItemsListForSQL(m_items_type, m_items, item_increment);
      
        }
-      public ArrayList prepareItemsListForSQL(int items_type, String initial_items)
+       
+        public ArrayList prepareItemsListForSQL(int item_increment)
+       {
+         return    prepareItemsListForSQL(m_items_type, m_items, item_increment);
+     
+       }
+      public ArrayList prepareItemsListForSQL(int items_type, String initial_items, int item_increment)
      {
          ArrayList result = new ArrayList();
          ArrayList  items = Algorithms.splitString( initial_items);
@@ -106,7 +129,7 @@ public abstract class ProcessRunner implements Runnable
                   case Constants.ITEM_TYPE_PLATE_LABELS:
                   {
                       first_item_in_cycle = last_item_in_cycle;
-                      last_item_in_cycle = first_item_in_cycle + 5;
+                      last_item_in_cycle = first_item_in_cycle + item_increment;
                       last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
                       break;
                   }
@@ -117,7 +140,7 @@ public abstract class ProcessRunner implements Runnable
             
                   {
                       first_item_in_cycle = last_item_in_cycle;
-                      last_item_in_cycle = first_item_in_cycle + 100;
+                      last_item_in_cycle = first_item_in_cycle + item_increment;
                       last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
                       break;
                   }

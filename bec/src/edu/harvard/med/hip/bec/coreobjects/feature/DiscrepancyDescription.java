@@ -144,6 +144,28 @@ public class DiscrepancyDescription
         return null;
     }
     
+    
+    
+     public int        getQuality()
+    {
+        switch (m_discrepancydefinition_type )
+        {
+            case TYPE_AA :
+            { 
+               return  m_aa.getQuality(); 
+            }
+            case TYPE_NOT_AA_LINKER:
+            {
+                return  m_linker.getQuality();
+            }
+            case TYPE_NOT_AA_AMBIQUOUS:
+            {
+                return m_rna_without_aa.getQuality();
+            }
+            default: return Mutation.QUALITY_NOTKNOWN;
+        }
+      
+    }
     public boolean    isPolymorphism()
     {
         switch (m_discrepancydefinition_type )
@@ -596,6 +618,152 @@ public class DiscrepancyDescription
             
           
     }
+    
+    
+     //function counts number of discrepancies of each type
+    public static int[][] getDiscrepanciesSeparatedByType(ArrayList discr_definitions,
+                                                          boolean isSeparateByQuality)
+    {
+        if (discr_definitions == null || discr_definitions.size() == 0) return null;
+        
+        Mutation discr = null;DiscrepancyDescription dd = null;
+        int change_type = Mutation.TYPE_NOT_DEFINE;
+        int quality = Mutation.QUALITY_NOTKNOWN;
+        int res[][] = new int[Mutation.MACRO_SPECTYPES_COUNT][2] ;
+        for (int count = 0; count < discr_definitions.size(); count++)
+        {
+            dd = (DiscrepancyDescription) discr_definitions.get(count);
+            if( dd.getDiscrepancyDefintionType() == DiscrepancyDescription.TYPE_AA )
+            { 
+               discr = (Mutation)dd.getAADefinition() ;
+               change_type = Mutation.getMacroChangeType( discr.getChangeType() );
+               if ( change_type == Mutation.TYPE_NOT_DEFINE)
+               {
+                   change_type = Mutation.getMacroChangeType( ((Mutation)dd.getRNACollection().get(0)).getChangeType() );
+               }
+            }
+            else   if( dd.getDiscrepancyDefintionType() ==  DiscrepancyDescription.TYPE_NOT_AA_LINKER
+                || dd.getDiscrepancyDefintionType() ==  DiscrepancyDescription.TYPE_NOT_AA_AMBIQUOUS )
+            {
+                discr = dd.getRNADefinition();
+                change_type = Mutation.getMacroChangeType( discr.getChangeType() );
+            }
+            if (isSeparateByQuality)
+            {
+                if (discr.getQuality() == Mutation.QUALITY_HIGH || discr.getQuality() == Mutation.QUALITY_NOTKNOWN)
+                {
+                   quality = 0;
+                }
+                else
+                {
+                    quality = 1;
+                }
+            }
+            else quality = 0;
+            res[-change_type ][ quality]++;
+                
+        }
+           
+        return res;
+    }
+    
+    
+     public static String discrepancySummaryReport(ArrayList discr_definitions,
+                                                        int discrepancy_region_type,
+                                                        boolean isHighQuality,
+                                                        boolean isHTML,
+                                                        boolean isSeparateByQuality)
+    {
+         StringBuffer report = new StringBuffer();
+        try
+        {
+            if (discr_definitions == null || discr_definitions.size()==0) return "";
+           
+            String quality_as_string = "";boolean isExists = false;
+            //int res[][] = new int[Mutation.MACRO_SPECTYPES_COUNT][2] ;
+            int[][] discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(
+                                                                discr_definitions,
+                                                                isSeparateByQuality);
+            
+            int quality = ( isHighQuality )? 0: 1;
+            //take into account that change type negative !!!!!!!!!!!!!!!
+            for (int change_type=0; change_type< Mutation.MACRO_SPECTYPES_COUNT;change_type++)
+            {
+                if (discrepancy_count[change_type][quality] != 0)
+                {
+                    if ( !Mutation.isMacroMutationTypeInGeneRegion(discrepancy_region_type, -change_type) ) continue;
+                    if (isHTML)
+                    {
+                        quality_as_string = (quality  == 0)? "Quality: High":"Quality: Low";
+                        report.append("<tr><td>"+Mutation.getMacroMutationTypeAsString(-change_type)+"</td>");
+                        report.append("<td>"+discrepancy_count[change_type][quality]+"</td>");
+                        report.append("<td>"+quality_as_string+"</td></tr>");
+                    }
+                    else
+                    {
+                        quality_as_string = (quality  == 0)? "High":"Low";
+                        report.append(Mutation.getMacroMutationTypeAsString(-change_type));
+                        report.append("("+quality_as_string+"): ");
+                        report.append(discrepancy_count[change_type][quality]+"|");
+
+                    }
+                }
+            }
+            return report.toString();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return report.toString();
+    }
+     
+     public static String discrepancySummaryReport( int[][] discrepancy_count,
+                                                        int discrepancy_region_type,
+                                                        boolean isHighQuality,
+                                                        boolean isHTML)
+    {
+         StringBuffer report = new StringBuffer();
+        try
+        {
+            if (discrepancy_count == null) return "";
+           
+            String quality_as_string = "";boolean isExists = false;
+            
+            int quality = ( isHighQuality )? 0: 1;
+            //take into account that change type negative !!!!!!!!!!!!!!!
+            for (int change_type=0; change_type< Mutation.MACRO_SPECTYPES_COUNT;change_type++)
+            {
+                if (discrepancy_count[change_type][quality] != 0)
+                {
+                    if ( !Mutation.isMacroMutationTypeInGeneRegion(discrepancy_region_type, -change_type) ) continue;
+                    if (isHTML)
+                    {
+                        quality_as_string = (quality  == 0)? "Quality: High":"Quality: Low";
+                        report.append("<tr><td>"+Mutation.getMacroMutationTypeAsString(-change_type)+"</td>");
+                        report.append("<td>"+discrepancy_count[change_type][quality]+"</td>");
+                        report.append("<td>"+quality_as_string+"</td></tr>");
+                    }
+                    else
+                    {
+                        quality_as_string = (quality  == 0)? "High":"Low";
+                        report.append(Mutation.getMacroMutationTypeAsString(-change_type));
+                        report.append("("+quality_as_string+"): ");
+                        report.append(discrepancy_count[change_type][quality]+"|");
+
+                    }
+                }
+            }
+            return report.toString();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return report.toString();
+    }
+     
+   
      //---------------------------------------------------------------------
     private static DiscrepancyDescription getMaxQualityDiscrepancy(DiscrepancyDescription description_one, DiscrepancyDescription description_two)
       {
@@ -629,6 +797,97 @@ public class DiscrepancyDescription
       }
 
        
+       
+       public static Object  detailedDiscrepancyreport(ArrayList discr_definition_arr, Object type)
+       {
+           if ( discr_definition_arr == null || discr_definition_arr.size()==0) return null;
+           StringBuffer result = new StringBuffer();
+           DiscrepancyDescription dd = null;
+           ArrayList discrepancy_reports_cds = new ArrayList();
+           String discrepancy_discription = null;
+           ArrayList discrepancy_reports_5_linker = new ArrayList();
+           ArrayList discrepancy_reports_3_linker = new ArrayList();
+           Mutation discr = null;
+          
+           for (int count = 0; count < discr_definition_arr.size(); count++)
+           {
+               dd = (DiscrepancyDescription)discr_definition_arr.get(count);
+               discrepancy_discription = "";
+                switch ( dd.getDiscrepancyDefintionType() )
+                {
+                    case TYPE_AA :
+                    { 
+                       for (int rna_count = 0; rna_count < dd.getRNACollection().size(); rna_count ++)
+                       {
+                           discrepancy_discription += Mutation.getDescription((RNAMutation)dd.getRNACollection().get(rna_count)) ;
+                           if ( rna_count != dd.getRNACollection().size()-1 ) discrepancy_discription += ",";
+                       }
+                       discrepancy_discription = discrepancy_discription.toLowerCase();
+                       if ( discrepancy_discription.indexOf("ins@") == -1 && discrepancy_discription.indexOf("del@") == -1)
+                       {
+                        discrepancy_discription += ","+ Mutation.getDescription( dd.getAADefinition()) ;
+                       }
+                       discrepancy_discription +=  ";";
+                       discrepancy_reports_cds.add(discrepancy_discription);
+                       break;
+                    }
+                    case TYPE_NOT_AA_LINKER:
+                    {
+                        if ( dd.getRNADefinition().getType() == Mutation.LINKER_5P)
+                        {
+                            discrepancy_reports_5_linker.add( Mutation.getDescription(dd.getRNADefinition()).toLowerCase() +";");
+                        }
+                        if ( dd.getRNADefinition().getType() == Mutation.LINKER_3P)
+                        {
+                            discrepancy_reports_3_linker.add(Mutation.getDescription(dd.getRNADefinition()).toLowerCase()+";");
+                        }
+                        break;
+                    }
+                    case TYPE_NOT_AA_AMBIQUOUS:
+                    {
+                        discr= dd.getRNADefinition();
+                        String temp = "";
+                        if ( ( discr.getSubjectStr() == null || discr.getSubjectStr().trim().length() == 0 )
+                        || ( discr.getQueryStr() == null || discr.getQueryStr().trim().length() == 0 ))
+                        {
+                            temp = "amb";
+                        }
+        
+                        discrepancy_reports_cds.add(temp+ Mutation.getDescription(discr).toLowerCase() +";");
+                        break;
+                    }
+                }
+            }
+           
+           if ( type instanceof String)
+           {
+               discrepancy_discription= "";
+               for ( int count = 0 ; count < discrepancy_reports_5_linker.size(); count++)
+               {
+                   discrepancy_discription += (String)discrepancy_reports_5_linker.get(count);
+               }
+               discrepancy_discription += Constants.TAB_DELIMETER;
+                for ( int count = 0 ; count < discrepancy_reports_cds.size(); count++)
+               {
+                   discrepancy_discription += (String)discrepancy_reports_cds.get(count);
+               }
+               discrepancy_discription += Constants.TAB_DELIMETER;
+               
+               for ( int count = 0 ; count < discrepancy_reports_3_linker.size(); count++)
+               {
+                   discrepancy_discription += (String)discrepancy_reports_3_linker.get(count);
+               }
+               return discrepancy_discription; 
+           }
+           else if ( type instanceof ArrayList)
+           {
+               discrepancy_reports_5_linker.addAll( discrepancy_reports_cds);
+               discrepancy_reports_5_linker.addAll(discrepancy_reports_3_linker);
+               return discrepancy_reports_5_linker;
+           }
+           return null;
+       }
+       //-------------------------------------------
         public static void main(String args[])
         {
             try
