@@ -86,6 +86,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                             }
                             catch(Exception e)
                             {
+                                DatabaseTransaction.rollback(conn);
                                 m_error_messages.add(e.getMessage());
                             }
                         }
@@ -94,6 +95,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         }
         catch(Exception e)
         {
+            DatabaseTransaction.rollback(conn);
             m_error_messages.add(e.getMessage());
         }
         finally
