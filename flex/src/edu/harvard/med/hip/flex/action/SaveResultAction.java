@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.13 $
- * $Date: 2001-07-30 22:09:26 $
+ * $Revision: 1.14 $
+ * $Date: 2001-07-31 19:40:48 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.13 $ $Date: 2001-07-30 22:09:26 $
+ * @version    $Revision: 1.14 $ $Date: 2001-07-31 19:40:48 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -191,9 +191,9 @@ public class SaveResultAction extends ResearcherAction {
             /*
              * we must now create the next protocol in the workflow based on
              * what the previous protocol was.
-             *
              */
             manageQueue(conn, queueItem, process, container);
+            
             System.out.println("finished manageQueue");
             // finally we commit all our changes.
             DatabaseTransaction.commit(conn);

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-07-27 21:03:30 $
+ * $Revision: 1.3 $
+ * $Date: 2001-07-31 19:40:48 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.flex.process.*;
  * on the protocol it is passed.
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.2 $ $Date: 2001-07-27 21:03:30 $
+ * @version    $Revision: 1.3 $ $Date: 2001-07-31 19:40:48 $
  */
 
 public class GetQueueItemsAction extends ResearcherAction {
@@ -92,9 +92,14 @@ public class GetQueueItemsAction extends ResearcherAction {
             ProcessQueue queue = queueFactory.makeQueue("ContainerProcessQueue");
             List queueItems = queue.getQueueItems(protocol);
             
-            // shove the items into the session.
-            request.getSession().setAttribute("SelectProtocolAction.queueItems",queueItems);
+            // shove the queue items into the session if its not empty.
+            if(! queueItems.isEmpty()) {
+                request.getSession().setAttribute("SelectProtocolAction.queueItems",queueItems);
+            }
+            
+            // remember the protocol
             request.getSession().setAttribute(Constants.PROTOCOL_NAME_KEY, protocolName);
+            
         } catch (Exception e) {
             request.setAttribute(Action.EXCEPTION_KEY, e);
             retForward = mapping.findForward("error");
