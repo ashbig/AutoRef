@@ -45,7 +45,7 @@ public class TraceFilesDistributor
       * inputTraceDir specify the directory where the trace files get dumped from sequencer
       * errorDir specify where the error log is stored for trace files failed Phred run
       */
-    public ArrayList distributeChromatFiles(String inputTraceDir, String outputBaseDir, String wrongformatfiles, String emptysamples_directory)
+    public ArrayList distributeChromatFiles(String inputTraceDir, String outputBaseDir)
     {
         ArrayList chromat_files = new ArrayList();
          PhredOutputFileName pr = null;
@@ -102,7 +102,7 @@ public class TraceFilesDistributor
       * inputTraceDir specify the directory where the trace files get dumped from sequencer
       * errorDir specify where the error log is stored for trace files failed Phred run
       */
-    public void distributeNotActiveChromatFiles(String inputTraceDir,  String wrongformatfiles, String emptysamples_directory)
+    public void distributeNotActiveChromatFiles(String inputTraceDir,  String wrongformatfiles, String emptysamples_directory, String control_samples)
     {
         ArrayList chromat_files = new ArrayList();
 
@@ -113,7 +113,7 @@ public class TraceFilesDistributor
         //distribute empty samples files
         distributeEmptySampleFiles( emptysamples_directory , sourceDir);
         //distribute control files
-        distributeControlFiles( wrongformatfiles ,  sourceDir);
+        distributeControlFiles( control_samples ,  sourceDir);
     }
 
          /* outputBaseDir specify the base directory for trace file distribution
