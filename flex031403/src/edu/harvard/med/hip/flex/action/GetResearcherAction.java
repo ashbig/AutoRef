@@ -125,7 +125,7 @@ public class GetResearcherAction extends ResearcherAction{
                     return (new ActionForward(mapping.getInput()));
                 }        
                 
-                mgcContainer.updateGlycerolContainer(((Container)newContainers.elementAt(1)).getId(), conn);
+                mgcContainer.updateCultureAndGlycerolContainer(((Container)newContainers.elementAt(0)).getId(), ((Container)newContainers.elementAt(1)).getId(), conn);
 
                 if("MGS".equals(c.getLabel().substring(0, 3))) {  
                     ((Container)oldContainers.elementAt(0)).setLocation(new Location(Location.DESTROYED));
