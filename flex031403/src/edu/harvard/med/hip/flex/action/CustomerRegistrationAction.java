@@ -82,7 +82,7 @@ public final class CustomerRegistrationAction extends Action {
         
         try {
             // get the access manager to check if the user_id has been used.
-        AccessManager accessManager = AccessManager.getInstance();
+            AccessManager accessManager = AccessManager.getInstance();
         
             // ask accessManager if the user_id has been used
             if(accessManager.userExist(user_id)) {
@@ -91,12 +91,18 @@ public final class CustomerRegistrationAction extends Action {
                 new ActionError("error.userid.used", user_id));
                 saveErrors(request, errors);
             
-           // return (new ActionForward(mapping.getInput()));
-                //System.out.println("******UserID is used!**********");
-                return (mapping.findForward("failure")); 
-               
+            // return (new ActionForward(mapping.getInput()));
+            //System.out.println("******UserID is used!**********");
+                return (mapping.findForward("failure"));  
             }
-            // if the userId has not been used, insert a new user record into the database
+        
+           // ask accessManager if the reminder text is unique.
+            else if (accessManager.reminderUnique(reminder)==false) {
+                errors.add("reminder", new ActionError("error.reminder.used",reminder));
+                saveErrors(request, errors);
+                return (mapping.findForward("failure"));
+            }
+            // if the userId has not been used and reminder text is unique, insert a new user record into the database
             else {
                 accessManager.addUser(user_id,email,password,organization,usergroup,reminder,firstname,lastname,street1,street2,city,state,province,zipcode,country,phone);
                 return (mapping.findForward("success")); 

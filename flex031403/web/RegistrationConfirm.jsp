@@ -1,20 +1,14 @@
 <%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<%@page isErrorPage="true"%>
 
 <html>
-<head><title><bean:message key="flex.name"/> Error</title></head>
+<head><title><bean:message key="flex.name"/> Registration Confirmation</title></head>
 <body>
-    <h3>You have successfully registrated to <bean:message key="flex.name"/>.</h3>
-    <html:errors/>
-    <logic:exists name="exception">
-        <bean:write name="exception"/>
-    </logic:exists>
-
+    <h3>You have successfully registrated to FLEXGene.</h3>
+ 
 <p>
 <a href="login.jsp">Login to <bean:message key="flex.name"/></a>
 </body>
 </html>
+ 

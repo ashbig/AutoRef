@@ -6,13 +6,10 @@
 <%@page isErrorPage="true"%>
 
 <html>
-<head><title><bean:message key="flex.name"/> Error</title></head>
+<head><title><bean:message key="flex.name"/> Find Registration Confirmation</title></head>
 <body>
     <h3>The information for your registration has been sent to you through email.</h3>
-    <html:errors/>
-    <logic:exists name="exception">
-        <bean:write name="exception"/>
-    </logic:exists>
+    
 
 <p>
 <a href="login.jsp">Login to <bean:message key="flex.name"/></a>

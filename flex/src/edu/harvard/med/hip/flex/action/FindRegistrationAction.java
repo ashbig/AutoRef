@@ -83,9 +83,9 @@ public final class FindRegistrationAction extends Action {
                 else if (reminder.equals("")){ 
                     errors.add("userID",new ActionError("error.userid.wrong", user_id));
                     saveErrors(request, errors);
-                    return (mapping.findForward("error"));
+                    return (mapping.findForward("failure"));
                 }
-                else
+                else if (accessManager.reminderUnique(reminder))
                 {
                     user_id= accessManager.findUser(reminder);
                     if (user_id!=null){
@@ -100,11 +100,16 @@ public final class FindRegistrationAction extends Action {
                     else {
                         errors.add("reminderText",new ActionError("error.useridandreminder.wrong", reminder));
                         saveErrors(request, errors);
-                        return (mapping.findForward("error"));
+                        return (mapping.findForward("failure"));
                     }
                 }
+                else{
+                    errors.add("reminder", new ActionError("error.reminder.notUnique",reminder));
+                    saveErrors(request, errors);
+                    return (mapping.findForward("failure"));
+                }                    
             }
-            else if ((reminder != null)&& (reminder.length()>0)){
+            else if ((reminder != null)&& (reminder.length()>0) && (accessManager.reminderUnique(reminder))){
                 user_id = accessManager.findUser(reminder);
                 if (user_id!=null){
                     password = accessManager.getPassword(user_id);
@@ -118,14 +123,19 @@ public final class FindRegistrationAction extends Action {
                 else {
                     errors.add("reminderText",new ActionError("error.reminder.wrong", reminder));
                     saveErrors(request, errors);
-                    return (mapping.findForward("error"));
+                    return (mapping.findForward("failure"));
                 }
+            }
+            else if (!accessManager.reminderUnique(reminder)){
+                errors.add("reminder", new ActionError("error.reminder.notUnique",reminder));
+                saveErrors(request, errors);
+                return (mapping.findForward("failure"));
             }
             else
             {
                 errors.add("term",new ActionError("error.term.required", reminder));
                 saveErrors(request, errors);
-                return (mapping.findForward("error"));
+                return (mapping.findForward("failure"));
             }
        }catch (Throwable th) {
             //System.out.println(th);
