@@ -62,10 +62,11 @@
 
 <table border="1">
     <tr>
-        <th>Sample</th><th>Type</th><th>Cell</th><!--<th>Status</th>--><th>Result</th>
+        <th>Sample</th><th>Type</th><th>Cell</th><th>Result</th>
     </tr>
     
-    <logic:iterate name="gelEntryForm" property="container.samples" id="curSample" indexId="i">
+    <logic:iterate name="gelEntryForm" property="container.samples" id="curSample" 
+    indexId="i" type="edu.harvard.med.hip.flex.core.Sample">
     <tr>
         <td>
             <bean:write name="curSample" property="id"/>
@@ -76,30 +77,26 @@
         <td>
             <bean:write name="curSample" property="position"/>
         </td>
-       <%-- <td>
-            <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
-                <html:select property='<%="status["+i+"]" %>'>
-                    <html:option value="<%=Sample.GOOD%>">Good</html:option>
-                    <html:option value="<%=Sample.BAD%>">Bad</html:option>
-                </html:select>
-            </logic:equal>
-            
-            <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
-                <bean:write name="gelEntryForm" property='<%="status["+i+"]" %>'/>
-            </logic:equal>
-
-        </td>
---%>
+      
         <td>
             <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
                 <html:select property='<%="result["+ i +"]" %>'>
+                    <%
+                    if(curSample.getType().toUpperCase().indexOf("CONTROL")  !=-1) {
+                    %>
+                        <html:option value="<%=Result.FAILED%>">Failed</html:option>
+                        <html:option value="<%=Result.SUCCEEDED%>">Succeeded</html:option>
+                    <%
+                    } else  {
+                    %>
                     <html:option value="<%=Result.CORRECT%>">Correct</html:option>
                     <html:option value="<%=Result.INCORRECT%>">Incorrect</html:option>
                     <html:option value="<%=Result.MUL_W_CORRECT%>">Multiple with correct</html:option>
                     <html:option value="<%=Result.MUL_WO_CORRECT%>">Multiple without correct</html:option>
                     <html:option value="<%=Result.NO_PRODUCT%>">No product</html:option>
-                    <html:option value="<%=Result.FAILED%>">Failed</html:option>
-                    <html:option value="<%=Result.SUCCEEDED%>">Succeeded</html:option>
+                    <%
+                    }
+                    %>
                 </html:select>
              </logic:equal>
              
