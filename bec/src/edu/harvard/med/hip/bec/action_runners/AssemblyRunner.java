@@ -174,7 +174,7 @@ public class AssemblyRunner extends ProcessRunner
                     message =  getTitle()+  Constants.LINE_SEPARATOR +"Process finished.";
                     if ( m_items != null && m_items.length() > 0)
                         message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
-                     Mailer.sendMessage      ( m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",  "elena_taycher@hms.harvard.edu", getTitle(), message);
+                     Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "hip_informatics@hms.harvard.edu", getTitle(), message);
 
                 }catch(Exception e1){}
                 if ( conn != null) DatabaseTransaction.closeConnection(conn);
