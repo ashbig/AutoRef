@@ -9,6 +9,7 @@ package edu.harvard.med.hip.flex.core;
 import java.util.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.query.handler.QueryManager;
 
 /**
  *
@@ -16,6 +17,9 @@ import edu.harvard.med.hip.flex.database.*;
  */
 public class CloneInfoSet {
     protected ArrayList allCloneInfo;
+    protected String criteria;
+    
+    public void setCriteria(String s) {this.criteria = s;}
     
     public ArrayList getAllCloneInfo() {return allCloneInfo;}
     
@@ -47,8 +51,13 @@ public class CloneInfoSet {
         " where c.constructid=cd.constructid"+
         " and f.sequenceid=cd.sequenceid"+
         " and c.strategyid=cs.strategyid"+
-        " and c.sequenceid=?"+
-        " order by c.sequenceid";
+        " and c.sequenceid=?";
+        
+        if(QueryManager.SEQUENCE_VERIFIED.equals(criteria)) {
+            sql += " and c.status='"+CloneInfo.SEQ_VERIFIED+"'";
+        }
+        
+        sql += " order by c.sequenceid";
         
         restore(sql, seqids);
     }

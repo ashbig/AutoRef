@@ -58,8 +58,12 @@ public class GetSearchResultsAction extends FlexAction {
         String condition = ((QueryFlexForm)form).getCondition();
         int currentPage = ((QueryFlexForm)form).getCurrentPage();
         int pageSize = ((QueryFlexForm)form).getPageSize();
-
+        String searchCriteria = ((QueryFlexForm)form).getSearchCriteria();
+        String cloneCriteria = ((QueryFlexForm)form).getCloneCriteria();
+        
         QueryManager manager = new QueryManager();
+        manager.setSearchCriteria(searchCriteria);
+        manager.setCloneCriteria(cloneCriteria);
         
         List params = manager.getParams(searchid);
         request.setAttribute("params", params);
@@ -102,6 +106,11 @@ public class GetSearchResultsAction extends FlexAction {
             request.setAttribute("results", founds);
             request.setAttribute("searchid", new Integer(searchid));
             request.setAttribute("condition", condition);
+            
+            if(QueryManager.DETAIL.equals(searchCriteria)) {
+                return mapping.findForward("success_found_detail");
+            }
+            
             return (mapping.findForward("success_found"));
         } else if("nofound".equals(condition)) {
             List nofounds = manager.getNoFounds(searchid);

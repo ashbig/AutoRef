@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.flex.query.core;
 
 import java.util.*;
+import edu.harvard.med.hip.flex.core.ConstructInfo;
 
 /**
  *
@@ -102,6 +103,24 @@ public class MatchGenbankRecord {
     
     public int getNumOfMatchFlexSequence() {
         return matchFlexSequence.size();
+    }
+    
+    public int getNumOfMatchClones() {
+        if(matchFlexSequence == null || matchFlexSequence.size() == 0) {
+            return 1;
+        }
+        
+        int num = 0;
+        for(int i=0; i<matchFlexSequence.size(); i++) {
+            MatchFlexSequence mfs = (MatchFlexSequence)matchFlexSequence.get(i);
+            int n = mfs.getNumOfClones();
+            if(n > 0) {
+                num = num + n;
+            } else {
+                n++;
+            }
+        }
+        return num;
     }
     
     public String getLocusid() {return locusid;}

@@ -19,7 +19,17 @@ import edu.harvard.med.hip.flex.core.*;
  * @author  DZuo
  */
 public class QueryManager {
-    String error = null;
+    public static final String SUMMARY = "Summary";
+    public static final String DETAIL = "Detail";
+    public static final String ALL = "All";
+    public static final String SEQUENCE_VERIFIED = "Sequence Verified";
+    
+    private String error = null;
+    private String cloneCriteria = ALL;
+    private String searchCriteria = SUMMARY;
+    
+    public void setCloneCriteria(String s) {this.cloneCriteria = s;}
+    public void setSearchCriteria(String s) {this.searchCriteria = s;}
     
     /** Creates a new instance of QueryManager */
     public QueryManager() {
@@ -155,124 +165,33 @@ public class QueryManager {
     }
     
     public List getFounds(int searchid) {
-        List founds = new ArrayList();
         String sql = "select * from searchresult where isfound='"+SearchResult.GENBANK_FOUND+"' and searchid="+searchid;
-        String sql2 = "select * from matchgenbankrecord where searchresultid=?";
-        String sql3 = "select * from matchflexsequence where matchgenbankid=?";
-        String sql4 = "select * from blasthit where matchflexid=?";
-        String sql5 = "select * from flexsequence where sequenceid=?";
-        PreparedStatement stmt2 = null;
-        PreparedStatement stmt3 = null;
-        PreparedStatement stmt4 = null;
-        PreparedStatement stmt5 = null;
-        ResultSet rs = null;
-        ResultSet rs2 = null;
-        ResultSet rs3 = null;
-        ResultSet rs4 = null;
-        ResultSet rs5 = null;
-        DatabaseTransaction t = null;
-        Connection conn = null;
-        try {
-            t = DatabaseTransaction.getInstance();
-            conn = t.requestConnection();
-            stmt2 = conn.prepareStatement(sql2);
-            stmt3 = conn.prepareStatement(sql3);
-            stmt4 = conn.prepareStatement(sql4);
-            stmt5 = conn.prepareStatement(sql5);
-            
-            rs = t.executeQuery(sql);
-            while(rs.next()) {
-                int searchresultid = rs.getInt(1);
-                String searchTerm = rs.getString(2);
-                String isFound = rs.getString(3);
-                
-                stmt2.setInt(1,  searchresultid);
-                rs2 = DatabaseTransaction.executeQuery(stmt2);
-                List mgss = new ArrayList();
-                while(rs2.next()) {
-                    int matchgenbankid = rs2.getInt(1);
-                    String accession = rs2.getString(2);
-                    String gi = rs2.getString(3);
-                    String method = rs2.getString(4);
-                    String locusid = rs2.getString(6);
-                    String unigene = rs2.getString(7);
-                    
-                    stmt3.setInt(1, matchgenbankid);
-                    rs3 = DatabaseTransaction.executeQuery(stmt3);
-                    List mfss = new ArrayList();
-                    while(rs3.next()) {
-                        int matchflexid = rs3.getInt(1);
-                        String isMatchByGi = rs3.getString(2);
-                        int flexsequenceid = rs3.getInt(4);
-                        
-                        stmt4.setInt(1, matchflexid);
-                        rs4 = DatabaseTransaction.executeQuery(stmt4);
-                        BlastHit bh = null;
-                        if(rs4.next()) {
-                            int querylength = rs4.getInt(2);
-                            int sublength = rs4.getInt(3);
-                            String output = rs4.getString(4);
-                            bh = new BlastHit(querylength,sublength,null,output);
-                        }
-                        
-                        stmt5.setInt(1, flexsequenceid);
-                        rs5 = DatabaseTransaction.executeQuery(stmt5);
-                        FlexSequence sequence = null;
-                        if(rs5.next()) {
-                            int sequenceid = rs5.getInt(1);
-                            String flexStatus = rs5.getString(2);
-                            String species = rs5.getString(3);
-                            int start = rs5.getInt(4);
-                            int stop = rs5.getInt(5);
-                            int length = rs5.getInt(6);
-                            int gccontent = rs5.getInt(7);
-                            String source = rs5.getString(8);
-                            String chromosome = rs5.getString(9);
-                            sequence = new FlexSequence(sequenceid,flexStatus,species,null,null,start,stop,length,gccontent,null,source,chromosome);
-                        }
-                        
-                        MatchFlexSequence mfs = new MatchFlexSequence(matchflexid, isMatchByGi, flexsequenceid, sequence, bh);
-                        mfss.add(mfs);
-                    }
-                    
-                    MatchGenbankRecord mgs = new MatchGenbankRecord(matchgenbankid,accession,gi, method, mfss, locusid, unigene);
-                    mgss.add(mgs);
-                }
-                
-                SearchResult result = new SearchResult(searchresultid,searchTerm,isFound,mgss,null,searchid);
-                founds.add(result);
-            }
-            
-            return founds;
-        } catch (Exception ex) {
-            error = new String(ex.getMessage());
-            return null;
-        } finally {
-            DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeResultSet(rs2);
-            DatabaseTransaction.closeResultSet(rs3);
-            DatabaseTransaction.closeResultSet(rs4);
-            DatabaseTransaction.closeResultSet(rs5);
-            DatabaseTransaction.closeStatement(stmt2);
-            DatabaseTransaction.closeStatement(stmt3);
-            DatabaseTransaction.closeStatement(stmt4);
-            DatabaseTransaction.closeStatement(stmt5);
-            DatabaseTransaction.closeConnection(conn);
-        }
+        return queryFounds(sql, searchid);
     }
     
     public List getFounds(int searchid, int startRecord, int endRecord) {
-        List founds = new ArrayList();
         String sql = "select * from searchresult "+
         " where isfound='"+SearchResult.GENBANK_FOUND+"' and searchid="+searchid+
         " and rownum<="+endRecord+" minus "+
         " (select * from searchresult "+
         " where isfound='"+SearchResult.GENBANK_FOUND+"' and searchid="+searchid+
         " and rownum<="+startRecord+")";
+        return queryFounds(sql, searchid);
+    }
+    
+    private List queryFounds(String sql, int searchid) {
+        List founds = new ArrayList();
+        Set seqids = new TreeSet();
+        
         String sql2 = "select * from matchgenbankrecord where searchresultid=?";
         String sql3 = "select * from matchflexsequence where matchgenbankid=?";
         String sql4 = "select * from blasthit where matchflexid=?";
         String sql5 = "select * from flexsequence where sequenceid=?";
+        
+        if(SEQUENCE_VERIFIED.equals(cloneCriteria)) {
+            sql5 += " and flexstatus='"+FlexSequence.OBTAINED+"'";
+        }
+        
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
         PreparedStatement stmt4 = null;
@@ -305,8 +224,8 @@ public class QueryManager {
                     int matchgenbankid = rs2.getInt(1);
                     String accession = rs2.getString(2);
                     String gi = rs2.getString(3);
-                    String method = rs2.getString(4);
-                    String locusid = rs2.getString(6);
+                    String method = rs2.getString(6);
+                    String locusid = rs2.getString(4);
                     String unigene = rs2.getString(7);
                     
                     stmt3.setInt(1, matchgenbankid);
@@ -343,16 +262,37 @@ public class QueryManager {
                             sequence = new FlexSequence(sequenceid,flexStatus,species,null,null,start,stop,length,gccontent,null,source,chromosome);
                         }
                         
-                        MatchFlexSequence mfs = new MatchFlexSequence(matchflexid, isMatchByGi, flexsequenceid, sequence, bh);
-                        mfss.add(mfs);
+                        if(sequence != null) {
+                            MatchFlexSequence mfs = new MatchFlexSequence(matchflexid, isMatchByGi, flexsequenceid, sequence, bh);
+                            mfss.add(mfs);
+                            seqids.add((new Integer(flexsequenceid)).toString());
+                        }
                     }
                     
-                    MatchGenbankRecord mgs = new MatchGenbankRecord(matchgenbankid,accession,gi, method, mfss, locusid, unigene);
-                    mgss.add(mgs);
+                    MatchGenbankRecord mgs = null;
+                    if(mfss.size() > 0) {
+                        mgs = new MatchGenbankRecord(matchgenbankid,accession,gi, method, mfss, locusid, unigene);
+                    }
+                    if(mgs != null) {
+                        mgss.add(mgs);
+                    }
                 }
                 
-                SearchResult result = new SearchResult(searchresultid,searchTerm,isFound,mgss,null,searchid);
-                founds.add(result);
+                SearchResult result = null;
+                if(mgss.size() > 0) {
+                    result = new SearchResult(searchresultid,searchTerm,isFound,mgss,null,searchid);
+                }
+                
+                if(result != null) {
+                    founds.add(result);
+                }
+            }
+            
+            if(searchCriteria.equals(DETAIL)) {
+                List ids = new ArrayList();
+                ids.addAll(seqids);
+                List constructInfoList = getConstructInfo(ids);
+                setConstructInfo(founds, constructInfoList);
             }
             
             return founds;
@@ -373,7 +313,7 @@ public class QueryManager {
         }
     }
     
-    public List getConstructInfo(List seqids) {        
+    public List getConstructInfo(List seqids) {
         List infos = new ArrayList();
         
         String sql = "select cd.constructid, cd.oligoid_5p, cd.oligoid_3p, cd.constructtype,"+
@@ -384,6 +324,11 @@ public class QueryManager {
         " and cd.projectid=p.projectid"+
         " and cd.workflowid=w.workflowid"+
         " and cd.sequenceid=?";
+        
+        if(SEQUENCE_VERIFIED.equals(cloneCriteria)) {
+            sql += " and cl.statusid="+ConstructInfo.SEQUENCE_VERIFIED_CLONES_OBTAINED_ID;
+        } 
+        
         DatabaseTransaction t = null;
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -398,7 +343,6 @@ public class QueryManager {
                 int seqid = Integer.parseInt((String)seqids.get(i));
                 stmt.setInt(1, seqid);
                 rs = DatabaseTransaction.executeQuery(stmt);
-                
                 List constructInfoList = new ArrayList();
                 while(rs.next()) {
                     int constructid = rs.getInt(1);
@@ -410,7 +354,6 @@ public class QueryManager {
                     int workflowid = rs.getInt(7);
                     String workflowName = rs.getString(8);
                     String status = rs.getString(9);
-                    
                     if(status == null) {
                         status = ConstructInfo.IN_CLONING_PROCESS;
                     }
@@ -424,6 +367,7 @@ public class QueryManager {
             }
             
             CloneInfoSet infoSet = new CloneInfoSet();
+            infoSet.setCriteria(cloneCriteria);
             infoSet.restoreBySequenceid(seqids);
             List allClones = infoSet.getAllCloneInfo();
             for(int i=0; i<allClones.size(); i++) {
@@ -521,6 +465,40 @@ public class QueryManager {
         }
     }
     
+    private void setConstructInfo(List founds, List constructInfoList) {
+        if(founds == null || founds.size() == 0 || constructInfoList == null || constructInfoList.size() == 0) {
+            return;
+        }
+        
+        for(int i=0; i<constructInfoList.size(); i++) {
+            ConstructInfoBean infoBean = (ConstructInfoBean)constructInfoList.get(i);
+            int seqid = infoBean.getSequenceid();
+            List infos = infoBean.getConstructInfos();
+            for(int m=0; m<infos.size(); m++) {
+                ConstructInfo info = (ConstructInfo)infos.get(m);
+            }
+            
+            for (int j=0; j<founds.size(); j++) {
+                SearchResult result = (SearchResult)founds.get(j);
+                List mgss = result.getFound();
+                if(mgss != null) {
+                    for(int n=0; n<mgss.size(); n++) {
+                        MatchGenbankRecord mgr = (MatchGenbankRecord)mgss.get(n);
+                        List mfss = mgr.getMatchFlexSequence();
+                        if(mfss != null) {
+                            for(int k=0; k<mfss.size(); k++) {
+                                MatchFlexSequence mfs = (MatchFlexSequence)mfss.get(k);
+                                if(mfs.getFlexsequenceid() == seqid) {
+                                    mfs.setConstructInfos(infos);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     public static void main(String args[]) {
         QueryManager manager = new QueryManager();
         List seqids = new ArrayList();
@@ -554,7 +532,9 @@ public class QueryManager {
         System.out.println("Number of results: "+manager.getNumOfResults(1));
         
         System.out.println("=============== Test getFounds ================");
-        List founds = manager.getFounds(1);
+        //manager.setSearchCriteria(QueryManager.DETAIL);
+        manager.setCloneCriteria(QueryManager.SEQUENCE_VERIFIED);
+        List founds = manager.getFounds(2);
         if(founds == null) {
             System.out.println(manager.getError());
         } else {
@@ -579,6 +559,7 @@ public class QueryManager {
                         System.out.println("\t\tmatch flex id: "+mfs.getMatchFlexId());
                         System.out.println("\t\tis match by gi: "+mfs.getIsMatchByGi());
                         System.out.println("\t\tflex sequence id: "+mfs.getFlexsequenceid());
+                        System.out.println("\t\tnumber of clones: "+mfs.getNumOfClones());
                         
                         BlastHit bh = mfs.getBlastHit();
                         if(bh != null) {

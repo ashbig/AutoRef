@@ -1275,6 +1275,7 @@
                validate="false"
                input="/GetAllSearchRecords.do">
       <forward  name="success_found"   path="/ViewFoundResults.jsp"/>
+      <forward  name="success_found_detail"   path="/ViewFoundResultsDetail.jsp"/>
       <forward  name="success_nofound"   path="/ViewNoFoundResults.jsp"/>
       <forward  name="fail"   path="/ViewResultsFail.jsp"/>
       <forward  name="empty"   path="/ViewSearchResultsEmpty.jsp"/>

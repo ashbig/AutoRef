@@ -413,6 +413,7 @@ public class SummaryTablePopulator {
     public static void main(String args[]) {
         //List containers = getContainers();
         List containers = new ArrayList();
+        containers.add(new Integer(3109));
         //containers.add(new Integer(8299));
         //containers.add(new Integer(8300));
         //containers.add(new Integer(7150));
@@ -428,7 +429,7 @@ public class SummaryTablePopulator {
         //containers.add(new Integer(8220));       
         //containers.add(new Integer(8221));       
         //containers.add(new Integer(8222));
-       
+       /**
         List samples = new ArrayList();
         samples.add(new Integer(100271));
         samples.add(new Integer(100276));
@@ -440,7 +441,7 @@ public class SummaryTablePopulator {
         samples.add(new Integer(123262));
         samples.add(new Integer(123371));
         samples.add(new Integer(123316));
-        
+        */
         /**
          List samples = getSamples();
         
@@ -456,8 +457,8 @@ public class SummaryTablePopulator {
         
         SummaryTablePopulator populator = new SummaryTablePopulator();
         
-        //if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
-        if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {            
+        if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
+        //if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {            
             populator.sendEmail(true, containers);            
         } else {
             populator.sendEmail(false, containers);

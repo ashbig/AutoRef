@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.5 2004-03-04 22:13:44 dzuo Exp $
+ * $Id: Oligo.java,v 1.6 2004-03-19 00:44:14 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -136,7 +136,7 @@ public class Oligo {
         } else if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
             tagSequence = GATEWAYTAG_5p + sequence;
         } else if(workflowid == Workflow.GATEWAY_WORKFLOW) {
-            if(projectId == Project.YP || projectId == Project.YEAST) {
+            if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT) {
                 tagSequence = GATEWAY_YP_5p + sequence;
             } else {
                 tagSequence = GATEWAYTAG_5p + sequence;
@@ -185,7 +185,7 @@ public class Oligo {
         } else if (workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
             tagSequence = GATEWAYTAG_3p_CLOSE + sequence; 
         } else if(workflowid == Workflow.GATEWAY_WORKFLOW) {
-            if(projectId == Project.YP || projectId == Project.YEAST) {
+            if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT) {
                 tagSequence = GATEWAY_YP_3p + sequence;
             } else {
                 tagSequence = GATEWAYTAG_3p_CLOSE + sequence;

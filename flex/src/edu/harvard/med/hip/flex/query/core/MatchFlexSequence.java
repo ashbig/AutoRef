@@ -7,6 +7,8 @@
 package edu.harvard.med.hip.flex.query.core;
 
 import edu.harvard.med.hip.flex.core.FlexSequence;
+import edu.harvard.med.hip.flex.core.ConstructInfo;
+import java.util.*;
 
 /**
  *
@@ -23,10 +25,12 @@ public class MatchFlexSequence {
     private int matchGenbankId;
     private FlexSequence flexSequence;
     
+    private List constructInfos;
+    
     /** Creates a new instance of MatchFlexSequence */
     public MatchFlexSequence() {
     }
-        
+    
     public MatchFlexSequence(String isMatchByGi, int id, BlastHit hit) {
         this.isMatchByGi = isMatchByGi;
         this.flexsequenceid = id;
@@ -87,6 +91,32 @@ public class MatchFlexSequence {
     
     public void setFlexSequence(FlexSequence seq) {
         this.flexSequence = seq;
+    }
+    
+    public List getConstructInfos() {
+        return constructInfos;
+    }
+    
+    public void setConstructInfos(List constructInfos) {
+        this.constructInfos = constructInfos;
+    }
+    
+    public int getNumOfClones() {
+        if(constructInfos == null || constructInfos.size() == 0)
+            return 1;
+    
+        int num = 0;
+        
+        for(int j=0; j<constructInfos.size(); j++) {
+            ConstructInfo c = (ConstructInfo)constructInfos.get(j);
+            int n = c.getNumOfClones();
+            if(n > 0) {
+                num = num + n;
+            } else {
+                num++;
+            }
+        }
+        return num;
     }
     
     public String getFoundBy() {

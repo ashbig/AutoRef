@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
+<%@ page import="edu.harvard.med.hip.flex.query.handler.QueryManager" %>
 
 <html>
 <head>
@@ -29,6 +30,17 @@
 
 <p>
 <html:form action="/GetSearchResults.do">
+    View options: <html:select property="searchCriteria">
+                    <html:option value="<%=QueryManager.SUMMARY%>"/>
+                    <html:option value="<%=QueryManager.DETAIL%>"/>
+                  </html:select>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <html:select property="cloneCriteria">
+                    <html:option value="<%=QueryManager.ALL%>"/>
+                    <html:option value="<%=QueryManager.SEQUENCE_VERIFIED%>"/>
+                  </html:select>
+                 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Total pages: <bean:write name="pages"/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
     Page   <html:select property="currentPage">
             <html:options collection="allPages" property="name" labelProperty="value"/>  

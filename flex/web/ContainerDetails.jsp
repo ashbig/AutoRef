@@ -89,6 +89,7 @@
         <th>Construct</th>
         <th>Oligo</th>
         <th>Predicted CDS Length</th>
+        <th>Clone ID</th>
         <logic:present name="process">
             <th>Result</th>
         </logic:present>
@@ -125,7 +126,8 @@
             <td><bean:write name="sample" property="oligoid"/></td>
         </logic:notEqual>
          
-        <td><bean:write name="sample" property="cdslength"/></td>       
+        <td><bean:write name="sample" property="cdslength"/></td>   
+        <td><flex:write name="sample" property="cloneid"/></td>    
                     
           <logic:present name="process">
             <td>

@@ -46,7 +46,7 @@ public class GiRecordPopulator {
             //System.out.println("Sequence file: "+giRecord.getSequenceFile());
             //System.out.println("sequence: "+giRecord.getSequenceText());
             try {
-                String file = writeFile(giRecord.getGi(), giRecord.getSequenceText());
+                String file = writeFile(giRecord.getGi(), new StringBuffer(giRecord.getSequenceText()));
                 giRecord.setSequenceFile(file);
                 insertList.add(giRecord);
             } catch (Exception ex) {
@@ -68,12 +68,11 @@ public class GiRecordPopulator {
             DatabaseTransaction.closeConnection(conn);
         }
     }
-    
-    private String writeFile(String gi, String sf) throws Exception {
+            
+    public String writeFile(String gi, StringBuffer sf) throws Exception {
         String file = FlexSeqAnalyzer.BLAST_BASE_DIR+BLAST_FILE_DIR+gi;
         PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-        pr.print(">gi|"+gi);
-        pr.println(CDNASequence.convertToFasta(sf));
+        pr.println(sf.toString());
         pr.close();
         
         return file;
@@ -93,6 +92,7 @@ public class GiRecordPopulator {
             stmt.setString(5, gr.getSequenceFile());
             stmt.setString(6, gr.getLocusid());
             stmt.setString(7, gr.getUnigene());
+            System.out.println("insert: "+gr.getGi());
             DatabaseTransaction.executeUpdate(stmt);
         }
         
@@ -251,6 +251,53 @@ public class GiRecordPopulator {
         }
     }
     
+    public void parseFile(String file, Connection conn) throws Exception {
+        List records = new ArrayList();
+        
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        String line = null;
+        StringBuffer sb = new StringBuffer();
+        String gi = null;
+        String filename = null;
+        
+        int count = 0;
+        while((line = in.readLine()) != null) {
+            if(line.trim().equals("")) {
+                filename = writeFile(gi, sb);
+                sb = new StringBuffer();
+                GiRecord gr = new GiRecord(gi, filename);
+                records.add(gr);
+                count++;
+                
+                if(count == 200) {
+                    insertDB(records, conn);
+                    DatabaseTransaction.commit(conn);
+                    records = new ArrayList();
+                    count = 0;
+                }
+                
+                continue;
+            }
+            
+            sb.append(line+"\n");
+            
+            if(line.indexOf(">") == 0) {
+                StringTokenizer st = new StringTokenizer(line);
+                String skip = st.nextToken("|");
+                gi = st.nextToken("|");
+            }
+        }
+        
+        filename = writeFile(gi, sb);
+        GiRecord gr = new GiRecord(gi, filename);
+        records.add(gr);
+        count++;
+        insertDB(records, conn);
+        DatabaseTransaction.commit(conn);
+        
+        in.close();
+    }
+    
     public static void main(String args[]) {
         /**   List giList = new ArrayList();
          * giList.add("32450632");
@@ -274,8 +321,26 @@ public class GiRecordPopulator {
          * populator.persistRecords();
          **/
         GiRecordPopulator populator = new GiRecordPopulator();
-        //populator.updateAccession();
-        //populator.updateLocus();
+        populator.updateAccession();
+        populator.updateLocus();
         populator.updateUnigene();
+       /**         
+        String file = "H:\\programs\\locus_gi_fasta";
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        GiRecordPopulator parser = new GiRecordPopulator();
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            parser.parseFile(file, conn);
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            System.out.println(ex);
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }*/
     }
 }
