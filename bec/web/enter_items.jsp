@@ -55,16 +55,16 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
     <td colspan=2 bgColor="#1145A6"> <font color="#FFFFFF"><strong>Select Items Type: </strong></font></td>
   </tr>
   <tr> 
-    <td><strong><input type="radio" name="item_type" value="1" checked>Container Labels</strong></td>
-    <td><strong><input type="radio" name="item_type" value="4" >BEC Sequence ID(clone sequence id)</strong></td>
+    <td><strong><input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_PLATE_LABELS%>" checked>Container Labels</strong></td>
+    <td><strong><input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_BECSEQUENCE_ID%>" >BEC Sequence ID(clone sequence id)</strong></td>
   </tr>
   <tr> 
-    <td><strong>  <input type="radio" name="item_type" value="2">Clone Ids</strong></td>
+    <td><strong>  <input type="radio" name="item_type" value="<%=Constants.ITEM_TYPE_CLONEID%>" >Clone Ids</strong></td>
 <td>
 <% if ( forwardName_int == Constants.PROCESS_RUN_PRIMER3 ||
 forwardName_int == Constants.PROCESS_VIEW_INTERNAL_PRIMERS)
 {%>
-<strong>  <input type="radio" name="item_type" value="3">FLEX Sequence Ids</strong><%}
+<strong>  <input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_FLEXSEQUENCE_ID %>">FLEX Sequence Ids</strong><%}
 else
 {%>&nbsp;<%}%>
 </td>
