@@ -24,12 +24,13 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
+import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.action_runners.*;
-
+import edu.harvard.med.hip.bec.util.*;
 
 /**
  *
@@ -55,7 +56,7 @@ public class SelectProcessAction extends ResearcherAction
         
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
-        ArrayList specs = new ArrayList();
+      
         Thread t = null;
         try
         {
@@ -78,11 +79,28 @@ public class SelectProcessAction extends ResearcherAction
                 {
                     ArrayList vectors = BioVector.getAllVectors();
                     request.setAttribute(Constants.VECTOR_COL_KEY, vectors);
-                    request.setAttribute("forwardName", new Integer(Constants.PROCESS_RUN_END_READS));
+                    request.setAttribute("forwardName", new Integer(Constants.PROCESS_SELECT_PLATES_FOR_END_READS));
                     return (mapping.findForward("select_vector"));
                 }
-                case Constants.PROCESS_RUN_END_READS://run sequencing for end reads
+                case Constants.PROCESS_SELECT_PLATES_FOR_END_READS://run sequencing for end reads
                 {
+                     //get all specs for each of the three types and all plates where
+                    int vector_id = Integer.parseInt( (String) request.getParameter(Constants.VECTOR_ID_KEY));
+                    ArrayList spec_collection = new ArrayList();
+                    ArrayList primers = BioVector.getVectorPrimers(vector_id);
+                    ArrayList spec_names = new ArrayList();
+                    ArrayList control_names = new ArrayList();
+                    spec_collection.add( primers);spec_names.add("5p primer");control_names.add("5p_primerid");
+                    spec_collection.add(  primers);spec_names.add("3p primer");control_names.add("3p_primerid");
+                    request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
+                    request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
+                    request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
+                    // there are isolates subject to isolateranking
+                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS);
+                    request.setAttribute(Constants.PLATE_NAMES_COLLECTION, plateNames);
+                       
+                    request.setAttribute("process_name", "Request End Reads");
+                    return (mapping.findForward("select_plates"));
                 }
                 case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
                 {
@@ -110,8 +128,31 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
                 {
                     //get all specs for each of the three types and all plates where
-                    // there are isolates subject to isolateranking
+                    ArrayList spec_collection = new ArrayList();
+                    ArrayList specs = null;
+                    ArrayList spec_names = new ArrayList();
+                    ArrayList control_names = new ArrayList();
+                    spec_collection.add( FullSeqSpec.getAllSpecNames() );
+                    spec_names.add("Bio Evaluation of Clones");
+                    control_names.add(Spec.FULL_SEQ_SPEC);
+                    spec_collection.add(  EndReadsSpec.getAllSpecNames());
+                     spec_names.add("End reads Evaluation");
+                     control_names.add(Spec.END_READS_SPEC);
+                    specs =  PolymorphismSpec.getAllSpecNames();
+                    Spec spec = new PolymorphismSpec(null,Spec.NONE_SPEC , BecIDGenerator.BEC_OBJECT_ID_NOTSET,BecIDGenerator.BEC_OBJECT_ID_NOTSET) ;
+                    specs.add(spec);
                     
+                    spec_collection.add( specs);
+                     spec_names.add("Polymorphism Finder");
+                     control_names.add(Spec.POLYMORPHISM_SPEC);
+                    request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
+                    request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
+                     request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
+                    // there are isolates subject to isolateranking
+                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_RUN_ISOLATE_RUNKER);
+                    request.setAttribute(Constants.PLATE_NAMES_COLLECTION, plateNames);
+                    request.setAttribute("process_name", "Run Isolate Ranker");
+                    return (mapping.findForward("select_plates"));
                 }
                
                

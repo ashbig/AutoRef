@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.13 2003-08-29 18:41:26 Elena Exp $
+ * $Id: Container.java,v 1.14 2003-08-29 21:21:13 Elena Exp $
  *
  * File     	: Container.java
 
@@ -252,7 +252,55 @@ public class Container
        
     }
     
-  
+     public static ArrayList findContainerLabelsForProcess(int process_code) throws    BecDatabaseException
+    {
+        //define isolatetracking id statuses for the process
+        String istr_status = null;
+        String sql = null;
+        switch (process_code)
+        {
+            case Constants.PROCESS_SELECT_PLATES_FOR_END_READS:
+            {
+                sql = "select distinct label from containerheader where containerid in "
+                + " (select containerid from sample where sampleid in "
+                + " (select sampleid from isolatetracking where status in ("+IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER+")))";
+                break;
+            }
+            case Constants.PROCESS_RUN_ISOLATE_RUNKER:
+            {
+                 sql = "select distinct label from containerheader where containerid in "
+                + " (select containerid from sample where sampleid in "
+                + " (select sampleid from isolatetracking where status in ("+IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED+
+                ","+IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED +","+ IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH + ")))";
+                break;
+            }
+        }
+        if (sql == null) return null;
+        ArrayList container_labels = new ArrayList();
+        
+        
+        ResultSet rs = null;
+        Container container = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                container_labels.add(      rs.getString("label"));
+            }
+            return container_labels;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured searching for containers for the process\nSQL: "+sqlE);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+       
+    }
+    
     public int          getId()    {        return m_id;    }
     public int          getStatus()    {        return m_status;}
     public String       getLabel()    {        return m_label;    }
