@@ -161,7 +161,7 @@
 
                     <logic:iterate name="constructInfo" property="clones" id="clone">
                         <td>
-                            <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&isCloneStorageDisplay=<bean:write name="<%=Constants.ISDISPLAY%>"/>">
+                            <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&<%=Constants.ISDISPLAY%>=<bean:write name="<%=Constants.ISDISPLAY%>"/>">
                             <flex:write name="clone" property="cloneid"/>
                             </A>
                             <bean:define id="form" name="queryFlexForm"/>

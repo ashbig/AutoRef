@@ -55,7 +55,7 @@
                 <flex:write name="clone" property="nameinfo.genesymbol"/>
             </TD>
             <TD>
-                <a target="_blank" href="ViewClone.do?cloneid=<flex:write name="clone" property="cloneid"/>&isCloneStorageDisplay=<bean:write name="isCloneStorageDisplay"/>"><flex:write name="clone" property="clonename"/></a>
+                <a target="_blank" href="ViewClone.do?cloneid=<flex:write name="clone" property="cloneid"/>&<%=Constants.ISDISPLAY%>=<bean:write name="<%=Constants.ISDISPLAY%>"/>"><flex:write name="clone" property="clonename"/></a>
             </TD>
             <TD>
                 <flex:write name="clone" property="constructtype"/>

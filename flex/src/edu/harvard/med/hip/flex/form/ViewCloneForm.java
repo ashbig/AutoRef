@@ -23,15 +23,15 @@ import java.util.*;
  * </ul>
  *
  * @author $Author: dzuo $
- * @version $Revision: 1.2 $ $Date: 2003-07-17 18:19:53 $
+ * @version $Revision: 1.3 $ $Date: 2004-06-11 18:26:49 $
  */
 
 public class ViewCloneForm extends ActionForm {
     protected int cloneid;    
-    protected int isCloneStorageDisplay = 0;
+    protected int isDisplay = 0;
     
     public void setCloneid(int cloneid) {this.cloneid = cloneid;}
-    public void setIsCloneStorageDisplay(int i) {this.isCloneStorageDisplay = i;}
+    public void setIsDisplay(int i) {this.isDisplay = i;}
     public int getCloneid() {return cloneid;}
-    public int getIsCloneStorageDisplay() {return isCloneStorageDisplay;}
+    public int getIsDisplay() {return isDisplay;}
 }
