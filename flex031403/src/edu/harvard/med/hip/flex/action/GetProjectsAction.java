@@ -36,6 +36,7 @@ import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.workflow.*;
+import edu.harvard.med.hip.flex.Constants;
 
 /**
  *
@@ -68,7 +69,16 @@ public class GetProjectsAction extends ResearcherAction {
         String forwardName = ((ProjectWorkflowForm)form).getForwardName();
         
         try {
-            Vector projects = Project.getAllProjects();
+            Vector projects = null;
+            
+            if(Constants.MGC_PLATE_HANDLE.equals(forwardName)) {
+                Project p = new Project(Project.MGC_PROJECT);
+                projects = new Vector();
+                projects.add(p);
+            } else {
+                projects = Project.getAllProjects();
+            }
+            
             request.setAttribute("projects", projects);
             
             if(Constants.IMPORT_SEQUENCES.equals(forwardName)) {
