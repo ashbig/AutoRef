@@ -378,10 +378,9 @@ public class MgcMasterListImporter
             pubinfo_entry_locus_link.put(FlexSequence.NAMEURL,"http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=" + seqData.get("locus_link" ) );
             publicInfo.add(pubinfo_entry_locus_link);
         }
-        
-        gccont =  (int) gc_content(seqText);
-        cdsLength = (start==-1 || stop == -1) ? 0 : stop - start +1;
-        
+      
+        cdsLength = (start==-1 || stop == -1)? 0 : stop - start +1;
+        gccont = gc_content(seqText.substring(start-1, stop));
         FlexSequence seq = new FlexSequence(-1, FlexSequence.NEW,
         "Homo sapiens", null, seqText, start, stop,
         cdsLength, gccont, publicInfo);
@@ -394,25 +393,9 @@ public class MgcMasterListImporter
         {
             return null;
         }
-        
     }
     
-    //calculates gc_content for the sequence shold be some other place
-    private double gc_content(String seq)
-    {
-        int i=0  ;
-        seq = seq.toLowerCase();
-        char seq_char[] = seq.toCharArray();
-        for (int j=0;j<seq_char.length;j++)
-        {
-            if (seq_char[j]=='g' || seq_char[j]=='c')
-            {
-                i++;
-            }
-        }
-        return (i*100/seq_char.length);
-    }
-    
+  
     
     
     /**Load sequence, mgc container and mgc sample information into database
@@ -536,6 +519,21 @@ public class MgcMasterListImporter
         { errors_to_print.add("Can not open log file");}
     }
     
+     //calculates gc_content for the sequence shold be some other place
+    private int gc_content(String seq)
+    {
+        int i=0  ;
+        seq = seq.toLowerCase();
+        char seq_char[] = seq.toCharArray();
+        for (int j=0;j<seq_char.length;j++)
+        {
+            if (seq_char[j]=='g' || seq_char[j]=='c')
+            {
+                i++;
+            }
+        }
+        return i;
+    }
     //****************************Testing*******************************
     
     public static void main(String args[])
