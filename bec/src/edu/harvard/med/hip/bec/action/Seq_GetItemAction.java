@@ -36,6 +36,8 @@ import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.modules.*;
+import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.ui_objects.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
@@ -206,37 +208,33 @@ public class Seq_GetItemAction extends ResearcherAction
                 */
                 case Constants.SAMPLE_ISOLATE_RANKER_REPORT:
                 {
+                    //get sample 
                     Sample sample = new Sample(id);
                     sample.getRefSequenceId();
-            
-                    sample.setIsolaterTrackingEngine( IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId()));
-                    ArrayList discrepancies = new ArrayList();
-                    CloneSequence   clonesequence   = null;
-                    Read read  = null;
-                    if (sample.getIsolateTrackingEngine().getCloneSequence() != null)
-                    {
-                        clonesequence = sample.getIsolateTrackingEngine().getCloneSequence();
-                        discrepancies = clonesequence.getDiscrepancies();
-                    }
-                    else
-                    {
-                        for (int read_count = 0; read_count < sample.getIsolateTrackingEngine().getEndReads().size(); read_count++)
-                        {
-                            read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(read_count);
-                            discrepancies.addAll( read.getSequence().getDiscrepancies() );
-                        }
-                        discrepancies = DiscrepancyDescription.getDiscrepancyNoDuplicates(discrepancies);
-                    }
-                     String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.LINKER_5P, true);
-                     discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
-                     discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.LINKER_3P, true);
-                     if (discrepancy_report_html.equals(""))
-                        discrepancy_report_html="<tr><td colspan=3><strong>No discrepancies</strong></td></tr>";
+            //get clone sequences && end reads
+                    int[] sequence_analysis_status = {
+                        BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES ,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH ,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED ,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED };
+                    String clone_sequence_analysis_status = Algorithms.convertArrayToString(sequence_analysis_status, ",");
+                    int[] sequence_type = {BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED, BaseSequence.CLONE_SEQUENCE_TYPE_FINAL  };
+                    String clone_sequence_type = Algorithms.convertArrayToString(sequence_type, ",");
+                    IsolateTrackingEngine istr = IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId(),
+                                clone_sequence_analysis_status,
+                                clone_sequence_type,2);
+                //    sample.setIsolaterTrackingEngine( istr);
+                    String discrepancy_report_for_endread = null;
+                    ArrayList end_reads = createListOfUIReads(istr,discrepancy_report_for_endread, sample.getRefSequenceId());
+                    ArrayList  clone_sequences = createListOfUICloneSequences(istr, sample.getRefSequenceId());
                    
                     request.setAttribute("container_label", request.getParameter("container_label"));
                     request.setAttribute("sample", sample);
-                    
-                    request.setAttribute("discrepancy_report",discrepancy_report_html);
+                    request.setAttribute("end_read", end_reads);
+                    request.setAttribute("clone_sequences",clone_sequences);
+                    request.setAttribute("discrepancy_report_for_endread",discrepancy_report_for_endread);
                     return (mapping.findForward("display_sample_isolate_ranker_report"));
                 }
                 case Constants.CONSTRUCT_DEFINITION_REPORT:
@@ -299,10 +297,10 @@ public class Seq_GetItemAction extends ResearcherAction
                 {
                   //find file
                     
-                    Utils ut= new Utils();
+                    UIUtils ut= new UIUtils();
                     String needle_output = null;
                    
-                    System.out.print("seq_id "+request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));   
+            //        System.out.print("seq_id "+request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));   
                     if ( request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR) != null)
                     {
                         int refseq_id = Integer.parseInt(request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));
@@ -422,7 +420,94 @@ public class Seq_GetItemAction extends ResearcherAction
     }
     
     
+    //for sample report: converts end reads list int o uireads
+    private ArrayList  createListOfUIReads(IsolateTrackingEngine istr, String discrepancy_report_for_endread, int ref_seqid)
+                        throws BecDatabaseException
+    {
+        ArrayList discrepancies = new ArrayList();
+        ArrayList uireads = new ArrayList();
+        UIRead uiread = null;Read read = null;
+        DiscrepancyFinder nv = new DiscrepancyFinder();
+        String  needle_file_name = null;
+        File needle_file = null;
+         for (int read_count = 0; read_count < istr.getEndReads().size(); read_count++)
+        {
+            read = (Read) istr.getEndReads().get(read_count);
+            uiread = new UIRead();
+            uiread.setId (read.getId());
+            uiread.setSequenceId (read.getSequence().getId());
+            uiread.setType (read.getType());
+            //determine needle file exists
+            needle_file_name = nv.getOutputDirectory()+"/needle"+uiread.getSequenceId ()+
+                                    "_"+ref_seqid+".out";
+            needle_file = new File(needle_file_name);
+            if ( needle_file.exists() )
+                uiread.setIsAlignmentExists (true);
+            if ( read.getSequence().getDiscrepancies() != null && read.getSequence().getDiscrepancies().size() > 0)
+            {
+                uiread.setIsDiscrepancies ( true);
+            }
+            uireads.add(uiread);
+            discrepancies.addAll( read.getSequence().getDiscrepancies() );
+        }
+        discrepancies = DiscrepancyDescription.getDiscrepancyNoDuplicates(discrepancies);
     
+         String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.LINKER_5P, true);
+         discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+         discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.LINKER_3P, true);
+         if (discrepancy_report_html.equals(""))
+            discrepancy_report_for_endread="<tr><td colspan=3><strong>No discrepancies</strong></td></tr>";
+         else
+             discrepancy_report_for_endread = discrepancy_report_html;
+         return uireads;
+    }
+    
+    
+     //for sample report: converts end reads list int o uireads
+    private ArrayList  createListOfUICloneSequences(IsolateTrackingEngine istr,int ref_seqid)
+                         throws BecDatabaseException
+    {
+        ArrayList discrepancies = new ArrayList();
+        ArrayList uiclonesequences = new ArrayList();
+        String discrepancy_report_html = null;
+        File  needle_file = null;
+        UISequence uiclonesequence = null;CloneSequence clone_sequence = null;
+         for (int seq_count = 0; seq_count < istr.getCloneSequences().size(); seq_count++)
+        {
+            clone_sequence = (CloneSequence) istr.getCloneSequences().get(seq_count);
+            uiclonesequence = new UISequence();
+            uiclonesequence.setId (clone_sequence.getId());
+            uiclonesequence.setRefSequenceId (ref_seqid);
+            uiclonesequence.setSequenceType (BaseSequence.CLONE_SEQUENCE);
+            uiclonesequence.setAnalysisStatus( clone_sequence.getCloneSequenceStatus());
+            uiclonesequence. setCloneSequenceType( clone_sequence.getCloneSequenceType());
+//check wether file exists
+             DiscrepancyFinder nv = new DiscrepancyFinder();
+            String  needle_file_name = nv.getOutputDirectory()+"/needle"+uiclonesequence.getId()+
+                                    "_"+ref_seqid+".out";
+             needle_file = new File(needle_file_name);
+            if ( needle_file.exists() )           
+                uiclonesequence.setIsAlignmentExists (true);
+            if ( clone_sequence.getDiscrepancies() != null && clone_sequence.getDiscrepancies().size() > 0)
+            {
+                uiclonesequence.setIsDiscrepancies ( true);
+               
+            }
+            
+            discrepancies = clone_sequence.getDiscrepancies() ;
+            discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.LINKER_5P, true);
+            discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+             discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.LINKER_3P, true);
+             if (discrepancy_report_html.equals(""))
+                uiclonesequence.setDiscrepancyReport ("<tr><td colspan=3><strong>No discrepancies</strong></td></tr>");
+             else
+                  uiclonesequence.setDiscrepancyReport (discrepancy_report_html);
+             uiclonesequences.add(uiclonesequence);
+        }
+       return uiclonesequences;
+        
+    }
+                   
     
     
 }

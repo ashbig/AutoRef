@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.15 2003-09-03 19:37:35 Elena Exp $
+ * $Id: Container.java,v 1.16 2003-09-16 18:59:06 Elena Exp $
  *
  * File     	: Container.java
 
@@ -191,17 +191,16 @@ public class Container
                 curContainer.restoreSample();
                 containerList.add(curContainer);
             }
-        } catch (NullPointerException ex)
+            return containerList;
+        } catch (Exception ex)
         {
             throw new BecUtilException("Error occured while initializing container with label: "+label+"\n"+ex.getMessage());
-        } catch (SQLException sqlE)
-        {
-            throw new BecDatabaseException("Error occured while initializing container from labe: "+label+"\n"+"\nSQL: "+sqlE);
-        } finally
+        } 
+        finally
         {
             DatabaseTransaction.closeResultSet(rs);
         }
-        return containerList;
+        
     }
     
      /**

@@ -411,13 +411,58 @@ public class AccessManager
         zip = DatabaseTransaction.prepareString(zip);
         country = DatabaseTransaction.prepareString(country);
         telephone = DatabaseTransaction.prepareString(telephone);
-        
+       
+
+
+         
         sql1 = "insert into userprofile (userid, username, useremail, userpassword, userorganization, usergroup, passwordreminderstring)"
         +"values (userid.nextval" + ",'"+ username +"', '"+ email +"', '"+ pswd +"', '"+ org +"', '"+ group +"', '"+ reminder +"')";
         //sql2 = "insert into useraddress" + "(username, firstname, lastname, organization, addressline1,addressline2,city,state,province,zipcode,country,telephone1)"
         //  +"values (" + "'"+ username +"', '"+ firstname+"', '"+ lastname +"', '"+ org +"', '"+ address1 +"', '"+ address2 +"','"+ city +"', '"+ state +"', '"+ province +"', '"+ zip +"', '"+ country +"', '"+ telephone +"' )";
+ 
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        Connection conn = t.requestConnection();
+        DatabaseTransaction.executeUpdate(sql1,conn);
+        //DatabaseTransaction.executeUpdate(sql2,conn);
+        DatabaseTransaction.commit(conn);
+        DatabaseTransaction.closeConnection(conn);
+    }
+    
+    
+      public void addUser(String username, String email,String pswd,String org,
+    String group, String reminder)
+    throws BecDatabaseException
+    {
+        String sql1;
+        String sql2;
         
         
+        // make sure all strings are oracle friendly.
+        username = DatabaseTransaction.prepareString(username);
+        pswd = DatabaseTransaction.prepareString(pswd);
+        email= DatabaseTransaction.prepareString(email);
+        org = DatabaseTransaction.prepareString(org);
+        group = DatabaseTransaction.prepareString(group);
+        reminder = DatabaseTransaction.prepareString(reminder);
+       /* firstname = DatabaseTransaction.prepareString(firstname);
+        lastname = DatabaseTransaction.prepareString(lastname);
+        address1 = DatabaseTransaction.prepareString(address1);
+        address2 = DatabaseTransaction.prepareString(address2);
+        city = DatabaseTransaction.prepareString(city);
+        state = DatabaseTransaction.prepareString(state);
+        province = DatabaseTransaction.prepareString(province);
+        zip = DatabaseTransaction.prepareString(zip);
+        country = DatabaseTransaction.prepareString(country);
+        telephone = DatabaseTransaction.prepareString(telephone);
+       */
+
+
+         
+        sql1 = "insert into userprofile (userid, username, useremail, userpassword, userorganization, usergroup, passwordreminderstring)"
+        +"values (userid.nextval" + ",'"+ username +"', '"+ email +"', '"+ pswd +"', '"+ org +"', '"+ group +"', '"+ reminder +"')";
+        //sql2 = "insert into useraddress" + "(username, firstname, lastname, organization, addressline1,addressline2,city,state,province,zipcode,country,telephone1)"
+        //  +"values (" + "'"+ username +"', '"+ firstname+"', '"+ lastname +"', '"+ org +"', '"+ address1 +"', '"+ address2 +"','"+ city +"', '"+ state +"', '"+ province +"', '"+ zip +"', '"+ country +"', '"+ telephone +"' )";
+   
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         DatabaseTransaction.executeUpdate(sql1,conn);

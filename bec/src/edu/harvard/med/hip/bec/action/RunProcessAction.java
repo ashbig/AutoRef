@@ -244,7 +244,6 @@ public class RunProcessAction extends ResearcherAction
                 {
                      clone_ids = (String) request.getParameter("clone_collection");
                 }
-       System.out.println(plate_name +" "+clone_ids);
                 if ( (plate_name == null ||  plate_name.trim().equals("")  ) &&
                     (clone_ids == null || clone_ids.trim().equals("")) )
                 {

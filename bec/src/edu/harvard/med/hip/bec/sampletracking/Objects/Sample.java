@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.8 2003-08-14 20:08:20 Elena Exp $
+ * $Id: Sample.java,v 1.9 2003-09-16 18:59:16 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -14,7 +14,7 @@ import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
-
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import java.math.BigDecimal;
 import java.util.*;
 import java.sql.*;
@@ -325,21 +325,23 @@ public class Sample
     {
        try
        {
-           Sample sample = new Sample(1441);
+           Sample sample = new Sample(1349);
                     sample.getRefSequenceId();
             
-                    sample.setIsolaterTrackingEngine( IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId()));
-                    ArrayList discrepancies = new ArrayList();
-                    
-                    Read read  = null;
-                    for (int read_count = 0; read_count < sample.getIsolateTrackingEngine().getEndReads().size(); read_count++)
-                    {
-                        read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(read_count);
-                        discrepancies.addAll( read.getSequence().getDiscrepancies() );
-                    }
-                 //   discrepancies = DiscrepancyPair.getDiscrepancyNoDuplicates(discrepancies);
-                    String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
-                    System.out.println(discrepancy_report_html);
+                    int[] sequence_analysis_status = {
+                        BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES ,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH ,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED ,
+                        BaseSequence.CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED };
+                    String clone_sequence_analysis_status = Algorithms.convertArrayToString(sequence_analysis_status, ",");
+                    int[] sequence_type = {BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED, BaseSequence.CLONE_SEQUENCE_TYPE_FINAL  };
+                    String clone_sequence_type = Algorithms.convertArrayToString(sequence_type, ",");
+                    IsolateTrackingEngine istr = IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId(),
+                                clone_sequence_analysis_status,
+                                clone_sequence_type,2);
+                    sample.setIsolaterTrackingEngine( istr);
        }
        catch(Exception e){}
     }
