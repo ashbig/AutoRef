@@ -18,6 +18,8 @@ public class NoFound {
     public static final String GENOMIC_SEQ = "Genomic sequence";
     public static final String GI_NOT_IN_FLEX = "GI not in Flex database";
     public static final String GI_NOT_IN_NCBI = "GI not found in NCBI";
+    public static final String ACCESSION_NOT_IN_FLEX = "Genbank accession not in Flex database";
+    public static final String ACCESSION_NOT_IN_NCBI = "Genbank accession not found in NCBI";
     public static final String NO_MATCH_BLAST = "No match found by blast";
     public static final String NO_MATCH_GENBANK_ENTRY = "No match genbank entry found";
     public static final String UNKNOWN = "Unknown";
