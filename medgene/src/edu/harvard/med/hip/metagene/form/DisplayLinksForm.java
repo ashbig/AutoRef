@@ -19,6 +19,7 @@ import org.apache.struts.action.ActionMapping;
  */
 public class DisplayLinksForm extends ActionForm {
     private int hipGeneId;
+    private String geneSymbol;
 
     /** Creates new DisplayLinksForm */
     public DisplayLinksForm() {
@@ -27,8 +28,14 @@ public class DisplayLinksForm extends ActionForm {
     public int getHipGeneId() {
         return hipGeneId;
     }
+    public String getGeneSymbol(){
+        return geneSymbol;
+    }    
     
     public void setHipGeneId(int hipGeneId) {
         this.hipGeneId = hipGeneId;
+    }
+    public void setGeneSymbol(String geneSymbol){
+        this.geneSymbol = geneSymbol;
     }
 }

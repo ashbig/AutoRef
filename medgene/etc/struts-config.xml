@@ -83,6 +83,14 @@
     <!-- chip gene analysis step2 -->   
     <form-bean      name="chipGeneAnalysis_2_Form"
                     type="edu.harvard.med.hip.metagene.form.ChipGeneAnalysis_2_Form"/>
+
+    <!-- chip gene gene analysis step1 -->
+    <form-bean      name="chipGeneGeneAnalysis_1_Form"
+                    type="edu.harvard.med.hip.metagene.form.ChipGeneGeneAnalysis_1_Form"/>        
+
+    <!-- chip gene gene analysis step2 -->   
+    <form-bean      name="chipGeneGeneAnalysis_2_Form"
+                    type="edu.harvard.med.hip.metagene.form.ChipGeneGeneAnalysis_2_Form"/>
     
 
   </form-beans>
@@ -146,6 +154,7 @@
       <forward  name="success_multi_disease"   path="/MultipleDiseaseSearch.jsp"/>
       <forward  name="success_gene_gene"   path="/GeneGeneSearch.jsp"/>
       <forward  name="success_chipGene_disease"  path="/ChipGeneAnalysis_1.jsp" />
+      <forward  name="success_chipGene_gene"  path="/ChipGeneGeneAnalysis_1.jsp" />
       <forward  name="failure"  path="/login.jsp"/>
     </action>
 
@@ -255,7 +264,24 @@
                input="/ChipGeneAnalysis_2.jsp">
       <!-- forward  name="success"   path="/DisplayChipGenes.jsp"/ -->    
       <forward  name="success"   path="/DisplayChipGenes.jsp"/>   
-      <forward  name="failure"   path="/login.jsp"/>
+    </action>
+
+    <!-- Process MicroArray data (2) analysis step1 -->    
+    <action    path="/chipGeneGeneAnalysis_1"
+               type="edu.harvard.med.hip.metagene.action.ChipGeneGeneAnalysis_1_Action"
+               name="chipGeneGeneAnalysis_1_Form"
+               scope="request"
+               input="/ChipGeneGeneAnalysis_1.jsp">
+      <forward  name="success"   path="/ChipGeneGeneAnalysis_2.jsp"/>
+    </action>
+
+    <!-- Process MicroArray data (2) analysis step2 -->    
+    <action    path="/chipGeneGeneAnalysis_2"
+               type="edu.harvard.med.hip.metagene.action.ChipGeneGeneAnalysis_2_Action"
+               name="chipGeneGeneAnalysis_2_Form"
+               scope="request"
+               input="/ChipGeneGeneAnalysis_2.jsp">
+      <forward  name="success"   path="/DisplayChipGeneGenes.jsp"/>        
     </action>
 
 

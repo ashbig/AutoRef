@@ -23,10 +23,10 @@
     <TR>
     <TD>
         Your input genes are grouped into 3 categories according to their relationship with 
-        the disease of <b><bean:write name="disease_mesh_term"/></b> as cited in literature. <br><br>
+        the gene of <b><bean:write name="gene_symbol"/></b> as cited in literature. <br><br>
         <a href="#direct"> First degree associations </a> <br>
         <a href="#indirect"> Second degree associations </a> <br>
-        <a href="#new"> Genes new to this disease </a> <br>
+        <a href="#new"> Genes new to this gene </a> <br>
     </TD>
     </TR>
     </TABLE>    
@@ -48,13 +48,13 @@
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
             <TD align="center">
-                <bean:write name="directChipGene" property="locus_id"/>
+                <bean:write name="directChipGene" property="locus_id"/>&nbsp
             </TD>
             <TD align="center">
-                <bean:write name="directChipGene" property="gene_symbol"/>
+                <bean:write name="directChipGene" property="gene_symbol"/>&nbsp
             </TD>
             <TD align="center">
-                <bean:write name="directChipGene" property="score"/>
+                <bean:write name="directChipGene" property="score"/>&nbsp
             </TD>
         </tr>
     </logic:iterate> 
@@ -77,13 +77,13 @@
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
             <TD align="center">
-                <bean:write name="indirectChipGene" property="locus_id"/>
+                <bean:write name="indirectChipGene" property="locus_id"/>&nbsp
             </TD>
             <TD align="center">
-                <bean:write name="indirectChipGene" property="gene_symbol"/>
+                <bean:write name="indirectChipGene" property="gene_symbol"/>&nbsp
             </TD>
             <TD align="center">
-                <bean:write name="indirectChipGene" property="score"/>
+                <bean:write name="indirectChipGene" property="score"/>&nbsp
             </TD>
         </tr>
     </logic:iterate> 
@@ -94,7 +94,7 @@
     <a name="new"> </a><br><br><% i = 0; %>
    
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
-    <TR> <p> <b>Genes new to this disease</b> <br><br>   </TR> 
+    <TR> <p> <b>Genes new to this Gene</b> <br><br>   </TR> 
     <TR bgcolor="#cccccc">
         <TH width="10%">Rank</TH>
         <TH width="30%">Locus ID</TH>

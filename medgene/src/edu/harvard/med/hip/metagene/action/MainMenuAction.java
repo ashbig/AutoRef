@@ -65,6 +65,8 @@ public class MainMenuAction extends MetageneAction {
             return (mapping.findForward("success_gene_gene"));
         } else if ("chipGeneDisease".equals(selected)) {
             return (mapping.findForward("success_chipGene_disease"));
+        } else if ("chipGeneGene".equals(selected)){
+            return (mapping.findForward("success_chipGene_gene"));
         } else {
             return (mapping.findForward("failure"));
         }        

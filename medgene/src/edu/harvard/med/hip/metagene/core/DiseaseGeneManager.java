@@ -371,6 +371,39 @@ public class DiseaseGeneManager {
         return geneInfo;
     }
     
+    
+    public Vector queryGeneinfoByGene(Connection conn, String symbol) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "select t.id_type, g.id_value, g.extra_information"+
+        " from id_type t, gene_information g, gene_list gl "+
+        " where t.type_id=g.type_id and g.hip_gene_id = gl.hip_gene_id "+
+        " and gl.symbol_value= ?";
+        Vector geneInfo = new Vector();
+        
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, symbol);
+            rs = pstmt.executeQuery();
+            
+            while(rs.next()) {
+                String type = rs.getString(1);
+                String value = rs.getString(2);
+                String extraInfo = rs.getString(3);
+                Geneinfo info = new Geneinfo(type, value, extraInfo);
+                geneInfo.addElement(info);
+            }
+            
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        
+        return geneInfo;
+    }
+    
+    
     protected Association found(Vector newAssociations, Association association) {
         if(newAssociations == null) {
             return null;

@@ -24,6 +24,7 @@
         <html:radio property="geneDiseaseSelect" value="diseaseGene"/>A particular gene<br><br>
     <table width="100%"><tr><td bgcolor="#ccccff"> <p>Analyze a gene list</p> </td></tr></table>       
         <html:radio property="geneDiseaseSelect" value="chipGeneDisease"/>Categorize genes from disease related high-throughput experiments such as micro-array <br>
+        <html:radio property="geneDiseaseSelect" value="chipGeneGene"/>Categorize genes from gene related high-throughput experiments such as micro-array <br>
         <p>
         Please make a selection and submit.
         <p>

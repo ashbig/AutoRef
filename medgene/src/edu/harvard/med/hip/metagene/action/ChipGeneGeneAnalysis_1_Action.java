@@ -1,10 +1,12 @@
+
 /*
- * DisplayLinksAction.java
+ * ChipGeneGeneAnalysis_1_Action.java
  *
- * Created on February 6, 2002, 4:45 PM
+ * Created on June 4, 2002, 1:08 PM
  */
 
 package edu.harvard.med.hip.metagene.action;
+
 
 import java.io.*;
 import javax.servlet.RequestDispatcher;
@@ -21,19 +23,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.metagene.form.DisplayLinksForm;
-import edu.harvard.med.hip.metagene.database.*;
 import edu.harvard.med.hip.metagene.core.*;
+import edu.harvard.med.hip.metagene.form.ChipGeneGeneAnalysis_1_Form;
 
 import java.util.*;
-import java.sql.*;
 
 /**
  *
- * @author  dzuo
- * @version
+ * @author  hweng
+ * @version 
  */
-public class DisplayLinksAction extends MetageneAction {
+public class ChipGeneGeneAnalysis_1_Action extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -50,6 +50,7 @@ public class DisplayLinksAction extends MetageneAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
+    
     public ActionForward metagenePerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -58,28 +59,42 @@ public class DisplayLinksAction extends MetageneAction {
         
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        int id = ((DisplayLinksForm)form).getHipGeneId();
-        String gene_symbol = ((DisplayLinksForm)form).getGeneSymbol();
+        String term = ((ChipGeneGeneAnalysis_1_Form)form).getTerm();
+        String searchTerm = ((ChipGeneGeneAnalysis_1_Form)form).getSearchTerm();
         
         DiseaseGeneManager manager = new DiseaseGeneManager();
-        DBManager dbmanager = new DBManager();
-        Connection conn = dbmanager.connect();
+        Vector geneIndexes = null;
         
-        if (conn == null) {
-            return (mapping.findForward("fail"));
+        if(ChipGeneGeneAnalysis_1_Form.GENENAME.equals(term) ||
+        ChipGeneGeneAnalysis_1_Form.GENESYMBOL.equals(term)) {
+            geneIndexes = manager.queryGeneIndexBySearchTerm(searchTerm);
+        } else {
+            int locusid;
+            
+            try {
+                locusid = Integer.parseInt(searchTerm);
+            } catch (NumberFormatException ex) {
+                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.invalid", searchTerm));
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+            }
+            
+            geneIndexes = manager.queryGeneIndexByLocusid(locusid);
         }
         
-        Vector infos = new Vector();
-        if(gene_symbol == null){
-            infos = manager.queryGeneinfoByGene(conn, id);
+        if(geneIndexes == null) {
+            return (mapping.findForward("failure"));
         }
-        else{
-            infos = manager.queryGeneinfoByGene(conn, gene_symbol);
-        }
-        dbmanager.disconnect(conn);
         
-        request.setAttribute("infos", infos);
+        if(geneIndexes.size() == 0) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.invalid", searchTerm));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+        
+        Vector stats = Statistics.getAllStatistics();
+        request.setAttribute("stats", stats);
+        request.setAttribute("geneIndexes", geneIndexes);
         return (mapping.findForward("success"));
     }
 }
-

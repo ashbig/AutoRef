@@ -45,6 +45,7 @@
            if (i != 1) { %>
             <html:option key="top 10" value="10"/>
             <html:option key="top 25" value="25"/>
+            <html:option key="top 100" value="100"/>
         <% } 
            else { %>
             <html:option key="top 25" value="25"/>

@@ -85,9 +85,9 @@ public class SelectMeshTermsAction extends MetageneAction {
             Vector commonAssociations = Association.mergeAssociations(allAssociations);
             HttpSession session = request.getSession();
             if( ((Integer)(session.getAttribute("user_type"))).intValue() != 1){                       
-                if(commonAssociations.size()>10){
+                if(commonAssociations.size()>50){
                     Vector temp = new Vector();
-                    for(int i = 0; i < 10; i++)
+                    for(int i = 0; i < 50; i++)
                         temp.addElement(commonAssociations.elementAt(i));
                     commonAssociations = temp;
                 }
