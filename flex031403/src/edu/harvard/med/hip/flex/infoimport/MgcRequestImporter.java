@@ -160,9 +160,23 @@ public class MgcRequestImporter
         LinkedList queueItems = new LinkedList();
         ContainerProcessQueue containerQueue = new ContainerProcessQueue();
         
+        Project mgcProject = null;
+        Workflow mgcPlateHandleWorkflow = null;
+        try {
+            mgcProject = new Project(Project.MGC_PROJECT);
+            mgcPlateHandleWorkflow = new Workflow(Workflow.MGC_PLATE_HANDLE_WORKFLOW);
+        } catch (Exception e) {}
+        
+        if(mgcProject == null || mgcPlateHandleWorkflow == null) {
+            m_messages.add("Cannot create MGC project or MGC plate handle workflow");
+            return false;
+        }
+        
         for (int cont_count = 0; cont_count < mgc_containers.size(); cont_count++)
         {
-            queueItem = new QueueItem((Container) mgc_containers.get(cont_count),protocol, m_Project, m_workflow);
+//            queueItem = new QueueItem((Container) mgc_containers.get(cont_count),protocol, m_Project, m_workflow);
+            // The project and workflow for these containers are set to MGC project and MGC plate handle workflow.
+            queueItem = new QueueItem((Container) mgc_containers.get(cont_count),protocol, mgcProject, mgcPlateHandleWorkflow);
             queueItems.add(queueItem);
         }
         try{
