@@ -99,6 +99,10 @@ public class ConstructGenerator
          if (project.getId() == Project.PSEUDOMONAS) m_isOpenOnly = true;
          if (project.getId() == Project.YEAST) m_isCloseOnly = true;
     }
+    
+    public void setIsOpenOnly(boolean b) {m_isOpenOnly = b;}
+    public void setIsCloseOnly(boolean b) {m_isCloseOnly = b;}
+    
     /**
      * Precondition: there is a group of 94 sequences in the
      * same size class in the Queue table awaiting for
@@ -430,6 +434,8 @@ public class ConstructGenerator
         {
             nextProtocols = new Vector();
             nextProtocols.add(new Protocol(Protocol.RECEIVE_OLIGO_PLATES)  );
+        } else {
+            nextProtocols = workflow.getNextProtocol(m_protocol);
         }
         
         ListIterator iter = constructList.listIterator();
