@@ -174,6 +174,12 @@ public class IsolateRankerRunner implements Runnable
                         "elena_taycher@hms.harvard.edu", "Request for end reads evaluation: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates ,m_error_messages);
 
                     }
+                    if (m_error_messages.size()=0)
+                    {
+                         Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                        "elena_taycher@hms.harvard.edu", "Request for end reads evaluation: error messages.", "\nIsolate Ranker finished request for the following plates:\n"+requested_plates );
+
+                    }
                 }
                     catch(Exception e){}
                 DatabaseTransaction.closeConnection(conn);
