@@ -327,10 +327,10 @@ public class SpecialReportsRunner extends ProcessRunner
                    return "select flexcloneid, flexsequenceid from flexinfo where isolatetrackingid in "
                    +" ( select isolatetrackingid from isolatetracking where sampleid in "
                    +" (select sampleid from sample where containerid in "
-                   +" (select containerid from containerheader where label in (" + sql_items +"))))";
+                   +" (select containerid from containerheader where label in (" + sql_items +")))) order by flexcloneid";
               }
               case Constants.ITEM_TYPE_CLONEID:
-                  return " select flexcloneid, flexsequenceid from flexinfo where flexcloneid in (" + sql_items +")"; 
+                  return " select flexcloneid, flexsequenceid from flexinfo where flexcloneid in (" + sql_items +") order by flexcloneid"; 
               default : return "";
           }
      }
