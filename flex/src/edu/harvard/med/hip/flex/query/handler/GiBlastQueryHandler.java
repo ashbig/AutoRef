@@ -79,7 +79,7 @@ public class GiBlastQueryHandler extends QueryHandler {
             List mgrs = new ArrayList();
             GiRecord gr = (GiRecord)iter.next();
             ArrayList matchFlexSequences = (ArrayList)found.get(gr);
-            MatchGenbankRecord mgr = new MatchGenbankRecord(gr.getGenbankAccession(), gr.getGi(), MatchGenbankRecord.DIRECT_SEARCH, matchFlexSequences);
+            MatchGenbankRecord mgr = new MatchGenbankRecord(gr.getGenbankAccession(), gr.getGi(), MatchGenbankRecord.DIRECT_SEARCH, matchFlexSequences, gr.getLocusid(), gr.getUnigene());
             mgrs.add(mgr);
             foundList.put(gr.getGi(), mgrs);
         }

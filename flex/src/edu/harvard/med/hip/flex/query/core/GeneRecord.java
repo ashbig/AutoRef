@@ -13,7 +13,7 @@ import java.util.*;
  * @author  dzuo
  */
 public class GeneRecord {
-    private int locusid;
+    private String locusid;
     private String isconfirmed;
     private String organism;
     private String status;
@@ -27,11 +27,11 @@ public class GeneRecord {
     public GeneRecord() {
     }
     
-    public GeneRecord(int locusid) {
+    public GeneRecord(String locusid) {
         this.locusid = locusid;
     }
 
-    public int getLocusid() {return locusid;}
+    public String getLocusid() {return locusid;}
     public String getIsconfirmed() {return isconfirmed;}
     public String getOrganism() {return organism;}
     public String getStatus() {return status;}
@@ -40,7 +40,7 @@ public class GeneRecord {
     public List getGenesymbol() {return genesymbol;}
     public List getGenbank() {return genbank;}
     
-    public void setLocusid(int locusid) {this.locusid=locusid;}
+    public void setLocusid(String locusid) {this.locusid=locusid;}
     public void setIsconfirmed(String isconfirmed) {this.isconfirmed = isconfirmed;}
     public void setOrganism(String organism) {this.organism = organism;}
     public void setStatus(String status) {this.status = status;}

@@ -17,6 +17,8 @@ public class GiRecord {
     protected int cdsStart;
     protected int cdsStop;
     protected String sequenceText;
+    protected String locusid;
+    protected String unigene;
     
     /** Creates a new instance of GiRecord */
     public GiRecord(String gi, String sequenceFile) {
@@ -24,18 +26,22 @@ public class GiRecord {
         this.sequenceFile = sequenceFile;
     }
     
-    public GiRecord(String gi, String genbankAccession, String sequenceFile) {
+    public GiRecord(String gi, String genbankAccession, String sequenceFile, String locusid, String unigene) {
         this.gi = gi;
         this.genbankAccession = genbankAccession;
         this.sequenceFile = sequenceFile;
+        this.locusid = locusid;
+        this.unigene = unigene;
     }
     
-    public GiRecord(String gi, String genbankAccession, String sequenceText, int cdsStart, int cdsStop) {
+    public GiRecord(String gi, String genbankAccession, String sequenceText, int cdsStart, int cdsStop, String locusid, String unigene) {
         this.gi = gi;
         this.genbankAccession = genbankAccession;
         this.sequenceText = sequenceText;
         this.cdsStart = cdsStart;
         this.cdsStop = cdsStop;
+        this.locusid = locusid;
+        this.unigene = unigene;
     }
     
     public String getSequenceText() {
@@ -76,5 +82,21 @@ public class GiRecord {
     
     public void setCdsStop(int i) {
         this.cdsStop = i;
+    }
+    
+    public String getLocusid() {
+        return locusid;
+    }
+    
+    public void setLocusid(String locusid) {
+        this.locusid = locusid;
+    }
+    
+    public String getUnigene() {
+        return unigene;
+    }
+    
+    public void setUnigene(String unigene) {
+        this.unigene = unigene;
     }
 }

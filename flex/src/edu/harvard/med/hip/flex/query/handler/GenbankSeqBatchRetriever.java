@@ -53,6 +53,7 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
                 Hashtable searchResult = finder.searchDetail(element);
                 int start = ((Integer)(searchResult.get("start"))).intValue();
                 int stop = ((Integer)(searchResult.get("stop"))).intValue();
+                String locusid = (String)searchResult.get("locus_link");
                 
                 //genomic sequence
                 if(start == -1 || stop == -1) {
@@ -60,7 +61,7 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
                     noFoundList.put(element, nofound);
                 } else {
                     String genbank = (String)(searchResult.get("accession"));
-                    GiRecord giRecord = new GiRecord(element, genbank, (String)(searchResult.get("sequencetext")), start, stop);
+                    GiRecord giRecord = new GiRecord(element, genbank, (String)(searchResult.get("sequencetext")), start, stop, locusid, null);
                     foundList.put(element, giRecord);
                 }
             } catch (FlexUtilException ex) {

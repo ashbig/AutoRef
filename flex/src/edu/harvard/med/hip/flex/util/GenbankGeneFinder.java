@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.13 2003-06-03 15:42:33 dzuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.14 2004-02-23 19:47:35 dzuo Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -208,7 +208,7 @@ public class GenbankGeneFinder {
     public static void main(String [] args) {
         GenbankGeneFinder finder = new GenbankGeneFinder();
         try{
-            Vector v = finder.search("5031798");
+            Vector v = finder.search("15080585");
             Enumeration enum = v.elements();
             while(enum.hasMoreElements()) {
                 GenbankSequence sequence = (GenbankSequence)enum.nextElement();
@@ -218,7 +218,7 @@ public class GenbankGeneFinder {
                 System.out.println();
             }
             
-            Hashtable h = finder.searchDetail("5031798");
+            Hashtable h = finder.searchDetail("15080585");
             System.out.println(h);
         } catch (FlexUtilException e) {
             System.out.println(e);

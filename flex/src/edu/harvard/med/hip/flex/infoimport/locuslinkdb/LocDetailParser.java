@@ -30,7 +30,7 @@ public class LocDetailParser {
         
         int count = 0;
         //System.out.println(line);
-        int locusid = Integer.parseInt(line.substring(line.indexOf(":")+1).trim());
+        String locusid = line.substring(line.indexOf(":")+1).trim();
         gene = new GeneRecord(locusid);
         
         while((line = in.readLine()) != null) {
@@ -50,7 +50,7 @@ public class LocDetailParser {
             }
             
             if(line.indexOf("LOCUSID") == 0) {
-                locusid = Integer.parseInt(line.substring(line.indexOf(":")+1).trim());
+                locusid = line.substring(line.indexOf(":")+1).trim();
                 gene = new GeneRecord(locusid);
             }
             if(line.indexOf("CURRENT_LOCUSID") == 0) {
@@ -165,7 +165,7 @@ public class LocDetailParser {
                 continue;
             }
             
-            stmt.setInt(1, gene.getLocusid());
+            stmt.setString(1, gene.getLocusid());
             stmt.setString(2, gene.getIsconfirmed());
             stmt.setString(3, gene.getOrganism());
             stmt.setString(4, gene.getStatus());
@@ -179,7 +179,7 @@ public class LocDetailParser {
                 GeneSymbol gs = (GeneSymbol)genesymbols.get(j);
                 stmt2.setString(1, gs.getSymbol());
                 stmt2.setString(2, gs.getType());
-                stmt2.setInt(3,  gene.getLocusid());
+                stmt2.setString(3,  gene.getLocusid());
                 DatabaseTransaction.executeUpdate(stmt2);
             }
             
@@ -189,7 +189,7 @@ public class LocDetailParser {
                 stmt3.setString(1, gr.getGenbank());
                 stmt3.setString(2, gr.getGi());
                 stmt3.setString(3, gr.getType());
-                stmt3.setInt(4, gene.getLocusid());
+                stmt3.setString(4, gene.getLocusid());
                 DatabaseTransaction.executeUpdate(stmt3);
             }
         }

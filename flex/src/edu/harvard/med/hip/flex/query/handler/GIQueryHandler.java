@@ -67,11 +67,19 @@ public class GIQueryHandler extends QueryHandler {
         " where b.sequenceid=g.sequenceid"+
         " and g.namevalue = ?"+
         " order by gi";
+        String sql2 = "select namevalue from name where nametype='LOCUS_ID'"+
+                    " and sequenceid=?";
+        String sql3 = "select namevalue from name where nametype='UNIGENE_SID'"+
+                    " and sequenceid=?";
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
+        PreparedStatement stmt2 = conn.prepareStatement(sql2);
+        PreparedStatement stmt3 = conn.prepareStatement(sql3);
         ResultSet rs = null;
+        ResultSet rs2 = null;
+        ResultSet rs3 = null;
         
         for(int i=0; i<searchTerms.size(); i++) {
             String searchTerm = (String)searchTerms.get(i);
@@ -80,6 +88,8 @@ public class GIQueryHandler extends QueryHandler {
             
             List matchList = new ArrayList();
             String genbank = null;
+            String locusid = null;
+            String unigene = null;
             while (rs.next()) {
                 genbank = rs.getString("GENBANK");
                 String gi = rs.getString("GI");
@@ -87,18 +97,34 @@ public class GIQueryHandler extends QueryHandler {
                                
                 MatchFlexSequence mfs = new MatchFlexSequence(MatchFlexSequence.MATCH_BY_GI, sequenceid, null);
                 matchList.add(mfs);
+                
+                stmt2.setInt(1, sequenceid);
+                rs2 = DatabaseTransaction.executeQuery(stmt2);
+                if(rs2.next()) {
+                    locusid = rs2.getString(1);
+                }
+                                
+                stmt3.setInt(1, sequenceid);
+                rs3 = DatabaseTransaction.executeQuery(stmt3);
+                if(rs3.next()) {
+                    locusid = rs3.getString(1);
+                }
             }
             
             if(matchList.size() == 0) {
                 NoFound nf = new NoFound(searchTerm, NoFound.GI_NOT_IN_FLEX);
-                noFoundList.put(new GiRecord(searchTerm,genbank,null), nf);
+                noFoundList.put(new GiRecord(searchTerm,genbank,null, locusid, unigene), nf);
             } else {
-                foundList.put(new GiRecord(searchTerm,genbank,null), matchList);
+                foundList.put(new GiRecord(searchTerm,genbank,null, locusid, unigene), matchList);
             }
         }
         
         DatabaseTransaction.closeResultSet(rs);  
+        DatabaseTransaction.closeResultSet(rs2);  
+        DatabaseTransaction.closeResultSet(rs3);  
         DatabaseTransaction.closeStatement(stmt);
+        DatabaseTransaction.closeStatement(stmt2);
+        DatabaseTransaction.closeStatement(stmt3);
         DatabaseTransaction.closeConnection(conn);
     }
     

@@ -80,8 +80,8 @@ public class GiRecordPopulator {
     }
     
     private void insertDB(List records, Connection conn) throws Exception {
-        String sql = "insert into girecord (gi, accession, cdsstart, cdsstop, sequencefile)"+
-        " values(?,?,?,?,?)";
+        String sql = "insert into girecord (gi, accession, cdsstart, cdsstop, sequencefile, locusid, unigene)"+
+        " values(?,?,?,?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
         
         for(int i=0; i<records.size(); i++) {
@@ -91,6 +91,8 @@ public class GiRecordPopulator {
             stmt.setInt(3, gr.getCdsStart());
             stmt.setInt(4, gr.getCdsStop());
             stmt.setString(5, gr.getSequenceFile());
+            stmt.setString(6, gr.getLocusid());
+            stmt.setString(7, gr.getUnigene());
             DatabaseTransaction.executeUpdate(stmt);
         }
         

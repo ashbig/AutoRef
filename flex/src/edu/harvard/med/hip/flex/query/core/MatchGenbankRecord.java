@@ -22,24 +22,30 @@ public class MatchGenbankRecord {
     private List matchFlexSequence;
     private String searchMethod;
     private int searchResultid;
+    private String locusid;
+    private String unigene;
     
     /** Creates a new instance of MatchGenbankRecord */
     public MatchGenbankRecord() {
     }
 
-    public MatchGenbankRecord(String genbank, String gi, String searchMethod, List matchFlexSequence) {
+    public MatchGenbankRecord(String genbank, String gi, String searchMethod, List matchFlexSequence, String locusid, String unigene) {
         this.genbankAccession = genbank;
         this.gi = gi;
         this.searchMethod = searchMethod;
         this.matchFlexSequence = matchFlexSequence;
+        this.locusid = locusid;
+        this.unigene = unigene;
     }
  
-    public MatchGenbankRecord(int id, String genbank, String gi, String searchMethod, List matchFlexSequence) {
+    public MatchGenbankRecord(int id, String genbank, String gi, String searchMethod, List matchFlexSequence, String locusid, String unigene) {
         this.matchGenbankId = id;
         this.genbankAccession = genbank;
         this.gi = gi;
         this.searchMethod = searchMethod;
         this.matchFlexSequence = matchFlexSequence;
+        this.locusid = locusid;
+        this.unigene = unigene;
     }
     
     public void setMatchGenbankId(int id) {
@@ -97,4 +103,9 @@ public class MatchGenbankRecord {
     public int getNumOfMatchFlexSequence() {
         return matchFlexSequence.size();
     }
+    
+    public String getLocusid() {return locusid;}
+    public String getUnigene() {return unigene;}
+    public void setLocusid(String s) {this.locusid=s;}
+    public void setUnigene(String s) {this.unigene = s;}
 }

@@ -193,6 +193,8 @@ public class QueryManager {
                     String accession = rs2.getString(2);
                     String gi = rs2.getString(3);
                     String method = rs2.getString(4);
+                    String locusid = rs2.getString(5);
+                    String unigene = rs2.getString(6);
                     
                     stmt3.setInt(1, matchgenbankid);
                     rs3 = DatabaseTransaction.executeQuery(stmt3);
@@ -232,7 +234,7 @@ public class QueryManager {
                         mfss.add(mfs);
                     }
                     
-                    MatchGenbankRecord mgs = new MatchGenbankRecord(matchgenbankid,accession,gi, method, mfss);
+                    MatchGenbankRecord mgs = new MatchGenbankRecord(matchgenbankid,accession,gi, method, mfss, locusid, unigene);
                     mgss.add(mgs);
                 }
                 
@@ -303,6 +305,8 @@ public class QueryManager {
                     String accession = rs2.getString(2);
                     String gi = rs2.getString(3);
                     String method = rs2.getString(4);
+                    String locusid = rs2.getString(5);
+                    String unigene = rs2.getString(6);
                     
                     stmt3.setInt(1, matchgenbankid);
                     rs3 = DatabaseTransaction.executeQuery(stmt3);
@@ -342,7 +346,7 @@ public class QueryManager {
                         mfss.add(mfs);
                     }
                     
-                    MatchGenbankRecord mgs = new MatchGenbankRecord(matchgenbankid,accession,gi, method, mfss);
+                    MatchGenbankRecord mgs = new MatchGenbankRecord(matchgenbankid,accession,gi, method, mfss, locusid, unigene);
                     mgss.add(mgs);
                 }
                 

@@ -27,8 +27,8 @@ public class MatchGenbankRecordSet {
         if(matchGenbankRecords == null || matchGenbankRecords.size() == 0)
             return;
         
-        String sql = "insert into matchgenbankrecord(matchgenbankid, genbankaccession, gi, searchmethod, searchresultid)"+
-                    " values(?,?,?,?,?)";
+        String sql = "insert into matchgenbankrecord(matchgenbankid, genbankaccession, gi, searchmethod, searchresultid, locusid, unigene)"+
+                    " values(?,?,?,?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
         for(int i=0; i<matchGenbankRecords.size(); i++) {
             MatchGenbankRecord mgr = (MatchGenbankRecord)matchGenbankRecords.get(i);
@@ -37,6 +37,8 @@ public class MatchGenbankRecordSet {
             stmt.setString(3, mgr.getGi());
             stmt.setString(4, mgr.getSearchMethod());
             stmt.setInt(5, mgr.getSearchResultid());
+            stmt.setString(6, mgr.getLocusid());
+            stmt.setString(7, mgr.getUnigene());
             DatabaseTransaction.executeUpdate(stmt);
         }
         DatabaseTransaction.closeStatement(stmt);
