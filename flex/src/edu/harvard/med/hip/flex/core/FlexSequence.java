@@ -1,5 +1,5 @@
 /**
- * $Id: FlexSequence.java,v 1.1 2003-03-07 17:44:52 dzuo Exp $
+ * $Id: FlexSequence.java,v 1.2 2003-06-03 15:28:49 dzuo Exp $
  *
  * File     : FlexSequence.java
  * Date     : 05022001
@@ -973,7 +973,7 @@ public void setSequenceInfo(Hashtable h) throws FlexUtilException
     setCdsstop(stop);
     setCdslength(stop-start+1);
     setSequencetext((String)h.get("sequencetext"));
-    if(start==-1 || stop == -1)
+    if(start < 0 || stop < 0)
     {
         setCdslength(0);
         setQuality(FlexSequence.QUESTIONABLE);

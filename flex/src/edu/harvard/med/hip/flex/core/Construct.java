@@ -1,5 +1,5 @@
 /**
- * $Id: Construct.java,v 1.3 2003-05-01 18:51:39 yanhui Exp $
+ * $Id: Construct.java,v 1.4 2003-06-03 15:27:54 dzuo Exp $
  * This class maps to the ConstructDesign table in the database.
  * @File Construct.java
  * @date 4/28/01
@@ -29,8 +29,8 @@ import java.util.Vector;
 
 
 public class Construct {
-    private static final int SIZELOWER = 2000;
-    private static final int SIZEHIGHER = 4000;
+    public static final int SIZELOWER = 2000;
+    public static final int SIZEHIGHER = 4000;
     public static final String FUSION = "FUSION";
     public static final String CLOSED = "CLOSED";
     

@@ -26,8 +26,8 @@ import edu.harvard.med.hip.flex.user.User;
 public class RearrayManager {
     public static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     public static final String DILIM = "\t";
-    //public static final String FILEPATH = "/tmp/";
-    public static final String FILEPATH = "G:\\";
+    public static final String FILEPATH = "/tmp/";
+    //public static final String FILEPATH = "G:\\";
     public static final String LEFTFILE = "left";
     
     protected InputStream fileInput = null;
@@ -61,7 +61,7 @@ public class RearrayManager {
     
     protected int sortBy = GenericRearrayer.SORT_BY_NONE;
     protected int numOfWellsOnPlate = 96;
-    protected int numOfControls = 2;
+    protected int numOfControls = 0;
     protected int sizeLower = GenericRearrayer.SIZELOWER;
     protected int sizeHigher = GenericRearrayer.SIZEHIGHER;
     protected String plateType = REARRAYEDPLATETYPE;
@@ -340,6 +340,12 @@ public class RearrayManager {
         
         ArrayList plateSamples = new ArrayList();
         for(int i=0; i<samples.size(); i++) {
+            RearrayPlateMap m = (RearrayPlateMap)samples.get(i);
+            
+            //check the dest plate well position for illegal value
+            if(isDestPlateSet && (m.getDestWell()<(numOfControls/2+1) || m.getDestWell()>(numOfWellsOnPlate-numOfControls/2)))
+                throw new Exception("Invalid destination well: "+m.getRearrayInputSample().getDestPlate()+": "+m.getRearrayInputSample().getDestWell());
+        
             plateSamples.add(samples.get(i));
             
             //This is one plate
@@ -528,8 +534,8 @@ public class RearrayManager {
      ********************************************************************************/
     public static void main(String args[]) {
         //String file = "G:\\rearraytest1.txt";
-        //String file = "G:\\rearraytest2.txt";
-        String file = "G:\\rearraytest4.txt";
+        String file = "G:\\rearraytest2.txt";
+        //String file = "G:\\rearraytest4.txt";
         
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -538,7 +544,8 @@ public class RearrayManager {
             RearrayManager manager = new RearrayManager(input);
             manager.setIsWellAsNumber(false);
             manager.setIsArrangeByFormat(true);
-            manager.setIsControl(true);
+            //manager.setIsControl(true);
+            //manager.setNumOfControls(2);
             //manager.setIsFullPlate(true);
             manager.setIsOneFile(false);
             manager.setIsOligo(true);

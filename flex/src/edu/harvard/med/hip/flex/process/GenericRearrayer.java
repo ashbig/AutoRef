@@ -84,7 +84,7 @@ public class GenericRearrayer {
             ArrayList s = (ArrayList)sortedSamples.get(i);
             newSamples.addAll(s);
         }
-       
+        
         return newSamples;
     }
     
@@ -95,7 +95,7 @@ public class GenericRearrayer {
      * @param samples A list of samples.
      * @return A sorted list of samples.
      */
-    public ArrayList groupByDest(List samples) {
+    public ArrayList groupByDest(List samples) throws Exception {
         Hashtable containers = new Hashtable();
         
         for(int i=0; i<samples.size(); i++) {
@@ -118,6 +118,28 @@ public class GenericRearrayer {
             String k = (String)enum.nextElement();
             ArrayList s = (ArrayList)containers.get(k);
             Collections.sort(s, new DestWellComparator());
+            
+            //check for duplicate well positions
+            String lastLabel = null;
+            int lastPosition = -1;
+            for(int i=0; i<s.size(); i++) {
+                RearrayPlateMap rs = (RearrayPlateMap)s.get(i);
+                String label = rs.getDestPlateLabel();
+                int position = rs.getDestWell();
+                
+                if(lastLabel == null && lastPosition == -1) {
+                    lastLabel = label;
+                    lastPosition = position;
+                } else {
+                    if(lastLabel.equals(label) && lastPosition == position) {
+                        throw new Exception("Duplicate destination wells: "+rs.getRearrayInputSample().getDestPlate()+": "+rs.getRearrayInputSample().getDestWell());
+                    } else {
+                        lastLabel = label;
+                        lastPosition = position;
+                    }
+                }
+            }
+            
             results.add(s);
         }
         
@@ -223,7 +245,7 @@ public class GenericRearrayer {
         }
     }
     
-     public class DestWellComparator implements Comparator {
+    public class DestWellComparator implements Comparator {
         
         public DestWellComparator() {
         }
@@ -244,7 +266,7 @@ public class GenericRearrayer {
             return -1;
         }
     }
-     
+    
     public class CDSComparator implements Comparator {
         
         public CDSComparator() {
@@ -274,56 +296,62 @@ public class GenericRearrayer {
     public static void main(String args[]) throws IOException, FlexDatabaseException, SQLException {
         String file = "G:\\rearraytest1.txt";
         String file2 = "G:\\rearraytest2.txt";
+        String file3 = "G:\\rearraytest4.txt";
         ArrayList samples = null;
         ArrayList newsamples = null;
-  
+        
         GenericRearrayer rearrayer = new GenericRearrayer();
         /*
         samples = readFile(file);
-       
+         
         System.out.println("Samples before rearray");
         printSamples(samples);
-        
+         
         System.out.println("Group by source");
         newsamples = rearrayer.groupBySource(samples);
-
+         
         for(int i=0; i<newsamples.size(); i++) {
             ArrayList currentSamples = (ArrayList)newsamples.get(i);
             printSamples(currentSamples);
         }
-      
+         
         System.out.println("Group by format");
         newsamples = rearrayer.groupByFormat(samples);
         for(int i=0; i<newsamples.size(); i++) {
             ArrayList currentSamples = (ArrayList)newsamples.get(i);
             printSamples(currentSamples);
         }
-       
+         
         System.out.println("Sort by saw-tooth");
         newsamples = rearrayer.sortBySawTooth(samples);
         printSamples(newsamples);
-
+         
         System.out.println("Group by size");
         newsamples = rearrayer.getSequencesBySize(samples, 500, 1000);
         printSamples(newsamples);
-*/         
+         */
         
-        samples = readFile(file2);
+        //samples = readFile(file2);
+        samples = readFile(file3);
         
         System.out.println("Samples before rearray");
         printSamples(samples);
         
-        newsamples = rearrayer.groupByDest(samples);
-        System.out.println("Group by destination plate");
-        for(int i=0; i<newsamples.size(); i++) {
-            ArrayList currentSamples = (ArrayList)newsamples.get(i);
-            printSamples(currentSamples);
+        try {
+            newsamples = rearrayer.groupByDest(samples);
+            
+            System.out.println("Group by destination plate");
+            for(int i=0; i<newsamples.size(); i++) {
+                ArrayList currentSamples = (ArrayList)newsamples.get(i);
+                printSamples(currentSamples);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
-        
         System.exit(0);
     }
     
-    private static ArrayList readFile(String file) 
+    private static ArrayList readFile(String file)
     throws IOException, FlexDatabaseException, SQLException {
         BufferedReader in = new BufferedReader(new FileReader(file));
         String line = null;
@@ -345,7 +373,7 @@ public class GenericRearrayer {
             inputSamples.add(s);
         }
         in.close();
-                
+        
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         RearrayPlateMapCreator creator = new RearrayPlateMapCreator(true, false);

@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.12 2002-12-18 17:00:34 Elena Exp $
+ * $Id: GenbankGeneFinder.java,v 1.13 2003-06-03 15:42:33 dzuo Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -95,6 +95,7 @@ public class GenbankGeneFinder {
             new InputStreamReader(
             url.openStream()));
             
+            String accession = "";
             String organism = ""; String gene_name = "";
             String locus_link_id = "";
             int start = -1;
@@ -105,7 +106,14 @@ public class GenbankGeneFinder {
             String inputLine;
             boolean breakSeq = false;
             while ((inputLine = in.readLine()) != null) {
-              
+                if(inputLine.trim().indexOf("ACCESSION") == 0 && accession.equals("")) {
+                    StringTokenizer tokens = new StringTokenizer(inputLine);
+                    if(tokens.hasMoreTokens()) {
+                        String ignore = tokens.nextToken();
+                        accession = tokens.nextToken();
+                    }
+                }
+                
                 if(inputLine.trim().indexOf("/organism=") == 0) {
                     organism = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\""));
                 }
@@ -120,11 +128,13 @@ public class GenbankGeneFinder {
                 if(inputLine.indexOf(">CDS</a>") != -1) {
                     cdscount++;
                     
+                    //genomic
                     if(cdscount>1) {
                         start = -1;
                         stop = -1;
                         break;
                     }
+                    //genomic
                     if(inputLine.indexOf("join") != -1 || inputLine.indexOf("complement") != -1)
                         continue;
                     
@@ -139,15 +149,17 @@ public class GenbankGeneFinder {
                     if(st.hasMoreTokens()) {
                         String startStr = st.nextToken();
                         String newStart = startStr;
+                        //missing start
                         if(startStr.indexOf("&lt;")!=-1) {
                             //newStart = startStr.substring(startStr.indexOf(";")+1);
-                            newStart = "-1";
+                            newStart = "-2";
                         }
                         
                         String stopStr = st.nextToken();
                         String newStop = stopStr;
+                        //missing stop
                         if(stopStr.indexOf("&gt;") != -1) {
-                            newStop = "-1";
+                            newStop = "-2";
                         }
                         start = Integer.parseInt(newStart);
                         stop = Integer.parseInt(newStop);
@@ -176,6 +188,7 @@ public class GenbankGeneFinder {
   
             in.close();
             
+            h.put("accession",  accession);
             h.put("species", organism);
             h.put("start", new Integer(start));
             h.put("stop", new Integer(stop));
