@@ -59,7 +59,7 @@
   </tr>
   <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_UPLOAD_PLATES %> >
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_UPLOAD_PLATES %> checked >
       Upload template plates information (settings required)&nbsp;<br>
       </font> <font color="#ECECFF">a</font></td>
   </tr>
@@ -115,22 +115,22 @@
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_PRIMER3 %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_PRIMER3 %> DISABLED>
       Run primer designer (settings required)</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER  %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER  %> DISABLED>
       Add new internal primer</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_APPROVE_INTERNAL_PRIMERS %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_APPROVE_INTERNAL_PRIMERS %> DISABLED>
       Approve internal primers</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> DISABLED>
       View internal primers 
       <P></font></td>
   </tr>
@@ -145,17 +145,17 @@
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE  %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE  %> DISABLED>
       Submit assembled sequences</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER %> DISABLED>
       Run discrepancy finder</font> </td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %> DISABLED>
       Run polymorphism finder(settings required)</font> </td>
   </tr>
   <tr> 

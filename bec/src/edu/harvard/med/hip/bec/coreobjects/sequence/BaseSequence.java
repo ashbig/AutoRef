@@ -41,7 +41,7 @@ public  class BaseSequence
     public static final int CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES = 3;
     public static final int CLONE_SEQUENCE_STATUS_NOMATCH = 4;
     public static final int CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED = 2;
-    public static final int CLONE_SEQUENCE_STATUS_FINISHED = 5;
+    public static final int CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED = 5;
     
     //sequence assembly status for clone sequence only
     // !!!!!!! final should have max value we count on this !!!!!
@@ -63,7 +63,7 @@ public  class BaseSequence
     
     protected int m_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     protected String m_text = null;
-    protected int m_type = -1;
+    protected int m_type = BASE_SEQUENCE;
     
     
     /** Creates a new instance of BaseSequence */
@@ -267,17 +267,28 @@ public  class BaseSequence
         }
     }
     
-    
-    public static String       getSequenceAnalyzedStatusAsString(int analize_status)
+     public static String       getCloneSequenceTypeAsString(int clone_seq_type)
     {
-        switch (analize_status)
+        switch (clone_seq_type)
+        {
+             case CLONE_SEQUENCE_TYPE_ASSEMBLED : return "Assembled"; 
+             case CLONE_SEQUENCE_TYPE_EDITED :return "Edited"; 
+             case CLONE_SEQUENCE_TYPE_FINAL : return "Final"; 
+            default : return "";
+        }
+     }
+     
+    
+    public static String       getSequenceAnalyzedStatusAsString(int status)
+    {
+        switch (status)
         {
             case CLONE_SEQUENCE_STATUS_ASSEMBLED: return "Obtained"; 
             case CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES : return "Analyzed, discrepancies found"; 
             case CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES: return "Analyzed, no discrepancies found";
             case CLONE_SEQUENCE_STATUS_NOMATCH :return "Not Matched"; 
             case CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED :return "Polymorphism resolved"; 
-            case CLONE_SEQUENCE_STATUS_FINISHED: return "Analysis Finished";
+            case CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED: return "Analysis Finished";
             default: return "";
         }
     } 

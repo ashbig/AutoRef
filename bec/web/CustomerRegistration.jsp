@@ -7,7 +7,7 @@
 
 <html>
 <head>
-    <title><bean:message key="bec.name"/> : Customer Registration</title>
+    <title><bean:message key="bec.name"/> : User Registration</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
@@ -16,17 +16,15 @@
 <html:errors/>
 <p>
 
-<html:form action="CustomerRegistration.do" focus="firstName">
+<html:form action="CustomerRegistration.do" focus="userID">
 
-<div align="center">
-  <center>
 
- <table border="0" cellpadding="0" cellspacing="0" width="78%" height="46"> 
+ <table border="0" cellpadding="0" cellspacing="0" width="78%" height="46" align="center"> 
 <tr>
       <td width="54%" height="22" valign="bottom" align="left">
-        <h1><b><font color="#000080">Resercher Registration </font></b></h1>
+        <h1><b><font color="#000080">User Registration </font></b></h1>
       </td>
-        <td width="46%" height="22" valign="middle" align="right"><img src="./jpg/earth.gif" width="76" height="76"><img src="./jpg/pc&woman.gif" width="110" height="76">&nbsp;</td>
+        <td width="46%" height="22" valign="middle" align="right"><img src="./jpg/pc&woman.gif" width="110" height="76">&nbsp;</td>
     </tr>
     <tr>
       <td width="100%" colspan="2" height="24">
@@ -36,7 +34,7 @@
     <tr>
       <td width="100%" colspan="2" height="21">
         <table border="0" cellpadding="0" cellspacing="0" width="80%">
-  
+  <!--
         <tr>
         <td class="prompt">First Name:</td>
         <td><html:text property="firstName" size="40"/></td>
@@ -86,6 +84,11 @@
         <td class="prompt">Work Phone:</td>
         <td><html:text property="phone" size="40"/></td>
         </tr>
+-->
+<tr>
+        <td class="prompt">User Name:</td>
+        <td><html:text property="userID" size="40"/></td>
+        </tr>
 
         <tr>
         <td class="prompt">Email:</td>
@@ -97,11 +100,7 @@
         <td><html:text property="organization" size="40"/></td>
         </tr>
 
-        <tr>
-        <td class="prompt">User Name:</td>
-        <td><html:text property="userID" size="40"/></td>
-        </tr>
-
+        
         <tr>
         <td class="prompt">Password:</td>
         <td><html:password property="password" size="40"/></td>
@@ -116,14 +115,15 @@
         <td class="prompt">Reminder Text:</td>
         <td><html:text property="reminderText" size="40"/></td>
         </tr>
-
-        <tr>
-        <td></td><td><html:submit property="submit" value="Register"/>&nbsp;&nbsp;&nbsp;<html:reset/></td>
-        </tr>
-
-    </table>
+  </table>
 </tr>
 </table>
+<div align="center">
+        <td></td><td><html:submit property="submit" value="Register"/>&nbsp;&nbsp;&nbsp;
+<INPUT TYPE=RESET value="Reset">
+</div>
+
+  
 </center>
 </div>
 </html:form>

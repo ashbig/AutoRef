@@ -12,6 +12,7 @@
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
+<%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
 
 <html>
 
@@ -79,14 +80,14 @@
 <TH>Rank</TH>
 </tr>
         <%
-        ArrayList element = null;
+        UICloneSample clone = null;
 int rank = -1; String rank_as_string = null;
 int status = -1;
        for (int count = 0; count < clones_data.size(); count++)
         {
-            element = (ArrayList) clones_data.get(count); 
-            status = ((Integer)element.get(3)).intValue();
-            rank = ((Integer)element.get(2)).intValue();
+            clone = (UICloneSample) clones_data.get(count); 
+            status = clone.getCloneStatus();
+            rank = clone.getRank();
             switch (rank)
 {
      case 1: case 2: case 3: case 4: {rank_as_string = String.valueOf(rank); break;}
@@ -96,19 +97,16 @@ int status = -1;
 }
 %>
 <tr>
-<TD width="30%"><%= (String)element.get(0) %></TD>
-<TD width="15%" align=center><%= element.get(1) %></TD>
+<TD width="30%"><%= clone.getPlateLabel() %></TD>
+<TD width="15%" align=center><%= clone.getPosition() %></TD>
 <TD width="20%" align=center><%= rank_as_string %></TD>
-<TD width="20%" align=center>
-<%= IsolateTrackingEngine.getStatusAsString(status) %>
-
-</TD>
+<TD width="20%" align=center><%= IsolateTrackingEngine.getStatusAsString(status) %></TD>
 <TD align=center>
 
 <% if (status == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED ||
     status == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH )
 {%>
-<select name="<%= element.get(4) %>" >
+<select name="<%=  clone.getIsolateTrackingId() %>" >
     <option value=1 <% if (rank == 1) {%> selected <%}%> >Best
     <option value=2 <% if (rank == 2) {%> selected <%}%> >Second
     <option value=3 <% if (rank == 3) {%> selected <%}%> >Third

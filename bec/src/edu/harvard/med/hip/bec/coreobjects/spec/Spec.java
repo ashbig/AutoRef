@@ -185,6 +185,8 @@ public abstract class Spec
     
     public void insert(Connection conn) throws BecDatabaseException
     {
+        if ( m_name == null || m_name.trim().equals(""))
+            throw new BecDatabaseException("Spec with name '"+m_name +"' cannot be submitted");
         if (m_id == -1)
                 m_id = BecIDGenerator.getID("configid");
         

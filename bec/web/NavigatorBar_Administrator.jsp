@@ -126,7 +126,7 @@ function init() {
     <td width="80%"><font color="#3333CC"> 
       <h1><strong>Biological Evaluation of Clones (BEC)</strong></h1>
       </font></td>
-    <td > <img align="top" border="0" src="./jpg/earth.gif" width=76 height="76" > 
+    <!--<td > <img align="top" border="0" src="./jpg/earth.gif" width=76 height="76" > -->
     </td>
     <td><img border="0" src="./jpg/pc&woman.gif"  width=96 height="76" ></td>
   </tr>

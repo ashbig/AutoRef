@@ -13,6 +13,7 @@ import javax.sql.*;
 import java.util.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.ui_objects.*;
 /**
  *
  * @author  htaycher
@@ -354,7 +355,8 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
     public static ArrayList getClonesData(int construct_id)throws BecDatabaseException
     {
         ArrayList clones_data = new ArrayList();
-        ArrayList clone_data = null;
+       
+        UICloneSample clone_sample = null;
          String sql = "select label, position, iso.status as status,rank,isolatetrackingid  "
 +" from isolatetracking iso,  sample s, containerheader c "
 +" where  s.sampleid=iso.sampleid and s.containerid=c.containerid and constructid="+construct_id+" order by position";
@@ -367,13 +369,13 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
             
             while(rs.next())
             {
-                clone_data = new ArrayList();
-                clone_data.add(rs.getString("label"));
-                clone_data.add( new Integer(rs.getInt("position")));
-                clone_data.add(new Integer(rs.getInt("rank")));
-                clone_data.add(new Integer(rs.getInt("status")));
-                clone_data.add(new Integer(rs.getInt("isolatetrackingid")));
-                clones_data.add(clone_data);
+                clone_sample = new UICloneSample();
+                clone_sample.setPlateLabel(rs.getString("label"));
+                clone_sample.setPosition(rs.getInt("position"));
+                clone_sample.setRank(rs.getInt("rank"));
+                clone_sample.setCloneStatus(rs.getInt("status"));
+                clone_sample.setIsolateTrackingId(rs.getInt("isolatetrackingid"));
+                clones_data.add(clone_sample);
             }
             return clones_data;
         } catch (Exception e)
@@ -388,7 +390,7 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
     
     //function gets all constructs that corespond to set of plates
     //with at least one isolate with status isolate_status
-    public static ArrayList getConstructsFromPlates( ArrayList plate_ids)throws BecDatabaseException
+    public static ArrayList getConstructsFromPlates( ArrayList plate_ids, String clone_sequence_status, String clone_sequence_type, int mode)throws BecDatabaseException
     {
        
         String int_plateids = "";
@@ -398,17 +400,17 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
             int_plateids += ((Integer)plate_ids.get(i)).intValue();
             if (i != plate_ids.size() - 1) int_plateids+=",";
         }
-        return getConstructsFromPlates(  int_plateids );
+        return getConstructsFromPlates(  int_plateids, clone_sequence_status,  clone_sequence_type, mode );
     }
      
      //function gets all constructs that corespond to set of plates
     //with at least one isolate with status isolate_status
-     public static ArrayList getConstructsFromPlate( int plate_id)throws BecDatabaseException
+     public static ArrayList getConstructsFromPlate( int plate_id, String clone_sequence_status, String clone_sequence_type, int mode)throws BecDatabaseException
     {
-        return getConstructsFromPlates(  String.valueOf(plate_id));
+        return getConstructsFromPlates(  String.valueOf(plate_id),  clone_sequence_status,  clone_sequence_type,  mode);
     }
     
-     private static ArrayList getConstructsFromPlates( String plate_ids)throws BecDatabaseException
+     private static ArrayList getConstructsFromPlates( String plate_ids,String clone_sequence_status,String clone_sequence_type, int mode)throws BecDatabaseException
      {
          ArrayList constructs = new ArrayList();
         Hashtable constructs_hash = new Hashtable();
@@ -458,8 +460,16 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
                     ||istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED
                     || istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS)
                     {
-                        CloneSequence cl = CloneSequence.getByIsolateTrackingId(istr.getId(), CloneSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
-                        istr.setCloneSequence(cl);
+                        if (mode == 1)
+                        {
+                            CloneSequence cl = CloneSequence.getOneByIsolateTrackingId(istr.getId(), clone_sequence_status, clone_sequence_type);
+                            istr.setCloneSequence(cl);
+                        }
+                        else if (mode > 1)
+                        {
+                            ArrayList clonesequences = CloneSequence.getAllByIsolateTrackingId(istr.getId(), clone_sequence_status, clone_sequence_type);
+                            istr.setCloneSequences(clonesequences); 
+                        }
                     }
                     else
                     {
@@ -511,7 +521,7 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
         try{
         ArrayList master_container_ids = new ArrayList();
         master_container_ids.add(new Integer(16));  
-        ArrayList co =Construct.getConstructsFromPlates(master_container_ids);
+        ArrayList co =Construct.getConstructsFromPlates(master_container_ids,"0","0",1);
         System.exit(0);
         }catch(Exception e){}
    }

@@ -25,12 +25,12 @@ public class CloneSequence extends AnalyzedScoredSequence
        
      //obtained/analyzed/mutations cleared/final
   
-    private int        m_sequence_type = -1 ; //final\conseq\final editied
+    private int        m_sequence_type = BaseSequence.CLONE_SEQUENCE_TYPE_ASSEMBLED ; //final\conseq\final editied
     private int         m_approved_by_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
    
     private int         m_result_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private int         m_isolatetracking_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
-    private int         m_analize_status = -1;
+    //private int         m_analize_status = -1;
     private int         m_cds_start = -1;
     private int         m_cds_stop = -1;
     private int         m_linker5_start = -1;
@@ -39,12 +39,14 @@ public class CloneSequence extends AnalyzedScoredSequence
     private String     m_submission_date = null;
   
     
+    private static int   MODE_ONE_LAST_BY_DATE_SEQUENCE = 0;
+    private static int   MODE_ALL_SEQUENCES = 1;
     
     public CloneSequence( String text,  int refseqid)
     {
         super( Algorithms.cleanWhiteSpaces(text) , refseqid);
         m_type = CLONE_SEQUENCE;
-        m_analize_status = STATUS_OBTAINED;
+        m_analize_status = CLONE_SEQUENCE_STATUS_ASSEMBLED;
        
     }
     public CloneSequence( String text, String scores,int refseqid, int status) 
@@ -95,12 +97,32 @@ public class CloneSequence extends AnalyzedScoredSequence
        
     }
     
-    public static CloneSequence getByIsolateTrackingId(int is_id, int seq_type) throws BecDatabaseException
+    public static CloneSequence getOneByIsolateTrackingId(int is_id, String clone_sequence_analysis_status, String clone_sequence_type) throws BecDatabaseException
     {
-        String sql = "select sequenceid from assembledsequence where isolatetrackingid = "+is_id+" and SEQUENCETYPE  =    "+seq_type;
-        return getByRule(sql);
+        String sql = "select sequenceid from assembledsequence where isolatetrackingid = "+is_id;
+        if (clone_sequence_analysis_status != null)
+                sql += " and SEQUENCETYPE  in (    "+clone_sequence_type +")";
+        if ( clone_sequence_analysis_status != null)
+            sql +=" and ANALYSISSTATUS in ( "+clone_sequence_analysis_status +")";
+        sql += " order by submissiondate ";
+        ArrayList sequences = getByRule(sql );
+        if (sequences.size() > 0)
+            return (CloneSequence) sequences.get(0);
+        return null;
     }
     
+    
+     public static ArrayList getAllByIsolateTrackingId(int is_id, String clone_sequence_analysis_status, String clone_sequence_type) throws BecDatabaseException
+    {
+        String sql = "select sequenceid from assembledsequence where isolatetrackingid = "+is_id;
+        if (clone_sequence_analysis_status != null)
+                sql += " and SEQUENCETYPE  in (    "+clone_sequence_type +")";
+        if ( clone_sequence_analysis_status != null)
+            sql +=" and ANALYSISSTATUS in ( "+clone_sequence_analysis_status +")";
+        sql += " order by submissiondate ";
+        return getByRule(sql);
+    }
+     
    public String getCodingSequence()
    {
              return getText().substring(m_cds_start,m_cds_stop + 1);
@@ -108,7 +130,7 @@ public class CloneSequence extends AnalyzedScoredSequence
     
     public CloneSequence( String text, String score, int refseqid)
     {
-        super( text,score,refseqid,STATUS_OBTAINED);
+        super( text,score,refseqid,CLONE_SEQUENCE_STATUS_ASSEMBLED);
         m_type =  CLONE_SEQUENCE;
    
     }
@@ -219,18 +241,21 @@ public class CloneSequence extends AnalyzedScoredSequence
     }
     
    //**********************************************************
-     private static CloneSequence getByRule( String sql)throws BecDatabaseException
+     private static ArrayList getByRule( String sql)throws BecDatabaseException
      {
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = null;
+        ArrayList sequences = new ArrayList();
+        CloneSequence seq = null;
         try
         {
             rs = t.executeQuery(sql);
-            if(rs.next())
+            while(rs.next())
             {
-                return new CloneSequence( rs.getInt ("SEQUENCEID") );
+                seq = new CloneSequence( rs.getInt ("SEQUENCEID") );
+                sequences.add(seq);
             }
-            return null;
+            return sequences;
             
          }
          catch(Exception e)
@@ -252,7 +277,8 @@ public class CloneSequence extends AnalyzedScoredSequence
        
             String query="ATGGAGCTACGTGTGGGGAACAAGTACCGCCTGGGACGGAAGATCGGGAGCGGGTCCTTCGGAGATATCTACCTGGGTGCCAACATCGCCTCTGGTGAGGAAGTCGCCATCAAGCTGGAGTGTGTGAAGACAAAGCACCCCCAGCTGCACATCGAGAGCAAGTTCTACAAGATGATGCAGGGTGGCGTGGGGATCCCGTCCATCAAGTGGTGCGGAGCTGAGGGCGACTACAACGTGATGGTCATGGAGCTGCTGGGGCCTAGCCTCGAGGACCTGTTCAACTTCTGTTCCCGCAAATTCAGCCTCAAGACGGTGCTGCTCTTGGCCGACCAGATGATCAGCCGCATCGAGTATATCCACTCCAAGAACTTCATCCACCGGGACGTCAAGCCCGACAACTTCCTCATGGGGCTGGGGAAGAAGGGCAACCTGGTCTACATCATCGACTTCGGCCTGGCCAAGAAGTACCGGGACGCCCGCACCCACCAGCACATTCCCTACCGGGAAAACAAGAACCTGACCGGCACGGCCCGCTACGCTTCCATCAACACGCACCTGGGCATTGAGCAAAGCCGTCGAGATGACCTGGAGAGCCTGGGCTACGTGCTCATGTACTTCAACCTGGGCTCCCTGCCCTGGCAGGGGCTCAAAGCAGCCACCAAGCGCCAGAAGTATGAACGGATCAGCGAGAAGAAGATGTCAACGCCCATCGAGGTCCTCTGCAAAGGCTATCCCTCCGAATTCTCAACATACCTCAACTTCTGCCGCTCCCTGCGGTTTGACGACAAGCCCGACTACTCTTACCTACGTCAGCTCTTCCGCAACCTCTTCCACCGGCAGGGCTTCTCCTATGACTACGTCTTTGACTGGAACATGCTGAAATTCGGTGCAGCCCGGAATCCCGAGGATGTGGACCGGGAGCGGCGAGAACACGAACGCGAGGAGAGGATGGGGCAGCTACGGGGGTCCGCGACCCGAGCCCTGCCCCCTGGCCCACCCACGGGGGCCACTGCCAACCGGCTCCGCAGTGCCGCCGAGCCCGTGGCTTCCACGCCAGCCTCCCGCATCCAGCCGGCTGGCAATACTTCTCCCAGAGCGATCTCGCGGGTCGACCGGGAGAGGAAGGTGAGTATGAGGCTGCACAGGGGTGCGCCCGCCAACGTCTCCTCCTCAGACCTCACTGGGCGGCAAGAGGTCTCCCGGATCCCAGCCTCACAGACAAGTGTGCCATTTGACCATCTCGGGAAGTTGG";
         
-             CloneSequence s = CloneSequence.getByIsolateTrackingId(988, 0);
+             CloneSequence s = CloneSequence.getOneByIsolateTrackingId(988, "0,1,2","0,1,2");
+              ArrayList s1 = CloneSequence.getAllByIsolateTrackingId(988, "0,1,2","0,1,2");
              System.out.print( s.getCodingSequence());
         } catch (Exception e)
         {

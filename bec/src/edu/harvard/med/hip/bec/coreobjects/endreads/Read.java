@@ -271,10 +271,10 @@ public class Read
     public int         getTrimEnd(){ return m_trimmedstop  ;}
      public int         getCdsStart(){ return m_cdsstart ;}
     public int         getCdsStop(){ return m_cdsstop ;}
-    
-    public String       getTypeAsString()
+    public String       getTypeAsString() {return getTypeAsString(m_type);}
+    public static String       getTypeAsString(int type)
     {
-        switch (m_type)
+        switch (type)
         {
             case  TYPE_ENDREAD_REVERSE : return "Reverse";
             case  TYPE_ENDREAD_REVERSE_FAIL : return "Reverse Fail";

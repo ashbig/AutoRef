@@ -12,6 +12,7 @@ import edu.harvard.med.hip.bec.database.*;
 import java.sql.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 /**
  *
  * @author  htaycher
@@ -20,6 +21,9 @@ public class FullSeqSpec extends Spec
 {
     public static final int CUT_OFF_VALUE_NOT_FOUND = -1000;
     
+    
+     public static final int MODE_PASS = 1;
+      public static final int MODE_FAIL = 0;
     //values
     
     public static final String FS_SILENT= "FS_SILENT";
@@ -66,7 +70,7 @@ public class FullSeqSpec extends Spec
          return getAllSpecsByTypeAndSubmitter(Spec.FULL_SEQ_SPEC_INT, submitter_id);
      }
      
-     public int getDiscrepancyNumberByType(int quality, int changetype) throws BecDatabaseException 
+     public int getDiscrepancyNumberByType(int quality, int changetype,int mode) throws BecDatabaseException 
      {
          switch (changetype)
          {
@@ -74,126 +78,233 @@ public class FullSeqSpec extends Spec
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_S_PASS_H");
+                     if ( mode == MODE_PASS)
+                        return  this.getParameterByNameInt("FS_S_PASS_H");
+                     else if( mode == MODE_FAIL)
+                        return  this.getParameterByNameInt("FS_S_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_S_PASS_L");
+                 {
+                     if ( mode == MODE_PASS)
+                        return  this.getParameterByNameInt("FS_S_PASS_L");
+                     else if( mode == MODE_FAIL)
+                        return  this.getParameterByNameInt("FS_S_FAIL_L");
+                 }
+                  
              }
              case Mutation.MACRO_SPECTYPE_INFRAME :
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_IINS_PASS_H");
+                     if ( mode == MODE_PASS)
+                        return  this.getParameterByNameInt("FS_IINS_PASS_H");
+                     else if( mode == MODE_FAIL)
+                        return  this.getParameterByNameInt("FS_IINS_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_IINS_PASS_L");
+                 {
+                      if ( mode == MODE_PASS)
+                        return  this.getParameterByNameInt("FS_IINS_PASS_L");
+                     else if( mode == MODE_FAIL)
+                        return  this.getParameterByNameInt("FS_IINS_FAIL_L");
+                 }
+                  
              }
              case Mutation.MACRO_SPECTYPE_CONSERVATIVE:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_C_PASS_H");
+                      if ( mode == MODE_PASS)
+                        return  this.getParameterByNameInt("FS_C_PASS_H");
+                     else if( mode == MODE_FAIL)
+                        return  this.getParameterByNameInt("FS_C_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_C_PASS_L");
+                 {
+                       if ( mode == MODE_PASS)
+                        return  this.getParameterByNameInt("FS_C_PASS_L");
+                     else if( mode == MODE_FAIL)
+                        return  this.getParameterByNameInt("FS_C_FAIL_L");
+                 }
              }
-             
              case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE :
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_NC_PASS_H");
+                    if ( mode == MODE_PASS)
+                        return  this.getParameterByNameInt("FS_NC_PASS_H");
+                     else if( mode == MODE_FAIL)
+                        return  this.getParameterByNameInt("FS_NC_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_NC_PASS_L");
-                 
+                 {
+                        if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NC_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NC_FAIL_L");
+                 }
              }
              case  Mutation.MACRO_SPECTYPE_FRAMESHIFT:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_FR_PASS_H");
+                     if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_FR_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_FR_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_FR_PASS_L");
+                 {
+                     if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_FR_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_FR_FAIL_L");
+                 }
              }
              
              case Mutation.MACRO_SPECTYPE_INFRAME_DELETION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_IDEL_PASS_H");
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_IDEL_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_IDEL_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_IDEL_PASS_L");
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_IDEL_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_IDEL_FAIL_L");
+                 }
              }
              case Mutation.MACRO_SPECTYPE_TRANCATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_TRANC_PASS_H");
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_TRANC_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_TRANC_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_TRANC_PASS_L");
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_TRANC_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_TRANC_FAIL_L");
+                 }
              }
              case Mutation.MACRO_SPECTYPE_NO_TRANSLATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_NOTRANSLATION_PASS_H");
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NOTRANSLATION_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NOTRANSLATION_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_NOTRANSLATION_PASS_L");
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_NOTRANSLATION_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_NOTRANSLATION_FAIL_L");
+                 }
              }
              case Mutation.MACRO_SPECTYPE_POST_ELONGATION:
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_PELONG_PASS_H");
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_PELONG_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_PELONG_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_PELONG_PASS_L");
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_PELONG_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_PELONG_FAIL_L");
+                 }
              }
              case Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION  : 
-                   {
+             {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_5S_PASS_H");
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_5S_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_5S_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_5S_PASS_L");
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_5S_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_5S_FAIL_L");
+                 }
              }
              case Mutation.MACRO_SPECTYPE_LINKER_3_SUBSTITUTION  :  
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_3S_PASS_H");
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_3S_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_3S_FAIL_H");
                  }
-                 else 
-                     return this.getParameterByNameInt("FS_3S_PASS_L");
+                 else
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_3S_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_3S_FAIL_L");
+                 }
              }
              case Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL  :   
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_5DI_PASS_H");
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_5DI_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_5DI_FAIL_H");
                  }
                  else 
-                     return this.getParameterByNameInt("FS_5DI_PASS_L");
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_5DI_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_5DI_FAIL_L");
+                 }
              }
              case Mutation.MACRO_SPECTYPE_LINKER_3_INS_DEL  :   
              {
                  if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
                  {
-                     return  this.getParameterByNameInt("FS_3DI_PASS_H");
-                 }
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_3DI_PASS_H");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_3DI_FAIL_H");
+                  }
                  else 
-                     return this.getParameterByNameInt("FS_3DI_PASS_L");
+                 {
+                       if ( mode == MODE_PASS)
+                            return  this.getParameterByNameInt("FS_3DI_PASS_L");
+                        else if( mode == MODE_FAIL)
+                            return  this.getParameterByNameInt("FS_3DI_FAIL_L");
+                 }
              }
              default: return CUT_OFF_VALUE_NOT_FOUND;
          }
         
      }
+     
+     
+     
      //cleans up not neaded parameters submitted by html form
      protected void cleanup_parameters()
      {
@@ -220,6 +331,9 @@ public class FullSeqSpec extends Spec
      {
          return getParameterByNameInt("FS_N_ROW");
      }
+     
+     
+     
       //-------------------- mani -----------------------
      public static void main(String [] args) 
      {
@@ -228,13 +342,28 @@ public class FullSeqSpec extends Spec
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
-             specs =  FullSeqSpec.getAllSpecs();
+             FullSeqSpec spec = (FullSeqSpec) Spec.getSpecById(12);
              
-            System.out.print(specs.size());
-            specs =  FullSeqSpec.getAllSpecNames();
-            System.out.print(specs.size());
-            specs =  FullSeqSpec.getAllSpecsBySubmitter(1);
-             System.out.print(specs.size());
+            System.out.println( spec.getDiscrepancyNumberByType(0, Mutation.MACRO_SPECTYPE_SILENT,0)  );
+              System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_SILENT,0)  );
+                System.out.println( spec.getDiscrepancyNumberByType(0, Mutation.MACRO_SPECTYPE_SILENT,1)  );
+                  System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_SILENT,1)  );
+                    System.out.println( spec.getDiscrepancyNumberByType(2, Mutation.MACRO_SPECTYPE_SILENT,1)  );
+                    
+                    
+                    
+            System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_NONCONSERVATIVE,0)  );
+            System.out.println( spec.getDiscrepancyNumberByType(2, Mutation.MACRO_SPECTYPE_POST_ELONGATION,0)  );
+            System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_SILENT,1)  );
+            System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_TRANCATION,0)  );    
+            System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_NONCONSERVATIVE,1)  );
+            
+            System.out.println( spec.getDiscrepancyNumberByType(0, Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION,0)  );
+            System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_LINKER_5_SUBSTITUTION,1)  );
+            System.out.println( spec.getDiscrepancyNumberByType(2, Mutation.MACRO_SPECTYPE_POST_ELONGATION,1)  );
+            System.out.println( spec.getDiscrepancyNumberByType(0, Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL,1)  );
+            System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL,0)  );    
+            System.out.println( spec.getDiscrepancyNumberByType(2, Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL,0)  );
         }
         catch(Exception e){ System.out.print(specs.size());}
         System.exit(0);

@@ -95,6 +95,7 @@ public class IsolateTrackingEngine
     private Read    m_forward_endread = null;
     private Read    m_reverse_endread = null;
     private CloneSequence   m_clone_sequence = null;
+    private ArrayList   m_clone_sequences = null;
     private ArrayList   m_endreads = null;
     
     
@@ -159,18 +160,20 @@ public class IsolateTrackingEngine
     public void      setEndReads(ArrayList reads)    {          m_endreads = reads;    }
     public void         setAssemblyStatus(int v){ m_assembly_status = v;}
     public void     setCloneSequence(CloneSequence c){ m_clone_sequence =c ;}
+    public void     setCloneSequences(ArrayList c){ m_clone_sequences=c ;}
     
-    public  int     getId(){ return m_id;}
-    public int      getFlexInfoId(){ return m_flexinfo_id ;}// sample id of the first sample of this isolate
-    public int      getConstructId(){ return m_construct_id ;}// identifies the agar; several (four) isolates will have the same id
-    public int      getStatus(){ return m_status ;}
-     public int     getAssemblyStatus(){return  m_assembly_status ;}
-    public int[]    getEndReadId()   {              return m_end_reads_id ; }// sample id of the sample used for the forward read
-    public int      getRank(){ return m_rank;} ;// results of the end read analysis
-    public int      getSampleId(){ return m_sample_id ;}// resulting from the full sequencing
-    public int[]    getCloneSequenceReadsId(){ return m_fullseq_reads_id;}
-    public CloneSequence     getCloneSequence( ){ return m_clone_sequence ;}
-    public int      getScore() 
+    public  int             getId(){ return m_id;}
+    public int              getFlexInfoId(){ return m_flexinfo_id ;}// sample id of the first sample of this isolate
+    public int              getConstructId(){ return m_construct_id ;}// identifies the agar; several (four) isolates will have the same id
+    public int              getStatus(){ return m_status ;}
+     public int             getAssemblyStatus(){return  m_assembly_status ;}
+    public int[]            getEndReadId()   {              return m_end_reads_id ; }// sample id of the sample used for the forward read
+    public int              getRank(){ return m_rank;} ;// results of the end read analysis
+    public int              getSampleId(){ return m_sample_id ;}// resulting from the full sequencing
+    public int[]            getCloneSequenceReadsId(){ return m_fullseq_reads_id;}
+    public CloneSequence    getCloneSequence( ){ return m_clone_sequence ;}
+    public ArrayList        getCloneSequences(){ return m_clone_sequences;}
+    public int              getScore() 
     { 
        
         return m_score;
@@ -191,7 +194,7 @@ public class IsolateTrackingEngine
             case PROCESS_STATUS_SUBMITTED_FOR_FULLSEQUENCING :return "Submitted for full sequencing";
            // case PROCESS_STATUS_SUBMITTED_FOR_ER_AND_FULL_SEQUENCING :return "Submitted for whole process";
            // case PROCESS_STATUS_SUBMITTED_FOR_ER_SEQUENCING : return "Submitted for end reads sequnecing";
-            case PROCESS_STATUS_SUBMITTED_EMPTY : return "No processing requered";
+            case PROCESS_STATUS_SUBMITTED_EMPTY : return "No processing requiered";
             case PROCESS_STATUS_SUBMITTED_FOR_SEQUENCE_ANALYSIS: return "Submitted for sequence analysis";
             case PROCESS_STATUS_ER_INITIATED :return "End reads ordered";
             case PROCESS_STATUS_ER_PHRED_RUN : return "Phred finished";
@@ -580,9 +583,9 @@ public class IsolateTrackingEngine
         return sequences;
     }
     
-    public static IsolateTrackingEngine getIsolateTrackingEngineBySampleId(int id)throws BecDatabaseException
+    public static IsolateTrackingEngine getIsolateTrackingEngineBySampleId(int id,String cs_analysis_status, String cq_type, int mode)throws BecDatabaseException
     {
-        ArrayList it = getIsolateTrackingEnginesByRule(" sampleid = "+id);
+        ArrayList it = getIsolateTrackingEnginesByRule(" sampleid = "+id,  cs_analysis_status,  cq_type, mode);
         if (it != null && it.size() > 0) return (IsolateTrackingEngine)it.get(0);
         return null;
     }
@@ -624,6 +627,9 @@ public class IsolateTrackingEngine
               m_status = default_status;
      }
     
+    
+    
+   
       //----------------------- private ------------------------------------------
    /*
     private void getEndReadFromDBs() throws BecDatabaseException
@@ -812,7 +818,7 @@ public class IsolateTrackingEngine
      **/
     
     
-   private static ArrayList getIsolateTrackingEnginesByRule( String sql)
+   private static ArrayList getIsolateTrackingEnginesByRule( String sql, String cs_analysis_status, String cq_type, int mode)
         throws BecDatabaseException
     {
         ArrayList engines = new ArrayList();
@@ -846,8 +852,16 @@ public class IsolateTrackingEngine
                     ArrayList reads = Read.getReadByIsolateTrackingId( istr.getId() );
                     istr.setEndReads(reads);
                 }
-                 CloneSequence cl = CloneSequence.getByIsolateTrackingId(istr.getId(), CloneSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED);
-                 istr.setCloneSequence(cl);
+                if (mode == 1)
+                {
+                     CloneSequence cl = CloneSequence.getOneByIsolateTrackingId(istr.getId(), cs_analysis_status,  cq_type);
+                     istr.setCloneSequence(cl);
+                }
+                else if (mode > 1)
+                {
+                    ArrayList cl_seqs = CloneSequence.getAllByIsolateTrackingId(istr.getId(), cs_analysis_status,  cq_type);
+                     istr.setCloneSequences(cl_seqs);
+                }
                 FlexInfo fl = new FlexInfo();
                 fl.setId ( crs.getInt("id"));
                 fl.setIsolateTrackingId ( istr.getId() );

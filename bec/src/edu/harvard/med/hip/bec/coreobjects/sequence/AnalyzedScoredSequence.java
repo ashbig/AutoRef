@@ -90,7 +90,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
             case CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES: return "Analyzed, no discrepancies found";
             case CLONE_SEQUENCE_STATUS_NOMATCH :return "Not Matched"; 
             case CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED :return "Polymorphism resolved"; 
-            case CLONE_SEQUENCE_STATUS_FINISHED: return "Analysis Finished";
+            case CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED: return "Analysis Finished";
             default: return "";
         }
     } 
