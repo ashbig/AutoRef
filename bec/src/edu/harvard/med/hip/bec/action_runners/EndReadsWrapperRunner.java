@@ -28,7 +28,7 @@ import edu.harvard.med.hip.utility.*;
  *
  * @author  HTaycher
  */
-public class EndReadsWrapperRunner implements Runnable
+public class EndReadsWrapperRunner extends ProcessRunner
 {
      // outputBaseDir specify the base directory for trace file distribution
     private static  String OUTPUT_BASE_ROOT = null;
@@ -66,8 +66,6 @@ public class EndReadsWrapperRunner implements Runnable
     private String      m_inputTraceDir = null;
     private String      m_control_samples_directory = null;
     private String      m_empty_samples_directory = null;
-    private ArrayList   m_error_messages = null;
-    private User        m_user = null;
     
     
     private int         m_min_clone_id = 1;
@@ -83,18 +81,17 @@ public class EndReadsWrapperRunner implements Runnable
         m_empty_samples_directory =OUTPUT_BASE_ROOT+ERROR_EMPTY_SAMPLES_DIR;
     }
     
+    public String getTitle()     { return "Request for end reads wrapper";     }
+     
     
     
     
-    
-    public ArrayList getErrorMessages(){ return m_error_messages;}
     public String      getOuputBaseDir (){ return m_outputBaseDir  ;}
     public String      getOuputBaseWrongFormat (){ return m_outputBaseDir_wrongformatfiles  ;}
     public String      getInputDir (){ return m_inputTraceDir  ;}
     public String      getControlSamplesDir (){ return m_control_samples_directory  ;}
     public String      getEmptySamplesDir (){ return m_empty_samples_directory  ;}
 
-     public  void        setUser(User v)    {m_user=v;}
     public void      setOuputBaseDir (String v){  m_outputBaseDir  = v;}
     public void      setOuputBaseWrongFormat (String v){  m_outputBaseDir_wrongformatfiles  = v;}
     public void      setInputDir (String v){  m_inputTraceDir  = v;}
@@ -134,23 +131,7 @@ public class EndReadsWrapperRunner implements Runnable
        {m_error_messages.add(e.getMessage());}
         finally
             {
-                try
-                {
-         //send errors
-                    if (m_error_messages.size()>0)
-                    {
-                         Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                        "hip_informatics@hms.harvard.edu", "Request for end reads wrapper: error messages.", "Errors\n ",m_error_messages);
-                
-                    }
-                     if (m_error_messages.size()==0)
-                    {
-                         Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                        "hip_informatics@hms.harvard.edu", "Request for end reads wrapper: processing finished.", "Processing finished ");
-                
-                    }
-                }
-                catch(Exception e){}
+                sendEMails( getTitle() );
                 DatabaseTransaction.closeConnection(conn);
             }
     }
@@ -315,4 +296,6 @@ public class EndReadsWrapperRunner implements Runnable
         }catch(Exception e){}
         System.exit(0);
      }
+     
+     
 }

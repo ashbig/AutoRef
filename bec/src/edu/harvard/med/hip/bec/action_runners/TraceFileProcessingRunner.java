@@ -49,6 +49,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
     public void setReadDirection(String read_direction)    { m_read_direction = read_direction;}
     public void setReadType(String read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
     public void setFileExtension(String ext){ m_file_extension = ext;}
+     public String getTitle()    {return "Request for trace files renaming.";    }
+    
+     
     public void setInputDirectory(String inputdir)
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD) m_inputdir = INPUT_DIR;
@@ -84,7 +87,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 runFileRenaming();
             }
         }
-        sendEMails();
+        sendEMails( getTitle() );
     
      }
      
@@ -297,4 +300,6 @@ public class TraceFileProcessingRunner extends ProcessRunner
          }catch(Exception e){}
          System.exit(0);
      }
+    
+   
 }

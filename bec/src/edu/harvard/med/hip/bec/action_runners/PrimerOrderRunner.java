@@ -63,6 +63,7 @@ public class PrimerOrderRunner extends ProcessRunner
     public void         setPrimerPlacementFormat(int v){ m_primer_placement_format = v;}
     public void         setNumberOfWellsOnPlate(int v){ m_wells_per_plate = v;}
     public void         isFullPlatesOnlye(boolean v){ m_is_full_plates =v;}
+    public String       getTitle()    { return "Request for Primer order";}
     
     public void run()
     {
@@ -90,7 +91,7 @@ public class PrimerOrderRunner extends ProcessRunner
         finally
         {
             if(conn != null)            DatabaseTransaction.closeConnection(conn);
-            sendEMails();
+            sendEMails( getTitle() );
         }
     }
     
@@ -353,5 +354,7 @@ public class PrimerOrderRunner extends ProcessRunner
        
         System.exit(0);
      } 
+    
+   
     
 }

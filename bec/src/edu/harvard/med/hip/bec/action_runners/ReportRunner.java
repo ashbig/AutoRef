@@ -67,16 +67,8 @@ public class ReportRunner extends ProcessRunner
    
 
         
-   // public  void        setUser(User v){m_user=v;}
-   // public  void        setItems(String item_ids)
-   // {
-   //     m_items = item_ids;
-   // }
-   //  public  void        setItemsType( int type)
-    // {
-    //     m_items_type = type;
-   //  }
-                // value="2"//Clone Ids</strong//
+    public String       getTitle()     { return "Request for report generator.";     }
+    
      public  void        setFields(
                     Object clone_id, //    Clone Id
                     Object dir_name, // Directory Name
@@ -169,7 +161,7 @@ public class ReportRunner extends ProcessRunner
         finally
         {
            
-            sendEMails();
+            sendEMails( getTitle() );
         }
         
     }
@@ -243,7 +235,7 @@ public class ReportRunner extends ProcessRunner
 +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
 +" and s.containerid in (select containerid from containerheader where label in ("
-+plate_names.toString()+")) order by s.containerid,position";
++plate_names.toString()+")) order by s.containerid,position, a.submissiondate ";
         } 
         else if (submission_type == Constants.ITEM_TYPE_CLONEID)
         {
@@ -253,7 +245,7 @@ public class ReportRunner extends ProcessRunner
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where rownum<300 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-+"  and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") ";
++"  and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") order by a.submissiondate ";
         }
        
         else if (submission_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)//bec sequence id
@@ -264,7 +256,7 @@ public class ReportRunner extends ProcessRunner
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where rownum<300 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-+"  and a.SEQUENCEID in ("+Algorithms.convertStringArrayToString(items,"," )+") ";
++"  and a.SEQUENCEID in ("+Algorithms.convertStringArrayToString(items,"," )+") a.submissiondate ";
         }
         return sql;
     }
@@ -478,7 +470,10 @@ public class ReportRunner extends ProcessRunner
             cloneinfo.append(BaseSequence.getCloneSequenceTypeAsString(clone.getSequenceType ()));
         cloneinfo.append( "\t");
     }//      Clone Sequence Id
-    if( m_clone_status){ cloneinfo.append(BaseSequence.getSequenceAnalyzedStatusAsString( clone.getSequenceAnalisysStatus ())+"\t");}//      Clone Sequence Analysis Status
+    if( m_clone_status)
+    { if (clone.getSequenceId () != 0)cloneinfo.append(BaseSequence.getSequenceAnalyzedStatusAsString( clone.getSequenceAnalisysStatus ()));
+      cloneinfo.append("\t");
+    }//      Clone Sequence Analysis Status
     if (m_clone_seq_cds_start){cloneinfo.append( clone.getCloneSequenceCdsStart ()+"\t");}
     if (m_clone_seq_cds_stop){cloneinfo.append( clone.getCloneSequenceCdsStop ()+"\t");}
     if (m_clone_seq_text)
@@ -577,7 +572,7 @@ public class ReportRunner extends ProcessRunner
              
             user = AccessManager.getInstance().getUser("htaycher1","htaycher");
             input = new ReportRunner();
-            input.setItems("CGS000081-3 CGS000081-4 CGS000081-1 CGS000081-5");
+            input.setItems("YRG000503");
             input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
             input.setFields(
                     "clone_id", //    Clone Id
@@ -615,4 +610,6 @@ public class ReportRunner extends ProcessRunner
        
         System.exit(0);
      }
+     
+      
 }

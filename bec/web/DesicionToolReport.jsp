@@ -46,19 +46,12 @@
 </div>
 <p></p>
 <% ArrayList clone_info = (ArrayList)request.getAttribute("clone_data") ;
-System.out.println(clone_info.size());
 %>
-<table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-  <tr> 
-    <td bgcolor="#1145A6" height="29">  <font color="#FFFFFF"><strong>Clone List:</strong></font></td>
-    
-  </tr>
- 
-</table>
+
 
 <table border="1" cellpadding="0" cellspacing="0" width="84%" align=center>
     <tr >
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Plate</font></strong></th>
+        <th bgcolor="#1145A6" width="15%"><strong><font color="#FFFFFF">Plate</font></strong></th>
        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Type</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Id</font></strong></th>
@@ -79,7 +72,7 @@ System.out.println(clone_info.size());
 	
 		clone = (UICloneSample)clone_info.get(count);
 
-                if ( clone.getSampleType().equals("CONTROL_POSITIVE") ||  clone.getSampleType().equals("CONTROL_NEGATIVE"))
+                if ( clone.getSampleType().equals("CONTROL"))
                 {
                   row_color = " bgColor=blue";
                 }
@@ -109,13 +102,17 @@ System.out.println(clone_info.size());
                 <td <%= row_color %> align="center">
 
  <%= IsolateTrackingEngine.getStatusAsString( clone.getCloneStatus () ) %> </td>
-                <td <%= row_color %> align="center"><% if (clone.getSequenceId() != -1)
+                <td <%= row_color %> align="center">
+                <% if (clone.getSequenceId() > 0)
                 {%>	<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 		<%= clone.getSequenceId()%></a> <%}else{%>&nbsp; <%}%></td>
-                 <td <%= row_color %> align="center">
- <% if ( clone.getSequenceAnalisysStatus () == -1){ %> &nbsp; 
-<%}else{%><%=BaseSequence.getSequenceAnalyzedStatusAsString(clone.getSequenceAnalisysStatus ()) %> <%}%></td>
-                <td  <%= row_color %> align="center"> <input type=BUTTON value="Discrepancy Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"></td>
+                <td <%= row_color %> align="center">
+             <% if ( clone.getSequenceId () > 0){ %> 
+            <%=BaseSequence.getSequenceAnalyzedStatusAsString(clone.getSequenceAnalisysStatus ()) %> <%}else{%>&nbsp; <%}%></td>
+                <td  <%= row_color %> align="center">
+ <% if (clone.getSequenceAnalisysStatus ()==BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES ){%>
+<input type=BUTTON value="Report"  onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<%}%> &nbsp;</td>
                 <td <%= row_color %> align="center"><% if ( clone.getCloneQuality() == -1){ %> &nbsp; 
 <%}else{%><%=BaseSequence.getSequenceQualityAsString(clone.getCloneQuality()) %> <%}%></td>
 
@@ -123,7 +120,7 @@ System.out.println(clone_info.size());
 	<%}%>
     </table>
 <P><P>
-<div align="center"> <input type="SUBMIT"/></DIV>
+<!--<div align="center"> <input type="SUBMIT"/></DIV> -->
 </html:form> 
 </body>
 </html>

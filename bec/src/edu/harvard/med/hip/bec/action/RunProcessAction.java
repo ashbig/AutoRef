@@ -423,38 +423,15 @@ public class RunProcessAction extends ResearcherAction
                 {
                     //get spec
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
-                    //get plate label or clonids
-                    String data_type =  (String) request.getParameter("data_type");
-                    String plate_name = null;String  clone_ids = null;
-                    if ( data_type.equalsIgnoreCase("PLATE"))
-                    {
-                        plate_name = (String) request.getParameter("plate_name");
-                    }
-                    else if ( data_type.equalsIgnoreCase("CLONE"))
-                    {
-                        clone_ids = (String) request.getParameter("clone_collection");
-                    }
-                    if ( (plate_name == null ||  plate_name.trim().equals("")  ) &&
-                    (clone_ids == null || clone_ids.trim().equals("")) )
-                    {
-                        errors.add(ActionErrors.GLOBAL_ERROR,  new ActionError("error.container.querry.parameter", "Please enter plate labels"));
-                        saveErrors(request,errors);
-                        return (mapping.findForward("error"));
-                    }
-                    
-                    //run
-                    DesicionTool ds = new DesicionTool();
+                    DecisionToolRunner ds = new DecisionToolRunner();
                     ds.setSpecId(bioeval_spec_id);
-                    if ( data_type.equalsIgnoreCase("PLATE"))
-                    {
-                        ds.setPlateName(plate_name);
-                    }
-                    else if ( data_type.equalsIgnoreCase("CLONE"))
-                    {
-                        ds.setCLoneIds( Algorithms.splitString(clone_ids) );
-                    }
+                    String  item_ids = (String) request.getParameter("items");
+                    ds.setItems(item_ids.toUpperCase().trim());
+                    ds.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                    ds.setUser(user);
                     ds.run();
-                    ArrayList clone_data = ds.getCloneData();
+                   
+                    ArrayList clone_data = ds.getClones();
                     request.setAttribute(Constants.JSP_TITLE,"report Clone Sequence Qualities" );
                     request.setAttribute("clone_data",clone_data );
                     return mapping.findForward("desicion_tool_report");

@@ -37,6 +37,10 @@ public class DiscrepancyFinderRunner extends ProcessRunner
     private int                 m_cutoff_score = 25;
     private Hashtable           m_cloning_strategies = null;
     
+    
+     public String getTitle()     {  return "Request for discrepancy finder run.";           }
+    
+    
     public void run()
     {
 
@@ -101,7 +105,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         finally
         {
             if(conn != null)            DatabaseTransaction.closeConnection(conn);
-            sendEMails();
+            sendEMails( getTitle() );
         }
     }
     
@@ -367,4 +371,6 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         System.exit(0);
    
     }
+     
+     
 }

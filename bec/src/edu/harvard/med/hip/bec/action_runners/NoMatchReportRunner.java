@@ -42,7 +42,8 @@ public class NoMatchReportRunner extends ProcessRunner
     public void         setPassParamBlastMinimumStretch(int i){m_blast_minimum_stretch = i;}
     public void         setBlastableDBName(String v){ m_blastable_dbname = v;}
     public void         setIdTypeToDisplay(String v){ if ( v != null && v.length() != 0) m_id_type = v;}
-   
+    public String getTitle()    { return "Request for NO MATCH report.";    }
+    
     
     public void run()
     {
@@ -70,7 +71,7 @@ public class NoMatchReportRunner extends ProcessRunner
         }
         finally
         {
-            sendEMails();
+            sendEMails( getTitle() );
         }
         
     }
@@ -423,4 +424,6 @@ public class NoMatchReportRunner extends ProcessRunner
     }catch(Exception e){}
     System.exit(0);
     }
+    
+   
 }

@@ -66,6 +66,8 @@ public class AssemblyRunner extends ProcessRunner
         public void         setResultType(String v){ m_result_type=v;}
         public void         setVectorFileName(String v){m_vector_file_name = v;}
         public void         setAssemblyMode(int mode){ m_assembly_mode = mode;}
+        public String       getTitle(){ return "Request for sequence assembler run.";}
+
 
         public void run()
         {
@@ -647,6 +649,8 @@ public static void main(String args[])
     }catch(Exception e){}
     System.exit(0);
 }
+
+
 }
 
 

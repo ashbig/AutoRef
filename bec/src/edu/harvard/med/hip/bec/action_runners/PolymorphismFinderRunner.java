@@ -38,10 +38,13 @@ public class PolymorphismFinderRunner extends ProcessRunner
     private int         m_spec_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;;     
     /** Creates a new instance of PolymorphismFinderRunner */
     public void         setSpecId(int v){m_spec_id = v;}
+     public String getTitle()    {return "Request for polymorphism finder run.";    }
     
     public void run()
     {
         System.out.println("PolymorphismFinderRunner");
     }
+    
+   
     
 }

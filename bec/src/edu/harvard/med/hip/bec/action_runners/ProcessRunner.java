@@ -97,33 +97,14 @@ public abstract class ProcessRunner implements Runnable
      }
      
      
-     private String getTitle()
-     {
-         
-         if (this instanceof PrimerDesignerRunner)
-            return "Request for primer designer execution.";
-         else if  (this instanceof PolymorphismFinderRunner)
-            return "Request for polymorphism finder run.";
-         else if (this instanceof DiscrepancyFinderRunner)
-            return "Request for discrepancy finder run.";
-          else if (this instanceof ReportRunner)
-            return "Request for report generator.";
-         else if (this instanceof AssemblyRunner)
-            return "Request for sequence assembler run.";
-         else if (this instanceof TraceFileProcessingRunner)
-            return "Request for trace files renaming.";
-         else if (this instanceof NoMatchReportRunner)
-             return "Request for NO MATCH report.";
-         return "";
-     }
+     public abstract String getTitle();
+  
      
-     protected void             sendEMails()
+     protected void             sendEMails(String title)
      {
-         String message_text = null;
          try
          {
  //send errors
-            String title = getTitle();
             if (m_error_messages.size()>0)
             {
                  Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
@@ -133,42 +114,19 @@ public abstract class ProcessRunner implements Runnable
             }
             if (m_file_list_reports != null && m_file_list_reports.size()>0 )//&& this instanceof ReportRunner)
             {
-                String subject  = null;
-                String text = null;
-                if (this instanceof ReportRunner)
-                {
-                    subject=" Request for report";
-                    text = "Please find attached report files for your request\n Requested item ids:\n"+m_items;
-                }
-                else if (this instanceof TraceFileProcessingRunner)
-                {
-                    subject = "Trace files order files request";
-                    text="Please find attached Trace files order for your request\n Requested item ids:\n"+m_items;
-                }
-                 else if (this instanceof NoMatchReportRunner)
-                {
-                    subject = "report on No Match clones";
-                    text="Please find attached report file for your request\n Requested item ids:\n"+m_items;
-                }
-                Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu",subject,                 text,               m_file_list_reports);
+                 Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                "hip_informatics@hms.harvard.edu",title, 
+                title+"\nPlease find attached report file for your request\n Requested item ids:\n"+m_items, 
+                m_file_list_reports);
             }
             if (m_file_list_reports == null)
             {
-                message_text = title;
-                if (m_items != null) message_text +=" \n Items processed:\n"+m_items;
-                 Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu", title, message_text );
-
-            }
-        /*    if (m_error_messages.size()!=0 && !(this instanceof ReportRunner))
-            {
-                 Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu", title,title+ " \n Items processed:\n"+m_items +"\nSee another e-mail for error messages.");
-
-            }
-         **/
-
+                String text = title +"\n Process finished \n";
+                if (m_items != null && m_items.length() > 0) text+=" Items processed:\n"+m_items;
+                Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
+                "hip_informatics@hms.harvard.edu", title, text  );
+           }
+     
         }
         catch(Exception e){}
      }

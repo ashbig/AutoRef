@@ -43,6 +43,9 @@ public class PrimerDesignerRunner extends ProcessRunner
     /** Creates a new instance of PolymorphismFinderRunner */
     public void         setSpecId(int v){m_spec_id = v;}
     public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
+    public String       getTitle()     {  return "Request for primer designer execution.";     }
+    
+     
     public void run()
     {
          int id = -1; int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -151,7 +154,7 @@ public class PrimerDesignerRunner extends ProcessRunner
                 try {reportFileWriter.close();}catch(Exception e){ try { reportFileWriter.close();}catch(Exception n){} }
             }
         
-            sendEMails();
+            sendEMails( getTitle());
         }
 
             //request->process->process_config|| process_object(refsequence)
@@ -371,4 +374,5 @@ public class PrimerDesignerRunner extends ProcessRunner
         System.exit(0);
      }
     
+     
 }

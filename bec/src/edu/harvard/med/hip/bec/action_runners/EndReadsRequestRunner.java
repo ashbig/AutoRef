@@ -42,30 +42,22 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
  *
  * @author  htaycher
  */
-  public class EndReadsRequestRunner implements Runnable
+  public class EndReadsRequestRunner extends ProcessRunner
 {
     
-    /** Creates a new instance of tester */
-    public EndReadsRequestRunner()
-    {
-         i_error_messages = new ArrayList();
-    }
-    
+     
   
         private ArrayList   i_master_container_ids = null;//get from form
         private boolean     i_isForward = false;//get from form
         private boolean     i_isReverse = false;//get from form
         private int         i_forward_primerid = -1;//get from form
         private int         i_reverse_primerid = -1;
-        private User        i_user = null;
-        
-        private ArrayList   i_error_messages = null;
-      
+     
         public void         setContainerIds(ArrayList v)        { i_master_container_ids = v;}
         public void         setForwardPrimerId(int id)        {i_forward_primerid = id; i_isForward =true;}
         public void         setRevercePrimerId(int id)        {i_reverse_primerid = id; i_isReverse = true;}
-        public  void        setUser(User v){i_user=v;}
-        
+        public String getTitle()     {   return "Request for end reads sequencing";  }     
+     
         public void run()
         {
             
@@ -83,7 +75,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                 ArrayList processes = new ArrayList();
                 Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
                                             new java.util.Date(),
-                                            i_user.getId(),
+                                            m_user.getId(),
                                             processes,
                                             Constants.TYPE_OBJECTS);
                 //create specs array for the process
@@ -115,7 +107,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                     //check wether this plate has end read results already
                     if (container.checkForResultTypes(result_types))
                     {
-                        i_error_messages.add("Plate "+container.getLabel()+" has enr read result - it wont be processed");
+                        m_error_messages.add("Plate "+container.getLabel()+" has enr read result - it wont be processed");
                         continue;
                     }
                   
@@ -137,42 +129,18 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
                     processPlate( container,  file_list, conn, process.getId());
                    
                 }
-                //send email to user
-                if (file_list != null && file_list.size()>0)
-                {
-                    Mailer.sendMessageWithFileCollections(i_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                    "hip_informatics@hms.harvard.edu", "Request for end reads sequencing", 
-                    "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates,
-                    file_list);
-                }
-  
                 // commit the transaction
                 if (master_plates.size() != 0)
                     conn.commit();
-              
-                
             }
-            
             catch(Exception ex)
             {
-                i_error_messages.add(ex.getMessage());
-                //send notification to the user
-                
+                m_error_messages.add(ex.getMessage());
                 DatabaseTransaction.rollback(conn);
             }
             finally
             {
-                try
-                {
-         //send errors
-                    if (i_error_messages.size()>0)
-                    {
-                         Mailer.sendMessage(i_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                        "hip_informatics@hms.harvard.edu", "Request for end reads sequencing: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates ,i_error_messages);
-                
-                    }
-                }
-                    catch(Exception e){}
+               sendEMails ( getTitle() );
                 DatabaseTransaction.closeConnection(conn);
             }
             
@@ -319,7 +287,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
         System.exit(0);
      }
     
-     
+   
     
 }
 

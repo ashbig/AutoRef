@@ -217,6 +217,7 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER://run discrepancy finder
                 case Constants.PROCESS_NOMATCH_REPORT:
+                case Constants.PROCESS_RUN_DECISION_TOOL:
                 {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
@@ -230,6 +231,13 @@ public class SelectProcessAction extends ResearcherAction
                             spec_names.add("Primer3 ");
                             control_names.add(Spec.PRIMER3_SPEC);
                             title = "run Primer Designer for the set of clones";break;
+                         }
+                         case Constants.PROCESS_RUN_DECISION_TOOL:
+                        {
+                            spec_collection.add( FullSeqSpec.getAllSpecNames()  );
+                            spec_names.add("Bio Evaluation of Clones: ");
+                            control_names.add(Spec.FULL_SEQ_SPEC);
+                            title = "run Desicion Tool";break;
                          }
                         case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:
                          {
@@ -288,13 +296,7 @@ additional_jsp.append("</SELECT></td> </tr>");
                     return (mapping.findForward("initiate_process"));
                 }
                 
-                case Constants.PROCESS_RUN_DECISION_TOOL://run decision tool
-                {
-                    ArrayList spec_collection =  FullSeqSpec.getAllSpecNames() ;
-                    request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
-                    return (mapping.findForward("run_desicion_tool"));
-                }
-                
+               
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE:
                 {
                     String file_description = "<I>You are about to run Discrepancy Finder as a stand aloan application. The <B>requested file format</b> is: sequence Id, reference sequence (Cds only), experimental sequence."
