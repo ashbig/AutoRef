@@ -79,6 +79,9 @@ public class Kinase
         try
         {
             writer = new FileWriter(fileName);
+            String title="Sequence Id\tDescription\tGI number\tAccession number\tLocus Link ID\t"
+                        +"Gene Symbol \t Cds Start \t Cds stop \t Cds length \t Sequence length \tSequence text \n";
+            writer.write(title);
             for (int count = 0; count < seqInfo.size(); count++)
             {
                 writer.write (printSequence( (FlexSequence) seqInfo.get(count)) );
@@ -97,10 +100,11 @@ public class Kinase
     private String printSequence(FlexSequence fc)
     {
         String seqData = null;
-        seqData = fc.getDescription() + "\t";
+        seqData = fc.getId() + "\t";
+        seqData += fc.getDescription() + "\t";
         seqData += fc.getGi()+ "\t" ;
         seqData += fc.getAccession()+ "\t" ;
-        seqData += fc.getLocusLinkId()+ "\t" ;
+        seqData += fc.getLocusLinkId()+ "\t" ; 
         seqData += fc.getGenesymbolString()+ "\t" ;
         seqData += fc.getCdsstart()+ "\t" ;
         seqData += fc.getCdsstop()+ "\t" ;
