@@ -138,7 +138,7 @@ public abstract class Mutation
     
     public static final int MACRO_SPECTYPES_COUNT = 22;//22
 	                 
-    protected int         m_id =-1;
+    protected int         m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     protected int         m_position =-1;// start of mutation (on ref sequence)
      protected int        m_exp_position =-1;// start of mutation (on exp sequence)
     protected int         m_length=-1;// – length of mutation (optional)

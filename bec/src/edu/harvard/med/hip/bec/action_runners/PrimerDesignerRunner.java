@@ -325,7 +325,7 @@ public class PrimerDesignerRunner extends ProcessRunner
                 return  "select collectionid as working_id , label as query_id, i.isolatetrackingid  as repeat_id"
                 +" from stretch_collection  s, sample ss, containerheader c, isolatetracking i "
                 +" where i.isolatetrackingid = s.isolatetrackingid and i.sampleid =  ss.sampleid and "
-                +" ss.containerid = c.containerid and  label in ( "+plate_names.toString()+") order by isolatetrackingid, collectionid desc ";
+                +" ss.containerid = c.containerid and  label in ( "+plate_names.toString()+") order by i.isolatetrackingid, collectionid desc ";
          
                 /*
                  return "select collectionid as id , isolatetrackingid from stretch_collection "
@@ -803,10 +803,10 @@ public class PrimerDesignerRunner extends ProcessRunner
       input = new PrimerDesignerRunner();
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
           
-           input.setInputData( Constants.ITEM_TYPE_CLONEID,"  521 979 ");
+           input.setInputData( Constants.ITEM_TYPE_CLONEID,"  158969 158985 159001 159017 159081 159097 159161 158527 158583 158567 158693 158756 158772 158867 158883 160363 158977 ");
          //   input.setInputData( Constants.ITEM_TYPE_CLONEID,"145895");
             input.setUser(user);
-            input.setSpecId(61);
+            input.setSpecId(75);
             input.setIsTryMode(true);
             input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_GAP_LQR);
             input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY);

@@ -502,15 +502,19 @@ import java.util.*;
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
        
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setInputData( Constants.ITEM_TYPE_CLONEID,"  157041 157471	");            
-             runner.setProcessType(Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE);
-             runner.setIsTryMode(false);
+             runner.setInputData( Constants.ITEM_TYPE_CLONEID," 141619	");            
+             runner.setProcessType(Constants.PROCESS_FIND_GAPS);
+             runner.setIsTryMode(true);
              //SlidingWindowTrimmingSpec spec =   SlidingWindowTrimmingSpec.getDefaultSpec();
           //   spec.setTrimmingType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);
              //spec.setQWindowSize( 10);
-             runner.setSpecId(32);
+             runner.setSpecId(73);// 32 for yp3
            //  runner.setVectorFileName("vector_pDonor221_altered.txt");
-             runner.setIsRunLQR(true);
+             runner.setIsRunLQR(false);
+             runner.setQualityTrimmingScore (0);
+   runner.setQualityTrimmingLastBase (0);
+   runner.setQualityTrimmingFirstBase (0);
+  
              runner.run();
             /* spec.setType( SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW);
              runner.setTrimmingSpec(spec);

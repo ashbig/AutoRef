@@ -55,8 +55,11 @@ public class FileOperations
         }
     } // createDirectoryOrFail
     
-    
     public static File writeFile(ArrayList file_entries, String title, String file_name) throws Exception
+    {
+        return writeFile( file_entries,  title,  file_name, true) ;
+    }
+    public static File writeFile(ArrayList file_entries, String title, String file_name, boolean isAppend) throws Exception
     {
         File fl = null;
         FileWriter fr = null;
@@ -64,7 +67,7 @@ public class FileOperations
         try
         {
             fl =   new File(file_name);
-            fr =  new FileWriter(fl);
+            fr =  new FileWriter(fl,isAppend);
             fr.write(title);
             for (int count = 0; count < file_entries.size(); count++)
             {

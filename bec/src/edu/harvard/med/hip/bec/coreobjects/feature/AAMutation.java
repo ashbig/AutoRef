@@ -51,7 +51,7 @@
          
          
          
-        
+        //------------------------------------------------------
          
         private int setType(String str_mut, String str_ori)
         {
@@ -143,4 +143,7 @@
             }
             return type;
         }
+        
+        
+        
     }

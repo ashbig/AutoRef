@@ -152,6 +152,59 @@ public class Seq_GetSpecAction extends ResearcherAction
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("slidingwindow_spec"));
                 }
+                  case Constants.AVAILABLE_SPECIFICATION_INT:
+                {
+                    Spec spec = null;
+                    String mapping_forw = null;
+                    int specid =  Integer.parseInt( (String)request.getParameter( "er_specid"));
+                    if ( specid > 0 )
+                    {
+                        spec = Spec.getSpecById( specid );
+                        mapping_forw = "end_reads_spec";
+                    }
+                    else
+                    {
+                          specid = Integer.parseInt( (String)request.getParameter( "be_specid"));
+                          if ( specid > 0 )
+                        {
+                            spec = Spec.getSpecById( specid );
+                            mapping_forw = "full_seq_spec";
+                       }
+                        else
+                        {
+                             specid = Integer.parseInt( (String) request.getParameter("primer_specid"));
+                              if ( specid > 0 )
+                            {
+                                spec = Spec.getSpecById( specid );
+                                mapping_forw = "primer3_spec";
+                            }
+                            else
+                            {
+                                specid = Integer.parseInt( (String)request.getParameter("polym_specid")); 
+                                if ( specid > 0 )
+                                {
+                                    spec = Spec.getSpecById( specid );
+                                    mapping_forw = "polymorphism_spec";
+                                }
+                                else
+                                {
+                                    specid = Integer.parseInt( (String) request.getParameter("sl_specid")); 
+                                    if ( specid > 0 )
+                                    {
+                                        spec = Spec.getSpecById( specid );
+                                        mapping_forw = "slidingwindow_spec";
+                                    }
+                                }
+                            }
+                        }
+                    }
+  
+                    if ( spec== null || mapping_forw== null) {}
+                    else       specs.add(spec);    
+                    
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward(mapping_forw));
+                }
                 /*
                case OligoPair.UNIVERSAL_PAIR_INT:
                 {

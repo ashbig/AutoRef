@@ -214,8 +214,12 @@ public abstract class ProcessRunner implements Runnable
                if ( m_additional_info != null)
                    message += m_additional_info;
                  Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu",title, message , 
+                null,title, message , 
                 m_file_list_reports);
+                  Mailer.sendMessageWithFileCollections("hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",
+                null,title, message , 
+                m_file_list_reports);
+                 
             }
             if (( m_file_list_reports == null || m_file_list_reports.size()==0 )
                  && ( m_error_messages == null || m_error_messages.size() == 0))
@@ -225,7 +229,8 @@ public abstract class ProcessRunner implements Runnable
                     message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
                 if ( m_additional_info != null)
                    message += m_additional_info;
-                 Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "hip_informatics@hms.harvard.edu", title, message);
+                 Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  null, title, message);
+                 Mailer.sendMessage      (  "hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",  null, title, message);
                      
             }
      

@@ -53,9 +53,44 @@ public class PrimerOrderRunner extends ProcessRunner
     private int                     m_primer_placement_format = PLACEMENT_FORMAT_ALL_TOGETHER;
     private int                     m_primer_number = -1;
     private int                     m_wells_per_plate = 96;
+    private int                     m_first_well = 1;
+    private int                     m_last_well = m_wells_per_plate;
     private int                     m_primers_selection_rule = OLIGO_SELECTION_FORMAT_REFSEQ_ONLY;
     private boolean                m_is_full_plates = false;
       
+    // for oligo order file (sent to company
+    
+    //-----------------------------------------------------------------
+    
+    //goal to provide file with n columns, column can be empty or be one out of 5 data types.
+    // empty well filled by rules declared by two params (empty sequence..)
+    public static final int           ONE_FILE_PER_ORDER = 0;
+    public static final int           ONE_FILE_PER_PLATE = 1;
+ public static final int           NO_ORDER_FILES = 2;
+
+    private int                     m_primer_sequence = 0;
+     private int                     m_primer_name= 0;
+
+    private int                     m_primer_column= 0;
+    private int                     m_primer_row= 0;
+    private int                     m_plate_name= 0;
+    private String                     m_empty_sequence= null;
+    private String                     m_empty_sequence_name = null;
+    private int                     m_number_of_files = NO_ORDER_FILES;
+    
+    private int[]                   i_print_array_for_order_file = null;
+    
+    private static final int        DATA_TYPE_PLATE_LABEL = 0;
+    private static final int        DATA_TYPE_PRIMER_SEQUENCE = 1;
+    private static final int        DATA_TYPE_PRIMER_NAME = 2;
+    private static final int        DATA_TYPE_PRIMER_COLUMN = 3;
+    private static final int        DATA_TYPE_PRIMER_ROW = 4;
+    private static final int        DATA_TYPE_NO_DATA = 5;
+      
+     
+    //--------------------
+    
+    
       //prepared statments
     private   PreparedStatement m_pst_insert_process_object = null;
     private  PreparedStatement m_pst_update_primer_status = null;
@@ -69,6 +104,25 @@ public class PrimerOrderRunner extends ProcessRunner
     public void         isFullPlatesOnly(boolean v){ m_is_full_plates =v;}
     public void         setPrimersSelectionRule(int v){ m_primers_selection_rule = v;}
     
+    public void         setFirstWell(int v){m_first_well = v;}
+    public void         setLastWell(int v){ m_last_well = v;}
+   
+    //--------------------
+     // for oligo order file (sent to company
+    public void         setPrimerSequenceColumn (int v){m_primer_sequence = v;}
+    public void         setPrimerNameColumn  (int v){m_primer_name= v;}
+
+   public void         setPrimerColumnColumn (int v){m_primer_column= v;}
+    public void         setPrimerowColumn  (int v){m_primer_row= v;}
+    public void         setPlateNameColumn (int v){m_plate_name= v;}
+    public void         setEmptySequenceDisplay  (String v){m_empty_sequence= v;}
+    public void         setEmptySequenceName  (String v){m_empty_sequence_name = v;}
+    public void         setNumberOfOrderFiles  (int v){m_number_of_files = v;}
+
+    //--------------------
+    
+    
+    
     public String       getTitle()    { return "Request for Primer order";}
     
     public void run()
@@ -77,6 +131,8 @@ public class PrimerOrderRunner extends ProcessRunner
          try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
+            //prepare array for order file
+            if (  m_number_of_files != NO_ORDER_FILES ) preparePrintArrayForOrderFile();
            // pst_get_clone_primers = conn.prepareStatement("");
               int process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_OLIGO_ORDER, new ArrayList(),m_user) ;
              createPreparedStatements( process_id, conn);
@@ -103,6 +159,79 @@ public class PrimerOrderRunner extends ProcessRunner
     
     
     //---------------------------private ------------------------------
+    // build int[] where size of array declared by max number of the column asked by user.
+    // array member value declares data type
+    
+    private void preparePrintArrayForOrderFile()
+    {
+        // get number of columns
+       int column_number =  Math.max(  m_primer_sequence, Math.max( m_primer_name, Math.max(   m_primer_column,  Math.max(    m_primer_row    ,  m_plate_name))));
+       i_print_array_for_order_file = new int[column_number];
+       for ( int col = 0; col < i_print_array_for_order_file.length; col++)
+       {
+            if ( col + 1 ==  m_plate_name){     i_print_array_for_order_file[col]= DATA_TYPE_PLATE_LABEL  ; continue;}
+            if ( col + 1 == m_primer_sequence )     {  i_print_array_for_order_file[col]= DATA_TYPE_PRIMER_SEQUENCE ; continue;}
+            if ( col + 1 == m_primer_name) {  i_print_array_for_order_file[col]=   DATA_TYPE_PRIMER_NAME  ; continue;}
+            if ( col + 1 ==  m_primer_column)  {  i_print_array_for_order_file[col]= DATA_TYPE_PRIMER_COLUMN  ; continue;}
+            if ( col + 1 == m_primer_row)    {  i_print_array_for_order_file[col]=  DATA_TYPE_PRIMER_ROW  ; continue;}
+            i_print_array_for_order_file[col]=  DATA_TYPE_NO_DATA;
+       }
+    }
+    
+    private String  createOrderFileEntry(int oligosample_id , String plate_label, 
+                                        int well , String oligo_sequence  )
+    {
+         StringBuffer temp = new StringBuffer();
+         String well_name = null;
+        for (int column_count = 0; column_count < i_print_array_for_order_file.length; column_count++)
+        {
+            if ( i_print_array_for_order_file[column_count]== DATA_TYPE_PLATE_LABEL  ){temp.append(plate_label + Constants.TAB_DELIMETER); continue;}
+            if (   i_print_array_for_order_file[column_count]== DATA_TYPE_PRIMER_SEQUENCE ) {temp.append(oligo_sequence + Constants.TAB_DELIMETER); continue;}
+            if (   i_print_array_for_order_file[column_count]==   DATA_TYPE_PRIMER_NAME  ){temp.append(oligosample_id + Constants.TAB_DELIMETER); continue;}
+            well_name = Algorithms.convertWellFromInttoA8_12(well );
+            if (   i_print_array_for_order_file[column_count]== DATA_TYPE_PRIMER_COLUMN  ){temp.append(well_name.substring(0,1) + Constants.TAB_DELIMETER); continue;}
+            if (   i_print_array_for_order_file[column_count]==  DATA_TYPE_PRIMER_ROW  ){temp.append(well_name.substring(1) + Constants.TAB_DELIMETER); continue;}
+            temp.append( Constants.TAB_DELIMETER);
+        }
+        
+        return temp.toString();
+    }
+    
+    
+    private void            fillEmptyWellsForOrderFile(ArrayList order_file_entries, String plate_label)
+    {
+        StringBuffer temp = null;
+        String well_name = null;
+        if ( i_print_array_for_order_file == null || i_print_array_for_order_file.length < 1) return;
+        for (int well = 1 ; well < m_first_well ; well++)  
+        {
+            order_file_entries.add(well-1,  emptyWellEntryForOrderFile(  plate_label,  well ));
+            
+        }
+        for (int well = order_file_entries.size() + 1 ; well <= m_wells_per_plate; well++)  
+        {
+           order_file_entries.add( emptyWellEntryForOrderFile(  plate_label,  well ));
+        }
+    }
+    
+     private String            emptyWellEntryForOrderFile( String plate_label, int well)
+    {
+        String well_name = null;
+        StringBuffer temp = new StringBuffer();
+        for (int column_count = 0; column_count < i_print_array_for_order_file.length; column_count++)
+        {
+            if ( i_print_array_for_order_file[column_count]== DATA_TYPE_PLATE_LABEL  ){temp.append(plate_label + Constants.TAB_DELIMETER); continue;}
+            if (   i_print_array_for_order_file[column_count]== DATA_TYPE_PRIMER_SEQUENCE ) {temp.append(m_empty_sequence + Constants.TAB_DELIMETER); continue;}
+            if (   i_print_array_for_order_file[column_count]==   DATA_TYPE_PRIMER_NAME  ){temp.append(m_empty_sequence_name + Constants.TAB_DELIMETER); continue;}
+            well_name = Algorithms.convertWellFromInttoA8_12(well );
+            if (   i_print_array_for_order_file[column_count]== DATA_TYPE_PRIMER_COLUMN  ){temp.append(well_name.substring(0,1) + Constants.TAB_DELIMETER); continue;}
+            if (   i_print_array_for_order_file[column_count]==  DATA_TYPE_PRIMER_ROW  ){temp.append(well_name.substring(1) + Constants.TAB_DELIMETER); continue;}
+            temp.append( Constants.TAB_DELIMETER);
+        }
+        return temp.toString();
+        
+    }
+    //----------|----------------------------|---------------------------|--------------------
     private ArrayList           getCloneDescriptions(ArrayList clone_ids)
     {
         ArrayList result = new ArrayList();
@@ -239,12 +368,14 @@ public class PrimerOrderRunner extends ProcessRunner
     throws Exception
     {
        
-        ArrayList naming_file_entries  = new ArrayList();
+      //  ArrayList naming_file_entries  = new ArrayList();
         ArrayList items_template  = new ArrayList();
         ArrayList items_oligo  = new ArrayList();
+        ArrayList items_order_file  = new ArrayList();
+       String  order_file_name = null;
         CloneDescription clone_description = null;
         Oligo oligo = null;String temp= null;
-        NamingFileEntry naming_entry = null;
+    //    NamingFileEntry naming_entry = null;
         String plate_label = null;
         int container_counter_try_mode = 1;
         
@@ -259,7 +390,7 @@ public class PrimerOrderRunner extends ProcessRunner
              plate_label = "OPLATE"+Constants.formatIntegerToString( container_counter_try_mode++, 6);
         }
        
-        int primer_counter = 0;int well_counter = 1;
+        int primer_counter = 0;int well_counter = m_first_well;
         for (int clone_counter = 0; clone_counter < sorted_clone_description.size(); clone_counter++)
         {
             clone_description = (CloneDescription)sorted_clone_description.get(clone_counter);
@@ -279,7 +410,10 @@ public class PrimerOrderRunner extends ProcessRunner
                         "\t"+clone_description.getCloneId() +"\t"+oligo.getId()
                         +"\t"+oligo.getSequence() +"\t"+oligo.getTm() +"\t"+oligo.getSequence().length();
                 items_oligo.add(temp);
-               naming_entry = new  NamingFileEntry(
+                
+                if ( m_number_of_files != PrimerOrderRunner.NO_ORDER_FILES )
+                    items_order_file.add( createOrderFileEntry(oligosample_id , plate_label,well_counter , oligo.getSequence()  ) );
+             /*  naming_entry = new  NamingFileEntry(
                     clone_description.getCloneId()
                     , NamingFileEntry.getOrientation(oligo.getOrientation() ),
                     clone_description.getContainerId(),
@@ -287,20 +421,44 @@ public class PrimerOrderRunner extends ProcessRunner
                     clone_description.getFlexSequenceId(),
                     Integer.parseInt( oligo.getName().substring(1)) ) ;
                 
-                naming_file_entries.add( naming_entry);
-                temp = clone_description.getCloneId()+"\t"
+                naming_file_entries.add( naming_entry); */
+              /*  temp = clone_description.getCloneId()+"\t"
                      + clone_description.getContainerId() +"\t"
                      + clone_description.getPosition() +"\t"
                      + plate_label +"\t"
-                     +   (well_counter );
+                     +   (well_counter );*/
+                 temp = clone_description.getCloneId()+"\t"
+                       + plate_label +"\t"
+                       +   (well_counter );
                 items_template.add(temp);
                 
-                if (well_counter == m_wells_per_plate   || primer_counter == primers.size() - 1)
+                String time_stamp_oligo_plate = "";
+                if (well_counter == m_last_well   || primer_counter == primers.size() - 1)
                 {
-                    m_file_list_reports.add( NamingFileEntry.createNamingFile(naming_file_entries,Constants.getTemporaryFilesPath() + plate_label+"_naming_reads.txt"));
-                    m_file_list_reports.add( FileOperations.writeFile(items_template,  "Clone Id\tOrg plate\tOrg well\tDestination plate\tDestination well\n",  Constants.getTemporaryFilesPath() + plate_label +"_template.txt"));
-                    m_file_list_reports.add( FileOperations.writeFile(items_oligo ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  Constants.getTemporaryFilesPath() + plate_label +"_oligo.txt"));
-                             
+                    if ( m_isTryMode )
+                    {
+                        time_stamp_oligo_plate = String.valueOf( System.currentTimeMillis() );
+                    }
+               //     m_file_list_reports.add( NamingFileEntry.createNamingFile(naming_file_entries,Constants.getTemporaryFilesPath() + plate_label+"_naming_reads.txt"));
+                    m_file_list_reports.add( FileOperations.writeFile(items_template,  "Clone Id\tOrg plate\tOrg well\tDestination plate\tDestination well\n",  Constants.getTemporaryFilesPath() + plate_label +"_template"+time_stamp_oligo_plate+".txt"));
+                    m_file_list_reports.add( FileOperations.writeFile(items_oligo ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  Constants.getTemporaryFilesPath() + plate_label +"_oligo"+time_stamp_oligo_plate+".txt"));
+ //-----                  m_file_list_reports.add( FileOperations.writeFile(items_order_file ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  Constants.getTemporaryFilesPath() + plate_label +"_oligo.txt"));
+                    if ( m_number_of_files == PrimerOrderRunner.ONE_FILE_PER_ORDER)  
+                    {
+                        fillEmptyWellsForOrderFile(items_order_file,plate_label);
+                         if ( order_file_name == null ) 
+                         {
+                             order_file_name = Constants.getTemporaryFilesPath() + "order_file_oligo_starting"+ plate_label +time_stamp_oligo_plate +".txt";
+                             m_file_list_reports.add( new File(order_file_name)  );
+                         }
+                        FileOperations.writeFile(items_order_file ,"",  order_file_name , true);
+                     
+                    }
+                    else if (m_number_of_files == PrimerOrderRunner.ONE_FILE_PER_PLATE )
+                    {
+                        fillEmptyWellsForOrderFile(items_order_file, plate_label );
+                         m_file_list_reports.add( FileOperations.writeFile(items_order_file ,"",  Constants.getTemporaryFilesPath() + plate_label +"_order_file"+time_stamp_oligo_plate+".txt"));
+                    }
                     if (! m_isTryMode ) 
                             conn.commit();
                      if ( primer_counter == primers.size() - 1)
@@ -315,10 +473,11 @@ public class PrimerOrderRunner extends ProcessRunner
                     {
                          plate_label = "OPLATE"+Constants.formatIntegerToString( container_counter_try_mode++, 6);
                     }
-                     naming_file_entries  = new ArrayList();
+                 //    naming_file_entries  = new ArrayList();
                      items_template  = new ArrayList();
                      items_oligo  = new ArrayList();
-                    well_counter = 0 ;
+                     items_order_file = new ArrayList();
+                    well_counter = m_first_well - 1 ;
                 
                 }
                  primer_counter++;well_counter++;
@@ -386,17 +545,41 @@ public class PrimerOrderRunner extends ProcessRunner
         User user  = null;
         try
         {
-            input = new PrimerOrderRunner();
-            user = AccessManager.getInstance().getUser("htaycher1","htaycher");
+                BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+     edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+    input = new PrimerOrderRunner();
+            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
        //     input.setItems(" 799	       800	       801	       818	       819	       820	       821	       822	       823	       824	       825	       838	       839	       840	       841	       842	       843	       844	       845	       850	       851	       852	       853	       882	       883	       884	       885	       890	       891	       892	       893	       897	       898	       899	       900	       905	       906	       907	       908	       933	       934	       935	       936	       941	       942	       943	       944	       948	       949	       950	       951	       956	       957	       958	       959	      1003	      1004	     35284	     35285	     35286	     35287	     35288	     35289");
             
        //     input.setItemsType( Constants.ITEM_TYPE_CLONEID);
             input.setUser(user);
+            input.setInputData(Constants.ITEM_TYPE_CLONEID,"  173473     173477     173489     173607     173613     173619     173625     173630     173633     173642     173647     173649     173654     173662     173665     173669     173678     173682     173686     173689     173884     173888     173912     173932     173949  ");//157775     157799     157818     157826     157831     157839     158080     158096     158122     158142     158152     158159     158511     158551     158613 ");
+            
+            
+            
             //input.setPrimerNumber();
             input.setPrimerPlacementFormat(PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER );
-            input.setNumberOfWellsOnPlate(76 );
+            input.setNumberOfWellsOnPlate(96 );
+            input.setPrimersSelectionRule( PrimerOrderRunner.OLIGO_SELECTION_FORMAT_REFSEQ_ONLY);
             input.isFullPlatesOnly(false);
             input.setIsTryMode(true);
+            input.setFirstWell(4);
+            input.setLastWell(90);
+    
+            
+            
+    
+            input.setPrimerSequenceColumn (8);
+            input.setPrimerNameColumn  ( 1);
+
+            input.setPrimerColumnColumn (2 );
+            input.setPrimerowColumn  (3 );
+            input.setPlateNameColumn (6 );
+            input.setEmptySequenceDisplay  (".");
+            input.setEmptySequenceName  (" ");
+            input.setNumberOfOrderFiles  (PrimerOrderRunner.NO_ORDER_FILES );
+
             input.run();
         }
         catch(Exception e){}

@@ -239,7 +239,8 @@ vi.	Type of definition (coverage low quality / no coverage )
          {
              
              stretch = (Stretch) m_stretches.get(count_stretches);
-             if ( stretch.getCdsStop() < 0 || stretch.getCdsStart() > cds_length  ) continue; // for gaps in 5' linker
+             if ( (stretch.getCdsStop() < 0 && stretch.getCdsStart() < 0)
+             || stretch.getCdsStart() > cds_length  ) continue; // for gaps in 5' linker
              // only gaps from gaps & lqr collection
              if ( stretch.getType() == Stretch.GAP_TYPE_GAP ) 
              {
@@ -583,8 +584,18 @@ vi.	Type of definition (coverage low quality / no coverage )
     
      public static void main(String [] args)
      {
+         
          try
          {
+       Stretch st = Stretch.getById(13266 );
+       for ( int c = 0; c < st.getSequence().getDiscrepancies().size(); c++)
+       {
+          System.out.println( (( Mutation) st.getSequence().getDiscrepancies().get(c)).toString() ) ;
+     }
+            DiscrepancyDescription.assembleDiscrepancyDefinitions( st.getSequence().getDiscrepancies() );
+                  
+        }catch(Exception e){}
+         
              /*
      ArrayList items = Algorithms.splitString("  1986 1916 2349  ");
                      StretchCollection lqr_for_clone = null; 
@@ -615,12 +626,7 @@ vi.	Type of definition (coverage low quality / no coverage )
                       
          String sa =  Mutation.toHTMLString(discrepancies);
          */
-     StretchCollection   strcol = StretchCollection.getLastByCloneId(3558);
-                            if ( strcol != null)
-                            {
-                                strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
-                              }   }
-         catch(Exception e){System.out.println(e.getMessage());}
+     
      }
                            
 }

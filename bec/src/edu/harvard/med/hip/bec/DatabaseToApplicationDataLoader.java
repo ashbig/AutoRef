@@ -70,7 +70,7 @@ public class DatabaseToApplicationDataLoader
 
     }
      
-    public static void      loadProcessDefinition()
+    private static void      loadProcessDefinition()
     {
         String sql = "select  PROCESSDEFINITIONID,PROCESSNAME from processdefinition ";
         ResultSet rs = null;
@@ -117,8 +117,12 @@ public class DatabaseToApplicationDataLoader
     
     
      public static Hashtable getSpecies(){ return m_species_definition;}
+     public static void      addSpecies(SpeciesDefinition sd){m_species_definition.put( String.valueOf( sd.getCode()), sd);}
     public static Hashtable getProcessDefinitions(){ return m_process_definition;}
-   
+    
+    public static Hashtable        getProjectDefinitions(){ return m_project_definition;}
+    public static void        addProject(String PROJECTNAME, String PROJECTCODE){ m_project_definition.put( PROJECTCODE,PROJECTNAME);}
+          
     
     //----------------------------------------------------
     public static String getSpeciesName(int species_code)

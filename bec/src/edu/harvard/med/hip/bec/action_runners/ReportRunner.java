@@ -229,6 +229,10 @@ public class ReportRunner extends ProcessRunner
             m_error_messages.add("Cannot get data for clone "+e.getMessage() +"\n"+sql);
             throw new Exception();
         }
+        finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
        
     }
     
@@ -391,9 +395,9 @@ public class ReportRunner extends ProcessRunner
       StringBuffer cloneinfo= new StringBuffer();
       CloneSequence clone_sequence = null;
       UIRead read = null;
-      RefSequence refsequence = null; ArrayList contigs = null; 
+      RefSequence refsequence = null; 
        ArrayList discrepancies =  null;boolean isItemsAnalized = true;
-        Stretch stretch = null;
+       
       if ( clone.getRefSequenceId()>0)
       {
          refsequence = (RefSequence)refsequences.get(new Integer(clone.getRefSequenceId()));
@@ -619,13 +623,16 @@ public class ReportRunner extends ProcessRunner
                         else if ( read_1_discrepancies != null && read_1_discrepancies.size() > 0 )
                         {
                             discrepancies = read_1_discrepancies;
+                             discrepancies = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_discrepancies);
+                 
                         }
                         else if ( read_2_discrepancies != null && read_2_discrepancies.size() > 0 )
                         {
                             discrepancies = read_2_discrepancies;
-                        }
-                        discrepancies = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_discrepancies);
+                             discrepancies = DiscrepancyDescription.assembleDiscrepancyDefinitions( clone_discrepancies);
                  
+                        }
+                       
                     }
                 }
             }

@@ -588,12 +588,16 @@ public static void main(String args[])
        CloneAssembly clone_assembly =null;
     try
     {
-         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+       
+    
+         runner.setUser( AccessManager.getInstance().getUser("lena","htaycher"));
         runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
          runner.setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
        //      runner.setItems("116384	");
       // runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID,"134897");  
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID,"143905");  
             runner.setVectorFileName("vector_empty.seq");
         runner.run();           
         /*

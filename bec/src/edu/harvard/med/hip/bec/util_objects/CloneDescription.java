@@ -63,6 +63,8 @@ public class CloneDescription
          private int        m_clone_analysis_status = -1;
        
          
+         private boolean        m_is_forwardER_needed = true;
+         private boolean        m_is_reverseER_needed = true;
          
          
          public CloneDescription(){}
@@ -116,7 +118,9 @@ public class CloneDescription
         public int			getCloneSequence5LinkerStart(){ return  m_clone_sequence_linker5_start ;}
         public int			getCloneSequence3LinkerStop (){ return m_clone_sequence_cds_linker3_stop ;}
         public int                      getCloneAnalysisStatus(){ return m_clone_analysis_status;}
- 
+        public boolean                  isForwardERNeeded(){ return m_is_forwardER_needed ;}
+        public boolean                  isReverseERNeeded(){ return m_is_reverseER_needed  ;}
+         
  
         public void                  setPlateName(String v){  m_plate_name = v;} 
         public void                  setReadFilePath(String c){ m_read_filepath=c;}
@@ -147,7 +151,9 @@ public class CloneDescription
         public void			setCloneSequence5LinkerStart(int v){   m_clone_sequence_linker5_start = v;}
         public void			setCloneSequence3LinkerStop (int v){  m_clone_sequence_cds_linker3_stop = v;}
         public void                      setCloneAnalysisStatus(int v){  m_clone_analysis_status = v;}
- 
+        public void                  setIsForwardERNeeded(boolean v){  m_is_forwardER_needed = v;}
+        public void                  setIsReverseERNeeded(boolean v){  m_is_reverseER_needed = v ;}
+       
         
         
         public static ArrayList getClonesDescription( ArrayList clones_to_process)throws BecDatabaseException

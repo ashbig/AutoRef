@@ -41,6 +41,10 @@ public class BioVector
     private ArrayList m_features = null;
     private ArrayList m_primers = null;
     /** Creates a new instance of BioVector */
+    
+    
+    public BioVector(){}
+    
     public BioVector(int id, String name, String seq, String source, 
             String filename ,String filepath ,
             int type,ArrayList features, ArrayList primers
@@ -70,17 +74,18 @@ public class BioVector
     
     public ArrayList getFeatures()    { return m_features;}
     public int     getType(){ return m_type;}   
-    public String  getTypeAsString()
+    public String  getTypeAsString()    {   return getTypeAsString(m_type);    }
+    public static String  getTypeAsString(int type)
     {
-        switch (m_type)
+        switch (type)
         {
             case VECTOR_TYPE_MASTER: return VECTOR_TYPE_MASTER_STR;
             case VECTOR_TYPE_EXSPRESION: return VECTOR_TYPE_EXSPRESION_STR;
+            default: return "";
         }
-        return "";
     }
     
-    public void addFeature(BioVectorFeature v)    {  m_features.add(v);}
+    public void addFeature(BioVectorFeature v)    { if ( m_features == null) m_features = new ArrayList();  m_features.add(v);}
     public ArrayList getPrimers()    { return m_primers;}
     public void addPrimers(Oligo v)    {  m_primers.add(v);}
     
@@ -95,6 +100,43 @@ public class BioVector
     public void setFeatures( ArrayList v)    {  m_features = v;}
     public void setPrimers( ArrayList v)    {  m_primers = v;}
 
+    
+    
+    public void insert(Connection conn)throws BecDatabaseException
+    {
+        if ( m_name == null || m_name.length() < 1) throw new BecDatabaseException("Vector does not have name");
+        
+        if (m_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+            m_id = BecIDGenerator.getID("vectorid");
+        BioVectorFeature ft = null;
+        String sql = "insert into vector(vectorid, vectorname, source, vectortype, vectorfilename,vectorfilepath)"+
+        " values ("+m_id +",'"+ m_name +"','"+m_source + "',"+m_type +",'"+m_filename +"','"+m_filepath+"')";
+        
+      
+        Statement stmt = null;
+        try
+        {
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            
+            for (int count = 0; count < m_features.size();count++)
+            {
+                ft = (BioVectorFeature)m_features.get(count);
+                ft.setVectorId(m_id);
+                ft.insert(conn);
+            }
+            
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+    }
+       
+       
+       
     public static ArrayList getAllVectors()throws BecDatabaseException
     {
         ArrayList vect = new ArrayList();

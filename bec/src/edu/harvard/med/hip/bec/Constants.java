@@ -231,6 +231,23 @@ public class Constants {
  public static final int         PROCESS_CREATE_REPORT_TRACEFILES_QUALITY  = 85;
 
      //69
+ 
+ //settings database
+    public static final int         PROCESS_ADD_NEW_LINKER  = 86;
+    public static final int         PROCESS_ADD_NEW_VECTOR  = 87;
+    public static final int         PROCESS_ADD_NAME_TYPE  = 88;
+    public static final int         PROCESS_ADD_SPECIES_DEFINITION  = 89;
+    public static final int         PROCESS_ADD_PROJECT_DEFINITION  = 90;
+     
+    public static final int         PROCESS_VIEW_ALL_NAME_TYPE  = 92;
+    public static final int         PROCESS_VIEW_ALL_SPECIES_DEFINITION  = 93;
+    public static final int         PROCESS_VIEW_ALL_PROJECT_DEFINITION  = 94;
+     public static final int         PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER  = 95;
+       public static final int         PROCESS_ADD_NEW_COMMON_PRIMER  = 98;
+// outside submission
+    public static final int         PROCESS_SUBMIT_REFERENCE_SEQUENCES  = 96;
+    public static final int         PROCESS_SUBMIT_CLONE_COLLECTION  = 97;
+ 
        
     //items for display 1-40
   
@@ -260,7 +277,8 @@ public class Constants {
     public static final int STRETCH_COLLECTION_REPORT_INT = 23;
     public static final int STRETCH_COLLECTION_REPORT_ALL_INT = 24;
     public static final int LQR_COLLECTION_REPORT_INT = 25;
-  
+  public static final int AVAILABLE_SPECIFICATION_INT = 26;
+    
     
     
     

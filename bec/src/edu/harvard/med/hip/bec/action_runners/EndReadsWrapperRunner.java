@@ -80,7 +80,6 @@ public class EndReadsWrapperRunner extends ProcessRunner
     /** Creates a new instance of EndReadsWrapperRunner */
     public EndReadsWrapperRunner()
     {
-        m_error_messages = new ArrayList();
         m_outputBaseDir =  OUTPUT_BASE_ROOT+CLONES_DIR;
         m_inputTraceDir =  INPUT_BASE_DIR;
         m_control_samples_directory =  OUTPUT_BASE_ROOT + CONTROLS_DIR;

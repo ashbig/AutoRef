@@ -539,9 +539,36 @@ public class RunProcessAction extends ResearcherAction
                         {
                              runner = new PrimerOrderRunner();
                              title = "request for Primer Order";
-                            ((PrimerOrderRunner)runner).setPrimerPlacementFormat( Integer.parseInt(request.getParameter("oligo_placement_format") ));
-                             ((PrimerOrderRunner)runner).setPrimerNumber( Integer.parseInt(request.getParameter("primer_number") ));
-                             ((PrimerOrderRunner)runner).setPrimersSelectionRule(Integer.parseInt(request.getParameter("oligo_grouping_rule") ));
+                             if ( request.getParameter("oligo_placement_format")  != null)
+                            (   (PrimerOrderRunner)runner).setPrimerPlacementFormat( Integer.parseInt(request.getParameter("oligo_placement_format") ));
+                              if ( request.getParameter("primer_number") != null)
+                                    ((PrimerOrderRunner)runner).setPrimerNumber( Integer.parseInt(request.getParameter("primer_number") ));
+                             if (request.getParameter("oligo_grouping_rule") != null)
+                                    ((PrimerOrderRunner)runner).setPrimersSelectionRule(Integer.parseInt(request.getParameter("oligo_grouping_rule") ));
+                             if ( request.getParameter("first_well") != null)
+                             {
+                                String fwell = request.getParameter("first_well");
+                                int  fposition = Algorithms.convertWellFromA8_12toInt(fwell);
+                                
+                               ((PrimerOrderRunner)runner).setFirstWell( fposition );
+                             }
+                               
+                             if ( request.getParameter("last_well") != null)
+                             {
+                                 String lwell = request.getParameter("last_well");
+                                 int  lposition = Algorithms.convertWellFromA8_12toInt(lwell);
+                                ((PrimerOrderRunner)runner).setLastWell( lposition );
+                             }
+if ( request.getParameter("primer_sequence") != null)((PrimerOrderRunner)runner).setPrimerSequenceColumn (Integer.parseInt(request.getParameter("primer_sequence") ));
+if ( request.getParameter("primer_name") != null)((PrimerOrderRunner)runner).setPrimerNameColumn  (Integer.parseInt(request.getParameter("primer_name") ));
+
+if ( request.getParameter("primer_column") != null)((PrimerOrderRunner)runner).setPrimerColumnColumn (Integer.parseInt(request.getParameter("primer_column") ));
+if ( request.getParameter("primer_row") != null)((PrimerOrderRunner)runner).setPrimerowColumn  (Integer.parseInt(request.getParameter("primer_row") ));
+if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setPlateNameColumn (Integer.parseInt(request.getParameter("plate_name") ));
+((PrimerOrderRunner)runner).setEmptySequenceDisplay  (request.getParameter("empty_sequence" ));
+((PrimerOrderRunner)runner).setEmptySequenceName  (request.getParameter("empty_sequence_name" ));
+((PrimerOrderRunner)runner).setNumberOfOrderFiles  (Integer.parseInt(request.getParameter("number_of_files") ));
+                             
                              if ( request.getParameter("isTryMode") != null )
                                  ((PrimerOrderRunner)runner).setIsTryMode(true  );
                             break;
@@ -749,13 +776,13 @@ public class RunProcessAction extends ResearcherAction
                     DecisionToolRunner_New runner = new DecisionToolRunner_New();
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
-                    runner.setInputData(items_type,items);
+                   runner.setInputData(items_type,items);
                     runner.setUser(user);
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
                     runner.setSpecId(bioeval_spec_id);
                     runner.setUserComment(request.getParameter("user_comment"));
                     runner.setNumberOfOutputFiles(Integer.parseInt( (String) request.getParameter("output_format")));
-                    // value="2"//Clone Ids</strong//
+                     // value="2"//Clone Ids</strong//
                     runner.setFields(
                         request.getParameter("plate_label" ),//    Plate Label</td>
                         request.getParameter("sample_type" ),//    Sample Type</td>

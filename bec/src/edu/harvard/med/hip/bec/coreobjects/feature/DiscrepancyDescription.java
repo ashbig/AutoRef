@@ -668,6 +668,22 @@ public class DiscrepancyDescription
     }
     
     
+    //returns array where first member - number of high quality discrepancies,
+    // second - number of high quality discrepancies
+    
+     public static int[]             getTotalNumberOfDiscrepanciesByQuality(ArrayList discrepancies)
+    {
+        DiscrepancyDescription dd = null;
+        int high_dd_count = 0; int low_dd_count = 0; 
+        for (int count = 0; count < discrepancies.size(); count++)
+        {
+            dd = (DiscrepancyDescription )discrepancies.get(count);
+            if ( dd.getQuality() == Mutation.QUALITY_LOW ) low_dd_count++ ;
+            else high_dd_count++;
+        }
+        int result[] = {high_dd_count, low_dd_count};
+        return result;
+    }
      public static String discrepancySummaryReport(ArrayList discr_definitions,
                                                         int discrepancy_region_type,
                                                         boolean isHighQuality,

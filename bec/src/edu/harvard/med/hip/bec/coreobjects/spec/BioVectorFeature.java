@@ -37,6 +37,8 @@ public class BioVectorFeature
     public static final String TYPE_REMAIN_STR = "Remain";
     
     /** Creates a new instance of VectorFeature */
+    
+    public BioVectorFeature(){}
     public BioVectorFeature(int id)throws BecDatabaseException
     {
         m_id = id;
@@ -98,12 +100,16 @@ public class BioVectorFeature
     public void setName ( String v){   m_name     = v;}
     public void setType ( int v){   m_type      = v;}
     public void setVectorId ( int v){   m_vectorid      = v;}
-    
+    public void setDescription(String s){ m_description = s;}
     
     public void insert(Connection conn)throws BecDatabaseException
     {
+        if ( m_name == null || m_name.length() < 1) throw new BecDatabaseException("Vector feature does not have name");
+         if (m_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
+            m_id = BecIDGenerator.getID("vectorid");
+        
         String sql = "insert into vectorfeature(featureid,vectorid, featuretype, featurename,description)"+
-        " values ("+m_id +","+ m_vectorid +","+m_type + ","+m_name +","+m_description +")";
+        " values ("+m_id +","+ m_vectorid +","+m_type + ",'"+m_name +"','"+m_description +"')";
         
       
         Statement stmt = null;

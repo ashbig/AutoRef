@@ -53,6 +53,11 @@ public class RefSequence extends BaseSequence
     private ArrayList   m_fullsequences = null;
     
     /** Creates a new instance of TheoreticalSequence */
+    public RefSequence( )
+    {
+        super( "",THEORETICAL_SEQUENCE);
+       // throw new BecDatabaseException("Constrator not allowed");
+    }
     public RefSequence( String t)
     {
         super( t,THEORETICAL_SEQUENCE);
@@ -251,6 +256,13 @@ public class RefSequence extends BaseSequence
     public void     setCdnaSource(String s)    {     m_cdnasource = s;}
     public void     setChromosome(String s)    {     m_chromosome = s ;}
     
+    
+     public void     addPublicInfo(PublicInfoItem v)   
+     { 
+         if ( m_publicInfo == null)   m_publicInfo = new ArrayList();
+         m_publicInfo.add( v);
+     }
+   
     /*
     public ArrayList getFullSequences()throws BecDatabaseException
     {

@@ -57,7 +57,6 @@ public class Seq_GetItemAction extends ResearcherAction
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         String label = null;int id = -1;Container container = null;
         String title = "";
-     
         try
         {
             if ( forwardName == Constants.CONTAINER_PROCESS_HISTORY || forwardName 
@@ -466,7 +465,20 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("vectors", vectors);
                     return (mapping.findForward("display_vector"));
                     
-                }     
+                }    
+                case Constants.AVAILABLE_SPECIFICATION_INT:
+                {
+                    request.setAttribute("primer3", Spec.getAllSpecsByType(Spec.PRIMER3_SPEC_INT, false));
+                    request.setAttribute("comparespec", Spec.getAllSpecsByType(Spec.END_READS_SPEC_INT, false));
+                    request.setAttribute("bioevaluation", Spec.getAllSpecsByType(Spec.FULL_SEQ_SPEC_INT, false));
+                    request.setAttribute("polymerphism", Spec.getAllSpecsByType(Spec.POLYMORPHISM_SPEC_INT, false));
+                    request.setAttribute("slidingwindow", Spec.getAllSpecsByType(Spec.TRIM_SLIDING_WINDOW_SPEC_INT, false));
+                    request.setAttribute("forwardName", new Integer(forwardName));
+                
+                    return (mapping.findForward("choose_spec"));
+                }
+                
+               
                 //check clones end reads / sequence availability
                 //initiated from SelectProcess
                 case Constants.PROCESS_CHECK_READS_AVAILABILITY:
