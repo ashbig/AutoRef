@@ -39,8 +39,7 @@ import edu.harvard.med.hip.flex.util.PrintLabel;
  * @author  dzuo
  * @version
  */
-public class GetNewOligoResearcherAction extends ResearcherAction
-{
+public class GetNewOligoResearcherAction extends ResearcherAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -61,8 +60,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException
-    {
+    throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String barcode = ((GetResearcherBarcodeForm)form).getResearcherBarcode();
         Researcher researcher = null;
@@ -75,17 +73,13 @@ public class GetNewOligoResearcherAction extends ResearcherAction
         
         boolean isClosedOnly = false;
         boolean isOpenOnly = false;
-        if ( projectid == Project.YEAST)    isClosedOnly = true;
-        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE ) isOpenOnly = true;
-        
-        
+        if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE || projectid == Project.YP)    isClosedOnly = true;
+        if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION) isOpenOnly = true;       
         
         // Validate the researcher barcode.
-        try
-        {
+        try {
             researcher = new Researcher(barcode);
-        } catch (FlexProcessException ex)
-        {
+        } catch (FlexProcessException ex) {
             request.setAttribute("workflowid", new Integer(workflowid));
             request.setAttribute("projectid", new Integer(projectid));
             request.setAttribute("templateid", new Integer(templateid));
@@ -93,8 +87,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
-        } catch (FlexDatabaseException ex)
-        {
+        } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
@@ -106,26 +99,20 @@ public class GetNewOligoResearcherAction extends ResearcherAction
         Container threepOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepOpen");
         Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
         
-        if( isOpenOnly )
-        {
-            if(fivepOligoD == null || threepOpenD == null || fivep == null || threepOpen == null)
-            {
+        if( isOpenOnly ) {
+            if(fivepOligoD == null || threepOpenD == null || fivep == null || threepOpen == null) {
                 return (mapping.findForward("fail"));
             }
         }
-        else if( isClosedOnly )
-        {
-            if(fivepOligoD == null || threepClosedD == null ||  fivep == null || threepClosed == null)
-            {
+        else if( isClosedOnly ) {
+            if(fivepOligoD == null || threepClosedD == null ||  fivep == null || threepClosed == null) {
                 return (mapping.findForward("fail"));
             }
-        } 
-        else
-        {
+        }
+        else {
             if(fivepOligoD == null || threepOpenD == null ||
             threepClosedD == null || fivep == null || threepOpen == null ||
-            threepClosed == null)
-            {
+            threepClosed == null) {
                 return (mapping.findForward("fail"));
             }
         }
@@ -136,17 +123,15 @@ public class GetNewOligoResearcherAction extends ResearcherAction
         
         
         
-        if( !isOpenOnly )
-        {
+        if( !isOpenOnly ) {
             newContainers.addElement(threepClosedD);
             oldContainers.addElement(threepClosed);
         }
-        if ( !isClosedOnly )
-        {
+        if ( !isClosedOnly ) {
             oldContainers.addElement(threepOpen);
             newContainers.addElement(threepOpenD);
         }
-    
+        
         QueueItem items = (QueueItem)request.getSession().getAttribute("EnterOligoPlateAction.item");
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterOligoPlateAction.sampleLineageSet");
@@ -154,33 +139,28 @@ public class GetNewOligoResearcherAction extends ResearcherAction
         String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
         
         Connection conn = null;
-        try
-        {
+        try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             
             // update the location of the old container.
-            for(int i=0; i<oldContainers.size(); i++)
-            {
+            for(int i=0; i<oldContainers.size(); i++) {
                 Container oldContainer = (Container)oldContainers.elementAt(i);
                 oldContainer.updateLocation(oldContainer.getLocation().getId(), conn);
             }
             
             // Insert the new containers and samples into database.
-            for(int i=0; i<newContainers.size(); i++)
-            {
+            for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
                 newContainer.insert(conn);
             }
             
             // Crate the plateset record for the new oligo containers.
             int threepClosedDid = -1; int threepOpenDiD = -1;
-            if(threepClosedD != null)
-            {
+            if(threepClosedD != null) {
                 threepClosedDid = threepClosedD.getId();
             }
-            if (threepOpenD != null)
-            {
+            if (threepOpenD != null) {
                 threepOpenDiD = threepOpenD.getId();
             }
             
@@ -203,8 +183,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction
             q.removeQueueItems(oldItems, conn);
             
             LinkedList newItems = new LinkedList();
-            for(int i=0; i<nextProtocols.size(); i++)
-            {
+            for(int i=0; i<nextProtocols.size(); i++) {
                 newItems.clear();
                 newItems.addLast(new QueueItem(pset, (Protocol)nextProtocols.elementAt(i), project, workflow));
                 q.addQueueItems(newItems, conn);
@@ -214,8 +193,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction
             DatabaseTransaction.commit(conn);
             
             // Print the barcode
-            for(int i=0; i<newContainers.size(); i++)
-            {
+            for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
                 String status = PrintLabel.execute(newContainer.getLabel());
                 //System.out.println("Printing barcode: "+status);
@@ -237,13 +215,11 @@ public class GetNewOligoResearcherAction extends ResearcherAction
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);
             
             return (mapping.findForward("success"));
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
-        } finally
-        {
+        } finally {
             DatabaseTransaction.closeConnection(conn);
         }
     }

@@ -78,6 +78,7 @@ public class OligoPlateManager {
         this.project = project;
         this.workflow = workflow;
         setProtocol();
+        setOpenClose(project, workflow);
     }
     
     /**
@@ -105,6 +106,7 @@ public class OligoPlateManager {
         this.protocol = protocol;
         
         if(protocol == null)            setProtocol();
+        setOpenClose(project, workflow);
     }
     
     /**
@@ -138,6 +140,8 @@ public class OligoPlateManager {
         
         if(protocol == null)
             setProtocol();
+        
+        setOpenClose(project, workflow);
     }
     
     public void setIsSetOpenClose(boolean b) {this.isSetOpenClose = b;}
@@ -156,6 +160,15 @@ public class OligoPlateManager {
      */
     protected void setIsReorder(boolean isReorder) {m_isReorderSequences = isReorder;}
     
+    protected void setOpenClose(Project project, Workflow workflow) {
+        if(project.getId() == Project.PSEUDOMONAS || project.getId() == Project.KINASE) {
+            setIsOpenOnly(true);
+            setIsSetOpenClose(true);
+        } else if(project.getId() == Project.YEAST || project.getId() == Project.YP) {
+            setIsCloseOnly(true);
+            setIsSetOpenClose(true);
+        }
+    }
     
     /**
      * Check the total number of sequences in the Queue table belong to the
@@ -387,10 +400,10 @@ public class OligoPlateManager {
                 } else {
                     LinkedList l = getQueueSequence(LIMITS[2], LIMITS[3]);
                     performOligoOrder(l);
-                } 
+                }
                 
                 if(seqList.size() != 0)
-                    performOligoOrder(seqList);                
+                    performOligoOrder(seqList);
             } else {
                 seqList = getQueueSequence();
                 performOligoOrder(seqList);

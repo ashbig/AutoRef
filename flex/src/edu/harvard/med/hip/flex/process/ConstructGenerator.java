@@ -76,7 +76,7 @@ public class ConstructGenerator
         this.project = project;
         this.workflow = workflow;
         if (project.getId() == Project.PSEUDOMONAS) m_isOpenOnly = true;
-         if (project.getId() == Project.YEAST) m_isCloseOnly = true;
+         if (project.getId() == Project.YEAST || project.getId() == Project.YP) m_isCloseOnly = true;
     }
     
     /**
@@ -97,7 +97,7 @@ public class ConstructGenerator
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
          if (project.getId() == Project.PSEUDOMONAS) m_isOpenOnly = true;
-         if (project.getId() == Project.YEAST) m_isCloseOnly = true;
+         if (project.getId() == Project.YEAST || project.getId() == Project.YP) m_isCloseOnly = true;
     }
     
     public void setIsOpenOnly(boolean b) {m_isOpenOnly = b;}
