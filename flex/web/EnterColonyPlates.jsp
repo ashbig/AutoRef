@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
+<%@ page import="edu.harvard.med.hip.flex.workflow.*"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -19,8 +20,19 @@
 <html:form action="/EnterColonyPlates.do" focus="agarPlateF1">
 <html:hidden property="projectid" />
 <html:hidden property="workflowid" />
+<input type="hidden" name="workflowname" value="<%= request.getAttribute("workflowname")%>" >
+<html:hidden property="projectname" />
+<html:hidden property="processname" />
 
 <table>
+    <tr>
+    <td class="prompt">Project name:</td>
+    <td><bean:write name="projectname"/></td>
+    </tr>
+    <tr>
+    <td class="prompt">Workflow name:</td>
+    <td><%= request.getAttribute("workflowname")%></td>
+    </tr>
     <tr>
     <td class="prompt">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
@@ -40,20 +52,31 @@
     </tr>
 
     <tr>
-    <logic:equal name="projectid" value="3">
-    <td class="prompt">Enter the first fusion agar plate barcode:</td>
-    </logic:equal>
-    <logic:notEqual name="projectid" value="3">
-    <td class="prompt">Enter the fusion agar plate barcode:</td>
-    </logic:notEqual>
-    <td><html:text property="agarPlateF1" size="20"/></td>
-    <logic:equal name="projectid" value="3">
-    <td class="prompt">Enter the second fusion agar plate barcode:</td>
-    </logic:equal>
-    <logic:notEqual name="projectid" value="3">
-    <td class="prompt">Enter the corresponding closed agar plate barcode:</td>
-    </logic:notEqual>
-    <td><html:text property="agarPlateC1" size="20"/></td>
+    <% 
+       Integer projectids = (Integer)request.getAttribute("projectid");
+        int projectid = projectids.intValue();
+        if (projectid == Project.PSEUDOMONAS)
+        {%>
+            <td class="prompt">Enter the first fusion agar plate barcode:</td>
+            <td><html:text property="agarPlateF1" size="20"/></td>
+            <td class="prompt">Enter the second fusion agar plate barcode:</td>
+             <td><html:text property="agarPlateC1" size="20"/></td>
+    <%}
+    else if   (projectid == Project.YEAST)
+    {%>
+        <td class="prompt">Enter the first closed agar plate barcode:</td>
+        <td><html:text property="agarPlateF1" size="20"/></td>
+        <td class="prompt">Enter the second closed agar plate barcode:</td>
+        <td><html:text property="agarPlateC1" size="20"/></td>
+    <%}
+    else 
+    {%>
+        <td class="prompt">Enter the fusion agar plate barcode:</td>
+        <td><html:text property="agarPlateF1" size="20"/></td>
+         <td class="prompt">Enter the corresponding closed agar plate barcode:</td>
+         <td><html:text property="agarPlateC1" size="20"/></td>
+    <%}%>
+    
     </tr>
     <tr></tr>
     <tr>

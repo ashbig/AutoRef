@@ -46,7 +46,8 @@
         />
         </html:select></td>
     </tr>
-
+    
+ <logic:present name="EnterOligoPlateAction.threepOpen">
     <tr>
     <td class="label">3P fusion oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></td>
@@ -59,6 +60,7 @@
         />
         </html:select></td>
     </tr>
+    </logic:present>
 
     <logic:present name="EnterOligoPlateAction.threepClosed">
     <tr>
