@@ -113,7 +113,8 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
     <td> <% if ( forwardName_int == Constants.PROCESS_PROCESS_OLIGO_PLATE)
 {%> <textarea name="order_comments" rows='6' cols='50' >
 <% if ( container.getCommentOrder()!= null){%> <%= container.getCommentOrder() %>  <%}%> </TEXTAREA>
-<%} else {%>       <%= container.getCommentOrder() %> <%}%>      
+<%}else{ if ( container.getCommentOrder()!= null){%>  
+     <%= container.getCommentOrder() %> <%}else{%> &nbsp; <%}}%>       
     </td>
   </tr>
  <tr> 
@@ -124,7 +125,8 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
 <% if ( container.getCommentSequencing()!= null){%>  <%= container.getCommentSequencing() %> <%}%>
 
 </TEXTAREA>
-<%}else{%>       <%= container.getCommentSequencing() %> <%}%>    
+<%}else{ if ( container.getCommentSequencing()!= null){%>  
+     <%= container.getCommentSequencing() %> <%}else{%> &nbsp; <%}}%>    
     </td>
   </tr>
   

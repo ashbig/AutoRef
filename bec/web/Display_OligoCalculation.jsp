@@ -167,7 +167,8 @@ for (int oligo_count = 0; oligo_count < olc.getOligos().size();oligo_count++)
 </TABLE>
 <% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
 {%><div align="center">  <p> <input type="submit" value="Submit" > </div>
-<input name="forwardName" type="hidden" value="<%= forwardName %>" > <%}%>
+<input name="forwardName" type="hidden" value="<%= forwardName %>" >
+ <input name="forwardAllApprovedPrimerIds" type="hidden" value="<%= request.getAttribute("forwardAllApprovedPrimerIds") %>" ><%}%>
  
 </body>
 </html>
