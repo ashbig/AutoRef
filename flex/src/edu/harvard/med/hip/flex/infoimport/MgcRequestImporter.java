@@ -98,14 +98,23 @@ public class MgcRequestImporter
         //save request to db
         m_Request.insert(conn);
         DatabaseTransaction.commit(conn);
-        notifyUser(requestGI, sequencesMatchedByGI, sequencesMatchedByBlast, sequencesNotMatchedByBlast);
+        try{
+            Vector ms = messages(requestGI, sequencesMatchedByGI, sequencesMatchedByBlast, sequencesNotMatchedByBlast);
+            Mailer.notifyUser(m_UserName,"importMGC.log","Import MGC request report",
+            "Import MGC request report",ms);
+        }catch(Exception e){}
+   
         m_Request = new Request(m_Request.getId());
         if (prev_step) prev_step = putOnQueue(conn)  ;
         DatabaseTransaction.commit(conn);
         
         //somthing went wrong notify user and myself
         if (! prev_step) 
-                Algorithms.notifyUser(m_UserName, "importrequest.log", m_messages);
+               try{
+               Mailer.notifyUser(m_UserName, "importrequest.log", 
+               "Mgc request import log",
+               "Mgc request import log",  m_messages);}
+               catch(Exception e){}
         //parse results for not matching GI
         return true;
         
@@ -454,42 +463,35 @@ public class MgcRequestImporter
     }
     
     //send e-mail to the user with all GI separated to three groups
-    private void notifyUser(ArrayList requestGI, ArrayList seqMatchedByGI, ArrayList sequencesMatchedByBlast, ArrayList sequencesNotMatchedByBlast) throws Exception
+    private Vector messages(ArrayList requestGI, ArrayList seqMatchedByGI, ArrayList sequencesMatchedByBlast, ArrayList sequencesNotMatchedByBlast) 
     {
-        AccessManager am = AccessManager.getInstance();
-        String to = am.getEmail( m_UserName );
-        String cc = "etaycher@hms.harvard.edu";
-        String from = "etaycher@hms.harvard.edu";
-        String subject = "User Notification: your request was uploaded";
-        String msgText = null;
+        Vector ms = new Vector();
         
-        msgText = "Request Id: " + m_Request.getId() + "\n";
+        ms.add( "Request Id: " + m_Request.getId() + "\n");
         
-        msgText += "\nGI numbers from request: \n";
+         ms.add( "\nGI numbers from request: \n");
         for (int count = 0; count< requestGI.size(); count++)
         {
-            msgText += requestGI.get(count) + "\t";
+             ms.add( requestGI.get(count) + "\t");
         }
         
-        msgText += "\nSequences matched to Mgc clones by GI number: \n";
+         ms.add("\nSequences matched to Mgc clones by GI number: \n");
         for (int count = 0; count< seqMatchedByGI.size(); count++)
         {
-            msgText += seqMatchedByGI.get(count) + "\t";
+             ms.add(seqMatchedByGI.get(count) + "\t");
         }
-        msgText += "\nSequences matched to Mgc clones by blast: \n";
+         ms.add( "\nSequences matched to Mgc clones by blast: \n");
         for (int count = 0; count< sequencesMatchedByBlast.size(); count++)
         {
-            msgText += sequencesMatchedByBlast.get(count) + "\t";
+             ms.add( sequencesMatchedByBlast.get(count) + "\t");
         }
-        msgText += "\nSequences not matched to Mgc clones: \n";
+         ms.add( "\nSequences not matched to Mgc clones: \n");
         for (int count = 0; count< sequencesNotMatchedByBlast.size(); count++)
         {
-            msgText += sequencesNotMatchedByBlast.get(count) + "\t";
+             ms.add( sequencesNotMatchedByBlast.get(count) + "\t");
         }
+        return ms;
         
-        
-        //match thr GI, match thr cds sequence, not matched
-        Mailer.sendMessage( to,  from,  cc, subject, msgText)  ;
     }
     
     
