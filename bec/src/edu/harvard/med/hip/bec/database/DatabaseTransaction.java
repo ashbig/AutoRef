@@ -20,8 +20,8 @@
    *
    *
    * The following information is used by CVS
-   * $Revision: 1.4 $
-   * $Date: 2003-09-03 19:32:07 $
+   * $Revision: 1.5 $
+   * $Date: 2003-10-09 18:20:20 $
    * $Author: Elena $
    *
    ******************************************************************************
@@ -62,7 +62,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.4 $ $Date: 2003-09-03 19:32:07 $
+ * @version    $Revision: 1.5 $ $Date: 2003-10-09 18:20:20 $
  */
 public class DatabaseTransaction
 {
@@ -110,6 +110,49 @@ public class DatabaseTransaction
         
     } // end getInstance()
     
+    /**
+     * Executes a sql statement and returns a Row set object with the results
+     * from the query.
+     *
+     * The current implementation uses a CachedRowSet which may need to be
+     * changed to a JDBCRowSet if too many rows are returned.
+     *
+     * @param sql The sql String to execute.
+     *
+     * @return <code>CachedRowSet</code> with the data from the query.
+     *
+     * @throws FlexDatabaseException
+     */
+    
+    public static CachedRowSet executeQuery(String sql, Connection conn) throws BecDatabaseException
+    {
+    
+        CachedRowSet crs = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try
+        {
+            crs = new CachedRowSet();
+            stmt = conn.createStatement();
+            
+            rs = stmt.executeQuery(sql);
+            crs.populate(rs);
+            
+            
+        } catch (SQLException e)
+        {
+            
+            throw new BecDatabaseException(e.getMessage()+"\nSQL: "+sql);
+        } finally
+        {
+            
+            // release database resources
+            closeResultSet(rs);
+            closeStatement(stmt);
+        //    closeConnection(conn);
+        }
+        return crs;
+    } //end executeSQL
     
     /**
      * Requests a Connection from the pool.
@@ -279,35 +322,6 @@ public class DatabaseTransaction
         return crs;
     } //end executeSQL
     
-     public static CachedRowSet executeQuery(String sql, Connection conn) throws BecDatabaseException
-    {
-    
-        CachedRowSet crs = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try
-        {
-            crs = new CachedRowSet();
-            stmt = conn.createStatement();
-            
-            rs = stmt.executeQuery(sql);
-            crs.populate(rs);
-            
-            
-        } catch (SQLException e)
-        {
-            
-            throw new BecDatabaseException(e.getMessage()+"\nSQL: "+sql);
-        } finally
-        {
-            
-            // release database resources
-            closeResultSet(rs);
-            closeStatement(stmt);
-            closeConnection(conn);
-        }
-        return crs;
-    } //end executeSQL
     
     
     /**
