@@ -29,6 +29,7 @@ public class Rearrayer
     
     private int       m_total_wells = 94;   
     private ArrayList m_messages = null;
+    private boolean   m_isMarker = true;
     
     
   
@@ -52,6 +53,7 @@ public class Rearrayer
        
     }
    
+    public void setRearrayByMarker(boolean m) { m_isMarker = m;}
     public ArrayList                        getMessages(){ return m_messages;} 
     
     
@@ -66,6 +68,9 @@ public class Rearrayer
      **/
     public ArrayList                        getPlates() throws Exception
     {
+        m_sequence_descriptions = new ArrayList();
+        m_container_descriptions = new ArrayList();
+        m_messages = new ArrayList();
         if ( m_Sequences == null || m_Sequences.size() == 0) return new ArrayList();
         //create hashtable of sequences , key - sequence id
         Hashtable sequences = new Hashtable();
@@ -229,12 +234,16 @@ public class Rearrayer
                 
                 ContainerDescription cont_1 =(ContainerDescription) ((SequenceDescription)cont1).getContainerDescription();
                 ContainerDescription cont_2 = (ContainerDescription) ((SequenceDescription)cont2).getContainerDescription();
-               //htaycher : do not sort by marker          
-               // int res =  cont_1.getMarker().compareToIgnoreCase(cont_2.getMarker() ) ;
-               // if (res == 0)//same marker
-                   return    -(cont_1.getNumberOfSequences() - cont_2.getNumberOfSequences());
-               // else
-               //    return res;
+                if (m_isMarker)
+                {
+                    int res =  cont_1.getMarker().compareToIgnoreCase(cont_2.getMarker() ) ;
+                    if (res == 0)//same marker
+                       return    -(cont_1.getNumberOfSequences() - cont_2.getNumberOfSequences());
+                    else
+                       return res;
+                }
+                   else
+                       return    -(cont_1.getNumberOfSequences() - cont_2.getNumberOfSequences());
                 
             }
         });
@@ -290,13 +299,14 @@ public class Rearrayer
             seq_description.add(    m_sequence_descriptions.get(seq_count)  );
             well_on_plate++;
                 //new plate
-            /*
-           if ( seq_count != number_of_sequences -1)
-           {
-               next_marker = ((SequenceDescription) m_sequence_descriptions.get(seq_count + 1)).getContainerDescription().getMarker();
-               isNewPlate = ! cur_container.getMarker().equalsIgnoreCase(next_marker    );
-           }
-             **/
+            if (m_isMarker)
+            {
+                   if ( seq_count != number_of_sequences -1)
+                   {
+                       next_marker = ((SequenceDescription) m_sequence_descriptions.get(seq_count + 1)).getContainerDescription().getMarker();
+                       isNewPlate = ! cur_container.getMarker().equalsIgnoreCase(next_marker    );
+                   }
+            }
             if (well_on_plate % m_total_wells == 0 || 
                 seq_count == number_of_sequences -1  || 
                 isNewPlate)
@@ -342,18 +352,38 @@ public class Rearrayer
             if (numOfSeqs != 0)
             {
                Rearrayer ra = new Rearrayer(new ArrayList(seqList), 10);
+               ra.setRearrayByMarker(true);
                plates = ra.getPlates();
+               System.out.println("------------------"+plates.size());
                for (int i = 0; i < plates.size();i++)
                {
                    System.out.println("plate");
+                    
                    PlateDescription p = (PlateDescription) plates.get(i);
+                   System.out.println(p.getNumberOfSequences() );
                    for (int j=0;j<p.getSequenceDescriptions().size();j++)
                    {
                      SequenceDescription s =( SequenceDescription)p.getSequenceDescriptions().get(j);
-                     System.out.println(s.getId()+"_"+s.getContainerId()+"_"+s.getPosition()+"_"+s.getCdsLength());
+                     System.out.println(s.getId()+"_"+s.getContainerId()+"_"+"_"+s.getContainerDescription().getNumberOfSequences()+"_"+s.getContainerDescription().getLabel()+"_"+s.getPosition()+"_"+s.getCdsLength());
                    }
                }
-               System.out.println(plates.size());
+               
+                ra.setRearrayByMarker(false);
+               ArrayList plates_no = ra.getPlates();
+               System.out.println("------------------"+plates_no.size());
+               for (int i = 0; i < plates_no.size();i++)
+               {
+                   System.out.println("plate");
+                    
+                   PlateDescription p = (PlateDescription) plates_no.get(i);
+                   System.out.println(p.getNumberOfSequences() );
+                   for (int j=0;j<p.getSequenceDescriptions().size();j++)
+                   {
+                     SequenceDescription s =( SequenceDescription)p.getSequenceDescriptions().get(j);
+                     System.out.println(s.getId()+"_"+s.getContainerId()+"_"+s.getContainerDescription().getLabel()+"_"+s.getPosition()+"_"+s.getCdsLength());
+                   }
+               }
+               
             }
            // Rearrayer re = new Rearrayer( seq_ids );
           //  ArrayList mgc_containers = null;

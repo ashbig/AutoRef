@@ -33,6 +33,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
     private   LinkedList                    m_notDuplicatedSequences = null;
     //used for allowing user set container location & print label
     private   ArrayList                     m_rearrayed_containers = null;
+    private    boolean m_isMarker = true;
     
     /**
      * Constructor
@@ -66,27 +67,30 @@ public class MgcOligoPlateManager extends OligoPlateManager
     }
     
     public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow,
-    int totalWells, boolean isFull, Protocol protocol, String user)  throws FlexDatabaseException
+    int totalWells, boolean isFull, boolean isMarker, Protocol protocol, String user)  throws FlexDatabaseException
     {
         //m_plateType
         super(conn,project,workflow,totalWells,isFull,false,protocol);
+        m_isMarker = isMarker;
         this.m_isReorderSequences = false;
         m_UserName = user;
     }
     
     public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow,
-    boolean isFull, Protocol protocol, String user)  throws FlexDatabaseException
+    boolean isFull, boolean isMarker,Protocol protocol, String user)  throws FlexDatabaseException
     {
-        this(conn, project,  workflow, 94,  isFull,  protocol, user);
+        this(conn, project,  workflow, 94, false, isFull,  protocol, user);
         m_isReorderSequences = false;
+        m_isMarker = isMarker;
         
     }
     
     public MgcOligoPlateManager(LinkedList seq, Connection conn, Project project, Workflow workflow,
-    boolean isFull, Protocol protocol, String user)  throws FlexDatabaseException
+    boolean isFull, boolean isMarker, Protocol protocol, String user)  throws FlexDatabaseException
     {
-        this(conn, project,  workflow, 94,  isFull,  protocol, user);
+        this(conn, project,  workflow, 94,  isFull, false,  protocol, user);
         m_isReorderSequences = false;
+        m_isMarker = isMarker;
         m_notDuplicatedSequences = seq ;
         
     }
@@ -124,6 +128,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
         //working with duplicates
         if (m_notDuplicatedSequences != null) seqList = m_notDuplicatedSequences;
         Rearrayer ra = new Rearrayer(new ArrayList(seqList), totalWells);
+        ra.setRearrayByMarker(m_isMarker);
         
         ArrayList plates = ra.getPlates( );
         ArrayList messages = ra.getMessages();
@@ -304,7 +309,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
             p = new Project(5);
             w = new Workflow(8);
             
-            MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 94, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS), "htaycher");
+            MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 94, false, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS), "htaycher");
             
             System.out.println("About to start thread");
             om.orderOligo();
@@ -315,7 +320,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
         } finally
         {
             DatabaseTransaction.closeConnection(c);
-        }
+        } 
     } //main
     
 }
