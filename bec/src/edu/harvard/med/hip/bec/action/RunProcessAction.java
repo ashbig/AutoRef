@@ -238,33 +238,49 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_PRIMER3: //run primer3
                 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder                
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER: //run discrepancy finder
+                case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
                 {
-                    
-                    
                     String title = "";
                     ProcessRunner runner = null;
-                     if (forwardName == Constants.PROCESS_RUN_PRIMER3) //run primer3
-                     {
-                          runner = new PrimerDesignerRunner();
-                          title = "request for Primer Designer";
-                          int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
-                          ((PrimerDesignerRunner)runner).setSpecId(spec_id);
-                          if ( request.getParameter("isTryMode") != null )
-                            ((PrimerDesignerRunner)runner).setIsTryMode( true );
-                     }
-                     else if  (forwardName == Constants.PROCESS_RUNPOLYMORPHISM_FINDER)
-                     {
-                          runner = new PolymorphismFinderRunner();
-                           title = "request for Polymorphism Finder";
-                          ((PolymorphismFinderRunner)runner).setSpecId(Integer.parseInt( (String)request.getParameter("POLYMORPHISM_SPEC")));
-                     }//run polymorphism finder
-                    else if (forwardName == Constants.PROCESS_RUN_DISCREPANCY_FINDER)
+                    switch (forwardName)
                     {
-                         runner = new DiscrepancyFinderRunner();
-                          title = "request for Discrepancy Finder";
-                    }//run discrepancy finder
+                        case Constants.PROCESS_RUN_PRIMER3: //run primer3
+                         {
+                              runner = new PrimerDesignerRunner();
+                              title = "request for Primer Designer";
+                              int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
+                              ((PrimerDesignerRunner)runner).setSpecId(spec_id);
+                              if ( request.getParameter("isTryMode") != null )
+                                ((PrimerDesignerRunner)runner).setIsTryMode( true );
+                              break;
+                         }
+                        case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
+                        {
+                             runner = new PrimerOrderRunner();
+                             title = "request for Primer Order";
+                            ((PrimerOrderRunner)runner).setPrimerPlacementFormat( Integer.parseInt(request.getParameter("oligo_placement_format") ));
+                             ((PrimerOrderRunner)runner).setPrimerPlacementFormat( Integer.parseInt(request.getParameter("primer_number") ));
+                             
+                             if ( request.getParameter("isTryMode") != null )
+                                 ((PrimerOrderRunner)runner).setIsTryMode(true  );
+                            break;
+                        }
+                        case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:
+                         {
+                              runner = new PolymorphismFinderRunner();
+                               title = "request for Polymorphism Finder";
+                              ((PolymorphismFinderRunner)runner).setSpecId(Integer.parseInt( (String)request.getParameter("POLYMORPHISM_SPEC")));
+                              break;
+                        }//run polymorphism finder
+                        case Constants.PROCESS_RUN_DISCREPANCY_FINDER:
+                        {
+                             runner = new DiscrepancyFinderRunner();
+                              title = "request for Discrepancy Finder";
+                              break;
+                        }//run discrepancy finder
+                    }
+                    
                     String  item_ids = (String) request.getParameter("items");
-               
                     runner.setItems(item_ids.toUpperCase().trim());
                    runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
                    runner.setUser(user);
@@ -390,6 +406,7 @@ public class RunProcessAction extends ResearcherAction
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
                     break;
                 }
+               
             }
             
             return mapping.findForward("processing");

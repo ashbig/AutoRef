@@ -204,6 +204,7 @@ public class SelectProcessAction extends ResearcherAction
                 }
                 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
+                case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
                 {
                     String title="";
                     switch ( forwardName)
@@ -216,13 +217,16 @@ public class SelectProcessAction extends ResearcherAction
                         {
                             title="view Internal Primers";break;
                         }
+                        case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
+                        {
+                            title="order Internal Primers";break;
+                           
+                        }
                     }
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("initiate_process"));
                 }
-               //approve internal primers
-                {
-                }
+             
                 case Constants.PROCESS_RUN_PRIMER3://run primer3
                 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER://run discrepancy finder
@@ -295,6 +299,7 @@ public class SelectProcessAction extends ResearcherAction
                 request.setAttribute(Constants.JSP_TITLE, "activate Clones");
                 return (mapping.findForward("scan_label"));
             }
+           
             }
         }
         catch (Exception e)

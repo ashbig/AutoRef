@@ -212,22 +212,23 @@ public class Constants {
      public static final int PROCESS_RUN_ISOLATE_RUNKER = 47;//run isolate runker
       public static final int PROCESS_APROVE_ISOLATE_RANKER = 48;//approve isolate ranker
     
-      public static final int PROCESS_ADD_NEW_INTERNAL_PRIMER = 49; // add new internal primer
-      public static final int PROCESS_VIEW_INTERNAL_PRIMERS = 50;//view internal primers
-      public static final int PROCESS_APPROVE_INTERNAL_PRIMERS = 51;//approve internal primers
-      public static final int PROCESS_RUN_PRIMER3= 52;//run primer3
-    public static final int PROCESS_RUN_ASSEMBLER_FOR_ALL_READS = 53;//run assembly wrapper
-    public static final int PROCESS_RUNPOLYMORPHISM_FINDER= 54; //run polymorphism finder
-    public static final int PROCESS_RUN_DISCREPANCY_FINDER= 55;//run discrepancy finder
-    public static final int PROCESS_RUN_DECISION_TOOL = 56;//run decision tool
+      public static final int             PROCESS_ADD_NEW_INTERNAL_PRIMER = 49; // add new internal primer
+      public static final int             PROCESS_VIEW_INTERNAL_PRIMERS = 50;//view internal primers
+      public static final int             PROCESS_APPROVE_INTERNAL_PRIMERS = 51;//approve internal primers
+      public static final int             PROCESS_RUN_PRIMER3= 52;//run primer3
+    public static final int             PROCESS_RUN_ASSEMBLER_FOR_ALL_READS = 53;//run assembly wrapper
+    public static final int             PROCESS_RUNPOLYMORPHISM_FINDER= 54; //run polymorphism finder
+    public static final int             PROCESS_RUN_DISCREPANCY_FINDER= 55;//run discrepancy finder
+    public static final int             PROCESS_RUN_DECISION_TOOL = 56;//run decision tool
 
-    public static final int PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 57;//run decision tool
-    public static final int PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
-    public static final int            PROCESS_ACTIVATE_CLONES = 59;
+    public static final int             PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 57;//run decision tool
+    public static final int             PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
+    public static final int             PROCESS_ACTIVATE_CLONES = 59;
     public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 60;
     public static final int             PROCESS_CREATE_REPORT = 61;
-    public static final int             PROCESS_SHOW_CLONE_HISTORY = 62;
-       //62
+    public static final int             PROCESS_SHOW_CLONE_HISTORY = 63;
+     public static final int            PROCESS_ORDER_INTERNAL_PRIMERS = 64;
+       //64
        
     //items for display 1-40
   
