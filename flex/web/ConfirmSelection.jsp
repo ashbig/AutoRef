@@ -31,7 +31,7 @@
 <logic:notEqual name="gs" property="species" value="Homo sapiens">
 <td></td>
 </logic:notEqual>
-<td><a target=_new href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="gs" property="gi"/>&dopt=GenBank"><bean:write name="gs" property="accession"/></a></td>
+<td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="gs" property="gi"/>&dopt=GenBank"><bean:write name="gs" property="accession"/></a></td>
 <td><bean:write name="gs" property="description"/></td>
 <td><bean:write name="gs" property="gi"/></td>
 <td><bean:write name="gs" property="species"/></td>
@@ -61,7 +61,7 @@
 <logic:notEqual name="element" property="id" value="-1">
 <td><font color=red><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="element" property="id"/>"><bean:write name="element" property="id"/></a></font></td>
 </logic:notEqual>
-<td><a target=_new href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="element" property="gi"/>&dopt=GenBank"><bean:write name="element" property="accession"/></a></td>
+<td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="element" property="gi"/>&dopt=GenBank"><bean:write name="element" property="accession"/></a></td>
 <td><bean:write name="element" property="description"/></td>
 <td><bean:write name="element" property="gi"/></td>
 <td><bean:write name="element" property="species"/></td>
@@ -106,7 +106,7 @@
 <logic:notEqual name="h" property="id" value="-1">
 <td><font color=red><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="h" property="id"/>"><bean:write name="h" property="id"/></a><br></font></td>
 </logic:notEqual>
-<td><a target=_new href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="h" property="gi"/>&dopt=GenBank"><bean:write name="h" property="accession"/><br></a></td>
+<td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="h" property="gi"/>&dopt=GenBank"><bean:write name="h" property="accession"/><br></a></td>
 <td><bean:write name="h" property="description"/></td>
 <td><bean:write name="h" property="gi"/></td>
 <td><bean:write name="h" property="species"/></td>
@@ -127,7 +127,7 @@
 <th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
 <logic:iterate id="bs" name="badSequences">
 <tr>
-<td><a target=_new href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="bs" property="key"/>&dopt=GenBank"><bean:write name="bs" property="value.accession"/></a></td>
+<td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="bs" property="key"/>&dopt=GenBank"><bean:write name="bs" property="value.accession"/></a></td>
 <td><bean:write name="bs" property="value.description"/></td>
 <td><bean:write name="bs" property="value.gi"/></td>
 <td><bean:write name="bs" property="value.species"/></td>

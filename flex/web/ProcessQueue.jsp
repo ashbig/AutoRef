@@ -1,5 +1,5 @@
 <%--
-        $Id: ProcessQueue.jsp,v 1.6 2001-07-16 17:42:31 jmunoz Exp $ 
+        $Id: ProcessQueue.jsp,v 1.7 2001-07-16 19:39:31 jmunoz Exp $ 
 
         File    : ProcessQueue.jsp
         Date    : 05102001
@@ -45,7 +45,7 @@
             </logic:iterate>
             <BR>
             GI:
-            <A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="curItem" property="item.gi"/>&dopt=GenBank"> 
+            <A target="_new" HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="curItem" property="item.gi"/>&dopt=GenBank"> 
                 <bean:write name="curItem" property="item.gi"/>
             </A>
             <BR>

@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.11 2001-07-16 17:42:31 jmunoz Exp $ 
+        $Id: PendingRequests.jsp,v 1.12 2001-07-16 19:39:31 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -55,7 +55,7 @@
                 <bean:write name="curQueueItem" property="item.quality"/>
             </TD>
             <TD>
-                <A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="curQueueItem" property="item.gi"/>&dopt=GenBank"> 
+                <A target="_new" HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="curQueueItem" property="item.gi"/>&dopt=GenBank"> 
                     <bean:write name="curQueueItem" property="item.gi"/>
                 </A>
             </TD>
