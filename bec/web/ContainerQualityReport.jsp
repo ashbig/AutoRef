@@ -261,10 +261,10 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
 	
 		  </table>
         </tr>
-		<%  for (int count = 2 ; count <= rows; count++)
+		<%  for (int count = 66 ; count <= rows -2 + 66; count++)
 		  {
 		  %>
-          <tr>      <td align="center"><strong>B</strong></td>        </tr>
+          <tr>      <td align="center"><strong><%= (char) count %></strong></td>        </tr>
           <%}%>
              </table></td>
   </tr>
