@@ -105,17 +105,37 @@ public class GetResearcherAction extends ResearcherAction{
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            
-            // update the location of the old container.
-            for(int i=0; i<oldContainers.size(); i++) {
-                Container oldContainer = (Container)oldContainers.elementAt(i);
-                oldContainer.updateLocation(oldContainer.getLocation().getId(), conn);
-            }
            
             // Insert the new containers and samples into database.
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
                 newContainer.insert(conn);
+            }
+            
+            if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname())) {
+                Container c = (Container)oldContainers.elementAt(0);                  
+                MgcContainer mgcContainer = MgcContainer.findMGCContainerWithThread(c.getLabel().substring(3));
+                if(mgcContainer == null) {
+                    request.setAttribute("workflowid", new Integer(workflowid));
+                    request.setAttribute("projectid", new Integer(projectid));
+                    DatabaseTransaction.rollback(conn);
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.mgc.notfound"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }        
+                
+                mgcContainer.updateGlycerolContainer(((Container)newContainers.elementAt(1)).getId(), conn);
+
+                if("MGS".equals(c.getLabel().substring(0, 3))) {  
+                    ((Container)oldContainers.elementAt(0)).setLocation(new Location(Location.DESTROYED));
+                }
+            }
+            
+            // update the location of the old container.
+            for(int i=0; i<oldContainers.size(); i++) {
+                Container oldContainer = (Container)oldContainers.elementAt(i);
+                oldContainer.updateLocation(oldContainer.getLocation().getId(), conn);
             }
             
             Workflow workflow = new Workflow(workflowid);
@@ -168,20 +188,6 @@ public class GetResearcherAction extends ResearcherAction{
                 
                 pr.close();
                 request.setAttribute("writeBarcode", new Integer(1));
-            }
-            
-            if(Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname())) {
-                MgcContainer mgcContainer = (MgcContainer)MgcContainer.findMGCContainerFromCulture((Container)oldContainers.elementAt(0));
-                if(mgcContainer == null) {
-                    request.setAttribute("workflowid", new Integer(workflowid));
-                    request.setAttribute("projectid", new Integer(projectid));
-                    DatabaseTransaction.rollback(conn);
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("error.mgc.notfound"));
-                    saveErrors(request, errors);
-                    return (new ActionForward(mapping.getInput()));
-                }
-                mgcContainer.updateGlycerolContainer(((Container)newContainers.elementAt(0)).getId(), conn);
             }
             
             // Commit the changes to the database.
