@@ -277,12 +277,12 @@ public class AccessManager {
         AccessManager manager = AccessManager.getInstance();
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
+            
             if(manager.authenticate("Larry Shumway", "three"))
                 System.out.println("Testing method authenticate - OK");
             else
                 System.out.println("Testing method authenticate - ERROR");
             
-            //manager.addUser("lms","schwartz@bio.umass.edu","worm","umass","<last name>Schwartz</last name>", "Customer");
         } catch (FlexDatabaseException e) {
             System.out.println(e);
         }

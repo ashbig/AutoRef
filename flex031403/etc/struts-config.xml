@@ -109,7 +109,7 @@
                name="logonForm"
               scope="request"
               input="/login.jsp">
-      <forward  name="success"   path="/MainMenu.jsp"/>
+      <forward  name="success"   path="/main.jsp"/>
       <forward  name="failure"  path="/login.jsp"/>
     </action>
 

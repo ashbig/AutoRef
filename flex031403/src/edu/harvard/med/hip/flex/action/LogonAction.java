@@ -12,9 +12,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2001-06-21 16:59:32 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.7 $
+ * $Date: 2001-07-05 15:57:53 $
+ * $Author: yhu $
  *
  ******************************************************************************
  *
@@ -37,7 +37,7 @@
 package edu.harvard.med.hip.flex.action;
 
 
-
+import java.util.*;
 import java.util.Hashtable;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -62,8 +62,8 @@ import edu.harvard.med.hip.flex.database.*;
 /**
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
- * @author $Author: dongmei_zuo $
- * @version $Revision: 1.6 $ $Date: 2001-06-21 16:59:32 $
+ * @author $Author: yhu $
+ * @version $Revision: 1.7 $ $Date: 2001-07-05 15:57:53 $
  */
 
 public final class LogonAction extends Action {
@@ -123,8 +123,15 @@ public final class LogonAction extends Action {
             
             return (new ActionForward(mapping.getInput()));
         }
-        
-        
+        LinkedList menu = null;
+        try{
+            menu = UserGroup.getMenu(user.getUserGroup());
+        }catch(Exception e) {
+            request.setAttribute(Action.EXCEPTION_KEY,e );
+            return mapping.findForward("error");
+            
+        };
+        request.getSession().setAttribute("menulist",menu);
         // Save our logged-in user in the session
         HttpSession session = request.getSession();
         session.setAttribute(Constants.USER_KEY, user);
