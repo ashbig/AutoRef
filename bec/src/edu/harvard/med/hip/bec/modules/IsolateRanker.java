@@ -17,6 +17,7 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.*;
 import java.util.*;
 import java.sql.*;
 
@@ -165,31 +166,38 @@ public class IsolateRanker
     private void  runRead( Read read, BaseSequence refsequence, Connection conn)
             throws BecUtilException, BecDatabaseException, ParseException
     {
-        
-        //prepare detectors
-        DiscrepancyFinder df = new DiscrepancyFinder();
-       
-        // reasign sequence for only trimmed sequence
-        AnalyzedScoredSequence read_sequence =  read.getSequence();
-        read_sequence.setText(read.getTrimmedSequence());
-        //run read
-        
-        df.setSequencePair(new SequencePair(read.getSequence() ,  refsequence));
-        df.setInputType(true);
-        //set compliment request
-        if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
-            df.setIsRunCompliment(! m_forward_read_sence );
-        else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
-            df.setIsRunCompliment(! m_reverse_read_sence);
-        df.run();
-        if (m_isRunPolymorphism)
+        // read can have all mutations analyzed and requers only score recalculation based on new spec
+        if (read.getScore() == Constants.SCORE_NOT_CALCULATED)
         {
-             PolymorphismDetector pf = new PolymorphismDetector();
-            pf.setSpec(m_polymorphism_spec);
-            pf.setSequence( read.getSequence());
-            pf.run();
+        
+            //prepare detectors
+            DiscrepancyFinder df = new DiscrepancyFinder();
+
+            // reasign sequence for only trimmed sequence
+            AnalyzedScoredSequence read_sequence =  read.getSequence();
+            read_sequence.setText(read.getTrimmedSequence());
+            //run read
+
+            df.setSequencePair(new SequencePair(read.getSequence() ,  refsequence));
+            df.setInputType(true);
+            //set compliment request
+            if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
+                df.setIsRunCompliment(! m_forward_read_sence );
+            else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
+                df.setIsRunCompliment(! m_reverse_read_sence);
+            df.run();
+            if (m_isRunPolymorphism)
+            {
+                 PolymorphismDetector pf = new PolymorphismDetector();
+                pf.setSpec(m_polymorphism_spec);
+                pf.setSequence( read.getSequence());
+                pf.run();
+            }
+              // insert mutations
+            read.getSequence().insertMutations(conn);
         }
         read.calculateScore(m_penalty_spec);
+      
         read.updateScore(conn);
     }
 
