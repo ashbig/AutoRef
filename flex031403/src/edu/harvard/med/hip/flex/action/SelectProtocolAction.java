@@ -72,7 +72,14 @@ public class SelectProtocolAction extends FlexAction {
                 return (mapping.findForward("success_pcr"));
             } else {               
                 queue = new ContainerProcessQueue();
-                items = queue.getQueueItems(protocol);
+                
+                if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
+                   Protocol.PERFORM_TRANSFORMATION.equals(protocol.getProcessname())) {
+                       items = queue.getQueueItemsWithStatus(protocol, edu.harvard.med.hip.flex.process.Process.SUCCESS);
+                } else {
+                    items = queue.getQueueItems(protocol);
+                }
+                
                 storeInSession(request, items, protocol);
                 
                 if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {

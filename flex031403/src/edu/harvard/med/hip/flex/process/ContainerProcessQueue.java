@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.9 2001-06-26 15:46:59 dongmei_zuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.10 2001-07-09 19:54:51 dzuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -88,6 +88,41 @@ public class ContainerProcessQueue implements ProcessQueue {
         LinkedList items = restore(protocol, sql);
         return items;
     }
+
+    /**
+     * Retrieve the batch of queued items which are waiting for the
+     * next workflow process on a particular date from the Queue table,
+     * and have a certain execution status.
+     *
+     * @param protocol The protocol object.
+     * @param executionstatus The status of the queue items.
+     * @return A LinkedList of QueueItem objects.
+     * @exception FlexDatabaseException.
+     */
+    public LinkedList getQueueItemsWithStatus(Protocol protocol, String executionstatus)
+    throws FlexDatabaseException {
+        int protocolid = protocol.getId();
+        String sql = new String("select c.containerid as id, "+
+        "c.containertype as type, " +
+        "c.locationid as locationid, " +
+        "l.locationtype as locationtype," +
+        "l.locationdescription as description,"+
+        "c.label as label, " +
+        "c.platesetid as platesetid, "+
+        "to_char(q.dateadded, 'fmMM-DD-YYYY') as dateadded\n" +
+        "from containerheader c, containerlocation l, queue q, "+
+        "processobject p, processexecution x\n" +
+        "where c.containerid = q.containerid\n" +
+        "and c.locationid = l.locationid\n"+
+        "and c.containerid = p.containerid\n"+
+        "and p.inputoutputflag='O'\n"+
+        "and p.executionid = x.executionid\n"+
+        "and x.executionstatus = '"+executionstatus+"'\n"+
+        "and q.protocolid = "+protocolid);
+  System.out.println(sql);      
+        LinkedList items = restore(protocol, sql);
+        return items;
+    }    
     
     /**
      * Insert all the selected process objects into the Queue
