@@ -34,10 +34,12 @@
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
+    <logic:present name="EnterSourcePlateAction.subprotocol">
     <tr>
     <td class="label">Protocol:</td>
     <td><bean:write name="EnterSourcePlateAction.subprotocol" property="name"/></td>
     </tr>
+    </logic:present>
 
     <logic:iterate id="oldContainer" name="EnterSourcePlateAction.oldContainers">
     <tr>

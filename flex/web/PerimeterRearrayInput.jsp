@@ -1,0 +1,85 @@
+<%@ page language="java" %>
+<%@ page errorPage="ProcessError.do"%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+
+<html>
+<head>
+<title><bean:message key="flex.name"/> : Cell Culture Perimeter Rearray</title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
+<body>
+
+<h2><bean:message key="flex.name"/> : Cell Culture Perimeter Rearray</h2>
+<hr>
+<html:errors/>
+
+<p>
+<html:form action="/PerimeterRearrayInput.do">
+<logic:present name="projectid">
+    <input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+</logic:present>
+<logic:present name="workflowid">
+    <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
+</logic:present>
+<input type="hidden" name="projectname" value="<bean:write name="projectname"/>">
+<logic:present name="workflowname">
+    <input type="hidden" name="workflowname" value="<bean:write name="workflowname"/>">
+</logic:present>
+
+<table>
+    <tr>
+    <td class="prompt">Project name:</td>
+    <td><bean:write name="projectname" /></td>
+    </tr>
+    <tr>
+    <td class="prompt">Workflow name:</td>
+    <td><bean:write name="workflowname" /></td>
+    </tr>
+
+    <tr>
+    <td class="prompt">Select Source Plate Type:</td>
+    <td><select name="sourcePlateType">
+        <option value="Costar flt bttm/MP16-24">Costar flt bttm/MP16-24
+        <option value="Costar rd bttm/MP16-24">Costar rd bttm/MP16-24
+        <option value="Deepwell on MP16">Deepwell on MP16
+        <option value="PCR on MP16 landscape">PCR on MP16 landscape
+        <option value="Reservoir on MP16">Reservoir on MP16
+        <option value="RK riplate dw/MP16-24">RK riplate dw/MP16-24
+        </select>
+    </td>
+    </tr>
+    <tr>
+    <td class="prompt">Select Destination Plate Type:</td>
+    <td><select name="destPlateType">
+        <option value="Costar flt bttm/MP16-24">Costar flt bttm/MP16-24
+        <option value="Costar rd bttm/MP16-24">Costar rd bttm/MP16-24
+        <option value="Deepwell on MP16">Deepwell on MP16
+        <option value="PCR on MP16 landscape">PCR on MP16 landscape
+        <option value="Reservoir on MP16">Reservoir on MP16
+        <option value="RK riplate dw/MP16-24">RK riplate dw/MP16-24
+        </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td class="prompt">Volumn:</td>
+    <td><html:text property="volumn"/></td>
+    </tr>
+
+    <tr>
+    <td class="prompt">Please enter all the plate labels (enter each label per line):</td>
+    <td><html:textarea property="labels"/></td>
+    </tr>
+
+    <tr>
+    <td></td>
+    <td><html:submit property="submit" value="Continue"/></td>
+    </tr>
+</table>
+</html:form>
+
+</body>
+</html>

@@ -94,10 +94,17 @@ public class GetResearcherAction extends ResearcherAction{
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
         String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
         
-        if(newContainers == null || oldContainers == null ||
-        items == null || protocol == null || sampleLineageSet == null ||
-        subprotocol == null) {
-            return (mapping.findForward("fail"));
+        if(protocol != null && protocol.getProcessname().equals(Protocol.PERIMETER_REARRAY)) {
+            if(newContainers == null || oldContainers == null ||
+            protocol == null || sampleLineageSet == null) {
+                return (mapping.findForward("fail"));
+            }
+        } else {
+            if(newContainers == null || oldContainers == null ||
+            items == null || protocol == null || sampleLineageSet == null ||
+            subprotocol == null) {
+                return (mapping.findForward("fail"));
+            }
         }
         
         Connection conn = null;
@@ -216,7 +223,7 @@ public class GetResearcherAction extends ResearcherAction{
                         seqContainers.add(newContainer);
                     }
                 }
-                int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());                
+                int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());
                 String isMappingFile = ((GetResearcherBarcodeForm)form).getIsMappingFile();
                 boolean b = false;
                 if("Yes".equals(isMappingFile)) {
@@ -224,7 +231,7 @@ public class GetResearcherAction extends ResearcherAction{
                 }
                 SummaryTablePopulator populator = new SummaryTablePopulator();
                 ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b, populator, containerids, strategyid, CloneInfo.MASTER_CLONE);
-                new Thread(handler).start();   
+                new Thread(handler).start();
             }
             
             // Remove everything from the session.
