@@ -62,8 +62,12 @@
 		<%= clone_sequence.getRefSequenceId()%></a></TD>
   </TR>
   <TR> 
-    <TD width="35%" ><strong> Status:</strong></td>
+    <TD width="35%" ><strong> Analysis Status:</strong></td>
     <td ><%= BaseSequence.getSequenceAnalyzedStatusAsString(clone_sequence.getStatus())%></TD>
+  </TR>
+ <TR> 
+    <TD width="35%" ><strong> Sequence Type:</strong></td>
+    <td ><%= BaseSequence.getCloneSequenceTypeAsString(clone_sequence.getCloneSequenceType())%></TD>
   </TR>
    <TR> 
     <TD width="35%" ><strong>Cds Start:</strong></td>

@@ -102,7 +102,7 @@ public class CloneSequence extends AnalyzedScoredSequence
     public static CloneSequence getOneByIsolateTrackingId(int is_id, String clone_sequence_analysis_status, String clone_sequence_type) throws BecDatabaseException
     {
         String sql = "select sequenceid from assembledsequence where isolatetrackingid = "+is_id;
-        if (clone_sequence_analysis_status != null)
+        if (clone_sequence_type != null)
                 sql += " and SEQUENCETYPE  in (    "+clone_sequence_type +")";
         if ( clone_sequence_analysis_status != null)
             sql +=" and ANALYSISSTATUS in ( "+clone_sequence_analysis_status +")";
@@ -160,7 +160,8 @@ public class CloneSequence extends AnalyzedScoredSequence
         
         //insert into sequencetext table.
             BaseSequence.insertSequence( conn, this.getText(),m_id, BaseSequence.SEQUENCE_INFO_TEXT);
-            BaseSequence.insertSequence( conn, this.getScores(),m_id, BaseSequence.SEQUENCE_INFO_SCORE);
+            if (this.getScores() != null)
+                BaseSequence.insertSequence( conn, this.getScores(),m_id, BaseSequence.SEQUENCE_INFO_SCORE);
           
         } catch (Exception sqlE)
         {
