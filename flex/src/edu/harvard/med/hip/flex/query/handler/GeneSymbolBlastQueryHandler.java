@@ -117,9 +117,9 @@ public class GeneSymbolBlastQueryHandler extends QueryHandler {
                 String locusid = sr.getLocusid();
                 if(noFoundByLocus.containsKey(locusid)) {
                     NoFound nf = (NoFound)noFoundByLocus.get(locusid);
-                    reason = reason+". Query by genbank accession: "+sr.getGenbank()+" - "+nf.getReason();
+                    reason = reason+nf.getReason();
                 } else {
-                    reason = reason+". Query by genbank accession: "+sr.getGenbank()+" - "+NoFound.UNKNOWN;
+                    reason = reason+NoFound.UNKNOWN;
                 }
             }
             noFoundList.put(term, new NoFound(term, reason));
