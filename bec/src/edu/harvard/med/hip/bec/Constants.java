@@ -19,35 +19,17 @@ public class Constants {
    
     private static final String DILIM = "_";
       
-     public  static String        getTemporaryFilesPath()
-    {
-        return edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TEMPORARY_FILES_FILE_PATH")+java.io.File.separator;
-    }
-  
-    
-    
-    public static String           getItemTypeAsString(int object_type)
-     {
-         switch (object_type )
-         {
-             case ITEM_TYPE_ISOLATETRASCKING_ID :return "Isolate Tracking Id";
-             case ITEM_TYPE_PLATE_LABELS : return "Container Label";
-             case ITEM_TYPE_BECSEQUENCE_ID : return "ACE reference sequence Id";
-             case ITEM_TYPE_FLEXSEQUENCE_ID : return "Flex reference Sequence Id";
-             case ITEM_TYPE_CLONEID: return "Clone Id";
-             default: return "Not known";
-         }
-     
-     }
-    
-    
-    
+    public static String       TAB_DELIMETER = "\t";//System.getProperty("line.separator") ;
+   
     public static String       LINE_SEPARATOR = "\n";//System.getProperty("line.separator") ;
-    
     public static final String DELIM_WHITE_SPACE = " ";
     // for UI to show menu 
     public static final String NO_MENU_TO_SHOW = "NO_MENU_TO_SHOW";
     
+     public  static String        getTemporaryFilesPath()
+    {
+        return edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TEMPORARY_FILES_FILE_PATH")+java.io.File.separator;
+    }
     
     // FLEX ----------------------------------------------
     // constant for workflow (queue) admin group
@@ -245,6 +227,8 @@ public class Constants {
   public static final int         PROCESS_DELETE_TRACE_FILES = 81;
    public static final int         PROCESS_MOVE_TRACE_FILES = 82;
   public static final int         PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID = 83;
+    public static final int         PROCESS_RUN_DECISION_TOOL_NEW  = 84;
+
      //69
        
     //items for display 1-40
@@ -275,13 +259,36 @@ public class Constants {
     public static final int STRETCH_COLLECTION_REPORT_INT = 23;
     public static final int STRETCH_COLLECTION_REPORT_ALL_INT = 24;
     public static final int LQR_COLLECTION_REPORT_INT = 25;
+  
+    
+    
+    
+    
+    
+    
     //type of items submitted for action : 1-4
     public static final int ITEM_TYPE_CLONEID = 1;
     public static final int ITEM_TYPE_PLATE_LABELS = 2;
     public static final int ITEM_TYPE_BECSEQUENCE_ID = 3;
     public static final int ITEM_TYPE_FLEXSEQUENCE_ID = 4;
      public static final int ITEM_TYPE_ISOLATETRASCKING_ID =-2;
+     public static final int ITEM_TYPE_PROJECT_NAME = 5 ;
    
+     
+     public static String           getItemTypeAsString(int object_type)
+     {
+         switch (object_type )
+         {
+             case ITEM_TYPE_ISOLATETRASCKING_ID :return "Isolate Tracking Id";
+             case ITEM_TYPE_PLATE_LABELS : return "Container Label";
+             case ITEM_TYPE_BECSEQUENCE_ID : return "ACE reference sequence Id";
+             case ITEM_TYPE_FLEXSEQUENCE_ID : return "Flex reference Sequence Id";
+             case ITEM_TYPE_CLONEID: return "Clone Id";
+             case ITEM_TYPE_PROJECT_NAME: return "Project Name";
+             default: return "Not known";
+         }
+     
+     }
     // for checking sequence identity
     public static final double MIN_IDENTITY_CUTOFF = 60.0;
     
@@ -296,7 +303,11 @@ public class Constants {
     public static final int    READ_TYPE_ENDREAD = 1;
     public static final int    READ_TYPE_INTERNAL = -1;
     
+    //format of output for deciosion tool
     
+      public static final int     OUTPUT_TYPE_ONE_FILE = 0;
+    public static final int     OUTPUT_TYPE_GROUP_PER_FILE = 1;
+  
     
     public static String       getOrientationAsStringFullName(int v) 
     { 
