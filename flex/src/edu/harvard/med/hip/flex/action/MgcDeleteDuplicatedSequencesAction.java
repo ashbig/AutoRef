@@ -86,7 +86,8 @@ public class MgcDeleteDuplicatedSequencesAction extends ResearcherAction
         
        
         //constract
-       // ArrayList plates = new ArrayList();
+        ArrayList plates = new ArrayList();
+        ArrayList  plates_no_marker = new ArrayList();
         //get total number of genes in queue
         if (seqList.size() != 0)
         {
@@ -94,14 +95,12 @@ public class MgcDeleteDuplicatedSequencesAction extends ResearcherAction
             {
                 Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
               
-               ra.setRearrayByMarker(true);
-               ArrayList plates = ra.getPlates();
-                request.setAttribute("platesInfo_marker", plates);
-                request.setAttribute("full_plates_marker", new Integer( plates.size() ));
+                ra.setRearrayByMarker(true);
+                plates = ra.getPlates();
+                
                 ra.setRearrayByMarker(false);
-               ArrayList  plates_no_marker = ra.getPlates();
-                request.setAttribute("platesInfo_no_marker", plates_no_marker);
-                request.setAttribute("full_plates_no_marker", new Integer( plates_no_marker.size() ));
+                plates_no_marker = ra.getPlates();
+         
             }
             catch(Exception e)
             {
@@ -109,6 +108,10 @@ public class MgcDeleteDuplicatedSequencesAction extends ResearcherAction
                 return (mapping.findForward("error"));
             }
         }
+        request.setAttribute("platesInfo_marker", plates);
+        request.setAttribute("full_plates_marker", new Integer( plates.size() ));
+        request.setAttribute("platesInfo_no_marker", plates_no_marker);
+        request.setAttribute("full_plates_no_marker", new Integer( plates_no_marker.size() ));
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
        // request.setAttribute("platesInfo", plates);

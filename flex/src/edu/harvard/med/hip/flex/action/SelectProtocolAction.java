@@ -126,7 +126,8 @@ public class SelectProtocolAction extends FlexAction
                 }
                 
                 
-                    // ArrayList plates = new ArrayList();
+                     ArrayList plates = new ArrayList();
+                     ArrayList  plates_no_marker = new ArrayList();
                 //get total number of genes in queue
                 if (numOfSeqs != 0)
                 {
@@ -134,14 +135,10 @@ public class SelectProtocolAction extends FlexAction
                     {
                        Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
                        ra.setRearrayByMarker(true);
-                       ArrayList plates = ra.getPlates();
-                        request.setAttribute("platesInfo_marker", plates);
-                        request.setAttribute("full_plates_marker", new Integer( plates.size() ));
-                        ra.setRearrayByMarker(false);
-                       ArrayList  plates_no_marker = ra.getPlates();
-                        request.setAttribute("platesInfo_no_marker", plates_no_marker);
-                        request.setAttribute("full_plates_no_marker", new Integer( plates_no_marker.size() ));
-                 
+                       plates = ra.getPlates();
+                      ra.setRearrayByMarker(false);
+                        plates_no_marker = ra.getPlates();
+                      
                     }
                     catch(Exception e)
                     {
@@ -150,6 +147,10 @@ public class SelectProtocolAction extends FlexAction
                         return (mapping.findForward("error"));
                     }
                 }
+                request.setAttribute("platesInfo_no_marker", plates_no_marker);
+                request.setAttribute("full_plates_no_marker", new Integer( plates_no_marker.size() ));
+                request.setAttribute("platesInfo_marker", plates);
+                request.setAttribute("full_plates_marker", new Integer( plates.size() ));
                // request.setAttribute("platesInfo", plates);
                // request.setAttribute("full_plates", new Integer( plates.size() ));
                 request.setAttribute("sequences_count", new Integer(numOfSeqs));
@@ -161,6 +162,7 @@ public class SelectProtocolAction extends FlexAction
             else
             {
                 queue = new ContainerProcessQueue();
+
             }
             items = queue.getQueueItems(protocol, project, workflow);
             
