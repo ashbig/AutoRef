@@ -14,7 +14,7 @@
     </center>
 
     <table width="80%" align="center" border="0"><tr><td> 
-    <p>HIP desease gene association database can help you to get the following information:</p>
+    <p>MedGene database can help you to get the following information:</p>
 
     <html:form action="main.do">   
         <html:radio property="geneDiseaseSelect" value="geneDisease" />A list of genes associated with a certain disease<br>
