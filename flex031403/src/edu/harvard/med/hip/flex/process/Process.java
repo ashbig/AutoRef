@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.10 2001-06-18 17:28:16 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.11 2001-06-18 19:48:30 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -105,6 +105,7 @@ public class Process {
         ResultSet rs = null;
         try {
             ps = conn.prepareStatement(sql);
+            System.out.println("Container: " + container);
             
             ps.setInt(1, container.getId());
             ps.setInt(2, protocol.getId());

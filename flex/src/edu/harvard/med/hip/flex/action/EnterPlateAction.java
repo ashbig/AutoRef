@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-18 18:23:52 $
+ * $Revision: 1.5 $
+ * $Date: 2001-06-18 19:48:30 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-18 18:23:52 $
+ * @version    $Revision: 1.5 $ $Date: 2001-06-18 19:48:30 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -91,14 +91,14 @@ public class EnterPlateAction extends ResearcherAction {
         // the queueItem and container corresponding to the barcode
         QueueItem queueItem= null;
         Container container = null;
-        Process process = null;
+        
         try {
             containerQueue =
             queueFactory.makeQueue("ContainerProcessQueue");
             // transform protocol
             runPCRGel = new Protocol(Protocol.RUN_PCR_GEL);
             transformItems = containerQueue.getQueueItems(runPCRGel);
-            process = Process.findProcess(container,runPCRGel);
+            
         } catch(FlexProcessException fpe) {
             request.setAttribute(Action.EXCEPTION_KEY, fpe);
             return mapping.findForward("error");
@@ -130,15 +130,25 @@ public class EnterPlateAction extends ResearcherAction {
             return retForward;
         }
         
-        // make sure the process execution is in process
+        // Find the right process
+        Process process = null;
+        try {
+            process = Process.findProcess(container,runPCRGel);
+        } catch (FlexDatabaseException fde) {
+            request.setAttribute(Action.EXCEPTION_KEY, fde);
+            return mapping.findForward("error");
+        }
         
-        if(process.getStatus() != process.INPROCESS) {
+        // make sure the process execution is in process
+        if(process == null || process.getStatus() != process.INPROCESS) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.queue.notready", container.getLabel()));
             saveErrors(request,errors);
             retForward = new ActionForward(mapping.getInput());
             return retForward;
         }
+        
+        
         
         
         /*
