@@ -1,5 +1,5 @@
 /**
- * $Id: FlexIDGenerator.java,v 1.6 2001-06-11 14:48:27 dongmei_zuo Exp $
+ * $Id: FlexIDGenerator.java,v 1.7 2002-05-13 13:16:25 Elena Exp $
  *
  * File     	: FlexIDGenerator.java
  * Date     	: 04182001
@@ -49,12 +49,64 @@ public class FlexIDGenerator {
         return id;
     }
     
+     /**
+     * This is a static method to get the primary key of the last record in the 
+      * for the given table  from the database (primary key is sequence).
+     *
+     * @param sequenceName The given sequence that the primary key is
+     * 	    generated from.
+     * @return An integer representing the primary key.
+     * @exception FlexDatabaseException.
+     */
+    public static int getCurrentId(String sequenceName) throws FlexDatabaseException {
+        int id = 0;
+        String sql = "select "+sequenceName+".currval as id from dual";
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        
+        RowSet rs = t.executeQuery(sql);
+        try {
+            while (rs.next()) {
+                
+                id = rs.getInt("ID");
+            }
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return id;
+    }
+    
+    
+      /** Find how many MGC containers alredy exists in the FlexDatabase
+     *  because label format is  MGC+number of MGC clone taged to 6 degits (MGC000001)
+     */
+    public static int getCount(String tableName) throws FlexDatabaseException
+    {
+        int count = 0;
+        String sql = "select count(*) as count from " + tableName;
+        RowSet rs = null;
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next()) {
+                count = rs.getInt("COUNT");
+            }
+        }catch (Exception e){ return -1;}
+        return count;
+    }
     //******************************************************//
     //			Test				//
     //******************************************************//
     public static void main(String [] args) {
         try {
             int id = FlexIDGenerator.getID("platesetid");
+            System.out.println(id);
+            id = FlexIDGenerator.getCurrentId("platesetid");
+            System.out.println(id);
+            id = FlexIDGenerator.getCount("mgcclone");
             System.out.println(id);
         } catch (FlexDatabaseException e) {
             System.out.println(e);
