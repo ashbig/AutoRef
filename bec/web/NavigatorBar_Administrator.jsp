@@ -65,9 +65,7 @@ dhtmlMenu.addItem(new NavBarMenuItem("Search", ""));
 dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=container Process History"));
 dhtmlMenu.addItem(new NavBarMenuItem("Container Description", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_TITLE%>=container Description"));
 dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_TITLE%>=container Results"));
-<!--dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_ISOLATE_RANKER_REPORT%>&amp;<%=Constants.JSP_TITLE%>=container Isolate Ranker Report")); -->
-dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "/BEC/logon.do"));
-dhtmlMenu.addItem(new NavBarMenuItem("Sample History", "ChipGeneGeneAnalysis_1.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "InitiateProcess.jsp?forwardName=<%=Constants.PROCESS_SHOW_CLONE_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=clone History"));
 dhtmlMenu.addItem(new NavBarMenuItem("Available Containers", "/BEC/Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_CONTAINERS_INT%>"));
 
 dhtmlMenu.addItem(new NavBarMenuItem("Run Report", "/BEC/RunReport.jsp?forwardName=<%=Constants.PROCESS_CREATE_REPORT%>"));

@@ -195,6 +195,7 @@
                 type="edu.harvard.med.hip.bec.action.RunProcessAction">
             <forward name="processing" path="/ConfirmProcess.jsp"/>
             <forward name="desicion_tool_report" path="/DesicionToolReport.jsp"/>
+            <forward name="display_item_history" path="/Display_ItemHistory.jsp"/>
             
     </action>
 

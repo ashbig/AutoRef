@@ -4,15 +4,11 @@
 
 
 <%@ page import="java.util.*" %>
-
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
-<%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
-
+<%@ page import="edu.harvard.med.hip.bec.util_objects.*" %>
+<%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
 <%-- The container that was searched --%>
 
 <html>
@@ -90,10 +86,10 @@
     </tr>
 <%
     String row_color =" bgColor='#e4e9f8'";
-	ProcessHistory pr_history=null;
+	edu.harvard.med.hip.bec.util_objects.ProcessHistory pr_history=null;
     for (int count = 0; count < process_items.size(); count ++)
 	{
-		pr_history = (ProcessHistory)process_items.get(count);
+		pr_history = (edu.harvard.med.hip.bec.util_objects.ProcessHistory)process_items.get(count);
 		if (count % 2 == 0)
 		{
 		  row_color =" bgColor='#e4e9f8'";
@@ -110,7 +106,7 @@
 		<% 
 		for (int s = 0; s < pr_history.getConfigs().size();s++)
 		{
-			ConfigItem cs=(ConfigItem)pr_history.getConfigs().get(s);
+			UIConfigItem cs=(UIConfigItem)pr_history.getConfigs().get(s);
 		
 		if ( cs.getType() == Spec.PRIMER3_SPEC_INT ||  cs.getType() == Spec.END_READS_SPEC_INT 
 		||  cs.getType() == Spec.FULL_SEQ_SPEC_INT ||  cs.getType() == Spec.POLYMORPHISM_SPEC_INT )

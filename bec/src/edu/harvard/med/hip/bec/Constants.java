@@ -162,9 +162,9 @@ public class Constants {
     public static final int            PROCESS_OBJECT_TYPE_RESULT = 1;
     public static final int            PROCESS_OBJECT_TYPE_CONTAINER = 0;
     public static final int            PROCESS_OBJECT_TYPE_CONSTRUCT = 2;
-    public static final int            PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE = 3;
+   // public static final int            PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE = 3;
     public static final int            PROCESS_OBJECT_TYPE_REFSEQUENCE = 4;
-   // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 5;
+    public static final int            PROCESS_OBJECT_TYPE_CLONE_SEQUENCE = 5;
    // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 6;
      // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 7;
      // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 8;
@@ -224,7 +224,7 @@ public class Constants {
     public static final int            PROCESS_ACTIVATE_CLONES = 59;
     public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 60;
     public static final int             PROCESS_CREATE_REPORT = 61;
-
+    public static final int             PROCESS_SHOW_CLONE_HISTORY = 62;
        //62
        
     //items for display 1-40
@@ -259,7 +259,6 @@ public class Constants {
     public static final int ITEM_TYPE_BECSEQUENCE_ID = 3;
     public static final int ITEM_TYPE_FLEXSEQUENCE_ID = 4;
    
-    
     
     /**
      * get today's date in dd-mmm-yy format

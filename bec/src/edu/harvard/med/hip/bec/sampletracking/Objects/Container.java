@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.22 2003-10-17 18:42:02 Elena Exp $
+ * $Id: Container.java,v 1.23 2003-11-04 22:43:53 Elena Exp $
  *
  * File     	: Container.java
 
@@ -12,6 +12,7 @@ import java.sql.*;
 import javax.sql.*;
 
 import edu.harvard.med.hip.bec.ui_objects.*;
+import edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.file.*;
@@ -1656,108 +1657,25 @@ public class Container
         
     }
      
-      public static ArrayList getProcessHistoryItems(String label)throws BecDatabaseException
+      public static ArrayList getProcessHistoryItems(String label)throws Exception
       
       {
           
           Container cont = findContainerDescriptionFromLabel(label);
           if ( cont != null)
-            return getProcessHistory( cont.getId());
+            return getProcessHistory( String.valueOf(cont.getId()));
           else return null;
       }
     
-      private static ArrayList getProcessHistory(int containerid)throws BecDatabaseException
+      private static ArrayList getProcessHistory(String containerid)throws Exception
       
       {
-          //for upload process
-          String sql = "select p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,p.processid as processid, "
-+"(select username from userprofile where userid=( select researcherid from request where requestid = "
-+" p.requestid)) as username,(select configtype from processconfig where processid= p.processid) as configtype, "
-+"(select configid from processconfig where processid= p.processid) as configid from process p, processdefinition pd, userprofile "
-+"where pd.processdefinitionid=p.processdefinitionid and processid= "
-+"(select processid from process_object where objectid = "+containerid+" and objecttype=0) order by EXECUTIONDATE desc";
-
-          ArrayList items = new ArrayList();
-          ArrayList item = new ArrayList();
-          DatabaseTransaction t = null;
-          RowSet crs = null; RowSet crs1 = null;
-         ProcessHistory pr_history = null;
-        try
-        {
-             t = DatabaseTransaction.getInstance();
-              crs = t.executeQuery(sql);
-            while(crs.next())
-            {
-                pr_history= new ProcessHistory();
-                pr_history.setId ( crs.getInt("processid") );
-                pr_history.setName ( crs.getString("processname") );
-                pr_history.setDate ( crs.getString("EXECUTIONDATE") );
-                pr_history.setUsername ( crs.getString("username") );
-                pr_history.addConfis (crs.getInt("configid"), crs.getInt("configtype"));
-              
-                items.add(pr_history);
-               
-            }
-              
-              //for all other first find process info
-      sql="select p.processid as processid, p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,(select username from userprofile where userid= "
-+"( select researcherid from request where requestid = p.requestid)) as username "
-+"from process p, processdefinition pd where pd.processdefinitionid=p.processdefinitionid and "
-+"processid= (select processid from process_object where objectid in (select min(resultid) from result where sampleid in "
-+"(select sampleid from sample where containerid="+containerid+")) and objecttype=1)";
-              crs = t.executeQuery(sql);
-            while(crs.next())
-            {
-                 pr_history= new ProcessHistory();
-                pr_history.setId ( crs.getInt("processid") );
-                pr_history.setName ( crs.getString("processname") );
-                pr_history.setDate ( crs.getString("EXECUTIONDATE") );
-                pr_history.setUsername ( crs.getString("username") );
-                sql="select CONFIGID,   CONFIGTYPE from processconfig  where processid="+pr_history.getId();
-                crs1 = t.executeQuery(sql);
-                while(crs1.next())
-                {
-                    pr_history.addConfis (crs1.getInt("configid"), crs1.getInt("configtype"));
-                }
-                items.add(pr_history);
-                              
-            }
-              
-  sql="select p.processid as processid,p.EXECUTIONDATE as EXECUTIONDATE ,pd.processname as processname,(select username from userprofile where userid= "
-+"( select researcherid from request where requestid ="
-+" p.requestid)) as username from process p, processdefinition pd where pd.processdefinitionid=p.processdefinitionid and "
-+"processid=(select processid from process_object where objectid in (select min(constructid) from isolatetracking where sampleid in "
-+"(select sampleid from sample where containerid="+containerid+")) and objecttype=2)";
-              crs = t.executeQuery(sql);
-            while(crs.next())
-            {
-                 pr_history= new ProcessHistory();
-                pr_history.setId ( crs.getInt("processid") );
-                pr_history.setName ( crs.getString("processname") );
-                pr_history.setDate ( crs.getString("EXECUTIONDATE") );
-                pr_history.setUsername ( crs.getString("username") );
-                sql="select CONFIGID,   CONFIGTYPE from processconfig  where processid="+pr_history.getId();
-                crs1 = t.executeQuery(sql);
-                while(crs1.next())
-                {
-                    pr_history.addConfis (crs1.getInt("configid"), crs1.getInt("configtype"));
-                }
-                items.add(pr_history);
-                              
-            }
-
-            
-            return items;
-        } catch (SQLException sqlE)
-        {
-            throw new BecDatabaseException("Error occured while initializing container history\nSQL: "+sql);
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(crs1);
-            DatabaseTransaction.closeResultSet(crs);
-        }
-          
-      }
+          ItemHistory history = (ItemHistory)edu.harvard.med.hip.bec.util_objects.ProcessHistory.getProcessHistory(Constants.ITEM_TYPE_PLATE_LABELS, containerid).get(0);
+          if ( history.getStatus() == ItemHistory.HISTORY_PROCESSED)
+              return history.getHistory();
+          else
+              throw new Exception( (String)history.getHistory().get(0));
+       }
     //**************************************************************//
     //				Test				//
     //**************************************************************//
@@ -1771,8 +1689,9 @@ public class Container
       
         try
         {
-            c = Container.findAllContainerLabels();
-             
+            container = Container.findContainerDescriptionFromLabel("YGS000358-1");
+             container.restoreSampleIsolateNoFlexInfo();
+             System.out.println("L");
              
         }
         catch(Exception e)

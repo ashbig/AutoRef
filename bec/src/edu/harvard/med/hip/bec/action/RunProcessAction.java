@@ -31,7 +31,7 @@ import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
-
+import edu.harvard.med.hip.bec.util_objects.*;
 /**
  *
  * @author  HTaycher
@@ -256,7 +256,15 @@ public class RunProcessAction extends ResearcherAction
                    // runner(  request,  forwardName,  user);
                 }
                 
-                
+                case Constants.PROCESS_SHOW_CLONE_HISTORY:
+                {
+                    String  item_ids = (String) request.getParameter("items");
+                   ArrayList process_items = edu.harvard.med.hip.bec.util_objects.ProcessHistory.getProcessHistory( Integer.parseInt(request.getParameter("item_type")), item_ids.toUpperCase().trim());
+                    request.setAttribute(Constants.JSP_TITLE,"clone History");
+                    request.setAttribute("process_items",process_items);
+                    request.setAttribute("item_type",request.getParameter("item_type"));
+                    return mapping.findForward("display_item_history"); 
+                }
                 
                 case Constants.PROCESS_RUN_DECISION_TOOL : //run decision tool
                 {
