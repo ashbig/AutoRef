@@ -106,20 +106,6 @@
         
             
         <td>
-        <%-- Small hack that will print a result if there is one.--%>
-        <%--<%
-                try{
-                    Result result = 
-                        Result.findResult((Sample)sample,(Process)process);
-                    if(result == null) {
-                        out.println("&nbsp;");
-                        } else {
-                            out.println(result);
-                        }
-                       } catch(Throwable th) {
-                            out.println("&nbsp;");
-                       }
-          %>--%>
           <logic:present name="process">
             <flex:findResult processName="process" sampleName="sample" id="result"/>
             <logic:present name="result">

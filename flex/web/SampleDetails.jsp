@@ -11,7 +11,10 @@
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 <bean:define name="<%=Constants.SAMPLE_KEY%>" id="sample"/>
-<bean:define id="sequence" name="sample" property="flexSequence"/>
+
+<logic:present name="sample" property="flexSequence">
+    <bean:define id="sequence" name="sample" property="flexSequence"/>
+</logic:present>
 
 <logic:present name="<%=Constants.PROCESS_KEY%>">
     <bean:define name="<%=Constants.PROCESS_KEY%>" id="process"/>   
@@ -53,9 +56,14 @@
         <bean:write name="sample" property="id"/>
     </td>
     <td>
-        <flex:linkFlexSequence sequenceName="sequence">
-            <bean:write name="sequence" property="id"/>
-        </flex:linkFlexSequence>
+        <logic:present name="sample" property="flexSequence">
+            <flex:linkFlexSequence sequenceName="sequence">
+                <bean:write name="sequence" property="id"/>
+            </flex:linkFlexSequence>
+        </logic:present>
+        <logic:notPresent name="sample" property="flexSequence">
+            N/A
+        </logic:notPresent>
 
     </td>
     
