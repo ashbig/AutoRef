@@ -195,7 +195,7 @@ public abstract class Spec
         String key = null; String val = "";
         String sql = "INSERT INTO config (configid, configname, configtype,submitterid)"+
         " VALUES(" + m_id + ",'" + m_name +"','" + m_type + "',"+ m_submitter_id+")";
-        System.out.println(sql);
+       
         try
         {
             stmt = conn.createStatement();
@@ -204,22 +204,15 @@ public abstract class Spec
             Enumeration e = m_params.keys();
             sql = "INSERT INTO config_parameters (configid, paramname, paramvalue)"+
                     " VALUES(" + m_id + ",?,?)";
+            pstmt = conn.prepareStatement(sql);
             while (e.hasMoreElements())
             {
-               
                 key = (String)e.nextElement();
                 val =  (String)m_params.get(key);
-            System.out.println(key+"_"+val);
-                //    sql = "INSERT INTO spec_parameters (specid, paramname, paramvalue)"+
-                  //  " VALUES(" + m_id + ",'" + key.toUpperCase() +"','" + val + "')";
-                   //stmt.executeUpdate(sql);
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, key.toUpperCase());
-                    pstmt.setString(2, val);
-               
-                    DatabaseTransaction.executeUpdate(pstmt);
-               System.out.println(key+"_"+val);
-            }
+                pstmt.setString(1, key.toUpperCase());
+                pstmt.setString(2, val);
+                DatabaseTransaction.executeUpdate(pstmt);
+           }
         } catch (Exception sqlE)
         {
             System.out.println(sqlE.getMessage());
