@@ -80,17 +80,7 @@
         <servlet-class>
             edu.harvard.med.hip.flex.database.DBInitServlet
         </servlet-class>  
-
-    <!-- for access database 
-    <init-param>
-        <param-name>driverClass</param-name>
-        <param-value>sun.jdbc.odbc.JdbcOdbcDriver</param-value>
-    </init-param>   
-    <init-param>
-      <param-name>jdbcURL</param-name>
-      <param-value>jdbc:odbc:new_medgene</param-value>
-    </init-param>
-        for access database -->             
+        
 
     <!-- for oracle database -->
     <init-param>
