@@ -113,7 +113,7 @@
                     <img border="0" src="jpg/new1.gif" width="60" height="25">
                     <p><b><font face="Verdana" size="2">&nbsp; <font color="#FF0000">MedGene
                     Database has been&nbsp;&nbsp;<br>
-                    &nbsp; updated in March, 2004.
+                    &nbsp; updated in July, 2004.
                     </font>
                     </font></b></p>
                       <p>&nbsp;<b>&nbsp;<font face="Verdana" size="2" color="#0066FF">MedGene
