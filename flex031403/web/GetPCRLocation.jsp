@@ -87,6 +87,7 @@
     </tr>
     </logic:present>
 
+    <logic:present name="EnterOligoPlateAction.pcrOpen">
     <tr>
     <td class="label">Fusion PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>
@@ -99,7 +100,7 @@
         />
         </html:select></td>
     </tr>
-
+    </logic:present>
     <logic:present name="EnterOligoPlateAction.pcrClosed">
     <tr>
     <td class="label">Closed PCR plate barcode:</td>

@@ -37,12 +37,14 @@
     <td><bean:write name="EnterOligoPlateAction.fivep" property="location.type"/></td>
     </tr>
 
+    <logic:present name="EnterOligoPlateAction.threepOpen">
     <tr>
     <td class="label">3P fusion oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.threepOpen" property="id"/>"><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></a></td>
     <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="location.type"/></td>
     </tr>
+    </logic:present>
 
     <logic:present name="EnterOligoPlateAction.threepClosed">
     <tr>
@@ -62,12 +64,14 @@
     </tr>
     </logic:present>
 
+    <logic:present name="EnterOligoPlateAction.pcrOpen">
     <tr>
     <td class="label">Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>
     <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="location.type"/></td>
     </tr>
+    </logic:present>
 
     <logic:present name="EnterOligoPlateAction.pcrClosed">
     <tr>

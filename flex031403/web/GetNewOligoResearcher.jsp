@@ -19,10 +19,19 @@
 <html:form action="/GetNewOligoResearcher.do" focus="researcherBarcode">
 <input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
 <input type="hidden" name="projectid" value=<bean:write name="projectid"/>>
+
 <logic:present name="templateid">
     <input type="hidden" name="templateid" value=<bean:write name="templateid"/>> 
 </logic:present> 
 <table>
+      <td class="prompt">Project name:</td>
+    <td><%= request.getAttribute("projectname")%></td>
+    </tr>
+    <tr>
+    <td class="prompt">Workflow name:</td>
+    <td><%= request.getAttribute("workflowname")%></td>
+    </tr>
+
     <tr>
     <td class="label">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
@@ -40,12 +49,14 @@
     <td><bean:write name="EnterOligoPlateAction.fivep" property="location.type"/></td>
     </tr>
 
+     <logic:present name="EnterOligoPlateAction.threepOpen">
     <tr>
     <td class="label">3P fusion oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.threepOpen" property="id"/>"><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></a></td>
     <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="location.type"/></td>
     </tr>
+    </logic:present>
 
     <logic:present name="EnterOligoPlateAction.threepClosed">
     <tr>
@@ -63,13 +74,14 @@
     <td><bean:write name="EnterOligoPlateAction.fivepOligoD" property="location.type"/></td>
     </tr>
 
+ <logic:present name="EnterOligoPlateAction.threepOpenD">
     <tr>
     <td class="label">3P fusion oligo daughter plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpenD" property="label"/></td>
     <td class="label">Location:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpenD" property="location.type"/></td>
     </tr>
-
+</logic:present>
     <logic:present name="EnterOligoPlateAction.threepClosedD">
     <tr>
     <td class="label">3P closed oligo daughter plate barcode:</td>

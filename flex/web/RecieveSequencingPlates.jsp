@@ -53,7 +53,8 @@
 
     <tr>
         <td class="prompt">Receive Date:&nbsp;&nbsp;&nbsp;
-            <html:text property="receiveDate" size="30"/><p></td>
+           
+            <input type="text" name="receiveDate" value="<%=request.getAttribute("receiveDate")%>" size="30"><p></td>
     </tr>
 
     <tr>

@@ -24,6 +24,8 @@
 </logic:present>
 <logic:present name="workflowid">
     <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
+    <input type="hidden" name="workflowname" value="<%= request.getAttribute("workflowid")%>">
+   <input type="hidden" name="workflowname" value="<%= request.getAttribute("processname")%>">
 </logic:present>
 <logic:present name="protocolid">
     
@@ -42,7 +44,9 @@
     <td class="prompt">Workflow name:</td>
     <td><bean:write name="workflowname" /></td>
     </tr>   
-
+     <td class="prompt">Process name:</td>
+    <td><bean:write name="processname" /></td>
+    </tr>   
     <tr>
         <td class="prompt">Please enter the rearray file:</td>    
         <td><html:file property="mgcRequestFile" /></td>

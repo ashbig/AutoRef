@@ -41,10 +41,13 @@ public class ConstructGenerator
     private Workflow workflow = null;
     private Protocol m_protocol = null;
     
+    
+    private boolean m_isOpenOnly = false;
+    private boolean m_isCloseOnly = false;
     /**
      * Constructor
      * Creates new ConstructGenerator
-     */
+       */
     public ConstructGenerator(LinkedList seqList, Connection c) throws FlexDatabaseException
     {
         this.seqList = seqList;
@@ -54,7 +57,7 @@ public class ConstructGenerator
         m_protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);
     }
     
-     
+   
     
     /**
      * Constructor.
@@ -72,7 +75,8 @@ public class ConstructGenerator
         this(seqList,c );
         this.project = project;
         this.workflow = workflow;
-        
+        if (project.getId() == Project.PSEUDOMONAS) m_isOpenOnly = true;
+         if (project.getId() == Project.YEAST) m_isCloseOnly = true;
     }
     
     /**
@@ -92,6 +96,8 @@ public class ConstructGenerator
         m_protocol = protocol;
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
+         if (project.getId() == Project.PSEUDOMONAS) m_isOpenOnly = true;
+         if (project.getId() == Project.YEAST) m_isCloseOnly = true;
     }
     /**
      * Precondition: there is a group of 94 sequences in the
@@ -107,12 +113,21 @@ public class ConstructGenerator
      */
     protected void generateOligoAndConstructs()throws FlexDatabaseException
     {
-        if(Project.PSEUDOMONAS == project.getId())
+        if( m_isOpenOnly)
         {
-            generatePMOligoAndConstructs();
-            return;
+            generateOpenOnlyOligoAndConstructs();
         }
-        
+        else if( m_isCloseOnly)
+        {
+            generateClosedOnlyOligoAndConstructs();
+          
+         }
+        else
+            generateBothOligoAndConstructs();
+     }
+    
+    private void generateBothOligoAndConstructs()throws FlexDatabaseException
+    {
         Sequence seq = null;
         Oligo result_5p = null;
         Oligo result_3s = null;
@@ -193,7 +208,7 @@ public class ConstructGenerator
         } //while
     } //generateOligoAndConstructs
     
-    public void generatePMOligoAndConstructs() throws FlexDatabaseException
+    public void generateOpenOnlyOligoAndConstructs() throws FlexDatabaseException
     {
         Sequence seq = null;
         Oligo result_5p = null;
@@ -259,6 +274,78 @@ public class ConstructGenerator
             pattern = new OligoPattern(oligoID_5p, -1, oligoID_3op,
             result_5p.getTagOligoSequence(), null, result_3op.getTagOligoSequence(),
             -1, open.getId(), cdsLength);
+            oligoPatternList.add(pattern);
+        } //while
+    }
+    
+     public void generateClosedOnlyOligoAndConstructs() throws FlexDatabaseException
+    {
+        Sequence seq = null;
+        Oligo result_5p = null;
+        Oligo result_3c = null;
+        OligoPattern pattern = null;
+        Construct close = null;
+        int seqId = 0;
+        int cdsLength = 0;
+        int oligoID_5p = 0;
+        int oligoID_3c = 0;
+        int pairId = 0; //construct pairID
+        int count = 0;
+        
+        // insert design constructs protocl process execution
+        // insertProcessExecution();
+        PMNNPrimerCalculator pc = new PMNNPrimerCalculator();
+        ListIterator iter = seqList.listIterator();
+        
+        while (iter.hasNext())
+        {
+            seq = (Sequence) iter.next(); //retrieves one sequence from the list
+            seqId = seq.getId();
+            cdsLength = seq.getCDSLength();
+            count++;
+            
+            //System.out.println("Calculate oligos for sequence count: " + count);
+            //System.out.println("SequenceID: " + seqId + "   " + cdsLength);
+            // calculate all three types of oligos for each sequence
+            // and insert oligo info into the oligo table
+            try
+            {
+                result_5p = pc.calculateFivepOligo(seq);
+                result_5p.setTagSequence_5p(project, workflow);
+                result_5p.insert(conn);
+                
+                //all 3p fusion oligos mutated their stop codon to lysine: CAA
+                result_3c = pc.calculateThreepCloseOligo(seq);
+                result_3c.setTagSequence_3p_Close(project, workflow);
+                result_3c.insert(conn);
+            } catch(FlexDatabaseException sqlex)
+            {
+                throw new FlexDatabaseException(sqlex);
+            }
+            
+            //get the group of three oligoIds derived from the same sequence
+            oligoID_5p = result_5p.getOligoID();
+            oligoID_3c = result_3c.getOligoID();
+            
+            //generate construct pairID: a open and a close construct derived from
+            //the same sequence have the same pair id.
+            pairId = setPairId(); //not working!!!
+            
+            // create two new constructs: open and close form and insert them
+            // to the ConstructDesign table
+            close = new Construct(seq,result_5p,result_3c, "CLOSED", pairId, project, workflow);
+            constructList.add(close);
+            //System.out.println("inserting constructs: ");
+            close.insert(conn);
+            //System.out.println("close construct ID: " + close.getId());
+            //System.out.println("open construct ID: " + open.getId());
+            
+            //create the OligoPattern object and store it in a linked list
+            pattern = new OligoPattern(
+                oligoID_5p,  oligoID_3c, -1,
+                result_5p.getTagOligoSequence(), 
+                result_3c.getTagOligoSequence(),null,
+                close.getId(), -1, cdsLength);
             oligoPatternList.add(pattern);
         } //while
     }
