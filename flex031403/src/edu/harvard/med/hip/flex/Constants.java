@@ -76,6 +76,9 @@ public class Constants {
     
     // key used to find the collection of samples
     public static final String SAMPLES_KEY = "SAMPLES";
+    
+    // key used to find the process
+    public static final String PROCESS_KEY="PROCESS";
     /** Creates new Constants */
     private Constants() {
     }
