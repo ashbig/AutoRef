@@ -16,121 +16,47 @@
 
 <%-- The container that was searched --%>
 <head>
-<style type="text/css">
-<!--
-.red {
-	background-color:#9999CC;
-}
-.green {
-	background-color: #99FFFF;
-}
-.black {
-	background-color: #999999;
-}
-.brown {
-	background-color: #ffe4c4;
-}
-.yellow {
-	background-color: #9999FF;
-}
-.orange {
-	background-color: #99CCFF;
-}
-.control {
-	background-color: #CCCCFF;
-}
-.empty {
-	background-color: #CCCCCC;
-}
+<link href="application_styles.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
 
-.nosample {
-	background-color: white;
-}
-.notanalized {
-	background-color: white;
-}
-.nomatch {
-	background-color: #ADFF2F;
-}
--->
-</style>
+<%
+
+String[] border_line_style ={"solid","dotted","dashed"}; 
+String[] border_line_color={"#FF00FF", "#00FF00", "#FF0000","#00FFFF","#6B8E23","#DAA520","black","#D2691E","#9400D3","#708090"};
+
+int border_line_style_counter = 0;
+int border_line_color_counter = 0;
+%>
+
 </head>
 <html>
 
 <body>
 <jsp:include page="NavigatorBar_Administrator.jsp" /> 
-	<p><P>
-<br>
+<p><P><br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        
-    <td > <font color="#008000" size="5"><b> container Quality Report</font> 
-      <hr>
-    
-    <p>
-    </td>
-    </tr>
-</table>
+<tr><td > <font color="#008000" size="5"><b> container Quality Report</font><hr>
+<p></td> </tr></table>
 
 <div align="center">
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="80%">
-    <tr>
-      <td width="100%"><html:errors/></td>
-    </tr>
-	
-  </table>
-  </center>
-</div>
+<center><table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr> <td width="100%"><html:errors/></td></tr></table></center></div>
 <p></p>
 <% 
 
 Container container = (Container)request.getAttribute("container") ;
 %>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-  <tr> 
-    <td width="19%"><strong>Label:</strong></td>
-    <td width="81%"> 
-      <%= container.getLabel() %>
-    </td>
-  </tr>
-  <tr> 
-    <td><strong>Container Id:</strong></td>
-    <td> 
-      <%= container.getId() %>
-    </td>
-  </tr>
-   <tr> 
-    <td><strong>Container Type:</strong></td>
-    <td> 
-      <%= container.getType() %>
-    </td>
-  </tr>
-  
-  
-  <tr> 
-    <td><strong>Cloning Strategy</strong></td>
-    <td> 
+<tr>     <td width="19%"><strong>Label: </strong></td>    <td width="81%">       <%= container.getLabel() %>    </td>  </tr>
+<tr> <td><strong>Container Id: </strong></td><td>       <%= container.getId() %>    </td>  </tr>
+<tr>     <td><strong>Container Type: </strong></td>    <td>       <%= container.getType() %>    </td>  </tr>
+ <tr><td><strong>Cloning Strategy: </strong></td><td> 
+    <% if ( container.getCloningStrategyId() != BecIDGenerator.BEC_OBJECT_ID_NOTSET){%> 
       <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
 	    <%= container.getCloningStrategyId() %></A>
-    </td>
-  </tr>
-  
- 
-</table>
-<P><P></P></P>
-<%  
-    String[] borders = {"border:solid 2px magen", 
-	"border:solid 1px #060", 
-	"border:dotted 2px magen",
-	"border:dotted 1px #060",
-	"border:solid 2px red",
-	"border:dashed 2px blue",
-	"border:dotted 1px green",
-	"border:solid 2px black",
-	"border:dashed 1px green",
-	"border:solid 2px magen"};
-%>
+	    <%} else {%> &nbsp; <%}%>    </td></tr>
+</table><P><P></P></P>
+
 	
 
  <%
@@ -143,7 +69,19 @@ Container container = (Container)request.getAttribute("container") ;
         String[][] cell_data = new String[rows][cols];
         int row = 0; int col = 0;
         String anchor = null;
-     
+        Hashtable construct_border_style = new Hashtable();
+        String border_style = null;
+        for (int count = 0; count < container.getSamples().size(); count ++)
+        {   
+                
+                sample = (Sample)container.getSamples().get(count);
+                if ( border_line_color_counter > border_line_color.length -1) 
+                        border_line_color_counter = 0;
+                if ( border_line_style_counter >   border_line_style.length - 1)
+                    border_line_style_counter = 0;
+                border_style = "border:"+border_line_style[border_line_style_counter++]+" 2px "+border_line_color[border_line_color_counter++];
+                construct_border_style.put( new Integer( sample.getIsolateTrackingEngine().getConstructId()), border_style);
+        }
          for (int count = 0; count < container.getSamples().size(); count ++)
         {	
                 sample = (Sample)container.getSamples().get(count);
@@ -161,25 +99,25 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
 		+ "&amp;ID="+ sample.getIsolateTrackingEngine().getConstructId()+"','"+sample.getIsolateTrackingEngine().getConstructId()+"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
 }
                 row = Algorithms.convertWellNumberIntoRowNumber(sample.getPosition())-1;
-                 col =Algorithms.convertWellNumberIntoColNumber(sample.getPosition() ) -1;
-                if (constructid != sample.getIsolateTrackingEngine().getConstructId())
-                {
-                        border_index++;
-                        if ( border_index > borders.length -1) border_index = 0;
-                }
+                col =Algorithms.convertWellNumberIntoColNumber(sample.getPosition() ) -1;
+                constructid = sample.getIsolateTrackingEngine().getConstructId();
+                border_style = (String)construct_border_style.get( new Integer(constructid));
                 if ( sample.getType().equals("CONTROL_POSITIVE") ||  sample.getType().equals("CONTROL_NEGATIVE"))
 		{
 			cell_data[row][col] =" <td class='control'><div align=center>"+sample.getPosition()+"</div></td>";
 		}
                 else if ( sample.getType().equals("EMPTY") )
                 {
-                      cell_data[row][col] =" <td class='empty' style="+ borders[border_index]+" ><div align=center>"+sample.getPosition()+"</div></td>";
-                }
+
+                      cell_data[row][col] =" <td class='empty' style = '"+ border_style + "' ><div align=center>"+sample.getPosition()+"</div></td>";
+          
+}
                 else if ( sample.getIsolateTrackingEngine().getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH ||
                             sample.getIsolateTrackingEngine().getStatus() == IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH)
                     {
-                        cell_data[row][col] =" <td class='nomatch' style="+ borders[border_index]+" >"+ anchor + "</td>";
-                    }
+                        cell_data[row][col] =" <td class='nomatch' style='"+ border_style+"' >"+ anchor + "</td>";
+                  
+}
                 else
                 {
                         int rank = sample.getIsolateTrackingEngine().getRank();
@@ -187,44 +125,41 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
                         {
                                 case 1: 
                                 {
-                                        cell_data[row][col] =" <td class='green' style='" + borders[border_index] +"' >"+anchor+"</td>";
+                                        cell_data[row][col] =" <td class='green' style='" + border_style +"' >"+anchor+"</td>";
                                         break;
                                 }
                                 case 2:
                                 {
-                                        cell_data[row][col] =" <td class='orange' style='"+ borders[border_index] +"' >"+anchor+"</td>";
+                                        cell_data[row][col] =" <td class='orange' style='"+ border_style +"' >"+anchor+"</td>";
                                         break;
 }
                                 case 3:
                                 {
-                                    cell_data[row][col] =" <td class='yellow' style='"+ borders[border_index] +"' >"+anchor+"</td>";
+                                    cell_data[row][col] =" <td class='yellow' style='"+border_style +"' >"+anchor+"</td>";
                                     break;
                                 }
                                 case 4:
                                 {
-                                    cell_data[row][col] =" <td class='red' style='"+ borders[border_index] +"' >"+anchor+"</td>";
+                                    cell_data[row][col] =" <td class='red' style='"+ border_style +"' >"+anchor+"</td>";
                                     break;
                                 }
                                 case -1://not analized
                                 {
-                                    cell_data[row][col] =" <td class='notanalized' style='"+ borders[border_index] +"' >"+anchor+"</td>";
+                                    cell_data[row][col] =" <td class='notanalized' style='"+ border_style +"' >"+anchor+"</td>";
                                     break;
                                 }
                                 case IsolateTrackingEngine.RANK_BLACK:
                                 {
                                     if (sample.getIsolateTrackingEngine().getStatus() ==IsolateTrackingEngine.PROCESS_STATUS_ER_NO_LONG_READS || sample.getIsolateTrackingEngine().getStatus()==IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS)
                                     {
-                                        cell_data[row][col] =" <td class='brown' style='"+ borders[border_index] +"' >"+anchor+"</td>";
+                                        cell_data[row][col] =" <td class='brown' style='"+ border_style +"' >"+anchor+"</td>";
                                    }
                                     else 
-                                    cell_data[row][col] =" <td class='black' style='"+ borders[border_index] +"' >"+anchor+"</td>";
+                                    cell_data[row][col] =" <td class='black' style='"+ border_style +"' >"+anchor+"</td>";
                                 }   
                         }
-
-                }
-//System.out.println(cell_data[row][col]);
-                constructid = sample.getIsolateTrackingEngine().getConstructId();
- }
+               }
+  }
 	%>
 	
 <table width="100%" border="0" align="center">
