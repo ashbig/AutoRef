@@ -54,22 +54,17 @@ Please follow the following hint.
 
 <logic:present name="customerRequest" scope="request">
 <p><b>You have the following cloning requests:</b>
+<table border="1" width="100%">
+<tr><th>Date</th><th>Total Sequences</th><th>Processed Sequences</th><th>Non-processed Sequences</th></tr>
 <logic:iterate id="oneRequest" name="customerRequest">
-<p>Date: <bean:write name="oneRequest" property="date"/>
-<table border=1 align=center width=90%>
-<th>FLEXGene ID</th><th>Description</th><th>Status</th>
-
-<logic:iterate id="sequence" name="oneRequest" property="sequences">
 <tr>
-<td><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="sequence" property="id"/>"><bean:write name="sequence" property="id"/></a></td>
-<td><bean:write name="sequence" property="description"/></td>
-<td><bean:write name="sequence" property="flexstatus"/></td>
+<td><a href="DisplayRequest.do?requestid=<bean:write name="oneRequest" property="id"/>&requestDate=<bean:write name="oneRequest" property="date"/>"><bean:write name="oneRequest" property="date"/></a></td>
+<td><bean:write name="oneRequest" property="numSequences"/></td>
+<td><bean:write name="oneRequest" property="processedSequences"/></td>
+<td><bean:write name="oneRequest" property="pendingSequences"/></td>
 </tr>
 </logic:iterate>
-
 </table>
-
-</logic:iterate>
 </logic:present>
 
 </body>

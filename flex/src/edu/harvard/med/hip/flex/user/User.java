@@ -179,36 +179,24 @@ public class User {
         "to_char(requestdate, 'fmYYYY-MM-DD') as rdate\n"+
         "from request where username='"+name+"' order by requestdate desc";
         RowSet requestRs = t.executeQuery(sql);
+        
         try {
             while(requestRs.next()) {
                 int id = requestRs.getInt("REQUESTID");
                 String username = requestRs.getString("USERNAME");
                 String requestdate = requestRs.getString("RDATE");
-                
-                sql = "select sequenceid from requestsequence\n"+
-                "where requestid = "+id;
-                
-                RowSet sequenceRs = t.executeQuery(sql);
-                
-                Vector sequences = new Vector();
-                while (sequenceRs.next()) {
-                    
-                    int seqid = sequenceRs.getInt("SEQUENCEID");
-                    FlexSequence sequence = new FlexSequence(seqid);
-                    sequences.addElement(sequence);
-                }
-                Request r = new Request(id, username, requestdate, sequences);
+                Request r = new Request(id);
+                r.setUsername(username);
+                r.setDate(requestdate);
                 requests.addElement(r);
             }
-            
             return requests;
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeResultSet(requestRs);
-        }
-    }
-    
+        }        
+    }   
     
     /**
      * Gets a string representation of the user, which is its username.

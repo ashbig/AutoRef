@@ -75,7 +75,7 @@ public class CustomerRequestAction extends FlexAction {
  
             request.setAttribute("species", FlexDefPopulator.getData("species"));
             return (mapping.findForward("success"));
-        } catch (FlexDatabaseException ex) {                       
+        } catch (Exception ex) {                       
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }

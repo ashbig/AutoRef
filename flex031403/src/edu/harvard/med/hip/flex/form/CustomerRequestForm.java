@@ -22,6 +22,8 @@ public class CustomerRequestForm extends ActionForm {
     private String species = null;
     private String [] checkOrder = null;
     private String [] selection = null;
+    private int requestid;
+    private String requestDate = null;
     
     /**
      * Set the searchString to the given value.
@@ -93,5 +95,41 @@ public class CustomerRequestForm extends ActionForm {
      */
     public void setSelection(String [] selection) {
         this.selection = selection;
+    }
+    
+    /**
+     * Return the requestid field.
+     *
+     * @return The requestid field.
+     */
+    public int getRequestid() {
+        return requestid;
+    }
+    
+    /**
+     * Set the requestid field to the given value.
+     *
+     * @param requestid The value to be set to.
+     */
+    public void setRequestid(int requestid) {
+        this.requestid = requestid;
+    }
+    
+    /**
+     * Return the requestDate field.
+     *
+     * @return The requestDate field.
+     */
+    public String getRequestDate() {
+        return requestDate;
+    }
+    
+    /**
+     * Set the requestDate field.
+     *
+     * @param requestDate The value to be set to.
+     */
+    public void setRequestDate(String requestDate) {
+        this.requestDate = requestDate;
     }
 }

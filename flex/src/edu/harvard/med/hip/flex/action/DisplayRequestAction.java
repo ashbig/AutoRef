@@ -1,9 +1,9 @@
 /*
- * CustomerRequestAction.java
+ * DisplayRequestAction.java
  *
- * Created on June 6, 2001, 5:47 PM
+ * Get the request by request id.
  *
- * Gets the customer request for the user.
+ * Created on July 18, 2001, 4:15 PM
  */
 
 package edu.harvard.med.hip.flex.action;
@@ -41,7 +41,7 @@ import edu.harvard.med.hip.flex.Constants;
  * @author  Dongmei Zuo
  * @version 
  */
-public class CustomerRequestAction extends FlexAction {
+public class DisplayRequestAction extends FlexAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -63,17 +63,17 @@ public class CustomerRequestAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        int id = ((CustomerRequestForm)form).getRequestid();      
         ActionErrors errors = new ActionErrors();
         
         try {
-            Vector requests = user.getRequests();
+            Request r = new Request(id);
+            Vector sequences = r.getSequences();
         
-            if(requests.size() > 0) {
-                request.setAttribute("customerRequest", requests);
-            }
- 
-            request.setAttribute("species", FlexDefPopulator.getData("species"));
+            if(sequences.size() > 0) {
+                request.setAttribute("sequences", sequences);
+            }            
+                  
             return (mapping.findForward("success"));
         } catch (Exception ex) {                       
             request.setAttribute(Action.EXCEPTION_KEY, ex);
