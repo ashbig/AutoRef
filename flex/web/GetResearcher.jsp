@@ -18,8 +18,13 @@
 <html:form action="/GetResearcher.do" focus="researcherBarcode">
 <table>
     <tr>
-    <td><b>Protocol:</b></td>
+    <td><b>Process name:</b></td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
+    </tr>
+
+    <tr>
+    <td><b>Protocol:</b></td>
+    <td><bean:write name="EnterSourcePlateAction.subprotocol" property="description"/></td>
     </tr>
 
     <logic:iterate id="oldContainer" name="EnterSourcePlateAction.oldContainers">

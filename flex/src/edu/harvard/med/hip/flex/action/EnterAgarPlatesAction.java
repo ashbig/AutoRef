@@ -64,7 +64,13 @@ public class EnterAgarPlatesAction extends EnterSourcePlateAction {
         ((CreateCultureBlockForm)form).setAgarC1Location(locations[1]);
         ((CreateCultureBlockForm)form).setAgarF2Location(locations[2]);
         ((CreateCultureBlockForm)form).setAgarC2Location(locations[3]);
-    }    
+    }   
+    
+    protected SubProtocol getSubProtocol(ActionForm form, Protocol protocol) {
+        String subProtocolName = ((CreateCultureBlockForm)form).getSubProtocolName();
+        SubProtocol subprotocol = new SubProtocol(protocol.getId(), subProtocolName);
+        return subprotocol;
+    }
     
     // Store the source container in the session.
     protected void storeSourceContainerInSession(HttpServletRequest request, Vector oldContainers) {

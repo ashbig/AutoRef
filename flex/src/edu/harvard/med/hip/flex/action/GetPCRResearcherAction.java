@@ -84,7 +84,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
         QueueItem item = (QueueItem)request.getSession().getAttribute("EnterOligoPlateAction.item");
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterOligoPlateAction.sampleLineageSet");
-        CDNALibrary cdnaLibrary = (CDNALibrary)request.getSession().getAttribute("EnterOligoPlateAction.cdnaLibrary");
+        SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterOligoPlateAction.subprotocol");
                 
         Connection conn = null;
         try {
@@ -103,7 +103,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
             // Create a process, process object and sample lineage record.
             Process process = new Process(protocol, 
             edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
-            process.setExtrainfo((new Integer(cdnaLibrary.getId())).toString());
+            process.setSubprotocol(subprotocol.getName());
             ContainerProcessObject fivepInputContainer = 
                 new ContainerProcessObject(fivep.getId(), 
                 process.getExecutionid(), 
@@ -179,8 +179,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
             request.getSession().removeAttribute("EnterOligoPlateAction.locations");
             request.getSession().removeAttribute("EnterOligoPlateAction.item");
             request.getSession().removeAttribute("EnterOligoPlateAction.sampleLineageSet");
-            request.getSession().removeAttribute("EnterOligoPlateAction.cdnaLibrary");
-            request.getSession().removeAttribute("SelectProtocolAction.cdnalibrary");
+            request.getSession().removeAttribute("EnterOligoPlateAction.subprotocol");
 
             return (mapping.findForward("success"));            
         } catch (Exception ex) {

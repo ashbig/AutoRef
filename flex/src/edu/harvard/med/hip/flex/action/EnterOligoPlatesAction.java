@@ -68,8 +68,9 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             String fivepPlate = ((CreatePCRPlateForm)form).getFivepPlate();
             String threepOpenPlate = ((CreatePCRPlateForm)form).getThreepOpenPlate();
             String threepClosedPlate = ((CreatePCRPlateForm)form).getThreepClosedPlate();
-            int cdnaLibrary = ((CreatePCRPlateForm)form).getCdnaLibrary();           
-            CDNALibrary library = new CDNALibrary(cdnaLibrary);
+            String subProtocolName = ((CreatePCRPlateForm)form).getSubProtocolName();           
+            Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
+            SubProtocol subprotocol = new SubProtocol(protocol.getId(), subProtocolName);
             LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems"); 
             QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate);
             if(item == null) {
@@ -87,7 +88,6 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             ((CreatePCRPlateForm)form).setThreepClosedSourceLocation(threepClosed.getLocation().getId());
 
             //map the container to the new container
-            Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
             ContainerMapper mapper = new OligoToPCRMapper();
            
             //map the 3p open oligo plate.
@@ -117,7 +117,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             request.getSession().setAttribute("EnterOligoPlateAction.locations", locations);
             request.getSession().setAttribute("EnterOligoPlateAction.item", item);
             request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
-            request.getSession().setAttribute("EnterOligoPlateAction.cdnaLibrary", library);
+            request.getSession().setAttribute("EnterOligoPlateAction.subprotocol", subprotocol);
 
             return (mapping.findForward("success"));   
         } catch (Exception ex) {

@@ -28,6 +28,7 @@ public class CreateProcessPlateForm extends ActionForm {
     private String destPlate = null;
     private int sourceLocation;
     private int [] destLocations;
+    private String subProtocolName = null;
     
     /**
      * Set the processname to the given value.
@@ -118,6 +119,24 @@ public class CreateProcessPlateForm extends ActionForm {
     public int getSourceLocation() {
         return sourceLocation;
     }    
+
+     /**
+     * Set the subProtocolName to the given value.
+     *
+     * @param subProtocolName The value to be set to.
+     */
+    public void setSubProtocolName(String subProtocolName) {
+        this.subProtocolName = subProtocolName;
+    }
+    
+    /**
+     * Return the subProtocolName.
+     *
+     * @return The subProtocolName.
+     */
+    public String getSubProtocolName() {
+        return subProtocolName;
+    }   
     
     /**
      * Validate the properties that have been set from this HTTP request,

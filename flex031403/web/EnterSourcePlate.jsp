@@ -18,13 +18,26 @@
 <html:form action="/EnterSourcePlate.do" focus="sourcePlate">
 <table>
     <tr>
-    <td><b>Protocol:</b></td>
+    <td><b>Process name:</b></td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
     <td><b>Enter the source plate barcode:</b></td>
     <td><html:text property="sourcePlate" size="40"/></td>
+    </tr>
+
+    <tr>
+    <td><b>Select the protocol:</b></td>
+    <td><html:select property="subProtocolName">
+        <bean:define id="subprotocols" name="SelectProtocolAction.protocol" property="subprotocol"/>
+        <html:options
+        collection="subprotocols"
+        property="name"
+        labelProperty="description"
+        />
+        </html:select>
+    </td>
     </tr>
 
     <tr>

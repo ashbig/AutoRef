@@ -68,8 +68,6 @@ public class SelectProtocolAction extends FlexAction {
             if(Protocol.GENERATE_PCR_PLATES.equals(processname)) {
                 queue = new PlatesetProcessQueue();
                 items = queue.getQueueItems(protocol);
-                Vector cdnalibrary = CDNALibrary.getAllLibraries();
-                request.getSession().setAttribute("SelectProtocolAction.cdnalibrary", cdnalibrary);
                 storeInSession(request, items, protocol);
                 return (mapping.findForward("success_pcr"));
             } else {               

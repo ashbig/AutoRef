@@ -8,6 +8,9 @@
 
 package edu.harvard.med.hip.flex.process;
 
+import edu.harvard.med.hip.flex.database.*;
+import java.sql.*;
+
 /**
  *
  * @author  dzuo
@@ -30,6 +33,32 @@ public class SubProtocol {
         this.description = description;
     }
 
+    /**
+     * Constructor.
+     */
+    public SubProtocol(int protocolid, String name) {
+        this.name = name;
+                
+        String sql = "select * from subprotocol"+
+                     " where protocolid = "+protocolid+
+                     " and subprotocolname='"+name+"'";
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                this.description = rs.getString("SUBPROTOCOLDESCRIPTION");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } catch (FlexDatabaseException ex) {
+            System.out.println(ex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+            
     /**
      * Return the protocol name.
      *
@@ -64,5 +93,10 @@ public class SubProtocol {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public static void main(String [] args) {
+        SubProtocol p = new SubProtocol(6, "M.B.2.1");
+        System.out.println("Subprotocol: "+p.getDescription());
     }
 }

@@ -18,7 +18,7 @@
 <html:form action="/EnterOligoPlates.do" focus="fivepPlate">
 <table>
     <tr>
-    <td><b>Protocol:</b></td>
+    <td><b>Process name:</b></td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
@@ -38,11 +38,12 @@
     </tr>
 
     <tr>
-    <td><b>Select library:</b></td>
-    <td><html:select property="cdnaLibrary">
+    <td><b>Select protocol used for PCR reaction:</b></td>
+    <td><html:select property="subProtocolName">
+        <bean:define id="subprotocols" name="SelectProtocolAction.protocol" property="subprotocol"/>
         <html:options
-        collection="SelectProtocolAction.cdnalibrary"
-        property="id"
+        collection="subprotocols"
+        property="name"
         labelProperty="description"
         />
         </html:select>

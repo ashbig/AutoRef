@@ -18,7 +18,7 @@
 <html:form action="/SelectProtocol.do">
 <table>
     <tr>
-    <td><b>Select process protocol:</b></td>
+    <td><b>Select the process name:</b></td>
     <td><html:select property="processname">
         <html:options
         collection="CreateProcessPlateAction.protocols"

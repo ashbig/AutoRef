@@ -110,6 +110,8 @@ public class GetResearcherAction extends ResearcherAction{
             }
             
             Process process = new Process(protocol, executionStatus, researcher);
+            SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
+            process.setSubprotocol(subprotocol.getName());
             // Add old container as input container.
             for(int i=0; i<oldContainers.size(); i++) {
                 Container oldContainer = (Container)oldContainers.elementAt(i);
@@ -182,7 +184,7 @@ public class GetResearcherAction extends ResearcherAction{
             request.getSession().removeAttribute("EnterSourcePlateAction.locations");
             request.getSession().removeAttribute("EnterSourcePlateAction.items");
             request.getSession().removeAttribute("EnterSourcePlateAction.sampleLineageSet");
-
+            request.getSession().removeAttribute("EnterSourcePlateAction.subprotocol");
             return (mapping.findForward("success"));            
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

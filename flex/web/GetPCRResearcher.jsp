@@ -18,13 +18,13 @@
 <html:form action="/GetPCRResearcher.do" focus="researcherBarcode">
 <table>
     <tr>
-    <td><b>Protocol:</b></td>
+    <td><b>Process name:</b></td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td><b>Library:</b></td>
-    <td><bean:write name="EnterOligoPlateAction.cdnaLibrary" property="description"/></td>
+    <td><b>PCR protocol:</b></td>
+    <td><bean:write name="EnterOligoPlateAction.subprotocol" property="description"/></td>
     </tr>
 
     <tr>

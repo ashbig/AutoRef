@@ -18,8 +18,21 @@
 <html:form action="/EnterAgarPlates.do" focus="agarPlateF1">
 <table>
     <tr>
-    <td><b>Protocol:</b></td>
+    <td><b>Process name:</b></td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
+    </tr>
+
+    <tr>
+    <td><b>Select the protocol:</b></td>
+    <td><html:select property="subProtocolName">
+        <bean:define id="subprotocols" name="SelectProtocolAction.protocol" property="subprotocol"/>
+        <html:options
+        collection="subprotocols"
+        property="name"
+        labelProperty="description"
+        />
+        </html:select>
+    </td>
     </tr>
 
     <tr>

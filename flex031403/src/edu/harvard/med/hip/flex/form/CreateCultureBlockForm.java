@@ -35,6 +35,7 @@ public class CreateCultureBlockForm extends ActionForm {
     private int agarF2Location;
     private int agarC2Location;
     private int [] destLocations;
+    private String subProtocolName = null;
     
     /**
      * Get the first fusion agar plate barcode.
@@ -197,6 +198,24 @@ public class CreateCultureBlockForm extends ActionForm {
     public int [] getDestLocations() {
         return destLocations;
     }    
+
+     /**
+     * Set the subProtocolName to the given value.
+     *
+     * @param subProtocolName The value to be set to.
+     */
+    public void setSubProtocolName(String subProtocolName) {
+        this.subProtocolName = subProtocolName;
+    }
+    
+    /**
+     * Return the subProtocolName.
+     *
+     * @return The subProtocolName.
+     */
+    public String getSubProtocolName() {
+        return subProtocolName;
+    }       
     
     /**
      * Validate the properties that have been set from this HTTP request,

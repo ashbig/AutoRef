@@ -31,7 +31,7 @@ public class CreatePCRPlateForm extends ActionForm {
     private int threepClosedSourceLocation;
     private int pcrOpenLocation;
     private int pcrClosedLocation;
-    private int cdnaLibrary;
+    private String subProtocolName = null;
     
     /**
      * Set the fivePlate to the given value.
@@ -178,21 +178,21 @@ public class CreatePCRPlateForm extends ActionForm {
     }
 
     /**
-     * Set the cDNA library to the given value.
+     * Set the subProtocolName to the given value.
      *
-     * @param cdnaLibrary The value to be set to.
+     * @param subProtocolName The value to be set to.
      */
-    public void setCdnaLibrary(int cdnaLibrary) {
-        this.cdnaLibrary = cdnaLibrary;
+    public void setSubProtocolName(String subProtocolName) {
+        this.subProtocolName = subProtocolName;
     }
     
     /**
-     * Return the cDNA library.
+     * Return the subProtocolName.
      *
-     * @return The cDNA library.
+     * @return The subProtocolName.
      */
-    public int getCdnaLibrary() {
-        return cdnaLibrary;
+    public String getSubProtocolName() {
+        return subProtocolName;
     }
     
     /**

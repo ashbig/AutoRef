@@ -7,11 +7,11 @@
 
 <html:html locale="true">
 <head>
-<title><bean:message key="flex.name"/> : Cloning Request</title>
+<title><bean:message key="flex.name"/> : Cloning Request History</title>
 </head>
 <body>
 
-<h2><bean:message key="flex.name"/> : Cloning Request : Sequence Selection</h2>
+<h2><bean:message key="flex.name"/> : Cloning Request History: Sequence Selection</h2>
 <hr>
 <html:errors/>
 <p><b>
