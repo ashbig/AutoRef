@@ -29,6 +29,9 @@ public class SequenceImporter {
     private Hashtable publicInfo;
     private Hashtable sequences;
     private Vector results;
+    private int successCount = 0;
+    private int failCount = 0;
+    private int totalCount = 0;
     
     /** Creates new ImportSequence
      *
@@ -58,9 +61,11 @@ public class SequenceImporter {
                     seq.insert(conn);
                     SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), true, null);
                     results.addElement(logger);
+                    successCount++;
                 } catch (FlexDatabaseException ex) {
                     SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, ex.getMessage());
                     results.addElement(logger);
+                    failCount++;
                 }
             }
             
@@ -135,6 +140,8 @@ public class SequenceImporter {
         
         try {
             while((line = in.readLine()) != null) {
+                totalCount++;
+                
                 StringTokenizer st = new StringTokenizer(line, DILIM);
                 String [] info = new String[9];
                 int i = 0;
@@ -169,6 +176,33 @@ public class SequenceImporter {
      */
     public Vector getResults() {
         return results;
+    }
+    
+    /**
+     * Return the total number of sequences imported successfully.
+     *
+     * @return The total number of sequences imported successfully.
+     */
+    public int getSuccessfulCount() {
+        return successCount;
+    }
+
+    /**
+     * Return the total number of sequences failed during import.
+     *
+     * @return The total number of sequences failed import.
+     */
+    public int getFailedCount() {
+        return failCount;
+    }
+
+    /**
+     * Return the total number of sequences for import.
+     *
+     * @return The total number of sequences for import.
+     */
+    public int getTotalCount() {
+        return totalCount;
     }
     
     public static void main(String args[]) {
