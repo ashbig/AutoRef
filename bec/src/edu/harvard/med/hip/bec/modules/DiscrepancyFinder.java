@@ -327,7 +327,7 @@ public class DiscrepancyFinder
             BaseSequence tr = new BaseSequence(seq, BaseSequence.BASE_SEQUENCE);
             tr.setId(127);
             SequencePair pair = new SequencePair( fl,  tr);
-            DescrepancyFinder df= new DescrepancyFinder(pair);
+            DiscrepancyFinder df= new DiscrepancyFinder(pair);
             df.setDebug(true);
             df.run();
             
