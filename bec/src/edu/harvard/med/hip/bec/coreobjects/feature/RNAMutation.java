@@ -200,15 +200,19 @@ public class RNAMutation extends Mutation {
     
     public String toHTMLString()
     {
-        String res = "";
+        StringBuffer res = new StringBuffer();
         
-        res ="<table  border=0>"+  super.toHTMLString() +   
+        res.append("<table  border=0>");
+        res.append( super.toHTMLString());   
        
-        "<tr><td>Codon ori</td><td>" +m_codon_ori + "</td></tr>" + 
-        "<tr><td>Codon mut</td><td>" +m_codon_mut + "</td></tr>" + 
-        "<tr><td>Codon position</td><td>"+m_codon_pos +"</td></tr>"
-        +"</table>";
-        return res;
+        res.append( "<tr><td>Codon ori</td><td>" +m_codon_ori + "</td></tr>"); 
+        res.append( "<tr><td>Codon mut</td><td>" +m_codon_mut + "</td></tr>"); 
+        if ( m_codon_pos == 0)
+            res.append( "<tr><td>Codon position</td><td>3</td></tr>");
+        else
+            res.append( "<tr><td>Codon position</td><td>"+m_codon_pos +"</td></tr>");
+        res.append(  "</table>");
+        return res.toString();
     }
     
     
