@@ -37,7 +37,7 @@ public class DatabaseToApplicationDataLoader
     
      
     private static Hashtable      m_project_definition = null;
-    private static Hashtable      m_species_names = null;
+    private static Hashtable      m_species_definition = null;
   
     public static void            loadDefinitionsFromDatabase()
     {
@@ -72,7 +72,7 @@ public class DatabaseToApplicationDataLoader
     private static void loadBiologicalSpeciesNames()
     {
         ResultSet rs = null; 
-        m_species_names = new Hashtable();
+        m_species_definition = new Hashtable();
         String sql = "SELECT speciesId, speciesname,IDNAME  from speciesDEFINITION ";
        SpeciesDefinition sd = null;
         try
@@ -81,7 +81,7 @@ public class DatabaseToApplicationDataLoader
             while ( rs.next())
             {
                 sd = new SpeciesDefinition(rs.getInt("speciesId"), rs.getString("speciesname"), rs.getString("IDNAME"));
-                m_species_names.put( String.valueOf( sd.getCode()), sd);
+                m_species_definition.put( String.valueOf( sd.getCode()), sd);
             }
         }
         catch(Exception e)
@@ -92,21 +92,22 @@ public class DatabaseToApplicationDataLoader
     
     public static String getSpeciesName(int species_code)
     {
-        SpeciesDefinition sd = (SpeciesDefinition) m_species_names.get( String.valueOf(species_code ));
-        if ( m_species_names == null || m_species_names.size() == 0 || sd == null)
+        SpeciesDefinition sd = (SpeciesDefinition) m_species_definition.get( String.valueOf(species_code ));
+        if ( m_species_definition == null || m_species_definition.size() == 0 || sd == null)
             return "Not known species";
         else 
             return  sd.getName();
     }
     
+    public static Hashtable getSpecies(){ return m_species_definition;}
     
     public static int getSpeciesId(String  species_name)
     {
-        if ( m_species_names == null || m_species_names.size() == 0) return SPECIES_NOT_SET;
+        if ( m_species_definition == null || m_species_definition.size() == 0) return SPECIES_NOT_SET;
         SpeciesDefinition sd = null;
-        for (Enumeration e = m_species_names.keys() ; e.hasMoreElements() ;)
+        for (Enumeration e = m_species_definition.keys() ; e.hasMoreElements() ;)
         {
-            sd = (SpeciesDefinition)m_species_names.get( e.nextElement() );
+            sd = (SpeciesDefinition)m_species_definition.get( e.nextElement() );
             if ( sd.getName().trim().equalsIgnoreCase(species_name))
                 return sd.getCode();
         }
@@ -115,8 +116,8 @@ public class DatabaseToApplicationDataLoader
     
      public static String getSpeciesUniqueId(int species_code)
     {
-        SpeciesDefinition sd = (SpeciesDefinition) m_species_names.get( String.valueOf(species_code ));
-        if ( m_species_names == null || m_species_names.size() == 0 || sd == null)
+        SpeciesDefinition sd = (SpeciesDefinition) m_species_definition.get( String.valueOf(species_code ));
+        if ( m_species_definition == null || m_species_definition.size() == 0 || sd == null)
             return "Not known species";
         else 
             return  sd.getIdName();
@@ -135,6 +136,12 @@ public class DatabaseToApplicationDataLoader
     {
     DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
     int n = DatabaseToApplicationDataLoader.getSpeciesId("Homo sapiens");
+    SpeciesDefinition sd  = null;
+    for (Enumeration e = DatabaseToApplicationDataLoader.getSpecies().keys() ; e.hasMoreElements() ;)
+{
+	sd = (SpeciesDefinition) DatabaseToApplicationDataLoader.getSpecies().get(e.nextElement());
+	System.out.println( sd.getIdName() );
+}
       }
 }
 

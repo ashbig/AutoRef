@@ -107,13 +107,15 @@ public class NoMatchReportRunner extends ProcessRunner
                   clone.setIsolateTrackingId (rs.getInt("ISOLATETRACKINGID"));
                   try
                   {
-                  if ( m_id_type.equalsIgnoreCase( PublicInfoItem.GI ) || m_id_type.equalsIgnoreCase( PublicInfoItem.SGD )
-                        ||  m_id_type.equalsIgnoreCase( PublicInfoItem.PANUMBER ))
-                    {
-                        additional_id = PublicInfoItem.getCloneAdditionalId (clone.getFLEXRefSequenceId(), m_id_type);
-                    }
-                  if (additional_id != null)                 clone.setSampleType( additional_id);
+                        clone.setSampleType("");
+                          if ( m_id_type != null && m_id_type.trim().length() > 0)
+                            {
+                                additional_id = PublicInfoItem.getCloneAdditionalId (clone.getFLEXRefSequenceId(), m_id_type);
+                                if (additional_id != null)                 clone.setSampleType( additional_id);
+                            }
+                    
                   }
+                  
                   catch(Exception e){ throw new BecDatabaseException("Cannot get "+m_id_type+" for clone "+clone.getCloneId() +"\n");}
                  clones.add(clone);
             }
@@ -307,7 +309,8 @@ public class NoMatchReportRunner extends ProcessRunner
         clone_info.append( clone.getPlateLabel ()+"\t");
         clone_info.append( clone.getPosition ()+"\t");
         clone_info.append(  clone.getFLEXRefSequenceId()+"\t");
-        if ( m_id_type != null && !m_id_type.equalsIgnoreCase("NONE"))clone_info.append(clone.getSampleType ()+"\t");
+        if ( m_id_type != null && m_id_type.trim().length()>0) 
+            clone_info.append(clone.getSampleType ()+"\t");
         clone_info.append(clone.getConstructId ()+"\t");
         BlastCloneReport blast_clone_report = (BlastCloneReport)blast_clone_reports.get( new Integer(clone.getCloneId ()));
         clone_info.append(     blast_clone_report.getSummary(m_id_type)+"\t");
