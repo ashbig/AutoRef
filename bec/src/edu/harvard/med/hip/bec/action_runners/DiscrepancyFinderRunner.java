@@ -75,7 +75,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                         clone_sequence = processSequence(clone);
                     //update clone data / status
                         updateInsertCloneInfo(conn,clone_sequence, clone);
-     System.out.println(clone_sequence.getId());
+    
                         //insert process_object
                         pst_insert_process_object.setInt(1,process_id);
                         pst_insert_process_object.setInt(2, clone_sequence.getId());
@@ -126,6 +126,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                 clone_description.setCloneSequenceId (rs.getInt("clonesequenceid"));
                 clone_description.setCloneSequenceType (rs.getInt("clonesequencetype"));
                 clone_description.setCloneSequenceStatus (rs.getInt("clonesequencestatus"));
+                clone_description.setIsolateStatus (rs.getInt("isolatestatus"));
+                
                 sequence_descriptions.add(clone_description);
             }
             
@@ -184,6 +186,11 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             }
             else
             {
+                //update isolate status for sequences submitted as text
+                if ( clone.getIsolateStatus() == IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_SEQUENCE_ANALYSIS)
+                {
+                    IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED, clone.getIsolateTrackingId(),conn);
+                }
                 clonesequence.updateLinker5Start(clonesequence.getId(), clonesequence.getLinker5Start(), conn);
                 clonesequence.updateLinker3Stop(clonesequence.getId(), clonesequence.getLinker3Stop(), conn);
                 clonesequence.insertMutations(conn);
@@ -288,7 +295,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             {
                  return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
-                 +" i.isolatetrackingid as isolatetrackingid from sequencingconstruct c, assembledsequence a,isolatetracking i "
+                 +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
                  +"  and i.isolatetrackingid (select isolatetrackingid from flexinfo where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
             }
@@ -304,7 +311,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                 }
                  return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
-                 +" i.isolatetrackingid as isolatetrackingid from sequencingconstruct c, assembledsequence a,isolatetracking i "
+                 +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
                  +"  and i.isolatetrackingid in (select isolatetrackingid from isolatetracking where sampleid in   "
                  +" (select sampleid from sample where containerid in "
@@ -314,7 +321,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             {
                 return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
-                 +" i.isolatetrackingid as isolatetrackingid from sequencingconstruct c, assembledsequence a,isolatetracking i "
+                 +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
                  +"  and a.sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
             }
@@ -322,7 +329,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             {
                 return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
-                 +" i.isolatetrackingid as isolatetrackingid from sequencingconstruct c, assembledsequence a,isolatetracking i "
+                 +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
                  +"  and i.isolatetrackingid (select isolatetrackingid from flexinfo where flexsequenceid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
             }

@@ -35,6 +35,7 @@ public class UICloneSample
     private int             m_clone_sequence_editing_status = -1;
     private int             m_clone_quality = -1;
     private int             m_clone_rank = -1;
+    private int             m_clone_score = -1;
     /** Creates a new instance of CloneSample */
     public UICloneSample()
     {
@@ -53,6 +54,7 @@ public class UICloneSample
     public int             getConstructId (){ return m_construct_id  ;}
      public int             getIsolateTrackingId (){ return m_isolatetracking_id ;}
      public int             getRank(){ return m_clone_rank;}
+     public int             getScore(){ return  m_clone_score;}
     public int             getSampleId(){ return m_sample_id ;}
     public int             getRefSequenceId(){ return m_refsequence_id ;}
     
@@ -68,6 +70,7 @@ public class UICloneSample
     public void             setConstructId (int v){  m_construct_id  = v ;}
      public void             setIsolateTrackingId (int v){  m_isolatetracking_id = v ;}
      public void             setRank(int v){  m_clone_rank = v;}
+      public void             setScore(int v){  m_clone_score = v;}
      public void             setSampleId(int v){   m_sample_id = v;}
     public void             setRefSequenceId(int v){   m_refsequence_id = v;}
 

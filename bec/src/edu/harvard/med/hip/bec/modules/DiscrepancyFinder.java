@@ -46,9 +46,9 @@ public class DiscrepancyFinder
         }
         else
         {
-            INPUT = "/tmp/";
-            OUTPUT = "/needleoutput/";
-            LOG_FILE_NAME = "/needleoutput/logfile.txt";
+            INPUT = "c:\\tmp\\";
+            OUTPUT = "c:\\needleoutput\\";
+            LOG_FILE_NAME = "c:\\needleoutput\\logfile.txt";
         }
     }
     private SequencePair m_seqpair = null;

@@ -219,7 +219,7 @@ public class Contig
     {
         try{
             NeedleResult res = new NeedleResult();
-           String queryFile ="c:\\tmp_assembly\\needle990_96.out";// "c:\\needleoutput\\needle10339_419.out";
+           String queryFile ="c:\\Document.txt";// "c:\\needleoutput\\needle10339_419.out";
             //  String queryFile = "c:\\needleATG.out";
              NeedleParser.parse(queryFile,res);
                
@@ -229,8 +229,8 @@ public class Contig
         char[] sequence_subject_n = res.getSubject().toUpperCase().toCharArray();
         //prepare sequence elements
         Contig c = new Contig();
-       // SequenceElement[] start_stop = c.prepareSequenceElementsTest(sequence_query_n,sequence_subject_n, 70,  460,534 );
-      //  int r = c.setCoverageStatus(start_stop);
+     //   SequenceElement[] start_stop = c.prepareSequenceElementsTest(sequence_query_n,sequence_subject_n, 70,  460,534 );
+        //int r = c.setCoverageStatus(start_stop);
       //  System.out.print( start_stop.length);
         
         }catch(Exception e){}

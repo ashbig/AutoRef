@@ -53,7 +53,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
-            pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,Constants.PROCESS_OBJECT_TYPE_REFSEQUENCE)");
+            pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_REFSEQUENCE+")");
             pst_check_oligo_cloning = conn.prepareStatement("select sequenceid from oligo_calculation where sequenceid = ? and primer3configid = "+m_spec_id);
             //get primer spec
             if ( !getPrimer3Spec()  ) return;
@@ -130,8 +130,7 @@ public class PrimerDesignerRunner extends ProcessRunner
     
     private BaseSequence getRefsequence(int id) throws Exception
     {
-       
-        
+  
         String sequence_text = BaseSequence.getSequenceInfo(id, BaseSequence.SEQUENCE_INFO_TEXT);
         BaseSequence refsequence = new BaseSequence();
         refsequence.setText(sequence_text);
@@ -143,13 +142,12 @@ public class PrimerDesignerRunner extends ProcessRunner
     
     private String      getQueryString(int rownum)
     {
-        String sql = null;
         ArrayList items = Algorithms.splitString( m_items);
         switch ( m_items_type)
         {
             case  Constants.ITEM_TYPE_CLONEID :
             {
-                sql="select refsequenceid from sequencingconstruct where constructid in "
+                return "select refsequenceid from sequencingconstruct where constructid in "
                 +" (select constructid from isolatetracking where isolatetrackingid in "
                 +" (select isolatetrackingid from flexinfo where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
             }
@@ -163,23 +161,23 @@ public class PrimerDesignerRunner extends ProcessRunner
                     plate_names.append("'");
                     if ( index != items.size()-1 ) plate_names.append(",");
                 }
-                sql="select refsequenceid from sequencingconstruct where constructid in "
+                 return "select refsequenceid from sequencingconstruct where constructid in "
                 +"  (select constructid from isolatetracking where sampleid in "
                 +"  (select sampleid from sample where containerid in (select containerid from "
                 +" containerheader where label in ("+plate_names.toString()+"))))";
             }
             case  Constants.ITEM_TYPE_BECSEQUENCE_ID :
             {
-                sql="select refsequenceid from assembledsequence where sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
+                return "select refsequenceid from assembledsequence where sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
             }
             case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
             {
-                sql="select refsequenceid from sequencingconstruct where constructid in "
+                return "select refsequenceid from sequencingconstruct where constructid in "
                 +" (select constructid from isolatetracking where isolatetrackingid in "
                 +" (select isolatetrackingid from flexinfo where flexsequenceid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
             }
         }
-        return sql;
+        return null;
     }
     
     private int         getRefSequenceId(String sql) throws Exception
@@ -269,6 +267,26 @@ public class PrimerDesignerRunner extends ProcessRunner
     }
     
     
-    
+     public static void main(String args[]) 
+     
+    {
+       // InputStream input = new InputStream();
+        ReportRunner input = null;
+        User user  = null;
+        try
+        {
+             
+            user = AccessManager.getInstance().getUser("htaycher1","htaycher");
+            input.setItems("65\n651\n652\n653\n58\n581\n582\n583\n874\n875\n876\n");
+            input.setItemsType( 2);
+           
+            input.run();
+        }
+        catch(Exception e){}
+     
+        
+       
+        System.exit(0);
+     }
     
 }

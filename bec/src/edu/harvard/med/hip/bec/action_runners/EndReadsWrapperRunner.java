@@ -74,6 +74,10 @@ public class EndReadsWrapperRunner implements Runnable
         m_empty_samples_directory =OUTPUT_BASE_ROOT+ERROR_EMPTY_SAMPLES_DIR;
     }
     
+    
+    
+    
+    
     public ArrayList getErrorMessages(){ return m_error_messages;}
     public String      getOuputBaseDir (){ return m_outputBaseDir  ;}
     public String      getOuputBaseWrongFormat (){ return m_outputBaseDir_wrongformatfiles  ;}

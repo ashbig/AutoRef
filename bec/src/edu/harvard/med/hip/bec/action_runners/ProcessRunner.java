@@ -39,13 +39,13 @@ public abstract class ProcessRunner implements Runnable
     protected int         m_items_type = -1;
     protected User        m_user = null;
     protected ArrayList   m_file_list_reports = null;
-    private   String        m_title = null;
+  //  private   String        m_title = null;
     /** Creates a new instance of ProcessRunner */
     public ProcessRunner()
     {
         m_error_messages = new ArrayList();
         m_file_list_reports = new ArrayList();
-        m_title = "";
+       // m_title = "";
     }
     
     public  void        setUser(User v){m_user=v;}
@@ -66,26 +66,41 @@ public abstract class ProcessRunner implements Runnable
          if (this instanceof PrimerDesignerRunner)
              {
                       ((PrimerDesignerRunner)this).run();
-                      m_title = "Request for primer designer execution";
+                   //   m_title = "Request for primer designer execution";
              }
              else if  (this instanceof PolymorphismFinderRunner)
              {
 
                   ((PolymorphismFinderRunner)this).run();
-                  m_title = "Request for polymorphism finder run";
+                //  m_title = "Request for polymorphism finder run";
              }//run polymorphism finder
             else if (this instanceof DiscrepancyFinderRunner)
             {
                 ((DiscrepancyFinderRunner)this).run();
-                m_title = "Request for discrepancy finder run";
+               // m_title = "Request for discrepancy finder run";
             }
              else if (this instanceof ReportRunner)
             {
                 ((ReportRunner)this).run();
-                m_title = "Request for report generator";
+               // m_title = "Request for report generator";
 
             }
    
+     }
+     
+     
+     private String getTitle()
+     {
+         
+         if (this instanceof PrimerDesignerRunner)
+            return "Request for primer designer execution";
+         else if  (this instanceof PolymorphismFinderRunner)
+            return "Request for polymorphism finder run";
+         else if (this instanceof DiscrepancyFinderRunner)
+            return "Request for discrepancy finder run";
+          else if (this instanceof ReportRunner)
+            return "Request for report generator";
+         return "";
      }
      
      protected void             sendEMails()
@@ -96,15 +111,21 @@ public abstract class ProcessRunner implements Runnable
             if (m_error_messages.size()>0)
             {
                  Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", m_title+": error messages.", "Errors\n " ,m_error_messages);
+                "elena_taycher@hms.harvard.edu", getTitle()+": error messages.", "Errors\n " ,m_error_messages);
 
             }
-            if (m_file_list_reports != null && m_file_list_reports.size()>0)
+            if (m_file_list_reports != null && m_file_list_reports.size()>0 && this instanceof ReportRunner)
             {
                 Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", m_title, 
+                "elena_taycher@hms.harvard.edu"," Request for report", 
                 "Please find attached report files for your request\n Requested item ids:\n"+m_items,
                m_file_list_reports);
+            }
+            if (m_error_messages.size()==0 && !(this instanceof ReportRunner))
+            {
+                 Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                "elena_taycher@hms.harvard.edu", getTitle()+", "+getTitle()+ " \n Items processed:\n"+m_items);
+
             }
 
         }

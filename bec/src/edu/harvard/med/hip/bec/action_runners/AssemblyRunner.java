@@ -181,7 +181,7 @@ public class AssemblyRunner implements Runnable
 
                                         process_id,conn );
                                         if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
-                                        System.out.println("Clone "+clone_definition.getFlexCloneId() +" "+result+" "+clone_definition.getFlexSequenceId()+" "+clone_sequence_id);
+                                       // System.out.println("Clone "+clone_definition.getFlexCloneId() +" "+result+" "+clone_definition.getFlexSequenceId()+" "+clone_sequence_id);
                                }
                                  IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
                                                         clone_definition.getIsolateTrackingId(),  conn );

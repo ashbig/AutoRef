@@ -20,6 +20,7 @@ public class CloneDescription
          private String     m_read_filepath = null;
          private int        m_becrefsequenceid = -1;
          private int        m_isolatetrackingid = -1;
+         private int        m_isolate_status = -1;
          private int        m_containerid    = -1;
          private int        m_sampleid = -1;
          private int        m_constructid = -1;
@@ -31,7 +32,7 @@ public class CloneDescription
          
          public CloneDescription(){}
          public CloneDescription(int v1, int v2, int v3, int v4, int v5, 
-         int v7, int v8, String v6, int v10,int v11, int v12, int v13,int v14,int v15)
+         int v7, int v8, String v6, int v10,int v11, int v12, int v13,int v14,int v15, int v16)
          {
              m_flex_sequenceid = v1;
              m_flex_cloneid = v2;
@@ -47,6 +48,7 @@ public class CloneDescription
              m_clone_sequence_id = v13;
              m_clone_sequence_type = v14;
              m_clone_sequence_status = v15;
+             m_isolate_status = v16;
          }
          
          public int        getCloneSequenceId (){ return m_clone_sequence_id  ;}
@@ -63,6 +65,7 @@ public class CloneDescription
            public int       getConstructId(){ return m_constructid ;}
          public int        getConstructFormat(){ return m_construct_format ;}
          public int        getCloningStrategyId(){ return m_cloning_strategy_id;}
+         public int         getIsolateStatus(){ return m_isolate_status;}
 
          public void        setReadFilePath(String c){ m_read_filepath=c;}
          public void        setFlexSequenceId  ( int v){  m_flex_sequenceid =v  ;}
@@ -78,6 +81,8 @@ public class CloneDescription
         public void        setCloneSequenceId (int v){   m_clone_sequence_id  = v ;}
         public void        setCloneSequenceType (int v){   m_clone_sequence_type  = v ;}
         public void        setCloneSequenceStatus (int v){   m_clone_sequence_status  = v ;}
+        public void        setIsolateStatus(int v){ m_isolate_status = v;}
+
     
     
 }

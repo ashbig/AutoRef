@@ -68,7 +68,11 @@
     <td>&nbsp;</td>
   </tr>
 <tr> 
-    <td> <input type="checkbox" name="rank" value="1">      CLone Rank</td>
+    <td> <input type="checkbox" name="score" value="1">      Clone Score</td>
+    <td>&nbsp;</td>
+  </tr>
+<tr> 
+    <td> <input type="checkbox" name="rank" value="1">      Clone Rank</td>
     <td>&nbsp;</td>
   </tr>
   <tr> 

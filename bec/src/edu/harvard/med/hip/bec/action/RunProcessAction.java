@@ -358,8 +358,8 @@ public class RunProcessAction extends ResearcherAction
                     request.getParameter("ref_panum"), //      PA Number (for Pseudomonas project only)
                     request.getParameter("ref_sga"), //      SGA Number (for Yeast project only)
                     request.getParameter("rank") ,
-                    request.getParameter("read_length") //      end reads length
-                    );
+                    request.getParameter("read_length"), //      end reads length
+                    request.getParameter("score"));
                     runner.setUser(user);
                     t = new Thread( runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,"processing Report Generation request");
