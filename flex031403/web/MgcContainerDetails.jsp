@@ -1,4 +1,4 @@
-<%@<%@ page contentType="text/html"%>
+<%@ page contentType="text/html"%>
 <%@ page language="java" %>
 
 

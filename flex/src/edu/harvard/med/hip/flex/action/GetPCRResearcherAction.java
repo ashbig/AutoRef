@@ -90,6 +90,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterOligoPlateAction.sampleLineageSet");
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterOligoPlateAction.subprotocol");
+        Container templatePlate = (Container)request.getSession().getAttribute("EnterOligoPlateAction.templatePlate");
         
         if(projectid == Project.PSEUDOMONAS) {
             if(fivep == null || threepOpen == null ||
@@ -120,6 +121,10 @@ public class GetPCRResearcherAction extends ResearcherAction {
                 threepClosed.updateLocation(threepClosed.getLocation().getId(), conn);
             }
             
+            if(templatePlate != null) {
+                templatePlate.updateLocation(templatePlate.getLocation().getId(), conn);
+            }
+                
             // Insert the new container and samples into database.
             pcrOpenContainer.insert(conn);
             
@@ -152,6 +157,14 @@ public class GetPCRResearcherAction extends ResearcherAction {
                 edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
             }
             
+            ContainerProcessObject templateInputContainer = null;
+            if(templatePlate != null) {
+                templateInputContainer =
+                new ContainerProcessObject(templatePlate.getId(),
+                process.getExecutionid(),
+                edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
+            }
+            
             ContainerProcessObject pcrOpenOutputContainer =
             new ContainerProcessObject(pcrOpenContainer.getId(),
             process.getExecutionid(),
@@ -172,6 +185,10 @@ public class GetPCRResearcherAction extends ResearcherAction {
                 process.addProcessObject(threepClosedInputContainer);
             }
             
+            if(templateInputContainer != null) {
+                process.addProcessObject(templateInputContainer);
+            }
+            
             process.addProcessObject(pcrOpenOutputContainer);
             
             if(pcrClosedOutputContainer != null) {
@@ -190,6 +207,10 @@ public class GetPCRResearcherAction extends ResearcherAction {
             
             if(threepClosedInputContainer != null) {
                 threepClosedInputContainer.updatePlateset(ps.getId(), conn);
+            }
+            
+            if(templateInputContainer != null) {
+                templateInputContainer.updatePlateset(ps.getId(), conn);
             }
             
             // Remove the container from the queue.
@@ -236,6 +257,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
             request.getSession().removeAttribute("EnterOligoPlateAction.item");
             request.getSession().removeAttribute("EnterOligoPlateAction.sampleLineageSet");
             request.getSession().removeAttribute("EnterOligoPlateAction.subprotocol");
+            request.getSession().removeAttribute("EnterOligoPlateAction.templatePlate");
             
             return (mapping.findForward("success"));
         } catch (Exception ex) {
