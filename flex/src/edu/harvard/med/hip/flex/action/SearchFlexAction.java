@@ -31,12 +31,13 @@ import edu.harvard.med.hip.flex.query.QueryParser;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.user.User;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.query.bean.*;
 
 /**
  *
  * @author  DZuo
  */
-public class SearchFlexAction extends FlexAction {
+public class SearchFlexAction extends Action {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -53,7 +54,7 @@ public class SearchFlexAction extends FlexAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -110,17 +111,100 @@ public class SearchFlexAction extends FlexAction {
             return mapping.findForward("error");
         }
         
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        SearchRecord searchRecord = new SearchRecord(searchName, searchType, SearchRecord.INPROCESS, user.getUsername());
         List params = new ArrayList();
         params.add(new Param(Param.BLASTPID, (new Integer(pid)).toString()));
         params.add(new Param(Param.BLASTLENGTH, (new Integer(length)).toString()));
         params.add(new Param(Param.BLASTDB, searchDatabase));
         params.add(new Param(Param.BLASTHIT, (new Integer(hits)).toString()));
         
-        ThreadedSearchManager manager = new ThreadedSearchManager(searchRecord, params, searchTermList);
-        new Thread(manager).start();   
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        
+        if(user == null) {
+            if(searchTermList.size() > 30) {                
+                errors.add("sequenceFile", new ActionError("error.query.exceedLimit"));
+                saveErrors(request,errors);
+                return new ActionForward(mapping.getInput());
+            }
+            
+            SearchRecord sr = new SearchRecord(searchName, searchType, SearchRecord.INPROCESS, null);
+            SearchManager m = new SearchManager(sr, params, searchTermList);
+            DatabaseTransaction t = null;
+            Connection conn = null;
+            try {
+                t = DatabaseTransaction.getInstance();
+                conn = t.requestConnection();
+            } catch (Exception ex) {
+                request.setAttribute(Action.EXCEPTION_KEY, new Exception(ex.getMessage()));
+                return mapping.findForward("error");
+            }
+            
+            try {
+                m.insertSearchRecord(conn);
+                DatabaseTransaction.commit(conn);
                 
+                if(m.doSearch()) {
+                    try {
+                        m.insertSearchResults(conn);
+                        DatabaseTransaction.commit(conn);
+                    } catch (Exception ex) {
+                        DatabaseTransaction.rollback(conn);
+                        m.setError(m.getError()+ "\nError occured while updating the database: "+ex.getMessage());
+                        sr.setSearchStatus(SearchRecord.FAIL);
+                        System.out.println("here: "+m.getError());
+                    }
+                } else {
+                    m.setError(m.getError()+"\nError occured while doing search.");
+                
+                        System.out.println("here 1: "+m.getError());
+                }
+                
+                try {
+                    m.updateSearchRecord(conn, sr.getSearchStatus());
+                    DatabaseTransaction.commit(conn);
+                } catch (Exception ex) {
+                    DatabaseTransaction.rollback(conn);
+                    m.setError(m.getError()+ "\nError occured while updating the database: "+ex.getMessage());
+                    sr.setSearchStatus(SearchRecord.FAIL);
+                    
+                        System.out.println("here 3: "+m.getError());
+                }
+            } catch (Exception ex) {
+                DatabaseTransaction.rollback(conn);
+                m.setError(m.getError()+"\nError occured while updating the database: "+ex.getMessage());
+                sr.setSearchStatus(SearchRecord.FAIL);
+                
+                        System.out.println("here 4: "+m.getError());
+            } finally {
+                DatabaseTransaction.closeConnection(conn);
+            }
+            
+            if(SearchRecord.COMPLETE.equals(sr.getSearchStatus())) {
+                List queryInfoList = new ArrayList();
+                QueryManager qm = new QueryManager();
+                int searchid = sr.getSearchid();
+                SearchRecord nsr = qm.getSearchRecord(searchid);
+                int numOfResults = qm.getNumOfResults(searchid);
+                int numOfFounds = qm.getNumOfFounds(searchid);
+                int numOfNofounds = qm.getNumOfNoFounds(searchid);
+                QueryInfo queryInfo = new QueryInfo(nsr, numOfResults, numOfFounds, numOfNofounds);
+                queryInfoList.add(queryInfo);
+                
+                request.setAttribute("queryInfoList", queryInfoList);
+                return (mapping.findForward("search_done"));
+            } else {
+                System.out.println(sr.getSearchStatus());
+                System.out.println("Error: "+m.getError());
+                request.setAttribute("params", params);
+                request.setAttribute("searchError", m.getError());
+                return (mapping.findForward("search_fail"));
+            }
+        }
+        
+        SearchRecord searchRecord = new SearchRecord(searchName, searchType, SearchRecord.INPROCESS, user.getUsername());
+        
+        ThreadedSearchManager manager = new ThreadedSearchManager(searchRecord, params, searchTermList);
+        new Thread(manager).start();
+        
         return (mapping.findForward("success"));
     }
 }

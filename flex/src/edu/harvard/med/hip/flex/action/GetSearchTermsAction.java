@@ -24,13 +24,15 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.query.bean.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.Constants;
 
 /**
  *
  * @author  DZuo
  */
-public class GetSearchTermsAction extends FlexAction {
-
+public class GetSearchTermsAction extends Action {
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -46,13 +48,15 @@ public class GetSearchTermsAction extends FlexAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-    
+        
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        
         List searchTerms = new ArrayList();
         searchTerms.add(new SearchTerm(SearchTerm.GI,  "GI"));
         searchTerms.add(new SearchTerm(SearchTerm.ACCESSION, "Genbank Accession"));
@@ -60,26 +64,28 @@ public class GetSearchTermsAction extends FlexAction {
         searchTerms.add(new SearchTerm(SearchTerm.LOCUS, "Locus ID"));
         
         List databases = new ArrayList();
-        databases.add(new SearchDatabase(SearchDatabase.HUMAN, SearchDatabase.HUMAN));
-        databases.add(new SearchDatabase(SearchDatabase.ALLDB, SearchDatabase.ALLDB));
-        databases.add(new SearchDatabase(SearchDatabase.BCDB, SearchDatabase.BCDB));
-        databases.add(new SearchDatabase(SearchDatabase.CLONTECHDB, SearchDatabase.CLONTECHDB));
-        databases.add(new SearchDatabase(SearchDatabase.FTDB, SearchDatabase.FTDB));
-        databases.add(new SearchDatabase(SearchDatabase.KINASEDB, SearchDatabase.KINASEDB));
-        databases.add(new SearchDatabase(SearchDatabase.MGCDB, SearchDatabase.MGCDB));
-        databases.add(new SearchDatabase(SearchDatabase.NIDDKDB, SearchDatabase.NIDDKDB));
-        databases.add(new SearchDatabase(SearchDatabase.PSEUDOMONASDB, SearchDatabase.PSEUDOMONASDB));
-        databases.add(new SearchDatabase(SearchDatabase.RZPDWALLDB, SearchDatabase.RZPDWALLDB));
-        databases.add(new SearchDatabase(SearchDatabase.VERIFIEDBCDB, SearchDatabase.VERIFIEDBCDB));
+        if(user != null) {
+            databases.add(new SearchDatabase(SearchDatabase.HUMAN, SearchDatabase.HUMAN));
+            databases.add(new SearchDatabase(SearchDatabase.ALLDB, SearchDatabase.ALLDB));
+            databases.add(new SearchDatabase(SearchDatabase.BCDB, SearchDatabase.BCDB));
+            databases.add(new SearchDatabase(SearchDatabase.CLONTECHDB, SearchDatabase.CLONTECHDB));
+            databases.add(new SearchDatabase(SearchDatabase.FTDB, SearchDatabase.FTDB));
+            databases.add(new SearchDatabase(SearchDatabase.KINASEDB, SearchDatabase.KINASEDB));
+            databases.add(new SearchDatabase(SearchDatabase.MGCDB, SearchDatabase.MGCDB));
+            databases.add(new SearchDatabase(SearchDatabase.NIDDKDB, SearchDatabase.NIDDKDB));
+            databases.add(new SearchDatabase(SearchDatabase.PSEUDOMONASDB, SearchDatabase.PSEUDOMONASDB));
+            databases.add(new SearchDatabase(SearchDatabase.RZPDWALLDB, SearchDatabase.RZPDWALLDB));
+            databases.add(new SearchDatabase(SearchDatabase.YEASTDB, SearchDatabase.YEASTDB));
+            databases.add(new SearchDatabase(SearchDatabase.YPDB, SearchDatabase.YPDB));
+        }
         databases.add(new SearchDatabase(SearchDatabase.VERIFIEDDB, SearchDatabase.VERIFIEDDB));
         databases.add(new SearchDatabase(SearchDatabase.VERIFIEDHUMANDB, SearchDatabase.VERIFIEDHUMANDB));
         databases.add(new SearchDatabase(SearchDatabase.VERIFIEDKINASEDB, SearchDatabase.VERIFIEDKINASEDB));
-        databases.add(new SearchDatabase(SearchDatabase.YEASTDB, SearchDatabase.YEASTDB));
-        databases.add(new SearchDatabase(SearchDatabase.YPDB, SearchDatabase.YPDB));
+        databases.add(new SearchDatabase(SearchDatabase.VERIFIEDBCDB, SearchDatabase.VERIFIEDBCDB));
         
         request.setAttribute("searchTerms", searchTerms);
-        request.setAttribute("searchDatabases", databases);     
-
+        request.setAttribute("searchDatabases", databases);
+        
         return (mapping.findForward("success"));
     }
 }

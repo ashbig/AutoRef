@@ -1,10 +1,10 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 
+<%@ page import="edu.harvard.med.hip.flex.Constants" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="edu.harvard.med.hip.flex.Constants" %>
 
 <html>
 <head>
@@ -30,7 +30,13 @@
 
 <p>
 
-<h3>No results to display.</H3>
+<h3>Your search failed due to the following error:</H3>
+<p><bean:write name="searchError"/>
+
+<p>
+<logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+<jsp:include page="footer.jsp"/>
+</logic:notPresent>
 
 </body>
 </html>

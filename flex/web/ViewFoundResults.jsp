@@ -1,6 +1,7 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 
+<%@ page import="edu.harvard.med.hip.flex.Constants"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -86,7 +87,7 @@
 
                 <td>
                 <logic:equal name="mfs" property="flexSequence.isCloned" value="true">
-                <A HREF="ViewConstructsInfo.do?sequenceid=<bean:write name="mfs" property="flexsequenceid"/>">
+                <A target="_blank" HREF="ViewConstructsInfo.do?sequenceid=<bean:write name="mfs" property="flexsequenceid"/>">
                 </logic:equal>
                 <flex:write name="mfs" property="flexSequence.flexstatus"/>
                 <logic:equal name="mfs" property="flexSequence.isCloned" value="true">

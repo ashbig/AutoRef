@@ -110,7 +110,7 @@
 
                 <td rowspan="<bean:write name="mfs" property="numOfClones"/>">
                 <logic:equal name="mfs" property="flexSequence.isCloned" value="true">
-                <A HREF="ViewConstructsInfo.do?sequenceid=<bean:write name="mfs" property="flexsequenceid"/>">
+                <A target="_blank" HREF="ViewConstructsInfo.do?sequenceid=<bean:write name="mfs" property="flexsequenceid"/>">
                 </logic:equal>
                 <flex:write name="mfs" property="flexSequence.flexstatus"/>
                 <logic:equal name="mfs" property="flexSequence.isCloned" value="true">
@@ -161,7 +161,7 @@
 
                     <logic:iterate name="constructInfo" property="clones" id="clone">
                         <td>
-                            <A href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&<%=Constants.ISDISPLAY%>=<bean:write name="<%=Constants.ISDISPLAY%>"/>">
+                            <A target="_blank" href="ViewClone.do?cloneid=<bean:write name="clone" property="cloneid"/>&<%=Constants.ISDISPLAY%>=<bean:write name="<%=Constants.ISDISPLAY%>"/>">
                             <flex:write name="clone" property="cloneid"/>
                             </A>
                             <bean:define id="form" name="queryFlexForm"/>

@@ -34,7 +34,7 @@ public class SearchManager {
     public SearchRecord getSearchRecord() {return searchRecord;}
     
     public void setError(String s) {
-        this.error = error;
+        this.error = s;
     }
     
     public String getError() {
@@ -45,9 +45,9 @@ public class SearchManager {
     
     /** Creates a new instance of SearchManager */
     public SearchManager(List searchTerms, String searchType, List params, String searchName, String user) {
-        searchRecord = new SearchRecord(searchName,searchType,SearchRecord.INPROCESS,user);
-        params = params;
-        searchTerms = searchTerms;
+        this.searchRecord = new SearchRecord(searchName,searchType,SearchRecord.INPROCESS,user);
+        this.params = params;
+        this.searchTerms = searchTerms;
     }
     
     public SearchManager(SearchRecord searchRecord, List params, List searchTerms) {
@@ -169,7 +169,7 @@ public class SearchManager {
      *
      * @return true if search is successful; false otherwise.
      */
-    public boolean doSearch() {
+    public boolean doSearch() {        
         QueryHandler handler = StaticQueryHandlerFactory.makeQueryHandler(searchRecord.getSearchType(), params);
         try {
             handler.handleQuery(searchTerms);
@@ -229,7 +229,7 @@ public class SearchManager {
     }
     
     public static void main(String args[]) {
-        SearchRecord searchRecord = new SearchRecord("Test search", SearchRecord.GENESYMBOL, SearchRecord.INPROCESS, "dzuo");
+        SearchRecord searchRecord = new SearchRecord("Test search", SearchRecord.LOCUSID, SearchRecord.INPROCESS, "dzuo");
         List searchTerms = new ArrayList();
         //searchTerms.add("33469916");
         //searchTerms.add("21961206");
@@ -241,7 +241,7 @@ public class SearchManager {
         //searchTerms.add("DSCR8");
         //searchTerms.add("EEF1G");
         //searchTerms.add("EGFR");
-        searchTerms.add("ABCA2");
+        searchTerms.add("10");
         
         SearchManager manager = new SearchManager(searchRecord, null, searchTerms);
         

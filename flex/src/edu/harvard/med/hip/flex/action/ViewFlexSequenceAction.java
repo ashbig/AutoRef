@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-07-09 18:16:42 $
- * $Author: jmunoz $
+ * $Revision: 1.5 $
+ * $Date: 2004-08-24 17:00:59 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -51,11 +51,11 @@ import edu.harvard.med.hip.flex.database.*;
  *
  * Class description - Full description
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.4 $ $Date: 2001-07-09 18:16:42 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.5 $ $Date: 2004-08-24 17:00:59 $
  */
 
-public class ViewFlexSequenceAction extends FlexAction {
+public class ViewFlexSequenceAction extends Action {
     
     
     /**
@@ -69,7 +69,7 @@ public class ViewFlexSequenceAction extends FlexAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping, ActionForm form,
+    public ActionForward perform(ActionMapping mapping, ActionForm form,
     HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();

@@ -42,7 +42,6 @@ public class ThreadedSearchManager extends SearchManager implements Runnable {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
         } catch (Exception ex) {
-            System.out.println(ex);
             DatabaseTransaction.closeConnection(conn);
             System.exit(0);
         }
@@ -50,7 +49,6 @@ public class ThreadedSearchManager extends SearchManager implements Runnable {
         try {
             insertSearchRecord(conn);
             DatabaseTransaction.commit(conn);
-            
             if(doSearch()) {
                 try {
                     insertSearchResults(conn);
@@ -62,6 +60,7 @@ public class ThreadedSearchManager extends SearchManager implements Runnable {
                 }
             } else {
                 error += "\nError occured while doing search.";
+                searchRecord.setSearchStatus(SearchRecord.FAIL);
             }
             
             try {

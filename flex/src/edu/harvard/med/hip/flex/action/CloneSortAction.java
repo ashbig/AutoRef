@@ -35,7 +35,7 @@ import edu.harvard.med.hip.flex.Constants;
  *
  * @author  dzuo
  */
-public class CloneSortAction extends FlexAction {
+public class CloneSortAction extends Action {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -52,17 +52,25 @@ public class CloneSortAction extends FlexAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException {                   
         String sortby = ((BrowseForm)form).getSortby();
         int pageindex = ((BrowseForm)form).getPageindex();
         int pagerecord = ((BrowseForm)form).getPagerecord();
         int isSort = ((BrowseForm)form).getIsSort();
         String prevButton = ((BrowseForm)form).getPrevButton();
         List info = (List)request.getSession().getAttribute("cloneInfo");
+        
+        ActionErrors errors = new ActionErrors();
+        if(info == null) {
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.session.expire"));
+            saveErrors(request, errors);
+            return mapping.findForward("login");
+        }
         
         if(isSort != 0) {
             if("flexseqid".equals(sortby)) {
@@ -113,7 +121,7 @@ public class CloneSortAction extends FlexAction {
         } else {
             currentInfo = info.subList((pageindex-1)*pagerecord, info.size());
         }
-  
+        
         request.setAttribute("prev", new Integer(prev));
         request.setAttribute("next", new Integer(next));
         request.setAttribute("pageindex", new Integer(pageindex));
@@ -123,11 +131,16 @@ public class CloneSortAction extends FlexAction {
         request.setAttribute("totalClones", new Integer(info.size()));
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
-        if(retValue) {
-            request.setAttribute(Constants.ISDISPLAY, new Integer(1));
-        } else {
+        
+        if(user == null) {
             request.setAttribute(Constants.ISDISPLAY, new Integer(0));
+        } else {
+            boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
+            if(retValue) {
+                request.setAttribute(Constants.ISDISPLAY, new Integer(1));
+            } else {
+                request.setAttribute(Constants.ISDISPLAY, new Integer(0));
+            }
         }
         
         return (mapping.findForward("success"));

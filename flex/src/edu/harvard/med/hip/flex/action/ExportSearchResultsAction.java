@@ -32,7 +32,7 @@ import edu.harvard.med.hip.flex.Constants;
  *
  * @author  DZuo
  */
-public class ExportSearchResultsAction extends FlexAction {
+public class ExportSearchResultsAction extends Action {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -49,7 +49,7 @@ public class ExportSearchResultsAction extends FlexAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -57,8 +57,11 @@ public class ExportSearchResultsAction extends FlexAction {
         ActionErrors errors = new ActionErrors();
                 
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
-             
+        boolean retValue = false;
+        if(user != null) {
+            retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
+        }
+        
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment;filename=cloneinfo.xls");
         PrintWriter out = response.getWriter();

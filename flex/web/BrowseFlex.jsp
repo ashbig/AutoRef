@@ -44,5 +44,8 @@
     </dl>
 </html:form>
 
+<logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+<jsp:include page="footer.jsp"/>
+</logic:notPresent>
 </body>
 </html:html>

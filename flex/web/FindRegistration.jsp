@@ -40,16 +40,22 @@
 
 <%-- <jsp:useBean id="beanInstanceName" scope="session" class="package.class" /> --%>
 <%-- <jsp:getProperty name="beanInstanceName"  property="propertyName" /> --%>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 <center>
-<small>** This system and the underlying database was built in conjunction with
-<a href="http://www.3rdmill.com" target="_blank">3rd Millennium Inc.</a> **</small>
-<p><a href="http://www.3rdmill.com" target="_blank">
-    <img height=40 
-        src="3rdhoriz.gif" 
-        width=150 border=0>
-    </a>
+<table width="710" cellpadding="0" cellspacing="0" border="0">
+<tr>
+              <td height="23" align="center"><font size="2">This system and the underlying database was built in conjunction with
+<a href="http://www.3rdmill.com" target="_blank">3rd Millennium Inc.</a></font> </td>
+            </tr>
+</table>
+
+<hr size=1 noshade>
+<table width="710" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td align="middle"><font size=-2 face=arial color="#8d8d8d">Copyright &copy; 2001-2004 Harvard Institute of Proteomics. All rights reserved.<br>
+		Last updated: July 1, 2004
+		</td>
+	</tr>
+</table>
 </center>
 </body>
 </html>

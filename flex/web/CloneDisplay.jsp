@@ -99,5 +99,9 @@ Page&nbsp;<bean:write name="pageindex"/>&nbsp;&nbsp&nbsp;
 <p align="center">
 <html:submit property="export" value="Export"/>
 -->
+<logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+<jsp:include page="footer.jsp"/>
+</logic:notPresent>
+
 </body>
 </html>

@@ -250,7 +250,7 @@
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
     <forward    name="help"         path="/Help.jsp"/>
-    <forward    name="login"        path="/login.jsp"/>
+    <forward    name="login"        path="/welcome.jsp"/>
     <forward    name="logout"       path="/Logout.do"/>
     <forward    name="home"         path="/overview.jsp"/>
     <forward    name="register"     path="/CustomerRegistration.jsp"/>
@@ -294,15 +294,15 @@
                type="edu.harvard.med.hip.flex.action.LogonAction"
                name="logonForm"
               scope="request"
-              input="/login.jsp">
+              input="/welcome.jsp">
       <forward  name="success"   path="/main.jsp"/>
-      <forward  name="failure"  path="/login.jsp"/>
+      <forward  name="failure"  path="/welcome.jsp"/>
     </action>
 
     <!-- process a user logout -->
     <action     path="/Logout"
                 type="edu.harvard.med.hip.flex.action.LogoutAction">
-      <forward  name="success"  path="/login.jsp"/>
+      <forward  name="success"  path="/welcome.jsp"/>
    </action>
 
     <!-- Process a customer registration -->
@@ -1273,6 +1273,8 @@
                validate="true"
                input="/GetSearchTerms.do">
       <forward  name="success"   path="/SearchFlexFinish.jsp"/>
+      <forward  name="search_done"   path="/ViewSearchRecords.jsp"/>
+      <forward  name="search_fail"   path="/SearchFail.jsp"/>
     </action>  
           
     <action    path="/GetAllSearchRecords"

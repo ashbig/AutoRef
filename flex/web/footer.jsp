@@ -4,20 +4,21 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-
 <html>
-<head><title><bean:message key="flex.name"/> : Find Registration Confirmation</title></head>
 <body>
-    <h2><bean:message key="flex.name"/> : Find Registration Confirmation</h2>
-    <hr>
-    <html:errors/>
-    <center>
-    <p>
-    <h3>The information for your registration has been sent to you through email.</h3>
-<a href="login.jsp">Login to <bean:message key="flex.name"/></a>
-    </center>
-
 <center>
+
+<table width="710" cellpadding="0" cellspacing="0" border="0">
+<tr><td align="center">
+    [<a href="welcome.jsp">Home</a>] 
+    [<html:link forward="register" target="_top">Member Registration</html:link>]
+    [<a href="BrowseFlex.jsp">View available clones</a>]
+    [<a href="GetSearchTerms.do">Search FLEXGene database</a>] 
+    [<a href="mailto:HIP_Informatics@hms.harvard.edu">Contact Us</a>] 
+<td></tr>
+</table>
+<br>
+
 <table width="710" cellpadding="0" cellspacing="0" border="0">
 <tr>
               <td height="23" align="center"><font size="2">This system and the underlying database was built in conjunction with
@@ -35,4 +36,4 @@
 </table>
 </center>
 </body>
-</html> 
+</html>

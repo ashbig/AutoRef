@@ -32,7 +32,7 @@ import edu.harvard.med.hip.flex.form.QueryFlexForm;
  *
  * @author  DZuo
  */
-public class ViewBlastOutputAction extends FlexAction {
+public class ViewBlastOutputAction extends Action {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -49,7 +49,7 @@ public class ViewBlastOutputAction extends FlexAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)

@@ -33,7 +33,7 @@ import edu.harvard.med.hip.flex.query.bean.*;
  *
  * @author  DZuo
  */
-public class GetSearchResultsAction extends FlexAction {
+public class GetSearchResultsAction extends Action {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -50,19 +50,24 @@ public class GetSearchResultsAction extends FlexAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public ActionForward perform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-                
+        
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
-        if(retValue) {
-            request.setAttribute(Constants.ISDISPLAY, new Integer(1));
-        } else {
+        
+        if(user == null) {
             request.setAttribute(Constants.ISDISPLAY, new Integer(0));
+        } else {
+            boolean retValue = AccessManager.getInstance().isUserAuthorize(user, Constants.RESEARCHER_GROUP);
+            if(retValue) {
+                request.setAttribute(Constants.ISDISPLAY, new Integer(1));
+            } else {
+                request.setAttribute(Constants.ISDISPLAY, new Integer(0));
+            }
         }
         
         int searchid = ((QueryFlexForm)form).getSearchid();
