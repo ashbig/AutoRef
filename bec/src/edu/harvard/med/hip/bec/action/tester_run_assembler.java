@@ -43,7 +43,7 @@ public class tester_run_assembler
     
          // outputBaseDir specify the base directory for trace file distribution
         private static final String INPUT_BASE_DR = "";
-        private static final int MAX_NUMBER_OF_ROWS_TO_RETURN = 200;
+        private static final int MAX_NUMBER_OF_ROWS_TO_RETURN = 20;
     
         private ArrayList   i_master_container_ids = null;//get from form
         private String      i_phrap_params_file = null;
@@ -66,7 +66,7 @@ public class tester_run_assembler
             ArrayList sequences = new ArrayList();
             i_error_messages = new ArrayList();
             int min_result_id = 1;
-            boolean isLastRecord = false;
+            boolean isLastRecord = true;
             RefSequence refsequence = null;BaseSequence base_refsequence = null;
             BioLinker   linker5 = null; int cds_start = 0; int cds_stop = 0;
             BioLinker   linker3 = null;
@@ -75,7 +75,7 @@ public class tester_run_assembler
             {
                 // conncection to use for transactions
                 conn = DatabaseTransaction.getInstance().requestConnection();
-      
+                int process_id = createProcessHistory(conn);
           //process only sequences  that are exspected
                 while (isLastRecord)
                 {
@@ -99,86 +99,110 @@ public class tester_run_assembler
                                      linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
                                      linker5 = BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() );
                                  }
+                                
+                                    
+                                cur_containerid =  sequence_definition.getContainerId() ;
                             }
                         
                         //get refsequence if needed
                             if (base_refsequence == null || base_refsequence.getId() != sequence_definition.getBecRefSequenceId())
                             {
                                 refsequence = new RefSequence( sequence_definition.getBecRefSequenceId());
+                                //gerry's sequences
+                                if (refsequence.getText().equals("NNNNN"))
+                                {
+                                     IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                    IsolateTrackingEngine.updateAssemblyStatus(
+                                                        IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn);
+                                    conn.commit();
+                                    
+                                    continue;
+                                }
                                 base_refsequence =  new BaseSequence(refsequence.getCodingSequence(), BaseSequence.BASE_SEQUENCE );
-                                if (base_refsequence.getText().length() >1500) continue;
+                                base_refsequence.setId(refsequence.getId());
+                                if (base_refsequence.getText().length() >2000)
+                                {
+                                    IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                    IsolateTrackingEngine.updateAssemblyStatus(
+                                                        IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn);
+                                    conn.commit();
+                                     System.out.println("Sequence too long. Clone "+sequence_definition.getFlexCloneId() +" "+sequence_definition.getFlexSequenceId());
+                                    continue;
+                                }
                                 cds_start = linker5.getSequence().length();
-                                cds_stop = linker5.getSequence().length() +  base_refsequence.getText().length() -2;
+                                cds_stop = linker5.getSequence().length() +  base_refsequence.getText().length();
                                 base_refsequence.setText( linker5.getSequence() + base_refsequence.getText()+linker3.getSequence());
+                                
                             }
                             
                            clone_sequence_id = -1;
                            clone_assembly = assembleSequence( sequence_definition );
                            if (clone_assembly == null )
                            {
-                               clone_assembly.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_NO_CONTIGS);
+                                IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                IsolateTrackingEngine.updateAssemblyStatus(
+                                                IsolateTrackingEngine.ASSEMBLY_STATUS_NO_CONTIGS,
+                                                sequence_definition.getIsolateTrackingId(),  conn);
+                                conn.commit();
+                                 System.out.println("Assembly null. Clone "+sequence_definition.getFlexCloneId() +" "+sequence_definition.getFlexSequenceId());
+                                continue;
                            }
                            else if( clone_assembly.getContigs().size() != 1)
                            {
-                               clone_assembly.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_N_CONTIGS);
+                              
+                                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                IsolateTrackingEngine.updateAssemblyStatus(
+                                                    IsolateTrackingEngine.ASSEMBLY_STATUS_N_CONTIGS,
+                                                    sequence_definition.getIsolateTrackingId(),  conn);
+                               conn.commit();
+                               continue;
                            }
                            else
                            {
                                //check coverage
                                Contig contig = (Contig) clone_assembly.getContigs().get(0);
-                               contig.checkForCoverage(sequence_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
-                               if ( clone_assembly.getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_PASS)
+                               int result = contig.checkForCoverage(sequence_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
+                               
+                               if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS
+                                || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED
+                                 || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED 
+                                  || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED )
+                               
                                {
-                                        clone_sequence_id = insertSequence(sequence_definition, clone_assembly, conn );
+                                        clone_sequence_id = insertSequence(sequence_definition, contig,
+                                        
+                                        process_id,conn );
+                                        if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
+                                        System.out.println("Clone "+sequence_definition.getFlexCloneId() +" "+result+" "+sequence_definition.getFlexSequenceId()+" "+clone_sequence_id);
                                }
+                                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                IsolateTrackingEngine.updateAssemblyStatus(
+                                                result,
+                                                sequence_definition.getIsolateTrackingId(),  conn);
+                                conn.commit();
+                                continue;
                            }
-                           IsolateTrackingEngine.updateStatus(clone_assembly.getStatus(),
-                                     sequence_definition.getIsolateTrackingId(),  conn );
-                           conn.commit();
-                           if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
+                         
+                           
                         }
                         catch(Exception e)
                         {
+                            System.out.println(e.getMessage() );
                             i_error_messages.add(e.getMessage() );
                             DatabaseTransaction.rollback(conn);
                         }
                     }
-                    //finished all clones in the group
-                    min_result_id = sequence_definition.getResultId();
-                    isLastRecord = expected_sequence_definition.size() < MAX_NUMBER_OF_ROWS_TO_RETURN;
+                  
                 }
                 
-                //insert history
-                if ( process_clones.size() > 0)
-                {
-                    ArrayList processes = new ArrayList();
-                    Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
-                                                new java.util.Date(),
-                                                i_user.getId(),
-                                                processes,
-                                                Constants.TYPE_OBJECTS);
-
-                    // Process object create
-                     //create specs array for the process
-                    ArrayList specs = new ArrayList();
-                  
-                    ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
-                                                                ProcessDefinition.ProcessIdFromProcessName(ProcessDefinition.RUN_ASSEMBLY),
-                                                                actionrequest.getId(),
-                                                                specs,
-                                                                Constants.TYPE_OBJECTS) ;
-                    processes.add(process);
-                     //finally we must insert request
-                    actionrequest.insert(conn);
-                    String sql = "";
-                    Statement stmt = conn.createStatement();
-                    for (int sequence_count = 0; sequence_count < process_clones.size();sequence_count++)
-                    {
-                        sql = "insert into process_object (processid,objectid,objecttype) values("+process.getId()+","+((Integer)process_clones.get(sequence_count)).intValue() +","+Constants.PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE+")";
-                        stmt.executeUpdate(sql);
-                    }
-                    conn.commit();
-                }
+                
             }
             catch(Exception ex)
             {
@@ -204,10 +228,142 @@ public class tester_run_assembler
         }
         
      public ArrayList getErrorMessages(){ return i_error_messages;}
+ /*    
      
-     
-     
-     
+     public void runCheckAssembly(int[] istid)
+        {
+      // The database connection used for the transaction
+            Connection conn = null;
+            ArrayList process_clones = new ArrayList();
+            ArrayList sequences = new ArrayList();
+            i_error_messages = new ArrayList();
+            int min_result_id = 1;
+            boolean isLastRecord = true;
+            RefSequence refsequence = null;BaseSequence base_refsequence = null;
+            BioLinker   linker5 = null; int cds_start = 0; int cds_stop = 0;
+            BioLinker   linker3 = null;
+            int cur_containerid = -1;
+            try
+            {
+                // conncection to use for transactions
+                conn = DatabaseTransaction.getInstance().requestConnection();
+                
+          //process only sequences  that are exspected
+                while (isLastRecord)
+                {
+                    ArrayList expected_sequence_definition = getExspectedSequenceDescriptions(conn, istid, min_result_id);
+
+                    if (expected_sequence_definition.size() == 0 )      return ;
+                    CloneAssembly clone_assembly = null;
+                    SequenceDescription sequence_definition = null;
+                    int clone_sequence_id = -1;
+                    for (int count = 0; count < expected_sequence_definition.size(); count ++)
+                    {
+                        sequence_definition= ( SequenceDescription)expected_sequence_definition.get(count);
+                        //get linker info
+                        try
+                        {
+                            if ((linker5 == null || linker3 == null) || sequence_definition.getContainerId() != cur_containerid )
+                            {
+                                CloningStrategy container_cloning_strategy = Container.getCloningStrategy(sequence_definition.getContainerId());
+                                if (container_cloning_strategy != null)
+                                 {
+                                     linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
+                                     linker5 = BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() );
+                                 }
+                                
+                                    
+                                cur_containerid =  sequence_definition.getContainerId() ;
+                            }
+                        
+                        //get refsequence if needed
+                            if (base_refsequence == null || base_refsequence.getId() != sequence_definition.getBecRefSequenceId())
+                            {
+                                refsequence = new RefSequence( sequence_definition.getBecRefSequenceId());
+                              
+                                base_refsequence =  new BaseSequence(refsequence.getCodingSequence(), BaseSequence.BASE_SEQUENCE );
+                                base_refsequence.setId(refsequence.getId());
+                                if (base_refsequence.getText().length() >2000)
+                                {
+                                    IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn );
+                                    IsolateTrackingEngine.updateAssemblyStatus(
+                                                        IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED,
+                                                        sequence_definition.getIsolateTrackingId(),  conn);
+                                    conn.commit();
+                                     System.out.println("Sequence too long. Clone "+sequence_definition.getFlexCloneId() +" "+sequence_definition.getFlexSequenceId());
+                                    continue;
+                                }
+                                cds_start = linker5.getSequence().length();
+                                cds_stop = linker5.getSequence().length() +  base_refsequence.getText().length();
+                                base_refsequence.setText( linker5.getSequence() + base_refsequence.getText()+linker3.getSequence());
+                                
+                            }
+                            
+                           clone_sequence_id = -1;
+                           clone_assembly = assembleSequence( sequence_definition );
+                           if (clone_assembly.getContigs().size() == 1)
+                           {
+                               //check coverage
+                               Contig contig = (Contig) clone_assembly.getContigs().get(0);
+                               int result = contig.checkForCoverage(sequence_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
+                               
+                               if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS
+                                || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED
+                                 || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED 
+                                  || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED )
+                               
+                               {
+                                        CloneSequence.updateCdsStartStopByResultId(conn,contig.contig.getCdsStart(),contig.getCdsStop(), sequence_definition.getResultid());
+                                        CloneSequence.updateSequenceTextByResultId(conn,contig.contig.getCdsStart(),contig.getCdsStop(), sequence_definition.getResultid());
+                                        contig.getSequence(),  contig.getScores()
+                                        System.out.println("Clone "+sequence_definition.getFlexCloneId() +" "+result+" "+sequence_definition.getFlexSequenceId()+" "+clone_sequence_id);
+                               }
+                                
+                                IsolateTrackingEngine.updateAssemblyStatus(
+                                                result,
+                                                sequence_definition.getIsolateTrackingId(),  conn);
+                                conn.commit();
+                                continue;
+                           }
+                         
+                           
+                        }
+                        catch(Exception e)
+                        {
+                            System.out.println(e.getMessage() );
+                            i_error_messages.add(e.getMessage() );
+                            DatabaseTransaction.rollback(conn);
+                        }
+                    }
+                  
+                }
+                
+                
+            }
+            catch(Exception ex)
+            {
+                i_error_messages.add(ex.getMessage());
+                DatabaseTransaction.rollback(conn);
+            }
+            finally
+            {
+                try
+                {
+         //send errors
+                    if (i_error_messages.size()>0)
+                    {
+                         Mailer.sendMessage(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
+                        "elena_taycher@hms.harvard.edu", "Request for sequence assemblyu : error messages.", "Errors\n " ,i_error_messages);
+                
+                    }
+                }
+                catch(Exception e){}
+                DatabaseTransaction.closeConnection(conn);
+            }
+            
+        }
+     */
      //-------------------------------------------------------
      
      private CloneAssembly assembleSequence(  SequenceDescription sequence_definition )throws BecDatabaseException
@@ -218,17 +374,19 @@ public class tester_run_assembler
          {
              //f:\clone_files\546\626\chromat_di     contig_dir
             String trace_files_directory_path =  sequence_definition.getReadFilePath()  ;
-            trace_files_directory_path = trace_files_directory_path.substring(1,trace_files_directory_path.lastIndexOf(File.pathSeparatorChar));
+            if (trace_files_directory_path == null) return null;
+             //replace to c drive
+            trace_files_directory_path = trace_files_directory_path.substring(0,trace_files_directory_path.lastIndexOf(File.separator));
+         //   trace_files_directory_path =   "c"+trace_files_directory_path;
             //call phredphrap
             PhredPhrap pp = new PhredPhrap();
             if (i_vector_file_name != null)pp.setVectorFileName(i_vector_file_name);
-            String output_file_name = sequence_definition.getFlexCloneId()+ ".fasta.screen.ace.1";
-           
-            pp.run(trace_files_directory_path, output_file_name );
+            String output_file_name =  sequence_definition.getFlexCloneId()+ ".fasta.screen.ace.1";
+             pp.run(trace_files_directory_path, output_file_name );
         
             //get phrdphrap output
             PhredPhrapParser pparser = new PhredPhrapParser();
-            clone_assembly = pparser.parse(trace_files_directory_path+output_file_name);
+            clone_assembly = pparser.parse(trace_files_directory_path+File.separator +"contig_dir" + File.separator + output_file_name);
         
             return clone_assembly;
          }
@@ -241,10 +399,10 @@ public class tester_run_assembler
      private ArrayList getExspectedSequenceDescriptions(Connection conn, String status, int min_result_id)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
-        String sql = "select   refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
-+ " from isolatetracking iso,  sample s, sequencingconstruct  constr "
-+" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid "
-+" and status in "+ status +" and rownum < "+MAX_NUMBER_OF_ROWS_TO_RETURN+"  order by containerid ,refsequenceid";
+        String sql = "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
++ " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
++" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
++" and status in ("+ status +") and rownum < "+MAX_NUMBER_OF_ROWS_TO_RETURN+"  order by containerid ,refsequenceid";
  
       
         
@@ -263,19 +421,20 @@ public class tester_run_assembler
                 seq_desc.setIsolateTrackingId( rs.getInt("isolatetrackingid"));
                 seq_desc.setContainerId(rs.getInt("containerid"));
                 seq_desc.setSampleId(rs.getInt("sampleid"));
-               
+                seq_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
+                seq_desc.setFlexCloneId(  rs.getInt("flexcloneid"));
+                
                 if (seq_desc.getSampleId() != -1)
                 {
                     sql_sample = "select distinct localpath from filereference where filereferenceid in "
                     +" (select filereferenceid from resultfilereference "
                     +" where resultid in (select resultid from result where sampleid="+seq_desc.getSampleId()+"))";
                     rs_ref = DatabaseTransaction.executeQuery(sql_sample, conn);
-                     seq_desc.setReadFilePath("localpath");
+                    if(rs_ref.next())
+                    {
+                        seq_desc.setReadFilePath(rs_ref.getString("LOCALPATH"));
                      // reparse f:\clone_files\5968\560\chromat_di
-                     ArrayList data = Algorithms.splitString(seq_desc.getReadFilePath(),  String.valueOf(File.pathSeparatorChar));
-                     
-                     seq_desc.setFlexSequenceId(rs.getInt( Integer.parseInt( (String) data.get(data.size() - 3))));
-                    seq_desc.setFlexCloneId(  rs.getInt(Integer.parseInt( (String) data.get(data.size() - 2))));
+                    }
                     res.add( seq_desc );
                 
                 }
@@ -298,18 +457,30 @@ public class tester_run_assembler
      
      private   int insertSequence(
                          SequenceDescription sequence_definition, 
-                         CloneAssembly clone_data,
+                         Contig contig, 
+                         int process_id,
                          Connection conn)throws BecDatabaseException
      {
          //create sequence 
          try
          {
-            Contig contig = (Contig)clone_data.getContigs().get(0);
+            Result result = new Result(BecIDGenerator.BEC_OBJECT_ID_NOTSET,     process_id,
+                                        sequence_definition.getSampleId(),       null,
+                                        Result.RESULT_TYPE_ASSEMBLED_FROM_END_READS_PASS,
+                                        BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
+            result.insert(conn, process_id );
+            
+            
             CloneSequence clone_seq = new CloneSequence( contig.getSequence(),  contig.getScores(), sequence_definition.getBecRefSequenceId());
-            clone_seq.setResultId( sequence_definition.getResultId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+            clone_seq.setResultId( result.getId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
             clone_seq.setIsolatetrackingId ( sequence_definition.getIsolateTrackingId() );//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
-            clone_seq.setStatus (BaseSequence.ASSEMBLY_STATUS_ASSESMBLED);
+            clone_seq.setStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED);
+            clone_seq.setType (BaseSequence.CLONE_SEQUENCE_TYPE_ASSESMBLED); //final\conseq\final editied
+            clone_seq.setCdsStart( contig.getCdsStart() );
+            clone_seq.setCdsStop( contig.getCdsStop() );
             clone_seq.insert(conn);
+            
+            
             return clone_seq.getId();
          }
          catch(Exception e)
@@ -320,7 +491,36 @@ public class tester_run_assembler
      }
      
      
-     
+     private int createProcessHistory(Connection conn) throws BecDatabaseException
+     {
+         ArrayList processes = new ArrayList();
+         try
+         {
+        Request actionrequest = new Request(BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                    new java.util.Date(),
+                                    i_user.getId(),
+                                    processes,
+                                    Constants.TYPE_OBJECTS);
+
+        // Process object create
+         //create specs array for the process
+        ArrayList specs = new ArrayList();
+
+        ProcessExecution process = new ProcessExecution( BecIDGenerator.BEC_OBJECT_ID_NOTSET,
+                                                    ProcessDefinition.ProcessIdFromProcessName(ProcessDefinition.RUN_ASSEMBLY_FROM_END_READS),
+                                                    actionrequest.getId(),
+                                                    specs,
+                                                    Constants.TYPE_OBJECTS) ;
+        processes.add(process);
+         //finally we must insert request
+        actionrequest.insert(conn);
+        conn.commit();
+        return process.getId();
+         } catch(Exception e)
+         {
+             throw new BecDatabaseException("Cannot create process");
+         }
+     }
      
      protected class SequenceDescription
      {
@@ -381,7 +581,7 @@ public class tester_run_assembler
         }
         catch(Exception e){}
         runner.setUser(user);
-        runner.setResultType( String.valueOf(Result.RESULT_TYPE_ASSEMBLED_FROM_END_READS));
+        runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
         runner.run();
         System.exit(0);
      }

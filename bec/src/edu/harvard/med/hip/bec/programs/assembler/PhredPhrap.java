@@ -118,12 +118,18 @@ public class PhredPhrap
         String cmd = null;
         
         // for windows /c/file_name
+        //output_file_name = Algorithms.convertWindowsFileNameIntoUnix(output_file_name);
+        clone_path =  Algorithms.convertWindowsFileNameIntoUnix(clone_path);
+        if (clone_path.indexOf("/f") != -1) clone_path ="/cygdrive" + clone_path;
         if (isWindows)
         {
+            
             cmd =  m_phredphrap_path + " --clonepath " + clone_path  + " --outputfilename "+ output_file_name;
             if (m_vector_file_name != null && !m_vector_file_name.equals("")) cmd += " --vectorfile " + m_vector_file_name;
         }
         else
+        {
+        }
             //cmd =  "perl "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
         System.out.println(cmd);
         //blastcmd = "/usr/local/emboss/bin/needle "+q_name+ ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile "+.out ";
@@ -134,30 +140,62 @@ public class PhredPhrap
             r.traceMethodCalls(true);
             Process p = r.exec(cmd);
             BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
-
-            int x;
-            while ((x = berr.read()) != -1)
+            BufferedInputStream binput = new BufferedInputStream(p.getInputStream());
+            int x = 0;int y = 0;
+            
+            boolean    isFinished = false;
+            boolean    isErrDone = false;
+            boolean    isOutDone = false;
+            byte[]      buff = new byte[255];
+            
+            while (!isFinished)
             {
-               // System.out.write(x);
-               // System.out.println(x);
+                if (berr.available() == 0 && binput.available() == 0)
+                {
+                    //System.out.println("Check if done");
+                    try
+                    {
+                        p.exitValue();
+                        isFinished = true;
+                        break;
+                    }
+                    catch (IllegalThreadStateException e)
+                    {
+                        Thread.currentThread().sleep(100);
+                    }
+                    catch(Exception e)
+                    {
+                        throw new BecUtilException("Cannot run phredphrap");
+                    }
+                }
+                else
+                {
+                   
+                    berr.read(buff, 0, Math.min(255, berr.available()));
+                    binput.read(buff, 0, Math.min(255, binput.available()));
+//                    System.out.println("Read stuff");
+                }
+
             }
             p.waitFor();
             if (p.exitValue() != 0)
             {
-                System.err.println("needle call failed" + p.exitValue());
+                System.err.println("phredphrap call failed" + p.exitValue());
                 return false;
             }
         } catch (IOException e)
         {
 
             e.printStackTrace();
-            throw new  BecUtilException("Cannot run needle");
+            throw new  BecUtilException("Cannot run phredphrap");
         } catch (InterruptedException e)
         {
 
-            System.err.println("User requests stop primer3:");
-            throw new  BecUtilException("Cannot run needle");
+            
+            throw new  BecUtilException("Cannot run phredphrap");
         }
+        
+        System.out.println("finished");
         return true;
     }
 
@@ -178,10 +216,12 @@ public class PhredPhrap
         }
      */
         ArrayList re = null;
-        String queryFile = "c:\\bio\\ex1.txt";
+        String queryFile = "f:\\clone_files\\215\\1916";
+        String o = "1916.fasta.screen.ace.1";
         try
         {
-         
+         PhredPhrap pp = new PhredPhrap();
+         pp.run(queryFile,o);
         }catch(Exception e){}
         System.exit(0);
     }

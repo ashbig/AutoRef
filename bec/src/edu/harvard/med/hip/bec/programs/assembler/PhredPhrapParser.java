@@ -133,7 +133,7 @@ public class PhredPhrapParser
     {
         try
         {
-            String foutput_name = "C:\\bio\\phredphrap\\onecontig.ace.1";
+            String foutput_name = "/c/clone_files/1591/683/contig_dir/683.fasta.screen.ace.1";
             PhredPhrapParser pp= new PhredPhrapParser();
             CloneAssembly cl = pp.parse( foutput_name); 
             ArrayList a = cl.getContigs();
