@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-06-20 12:22:51 $
+ * $Revision: 1.8 $
+ * $Date: 2001-06-20 18:19:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.7 $ $Date: 2001-06-20 12:22:51 $
+ * @version    $Revision: 1.8 $ $Date: 2001-06-20 18:19:45 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -84,20 +84,29 @@ public class EnterPlateAction extends ResearcherAction {
         // get the barcode from the form
         String barcode = ((PlateEntryForm)form).getPlateBarcode();
         
+        //get the protocol name
+        String protocolName = ((PlateEntryForm)form).getProtocolString();
+        
         QueueFactory queueFactory = new StaticQueueFactory();
         ProcessQueue containerQueue = null;
-        Protocol performTransform = null;
-        List transformItems = null;
+        Protocol protocol = null;
+        
+        List queueItems = null;
+        
         // the queueItem and container corresponding to the barcode
         QueueItem queueItem= null;
         Container container = null;
         
+        
+        
         try {
             containerQueue =
             queueFactory.makeQueue("ContainerProcessQueue");
-            // transform protocol
-            performTransform = new Protocol(Protocol.PERFORM_TRANSFORMATION);
-            transformItems = containerQueue.getQueueItems(performTransform);
+            
+            //create the protocol from the name
+            protocol = new Protocol(protocolName);
+            
+            queueItems = containerQueue.getQueueItems(protocol);
             
         } catch(FlexProcessException fpe) {
             request.setAttribute(Action.EXCEPTION_KEY, fpe);
@@ -109,7 +118,7 @@ public class EnterPlateAction extends ResearcherAction {
         
         
         // make sure the container in the list
-        Iterator transformIter = transformItems.iterator();
+        Iterator transformIter = queueItems.iterator();
         
         while(transformIter.hasNext()) {
             QueueItem curQueueItem = (QueueItem)transformIter.next();
@@ -133,7 +142,7 @@ public class EnterPlateAction extends ResearcherAction {
         // Find the right process
         Process process = null;
         try {
-            process = Process.findProcess(container,performTransform);
+            process = Process.findProcess(container,protocol);
         } catch (FlexDatabaseException fde) {
             request.setAttribute(Action.EXCEPTION_KEY, fde);
             return mapping.findForward("error");
@@ -164,24 +173,39 @@ public class EnterPlateAction extends ResearcherAction {
             return mapping.findForward("error");
         }
         
-        // create the form with default values
-        ContainerResultsForm detailForm = new ContainerResultsForm(container);
+        // get the session
         HttpSession session = request.getSession();
-        // put the form in the session
-        session.setAttribute("transformEntryForm",detailForm);
+        
+        // create the form with default values for the detail entry page
+        ContainerResultsForm detailForm = null;
+        if(protocolName.equals(Protocol.RUN_PCR_GEL)) {
+            detailForm = new ContainerResultsForm(container);
+            // put the form in the session
+            session.setAttribute("gelEntryForm",detailForm);
+            retForward = mapping.findForward("gelEntry");
+        } else if(protocolName.equals(Protocol.PERFORM_TRANSFORMATION)) {
+            detailForm = new GelResultsForm(container);
+            // put the form in the session
+            session.setAttribute("transformEntryForm",detailForm);
+            retForward = mapping.findForward("transformEntry");
+        } else {
+            retForward = new ActionForward(mapping.getInput());
+        }
+        
         
         // put Queue item in the session
         session.setAttribute(Constants.QUEUE_ITEM_KEY, queueItem);
         // put the process in the session
         session.setAttribute(Constants.PROCESS_KEY, process);
-        /* 
-         * put the container and the samples into the request for the jsp 
+        
+        /*
+         * put the container and the samples into the request for the jsp
          * page to display
          */
         request.setAttribute(Constants.SAMPLES_KEY ,samples);
         request.setAttribute(Constants.CONTAINER_KEY, container);
         
-        return mapping.findForward("success");
+        return retForward;
     }
     
 } // End class EnterPlateAction

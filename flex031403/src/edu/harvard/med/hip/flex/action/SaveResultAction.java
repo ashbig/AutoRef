@@ -1,10 +1,11 @@
 /*
- * File : EnterTransformDetailsAction.java
- * Classes : EnterTransformDetailsAction
+ * File : SaveResultAction.java
+ * Classes : SaveResultAction
  *
  * Description :
  *
- *      Action to enter details about a transform details into the database
+ *      Action that save info about the result into the database.
+ *      Also will manage the workflow.
  *
  *
  * Author : Juan Munoz (jmunoz@3rdmill.com)
@@ -13,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2001-06-20 12:22:51 $
+ * $Revision: 1.1 $
+ * $Date: 2001-06-20 18:19:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -45,6 +46,9 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import org.apache.struts.action.*;
+import org.apache.struts.upload.*;
+
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
@@ -54,21 +58,21 @@ import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.process.Result;
 
 
-import org.apache.struts.action.*;
+
 /**
- * Action to enter details about a plate transfer into the database.
+ * Will save information about the result into the db and manage the workflow.
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.8 $ $Date: 2001-06-20 12:22:51 $
+ * @version    $Revision: 1.1 $ $Date: 2001-06-20 18:19:45 $
  */
 
-public class EnterTransformDetailsAction extends ResearcherAction {
+public class SaveResultAction extends ResearcherAction {
     
     /**
      * Default Constructor
      */
-    public EnterTransformDetailsAction() {
+    public SaveResultAction() {
     }
     
     /**
@@ -90,10 +94,10 @@ public class EnterTransformDetailsAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
         // The Queue item and process must be in the session
-        QueueItem queueItem = (QueueItem)session.getAttribute(Constants.QUEUE_ITEM_KEY);
+        QueueItem queueItem =
+        (QueueItem)session.getAttribute(Constants.QUEUE_ITEM_KEY);
         Process process = (Process)session.getAttribute(Constants.PROCESS_KEY);
         if(queueItem == null || process == null) {
-            
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.session.missing.attribute",
             queueItem==null ? Constants.QUEUE_ITEM_KEY : Constants.PROCESS_KEY));
@@ -108,7 +112,7 @@ public class EnterTransformDetailsAction extends ResearcherAction {
         
         Connection conn = null;
         
-       
+        
         
         try {
             conn = DatabaseTransaction.getInstance().requestConnection();
@@ -117,29 +121,54 @@ public class EnterTransformDetailsAction extends ResearcherAction {
                 Sample curSample = (Sample)samples.get(i);
                 
                 curSample.setStatus(resultForm.getStatus(i));
-                Result curResult = 
-                    new Result(process,curSample,Result.TRANSFORMATION_TYPE,resultForm.getResult(i));
+                Result curResult =
+                new Result(process,curSample,Result.TRANSFORMATION_TYPE,resultForm.getResult(i));
                 curSample.update(conn);
                 curResult.insert(conn);
             }
             /*
-             * now we need to remove the container from the queue, 
+             * now we need to remove the container from the queue,
              * and insert it for the Agar process.
              */
             StaticQueueFactory queueFactory = new StaticQueueFactory();
             ProcessQueue queue = queueFactory.makeQueue("ContainerProcessQueue");
-         
-           
+            
+            
             LinkedList dummyList = new LinkedList();
             dummyList.add(queueItem);
             // remove the transform from the queue.
             queue.removeQueueItems(dummyList, conn);
             
+            /*
+             * we must now create the next protocol in the workflow based on
+             * what the previous protocol was.
+             *
+             * Also if there is a file to upload then, add it to the file
+             * repository and appropriate database tables.
+             */
+            Protocol nextProtocol = null;
             
-            Protocol agarProtocol = 
+            if(queueItem.getProtocol().getProcessname().equals(Protocol.GENERATE_TRANSFORMATION_PLATES)) {
+                nextProtocol =
                 new Protocol(Protocol.GENERATE_AGAR_PLATES);
+            } else if(queueItem.getProtocol().getProcessname().equals(Protocol.GENERATE_PCR_PLATES)) {
+                nextProtocol= new Protocol(Protocol.GENERATE_FILTER_PLATES);
+                GelResultsForm gelForm = (GelResultsForm)form;
+                FormFile image = gelForm.getGelImage();
+                System.out.println("File uploaded: " + image.getFileName());
+                System.out.println("file size: " + image.getFileSize());
+                OutputStream bos = new FileOutputStream("/test.doc");
+                InputStream stream = image.getInputStream();
+                int bytesRead = 0;
+                byte[] buffer = new byte[8192];
+                while ((bytesRead = stream.read(buffer, 0, 8192)) != -1) {
+                    bos.write(buffer, 0, bytesRead);
+                }
+                bos.close();
+            }
+            
             dummyList.clear();
-            dummyList.add(new QueueItem(container,agarProtocol));
+            dummyList.add(new QueueItem(container,nextProtocol));
             // add queue item for the generate filter plates process
             queue.addQueueItems(dummyList, conn);
             
@@ -161,12 +190,15 @@ public class EnterTransformDetailsAction extends ResearcherAction {
             DatabaseTransaction.closeConnection(conn);
         }
         
-        // if no errors have occured, we must remove the items from the session
-        session.removeAttribute(Constants.PROCESS_KEY);
-        session.removeAttribute(Constants.QUEUE_ITEM_KEY);
-        session.removeAttribute("transformEntryForm");
-        request.setAttribute(Constants.CONTAINER_KEY, container);
-        retForward=mapping.findForward("success");
+        if(errors.size() == 0) {
+            // if no errors have occured, we must remove the items from the session
+            session.removeAttribute(Constants.PROCESS_KEY);
+            session.removeAttribute(Constants.QUEUE_ITEM_KEY);
+            session.removeAttribute("transformEntryForm");
+            session.removeAttribute("gelEntryForm");
+            request.setAttribute(Constants.CONTAINER_KEY, container);
+            retForward=mapping.findForward("success");
+        }
         return retForward;
     } //end flexPerform
     

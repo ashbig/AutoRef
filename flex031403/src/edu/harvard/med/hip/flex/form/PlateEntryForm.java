@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-15 19:20:51 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-20 18:19:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -54,12 +54,16 @@ import edu.harvard.med.hip.flex.process.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-15 19:20:51 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-20 18:19:45 $
  */
 
 public class PlateEntryForm extends ActionForm{
     
+    // barcode of the plate entered
     private String plateBarcode = "";
+    
+    // The name of the protocol used
+    private String protocolString ="";
     
     /**
      * Reset all properties to their default values.
@@ -91,6 +95,25 @@ public class PlateEntryForm extends ActionForm{
     public void setPlateBarcode(String plateBarcode) {
         this.plateBarcode = plateBarcode;
     }
+    
+    /**
+     * Get the name of the protocol used.
+     *
+     * @return the name of the protocol used for this result.
+     */
+    public String getProtocolString() {
+        return this.protocolString;
+    }
+    
+    /**
+     * sets the name of the protocol used for this result.
+     *
+     * @param protocolString The name of the protocol used for this result.
+     */
+    public void setProtocolString(String protocolString ) {
+        this.protocolString = protocolString;
+    }
+    
     
     /**
      * Validate the properties that have been set from this HTTP request,

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-20 12:07:58 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-20 18:19:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -45,12 +45,14 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.struts.upload.*;
 
+import edu.harvard.med.hip.flex.core.*;
+
 /**
  * Form for entering gel results.
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-20 12:07:58 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-20 18:19:45 $
  */
 
 public class GelResultsForm extends ContainerResultsForm {
@@ -61,6 +63,21 @@ public class GelResultsForm extends ContainerResultsForm {
      */
     private FormFile gelImage;
     
+    /**
+     * Constructor that populates its self from a container
+     * 
+     * @param container the container to get info from
+     */
+    public GelResultsForm(Container container) {
+        super(container);
+    }
+    
+    /**
+     * Default Constructor
+     */
+    public GelResultsForm() {
+        super();
+    }
     
     /**
      * Accessor for the gel image.
