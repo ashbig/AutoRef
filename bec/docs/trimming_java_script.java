@@ -4,7 +4,7 @@
  * Created on September 27, 2004, 11:26 PM
  */
 
-package edu.harvard.med.hip.bec.programs.assembler;
+
 
 import java.io.*;
 import java.util.*;
@@ -34,9 +34,10 @@ public class trimming_java_script {
         if ( arg.length > 1)
             score = Double.parseDouble( arg[1]);
         else
-            score = PhdFilesTrimmer.MIN_AVG_QUAL;
+            score = trimming_java_script.MIN_AVG_QUAL;
         trimming_java_script tester = new trimming_java_script();
-        
+        directory_name = convertUnixFileNameIntoWindows( directory_name);
+       
        // directory_name="C:\\bio\\plate_analysis\\clone_samples\\4426";//\\phd_dir\\6142_E05_3277_4426_F5.ab1.phd.1";
         tester.runTrimming(directory_name, score);
     }
@@ -211,6 +212,19 @@ public class trimming_java_script {
        
     } 
      
+   private static String convertUnixFileNameIntoWindows(String filename)
+    {
+        //                /c/bio/plate_analysis/clone_samples/3277/4426
+        String res = null;
+        String directory_structure = null;
+        if (filename.charAt(0) == '/') filename = filename.substring(1);
+        int drive_separator = filename.indexOf( '/' );
+        res = filename.substring(0, drive_separator )+":" + File.separator;
+        directory_structure = filename.substring( drive_separator + 1);
+        directory_structure = directory_structure.replace('/','\\');
+        
+        return res + directory_structure ;
+    }
     public class ScoredElement 
     {
         private char i_base = '\u0000';
