@@ -293,7 +293,8 @@ public class GenericRearrayer {
      *                          Test
      ********************************************************************************/
     
-    public static void main(String args[]) throws IOException, FlexDatabaseException, SQLException {
+    public static void main(String args[]) 
+    throws IOException, FlexDatabaseException, SQLException, RearrayException {
         String file = "G:\\rearraytest1.txt";
         String file2 = "G:\\rearraytest2.txt";
         String file3 = "G:\\rearraytest4.txt";
@@ -352,7 +353,7 @@ public class GenericRearrayer {
     }
     
     private static ArrayList readFile(String file)
-    throws IOException, FlexDatabaseException, SQLException {
+    throws IOException, FlexDatabaseException, SQLException, RearrayException {
         BufferedReader in = new BufferedReader(new FileReader(file));
         String line = null;
         ArrayList inputSamples = new ArrayList();
