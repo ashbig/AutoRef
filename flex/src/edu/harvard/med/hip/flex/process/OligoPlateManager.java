@@ -146,10 +146,16 @@ public class OligoPlateManager {
                     //all of the oligo plate header and sample info are inserted in DB
                     //three text files for order oligos will be generated
                     plater = new OligoPlater(oligoPatternList, cg.getConstructList(), conn);
+<<<<<<< OligoPlateManager.java
+                    plater.generateOligoOrder();
+                   // plater.insertProcessInputOutput();
+                    System.out.println("receive oligo plates queue inserted.");
+=======
                     plater.createOligoPlates();
                     plater.insertProcessInputOutput();
                     plater.insertReceiveOligoQueue();
                     //System.out.println("receive oligo plates queue inserted.");
+>>>>>>> 1.11
                     plater.removeOrderOligoQueue();
                     //System.out.println("order oligo queue removed.");
                     
@@ -159,10 +165,18 @@ public class OligoPlateManager {
                     DatabaseTransaction.commit(conn);
                 } catch(FlexDatabaseException sqlex){
                     //System.out.println(sqlex);
+<<<<<<< OligoPlateManager.java
+                    System.out.println(sqlex.getMessage());
+                    DatabaseTransaction.rollback(conn);                    
+                } catch(IOException ioe){
+                    System.out.println("Error occurred while writing to oligo order files");
+                    System.out.println(ioe.getMessage());
+=======
                     System.err.println(sqlex.getMessage());
+>>>>>>> 1.11
                     DatabaseTransaction.rollback(conn);
-                    
-                }finally {
+                }
+                finally {
                     DatabaseTransaction.closeConnection(conn);
                 }
                 
@@ -176,7 +190,7 @@ public class OligoPlateManager {
     public void sendOligoOrders() throws MessagingException{
         String to = "wmar@hms.harvard.edu";
         String from = "wmar@hms.harvard.edu";
-        String cc = "allison_halleck@hms.harvard.edu";
+        String cc = "jmunoz@3rdmill.com";
         String subject = "Testing Oligo Order";
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
