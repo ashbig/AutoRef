@@ -69,10 +69,15 @@ public class GetLocationAction extends ResearcherAction{
             // Create the new plate and samples.        
             Location dLocation = new Location(destLocation);
             Container container = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");
-            Vector sampleLineageSet = new Vector();
-            ContainerMapper mapper = new ContainerMapper();
-            Container newContainer = mapper.mapContainer(container, protocol, dLocation, sampleLineageSet);
-
+            
+            ContainerMapper mapper = new OneToOneContainerMapper();
+            Vector oldContainers = new Vector();
+            oldContainers.addElement(container);
+            Vector newContainers = mapper.doMapping(oldContainers, protocol);
+            Container newContainer = (Container)newContainers.elementAt(0);
+            newContainer.setLocation(dLocation);
+            Vector sampleLineageSet = mapper.getSampleLineageSet();
+            
             // Store the data in the session.        
             request.getSession().setAttribute("GetLocationAction.newContainer", newContainer);  
             request.getSession().setAttribute("GetLocationAction.sampleLineageSet", sampleLineageSet);
