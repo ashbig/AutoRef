@@ -71,25 +71,13 @@ public class SelectProtocolAction extends FlexAction {
             }
 
             // Get the location from the database.
-            Vector locations = new Vector();
-            String sql = "select * from containerlocation";
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            ResultSet rs = t.executeQuery(sql);
-            while (rs.next()) {
-                int id = rs.getInt("LOCATIONID");
-                String type = rs.getString("LOCATIONTYPE");
-                String description = rs.getString("LOCATIONDESCRIPTION");
-                Location l = new Location(id, type, description);
-                locations.addElement(l);
-            }
+            Vector locations = Location.getLocations();
             request.getSession().setAttribute("protocol", protocol);
             request.setAttribute("locations", locations);
             
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {
             return (mapping.findForward("error"));
-        } catch (SQLException ex) {
-            return (mapping.findForward("error"));
-        }
+        } 
     }
 }

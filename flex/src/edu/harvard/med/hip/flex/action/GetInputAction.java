@@ -97,7 +97,7 @@ public class GetInputAction extends ResearcherAction{
             Container container = (Container)item.getItem();
             ContainerMapper mapper = new ContainerMapper();
             Container newContainer = mapper.mapContainer(container, protocol, dLocation);
-
+System.out.println(newContainer.getId());
             // Insert the new container and samples into database.
             newContainer.insert(conn);
             
