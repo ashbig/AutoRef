@@ -158,7 +158,7 @@ public class PlateUploadRunner implements Runnable
                   //  System.out.println(m_error_messages.size()+" l1");
                     Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
                     "hip_informatics@hms.harvard.edu", "Upload plates: error messages.",
-                    "Errors\n Processing of requested for the following plates:\n"+requested_plates +"\n"+
+                    "Errors"+Constants.LINE_SEPARATOR+"Processing of requested for the following plates:"+Constants.LINE_SEPARATOR+requested_plates +Constants.LINE_SEPARATOR+
                     Algorithms.convertStringArrayToString(m_error_messages,"\n"));
                 }
                 if (pb.getPassPlateNames().size()!=0)
@@ -166,15 +166,15 @@ public class PlateUploadRunner implements Runnable
                   //  System.out.println(pb.getPassPlateNames().size()+" l3");
                      Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
                     "hip_informatics@hms.harvard.edu", "Uploaded plates.",
-                    "\n Processing of requested for the following plates:\n"+requested_plates +"\n The follwing plates have been sucessfully uploaded from FLEX into BEC"+
-                    Algorithms.convertStringArrayToString(pb.getPassPlateNames(),"\n"));
+                    Constants.LINE_SEPARATOR+"Processing of requested for the following plates:"+Constants.LINE_SEPARATOR+requested_plates +Constants.LINE_SEPARATOR+"The follwing plates have been sucessfully uploaded from FLEX into BEC: "+
+                    Algorithms.convertStringArrayToString(pb.getPassPlateNames(), Constants.LINE_SEPARATOR));
                 }
                  if (pb.getFailedPlateNames().size() != 0)
                  {
                     Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
                     "hip_informatics@hms.harvard.edu", "Failed Plates.",
-                    "\n Processing of requested for the following plates:\n"+requested_plates +"\nFailed plates\n"+
-                    Algorithms.convertStringArrayToString(pb.getFailedPlateNames(),"\n"));
+                    "Processing of requested for the following plates:"+Constants.LINE_SEPARATOR+requested_plates +Constants.LINE_SEPARATOR+"Failed plates"+Constants.LINE_SEPARATOR
+                    + Algorithms.convertStringArrayToString(pb.getFailedPlateNames(),Constants.LINE_SEPARATOR));
                  }
 
             }
