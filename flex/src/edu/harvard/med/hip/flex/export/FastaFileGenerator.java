@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.flex.export;
 
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.Mailer;
 import edu.harvard.med.hip.utility.Logger;
