@@ -45,46 +45,18 @@ public class MgcDisplayNewPlatesAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
         String fileName =  ((MgcCloneInfoImportForm)form).getFileName();
         HttpSession session = request.getSession();
-        Hashtable labels = new Hashtable(); 
-        DatabaseTransaction t = null;
-        Connection conn = null;
+        ArrayList labels = new ArrayList(); 
+   
         MgcContainerCollection mgcCol = new MgcContainerCollection();
        
         try {
-            t = DatabaseTransaction.getInstance();
-            conn = t.requestConnection();
             
-            labels =  mgcCol.getNewPlates(fileName,conn);
+            labels =  mgcCol.getNewPlates(fileName);
             request.setAttribute("filename", fileName);
             
+            request.setAttribute("LABELS", labels);
             
-            if (labels == null) return (mapping.findForward("no_labels_found"));
-            /*
-            //calculate number of pages
-             int itemsPerPage =
-                    Integer.parseInt(FlexProperties.getInstance().
-                    getProperty("flex.approvesequences.pagesize"));
-            
-              // get the total number of items.
-            int totalItems = labels.size();
-            // find out how many pages we will need.
-            int pageCount = (int)Math.ceil((double)totalItems/itemsPerPage);
-            // make an array with all the page numbers
-            ArrayList pages = new ArrayList(pageCount);
-            
-            for (int i = 1; i <= pageCount; i++) {
-                pages.add(i-1,String.valueOf(i));
-                
-            }
-           
-            
-            // session.setAttribute("PAGES", pages);
-             
-            // session.setAttribute("CURRENT_PAGE", new Integer(1) );
-             */
-             session.setAttribute("LABELS", labels);
-             
-             return (mapping.findForward("displaylabels")) ;
+            return (mapping.findForward("displayplates")) ;
              
         } catch (Exception e) {
             request.setAttribute(Action.EXCEPTION_KEY, e);

@@ -1,5 +1,5 @@
 <%--
-        $Id: MgcDisplayNewPlates.jsp,v 1.1 2002-05-14 21:31:40 Elena Exp $ 
+        $Id: MgcDisplayNewPlates.jsp,v 1.2 2002-05-30 17:26:47 Elena Exp $ 
 
        
         Author  : htaycher
@@ -13,6 +13,8 @@
 <%@ page errorPage="ProcessError.do"%>
 
 <%@ page import="edu.harvard.med.hip.flex.Constants"%>
+<%@ page import="java.util.*"%>
+<%@ page import="edu.harvard.med.hip.flex.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -22,55 +24,103 @@
 <head>
     <title><bean:message key="flex.name"/> : New Mgc Clone Containers</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+
+<script language="JavaScript">
+<!--
+function SetChecked(e, val) {
+  // Check all of the checkboxes in a group
+  // Initialization
+  var iElt, currElt, f;
+
+    // Identify the form
+   f = e.form;
+    // Loop over all elements in the form
+    for (iElt=0; iElt < f.elements.length; iElt++)
+ {
+      currElt = f.elements[iElt];	
+      // If the element is one of the checkboxes in the group containing the checkbox which was just clicked...
+      if (currElt.name == 'chkPrint')
+      {
+       // Check the checkbox
+        currElt.checked = val;
+      }  // end if
+    }  // end loop
+  
+}  // end of function CheckAllCheckboxesInGroup
+-->
+</script>
+
  </head>
 <body>
     
     <h2><bean:message key="flex.name"/> : New Mgc Clone Containers</h2>
     <hr>
     <html:errors/>
+    
     <p>
-    <html:form action="ProcessQueue.do">
+ <html:form action="MgcPrintLabels.do"  >
 
-    <input type="hidden" name="fileName" value=<bean:write name="fileName"/>>
+
+
     <h3> Print barcodes for New Mgc Plates.</h3>
-    (Distribution file <bean:write name="fileName"/> )
-</table>
-<td><tr>
-<html:submit property= "action" value = "Print">
-</tr><tr>
-<html:submit property= "action" value = "Print All">
-</tr></td></table>
-<
+<table border='0' cellpadding='0' cellspacing='9' >
+    <tr>
+        <td>
+            Distribution file  
+        </td><Td>
+            <bean:write name="filename" /> 
+        </td>
+    </tr><tr>
+        <td>
+            Number of MGC Plates:
+        </td><Td align="right">
+           <%= ((ArrayList)request.getAttribute("LABELS")).size() %> 
+        </td>
+     </tr><tr>
+</table>    
+
 <p>
  
+ <html:submit property="submit" value="  Print  "/>
+      
+<p>
+<p>
 <!-- create main table -->
-        </table>
-        </td>
-        </tr>
-    <tr class="headerRow">
+<table  cellpadding=0 cellspacing=2 border=1>
+     
+     <tr class="headerRow">
+        
+        <TH>FLEX Id</TH>
         <TH>Original Mgc Plate Label</TH>
         <TH>Flex Mgc Plate Label</TH>
-        <TH> Print </TH>
-        
-    </TR>
-    
-    <!-- iterate through each QueueItem (sequence) that is in the queue -->
-    <!-- keep track of the count -->
+        <TH><input type="checkbox" name="all" value="All" onclick="SetChecked(this, this.checked)">  Print </TH>
+      </TR>
 
-    <logic:iterate  id="clone" name="LABELS"> 
+ <logic:iterate  id="curPlate" name="LABELS"> 
         <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+            
             <TD>
-                <bean:write name="clone" property="value"/>
-             </TD>
-            <TD>
-                <bean:write name="clone" property="key"/>
+                <a href="/FLEX/MgcViewContainerDetails.do?CONTAINER_ID=<bean:write name="curPlate" property="id"/>">
+                    <bean:write name="curPlate" property="id"/>
+                </a>
             </TD>
             <TD>
-                <input type="checkbox" name="selection" value="<bean:write name="clone" property="key"/>" >
+                <bean:write name="curPlate" property="originalContainer"/>
             </TD>
-         </flex:row>
-   </logic:iterate>
-  
+            <TD>
+                <bean:write name="curPlate" property="label"/>
+            </TD>
+            <TD>
+              
+              <input type="checkbox" name="chkPrint" value='<bean:write name="curPlate" property="label"/>'>      
+                
+            </TD>
+
+        </flex:row>
+    </logic:iterate> 
+
+
+
 </TABLE>
 
 <br>
@@ -79,6 +129,7 @@
 
 </html:form>
 </body>
-
-
 </html>
+
+
+  
