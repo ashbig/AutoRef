@@ -6,7 +6,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.*" %>
 <%@ page import="edu.harvard.med.hip.flex.seqprocess.spec.*" %>
-<%@ page import="edu.harvard.med.hip.flex.seqprocess.core.*" %>
+<%@ page import="edu.harvard.med.hip.flex.seqprocess.core.oligo.*" %>
 <html>
 
 <head>
