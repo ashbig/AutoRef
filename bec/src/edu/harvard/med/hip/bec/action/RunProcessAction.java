@@ -430,6 +430,9 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_DELETE_CLONE_FORWARD_READ ://
                 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                 case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
+                    case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
+                case  Constants.PROCESS_DELETE_TRACE_FILES :
+  
                 {
                     String title = "";
                     ProcessRunner runner = null;
@@ -440,6 +443,9 @@ public class RunProcessAction extends ResearcherAction
                         case Constants.PROCESS_DELETE_CLONE_FORWARD_READ ://
                         case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                         case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
+                        case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
+                        case  Constants.PROCESS_DELETE_TRACE_FILES :
+  
                          {
                               runner = new DeleteObjectRunner();
                               ((DeleteObjectRunner)runner).setActionType(forwardName);
@@ -450,6 +456,9 @@ public class RunProcessAction extends ResearcherAction
                                     case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{title = "request for Clone forward end reads deletion"; break;}
                                     case Constants.PROCESS_DELETE_CLONE_REVERSE_READ :{title = "request for Clone reverse end reads deletion"; break;}
                                     case Constants.PROCESS_DELETE_CLONE_SEQUENCE:{title = "request for Clone sequences deletion"; break;}
+                                    case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title = "request for list of Trace Files' names"; break;}
+                                    case  Constants.PROCESS_DELETE_TRACE_FILES :{title = "request for Trace Files deletion"; break;}
+  
                               }
                               break;
                         }
@@ -461,6 +470,7 @@ public class RunProcessAction extends ResearcherAction
                                      title = "request for Order List for resequencing of End Reads";
                               else if ( forwardName ==  Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  )
                                      title = "request for Order List for resequencing of Internal Reads";
+                              ((SpecialReportsRunner)runner).setReportType(forwardName);
                               break;//run end reads wrapper
                          }
                          case Constants.PROCESS_RUN_END_READS_WRAPPER:
@@ -484,8 +494,13 @@ public class RunProcessAction extends ResearcherAction
                               title = "request for Primer Designer";
                               int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
                               ((PrimerDesignerRunner)runner).setSpecId(spec_id);
-                              if ( request.getParameter("isTryMode") != null )
-                                ((PrimerDesignerRunner)runner).setIsTryMode( true );
+      if ( request.getParameter("isTryMode") != null )  ((PrimerDesignerRunner)runner).setIsTryMode( true );
+ /*     if ( Integer.parseInt(request.getParameter("isCloseGaps")) == 1 )  ((PrimerDesignerRunner)runner).setIsCloseGaps( true );
+     if ( request.getParameter("isLQRIncluded") != null )((PrimerDesignerRunner)runner).setIsLQRIncluded( true );
+     if ( request.getParameter("isLQRWithDiscrepancyOnly") != null )((PrimerDesignerRunner)runner).setIsLQRWithDiscrepancyOnly( true );
+     if ( request.getParameter("isCoverLQDRegionsOnly") != null )((PrimerDesignerRunner)runner).setIsCoverLQDRegionsOnly( true );
+                              ((PrimerDesignerRunner)runner).setMinDistanceBetweenStretchesToBeCombined( Integer.parseInt(request.getParameter("minDistanceBetweenStretchesToBeCombined")) ); 
+  **/
                               break;
                          }
                         case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
@@ -648,7 +663,8 @@ public class RunProcessAction extends ResearcherAction
                     request.getParameter("score"),
                     request.getParameter("clone_seq_cds_start"),
                     request.getParameter("clone_seq_cds_stop"),
-                    request.getParameter("clone_seq_text"));
+                    request.getParameter("clone_seq_text"),
+                    request.getParameter("assembly_attempt_status"));
                     runner.setUser(user);
                     t = new Thread( runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,"processing Report Generation request");
