@@ -174,7 +174,7 @@
     <action    path="/GetInput"
                type="edu.harvard.med.hip.flex.action.GetInputAction"
                name="getProcessPlateInputForm"
-               scope="request"
+               scope="session"
                input="/SelectProtocol.do">
       <forward  name="success"   path="/ConfirmPlate.jsp"/>
     </action>  
