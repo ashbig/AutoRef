@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-07-16 20:24:50 $
+ * $Revision: 1.4 $
+ * $Date: 2001-07-17 16:56:22 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -52,7 +52,7 @@ import edu.harvard.med.hip.flex.user.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.3 $ $Date: 2001-07-16 20:24:50 $
+ * @version    $Revision: 1.4 $ $Date: 2001-07-17 16:56:22 $
  */
 
 public abstract class  ResearcherAction extends FlexAction {
@@ -76,14 +76,10 @@ public abstract class  ResearcherAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        // Make sure basic things are set up (interface user logged into system.
-        super.perform(mapping, form, request,response);
         ActionForward retForward = null;
         ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
         
-        // make it so the session doesn't time out for 8 hours.
-        session.setMaxInactiveInterval(480);
         
         if(! isUserLoggedIn(session)){
             retForward = mapping.findForward("login");

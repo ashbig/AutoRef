@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-07-16 20:24:50 $
+ * $Revision: 1.3 $
+ * $Date: 2001-07-17 16:56:22 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -52,7 +52,7 @@ import edu.harvard.med.hip.flex.user.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.2 $ $Date: 2001-07-16 20:24:50 $
+ * @version    $Revision: 1.3 $ $Date: 2001-07-17 16:56:22 $
  */
 
 public abstract class  WorkflowAction extends FlexAction {
@@ -76,8 +76,6 @@ public abstract class  WorkflowAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        // Make sure basic things are set up (interface user logged into system.
-        super.perform(mapping, form, request,response);
         // place to store errors
         ActionErrors errors = new ActionErrors();
         ActionForward retForward = null;
