@@ -18,19 +18,19 @@
 <style type="text/css">
 <!--
 .red {
-	background-color: #CCFFFF;
+	background-color:#9999CC;
 }
 .green {
-	background-color: #99FFCC;
+	background-color: #99FFFF;
 }
 .black {
 	background-color: #999999;
 }
 .yellow {
-	background-color: #FFFF99;
+	background-color: #9999FF;
 }
 .orange {
-	background-color: #FFCC66;
+	background-color: #99CCFF;
 }
 .control {
 	background-color: #CCCCFF;
@@ -303,7 +303,7 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
   </tr>
  <tr> 
     <td ><b> Empty well:</b></td>
-    <td  class="nosample"  ></td>
+    <td  class="nosample" align=center  >white</td>
   </tr>
 </table>
 
