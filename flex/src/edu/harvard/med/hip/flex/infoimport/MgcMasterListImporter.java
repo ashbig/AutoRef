@@ -40,9 +40,10 @@ public class MgcMasterListImporter
     private int                 m_failCount = 0;
     private int                 m_totalCount = 0;
     private String              m_username = null;
-    private File                m_log_file = null;
+  //  private File                m_log_file = null;
     private FileWriter          m_writer = null;
     
+  
     private Vector errors_to_print = null;
     //private Vector log = null; //get outof memory error
     
@@ -76,17 +77,15 @@ public class MgcMasterListImporter
         Hashtable existingClones = new Hashtable();
         System.out.println(System.currentTimeMillis());
         boolean res = true;
-        //delete log file 
-        try{
-              m_log_file = new File(FILE_PATH + "import_log.txt");
-              m_writer = new  FileWriter(m_log_file);
-              m_writer.write("Log file for master list import. File name " +fileName );
-        }  catch(Exception e)        {}
-        
+        writeToFile("Log file for MGC master list upload\n");        
         if (res) res =  getExistingClonesFromDB(existingClones);
+        System.out.println("Get existing clones from db");
         if (res) res = readCloneInfo(  input,  fileName, containerCol, existingClones) ;
+        System.out.println("Read file " + containerCol.size() +" containers");
         if (res) res = readSeqences(containerCol, sequenceCol) ;
+        System.out.println("Read sequences ");
         if (res) res = uploadToDatabase(containerCol, sequenceCol) ;
+        System.out.println("Uploaded to db");
         if (m_username != null)
         {
             try
@@ -96,9 +95,11 @@ public class MgcMasterListImporter
                 else
                     errors_to_print.add( 1,"Report: master mgc list upload.\n File Name "+fileName);
                 Mailer.notifyUser(m_username, "report.txt", "Report: master mgc list upload","Report: master mgc list upload",  errors_to_print);
-                m_writer.flush(); m_writer.close();
+               // m_writer.flush(); m_writer.close();
+                File m_log_file = new File(FILE_PATH + "import_log.txt");
+          
                 Mailer.sendMessageWithAttachedFile (m_username,  "Report on master mgc list upload","Report for mgc list upload",  m_log_file);
-              
+                m_log_file.delete();
                   
             }catch(Exception e){
             System.out.println(e.getMessage());}
@@ -168,7 +169,7 @@ public class MgcMasterListImporter
                 //if container the same - create new MgcClone
                 //************************** change
                 current_container = info[9] + info[10];
-                
+             
                 //check if this mgc clone info exist in db for the same container/position
                 seq_id = -1;
                 if ( existingClones.containsKey(info [1] + "|" +  current_container )    )
@@ -188,7 +189,7 @@ public class MgcMasterListImporter
                     current_container,
                     MgcContainer.getLabel(prev_mgc_containers + current_container_number ),
                     info[9]);
-                  m_writer.write("Get from import file mgc container\t"+current_container +"\n");
+                   writeToFile("Get from import file mgc container\t"+current_container +"\n");
                     containerCol.add(cont);
                     current_container_number++;
                     last_container = current_container;
@@ -200,7 +201,7 @@ public class MgcMasterListImporter
                                         Integer.parseInt(info [1]), Integer.parseInt(info[0]),
                                         info[8], info[11], Integer.parseInt(info[12]),
                                         MgcSample.STATUS_AVAILABLE);
-                m_writer.write("Get from import file mgc clone\t "+info [1] + "\n");
+                writeToFile("Get from import file mgc clone\t "+info [1] + "\n");
                 if (seq_id != -1) clone.setSequenceId(seq_id);
                 cont.addSample(clone);
                 m_successCount++;
@@ -307,7 +308,7 @@ public class MgcMasterListImporter
                             continue;
                         }
                         sequenceCol.put( Integer.toString(current_key), fs );
-                        m_writer.write("Get from ncbi sequence for mgc clone\t "+current_key  +"\n" );
+                        writeToFile("Get from ncbi sequence for mgc clone\t "+current_key  +"\n" );
                         current_gi = null;
                        
 
@@ -455,7 +456,7 @@ public class MgcMasterListImporter
                             fs.insert(conn);
                              
                             fs_key = fs.getId();
-                            m_writer.write("Insert into db sequence for mgc clone\t"+fs_key  +"\n");
+                            writeToFile("Insert into db sequence for mgc clone\t"+fs_key  +"\n");
                             current_clone.setSequenceId(fs_key);
                         }
                         if (fs == null) current_clone.setStatus(MgcSample.STATUS_NO_SEQUENCE);
@@ -464,7 +465,7 @@ public class MgcMasterListImporter
                     
                 }//end loop clone
                 cont.insert(conn);
-                m_writer.write("Insert into db mgc container\t"+cont.getLabel() + "\n");
+                writeToFile("Insert into db mgc container\t"+cont.getLabel() + "\n");
                 //commit_count++;
                 //if ( (commit_count % 10) == 0 ) DatabaseTransaction.commit(conn);
                 DatabaseTransaction.commit(conn);
@@ -536,9 +537,12 @@ public class MgcMasterListImporter
    private void writeToFile(String mes)
    {
         try{
-         m_writer = new  FileWriter(FILE_PATH + "import_log.txt", true);
-         m_writer.write(mes);
-         m_writer.close();
+            //delete log file 
+            
+           
+             m_writer = new  FileWriter(FILE_PATH + "import_log.txt", true);
+             m_writer.write(mes);
+             m_writer.close();
          }catch(IOException e)
          { errors_to_print.add("Can not open log file");}
    }
@@ -548,7 +552,7 @@ public class MgcMasterListImporter
     public static void main(String args[])
     {
         
-        String file = "c:\\mgc_plate_info1.txt";
+        String file = "c:\\mgc_plate_info.txt";
         InputStream input;
         
         try
