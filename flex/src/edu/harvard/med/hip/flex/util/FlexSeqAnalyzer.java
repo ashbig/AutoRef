@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.21 2001-07-26 17:52:14 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.22 2001-07-26 18:15:24 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -89,13 +89,13 @@ public class FlexSeqAnalyzer {
         ArrayList homologs = parser.getHomologList();
         
         BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(0);
-        int homologid = Integer.parseInt(homologItem.getSubID());
+        int homologid = Integer.parseInt((homologItem.getSubID()).trim());
         
         BlastParser.Alignment y = (BlastParser.Alignment)homologItem.getAlignItem(0);
         String identity = y.getIdentity();
         StringTokenizer st = new StringTokenizer(identity);
-        int numerator = Integer.parseInt(st.nextToken(" /"));
-        int denomenator = Integer.parseInt(st.nextToken(" /"));
+        int numerator = Integer.parseInt((st.nextToken(" /")).trim());
+        int denomenator = Integer.parseInt((st.nextToken(" /")).trim());
         double percentIdentity = numerator/(double)denomenator;
         int start = y.getQryStart();
         int end = y.getQryEnd();
