@@ -1,5 +1,5 @@
 /*
- * $Id: CloneRequest.java,v 1.4 2001-05-23 19:35:09 dongmei_zuo Exp $
+ * $Id: CloneRequest.java,v 1.5 2001-05-23 20:13:50 dongmei_zuo Exp $
  *
  * File     : CloneRequest.java
  * Date     : 05042001
@@ -9,8 +9,8 @@
 package edu.harvard.med.hip.flex.gui;
 
 import java.util.*;
+import java.sql.*;
 import java.io.*;
-import javax.servlet.http.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.*;
@@ -231,13 +231,15 @@ public class CloneRequest {
         }
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
-        r.insert(t);
+        Connection conn = t.requestConnection();
+        r.insert(conn);
         
         SequenceProcessQueue queue = new SequenceProcessQueue();
         queue.addQueueItems(l, t);
         
-        t.commit();
-        t.disconnect();
+        
+        conn.commit();
+        conn.close();
     }
     
     /**

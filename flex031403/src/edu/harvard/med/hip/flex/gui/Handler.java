@@ -1,5 +1,5 @@
 /*
- *	$Id: Handler.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $ 
+ *	$Id: Handler.java,v 1.2 2001-05-23 20:13:50 dongmei_zuo Exp $ 
  *
  *	File	: Handler.java
  *	Date	: 05042001
@@ -12,8 +12,8 @@ package edu.harvard.med.hip.flex.gui;
 
 import javax.servlet.http.*;
 import java.util.*;
-import flex.ApplicationCode.Java.User.*;
-import flex.ApplicationCode.Java.database.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.database.*;
 
 public class Handler {
 	protected String pathInfo;
@@ -84,9 +84,9 @@ public class Handler {
 	return password;
     }
 
-	public String [] getUserMenu(DatabaseTransaction t) throws FlexDatabaseException {
+	public String [] getUserMenu() throws FlexDatabaseException {
 		User userObj = new User(username, password);
-		String userGroup = userObj.getUserGroup(t);
+		String userGroup = userObj.getUserGroup();
 		return (String [])menu.get(userGroup);
 	}
 
@@ -125,7 +125,7 @@ public class Handler {
 			else
 				System.out.println("Testing authenticate method - ERROR");
 					
-			String[] userMenu = h.getUserMenu(t);
+			String[] userMenu = h.getUserMenu();
 			System.out.println(userMenu);
 		} catch (FlexDatabaseException e) {
 			System.out.println(e);

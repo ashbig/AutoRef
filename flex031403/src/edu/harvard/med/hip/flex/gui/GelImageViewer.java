@@ -1,5 +1,5 @@
 /**
- * $Id: GelImageViewer.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $
+ * $Id: GelImageViewer.java,v 1.2 2001-05-23 20:13:50 dongmei_zuo Exp $
  *
  * File     	: GelImage.java 
  * Date     	: 05102001
@@ -9,9 +9,9 @@
 package edu.harvard.med.hip.flex.gui;
 //import javax.servlet.http.*;
 import java.sql.*;
-import flex.ApplicationCode.Java.database.*;
-import flex.ApplicationCode.Java.core.*;
-import flex.ApplicationCode.Java.util.*;
+import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.util.*;
 
 
 /**
@@ -67,7 +67,7 @@ public class GelImageViewer {
 		
 		try{
 			t = DatabaseTransaction.getInstance();
-			rs = t.getResultset(sql);
+			rs = t.executeQuery(sql);
 			rs.next();
 			gelName = rs.getString(1);
 			
@@ -98,8 +98,8 @@ public class GelImageViewer {
 		
 		try{
 			t = DatabaseTransaction.getInstance();
-			con = t.getConnection();
-			rs = t.getResultset(sql);
+			//con = t.requestConnection();
+			rs = t.executeQuery(sql);
 			rs.next();
 			
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -150,7 +150,7 @@ public class GelImageViewer {
 		
 		try{
 			t = DatabaseTransaction.getInstance();
-			rs = t.getResultset(sql);
+			rs = t.executeQuery(sql);
 			if(rs.next()) {
 				gelName = rs.getString(1);
 			} else {

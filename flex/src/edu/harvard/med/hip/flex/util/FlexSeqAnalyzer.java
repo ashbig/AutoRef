@@ -1,16 +1,16 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.1 2001-05-23 19:45:11 dongmei_zuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.2 2001-05-23 20:13:50 dongmei_zuo Exp $
  *
  * File     : FlexSeqAnalyzer.java 
  * Date     : 05102001
  * Author	: Dongmei Zuo
  */
 
-package flex.ApplicationCode.Java.util;
+package edu.harvard.med.hip.flex.util;
 
-import flex.ApplicationCode.Java.core.*;
-import flex.ApplicationCode.Java.database.*;
-import flex.ApplicationCode.Java.blast.*;
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.blast.*;
 import java.util.*;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -74,6 +74,7 @@ public class FlexSeqAnalyzer {
 	public boolean findHomolog() throws FlexUtilException, FlexDatabaseException, ParseException {
 		boolean isHomolog = false;
 		DatabaseTransaction t = DatabaseTransaction.getInstance();
+        
 		String queryFile = makeQueryFile();
 		Blaster blaster = new Blaster();
 		blaster.setHits(1);
@@ -100,7 +101,7 @@ public class FlexSeqAnalyzer {
 		
 		if(percentIdentity>=PERCENTIDENTITY && percentAlignment>=PERCENTALIGNMENT) {
 			FlexSequence s = new FlexSequence(homologid);
-			s.restore(homologid, t);
+			s.restore(homologid);
 			homolog.put(s.getGi(), s);
 			isHomolog = true;
 		}
@@ -154,13 +155,16 @@ public class FlexSeqAnalyzer {
 					 //"and sequenceid <> "+sequence.getId();
 
  		DatabaseTransaction t = DatabaseTransaction.getInstance();
-		Vector results = t.executeSql(sql);
-		Enumeration enum = results.elements();
-		while(enum.hasMoreElements()) {
-			Hashtable h = (Hashtable)enum.nextElement();
-			int id = ((BigDecimal)(h.get("SEQUENCEID"))).intValue();
+		ResultSet rs = t.executeQuery(sql);
+       try {
+		while(rs.next()) {
+			
+			int id = rs.getInt("SEQUENCEID");
 			v.addElement(new Integer(id));
 		}
+       } catch(SQLException sqlE) {
+           throw new FlexDatabaseException(sqlE);
+       }
 		if(v.isEmpty()) {
 			return false;
 		} else {
@@ -173,7 +177,7 @@ public class FlexSeqAnalyzer {
 		boolean returnValue = false;
 		
 		DatabaseTransaction t = DatabaseTransaction.getInstance();
-		Connection c = t.getConnection();
+		Connection c = t.requestConnection();
 		String sql = "select s.sequenceid as id "+
 					 "from flexsequence s, sequencetext t "+
 					 "where s.sequenceid = t.sequenceid "+
@@ -212,7 +216,7 @@ public class FlexSeqAnalyzer {
 			
 				if(isSame) {
 					FlexSequence s = new FlexSequence(sequenceid);
-					s.restore(sequenceid, t);
+					s.restore(sequenceid);
 					sameSequence.addElement(s);
 					
 					returnValue = true;
@@ -264,7 +268,7 @@ public class FlexSeqAnalyzer {
 		try {
 			DatabaseTransaction t = DatabaseTransaction.getInstance();
 			FlexSequence sequence = new FlexSequence(4598);
-			sequence.restore(4598, t);
+			sequence.restore(4598);
 			sequence.setId(-1);
 			FlexSeqAnalyzer analyzer = new FlexSeqAnalyzer(sequence);
 			if(analyzer.findSame()) {
@@ -291,7 +295,7 @@ public class FlexSeqAnalyzer {
 					while(ks.hasMoreElements()) {
 						String k = (String)ks.nextElement();
 						FlexSequence s = (FlexSequence)h.get(k);
-						s.restore(s.getId(), t);
+						s.restore(s.getId());
 						System.out.println("\t"+s.getId());
 						System.out.println("\t"+s.getSequencetext());
 						System.out.println("\t"+s.getFlexstatus());
