@@ -954,7 +954,7 @@ try
             param_names = refsequence.getPublicInfoParametersNotIncludedInList(param_names);
             for ( int cc = 0; cc < param_names.size(); cc++) 
             {
-                cloneinfo.append( param_names.get(cc)+" "); 
+                cloneinfo.append( param_names.get(cc)+"|"); 
             }
              cloneinfo.append(Constants.TAB_DELIMETER);
              
@@ -1166,14 +1166,11 @@ catch(Exception e)
                if ( m_number_of_files == Constants.OUTPUT_TYPE_GROUP_PER_FILE)
                {
                    fr_array = getFileWriters(time_stamp, title, write_cycle);
-        // System.out.println("fr_array "+fr_array.length);
-        //  System.out.println("fclones "+clones.length);
                    for (int count = 0; count < clones.length; count++)
                    {
                         clone= clones[count];
                         if ( clone == null  ) break;
                         if (  clone.getRank() < 0 || clone.getRank() > m_group_definitions.length-1) continue;
-                         System.out.println("clones "+clone.getCloneId()+" "+clone.getRank());
                         item_report =  writeItem(  clone,  ref_sequences,  linkers );
                          fr_array[clone.getRank()].write(item_report + Constants.LINE_SEPARATOR);
 
