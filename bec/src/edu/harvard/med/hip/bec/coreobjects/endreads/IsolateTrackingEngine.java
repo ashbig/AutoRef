@@ -67,11 +67,12 @@ public class IsolateTrackingEngine
     public static final int            ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED = -4;
     public static final int            ASSEMBLY_STATUS_N_CONTIGS =-6;
     public static final int            ASSEMBLY_STATUS_NO_CONTIGS =-5;
-    public static final int           ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED = -7;
-    public static final int           ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED = -8;
-     public static final int            ASSEMBLY_STATUS_FAILED_NO_MATCH = -10;  
-    public static final int           ASSEMBLY_STATUS_PASS = 11;
-
+    public static final int            ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED = -7;
+    public static final int            ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED = -8;
+     public static final int           ASSEMBLY_STATUS_FAILED_NO_MATCH = -10;  
+    public static final int            ASSEMBLY_STATUS_PASS = 11;
+    public static final int            ASSEMBLY_STATUS_SUBMITTED_BY_SEQUENCING_FACILITY = 12;
+    
     public static final int            ASSEMBLY_STATUS_CONFIRMED = 13;
     
      
