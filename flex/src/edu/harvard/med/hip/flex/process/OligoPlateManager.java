@@ -89,6 +89,9 @@ public class OligoPlateManager {
         this.isOnlyFullPlate = isFull;
         this.isGroupBySize = isGroupBySize;
         this.protocol = protocol;
+        
+        if(protocol == null)
+            setProtocol();        
     }
     
     /**
