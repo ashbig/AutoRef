@@ -1,5 +1,5 @@
 /**
- * $Id: Construct.java,v 1.1 2003-03-07 17:44:51 dzuo Exp $
+ * $Id: Construct.java,v 1.2 2003-04-17 19:40:02 dzuo Exp $
  * This class maps to the ConstructDesign table in the database.
  * @File Construct.java
  * @date 4/28/01
@@ -290,6 +290,31 @@ public class Construct {
         return (this.pairId == c.getPairId());
     }
 
+    /**
+     * Return the paired construct
+     *
+     * @return An integer.
+     */
+    public int getPairedConstructid() 
+    throws FlexDatabaseException{
+        int ret = -1;
+        String sql = "select constructid"+
+                    " from constructdesign c"+
+                    " where c.constructpairid ="+pairId+
+                    " and c.constructid <> "+id; 
+        
+        try {
+            ResultSet rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            if(rs.next()) {
+               ret = rs.getInt(1);
+            }          
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        }
+        
+        return ret;
+    }
+    
     /**
      * insert a Construct record into ConstructDesign table.
      *
