@@ -1,6 +1,6 @@
 -- C:\BEC\bec\docs\current_flex_sequences.sqs
 --
--- Generated for Oracle 8.1 on Tue Apr 22  17:01:26 2003 by Server Generator 6.5.91.0.9
+-- Generated for Oracle 8.1 on Thu May 08  17:42:57 2003 by Server Generator 6.5.91.0.9
  
 PROMPT Creating Sequence 'CONTAINERID'
 CREATE SEQUENCE CONTAINERID
@@ -12,6 +12,14 @@ CREATE SEQUENCE CONTAINERID
 
 PROMPT Creating Sequence 'READID'
 CREATE SEQUENCE READID
+ NOMAXVALUE
+ NOMINVALUE
+ NOCYCLE
+ NOCACHE
+/
+
+PROMPT Creating Sequence 'REQUESTID'
+CREATE SEQUENCE REQUESTID
  NOMAXVALUE
  NOMINVALUE
  NOCYCLE
