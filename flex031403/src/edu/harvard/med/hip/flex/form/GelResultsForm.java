@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-21 16:31:45 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.5 $
+ * $Date: 2001-08-01 13:57:31 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -51,11 +51,11 @@ import edu.harvard.med.hip.flex.core.*;
  * Form for entering gel results.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-21 16:31:45 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.5 $ $Date: 2001-08-01 13:57:31 $
  */
 
-public class GelResultsForm extends ContainerResultsForm {
+public class GelResultsForm extends ContainerResultsForm implements FileForm {
     
     
     /**
@@ -79,14 +79,7 @@ public class GelResultsForm extends ContainerResultsForm {
         super();
     }
     
-    /**
-     * Accessor for the gel image.
-     *
-     * @return the FormFile of the gel image.
-     */
-    public FormFile getGelImage() {
-        return this.gelImage;
-    }
+   
     
     
     /**
@@ -94,8 +87,17 @@ public class GelResultsForm extends ContainerResultsForm {
      *
      * @param gelImage the <code>FormFile</code> that represents the gel image.
      */
-    public void setGelImage(FormFile gelImage) {
-        this.gelImage = gelImage;
+    public void setFormFile(FormFile formFile) {
+        this.gelImage = formFile;
+    }
+    
+    /**
+     * Accessor for the gel image.
+     *
+     * @return the FormFile of the gel image.
+     */
+    public FormFile getFormFile() {
+        return this.gelImage;
     }
     
     /**
@@ -119,6 +121,8 @@ public class GelResultsForm extends ContainerResultsForm {
         return errors;
         
     }
+    
+    
     
 } // End class GelDetailsForm
 

@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.14 $
- * $Date: 2001-07-31 19:40:48 $
+ * $Revision: 1.15 $
+ * $Date: 2001-08-01 13:57:31 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.14 $ $Date: 2001-07-31 19:40:48 $
+ * @version    $Revision: 1.15 $ $Date: 2001-08-01 13:57:31 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -104,6 +104,7 @@ public class SaveResultAction extends ResearcherAction {
         
         String researcherBarcode = (String) session.getAttribute(Constants.RESEARCHER_BARCODE_KEY);
         
+        // make sure we can continue
         if(queueItem == null || protocolName == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.session.missing.attribute",
@@ -113,19 +114,16 @@ public class SaveResultAction extends ResearcherAction {
             return retForward;
         }
         
-        String resultType = null;
-        if(form instanceof GelResultsForm) {
-            resultType = Result.PCR_GEL_TYPE;
-            GelResultsForm gelForm = (GelResultsForm)form;
-            // validate the file
-            FormFile image = gelForm.getGelImage();
+        //validate the file if any
+        if(form instanceof FileForm) {
+            FileForm fileForm = (FileForm) form;
+            FormFile image = fileForm.getFormFile();
             if (image.getFileName().equals("") || image.getFileSize() == 0) {
                 errors.add("gelImage", new ActionError("error.gel.file.required"));
                 saveErrors(request,errors);
                 retForward = new ActionForward(mapping.getInput());
                 return retForward;
             }
-            
             // make sure the name doesn't have any spaces in it
             if(image.getFileName().indexOf(" ") != -1) {
                 // display error message on entry form
@@ -134,30 +132,26 @@ public class SaveResultAction extends ResearcherAction {
                 saveErrors(request,errors);
                 return new ActionForward(mapping.getInput());
             }
+        }
+        
+        
+        //figure out the result type.
+        String resultType = null;
+        if(form instanceof GelResultsForm) {
+            resultType = Result.PCR_GEL_TYPE;
         } else {
             resultType = Result.AGAR_PLATE_TYPE;
         }
         
         ContainerResultsForm resultForm = (ContainerResultsForm) form;
         
-        // if the form is editable, forward to the confirm page.
+        // if the form is editable, forward to the confirm page with stats.
         if(resultForm.isEditable()) {
-            // make some statistics about what's been selected
-            Map resultMap = new HashMap();
-            for (int i = 0; i<resultForm.size(); i++) {
-                String curResult = resultForm.getResult(i);
-                // increment the count if we have allready encountered this result
-                if(resultMap.containsKey(curResult)) {
-                    resultMap.put(curResult,
-                    new Integer(((Integer)resultMap.get(curResult)).intValue() + 1));
-                } else {
-                    // otherwise make the count 1
-                    resultMap.put(curResult, new Integer(1));
-                }
-            }
+            
+            Map stats = getResultStats(resultForm);
             
             // shove it into the request.
-            request.setAttribute(Constants.RESULT_STATS_KEY,resultMap);
+            request.setAttribute(Constants.RESULT_STATS_KEY,stats);
             return mapping.findForward("confirm");
         }
         
@@ -173,17 +167,17 @@ public class SaveResultAction extends ResearcherAction {
             
             protocol = new Protocol(protocolName);
             
-            // create a new process 
+            // create a new process
             Process process = new Process(protocol, Process.SUCCESS, researcher);
             
             // create the container process object
-            ContainerProcessObject cpo = 
-                new ContainerProcessObject(container.getId(),process.getExecutionid(),ProcessObject.IO);
+            ContainerProcessObject cpo =
+            new ContainerProcessObject(container.getId(),process.getExecutionid(),ProcessObject.IO);
             
             // associate the process object with the process
             process.addProcessObject(cpo);
             
-            process.insert(conn); 
+            process.insert(conn);
             
             // save the results.
             saveResults(resultType,process, resultForm, conn);
@@ -263,8 +257,8 @@ public class SaveResultAction extends ResearcherAction {
             // one without writting anything to the DB.
             if(curSample.getType().toUpperCase().indexOf("EMPTY") == -1) {
                 // insert a record into sample linage, mapping the sample to itself
-                SampleLineage sampleL= 
-                    new SampleLineage(process.getExecutionid(), curSample.getId(), curSample.getId());
+                SampleLineage sampleL=
+                new SampleLineage(process.getExecutionid(), curSample.getId(), curSample.getId());
                 
                 // do the db insert
                 sampleL.insert(conn);
@@ -308,7 +302,7 @@ public class SaveResultAction extends ResearcherAction {
             GelResultsForm gelForm = (GelResultsForm)form;
             
             // the image file
-            FormFile image = gelForm.getGelImage();
+            FormFile image = gelForm.getFormFile();
             
             // get the current date
             Calendar cal = Calendar.getInstance();
@@ -332,7 +326,7 @@ public class SaveResultAction extends ResearcherAction {
             FileReference.GEL_TYPE,localPath, container);
             
             FileRepository.uploadFile(fileRef,
-            gelForm.getGelImage().getInputStream());
+            gelForm.getFormFile().getInputStream());
         }
         return fileRef;
     }
@@ -382,6 +376,36 @@ public class SaveResultAction extends ResearcherAction {
         // update the process execution for the previous step.
         curProcess.setExecutionStatus(Process.SUCCESS);
         curProcess.update(conn);
+    }
+    
+    
+    /**
+     * Utility method to compute statistics about what was selected.
+     *
+     * @param containerForm ContaineResultsForm holding the results.
+     */
+    private Map getResultStats(ContainerResultsForm resultForm) {
+        // make some statistics about what's been selected
+        Map resultMap = new HashMap();
+        for (int i = 0; i<resultForm.size(); i++) {
+            String curResult = resultForm.getResult(i);
+            
+            // substitute "Empty" for ""
+            if (curResult == null || curResult.equals("")
+            || curResult.equals(" ")) {
+                curResult = "Empty";
+            }
+            
+            // increment the count if we have allready encountered this result
+            if(resultMap.containsKey(curResult)) {
+                resultMap.put(curResult,
+                new Integer(((Integer)resultMap.get(curResult)).intValue() + 1));
+            } else {
+                // otherwise make the count 1
+                resultMap.put(curResult, new Integer(1));
+            }
+        }
+        return resultMap;
     }
 } // End class EnterTransformDetailsAction
 
