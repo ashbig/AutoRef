@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.10 2004-10-29 18:52:41 dzuo Exp $
+ * $Id: Oligo.java,v 1.11 2004-10-29 19:06:20 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -35,8 +35,8 @@ public class Oligo {
     private static final String INGA_3p_FUSION = "AGAAAGCTGGGTCACTCACCAA";
     private static final String INGA_3p_CLOSE =  "AGAAAGCTGGGTCACTCACCTA";
     private static final String VC_5p = INGA_5p;
-    private static final String VC_3p_FUSION = INGA_3p_FUSION;
-    private static final String VC_3p_CLOSE =  INGA_3p_CLOSE;
+    private static final String VC_3p_FUSION = GATEWAY_YP_3p_FUSION;
+    private static final String VC_3p_CLOSE =  GATEWAY_YP_3p;
     
   //  private Project project;
   //  private Workflow workflow;
