@@ -485,6 +485,41 @@ public abstract class Mutation
         return report.toString();
     }
     
+    public static String discrepancyTypeQualityReport(ArrayList discrepancies, int discrepancy_type, boolean isSeparateByQuality, boolean isHighQuality)
+    {
+        if (discrepancies == null || discrepancies.size()==0) return "";
+        StringBuffer report = new StringBuffer();
+        String line = "";boolean isExists = false;
+        String quality  ;int i;
+        int[][] discrepancy_count  = getDiscrepanciesSeparatedByType( discrepancies,  discrepancy_type,  isSeparateByQuality);
+        for (int j=0; j< 45;j++)
+        {
+            if (isHighQuality)
+            {
+                i = 0;
+                quality = "(High/Not known)";
+            }
+            else 
+            {
+                 quality = "(Low)";
+                i = 1;
+            }
+            line =getMutationTypeAsString(j);
+            isExists = false;
+            if (discrepancy_count[j][i] != 0)
+            {
+
+                if (! isExists) report.append(line+quality+": ");
+                isExists = true;
+                report.append(discrepancy_count[j][i]);
+                
+            }
+            if (isExists) report.append(" | ");
+            
+        }
+        return report.toString();
+    }
+    
     public static ArrayList   getDiscrepanciesBySequenceId(int seq_id) throws BecDatabaseException
     {
          String sql = "select  DISCREPANCYID  ,POSITION ,LENGTH ,CHANGEORI ,CHANGEMUT "
