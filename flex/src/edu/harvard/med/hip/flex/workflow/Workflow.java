@@ -137,7 +137,7 @@ public class Workflow {
     /**
      * Constructor.
      *
-     * @id The workflowid corresponding to the primary key in the database.
+     * @param id The workflowid corresponding to the primary key in the database.
      * @exception FlexDatabaseException.
      */
     public Workflow(int id) throws FlexDatabaseException {
@@ -189,6 +189,20 @@ public class Workflow {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }
+    }
+
+    /** 
+     * Constructor.
+     *
+     * @param id The workflowid.
+     * @param name The workflow name.
+     * @param description The workflow description.
+     * @return The Workflow object.
+     */
+    public Workflow(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
     }
     
     /**
@@ -243,6 +257,29 @@ public class Workflow {
      */
     public Vector getFlow() {
         return flow;
+    }
+
+    public static Vector getAllWorkflows() throws FlexDatabaseException {
+        String sql = "select * from workflow";
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        ResultSet rs = t.executeQuery(sql);
+        Vector workflows = new Vector();  
+        
+        try{                   
+            while(rs.next()) {
+                int workflowid = rs.getInt("WORKFLOWID");
+                String name = rs.getString("NAME");
+                String description = rs.getString("DESCRIPTION");
+                Workflow w = new Workflow(workflowid, name, description);
+                workflows.addElement(w);
+            }                
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return workflows;
     }
     
     public static void main(String [] args) {

@@ -31,6 +31,7 @@ public class QueryManager {
         }
         
         String searchList = convertToSqlList(searchTerm);
+        
         if(searchList == null) {
             setMessage("Search terms are not specified.");
             return false;
@@ -44,13 +45,15 @@ public class QueryManager {
         String sql;
         boolean isPending = false;
         if("REJECTED".equals(flexstatus) || "PENDING".equals(flexstatus)) {
-            sql = "select distinct t.sequenceid, flexstatus,  n1.namevalue as gi,"+
+            sql = "select distinct t.sequenceid, flexstatus, pname, n1.namevalue as gi,"+
             " n2.namevalue as genbankacc, n3.namevalue as genename,"+
             " n4.namevalue as genesymbol, n5.namevalue as panumber"+
             " from"+
-            " (select f.sequenceid, f.flexstatus"+
-            " from flexsequence f"+
+            " (select f.sequenceid, f.flexstatus, p.name as pname, p.projectid"+
+            " from flexsequence f, project p, requestsequence r"+
             " where f.flexstatus='"+flexstatus+"'"+
+            " and f.sequenceid=r.sequenceid"+
+            " and r.projectid=p.projectid"+
             " and f.sequenceid in"+
             " (select sequenceid from name"+
             " where nametype='"+searchType+"'"+
@@ -64,39 +67,39 @@ public class QueryManager {
             
             isPending = true;
         } else {
-            sql = "select distinct t.sequenceid, flexstatus, constructtype,"+
-            " containerposition, label, pname, wname, five,"+
-            " three, resultvalue, n1.namevalue as gi,"+
-            " n2.namevalue as genbankacc, n3.namevalue as genename,"+
-            " n4.namevalue as genesymbol, n5.namevalue as panumber"+
+            sql = "select distinct t.sequenceid, flexstatus, constructtype,\n"+
+            " containerposition, label, pname, wname, five,\n"+
+            " three, resultvalue, n1.namevalue as gi,\n"+
+            " n2.namevalue as genbankacc, n3.namevalue as genename,\n"+
+            " n4.namevalue as genesymbol, n5.namevalue as panumber\n"+
             " from"+
-            " (select f.sequenceid, f.flexstatus, c.constructtype,"+
-            " c.projectid, c.workflowid, s.containerposition, ch.label,"+
-            " ou.gatewaysequence as five, oc.gatewaysequence as three,"+
-            " p.name as pname, w.name as wname, r.resultvalue"+
-            " from flexsequence f, constructdesign c,"+
-            " sample s, containercell cc, containerheader ch,"+
-            " result r, project p, workflow w, oligo ou, oligo oc"+
-            " where f.sequenceid=c.sequenceid(+)"+
-            " and c.constructid=s.constructid(+)"+
-            " and s.sampleid=cc.sampleid"+
-            " and cc.containerid=ch.containerid"+
-            " and c.projectid=p.projectid"+
-            " and c.workflowid=w.workflowid"+
-            " and c.oligoid_5p=ou.oligoid"+
-            " and c.oligoid_3p=oc.oligoid"+
-            " and s.sampleid=r.sampleid(+)"+
-            " and f.flexstatus='"+flexstatus+"'"+
-            " and f.sequenceid in"+
-            " (select sequenceid from name"+
-            " where nametype='"+searchType+"'"+
-            " and namevalue in ("+searchList+"))) t,"+
-            " givu n1, genbankvu n2, genenamevu n3, genesymbolvu n4, pavu n5"+
-            " where t.sequenceid=n1.sequenceid(+)"+
-            " and t.sequenceid=n2.sequenceid(+)"+
-            " and t.sequenceid=n3.sequenceid(+)"+
-            " and t.sequenceid=n4.sequenceid(+)"+
-            " and t.sequenceid=n5.sequenceid(+)";
+            " (select f.sequenceid, f.flexstatus, c.constructtype,\n"+
+            " c.projectid, c.workflowid, s.containerposition, ch.label,\n"+
+            " ou.gatewaysequence as five, oc.gatewaysequence as three,\n"+
+            " p.name as pname, w.name as wname, r.resultvalue\n"+
+            " from flexsequence f, constructdesign c,\n"+
+            " sample s, containercell cc, containerheader ch,\n"+
+            " result r, project p, workflow w, oligo ou, oligo oc\n"+
+            " where f.sequenceid=c.sequenceid(+)\n"+
+            " and c.constructid=s.constructid(+)\n"+
+            " and s.sampleid=cc.sampleid\n"+
+            " and cc.containerid=ch.containerid\n"+
+            " and c.projectid=p.projectid\n"+
+            " and c.workflowid=w.workflowid\n"+
+            " and c.oligoid_5p=ou.oligoid\n"+
+            " and c.oligoid_3p=oc.oligoid\n"+
+            " and s.sampleid=r.sampleid(+)\n"+
+            " and f.flexstatus='"+flexstatus+"'\n"+
+            " and f.sequenceid in\n"+
+            " (select sequenceid from name\n"+
+            " where nametype='"+searchType+"'\n"+
+            " and namevalue in ("+searchList+"))) t,\n"+
+            " givu n1, genbankvu n2, genenamevu n3, genesymbolvu n4, pavu n5\n"+
+            " where t.sequenceid=n1.sequenceid(+)\n"+
+            " and t.sequenceid=n2.sequenceid(+)\n"+
+            " and t.sequenceid=n3.sequenceid(+)\n"+
+            " and t.sequenceid=n4.sequenceid(+)\n"+
+            " and t.sequenceid=n5.sequenceid(+)\n";
             
             if(project != -1)
                 sql = sql+" and t.projectid="+project;
@@ -144,7 +147,7 @@ public class QueryManager {
             if("glycerol".equals(plate))
                 sql = sql+" and t.label like '_GS%'";
         }
-       
+     
         DatabaseTransaction dt = null;
         RowSet rs = null;
         try {
@@ -170,11 +173,12 @@ public class QueryManager {
                 String panumber = null;
                 
                 if(isPending) {
-                    gi = rs.getString(3);
-                    genbank = rs.getString(4);
-                    genename = rs.getString(5);
-                    genesymbol = rs.getString(6);
-                    panumber = rs.getString(7);
+                    pname = rs.getString(3);
+                    gi = rs.getString(4);
+                    genbank = rs.getString(5);
+                    genename = rs.getString(6);
+                    genesymbol = rs.getString(7);
+                    panumber = rs.getString(8);
                 } else {
                     type = rs.getString(3);
                     well = rs.getInt(4);
@@ -235,9 +239,9 @@ public class QueryManager {
             String term = (String)(searchTerm.get(i));
             if(term != null) {
                 if(sqlList == null) {
-                    sqlList = term;
+                    sqlList = "'"+term+"'";
                 } else {
-                    sqlList = sqlList+","+term;
+                    sqlList = sqlList+","+"'"+term+"'";
                 }
             }
         }
