@@ -71,6 +71,9 @@ public class Constants {
     // key used to find the id of a plate
     public static final String PLATE_ID_KEY = "PLATE_ID";
     
+    // key used to find a container
+    public static final String CONTAINER_KEY = "CONTAINER";
+    
     // key used to find the collection of samples
     public static final String SAMPLES_KEY = "SAMPLES";
     /** Creates new Constants */
