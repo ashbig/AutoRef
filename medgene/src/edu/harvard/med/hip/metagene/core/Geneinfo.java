@@ -12,18 +12,28 @@ package edu.harvard.med.hip.metagene.core;
  * @version 
  */
 public class Geneinfo {
-    private String locusid;
+    public static final String GO = "GO";
+    
     private String type;
     private String value;
-    private String url;
-    private String date;
+    private String extraInfo;
     
     /** Creates new Geneinfo */
-    public Geneinfo(String locusid, String type, String value, String url, String date){
-        this.locusid = locusid;
+    public Geneinfo(String type, String value, String extraInfo){
         this.type = type;
         this.value = value;
-        this.url = url;
-        this.date = date;
+        this.extraInfo = extraInfo;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public String getValue() {
+        return value;
+    }
+    
+    public String getExtraInfo() {
+        return extraInfo;
     }
 }

@@ -22,6 +22,9 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.metagene.form.GetGenesForm;
+import edu.harvard.med.hip.metagene.core.*;
+
+import java.util.*;
 
 /**
  *
@@ -55,10 +58,20 @@ public class GetGenesAction extends Action {
         ActionErrors errors = new ActionErrors();
         int disease = ((GetGenesForm)form).getDiseaseTerm();
         int stat = ((GetGenesForm)form).getStat();
-        int number = ((GetGenesForm)form).getNumber();              
+        int number = ((GetGenesForm)form).getNumber();   
+        String submit = ((GetGenesForm)form).getSubmit();
         
+        if("New Search".equals(submit)) {
+            return (mapping.findForward("newsearch"));
+        }
         
-            return (mapping.findForward("failure"));
-     
+        if("Get Genes".equals(submit)) {
+            DiseaseGeneManager manager = new DiseaseGeneManager();
+            Vector associations = manager.getAssociations(disease, stat, number);
+            request.setAttribute("associations", associations);
+            return (mapping.findForward("success"));
+        }
+        
+        return (mapping.findForward("error"));     
     }   
 }

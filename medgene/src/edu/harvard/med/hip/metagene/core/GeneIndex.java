@@ -12,19 +12,36 @@ package edu.harvard.med.hip.metagene.core;
  * @version 
  */
 public class GeneIndex {
+    public static final String SYMBOL = "Gene formal symbol";
+    public static final String NAME = "Gene formal name";
+    public static final String FAMILY = "Gene family term";
+    
     private int indexid;
     private String index;
     private String type;
     private String date;
-    private double statScore;
     
     /** Creates new GeneIndex */
-    public GeneIndex(int indexid, String index, String type, String date, double statScore) {
+    public GeneIndex(int indexid, String index, String type, String date) {
         this.indexid = indexid;
         this.index = index;
         this.type = type;
         this.date = date;
-        this.statScore = statScore;
     }
 
+    public int getIndexid() {
+        return indexid;
+    }
+    
+    public String getIndex() {
+        return index;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public String getDate() {
+        return date;
+    }
 }

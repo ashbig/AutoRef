@@ -21,6 +21,7 @@ public class GetGenesForm extends ActionForm {
     private int diseaseTerm;
     private int stat;
     private int number;
+    private String submit;
 
     /** Creates new GetGenesForm */
     public GetGenesForm() {
@@ -48,5 +49,13 @@ public class GetGenesForm extends ActionForm {
     
     public void setNumber(int number) {
         this.number = number;
+    }
+    
+    public String getSubmit() {
+        return submit;
+    }
+    
+    public void setSubmit(String submit) {
+        this.submit = submit;
     }
 }

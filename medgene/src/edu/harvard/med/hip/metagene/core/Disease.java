@@ -17,6 +17,14 @@ public class Disease {
     private int id;
     private String term;
     private String date;
+
+    public Disease(int id) {
+        this.id = id;
+    }
+    
+    public Disease(String term) {
+        this.term = term;
+    }
     
     /** Creates new Disease */
     public Disease(int id, String term, String date) {
