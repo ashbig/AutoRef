@@ -265,24 +265,24 @@ public class LocDetailParser {
         List records = null;
         
         try {
-          //  in = new BufferedReader(new FileReader(file));
+            in = new BufferedReader(new FileReader(file));
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-           // parser.cleanTable("generecord_tmp", conn);
-          //  parser.cleanTable("sequencerecord_tmp", conn);
-          //  parser.cleanTable("genesymbol_tmp", conn);
-          //  String line = null;
-         //  in.readLine();
+            parser.cleanTable("generecord_tmp", conn);
+            parser.cleanTable("sequencerecord_tmp", conn);
+            parser.cleanTable("genesymbol_tmp", conn);
+            String line = null;
+            in.readLine();
             
-          //  while((line = in.readLine()) != null) {
-         //       System.out.println(line);
-         //       records = parser.parseFile(in, line);
-         //       parser.insert(conn, records);
-          //      DatabaseTransaction.commit(conn);
+            while((line = in.readLine()) != null) {
+                System.out.println(line);
+                records = parser.parseFile(in, line);
+                parser.insert(conn, records);
+                DatabaseTransaction.commit(conn);
                 //DatabaseTransaction.rollback(conn);
-          //  }
+            }
             
-          //  in.close();
+            in.close();
             
             //parser.disableConstraints("generecord", conn);
             System.out.println("Truncate table GENESYMBOL");

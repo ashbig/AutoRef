@@ -31,21 +31,23 @@ public class MatchGenbankRecord {
     }
     
     public MatchGenbankRecord(MatchGenbankRecord r) {
-        this.matchGenbankId = r.getMatchGenbankId();
-        this.genbankAccession = r.getGanbankAccession();
-        this.gi = r.getGi();
-        matchFlexSequence = new ArrayList();
-        List mfss = r.getMatchFlexSequence();
-        if(mfss != null) {
-            for(int i=0; i<mfss.size(); i++) {
-                MatchFlexSequence mfs = (MatchFlexSequence)mfss.get(i);
-                matchFlexSequence.add(new MatchFlexSequence(mfs));
+        if(r != null) {
+            this.matchGenbankId = r.getMatchGenbankId();
+            this.genbankAccession = r.getGanbankAccession();
+            this.gi = r.getGi();
+            matchFlexSequence = new ArrayList();
+            List mfss = r.getMatchFlexSequence();
+            if(mfss != null) {
+                for(int i=0; i<mfss.size(); i++) {
+                    MatchFlexSequence mfs = (MatchFlexSequence)mfss.get(i);
+                    matchFlexSequence.add(new MatchFlexSequence(mfs));
+                }
             }
+            this.searchMethod = r.getSearchMethod();
+            this.searchResultid = r.getSearchResultid();
+            this.locusid = r.getLocusid();
+            this.unigene = r.getUnigene();
         }
-        this.searchMethod = r.getSearchMethod();
-        this.searchResultid = r.getSearchResultid();
-        this.locusid = r.getLocusid();
-        this.unigene = r.getUnigene();
     }
     
     public MatchGenbankRecord(String genbank, String gi, String searchMethod, List matchFlexSequence, String locusid, String unigene) {

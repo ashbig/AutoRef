@@ -32,12 +32,14 @@ public class MatchFlexSequence {
     }
     
     public MatchFlexSequence(MatchFlexSequence m) {
-        this.matchFlexId = m.getMatchFlexId();
-        this.flexsequenceid = m.getFlexsequenceid();
-        this.isMatchByGi = m.getIsMatchByGi();
-        this.blastHit = new BlastHit(m.getBlastHit());
-        this.matchGenbankId = m.getMatchGenbankId();
-        this.flexSequence = m.getFlexSequence();
+        if(m != null) {
+            this.matchFlexId = m.getMatchFlexId();
+            this.flexsequenceid = m.getFlexsequenceid();
+            this.isMatchByGi = m.getIsMatchByGi();
+            this.blastHit = new BlastHit(m.getBlastHit());
+            this.matchGenbankId = m.getMatchGenbankId();
+            this.flexSequence = m.getFlexSequence();
+        }
     }
     
     public MatchFlexSequence(String isMatchByGi, int id, BlastHit hit) {
