@@ -172,7 +172,7 @@ public class PlateUploader
     private ArrayList getSampleInfoFromFLEX(String platename, Hashtable flex_sequence_ids, Connection flex_connection) throws BecDatabaseException
     {
         ArrayList samples = new ArrayList();
-      
+       boolean isCloneIdsSet = false;
         int plate_id  = -1;
         SampleInfo sample ;
         /*
@@ -219,7 +219,9 @@ public class PlateUploader
                     flex_sequence_ids.put(new Integer(sample.getSequenceId () ), new Integer(-1));
                 }
                 int cloneid = rs.getInt("CLONEID");
-                System.out.println(rs.getObject("CLONEID"));
+                if ( !isCloneIdsSet && cloneid> 1)
+                    isCloneIdsSet = true;
+              //  System.out.println(rs.getObject("CLONEID"));
                 //not empty sample
                 if ( !sample.isEmpty() && ! sample.isControl() )
                 {
@@ -231,6 +233,11 @@ public class PlateUploader
                     sample.setCloneId (0);
                 }
                 samples.add(sample);
+            }
+            if ( !isCloneIdsSet )
+            {
+                samples = new ArrayList();
+                throw new BecDatabaseException("No clone id are assigned to the clones on this plate: "+platename+"\n");
             }
         } catch (Exception sqlE)
         {
@@ -723,7 +730,7 @@ public class PlateUploader
         ArrayList plates = new ArrayList();
     
       //  plates.add("YGS000360-2");
-        plates.add("PGS000121-1");
+        plates.add("MGS000206-5");
        // plates.add("YGS000360-3");
        // plates.add("YGS000360-4");
         Connection conn=null;
