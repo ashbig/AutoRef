@@ -54,9 +54,9 @@ public class RearrayedSeqPlatesHandler {
                 emailFailed(failed);
             }
             
-            if(isFile) {
-                emailFile(containers, researcherBarcode);
-            }
+            //if(isFile) {
+             //   emailFile(containers, researcherBarcode);
+            //}
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -72,7 +72,7 @@ public class RearrayedSeqPlatesHandler {
         Mailer.sendMessage("dzuo@hms.harvard.edu","dzuo@hms.harvard.edu", "cloneid update failed",message);
     }
     
-    public void emailFile(List containers, String researcherBarcode) throws Exception {
+    public void emailFile(List containers, String researcherBarcode) {
         User user = User.getUserFromBarcode(researcherBarcode);
         String filepath = SeqContainerMapper.FILEPATH;
         Collection fileCol = new ArrayList();
@@ -80,7 +80,11 @@ public class RearrayedSeqPlatesHandler {
             Container c = (Container)containers.get(i);
             fileCol.add(new File(filepath+c.getLabel()));
         }
-        Mailer.sendMessage(user.getUserEmail(),"dzuo@hms.harvard.edu","dzuo@hms.harvard.edu","Files for rearrayed sequencing plates","Attached are your files for rearrayed sequencing plates", fileCol);
+        try {
+            Mailer.sendMessage(user.getUserEmail(),"dzuo@hms.harvard.edu","dzuo@hms.harvard.edu","Files for rearrayed sequencing plates","Attached are your files for rearrayed sequencing plates", fileCol);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
     
     public static void main(String args[]) {

@@ -7,6 +7,8 @@
 package edu.harvard.med.hip.flex.util;
 
 import java.util.*;
+import java.lang.Thread;
+import edu.harvard.med.hip.flex.core.*;
 
 /**
  *
@@ -51,8 +53,30 @@ public class ThreadedRearrayedSeqPlatesHandler extends RearrayedSeqPlatesHandler
      *
      */
     public void run() {
+        if(isFile) {
+            emailFile(containers, researcherBarcode);
+        }
         processSummaryTable(glycerolContainers, strategyid, cloneType);
         processSeqPlates(containers, researcherBarcode);
     }
-    
+ 
+       public static void main(String args[]) {
+           Container c1 = new Container(7893, null, null, "SAE000727");
+           Container c2 = new Container(7894, null, null, "SBF000727");
+           List containers = new ArrayList();
+           containers.add(c1);
+           containers.add(c2);
+           
+           List containerids = new ArrayList();
+           containerids.add(new Integer(7893));
+           containerids.add(new Integer(7894));
+           
+           SummaryTablePopulator populator = new SummaryTablePopulator();
+           ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(containers, "dzuo", true, populator, containerids, 1, CloneInfo.MASTER_CLONE);
+           try {
+               new Thread(handler).start();
+           } catch (Exception ex) {
+               System.out.println(ex);
+           }
+       }
 }
