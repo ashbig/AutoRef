@@ -33,7 +33,7 @@ import java.util.*;
  *
  * @author  htaycher
  */
-public class tester_plate_upload
+public class tester_plate_upload 
 {
     
     /** Creates a new instance of tester */
@@ -189,12 +189,14 @@ public class tester_plate_upload
     {
         ArrayList master_container_labels = new ArrayList();
       
-            master_container_labels.add("YGS000370-1");
+            master_container_labels.add("PGS000121-1");
             
         tester_plate_upload runner = new tester_plate_upload();
         runner.setContainerLabels(master_container_labels );
-        runner.setVectorId(1);// runner.setVectorId(5 );//bec_test
-        runner.setLinker3Id(3);//runner.setLinker3Id(8);//bec_test
+        //runner.setVectorId(1);
+        runner.setVectorId(5 );//bec_test
+        //runner.setLinker3Id(3);
+        runner.setLinker3Id(8);//bec_test
         User user  = null;
         try
         {
@@ -204,11 +206,11 @@ public class tester_plate_upload
         {}
         runner.setUser(user);
  
-        runner.setLinker5Id(4)  ;//runner.setLinker5Id(7) //bec_test
+     //   runner.setLinker5Id(4)  ;
+        runner.setLinker5Id(7) ;//bec_test
         runner.setNextStep(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER) ;
         runner.setPlateInfoType(PlateUploader.PLATE_NAMES);
-    
-        runner.run();
+    runner.run();
         System.exit(0);
     }
     

@@ -206,54 +206,37 @@ public class Result
      * @return The result for the given sample and process.
      * @exception BecDatabaseException.
      */
-    public static Result findResult(int sampleid, int processid)
-    throws BecDatabaseException
+    public static Result getResultBySampleId(int sampleid, String resulttype)    throws BecDatabaseException
     {
     
-        
-        /*
         Result result = null;
-        String sql=
-        "select r.resultid,r.resulttype as type, r.resultvalue as value " +
-        "from result r, sample s, processexecution p " +
-        "WHERE r.sampleid = s.sampleid " +
-        "AND r.executionid = p.executionid " +
-        "AND s.sampleid = ? " +
-        "AND p.executionid = ?";
-        
-        DatabaseTransaction dt = DatabaseTransaction.getInstance();
-        Connection conn = dt.requestConnection();
-        PreparedStatement ps = null;
+        String sql= "select resultid,resulttype ,resultvalueid  " +
+        "from result    WHERE sampleid =" + sampleid +  " AND resulttype in ("+ resulttype +")";
+ 
         ResultSet rs = null;
         try
         {
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, sample.getId());
-            ps.setInt(2, m_process_id);
-            
-            rs = dt.executeQuery(ps);
-            
+            DatabaseTransaction dt = DatabaseTransaction.getInstance();
+            rs = dt.executeQuery(sql);
             // if we find a process then create it
             if(rs.next())
             {
-                int type = rs.getInt("TYPE");
-                String value = rs.getString("VALUE");
+                int type = rs.getInt("resulttype");
+                int resultvalueid = rs.getInt("resultvalueid");
                 int resultId = rs.getInt("RESULTID");
-                result = new Result(resultId, process, sample, type, value);
+                result = new Result(resultId, -1, sampleid, null,type, resultvalueid);
+               
             }
+            return result;
         } catch (SQLException sqlE)
         {
             throw new BecDatabaseException(sqlE);
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);
-            DatabaseTransaction.closeStatement(ps);
-            DatabaseTransaction.closeConnection(conn);
+ 
         }
-         
-        return result;
-         **/
-        return null;
+     
     }
     
     /**

@@ -11,9 +11,12 @@ import edu.harvard.med.hip.bec.export.*;
 import edu.harvard.med.hip.bec.programs.blast.*;
 import edu.harvard.med.hip.bec.bioutil.*;
 import  edu.harvard.med.hip.bec.coreobjects.sequence.*;
-
-
+import  edu.harvard.med.hip.bec.database.*;
+import java.io.*;
 import java.util.*;
+import javax.sql.*;
+import java.sql.*;
+import sun.jdbc.rowset.*;
 /**
  *
  * @author  htaycher
@@ -35,60 +38,80 @@ public class OutstandingJobs
     public void setPassParamBlastIdentity(double i){m_blast_identity = i;}
     public void setPassParamBlastMinimumStretch(int i){m_blast_minimum_stretch = i;}
     
-    public  void findWriteORF()throws Exception
+    public  void findWriteORF(String reportfilename)throws Exception
     {
         //take all isolates with no match status
         int[] status = {IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH};
-        ArrayList isolate_engines = IsolateTrackingEngine.getIsolateTrackingEnginesByStatusandSpecies(status, m_species);
-      
-        IsolateTrackingEngine cur_engine = null;String sequence = null;
-        ArrayList messages = new ArrayList();
-        //set blaster
-        BlastParserNew parser = null;
-        BlastWrapper blaster = new BlastWrapper();
-        //set matrix to small sequences if not specified by user
-        blaster.setProgramName("blastn");
-        
-        blaster.setFormat(8);blaster.setGI("T");blaster.setHitNumber(1);blaster.setFilter("F");
-              
-        for (int isolate_count = 0; isolate_count < isolate_engines.size(); isolate_count++)
+        String processed_isolatetr_ids = "";
+        FileWriter in = null; int count_isolates = 0;
+        while (true)
         {
-            cur_engine = (IsolateTrackingEngine)isolate_engines.get(isolate_count);
-            for (int read_count = 0; read_count < cur_engine.getEndReads().size(); read_count++)
+            if (count_isolates == 0)
             {
-                Read read = (Read)cur_engine.getEndReads().get(read_count);
-             //   if ( read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH ||
-               //     read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH )
-               // {
-                      // blast each against blastable database
-                     //write query file
-                    sequence = read.getTrimmedSequence();
-                    String queryFile = SequenceManipulation.makeQueryFileInFASTAFormat(INPUT,sequence, "bn", ""+ read.getSequence().getId());
-                    //set matrix
-                    if (sequence.length() < 100) blaster.setMatrix( "PAM30");
-                    else if (sequence.length()>100 && sequence.length()<150) blaster.setMatrix("PAM70");
-                    else blaster.setMatrix("BLOSUM62");
-                        
-                    blaster.setInputFN(queryFile+".in");
-                    blaster.setOutputFN(queryFile+".out");
-                    if ( m_blastable_dbname == null)
-                        setDBforBlaster( m_species, blaster);
-                    else
-                        blaster.setDB( m_blastable_dbname );
-                    blaster.run();
-        
-                    ArrayList hits = parser.parse(queryFile+".out", 8);
-                    String match_info = confirmORFMatch(hits);
-                    if (match_info != null)
-                        messages.add( cur_engine.getId() + " "+ read.getId() + " "+ read.getSequence().getId()+ " "+ match_info );
-             //  }
+                in = new FileWriter(reportfilename);
+                in.write("Construct Id\t Bec RefSequence Id\tFlex Refsequence Id\t Isolate Id\tRead Id\tRead seq id\t hit id \t identity\t stretch");
             }
-        }
-        // output best match into file info
-        for (int count = 0; count < messages.size(); count++)
-        {
-            System.out.println( (String) messages.get(count));
-        }
+            else
+            {
+                                in = new FileWriter(reportfilename, true);
+            }
+         ArrayList isolate_engines = IsolateTrackingEngine.getIsolateTrackingEnginesByStatusandSpecies(status, m_species,processed_isolatetr_ids);
+
+           if ( isolate_engines == null || isolate_engines.size() == 0)break;
+            IsolateTrackingEngine cur_engine = null;
+            String sequence = null;
+            ConstructInfo cur_construct = null;
+            ArrayList messages = new ArrayList();
+            //set blaster
+            BlastParserNew parser = null;
+            BlastWrapper blaster = new BlastWrapper();
+            //set matrix to small sequences if not specified by user
+            blaster.setProgramName("blastn");
+
+            blaster.setFormat(8);blaster.setGI("T");blaster.setHitNumber(10);blaster.setFilter("F");
+
+            for (int isolate_count = 0; isolate_count < isolate_engines.size(); isolate_count++)
+            {
+                cur_engine = (IsolateTrackingEngine)isolate_engines.get(isolate_count);
+                cur_construct = new ConstructInfo(cur_engine.getId());
+                processed_isolatetr_ids += cur_engine.getId()+",";
+                in.write("\n\n"+cur_construct.getConstructId() +"\t"+ cur_construct.getRefSeqId()+"\t"+cur_construct.getFlexRefSeqId() +"\t"+ cur_engine.getId() + "\t");
+                for (int read_count = 0; read_count < cur_engine.getEndReads().size(); read_count++)
+                {
+                    count_isolates++;
+                    Read read = (Read)cur_engine.getEndReads().get(read_count);
+                 //   if ( read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH ||
+                   //     read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH )
+                   // {
+                          // blast each against blastable database
+                         //write query file
+                        sequence = read.getTrimmedSequence();
+                        String queryFile = SequenceManipulation.makeQueryFileInFASTAFormat(INPUT,sequence, "bn", ""+ read.getSequence().getId());
+                        //set matrix
+                        if (sequence.length() < 100) blaster.setMatrix( "PAM30");
+                        else if (sequence.length()>100 && sequence.length()<150) blaster.setMatrix("PAM70");
+                        else blaster.setMatrix("BLOSUM62");
+
+                        blaster.setInputFN(queryFile+".in");
+                        blaster.setOutputFN(queryFile+".out");
+                        if ( m_blastable_dbname == null)
+                            setDBforBlaster( m_species, blaster);
+                        else
+                            blaster.setDB( m_blastable_dbname );
+                        blaster.run();
+
+                        ArrayList hits = parser.parse(queryFile+".out", 8);
+                        String match_info = confirmORFMatch(hits, cur_construct.getFlexRefSeqId());
+                        if (match_info != null && match_info.length() != 0)
+                            in.write( "\n\t"+read.getId() + "\t"+ read.getSequence().getId()+ "\n"+ match_info );
+                      
+                 //  }
+                }
+            }
+            
+             in.flush();
+            in.close();
+    }
     }
     
     
@@ -130,24 +153,86 @@ public class OutstandingJobs
             }
     }
     
-    private String confirmORFMatch(ArrayList blast_output)
+    private String confirmORFMatch(ArrayList blast_output, int flexseqid)
     {
-        String res = null;
+        String res = "";
          if (blast_output.size() < 1) return null;
         //take best hit
-        BlastResult blresult = (BlastResult)blast_output.get(0);
-        if (blresult.getAligments().size() < 1) return null;
-        BlastAligment blalm = (BlastAligment) blresult.getAligments().get(0);
-        //if discrepancy matched 100% by identity on the whole length - confirm it
-        boolean isConfirm = blalm.getIdentity() >= m_blast_identity
-            && ( blalm.getQStop()-blalm.getQStart() + 1)>= m_blast_minimum_stretch;
-        if (isConfirm)
-            res= "hit "+blresult.getAcesession() + " " + blalm.getSequenceId() + " "+ blalm.getIdentity() +" "+ blalm.getQStop() +" "+blalm.getQStart();
+        BlastResult blresult = null;
+        
+        BlastAligment blalm = null;
+        for (int count = 0 ; count <  blast_output.size(); count++)
+        {
+            blresult=(BlastResult)blast_output.get(count);
+            blalm =(BlastAligment) blresult.getAligments().get(0);
+            //if discrepancy matched 100% by identity on the whole length - confirm it
+            boolean isConfirm = blalm.getIdentity() >= m_blast_identity
+                && ( blalm.getQStop()-blalm.getQStart() + 1)>= m_blast_minimum_stretch;
+            if ( isConfirm && count == 0)
+            {
+                res+= "\t\tbest hit \t";
+                
+               res+=blresult.getAcesession()+ "\t" +  blalm.getSequenceId()+ "\t"+ blalm.getIdentity() +"\t"+ ( blalm.getQStop()-blalm.getQStart());
+            }
+            if ( isConfirm && count > 0 && blresult.getAcesession().equalsIgnoreCase(""+ flexseqid))
+            {
+                res+= "\t\tref sequence hit \t"+blresult.getAcesession()+"\t" ;
+                res +=  blalm.getSequenceId()+ "\t"+ blalm.getIdentity() +"\t"+ ( blalm.getQStop()-blalm.getQStart());
+            }
+            if ( flexseqid == blalm.getSequenceId()) break;
+            
+        }
         return res;     
     }
     
     
-    
+    class ConstructInfo
+    {
+        private int i_constructid = -1;
+        private int i_refseqid = -1;
+        private int i_flexrefseqid = -1;
+        
+        public ConstructInfo(){}
+        public ConstructInfo(int isolateid)throws BecDatabaseException
+        {
+            
+            String sql = "select refsequenceid, flexsequenceid , i.constructid as constructid from sequencingconstruct c, flexinfo f, isolatetracking i "
++" where i.isolatetrackingid  ="+isolateid+" and f.isolatetrackingid  =i.isolatetrackingid   and i.constructid=c.constructid      ";
+            RowSet crs = null;
+        
+            try
+            {
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                crs = t.executeQuery(sql);
+
+                if(crs.next())
+                {
+                    i_refseqid = crs.getInt("refsequenceid");
+                   i_flexrefseqid = crs.getInt("flexsequenceid");
+                   i_constructid = crs.getInt("constructid");
+                }
+            } 
+            catch (Exception e)
+            {
+                throw new BecDatabaseException("Error occured while extracting sequenceids: "+sql);
+            } 
+            finally
+            {
+                DatabaseTransaction.closeResultSet(crs);
+            }
+        
+        }
+        
+        public int getConstructId(){ return i_constructid  ;}
+        public int getRefSeqId(){ return i_refseqid  ;}
+        public int getFlexRefSeqId(){ return i_flexrefseqid  ;}
+        
+        public void setConstructId(int v){   i_constructid  = v;}
+        public void setRefSeqId(int v){   i_refseqid  = v;}
+        public void setFlexRefSeqId(int v){   i_flexrefseqid  = v;}
+        
+    }
+        
     
     
     public static void main(String [] args)
@@ -156,10 +241,10 @@ public class OutstandingJobs
         {
                OutstandingJobs ot =new OutstandingJobs();
                 ot.setSpecies(RefSequence.SPECIES_YEAST);
-               
+               String filename="/tmp/namatchout.txt";
                 ot.setPassParamBlastIdentity( 95.0);
-                ot.setPassParamBlastMinimumStretch(10);
-                ot.findWriteORF();
+                ot.setPassParamBlastMinimumStretch(70);
+                ot.findWriteORF(filename);
         }
         catch(Exception e){System.out.print(e.getMessage());}
   }

@@ -186,7 +186,19 @@ public class Construct
       { 
          if(m_refsequence == null) 
             m_refsequence = new RefSequence(m_refsequence_id);
-         m_refsequence_for_analysis =  new BaseSequence(m_refsequence.getCodingSequence(), BaseSequence.BASE_SEQUENCE );
+         String seq = m_refsequence.getCodingSequence();
+         if (m_format == FORMAT_OPEN)
+         {
+             seq = seq.substring(0, seq.length()-3);
+             seq += "TTG";
+         }
+         else if (m_format == FORMAT_OPEN)
+         {
+              seq = seq.substring(0, seq.length()-3);
+             seq += "TAG";
+         }
+             
+         m_refsequence_for_analysis =  new BaseSequence(seq, BaseSequence.BASE_SEQUENCE );
          return m_refsequence_for_analysis;
      }
     /*

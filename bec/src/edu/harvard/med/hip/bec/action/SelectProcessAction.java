@@ -19,6 +19,7 @@ import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.*;
@@ -27,6 +28,7 @@ import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.Constants;
+import edu.harvard.med.hip.bec.action_runners.*;
 
 
 /**
@@ -54,11 +56,11 @@ public class SelectProcessAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         ArrayList specs = new ArrayList();
-        
-         System.out.println( forwardName);
+        Thread t = null;
         try
         {
-            
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        
             request.setAttribute("forwardName", new Integer(forwardName));
             switch  (forwardName)
             {
@@ -66,37 +68,53 @@ public class SelectProcessAction extends ResearcherAction
                 {
                    
                     ArrayList biolinkers = BioLinker.getAllLinkers();
-                                 ArrayList vectors = BioVector.getAllVectors();
+                    ArrayList vectors = BioVector.getAllVectors();
                    
                     request.setAttribute(Constants.VECTOR_COL_KEY, vectors);
                     request.setAttribute(Constants.LINKER_COL_KEY, biolinkers);
                     return (mapping.findForward("upload_plates"));
                 }
+                case Constants.PROCESS_SELECT_VECTOR_FOR_END_READS ://allows to select vector fr plates
+                {
+                    ArrayList vectors = BioVector.getAllVectors();
+                    request.setAttribute(Constants.VECTOR_COL_KEY, vectors);
+                    request.setAttribute("forwardName", new Integer(Constants.PROCESS_RUN_END_READS));
+                    return (mapping.findForward("select_vector"));
+                }
                 case Constants.PROCESS_RUN_END_READS://run sequencing for end reads
                 {
                 }
                 case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
-                case Constants.PROCESS_RUN_ASSEMBLER://run assembly wrapper
                 {
-                  //  RunProcess process = new RunProcess(forwardName, null);
-                  //  process.run();
+                     EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
+                    runner.setUser(user);
+                    t = new Thread(runner);
+                    t.start();
+                    break;
                 }
-                case Constants.PROCESS_CHECK_READS_AVAILABILITY://check reads
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper
                 {
+                    AssemblyRunner runner = new AssemblyRunner();
+                    runner.setUser(user);
+                    runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
+                    t = new Thread(runner);
+                    t.start();
+                    break;
+                }
+                case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY:
+                {
+                     request.setAttribute("forwardName", new Integer(Constants.PROCESS_CHECK_READS_AVAILABILITY));
+                    request.setAttribute(Constants.JSP_TITLE,"select Plates to Check Clone Status");
+                     return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
                 {
+                    //get all specs for each of the three types and all plates where
+                    // there are isolates subject to isolateranking
+                    
                 }
-                case Constants.PROCESS_APROVE_ISOLATE_RANKER://approve isolate ranker
-                {
-                    request.setAttribute(Constants.JSP_TITLE, "approve Isolate Ranking");
-                    return (mapping.findForward("scan_lable"));
-                }
-                case Constants.PROCESS_PUT_CLONES_ON_HOLD: //put clones on hold
-                {
-                    request.setAttribute(Constants.JSP_TITLE, "activate/deactivate Clones");
-                    return (mapping.findForward("scan_lable"));
-                }
+               
+               
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER: // add new internal primer
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
                 {
@@ -163,8 +181,20 @@ public class SelectProcessAction extends ResearcherAction
                     request.setAttribute(Constants.ADDITIONAL_JSP, additional_jsp);
                     return (mapping.findForward("submit_data_file"));
                 }
-            }
             
+            case   Constants.PROCESS_PUT_CLONES_ON_HOLD :
+            {
+             //show label scan form  
+                request.setAttribute(Constants.JSP_TITLE, "put Active Clones on Hold");
+                return (mapping.findForward("scan_label"));
+            }
+            case Constants.PROCESS_ACTIVATE_CLONES:
+            {
+              //show label scan form  
+                request.setAttribute(Constants.JSP_TITLE, "activate Clones");
+                return (mapping.findForward("scan_label"));
+            }
+            }
         }
         catch (Exception e)
         {

@@ -72,7 +72,7 @@ public class RunDiscrepancyFinderAction extends ResearcherAction
             
             // get sequences for clones from this master plates that can be processed 
             // by discrepancy finder
-           int[] master_plate_status = {IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_CONFIRMED};
+           int[] master_plate_status = null;//{IsolateTrackingEngine.PROCESS_STATUS_ASSEMBLY_CONFIRMED};
            ArrayList isolate_trackings = IsolateTrackingEngine.getIsolateTrackingEngines(master_container_ids, master_plate_status);
              
            IsolateTrackingEngine it = null;

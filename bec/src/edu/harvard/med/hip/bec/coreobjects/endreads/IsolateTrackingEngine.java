@@ -18,6 +18,7 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.*;
 import java.util.*;
 import sun.jdbc.rowset.*;
+import edu.harvard.med.hip.bec.sampletracking.objects.*;
 /**
  *
  * @author  htaycher
@@ -38,8 +39,8 @@ public class IsolateTrackingEngine
      
      public static final int           PROCESS_STATUS_SUBMITTED_FOR_ER = 0;
     public static final int            PROCESS_STATUS_SUBMITTED_FOR_FULLSEQUENCING = 1;
-    public static final int            PROCESS_STATUS_SUBMITTED_FOR_ER_AND_FULL_SEQUENCING = 17;
-    public static final int            PROCESS_STATUS_SUBMITTED_FOR_ER_SEQUENCING = 20;
+   // public static final int            PROCESS_STATUS_SUBMITTED_FOR_ER_AND_FULL_SEQUENCING = 17;
+    public static final int            PROCESS_STATUS_SUBMITTED_FOR_SEQUENCE_ANALYSIS = 20;
     public static final int            PROCESS_STATUS_SUBMITTED_EMPTY = 29;
     
     public static final int            PROCESS_STATUS_ER_INITIATED = 2;
@@ -56,9 +57,12 @@ public class IsolateTrackingEngine
     public static final int            PROCESS_STATUS_OLIGODESIGNER_RUN = 8;
     public static final int            PROCESS_STATUS_OLIGODESIGNER_CONFIRMED = 9;
     public static final int            PROCESS_STATUS_INTERNAL_READS_FINISHED = 10;
-  
-    
-
+   
+    public static final int            PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED = 14;
+    public static final int            PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED = 15;
+   
+    public static final int            PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED = 41;
+   
     public static final int            ASSEMBLY_STATUS_FAILED_CDS_NOT_COVERED = -3;
     public static final int            ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED = -4;
     public static final int            ASSEMBLY_STATUS_N_CONTIGS =-6;
@@ -70,11 +74,7 @@ public class IsolateTrackingEngine
 
     public static final int            ASSEMBLY_STATUS_CONFIRMED = 13;
     
-    public static final int            PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED = 14;
-    public static final int            PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED = 15;
-   
-    public static final int            PROCESS_STATUS_SEQUENCING_PROCESS_FINISHED = 41;
-    
+     
     
     
     private	int     m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -91,7 +91,7 @@ public class IsolateTrackingEngine
     
     //?????????????//
     private	int[]   m_fullseq_reads_id = null;//array of samples (ids) used for full sequencing? 
-    private	int[]   m_end_reads_id = new int[2] ;// end reads id
+    private	int[]   m_end_reads_id = {-1,-1};// end reads id
     private Read    m_forward_endread = null;
     private Read    m_reverse_endread = null;
     private CloneSequence   m_clone_sequence = null;
@@ -165,7 +165,7 @@ public class IsolateTrackingEngine
     public int      getConstructId(){ return m_construct_id ;}// identifies the agar; several (four) isolates will have the same id
     public int      getStatus(){ return m_status ;}
      public int     getAssemblyStatus(){return  m_assembly_status ;}
-    public int[]    getEndReadId(){ return m_end_reads_id ;}// sample id of the sample used for the forward read
+    public int[]    getEndReadId()   {              return m_end_reads_id ; }// sample id of the sample used for the forward read
     public int      getRank(){ return m_rank;} ;// results of the end read analysis
     public int      getSampleId(){ return m_sample_id ;}// resulting from the full sequencing
     public int[]    getCloneSequenceReadsId(){ return m_fullseq_reads_id;}
@@ -184,10 +184,10 @@ public class IsolateTrackingEngine
 
             case PROCESS_STATUS_SUBMITTED_FOR_ER : return "Submitted for end reads";
             case PROCESS_STATUS_SUBMITTED_FOR_FULLSEQUENCING :return "Submitted for full sequencing";
-            case PROCESS_STATUS_SUBMITTED_FOR_ER_AND_FULL_SEQUENCING :return "Submitted for whole process";
-            case PROCESS_STATUS_SUBMITTED_FOR_ER_SEQUENCING : return "Submitted for end reads sequnecing";
+           // case PROCESS_STATUS_SUBMITTED_FOR_ER_AND_FULL_SEQUENCING :return "Submitted for whole process";
+           // case PROCESS_STATUS_SUBMITTED_FOR_ER_SEQUENCING : return "Submitted for end reads sequnecing";
             case PROCESS_STATUS_SUBMITTED_EMPTY : return "No processing requered";
-
+            case PROCESS_STATUS_SUBMITTED_FOR_SEQUENCE_ANALYSIS: return "Submitted for sequence analysis";
             case PROCESS_STATUS_ER_INITIATED :return "End reads ordered";
             case PROCESS_STATUS_ER_PHRED_RUN : return "Phred finished";
             case PROCESS_STATUS_ER_ANALYZED : return "End reads analisys finished";
@@ -195,18 +195,15 @@ public class IsolateTrackingEngine
             case PROCESS_STATUS_ER_NO_READS : return "No end reads";
             case PROCESS_STATUS_ER_NO_LONG_READS: return "No long Reads";
             case PROCESS_STATUS_ER_CONFIRMED : return "End reads confirmed";
-
+            case PROCESS_STATUS_ER_ASSEMBLY_FINISHED: return "Assembly based on End Reads Finished";
+      
+    
             case PROCESS_STATUS_READY_FOR_ASSEMBLY : return "Ready for assembly";
             case PROCESS_STATUS_READY_FOR_INTERNAL_READS :return "Ready for internal reads";
             case PROCESS_STATUS_OLIGODESIGNER_RUN : return "Primer designer finished";
             case PROCESS_STATUS_OLIGODESIGNER_CONFIRMED : return "Internal primers confirmed";
             case PROCESS_STATUS_INTERNAL_READS_FINISHED : return "Full sequencing finished";
 
-          
-            case PROCESS_STATUS_ER_ASSEMBLY_FINISHED: return "Finished assembly from end reads";
-
-    
-    
             case PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED : return "Discrepancy finder finished";
             case PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED : return "Polymorphism finder finished";
 
@@ -240,6 +237,9 @@ public class IsolateTrackingEngine
     }
     public Read     getForwardEndRead()    {          return m_forward_endread;    }
     public Read     getReverseEndRead()    {      return m_reverse_endread;    }
+    public void     setForwardEndRead(Read v)    {     m_forward_endread = v;    }
+    public void     setReverseEndRead(Read v)    {  m_reverse_endread =v;    }
+    
     public ArrayList    getEndReads()    {         return m_endreads;    }
     
     
@@ -446,14 +446,19 @@ public class IsolateTrackingEngine
     // @paramin status[]- isolate status 
     // @paramin masterids[] - ids for master plates
     // @paramout    array of sequenceids
-    public static ArrayList getIsolateTrackingEnginesByStatusandSpecies( int[] status, int species)
+    public static ArrayList getIsolateTrackingEnginesByStatusandSpecies( int[] status, int species,String processed_isolatetr_ids)
         throws BecDatabaseException
     {
         ArrayList engines = new ArrayList();
         String processtatus=Algorithms.convertArrayToString(status,",");
        
         if ( processtatus.equalsIgnoreCase("") ) return null;
-        
+        String exclude_istr = "";
+        if (processed_isolatetr_ids != null && ! processed_isolatetr_ids.equals(""))
+        {
+            exclude_istr = processed_isolatetr_ids.substring(0,processed_isolatetr_ids.length()-1 );
+            exclude_istr = "and isolatetrackingid not in ("+exclude_istr+")";
+        }
         String sql = null;  
         if (species == RefSequence.SPECIES_NOT_SET)
             sql = "select isolatetrackingid,constructid,status,rank,score,sampleid  from isolatetracking where status in ("+processtatus+")";
@@ -461,7 +466,7 @@ public class IsolateTrackingEngine
             sql = "select iso.ASSEMBLY_STATUS as assemblystatus, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
             +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid "
             +" from isolatetracking iso, sequencingconstruct c, refsequence r "
-            +"where status in ("+ processtatus+") and r.sequenceid=c.refsequenceid and c.constructid=iso.constructid and r.genusspecies="+species;
+            +"where rownum < 30 "+exclude_istr+"and status in ("+ processtatus+") and r.sequenceid=c.refsequenceid and c.constructid=iso.constructid and r.genusspecies="+species+" order by isolatetrackingid";
         RowSet crs = null;
         IsolateTrackingEngine it = null;
         try
@@ -478,6 +483,8 @@ public class IsolateTrackingEngine
                 istr.setStatus(crs.getInt("status") );
                 istr.setSampleId(crs.getInt("sampleid") );
                 istr.setId( crs.getInt("isolatetrackingid") );
+                
+              
                 istr.setAssemblyStatus( crs.getInt("assemblystatus"));
                 istr.setConstructId( crs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
                 // exstruct reads if not empty sample
@@ -580,7 +587,6 @@ public class IsolateTrackingEngine
            for (int count =0; count < m_endreads.size(); count++)
            {
                Read read = (Read)m_endreads.get(count);
-                
                if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
                                  read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH)
                {
@@ -605,6 +611,7 @@ public class IsolateTrackingEngine
      }
     
       //----------------------- private ------------------------------------------
+   /*
     private void getEndReadFromDBs() throws BecDatabaseException
     {
         Read r1 = Read.getReadById(m_end_reads_id[0]);
@@ -621,7 +628,7 @@ public class IsolateTrackingEngine
         }
     }
     
-    
+    */
     
     
     private boolean isOverlap( ArrayList not_ambiquous_read , int refsequence_length) 
@@ -887,6 +894,8 @@ public class IsolateTrackingEngine
     {
            
         //check for ambiquouty condition
+        try
+        {
        ArrayList not_ambiquous_read = getReadPassedAmbiquoutyTest(cutoff_spec);
        if ( not_ambiquous_read == null || not_ambiquous_read.size() == 0)
        {
@@ -943,6 +952,11 @@ public class IsolateTrackingEngine
                {
                    m_score =(int)( 1000 * (DiscrepancyDescription.getPenalty( discrepancies_pairs, spec)/refsequence_length));
                }
+        }
+        }
+        catch(Exception e)
+        {
+            throw new BecDatabaseException(e.getMessage());
         }
     }
     

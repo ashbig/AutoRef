@@ -131,8 +131,15 @@ public class Run_UploadPlatesAction extends ResearcherAction
                 conn.commit();
                 cloning_startegy_id = str.getId();
             }
-          
-           
+          System.out.print(cloning_startegy_id);
+           System.out.print(i_plate_info_type);
+            System.out.print(i_isolate_status);
+            for (int c=0;c<i_master_container_labels.size();c++)
+            {
+          System.out.print((String)i_master_container_labels.get(c));
+            }
+            return;
+            /*
               //upload plates
             pb = new PlateUploader( i_master_container_labels, i_plate_info_type, cloning_startegy_id, i_isolate_status);
             pb.upload(conn);
@@ -174,7 +181,7 @@ public class Run_UploadPlatesAction extends ResearcherAction
 
                 conn.commit();
             }
-            
+            */
         }
         catch(Exception e)
         {

@@ -474,8 +474,8 @@ public class tester_run_assembler
             CloneSequence clone_seq = new CloneSequence( contig.getSequence(),  contig.getScores(), sequence_definition.getBecRefSequenceId());
             clone_seq.setResultId( result.getId()) ;//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
             clone_seq.setIsolatetrackingId ( sequence_definition.getIsolateTrackingId() );//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
-            clone_seq.setStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED);
-            clone_seq.setType (BaseSequence.CLONE_SEQUENCE_TYPE_ASSESMBLED); //final\conseq\final editied
+            clone_seq.setCloneSequenceStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED);
+            clone_seq.setCloneSequenceType (BaseSequence.CLONE_SEQUENCE_TYPE_ASSESMBLED); //final\conseq\final editied
             clone_seq.setCdsStart( contig.getCdsStart() );
             clone_seq.setCdsStop( contig.getCdsStop() );
             clone_seq.insert(conn);

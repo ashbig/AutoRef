@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.12 2003-08-14 20:08:19 Elena Exp $
+ * $Id: Container.java,v 1.13 2003-08-29 18:41:26 Elena Exp $
  *
  * File     	: Container.java
 
@@ -408,7 +408,7 @@ public class Container
         String sql = null;
         if (!isRefSequenceInfo && !isConstructInfo)
         {
-         sql = "select s.sampleid as sampleid, position, constructid, sampletype,rank,score, status, "
+         sql = "select s.sampleid as sampleid, position, ASSEMBLY_STATUS, constructid, sampletype,rank,score, status, "
         +" iso.isolatetrackingid as isolatetrackingid,id,flexconstructid,flexsampleid,flexsequencingplateid,"
         +" flexsequenceid,flexcloneid from flexinfo f, isolatetracking iso, sample s  "
         +" where f.isolatetrackingid=iso.isolatetrackingid and iso.sampleid=s.sampleid "
@@ -420,7 +420,7 @@ public class Container
         +" iso.isolatetrackingid as isolatetrackingid,id,flexconstructid,flexsampleid,flexsequencingplateid, "
         +"  flexsequenceid,flexcloneid from flexinfo f, isolatetracking iso, sample s, sequencingconstruct c  "
         +"  where f.isolatetrackingid=iso.isolatetrackingid and iso.sampleid=s.sampleid "
-+" and c.constructid=iso.constructid  and s.sampleid in ( select sampleid from sample where containerid = "+m_id+" ) order by POSITION";
++" and c.constructid(+)=iso.constructid  and s.sampleid in ( select sampleid from sample where containerid = "+m_id+" ) order by POSITION";
         }
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -437,7 +437,7 @@ public class Container
                  int sampleid = crs.getInt("sampleid");
                 String sampletype = crs.getString("sampletype");
                 s = new Sample(  sampleid, sampletype, position, m_id);
-                if (isRefSequenceInfo)
+                if (isRefSequenceInfo && s.getType().equals("ISOLATE"))
                 {
                     refseqid = crs.getInt("refsequenceid");
                     s.setRefSequenceId(refseqid);
@@ -492,7 +492,7 @@ public class Container
         
         m_samples.clear();
         
-        String sql = "select s.sampleid as sampleid, position, constructid, sampletype,rank,score, status, ASSEMBLY_STATUS "
+        String sql = "select s.sampleid as sampleid, position,constructid, sampletype,rank,score, status, ASSEMBLY_STATUS ,"
         +" iso.isolatetrackingid as isolatetrackingid from  isolatetracking iso, sample s  "
         +" where  iso.sampleid=s.sampleid "
         +" and s.sampleid in ( select sampleid from sample where containerid = "+m_id+") order by POSITION";
@@ -1455,7 +1455,7 @@ public class Container
                 {
                     forward = new Oligo();
                     forward.setId(crs.getInt("primerid") );
-                    forward.setType(crs.getInt("type"));//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
+                    forward.setType(crs.getInt("type"));//primer type: 5p-pcr, 5p-universal, 5p-full_set_n ?
                     forward.setStart(position); // for full sequencing, start of the prime regarding sequence start
                     forward.setName(crs.getString("name") );
                     forward.setSequence(crs.getString("sequence"));
@@ -1468,7 +1468,7 @@ public class Container
                 {
                     reverse = new Oligo();
                     reverse.setId(crs.getInt("primerid") );
-                    reverse.setType(crs.getInt("type"));//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
+                    reverse.setType(crs.getInt("type"));//primer type: 5p-pcr, 5p-universal, 5p-full_set_n ?
                     reverse.setStart(position); // for full sequencing, start of the prime regarding sequence start
                     reverse.setName(crs.getString("name") );
                     reverse.setSequence(crs.getString("sequence"));
@@ -1605,8 +1605,8 @@ public class Container
        ArrayList c  = null;Container container =null;
         try
         {
-              container = Container.findContainerDescriptionFromLabel("YGS000361-3");
-            
+              container = Container.findContainerDescriptionFromLabel("PGS000121-1");
+           
              container.restoreSampleIsolate(false,true);
              
              int i=container.getCloningStrategyId();

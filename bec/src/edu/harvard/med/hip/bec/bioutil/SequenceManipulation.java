@@ -74,6 +74,8 @@ public class SequenceManipulation
                 {newStr.append("G");break;}
                 case  'g' : case  'G':
                 {newStr.append("C");break;}
+                case  'n' : case  'N':
+                {newStr.append("N");break;}
                 case '['  :
                 { newStr.append(']'); break;}
                 case ']':
@@ -326,15 +328,21 @@ public class SequenceManipulation
     
     public static void main(String [] args)
     {
-        
-        System.out.println( (int) Math.round(Math.ceil(4/3)));
-        System.out.println( (int) Math.round(Math.ceil(3/3)));
-        System.out.println( (int) Math.round(Math.ceil(2/3)));
-        System.out.println( (int) Math.round(Math.ceil(1/3)));
-        int[] arr={0,1,2,3,4,5,6,7,8,9};
-        int as[] = SequenceManipulation.complimentScores(arr);
-        for (int c = 0; c < as.length;c++){
-            System.out.println(as[c]);
-        }
+        String str="ATATGAAACAATTNGAAACGCAAAATTTCAGAATCACAAGCCGTAATCCAACTGGACGATC"
++"TTCGTCGCCGTAAAAGAGTTTGCGCCGTTTAGGATTTTGTACTCCTAATGACATTATTGA"
++"ACTGAAAGGTAGAGTTGCATGTGAAATATCTAGTGGTGATGGACTGTTACTAACAGAATT"
++"GATCTTCAATGGTAATTTCAATGAGTTGAAANCCGGAACAAGCGGCAGCATTATTATCATG"
++"CTTTGCATTCCAAGAACGCTGTAAAGAAGCGCCTAGATTGAAACCAGAGCTTGCCGAACC"
++"TTTGAAGGCTATGAGAGAAATTGCAGCAAAGATCGCTAAGATAATGGAGGATTCTAAAAT"
++"TGAAGTTGTAGAAAAGGACTACGTTGAAAGCTTCAGACATGAACTAATGGAAGTTGTTTA"
++"CGAATGGTGTAGAGGAGCTACTTTTACGCAAATCTGTAAAATGACCGACGTTTACGAAGG"
++"TTCGTTGATCAGAATGTTCAAGAGATTAGAGGAATTGGTGAAGGAGCTGGTAGACGTCGC"
++"CAATACCATTGGTAACTCTTCACTTAAGGAGAAGATGGAAGCTGTCTTGAAATTAATTCA"
++"TAGAGATATCGTATCTGCTGGTTCTTTGTATTTATAGCATGGCAATTCCCGGGGATACCC"
++"AGCTTTCTTGTACAAAGTTGGCATTATAAGAAAGCATTGCTTATCAATTTGTGCAACGAA"
++"CAGGTCACTATCAGTCAAAATAAAATCATTATTGCCATCCAG";
+
+        System.out.println(getCompliment(str));
+       
     }
 }

@@ -165,7 +165,7 @@ public class Constants {
     public static final int            PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE = 3;
     
     //read quality
-    public static final int            NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION = 50;
+    public static final int            NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION = 60;
     
     
     // key used to find vector object in session.
@@ -176,32 +176,48 @@ public class Constants {
     public static final String LINKER_COL_KEY = "COL_LINKER";
     public static final String PLATES_COL_KEY = "COL_PLATES";
     
+        //submit data from file
+    public static final String FILE_DESCRIPTION = "file_description";
+    public static final String FILE_TITLE = "file_title";
+    public static final String FILE_NAME =  "fileName";
     
-    public static final String JSP_TITLE = "title";
+    //jsp tags
+    public static final String ADDITIONAL_JSP = "additional_jsp";
+     public static final String JSP_TITLE = "title";
+   
     
     //for  display; definition of items to display
-    //processes 20 - 50 
-    public static final int PROCESS_UPLOAD_PLATES =  20;//upload plates
-     public static final int PROCESS_RUN_END_READS = 21;//run sequencing for end reads
-     public static final int PROCESS_RUN_END_READS_WRAPPER = 22;//run end reads wrapper
-     public static final int PROCESS_RUN_ASSEMBLER = 23;//run assembly wrapper
-      public static final int PROCESS_CHECK_READS_AVAILABILITY =24;//check reads
-      public static final int PROCESS_RUN_ISOLATE_RUNKER = 25;//run isolate runker
-      public static final int PROCESS_APROVE_ISOLATE_RANKER = 26;//approve isolate ranker
+    //processes 40 - 150 
+    public static final int PROCESS_UPLOAD_PLATES =  40;//upload plates
+     public static final int PROCESS_SELECT_VECTOR_FOR_END_READS =41;//run sequencing for end reads
+     public static final int PROCESS_SELECT_PLATES_FOR_END_READS =41; 
+     public static final int PROCESS_RUN_END_READS = 42;//run sequencing for end reads
+     public static final int PROCESS_RUN_END_READS_WRAPPER = 43;//run end reads wrapper
+     public static final int PROCESS_RUN_ASSEMBLER_FOR_END_READS = 45;//run assembly wrapper
+      public static final int PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY =46;
+     public static final int PROCESS_CHECK_READS_AVAILABILITY =62;//check reads
+     
+     public static final int PROCESS_SELECT_PLATES_FOR_ISOLATE_RUNKER =47; 
+     public static final int PROCESS_RUN_ISOLATE_RUNKER = 48;//run isolate runker
+      public static final int PROCESS_APROVE_ISOLATE_RANKER = 48;//approve isolate ranker
     
-      public static final int PROCESS_ADD_NEW_INTERNAL_PRIMER = 28; // add new internal primer
-      public static final int PROCESS_VIEW_INTERNAL_PRIMERS = 29;//view internal primers
-      public static final int PROCESS_APPROVE_INTERNAL_PRIMERS = 30;//approve internal primers
-      public static final int PROCESS_RUN_PRIMER3= 31;//run primer3
-      public static final int PROCESS_RUNPOLYMORPHISM_FINDER= 32; //run polymorphism finder
-      public static final int PROCESS_RUN_DISCREPANCY_FINDER= 33;//run discrepancy finder
-      public static final int PROCESS_RUN_DESIGION_TOOL = 34;//run decision tool
+      public static final int PROCESS_ADD_NEW_INTERNAL_PRIMER = 49; // add new internal primer
+      public static final int PROCESS_VIEW_INTERNAL_PRIMERS = 50;//view internal primers
+      public static final int PROCESS_APPROVE_INTERNAL_PRIMERS = 51;//approve internal primers
+      public static final int PROCESS_RUN_PRIMER3= 52;//run primer3
+    public static final int PROCESS_RUN_ASSEMBLER_FOR_ALL_READS = 53;//run assembly wrapper
+      public static final int PROCESS_RUNPOLYMORPHISM_FINDER= 54; //run polymorphism finder
+      public static final int PROCESS_RUN_DISCREPANCY_FINDER= 55;//run discrepancy finder
+      public static final int PROCESS_RUN_DESIGION_TOOL = 56;//run decision tool
       
-      public static final int PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 35;//run decision tool
-       public static final int PROCESS_PUT_CLONES_ON_HOLD = 27; //put clones on hold
-      public static final int            PROCESS_ACTIVATE_CLONES = 37;
-       public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 38;
-    //items for display 1-19
+      public static final int PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 57;//run decision tool
+       public static final int PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
+      public static final int            PROCESS_ACTIVATE_CLONES = 59;
+       public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 60;
+       
+       //62
+       
+    //items for display 1-40
   
    
     public static final int VECTOR_DEFINITION_INT = 1;
@@ -224,11 +240,7 @@ public class Constants {
       public static final int AVAILABLE_LINKERS_DEFINITION_INT = 18;
       
        
-       //submit data from file
-    public static final String FILE_DESCRIPTION = "file_description";
-    public static final String FILE_TITLE = "file_title";
-    public static final String FILE_NAME =  "fileName";
-    public static final String ADDITIONAL_JSP = "additional_jsp";
+   
     
     
     /**

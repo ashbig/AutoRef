@@ -149,6 +149,8 @@
             <forward name="display_isolate_ranker_report" path="/ContainerQualityReport.jsp"/>
              <forward name="display_sample_isolate_ranker_report" path="/SampleReport.jsp"/>
             <forward name="display_read_report" path="/ReadReport.jsp"/>
+             <forward name="show_activate_list" path="/CloneList.jsp"/>
+            <forward name="show_clone_status_list" path="/ContainerCloneStatus.jsp"/>
 </action>
 
  
@@ -158,8 +160,9 @@
                 name="seqGetSpecForm"
                 type="edu.harvard.med.hip.bec.action.SelectProcessAction">
             <forward name="upload_plates" path="/RunUploadPlates.jsp"/>
+            <forward name="select_vector" path="/SelectVector.jsp"/>
             <forward name="run_process" path="/RunProcess.jsp"/>
-            <forward name="scan_lable" path="/ContainerScan.jsp"/>
+            <forward name="scan_label" path="/ContainerScan.jsp"/>
             <forward name="submit_data_file" path="/SubmitDataFile.jsp"/>
            
 
@@ -181,7 +184,7 @@
     <action      path="/RunProcess"
                 name="seqGetSpecForm"
                 type="edu.harvard.med.hip.bec.action.RunProcessAction">
-            <forward name="sucess" path="/ConfirmProcess.jsp"/>
+            <forward name="processing" path="/ConfirmProcess.jsp"/>
             
     </action>
 

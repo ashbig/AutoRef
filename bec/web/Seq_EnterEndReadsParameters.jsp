@@ -215,7 +215,7 @@
               <input name="ER_3DI_H" type="input" id="ER_3DI_H" value="1000" size="10">
             </div></td>
        	<td bgColor="#b8c6ed"><div align="center"> 
-              <input name="ER_3DI_H" type="input" id="ER_3DI_H" value="500" size="10">
+              <input name="ER_3DI_L" type="input" id="ER_3DI_L" value="500" size="10">
             </div></td>
       </table></td>
   </tr>

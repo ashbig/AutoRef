@@ -60,10 +60,14 @@
             if (m.length() == 0) m = null;
             
             int type = Mutation.TYPE_NOT_DEFINE;
-            
+             
             if (m_position == 1 )
             {
-                if (o != null && !o.substring( 0, 1).equals(m.substring( 0, 1)))
+                 if (o != null && m==null)
+                {
+                    return Mutation.TYPE_AA_NO_TRANSLATION ;
+                }
+                 else if(o != null && m != null &&  !o.substring( 0, 1).equals(m.substring( 0, 1)))
                 {
                     return Mutation.TYPE_AA_NO_TRANSLATION ;
                 }

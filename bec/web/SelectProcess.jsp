@@ -69,17 +69,22 @@
   </tr>
   <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_END_READS   %> >
-      Run end reads sequencing (settings required)</font></td>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_VECTOR_FOR_END_READS   %> >
+      Request end reads sequencing (settings required)</font></td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_END_READS_WRAPPER  %> >
       Run end reads wrapper (settings required)</font></td>
   </tr>
+ <tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS  %> >
+      Run assemble for end reads</font></td>
+  </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_CHECK_READS_AVAILABILITY %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY %>>
       Check whether all reads are available</font></td>
   </tr>
   <tr> 
@@ -135,7 +140,7 @@
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER  %>>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS  %>>
       Run assembly wrapper</font></td>
   </tr>
   <tr> 

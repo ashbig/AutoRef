@@ -175,6 +175,7 @@ public class PlateUploader
       
         int plate_id  = -1;
         SampleInfo sample ;
+        /*
         String sql = "select sampleid, sampletype, containerid,"+
         " containerposition as position, cd.constructtype as format, cd.constructid as constructid, cd.sequenceid as sequenceid, cloneid"+
         " from clonesequencing c, sample s, constructdesign cd"+
@@ -185,7 +186,15 @@ public class PlateUploader
         " and c.sequencingsampleid(+)=s.sampleid"+
         " and s.constructid=cd.constructid(+)"+
         " order by containerposition";
-
+*/
+         String sql = "select sampleid, sampletype, containerid,"+
+        " containerposition as position, cd.constructtype as format, cd.constructid as constructid, cd.sequenceid as sequenceid, c.cloneid as CLONEID "+
+        " from clonesequencing c, sample s, constructdesign cd"+
+        " where s.containerid =  (select containerid from containerheader " +
+        " where label='" + platename +"')"+
+        " and c.sequencingsampleid(+)=s.sampleid"+
+        " and s.constructid=cd.constructid(+)"+
+        " order by containerposition";
         ResultSet rs = null;
         try
         {
@@ -209,10 +218,13 @@ public class PlateUploader
                     
                     flex_sequence_ids.put(new Integer(sample.getSequenceId () ), new Integer(-1));
                 }
+                int cloneid = rs.getInt("CLONEID");
+                System.out.println(rs.getObject("CLONEID"));
                 //not empty sample
-                if ( !sample.isEmpty() )
+                if ( !sample.isEmpty() && ! sample.isControl() )
                 {
-                    sample.setCloneId (rs.getInt("cloneid"));
+                   // if (cloneid == 0) throw new BecDatabaseException("No cloneid is detected for sample position "+sample.getPosition ());
+                    sample.setCloneId (cloneid);
                 }
                 else
                 {
@@ -687,7 +699,7 @@ public class PlateUploader
         ArrayList plates = new ArrayList();
     
       //  plates.add("YGS000360-2");
-        plates.add("YGS000360-1");
+        plates.add("PGS000121-1");
        // plates.add("YGS000360-3");
        // plates.add("YGS000360-4");
         Connection conn=null;
@@ -698,7 +710,7 @@ public class PlateUploader
             pb.upload( conn);
     //     PlateUploader pb = new PlateUploader( plates, PLATE_NAMES, 1,  4, 5, IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER);
      //    pb.upload();
-            conn.commit();
+        //    conn.commit();
             
         }catch(Exception e){DatabaseTransaction.rollback(conn);}
         System.exit(0);

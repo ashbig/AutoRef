@@ -174,7 +174,7 @@ else if (specs.size() > 0 )
               <%= current_params.get("ER_3DI_H")%>
             </div></td>
        	<td bgColor="#b8c6ed"><div align="center"> 
-              <%= current_params.get("ER_3DI_H")%>
+              <%= current_params.get("ER_3DI_L")%>
             </div></td>
       </table></td>
   </tr>

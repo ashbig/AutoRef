@@ -220,13 +220,13 @@ public class DiscrepancyFinder
         char[] sequence_subject_n = res_needle.getSubject().toUpperCase().toCharArray();
         //prepare sequence elements
         SequenceElement[] elements = prepareSequenceElements(sequence_query_n,sequence_subject_n,quality_scores_query);
-
+        int  number_of_rna_discrepancies = 0;
 
         boolean isInMutation = false;
         boolean isAlignmentStarted = false;
         boolean isDefineQuality = ( quality_scores_query != null && quality_scores_query.length > 0);
         AAMutation cur_aa_mutation = null;        RNAMutation cur_rna_mutation = null;
-        int number_of_rna_discrepancies = -1;
+       
         int mut_number = 0;int mut_start = -1;
         try{
         for (int count = 0; count < elements.length; count++ )
@@ -254,10 +254,11 @@ public class DiscrepancyFinder
                     // do nothing
                     if (isInMutation)//mutation finished
                     {
-                         createMutations( res,   number_of_rna_discrepancies,
-                             isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id );
+                         createMutations( res, isDefineQuality,  elements,   
+                         count,  mut_start,  exper_sequence_id );
                         mut_start = -1;
                         isInMutation =false;
+                        number_of_rna_discrepancies++;
                         //forse get out if max number of discrepancies reached
                         if (m_max_number_of_mutations_to_detect < number_of_rna_discrepancies)
                             return res;
@@ -272,7 +273,7 @@ public class DiscrepancyFinder
                         //forse to close last mutation
                         if (isInMutation)
                         {
-                            createMutations( res,   number_of_rna_discrepancies,
+                            createMutations( res,  
                              isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id);
                         }
                         break;
@@ -290,10 +291,11 @@ public class DiscrepancyFinder
                              ;
                          if (isCreateNewMutation)
                          {
-                             createMutations( res,   number_of_rna_discrepancies,
-                             isDefineQuality,  elements,   count,  mut_start,  exper_sequence_id);
+                             createMutations( res,   isDefineQuality,  elements,   count,
+                             mut_start,  exper_sequence_id);
                              mut_start = -1;
-                             if ( m_max_number_of_mutations_to_detect < count) return res;
+                             number_of_rna_discrepancies ++;
+                             if ( m_max_number_of_mutations_to_detect < number_of_rna_discrepancies) return res;
 
                          }
                      }
@@ -315,7 +317,7 @@ public class DiscrepancyFinder
 
     }
 
-    private void createMutations(ArrayList res,  int number_of_rna_discrepancies,
+    private void createMutations(ArrayList res,  
             boolean isDefineQuality, SequenceElement[] elements,
             int count, int mut_start, int exper_sequence_id)
     {
@@ -375,11 +377,11 @@ public class DiscrepancyFinder
 
 
         cur_rna_mutation = createRNADiscrepancy( elements,  count, mut_number,
-                                                mut_start, exper_sequence_id,
+                                                mut_start, m_refsequence_cds_start, exper_sequence_id,
                                                 q_allel,s_allel,quality);
         res.add(cur_rna_mutation);
 // System.out.println("\t\t\t New Mutation\n\n\t\t\t "+cur_rna_mutation.toString());
-        number_of_rna_discrepancies++;
+       
         if (    cur_rna_mutation.getType() != Mutation.TYPE_RNA_SILENT )
         {
            cur_aa_mutation= createAADiscrepancy( cur_rna_mutation.getCodonMut(),
@@ -400,7 +402,7 @@ public class DiscrepancyFinder
                                         int[] quality_scores)
     {
         int length = ( sequence_query_n.length  >= sequence_subject_n.length ) ?
-                sequence_subject_n.length -1  :   sequence_query_n.length -1 ;
+                sequence_subject_n.length   :   sequence_query_n.length  ;
         SequenceElement[] elements = new SequenceElement[length];
         SequenceElement element = null;
         int q_index = 0;
@@ -425,15 +427,17 @@ public class DiscrepancyFinder
             elements[count]=element;
 
             //set up cds start && stop
-            if (s_index == 1 && q_index > 0 && m_cds_start == 0)
+            if (s_index >0 && q_index > 0 && m_cds_start == 0)
             {
                 m_cds_start = q_index;
             }
             if (m_cds_stop == 0 && s_index > 1 && 
-            ( sequence_subject_n[count] == ' ' && sequence_query_n[count] != ' ')
-            ||  ( sequence_subject_n[count] != ' ' && sequence_query_n[count] == ' ')
-            || ( count == sequence_query_n.length -1 && 
-                    ( sequence_subject_n[count] != ' ' && sequence_subject_n[count] != '-' && sequence_query_n[count] != ' ' && sequence_query_n[count] != '-')))
+            ( 
+             (sequence_subject_n[count] == ' ' && sequence_query_n[count] == ' ')
+            || (sequence_subject_n[count] == ' ' && sequence_query_n[count] != ' ')
+            ||  ( m_cds_start > 0 && sequence_subject_n[count] != ' ' && sequence_query_n[count] == ' ')
+            || ( count == sequence_query_n.length -1 )))
+                
             {
                 m_cds_stop = q_index;
             }
@@ -465,7 +469,7 @@ public class DiscrepancyFinder
     }
 
     private RNAMutation createRNADiscrepancy( SequenceElement[] elements, int current_element_count,
-                    int mut_number,  int mut_start, int sequence_id,
+                    int mut_number,  int mut_start, int m_refsequence_cds_start, int sequence_id,
                     String q_allel,String s_allel,int quality)
     {
 
@@ -571,7 +575,7 @@ public class DiscrepancyFinder
         cur_rna_mutation.setCodonOri( cori );
         cur_rna_mutation.setCodonMut(corm);
         cur_rna_mutation.setCodonPos( elements[mut_start].getSubjectIndex()  % 3 );
-        cur_rna_mutation.setPosition ( elements[mut_start].getSubjectIndex());// start of mutation (on object sequence)
+        cur_rna_mutation.setPosition ( elements[mut_start].getSubjectIndex()- m_refsequence_cds_start);// start of mutation (on object sequence)
         cur_rna_mutation.setLength ( s_allel.length());
         cur_rna_mutation.setChangeMut ( q_allel);
         cur_rna_mutation.setChangeOri ( s_allel);
@@ -594,7 +598,7 @@ public class DiscrepancyFinder
         String am =  SequenceManipulation.getTranslation(cor_ori, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
 
         cur_aa_mutation =  new AAMutation();
-        cur_aa_mutation.setPosition ( (int)Math.floor(element.getSubjectIndex() / 3) + 1 );// start of mutation (on object sequence)
+        cur_aa_mutation.setPosition ( (int)Math.floor( (element.getSubjectIndex() - m_refsequence_cds_start)/ 3) + 1 );// start of mutation (on object sequence)
         cur_aa_mutation.setLength ( (int) Math.ceil(cor_ori.length() / 3) );
         cur_aa_mutation.setChangeMut ( atr);
         cur_aa_mutation.setChangeOri ( am);
@@ -653,14 +657,7 @@ public class DiscrepancyFinder
     public static void main(String args[])
     {
 
-        String seq = "TTTTTTTTTTTTTTGAATTTGATAATCCTCCTTTTATTcCATATTAAACTTTAAAATTTGTACCACATTATTAAAGTATTACTTTTACTCACAGTAGTATTATACATAGACTTAACACAATTTTTAAAAATGTGTTTACTTAAAACAATATAATTCTCCTTTACAAAAGCAACTTTATATAAAATGTTTGGCTTAAGACTGTCATTGCTATTATGCCTTTGAATGAAATTCCACTCTTTCGCCTCCATTGTCCAGAAACAGGCACATATCAGCTTGTTTTCTTTAATGAATATTCTGTAACAAGTTCCTGAAGTTTTCTAATTCTTTCACACTTGTAGAAATTCTTCCAAATGCGTTGAATAATGATACTATTTCTTGTCTGGTTAGATGGAATTCATAACTAGGTCCACTTTCTGGCATATTTGCTATCAATTTCTCAGAAAATAAGATCTTCAGAGCAGTGCCCAAACCCTGAGTCTGAAGCTTTCCCCACAGACGACATTTAAAACAACCAACACAATCCATAATT";
-        // String seq="GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTATCAGTCGACACCATGCGCGAGATCGTGCACATCCAGGCGGGCCAGTGCGGCAACCAGATCGGCGCCAAGTTTTGGGAGGTCATCAGTGATGAGCATGGGATTGACCCCACTGGCAGTTACCATGGAGACAGTGATTTGCAGCTGGAGAGAATCAATGTTTACTACAATGAAGCCACTGGTAACAAATATGTTCCTCGGGCCATCCTCGTGGATCTGGAGCCAGGCACGATGGATTCGGTTAGGTCTGGACCATTCGGCCAGATCTTCAGACCAGACAATTTCGTGTTTGGCCAGAGTGGAGCCGGGAATAACTGGGCCAAGGGCCACTACACAGAGGGAGCCGAGCTGGTCGACTCGGTCCTGGATGTGGTGAGGAAGGAGTCAGAGAGCTGTGACTGTCTCCAGGGCTTCCAGCTGACCCACTCTCTGGGGGGCGGCACGGGGTCCGGGATGGGCACCCTGCTCATCAGCAAGATCCGGGAAGAGTACCCAGACCGCATCATGAACACCTTCAGCGTCATGCCCTCACCCAAGGTGTCAGACACGGTGGTGGAGCCCTACAACGCCACCCTCTCGGTCCACCAGCTGGTGGAAAACACAGATGAAACCTACTGCATTGACAACGAGGCCCTGTATGACATCTGCTTCCGCACCCTGAAGCTGACCACCCCCACCTACGGGGACCTCAACCACCTGGTGTCGGCCACCATGAGCGGGGTCACCACCTGCCTGCGCTTCCCGGGCCAGCTGAACGCAGACCTGCGCAAGCTGGCGGTGAACATGGTGCCCTTCCCTCGCCTGCACTTCTTCATGCCCGGCTTCGCGCCCCTGACCAGCCGGGGCAGCCAGCAGTACCGGGCGCTCACGGTGCCCGAGCTCACCCAGCAGATGTTCGACTCCAAGAACATGATGGCCGCCTGCGACCCGCGCCACGGCCGCTACCTGACGGTGGCTGCCATCTTCCGGGGCCGCATGTCCATGAAGGAGGTGGACGAGCAGATGCTCAACGTGCAGAACAAGAACAGCAGCTACTTCGTGGAGTGGATCCCCAACAACGTGAAGACGGCCGTGTGCGACATCCCGCCCCGCGGCCTGAAGATGTCGGCCACCTTCATCGGCAACAGCACGGCCATCCAGGAGCTGTTCAAGCGCATCTCCGAGCAGTTCACGGCCATGTTCCGGCGCAAGGCCTTCCTGCACTGGTACACGGGCGAGGGCATGGACGAGATGGAGTTCACCGAGGCCGAGAGCAACATGAACGACCTGGTGTCCGAGTACCAGCAGTACCAGGACGCCACGGCCGACGAACAAGGGGAGTTCGAGGAGGAGGAGGGCGAGGACGAGGCTTTGGGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC";
-         // String queryFile = "c:\\needleoutput\\needle3600_2808.out";
-       SequencePair pair = null;
-       int refseqid = -1;
-       String refseq = null;BaseSequence  refsequence =null;
-       String cloneseq=null;AnalyzedScoredSequence clonesequence = null;String line = null;
-       ArrayList pairs = new ArrayList();
+      
        try
         {
            /*
@@ -727,13 +724,14 @@ public class DiscrepancyFinder
             */
 
            NeedleResult res = new NeedleResult();
-          String queryFile ="c:\\needleoutput\\needle1763_104.out";
+          String queryFile ="c:\\needleoutput\\needle6574_1285.out";
             //  String queryFile = "c:\\needleATG.out";
              NeedleParser.parse(queryFile,res);
 
             // edu.harvard.med.hip.bec.coreobjects.endreads.Read read =  edu.harvard.med.hip.bec.coreobjects.endreads.Read.getReadById(1154);
             // int[] trimmed_scores = read.getTrimmedScoresAsArray();
-             DiscrepancyFinder d =new DiscrepancyFinder(pair);
+             DiscrepancyFinder d =new DiscrepancyFinder(new ArrayList());
+             
        ///      String l5 = "CTTCCGGCTGACCATC";
         //     String l3 = "CATGGCTATTCGGGG";
         //     String seqr="ATGATTGTTAAAGTGAAGACACTGACTGGGAAGGAGATCTCTGTTGAGCTGAAGGAATCAGATCTCGTATATCACATCAAGGAACTTTTGGAGGAAAAAGAAGGGATTCCACCATCTCAACAAAGACTTATATTCCAGGGAAAACAAATGTATGTTCATTCAGTGGTTAA--ATCTTTTAAGTTTATTTACGTTTTTGAGACCTTACTAACGACCAGGATAGTGATGATAAATTAACAGTAACGGATGCACATCTAGTAGAGGGAATGCAACTCCACTTGGTATTAACACTAAGAGGTGGTAACTAG";
@@ -743,7 +741,11 @@ public class DiscrepancyFinder
          //    d.setRefSequenceCdsStop(l5.length() +seqr.length()-2);
              
          //    int[]scores=null;//{10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,10,10,30,30,30,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,30,30,34,34,24,56,43,45,10,10,10,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30};
-          ArrayList   m = d.run_analysis( res,  null,1188, 1203,0);
+         d.setMaxNumberOfDiscrepancies(20);
+         d.setRefSequenceCdsStart(   69 );
+         d.setRefSequenceCdsStop(  2790);
+             ArrayList   m = d.run_analysis( res,  null,1188, 1203,450);
+         
           System.out.println(d.getCdsStart()+" "+d.getCdsStop());
 
 

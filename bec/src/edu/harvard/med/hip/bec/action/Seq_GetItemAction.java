@@ -63,7 +63,8 @@ public class Seq_GetItemAction extends ResearcherAction
                 forwardName == Constants.CONTAINER_RESULTS_VIEW ||
                 forwardName == Constants.CONTAINER_ISOLATE_RANKER_REPORT ||
                 forwardName ==Constants.PROCESS_PUT_CLONES_ON_HOLD ||
-                 forwardName == Constants.PROCESS_ACTIVATE_CLONES)//rocessing from container label
+                 forwardName == Constants.PROCESS_ACTIVATE_CLONES ||
+                 forwardName == Constants.PROCESS_CHECK_READS_AVAILABILITY )//rocessing from container label
                {
                      
                     label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
@@ -323,7 +324,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     container.restoreSampleIsolate(false,true);
                     request.setAttribute("container",container);
                     request.setAttribute("forwardName", new Integer(forwardName));
-                    System.out.print("lll");
+                
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("show_activate_list"));
                 }
@@ -338,14 +339,33 @@ public class Seq_GetItemAction extends ResearcherAction
                 }
                 case Constants.AVAILABLE_VECTORS_DEFINITION_INT:
                 {
-                    System.out.println("a");
+                    
                     request.setAttribute("forwardName", new Integer(forwardName));
                     ArrayList vectors = BioVector.getAllVectors();
                     request.setAttribute("vectors", vectors);
-                    System.out.println(vectors.size());
                     return (mapping.findForward("display_vector"));
                     
                 }     
+                //check clones end reads / sequence availability
+                //initiated from SelectProcess
+                case Constants.PROCESS_CHECK_READS_AVAILABILITY:
+                {
+                    container.restoreSampleIsolateNoFlexInfo();
+                    Sample s = null;Result r = null;
+                    for (int is_count = 0; is_count < container.getSamples().size(); is_count++)
+                    {
+                        s = (Sample) container.getSamples().get(is_count);
+                        r = Result.getResultBySampleId(s.getId(), ""+Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_FORWARD_PASS+","+Result.RESULT_TYPE_ENDREAD_FORWARD_FAIL);
+                        if (r != null) s.addResult(r);
+                        r = Result.getResultBySampleId(s.getId(), ""+Result.RESULT_TYPE_ENDREAD_REVERSE +","+Result.RESULT_TYPE_ENDREAD_REVERSE_PASS+","+Result.RESULT_TYPE_ENDREAD_REVERSE_FAIL);
+                        if (r != null) s.addResult(r);
+
+                    }
+                     request.setAttribute("container",container);
+                    String title = "clone Data for container " + label;
+                    request.setAttribute(Constants.JSP_TITLE,title);
+                    return (mapping.findForward("show_clone_status_list"));
+                }
              
             }
             

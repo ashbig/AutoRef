@@ -136,7 +136,7 @@ public class RunEndReadsRequestAction extends ResearcherAction
                         i_error_messages.add("Plate "+container.getLabel()+" has enr read result - it wont be processed");
                         continue;
                     }
-                    container.restoreSampleIsolate();
+                    container.restoreSampleIsolate(false,false);
                     master_plates.add(container);
                 }
                 

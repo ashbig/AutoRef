@@ -40,10 +40,11 @@ public class tester_isolateranker
      
     {
         ArrayList master_container_ids = new ArrayList();
-        master_container_ids.add(new Integer(16));
-      //  master_container_ids.add(new Integer(16));
-     //  master_container_ids.add(new Integer(18));
-     // master_container_ids.add(new Integer(19));
+       
+     
+      master_container_ids.add(new Integer(56));
+      
+     
         tester_isolateranker runner = new tester_isolateranker();
       
         int specid_polymorphism = -1;
@@ -52,8 +53,8 @@ public class tester_isolateranker
         {
             user = AccessManager.getInstance().getUser("htaycher","htaycher");
             runner.setContainerIds(master_container_ids );
-            runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(6, Spec.FULL_SEQ_SPEC_INT));
-            runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(5, Spec.END_READS_SPEC_INT));
+            runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(11, Spec.FULL_SEQ_SPEC_INT));
+            runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(10, Spec.END_READS_SPEC_INT));
             if (specid_polymorphism != -1)
                 runner.setPolymorphismSpec((PolymorphismSpec)Spec.getSpecById(specid_polymorphism, Spec.POLYMORPHISM_SPEC_INT));
             runner.setUser(user);
@@ -103,7 +104,7 @@ public class tester_isolateranker
                 for (int plate_count = 0; plate_count < i_master_container_ids.size(); plate_count++)
                 {
                     container_id = ((Integer)i_master_container_ids.get(plate_count)).intValue();
-                   
+                   System.out.println("Started container "+container_id);
                     //get common primers used for reads - assumption each plate run with the same primers
 // this staff will work only for one pair of end read primers !!!!!!!!!!!!
                     // fix for multipal pairs
@@ -111,9 +112,14 @@ public class tester_isolateranker
                      requested_plates += container_id;
                     ArrayList constructs = Construct.getConstructsFromPlate(container_id);
                       CloningStrategy container_cloning_strategy = Container.getCloningStrategy(container_id);
-                    BioLinker linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
-                    BioLinker linker5 = BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() );
-                    
+                     BioLinker linker3 =  null; BioLinker linker5 =null;
+                     int linker3_length = 0;
+                     int linker5_length = 0;
+                      if (container_cloning_strategy != null)
+                     {
+                         linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
+                         linker5 = BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() );
+                     }
                     if (i_isRunPolymorphismFinder)
                     {
                         isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs,  i_polymorphism_spec);
@@ -123,22 +129,31 @@ public class tester_isolateranker
                     {
                          isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs);
                     }
-                    isolate_ranker.setLinker5(linker5);
-                    isolate_ranker.setLinker3(linker3);
+                   
+                  if (linker3 != null)
+                     {
+                         isolate_ranker.setLinker3(linker3);
+                        linker3_length = linker3.getSequence().length();
+                     }
+                     if (linker5 != null)
+                     {
+                         isolate_ranker.setLinker5(linker5);
+                         linker5_length = linker5.getSequence().length();
+                     }
                     if (oligos[0] != null)
                     {
-                         isolate_ranker.set5pMinReadLength(oligos[0].getLeaderLength() + linker5.getSequence().length() + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION);
+                         isolate_ranker.set5pMinReadLength(oligos[0].getLeaderLength() + linker5_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION);
                          isolate_ranker.setForwardReadSence( oligos[0].getOrientation() == Oligo.ORIENTATION_SENSE);
                     }
                     if (oligos[1] != null)
                     {
-                         isolate_ranker.set3pMinReadLength(oligos[1].getLeaderLength() + linker3.getSequence().length() + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION);
+                         isolate_ranker.set3pMinReadLength(oligos[1].getLeaderLength() + linker3_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION);
                         isolate_ranker.setReverseReadSence( oligos[1].getOrientation() == Oligo.ORIENTATION_SENSE) ; 
                     }
                   
                   
                     isolate_ranker.run(conn);
-                   
+                   System.out.println("Finished container "+container_id);
                 }
   
                 i_error_messages.addAll( isolate_ranker.getErrorMessages() );
