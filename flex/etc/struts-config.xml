@@ -142,6 +142,9 @@
     <form-bean      name="mgcImportRequestForm"
                     type="edu.harvard.med.hip.flex.form.MgcImportRequestForm"/>
 
+     <!-- Form used to import MGC reuest -->
+    <form-bean      name="specialOligoOrderForm"
+                    type="edu.harvard.med.hip.flex.form.SpecialOligoOrderForm"/>
 
     </form-beans>
     
@@ -754,6 +757,14 @@
     </action>
   
 
+    <!-- Action mapping for MGC request import -->
+    <action path="/SpecialOligoOrder"
+            type="edu.harvard.med.hip.flex.action.SpecialOligoOrderAction"
+            name="specialOligoOrderForm"
+            scope="request"
+            input="/SpecialOligoOrder.jsp">
+      <forward name="success" path="/ProcessSpecialOligoOrder.jsp"/>
+    </action>
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
