@@ -102,6 +102,8 @@ public class Constants {
     // key used to find the edit mode of a form
     public static final String FORM_MODE_KEY="EDIT_MODE";
     
+    // key used to find the thread
+    public static final String THREAD_KEY="THREAD";
    
     
     /** Creates new Constants */
