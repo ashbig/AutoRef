@@ -25,8 +25,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  * @author  dzuo
  * @version
  */
-public class ImportSequenceAction extends AdminAction {
-    
+public class ImportSequenceAction extends AdminAction {    
     /**
      * Does the real work for the perform method which must be overriden by the
      * Child classes.
@@ -77,7 +76,7 @@ public class ImportSequenceAction extends AdminAction {
         SequenceImporter importer = new SequenceImporter(project);
         DatabaseTransaction t = null;
         Connection conn = null;
-        
+ 
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2001-08-17 20:35:52 $
+ * $Revision: 1.11 $
+ * $Date: 2001-11-05 21:06:39 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.10 $ $Date: 2001-08-17 20:35:52 $
+ * @version    $Revision: 1.11 $ $Date: 2001-11-05 21:06:39 $
  */
 
 public class ViewPendingRequestsAction extends WorkflowAction{
@@ -87,8 +87,8 @@ public class ViewPendingRequestsAction extends WorkflowAction{
         // get the session
         HttpSession session = request.getSession();
                 
-        int projectid = ((Integer)(request.getAttribute("projectid"))).intValue();
-        int workflowid = ((Integer)(request.getAttribute("workflowid"))).intValue();
+        int projectid = ((PendingRequestsForm)form).getProjectid();
+        int workflowid = ((PendingRequestsForm)form).getWorkflowid();
         
         try {
             Project project = new Project(projectid);   

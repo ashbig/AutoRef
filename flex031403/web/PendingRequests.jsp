@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.20 2001-08-17 20:38:26 dzuo Exp $ 
+        $Id: PendingRequests.jsp,v 1.21 2001-11-05 21:07:24 dzuo Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -45,9 +45,7 @@
                             Jump to page: 
                             <logic:iterate name="PAGES" id="pageLink">
                                 <logic:notEqual name="CURRENT_PAGE" value="<%=pageLink.toString()%>">
-                                    <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="pageLink">
-                                        <bean:write name="pageLink"/>
-                                    </html:link>
+                                    <a href="ViewPendingRequests.do?<%=Constants.PAGE_KEY%>=<bean:write name="pageLink"/>&workflowid=<bean:write name="workflowid"/>&projectid=<bean:write name="projectid"/>"><bean:write name="pageLink"/></a>
                                 </logic:notEqual>
                                 <logic:equal name="CURRENT_PAGE" value="<%=pageLink.toString()%>">
                                     <bean:write name="pageLink"/>

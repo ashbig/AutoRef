@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-08-17 20:36:50 $
+ * $Revision: 1.3 $
+ * $Date: 2001-11-05 21:06:39 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -52,10 +52,10 @@ import edu.harvard.med.hip.flex.process.*;
  * Form for accepting rejecting sequences in the queue.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.2 $ $Date: 2001-08-17 20:36:50 $
+ * @version    $Revision: 1.3 $ $Date: 2001-11-05 21:06:39 $
  */
 
-public class PendingRequestsForm extends ActionForm  {
+public class PendingRequestsForm extends ProjectWorkflowForm  {
     // list of statuses to track.
     public List statusList= null;
     
