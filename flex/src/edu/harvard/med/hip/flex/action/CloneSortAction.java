@@ -84,6 +84,10 @@ public class CloneSortAction extends FlexAction {
             if("constructtype".equals(sortby)) {
                 Collections.sort(info, new CloneInfo.ConstructtypeComparator());
             }
+            
+            if("cloneAcc".equals(sortby)) {
+                Collections.sort(info, new CloneInfo.CloneAccComparator());
+            }
         }
         
         int prev = 0;

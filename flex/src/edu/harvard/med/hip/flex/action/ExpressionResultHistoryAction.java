@@ -24,6 +24,7 @@ import org.apache.struts.util.MessageResources;
 import edu.harvard.med.hip.flex.form.ExpressionResultHistoryForm;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.core.Sample;
+import edu.harvard.med.hip.flex.file.*;
 import java.util.*;
 
 /**
@@ -55,23 +56,33 @@ public class ExpressionResultHistoryAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
         int sampleid = ((ExpressionResultHistoryForm)form).getSampleid();
         String resulttype = ((ExpressionResultHistoryForm)form).getResulttype();
-
+        String gene = ((ExpressionResultHistoryForm)form).getGene();
+        String plate = ((ExpressionResultHistoryForm)form).getPlate();
+        int well = ((ExpressionResultHistoryForm)form).getWell();
+        
         List results = null;
         try {
             results = Result.findResults(sampleid, resulttype);
             
-            for(int i=0; i<results.size(); i++) {
-                Result result = (Result)results.get(i);
-            }
-            
             if(results==null || results.size()==0) {
                 return (mapping.findForward("noresult"));
+            }
+            
+            for(int i=0; i<results.size(); i++) {
+                Result result = (Result)results.get(i);
+                LinkedList fileRefs = FileReference.findFile(result);
+                if(fileRefs != null || fileRefs.size() != 0) {
+                    result.setFileRefs(fileRefs);
+                }
             }
             
             Result result = (Result)results.get(0);
             Sample sample = result.getSample();
             request.setAttribute("sample", sample);
             request.setAttribute("results", results);
+            request.setAttribute("gene", gene);
+            request.setAttribute("plate", plate);
+            request.setAttribute("well", new Integer(well));
             request.setAttribute("resulttype", resulttype);
         } catch (Exception ex) {
             return (mapping.findForward("fail"));

@@ -55,13 +55,16 @@ public class CloneInfoSet {
     
     protected void restore(String sql, List cloneids) throws Exception {
         String sql2 = "select nametype,namevalue from name where sequenceid=?";
+        String sql3 = "select nametype,namevalue from clonename where cloneid=?";
         
         DatabaseTransaction t = null;
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
+        ResultSet rs3 = null;
         allCloneInfo = new ArrayList();
         
         try {
@@ -69,6 +72,7 @@ public class CloneInfoSet {
             conn = t.requestConnection();
             stmt = conn.prepareStatement(sql);
             stmt2 = conn.prepareStatement(sql2);
+            stmt3 = conn.prepareStatement(sql3);
             
             for(int i=0; i<cloneids.size(); i++) {
                 String cloneid = (String)cloneids.get(i);
@@ -149,7 +153,26 @@ public class CloneInfoSet {
                             sgd = namevalue;
                         }
                     }
+                    
+                    stmt3.setInt(1, Integer.parseInt(cloneid));
+                    rs3 = DatabaseTransaction.executeQuery(stmt3);
+                    String cloneAcc = null;
+                    String cloneGi = null;
+                    while(rs3.next()) {
+                        String nametype = rs3.getString(1);
+                        String namevalue = rs3.getString(2);
+                        
+                        if(FlexSequence.GENBANK_ACCESSION.equals(nametype)) {
+                            cloneAcc = namevalue;
+                        }
+                        if(FlexSequence.GI.equals(nametype)) {
+                            cloneGi = namevalue;
+                        }
+                    }
+                    
                     NameInfo ni = new NameInfo(gi, genesymbol, genbank, locusid, panumber, sgd);
+                    ni.setCloneAcc(cloneAcc);
+                    ni.setCloneGi(cloneGi);
                     info.setNameinfo(ni);
                     allCloneInfo.add(info);
                 }
@@ -160,8 +183,10 @@ public class CloneInfoSet {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeResultSet(rs2);
+            DatabaseTransaction.closeResultSet(rs3);
             DatabaseTransaction.closeStatement(stmt);
             DatabaseTransaction.closeStatement(stmt2);
+            DatabaseTransaction.closeStatement(stmt3);
             DatabaseTransaction.closeConnection(conn);
         }
     }

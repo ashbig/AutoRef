@@ -22,8 +22,9 @@
 <p>
     <TABLE width="100%" border="1" cellpadding="2" cellspacing="0">
     <tr class="headerRow">
-        <TH><a href="CloneSort.do?sortby=flexseqid&isSort=1&totalClones=<bean:write name="totalClones"/>">FLEX Sequence Id</a></TH>
-        <TH><a href="CloneSort.do?sortby=genbank&isSort=1&totalClones=<bean:write name="totalClones"/>">GenBank</a></TH>
+        <TH><a href="CloneSort.do?sortby=flexseqid&isSort=1&totalClones=<bean:write name="totalClones"/>">FLEX Sequence Id</a></TH>        
+        <TH><a href="CloneSort.do?sortby=cloneAcc&isSort=1&totalClones=<bean:write name="totalClones"/>">Genbank</a></TH>
+        <TH><a href="CloneSort.do?sortby=genbank&isSort=1&totalClones=<bean:write name="totalClones"/>">Reference GenBank</a></TH>
         <TH><a href="CloneSort.do?sortby=genesymbol&isSort=1&totalClones=<bean:write name="totalClones"/>">Gene Symbol</a></TH>
         <TH><a href="CloneSort.do?sortby=clonename&isSort=1&totalClones=<bean:write name="totalClones"/>">FLEX Clone ID</a></TH>
         <TH><a href="CloneSort.do?sortby=constructtype&isSort=1&totalClones=<bean:write name="totalClones"/>">Version</a></TH>
@@ -39,6 +40,11 @@
                 <A target="_blank" HREF="ViewSequence.do?FLEX_SEQUENCE_ID=<bean:write name="clone" property="refsequenceid"/>">
                     <flex:write name="clone" property="refsequenceid"/>
                 </A>                           
+            </TD>
+            <TD>
+                <A target="_blank" HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="clone" property="nameinfo.cloneGi"/>&dopt=GenBank"> 
+                    <flex:write name="clone" property="nameinfo.cloneAcc"/>
+                </A>
             </TD>
             <TD>
                 <A target="_blank" HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="clone" property="nameinfo.gi"/>&dopt=GenBank"> 
