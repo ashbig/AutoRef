@@ -1,5 +1,5 @@
 /**
- * $Id: MgcSample.java,v 1.1 2003-03-07 17:44:53 dzuo Exp $
+ * $Id: MgcSample.java,v 1.2 2005-03-01 16:38:52 Elena Exp $
  *
  * File     	: MgcClone.java
  * Date     	: 05052002
@@ -89,6 +89,36 @@ public class MgcSample extends Sample{
         int second_char_value = 0;
         int row_value = 0;
         m_MgcId = mgcId;
+        m_ImageId = imageId;
+        m_Vector = vector;
+        m_Row = row;
+        m_Column = column;
+        m_Status = clone_status;
+        
+        
+        first_char_value = (int)row.charAt(0) - a_value + 1;
+        if ( row.length() > 1) 
+        {
+            second_char_value = (int)row.charAt(1) - a_value + 1;
+            row_value = first_char_value * 27 + second_char_value;
+        }
+        else
+        {
+            row_value = first_char_value;
+        }
+        this.position = (column - 1) * 8 +  row_value ;
+  
+    }
+    public MgcSample(int id,  int containerid,  
+                     int imageId, String vector, String row, int column,
+                    String clone_status) throws FlexDatabaseException
+    {
+        super( id,  Sample.ISOLATE,  -1,  containerid, -1,-1,  Sample.GOOD) ;
+        int a_value = (int) 'a';
+        int first_char_value = 0;
+        int second_char_value = 0;
+        int row_value = 0;
+      //  m_MgcId = mgcId;
         m_ImageId = imageId;
         m_Vector = vector;
         m_Row = row;
