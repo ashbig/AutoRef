@@ -18,43 +18,43 @@
 
 <p>
 <html:form action="/PerimeterRearrayInput.do">
-<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
-<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
-<input type="hidden" name="projectname" value="<bean:write name="projectname"/>">
-<input type="hidden" name="workflowname" value="<bean:write name="workflowname"/>">
+<html:hidden property="projectid"/>
+<html:hidden property="workflowid"/>
+<html:hidden property="projectname"/>
+<html:hidden property="workflowname"/>
 
 <table>
     <tr>
     <td class="prompt">Project name:</td>
-    <td><bean:write name="projectname" /></td>
+    <td><bean:write name="perimeterRearrayInputForm" property="projectname" /></td>
     </tr>
     <tr>
     <td class="prompt">Workflow name:</td>
-    <td><bean:write name="workflowname" /></td>
+    <td><bean:write name="perimeterRearrayInputForm" property="workflowname" /></td>
     </tr>
 
     <tr>
     <td class="prompt">Select Source Plate Type:</td>
-    <td><select name="sourcePlateType">
-        <option value="Costar flt bttm/MP16-24">Costar flt bttm/MP16-24
-        <option value="Costar rd bttm/MP16-24">Costar rd bttm/MP16-24
-        <option value="Deepwell on MP16">Deepwell on MP16
-        <option value="PCR on MP16 landscape">PCR on MP16 landscape
-        <option value="Reservoir on MP16">Reservoir on MP16
-        <option value="RK riplate dw/MP16-24">RK riplate dw/MP16-24
-        </select>
+    <td><html:select property="sourcePlateType">
+        <option>Costar flt bttm/MP16-24</option>
+        <option>Costar rd bttm/MP16-24</option>
+        <option>Deepwell on MP16</option>
+        <option>PCR on MP16 landscape</option>
+        <option>Reservoir on MP16</option>
+        <option>RK riplate dw/MP16-24</option>
+        </html:select>
     </td>
     </tr>
     <tr>
     <td class="prompt">Select Destination Plate Type:</td>
-    <td><select name="destPlateType">
-        <option value="Costar flt bttm/MP16-24">Costar flt bttm/MP16-24
-        <option value="Costar rd bttm/MP16-24">Costar rd bttm/MP16-24
-        <option value="Deepwell on MP16">Deepwell on MP16
-        <option value="PCR on MP16 landscape">PCR on MP16 landscape
-        <option value="Reservoir on MP16">Reservoir on MP16
-        <option value="RK riplate dw/MP16-24">RK riplate dw/MP16-24
-        </select>
+    <td><html:select property="destPlateType">
+        <option>Costar flt bttm/MP16-24</option>
+        <option>Costar rd bttm/MP16-24</option>
+        <option>Deepwell on MP16</option>
+        <option>PCR on MP16 landscape</option>
+        <option>Reservoir on MP16</option>
+        <option>RK riplate dw/MP16-24</option>
+        </html:select>
     </td>
     </tr>
 

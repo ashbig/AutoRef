@@ -116,6 +116,12 @@ public class SelectWorkflowAction extends ResearcherAction {
                 return mapping.findForward("success_select_process");
             }
             if(Constants.PERIMETER_REARRAY.equals(forwardName) && workflowid==Workflow.EXPRESSION_WORKFLOW) {
+                PerimeterRearrayInputForm f = new PerimeterRearrayInputForm();
+                f.setProjectid(projectid);
+                f.setWorkflowid(workflowid);
+                f.setProjectname(projectname);
+                f.setWorkflowname(workflow.getName());
+                request.setAttribute("perimeterRearrayInputForm", f);
                 return (mapping.findForward("success_perimeter_rearray"));
             }
             
