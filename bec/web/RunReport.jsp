@@ -25,6 +25,12 @@
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr>      <td width="100%"><html:errors/></td>    </tr>
   </table>
+  <table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr>      <td width="100%">
+ <i>If you are not sure about certain parameter please consult <a href="Help_ReportRunner.jsp"> help
+</a>. </i> 
+  </td>    </tr>
+  </table>
   </center>
 </div>
 
@@ -78,7 +84,7 @@
   <tr> 
     <td bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Reference 
         Sequence Information</strong></font></div></td>
-    <td bgColor="#e4e9f8"><div align="center" ><font color="000080"><strong>Clone 
+    <td bgColor="#e4e9f8"><div align="center" ><font color="000080"><strong>BEC Clone 
         Sequence Information</strong></font></div></td>
   </tr>
   <tr> 
@@ -125,7 +131,7 @@
     <td>&nbsp;</td>
   </tr>
   <tr> 
-    <td><input type="checkbox" name="ref_sga" value="1">      SGA Number (for Yeast project only)</td>
+    <td><input type="checkbox" name="ref_sga" value="1">      SGD Number (for Yeast project only)</td>
     <td>&nbsp;</td>
   </tr>
   
