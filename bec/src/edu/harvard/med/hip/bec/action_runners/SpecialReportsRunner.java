@@ -352,18 +352,18 @@ public class SpecialReportsRunner extends ProcessRunner
                 buf.append( stretch.getStretchTypeAsString( stretch.getType()) + " "+ (index + 1) + "\t");
                 if ( isCDSCoordinatesAlfaNummericNomenculature )
                 {
-                    buf.append( "Cds Start " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStart()- clone_sequence.getCdsStart() , refseq_cds_length ) );
-                    buf.append("\tCds Stop " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStop() -  clone_sequence.getCdsStart(), refseq_cds_length ) );
+                    buf.append( "Cds Start " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStart() , refseq_cds_length ) );
+                    buf.append("\tCds Stop " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStop() , refseq_cds_length ) );
                 }
                 else
                 {
-                    buf.append( "Cds Start " + ( stretch.getCdsStart()- clone_sequence.getCdsStart() ) );
-                    buf.append("\tCds Stop " + ( stretch.getCdsStop() -  clone_sequence.getCdsStart() ) );
+                    buf.append( "Cds Start " + ( stretch.getCdsStart() ) );
+                    buf.append("\tCds Stop " + ( stretch.getCdsStop() ) );
              
                 }
-                buf.append("\t Sequence Region "+stretch.getCdsStart() +" - "+ stretch.getCdsStop() );
+                buf.append("\t Sequence Region "+stretch.getSequenceStart() +" - "+ stretch.getSequenceStop() );
                 //define discrepancies in the region
-                ArrayList lqr_discrepancies = clone_sequence.getDiscrepanciesInRegion( stretch.getCdsStart() , stretch.getCdsStop(), clone_sequence.getCdsStart() , refseq_cds_length);
+                ArrayList lqr_discrepancies = clone_sequence.getDiscrepanciesInRegion( stretch.getSequenceStart() , stretch.getSequenceStop(), clone_sequence.getCdsStart() , refseq_cds_length);
                   if ( lqr_discrepancies == null || lqr_discrepancies.size() == 0 )
                   {
                       buf.append("\t No discrepancies found in the region ");
@@ -442,19 +442,21 @@ public class SpecialReportsRunner extends ProcessRunner
                 buf.append( stretch.getStretchTypeAsString( stretch.getType()) + " "+ (index + 1) + "\t");
                 if ( isCDSCoordinatesAlfaNummericNomenculature )
                 {
-                    buf.append( "Cds Start " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStart()- clone_sequence.getCdsStart() , refseq_cds_length ) );
-                    buf.append("\tCds Stop " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStop() -  clone_sequence.getCdsStart(), refseq_cds_length ) );
+                    buf.append( "Cds Start " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStart() , refseq_cds_length ) );
+                    buf.append("\tCds Stop " + convertCDSCoordinatesAlfaNummericNomenculature( stretch.getCdsStop() , refseq_cds_length ) );
                 }
                 else
                 {
-                    buf.append( "Cds Start " + ( stretch.getCdsStart()- clone_sequence.getCdsStart() ) );
-                    buf.append("\tCds Stop " + ( stretch.getCdsStop() -  clone_sequence.getCdsStart() ) );
+                    buf.append( "Cds Start " + ( stretch.getCdsStart() ) );
+                    buf.append("\tCds Stop " + ( stretch.getCdsStop() ) );
              
                 }
-                buf.append("\t Sequence Region "+stretch.getCdsStart() +" - "+ stretch.getCdsStop() );
+                buf.append("\t Sequence Region "+stretch.getSequenceStart() +" - "+ stretch.getSequenceStop() );
                 //define discrepancies in the region
-              ArrayList lqr_discrepancies = clone_sequence.getDiscrepanciesInRegion( stretch.getCdsStart() , stretch.getCdsStop(), clone_sequence.getCdsStart() , refseq_cds_length);
-              if ( lqr_discrepancies != null || lqr_discrepancies.size() > 0 )
+           //   ArrayList lqr_discrepancies = clone_sequence.getDiscrepanciesInRegion( stretch.getCdsStart() , stretch.getCdsStop(), clone_sequence.getCdsStart() , refseq_cds_length);
+               ArrayList lqr_discrepancies = clone_sequence.getDiscrepanciesInRegion( stretch.getSequenceStart() , stretch.getSequenceStop(), clone_sequence.getCdsStart() , refseq_cds_length);
+          
+                if ( lqr_discrepancies != null || lqr_discrepancies.size() > 0 )
               {
 // create new report item
                   print_items.addAll(

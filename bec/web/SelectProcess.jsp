@@ -273,9 +273,17 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_GET_TRACE_FILE_NAMES  %>>
       Get trace files' names</font></td>
-</tr><tr> 
+</tr>
+
+<tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_TRACE_FILES %> disabled>
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_MOVE_TRACE_FILES %> >
+      Move trace files from clone directory into temporary directory</font></td>
+</tr> 
+
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_TRACE_FILES %> >
       Delete trace files from hard drive</font></td>
 </tr> 
 <tr> 

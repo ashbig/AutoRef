@@ -45,10 +45,8 @@ public class AssemblyRunner extends ProcessRunner
      public static final int       MINIMUM_LINKER_COVERAGE = 10;
      
      public static final int       MAXIMUM_READ_LENGTH = 800;
-     private String                 m_vector_file_names = null;
      
-     public void                    setVectorFileNames(String   s){    m_vector_file_names = s;}
-        // outputBaseDir specify the base directory for trace file distribution
+         // outputBaseDir specify the base directory for trace file distribution
       //  private static final String INPUT_BASE_DR = "";
       
         private ArrayList   m_master_container_ids = null;//get from form
@@ -57,8 +55,8 @@ public class AssemblyRunner extends ProcessRunner
         private ArrayList   m_error_messages = null;
         private String      m_result_type = null;
         private User        m_user = null;
-         private String      m_vector_file_name = null;
-          private int      m_assembly_mode = END_READS_ASSEMBLY;
+        private String      m_vector_file_name = null;
+        private int         m_assembly_mode = END_READS_ASSEMBLY;
 
         public  void        setUser(User v){m_user=v;}
         public void         setResultType(String v){ m_result_type=v;}

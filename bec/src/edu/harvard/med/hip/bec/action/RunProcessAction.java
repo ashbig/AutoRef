@@ -263,33 +263,42 @@ public class RunProcessAction extends ResearcherAction
                      Hashtable stretch_collections = new Hashtable();
                      ArrayList items = Algorithms.splitString(item_ids);
                      StretchCollection strcol = null; int cloneid = 0;
-                     for (int index = 0; index < items.size();index++)
+                     if ( items != null )
                      {
-                         cloneid = Integer.parseInt( (String) items.get(index));
-                         if ( forwardName == Constants.STRETCH_COLLECTION_REPORT_ALL_INT)
+                         for (int index = 0; index < items.size();index++)
                          {
-                             ArrayList str_colections = StretchCollection.getAllByCloneId(cloneid);
-                             if ( str_colections != null )
+                             cloneid = Integer.parseInt( (String) items.get(index));
+                             if ( forwardName == Constants.STRETCH_COLLECTION_REPORT_ALL_INT)
                              {
-                                 for ( int count = 0; count < str_colections.size(); count++)
+                                 ArrayList str_colections = StretchCollection.getAllByCloneId(cloneid);
+                                 if ( str_colections != null )
                                  {
-                                     strcol = (StretchCollection) str_colections.get(count);
-                                     if ( strcol.getType() != StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) continue;
-                                     strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                                     for ( int count = 0; count < str_colections.size(); count++)
+                                     {
+                                         strcol = (StretchCollection) str_colections.get(count);
+                                         if ( strcol.getType() == StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) 
+                                         {
+                                            strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                                         }
+                                     }
+                                     stretch_collections.put( (String) items.get(index), str_colections);
                                  }
-                                 stretch_collections.put( (String) items.get(index), str_colections);
                              }
-                         }
-                         else
-                         {
-                            strcol = StretchCollection.getLastByCloneId(cloneid);
-                            if ( strcol != null)
-                            {
-                                strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
-                                if ( strcol.getType() != StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) continue;
-                                stretch_collections.put( (String) items.get(index), strcol);
-                            }
-                         }
+                             
+                             else
+                             {
+                                strcol = StretchCollection.getLastByCloneId(cloneid);
+                                if ( strcol != null)
+                                {
+                                    strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                                    if ( strcol.getType() == StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) 
+                                    {
+                                        stretch_collections.put( (String) items.get(index), strcol);
+                                       
+                                    }
+                                }
+                             }
+                     }
                      }
                     request.setAttribute(Constants.JSP_TITLE,"view Gaps and Contigs");
                     request.setAttribute("stretch_collections",stretch_collections);
@@ -309,18 +318,24 @@ public class RunProcessAction extends ResearcherAction
                      CloneSequence clone_sequence = null;
                      //we trick system here writing html table 
                      Hashtable display_items = new Hashtable();
-                     for (int index = 0; index < items.size();index++)
+                     if ( items != null)
                      {
-                            cloneid = Integer.parseInt( (String) items.get(index));
-                            clone_sequence = CloneSequence.getOneByCloneId(cloneid);
-                            if ( clone_sequence != null)
-                            {
-                                lqr_for_clone = StretchCollection.getByCloneSequenceId(clone_sequence.getId() , false);
-                                if ( lqr_for_clone.getType() != StretchCollection.TYPE_COLLECTION_OF_LQR) continue;
-                                StretchCollection.prepareStretchCollectionForDisplay(lqr_for_clone,clone_sequence, clone_sequence.getCdsStop() - clone_sequence.getCdsStart());
-                                display_items.put( items.get(index), lqr_for_clone);
-                            }
-                          
+                         for (int index = 0; index < items.size();index++)
+                         {
+
+                                cloneid = Integer.parseInt( (String) items.get(index));
+                                clone_sequence = CloneSequence.getOneByCloneId(cloneid);
+                                if ( clone_sequence != null)
+                                {
+                                    lqr_for_clone = StretchCollection.getByCloneSequenceId(clone_sequence.getId() , false);
+                                    if ( lqr_for_clone != null && lqr_for_clone.getType() == StretchCollection.TYPE_COLLECTION_OF_LQR) 
+                                    {
+                                        StretchCollection.prepareStretchCollectionForDisplay(lqr_for_clone,clone_sequence, clone_sequence.getCdsStop() - clone_sequence.getCdsStart());
+                                        display_items.put( items.get(index), lqr_for_clone);
+                                    }
+                                }
+
+                         }
                      }
                     request.setAttribute(Constants.JSP_TITLE,"view Low Quality Regions for clone sequences");
                     request.setAttribute("lqr_clone_stretch_collections",display_items);
@@ -431,7 +446,7 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                 case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
                     case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
-                case  Constants.PROCESS_DELETE_TRACE_FILES :
+               // case  Constants.PROCESS_DELETE_TRACE_FILES :
   
                 {
                     String title = "";
@@ -444,7 +459,7 @@ public class RunProcessAction extends ResearcherAction
                         case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                         case Constants.PROCESS_DELETE_CLONE_SEQUENCE://
                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
-                        case  Constants.PROCESS_DELETE_TRACE_FILES :
+                      //  case  Constants.PROCESS_DELETE_TRACE_FILES :
   
                          {
                               runner = new DeleteObjectRunner();
@@ -457,7 +472,7 @@ public class RunProcessAction extends ResearcherAction
                                     case Constants.PROCESS_DELETE_CLONE_REVERSE_READ :{title = "request for Clone reverse end reads deletion"; break;}
                                     case Constants.PROCESS_DELETE_CLONE_SEQUENCE:{title = "request for Clone sequences deletion"; break;}
                                     case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title = "request for list of Trace Files' names"; break;}
-                                    case  Constants.PROCESS_DELETE_TRACE_FILES :{title = "request for Trace Files deletion"; break;}
+                                //    case  Constants.PROCESS_DELETE_TRACE_FILES :{title = "request for Trace Files deletion"; break;}
   
                               }
                               break;
@@ -485,7 +500,9 @@ public class RunProcessAction extends ResearcherAction
                              runner = new AssemblyRunner();
                                ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.END_READS_ASSEMBLY);
                              ((AssemblyRunner)runner).setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
-                               title = "request for end read wrapper invocation";
+                              ((AssemblyRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
+                             
+                             title = "request for end read wrapper invocation";
                              break;
                         }
                          case Constants.PROCESS_RUN_PRIMER3: //run primer3
@@ -495,12 +512,9 @@ public class RunProcessAction extends ResearcherAction
                               int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
                               ((PrimerDesignerRunner)runner).setSpecId(spec_id);
       if ( request.getParameter("isTryMode") != null )  ((PrimerDesignerRunner)runner).setIsTryMode( true );
-      if ( Integer.parseInt(request.getParameter("isCloseGaps")) == 1 )  ((PrimerDesignerRunner)runner).setIsCloseGaps( true );
-     if ( request.getParameter("isLQRIncluded") != null )((PrimerDesignerRunner)runner).setIsLQRIncluded( true );
-     if ( request.getParameter("isLQRWithDiscrepancyOnly") != null )((PrimerDesignerRunner)runner).setIsLQRWithDiscrepancyOnly( true );
-     if ( request.getParameter("isCoverLQDRegionsOnly") != null )((PrimerDesignerRunner)runner).setIsCoverLQDRegionsOnly( true );
-                              ((PrimerDesignerRunner)runner).setMinDistanceBetweenStretchesToBeCombined( Integer.parseInt(request.getParameter("minDistanceBetweenStretchesToBeCombined")) ); 
-  
+      ((PrimerDesignerRunner)runner).setTypeOfSequenceCoverage( Integer.parseInt(request.getParameter("typeSequenceCoverage"))  );
+     ((PrimerDesignerRunner)runner).setIsLQRCoverageType( Integer.parseInt(request.getParameter("typeLQRCoverage")) );
+     ((PrimerDesignerRunner)runner).setMinDistanceBetweenStretchesToBeCombined( Integer.parseInt(request.getParameter("minDistanceBetweenStretchesToBeCombined")) ); 
                               break;
                          }
                         case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
@@ -518,6 +532,8 @@ public class RunProcessAction extends ResearcherAction
                         {
                              runner = new AssemblyRunner();
                              ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
+                             ((AssemblyRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
+                             
                  //      System.out.println((String)request.getParameter("vectors_file_name"));
                             // ((AssemblyRunner)runner).setVectorFileNames((String)request.getParameter("vectors_file_name"));
                              title = "request for Clone sequence assembly";
@@ -554,6 +570,7 @@ public class RunProcessAction extends ResearcherAction
                               if ( request.getParameter("isTryMode") != null )
                                 ((GapMapperRunner)runner).setIsTryMode( true );
                               ((GapMapperRunner)runner).setProcessType( forwardName ) ;
+                              ((GapMapperRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
                               if ( forwardName == Constants.PROCESS_FIND_GAPS)
                               {
                                   title = "request for Gap Mapper run";
@@ -568,8 +585,6 @@ public class RunProcessAction extends ResearcherAction
                     }
                     
                     String  item_ids = (String) request.getParameter("items");
-                   // runner.setItems (item_ids.toUpperCase().trim());
-                   // runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                 

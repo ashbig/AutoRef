@@ -308,9 +308,9 @@ public class Seq_GetItemAction extends ResearcherAction
                           {
                              lqr = (Stretch) lqrs.get(count);
                               lqr_report_html.append("<tr><TD>"+lqr.getStretchTypeAsString(lqr.getType()) + " "+ (count + 1) +"</TD>");
-                              lqr_report_html.append("<TD>"+ (  lqr.getCdsStart()+ stretch.getCdsStart()  )
-                                    +" - "+ ( lqr.getCdsStop() +  stretch.getCdsStart() )  +"</TD>");
-                              lqr_report_html.append("<TD>"+lqr.getCdsStart() +" - "+ lqr.getCdsStop() +"</TD></tr>");
+                              lqr_report_html.append("<TD>"+ (  lqr.getCdsStart() )
+                                    +" - "+ ( lqr.getCdsStop()  )  +"</TD>");
+                              lqr_report_html.append("<TD>"+lqr.getSequenceStart() +" - "+ lqr.getSequenceStop() +"</TD></tr>");
                           }
                       }
                   }

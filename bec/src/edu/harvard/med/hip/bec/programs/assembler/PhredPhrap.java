@@ -14,6 +14,8 @@ import  edu.harvard.med.hip.bec.bioutil.*;
 import  edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.programs.phred.*;
+import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.utility.*;
 /**
  *
@@ -21,9 +23,8 @@ import edu.harvard.med.hip.utility.*;
  */
 public class PhredPhrap
 {
-
-    
- 
+    public static final String      VECTOR_LIBRARY_NAME_EMPTY = "vector_empty.seq";
+    public static final String      VECTOR_LIBRARY_NAME = "vector.seq";
 
     private String      m_query = null;
     private int         m_query_id=-1;
@@ -31,26 +32,26 @@ public class PhredPhrap
     private String      m_reference = null;
     private int         m_ref_id =-1;
  
-    private String  m_phredphrap_path = null;
-    private String         m_vector_file_name = null;
+    private String      m_phredphrap_path = null;
+    private String      m_vector_file_name = null;
+    
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
-            m_vector_file_name = "d:\\bio_programs\\phredphrap\\lib\\screenlibs\\vector.seq";
+            m_vector_file_name =  VECTOR_LIBRARY_NAME;
             m_phredphrap_path = "d:\\programs\\cygwin\\bin\\perl d:\\bio_programs\\phredphrap\\phredPhrap  ";
         }
         else
         {
             m_phredphrap_path = "perl c:\\programs_bio\\biolocal\\phredPhrap  ";
+             m_vector_file_name =  VECTOR_LIBRARY_NAME;    
         }
     }
   
   
     /** Creates a new instance of Needle */
-    public PhredPhrap()
-    {
-    }
-    public void         setVectorFileName(String s){ m_vector_file_name = s;}
+    public PhredPhrap()    {    }
+    public void         setVectorFileName(String s){ if ( s != null && s.trim().length()>1) m_vector_file_name =  s;}
     public String       getVectorFileName(){ return m_vector_file_name ;}
 
    
@@ -58,16 +59,31 @@ public class PhredPhrap
     public boolean run(String clone_path, String output_file_name)throws BecUtilException
     {
         String cmd = null;
-        
+          
         // for windows /c/file_name
         //output_file_name = Algorithms.convertWindowsFileNameIntoUnix(output_file_name);
+        if ( !(new File(clone_path)).exists())
+        {
+            throw new BecUtilException("Clone directory does not exist " + clone_path);
+        }
         clone_path =  Algorithms.convertWindowsFileNameIntoUnix(clone_path);
         if (clone_path.indexOf("/f") != -1) clone_path ="/cygdrive" + clone_path;
-      
-            
-            cmd =  m_phredphrap_path + " --clonepath " + clone_path  + " --outputfilename "+ output_file_name;
-            if (m_vector_file_name != null && !m_vector_file_name.equals("")) cmd += " --vectorfile " + Algorithms.convertWindowsFileNameIntoUnix(m_vector_file_name);
+   
+        cmd =  m_phredphrap_path + " --clonepath " + clone_path  + " --outputfilename "+ output_file_name;
+        if (m_vector_file_name != null && !m_vector_file_name.equals(""))
+        {
+            cmd += " --vectorfile " + m_vector_file_name;
+            /*if (ApplicationHostDeclaration.IS_BIGHEAD)
+            {
+                cmd +=  Algorithms.convertWindowsFileNameIntoUnix(m_vector_file_name);
+            }
+            else
+            {
+                cmd += m_vector_file_name;
+            }*/
         
+        }
+                System.out.println(cmd);
         try
         {
             Runtime r = Runtime.getRuntime();
@@ -135,7 +151,7 @@ public class PhredPhrap
     {
         //replasement for # fasta2Phd.perl
         String refseq_read_name = file_name;
-        file_name = file_location +File.separator + "phd_dir" +File.separator + file_name +".phd.1";
+        file_name = file_location +File.separator + PhredWrapper.PHD_DIR_NAME +File.separator + file_name +".phd.1";
         FileWriter in = null;
         try
         {

@@ -43,11 +43,14 @@ public class Stretch
     private AnalyzedScoredSequence m_sequence = null;
     private int             m_cds_start = ScoredElement.DEFAULT_COORDINATE; //(clone sequence coordinates for low quality)
     private int             m_cds_stop = ScoredElement.DEFAULT_COORDINATE;
+    private int             m_sequence_start = ScoredElement.DEFAULT_COORDINATE; //(clone sequence coordinates for low quality)
+    private int             m_sequence_stop = ScoredElement.DEFAULT_COORDINATE;
     private int             m_orientation = Constants.ORIENTATION_FORWARD;
     private int             m_analysis_status = -1;//(not analyzed / analyzed no discrepancies / analyzed yes discrepancies)
     private int             m_collection_id = -1;//Group id (for connection of contigs);
     private int             m_type = -1;
     private int             m_status = STATUS_DETERMINED;
+   
     private String          i_refsequence_stretch = null; // for not contigs
     private String          i_html_description = null; 
     
@@ -56,10 +59,12 @@ public class Stretch
     public Stretch()
     {
     }
-    public Stretch(int type, int status, int cds_start, int cds_stop, int orientation)
+    public Stretch(int type, int status, int cds_start, int cds_stop, int seq_start, int seq_stop,int orientation)
     {
         m_cds_start = cds_start; //(clone sequence coordinates for low quality)
         m_cds_stop = cds_stop;
+        m_sequence_stop = seq_stop;
+        m_sequence_start = seq_start;
         m_orientation = orientation;
         m_type = type;
         m_status = status;
@@ -81,6 +86,9 @@ public class Stretch
     public int              getStatus(){ return m_status;}
     public String           getRefSequenceStretch(){ return i_refsequence_stretch ;}
     public String           getHTMLDescription(){ return i_html_description;}
+    public int              getSequenceStart(){ return m_sequence_start ;} //(clone sequence coordinates for low quality)
+    public int              getSequenceStop(){ return m_sequence_stop ;}
+   
     
    public void              setId (int v){   m_id = v;}
     public void             setSequenceId (int v){   m_sequence_id  = v;}//Sequence (int vpointer to analized sequence for contigs)
@@ -91,8 +99,12 @@ public class Stretch
     public void             setAnalysisStatus (int v){   m_analysis_status  = v;}//(int vnot analyzed / analyzed no discrepancies / analyzed yes discrepancies)
     public void              setCollectionId (int v){   m_collection_id  = v;}//Group id (int vfor connection of contigs)= v;
     public void              setType (int v){   m_type  = v;}
-    public void               setStatus(int v){ m_status = v;}
-    public void                setRefSequenceStretch(String s) { i_refsequence_stretch = s; }
+    public void              setStatus(int v){ m_status = v;}
+    public void              setRefSequenceStretch(String s) { i_refsequence_stretch = s; }
+    public void           setSequenceStart(int v){  m_sequence_start = v;} //(clone sequence coordinates for low quality)
+    public void              setSequenceStop(int v){  m_sequence_stop = v;}
+ 
+    
     public void             setHTMLDescription(String s){ i_html_description = s;}
     
     
@@ -111,8 +123,16 @@ public class Stretch
     {
         String result = "Type " +" "+ getStretchTypeAsString(m_type)
         +" Cds Start "+m_cds_start +" Cds Stop "+ m_cds_stop ;
-        if ( m_sequence_id != -1) 
+        if ( m_sequence_id != -1 ) 
+        {
+           
             result +=" Sequence Id: "+ m_sequence_id;
+        }
+         if ( m_type == GAP_TYPE_LOW_QUALITY)
+        {
+            result +=" Contig sequence start "+ m_sequence_start ;
+            result +=" Contig sequence stop "+m_sequence_stop ;
+        }
         return  result;
         
      }
@@ -131,9 +151,10 @@ public class Stretch
                 m_sequence.insert(conn);
                 m_sequence_id = m_sequence.getId();
             }
-            sql = "INSERT INTO STRETCH  (STRETCHID ,SEQUENCEID ,CDSSTART  ,CDSEND,ORIENTATION ,"
+            sql = "INSERT INTO STRETCH  (STRETCHID ,SEQUENCEID ,CDSSTART  ,CDSEND,SEQUENCESTART,SEQUENCESTOP, ORIENTATION ,"
             +" STATUS ,TYPE ,ANALYSISSTATUS,COLLECTIONID) VALUES("
             +m_id+ ","  + m_sequence_id + "," +m_cds_start + ", " + m_cds_stop+"," +
+            m_sequence_start+"," + m_sequence_stop +"," +
             m_orientation +","+ m_status + ","+ m_type +","+m_analysis_status +","+m_collection_id+")";
          
             stmt = conn.createStatement();
@@ -165,7 +186,7 @@ public class Stretch
     }
      public static ArrayList getByStretchCollectionId( int collection_id, boolean isSequenceIncluded) throws Exception
      {
-         String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , STATUS "
+         String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , SEQUENCESTART,SEQUENCESTOP, STATUS "
          +"  ,ORIENTATION  ,TYPE  ,ANALYSISSTATUS  ,COLLECTIONID   from  STRETCH "
          +"  where COLLECTIONID ="+collection_id +" order by CDSSTART";
          return getByRule( sql, isSequenceIncluded);
@@ -173,14 +194,14 @@ public class Stretch
      
       public static ArrayList getBySequenceIdType( int sequenceid, int stretch_type, boolean isSequenceIncluded) throws Exception
      {
-         String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , STATUS "
+         String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , SEQUENCESTART,SEQUENCESTOP,  STATUS "
          +"  ,ORIENTATION  ,TYPE  ,ANALYSISSTATUS  ,COLLECTIONID   from  STRETCH "
          +"  where sequenceid ="+sequenceid +" and type = " +stretch_type  +" order by CDSSTART";
          return getByRule( sql, isSequenceIncluded);
      }
      public static Stretch getById( int id) throws Exception
      {
-         String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , STATUS "
+         String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , SEQUENCESTART,SEQUENCESTOP, STATUS "
          +"  ,ORIENTATION  ,TYPE  ,ANALYSISSTATUS  ,COLLECTIONID   from  STRETCH "
          +"  where StretchID ="+id +" order by CDSSTART";
          ArrayList stretches = getByRule( sql, true);
@@ -237,6 +258,8 @@ public class Stretch
                 sc.setAnalysisStatus (rs.getInt("ANALYSISSTATUS"));//(int vnot analyzed / analyzed no discrepancies / analyzed yes discrepancies)
                 sc.setCollectionId (rs.getInt("COLLECTIONID"));//Group id (int vfor connection of contigs)= v;
                 sc.setStatus( rs.getInt("STATUS"));
+                sc.setSequenceStart(rs.getInt("SEQUENCESTART"));
+                sc.setSequenceStop(rs.getInt("SEQUENCESTOP"));
                 res.add(sc);
             }
             return res;

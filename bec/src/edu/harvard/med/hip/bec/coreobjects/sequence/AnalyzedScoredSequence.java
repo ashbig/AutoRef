@@ -184,7 +184,9 @@ public class AnalyzedScoredSequence extends ScoredSequence
     
     
   
-    public ArrayList getDiscrepanciesInRegion(int region_start, int region_end, int cds_start, int cds_length)
+    public ArrayList getDiscrepanciesInRegion(int region_start, 
+                                            int region_end, 
+                                            int cds_start, int cds_length)
     {
         ArrayList dicr_in_region = new ArrayList();
          
@@ -232,6 +234,30 @@ public class AnalyzedScoredSequence extends ScoredSequence
                if ( position > region_end ) break;
            }
           
+        }
+        return dicr_in_region;
+    }
+    
+    
+    // used by primer designer to determine 
+    // (a) ? any discrepancyes in the region
+    // (b) strt/stop of the discrepancies
+    public static ArrayList getRNADiscrepanciesInRegion(ArrayList discrepancies,int region_start, int region_end )
+    {
+        ArrayList dicr_in_region = new ArrayList();
+         
+        if ( discrepancies == null || discrepancies.size() == 0) return null;
+        discrepancies =  Mutation.sortDiscrepanciesByPosition(discrepancies);
+        RNAMutation rm = null;int position = 0;
+        for (int count = 0; count < discrepancies.size(); count ++)
+	{
+            rm = (RNAMutation)discrepancies.get(0);
+            position = rm.getExpPosition();
+            if (  position >= region_start  &&  position <= region_end )
+            {
+                dicr_in_region.add( rm );
+                if ( position > region_end ) break;
+            }
         }
         return dicr_in_region;
     }

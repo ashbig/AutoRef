@@ -6,6 +6,7 @@
 
 package edu.harvard.med.hip.bec.modules;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.util.*;
@@ -15,6 +16,7 @@ import  edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.programs.assembler.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
+import edu.harvard.med.hip.bec.programs.phred.*;
 import java.util.*;
 import java.sql.*;
 import java.io.*;
@@ -28,7 +30,8 @@ public class GapMapper
     private StretchCollection           m_stretch_collection = null;
     private SlidingWindowTrimmingSpec       m_trimming_spec = null;
     private boolean                         m_isRunLQRFinderForContigs = false;
-   
+    private String                      m_vector_file_name = null;
+      
    
     
    // private int                     m_min_contig_avg_score = 20;
@@ -40,13 +43,15 @@ public class GapMapper
     }
     
     public void                 setCloneId(int v){ m_clone_id = v;}
+    public void         setVectorFileName(String v){m_vector_file_name = v;}
+       
     
     public void                 setIsRunLQR(boolean v){m_isRunLQRFinderForContigs = v;}
     public ArrayList            getErrorMessages(){ return m_error_messages; }
     public StretchCollection    getStretchCollection(){ return   m_stretch_collection ;}
    // public void                 setMinContigLength(int v){ m_min_contig_length = v;}
    // public void                 setMinAvgContigScore(int v){  m_min_contig_avg_score = v;}
-    public void         setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
+    public void                 setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
   
     public void                 run()
     {
@@ -67,6 +72,7 @@ public class GapMapper
             BaseSequence clone_refsequence  = getRefsequence(clone_description);
             // build refsequence file
             PhredPhrap pp = new PhredPhrap();
+            pp.setVectorFileName(m_vector_file_name);
                 //delete all .phd files from previous processing
             FileOperations.deleteAllFilesFormDirectory(clone_description.getReadFilePath() + File.separator +"phd_dir");
       
@@ -80,9 +86,17 @@ public class GapMapper
             String refseq_read_name = clone_description.getReadFilePath() +File.separator+ "contig_dir"+File.separator+"refseqassembly"+clone_refsequence.getId()+".fasta.screen.ace.1";
             CloneAssembly clone_assembly = pparser.parseAllData( refseq_read_name );
   //it should be only one contig
-            if ( clone_assembly == null || clone_assembly.getContigs()== null || clone_assembly.getContigs().size() != 1)
+            if ( clone_assembly == null || clone_assembly.getContigs()== null )
             {
-                m_error_messages.add("Gap Mapper failed: cannot assemble reads with reference sequence for clone id "+clone_description.getCloneId());
+                m_error_messages.add("Gap Mapper failed: no assembly was build for clone id "+clone_description.getCloneId());
+                return;
+            }
+            else if ( clone_assembly != null && clone_assembly.getContigs().size() > 1)
+            {
+                m_error_messages.add("Gap Mapper failed: more than one contig("+ clone_assembly.getContigs().size() +" contigs) build for clone id "+clone_description.getCloneId());
+                ArrayList not_assembled_reads = getNamesOfNotAssembledReads(clone_description, clone_assembly);
+                if ( not_assembled_reads != null && not_assembled_reads.size() > 0 ) 
+                    m_error_messages.addAll(not_assembled_reads);
                 return;
             }
             ReadInAssembly read = null;
@@ -154,6 +168,38 @@ public class GapMapper
     
     //_______________________
     
+    private  ArrayList      getNamesOfNotAssembledReads(CloneDescription clone_description, CloneAssembly clone_assembly)
+    {
+        ArrayList error_messages = new ArrayList();
+        ReadInAssembly read = null; Contig contig = null;
+        ArrayList file_names = new ArrayList ();
+        for (int contig_count = 0; contig_count < clone_assembly.getContigs().size(); contig_count++)
+        {
+            contig = (Contig) clone_assembly.getContigs().get(contig_count);
+            for (int read_count = 0; read_count < contig.getReads().size(); read_count++)
+            {
+                read = (ReadInAssembly) contig.getReads().get(read_count);
+                if ( read.getName().indexOf("refsequence") != -1)
+                {
+                    file_names = new ArrayList();
+                    break;
+                }
+                else
+                {
+                    file_names.add("Clone id: "+ clone_description.getCloneId() +"\t"+clone_description.getReadFilePath() +File.separator+PhredWrapper.CHROMAT_DIR_NAME +File.separator+read.getName());
+                }
+                
+                if ( read_count == contig.getReads().size() - 1 && ( file_names!= null && file_names.size() > 0))
+                {
+                    error_messages.addAll(file_names);
+                    file_names = new ArrayList();
+                }
+            }
+        }
+   
+        return error_messages;
+    }
+               
    
     private boolean          isCallForGapMapperRelevant(CloneDescription clone_description)throws Exception
     {

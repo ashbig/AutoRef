@@ -16,7 +16,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
 import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
-
+import edu.harvard.med.hip.bec.action_runners.*;
 /**
  *
  * @author  HTaycher
@@ -224,8 +224,7 @@ vi.	Type of definition (coverage low quality / no coverage )
      // sequence id - cds start for the refsequence subsequence
      public  ArrayList getStretchBoundaries(int cloneid, 
                 int cds_length, 
-                boolean   isLQRIncluded,   
-                boolean  isLQRWithDiscrepancyOnly , 
+                int type_of_lqr_coverage , 
                 boolean isStartFromFirstDiscrepancy)throws Exception
      {
       
@@ -235,85 +234,62 @@ vi.	Type of definition (coverage low quality / no coverage )
          int[] element = null; 
          int stretch_start = 0;          int stretch_end =0;
          boolean isInclude = true;
-         CloneSequence clone_sequence  = null;
+         AnalyzedScoredSequence sequence = null;
          for (  int count_stretches = 0; count_stretches < m_stretches.size(); count_stretches++)
          {
+             
              stretch = (Stretch) m_stretches.get(count_stretches);
-             if ( stretch.getCdsStop() < 0 || stretch.getCdsStart() > cds_length -1 ) continue; // for gaps in 5' linker
-             isInclude = true;
+             if ( stretch.getCdsStop() < 0 || stretch.getCdsStart() > cds_length  ) continue; // for gaps in 5' linker
              // only gaps from gaps & lqr collection
-             if ( m_type == TYPE_COLLECTION_OF_GAPS_AND_CONTIGS && !isLQRIncluded ) 
+             if ( stretch.getType() == Stretch.GAP_TYPE_GAP ) 
              {
                  boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
              }
              //lqr collection
-             else if ( m_type == TYPE_COLLECTION_OF_LQR && isLQRIncluded)
+             else if ( stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY )
              {
-                 if ( isLQRWithDiscrepancyOnly )//find if any discrepancies
+                 switch ( type_of_lqr_coverage)
                  {
-                     if ( clone_sequence == null)
-                          clone_sequence = CloneSequence.getOneByCloneId(cloneid);
-                     discrepancies = clone_sequence.getDiscrepanciesInRegion( 
-                                stretch.getCdsStart() ,  stretch.getCdsStop(), 
-                                clone_sequence.getCdsStart() , cds_length);
-                     
-                      isInclude = !(discrepancies == null || discrepancies.size() == 0);
-                      if (isInclude && isStartFromFirstDiscrepancy )
-                      {
-                          discrepancies = Mutation.getDiscrepanciesBySequenceType(discrepancies, Mutation.RNA);
-                          discrepancies = Mutation.sortDiscrepanciesByPosition(discrepancies);
-                          stretch_start = ((Mutation)discrepancies.get(0)).getPosition(); 
-                          stretch_end = ((Mutation)discrepancies.get( discrepancies.size() -1 )).getPosition(); 
-                      }
-                 }
-                 if ( isInclude) 
-                     boundaries.add( constructBoundaryElementFromStretch( stretch_start, stretch_end,  cds_length) );
-             }
-             else if ( m_type == TYPE_COLLECTION_OF_GAPS_AND_CONTIGS && isLQRIncluded )
-             {
-                 switch( stretch.getType())
-                 {
-                     case Stretch.GAP_TYPE_GAP : //include all gaps
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_NONE : break;
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR:
                      {
                          boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
                          break;
                      }
-                     case Stretch.GAP_TYPE_LOW_QUALITY : //include all gaps
+                    case PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY :
                      {
-                         int sequence_id = stretch.getSequenceId();
-                         Stretch contig = (Stretch) getBySequenceIdType( sequence_id , Stretch.GAP_TYPE_CONTIG).get(0);
-                         if ( contig == null ) continue;// error
-                         stretch_start = stretch.getCdsStart() + contig.getCdsStart(); 
-                         stretch_end = stretch.getCdsStop() + contig.getCdsStart() ;
-                         if ( isLQRWithDiscrepancyOnly )//find if any discrepancies
+                         sequence = getSequenceForStretch( cloneid, sequence, stretch );
+                         discrepancies = getDiscrepanciesInRegion(stretch, sequence , cds_length, cloneid);
+                         if ( discrepancies != null && discrepancies.size() > 0)
+                              boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
+                         break;
+                         
+                     }
+                    case PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS:
+                     {
+                         sequence = getSequenceForStretch( cloneid, sequence, stretch );
+                         discrepancies = getDiscrepanciesInRegion(stretch, sequence , cds_length, cloneid);
+                         if ( discrepancies != null && discrepancies.size() > 0)
                          {
-                              discrepancies = contig.getSequence().getDiscrepanciesInRegion( 
-                                        stretch_start, stretch_end, 0, contig.getCdsStop());
-                              isInclude = !(discrepancies == null || discrepancies.size() == 0);
-                              if ( isInclude && isStartFromFirstDiscrepancy )
-                              {
-                                  discrepancies = Mutation.getDiscrepanciesBySequenceType(discrepancies, Mutation.RNA);
-                                  discrepancies = Mutation.sortDiscrepanciesByPosition(discrepancies);
-                                  stretch_start = ((Mutation)discrepancies.get(0)).getPosition(); 
-                                  stretch_end = ((Mutation)discrepancies.get( discrepancies.size() -1 )).getPosition(); 
-                              }
-                         }
-                         if ( isInclude)    
-                         {
-                             boundaries.add(constructBoundaryElementFromStretch(stretch_start,stretch_end,cds_length) );
+                            int first_discr_start = ((Mutation)discrepancies.get(0)).getPosition(); 
+                            int last_discr_end = ((Mutation)discrepancies.get( discrepancies.size() -1 )).getPosition() +
+                                ((Mutation)discrepancies.get( discrepancies.size() -1 )).getLength(); ; 
+                            boundaries.add( constructBoundaryElementFromStretch( first_discr_start,  last_discr_end, cds_length) );
                          }
                          break;
                      }
                  }
              }
-             
          }
          return boundaries;
     }
  
+         
+         
      //function prepares str collection for LQR display
      public static  void prepareStretchCollectionForDisplay
-                        (StretchCollection lqr_for_clone,CloneSequence clone_sequence, int cds_length)
+                        (StretchCollection lqr_for_clone,
+                        CloneSequence clone_sequence, int cds_length)
      {
          if (lqr_for_clone == null ) return;
          Stretch lqr = null;
@@ -326,17 +302,18 @@ vi.	Type of definition (coverage low quality / no coverage )
          for (int count = 0; count < lqr_for_clone.getStretches().size(); count++)
          {
              lqr = (Stretch) lqr_for_clone.getStretches().get(count);
-             ScoredSequence scored_sequence =  clone_sequence.getSubSequence( lqr.getCdsStart() - 1, lqr.getCdsStop() );
+             ScoredSequence scored_sequence =  clone_sequence.getSubSequence( lqr.getSequenceStart() - 1, lqr.getSequenceStop() );
              String stretch_html_fomated_sequence = scored_sequence.toHTMLStringNoRuler(40) ;
              String stretch_name = lqr.getStretchTypeAsString(lqr.getType()) + " "+ (count + 1);
              StringBuffer html_description = new StringBuffer();
              html_description.append("<TD>"+stretch_name +"</TD>");
-              html_description.append("<TD>"+ (  lqr.getCdsStart()- clone_sequence.getCdsStart()  )
-                    +" - "+ ( lqr.getCdsStop() -  clone_sequence.getCdsStart() )  +"</TD>");
-              html_description.append("<TD>"+lqr.getCdsStart() +" - "+ lqr.getCdsStop() +"</TD>");
+             
+             html_description.append("<TD>"+ (  lqr.getCdsStart() )
+                    +" - "+ ( lqr.getCdsStop()  )  +"</TD>");
+              html_description.append("<TD>"+lqr.getSequenceStart() +" - "+ lqr.getSequenceStop() +"</TD>");
               html_description.append("<TD> <PRE> <font size='-2'>"+ stretch_html_fomated_sequence +"</font></pre></TD>");
              
-              discrepancies = clone_sequence.getDiscrepanciesInRegion( lqr.getCdsStart() , lqr.getCdsStop(), clone_sequence.getCdsStart(), cds_length);
+              discrepancies = clone_sequence.getDiscrepanciesInRegion( lqr.getSequenceStart() , lqr.getSequenceStop(), clone_sequence.getCdsStart(), cds_length);
               if ( discrepancies == null || discrepancies.size() == 0 )
               {
                   discrepancy_report_button_text = "&nbsp";
@@ -363,13 +340,51 @@ vi.	Type of definition (coverage low quality / no coverage )
                            
     
      //--------------------------------
-     
+     //get sequence for stretch 
+     private AnalyzedScoredSequence  getSequenceForStretch( int cloneid,
+                    AnalyzedScoredSequence sequence, Stretch stretch ) throws Exception
+     {
+         
+         try
+         {
+               if (m_type == StretchCollection.TYPE_COLLECTION_OF_LQR )
+               {
+                   if ( sequence != null)                return sequence;
+                   sequence = (AnalyzedScoredSequence) CloneSequence.getOneByCloneId(cloneid);
+               }
+               else if ( m_type == StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS )
+               {
+                   if ( sequence != null && ( sequence.getId() == stretch.getSequenceId())) return sequence;
+                   sequence = new AnalyzedScoredSequence( stretch.getSequenceId() );
+               }
+               return sequence;
+         }
+         catch(Exception e){ throw new BecDatabaseException ("Cannot get sequence for LQR. Clone Id: "+ cloneid);}
+    }
+       
+         
+    private   ArrayList getDiscrepanciesInRegion(Stretch stretch, 
+                AnalyzedScoredSequence sequence , int cds_length, int cloneid )
+                throws Exception
+     {
+         ArrayList discrepancies = null;
+                       
+         try
+         {
+               discrepancies = Mutation.getDiscrepanciesBySequenceType(sequence.getDiscrepancies() , Mutation.RNA);
+               discrepancies = AnalyzedScoredSequence.getRNADiscrepanciesInRegion( discrepancies,stretch.getSequenceStart(), stretch.getSequenceStop() );
+        
+               return discrepancies;
+         }
+         catch(Exception e){ throw new BecDatabaseException ("Cannot get discrepancies for LQR. Clone Id: "+ cloneid + " Stretch id: " + stretch.getId() );}
+    }
+       
+                       
+         
     private int[] constructBoundaryElementFromStretch(Stretch stretch, int cds_length)
     {
-         int[] element = new int[2];
-         element[0] =  (stretch.getCdsStart() < 0 ) ? 0 : stretch.getCdsStart();
-         element[1] = ( stretch.getCdsStop() > cds_length ) ? cds_length  : stretch.getCdsStop() ;
-         return element;
+        return constructBoundaryElementFromStretch(stretch.getCdsStart(), stretch.getCdsStop(),  cds_length);
+        
     }
     private int[] constructBoundaryElementFromStretch(int start, int end, int cds_length)
     {

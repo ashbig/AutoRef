@@ -182,6 +182,7 @@ public class PhredPhrapParser
         StringBuffer sequence = new StringBuffer();
         try
         {
+           
             fin = new BufferedReader(new FileReader(foutput_name));
             while ((line = fin.readLine()) != null)
             {
@@ -283,12 +284,13 @@ public class PhredPhrapParser
     {
         try
         {
-            /*
-            String  foutput_name = "C:\\bio\\plate_analysis\\clone_samples\\2055\\3214\\contig_dir\\refseqassembly1475.fasta.screen.ace.1";
+       
+            String  foutput_name = "F:\\trace_files_root\\clone_samples\\3337\\112576\\contig_dir\\refseqassembly3337.fasta.screen.ace.1";
             PhredPhrapParser pp= new PhredPhrapParser();
             CloneAssembly cl = pp.parseAllData( foutput_name); 
             ArrayList a = cl.getContigs();
             System.out.println("contigs "+a.size() );
+            /*
             for (int c=0; c<a.size(); c++)
             {
                 Contig cont =(Contig)a.get(c);

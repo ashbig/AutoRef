@@ -52,7 +52,7 @@ public class SubmitDataFileAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
         int forwardName = ((SubmitDataFileForm)form).getForwardName();
         FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
-     
+      String title = "";
         //check if can get input stream
         InputStream input = null;Thread t = null;
         try
@@ -89,8 +89,8 @@ public class SubmitDataFileAction extends ResearcherAction
                     RunDiscrepancyFinder df= new RunDiscrepancyFinder(input,isSendNeedleFiles, user.getUserEmail());
                     t = new Thread(df);
                     t.start();
-                    String str="The following process was initiated by user: <i>Run Discrepancy Finder as stand-alone application</i>.<P>The report will be send to user by e-mail.";
-                    request.setAttribute(Constants.JSP_TITLE,str);
+                    title="The following process was initiated by user: <i>Run Discrepancy Finder as stand-alone application</i>.<P>The report will be send to user by e-mail.";
+                    request.setAttribute(Constants.JSP_TITLE,title);
                      return (mapping.findForward("response"));
                 }
                 case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE:
@@ -98,15 +98,37 @@ public class SubmitDataFileAction extends ResearcherAction
                     SequenceDataUploadRunner sd= new SequenceDataUploadRunner(input, user);
                     t = new Thread(sd);
                     t.start();
-                    String str="The following process was initiated by user: <i>Submit sequence data</i>.<P>Report will be send to user by e-mail.";
-                    request.setAttribute(Constants.JSP_TITLE,str);
+                    title="The following process was initiated by user: <i>Submit sequence data</i>.<P>Report will be send to user by e-mail.";
+                    request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("response"));
                 }
+                case  Constants.PROCESS_DELETE_TRACE_FILES :
+                case  Constants.PROCESS_MOVE_TRACE_FILES:
+                {
+                    
+                    switch(forwardName)
+                    {
+                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title = "request for list of Trace Files' names"; break;}
+                         case  Constants.PROCESS_DELETE_TRACE_FILES :{title = "request for Trace Files deletion"; break;}
+                    }
+                    DeleteObjectRunner runner = new DeleteObjectRunner();
+                    ((DeleteObjectRunner)runner).setActionType(forwardName);
+                              
+                    ArrayList items = getInputItems( input);
+                    String  item_ids = Algorithms.convertStringArrayToString(items, " ");
+                    runner.setInputData( Constants.ITEM_TYPE_PLATE_LABELS,item_ids);
+                    runner.setUser(user);
+                    t = new Thread(runner);                    t.start();
+                    
+                    request.setAttribute(Constants.JSP_TITLE,title);
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
+                    return mapping.findForward("processing");
+                }
+             
             }
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
@@ -114,7 +136,25 @@ public class SubmitDataFileAction extends ResearcherAction
     }
     
     
-    
+      ////////////////////
+     private ArrayList getInputItems(InputStream input) throws Exception
+     {
+         BufferedReader reader = null;
+         ArrayList items = new ArrayList();  String line = null;
+         try
+         {
+                reader = new BufferedReader(new InputStreamReader(input));
+                while  ((line = reader.readLine()) != null)
+                {
+                    items.add(line.trim().toUpperCase() );
+                }
+                return items;
+         }
+         catch(Exception e)
+         {
+             throw new BecUtilException("Cannot read input file");
+         }
+     }
     
      class RunDiscrepancyFinder implements Runnable
     {
@@ -223,4 +263,7 @@ public class SubmitDataFileAction extends ResearcherAction
             catch(Exception e){if (reader != null) try{reader.close();}catch(Exception i){}}
         }
      }
+     
+     
+   
 }

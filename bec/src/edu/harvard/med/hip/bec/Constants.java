@@ -33,6 +33,23 @@ public class Constants {
             return TEMPORARY_FILES_FILE_PATH;
         }
     }
+    
+    public static String           getItemTypeAsString(int object_type)
+     {
+         switch (object_type )
+         {
+             case ITEM_TYPE_ISOLATETRASCKING_ID :return "Isolate Tracking Id";
+             case ITEM_TYPE_PLATE_LABELS : return "Container Label";
+             case ITEM_TYPE_BECSEQUENCE_ID : return "ACE reference sequence Id";
+             case ITEM_TYPE_FLEXSEQUENCE_ID : return "Flex reference Sequence Id";
+             case ITEM_TYPE_CLONEID: return "Clone Id";
+             default: return "Not known";
+         }
+     
+     }
+    
+    
+    
     public static String       LINE_SEPARATOR = "\n";//System.getProperty("line.separator") ;
     
     public static final String DELIM_WHITE_SPACE = " ";
@@ -232,7 +249,8 @@ public class Constants {
     public static final int         PROCESS_DELETE_CLONE_SEQUENCE = 79;//
   public static final int         PROCESS_GET_TRACE_FILE_NAMES = 80;
   public static final int         PROCESS_DELETE_TRACE_FILES = 81;
-   
+   public static final int         PROCESS_MOVE_TRACE_FILES = 82;
+ 
      //69
        
     //items for display 1-40

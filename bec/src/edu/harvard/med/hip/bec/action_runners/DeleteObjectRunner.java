@@ -18,6 +18,7 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
+import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.Constants;
@@ -32,7 +33,18 @@ import java.util.*;
 public class DeleteObjectRunner extends ProcessRunner 
 {
     //public static final int         Constants.PROCESS_UPDATE_REFERENCE_SEQUENCE = 5;
-    
+    private static  String MOVE_TRACE_FILES_BASE_DIR = null;
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+        {
+             MOVE_TRACE_FILES_BASE_DIR = "d:\\trace_files_root\\trace_files_temporary_removed\\";
+        }
+        else
+        {
+           //MOVE_TRACE_FILES_BASE_DIR = "c:\\bio\\plate_analysis\\trace_files_temporary_removed\\";
+          MOVE_TRACE_FILES_BASE_DIR = "f:\\trace_files_root\\trace_files_temporary_removed\\";
+        }
+    }
     
     private int                     m_action_type = -1;
      public String       getTitle()    
@@ -44,9 +56,10 @@ public class DeleteObjectRunner extends ProcessRunner
             case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : return "delete Clone forward End Reads";
             case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : return "delete Clone reverse End Reads";
             case Constants.PROCESS_DELETE_CLONE_SEQUENCE : return "delete Clone sequences";
-             case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return "get Trace Files' names";
+            case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return "get Trace Files' names";
             case  Constants.PROCESS_DELETE_TRACE_FILES :return "delete Trace Files from hard drive";
-             default: return  "";
+            case Constants.PROCESS_MOVE_TRACE_FILES:return "move Trace Files from clone directories";
+            default: return  "";
         }
      }
     public   void        setActionType(int v){ m_action_type = v;}  
@@ -56,11 +69,23 @@ public class DeleteObjectRunner extends ProcessRunner
           Connection conn = null;
           String sql = "";
          FileWriter reportFileWriter = null;
+         ArrayList sql_groups_of_items = null;
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
             String  report_file_name = Constants.getTemporaryFilesPath() + "DeleteReport"+System.currentTimeMillis()+".txt";
-             ArrayList sql_groups_of_items =  prepareItemsListForSQL();
+            if (  m_action_type == Constants.PROCESS_DELETE_TRACE_FILES )
+            {
+                deleteTraceFiles(report_file_name);
+            }
+            else if ( m_action_type ==Constants.PROCESS_MOVE_TRACE_FILES)
+            {
+                report_file_name = Constants.getTemporaryFilesPath() + "MoveFilesReport"+System.currentTimeMillis()+".txt";
+                moveTraceFiles(report_file_name); 
+            }
+            else
+            {
+                sql_groups_of_items =  prepareItemsListForSQL();
                for (int count = 0; count < sql_groups_of_items.size(); count++)
                {
                    try
@@ -68,8 +93,7 @@ public class DeleteObjectRunner extends ProcessRunner
                        switch(m_action_type)
                        {
                             case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{getTraceFileNames((String)sql_groups_of_items.get(count),report_file_name); break;}
-                            case  Constants.PROCESS_DELETE_TRACE_FILES :{deleteTraceFiles(report_file_name); break;}
-                            case Constants.PROCESS_DELETE_PLATE : 
+                             case Constants.PROCESS_DELETE_PLATE : 
                             case Constants.PROCESS_DELETE_CLONE_READS : 
                             case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : 
                             case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : 
@@ -85,7 +109,7 @@ public class DeleteObjectRunner extends ProcessRunner
                         m_error_messages.add(e.getMessage());
                     }
                }
-             
+            }
             m_file_list_reports.add(new File(report_file_name));   
           
         }
@@ -192,6 +216,41 @@ public class DeleteObjectRunner extends ProcessRunner
             }
         }
     }
+    
+    private void            moveTraceFiles(String report_file_name) 
+    {
+        File file_to_move = null; File file_new = null;
+        ArrayList file_names_to_move = Algorithms.splitString(m_items);
+        ArrayList fileNames = new ArrayList();
+        String new_file_name = null;
+        for (int file_count = 0; file_count < file_names_to_move.size(); file_count++)
+        {
+            file_to_move = new File( (String) file_names_to_move.get(file_count) );
+            if ( file_to_move.exists() )
+            {
+                new_file_name = MOVE_TRACE_FILES_BASE_DIR + file_to_move.getName();
+                file_new = new File(new_file_name);
+                try
+                {
+                    FileOperations.moveFile(file_to_move, file_new, true, true);
+                    fileNames.add("Moving file: "+(String) file_names_to_move.get(file_count) +" into directory "+ MOVE_TRACE_FILES_BASE_DIR);
+                }
+                catch(Exception e)
+                {
+                //file_to_move.delete();
+                    fileNames.add("Cannot move file: "+(String) file_names_to_move.get(file_count) +" into directory "+ MOVE_TRACE_FILES_BASE_DIR);
+                }
+            }
+            else
+                fileNames.add("File "+(String) file_names_to_move.get(file_count) +" does not exists.");
+            if (fileNames.size() >= 200 || file_count == file_names_to_move.size() - 1)
+            {
+                printReport(fileNames,   report_file_name , "");
+                fileNames = new ArrayList();
+            }
+        }
+    }
+    
     private void deleteItems(Connection conn, String sql_items, String report_file_name) throws Exception
     {
         ArrayList sql_for_deletion = new ArrayList();
@@ -470,23 +529,12 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
         {// 3558           775       776       884       638      6947 
             input = new DeleteObjectRunner();
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
-          //  input.setItems("    734 345 ");
-         //   input.setItemsType( Constants.ITEM_TYPE_CLONEID);
             input.setUser(user);
-            
-           
-            input.setActionType(Constants.PROCESS_DELETE_CLONE_REVERSE_READ);
-            ArrayList   del=   input.getSqlReads("776", Constants.PROCESS_DELETE_CLONE_REVERSE_READ);
-        //   input.setItems("c:\\bio\\plate_analysis\\clone_samples\\1879\\776\\chromat_dir\\5947_C01_1879_776_R0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_F0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_R0.ab1");
+           input.setActionType(Constants.PROCESS_MOVE_TRACE_FILES);
+           String items = "C:\\bio\\plate_analysis\\clone_samples\\test.txt";
+           input.setInputData( Constants.ITEM_TYPE_PLATE_LABELS, items);
            input.run();
-          //   input.setItems("    734 345 ");
-        //    input.setItemsType( Constants.ITEM_TYPE_CLONEID);
-          
-       //    input.setItemsType( Constants.ITEM_TYPE_CLONEID);
-         //     ArrayList sql_groups_of_items =  input.prepareItemsListForSQL();
-           
-         //   ArrayList sql = input.getSqlReads((String)sql_groups_of_items.get(0),Constants.PROCESS_DELETE_CLONE_READS);
-       
+            
         }
         catch(Exception e){}
      

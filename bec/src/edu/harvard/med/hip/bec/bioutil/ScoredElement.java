@@ -96,6 +96,7 @@ public class ScoredElement
                      else
                         contig.setCdsStop(contig.getCdsStart() + high_quality_start_stop[1] );
                  }
+              
                 sequence = ScoredElement.createScoredSequence( current_contig  );
              }
          }

@@ -114,16 +114,9 @@ if ((specs != null && names != null && control_names != null)
 
 
  <jsp:include page="additional_jsp_for_initiateprocess.jsp" />
-
 </table>
 
-
-
-<div align="center"> 
-  <p> 
-    <input type="submit" value="Submit" >
-   
-</div>
+<div align="center">   <p>     <input type="submit" value="Submit" ></DIV>
 </html:form> 
 </body>
 </html>

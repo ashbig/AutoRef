@@ -48,7 +48,8 @@ public class EndReadsWrapperRunner extends ProcessRunner
             
         else
         {
-           OUTPUT_BASE_ROOT = "c:\\bio\\plate_analysis\\";
+          // OUTPUT_BASE_ROOT = "c:\\bio\\plate_analysis\\";
+            OUTPUT_BASE_ROOT = "f:\\trace_files_root\\";
            INPUT_BASE_DIR = "C:\\bio\\plate_dump\\";
         }
     }

@@ -179,12 +179,40 @@ public class SelectProcessAction extends ResearcherAction
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE:
+                case  Constants.PROCESS_DELETE_TRACE_FILES :
+                case  Constants.PROCESS_MOVE_TRACE_FILES:
+             
                 {
-                     String file_description = "<I>You are about to submit sequence data to BEC. The <B>requested file format</b> is: <p> <i> ></i>FLEX SAMPLE ID <P> sequence in fasta format."
-                    +"The process will take some time. The e-mail report will be sent to you upon completion."; 
-                    String file_title = "Please select the sequence information file:";
-                    String additional_jsp = "";
-                    request.setAttribute(Constants.JSP_TITLE, "submit Sequence data for set of clones");
+                     String file_description = "";
+                     String file_title = "";  String title = "";       String additional_jsp = "";
+                    switch (forwardName)
+                    { 
+                        case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE:
+                        {
+                            file_description = "<I>You are about to submit sequence data to BEC. The <B>requested file format</b> is: <p> <i> ></i>FLEX SAMPLE ID <P> sequence in fasta format."
+                            +"The process will take some time. The e-mail report will be sent to you upon completion."; 
+                            file_title =  "Please select the sequence information file:";
+                            title="submit Sequence data for set of clones";
+                            break;
+                        }
+                        case  Constants.PROCESS_DELETE_TRACE_FILES :
+                        {
+                            file_description = "<I>You are about to delete trace files from clone directories. The <B>requested file format</b> is: <p> <i> absolute file name (file path information included - c:/dirname)</i>."
+                            +" The process will take some time. E-mail report will be sent to you upon completion."; 
+                            file_title =  "Please select the file with trace files' information:";
+                            title="submit List of trace files to delete";
+                            break;
+                        }
+                        case  Constants.PROCESS_MOVE_TRACE_FILES:
+                        {
+                            file_description = "<I>You are about to move trace files from clone directories into common directory. The <B>requested file format</b> is: <p> <i> absolute file name (file path information included - c:/dirname)</i>."
+                            +" The process will take some time. E-mail report will be sent to you upon completion."; 
+                            file_title =  "Please select the file with trace files' information:";
+                            title="submit List of trace files to move";;
+                            break;
+                        }
+                    }
+                    request.setAttribute(Constants.JSP_TITLE,title );
                     request.setAttribute(Constants.FILE_DESCRIPTION, file_description);
                     request.setAttribute(Constants.FILE_TITLE, file_title);
                     request.setAttribute(Constants.FILE_NAME,Constants.FILE_NAME);
@@ -217,8 +245,6 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                 case Constants.PROCESS_DELETE_CLONE_SEQUENCE ://
                 case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
-                case  Constants.PROCESS_DELETE_TRACE_FILES :
-  
                 {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
@@ -231,8 +257,7 @@ public class SelectProcessAction extends ResearcherAction
                         case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : {title="delete Clone forward End Reads";break; }
                         case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : {title="delete Clone reverse End Reads";break; }
                         case Constants.PROCESS_DELETE_CLONE_SEQUENCE : {title="delete Clone sequences";break; }
-                         case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title="get Trace Files' names";break; }
-                        case  Constants.PROCESS_DELETE_TRACE_FILES :{title="delete Trace Files from hard drive";break; }
+                        case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title="get Trace Files' names";break; }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  {title="get Order List for resequencing of End Reads";break; }
                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : {title="get Order List for resequencing of Internal Reads";break; }
                         case Constants.PROCESS_RUN_END_READS_WRAPPER: {title="run End Reads Wrapper";break; }

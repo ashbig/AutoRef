@@ -134,20 +134,20 @@ public class Contig
             // check if first contig covers 5 prime
              if ( contig_number == 0 && contig.getCdsStart() != ScoredElement.DEFAULT_COORDINATE )
              {
-                gap = new Stretch(Stretch.GAP_TYPE_GAP, Stretch.STATUS_DETERMINED, ScoredElement.DEFAULT_COORDINATE , contig.getCdsStart() - 1 , Constants.ORIENTATION_FORWARD);
+                gap = new Stretch(Stretch.GAP_TYPE_GAP, Stretch.STATUS_DETERMINED, ScoredElement.DEFAULT_COORDINATE , contig.getCdsStart() - 1 , 0,0,Constants.ORIENTATION_FORWARD);
                 gaps.add( gap);
                
               }
              //create gap after last contig if needed
              if ( contig_number == contigs.size() - 1 && contig.getCdsStop() != ScoredElement.DEFAULT_COORDINATE )
              {
-                gap = new Stretch(Stretch.GAP_TYPE_GAP, Stretch.STATUS_DETERMINED, contig.getCdsStop() + 1,ScoredElement.DEFAULT_COORDINATE ,  Constants.ORIENTATION_FORWARD);
+                gap = new Stretch(Stretch.GAP_TYPE_GAP, Stretch.STATUS_DETERMINED, contig.getCdsStop() + 1,ScoredElement.DEFAULT_COORDINATE , 0,0,  Constants.ORIENTATION_FORWARD);
                 gaps.add( gap);
              
              }
              if ( contig_number < contigs.size() - 1)//last element
              {
-                gap = new Stretch(Stretch.GAP_TYPE_GAP, Stretch.STATUS_DETERMINED, contig.getCdsStop() + 1 , ((Stretch)contigs.get(contig_number + 1)).getCdsStart() - 1, Constants.ORIENTATION_FORWARD);
+                gap = new Stretch(Stretch.GAP_TYPE_GAP, Stretch.STATUS_DETERMINED, contig.getCdsStop() + 1 , ((Stretch)contigs.get(contig_number + 1)).getCdsStart() - 1, 0,0,Constants.ORIENTATION_FORWARD);
                 gaps.add( gap);
              }
              

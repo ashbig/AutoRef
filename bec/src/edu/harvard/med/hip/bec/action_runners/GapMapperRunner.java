@@ -9,6 +9,7 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.database.*;
+import edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
 import edu.harvard.med.hip.bec.Constants;
@@ -29,6 +30,8 @@ import java.util.*;
     private boolean                         m_isTryMode = false;
     private int                             m_spec_id = -1;
     private boolean                         m_isRunLQRFinderForContigs = false;
+    private String                          m_vector_file_name = null;
+       
 
     // only for LQR report how many bases will be covered by end reads
     private int				m_number_of_bases_covered_by_forward_er = 300;
@@ -43,6 +46,8 @@ import java.util.*;
     public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
     public void         setIsRunLQR(boolean v){ m_isRunLQRFinderForContigs = v ;}
 
+    public void         setVectorFileName(String v){m_vector_file_name = v;}
+       
     public void         setNumberOfBasesCoveredByForwardER(int v){m_number_of_bases_covered_by_forward_er = v ;}
     public void         setNumberOfBasesCoveredByReverseER(int v){m_number_of_bases_covered_by_reverse_er = v;}
 
@@ -71,6 +76,7 @@ import java.util.*;
          SlidingWindowTrimmingSpec       trimming_spec = null;
          Hashtable clone_startagies = new Hashtable();
          CloningStrategy cloning_strategy = null;
+         boolean isReportWasCreated = false;
          try
         {
             // get spec
@@ -78,6 +84,7 @@ import java.util.*;
             conn = DatabaseTransaction.getInstance().requestConnection();
             ArrayList clone_ids = Algorithms.splitString( m_items);
             String report_file_name = Constants.getTemporaryFilesPath() + "GapMapper"+System.currentTimeMillis()+".txt";
+            
             for (int count_clones = 0; count_clones < clone_ids.size(); count_clones++)
             {
                 //we need to get linkers to prevent definition of lqrs outside intresting regions
@@ -89,8 +96,8 @@ import java.util.*;
                         
                     if (stretch_collection != null )
                     {
-                         stretch_collection.setSpecId(m_spec_id);
-                                 //define lqr for contgi sequences
+                        stretch_collection.setSpecId(m_spec_id);
+    //define lqr for contgi sequences
                         if ( m_isRunLQRFinderForContigs && m_process_type == Constants.PROCESS_FIND_GAPS)
                                 getLQRForDefinedContigs( stretch_collection, trimming_spec);
 
@@ -113,6 +120,8 @@ import java.util.*;
                             m_number_of_bases_covered_by_reverse_er,
                             true, true);
                         Algorithms.writeArrayIntoFile( print_items, true, report_file_name, false);
+                        if ( print_items != null && print_items.size() > 0 && !isReportWasCreated)
+                            isReportWasCreated = true;
                     }
                     
                 }
@@ -122,7 +131,7 @@ import java.util.*;
                     m_error_messages.add(e.getMessage());
                 }
          }
-         m_file_list_reports.add( new File(report_file_name));
+         if ( isReportWasCreated )m_file_list_reports.add( new File(report_file_name));
         }
         catch(Exception e)
         {
@@ -159,8 +168,18 @@ import java.util.*;
                         stretch_boundaries = (int[]) boundaries.get(index);
                         lqr = new Stretch();
                         lqr.setType( Stretch.GAP_TYPE_LOW_QUALITY);
-                        lqr.setCdsStart( stretch_boundaries[0]);
-                        lqr.setCdsStop( stretch_boundaries[1] );
+                        if ( contig.getCdsStart() == ScoredElement.DEFAULT_COORDINATE)
+                        {
+                            lqr.setCdsStart( -( contig.getSequence().getText().length() - contig.getCdsStop()) + stretch_boundaries[0] );
+                            lqr.setCdsStop( -( contig.getSequence().getText().length() -contig.getCdsStop() ) + stretch_boundaries[1]  );
+                        }
+                        else
+                        {
+                            lqr.setCdsStart( contig.getCdsStart() + stretch_boundaries[0] - 1);
+                            lqr.setCdsStop( contig.getCdsStart() + stretch_boundaries[1] - 1);
+                        }
+                        lqr.setSequenceStart(stretch_boundaries[0]);
+                        lqr.setSequenceStop(stretch_boundaries[1]);
                         lqr.setSequenceId(sequenceid);
                         lqr_stretches.add(lqr);
                     }
@@ -185,6 +204,8 @@ import java.util.*;
         {
             GapMapper mapper = new GapMapper();
             mapper.setCloneId(clone_id);
+            mapper.setVectorFileName(m_vector_file_name );
+       
             mapper.setTrimmingSpec( trimming_spec);
             mapper.setIsRunLQR(m_isRunLQRFinderForContigs);
             mapper.run();
@@ -209,7 +230,7 @@ import java.util.*;
             throws Exception
     {
             CloneDescription clone_description = CloneDescription.getCloneDescription( clone_id);
-          
+            Stretch lqr = null;
             CloneSequence clone_sequence = CloneSequence.getOneByCloneId(clone_id);
             StretchCollection  stretch_collection = null;
             if ( clone_sequence != null && clone_description != null) //sequence assembled , checking for lqr
@@ -231,6 +252,16 @@ import java.util.*;
                //  end_of_lqr_definition_region =clone_sequence.getText().length() ;
                 ArrayList lqr_stretches = ScoredSequence.getLQR(clone_sequence,  trimming_spec,
                                         start_of_lqr_definition_region, end_of_lqr_definition_region);
+                // reassigned coordinates
+                for (int count = 0; count < lqr_stretches.size(); count++)
+                {
+                    lqr = (Stretch)lqr_stretches.get(count);
+                    lqr.setSequenceStart( lqr.getCdsStart() );
+                    lqr.setSequenceStop( lqr.getCdsStop() );
+                    lqr.setCdsStart(lqr.getCdsStart()- clone_sequence.getCdsStart() );
+                    lqr.setCdsStop(lqr.getCdsStop()- clone_sequence.getCdsStart() );
+                }
+                
                 stretch_collection = new StretchCollection();
                 stretch_collection.setType ( StretchCollection.TYPE_COLLECTION_OF_LQR);
                 stretch_collection.setRefSequenceId (  clone_description.getBecRefSequenceId());
@@ -457,9 +488,11 @@ import java.util.*;
         try
         {
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setInputData( Constants.ITEM_TYPE_CLONEID," 622   ");
+             runner.setInputData( Constants.ITEM_TYPE_CLONEID,"   1575  4627 ");
+             
+             
              runner.setProcessType(Constants.PROCESS_FIND_GAPS);
-             runner.setIsTryMode(true);
+             runner.setIsTryMode(false);
              //SlidingWindowTrimmingSpec spec =   SlidingWindowTrimmingSpec.getDefaultSpec();
           //   spec.setTrimmingType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);
              //spec.setQWindowSize( 10);
