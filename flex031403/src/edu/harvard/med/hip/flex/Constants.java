@@ -17,7 +17,7 @@ public class Constants {
      */
     
     // constant for interal user group
-    public static final String INTERAL_GROUP = "internal";
+    public static final String INTERNAL_GROUP = "internal";
     
     //constant for external user group
     public static final String EXTERNAL_GROUP = "external";
