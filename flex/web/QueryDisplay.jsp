@@ -181,7 +181,7 @@
 
 
         <logic:present name="workflow">
-        <td><flex:write name="info" property="workflow"/></td>
+        <td><bean:write name="info" property="workflow"/></td>
         </logic:present>
     </flex:row>
     </logic:iterate>
