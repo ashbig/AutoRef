@@ -189,7 +189,7 @@
     <forward    name="importStatus" path="/MgcPBSelectFile.jsp"/>
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>    
     <forward    name="specialOligoOrder" path="/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER"/>
-    <forward    name="sequenceQuery" path="/GetQueryInfo.do"/>    
+    <forward    name="geneQuery" path="/GetQueryInfo.do"/>    
   </global-forwards>
   
 
