@@ -37,7 +37,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class SelectWorkflowAction extends ResearcherAction {
     
@@ -68,17 +68,17 @@ public class SelectWorkflowAction extends ResearcherAction {
         String projectname = ((ProjectWorkflowForm)form).getProjectname();
         
         try {
-           
+            
             request.setAttribute("projectname", projectname);
             request.setAttribute("projectid", new Integer(projectid));
             Workflow workflow = new Workflow(workflowid);
             request.setAttribute("workflowname", workflow.getName());
             request.setAttribute("workflowid", new Integer(workflowid));
-
+            
             if(Constants.APPROVE_SEQUENCES.equals(forwardName)) {
                 return mapping.findForward("success_approve_sequences");
             }
-
+            
             if(Constants.CREATE_PROCESS_PLATES.equals(forwardName)) {
                 return mapping.findForward("success_create_process_plates");
             }
@@ -88,10 +88,20 @@ public class SelectWorkflowAction extends ResearcherAction {
             }
             
             if(Constants.MGC_REQUEST_IMPORT.equals(forwardName)) {
-               return mapping.findForward("success_mgc_request_import");
-            }            
+                return mapping.findForward("success_mgc_request_import");
+            }
             
             if(Constants.SPECIAL_OLIGO_ORDER.equals(forwardName)) {
+                Project project = new Project(projectid);
+                Protocol protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);
+                SequenceProcessQueue queue = new SequenceProcessQueue();
+                int small = queue.getQueueSize(protocol, project, workflow, 0, OligoPlateManager.smallCDSLimit);
+                int medium = queue.getQueueSize(protocol, project, workflow, OligoPlateManager.smallCDSLimit, OligoPlateManager.mediumCDSLimit);
+                int large = queue.getQueueSize(protocol, project, workflow, OligoPlateManager.mediumCDSLimit, -1);
+                
+                request.setAttribute("small", new Integer(small));
+                request.setAttribute("medium", new Integer(medium));
+                request.setAttribute("large", new Integer(large));
                 return mapping.findForward("success_special_oligo_order");
             }
             
