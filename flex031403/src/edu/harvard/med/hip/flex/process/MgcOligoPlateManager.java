@@ -88,10 +88,9 @@ public class MgcOligoPlateManager extends OligoPlateManager
      */
     protected void createOligoPlates(LinkedList seqList) throws FlexDatabaseException, FlexCoreException, IOException, Exception
     {
-       
-        int number_of_destination_plates = 0;
         
-        if (seqList == null || seqList.size() == 0) return;  
+        int number_of_destination_plates = 0;
+           
         if (isOnlyFullPlate)//only full plates: delete trailing sequences
         {
             int numSeqToProcess = totalWells * ( (int)Math.ceil(seqList.size() / totalWells));
@@ -104,11 +103,11 @@ public class MgcOligoPlateManager extends OligoPlateManager
         }
            //arrange sequences by marker / number of sequences on mgc plate
         // and put them in destination plate groups
-                
+        if (seqList == null || seqList.size() == 0) return;  
         Rearrayer ra = new Rearrayer(new ArrayList(seqList), totalWells);
+        
         ArrayList messages = new ArrayList();
         ArrayList plates = ra.getPlates( messages );
-        
         LinkedList plate_sequences = null;
         ArrayList plate_sequence_descriptions = null;
        
@@ -125,7 +124,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
             plate_sequences = (LinkedList)((ArrayList)plates.get(plate_count)).get(0);
             plate_sequence_descriptions = (ArrayList)( (ArrayList)plates.get(plate_count)).get(1);
       //new rearrayed container
-            
+                    
             Container rearrayed_cont = createContainer(plate_label, threadId,plate_sequences, plate_sequence_descriptions);
             DatabaseTransaction.commit(conn);
             createOligoPlate(plate_sequences, rearrayed_cont.getId());
@@ -227,10 +226,12 @@ public class MgcOligoPlateManager extends OligoPlateManager
     public File createRearrayFile(ArrayList plate, String label) throws IOException
     {
        
-        File      fl =   new File(filePath + "Robot.txt");
+        File      fl =   new File(filePath + label+ ".txt");
         String temp = null;
         
         FileWriter fr =  new FileWriter(fl);
+        fr.write("Image Id"+DELIM+ "Mgc plate label"+DELIM+
+                    "Mgc plate position"+DELIM+  "Destination plate"+ DELIM+  "Destination plate position" +"\n");
         for (int count_seq = 0; count_seq < plate.size(); count_seq++)
         {
             SequenceDescription sd = (SequenceDescription) plate.get(count_seq);
@@ -264,7 +265,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
             p = new Project(5);
             w = new Workflow(7);
        
-            MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 5, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS));
+            MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 50, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS));
            
             System.out.println("About to start thread");
             om.orderOligo();
