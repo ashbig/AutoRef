@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.14 2002-06-10 16:47:02 dzuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.15 2002-06-10 19:43:06 dzuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -135,6 +135,53 @@ public class SequenceProcessQueue implements ProcessQueue {
         return size;
     }
     
+    /**
+     * Finds the number of items in the queue for a protocol.
+     *
+     * @param protocol Protocol to count items for.
+     * @param project The project to count items for.
+     * @param workflow The workflow to count items for.
+     * @param lowerSizeLimit The lower bound of the cds sequences to query.
+     * @param upperSizeLimit The upper bound of the cds sequences to query. 
+     *        -1 means no upper bound.
+     * @return number of items in the queue for the given protocol and project.
+     */
+    public int getQueueSize(Protocol protocol, Project project, Workflow workflow, int lowerSizeLimit, int upperSizeLimit) throws FlexDatabaseException{
+        String sql = null;
+        
+        if(upperSizeLimit == -1) {
+            sql = "select count(*) as queue_size"+
+            " from queue q, flexsequence f"+
+            " where q.sequenceid = f.sequenceid"+
+            " and q.protocolid = "+protocol.getId()+
+            " and q.workflowid ="+workflow.getId()+
+            " and q.projectid = "+project.getId()+
+            " and f.cdslength >= "+lowerSizeLimit;
+        } else {
+            sql = "select count(*) as queue_size" +
+            " from queue q, flexsequence f" +
+            " where q.sequenceid = f.sequenceid"+
+            " and q.protocolid =  " + protocol.getId()+
+            " and q.workflowid = " + workflow.getId() + 
+            " and q.projectid = "+project.getId()+
+            " and f.cdslength >= "+lowerSizeLimit+
+            " and f.cdslength < "+upperSizeLimit;
+        }
+        
+        int size =0;
+        
+        try {
+            
+            ResultSet rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            if (rs.next()) {
+                size = rs.getInt("queue_size");
+            }
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        }
+        
+        return size;
+    }
     
     /**
      * Retrieve the batch of queued items which are waiting for the
