@@ -46,10 +46,6 @@
     <!-- Create process plate form bean -->
     <form-bean      name="createProcessPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
-   
-    <!-- Create process plate form bean -->
-    <form-bean      name="getProcessPlateInputForm"
-                    type="edu.harvard.med.hip.flex.form.GetProcessPlateInputForm"/>
 
     <!-- Customer registration form bean -->
     <form-bean      name="customerRegistrationForm"
@@ -210,6 +206,7 @@
                type="edu.harvard.med.hip.flex.action.SelectProtocolAction"
                name="createProcessPlateForm"
                scope="request"
+               validate="false"
                input="/SelectProtocol.jsp">
       <forward  name="success"   path="/GetInput.jsp"/>
     </action> 
@@ -217,7 +214,7 @@
     <!-- Process the process plate creation (get input) -->
     <action    path="/GetInput"
                type="edu.harvard.med.hip.flex.action.GetInputAction"
-               name="getProcessPlateInputForm"
+               name="createProcessPlateForm"
                scope="request"
                input="/SelectProtocol.do">
       <forward  name="success"   path="/ConfirmPlate.jsp"/>

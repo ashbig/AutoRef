@@ -20,10 +20,29 @@ import org.apache.struts.action.ActionMapping;
  * @version 
  */
 public class GetProcessPlateInputForm extends ActionForm {
+    private String protocol;
     private String sourcePlate = null;
     private String researcherBarcode = null;
     private int sourceLocation;
     private int destLocation;
+    
+    /**
+     * Set the protocol to the given value.
+     *
+     * @param protocol The value to be set to.
+     */
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+    
+    /**
+     * Return the protocol.
+     *
+     * @return The protocol.
+     */
+    public String getProtocol() {
+        return protocol;
+    }       
     
     /**
      * Set the source plate.

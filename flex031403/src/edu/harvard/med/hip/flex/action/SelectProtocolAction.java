@@ -61,7 +61,7 @@ public class SelectProtocolAction extends FlexAction {
             request.getSession().removeAttribute("queueItems");
         
         ContainerProcessQueue queue = new ContainerProcessQueue();
-        try {        
+        try {       
             String processname = ((CreateProcessPlateForm)form).getProtocol();
             Protocol protocol = new Protocol(processname);
             LinkedList items = queue.getQueueItems(protocol);
@@ -77,6 +77,7 @@ public class SelectProtocolAction extends FlexAction {
             
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         } 
     }
