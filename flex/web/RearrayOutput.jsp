@@ -25,9 +25,9 @@
 <p><html:submit property="submit" value="Print Barcode"/></td>
 </html:form>
 
-<h3>The following plate(s) have been created:</h3>
+<h3>The following file(s) have been created:</h3>
 <logic:iterate id="file" name="files">
-<p><a href="<bean:write name="file"/>"><bean:write name="file"/></a>
+<p><a href="<bean:write name="file"/>"><bean:write name="file" property="name"/></a>
 </logic:iterate>
 </center>
 </body>

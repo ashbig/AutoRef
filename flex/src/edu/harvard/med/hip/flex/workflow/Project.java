@@ -102,6 +102,23 @@ public class Project {
         this.version = version;
         populateWorkflows();
     }
+ 
+    /**
+     * Constructor.
+     *
+     * @param id The project id.
+     * @param name The project name.
+     * @param description The project description.
+     * @param version The project version.
+     * @param workflows The workflows belonging to this project
+     */
+    public Project(int id, String name, String description, String version, Vector workflows) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.version = version;
+        this.workflows = workflows;
+    }
     
     /**
      * Return the project id.
