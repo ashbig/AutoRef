@@ -43,58 +43,54 @@ public class DiscrepancyFinderRunner extends ProcessRunner
     
     public void run()
     {
-
-         int id = -1; int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
-         Connection conn = null;
-         CloneDescription clone = null;
-         String sql = "";
-         Statement stmt = null;
-         PreparedStatement pst_check_clone_sequence = null;
-          PreparedStatement pst_insert_process_object = null;
-          CloneSequence clone_sequence = null;
+        int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+        Connection conn = null;
+        CloneDescription clone = null;
+        String sql = "";
+        PreparedStatement pst_check_clone_sequence = null;
+        PreparedStatement pst_insert_process_object = null;
+        CloneSequence clone_sequence = null;
+        ArrayList  sql_groups_of_items = new ArrayList();
+        ArrayList  sequence_descriptions = null;
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
             pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_CLONE_SEQUENCE+")");
             pst_check_clone_sequence = conn.prepareStatement("select sequenceid from assembledsequence where sequenceid = ? and analysisstatus ="+BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
             
-            sql = getQueryString(-1, BaseSequence.CLONE_SEQUENCE_TYPE_FINAL, BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
-            if ( sql == null)        { return ; }
-            ArrayList  sequence_descriptions =     getSequenceDescriptions(sql);
-            if ( sequence_descriptions == null || sequence_descriptions.size() <1 ) return;
-            //create process
-            process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DISCREPANCY_FINDER,new ArrayList(),m_user) ;
-           
+            sql_groups_of_items =  prepareItemsListForSQL();
+            if ( sql_groups_of_items.size() > 0 )
+                process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DISCREPANCY_FINDER,new ArrayList(),m_user) ;
+ 
+            for (int count = 0; count < sql_groups_of_items.size(); count++)
+            {
+                sql = getQueryString( (String)sql_groups_of_items.get(count), BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
+                sequence_descriptions =     getSequenceDescriptions(sql);
                 for  (int index =  0;  index < sequence_descriptions.size(); index++)
                 {
-                        clone = (CloneDescription) sequence_descriptions.get(index);
-                        synchronized(this)
+                    clone = (CloneDescription) sequence_descriptions.get(index);
+                    synchronized(this)
+                    {
+                        try
                         {
-                             try
-                            {
-                                if (isSequenceProcessed(clone, pst_check_clone_sequence) )
-                                {
-                                    continue;
-                                }
-                            //process sequence
-                                clone_sequence = processSequence(clone);
-                            //update clone data / status
-                                updateInsertCloneInfo(conn,clone_sequence, clone);
-
-                                //insert process_object
-                                pst_insert_process_object.setInt(1,process_id);
-                                pst_insert_process_object.setInt(2, clone_sequence.getId());
-                                DatabaseTransaction.executeUpdate(pst_insert_process_object);
-
-                               conn.commit();
-                            }
-                            catch(Exception e)
-                            {
-                                DatabaseTransaction.rollback(conn);
-                                m_error_messages.add(e.getMessage());
-                            }
+                          //  if (isSequenceProcessed(clone, pst_check_clone_sequence) ) continue;
+                            clone_sequence = processSequence(clone);
+                        //update clone data / status
+                            updateInsertCloneInfo(conn,clone_sequence, clone);
+                            //insert process_object
+                            pst_insert_process_object.setInt(1,process_id);
+                            pst_insert_process_object.setInt(2, clone_sequence.getId());
+                            DatabaseTransaction.executeUpdate(pst_insert_process_object);
+                            conn.commit();
                         }
+                        catch(Exception e)
+                        {
+                            DatabaseTransaction.rollback(conn);
+                            m_error_messages.add(e.getMessage());
+                        }
+                    }
                 }
+            }
             
         }
         catch(Exception e)
@@ -295,9 +291,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
     
     
     
-    private String      getQueryString(int rownum, int seq_type, int seq_status)
+    private String      getQueryString(String sql_items, int sequence_analysis_status)
     {
-       ArrayList items = Algorithms.splitString( m_items);
         switch ( m_items_type)
         {
             case  Constants.ITEM_TYPE_CLONEID :
@@ -306,25 +301,19 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
-                 +"  and i.isolatetrackingid in (select isolatetrackingid from flexinfo where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+"))";
+                 +"  and i.isolatetrackingid in (select isolatetrackingid from flexinfo where flexcloneid in ("+sql_items+"))"
+                 + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
             case  Constants.ITEM_TYPE_PLATE_LABELS :
             {
-                StringBuffer plate_names = new StringBuffer();
-                for (int index = 0; index < items.size(); index++)
-                {
-                    plate_names.append( "'");
-                    plate_names.append((String)items.get(index));
-                    plate_names.append("'");
-                    if ( index != items.size()-1 ) plate_names.append(",");
-                }
                  return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
                  +"  and i.isolatetrackingid in (select isolatetrackingid from isolatetracking where sampleid in   "
                  +" (select sampleid from sample where containerid in "
-                 +" (select containerid from  containerheader where label in ("+plate_names.toString()+"))))";
+                 +" (select containerid from  containerheader where label in ("+sql_items+"))))"
+                  + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
             case  Constants.ITEM_TYPE_BECSEQUENCE_ID :
             {
@@ -332,7 +321,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
-                 +"  and a.sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
+                 +"  and a.sequenceid in  ("+sql_items+")"
+                  + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
             case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
             {
@@ -340,8 +330,9 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
-                 +"  and i.isolatetrackingid (select isolatetrackingid from flexinfo where flexsequenceid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
-            }
+                 +"  and i.isolatetrackingid (select isolatetrackingid from flexinfo where flexsequenceid in ("+sql_items+")))"
+                  + " and a.analysisstatus in ("+sequence_analysis_status+")";
+             }
         }
         return null;
     }
@@ -360,7 +351,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         catch(Exception e){}
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
-        String  item_ids = "156336";
+        String  item_ids = " 2688	";
 
         runner.setItems(item_ids.toUpperCase().trim());
         runner.setItemsType( Constants.ITEM_TYPE_CLONEID);

@@ -69,12 +69,22 @@ public class BioLinker
         
     }
     
-    
     public static BioLinker getLinkerById(int id)throws BecDatabaseException
     {
               
         String sql = "select linkerid, name, sequence, framestart from linker where linkerid = "+id;
-        RowSet rs = null;
+        return getByRule(sql);
+    }
+     public static BioLinker getLinkerByName(String name)throws BecDatabaseException
+    {
+              
+        String sql = "select linkerid, name, sequence, framestart from linker where name = '"+name +"'";
+        return getByRule(sql);
+    }
+    private static BioLinker getByRule(String sql)throws BecDatabaseException
+    {
+              
+         RowSet rs = null;
         BioLinker linker = null;
         try
         {
@@ -85,12 +95,10 @@ public class BioLinker
             {
                linker= new BioLinker( rs.getInt("linkerid"),rs.getString("name"), Algorithms.cleanChar(rs.getString("sequence"),'-'),rs.getInt("framestart") );
             }
-            //get features
-           
             return linker;
         } catch (Exception e)
         {
-            throw new BecDatabaseException("Error occured while linker with id: "+id+"\n"+sql);
+            throw new BecDatabaseException("Error occured while linker: "+sql);
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);

@@ -223,7 +223,10 @@ public class Constants {
 
      public static final int            PROCESS_FIND_GAPS  = 71;
      public static final int            PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  = 72;
-       //69
+      public static final int           PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  = 73;
+      public static final int           PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  = 74;
+   
+     //69
        
     //items for display 1-40
   

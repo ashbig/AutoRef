@@ -206,6 +206,9 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
                 case Constants.PROCESS_RUN_END_READS_WRAPPER:
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+  
                 {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
@@ -214,6 +217,11 @@ public class SelectProcessAction extends ResearcherAction
                      StringBuffer additional_jsp = new StringBuffer();
                     switch( forwardName)
                     {
+                         case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
+                             {title="get Order List for resequencing of End Reads";break; }
+                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+                            {title="get Order List for resequencing of Internal Reads";break; }
+  
                         case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
                                   {title="run End Reads Wrapper";break; }
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper

@@ -93,13 +93,90 @@ public abstract class ProcessRunner implements Runnable
             }
           else if (this instanceof NoMatchReportRunner)
               ((NoMatchReportRunner)this).run();
+           else if (this instanceof SpecialReportsRunner)
+              ((SpecialReportsRunner)this).run();
+         
    
      }
      
      
      public abstract String getTitle();
   
+    
      
+      public ArrayList prepareItemsListForSQL()
+     {
+         ArrayList result = new ArrayList();
+         ArrayList      items = Algorithms.splitString( m_items);
+         ArrayList cycle_items = new ArrayList();
+         int cycle_number = 0; int last_item_in_cycle = 0; int first_item_in_cycle = 0;
+          while (last_item_in_cycle < items.size() )
+          {
+              // get items for cycle
+              switch ( m_items_type)
+              {
+                  case Constants.ITEM_TYPE_PLATE_LABELS:
+                  {
+                      first_item_in_cycle = last_item_in_cycle;
+                      last_item_in_cycle = first_item_in_cycle + 5;
+                      last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
+                      break;
+                  }
+                  case Constants.ITEM_TYPE_CLONEID:
+                  case Constants.ITEM_TYPE_BECSEQUENCE_ID:
+                  case Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
+                  case Constants.ITEM_TYPE_ISOLATETRASCKING_ID :
+            
+                  {
+                      first_item_in_cycle = last_item_in_cycle;
+                      last_item_in_cycle = first_item_in_cycle + 100;
+                      last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
+                      break;
+                  }
+                  
+              }
+              cycle_items = new ArrayList();
+              for ( int item_count = first_item_in_cycle; item_count < last_item_in_cycle; item_count++)
+              {
+                  cycle_items.add(items.get(item_count));
+               }
+              cycle_number++;
+              result.add(transferArrayOfItemsIntoSQLString(cycle_items));
+          }
+          return result;
+   
+     }
+     
+      private String transferArrayOfItemsIntoSQLString(ArrayList items)
+      {
+          String result = "";
+          switch ( m_items_type)
+          {
+              case Constants.ITEM_TYPE_CLONEID:
+              case Constants.ITEM_TYPE_BECSEQUENCE_ID:
+              case Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
+              case Constants.ITEM_TYPE_ISOLATETRASCKING_ID :
+              {
+                  result =  Algorithms.convertStringArrayToString(items,"," );
+                  break;
+              }
+              case Constants.ITEM_TYPE_PLATE_LABELS :
+              { 
+                  StringBuffer plate_names = new StringBuffer();
+                    for (int index = 0; index < items.size(); index++)
+                    {
+                        plate_names.append( "'");
+                        plate_names.append((String)items.get(index));
+                        plate_names.append("'");
+                        if ( index != items.size()-1 ) plate_names.append(",");
+                    }
+                  result = plate_names.toString();
+                  break;
+              }
+              
+          }
+          return result;
+      }
      protected void             sendEMails(String title)
      {
          try

@@ -47,23 +47,27 @@ public class NoMatchReportRunner extends ProcessRunner
     
     public void run()
     {
-        // ArrayList file_list = new ArrayList();
-        ArrayList items = new ArrayList();
-        File report = null;
         Hashtable blast_clone_reports = new Hashtable ();
         try
         {
+            String  report_file_name = Constants.getTemporaryFilesPath() + "NoMatchReport"+System.currentTimeMillis()+".txt";
+      
              BlastWrapper blaster = new BlastWrapper();
             //set matrix to small sequences if not specified by user
             blaster.setProgramName("blastn");
            blaster.setFormat(8);blaster.setGI("T");blaster.setHitNumber(10);blaster.setFilter("F");
            blaster.setDB( m_blastable_dbname);
-                   
-           items = Algorithms.splitString( m_items);
-           ArrayList clones = getCloneInfo(items);
-           processClones(clones, blaster, blast_clone_reports);
-           report = printReport(clones, blast_clone_reports);
-           m_file_list_reports.add(report);   
+             
+           ArrayList sql_groups_of_items =  prepareItemsListForSQL();
+           for (int count = 0; count < sql_groups_of_items.size(); count++)
+           {
+               blast_clone_reports = new Hashtable ();
+               ArrayList clones = getCloneInfo((String)sql_groups_of_items.get(count) );
+               processClones(clones, blaster, blast_clone_reports);
+               printReport(clones, blast_clone_reports, report_file_name, count);
+           }
+           
+           m_file_list_reports.add(new File(report_file_name));   
         }
         catch(Exception ex)
         {
@@ -79,13 +83,13 @@ public class NoMatchReportRunner extends ProcessRunner
     
     //------------------------------------
    
-     private ArrayList getCloneInfo( ArrayList items) throws BecDatabaseException
+     private ArrayList getCloneInfo( String sql_items) throws BecDatabaseException
      {
         ArrayList clones = new ArrayList();String additional_id = null;
         String sql = null;
         UICloneSample clone = null;
         ResultSet rs = null;
-        sql = constructQueryString(items);
+        sql = constructQueryString(sql_items);
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -124,29 +128,20 @@ public class NoMatchReportRunner extends ProcessRunner
     
       
    
-    private String constructQueryString( ArrayList items)
+    private String constructQueryString( String sql_items)
     {
         String sql = null;
         switch (m_items_type)
         {
             case Constants.ITEM_TYPE_PLATE_LABELS://plates
             {
-                StringBuffer plate_names = new StringBuffer();
-                for (int index = 0; index < items.size(); index++)
-                {
-                    plate_names.append( "'");
-                    plate_names.append((String)items.get(index));
-                    plate_names.append("'");
-                    if (index == 12) break;
-                    if ( index != items.size()-1 ) plate_names.append(",");
-                }
-                return "select FLEXSEQUENCEID,LABEL, POSITION, flexcloneid  as CLONEID,"
+               return "select FLEXSEQUENCEID,LABEL, POSITION, flexcloneid  as CLONEID,"
      +" a.SEQUENCEID as CLONESEQUENCEID,sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID "
     +" from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
     +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
     +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
     +" and i.status in (" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+","+IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH+") and s.containerid in (select containerid from containerheader where label in ("
-    +plate_names.toString()+")) order by s.containerid,position";
+    +sql_items+")) order by s.containerid,position";
             } 
             case Constants.ITEM_TYPE_CLONEID:
             {
@@ -155,7 +150,7 @@ public class NoMatchReportRunner extends ProcessRunner
         +"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
         +" sequencingconstruct sc where  f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
         +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-        +"  and i.status in (" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+","+IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH+") and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") ";
+        +"  and i.status in (" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+","+IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH+") and flexcloneid in ("+sql_items+") ";
             }
             default : return "";
         }
@@ -274,31 +269,29 @@ public class NoMatchReportRunner extends ProcessRunner
         }
         return res;     
     }
-    private File            printReport(ArrayList clones, Hashtable blast_clone_reports)
+    private void            printReport(ArrayList clones, Hashtable blast_clone_reports, 
+                            String report_file_name, int first_record)
     {
         String title = " Clone Id\tPlate Label\tPosition\t Exspected FLEX Sequence Id";
         if ( m_id_type != null && !m_id_type.equalsIgnoreCase("NONE")) title+="\t"+m_id_type;
         title +=    "\tConstructId\tSummary\tDetails\n";
         FileWriter in = null; 
-        File report = new File(Constants.getTemporaryFilesPath() + "NoMatchReport"+System.currentTimeMillis()+".txt");
         try
         {
-            in = new FileWriter(report);
-            in.write(title);
+            in =  new FileWriter(report_file_name, true);
+             if (first_record == 0) in.write(title+"\n");        
             for (int clone_count =0; clone_count<clones.size(); clone_count++)
             {
                   in.write( getCloneEntry( (UICloneSample)clones.get(clone_count) ,blast_clone_reports ));
             }
             in.flush();
             in.close();
-            
         }
         catch(Exception e)
         {
             m_error_messages.add("Cannot create report file.");
         }
-        return report;
-    }
+   }
     
     private String getCloneEntry(UICloneSample clone, Hashtable blast_clone_reports)
     {

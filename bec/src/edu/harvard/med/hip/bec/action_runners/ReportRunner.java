@@ -134,7 +134,7 @@ public class ReportRunner extends ProcessRunner
     public void run()
     {
         // ArrayList file_list = new ArrayList();
-        ArrayList items = new ArrayList();
+        ArrayList sql_groups_of_items = new ArrayList();
         File report = null;
         Hashtable refsequences = new Hashtable();//containes refsequences by bec id
         Hashtable reads = new Hashtable();//containes reads by isolatetrackingid
@@ -143,41 +143,13 @@ public class ReportRunner extends ProcessRunner
            String  report_file_name =    Constants.getTemporaryFilesPath() + "GeneralReport"+ System.currentTimeMillis()+ ".txt";
           
             //convert item into array
-           items = Algorithms.splitString( m_items);
-           ArrayList cycle_items = new ArrayList();
-           int cycle_number = 0; int last_item_in_cycle = 0; int first_item_in_cycle = 0;
-          while (last_item_in_cycle < items.size() )
-          {
-              // get items for cycle
-              switch ( m_items_type)
-              {
-                  case Constants.ITEM_TYPE_PLATE_LABELS:
-                  {
-                      first_item_in_cycle = last_item_in_cycle;
-                      last_item_in_cycle = first_item_in_cycle + 5;
-                      last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
-                      break;
-                  }
-                  case Constants.ITEM_TYPE_CLONEID:
-                  case Constants.ITEM_TYPE_BECSEQUENCE_ID:
-                  {
-                      first_item_in_cycle = last_item_in_cycle;
-                      last_item_in_cycle = first_item_in_cycle + 100;
-                      last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
-                      break;
-                  }
-                  default: throw new BecUtilException("Wrong data type.");
-              }
-              cycle_items = new ArrayList();
-              for ( int item_count = first_item_in_cycle; item_count < last_item_in_cycle; item_count++)
-              {
-                  cycle_items.add(items.get(item_count));
-               }
-              cycle_number++;
-              ArrayList clones = getCloneInfo(m_items_type,cycle_items);
+           sql_groups_of_items =  prepareItemsListForSQL();
+           for (int count = 0; count < sql_groups_of_items.size(); count++)
+           {
+              ArrayList clones = getCloneInfo(m_items_type, (String) sql_groups_of_items.get(count));
               refsequences= extractRefSequences( clones);
                if ( m_read_length )               reads = extractReads(clones);
-              printReport(report_file_name,clones,refsequences,reads, first_item_in_cycle);
+              printReport(report_file_name,clones,refsequences,reads, count);
           }
           m_file_list_reports.add(new File(report_file_name));   
         }
@@ -194,13 +166,13 @@ public class ReportRunner extends ProcessRunner
     }
     
     
-    private ArrayList getCloneInfo(int submission_type, ArrayList items)
+    private ArrayList getCloneInfo(int submission_type, String sql_items)
     {
         ArrayList clones = new ArrayList();
         String sql = null;
         UICloneSample clone = null;UICloneSample previous_clone = null;
         ResultSet rs = null;
-        sql = constructQueryString(submission_type,items);
+        sql = constructQueryString(submission_type, sql_items);
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -246,20 +218,12 @@ public class ReportRunner extends ProcessRunner
     }
     
     
-    private String constructQueryString(int submission_type, ArrayList items)
+    private String constructQueryString(int submission_type, String sql_items)
     {
         String sql = null;
         if ( submission_type == Constants.ITEM_TYPE_PLATE_LABELS)//plates
         {
-            StringBuffer plate_names = new StringBuffer();
-            for (int index = 0; index < items.size(); index++)
-            {
-                plate_names.append( "'");
-                plate_names.append((String)items.get(index));
-                plate_names.append("'");
-              //  if (index == 2) break;
-                if ( index != items.size()-1 ) plate_names.append(",");
-            }
+            
             sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
@@ -267,7 +231,7 @@ public class ReportRunner extends ProcessRunner
 +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
 +" and s.containerid in (select containerid from containerheader where label in ("
-+plate_names.toString()+")) order by s.containerid,position, a.submissiondate desc";
++sql_items+")) order by s.containerid,position, a.submissiondate desc";
         } 
         else if (submission_type == Constants.ITEM_TYPE_CLONEID)
         {
@@ -277,7 +241,7 @@ public class ReportRunner extends ProcessRunner
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where rownum<1000 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-+"  and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") order by s.containerid,position, a.submissiondate desc";
++"  and flexcloneid in ("+sql_items+") order by s.containerid,position, a.submissiondate desc";
         }
        
         else if (submission_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)//bec sequence id
@@ -288,7 +252,7 @@ public class ReportRunner extends ProcessRunner
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where rownum<1000 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-+"  and a.SEQUENCEID in ("+Algorithms.convertStringArrayToString(items,"," )+") order by s.containerid,position,  a.submissiondate desc";
++"  and a.SEQUENCEID in ("+sql_items+") order by s.containerid,position,  a.submissiondate desc";
         }
         return sql;
     }

@@ -184,7 +184,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
     
     
   
-    public ArrayList getDiscrepanciesInRegion(int region_start, int region_end, int cds_start)
+    public ArrayList getDiscrepanciesInRegion(int region_start, int region_end, int cds_start, int cds_length)
     {
         ArrayList dicr_in_region = new ArrayList();
          
@@ -218,7 +218,15 @@ public class AnalyzedScoredSequence extends ScoredSequence
            }
 	   else 
            {
-               position = discr_definition.getRNADefinition().getPosition() + cds_start;
+               Mutation rna = discr_definition.getRNADefinition();
+               position = rna.getPosition() + cds_start;
+               if ( rna.getChangeType() == Mutation.TYPE_N_SUBSTITUTION_LINKER3
+                      ||  rna.getChangeType() == Mutation.TYPE_LINKER_3_SUBSTITUTION
+                      ||  rna.getChangeType() == Mutation.TYPE_LINKER_3_INS_DEL
+                )
+               {
+                   position = discr_definition.getRNADefinition().getPosition() + cds_length ;
+               }
                if (  position >= region_start  &&  position <= region_end )
                     dicr_in_region.addAll ( discr_definition.getAllDiscrepancies() );
                if ( position > region_end ) break;

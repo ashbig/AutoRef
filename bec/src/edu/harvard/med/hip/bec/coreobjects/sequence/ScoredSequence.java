@@ -271,17 +271,18 @@ public class ScoredSequence extends BaseSequence
    }
     
    
-   public static ArrayList getLQR(ScoredSequence sequence, SlidingWindowTrimmingSpec spec)
+   public static ArrayList getLQR(ScoredSequence sequence, SlidingWindowTrimmingSpec spec,
+                            int start_of_lqr_definition_region, int end_of_lqr_definition_region)
                              throws Exception
    {
-       ArrayList boundaries = getLQR(sequence.getScoresAsArray(),  spec);
+       ArrayList boundaries = getLQR(sequence.getScoresAsArray(),  spec,start_of_lqr_definition_region,  end_of_lqr_definition_region);
         Stretch lqr  = null;
         int[] stretch_boundaries = new int[2];
         ArrayList lqr_stretches = new ArrayList();
         //create stretch collection
        for (int index = 0; index < boundaries.size(); index++)
        {
-           stretch_boundaries = (int[]) boundaries.get(index);
+              stretch_boundaries = (int[]) boundaries.get(index);
               lqr = new Stretch();
                lqr.setType( Stretch.GAP_TYPE_LOW_QUALITY);
                lqr.setCdsStart( stretch_boundaries[0]);
@@ -291,33 +292,34 @@ public class ScoredSequence extends BaseSequence
         return lqr_stretches;
    }
    //function defines lqr for the scored sequence based on submitted spec
-    public static ArrayList getLQR( int[] scores , SlidingWindowTrimmingSpec spec)
+    public static ArrayList getLQR( int[] scores , SlidingWindowTrimmingSpec spec,
+                            int start_of_lqr_definition_region, int end_of_lqr_definition_region)
                              throws Exception
      {
         ArrayList boundaries = new ArrayList();
-        int window_end = spec.getQWindowSize() ;
+        int window_size = spec.getQWindowSize();//+ start_of_lqr_definition_region ;
         int count_not_pass_criteria_bases = 0;
-        int count = 0;
-        for (; count < window_end; count++)
+        int count = start_of_lqr_definition_region;//0;
+        for (; count < window_size + start_of_lqr_definition_region ; count++)
         {
             if ( scores[count] < spec.getQCutOff() )
                 count_not_pass_criteria_bases++;
         }
        if ( count_not_pass_criteria_bases >= spec.getQMaxNumberLowQualityBases())
-           boundaries.add(new Integer(1));
-       for (  count = window_end ; count < scores.length ; count++)
+           boundaries.add(new Integer(start_of_lqr_definition_region+1));
+       for (   ; count < end_of_lqr_definition_region; count++)//scores.length ; count++)
        {
            int delta = 0; 
            if ( scores[count] < spec.getQCutOff() )
                   delta++;
-           if ( scores[count - window_end] < spec.getQCutOff() )
+           if ( scores[count - window_size] < spec.getQCutOff() )
                   delta--;
            if ( count_not_pass_criteria_bases == spec.getQMaxNumberLowQualityBases() - 1 
                 && delta > 0 )
            {
                if ( boundaries.size() == 0 ||
-                        ((Integer)boundaries.get( boundaries.size() - 1)).intValue() < (count - window_end) )
-                     boundaries.add(new Integer(count - window_end + 1 ));
+                        ((Integer)boundaries.get( boundaries.size() - 1)).intValue() < (count - window_size) )
+                     boundaries.add(new Integer(count - window_size + 1 ));
                else
                    boundaries.remove( boundaries.size() - 1);
            }
@@ -326,10 +328,8 @@ public class ScoredSequence extends BaseSequence
                 boundaries.add(new Integer(count + 1));
             count_not_pass_criteria_bases += delta;
         }
-
         if ( count_not_pass_criteria_bases >= spec.getQMaxNumberLowQualityBases())
             boundaries.add(new Integer( scores.length ));
-
         return colapseBoundaries(boundaries, spec);
      }
       //--------------------------------private --------------------------------------------------
@@ -577,17 +577,17 @@ public class ScoredSequence extends BaseSequence
            //  System.out.println( sequence.getScores());
              SlidingWindowTrimmingSpec spec =  SlidingWindowTrimmingSpec.getDefaultSpec();
              spec.setQWindowSize(10);
-              res =  ScoredSequence.getLQR( sequence, spec );
+             // res =  ScoredSequence.getLQR( sequence, spec );
               sequence = new ScoredSequence( 45188);
                  System.out.println( sequence.getText());
              System.out.println( sequence.getScores());
             
-                res =  ScoredSequence.getLQR( sequence, spec );
+           //     res =  ScoredSequence.getLQR( sequence, spec );
                  sequence = new ScoredSequence( 45189);
                     System.out.println( sequence.getText());
              System.out.println( sequence.getScores());
             
-                res =  ScoredSequence.getLQR( sequence, spec );
+           //     res =  ScoredSequence.getLQR( sequence, spec );
            //  ScoredSequence.trimSequence(s);
            
           //  boolean result = ScoredSequence.isPassAmbiguityCheck(sequence);

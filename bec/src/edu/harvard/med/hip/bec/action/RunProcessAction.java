@@ -317,7 +317,7 @@ public class RunProcessAction extends ResearcherAction
                             {
                                 lqr_for_clone = StretchCollection.getByCloneSequenceId(clone_sequence.getId() , false);
                                 if ( lqr_for_clone.getType() != StretchCollection.TYPE_COLLECTION_OF_LQR) continue;
-                                StretchCollection.prepareStretchCollectionForDisplay(lqr_for_clone,clone_sequence);
+                                StretchCollection.prepareStretchCollectionForDisplay(lqr_for_clone,clone_sequence, clone_sequence.getCdsStop() - clone_sequence.getCdsStart());
                                 display_items.put( items.get(index), lqr_for_clone);
                             }
                           
@@ -423,11 +423,24 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
                 case Constants.PROCESS_RUN_END_READS_WRAPPER:
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:    
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
+                case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+  
                 {
                     String title = "";
                     ProcessRunner runner = null;
                     switch (forwardName)
                     {
+                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :
+                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :
+                        {
+                              runner = new SpecialReportsRunner();
+                              if (  forwardName == Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  )
+                                     title = "request for Order List for resequencing of End Reads";
+                              else if ( forwardName ==  Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  )
+                                     title = "request for Order List for resequencing of Internal Reads";
+                              break;//run end reads wrapper
+                         }
                          case Constants.PROCESS_RUN_END_READS_WRAPPER:
                          {
                               runner = new EndReadsWrapperRunner();

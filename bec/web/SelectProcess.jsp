@@ -201,11 +201,9 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY %>>
       View end reads availability</font></td>
 </tr>
-<tr> 
-    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> >
-      View internal primers </font></td>
-  </tr>
+
+
+
 <% if (! edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
 {%>
 <tr> 

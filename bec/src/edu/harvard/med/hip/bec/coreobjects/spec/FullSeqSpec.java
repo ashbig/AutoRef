@@ -458,7 +458,79 @@ public class FullSeqSpec extends Spec
      }
      
      
-     
+      public boolean isIgnorPolymorphismByType( int changetype) throws BecDatabaseException 
+     {
+         switch (changetype)
+         {
+             case Mutation.MACRO_SPECTYPE_SILENT:
+             {
+                if ( this.getParameterByName("FS_S_POLM") == null)
+                        return  false;
+                else 
+                        return true;
+             }
+             case Mutation.MACRO_SPECTYPE_INFRAME :
+             {
+                 if  (this.getParameterByName("FS_IINS_POLM") == null) 
+                    return false;
+                 else 
+                     return true;
+                    
+             }
+             case Mutation.MACRO_SPECTYPE_CONSERVATIVE:
+             {
+                 if  (this.getParameterByName("FS_C_POLM")== null)
+                     return false;
+                 else
+                     return true;
+             }
+             case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE :
+             {
+                  if  (this.getParameterByName("FS_NC_POLM") == null)
+                     return false;
+                 else
+                     return true;
+             }
+             case  Mutation.MACRO_SPECTYPE_FRAMESHIFT:
+             {
+                  if  (this.getParameterByName("FS_FR_POLM") == null)
+                     return false;
+                 else
+                     return true;
+             }
+             case Mutation.MACRO_SPECTYPE_INFRAME_DELETION:
+             {
+                  if  (this.getParameterByName("FS_IDEL_POLM") == null)
+                     return false;
+                 else
+                     return true;
+             }
+             case Mutation.MACRO_SPECTYPE_TRANCATION:
+             {
+                  if  (this.getParameterByName("FS_TRANC_POLM") == null)
+                     return false;
+                 else
+                     return true;
+             }
+             case Mutation.MACRO_SPECTYPE_NO_TRANSLATION:
+             {
+                  if  (this.getParameterByName("FS_NOTRANSLATION_POLM") == null)
+                     return false;
+                 else
+                     return true;
+             }
+             case Mutation.MACRO_SPECTYPE_POST_ELONGATION:
+             {
+                  if  (this.getParameterByName("FS_PELONG_POLM") == null)
+                     return false;
+                 else
+                     return true;
+             }
+             default: return false;
+         }
+        
+     }
+    
      //cleans up not neaded parameters submitted by html form
      protected void cleanup_parameters()
      {
@@ -496,8 +568,9 @@ public class FullSeqSpec extends Spec
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
-             FullSeqSpec spec = (FullSeqSpec) Spec.getSpecById(12);
-             
+             FullSeqSpec spec = (FullSeqSpec) Spec.getSpecById(20);
+             System.out.println( spec.getParameterByNameString("FS_S_POLM"));
+        /*     
             System.out.println( spec.getDiscrepancyNumberByType(0, Mutation.MACRO_SPECTYPE_SILENT,0)  );
               System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_SILENT,0)  );
                 System.out.println( spec.getDiscrepancyNumberByType(0, Mutation.MACRO_SPECTYPE_SILENT,1)  );
@@ -518,7 +591,8 @@ public class FullSeqSpec extends Spec
             System.out.println( spec.getDiscrepancyNumberByType(0, Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL,1)  );
             System.out.println( spec.getDiscrepancyNumberByType(1, Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL,0)  );    
             System.out.println( spec.getDiscrepancyNumberByType(2, Mutation.MACRO_SPECTYPE_LINKER_5_INS_DEL,0)  );
-        }
+        */
+         }
         catch(Exception e){ System.out.print(specs.size());}
         System.exit(0);
      }

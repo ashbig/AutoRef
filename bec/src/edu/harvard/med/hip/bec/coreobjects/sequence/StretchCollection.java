@@ -198,37 +198,101 @@ vi.	Type of definition (coverage low quality / no coverage )
           return getById(collection_id, true);
      }
      
-     public  ArrayList getSequenceCollection(String refsequence_text,int m_min_distance_between_stretches, boolean isApprovedOnly)
+     //get collection of BaseSequence that are subsequences of refsequence
+     // used for primer design
+     // sequence id - cds start for the refsequence subsequence
+     public  ArrayList getStretchBoundaries(int cloneid, 
+                int cds_length, 
+                boolean   isLQRIncluded,   
+                boolean  isLQRWithDiscrepancyOnly , 
+                boolean isStartFromFirstDiscrepancy)throws Exception
      {
-         ArrayList subsequences = new ArrayList();
-         int subsequence_start = 0; int subsequence_end = 0;
-         Stretch stretch = null;Stretch stretch_next = null;
-         String subsequence = null;
-         int count_stretches = 0;
-         ArrayList stretches_to_process = getStretchesToProcess(isApprovedOnly);
-         while(count_stretches < stretches_to_process.size())
+      
+         Stretch stretch = null;
+         ArrayList boundaries = new ArrayList();
+          ArrayList discrepancies = null;
+         int[] element = null; 
+         int stretch_start = 0;          int stretch_end =0;
+         boolean isInclude = true;
+         CloneSequence clone_sequence  = null;
+         for (  int count_stretches = 0; count_stretches < m_stretches.size(); count_stretches++)
          {
-             stretch = (Stretch) stretches_to_process.get(count_stretches);
-             stretch_next = stretch;
-             for (; count_stretches < stretches_to_process.size(); count_stretches++)
+             stretch = (Stretch) m_stretches.get(count_stretches);
+             if ( stretch.getCdsStop() < 0 || stretch.getCdsStart() > cds_length -1 ) continue; // for gaps in 5' linker
+             isInclude = true;
+             // only gaps from gaps & lqr collection
+             if ( m_type == TYPE_COLLECTION_OF_GAPS_AND_CONTIGS && !isLQRIncluded ) 
              {
-                 if (stretch_next.getCdsStop() - stretch.getCdsStop()  <= m_min_distance_between_stretches)
-                 {
-                     stretch_next = (Stretch) stretches_to_process.get(count_stretches);
-                 }
-                 else
-                     break;
+                 boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
              }
-             subsequence = refsequence_text.substring(stretch.getCdsStart(),           stretch_next.getCdsStop() );
-             subsequences.add(subsequence);
+             //lqr collection
+             else if ( m_type == TYPE_COLLECTION_OF_LQR && isLQRIncluded)
+             {
+                 if ( isLQRWithDiscrepancyOnly )//find if any discrepancies
+                 {
+                     if ( clone_sequence == null)
+                          clone_sequence = CloneSequence.getOneByCloneId(cloneid);
+                     discrepancies = clone_sequence.getDiscrepanciesInRegion( 
+                                stretch.getCdsStart() ,  stretch.getCdsStop(), 
+                                clone_sequence.getCdsStart() , cds_length);
+                     
+                      isInclude = !(discrepancies == null || discrepancies.size() == 0);
+                      if (isInclude && isStartFromFirstDiscrepancy )
+                      {
+                          discrepancies = Mutation.getDiscrepanciesBySequenceType(discrepancies, Mutation.RNA);
+                          discrepancies = Mutation.sortDiscrepanciesByPosition(discrepancies);
+                          stretch_start = ((Mutation)discrepancies.get(0)).getPosition(); 
+                          stretch_end = ((Mutation)discrepancies.get( discrepancies.size() -1 )).getPosition(); 
+                      }
+                 }
+                 if ( isInclude) 
+                     boundaries.add( constructBoundaryElementFromStretch( stretch_start, stretch_end,  cds_length) );
+             }
+             else if ( m_type == TYPE_COLLECTION_OF_GAPS_AND_CONTIGS && isLQRIncluded )
+             {
+                 switch( stretch.getType())
+                 {
+                     case Stretch.GAP_TYPE_GAP : //include all gaps
+                     {
+                         boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) );
+                         break;
+                     }
+                     case Stretch.GAP_TYPE_LOW_QUALITY : //include all gaps
+                     {
+                         int sequence_id = stretch.getSequenceId();
+                         Stretch contig = (Stretch) getBySequenceIdType( sequence_id , Stretch.GAP_TYPE_CONTIG).get(0);
+                         if ( contig == null ) continue;// error
+                         stretch_start = stretch.getCdsStart() + contig.getCdsStart(); 
+                         stretch_end = stretch.getCdsStop() + contig.getCdsStart() ;
+                         if ( isLQRWithDiscrepancyOnly )//find if any discrepancies
+                         {
+                              discrepancies = contig.getSequence().getDiscrepanciesInRegion( 
+                                        stretch_start, stretch_end, 0, contig.getCdsStop() );
+                              isInclude = !(discrepancies == null || discrepancies.size() == 0);
+                              if ( isInclude && isStartFromFirstDiscrepancy )
+                              {
+                                  discrepancies = Mutation.getDiscrepanciesBySequenceType(discrepancies, Mutation.RNA);
+                                  discrepancies = Mutation.sortDiscrepanciesByPosition(discrepancies);
+                                  stretch_start = ((Mutation)discrepancies.get(0)).getPosition(); 
+                                  stretch_end = ((Mutation)discrepancies.get( discrepancies.size() -1 )).getPosition(); 
+                              }
+                         }
+                         if ( isInclude)    
+                         {
+                             boundaries.add(constructBoundaryElementFromStretch(stretch_start,stretch_end,cds_length) );
+                         }
+                         break;
+                     }
+                 }
+             }
+             
          }
-       
-         return subsequences;
-     }
+         return boundaries;
+    }
  
      //function prepares str collection for LQR display
      public static  void prepareStretchCollectionForDisplay
-                        (StretchCollection lqr_for_clone,CloneSequence clone_sequence)
+                        (StretchCollection lqr_for_clone,CloneSequence clone_sequence, int cds_length)
      {
          if (lqr_for_clone == null ) return;
          Stretch lqr = null;
@@ -251,7 +315,7 @@ vi.	Type of definition (coverage low quality / no coverage )
               html_description.append("<TD>"+lqr.getCdsStart() +" - "+ lqr.getCdsStop() +"</TD>");
               html_description.append("<TD> <PRE> <font size='-2'>"+ stretch_html_fomated_sequence +"</font></pre></TD>");
              
-              discrepancies = clone_sequence.getDiscrepanciesInRegion( lqr.getCdsStart() , lqr.getCdsStop(), clone_sequence.getCdsStart() );
+              discrepancies = clone_sequence.getDiscrepanciesInRegion( lqr.getCdsStart() , lqr.getCdsStop(), clone_sequence.getCdsStart(), cds_length );
               if ( discrepancies == null || discrepancies.size() == 0 )
               {
                   discrepancy_report_button_text = "&nbsp";
@@ -279,23 +343,42 @@ vi.	Type of definition (coverage low quality / no coverage )
     
      //--------------------------------
      
-     private ArrayList  getStretchesToProcess(boolean isApprovedOnly)
-     {
-         ArrayList stretches_to_process = new ArrayList();
-         if ( !isApprovedOnly) return m_stretches;
-         for (int count = 0; count < m_stretches.size(); count ++)
-         {
-             if (( (Stretch) m_stretches.get(count)).getStatus() == Stretch.STATUS_APPROVED_FOR_PRIMER_DESIGN)
-                 stretches_to_process.add(m_stretches.get(count));
-         }
-         return stretches_to_process;
-     }
+    private int[] constructBoundaryElementFromStretch(Stretch stretch, int cds_length)
+    {
+         int[] element = new int[2];
+         element[0] =  (stretch.getCdsStart() < 0 ) ? 0 : stretch.getCdsStart();
+         element[1] = ( stretch.getCdsStop() > cds_length ) ? cds_length  : stretch.getCdsStop() ;
+         return element;
+    }
+    private int[] constructBoundaryElementFromStretch(int start, int end, int cds_length)
+    {
+         int[] element = new int[2];
+         element[0] =  (start < 0 ) ? 0 :start;
+         element[1] = ( end > cds_length ) ? cds_length  : end ;
+         return element;
+    }    
+    private ArrayList getBySequenceIdType(int  sequence_id , int stretch_type ) 
+    {
+        ArrayList stretches = new ArrayList();
+        Stretch stretch = null;
+        for (int count = 0; count < m_stretches.size(); count++)
+        {
+            stretch = (Stretch) m_stretches.get(count);
+            if ( stretch.getSequenceId() == sequence_id && stretch.getType() == stretch_type)
+            {
+                stretches.add(stretch);
+            }
+        }
+        return stretches;
+    }
+    
      private static ArrayList getByRule(String sql, boolean isSequenceIncluded)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
-        ResultSet rs = null;
+        ResultSet rs = null;ResultSet rs1 = null;
          StretchCollection sc = null;
          ArrayList stretches = null;
+         String sql1 = "SELECT FLEXCLONEID from flexinfo where isolatetrackingid = ";
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -312,7 +395,8 @@ vi.	Type of definition (coverage low quality / no coverage )
                 sc.setSpecId ( rs.getInt("CONFIGID"));
                 stretches= Stretch.getByStretchCollectionId(sc.getId()  ,  isSequenceIncluded);
                 sc.setStretches(stretches);
-               
+                rs1 = t.executeQuery(sql1 + sc.getIsolatetrackingId()); 
+                if (rs1.next()) sc.setCloneId(rs1.getInt("FLEXCLONEID"));
                 res.add(sc);
             }
             return res;
@@ -321,7 +405,8 @@ vi.	Type of definition (coverage low quality / no coverage )
             throw new BecDatabaseException("Error occured while extracting stretch collection"+sqlE+"\nSQL: "+sql);
         } finally
         {
-            DatabaseTransaction.closeResultSet(rs);
+            if ( rs1 != null) DatabaseTransaction.closeResultSet(rs1);
+            if ( rs != null)DatabaseTransaction.closeResultSet(rs);
         }
 
 

@@ -66,7 +66,12 @@ public class Stretch
     }
      public int              getId (){ return m_id ;}
     public int             getSequenceId (){ return m_sequence_id  ;}//Sequence (pointer to analized sequence for contigs)
-    public AnalyzedScoredSequence getSequence (){ return m_sequence  ;}
+    public AnalyzedScoredSequence getSequence () throws Exception
+    { 
+        if ( m_sequence == null && m_sequence_id > 0)
+            m_sequence = new AnalyzedScoredSequence(m_sequence_id);
+        return m_sequence  ;
+    }
     public int             getCdsStart (){ return m_cds_start  ;} //(clone sequence coordinates for low quality)
     public int             getCdsStop (){ return m_cds_stop  ;}
     public int             getOrientation (){ return m_orientation ;}
@@ -162,7 +167,7 @@ public class Stretch
      {
          String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , STATUS "
          +"  ,ORIENTATION  ,TYPE  ,ANALYSISSTATUS  ,COLLECTIONID   from  STRETCH "
-         +"  where COLLECTIONID ="+collection_id ;
+         +"  where COLLECTIONID ="+collection_id +" order by CDSSTART";
          return getByRule( sql, isSequenceIncluded);
      }
      
@@ -170,14 +175,14 @@ public class Stretch
      {
          String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , STATUS "
          +"  ,ORIENTATION  ,TYPE  ,ANALYSISSTATUS  ,COLLECTIONID   from  STRETCH "
-         +"  where sequenceid ="+sequenceid +" and type = " +stretch_type  ;
+         +"  where sequenceid ="+sequenceid +" and type = " +stretch_type  +" order by CDSSTART";
          return getByRule( sql, isSequenceIncluded);
      }
      public static Stretch getById( int id) throws Exception
      {
          String sql = " select  STRETCHID  ,SEQUENCEID  ,CDSSTART  ,CDSEND , STATUS "
          +"  ,ORIENTATION  ,TYPE  ,ANALYSISSTATUS  ,COLLECTIONID   from  STRETCH "
-         +"  where StretchID ="+id ;
+         +"  where StretchID ="+id +" order by CDSSTART";
          ArrayList stretches = getByRule( sql, true);
          if ( stretches == null || stretches.size() < 1) return null;
          else return (Stretch)stretches.get(0);

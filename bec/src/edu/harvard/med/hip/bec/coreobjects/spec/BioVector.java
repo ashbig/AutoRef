@@ -35,10 +35,16 @@ public class BioVector
     private String m_name = null;
     private String m_sequence = null;
     private String m_source = null;
+    private String m_filename = null;
+    private String m_filepath = null;
+    
     private ArrayList m_features = null;
     private ArrayList m_primers = null;
     /** Creates a new instance of BioVector */
-    public BioVector(int id, String name, String seq, String source, int type,ArrayList features, ArrayList primers)throws BecDatabaseException
+    public BioVector(int id, String name, String seq, String source, 
+            String filename ,String filepath ,
+            int type,ArrayList features, ArrayList primers
+            )throws BecDatabaseException
     {
         m_name = name;
         m_sequence = seq;
@@ -46,6 +52,8 @@ public class BioVector
         m_source=source;
         m_type = type;
         m_primers =primers;
+        m_filename = filename;
+        m_filepath = filepath;
          if (id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
             m_id = BecIDGenerator.getID("vectorid");
         else
@@ -57,6 +65,9 @@ public class BioVector
     public String getName()    { return m_name;}
     public String getSequence()    { return m_sequence;}
     public String getSource(){ return m_source;}
+    public String getFileName(){ return m_filename;}
+    public String getFilePath(){ return m_filepath ;}
+    
     public ArrayList getFeatures()    { return m_features;}
     public int     getType(){ return m_type;}   
     public String  getTypeAsString()
@@ -78,13 +89,16 @@ public class BioVector
     public void setName( String v)    {  m_name = v;}
     public void setSequence( String v)    {  m_sequence = v;}
     public void setSource(String s){ m_source = s;}
+    public void setFileName(String s){ m_filename = s;}
+    public void setFilePath(String s){ m_filepath = s;}
+  
     public void setFeatures( ArrayList v)    {  m_features = v;}
     public void setPrimers( ArrayList v)    {  m_primers = v;}
 
     public static ArrayList getAllVectors()throws BecDatabaseException
     {
         ArrayList vect = new ArrayList();
-         String sql = "select vectorid, vectorname, source,vectortype from vector ";
+         String sql = "select vectorid, vectorname, source,vectortype, vectorfilename, vectorfilepath  from vector ";
         RowSet rs = null;
         BioVector vector = null;
         try
@@ -95,7 +109,9 @@ public class BioVector
             while(rs.next())
             {
                 
-                vector= new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), null, rs.getString("source") , rs.getInt("vectortype"), null, null);
+                vector= new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), 
+                        null, rs.getString("source") ,rs.getString("vectorfilename"),rs.getString("vectorfilepath"),
+                        rs.getInt("vectortype"), null, null);
                  vector.setFeatures( getFeatures(vector.getId()));
                 vect.add(vector);
             }
@@ -115,7 +131,8 @@ public class BioVector
     public static BioVector getVectorById(int id)throws BecDatabaseException
     {
               
-        String sql = "select vectorid, vectorname, source, vectortype from vector where vectorid = "+id;
+        String sql = "select vectorid, vectorname, source, vectortype, "
+        +" vectorfilename, vectorfilepath from vector where vectorid = "+id;
         RowSet rs = null;
         BioVector vect = null;
         try
@@ -125,8 +142,10 @@ public class BioVector
             
             while(rs.next())
             {
-                vect = new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), null,rs.getString("source") ,rs.getInt("vectortype"), null, null);
-                vect.setFeatures( getFeatures(vect.getId()));
+                vect= new BioVector( rs.getInt("vectorid"),rs.getString("vectorname"), 
+                        null, rs.getString("source") ,rs.getString("vectorfilename"),rs.getString("vectorfilepath"),
+                        rs.getInt("vectortype"), null, null);
+               vect.setFeatures( getFeatures(vect.getId()));
             }
             //get features
            

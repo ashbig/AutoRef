@@ -118,19 +118,19 @@ public class EndReadsWrapperRunner extends ProcessRunner
                 m_error_messages.addAll( tfb.getErrorMesages());
                 
                 tfb.setIsInnerReads(false); 
-                //run clones
-                   //process only end reads that are exspected
-              //  while (true)
-               // {
-                    ArrayList expected_chromat_file_names = getExspectedChromatFileNames(conn, m_min_clone_id);
-                     //if (expected_chromat_file_names.size() == 0)   break; 
-                      //distribute chromat files 
+              
+                //action per set of plates
+                  //convert item into array
+               ArrayList sql_groups_of_items =  prepareItemsListForSQL();
+               for (int count = 0; count < sql_groups_of_items.size(); count++)
+               {
+                    ArrayList expected_chromat_file_names = getExspectedChromatFileNames(conn, (String)sql_groups_of_items.get(count) );
+                       //distribute chromat files 
                     tfb.setNameOfFilesToDistibute(expected_chromat_file_names);
                     ArrayList chromat_files_names = tfb.distributeEndReadsChromatFiles(m_inputTraceDir, m_outputBaseDir);
                     m_error_messages.addAll( tfb.getErrorMesages());
                     runPhredandParseOutput( chromat_files_names,   conn);
-                //}
-                
+               }
           } 
         catch(Exception e)  
        {m_error_messages.add(e.getMessage());}
@@ -144,29 +144,10 @@ public class EndReadsWrapperRunner extends ProcessRunner
     //private
     
     
-      private ArrayList getExspectedChromatFileNames(Connection conn, int min_clone_id)throws BecDatabaseException
+      private ArrayList getExspectedChromatFileNames(Connection conn, String plate_names)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
-     /*   String sql = "select  FLEXSEQUENCINGPLATEID as plateid ,FLEXSEQUENCEID as sequenceid "
-         +",FLEXCLONEID as cloneid,position,resulttype as orientation"
-        +" from flexinfo f, isolatetracking iso, result r, sample s "
-        +" where FLEXCLONEID  > "+min_clone_id+" and rownum < "+MAX_ROW_NUMBER +" and f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
-        +" and iso.sampleid=s.sampleid and iso.sampleid in"
-        +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
-        Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE +")) order by FLEXCLONEID ";
-     */   
-        ArrayList items = Algorithms.splitString( m_items);
-        if ( items == null || items.size() == 0) return null;
-        StringBuffer plate_names = new StringBuffer();
-        for (int index = 0; index < items.size(); index++)
-        {
-            plate_names.append( "'");
-            plate_names.append((String)items.get(index));
-            plate_names.append("'");
-            if (index == 10) break;
-            if ( index != items.size()-1 ) plate_names.append(",");
-        }
-       
+      
         String sql = "select  FLEXSEQUENCINGPLATEID as plateid ,FLEXSEQUENCEID as sequenceid , "
 +" FLEXCLONEID as cloneid,position,resulttype as orientation from flexinfo f, "
 +"  isolatetracking iso, result r, sample s  where  f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID "
@@ -174,7 +155,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
 +" (select sampleid from  result where resultvalueid is null and resulttype in ("
 +         Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE      
 +  ")         and sampleid in ( select sampleid from sample where containerid "
-+"  in ( select containerid from containerheader where label in (" + plate_names.toString()+")))) order by FLEXCLONEID ";
++"  in ( select containerid from containerheader where label in (" + plate_names +")))) order by FLEXCLONEID ";
            
         ResultSet rs = null;NamingFileEntry entry = null;
         String orientation_str = "";
@@ -201,7 +182,6 @@ public class EndReadsWrapperRunner extends ProcessRunner
                                sequence_id,   0);
                // System.out.println(entry.toString());
                 res.add( entry.getNamingFileEntyInfo() );
-                m_min_clone_id = clone_id;
             }
             return res;
         } catch (Exception sqlE)
@@ -248,19 +228,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
           {
               if ( ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION ) // check for read quality 
               {
-                    if (  read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
-                        return;
-                    if ( read.getTrimEnd() - read.getTrimStart() < 65 + 50)
-                        return;
-                    int[] scores = read.getScoresAsArray();
-  
-                    int bases_to_check = ( scores.length <= 300 ) ? scores.length : 300;
-                    int good_bases = 0;
-                    for ( int bases = 1; bases <= bases_to_check; bases++)
-                    {
-                        if ( scores[bases] >= 20) good_bases++;
-                    }
-                    if ( good_bases < 100  )                        return;
+                    if (! isSufficientQualityRead(read) )     return;
               }
               //read = (Read) reads.get(count);
               istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
@@ -304,6 +272,23 @@ public class EndReadsWrapperRunner extends ProcessRunner
     }
 
 
+    
+    private boolean isSufficientQualityRead(Read read)throws Exception
+    {
+        if (  read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
+            return false;
+        if ( read.getTrimEnd() - read.getTrimStart() < 65 + 50)
+            return false;
+        int[] scores = read.getScoresAsArray();
+        int bases_to_check = ( scores.length <= 300 ) ? scores.length : 300;
+        int good_bases = 0;
+        for ( int bases = 1; bases <= bases_to_check; bases++)
+        {
+            if ( scores[bases] >= 20) good_bases++;
+        }
+        if ( good_bases < 100  )      return false;
+        return true;
+    }
      public static void main(String args[])
     {
         try

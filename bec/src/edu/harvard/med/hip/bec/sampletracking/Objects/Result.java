@@ -37,8 +37,6 @@ import edu.harvard.med.hip.bec.*;
 public class Result
 {
     
-    // result type for a GEL
-    public static final int RESULT_TYPE_GEL = 11;
     
     public static final int RESULT_TYPE_ENDREAD_FORWARD= 12;
     public static final int RESULT_TYPE_ENDREAD_FORWARD_PASS=Read.TYPE_ENDREAD_FORWARD;

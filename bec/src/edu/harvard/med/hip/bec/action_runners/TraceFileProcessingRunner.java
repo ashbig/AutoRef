@@ -91,15 +91,15 @@ public class TraceFileProcessingRunner extends ProcessRunner
             {
                 case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
                 {
-                    runCreateRenamingFile();
+                    runCreateRenamingFile(); break;
                 }
                 case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
                 {
-                    runFileRenaming();
+                    runFileRenaming();break;
                 }
                 case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
                 {
-                    createRenamingFile();
+                    createRenamingFile();break;
                 }
             }
         }
