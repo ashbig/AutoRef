@@ -74,6 +74,15 @@
     <!-- Search genes for gene step2 -->   
     <form-bean      name="searchGenesForGeneStep2Form"
                     type="edu.harvard.med.hip.metagene.form.SearchGenesForGene_step2Form"/>
+
+
+    <!-- chip gene analysis step1 -->
+    <form-bean      name="chipGeneAnalysis_1_Form"
+                    type="edu.harvard.med.hip.metagene.form.ChipGeneAnalysis_1_Form"/>        
+
+    <!-- chip gene analysis step2 -->   
+    <form-bean      name="chipGeneAnalysis_2_Form"
+                    type="edu.harvard.med.hip.metagene.form.ChipGeneAnalysis_2_Form"/>
     
 
   </form-beans>
@@ -136,6 +145,7 @@
       <forward  name="success_gene"   path="/GeneSearch.jsp"/>
       <forward  name="success_multi_disease"   path="/MultipleDiseaseSearch.jsp"/>
       <forward  name="success_gene_gene"   path="/GeneGeneSearch.jsp"/>
+      <forward  name="success_chipGene_disease"  path="/ChipGeneAnalysis_1.jsp" />
       <forward  name="failure"  path="/login.jsp"/>
     </action>
 
@@ -227,6 +237,27 @@
       <forward  name="success"   path="/DisplayGenesForGene.jsp"/>
       <forward  name="newsearch"   path="/GeneGeneSearch.jsp"/>
     </action>   
+
+    <!-- Process MicroArray data analysis step1 -->    
+    <action    path="/chipGeneAnalysis_1"
+               type="edu.harvard.med.hip.metagene.action.ChipGeneAnalysis_1_Action"
+               name="chipGeneAnalysis_1_Form"
+               scope="request"
+               input="/ChipGeneAnalysis_1.jsp">
+      <forward  name="success"   path="/ChipGeneAnalysis_2.jsp"/>
+    </action>
+
+    <!-- Process MicroArray data analysis step2 -->    
+    <action    path="/chipGeneAnalysis_2"
+               type="edu.harvard.med.hip.metagene.action.ChipGeneAnalysis_2_Action"
+               name="chipGeneAnalysis_2_Form"
+               scope="request"
+               input="/ChipGeneAnalysis_2.jsp">
+      <!-- forward  name="success"   path="/DisplayChipGenes.jsp"/ -->    
+      <forward  name="success"   path="/DisplayChipGenes.jsp"/>   
+      <forward  name="failure"   path="/login.jsp"/>
+    </action>
+
 
 
     <action     path="/ProcessError"

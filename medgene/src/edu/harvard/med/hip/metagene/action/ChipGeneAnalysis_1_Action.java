@@ -1,7 +1,7 @@
 /*
- * MainMenuAction.java
+ * ChipGeneAnalysis_1_Action.java
  *
- * Created on December 13, 2001, 10:49 AM
+ * Created on May 30, 2002, 4:12 PM
  */
 
 package edu.harvard.med.hip.metagene.action;
@@ -21,14 +21,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.metagene.form.MainForm;
+import edu.harvard.med.hip.metagene.form.ChipGeneAnalysis_1_Form;
+import edu.harvard.med.hip.metagene.core.*;
+
+import java.util.*;
 
 /**
  *
- * @author  dzuo
- * @version 
+ * @author  hweng
+ * @version
  */
-public class MainMenuAction extends MetageneAction {
+public class ChipGeneAnalysis_1_Action extends MetageneAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -53,20 +56,20 @@ public class MainMenuAction extends MetageneAction {
         
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        String selected = ((MainForm)form).getGeneDiseaseSelect();       
+        String searchTerm = ((ChipGeneAnalysis_1_Form)form).getSearchTerm();
         
-        if("geneDisease".equals(selected)) {
-            return (mapping.findForward("success_disease"));
-        } else if("diseaseGene".equals(selected)) {
-            return (mapping.findForward("success_gene"));
-        } else if("multiDisease".equals(selected)) {
-            return (mapping.findForward("success_multi_disease"));            
-        } else if ("geneGene".equals(selected)) { 
-            return (mapping.findForward("success_gene_gene"));
-        } else if ("chipGeneDisease".equals(selected)) {
-            return (mapping.findForward("success_chipGene_disease"));
+        DiseaseGeneManager manager = new DiseaseGeneManager();
+        Vector diseases = manager.findDiseases(searchTerm);
+        
+        if(diseases == null || diseases.size() == 0) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.notfound", searchTerm));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
         } else {
-            return (mapping.findForward("failure"));
-        }        
-    }   
+            Vector stats = Statistics.getAllStatistics();
+            request.setAttribute("stats", stats);
+            request.setAttribute("diseases", diseases);
+            return (mapping.findForward("success"));
+        }
+    }
 }

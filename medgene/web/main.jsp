@@ -15,14 +15,15 @@
 
     <table width="80%" align="center" border="0"><tr><td> 
     <p>The MedGene database can help you to get the following information:</p>
-
-    <p>A list of genes associated with</p>
-    <html:form action="main.do">   
+    <html:form action="main.do">  
+    <table width="100%"><tr><td bgcolor="#ccccff"> <p>A list of genes associated with</p> </td></tr></table>     
         <html:radio property="geneDiseaseSelect" value="geneDisease" />a particular disease<br>      
         <html:radio property="geneDiseaseSelect" value="multiDisease"/>multiple diseases<br>
-        <html:radio property="geneDiseaseSelect" value="geneGene"/>a particular gene<br>
-        <p> A list of diseases associated with</p>
-        <html:radio property="geneDiseaseSelect" value="diseaseGene"/>a particular gene<br>
+        <html:radio property="geneDiseaseSelect" value="geneGene"/>a particular gene<br><br>
+    <table width="100%"><tr><td bgcolor="#ccccff"> <p>A list of diseases associated with</p> </td></tr></table>      
+        <html:radio property="geneDiseaseSelect" value="diseaseGene"/>a particular gene<br><br>
+    <table width="100%"><tr><td bgcolor="#ccccff"> <p>Analysize a gene list</p> </td></tr></table>       
+        <html:radio property="geneDiseaseSelect" value="chipGeneDisease"/>valuate gene lists from disease related high-throughput experiments such as Micro-array <br>
         <p>
         Please make a selection and submit.
         <p>
