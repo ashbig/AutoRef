@@ -34,7 +34,7 @@ import edu.harvard.med.hip.flex.database.*;
  * @author  dzuo
  * @version 
  */
-public class SelectProtocolAction extends InternalFlexAction {
+public class SelectProtocolAction extends FlexAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP

@@ -28,7 +28,7 @@ import org.apache.struts.util.MessageResources;
  * @author  dzuo
  * @version 
  */
-public class GetInputAction extends InternalFlexAction {
+public class GetInputAction extends FlexAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP

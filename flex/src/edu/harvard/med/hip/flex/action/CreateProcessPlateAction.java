@@ -34,7 +34,7 @@ import edu.harvard.med.hip.flex.process.Protocol;
  * @author  dzuo
  * @version 
  */
-public class CreateProcessPlateAction extends InternalFlexAction {
+public class CreateProcessPlateAction extends FlexAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
