@@ -1,3 +1,4 @@
+
 Application configuration:
 
 
@@ -18,14 +19,22 @@ IS_BIGHEAD  and IS_BIGHEAD_FOR_EXPRESSION_EVALUATION
                 b. get type int
                 c. all server machines should get own value
 
+
+
+
+
+
 1.	To configure new application for the same server:
             
             set JSP_REDIRECTION and IS_BIGHEAD_FOR_EXPRESSION_EVALUATION;
 
+
+
+
 2.	To reconfigure from one server machine to another (make sure your setting are according to OS)
             set IS_BIGHEAD;
 
-a. build the follwoing directories (min set)
+a. build the following directories (min set)
 
             - trace_files_damp
             - trace_files_root
@@ -39,11 +48,11 @@ b. setup scheduled jobs
     ii. transfer of blastable databases from FLEX server
 
 
-c. install and set up cygwin for Win machine
-d. recompile all third party programms and setup them
+c. install and setup cygwin for Win machine
+d. rebuild all third party programs and setup them
                 1. EMBOSS package
-                2. primer3 (can be transfered as .exe on WIn)
-                3. assembled package
+                2. primer3 (can be transferred as .exe on WIn)
+                3. assembly package
                 4. blast
 e. set phredPhrap script according to machine settings
 
@@ -80,4 +89,4 @@ class   PhredWrapper
 package edu.harvard.med.hip.bec.programs.needle;
 class    NeedleWrapper
 
-
+recompile trimming script and configure phrepPhap to run it

@@ -50,6 +50,7 @@
 
 
 # Get the paramenter from user input.
+
 GetOptions("clonepath=s" => \$clone_path,
 		"vectorfile=s" => \$vectorfilename,
 		"outputfilename=s" => \$outputfilename);
@@ -58,7 +59,8 @@ $phdDirPath = $clone_path."/phd_dir";
 #construct output file path
 $outputPath = $clone_path."/contig_dir";
 
-
+print ($chromatDirPath );
+print ( $outputPath );
 
 $szVersion = "991019";
 $cross_matchExe = "c:/programs_bio/biolocal/cross_match";
@@ -72,20 +74,29 @@ $tagRepeats = "c:/programs_bio/biolocal/tagRepeats.perl";
 # for polymorphism detection
 $polyPhredExe = "c:/programs_bio/biolocal/polyphred";
 $determineReadTypes = "c:/programs_bio/biolocal/determineReadTypes.perl";
+#$java_pass = "/c/j2sdk1.4.0_03/bin/java";
+#$java_trimming_script = "d:/bio_programs/phredphrap/triming_phd_files";
 
+$java_pass = "/c/Program\\ Files/j2sdk1.4.1_02/bin/java";
+#$java_pass = "c:/Program\\ Files/j2sdk1.4.1_02/bin/java";
+
+$java_trimming_script = "c:/programs_bio/biolocal trimming_java_script";
+$c_trimming_script="c:/programs_bio/biolocal/trimming";
 
 # change this to reflect wherever you put you fasta file of vector sequences
+$szVectorFilePath = "c:/programs_bio/biolocal/lib/screenLibs/";
 
-$szDefaultVectorFileDefault = "c:/programs_bio/biolocal/lib/screenLibs/vector.seq";
+$szDefaultVectorFileName = "vector_empty.seq";
 if ($vectorfilename eq "")
 {
 	
-	$szDefaultVectorFile = $szDefaultVectorFileDefault;
+	$szDefaultVectorFile = $szVectorFilePath.$szDefaultVectorFileName;
 }
 else
 {
-	$szDefaultVectorFile = $vectorfilename;
+	$szDefaultVectorFile = $szVectorFilePath.$vectorfilename;
 }
+
 print "\n\n--".$szDefaultVectorFile."-----\n";
 # change this to reflect wherever you put the phredpar.dat file
 $szPhredParameterFile = "c:/programs_bio/biolocal/lib/phredpar.dat";
@@ -482,11 +493,22 @@ else {
 }
 
 
+print "\n\n--------------------------------------------------------\n";
+print "Now running trimming...\n";
+print "--------------------------------------------------------\n\n\n";
+
+#$status = `/usr/bin/sh -c \"$java_pass -cp $java_trimming_script $clone_path  10\"`;
+#!system( "$java_pass -cp $java_trimming_script $clone_path  10 ") || die "some problem running crossmatch";
+!system("$c_trimming_script $clone_path./phd_dir/  10 50 700") ||  die "some problem running phd2fasta";
+
+
+
+
 # only uncomment the following 4 lines when you have customized 
 # determineReadTypes.perl
-#print "\n\n--------------------------------------------------------\n";
-#print "Now running determineReadTypes.perl...\n";
-#print "--------------------------------------------------------\n\n\n";
+print "\n\n--------------------------------------------------------\n";
+print "Now running determineReadTypes.perl...\n";
+print "--------------------------------------------------------\n\n\n";
 
 #!system( "$determineReadTypes" ) || die "some problem running determineReadTypes.perl\n";
 
@@ -499,6 +521,7 @@ print "--------------------------------------------------------\n\n\n";
 $szFastaFile = $szBaseName . ".fasta";
 $szFastaQualFile = $szBaseName . ".fasta.qual";
 
+print "$phd2fasta -id $phdDirPath -os $szFastaFile -oq $szFastaQualFile";
 !system("$phd2fasta -id $phdDirPath -os $szFastaFile -oq $szFastaQualFile") ||
   die "some problem running phd2fasta";
 
@@ -515,15 +538,18 @@ if (-e $szScreen ) {
 }
 
 
+
+
+
 print "\n\n--------------------------------------------------------\n";
-print "Now running cross_match...\n";
+print "Now running cross_match...\n$niceExe $cross_matchExe $szFastaFile $szVector -minmatch 12 -penalty -2 -minscore 20 -screen  $szScreenOut" ;
 print "--------------------------------------------------------\n\n\n";
 
 !system( "$niceExe $cross_matchExe $szFastaFile $szVector -minmatch 12 -penalty -2 -minscore 20 -screen > $szScreenOut" ) || die "some problem running crossmatch";
 
 #
 # do a screen for e coli, creating report only
-# chrisa 18-jan-96
+# chrisa 18-jan-                   96
 #
 # use sequence already screened for vector
 # chrisa 31-july-96
@@ -541,7 +567,7 @@ if (-e $szPhrapOut ) {
 }
 
 print "\n\n--------------------------------------------------------\n";
-print "Now running phrap...\n";
+print "Now running phrap...\n$phrapExe $szScreen -new_ace -view @aPhrapOptions >$szPhrapOut";
 print "--------------------------------------------------------\n\n\n";
 
 !system( "$phrapExe $szScreen -new_ace -view @aPhrapOptions >$szPhrapOut" ) 
@@ -608,7 +634,7 @@ $deleteFiles = $szBaseName."*";
 print($newAceFilePath."\n");
 system("mv $szAceFileToBeProduced $newAceFilePath");
 system("rm $deleteFiles");
-print "you may now run consed on $szAceFileToBeProduced\n";
+#print "you may now run consed on $szAceFileToBeProduced\n";
 
 exit(0);
 
@@ -628,8 +654,8 @@ sub bCheckIfThisIsAnAceFile() {
 
   my $bSuccess = open( filAce, $szFile );
   if (!$bSuccess ) {
-    print STDERR "couldn't open $szFile\n";
-    print STDERR "assuming this is not an ace file\n";
+#    print STDERR "couldn't open $szFile\n";
+ #$   print STDERR "assuming this is not an ace file\n";
     return( 0 );
   }
 
@@ -637,7 +663,7 @@ sub bCheckIfThisIsAnAceFile() {
   my $szFirstLine;
 
   if ( !defined( $szFirstLine = <filAce> ) ) {
-    print STDERR "file $szFile was empty so assuming this is not an ace file\n";
+ #   print STDERR "file $szFile was empty so assuming this is not an ace file\n";
     close( filAce );
     return( 0 );
   }
@@ -652,7 +678,7 @@ sub bCheckIfThisIsAnAceFile() {
   chomp( $szFirstLine );
   while( length( $szFirstLine ) == 0 ) {
     if ( !defined( $szFirstLine = <filAce> ) ) {
-      print STDERR "file $szFile was empty so assuming this is not an ace file\n";
+  #    print STDERR "file $szFile was empty so assuming this is not an ace file\n";
       close( filAce );
       return( 0 );
     }
@@ -664,7 +690,7 @@ sub bCheckIfThisIsAnAceFile() {
     return( 1 );
   }
   else {
-    print STDERR "file $szFile is not an ace file--trying another\n";
+ #   print STDERR "file $szFile is not an ace file--trying another\n";
     close( filAce );
     return( 0 );
   }
