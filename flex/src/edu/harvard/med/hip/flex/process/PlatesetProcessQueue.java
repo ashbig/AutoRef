@@ -46,6 +46,7 @@ public class PlatesetProcessQueue implements ProcessQueue {
         "ps.containerid_5p as oligo5p, " +
         "ps.containerid_3pfusion as oligo3pf, " +
         "ps.containerid_3pclosed as oligo3pc, " +
+        "ps.containerid_mgc as mgc, " +
         "q.projectid as projectid, " +
         "q.workflowid as workflowid, " +
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
@@ -74,6 +75,7 @@ public class PlatesetProcessQueue implements ProcessQueue {
         "ps.containerid_5p as oligo5p, " +
         "ps.containerid_3pfusion as oligo3pf, " +
         "ps.containerid_3pclosed as oligo3pc, " +
+        "ps.containerid_mgc as mgc, " +
         "q.projectid as projectid, " +
         "q.workflowid as workflowid, " +
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
@@ -102,6 +104,7 @@ public class PlatesetProcessQueue implements ProcessQueue {
         "ps.containerid_5p as oligo5p, " +
         "ps.containerid_3pfusion as oligo3pf, " +
         "ps.containerid_3pclosed as oligo3pc, " +
+        "ps.containerid_mgc as mgc, " +
         "q.projectid as projectid, " +
         "q.workflowid as workflowid, " +
         "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
@@ -245,10 +248,11 @@ public class PlatesetProcessQueue implements ProcessQueue {
             int oligo5p = rs.getInt("OLIGO5P");
             int oligo3pf = rs.getInt("OLIGO3PF");
             int oligo3pc = rs.getInt("OLIGO3PC");
+            int mgc = rs.getInt("MGC");
             int projectid = rs.getInt("PROJECTID");
             int workflowid = rs.getInt("WORKFLOWID");
             String date = rs.getString("DATEADDED");
-            Plateset ps = new Plateset(id, oligo5p, oligo3pf, oligo3pc);
+            Plateset ps = new Plateset(id, oligo5p, oligo3pf, oligo3pc, mgc);
             QueueItem item = new QueueItem(ps, protocol, date, new Project(projectid), new Workflow(workflowid));
             items.addLast(item);
         }
@@ -266,10 +270,12 @@ public class PlatesetProcessQueue implements ProcessQueue {
     //******************************************************//
     
     public static void main(String [] args) throws Exception {
+        System.out.println("Testing...");
+        
         try {
             QueueFactory factory = new StaticQueueFactory();
-            ContainerProcessQueue queue = (ContainerProcessQueue)factory.makeQueue("PlatesetProcessQueue");
-            Protocol protocol = new Protocol(1, null, "identify sequences from unigene");
+            PlatesetProcessQueue queue = (PlatesetProcessQueue)factory.makeQueue("PlatesetProcessQueue");
+            Protocol protocol = new Protocol(1);
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection c = t.requestConnection();
