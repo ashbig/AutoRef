@@ -15,7 +15,7 @@ public class MenuItem {
     
     private String item;
     private String description;
-    
+    private String m_group; 
 
     /** Creates new menuitem */
     /**
@@ -25,9 +25,10 @@ public class MenuItem {
      * @param description: description of the menuitems 
      * @return A Menuitem object.
      */
-    public MenuItem(String item,String desc){
+    public MenuItem(String item,String desc, String group){
         this.item = item;
         this.description = desc;
+        m_group = group;
     }
     
     /**
@@ -39,6 +40,9 @@ public class MenuItem {
         return item;
     }
     
+     public String getMenuGroup() {
+        return m_group;
+    }
     /**
      * Return desciption.
      *
@@ -55,6 +59,15 @@ public class MenuItem {
      */
     public void setMenuItem(String menuItem) {
         this.item = menuItem;
+    }
+    
+     /**
+     * set the menu item
+     *
+     * @param menuitem
+     */
+    public void setMenuGroup(String group) {
+        m_group = group;
     }
     
     /**

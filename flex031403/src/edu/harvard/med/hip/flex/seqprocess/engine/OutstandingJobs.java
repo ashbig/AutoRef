@@ -62,8 +62,8 @@ public class OutstandingJobs
                
                 if (count % 5 == 0 || ( count == sequences.size()- 1) )
                     Mailer.sendMessage(useremail, from, cc, subject, msgText, files);
-                 seq.setAnalizeStatus(FullSequence.STATUS_FINAL);
-                seq.updateAnalyzeStatus(conn);
+                 seq.setStatus(FullSequence.STATUS_FINAL);
+                seq.updateStatus(conn);
            }
        }
        catch(Exception e)

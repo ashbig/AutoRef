@@ -26,7 +26,7 @@ public class UserGroup {
         LinkedList menulist = new LinkedList();
         String sql = ""; 
         ResultSet rs = null;  
-        sql = "SELECT menuitem.menuitem, menuitem.description FROM menuitem,usergroupmenuitem"
+        sql = "SELECT menuitem.menuitem, menuitem.description, menuitem.groupname FROM menuitem, usergroupmenuitem"
         + " WHERE menuitem.menuitemid = usergroupmenuitem.menuitemid and usergroupmenuitem.usergroup= '"+groupName+"' order by menuitem.displayorder";
         //System.out.println(sql);
         try {
@@ -36,8 +36,11 @@ public class UserGroup {
             while (rs.next()) {
                 String item = rs.getString(1);
                 String desc = rs.getString(2);
-                MenuItem group = new MenuItem(item,desc);
-                //System.out.println("tmp: "+tmp);
+                String mg = rs.getString(3);
+                if (mg == null) mg ="None";
+                MenuItem group = new MenuItem(item,desc, mg);
+                
+             
                 menulist.addLast (group); 
             }
         }catch (SQLException sqlex) { sqlex.printStackTrace();

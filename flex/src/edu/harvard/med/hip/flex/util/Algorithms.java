@@ -134,8 +134,36 @@ public class Algorithms
         return copy;
     }
     
+    public static String cleanChar(String str, char ch)
+    {
+        String copy = "";  // The reversed copy.
+        char[] ar =str.toCharArray();
+        //       from str.length() - 1 down to 0.
+        for ( int i = 0; i < ar.length;  i++ )
+        {
+            if (ar[i] != ch ) 
+                copy += ar[i];
+          
+        }
+        
+        return copy;
+    }
     
     
+    public static int numberOf(String str, char ch)
+    {
+        int res = 0;
+        char[] ar =str.toCharArray();
+        //       from str.length() - 1 down to 0.
+        for ( int i = 0; i < ar.length;  i++ )
+        {
+            if ( ar[i] == ch)
+                res++;
+          
+        }
+        
+        return res;
+    }
     
     public static void main(String args[])
     {

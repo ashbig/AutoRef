@@ -32,7 +32,8 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.seqprocess.spec.*;
-import edu.harvard.med.hip.flex.seqprocess.core.*;
+import edu.harvard.med.hip.flex.seqprocess.core.sequence.*;
+import edu.harvard.med.hip.flex.seqprocess.core.oligo.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.*;
 

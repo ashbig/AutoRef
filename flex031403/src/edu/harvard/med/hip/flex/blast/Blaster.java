@@ -40,14 +40,23 @@ public class Blaster extends java.lang.Object {
     public static final boolean BLAST_FAILED = false; 
     public static final String BLAST_PROGRAM_BLASTN = "blastn";
     public static final String BLAST_PROGRAM_BLASTP = "blastp";    
-    
+    public static final String BLAST_PROGRAM_TBLASTX = "tblastx";  
+     public static final String BLAST_PROGRAM_BLASTX = "blastx";  
+    public static final String BLAST_EXEC_BLASTALL = "blastall";
+    public static final String BLAST_EXEC_BLAST2SEQ = "bl2seq";
     /** identify query sequence type. Default is DNA sequence
      */
     private String type = QUERY_TYPE_DNA;
     
     /** identify which blast program to search, default is blastn 
      */
-    private String program = "-p" + BLAST_PROGRAM_BLASTN;
+    private String program = "-p " + BLAST_PROGRAM_BLASTN;
+    
+     
+    /** identify which blast program to use blastall / bl2seq
+     */
+    private String executable =  BLAST_EXEC_BLASTALL;
+    
     //private String program = BLAST_PROGRAM_BLASTN;
     
     /** idenity the blastable database on the file system 
@@ -72,6 +81,10 @@ public class Blaster extends java.lang.Object {
      */
     private String gapOpen = "-G0";
     
+    /** gapped default T
+     */
+    private String m_gapped = "-g T";
+    
     /** Penalty of extending existing gaps. Zero invokes default.
      */
     private String gapExtend = "-E0";
@@ -93,6 +106,10 @@ public class Blaster extends java.lang.Object {
     /** output file name. 
      */
     private String outfile = null;
+    
+      /** input  file name. (used for bl2seq
+     */
+    private String m_subjectfile = null;
     
     /** Create a new Blaster instance with no parameter set up.
      *  To actually use the object to execute a blast search you need to
@@ -147,7 +164,7 @@ public class Blaster extends java.lang.Object {
      *  @param querySeqFname, query sequence file name in fasta format 
      *  @param outputFname, blast output file name
      */
-    public boolean blast(String query, String output) {
+  public boolean blast(String query, String output) {
         String blastcmd = null;
         outfile = output;
         
@@ -180,10 +197,54 @@ public class Blaster extends java.lang.Object {
         }
         return Blaster.BLAST_SUCESS;
     }
+    
+    
+    /** This version of blast takes both query sequence file name and 
+     *  specified output file name of a blast search. No file existing check. Make
+     *  sure query sequence file existing and output can be written to the specified
+     *  location.
+     * 
+     *  @param querySeqFname, query sequence file name in fasta format 
+     *  @param outputFname, blast output file name
+     */
+    public boolean blast_bl2seq(String query, String output) {
+        String blastcmd = null;
+       
+        blastcmd = "c:\\blast\\bl2seq " + program + " " + expect + " " + m_gapped +          
+           " -j " + m_subjectfile + " -i " + query +  " -o " + output ; 
+        
+        //blastcmd = "/kotel/data/blast/bl2seq ";
+        
+        try {
+            Runtime r = Runtime.getRuntime();
+            r.traceMethodCalls(true);
+            Process p = r.exec(blastcmd);
+            
+            BufferedInputStream bin = new BufferedInputStream(p.getErrorStream());
+            int x;
+            while ((x = bin.read()) != -1) {
+                System.out.write(x);
+                System.out.println(x);
+            }
+            p.waitFor();
+            if (p.exitValue() != 0) {
+                System.err.println("blast call failed");
+                return Blaster.BLAST_FAILED;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.err.println("User requests stop blasting:");
+        }
+        return Blaster.BLAST_SUCESS;
+    }
 
     private String makeBlastCmd(String query, String output) {
-     
-         String blastcmd = "/kotel/data/blast/blastall " +                  
+         String blastcmd = null;
+        if (executable.equals(Blaster.BLAST_EXEC_BLASTALL))
+        {
+     /*
+          blastcmd = "/kotel/data/blast/blastall " +                    
                           program + " " +                
                           "-d" + dbPath +  " " +                
                           "-i" + query + " "  +         
@@ -193,9 +254,9 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits;                    
-
-/*     
-         String blastcmd = "E:\\flexDev\\blast\\blastall " +                  
+*/
+    
+          blastcmd = "c:\\Program Files\\blast\\blastall "    +            
                           program + " " +                
                           "-d " + dbPath +  " " +                
                           "-i " + query + " "  +         
@@ -205,18 +266,54 @@ public class Blaster extends java.lang.Object {
                           gapExtend + " " +              
                           filter + " " +                 
                           hits; 
-*/ 
+        }
+        else
+            if (executable.equals("bl2seq") &&  m_subjectfile != null) 
+            {
+                /*
+      //bl2seq -p blastn -e 10e-50 -i plt1_A01 -j plt1_A01.seq -o plt1_A01.n
+
+         String blastcmd = "/kotel/data/blast/bl2seq " +                    
+                          program + " " +                
+                          "-j" + m_subjectfile +  " " +                
+                          "-i" + query + " "  +         
+                          "-o" + output + " "  +         
+                          expect ;               
+*/
+    
+          blastcmd = "c:\\blast\\bl2seq "   +              
+                          program + " " + expect + " " + m_gapped +          
+                          " -j " + m_subjectfile +                 
+                          " -i " + query +     
+                          " -o " + output 
+                           
+                          ; 
+        
+            }
+System.out.println(blastcmd);
          return blastcmd;
     }
     
-    private boolean isProgramMatchType() {
-        if (type.equalsIgnoreCase(Blaster.QUERY_TYPE_DNA) &&
-            (!program.equalsIgnoreCase("-p" + Blaster.BLAST_PROGRAM_BLASTN)) ||
-            type.equalsIgnoreCase(Blaster.QUERY_TYPE_PROTEIN) &&
-            (!program.equalsIgnoreCase("-p" + Blaster.BLAST_PROGRAM_BLASTP)))
-            return false;
-        else 
-            return true;      
+    private boolean isProgramMatchType()
+    {
+        if (type.equalsIgnoreCase(Blaster.QUERY_TYPE_DNA) )
+        {
+            if  ( program.equalsIgnoreCase("-p " + Blaster.BLAST_PROGRAM_BLASTN)
+                     || program.equalsIgnoreCase("-p " + Blaster.BLAST_PROGRAM_TBLASTX)
+                     )
+            {
+                return true;
+            }
+        }
+        else if    (type.equalsIgnoreCase(Blaster.QUERY_TYPE_PROTEIN))
+        {
+            if (program.equalsIgnoreCase("-p " + Blaster.BLAST_PROGRAM_BLASTP))
+            {
+                return true;
+            }
+        }
+        
+            return false;      
     }
     
     /** This method provided to delete a blast output file */
@@ -241,6 +338,18 @@ public class Blaster extends java.lang.Object {
      */
     public void setProgram(String program) { this.program = "-p " + program; }
     
+     /** set blast program to use according different type of sequence. 
+     */
+    public void setExecutable(String exec) { this.executable =  exec; }
+    
+    public void setGapped(boolean t)
+    {
+        if (t) 
+                m_gapped="-g T";
+        else 
+                m_gapped = "-g F";
+    }
+    
     /** set E value threshold 
      */
     public void setExpect(double e) { this.expect = "-e " + e; }
@@ -253,6 +362,11 @@ public class Blaster extends java.lang.Object {
      */
     public void setHits(int hits) {
         this.hits = "-v" + hits + " -b" + hits;
+    }
+    /** set the file name of subject sequence for bl2seq
+     */
+    public void setSubjectFileName(String fn) {
+        m_subjectfile = fn;
     }
     
     /** set similarity matrix for scoring for protein blast
@@ -301,10 +415,62 @@ public class Blaster extends java.lang.Object {
         }
     }
     
+    
+    
+     public String getDBPath() { return   this.dbPath ;    }
+    
+    /** set blast program to use according different type of sequence. 
+     */
+    public String getProgram() { return this.program; }
+    
+     /** set blast program to use according different type of sequence. 
+     */
+    public String getExecutable() { return this.executable; }
+    
+   
+    
+    /** set E value threshold 
+     */
+    public String getExpect() {return this.expect ; }
+    
+    /** set filter on or off 
+     */
+    public String getFilter() { return this.filter; }
+
+    /** set the number of hits to report
+     */
+    public String getHits() {return         this.hits ;}
+  
+    /** set the file name of subject sequence for bl2seq
+     */
+    public String getSubjectFileName() { return         m_subjectfile;    }
+    
+    /** set similarity matrix for scoring for protein blast
+     */
+    public String setMatrix() {return         this.matrix ;   }
+    
+    /** set gap open penalties */
+    public String getGapOpen() {     return   this.gapOpen ;    }
+    
+    /** set gap extending penalties */
+    public String getGapExtend() {      return this.gapExtend ;    }
+    
+    /** get nucleotide match score */
+    public String getMatch() {     return   this.match ;    }
+    public String getGapped(){ return m_gapped;}
+    
+    /** get nucleotide mismatch penalties */
+    public String getMismatch() { return  this.mismatch ;  }
+    /** get sequence type */
+    public String getType() { return this.type ; }
+    
+    
+    
+    
     // testing Blaster and BlastParser
     public static void main (String args[]) {        
         Blaster blaster = new Blaster();
-        blaster.setHits(5);
+        blaster.setHits(1);
         blaster.setDBPath("/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/WEB-INF/classes/blastdb/genes");
         //blaster.setType("dna");
         for (int i=0; i<args.length; i++) {
