@@ -77,6 +77,8 @@ public class PrimerOrderRunner extends ProcessRunner
           //  ArrayList sorted_clone_description = sortCloneDescriptions(clone_description);
              ArrayList sorted_clone_description = clone_description;
             processClones(sorted_clone_description,m_wells_per_plate,   conn);
+            if ( m_isTryMode ) 
+                DatabaseTransaction.rollback(conn);
         }
         catch(Exception e)
         {
@@ -253,9 +255,7 @@ public class PrimerOrderRunner extends ProcessRunner
                              
                     if (! m_isTryMode ) 
                             conn.commit();
-                    else
-                        DatabaseTransaction.rollback(conn);
-                    if ( primer_counter == primers.size() - 1)
+                     if ( primer_counter == primers.size() - 1)
                         return ;
                     
                     container = createOligoContainer();
@@ -269,6 +269,7 @@ public class PrimerOrderRunner extends ProcessRunner
             }//primer cycle;
             
         }//clone cycle
+      
         return ;
         
     }
@@ -331,13 +332,15 @@ public class PrimerOrderRunner extends ProcessRunner
         {
             input = new PrimerOrderRunner();
             user = AccessManager.getInstance().getUser("htaycher1","htaycher");
-            input.setItems("675\t676\t678\t677\t719\t722\t721\t720\t956\t959\t958\t957\t715\t718\t717\t716\t822\t823\t825\t824\t850\t851\t853\t852\t691\t692\t694\t693\t905\t906\t908\t907\t774\t775\t776\t777\t730\t731\t733\t732\t646\t647\t649\t648\t838\t839\t841\t840\t638\t641\t640\t639\t699\t702\t701\t700\t606\t607\t609\t608\t726\t729\t728\t727\t671\t674\t673\t672\t941\t942\t944\t943\t754\t755\t756\t757\t1003");
+            input.setItems(" 799	       800	       801	       818	       819	       820	       821	       822	       823	       824	       825	       838	       839	       840	       841	       842	       843	       844	       845	       850	       851	       852	       853	       882	       883	       884	       885	       890	       891	       892	       893	       897	       898	       899	       900	       905	       906	       907	       908	       933	       934	       935	       936	       941	       942	       943	       944	       948	       949	       950	       951	       956	       957	       958	       959	      1003	      1004	     35284	     35285	     35286	     35287	     35288	     35289");
+            
             input.setItemsType( Constants.ITEM_TYPE_CLONEID);
             input.setUser(user);
             //input.setPrimerNumber();
             input.setPrimerPlacementFormat(PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER );
-            input.setNumberOfWellsOnPlate(96 );
+            input.setNumberOfWellsOnPlate(76 );
             input.isFullPlatesOnlye(false);
+            input.setIsTryMode(true);
             input.run();
         }
         catch(Exception e){}
