@@ -22,6 +22,7 @@ import org.apache.struts.action.*;
 public class ChipGeneGeneAnalysis_2_Form extends ActionForm {
     private FormFile chipGeneInputFile;
     private int gene;
+    private int stat;
     private String geneInputType = "Gene Symbol";
     private String chipGeneInput;
    // private String hasFieldName;
@@ -30,6 +31,9 @@ public class ChipGeneGeneAnalysis_2_Form extends ActionForm {
     
     public int getGene() {
         return gene;
+    }
+    public int getStat(){
+        return stat;
     }
     public String getGeneInputType(){
         return geneInputType;
@@ -47,6 +51,9 @@ public class ChipGeneGeneAnalysis_2_Form extends ActionForm {
     
     public void setGene(int gene){
         this.gene = gene;
+    }
+    public void setStat(int stat){
+        this.stat = stat;
     }
     public void setGeneInputType(String geneInputType){
         this.geneInputType = geneInputType;

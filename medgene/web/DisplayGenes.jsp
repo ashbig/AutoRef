@@ -25,7 +25,13 @@
 
     <table width="80%" align="center" border="0"><tr><td> 
     <html:errors/>
-    
+   
+    <br>
+    <hr>
+    <b>Note:</b> If you want to find whether your interested genes are on this page, 
+    just click Edit on your browser's menu bar and use Find to search the current page. 
+    <hr><br>
+
     <p>
     <TABLE width = "100%" align="center" border="1" cellpadding="2" cellspacing="0" >
 

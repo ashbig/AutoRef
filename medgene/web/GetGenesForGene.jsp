@@ -12,13 +12,13 @@
     <body>
 
     <center>
-    <h1>Genes Associated with a Particular Gene</h1>
+    <h1><br>Genes Associated with a Particular Gene</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td> 
     <html:errors/>
 
-    <p>Following are the corresponding gene symbol(s). Please choose one:</p>
+    <p><br>Following are the corresponding gene symbol(s). Please choose one:</p>
 
     <html:form action="SearchGenesForGene_step2.do">  
 
@@ -30,7 +30,7 @@
         />
     </html:select>
 
-    <p>Please choose a <a href="statistic_menu.jsp" target="_blank">statistical method</a> to rank the gene list:
+    <p><br>Please choose a <a href="statistic_menu.jsp" target="_blank">statistical method</a> to rank the gene list:
 <p>
     <html:select property="stat">
         <html:options
@@ -40,7 +40,7 @@
         />
     </html:select>
 
-    <p>Please choose the number of genes for your list:
+    <p><br>Please choose the number of genes for your list:
     <html:select property="number">
         <% int i = ((Integer)(session.getAttribute("user_type"))).intValue();
            if (i != 1) { %>
@@ -59,7 +59,7 @@
     </html:select>
 
     <p>
-<p>For performance issue, we only display limited genes here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
+<p><br>For performance issue, we only display limited genes here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
 <p>
     <html:submit property="submit" value="Get Genes"/>
     <html:submit property="submit" value="New Search"/>

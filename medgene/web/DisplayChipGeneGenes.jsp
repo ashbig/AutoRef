@@ -22,8 +22,9 @@
     <TABLE width = "80%" align="center" border="0" cellpadding="2" cellspacing="0" > 
     <TR>
     <TD>
-        Your input genes are grouped into 3 categories according to their relationship with 
-        the gene of <b><bean:write name="gene_symbol"/></b> as cited in literature. <br><br>
+        Your input genes are grouped into <a href="microArray_category.jsp" target="_black">3 categories</a> according to their relationship with 
+        the gene of <b><bean:write name="gene_symbol"/></b> as cited in literature. 
+        The statistical method you selected is <b><bean:write name="stat"/></b>. <br><br>
         <a href="#direct"> First degree associations </a> <br>
         <a href="#indirect"> Second degree associations </a> <br>
         <a href="#new"> Genes new to this gene </a> <br>
@@ -48,10 +49,12 @@
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
             <TD align="center">
-                <bean:write name="directChipGene" property="locus_id"/>
+                <a href="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="directChipGene" property="locus_id"/>" target="_blank">
+                <bean:write name="directChipGene" property="locus_id"/></a>
             </TD>
             <TD align="center">
-                <bean:write name="directChipGene" property="gene_symbol"/>
+                <a href="DisplayLinks.do?geneSymbol=<bean:write name="directChipGene" property="gene_symbol"/>" target="_blank"> 
+                <bean:write name="directChipGene" property="gene_symbol"/></a>               
             </TD>
             <TD align="center">
                 <bean:write name="directChipGene" property="score"/>
@@ -77,10 +80,12 @@
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
             <TD align="center">
-                <bean:write name="indirectChipGene" property="locus_id"/>
+                <a href="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="indirectChipGene" property="locus_id"/>" target="_blank">
+                <bean:write name="indirectChipGene" property="locus_id"/></a>
             </TD>
             <TD align="center">
-                <bean:write name="indirectChipGene" property="gene_symbol"/>
+                <a href="DisplayLinks.do?geneSymbol=<bean:write name="indirectChipGene" property="gene_symbol"/>" target="_blank">
+                <bean:write name="indirectChipGene" property="gene_symbol"/></a>
             </TD>
             <TD align="center">
                 <bean:write name="indirectChipGene" property="score"/>
@@ -110,14 +115,16 @@
             <TD align="center"> - </TD>            
             </logic:equal>
             <logic:notEqual name="newChipGene" property="locus_id" value="0">
-            <TD align="center"> <bean:write name="newChipGene" property="locus_id"/> </TD>
+            <TD align="center"> <a href="http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=<bean:write name="newChipGene" property="locus_id"/>" target="_blank">
+                <bean:write name="newChipGene" property="locus_id"/></a> </TD>            
             </logic:notEqual>
 
             <logic:equal name="newChipGene" property="gene_symbol" value="null">
             <TD align="center"> - </TD>            
             </logic:equal>
             <logic:notEqual name="newChipGene" property="gene_symbol" value="null">
-            <TD align="center"> <bean:write name="newChipGene" property="gene_symbol"/> </TD>
+            <TD align="center"> <a href="DisplayLinks.do?geneSymbol=<bean:write name="newChipGene" property="gene_symbol"/>" target="_blank">
+                <bean:write name="newChipGene" property="gene_symbol"/></a> </TD>
             </logic:notEqual>
 
             <TD align="center"> - <TD>

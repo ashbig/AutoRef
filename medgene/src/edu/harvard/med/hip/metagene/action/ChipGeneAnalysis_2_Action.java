@@ -36,6 +36,7 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
                          throws ServletException, IOException { 
         
         int disease_id = ((ChipGeneAnalysis_2_Form)form).getDiseaseTerm();
+        int stat_id = ((ChipGeneAnalysis_2_Form)form).getStat();
         String inputType = ((ChipGeneAnalysis_2_Form)form).getGeneInputType();
         String geneInputText = ((ChipGeneAnalysis_2_Form)form).getChipGeneInput();
         FormFile geneInputFile = ((ChipGeneAnalysis_2_Form)form).getChipGeneInputFile();
@@ -84,11 +85,11 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
             // analysis input genes
             ActionErrors errors = new ActionErrors();    
             ChipGeneDiseaseAnalysis gda = new ChipGeneDiseaseAnalysis();  
-            gda.hashDirectGenes(disease_id, 1, input_type);
+            gda.hashDirectGenes(disease_id, stat_id, input_type);
             //gda.hashDirectGenes(402, 1, input_type);  //402 483
             
             try{
-            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type);       
+            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type, stat_id);       
             gda.analyzeInputChipGenes(gene_input, input_type);
             }catch(NumberFormatException e){
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
@@ -99,12 +100,23 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
             String disease_mesh_term = gda.getDiseaseMeshTerm(disease_id);
             //String disease_mesh_term = gda.getDiseaseMeshTerm(402);
             
+            String stat="";
+            switch(stat_id){
+                case 1: stat="Product of incidence"; break;
+                case 2: stat="Probability"; break;
+                case 3: stat="Chi square analysis"; break;
+                case 4: stat="Fischer exact test"; break;
+                case 5: stat="Relative risk of gene"; break;
+                case 6: stat="Relative risk of disease"; break;
+            }
+            
             // set attributes
             request.setAttribute("direct_genes", gda.getDirect_gene_tree());
             request.setAttribute("direct_children_genes", gda.getDirect_children_gene_tree());
             request.setAttribute("indirect_genes", gda.getIndirect_gene_tree());
             request.setAttribute("new_genes", gda.getNew_gene_tree());
             request.setAttribute("disease_mesh_term", disease_mesh_term);
+            request.setAttribute("stat", stat);
             
             return (mapping.findForward("success"));
         }

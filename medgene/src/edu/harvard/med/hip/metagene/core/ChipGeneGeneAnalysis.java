@@ -192,7 +192,7 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
                                                                                         
         ChipGeneGeneAnalysis ana = new ChipGeneGeneAnalysis();  
         ana.hashDirectGenes(531, 1, ana.GENE_SYMBOL_INPUT);  
-        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT);       
+        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1);       
         ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT);
         
         

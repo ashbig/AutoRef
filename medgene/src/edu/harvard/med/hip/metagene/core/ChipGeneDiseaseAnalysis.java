@@ -219,7 +219,7 @@ public long start, end2;
      */
     
     public void hashIndirectGenes(String input_genes, Vector source_for_indirect_genes,
-                                      int input_type){
+                                      int input_type, int stat_id){
         DBManager manager = new DBManager();
         Connection con = manager.connect();
 
@@ -228,17 +228,23 @@ public long start, end2;
             return;
         }
                
-        String input = ""; int k=0;
+        String input = ""; 
+        int k=0;
         StringTokenizer st = new StringTokenizer(input_genes);
-        while(st.hasMoreTokens()){   
-            k++;
-            if(input_type == GENE_SYMBOL_INPUT)
-                input = input + "'" + st.nextToken() + "'" + ", ";            
-            if(input_type == LOCUS_ID_INPUT)
-                input = input + st.nextToken() + ", ";                                        
+        while(st.hasMoreTokens()){               
+            if (k < 2000) {
+                if(input_type == GENE_SYMBOL_INPUT)
+                    input = input + "'" + st.nextToken() + "'" + ", ";            
+                if(input_type == LOCUS_ID_INPUT)
+                    input = input + st.nextToken() + ", ";               
+                k++;
+            }
+            else
+                break;           
         }
         
-        System.out.println("--------------------------  " + k);
+        
+        //System.out.println("--------------------------  " + k);
         
         String elements = "";
         for (int i = 0; i<source_for_indirect_genes.size(); i++){
@@ -259,11 +265,11 @@ public long start, end2;
         if(input_type == LOCUS_ID_INPUT)
             sql_1 += "where gl.locus_id in ( " + input + " ) ";
                
-            sql_1 = sql_1 +                      
+        sql_1 = sql_1 +                      
                 "and gl.gene_index_id = gi.gene_index_id and gi.gene_index_id = gga.gene1_index_id " + 
                 "and gga.gene2_index_id in (" + elements + " ) " +  
                 "and gga.association_id=ad.association_id And ad.data_id=sa.data_id " +
-                "And sa.statistic_id=1 " +
+                "And sa.statistic_id= " + stat_id + " " + 
                 "group by gl.symbol_value, gl.locus_id, gl.gene_index_id";
 
         String sql_2 = 
@@ -281,7 +287,7 @@ public long start, end2;
             "and gl.gene_index_id = gi.gene_index_id and gi.gene_index_id = gga.gene2_index_id " + 
             "and gga.gene1_index_id in (" + elements + " ) " +  
             "and gga.association_id=ad.association_id And ad.data_id=sa.data_id " +
-            "And sa.statistic_id=1 " +
+            "And sa.statistic_id= " + stat_id + " " +
             "group by gl.symbol_value, gl.locus_id, gl.gene_index_id";       
                 
         Statement stmt = null;
@@ -344,14 +350,23 @@ public long start, end2;
      */
     public void analyzeInputChipGenes(String input_genes, int input_type){
         
+        int k = 0;
         StringTokenizer st = new StringTokenizer(input_genes);
         if(input_type == GENE_SYMBOL_INPUT){
-            while(st.hasMoreTokens())            
-                classify(st.nextToken());
+            while(st.hasMoreTokens()){
+                if(k < 2000){ 
+                    classify(st.nextToken());
+                    k++;
+                }
+            }
         }
         if(input_type == LOCUS_ID_INPUT){
-            while(st.hasMoreTokens())
-                classify(Integer.parseInt(st.nextToken()));
+            while(st.hasMoreTokens()){
+                if(k < 2000){
+                    classify(Integer.parseInt(st.nextToken()));
+                    k++;
+                }
+            }
         }
         
     }
@@ -473,7 +488,7 @@ public long start, end2;
                                                                                         
         ChipGeneDiseaseAnalysis ana = new ChipGeneDiseaseAnalysis();  
         ana.hashDirectGenes(483, 1, ana.GENE_SYMBOL_INPUT);  //402 483
-        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT);       
+        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1);       
         ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT);
         
         

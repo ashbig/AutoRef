@@ -10,13 +10,13 @@
     </head>
     <body>
     <center>
-    <h1>Analyze a Gene List</h1>
+    <h1><br>Analyze a Gene List</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
-    <p>Please type in the gene name for your high-throughput experiment data.  The 
-       corresponding official gene symbol(s) will be displayed.</p>
+    <p><br>Please type in the gene name for your high-throughput experiment data. 
+           The corresponding official gene symbol(s) will be displayed.<br></p>
 
     <html:form action="chipGeneGeneAnalysis_1.do">   
     <table width="80%" align="center">
@@ -30,8 +30,8 @@
             <td><html:text property="searchTerm" size="50"/></td>
         </tr>
         <tr>
-            <td></td>
-            <td><html:submit property="submit" value="continue"/></td>
+            <td><br></td>
+            <td><br><html:submit property="submit" value="continue"/></td>
         </tr>
     </table>
     </html:form>

@@ -11,14 +11,14 @@
     </head>
     <body>
 
-    <center>
+    <center><br>
     <h1>Genes Associated with a Particular Disease</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td> 
     <html:errors/>
 
-    <p>Following are the correspondng MeSH term(s). Please choose one:</p>
+    <p><br>Following are the correspondng MeSH term(s). Please choose one:</p>
 
     <html:form action="GetGenes.do">   
 
@@ -30,7 +30,7 @@
         />
     </html:select>
 
-    <p>Please choose a <a href="statistic_menu.jsp" target="_blank">statistical method</a> to rank the gene list:
+    <p><br>Please choose a <a href="statistic_menu.jsp" target="_blank">statistical method</a> to rank the gene list:
     <html:select property="stat">
         <html:options
         collection = "stats"
@@ -39,7 +39,7 @@
         />
     </html:select>
 
-    <p>Please choose the number of genes for your list:
+    <p><br>Please choose the number of genes for your list:
     <html:select property="number">
         <% int i = ((Integer)(session.getAttribute("user_type"))).intValue();
            if (i != 1) { %>
@@ -56,12 +56,12 @@
             <html:option key="top 3000" value="3000"/>
         <% } %>
     </html:select>
-    <p>For performance issue, we only display limited genes here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
-    <p>
-    <html:submit property="submit" value="Get Genes"/>
+    <p><br>For performance issue, we only display limited genes here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
+    <p><br>
+    <html:submit property="submit" value="Get Genes"/>&nbsp;&nbsp;
     <html:submit property="submit" value="New Search"/>
     </html:form>
-<p>
+<p><br>
 <jsp:include page="links.jsp" flush="true"/>
 </td></tr></table></body>
 </html>

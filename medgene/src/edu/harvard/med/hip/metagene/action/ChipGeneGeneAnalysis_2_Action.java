@@ -34,6 +34,7 @@ public class ChipGeneGeneAnalysis_2_Action extends MetageneAction{
                          throws ServletException, IOException { 
         
         int gene_index_id = ((ChipGeneGeneAnalysis_2_Form)form).getGene();
+        int stat_id = ((ChipGeneGeneAnalysis_2_Form)form).getStat();
         String inputType = ((ChipGeneGeneAnalysis_2_Form)form).getGeneInputType();
         String geneInputText = ((ChipGeneGeneAnalysis_2_Form)form).getChipGeneInput();
         FormFile geneInputFile = ((ChipGeneGeneAnalysis_2_Form)form).getChipGeneInputFile();
@@ -75,11 +76,11 @@ public class ChipGeneGeneAnalysis_2_Action extends MetageneAction{
             // analysis input genes
             ActionErrors errors = new ActionErrors();    
             ChipGeneGeneAnalysis gda = new ChipGeneGeneAnalysis();  
-            gda.hashDirectGenes(gene_index_id, 1, input_type);
+            gda.hashDirectGenes(gene_index_id, stat_id, input_type);
             //gda.hashDirectGenes(531, 1, input_type);  
             
             try{
-            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type);       
+            gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type, stat_id);       
             gda.analyzeInputChipGenes(gene_input, input_type);
             }catch(NumberFormatException e){
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
@@ -88,13 +89,22 @@ public class ChipGeneGeneAnalysis_2_Action extends MetageneAction{
  
             }
             String gene_symbol = gda.getGeneSymbol(gene_index_id);
-            //String gene_symbol = gda.getDiseaseMeshTerm(531);
-            
+            String stat="";
+            switch(stat_id){
+                case 1: stat="Product of incidence"; break;
+                case 2: stat="Probability"; break;
+                case 3: stat="Chi square analysis"; break;
+                case 4: stat="Fischer exact test"; break;
+                case 5: stat="Relative risk of gene"; break;
+                case 6: stat="Relative risk of disease"; break;
+            }
+                
             // set attributes
             request.setAttribute("direct_genes", gda.getDirect_gene_tree());
             request.setAttribute("indirect_genes", gda.getIndirect_gene_tree());
             request.setAttribute("new_genes", gda.getNew_gene_tree());
             request.setAttribute("gene_symbol", gene_symbol);
+            request.setAttribute("stat", stat);
             
             return (mapping.findForward("success"));
         }

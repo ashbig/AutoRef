@@ -437,9 +437,6 @@ public class DiseaseGeneManager {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
  
-        
-        //Connection conn = pool.getConnection();
-        
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -447,16 +444,16 @@ public class DiseaseGeneManager {
         
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        String sql = "select i.gene_index_id, i.gene_index, t.index_type, i.date_added"+
+        String sql = "select distinct i.gene_index_id, i.gene_index, t.index_type, i.date_added"+
         " from gene_index i, search_term s, index_type t"+
         " where i.gene_index_id=s.gene_index_id"+
         " and i.index_type_id=t.index_type_id"+
-        " and s.gene_term = ?";
+        " and s.gene_term like ?";
         Vector geneIndexes = new Vector();
         
         try {
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, term);
+            stmt.setString(1, "%"+term+"%");
             rs = stmt.executeQuery();
             
             while(rs.next()) {
@@ -464,8 +461,10 @@ public class DiseaseGeneManager {
                 String index = rs.getString(2);
                 String type = rs.getString(3);
                 String date = rs.getString(4);
-                GeneIndex geneIndex = new GeneIndex(id, index, type, date);
-                geneIndexes.addElement(geneIndex);
+                if(index.length() <= 80){
+                    GeneIndex geneIndex = new GeneIndex(id, index, type, date);
+                    geneIndexes.addElement(geneIndex);
+                }
             }
             
             rs.close();

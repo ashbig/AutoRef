@@ -45,9 +45,11 @@
     </html:form>
 
      <html:link forward="register" target="_top">User registration</html:link>
-    <br>
+     <br>
+<!--    
     <html:link forward="findRegistration" target="_top">Forgot your password?</html:link>
-    <br><br>
+-->
+    <br>
     <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>
     <br><br>
 

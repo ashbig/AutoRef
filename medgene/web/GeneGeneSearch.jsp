@@ -9,17 +9,17 @@
         <title>MedGene : Search Associated Genes for a paticular Gene</title>
     </head>
     <body>
-    <center>
+    <center><br>
     <h1>Genes Associated with a Particular Gene</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
-    <p>Please type in a gene term.  The 
-       corresponding official gene symbol(s) will be displayed.</p>
+    <p><br>Please type in a gene term.  The 
+       corresponding official gene symbol(s) will be displayed.<br></p>
 
     <html:form action="SearchGenesForGene_step1.do">   
-    <table width="80%" align="center">
+    <table width="80%" align="left">
         <tr>
             <td><html:select property="term">
                 <html:option value="Gene Name" />
@@ -30,12 +30,12 @@
             <td><html:text property="searchTerm" size="50"/></td>
         </tr>
         <tr>
-            <td></td>
-            <td><html:submit property="submit" value="continue"/></td>
+            <td><br></td>
+            <td><br><html:submit property="submit" value="continue"/></td>
         </tr>
     </table>
     </html:form>
-<p>
-<jsp:include page="links.jsp" flush="true"/>
-</td></tr></table></body>
+    <br><br><br><br><br><br><p>
+    <jsp:include page="links.jsp" flush="true"/>
+    </body>
 </html>

@@ -12,7 +12,7 @@
     <center>
     <h1>Main Menu</h1>
     </center>
-
+ 
     <table width="80%" align="center" border="0"><tr><td> 
     <p>The MedGene database can help you to get the following information:</p>
     <html:form action="main.do">  
