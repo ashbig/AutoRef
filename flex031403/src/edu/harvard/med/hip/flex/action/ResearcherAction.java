@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-07-06 21:48:58 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.3 $
+ * $Date: 2001-07-16 20:24:50 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -51,8 +51,8 @@ import edu.harvard.med.hip.flex.user.*;
  * implement.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-07-06 21:48:58 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.3 $ $Date: 2001-07-16 20:24:50 $
  */
 
 public abstract class  ResearcherAction extends FlexAction {
@@ -76,6 +76,8 @@ public abstract class  ResearcherAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
+        // Make sure basic things are set up (interface user logged into system.
+        super.perform(mapping, form, request,response);
         ActionForward retForward = null;
         ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
@@ -83,10 +85,16 @@ public abstract class  ResearcherAction extends FlexAction {
         // make it so the session doesn't time out for 8 hours.
         session.setMaxInactiveInterval(480);
         
-        if(isUserLoggedIn(session) &&
+        if(! isUserLoggedIn(session)){
+            retForward = mapping.findForward("login");
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.user.notloggedin"));
+        }
+        
+        if(errors.size() == 0 && 
         isUserAuthorize(session, Constants.RESEARCHER_GROUP)) {
             retForward = flexPerform(mapping,form,request,response);
-        } else {
+        } else if(errors.size() == 0) {
             retForward = mapping.findForward("login");
             User user = (User)session.getAttribute(Constants.USER_KEY);
             errors.add(ActionErrors.GLOBAL_ERROR, 

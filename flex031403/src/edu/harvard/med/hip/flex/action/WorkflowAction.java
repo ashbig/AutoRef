@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-14 14:53:42 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-16 20:24:50 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -51,8 +51,8 @@ import edu.harvard.med.hip.flex.user.*;
  * (queue operations) should follow.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-14 14:53:42 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-16 20:24:50 $
  */
 
 public abstract class  WorkflowAction extends FlexAction {
@@ -76,15 +76,22 @@ public abstract class  WorkflowAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
+        // Make sure basic things are set up (interface user logged into system.
+        super.perform(mapping, form, request,response);
         // place to store errors
         ActionErrors errors = new ActionErrors();
         ActionForward retForward = null;
         HttpSession session = request.getSession();
+        if(! isUserLoggedIn(session)){
+            retForward = mapping.findForward("login");
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.user.notloggedin"));
+        }
         
-        if(isUserLoggedIn(session) &&
-        isUserAuthorize(session, Constants.WORKFLOW_GROUP)) {
+        if(errors.size() == 0 && isUserAuthorize(session, Constants.WORKFLOW_GROUP)) {
             retForward = flexPerform(mapping,form,request,response);
-        } else {
+        } else if (errors.size() == 0) {
+            
             retForward = mapping.findForward("login");
             User user = (User)session.getAttribute(Constants.USER_KEY);
             errors.add(ActionErrors.GLOBAL_ERROR, 

@@ -17,9 +17,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-14 14:53:42 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.4 $
+ * $Date: 2001-07-16 20:24:50 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -59,8 +59,8 @@ import edu.harvard.med.hip.flex.user.*;
  *    <code>FlexAction</code> and a <code>ActionForward</code> should
  *    be returned.
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-14 14:53:42 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.4 $ $Date: 2001-07-16 20:24:50 $
  */
 public abstract class FlexAction extends org.apache.struts.action.Action {
     
@@ -84,10 +84,16 @@ public abstract class FlexAction extends org.apache.struts.action.Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
+        ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
+        
         if(isUserLoggedIn(session)) {
             return flexPerform(mapping,form,request,response);
         } else {
+            
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.user.notloggedin"));
+            saveErrors(request,errors);
             return mapping.findForward("login");
         }
         
@@ -117,8 +123,8 @@ public abstract class FlexAction extends org.apache.struts.action.Action {
     public boolean isUserAuthorize(HttpSession session, String group) {
         boolean retValue = false;
         User user = (User)session.getAttribute(Constants.USER_KEY);
-        retValue = 
-            AccessManager.getInstance().isUserAuthorize(user, group);
+        retValue =
+        AccessManager.getInstance().isUserAuthorize(user, group);
         
         return retValue;
     }
