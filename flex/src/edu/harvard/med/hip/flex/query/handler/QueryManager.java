@@ -11,6 +11,7 @@ import java.util.*;
 import java.sql.Date;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.query.core.*;
+import edu.harvard.med.hip.flex.query.bean.*;
 import edu.harvard.med.hip.flex.core.*;
 
 /**
@@ -263,11 +264,11 @@ public class QueryManager {
     public List getFounds(int searchid, int startRecord, int endRecord) {
         List founds = new ArrayList();
         String sql = "select * from searchresult "+
-                    " where isfound='"+SearchResult.GENBANK_FOUND+"' and searchid="+searchid+
-                    " and rownum<="+endRecord+" minus "+
-                    " (select * from searchresult "+
-                    " where isfound='"+SearchResult.GENBANK_FOUND+"' and searchid="+searchid+
-                    " and rownum<="+startRecord+")";
+        " where isfound='"+SearchResult.GENBANK_FOUND+"' and searchid="+searchid+
+        " and rownum<="+endRecord+" minus "+
+        " (select * from searchresult "+
+        " where isfound='"+SearchResult.GENBANK_FOUND+"' and searchid="+searchid+
+        " and rownum<="+startRecord+")";
         String sql2 = "select * from matchgenbankrecord where searchresultid=?";
         String sql3 = "select * from matchflexsequence where matchgenbankid=?";
         String sql4 = "select * from blasthit where matchflexid=?";
@@ -371,7 +372,76 @@ public class QueryManager {
             DatabaseTransaction.closeConnection(conn);
         }
     }
+    
+    public List getConstructInfo(List seqids) {        
+        List infos = new ArrayList();
         
+        String sql = "select cd.constructid, cd.oligoid_5p, cd.oligoid_3p, cd.constructtype,"+
+        " p.projectid, p.name, w.workflowid, w.name, cs.type"+
+        " from constructdesign cd, cloningprogress cl, cloningstatus cs, project p, workflow w"+
+        " where cd.constructid=cl.constructid(+)"+
+        " and cl.statusid=cs.statusid"+
+        " and cd.projectid=p.projectid"+
+        " and cd.workflowid=w.workflowid"+
+        " and cd.sequenceid=?";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            
+            for(int i=0; i<seqids.size(); i++) {
+                int seqid = Integer.parseInt((String)seqids.get(i));
+                stmt.setInt(1, seqid);
+                rs = DatabaseTransaction.executeQuery(stmt);
+                
+                List constructInfoList = new ArrayList();
+                while(rs.next()) {
+                    int constructid = rs.getInt(1);
+                    int oligoid5p = rs.getInt(2);
+                    int oligoid3p = rs.getInt(3);
+                    String constructType = rs.getString(4);
+                    int projectid = rs.getInt(5);
+                    String projectName = rs.getString(6);
+                    int workflowid = rs.getInt(7);
+                    String workflowName = rs.getString(8);
+                    String status = rs.getString(9);
+                    
+                    if(status == null) {
+                        status = ConstructInfo.IN_CLONING_PROCESS;
+                    }
+                    
+                    ConstructInfo info = new ConstructInfo(constructid,oligoid5p,oligoid3p, constructType, projectid,projectName, workflowid, workflowName, status);
+                    constructInfoList.add(info);
+                }
+                
+                ConstructInfoBean constructInfo = new ConstructInfoBean(seqid, constructInfoList);
+                infos.add(constructInfo);
+            }
+            
+            CloneInfoSet infoSet = new CloneInfoSet();
+            infoSet.restoreBySequenceid(seqids);
+            List allClones = infoSet.getAllCloneInfo();
+            for(int i=0; i<allClones.size(); i++) {
+                CloneInfo cloneInfo = (CloneInfo)allClones.get(i);
+                setCloneInfo(infos, cloneInfo);
+            }
+            
+            return infos;
+        } catch (Exception ex) {
+            error = new String(ex.getMessage());
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
     public List getNoFounds(int searchid) {
         List noFounds = new ArrayList();
         String sql = "select * from searchresult where isfound='"+SearchResult.GENBANK_NOT_FOUND+"' and searchid="+searchid;
@@ -413,8 +483,25 @@ public class QueryManager {
         }
     }
     
+    private void setCloneInfo(List infos, CloneInfo cloneInfo) {
+        for(int i=0; i<infos.size(); i++) {
+            ConstructInfoBean info = (ConstructInfoBean)infos.get(i);
+            if(info.getSequenceid() == cloneInfo.getRefsequenceid()) {
+                List infoList = info.getConstructInfos();
+                
+                for(int k=0; k<infoList.size(); k++) {
+                    ConstructInfo c = (ConstructInfo)infoList.get(k);
+                    if(c.getConstructid() == cloneInfo.getConstructid()) {
+                        c.addClone(cloneInfo);
+                    }
+                }
+            }
+        }
+    }
+    
     public static void main(String args[]) {
         QueryManager manager = new QueryManager();
+        List seqids = new ArrayList();
         
         System.out.println("=============== test getSearchRecord ==============");
         SearchRecord record = manager.getSearchRecord(1);
@@ -445,7 +532,7 @@ public class QueryManager {
         System.out.println("Number of results: "+manager.getNumOfResults(1));
         
         System.out.println("=============== Test getFounds ================");
-        List founds = manager.getFounds(7);
+        List founds = manager.getFounds(6);
         if(founds == null) {
             System.out.println(manager.getError());
         } else {
@@ -466,6 +553,7 @@ public class QueryManager {
                     List mfss = mgr.getMatchFlexSequence();
                     for(int k=0; k<mfss.size(); k++) {
                         MatchFlexSequence mfs = (MatchFlexSequence)mfss.get(k);
+                        seqids.add((new Integer(mfs.getFlexsequenceid())).toString());
                         System.out.println("\t\tmatch flex id: "+mfs.getMatchFlexId());
                         System.out.println("\t\tis match by gi: "+mfs.getIsMatchByGi());
                         System.out.println("\t\tflex sequence id: "+mfs.getFlexsequenceid());
@@ -490,7 +578,7 @@ public class QueryManager {
         }
         
         System.out.println("=============== test getNoFounds ==============");
-        List noFounds = manager.getNoFounds(7);
+        List noFounds = manager.getNoFounds(6);
         if(noFounds== null) {
             System.out.println(manager.getError());
         } else {
@@ -500,6 +588,47 @@ public class QueryManager {
                 System.out.println("reason: "+nf.getReason());
             }
         }
+        
+        System.out.println("================ test getConstructInfo ============");
+        List constructInfos = manager.getConstructInfo(seqids);
+        if(constructInfos == null) {
+            System.out.println(manager.getError());
+            System.exit(0);
+        }
+        
+        for(int n=0; n<constructInfos.size(); n++) {
+            ConstructInfoBean constructInfo = (ConstructInfoBean)constructInfos.get(n);
+            int seqid = constructInfo.getSequenceid();
+            System.out.println("seqid: "+seqid);
+            List infoList = constructInfo.getConstructInfos();
+            for(int i=0; i<infoList.size(); i++) {
+                ConstructInfo info = (ConstructInfo)infoList.get(i);
+                System.out.println("\t"+info.getConstructid());
+                System.out.println("\t"+info.getConstructType());
+                System.out.println("\t"+info.getOligoid5p());
+                System.out.println("\t"+info.getOligoid3p());
+                System.out.println("\t"+info.getProjectName());
+                System.out.println("\t"+info.getWorkflowName());
+                System.out.println("\t"+info.getStatus());
+                
+                List clones = info.getClones();
+                for(int k=0; k<clones.size(); k++) {
+                    CloneInfo clone = (CloneInfo)clones.get(k);
+                    System.out.println("\t\t"+clone.getConstructid());
+                    System.out.println("\t\t"+clone.getCloneid());
+                    System.out.println("\t\t"+clone.getClonename());
+                    System.out.println("\t\t"+clone.getClonetype());
+                    System.out.println("\t\t"+clone.getMastercloneid());
+                    System.out.println("\t\t"+clone.getStatus());
+                    
+                    CloningStrategy cs = clone.getCloningstrategy();
+                    System.out.println("\t\t"+cs.getId());
+                    System.out.println("\t\t"+cs.getName());
+                    
+                    NameInfo names = clone.getNameinfo();
+                    System.out.println("\t\t"+names.getGenbank());
+                }
+            }
+        }
     }
-    
 }
