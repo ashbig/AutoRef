@@ -1,19 +1,18 @@
-#/usr/bin/perl
+#!c:\perl\bin\perl
 
 use LWP::UserAgent;
 
 my $ENTREZ_URL = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&term=";
-# Caller has to make sure the filename is unique
-my $page_name = shift @ARGV;
+# construct searching url
+my $page_name = shift @ARGV;       ## get search string
 
 my $url = "";
-foreach (@ARGV) {
-    $url  .= ($_."+");
+for (@ARGV) {
+	$url .= ($_."+");	
 }
 chop $url;
 
-#$url =~ s/\s/\+/g;
-$url = $ENTREZ_URL.$url;
+my $url = $ENTREZ_URL.$url;
 get_page($url, $page_name);
 parse_page($page_name);
 unlink $page_name;
@@ -61,14 +60,4 @@ sub get_page {
 	print $res->content;
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
 

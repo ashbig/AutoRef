@@ -32,12 +32,12 @@ public class GenbankGeneFinder extends java.lang.Object {
     public Vector search() //throws FlexUtilException 
     { 
         pageName = new TempObject(srchStr).getPageName();
-        //System.out.println("Page name: " + pageName);
-	FileReader fin;
+        FileReader fin;
         
         // call perl routine to fetch and parse the first page
-        String cmd = "perl GBSearch.pl " + pageName + " " + srchStr;
-        //System.out.println(cmd);        
+        String cmd = "perl GBSearch.pl " + pageName + " " + 
+                     "\"" + srchStr + "\"";  
+        System.out.println(cmd);        
         try {
             Process p = Runtime.getRuntime().exec(cmd);
             p.waitFor();
@@ -55,24 +55,25 @@ public class GenbankGeneFinder extends java.lang.Object {
             makeEntrezVT(fin);
             fin.close();
         } catch (FileNotFoundException e) {
-	    e.printStackTrace();
             //throw new FlexUtilException(e.getMessage()));
         } catch (IOException e) {
-	    e.printStackTrace();
             //throw new FlexUtilException(e.getMessage()));
         }
+        cleanup();
         return entrezItemVT;
     }
     
-    public void cleanup() // throws FlexUtilException
+    private void cleanup() // throws FlexUtilException
     {
-        File temp = new File(pageName + ".txt");
-        /*System.out.println(temp.getName());
+        File temp = new File(pageName + ".html");
+        temp.delete();
+        /*
+        System.out.println(temp.getName());
         if (temp.delete())
             System.out.println("Delete");
         else 
             System.out.println("Error");
-         */
+        */
     }
     
     public Vector getEntrezVT() { return entrezItemVT; }
@@ -115,7 +116,7 @@ public class GenbankGeneFinder extends java.lang.Object {
         }
         
         public String getPageName() {
-            String fname = this.hashCode() + ".html";
+            String fname = this.hashCode() + "_temp";
             return fname;
         }
     }
@@ -141,25 +142,17 @@ public class GenbankGeneFinder extends java.lang.Object {
     public static void main (String args[]) {
         GenbankGeneFinder finder1 = new GenbankGeneFinder("human AND histone");
         Vector itemsVT = finder1.search();
-        finder1.cleanup();
         
         if (!itemsVT.isEmpty()) {
             for (int i=0; i<itemsVT.size(); i++) {
                 EntrezItem item = (EntrezItem)itemsVT.get(i);
-                System.out.println("GI:          " + item.getGI());
-                System.out.println("ACCESSION:   " + item.getAccession());
-                System.out.println("DESCRIPTION: " + item.getDescription());
-		System.out.println();
+                System.out.println("GI: " + item.getGI());
+                System.out.println("Accession: " + item.getAccession());
+                System.out.println("Description: " + item.getDescription());
+                System.out.println();
             }
         } 
         else 
             System.out.println("No item returned");
     }
 }
-
-
-
-
-
-
-
