@@ -61,7 +61,7 @@ public class Blast2seqParser
     
     //colors for blast html output
     public static final String COLOR_N_MISTMATCH_SUBSTITUTION = "FFFFFF";
-    public static final String COLOR_N_MISTMATCH_DELETION = "F1FFFF";
+    public static final String COLOR_N_MISTMATCH_DELETION = "F10000";
     
     public static final String COLOR_P_MISTMATCH_CONSERVATIVE = "FF00FF";
     public static final String COLOR_P_MISTMATCH_NONCONSERVATIVE = "FF0FFF";
