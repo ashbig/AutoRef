@@ -27,6 +27,7 @@ import sun.jdbc.rowset.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.user.*;
 
 public class MgcMasterListImporter
 {
@@ -39,13 +40,17 @@ public class MgcMasterListImporter
     private int m_successCount = 0;
     private int m_failCount = 0;
     private int m_totalCount = 0;
+    private String m_username = null;
     
+    /** Creates a new instance of MgcMasterListImporter */
+    public MgcMasterListImporter(String username)
+    {
+        m_username = username;
+    }
     /** Creates a new instance of MgcMasterListImporter */
     public MgcMasterListImporter()
     {
-        
     }
-    
     
     /**
      *Read mgc master list and collect mgc clone, mgc container, mgc clone seq info
@@ -62,6 +67,8 @@ public class MgcMasterListImporter
         if (! checkForMgcIDMatches(existingSeqCol) ) return false;
         if (! readSeqences(containerCol, sequenceCol, existingSeqCol) ) return false;
         if (! uploadToDatabase(containerCol, sequenceCol) ) return false;
+        if (m_username != null) 
+            try{notifyUser();}catch(Exception e){}
         return true;
         
     }
@@ -377,6 +384,21 @@ public class MgcMasterListImporter
         DatabaseTransaction.closeConnection(conn);
         return true;
     }
+    
+    
+    
+     //send e-mail to the user with all GI separated to three groups
+    private void notifyUser() throws Exception
+    {
+        AccessManager am = AccessManager.getInstance();
+        String to = am.getEmail( m_username );
+        //String to = "etaycher@hms.harvard.edu";
+        String from = "etaycher@hms.harvard.edu";
+        String subject = "User Notification: Mgc clone master list (file name: ) was uploaded to database";
+        subject += "\nReport is attached.";
+        String msgText = null;
+    }
+    
     
     public int getFailedCount()
     { return m_failCount ;}

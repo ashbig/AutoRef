@@ -23,7 +23,7 @@ import edu.harvard.med.hip.flex.workflow.Project;
 import edu.harvard.med.hip.flex.process.Request;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
-import edu.harvard.med.hip.flex.user.User;
+import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.util.*;
 import java.util.*;
 import java.io.*;
@@ -32,13 +32,15 @@ import sun.jdbc.rowset.*;
 import javax.mail.*;
 
 
-public class MgcRequestImporter {
+public class MgcRequestImporter
+{
     public static final String DILIM = "\t!";
     public static final String DEFAULT = "NA";
     public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
     
     private Project m_Project = null;
     private String m_UserName = null;
+    
     private Request m_Request = null;
     private int m_SuccessCount = 0;
     private int m_FailCount = 0;
@@ -47,7 +49,8 @@ public class MgcRequestImporter {
     
     
     /** Creates new MgcRequestImporter */
-    public MgcRequestImporter(Project project, String user_name) {
+    public MgcRequestImporter(Project project, String user_name)
+    {
         m_Project = project;
         m_UserName = user_name;
         m_Request = new Request(m_UserName, m_Project);
@@ -63,7 +66,8 @@ public class MgcRequestImporter {
      * @return vector of sequences from request.
      */
     public Vector performImport(InputStream requestInput, Connection conn)
-    throws Exception {
+    throws Exception
+    {
         
         Vector request_sequences = new Vector();
         ArrayList sequencesMatchedByBlast = new ArrayList();
@@ -89,20 +93,25 @@ public class MgcRequestImporter {
     
     /*Function parses request file and returns list of GI numbers
      */
-    private ArrayList  parseRequestFile(InputStream requestInput) {
+    private ArrayList  parseRequestFile(InputStream requestInput)
+    {
         BufferedReader in = new BufferedReader(new InputStreamReader(requestInput));
         String line = null;
         ArrayList gi_numbers = new ArrayList();
         
-        try {
-            while((line = in.readLine()) != null) {
+        try
+        {
+            while((line = in.readLine()) != null)
+            {
                 StringTokenizer st = new StringTokenizer(line, DILIM);
-                while(st.hasMoreTokens()) {
+                while(st.hasMoreTokens())
+                {
                     gi_numbers.add( st.nextToken().trim() );
                 }
             }
         }
-        catch(Exception e) {}
+        catch(Exception e)
+        {}
         m_TotalCountRequests = gi_numbers.size();
         return gi_numbers;
     }
@@ -112,7 +121,8 @@ public class MgcRequestImporter {
       * 3. adds matching sequences to  Request
       *@return ArrayList of not matched GI numbers
       */
-    private  ArrayList  matchGINumbersToMgcClones(ArrayList requestGI) {
+    private  ArrayList  matchGINumbersToMgcClones(ArrayList requestGI)
+    {
         ArrayList not_matching_gi_numbers = new ArrayList();
         ArrayList temp = new ArrayList();
         String sql = "select n.namevalue as gi, n.sequenceid as sequence_id "+
@@ -121,18 +131,22 @@ public class MgcRequestImporter {
         int current_gi = 0;
         int current_seq_id = 0;
         CachedRowSet crs = null;
-        try {
+        try
+        {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             crs = t.executeQuery(sql);
             
-            if(crs.size()==0) {
+            if(crs.size()==0)
+            {
                 //write to log file
             }
             
-            while(crs.next()) {
+            while(crs.next())
+            {
                 current_seq_id = crs.getInt("SEQUENCE_ID");
                 current_gi = crs.getInt("GI");
-                if ( requestGI.contains( Integer.toString(current_gi)) ) {//create dummy flexsequence and add it to request
+                if ( requestGI.contains( Integer.toString(current_gi)) )
+                {//create dummy flexsequence and add it to request
                     FlexSequence fc = new FlexSequence( current_seq_id, FlexSequence.GOOD, null, null, null, 0, 0, 0, 0, null, null, null);
                     m_Request.addSequence(fc);
                     temp.add( Integer.toString(current_gi) );
@@ -141,9 +155,11 @@ public class MgcRequestImporter {
                 
             }
             
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             // throw new FlexDatabaseException("Error occured while  " +sql);
-        } finally {
+        } finally
+        {
             DatabaseTransaction.closeResultSet(crs);
         }
         not_matching_gi_numbers.addAll(requestGI);
@@ -159,7 +175,8 @@ public class MgcRequestImporter {
       * @param ArrayList of GI numbers
       *@return Hashtable of FlexSequences , key - GI
       */
-    private Hashtable  readSequences(ArrayList not_matching_gi_numbers) {
+    private Hashtable  readSequences(ArrayList not_matching_gi_numbers)
+    {
         Hashtable sequences = new Hashtable();
         GenbankGeneFinder gb = new GenbankGeneFinder();
         Vector genBankSeq = new Vector();
@@ -167,20 +184,24 @@ public class MgcRequestImporter {
         String current_gi = null;
         MgcMasterListImporter ml = new MgcMasterListImporter();
         Vector gi_data = new Vector();
-        try{
-            for (int gi_count = 0; gi_count < not_matching_gi_numbers.size(); gi_count++) {
+        try
+        {
+            for (int gi_count = 0; gi_count < not_matching_gi_numbers.size(); gi_count++)
+            {
                 {
                     current_gi = (String)not_matching_gi_numbers.get(gi_count);
                     genBankSeq = gb.search(current_gi );
                     if (genBankSeq.isEmpty() ) continue;
                     seqData = gb.searchDetail( current_gi );
-                    gi_data.add(current_gi);
-                    FlexSequence fs = ml.createFlexSequence( seqData, gi_data);
+                    FlexSequence fs = ml.createFlexSequence( seqData, genBankSeq);
+                    //if fs == null something was bad with ncbi query
+                    if (fs == null) continue;
                     sequences.put( current_gi, fs );
                     current_gi = null;
                 }
             }
-        }catch(Exception e) {System.out.println("Ncbi search: can not get sequence for GI: " + current_gi ); }
+        }catch(Exception e)
+        {System.out.println("Ncbi search: can not get sequence for GI: " + current_gi ); }
         return sequences;
     }
     
@@ -191,13 +212,16 @@ public class MgcRequestImporter {
     
     private boolean blastSequences(Hashtable notMatchedSequences,
     ArrayList sequencesMatchedByBlast,
-    ArrayList sequencesNotMatchedByBlast) {
+    ArrayList sequencesNotMatchedByBlast)
+    {
         Enumeration en = notMatchedSequences.keys();
         FlexSequence fc = null;
         FlexSeqAnalyzer fanalyzer = null;
         int seq_id = -1;
-        try{
-            while (en.hasMoreElements()) {
+        try
+        {
+            while (en.hasMoreElements())
+            {
                 fc = (FlexSequence) en.nextElement();
                 fanalyzer = new FlexSeqAnalyzer(fc);
                 
@@ -208,31 +232,39 @@ public class MgcRequestImporter {
                     m_Request.addSequence(fc);
                     sequencesMatchedByBlast.add(fc.getGi());
                 }
-                else {
+                else
+                {
                     sequencesNotMatchedByBlast.add(fc.getGi());
                 }
                 seq_id = -1;
                 
             }
-        }catch(Exception e){return false;}
+        }catch(Exception e)
+        {return false;}
         return true;
     }
     
     //send e-mail to the user with all GI separated to three groups
-    private void notifyUser(ArrayList requestGI, ArrayList sequencesMatchedByBlast, ArrayList sequencesNotMatchedByBlast) throws MessagingException {
-        String to = "etaycher@hms.harvard.edu";
+    private void notifyUser(ArrayList requestGI, ArrayList sequencesMatchedByBlast, ArrayList sequencesNotMatchedByBlast) throws Exception
+    {
+        AccessManager am = AccessManager.getInstance();
+        String to = am.getEmail( m_UserName );
+        //String to = "etaycher@hms.harvard.edu";
         String from = "etaycher@hms.harvard.edu";
         String subject = "User Notification: your request was uploaded";
         String msgText = null;
         
         msgText = "Sequences matched to Mgc clones by GI number: \n";
-        for (int count = 0; count< requestGI.size(); count++) {
+        for (int count = 0; count< requestGI.size(); count++)
+        {
             msgText = requestGI.get(count) + "\t";
         }
-        for (int count = 0; count< sequencesMatchedByBlast.size(); count++) {
+        for (int count = 0; count< sequencesMatchedByBlast.size(); count++)
+        {
             msgText = sequencesMatchedByBlast.get(count) + "\t";
         }
-        for (int count = 0; count< sequencesNotMatchedByBlast.size(); count++) {
+        for (int count = 0; count< sequencesNotMatchedByBlast.size(); count++)
+        {
             msgText = sequencesNotMatchedByBlast.get(count) + "\t";
         }
         
@@ -242,7 +274,7 @@ public class MgcRequestImporter {
     }
     
     
-      //****************************Testing*******************************
+    //****************************Testing*******************************
     
     public static void main(String args[])
     {
@@ -258,7 +290,7 @@ public class MgcRequestImporter {
             System.out.println(ex);
             return;
         }
-         DatabaseTransaction t = null;
+        DatabaseTransaction t = null;
         Connection conn = null;
         
         
@@ -269,7 +301,8 @@ public class MgcRequestImporter {
             MgcRequestImporter importer = new MgcRequestImporter(null,"dzuo");
             importer.performImport(input, conn) ;
         }
-        catch(Exception e){}
+        catch(Exception e)
+        {}
         System.exit(0);
     }
     

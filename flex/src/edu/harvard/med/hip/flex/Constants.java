@@ -156,6 +156,8 @@ public class Constants {
     //forward name used for mgc plate handling.
     public static final String MGC_PLATE_HANDLE = "MGC_PLATE_HANDLE";
     
+    //forward name for mgc request import
+    public static final String MGC_REQUEST_IMPORT = "MGC_REQUEST_IMPORT";
     /** Creates new Constants */
     private Constants() {
     }
