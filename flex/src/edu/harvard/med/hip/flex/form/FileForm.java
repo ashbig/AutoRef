@@ -9,15 +9,30 @@ package edu.harvard.med.hip.flex.form;
 import org.apache.struts.upload.*;
 import org.apache.struts.action.*;
 
+import edu.harvard.med.hip.flex.core.*;
 
 /**
  * This interface allows us to treat forms that upload files in a 
- * generic way.
+ * generic way for a container.
  *
  * @author  $Author: jmunoz $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface FileForm {
+    
+    /**
+     * get this container this form is about
+     *
+     * @return Container associated with this form
+     */
+    public Container getContainer();
+    
+    /**
+     * associates a container with this form.
+     *
+     * @param container Container to associate with.
+     */
+    public void setContainer(Container container);
     
     /**
      * Accessor for the file.

@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.15 $
- * $Date: 2001-08-01 13:57:31 $
+ * $Revision: 1.16 $
+ * $Date: 2001-08-01 14:08:17 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.15 $ $Date: 2001-08-01 13:57:31 $
+ * @version    $Revision: 1.16 $ $Date: 2001-08-01 14:08:17 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -297,12 +297,12 @@ public class SaveResultAction extends ResearcherAction {
     throws FlexDatabaseException, IOException{
         System.out.println("calling handleFileReference");
         FileReference fileRef = null;
-        if(form instanceof GelResultsForm) {
-            Container container = ((GelResultsForm)form).getContainer();
-            GelResultsForm gelForm = (GelResultsForm)form;
+        if(form instanceof FileForm) {
+            FileForm fileForm = (FileForm)form;
+            Container container = fileForm.getContainer();
             
-            // the image file
-            FormFile image = gelForm.getFormFile();
+            // get the file
+            FormFile image = fileForm.getFormFile();
             
             // get the current date
             Calendar cal = Calendar.getInstance();
@@ -326,7 +326,7 @@ public class SaveResultAction extends ResearcherAction {
             FileReference.GEL_TYPE,localPath, container);
             
             FileRepository.uploadFile(fileRef,
-            gelForm.getFormFile().getInputStream());
+            fileForm.getFormFile().getInputStream());
         }
         return fileRef;
     }
