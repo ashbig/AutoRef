@@ -12,8 +12,7 @@
 <h2>FlexGene : Create Process Plate</h2>
 <hr>
 <html:errors/>
-<html:form action="/EnterSourcePlate.do" focus="sourcePlate">
-<input type="hidden" name="page" value="1">
+<html:form action="/EnterOligoPlates.do" focus="fivepPlate">
 <table>
     <tr>
     <td><b>Protocol:</b></td>
@@ -21,8 +20,18 @@
     </tr>
 
     <tr>
-    <td><b>Enter the source plate barcode:</b></td>
-    <td><html:text property="sourcePlate" size="40"/></td>
+    <td><b>Enter 5P oligo plate barcode:</b></td>
+    <td><html:text property="fivepPlate" size="40"/></td>
+    </tr>
+
+    <tr>
+    <td><b>Enter 3P open oligo plate barcode:</b></td>
+    <td><html:text property="threepOpenPlate" size="40"/></td>
+    </tr>
+
+    <tr>
+    <td><b>Enter 3P closed oligo plate barcode:</b></td>
+    <td><html:text property="threepClosedPlate" size="40"/></td>
     </tr>
 
     <tr>
@@ -31,7 +40,7 @@
 </table>
 </html:form>
 
-<jsp:include page="QueueItemsDisplay.jsp" flush="true" />
+<jsp:include page="PlatesetQueueItemsDisplay.jsp" flush="true" />
 
 </body>
 </html>

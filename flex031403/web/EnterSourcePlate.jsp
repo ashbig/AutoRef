@@ -30,22 +30,8 @@
     </tr>
 </table>
 </html:form>
-<logic:present name="SelectProtocolAction.queueItems">
-<p>
-<b>The following containers are available:</b>
-<table>
-<tr>
-    <th>ID</th><th>Label</th>
-</tr>
 
-<logic:iterate id="queueItem" name="SelectProtocolAction.queueItems">
-<tr>
-    <td><bean:write name="queueItem" property="item.id"/></td>
-    <td><bean:write name="queueItem" property="item.label"/></td>
-</tr>
-</logic:iterate>
-</table>
-</logic:present>
+<jsp:include page="QueueItemsDisplay.jsp" flush="true" />
 
 </body>
 </html>

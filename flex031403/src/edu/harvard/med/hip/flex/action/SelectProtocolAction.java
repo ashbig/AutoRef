@@ -58,26 +58,39 @@ public class SelectProtocolAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        //remove the attributes from the session.
-        if(request.getSession().getAttribute("SelectProtocolAction.queueItems") != null)
-            request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+        String processname = ((CreateProcessPlateForm)form).getProcessname();
+        ProcessQueue queue = null;
+        LinkedList items = null;
         
-        ContainerProcessQueue queue = new ContainerProcessQueue();
-        try {       
-            String processname = ((CreateProcessPlateForm)form).getProcessname();
+        try {
             Protocol protocol = new Protocol(processname);
-            LinkedList items = queue.getQueueItems(protocol);
             
-            if(items.size() > 0) {
-                request.getSession().setAttribute("SelectProtocolAction.queueItems", items);
+            if(Protocol.GENERATE_PCR_PLATES.equals(processname)) {
+                queue = new PlatesetProcessQueue();
+                items = queue.getQueueItems(protocol);
+                storeInSession(request, items, protocol);
+                return (mapping.findForward("success_pcr"));
+            } else {
+                queue = new ContainerProcessQueue();
+                items = queue.getQueueItems(protocol);
+                storeInSession(request, items, protocol);
+                return (mapping.findForward("success"));
             }
-
-            request.getSession().setAttribute("SelectProtocolAction.protocol", protocol);
-            
-            return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         } 
+    }
+
+    public void storeInSession(HttpServletRequest request, LinkedList items, Protocol protocol) {
+        //remove the attributes from the session.
+        if(request.getSession().getAttribute("SelectProtocolAction.queueItems") != null)
+            request.getSession().removeAttribute("SelectProtocolAction.queueItems");      
+
+        if(items.size() > 0) {
+            request.getSession().setAttribute("SelectProtocolAction.queueItems", items);
+        }
+
+        request.getSession().setAttribute("SelectProtocolAction.protocol", protocol);        
     }
 }
