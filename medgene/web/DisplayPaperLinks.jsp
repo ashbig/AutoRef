@@ -9,23 +9,46 @@
 <head><title>Medline Paper Links</title></head>
 <body>
 <center>
-<h1>Selected Paper Links (PMID)</h1>
+<h1>Selected Paper Links</h1>
 </center>
 <p>
     &nbsp;&nbsp;<b>Disease Mesh Term:</b>&nbsp;&nbsp;<bean:write name="disease_name"/><br>
-    &nbsp;&nbsp;<b>Gene Name:</b>&nbsp;&nbsp;<bean:write name="gene_symbol"/><br>
-    <% String url = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids="; %>
-    <ul>
-    <logic:iterate id="paper" name="medline_records"> 
-        <li>
-        <a href="<%= url %><bean:write name="paper"/>" target="_blank"><bean:write name="paper"/></a>
-        </li>
-    </logic:iterate> 
-    </ul>
+    &nbsp;&nbsp;<b>Gene Name:</b>&nbsp;&nbsp;<bean:write name="gene_symbol"/><br><br>
+    &nbsp;&nbsp;The papers are listed in descending order of the PubMed ID.<br><br>
+    <%  String url, s; %>
+    <%  java.util.Vector records = (java.util.Vector)(request.getAttribute("medline_records"));
+        if(records.size() == 0){ %>
+            <b> No paper found. </b> <br>
+     <% }
+        else{
+            int i = records.size()/200;
+            int j = records.size()%200;
+            for (int k=0; k < i; k++){ 
+                s = "";
+                url = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=";
+                for (int a=200*k+1; a <= 200*(k+1); a++){
+                    s = s + ((String)(records.elementAt(a-1))).toString() + ",";
+                }
+                url = url + s.substring(0, s.length()-1);
+                %>            
+                <li> <a href="<%= url %>" target="_blank"> <%= 200*k+1 %> - <%= 200*(k+1) %> </a> </li>
+         <% } 
 
+            s = "";
+            url = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=";
+            for (int a=200*i+1; a <= 200*i+j; a++){
+                s = s + ((String)(records.elementAt(a-1))).toString() + ",";               
+            }
+            url = url + s.substring(0, s.length()-1);
+         %>
+            <li> <a href="<%= url %>" target="_blank"> <%= 200*i+1 %> - <%= 200*i+j %> </a> </li>
+     <% } %>
+     
 <p>
 <br>
 <jsp:include page="links.jsp" flush="true"/>
 
 </body>
 </html>
+
+
