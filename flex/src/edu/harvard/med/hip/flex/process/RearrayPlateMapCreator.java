@@ -53,15 +53,15 @@ public class RearrayPlateMapCreator {
         " from flexsequence f, constructdesign c, containerheader ch,"+
         " (select * from sample where containerid in ("+
         " select containerid from containerheader where label=?)) s"+
-        " where f.sequenceid=c.sequenceid"+
-        " and c.constructid=s.constructid"+
+        " where f.sequenceid(+)=c.sequenceid"+
+        " and c.constructid(+)=s.constructid"+
         " and s.containerid=ch.containerid"+
         " and s.containerposition=?";
         String s2 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype, s.cloneid"+
         " from flexsequence f, constructdesign c, containerheader ch,"+
         " (select * from sample where containerid=?) s"+
-        " where f.sequenceid=c.sequenceid"+
-        " and c.constructid=s.constructid"+
+        " where f.sequenceid(+)=c.sequenceid"+
+        " and c.constructid(+)=s.constructid"+
         " and s.containerid=ch.containerid"+
         " and s.containerposition=?";
         PreparedStatement stmt = null;
