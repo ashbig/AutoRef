@@ -12,10 +12,10 @@
 <body>
 
 <center>
-<h2>Member Registration</h2>
-<hr>
-<html:errors/>
+<h1>Member Registration</h1>
 </center>
+
+<html:errors/>
 
 <p>
 
