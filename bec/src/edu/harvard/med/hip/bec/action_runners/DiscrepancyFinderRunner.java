@@ -130,6 +130,9 @@ public class DiscrepancyFinderRunner extends ProcessRunner
              contig_sequence = stretch.getSequence();
              if (contig_sequence.getStatus() != BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED) continue;
              i_discrepancy_finder.setSequencePair(new SequencePair(contig_sequence ,  refsequence));
+             
+             i_discrepancy_finder.setCdsStart(0);
+             i_discrepancy_finder.setCdsStop(0);
              i_discrepancy_finder.run();
              if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
                 return ;
@@ -271,6 +274,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             i_discrepancy_finder.setRefSequenceCdsStop(  cds_start_stop[1] );
             i_discrepancy_finder.setSequencePair(new SequencePair(clonesequence ,  refsequence));
 
+            i_discrepancy_finder.setCdsStart(0);
+            i_discrepancy_finder.setCdsStop(0);
             i_discrepancy_finder.run();
             clonesequence.setLinker3Stop(i_discrepancy_finder.getCdsStop());
             clonesequence.setLinker5Start(i_discrepancy_finder.getCdsStart() );
@@ -393,25 +398,25 @@ public class DiscrepancyFinderRunner extends ProcessRunner
 
     {
        // InputStream input = new InputStream();
-        
+          BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+     edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
         FileInputStream input = null;
         User user  = null;
         try
         {
-            user = AccessManager.getInstance().getUser("lena","htaycher");
+            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
         }
         catch(Exception e){}
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
        
-        runner.setInputData( Constants.ITEM_TYPE_CLONEID, "143905 ");
+        runner.setInputData( Constants.ITEM_TYPE_BECSEQUENCE_ID, "61842 61846 61849 61850 ");
     //    runner.setItems(item_ids.toUpperCase().trim());
       //  runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
         runner.setUser(user);
         //Thread t = new Thread(runner);
        // t.start();
-       BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
-        sysProps.verifyApplicationSettings();
        
         runner.run();
          

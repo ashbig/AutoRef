@@ -348,6 +348,9 @@ public class IsolateRanker
                 i_discrepancy_finder.setIsRunCompliment(! m_forward_read_sence );
             else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
                 i_discrepancy_finder.setIsRunCompliment(! m_reverse_read_sence);
+            
+            i_discrepancy_finder.setCdsStart(0);
+            i_discrepancy_finder.setCdsStop(0);
             i_discrepancy_finder.run();
             
             //set cds start && stop 
@@ -445,6 +448,9 @@ public class IsolateRanker
             i_discrepancy_finder.setRefSequenceCdsStart(  cdststart);
             i_discrepancy_finder.setRefSequenceCdsStop(  cdsstop );
             i_discrepancy_finder.setSequencePair(new SequencePair(clonesequence ,  refsequence));
+            
+            i_discrepancy_finder.setCdsStart(0);
+            i_discrepancy_finder.setCdsStop(0);
             i_discrepancy_finder.run();
           
             if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
@@ -498,6 +504,9 @@ public class IsolateRanker
                  if (stretch.getAnalysisStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED)
                  {
                     i_discrepancy_finder.setSequencePair(new SequencePair(contig_sequence ,  refsequence));
+                     i_discrepancy_finder.setCdsStart(0);
+                    i_discrepancy_finder.setCdsStop(0);
+        
                     i_discrepancy_finder.run();
          
                     if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)

@@ -132,6 +132,10 @@ public class DiscrepancyFinder
 
     public int     getCdsStart(){ return        m_cds_start  ;} //start of cds for query sequence if covered
     public int     getCdsStop(){ return        m_cds_stop ;}
+    public void     setCdsStart(int v){         m_cds_start = v ;} //start of cds for query sequence if covered
+    public void     setCdsStop(int v){         m_cds_stop = v ;}
+   
+    
     //main calling function for polymorphism finder
     public void run()throws BecDatabaseException, BecUtilException
     {
@@ -921,6 +925,10 @@ public class DiscrepancyFinder
       
        try
         {
+                BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+            sysProps.verifyApplicationSettings();
+            edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+       
            /*
             NeedleResult res = new NeedleResult();
 
