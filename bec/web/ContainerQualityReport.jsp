@@ -38,8 +38,9 @@
 .empty {
 	background-color: #CCCCCC;
 }
+
 .nosample {
-	background-color: #FFCC11;
+	background-color: white;
 }
 .notanalized {
 	background-color: white;
@@ -237,7 +238,11 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
     %> <TR> <%
     for (int count_col = 0; count_col < cols; count_col++)
     {//System.out.println(cell_data[count][count_col]);
-%>
+        if (  cell_data[count][count_col] == null )
+        {
+            cell_data[count][count_col] = " <td class='nosample' style='border:solid 2px black' ><div align=center>" + (count+1)*(count_col+1) +"</div></td>";
+                                    
+        }%>
        <%= cell_data[count][count_col] %>
     <%}
  %> </TR> <%
@@ -295,6 +300,10 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
   <tr> 
     <td ><b> Empty sample:</b></td>
     <td  class="empty"  ></td>
+  </tr>
+ <tr> 
+    <td ><b> Empty well:</b></td>
+    <td  class="nosample"  ></td>
   </tr>
 </table>
 
