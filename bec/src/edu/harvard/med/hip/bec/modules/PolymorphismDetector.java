@@ -36,12 +36,12 @@ public class PolymorphismDetector
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
-            INPUT = "d:\\tmp\\";
+            INPUT = Constants.getTemporaryFilesPath();
            OUTPUT = "d:\\output\\blastoutput\\";
         }
         else
         {
-            INPUT = "/tmp/";
+            INPUT = Constants.getTemporaryFilesPath();
            OUTPUT = "/output/blastoutput/";
         }
     }

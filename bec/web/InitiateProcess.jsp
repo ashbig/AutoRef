@@ -130,7 +130,14 @@ if ((specs != null && names != null && control_names != null)
 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b></td></tr>
     
 <%}%>
+
+
+<% if ( request.getAttribute(Constants.ADDITIONAL_JSP) != null)
+{%> <%=request.getAttribute(Constants.ADDITIONAL_JSP) %> <%}%>
 </table>
+
+
+
 <div align="center"> 
   <p> 
     <input type="submit" value="Submit" >

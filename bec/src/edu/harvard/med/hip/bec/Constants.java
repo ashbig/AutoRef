@@ -8,6 +8,8 @@ package edu.harvard.med.hip.bec;
 
 import java.util.*;
 import java.text.*;
+
+import edu.harvard.med.hip.utility.*;
 /**
  *
  * @author  jmunoz
@@ -15,6 +17,22 @@ import java.text.*;
  */
 public class Constants {
    
+    private static final String DILIM = "_";
+   
+    private  static String TEMPORARY_FILES_FILE_PATH = null;
+    public  static String        getTemporaryFilesPath()
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+        {
+            TEMPORARY_FILES_FILE_PATH = "d:\\tmp\\";
+            return TEMPORARY_FILES_FILE_PATH;
+        }
+        else
+        {
+            TEMPORARY_FILES_FILE_PATH = "c:\\tmp\\";
+            return TEMPORARY_FILES_FILE_PATH;
+        }
+    }
     public static String       LINE_SEPARATOR = System.getProperty("line.separator") ;
     
     public static final String DELIM_WHITE_SPACE = " ";
@@ -200,7 +218,8 @@ public class Constants {
      
      public static final int            PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER = 67;
      public static final int            PROCESS_INITIATE_TRACEFILES_TRANSFER = 68;
-       //67
+     public static final int            PROCESS_NOMATCH_REPORT  = 69;
+       //69
        
     //items for display 1-40
   

@@ -8,6 +8,7 @@ package edu.harvard.med.hip.bec.sampletracking.mapping;
 import java.util.*;
 import java.io.*;
 import edu.harvard.med.hip.utility.*;
+import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 /**
  *
@@ -15,17 +16,9 @@ import edu.harvard.med.hip.bec.coreobjects.oligo.*;
  */
 public class NamingFileEntry
 {
-    public static final String ORIENTATION_FORWARD = "F";
-    public static final String ORIENTATION_REVERSE = "R";
+   
     private static final String DILIM = "_";
    
-    private  static String FILE_PATH = null;
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-            FILE_PATH = "d:\\tmp\\";
-        else
-            FILE_PATH = "c:\\tmp\\";
-    }
     private int     m_plateid = -1;
     private String  m_wellid = null;
     private int     m_cloneid = -1;
@@ -33,7 +26,7 @@ public class NamingFileEntry
     private int     m_readnum = -1;
     private String  m_orientation = null;
     
-    private static String  m_filePath =FILE_PATH;
+    private static String  m_filePath =Constants.getTemporaryFilesPath();
        
         public NamingFileEntry(int cloneid,String orientation,int  plateid, String wellid, int sequenceid,
         int readnum)
@@ -56,10 +49,10 @@ public class NamingFileEntry
         public String  getOrientation (){ return m_orientation  ;}
         public static String       getOrientation(int v) 
         { 
-            if ( v == Oligo.ORIENTATION_FORWARD)
-                return ORIENTATION_FORWARD;
-            else if ( v == Oligo.ORIENTATION_REVERSE)
-                return ORIENTATION_REVERSE;
+            if ( v == Constants.ORIENTATION_FORWARD)
+                return Constants.READ_DIRECTION_FORWARD;
+            else if ( v == Constants.ORIENTATION_REVERSE)
+                return Constants.READ_DIRECTION_REVERSE;;
             return "Not known";
         }
         public String toString()
@@ -92,7 +85,7 @@ public class NamingFileEntry
         String temp = null;
         if ( file_entries == null || file_entries.size() < 1) return null;
         FileWriter fr = null; NamingFileEntry fe= null;
-        if (m_filePath == null) m_filePath = FILE_PATH;
+        if (m_filePath == null) m_filePath = Constants.getTemporaryFilesPath();
         
         try{
             fl =   new File(m_filePath + ((NamingFileEntry) file_entries.get(0)).getPlateId()+ ".txt");

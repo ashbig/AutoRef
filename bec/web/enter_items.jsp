@@ -50,7 +50,8 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
 boolean isCloneIdOnly = false;
 if ( forwardName_int == Constants.PROCESS_SHOW_CLONE_HISTORY 
 || forwardName_int == Constants.PROCESS_ORDER_INTERNAL_PRIMERS
-|| forwardName_int == Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS)
+|| forwardName_int == Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS
+|| forwardName_int == Constants.PROCESS_NOMATCH_REPORT)
 {
 isCloneIdOnly = true;
 }
@@ -61,7 +62,12 @@ isCloneIdOnly = true;
   <tr> 
     <td colspan=2 bgColor="#1145A6"> <font color="#FFFFFF"><strong>Select Items Type: </strong></font></td>
   </tr>
-  
+<% if ( forwardName_int == Constants.PROCESS_NOMATCH_REPORT )
+{%>
+  <tr>  
+    <td><strong><input type="radio" name="item_type" value="<%= Constants.ITEM_TYPE_PLATE_LABELS%>" checked>Container Labels</strong></td>
+  </tr>
+<%}%> 
 <% if ( !isCloneIdOnly )
 {%>
   <tr>  

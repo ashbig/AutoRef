@@ -40,13 +40,13 @@ public class DiscrepancyFinder
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
-            INPUT = "d:\\tmp\\";
+            INPUT = Constants.getTemporaryFilesPath();
             OUTPUT = "d:\\output\\needleoutput\\";
             LOG_FILE_NAME = "d:\\output\\needleoutput\\logfile.txt";
         }
         else
         {
-            INPUT = "c:\\tmp\\";
+            INPUT = Constants.getTemporaryFilesPath();
             OUTPUT = "c:\\needleoutput\\";
             LOG_FILE_NAME = "c:\\needleoutput\\logfile.txt";
         }

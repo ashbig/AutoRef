@@ -418,32 +418,49 @@ public class Primer3Wrapper
         try
         {
             Hashtable ht = new Hashtable();
-            ht.put("P_PRIMER_GC_MIN","20");
-            ht.put("P_PRIMER_OPT","21");
-            ht.put("P_DOWNSTREAM_DISTANCE","120");
-            ht.put("P_PRIMER_TM_OPT","60.0");
-            ht.put("P_NUMBER_OF_STRANDS","2");
-            ht.put("P_SINGLE_READ_LENGTH","400");
-            ht.put("P_PRIMER_MIN","18");
-            ht.put("P_PRIMER_GC_MAX","80.0");
-            ht.put("P_PRIMER_TM_MIN","57.0");
-            ht.put("P_PRIMER_MAX","30");
-            ht.put("P_PRIMER_TM_MAX","66.0");
-            ht.put("P_BUFFER_WINDOW_LEN","50");
-            ht.put("P_PRIMER_GC_OPT","50.0");
-            ht.put("P_UPSTREAM_DISTANCE","120");
-            ht.put("P_EST_SEQ","50");
-
+            /* // 15
+           ht.put("P_BUFFER_WINDOW_LEN","50");
+ht.put("P_DOWNSTREAM_DISTANCE","130");
+ht.put("P_EST_SEQ","50");
+ht.put("P_NUMBER_OF_STRANDS","0");
+ht.put("P_PRIMER_GC_MAX","70");
+ht.put("P_PRIMER_GC_MIN","30");
+ht.put("P_PRIMER_GC_OPT","50");
+ht.put("P_PRIMER_MAX","25");
+ht.put("P_PRIMER_MIN","16");
+ht.put("P_PRIMER_OPT","20");
+ht.put("P_PRIMER_TM_MAX","63");
+ht.put("P_PRIMER_TM_MIN","54");
+ht.put("P_PRIMER_TM_OPT","58");
+ht.put("P_SINGLE_READ_LENGTH","500");
+ht.put("P_UPSTREAM_DISTANCE","120");
+             **/
+            
+            //7
+ ht.put("P_BUFFER_WINDOW_LEN","50");
+ht.put("P_DOWNSTREAM_DISTANCE","130");
+ht.put("P_EST_SEQ","50");
+ht.put("P_NUMBER_OF_STRANDS","0");
+ht.put("P_PRIMER_GC_MAX","70");
+ht.put("P_PRIMER_GC_MIN","30");
+ht.put("P_PRIMER_GC_OPT","50");
+ht.put("P_PRIMER_MAX","25");
+ht.put("P_PRIMER_MIN","16");
+ht.put("P_PRIMER_OPT","20");
+ht.put("P_PRIMER_TM_MAX","63");
+ht.put("P_PRIMER_TM_MIN","54");
+ht.put("P_PRIMER_TM_OPT","58");
+ht.put("P_SINGLE_READ_LENGTH","400");
+ht.put("P_UPSTREAM_DISTANCE","120");
             re = new ArrayList();
-            Primer3Spec ps = (Primer3Spec)Spec.getSpecById(3);
-            RefSequence tr = new RefSequence(14582);
+            Primer3Spec ps =  (Primer3Spec)Spec.getSpecById(7);
            
+            RefSequence tr = new RefSequence(5661);
+       
             
             Primer3Wrapper pw = new Primer3Wrapper(ps, tr);
             pw.run();
-            //String fn = m_file_output;
-           // re = Primer3Parser.parse("c:\\tmp\\primer3output.txt",ps);
-            System.out.println(re.size());
+          
         }catch(Exception e){}
         System.exit(0);
     }

@@ -6,7 +6,7 @@
 
 package edu.harvard.med.hip.bec.coreobjects.oligo;
 
-
+import  edu.harvard.med.hip.bec.*;
 import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.database.*;
 import java.sql.*;
@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.10 2003-12-17 20:56:33 Elena Exp $
+ * $Id: Oligo.java,v 1.11 2004-03-09 17:44:35 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -40,9 +40,7 @@ public class Oligo
     //public static final int TYPE_HOLDER = 6;
     public static final int TYPE_NOTKNOWN = -1;
 
-    //for inner primers
-    public static final int ORIENTATION_FORWARD = 1;
-    public static final int ORIENTATION_REVERSE = -1;
+   
     //for end reads primers
     public static final int ORIENTATION_SENSE = 1;
     public static final int ORIENTATION_ANTISENSE = -1;
@@ -159,9 +157,9 @@ public class Oligo
     public int          getOrientation() { return m_orientation;}
     public String       getOrientationAsString() 
     { 
-        if ( m_orientation == ORIENTATION_FORWARD)
+        if ( m_orientation == Constants.ORIENTATION_FORWARD)
             return "Forward";
-        else if ( m_orientation == ORIENTATION_REVERSE)
+        else if ( m_orientation == Constants.ORIENTATION_REVERSE)
             return "Reverse";
         return "Not known";
     }

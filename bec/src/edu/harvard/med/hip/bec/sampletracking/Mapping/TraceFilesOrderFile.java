@@ -13,7 +13,7 @@ package edu.harvard.med.hip.bec.sampletracking.mapping;
 
 import java.util.*;
 import java.io.*;
-import edu.harvard.med.hip.utility.*;
+import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 /**
  *
@@ -36,15 +36,7 @@ h.	SF well (A01)
 i.	SF Trace file name
      **/
 
-    private static final String DILIM = "_";
-   
-    public  static String FILE_PATH = null;
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-            FILE_PATH = "d:\\tmp\\";
-        else
-            FILE_PATH = "c:\\tmp\\";
-    }
+    
     
    
 
@@ -63,7 +55,7 @@ i.	SF Trace file name
     private String  m_filename_sf = null;
 
     
-    private static String  m_filePath =FILE_PATH;
+    private static String  m_filePath =Constants.getTemporaryFilesPath();
        
     public TraceFilesOrderFile()    
     {     
@@ -137,7 +129,7 @@ i.	SF Trace file name
         String temp = null;
         if ( file_entries == null || file_entries.size() < 1) return null;
         FileWriter fr = null; TraceFilesOrderFile fe= null;
-        if (m_filePath == null) m_filePath = FILE_PATH;
+        if (m_filePath == null) m_filePath = Constants.getTemporaryFilesPath();
         
         try{
             fl =   new File(m_filePath + ((TraceFilesOrderFile) file_entries.get(0)).getHipPlateLabel()+ ".txt");
