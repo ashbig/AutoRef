@@ -139,9 +139,6 @@ public class FastaFileGenerator {
         }catch (IOException e) {
             log.logging(e.getMessage());
             return -1;
-        }catch (FlexDatabaseException e) {
-            log.logging(e.getMessage());
-            return -1;
         }catch (SQLException sqlE) {
             log.logging(sqlE.getMessage());
             return -1;
