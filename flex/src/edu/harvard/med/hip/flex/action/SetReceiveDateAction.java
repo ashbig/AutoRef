@@ -8,6 +8,7 @@ package edu.harvard.med.hip.flex.action;
 import edu.harvard.med.hip.flex.util.DateFormatter;
 import edu.harvard.med.hip.flex.form.ReceiveOligoOrdersForm;
 import java.io.IOException;
+import java.util.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,10 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-
+import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.form.*;
+import edu.harvard.med.hip.flex.database.*;
 
 /**
  *
@@ -65,6 +69,20 @@ public class SetReceiveDateAction extends ResearcherAction {
         receiveOligoForm.setReceiveDate(currentDate);
         //System.out.println("current date: " + currentDate);
         request.setAttribute("ReceiveOligoOrdersForm",receiveOligoForm);
+        Protocol protocol = null;
+        
+        try{
+            protocol = new Protocol("receive oligo plates");
+            ContainerProcessQueue cpq = new ContainerProcessQueue();
+            LinkedList items = cpq.getQueueItems(protocol);
+            if(items.size() > 0) {
+                request.setAttribute("SelectProtocolAction.queueItems", items);
+            }
+        } catch (Exception e) {
+            request.setAttribute(Action.EXCEPTION_KEY, e);
+            System.out.println(e);
+        }
+        
         return (mapping.findForward("success"));
     }
     

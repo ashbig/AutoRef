@@ -22,7 +22,7 @@
                 <td class="prompt">Please enter plate IDs for all of the oligo plates received:<p></td>
             </tr>
             <tr>
-                <td><html:textarea property="oligoPlateIds" rows="12" cols="50"/><p></td>
+                <td><html:textarea property="oligoPlateIds" rows="10" cols="35"/><p></td>
             </tr>
 
             <tr>
@@ -38,5 +38,7 @@
         <p>
         <input type=submit value="Submit"> <input type=reset value="Clear">
     </html:form>
+
+    <jsp:include page="QueueItemsDisplay.jsp" flush="true"/>
 </body>
 </html>
