@@ -165,7 +165,7 @@
     <forward    name="addResearcher" path="/AddResearcher.jsp"/>
     <forward    name="mgcPlateHandle" path="/GetProjects.do?forwardName=MGC_PLATE_HANDLE"/>
     <forward    name="importMGCMaster" path="/ImportMgcCloneList.jsp"/>
-    
+    <forward    name="importStatus" path="/MgcPBSelectFile.jsp"/>
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>
     
   </global-forwards>
