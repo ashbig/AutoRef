@@ -133,6 +133,10 @@
     <!-- Form used to import MGC master clone list -->
     <form-bean      name="mgcCloneInfoImportForm"
                     type="edu.harvard.med.hip.flex.form.MgcCloneInfoImportForm"/>
+    
+    <!-- FOrm used to print labels for mgc containers -->
+    <form-bean      name="mgcPrintNewLabelsForm"
+                    type="edu.harvard.med.hip.flex.form.MgcPrintNewLabelsForm"/>
 
      <!-- Form used to import MGC reuest -->
     <form-bean      name="mgcImportRequestForm"
@@ -706,6 +710,14 @@
             input="/ImportMgcCloneList.jsp">
       <forward name="proccessing" path="/ImportMgcMasterListResponse.jsp"/>
     </action>
+    
+    <!-- Action mapping for MGC new plates print barcode -->
+    <action path="/MgcDisplayNewPlates"
+            type="edu.harvard.med.hip.flex.action.MgcDisplayNewPlatesAction"
+            name="mgcCloneInfoImportForm"
+            input="/MgcPBSelectFile.jsp">
+      <forward name="displayplates" path="/MgcDisplayNewPlates.jsp"/>
+    </action>
 
     <!-- Action mapping for MGC request import -->
     <action path="/MgcImportRequest"
@@ -721,6 +733,24 @@
             type="edu.harvard.med.hip.flex.action.MGCPlateHandleAction">
       <forward name="success" path="/SelectProtocol.jsp"/>
     </action>
+
+    <!-- Displays the mgc container details page -->
+        <action     path="/MgcViewContainerDetails"
+                    type="edu.harvard.med.hip.flex.action.MgcViewContainerDetailsAction"
+                   
+                    input="/MgcDisplayNewPlates.jsp">
+        <forward   name="success"  path="/MgcContainerDetails.jsp"/>
+    </action>
+   
+<!-- Action that will  print the collection of strings it is passed-->
+    <action path="/MgcPrintLabels"
+            type="edu.harvard.med.hip.flex.action.MgcPrintLabelsAction"
+            name="mgcPrintNewLabelsForm"
+            input="/MgcDisplayNewPlates.jsp">
+      <forward  name="success" path="/MgcPrintConfirm.jsp"/>
+    </action>
+  
+
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
