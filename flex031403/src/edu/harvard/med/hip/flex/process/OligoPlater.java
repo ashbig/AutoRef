@@ -22,13 +22,17 @@ import java.io.*;
 
 
 public class OligoPlater {
-    // private final String plateOutFileName1 =
-    // FileRepository.REPOSITORY_PATH+FileRepository.OLIGO_ORDER_PATH+uniqueFileName;
+    
     private static final String filePath = "/tmp/";
+   // private static final String filePath = "H:/Dev/OligoOrder/";
+    
     private static final int positiveControlPosition = 1;
     private static final int negativeControlPosition = 96;
     private static final String PositiveControlSampleType = "CONTROL_POSITIVE";
     private static final String NegativeControlSampleType = "CONTROL_NEGATIVE";
+    private static final String oligoFivePrefix = "OU";
+    private static final String oligoClosePrefix = "OC";
+    private static final String oligoFusionPrefix = "OF";
     
     private LinkedList oligoPatternList;
     private LinkedList constructList;
@@ -45,7 +49,9 @@ public class OligoPlater {
     private FileWriter plateWriter_3s = null;
     private FileWriter plateWriter_3op = null;
     
-    /** Creates new OligoPlater */
+    /** 
+     * Creates new OligoPlater 
+     */
     public OligoPlater(LinkedList oligoPatternList, LinkedList constructList, Connection c)
     throws FlexDatabaseException, IOException {
         this.oligoPatternList = oligoPatternList;
@@ -315,9 +321,9 @@ public class OligoPlater {
         
         plateset = new Plateset(container_5p.getId(), container_3op.getId(),container_3s.getId());
         int platesetId = plateset.getId();
-        label_5p = Container.getLabel("Ou",platesetId,null); //upstream
-        label_3s = Container.getLabel("Oc",platesetId,null); //closed
-        label_3op = Container.getLabel("Of",platesetId,null); //fusion
+        label_5p = Container.getLabel(oligoFivePrefix, platesetId,null); //upstream
+        label_3s = Container.getLabel(oligoClosePrefix, platesetId,null); //closed
+        label_3op = Container.getLabel(oligoFusionPrefix, platesetId,null); //fusion
         
         container_5p.setLabel(label_5p);
         container_3s.setLabel(label_3s);
@@ -446,6 +452,36 @@ public class OligoPlater {
         System.out.println("Adding receive oligo plates to queue...");
         containerQueue.addQueueItems(containerQueueItemList, conn);
     } //insertReceiveOligoQueue
+    
+    /**
+     * delete the order oligos queue records referencing the two constructdesign
+     */
+    protected void removeOrderOligoQueue () throws FlexDatabaseException {
+       
+        Protocol protocol = new Protocol("generate oligo orders");
+        
+        String sql = "DELETE FROM queue\n" +
+        "WHERE protocolid = "+ protocol.getId()  + "\n" +
+        "AND constructid = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            //Vector v = new Vector();
+            ListIterator iter = constructList.listIterator();
+            
+            while (iter.hasNext()) {
+                Construct construct = (Construct) iter.next();
+                int constructid = construct.getId();
+                stmt.setInt(1, constructid);
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException("Error occured while deleting constructs from queue\n"+sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        } 
+    }
     
     
     /** Note: this comparator imposes orderings that are

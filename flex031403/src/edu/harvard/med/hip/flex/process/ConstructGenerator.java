@@ -102,12 +102,7 @@ public class ConstructGenerator {
             oligoID_5p = result_5p.getOligoID();
             oligoID_3s = result_3s.getOligoID();
             oligoID_3op = result_3op.getOligoID();
-            
-            //create the OligoPattern object and store it in a linked list
-            pattern = new OligoPattern(oligoID_5p, oligoID_3s, oligoID_3op, 
-                result_5p.getSequence(), result_3s.getSequence(), result_3op.getSequence(), cdsLength);
-            oligoPatternList.add(pattern);
-            
+                        
             //generate construct pairID: a open and a close construct derived from
             //the same sequence have the same pair id.
             pairId = setPairId(); //not working!!!
@@ -122,7 +117,12 @@ public class ConstructGenerator {
             close.insert(conn);
             open.insert(conn);
             System.out.println("close construct ID: " + close.getId());
-            System.out.println("open construct ID: " + open.getId());           
+            System.out.println("open construct ID: " + open.getId());
+            
+            //create the OligoPattern object and store it in a linked list
+            pattern = new OligoPattern(oligoID_5p, oligoID_3s, oligoID_3op, 
+                result_5p.getSequence(), result_3s.getSequence(), result_3op.getSequence(), cdsLength);
+            oligoPatternList.add(pattern);
         } //while
     } //generateOligoAndConstructs
     
