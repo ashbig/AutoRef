@@ -110,39 +110,7 @@ public class RunProcessDataFileInAction extends ResearcherAction
    
             switch (forwardName)
             {
-                case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER : // add new internal primer
-                {
-                }
-
-                case Constants.PROCESS_VIEW_INTERNAL_PRIMERS : //view internal primers
-                {
-                    ArrayList oligo_calculation = new ArrayList();
-                    ArrayList oligo_calc_for_sequence = null;
-                    String refseqid = null;
-                    for (int seq_count = 0; seq_count < sequence_id_items.size(); seq_count++)
-                    {
-                       refseqid = (String) sequence_id_items.get(seq_count);
-                       oligo_calc_for_sequence = OligoCalculation.getOligoCalculations(Integer.parseInt(refseqid), OligoCalculation.QUERYTYPE_REFSEQUENCEID);
-                       oligo_calculation.add(oligo_calc_for_sequence);
-                    }
-                }
-
-                case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS : //approve internal primers
-                {
-                }
-
-                case Constants.PROCESS_RUN_PRIMER3: //run primer3
-                {
-                }
-
-                case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder
-                {
-                }
-
-                case Constants.PROCESS_RUN_DISCREPANCY_FINDER: //run discrepancy finder
-                {
-                }
-
+               
                 case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE : 
                 {
                 }
