@@ -137,25 +137,21 @@ public class SummaryTablePopulator {
     
     public int populateClonesTable(List samples, int cloningStrategy, String cloneType, Connection conn) throws FlexDatabaseException, SQLException {
         String sql = "insert into clones"+
-        " select ?, null, ?, o.mastercloneid,"+
+        " select clonesid.nextval, null, ?, o.mastercloneid,"+
         " c.sequenceid, ?, null, 'UNSEQUENCED', c.constructid"+
         " from obtainedmasterclone o, constructdesign c, sample s"+
         " where o.sampleid=s.sampleid"+
         " and s.constructid=c.constructid"+
         " and s.sampleid=?";
-        
-        int cloneid = FlexIDGenerator.getMaxid("clones", "cloneid");
-        
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(2, cloneType);
-        stmt.setInt(3, cloningStrategy);
+        stmt.setString(1, cloneType);
+        stmt.setInt(2, cloningStrategy);
         int ret = 0;
         
         for(int i=0; i<samples.size(); i++) {
             Integer sample = (Integer)samples.get(i);
             int sampleid = sample.intValue();
-            stmt.setInt(1, ++cloneid);
-            stmt.setInt(4, sampleid);
+            stmt.setInt(3, sampleid);
             int num = DatabaseTransaction.executeUpdate(stmt);
             ret += num;
         }

@@ -56,8 +56,26 @@ public class EnterSrcForGlycerolAndSeqOneRowAction extends EnterSrcForGlycerolAn
         
     protected ContainerMapper getContainerMapper(String processname, ActionForm form) throws FlexProcessException {
         String row = ((CreateGlycerolAndSeqForm)form).getRow();
+        boolean isA = ((CreateGlycerolAndSeqForm)form).getIsA();
+        boolean isB = ((CreateGlycerolAndSeqForm)form).getIsB();
+        boolean isC = ((CreateGlycerolAndSeqForm)form).getIsC();
+        boolean isD = ((CreateGlycerolAndSeqForm)form).getIsD();
+        boolean isE = ((CreateGlycerolAndSeqForm)form).getIsE();
+        boolean isF = ((CreateGlycerolAndSeqForm)form).getIsF();
+        boolean isG = ((CreateGlycerolAndSeqForm)form).getIsG();
+        boolean isH = ((CreateGlycerolAndSeqForm)form).getIsH();
+        
         GlycerolAndSeqContainerMapper mapper = new GlycerolAndSeqContainerMapper();
         mapper.setRow(row);
+        mapper.setIsA(isA);
+        mapper.setIsB(isB);
+        mapper.setIsC(isC);
+        mapper.setIsD(isD);
+        mapper.setIsE(isE);
+        mapper.setIsF(isF);
+        mapper.setIsG(isG);
+        mapper.setIsH(isH);
+        
         String isMappingFile = ((CreateGlycerolAndSeqForm)form).getIsMappingFile();
         
         if("Yes".equals(isMappingFile)) {

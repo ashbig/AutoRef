@@ -29,6 +29,14 @@ public class EnterSrcForSequencingForm extends ProjectWorkflowForm {
     protected String researcher = null;
     protected int researcherid;
     protected String isMappingFile = "Yes";
+    protected boolean isA = false;
+    protected boolean isB = false;
+    protected boolean isC = false;
+    protected boolean isD = false;
+    protected boolean isE = false;
+    protected boolean isF = false;
+    protected boolean isG = false;
+    protected boolean isH = false;
     
     /** Creates a new instance of EnterSrcForSequencingForm */
     public EnterSrcForSequencingForm() {
@@ -46,6 +54,14 @@ public class EnterSrcForSequencingForm extends ProjectWorkflowForm {
     public String getResearcher() {return researcher;}
     public int getResearcherid() {return researcherid;}
     public String getIsMappingFile() {return isMappingFile;}
+    public boolean getIsA() {return isA;}
+    public boolean getIsB() {return isB;}
+    public boolean getIsC() {return isC;}
+    public boolean getIsD() {return isD;}
+    public boolean getIsE() {return isE;}
+    public boolean getIsF() {return isF;}
+    public boolean getIsG() {return isG;}
+    public boolean getIsH() {return isH;}
     
     public void setPlate1(String plate1) {this.plate1 = plate1;}
     public void setPlate2(String plate2) {this.plate2 = plate2;}
@@ -59,6 +75,14 @@ public class EnterSrcForSequencingForm extends ProjectWorkflowForm {
     public void setResearcher(String researcher) {this.researcher = researcher;}
     public void setResearcherid(int researcherid) {this.researcherid = researcherid;}
     public void setIsMappingFile(String s) {this.isMappingFile = s;}
+    public void setIsA(boolean b) {this.isA = b;}
+    public void setIsB(boolean b) {this.isB = b;}
+    public void setIsC(boolean b) {this.isC = b;}
+    public void setIsD(boolean b) {this.isD = b;}
+    public void setIsE(boolean b) {this.isE = b;}
+    public void setIsF(boolean b) {this.isF = b;}
+    public void setIsG(boolean b) {this.isG = b;}
+    public void setIsH(boolean b) {this.isH = b;}
     
     /**
      * Reset all properties to their default values.

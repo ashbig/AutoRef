@@ -28,6 +28,14 @@ public class GlycerolAndSeqContainerMapper implements ContainerMapper {
     }
     
     public void setRow(String row) {seqContainerMapper.setRow(row);}
+    public void setIsA(boolean b) {seqContainerMapper.setIsA(b);}
+    public void setIsB(boolean b) {seqContainerMapper.setIsB(b);}
+    public void setIsC(boolean b) {seqContainerMapper.setIsC(b);}
+    public void setIsD(boolean b) {seqContainerMapper.setIsD(b);}
+    public void setIsE(boolean b) {seqContainerMapper.setIsE(b);}
+    public void setIsF(boolean b) {seqContainerMapper.setIsF(b);}
+    public void setIsG(boolean b) {seqContainerMapper.setIsG(b);}
+    public void setIsH(boolean b) {seqContainerMapper.setIsH(b);}
     public void setIsMappingFile(boolean b) {
         seqContainerMapper.setIsMappingFile(b);
     }

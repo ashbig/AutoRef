@@ -8,6 +8,7 @@ package edu.harvard.med.hip.flex.process;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.util.*;
 import java.util.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -45,21 +46,7 @@ public class MasterToExpressionContainerMapper {
         Enumeration enum = oldSamples.elements();
         String type = null;
         sampleLineageSet = new Vector();
-        
-        String sql = "select max(cloneid) from clones";
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        ResultSet rs = t.executeQuery(sql);
-        int maxcloneid = 0;
-        try {
-            if(rs.next()) {
-                maxcloneid=rs.getInt(1);
-            } else {
-                throw new FlexDatabaseException("Database error.");
-            }
-        } catch (SQLException ex) {
-            throw new FlexDatabaseException(ex.getMessage());
-        }
-        
+                
         while(enum.hasMoreElements()) {
             CloneSample s = (CloneSample)enum.nextElement();
             if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
@@ -72,6 +59,7 @@ public class MasterToExpressionContainerMapper {
                 type = sampletype;
             }
             
+            int maxcloneid = FlexIDGenerator.getID("clonesid");
             CloningStrategy cs = CloningStrategy.findStrategyById(s.getStrategyid());
             CloningStrategy expStrategy = CloningStrategy.findStrategyByVectorAndLinker(vectorname, cs.getLinker5p().getId(), cs.getLinker3p().getId());
             ExpressionCloneSample newSample = new ExpressionCloneSample(type, s.getPosition(), newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD, 0);
@@ -80,7 +68,7 @@ public class MasterToExpressionContainerMapper {
             newSample.setGeneSymbol(s.getGeneSymbol());
             newSample.setPa(s.getPa());
             newSample.setSgd(s.getSgd());
-            newSample.setCloneid(++maxcloneid);
+            newSample.setCloneid(maxcloneid);
             newSample.setClonetype(CloneSample.EXPRESSION);
             newSample.setMastercloneid(s.getMastercloneid());
             newSample.setSequenceid(s.getSequenceid());

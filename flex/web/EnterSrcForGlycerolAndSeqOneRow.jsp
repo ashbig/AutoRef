@@ -75,23 +75,33 @@
     <td class="prompt">Enter 8th culture plate barcode:</td>
     <td><html:text property="plate8" size="40"/></td>
     </tr>
-
+</table>
+<p>
+<table>
+    <input type="hidden" name="row" value="one"/>
     <tr>
     <td class="prompt">Select the rows:</td>
-    <td><select name="row">
-            <OPTION value="all"/>All
-            <option value="a"/>A
-            <option value="b"/>B
-            <option value="c"/>C
-            <option value="d"/>D
-            <option value="e"/>E
-            <option value="f"/>F
-            <option value="g"/>G
-            <option value="h"/>H
-        </select>
-    </td>
+    <td class="prompt"><input type="checkbox" name="isA"/> A</td>
+    <td class="prompt"><input type="checkbox" name="isB"/> B</td>
     </tr>
-
+    <tr>
+    <td></td>
+    <td class="prompt"><input type="checkbox" name="isC"/> C</td>
+    <td class="prompt"><input type="checkbox" name="isD"/> D</td>
+    </tr>
+    <tr>
+    <td></td>
+    <td class="prompt"><input type="checkbox" name="isE"/> E</td>
+    <td class="prompt"><input type="checkbox" name="isF"/> F</td>
+    </tr>
+    <tr>
+    <td></td>
+    <td class="prompt"><input type="checkbox" name="isG"/> G</td>
+    <td class="prompt"><input type="checkbox" name="isH"/> H</td>
+    </tr>
+</table>
+<p>
+<table>
     <tr>
     <td class="prompt">Generate rearray files?</td>
     <td><select name="isMappingFile">
