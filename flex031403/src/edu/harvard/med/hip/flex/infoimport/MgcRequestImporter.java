@@ -38,7 +38,7 @@ public class MgcRequestImporter
     public static final String DILIM = "\t!";
     public static final String DEFAULT = "NA";
 
-    static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
+    public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
     //public static final String BLASTABLE_DATABASE_NAME = "E:\\tmp\\MGC\\genes";    
     //public static final String BLASTABLE_DATABASE_NAME = "e:\\Users\\HIP\\HTaycher\\MGC\\genes";
 
