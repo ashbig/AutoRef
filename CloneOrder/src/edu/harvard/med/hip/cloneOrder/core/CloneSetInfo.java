@@ -44,7 +44,7 @@ public class CloneSetInfo {
             return new TreeSet();
         }
         
-        String sql = "SELECT distinct ci.flexid, ci.genesymbol, ci.genbankacc, ci.gi, ci.sugenid, ci.clonetype " +
+        String sql = "SELECT ci.PlateID,ci.WellID_position, ci.flexid, ci.genesymbol, ci.genbankacc, ci.gi, ci.sugenid, ci.clonetype " +
                      "FROM clone_set_info AS csi, clone_set AS cs, clone_info AS ci " +
                      "WHERE csi.clonesetid=cs.clonesetid " +
                      "and cs.flexid=ci.flexid and csi.clonesetname = '" + cloneSetName + "'";
@@ -55,13 +55,15 @@ public class CloneSetInfo {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);            
             while(rs.next()) {
-                String flexId = rs.getString(1);
-                String geneSymbol = rs.getString(2);
-                String genbankAcc = rs.getString(3);
-                int gi = rs.getInt(4);
-                String sugenId = rs.getString(5);
-                String cloneType = rs.getString(6);
-                CloneInfo clone = new CloneInfo(flexId, geneSymbol, genbankAcc, gi, sugenId, cloneType);
+                String plateId = rs.getString(1);
+                String wellIdPosition = rs.getString(2);
+                String flexId = rs.getString(3);
+                String geneSymbol = rs.getString(4);
+                String genbankAcc = rs.getString(5);
+                int gi = rs.getInt(6);
+                String sugenId = rs.getString(7);
+                String cloneType = rs.getString(8);
+                CloneInfo clone = new CloneInfo(plateId,wellIdPosition,flexId, geneSymbol, genbankAcc, gi, sugenId, cloneType);
                 clones.add(clone);
             }
             rs.close();
