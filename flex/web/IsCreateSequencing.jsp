@@ -45,6 +45,15 @@
     </td>
     </tr>
 
+    <tr>
+    <td class="prompt">Please select number of rows on each source plate</td>
+    <td><html:select property="numOfRows">
+        <option value="1"/>One row
+        <option value="2"/>Two rows
+        </html:select>
+    </td>
+    </tr>
+
     <tr></tr>
     <tr>
     <td></td><td><html:submit property="submit" value="Continue"/></td>

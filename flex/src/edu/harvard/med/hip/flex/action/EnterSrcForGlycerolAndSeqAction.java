@@ -101,6 +101,7 @@ public class EnterSrcForGlycerolAndSeqAction extends EnterSourcePlateAction {
         
         return mapper;
     }
+    
     protected void storeOthersInRequest(HttpServletRequest request, ActionForm form) {
         request.setAttribute("isMappingFile", ((CreateGlycerolAndSeqForm)form).getIsMappingFile());
     }

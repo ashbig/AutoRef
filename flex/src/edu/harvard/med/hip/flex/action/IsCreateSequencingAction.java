@@ -58,15 +58,19 @@ public class IsCreateSequencingAction extends ResearcherAction {
         String projectname = ((IsCreateSequencingForm)form).getProjectname();
         String workflowname = ((IsCreateSequencingForm)form).getWorkflowname();
         String isSeqPlates = ((IsCreateSequencingForm)form).getIsSeqPlates();
-        
-        
+        int numOfRows = ((IsCreateSequencingForm)form).getNumOfRows();
+                
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
         request.setAttribute("projectname", projectname);
         request.setAttribute("workflowname", workflowname);
         
         if("Yes".equals(isSeqPlates)) {
-            return (mapping.findForward("success_seq"));
+            if(numOfRows == 1) {
+                return (mapping.findForward("success_seq_onerow"));
+            } else {
+                return (mapping.findForward("success_seq"));
+            }
         }
         
         return (mapping.findForward("success"));

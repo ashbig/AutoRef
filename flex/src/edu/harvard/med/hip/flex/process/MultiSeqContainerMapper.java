@@ -19,6 +19,15 @@ public class MultiSeqContainerMapper {
     public static final String AE = "ae";
     public static final String BF = "bf";
     public static final String BOTH = "both";
+    public static final String ALL = "all";
+    public static final String A = "a";
+    public static final String B = "b";
+    public static final String C = "c";
+    public static final String D = "d";
+    public static final String E = "e";
+    public static final String F = "f";
+    public static final String G = "g";
+    public static final String H = "h";
     
     private String row = BOTH;
     private Vector sampleLineageSet = null;
@@ -50,17 +59,43 @@ public class MultiSeqContainerMapper {
         } catch (Exception ex) {
             throw new FlexDatabaseException(ex);
         }
-        if("ae".equals(row)) {
-            return mapAE(project, workflow, protocol, containers, threadid);
-        } else if("bf".equals(row)) {
-            return mapBF(project, workflow, protocol, containers, threadid);
+        if(AE.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "AE", 2, 1);
+        } else if(BF.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "BF", 2, 2);
+        } else if(BOTH.equals(row)) {
+            Vector newContainers = mapRows(project, workflow, protocol, containers, threadid, "AE", 2, 1);
+            newContainers.addAll(mapRows(project, workflow, protocol, containers, threadid, "BF", 2, 2));
+            return newContainers;
+        } else if(A.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "SA", 1, 1);
+        } else if(B.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "SB", 1, 2);
+        } else if(C.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "SC", 1, 3);
+        } else if(D.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "SD", 1, 4);
+        } else if(E.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "SE", 1, 5);
+        } else if(F.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "SF", 1, 6);
+        } else if(G.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "SG", 1, 7);
+        } else if(H.equals(row)) {
+            return mapRows(project, workflow, protocol, containers, threadid, "SH", 1, 8);
         } else {
-            Vector newContainers = mapAE(project, workflow, protocol, containers, threadid);
-            newContainers.addAll(mapBF(project, workflow, protocol, containers, threadid));
+            Vector newContainers = mapRows(project, workflow, protocol, containers, threadid, "SA", 1, 1);
+            newContainers.addAll(mapRows(project, workflow, protocol, containers, threadid, "SB", 1, 2));
+            newContainers.addAll(mapRows(project, workflow, protocol, containers, threadid, "SC", 1, 3));
+            newContainers.addAll(mapRows(project, workflow, protocol, containers, threadid, "SD", 1, 4));
+            newContainers.addAll(mapRows(project, workflow, protocol, containers, threadid, "SE", 1, 5));
+            newContainers.addAll(mapRows(project, workflow, protocol, containers, threadid, "SF", 1, 6));
+            newContainers.addAll(mapRows(project, workflow, protocol, containers, threadid, "SG", 1, 7));
+            newContainers.addAll(mapRows(project, workflow, protocol, containers, threadid, "SH", 1, 8));
             return newContainers;
         }
     }
-        
+    
     /** Return the sample lineage.
      *
      * @return The sample lineage as a Vector.
@@ -70,24 +105,11 @@ public class MultiSeqContainerMapper {
         return sampleLineageSet;
     }
     
-    public Vector mapAE(Project project, Workflow workflow, Protocol protocol, Vector containers, int threadid) throws FlexDatabaseException {
+    public Vector mapRows(Project project, Workflow workflow, Protocol protocol, Vector containers, int threadid, String processCode, int numOfRows, int rowNum) throws FlexDatabaseException {
         SeqContainerMapper mapper = new SeqContainerMapper();
-        mapper.setRows(2);
-        mapper.setRow(1);
-        mapper.setProcesscode("AE");
-        mapper.setThreadid(threadid);
-        mapper.setIsCulture(isCulture);
-        mapper.setIsMappingFile(isMappingFile);
-        Vector newContainers = mapper.doMapping(containers, protocol, project, workflow);
-        sampleLineageSet.addAll(mapper.getSampleLineageSet());
-        return newContainers;
-    }
-    
-    public Vector mapBF(Project project, Workflow workflow, Protocol protocol, Vector containers, int threadid) throws FlexDatabaseException {
-        SeqContainerMapper mapper = new SeqContainerMapper();
-        mapper.setRows(2);
-        mapper.setRow(2);
-        mapper.setProcesscode("BF");
+        mapper.setRows(numOfRows);
+        mapper.setRow(rowNum);
+        mapper.setProcesscode(processCode);
         mapper.setThreadid(threadid);
         mapper.setIsCulture(isCulture);
         mapper.setIsMappingFile(isMappingFile);

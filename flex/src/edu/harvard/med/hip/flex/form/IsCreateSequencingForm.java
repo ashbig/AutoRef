@@ -12,6 +12,7 @@ package edu.harvard.med.hip.flex.form;
  */
 public class IsCreateSequencingForm extends ProjectWorkflowForm {
     protected String isSeqPlates;
+    protected int numOfRows = 1;
     
     /** Creates a new instance of IsCreateSequencingForm */
     public IsCreateSequencingForm() {
@@ -19,4 +20,6 @@ public class IsCreateSequencingForm extends ProjectWorkflowForm {
     
     public String getIsSeqPlates() {return isSeqPlates;}
     public void setIsSeqPlates(String s) {this.isSeqPlates = s;}
+    public int getNumOfRows() {return numOfRows;}
+    public void setNumOfRows(int numOfRows) {this.numOfRows = numOfRows;}
 }
