@@ -146,9 +146,12 @@
     <form-bean      name="specialOligoOrderForm"
                     type="edu.harvard.med.hip.flex.form.SpecialOligoOrderForm"/>
 
-    </form-beans>
-    
-   
+     <!-- Form used to import MGC primer design and rearray -->
+    <form-bean      name="mgcOrderOligoForm"
+                    type="edu.harvard.med.hip.flex.form.MgcOrderOligoForm"/>
+
+    </form-beans>    
+  
 
 
 
@@ -766,6 +769,15 @@
       <forward name="success" path="/ProcessSpecialOligoOrder.jsp"/>
     </action>
 
+    <!-- Action mapping for MGC primer design and rearray -->
+    <action path="/MgcOrderOligo"
+            type="edu.harvard.med.hip.flex.action.MgcOrderOligoAction"
+            name="mgcOrderOligoForm"
+            scope="request"
+            input="/MgcProcessFullPlates.jsp">
+      <forward name="success" path="/MgcProcessFullPlatesResult.jsp"/>
+    </action>
+    
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
