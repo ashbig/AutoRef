@@ -20,7 +20,7 @@ public class FileOperations
      * Buffer size when reading from input stream.
      */
     private final static int BUFFER_SIZE = 1024;
-    private final static boolean     m_isSameComputer = false;
+    private static boolean      m_isSameComputer = false;
      {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
              m_isSameComputer = true;
