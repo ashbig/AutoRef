@@ -47,6 +47,10 @@
     <form-bean      name="createProcessPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
 
+    <!-- Get researcher barcode form bean -->
+    <form-bean      name="getResearcherBarcodeForm"
+                    type="edu.harvard.med.hip.flex.form.GetResearcherBarcodeForm"/>
+
     <!-- Create process plate form bean -->
     <form-bean      name="createPCRPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreatePCRPlateForm"/>
@@ -269,7 +273,7 @@
                type="edu.harvard.med.hip.flex.action.GetPCRLocationAction"
                name="createPCRPlateForm"
                scope="request"
-               validate="true"
+               validate="false"
                input="/GetPCRLocation.jsp">
       <forward  name="success"   path="/GetPCRResearcher.jsp"/>
     </action> 
@@ -277,11 +281,21 @@
      <!-- Process the researcher barcode input -->
     <action    path="/GetResearcher"
                type="edu.harvard.med.hip.flex.action.GetResearcherAction"
-               name="createProcessPlateForm"
+               name="getResearcherBarcodeForm"
                scope="request"
                validate="true"
                input="/GetResearcher.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
+    </action> 
+
+     <!-- Process the researcher barcode input -->
+    <action    path="/GetPCRResearcher"
+               type="edu.harvard.med.hip.flex.action.GetPCRResearcherAction"
+               name="getResearcherBarcodeForm"
+               scope="request"
+               validate="true"
+               input="/GetPCRResearcher.jsp">
+      <forward  name="success"   path="/PrintPCRBarcode.jsp"/>
     </action> 
 
      <!-- Print more barcodes -->
