@@ -45,8 +45,10 @@ public class DiseaseGeneManager {
             return null;
         }
         
+        String sql; Vector diseases;
+        /*
         String sql = "select * from disease_list where disease_mesh_term = ?";
-        Vector diseases = queryDiseases(conn, sql, term);
+        Vector diseases = queryDiseases(conn, sql, "%"+term+"%");
         
         if(diseases != null && diseases.size() == 0) {
             sql = "select dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.hip_disease_id=dn.hip_disease_id and dn.disease_nick_name_value=?";
@@ -54,14 +56,15 @@ public class DiseaseGeneManager {
         }
         
         if(diseases != null && diseases.size() == 0) {
+         */
             TreeSet diseaseSet = new TreeSet(new DiseaseComparator());
             sql = "select * from disease_list where disease_mesh_term like ?";
             diseaseSet.addAll(queryDiseases(conn, sql, "%"+term+"%"));
             sql = "select distinct dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.hip_disease_id=dn.hip_disease_id and dn.disease_nick_name_value like ?";
             diseaseSet.addAll(queryDiseases(conn, sql, "%"+term+"%"));
             diseases = new Vector(diseaseSet);
-        }
-
+        
+                               
         manager.disconnect(conn);
 
         return diseases;

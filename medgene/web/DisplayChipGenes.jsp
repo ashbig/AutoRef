@@ -24,9 +24,9 @@
     <TD>
         Your input genes are grouped into 3 categories according to their relationship with 
         the disease of <b><bean:write name="disease_mesh_term"/></b> as cited in literature. <br><br>
-        <a href="#direct"> Direct Associated Genes </a> <br>
-        <a href="#indirect"> Indirect Associated Genes </a> <br>
-        <a href="#new"> Non Associated Genes </a> <br>
+        <a href="#direct"> First degree associations </a> <br>
+        <a href="#indirect"> Second degree associations </a> <br>
+        <a href="#new"> Genes new to this disease </a> <br>
     </TD>
     </TR>
     </TABLE>    
