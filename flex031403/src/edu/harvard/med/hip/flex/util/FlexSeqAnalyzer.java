@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.35 2002-07-23 16:52:20 Elena Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.36 2002-12-17 15:01:30 Elena Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -24,10 +24,11 @@ import java.io.*;
 public class FlexSeqAnalyzer {
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
     public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
-    private static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
-    private static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
+    public static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
+    public static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
+    public static final String MGCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Mgc/genes";
 
-  // private static final String HUMANDB="E:/flexDev/BlastDB/genes";
+   //private static final String HUMANDB="E:/flexDev/BlastDB/genes";
     //private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
@@ -208,11 +209,13 @@ public class FlexSeqAnalyzer {
         String queryFile = makeQueryFile();
         Blaster blaster = new Blaster();
         blaster.setHits(1);
-        blaster.setDBPath(BLAST_BASE_DIR+BLAST_DB_DIR + dbFileName);
+     //   blaster.setDBPath(BLAST_BASE_DIR+BLAST_DB_DIR + dbFileName);
+        blaster.setDBPath( dbFileName);
                 
         blaster.blast(queryFile+".in", queryFile+".out");
         BlastParser parser = new BlastParser(queryFile+".out");
         parser.parseBlast();
+       
         ArrayList homologs = parser.getHomologList();
         
         BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(0);
@@ -407,10 +410,13 @@ public class FlexSeqAnalyzer {
     public static void main(String [] args) {
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
-            FlexSequence sequence = new FlexSequence(4598);
-            sequence.restore(4598);
+            FlexSequence sequence = new FlexSequence(24450);
+            sequence.restore(24450);
             sequence.setId(-1);
             FlexSeqAnalyzer analyzer = new FlexSeqAnalyzer(sequence);
+            analyzer.findExactMatchOrHomolog(90 ,  70 ,"c:\\MGC\\genes");
+            
+            /*
             if(analyzer.findSame()) {
                 Vector sequences = analyzer.getSameSequence();
                 Enumeration enum = sequences.elements();
@@ -440,7 +446,8 @@ public class FlexSeqAnalyzer {
                         System.out.println("\t"+s.getFlexstatus());
                     }
                 }
-            }
+             
+            }**/
         } catch (FlexDatabaseException e) {
             System.out.println(e);
         } catch (FlexUtilException e) {
