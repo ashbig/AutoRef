@@ -30,6 +30,7 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.GetProcessPlateInputForm;
+import edu.harvard.med.hip.flex.process.Process;
 
 /**
  *
@@ -59,7 +60,7 @@ public class GetInputAction extends ResearcherAction{
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String barcode = ((GetProcessPlateInputForm)form).getResearcherBarcode();
-           Researcher researcher = null;
+        Researcher researcher = null;
 
         // Validate the researcher barcode.
         try {
@@ -73,8 +74,9 @@ public class GetInputAction extends ResearcherAction{
             return (mapping.findForward("error"));
         }
         
-        LinkedList queueItems = (LinkedList)request.getSession().getAttribute("queueItems"); 
+        // Validate container label.
         String sourcePlate = ((GetProcessPlateInputForm)form).getSourcePlate();
+        LinkedList queueItems = (LinkedList)request.getSession().getAttribute("queueItems"); 
         QueueItem item = getValidPlate(queueItems, sourcePlate);
         if(item == null) {
             errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
@@ -87,47 +89,59 @@ public class GetInputAction extends ResearcherAction{
         Protocol protocol = (Protocol)request.getSession().getAttribute("protocol");        
         Connection conn = null;
         try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+
             // Create the new plate and samples.        
             Location dLocation = new Location(destLocation);
             Container container = (Container)item.getItem();
             ContainerMapper mapper = new ContainerMapper();
             Container newContainer = mapper.mapContainer(container, protocol, dLocation);
-            //String type = mapper.getContainerType(protocol.getProcessname());
-        
-            Location sLocation = new Location(sourceLocation);
-            //Location dLocation = new Location(destLocation);
-            //String newBarcode = Container.getLabel(protocol.getProcesscode(), container.getPlatesetid(), getSubThread(sourcePlate));        
-            //Container newContainer = new Container(type, dLocation, newBarcode);
-            //container.restoreSample();
-            //Vector samples = mappingSamples(container, protocol);
+
+            // Insert the new container and samples into database.
+            newContainer.insert(conn);
             
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            conn = t.requestConnection();
-        
+            // Create a process and process object.
+            Process process = new Process(protocol, 
+            edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
+            ProcessContainer inputContainer = 
+                new ProcessContainer(container.getId(), 
+                process.getExecutionid(), 
+                edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
+            ProcessContainer outputContainer = 
+                new ProcessContainer(newContainer.getId(), 
+                process.getExecutionid(),
+                edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
+            process.addProcessObject(inputContainer);
+            process.addProcessObject(outputContainer);            
+            
+            // Insert the process and process objects into database.
+            process.insert(conn);
+            
             // Remove the container from the queue.
             LinkedList newItems = new LinkedList();
             newItems.addLast(item);
             ContainerProcessQueue queue = new ContainerProcessQueue();
-            //queue.removeQueueItems(newItems, conn);
-        
-        
-        request.getSession().setAttribute("oldContainer", container); 
-        request.getSession().setAttribute("newContainer", newContainer);  
-        request.getSession().setAttribute("sLocation", sLocation);
-        request.getSession().setAttribute("dLocation", dLocation);
-        return (mapping.findForward("success"));
-        
+            queue.removeQueueItems(newItems, conn);
+
+            // Add the new container to the queue.
+            newItems.clear();
+            newItems.addLast(new QueueItem(newContainer, protocol));
+            queue.addQueueItems(newItems, conn);
             
-        } catch (FlexDatabaseException ex) {
-            request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return (mapping.findForward("error"));
-        } catch (FlexCoreException ex) {
-            request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return (mapping.findForward("error"));
-        } catch (FlexProcessException ex) {
-            request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return (mapping.findForward("error"));
-        } catch (MissingResourceException ex) {
+            // Commit the changes to the database.
+            DatabaseTransaction.commit(conn);
+            
+            // Store the data in the session.
+            Location sLocation = new Location(sourceLocation);        
+            request.getSession().setAttribute("oldContainer", container); 
+            request.getSession().setAttribute("newContainer", newContainer);  
+            request.getSession().setAttribute("sLocation", sLocation);
+            request.getSession().setAttribute("dLocation", dLocation);
+            
+            return (mapping.findForward("success"));            
+        } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         } finally {
@@ -152,8 +166,4 @@ public class GetInputAction extends ResearcherAction{
         
         return found;
     }
-        
-
-    
-
 }
