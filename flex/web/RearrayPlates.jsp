@@ -13,7 +13,7 @@
 
 <body>
     
-<html:form action="RearrayPlates.do" focus="logFile" enctype="multipart/form-data">
+<html:form action="RearrayPlates.do"  enctype="multipart/form-data">
     <h2><bean:message key="flex.name"/> : Process Rearray</h2>
     <hr>
     <html:errors/>
@@ -24,13 +24,10 @@
 </logic:present>
 <logic:present name="workflowid">
     <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
-    <input type="hidden" name="workflowname" value="<%= request.getAttribute("workflowid")%>">
-   <input type="hidden" name="workflowname" value="<%= request.getAttribute("processname")%>">
+    <input type="hidden" name="workflowname" value="<%= request.getAttribute("workflowname")%>">
+   <input type="hidden" name="processname" value="<%= request.getAttribute("processname")%>">
 </logic:present>
-<logic:present name="protocolid">
-    
-    <input type="hidden" name="protocolid" value="<bean:write name="protocolid"/>">
-</logic:present>
+
 
 
 
@@ -45,15 +42,54 @@
     <td><bean:write name="workflowname" /></td>
     </tr>   
      <td class="prompt">Process name:</td>
-    <td><bean:write name="processname" /></td>
+    <td><%= request.getAttribute("processname")%></td>
     </tr>   
     <tr>
-        <td class="prompt">Please enter the rearray file:</td>    
-        <td><html:file property="mgcRequestFile" /></td>
+       <p> <td class="prompt">Please enter the rearray file:</td>    
+        <td><html:file property="requestFile" /></td>
+    </tr>
+    <tr>
+        <td class="prompt">Number of wells on plate:</td>    
+        <td ><input type="text" name="wellsOnPlate" value = "96" align="right"/></td>
     </tr>
 
- 
+    <tr>
+    <td class="prompt">Is full plate required?</td>
+    <td>
+        <html:radio property="isFullPlate" value="true"/>Yes
+        <html:radio property="isFullPlate" value="false"/>No
+    </td>
+</tr>
+<tr>
+    <td class="prompt">Put sequences on queue for processing?</td>
+        <td >
+            <input type="radio" name="isPutOnQueue"  value="true">Yes
+            <input type="radio" name="isPutOnQueue" checked value="false">No
+        </td>
+</tr>
+<tr>
+     <td class="prompt">Is controls requered?</td>
+     <td>
+        <html:radio property="isControls" value="true"/>Yes
+        <html:radio property="isControls" value="false"/>No
+    </td>
+</tr>
+<tr>
+     <td class="prompt">Is sort by saw-tooth patern?</td>
+         <td>
+        <html:radio property="isSortBySawToothpatern" value="true"/>Yes
+        <html:radio property="isSortBySawToothpatern" value="false"/>No
+    </td>
+</tr>
     </table>
+
+        <b>Choose sequences that you want to group together:</b> 
+        (sequences you don't choose will be grouped separately)
+        <dl>
+        <dd><html:checkbox property="small" />small genes (0 <= CDS < 2000)
+        <dd><html:checkbox property="medium" />medium genes (2000 <= CDS < 4000)
+        <dd><html:checkbox property="large" />large genes (CDS >= 4000)
+        </dl>
     <br>
 
     <html:submit/>
