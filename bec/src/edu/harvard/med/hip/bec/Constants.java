@@ -236,6 +236,18 @@ public class Constants {
    
     // for checking sequence identity
     public static final double MIN_IDENTITY_CUTOFF = 60.0;
+    
+    // reads direction
+    public static final String READ_DIRECTION_FORWARD = "F";
+    public static final String READ_DIRECTION_REVERSE = "R";
+    public static final int ORIENTATION_FORWARD = 1;
+    public static final int ORIENTATION_REVERSE = -1;
+    
+    public static final String READ_TYPE_ENDREAD_STR = "E";
+    public static final String READ_TYPE_INTERNAL_STR = "I";
+    public static final int    READ_TYPE_ENDREAD = 1;
+    public static final int    READ_TYPE_INTERNAL = -1;
+    
     /**
      * get today's date in dd-mmm-yy format
      */

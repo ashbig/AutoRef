@@ -106,20 +106,21 @@ public abstract class ProcessRunner implements Runnable
      {
          
          if (this instanceof PrimerDesignerRunner)
-            return "Request for primer designer execution";
+            return "Request for primer designer execution.";
          else if  (this instanceof PolymorphismFinderRunner)
-            return "Request for polymorphism finder run";
+            return "Request for polymorphism finder run.";
          else if (this instanceof DiscrepancyFinderRunner)
-            return "Request for discrepancy finder run";
+            return "Request for discrepancy finder run.";
           else if (this instanceof ReportRunner)
-            return "Request for report generator";
+            return "Request for report generator.";
          else if (this instanceof AssemblyRunner)
-            return "Request for sequence assembler run";
+            return "Request for sequence assembler run.";
          return "";
      }
      
      protected void             sendEMails()
      {
+         String text = null;
          try
          {
  //send errors
@@ -133,15 +134,27 @@ public abstract class ProcessRunner implements Runnable
             }
             if (m_file_list_reports != null && m_file_list_reports.size()>0 )//&& this instanceof ReportRunner)
             {
+                String subject  = null;
+                String text = null;
+                if (this instanceof ReportRunner)
+                {
+                    subject=" Request for report";
+                    text = "Please find attached report files for your request\n Requested item ids:\n"+m_items;
+                }
+                else if (this instanceof ReportRunner)
+                {
+                    subject = "Trace files order files request";
+                    text="Please find attached Trace files order for your request\n Requested item ids:\n"+m_items;
+                }
                 Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu"," Request for report", 
-                "Please find attached report files for your request\n Requested item ids:\n"+m_items,
-               m_file_list_reports);
+                "elena_taycher@hms.harvard.edu",subject,                 text,               m_file_list_reports);
             }
             if (m_error_messages.size()==0 && !(this instanceof ReportRunner))
             {
+                text = title;
+                if (m_items != null) text +=" \n Items processed:\n"+m_items;
                  Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", title, title+ " \n Items processed:\n"+m_items);
+                "elena_taycher@hms.harvard.edu", title, text );
 
             }
             if (m_error_messages.size()!=0 && !(this instanceof ReportRunner))
