@@ -26,8 +26,8 @@ public class MgcOligoPlateManager
     private boolean m_isOnlyFullPlates = true;
     
     
-    private Connection m_conn;
-    private LinkedList m_fileList;
+    private Connection m_conn = null;
+    private LinkedList m_fileList = null;
     private Project m_project = null;
     private Workflow m_workflow = null;
     private Protocol m_protocol = null;
@@ -37,19 +37,12 @@ public class MgcOligoPlateManager
      * Constructor
      * Creates new OligoPlateManager
      */
-    public MgcOligoPlateManager() throws FlexDatabaseException
+    public MgcOligoPlateManager(Connection conn) throws FlexDatabaseException
     {
         if ( m_DESIGN_CONSTRUCTS == null)
             m_DESIGN_CONSTRUCTS = Protocol.MGC_DESIGN_CONSTRUCTS;
         m_protocol = new Protocol(m_DESIGN_CONSTRUCTS);
-        try
-        {
-            this.m_conn = DatabaseTransaction.getInstance().requestConnection();
-            
-        } catch(FlexDatabaseException sqlex)
-        {
-            throw new FlexDatabaseException(sqlex);
-        }
+        m_conn = conn;
     }
     
     /**
@@ -62,38 +55,34 @@ public class MgcOligoPlateManager
      *
      * @exception FlexDatabaseException.
      */
-    public MgcOligoPlateManager(Project project, Workflow workflow)
+    public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow)
     throws FlexDatabaseException
     {
-        this();
+        this(conn);
         m_project = project;
         m_workflow = workflow;
         
     }
     
-    public MgcOligoPlateManager(Project project, Workflow workflow,
+    public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow,
     int totalWells, boolean isFull, String protocol)
     throws FlexDatabaseException
     {
         
-        try
-        {
-            this.m_conn = DatabaseTransaction.getInstance().requestConnection();
-            m_project = project;
-            m_workflow = workflow;
-            m_DESIGN_CONSTRUCTS = protocol;
-            m_totalWells = totalWells;
-            m_isOnlyFullPlates = isFull;//if only full plates go into experiment
-            m_protocol = new Protocol(m_DESIGN_CONSTRUCTS);
-            
-        } catch(FlexDatabaseException sqlex)
-        {
-            throw new FlexDatabaseException(sqlex);
-        }
-       
-        
-        
+        m_conn = conn;
+        m_project = project;
+        m_workflow = workflow;
+        m_DESIGN_CONSTRUCTS = protocol;
+        m_totalWells = totalWells;
+        m_isOnlyFullPlates = isFull;//if only full plates go into experiment
+        m_protocol = new Protocol(m_DESIGN_CONSTRUCTS);
     }
+    
+   public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow,
+                 boolean isFull, String protocol) throws  FlexDatabaseException
+   {
+          this(conn, project,  workflow, 94,  isFull,  protocol);
+   }
     
     public MgcOligoPlateManager(Project project, Workflow workflow, String protocol)
     throws FlexDatabaseException
@@ -122,6 +111,40 @@ public class MgcOligoPlateManager
         return m_orderSequencesOutside;
     }
     
+    
+    /**
+     * Check the total number of sequences in the Queue table belong to the
+     * same project and workflow waiting for Design_Construct protocol. 
+     * @return The total number of sequences.
+     */
+    public int totalSeqQueue() throws FlexDatabaseException {
+        int count = 0;
+        ResultSet rs = null;
+        
+       
+        int protocolId = m_protocol.getId();
+        
+        String sql = "SELECT COUNT(q.sequenceid) " +
+        "FROM queue q, flexsequence s \n" +
+        "WHERE q.sequenceid = s.sequenceid \n" +
+        "AND q.projectId =" + m_project.getId() + "\n" +
+        "AND q.workflowId =" + m_workflow.getId() + "\n" +
+        "AND q.protocolId =" + protocolId ;
+        
+        try {
+            rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            while (rs.next()) {
+                count = rs.getInt(1);
+            } // while
+            
+        } catch (SQLException sqlex) {
+            throw new FlexDatabaseException(sqlex);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        return count;
+    } //
+    
     /**
      * retrieve queue records and related sequence records of the same project
      * where protocol = m_design_construct'
@@ -142,21 +165,85 @@ public class MgcOligoPlateManager
         seqQueue.removeQueueItems(seqList, m_protocol, m_conn);
     }
     
-    private void createOligoPlates(LinkedList seqList) throws FlexDatabaseException, FlexCoreException, IOException
+    private void createOligoPlates(LinkedList seqList) throws FlexDatabaseException, FlexCoreException, IOException, Exception
     {
         
-        ConstructGenerator cg = null;
-        OligoPlater plater = null;
+     
+        ArrayList plates = new ArrayList();
+        /*
         
         if (m_isOnlyFullPlates)//only full plates
         {
             int numSeqToProcess = m_totalWells * ( (int)Math.ceil(seqList.size() / m_totalWells));
+            if (numSeqToProcess < 0) return;
             int numberOfSequencesToTruncate = seqList.size() - numSeqToProcess;
             for (int count = 0; count < numberOfSequencesToTruncate; count++)
             {
                 seqList.removeLast();
             }
         }
+        
+        if (m_DESIGN_CONSTRUCTS.equals(Protocol.MGC_DESIGN_CONSTRUCTS))
+        {
+            //arrange sequences by marker/plate/saw-tooth
+            Rearrayer ra = new Rearrayer(new ArrayList(seqList));
+            ra.findOriginalMgcContainers();
+            ArrayList orderedSeq = ra.getSequencesOrderedByMarkerContainerSTP(m_totalWells);
+            //put them in destination plate groups
+            ArrayList destination_plate  =  new ArrayList();
+            for (int seq_count = 0; seq_count <= orderedSeq.size(); ++seq_count)
+            {
+                 destination_plate.add(orderedSeq.get(seq_count));
+                 if ((seq_count % m_totalWells) == 0 || seq_count == orderedSeq.size() )//plate filled
+                 {
+                     plates.add(destination_plate);
+                     destination_plate  =  new ArrayList();
+                 }
+            }
+      
+            //check if all mgc culture plates for this destination plate 
+            //are available
+            //1. get all available culture blocks and build hashtable of culture - mgc
+            ArrayList mc_available = new ArrayList();
+            ArrayList cultureBlocks = new ArrayList();
+            //!!!!!!!!!!!! define here
+            for (int cont_count = 0; cont_count < cultureBlocks.size(); cont_count++)
+            {
+                MgcContainer mc = MgcContainer.findMGCContainerFromCulture((Container) cultureBlocks.get(cont_count));
+                mc_available.add(mc);
+            }
+            
+            
+            /* destination plate
+             *all culture plate are available
+            //1. design primers & constracts
+            //2. generate rearray file
+            //3.group oligo plates and rearrayed culture block into one plateset
+             */
+        
+        /*
+            boolean plate_ok = false;
+            for (int plate_count = 0; plate_count < plates.size(); plate_count++)
+            {
+                plate_ok = false;
+                for (int seq_count = 0; seq_count < m_totalWells; seq_count++)
+                {
+                }
+                if ( plate_ok )
+                {
+                    createOligoPlate((LinkedList)plates.get(plate_count));
+                    createRearrayFile();
+                }
+            }
+        }
+         **/
+    }
+    
+    
+   private  void createOligoPlate(LinkedList seqList) throws FlexDatabaseException, FlexCoreException, IOException, Exception
+    {
+           ConstructGenerator cg = null;
+        OligoPlater plater = null;
         try
         {
             cg = new ConstructGenerator(seqList, m_conn, m_project, m_workflow, m_protocol);
@@ -196,58 +283,37 @@ public class MgcOligoPlateManager
     
     public void sendOligoOrders() throws MessagingException
     {
-        String to = "wmar@hms.harvard.edu";
-        String from = "wmar@hms.harvard.edu";
+        String to = "htaycher@hms.harvard.edu";
+        String from = "htaycher@hms.harvard.edu";
         String cc = "flexgene_manager@hms.harvard.edu";
-        String subject = "New Testing Oligo Order";
+        String subject = "New Oligo Order";
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
         Mailer.sendMessage(to, from, cc, subject, msgText, m_fileList);
     }
     
     
-    public synchronized void orderOligo()
+    public synchronized void orderOligo() throws Exception
     {
         int totalQueue_sequences = 0;
-        try
+     
+        LinkedList seqList = getQueueSequence();
+        totalQueue_sequences = seqList.size();
+        System.out.println("There are total of " + totalQueue_sequences + " sequences belong to the same size group in the queue");
+        createOligoPlates(seqList);
+        //avoid sending out empty email without files attached
+        if (m_fileList.size() >= 1)
         {
-            LinkedList seqList = getQueueSequence();
-            totalQueue_sequences = seqList.size();
-            System.out.println("There are total of " + totalQueue_sequences + " sequences belong to the same size group in the queue");
-            createOligoPlates(seqList);
-            //avoid sending out empty email without files attached
-            if (m_fileList.size() >= 1)
-            {
-                sendOligoOrders();
-                System.out.println("Oligo order files have been mailed!");
-                DatabaseTransaction.commit(m_conn);
-            } //inner if
-            else
-            {
-                System.out.println("File error, no order is mailed!");
-                DatabaseTransaction.rollback(m_conn);
-            } 
-                
-        } catch (FlexDatabaseException e)
+            sendOligoOrders();
+            System.out.println("Oligo order files have been mailed!");
+            DatabaseTransaction.commit(m_conn);
+        } //inner if
+        else
         {
-            e.printStackTrace();
-        } catch (FlexCoreException ex)
-        {
-            ex.printStackTrace();
-        } catch (IOException IOex)
-        {
+            System.out.println("File error, no order is mailed!");
             DatabaseTransaction.rollback(m_conn);
-            IOex.printStackTrace();
-        } catch (MessagingException msgex)
-        {
-            DatabaseTransaction.rollback(m_conn);
-            msgex.printStackTrace();
-        }finally
-        {
-            DatabaseTransaction.closeConnection(m_conn);
-        }
-        
-        System.out.println("Thread finished");
+        } 
+   
     }
     
     //******************************************************//
