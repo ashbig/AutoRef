@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2002-10-08 17:46:00 $
+ * $Revision: 1.6 $
+ * $Date: 2002-11-25 23:53:39 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -55,7 +55,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Action called when requesting to view the process history of a container
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.5 $ $Date: 2002-10-08 17:46:00 $
+ * @version    $Revision: 1.6 $ $Date: 2002-11-25 23:53:39 $
  */
 
 public class ViewContainerProcessHistoryAction extends CollaboratorAction
@@ -117,8 +117,10 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
                     String let = containerBarcode.substring(0,3);
                     
                 // check if it mgc 
-                    if ( let.equalsIgnoreCase("MGC") || let.equalsIgnoreCase("MGS") ||
-                        let.equalsIgnoreCase("MLI") || let.equalsIgnoreCase("MDN") ) 
+                    if ( let.equalsIgnoreCase("MGC") || 
+                        ( let.equalsIgnoreCase("MGS")  && containerBarcode.indexOf("-") == -1)
+                        || ( let.equalsIgnoreCase("MLI") && containerBarcode.indexOf("-") == -1)
+                        || let.equalsIgnoreCase("MDN") ) 
                         
                     {
                         isMGC = true;
