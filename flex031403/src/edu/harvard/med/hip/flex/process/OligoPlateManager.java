@@ -165,7 +165,7 @@ public class OligoPlateManager {
     } //createOligoAndConstruct
     
     public void sendOligoOrders() throws MessagingException{
-        String to = "wenhongm@hotmail.com";
+        String to = "wmar@hms.harvard.edu";
         String from = "wmar@hms.harvard.edu";
         String cc = "cruel@3rdmill.com";
         String subject = "Testing Oligo Order";
