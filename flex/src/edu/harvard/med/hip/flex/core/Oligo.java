@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.1 2003-03-07 17:44:53 dzuo Exp $
+ * $Id: Oligo.java,v 1.2 2003-08-13 19:18:59 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -126,12 +126,12 @@ public class Oligo {
          */
         int workflowid = workflow.getId();
         
-        if(workflowid == Workflow.CREATOR_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW) {
+        if(workflowid == Workflow.CREATOR_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR) {
             tagSequence = CLONETECH_5p + sequence;
         } else if(workflowid == Workflow.PSEUDOMONAS_WORKFLOW) {
             tagSequence = PSEUDOMONAS_5p + sequence;
         } else {
-            tagSequence = GATEWAYTAG_5p + sequence;
+            tagSequence = CLONETECH_5p + sequence;
         }
     }
     
@@ -167,7 +167,7 @@ public class Oligo {
          */
         int workflowid = workflow.getId();
         
-        if(workflowid == Workflow.CREATOR_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW) {
+        if(workflowid == Workflow.CREATOR_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR) {
             tagSequence = CLONETECH_3p_CLOSE + sequence;
         } else if(workflowid == Workflow.PSEUDOMONAS_WORKFLOW) {
             tagSequence = GATEWAYTAG_3p_CLOSE_PA + sequence;
@@ -202,7 +202,7 @@ public class Oligo {
          */
         int workflowid = workflow.getId();
         
-        if(workflowid == Workflow.CREATOR_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW) {
+        if(workflowid == Workflow.CREATOR_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR) {
             tagSequence = CLONETECH_3p_FUSION + sequence;
         } else if(workflowid == Workflow.PSEUDOMONAS_WORKFLOW) {
             tagSequence = PSEUDOMONAS_3p_FUSION + sequence;
