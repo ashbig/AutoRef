@@ -483,11 +483,14 @@ public class RearrayerForPlates
             Sample control_negative = new Sample(Sample.CONTROL_NEGATIVE, position++,contId);
             cont.addSample(control_negative);
         }
-        cont.insert(m_conn);
-        //process sample linerage
-        //rearrayed plate is output container
-        createSampleLinerageForContainer( cont, org_containers_for_this_container,sampleLineageSet );
-        if (m_isPutOnQueue) putPlateOnQueue(cont);
+        if (m_isPutOnQueue)
+        {
+            cont.insert(m_conn);
+            //process sample linerage
+            //rearrayed plate is output container
+            createSampleLinerageForContainer( cont, org_containers_for_this_container,sampleLineageSet );
+             putPlateOnQueue(cont);
+        }
         return cont;
     }
     
