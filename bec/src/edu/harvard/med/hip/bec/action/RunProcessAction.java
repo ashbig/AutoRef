@@ -239,6 +239,7 @@ public class RunProcessAction extends ResearcherAction
                         }
 
                      }
+                    //   System.out.println(Algorithms.convertStringArrayToString( forwardAllApprovedPrimerIds,Constants.DELIM_WHITE_SPACE));
                        request.setAttribute("forwardAllApprovedPrimerIds",Algorithms.convertStringArrayToString( forwardAllApprovedPrimerIds,Constants.DELIM_WHITE_SPACE));
                      //  oligo_calculations = OligoCalculation.sortByRefSequenceIdPrimerSpec(oligo_calculations);
                     
@@ -354,7 +355,7 @@ public class RunProcessAction extends ResearcherAction
                    
                     String[] primers = request.getParameterValues("chkPrimer");
                     String old_approved_primers = (String) request.getParameter("forwardAllApprovedPrimerIds");
-                    
+                 //   System.out.println(old_approved_primers);
                     ArrayList arr_old_approved_primers = null;
                    if (old_approved_primers != null) 
                         arr_old_approved_primers = Algorithms.splitString(old_approved_primers,Constants.DELIM_WHITE_SPACE);
@@ -626,7 +627,17 @@ public class RunProcessAction extends ResearcherAction
                     request.setAttribute("item_type",request.getParameter("item_type"));
                     return mapping.findForward("display_item_history"); 
                 }
+                case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:
+                {
+                    String  item_ids = (String) request.getParameter("items");
+                    int items_type =  Integer.parseInt(request.getParameter("item_type"));
                 
+                    ArrayList clone_ids = Algorithms.splitString(ProcessRunner.cleanUpItems( items_type,  item_ids));
+                    ArrayList item_descriptions = UI_GeneOligo.getByCloneId(clone_ids);
+                    request.setAttribute("processing_items", item_descriptions);
+                    request.setAttribute(Constants.JSP_TITLE,"gene specific Oligos ordered for Clone");
+                    return mapping.findForward("display_oligo_order_for_clone"); 
+                }
                 case Constants.PROCESS_RUN_DECISION_TOOL : //run decision tool
                 {
                     //get spec
