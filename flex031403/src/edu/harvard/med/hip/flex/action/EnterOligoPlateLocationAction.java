@@ -77,8 +77,18 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             current_platesetid = container.getPlatesetid();
             Plateset plateset = new Plateset(current_platesetid);
             platesetList.add(plateset);
+            System.out.println("platesetid is: "+ plateset.getId());
+            
             //oligo plates received may belong to more than one plateset
             while (iter.hasNext()){
+                // Set the location for the containers.
+                Location oligoPlateLocation = new Location("FREEZER"); //to be modified
+                container.setLocation(oligoPlateLocation);
+                int locationid = oligoPlateLocation.getId();
+                container.updateLocation(locationid, conn);
+                System.out.println("update the location for container: "+container.getLabel());
+                DatabaseTransaction.commit(conn);
+                
                 old_platesetid = current_platesetid;
                 container = (Container)iter.next();
                 current_platesetid = container.getPlatesetid();
@@ -86,16 +96,10 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
                 if (old_platesetid != current_platesetid){
                     plateset = new Plateset(current_platesetid);
                     platesetList.add(plateset);
+                    System.out.println("next platesetid is: "+ plateset.getId());
                 } //if
+                
             } //while
-            
-            // Set the location for the containers.
-            Location oligoPlateLocation = new Location("FREEZER"); //to be modified
-            container.setLocation(oligoPlateLocation);
-            int locationid = oligoPlateLocation.getId();
-            container.updateLocation(locationid, conn);
-            //System.out.println("update the location for container: "+container.getLabel());
-            DatabaseTransaction.commit(conn);
             
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
@@ -107,10 +111,11 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             //check plateset to see whether all of the oligo plates
             //belong to the same plateset have been received
             ListIterator iter = platesetList.listIterator();
+            System.out.println("Total plateset received: "+ platesetList.size());
             while (iter.hasNext()){
                 Plateset plateset = (Plateset)iter.next();
                 boolean complete = checkPlateset(plateset.getId());
-                //System.out.println("The plateset is ready for PCR: "+ complete);
+                
                 if (complete) {
                     System.out.println("inserting generate PCR plate queue...");
                     insertPCRQueue(plateset, conn);
