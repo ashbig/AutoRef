@@ -31,7 +31,10 @@
 	{
 		title = request.getAttribute( Constants.JSP_TITLE );
 	}
-
+int forwardName_int = 0;
+if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
+else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardName).intValue();
+System.out.println(forwardName_int);
 %>
    
     
@@ -61,6 +64,11 @@
   </table>
   </center>
 </div>
+
+
+<% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
+{%><form action="RunProcess.do" ><%}%>
+
 <% 
 
 ArrayList  oligo_calculations = (ArrayList) request.getAttribute("oligo_calculations");
@@ -83,7 +91,11 @@ String item_title = null;
 %>
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-<% for (int index = 0; index < items.size(); index ++)
+<%
+ 
+Hashtable ocalc_ids=new Hashtable();
+for (int index = 0; index < items.size(); index ++)
+
 {%>
  <tr><td colspan='2'>&nbsp;</td></tr>
   <TR>     <td height='29' width="30%"bgColor="#b8c6ed" >
@@ -94,15 +106,21 @@ String item_title = null;
     for (int oligo_c_count = 0; oligo_c_count < ol_per_item.size();oligo_c_count++)
     {
         OligoCalculation olc = (OligoCalculation) ol_per_item.get(oligo_c_count);
+
     %>
     <tr><td ><strong>Primer3 Specification: </strong></td>
 <td   ><strong>
 <a href="/BEC/Seq_GetSpec.do?forwardName=<%= olc.getPrimer3SpecId()  * Spec.SPEC_SHOW_SPEC %> "> <%= olc.getPrimer3SpecId()%></a></strong></td></TR>
     <tr> <td  ><strong>Reference Sequence Id: </strong></td>
 <td   ><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= olc.getSequenceId()%>','<%=olc.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= olc.getSequenceId()%></a></strong></td></TR>
-    <tr><td colspan='2'>
+ <% if ( ocalc_ids.containsKey(new Integer(olc.getId()) ))
+{%><tr><td colspan=2>See Primers above</td></tr><% continue;}%>  
+ <tr><td colspan='2'>
 <table border='1' cellpadding="2" cellspacing="2" width="100%" align=center>
 <Tr>
+<% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
+{%><th bgcolor="#1145A6" width="5%"><strong><font color="#FFFFFF"></font></strong></th><%
+}%>
 <th bgcolor="#1145A6" width="5%"><strong><font color="#FFFFFF">Name</font></strong></th>
 <th bgcolor="#1145A6" ><strong><font color="#FFFFFF">Sequence</font></strong></th>
 <th bgcolor="#1145A6" width="5%"><strong><font color="#FFFFFF">Tm</font></strong></th>
@@ -112,6 +130,7 @@ String item_title = null;
 <th bgcolor="#1145A6" width="25%"><strong><font color="#FFFFFF">Submission Type</font></strong></th>
 <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Submitter</font></strong></th>
 </tr>
+
     <%  
 String row_color = "bgColor='#e4e9f8'";
 for (int oligo_count = 0; oligo_count < olc.getOligos().size();oligo_count++)
@@ -123,6 +142,9 @@ for (int oligo_count = 0; oligo_count < olc.getOligos().size();oligo_count++)
             row_color = "bgColor='#b8c6ed'";
     %>
 <tr>
+<% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
+{%><td><input type=checkbox name=chkPrimer value=<%=ol.getId() %> <%if (ol.getStatus() != Oligo.STATUS_DESIGNED){%> checked disabled<%}%> ></td><%
+}%>
 <td  ><strong><% if ( ol.getName() != null){%> <%= ol.getName() %> <%}else{%> &nbsp; <%}%></td>
 
 <td  ><strong><%=ol.getSequence()%></strong></td>
@@ -136,11 +158,13 @@ for (int oligo_count = 0; oligo_count < olc.getOligos().size();oligo_count++)
     <%}%>
 </TABLE>
 </td></tr><tr><td colspan=2>&nbsp;</td></tr>
-<%}%>
+<%ocalc_ids.put(new Integer(olc.getId()), "");}%>
  
 <%}%>
 </TABLE>
-
+<% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
+{%><div align="center">  <p> <input type="submit" value="Submit" > </div>
+<input name="forwardName" type="hidden" value="<%= forwardName %>" > <%}%>
  
 </body>
 </html>
