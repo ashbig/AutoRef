@@ -52,6 +52,8 @@ public class DisplayPaperLinksAction extends MetageneAction{
         else{
             records = m.getMedlineRecords(disease_id, gene_index);            
         }
+        request.setAttribute("disease_name", disease_mesh_term);
+        request.setAttribute("gene_symbol", gene_symbol);
         request.setAttribute("medline_records", records);
         return (mapping.findForward("success"));                                              
                                       

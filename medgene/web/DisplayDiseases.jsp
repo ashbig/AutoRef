@@ -40,7 +40,9 @@
                 <bean:write name="association" property="stat.score"/>&nbsp
             </TD>
             <TD align="center">
-                <bean:write name="association" property="data.doublehit"/>&nbsp
+                <a href="DisplayPaperLinks.do?disease_id=<bean:write name="association" property="disease.id"/>&gene_index=<bean:write name="gene" property="index"/>
+&disease_mesh_term=<bean:write name="association" property="disease.term"/>&gene_symbol=<bean:write name="gene" property="index"/>" target="_blank">
+                <bean:write name="association" property="data.doublehit"/></a>&nbsp
             </TD>
         </tr>
     </logic:iterate> 

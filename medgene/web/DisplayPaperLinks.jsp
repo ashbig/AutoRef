@@ -12,6 +12,8 @@
 <h1>Selected Paper Links (PMID)</h1>
 </center>
 <p>
+    &nbsp;&nbsp;<b>Disease Mesh Term:</b>&nbsp;&nbsp;<bean:write name="disease_name"/><br>
+    &nbsp;&nbsp;<b>Gene Name:</b>&nbsp;&nbsp;<bean:write name="gene_symbol"/><br>
     <% String url = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids="; %>
     <ul>
     <logic:iterate id="paper" name="medline_records"> 

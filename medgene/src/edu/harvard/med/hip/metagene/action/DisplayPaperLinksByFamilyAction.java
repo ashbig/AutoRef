@@ -39,13 +39,17 @@ public class DisplayPaperLinksByFamilyAction extends MetageneAction{
                                          HttpServletRequest request, 
                                          HttpServletResponse response) 
                                          throws ServletException, IOException {
-
+                                             
+        //int disease_id = ((DisplayPaperLinksForm)form).getDisease_id();                                
+        //String gene_index = ((DisplayPaperLinksForm)form).getGene_index();
         String disease_mesh_term = ((DisplayPaperLinksForm)form).getDisease_mesh_term();
         String gene_symbol = ((DisplayPaperLinksForm)form).getGene_symbol();
         Vector records = new Vector();
                                       
         DiseaseGeneManager m = new DiseaseGeneManager();
         records = m.getMedlineRecordsByFamily(disease_mesh_term, gene_symbol);
+        request.setAttribute("disease_name", disease_mesh_term);
+        request.setAttribute("gene_symbol", gene_symbol);
         request.setAttribute("medline_records", records);
         return (mapping.findForward("success"));                                         
                                              

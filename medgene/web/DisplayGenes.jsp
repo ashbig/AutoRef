@@ -40,7 +40,7 @@
         <COL width="5%">
     <THEAD>
 
-    <TR bgcolor="gray">
+    <TR bgcolor="#cccccc">
         <TH>Rank</TH>
         <TH><A HREF="KeySearchTerm.jsp" target="_blank">Key Search Term</A></TH>
         <TH><A HREF="SearchType.jsp" target="_blank">Search Type</A></TH>
@@ -99,8 +99,16 @@
             <TD align="center">
                 <bean:write name="association" property="stat.score"/>&nbsp
             </TD>
+            
             <TD align="center">
-                <a href="DisplayPaperLinks.do?disease_id=<bean:write name="association" property="disease.id"/>&gene_index=<bean:write name="association" property="geneIndex.index"/>" >
+                <logic:equal  name="association" property="gene.type" value="GENE">
+                <a href="DisplayPaperLinks.do?disease_id=<bean:write name="association" property="disease.id"/>&gene_index=<bean:write name="association" property="geneIndex.index"/>
+&disease_mesh_term=<bean:write name="disease"/>&gene_symbol=<bean:write name="association" property="gene.symbol"/>" target="_blank">
+                </logic:equal>
+                <logic:equal name="association" property="gene.type" value="FAMILY">
+                <a href="DisplayPaperLinks.do?disease_id=<bean:write name="association" property="disease.id"/>&gene_index=<bean:write name="association" property="geneIndex.index"/>
+&disease_mesh_term=<bean:write name="disease"/>&gene_symbol=<bean:write name="association" property="gene.name"/>" target="_blank">
+                </logic:equal>
                 <bean:write name="association" property="data.doublehit"/></a>&nbsp
             </TD>
         </tr>
