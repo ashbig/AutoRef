@@ -20,21 +20,8 @@
 <html:errors/>
 
 <p>
-<html:form action="/SpecialOligoOrder.do" focus="isFullPlate"> 
-
-<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
-<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
-
-<dl>
-    <dt class="prompt">Is full plate required?
-        <dd><html:radio property="isFullPlate" value="true"/>Yes
-        <html:radio property="isFullPlate" value="false"/>No
-    <dt class="prompt">Group sequences into small, medium and large queues?
-        <dd><html:radio property="isGroupBySize" value="true"/>Yes
-        <html:radio property="isGroupBySize" value="false"/>No
-<dl>
-<html:submit/>
-</html:form>
+We are processing your oligo order. Please check the flexgene_manager account to
+get the order files.
 
 </body>
 </html:html>

@@ -22,16 +22,16 @@
 <p>
 <html:form action="/SpecialOligoOrder.do" focus="isFullPlate"> 
 
-<html:hidden property="projectid"/>
-<html:hidden property="workflowid"/>
+<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 
 <dl>
     <dt class="prompt">Is full plate required?
         <dd><html:radio property="isFullPlate" value="true"/>Yes
-        <dd><html:radio property="isFullPlate" value="false"/>No
+        <html:radio property="isFullPlate" value="false"/>No
     <dt class="prompt">Group sequences into small, medium and large queues?
         <dd><html:radio property="isGroupBySize" value="true"/>Yes
-        <dd><html:radio property="isGroupBySize" value="false"/>No
+        <html:radio property="isGroupBySize" value="false"/>No
 <dl>
 <html:submit/>
 </html:form>

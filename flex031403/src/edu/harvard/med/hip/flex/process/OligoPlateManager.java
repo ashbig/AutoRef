@@ -264,9 +264,6 @@ public class OligoPlateManager {
             
             DatabaseTransaction.rollback(conn);
         }
-        finally {
-            DatabaseTransaction.closeConnection(conn);
-        }
         
         fileList = plater.generateOligoOrderFiles();
     }
@@ -312,9 +309,8 @@ public class OligoPlateManager {
         } catch (Exception ex){
             DatabaseTransaction.rollback(conn);
             ex.printStackTrace();
-        }finally {
-            //   DatabaseTransaction.closeConnection(conn);
         }
+        
         System.out.println("Thread finished");
     }
     
