@@ -11,7 +11,7 @@ import edu.harvard.med.hip.flex.database.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.core.*;
-import edu.harvard.med.hip.flex.seqprocess.core.*;
+import edu.harvard.med.hip.flex.seqprocess.core.oligo.*;
 /**
  *
  * @author  htaycher
