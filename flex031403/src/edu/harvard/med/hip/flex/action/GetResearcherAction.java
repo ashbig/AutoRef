@@ -131,7 +131,7 @@ public class GetResearcherAction extends ResearcherAction{
             
             // Insert the process and process objects into database.
             process.insert(conn);
-            
+/*            
             // Remove the container from the queue.
             ContainerProcessQueue queue = new ContainerProcessQueue();
             queue.removeQueueItems(items, conn);
@@ -150,6 +150,9 @@ public class GetResearcherAction extends ResearcherAction{
                 }
                 queue.addQueueItems(newItems, conn);
             }
+*/
+            WorkflowManager manager = new WorkflowManager("ProcessPlateManager");
+            manager.processQueue(items, newContainers, protocol, conn);
             
             // Commit the changes to the database.
             DatabaseTransaction.commit(conn);
