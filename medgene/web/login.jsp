@@ -30,6 +30,17 @@
 <A><font size=3>5. The analyzed gene list from other disease related high-throughput experiments, such as micro-array</A></font><BR>
 <A><font size=3>6. The analyzed gene list from other gene related high-throughput experiments, such as micro-array</A></font><BR>
 <center>
+<br>&nbsp;
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td width="7%" valign="top"><font color="#FF0000"><b>Note:</b></font></td>
+    <td width="93%" valign="top">&nbsp;MedGene is freely available to all academic and
+      non-profit researchers. Commercial users are welcome and should contact
+      the Harvard OTL (Office of Technology Liscencing) at (617) 432-0922.</td>
+  </tr>
+</table>
+
+
     <html:form action="logon.do" focus="username" target="_top">
 <br><br>
         <table>
