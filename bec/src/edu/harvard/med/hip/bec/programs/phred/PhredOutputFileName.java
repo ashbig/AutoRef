@@ -94,7 +94,7 @@ public class PhredOutputFileName
     {
         String read_num ;
         
-      
+       m_filename = m_filename.toUpperCase();
         ArrayList arr = Algorithms.splitString( m_filename,  SEPARATOR);
         if (arr.size() != 5)
             throw new BecUtilException("Wrong file name.");
@@ -111,7 +111,7 @@ public class PhredOutputFileName
         {
             m_read_type = Read.TYPE_ENDREAD_REVERSE;
         }
-        else if (temp[0] == 'R' && temp[1] != '0') 
+        else if (temp[0] == 'F' && temp[1] != '0') 
         {
             m_read_type = Read.TYPE_INNER_FORWARD;
             m_read_num = getReadNumber(temp);
@@ -154,9 +154,10 @@ public class PhredOutputFileName
     
      public static void main(String args[])
     {
-        PhredOutputFileName p = new PhredOutputFileName("2799_c08_jljp_31414.3_ps-tk_054.abi");
+        try{
+        PhredOutputFileName p = new PhredOutputFileName("C:\\bio\\plate_analysis\\clone_samples\\1029\\114779\\chromat_dir\\7204_D11_1029_114779_F1.ab1",PhredOutputFileName.FORMAT_OURS);
         System.out.println( p.isWriteFileFormat(PhredOutputFileName.FORMAT_OURS));
-     
+        }catch(Exception e){}
         System.exit(0);
      }
    
