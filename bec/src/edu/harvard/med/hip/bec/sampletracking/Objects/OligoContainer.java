@@ -1,5 +1,5 @@
 /**
- * $Id: OligoContainer.java,v 1.3 2005-01-20 20:14:49 Elena Exp $
+ * $Id: OligoContainer.java,v 1.4 2005-02-10 18:05:29 Elena Exp $
  *
  * File     	: Container.java
 
@@ -31,7 +31,7 @@ public class OligoContainer
 {
   
     //for oligo containers
-    public static final int STATUS_ORDER_CREATED = 0;
+ //   public static final int STATUS_ORDER_CREATED = 0;
     public static final int STATUS_ORDER_SENT = 1;
     public static final int STATUS_RECIEVED = 2;
     public static final int STATUS_SENT_FOR_SEQUENCING = 3;
@@ -83,7 +83,7 @@ public class OligoContainer
     {
         switch(status)
         {
-            case STATUS_ORDER_CREATED: return "Created";
+            //case STATUS_ORDER_CREATED: return "Created";
             case STATUS_ORDER_SENT : return "Ordered";
             case STATUS_RECIEVED : return "Recieved";
             case STATUS_SENT_FOR_SEQUENCING: return "Used for sequencing";
