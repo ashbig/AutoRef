@@ -84,7 +84,7 @@ public class Yeast_CreateOligo
         Container cont_3p = null;
         ArrayList constructs = new ArrayList();
         Plateset plateset = null;
-        
+        int count1 = 0;
         //create plate location
         Location location = new Location(Location.CODE_UNAVAILABLE,Location.UNAVAILABLE, "");
         try
@@ -101,15 +101,44 @@ public class Yeast_CreateOligo
                     i++;
                 }
                 //create 2 oligo
-                 ol_5 = new Oligo( "OLIGO_5P", info[3],0.0);
-                 ol_3 = new Oligo( "OLIGO_3P",info[4],0.0);
-                 seq = new FlexSequence(Integer.parseInt(info[0]));
+                if (info[0].equals("0"))
+                {
+                
+                     ol_5 = new Oligo( "OLIGO_5P", "NNNNN", 0.0);
+                     ol_3 = new Oligo( "OLIGO_3P","NNNNN" , 0.0);
+                     Hashtable name = new Hashtable();
+                     name.put(FlexSequence.NAMETYPE, "SGD");
+                     name.put(FlexSequence.NAMEVALUE, info[5]);
+                     name.put(FlexSequence.NAMEURL, "");
+                     name.put(FlexSequence.DESCRIPTION, "");
+                     Vector publicInfo = new Vector();
+                     publicInfo.add(name);
+                     seq = new FlexSequence(-1, 
+                                "INPROCESS", 
+                                "Saccharomyces cerevisiae", 
+                                null, 
+                                "NNNNN", 0, 1, 0, 1, 
+                                publicInfo);
+                     seq.insert(m_conn);
+                }
+                else
+                {
+                    ol_5 = new Oligo( Integer.parseInt(info[3]) );
+                    ol_3 = new Oligo( Integer.parseInt(info[4]) );
+                   
+                    seq = new FlexSequence(Integer.parseInt(info[0]));
+                    
+                }
                  sequence = new Sequence(seq.getId(), seq.getCdsstart(), seq.getCdsstop());
                  int pairid = FlexIDGenerator.getID("pairid");
                  construct = new Construct(sequence, ol_5,ol_3, "CLOSED", 0, m_project, m_workflow);
                  constructs.add(construct);
-                 ol_3.insert(m_conn);
-                 ol_5.insert(m_conn);
+                 if (info[0].equals("0"))
+                 {
+                     ol_3.insert(m_conn);
+                     ol_5.insert(m_conn);
+                     
+                 }
                  construct.insert(m_conn);
                  insertProcessInputOutput(construct.getId(), sequence.getId());
                  //plate new plate?
@@ -144,8 +173,8 @@ public class Yeast_CreateOligo
                  cont_5p.addSample(ol5);
                  Sample ol3 = new Sample("OLIGO_3C", wellid, cont_3p.getId(), construct.getId(), ol_3.getOligoID(),"G");
                  cont_3p.addSample(ol3);
-                
-                 
+                System.out.println(info[0]);
+              
                 
             }
             if (cont_5p != null )
@@ -157,7 +186,7 @@ public class Yeast_CreateOligo
         }
         catch(Exception e)
         {
-            
+            System.out.println(e.getMessage());
             try
             {
                 in.close();
@@ -193,23 +222,17 @@ public class Yeast_CreateOligo
     private int getPosition( String well) 
     {
         int position = -1;
-        String row = well. substring(0,1);
+        well = well.toLowerCase();
+        int row = (int)well.charAt(0);
         int column = Integer.parseInt(well.substring(1));
         int a_value = (int) 'a';
         int first_char_value = 0;
         int second_char_value = 0;
         int row_value = 0;
                
-        first_char_value = (int)row.charAt(0) - a_value + 1;
-        if ( row.length() > 1) 
-        {
-            second_char_value = (int)row.charAt(1) - a_value + 1;
-            row_value = first_char_value * 27 + second_char_value;
-        }
-        else
-        {
-            row_value = first_char_value;
-        }
+        
+        row_value = row - a_value + 1;
+     
         return (column - 1) * 8 +  row_value ;
         
   
@@ -295,19 +318,48 @@ public class Yeast_CreateOligo
         Connection c = null;
         Project p = null;
         Workflow w = null;
-        String fname = "e:\\htaycher\\yeast\\oligoinfo.txt";
+        String fname = "e:\\htaycher\\yeast\\update_oligo_1-10.txt";
         InputStream input = null;
+         Yeast_CreateOligo rearrayer =null;
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
             int projectid = 2;
-            int workflowid = 10;
-            int protocolid = 40;
+            int workflowid = 11;
+         //   int protocolid = 40;
+            
+             input = new FileInputStream(fname);
+            rearrayer = new Yeast_CreateOligo(c,projectid, workflowid,input,"elena_taycher@hms.harvard.edu");
+           
+            rearrayer.readFile();c.commit();
+            System.out.println(1);
+            
+            fname = "e:\\htaycher\\yeast\\update_oligo-11-22.txt";
             input = new FileInputStream(fname);
-            Yeast_CreateOligo rearrayer = new Yeast_CreateOligo(c,projectid, workflowid,input,"elena_taycher@hms.harvard.edu");
+            rearrayer = new Yeast_CreateOligo(c,projectid, workflowid,input,"elena_taycher@hms.harvard.edu");
+                  rearrayer.readFile();c.commit();
+             System.out.println(2);
+             
+             fname = "e:\\htaycher\\yeast\\update_oligo_23-34.txt";
+            input = new FileInputStream(fname);
+            rearrayer = new Yeast_CreateOligo(c,projectid, workflowid,input,"elena_taycher@hms.harvard.edu");
+                    rearrayer.readFile();c.commit();
+             System.out.println(3);
+             /*
+             fname = "e:\\htaycher\\yeast\\update_oligo-35-50.txt";
+            input = new FileInputStream(fname);
+            rearrayer = new Yeast_CreateOligo(c,projectid, workflowid,input,"elena_taycher@hms.harvard.edu");
+              rearrayer.readFile();c.commit();
+             System.out.println("finished 4");
+             
+             fname = "e:\\htaycher\\yeast\\update_oligo-51.txt";
+            input = new FileInputStream(fname);
+            rearrayer = new Yeast_CreateOligo(c,projectid, workflowid,input,"elena_taycher@hms.harvard.edu");
            
             rearrayer.readFile();
+            //c.rollback();
+              **/
             c.commit();
         } catch (Exception ex)
         {
