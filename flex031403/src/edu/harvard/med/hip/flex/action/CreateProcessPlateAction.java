@@ -65,6 +65,10 @@ public class CreateProcessPlateAction extends FlexAction {
                 int protocolid = rs.getInt("PROTOCOLID");
                 String processname = rs.getString("PROCESSNAME");
                 String processcode = rs.getString("PROCESSCODE");
+                
+                if(Protocol.GENERATE_OLIGO_ORDERS.equals(processname))
+                    continue;
+                
                 Protocol p = new Protocol(protocolid, processcode, processname);
                 protocol.addElement(p);
             }

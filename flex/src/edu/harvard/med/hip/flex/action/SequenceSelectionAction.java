@@ -71,10 +71,9 @@ public class SequenceSelectionAction extends FlexAction {
             return (mapping.findForward("empty"));
         }
              
-        Vector goodSequences = new Vector();
         Vector newSequences = new Vector();
-        Hashtable badSequences = new Hashtable();
-        Hashtable sameSequence = new Hashtable();
+        Vector badSequences = new Vector();
+        Vector sameSequence = new Vector();
         Hashtable homologs = new Hashtable();
         Hashtable cdsMatchSequences = new Hashtable();
         Hashtable sequences = new Hashtable();
@@ -92,16 +91,17 @@ public class SequenceSelectionAction extends FlexAction {
                 
                     //if the sequence quality is questionable, put it aside.
                     if(FlexSequence.QUESTIONABLE.equals(sequence.getQuality())) {
-                        badSequences.put(gi, sequence);
+                        badSequences.addElement(sequence);
                     } else {
                         FlexSeqAnalyzer analyzer = new FlexSeqAnalyzer(sequence);
                         if(analyzer.findSame()) {
                             Vector sseqs = analyzer.getSameSequence();
-                            sameSequence.put(gi, sseqs);
-                            sequences.put(gi, sequence);
                             
                             //Add the new sequence information to the database.
                             ((FlexSequence)sseqs.elementAt(0)).addPublicInfo(sequence.getPublicInfo());
+                            sequence.setId(((FlexSequence)sseqs.elementAt(0)).getId());
+                            sameSequence.addElement(sequence);
+                            sequences.put(gi, sequence);
                         } else {
                             if(analyzer.findHomolog()) {
                                 Homologs h = new Homologs();
@@ -127,9 +127,9 @@ public class SequenceSelectionAction extends FlexAction {
                     }
                 } else {
                     if(FlexSequence.QUESTIONABLE.equals(sequence.getQuality())) {
-                        badSequences.put(gi, sequence);
+                        badSequences.addElement(sequence);
                     } else {
-                        goodSequences.addElement(sequence);
+                        sameSequence.addElement(sequence);
                         sequences.put(gi, sequence);
                     }
                 }
@@ -141,11 +141,6 @@ public class SequenceSelectionAction extends FlexAction {
                 request.setAttribute("newSequences", newSequences);
                 count++;
             }            
-            if(goodSequences.size() > 0) {
-                Collections.sort(goodSequences, new FlexSeqStatusComparator());
-                request.setAttribute("goodSequences", goodSequences);
-                count++;
-            }
             if(badSequences.size() > 0) {
                 request.setAttribute("badSequences", badSequences);
                 count++;
@@ -165,8 +160,8 @@ public class SequenceSelectionAction extends FlexAction {
             if(submittedSequences.size() > 0) {
                 request.setAttribute("submittedSequences", submittedSequences);
             }
-            if(goodSequences.size() > 0 || sameSequence.size() > 0 || cdsMatchSequences.size() > 0) {
-                request.setAttribute("displaySameSequence", "1");
+            if(cdsMatchSequences.size() > 0 || homologs.size() > 0) {
+                request.setAttribute("displayHomologs", "1");
             }
             
             request.getSession().setAttribute("sequences", sequences);
