@@ -23,16 +23,16 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  * @author  htaycher
  */
-public class RearrayForm extends ActionForm
+public class RearrayForm extends ProjectWorkflowProtocolForm
 {
     
-    private String        m_forwardName = null;
+   /* private String        m_forwardName = null;
     private int           m_projectid = -1;
     private int           m_workflowid = -1;
      private String        m_workflowname = null;
     private String        m_projectname = null;
     private String        m_processname = null;
-    
+    */
     private FormFile      m_rearrayFile = null;
     private   boolean       m_isPutOnQueue = true;
     private String         m_platetype = null;
@@ -75,7 +75,7 @@ public class RearrayForm extends ActionForm
     public void         setRequestFile(FormFile requestFile)   {      m_rearrayFile = requestFile;    }
     public FormFile     getRequestFile()                          {        return m_rearrayFile;    }
    
-    public void         setForwardName(String forwardName)            {        m_forwardName = forwardName;    }
+  /*  public void         setForwardName(String forwardName)            {        m_forwardName = forwardName;    }
     public String       getForwardName()                               {        return m_forwardName;    }
     
     public void         setWorkflowname(String name)    {        m_workflowname = name;    }
@@ -93,7 +93,7 @@ public class RearrayForm extends ActionForm
     public void         setWorkflowid(int workflowid)    {        m_workflowid = workflowid;    }
     public int          getWorkflowid()   {        return m_workflowid;    }
     
- 
+ */
     public void setIsFullPlate(boolean isFullPlate) {        m_isFullPlate = isFullPlate;    }
     public boolean getIsFullPlate() {        return m_isFullPlate;    }
  

@@ -14,7 +14,7 @@ import org.apache.struts.action.*;
  * @author  Wendy Mar
  * @version
  */
-public class ReceiveOligoOrdersForm extends ActionForm{
+public class ReceiveOligoOrdersForm extends ProjectWorkflowProtocolForm{
     public final static String DELIMITER = "\t\n\r\f, ";
     private String oligoPlateIds = null;
     private String receiveDate = null;
