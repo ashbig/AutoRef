@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2001-06-25 11:40:23 $
+ * $Revision: 1.7 $
+ * $Date: 2001-06-25 17:30:53 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -65,7 +65,7 @@ import edu.harvard.med.hip.flex.process.Result;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.6 $ $Date: 2001-06-25 11:40:23 $
+ * @version    $Revision: 1.7 $ $Date: 2001-06-25 17:30:53 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -200,7 +200,7 @@ public class SaveResultAction extends ResearcherAction {
              */
             Protocol nextProtocol = null;
             
-            if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.GENERATE_TRANSFORMATION_PLATES)) {
+            if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.PERFORM_TRANSFORMATION)) {
                 nextProtocol =
                 new Protocol(Protocol.GENERATE_AGAR_PLATES);
             } else if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.RUN_PCR_GEL)) {
@@ -211,7 +211,8 @@ public class SaveResultAction extends ResearcherAction {
                 request.setAttribute(Action.EXCEPTION_KEY,
                 new FlexProcessException("Protocol " +
                 queueItem.getProtocol().getProcessname() +
-                " not valid here"));
+                " not valid here\n"));
+                DatabaseTransaction.rollback(conn);
                 DatabaseTransaction.closeConnection(conn);
                 return retForward;
             }

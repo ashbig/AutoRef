@@ -2,9 +2,12 @@
 <%@ page language="java" %>
 <%@ page import="edu.harvard.med.hip.flex.*" %>
 <%@ page import="edu.harvard.med.hip.flex.core.*"%>
+<%@ page import="edu.harvard.med.hip.flex.process.*"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+
 
 <%-- Get the mode of this form, edit or ready only --%>
 <logic:present parameter="<%=Constants.FORM_MODE_KEY%>">
@@ -84,13 +87,13 @@
         <td>
             <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
                 <html:select property='<%="result["+ i++ +"]" %>'>
-                    <html:option value="Correct">Correct</html:option>
-                    <html:option value="Incorrect">Incorrect</html:option>
-                    <html:option value="Multiple with correct">Multiple with correct</html:option>
-                    <html:option value="Multiple without correct">Multiple without correct</html:option>
-                    <html:option value="No product">No product</html:option>
-                    <html:option value="Failed">Failed</html:option>
-                    <html:option value="Succeeded">Succeeded</html:option>
+                    <html:option value="<%=Result.CORRECT%>">Correct</html:option>
+                    <html:option value="<%=Result.INCORRECT%>">Incorrect</html:option>
+                    <html:option value="<%=Result.MUL_W_CORRECT%>">Multiple with correct</html:option>
+                    <html:option value="<%=Result.MUL_WO_CORRECT%>">Multiple without correct</html:option>
+                    <html:option value="<%=Result.NO_PRODUCT%>">No product</html:option>
+                    <html:option value="<%=Result.FAILED%>">Failed</html:option>
+                    <html:option value="<%=Result.SUCCEEDED%>">Succeeded</html:option>
                 </html:select>
              </logic:equal>
              
