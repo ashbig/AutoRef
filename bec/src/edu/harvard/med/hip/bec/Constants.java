@@ -163,6 +163,12 @@ public class Constants {
     public static final int            PROCESS_OBJECT_TYPE_CONTAINER = 0;
     public static final int            PROCESS_OBJECT_TYPE_CONSTRUCT = 2;
     public static final int            PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE = 3;
+   // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 4;
+   // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 5;
+   // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 6;
+     // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 7;
+     // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 8;
+    
     
     //read quality
     public static final int            NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION = 60;
@@ -209,15 +215,15 @@ public class Constants {
       public static final int PROCESS_APPROVE_INTERNAL_PRIMERS = 51;//approve internal primers
       public static final int PROCESS_RUN_PRIMER3= 52;//run primer3
     public static final int PROCESS_RUN_ASSEMBLER_FOR_ALL_READS = 53;//run assembly wrapper
-      public static final int PROCESS_RUNPOLYMORPHISM_FINDER= 54; //run polymorphism finder
-      public static final int PROCESS_RUN_DISCREPANCY_FINDER= 55;//run discrepancy finder
-      public static final int PROCESS_RUN_DECISION_TOOL = 56;//run decision tool
-      
-      public static final int PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 57;//run decision tool
-       public static final int PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
-      public static final int            PROCESS_ACTIVATE_CLONES = 59;
-       public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 60;
-       
+    public static final int PROCESS_RUNPOLYMORPHISM_FINDER= 54; //run polymorphism finder
+    public static final int PROCESS_RUN_DISCREPANCY_FINDER= 55;//run discrepancy finder
+    public static final int PROCESS_RUN_DECISION_TOOL = 56;//run decision tool
+
+    public static final int PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 57;//run decision tool
+    public static final int PROCESS_PUT_CLONES_ON_HOLD = 58; //put clones on hold
+    public static final int            PROCESS_ACTIVATE_CLONES = 59;
+    public static final int             PROCESS_SUBMIT_ASSEMBLED_SEQUENCE = 60;
+
        //62
        
     //items for display 1-40
@@ -227,22 +233,23 @@ public class Constants {
     public static final int LINKER_DEFINITION_INT = 2;
     public static final int PRIMER_DEFINITION_INT = 3;
     public static final int REFSEQUENCE_DEFINITION_INT = 4;
-      public static final int SPEC_DEFINITION_INT = 5;
-        public static final int CONTAINER_DEFINITION_INT = 6;
+    public static final int SPEC_DEFINITION_INT = 5;
+    public static final int CONTAINER_DEFINITION_INT = 6;
     public static final int CLONING_STRATEGY_DEFINITION_INT = 7;
-     public static final int CONTAINER_PROCESS_HISTORY = 8;
+    public static final int CONTAINER_PROCESS_HISTORY = 8;
     public static final int CLONE_SEQUENCE_DEFINITION_INT = 9;
     public static final int CONTAINER_RESULTS_VIEW = 10;
-     public static final int SCOREDSEQUENCE_DEFINITION_INT = 11;
-       public static final int ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT = 12;
+    public static final int SCOREDSEQUENCE_DEFINITION_INT = 11;
+    public static final int ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT = 12;
     public static final int READSEQUENCE_NEEDLE_ALIGNMENT_INT = 13;
     public static final int CONTAINER_ISOLATE_RANKER_REPORT = 14;
     public static final int SAMPLE_ISOLATE_RANKER_REPORT = 15;
     public static final int READ_REPORT_INT = 16;
-     public static final int AVAILABLE_VECTORS_DEFINITION_INT = 17;
-      public static final int AVAILABLE_LINKERS_DEFINITION_INT = 18;
-       public static final int CONSTRUCT_DEFINITION_REPORT = 19;
-       
+    public static final int AVAILABLE_VECTORS_DEFINITION_INT = 17;
+    public static final int AVAILABLE_LINKERS_DEFINITION_INT = 18;
+    public static final int CONSTRUCT_DEFINITION_REPORT = 19;
+    public static final int CLONE_SEQUENCE_DEFINITION_REPORT = 20;
+    
    
     
     
