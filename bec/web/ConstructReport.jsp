@@ -58,7 +58,7 @@
   </tr>
    <tr> 
     <td><strong>Reference Sequence Id:</strong></td>
-    <td> <a href="#" onCLick="window.open('<%= ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= construct.getRefSeqId()%>','newWndRefseqNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+    <td> <a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= construct.getRefSeqId()%>','newWndRefseqNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
       <%= construct.getRefSeqId()%></a> </td>
   </tr>
   

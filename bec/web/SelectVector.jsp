@@ -21,7 +21,7 @@ function fnShowVectorDetails()
    
    var vectorid = vectorid.options(vectorid.selectedIndex).value;
    alert(vectorid);
-    var r = "window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.VECTOR_DEFINITION_INT%>&amp;ID="+ vectorid +"','vectordetails','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes')";
+    var r = "window.open('<%=edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.VECTOR_DEFINITION_INT%>&amp;ID="+ vectorid +"','vectordetails','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes')";
 
 }
 -->

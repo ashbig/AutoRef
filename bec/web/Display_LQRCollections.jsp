@@ -11,7 +11,7 @@
 <%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
 <html>
 <head>
-<script language="JavaScript" src="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>scripts.js"></script>
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
 
  <title> <bean:message key="bec.name"/> : <%=Constants.JSP_TITLE%></title>
    
@@ -86,17 +86,17 @@ for (int index = 0; index < items.size(); index ++)
 {   %>
 
 <tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence Id: </strong></td>
-<td   ><a href="#" onCLick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= str_collection.getRefSequenceId()%>','<%= str_collection.getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= str_collection.getRefSequenceId()%></a></strong></td></TR>
+<td   ><a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= str_collection.getRefSequenceId()%>','<%= str_collection.getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= str_collection.getRefSequenceId()%></a></strong></td></TR>
 <tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Id: </strong></td>
-<td   ><a href="#" onCLick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <%= str_collection.getCloneSequenceId() %></a></strong></td></TR>
+<td   ><a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <%= str_collection.getCloneSequenceId() %></a></strong></td></TR>
 <tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Analysis Status: </strong></td>
 <td >&nbsp </td></tr>
 <tr> <td  ><strong>&nbsp;&nbsp; Clone Sequence Aligment: </strong></td>
 <td   >
-<input type=BUTTON value=Alignment onClick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId() %>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= str_collection.getRefSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"></td></tr>
+<input type=BUTTON value=Alignment onClick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= str_collection.getCloneSequenceId() %>&amp;TYPE=<%= BaseSequence.CLONE_SEQUENCE%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= str_collection.getRefSequenceId()%>','<%= str_collection.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"></td></tr>
 
 <tr> <td  ><strong>&nbsp;&nbsp; Specification for LQR definition: </strong></td>
-<td ><a href="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetSpec.do?forwardName=<%= str_collection.getSpecId() * Spec.SPEC_SHOW_SPEC %>" > <%= str_collection.getSpecId() %></a></strong></td></TR>
+<td ><a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%= str_collection.getSpecId() * Spec.SPEC_SHOW_SPEC %>" > <%= str_collection.getSpecId() %></a></strong></td></TR>
 <tr><td colspan='2'>&nbsp; </td></tr>
 <tr><td colspan='2'>
 <table width="90%" border="1" align="center" cellpadding="2" cellspacing="2">

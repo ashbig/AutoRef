@@ -111,7 +111,7 @@ Container container = (Container)request.getAttribute("container") ;
   <tr> 
     <td><strong>Cloning Strategy</strong></td>
     <td> 
-      <a href="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
+      <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
 	    <%= container.getCloningStrategyId() %></A>
     </td>
   </tr>
@@ -151,12 +151,12 @@ Container container = (Container)request.getAttribute("container") ;
 if ( forwardName == Constants.CONTAINER_RESULTS_VIEW)
 {
                 anchor = "<A HREF=\"\" onClick=\"window.open('"+
-edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION +"Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT + "&amp;ID="+ sample.getId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT + "&amp;ID="+ sample.getId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
 }
 if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateTrackingEngine() != null)
 {
    anchor = "<A HREF=\"\" onClick=\"window.open('"
-    + edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION 
+    + edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") 
     + "Seq_GetItem.do?forwardName="+ Constants.CONSTRUCT_DEFINITION_REPORT 
 		+ "&amp;ID="+ sample.getIsolateTrackingEngine().getConstructId()+"','"+sample.getIsolateTrackingEngine().getConstructId()+"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
 }
@@ -255,7 +255,6 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
         if (  cell_data[count][count_col] == null )
         {
             cell_data[count][count_col] = " <td class='nosample' style='border:solid 2px black' ><div align=center>" + ((count+1)+(count_col)* 8) +"</div></td>";
-  System.out.println(count+" "+count_col+" "+(count+1)*(count_col+1));                                  
         }%>
        <%= cell_data[count][count_col] %>
     <%}

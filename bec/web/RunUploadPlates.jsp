@@ -40,7 +40,7 @@
       <td width="100%"><html:errors/></td>
     </tr>
 	<tr>
-        <td><i>If you are not sure about certain settings, please, consult help</i> </i> <a href="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Help_PlateUploader.jsp">[parameter help file]</a>. 
+        <td><i>If you are not sure about certain settings, please, consult help</i> </i> <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Help_PlateUploader.jsp">[parameter help file]</a>. 
           </i></td>
       </tr>
   </table>

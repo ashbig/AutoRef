@@ -5,6 +5,8 @@
 
 
 <%@ page import="edu.harvard.med.hip.bec.*" %>
+
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <%@ page import="edu.harvard.med.hip.utility.*"%>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -120,7 +122,7 @@ else if ( forwardName_int == Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER)
 {%>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
 <tr><td>Please specify renaming file</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
-<%if ( !ApplicationHostDeclaration.IS_BIGHEAD) 
+<%if ( BecProperties.getInstance().isInDebugMode() ) 
 {%>
 
 <tr><td>Please specify directory where trace files are located</td><td><input type="text" name="inputdir" id="inputdir" value="">		</td></tr>
@@ -137,7 +139,7 @@ else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFIL
 {%>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
 <tr><td><b>Please specify maping file(format sequencing facility plate name&nbsp; &nbsp;&nbsp;FLEX label)</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
-<%if ( !ApplicationHostDeclaration.IS_BIGHEAD) 
+<%if ( BecProperties.getInstance().isInDebugMode() ) 
 {%>
 
 <tr><td><b>Please specify directory where trace files are located</td><td><input type="text" name="inputdir" id="inputdir" value="">		</td></tr>
@@ -146,9 +148,10 @@ else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFIL
 <td>
 <table border='0'>
 <tr><td>
-<input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> checked>Broad Institute
+<input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> >Broad Institute
 </td></tr><tr><td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC%> checked>HTMBC
 </td></tr><tr><td><input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD%> >Agencourt 
+</td></tr><tr><td><input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER%> >Kolodner 
 </td></tr></table>
 <tr><td>&nbsp;</td></tr>
 </td></tr>

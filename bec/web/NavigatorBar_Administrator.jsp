@@ -12,7 +12,7 @@
 <html>
 
 <head>
-<script language="JavaScript" src="<%= ApplicationHostDeclaration.JSP_REDIRECTION %>navcond.js"></script>
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>navcond.js"></script>
 <script language="JavaScript">
 
 /*
@@ -48,8 +48,8 @@ myNavBar1.addMenu(dhtmlMenu);
 	dhtmlMenu.addItem(new NavBarMenuItem("Polymorphism Finder", "Seq_EnterPolymorphismParameters.jsp"));
         dhtmlMenu.addItem(new NavBarMenuItem("Sequence Trimming Parameters", "Seq_EnterSlidingWindowParameters.jsp"));
 
-dhtmlMenu.addItem(new NavBarMenuItem("Available Vectors Information", "<%= ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_VECTORS_DEFINITION_INT%>"));
-dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "<%= ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_LINKERS_DEFINITION_INT%>"));
+dhtmlMenu.addItem(new NavBarMenuItem("Available Vectors Information", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_VECTORS_DEFINITION_INT%>"));
+dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_LINKERS_DEFINITION_INT%>"));
 	myNavBar1.addMenu(dhtmlMenu);
 
 
@@ -81,9 +81,9 @@ dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?fo
 dhtmlMenu.addItem(new NavBarMenuItem("Container Description", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_TITLE%>=container Description"));
 dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_TITLE%>=container Results"));
 dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "InitiateProcess.jsp?forwardName=<%=Constants.PROCESS_SHOW_CLONE_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=clone History"));
-dhtmlMenu.addItem(new NavBarMenuItem("Available Containers", "<%= ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_CONTAINERS_INT%>"));
+dhtmlMenu.addItem(new NavBarMenuItem("Available Containers", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_CONTAINERS_INT%>"));
 
-dhtmlMenu.addItem(new NavBarMenuItem("Run Report", "<%= ApplicationHostDeclaration.JSP_REDIRECTION %>/SelectReport.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("Run Report", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>/SelectReport.jsp"));
 
 
 myNavBar1.addMenu(dhtmlMenu);

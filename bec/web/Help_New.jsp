@@ -127,7 +127,6 @@
         <li>LQR Finder: report shows description of RNA discrepancies in report. 
         </li>
       </ul>
-      <br> <br>
-      12. General Report: bug fix: show all controls<br> <br></p>
-      </li> </li> </td>
+      
+    </td>
   </tr></table></body>

@@ -4,8 +4,8 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 <%@ page import="edu.harvard.med.hip.bec.action_runners.*" %>
 <%@ page import="edu.harvard.med.hip.bec.programs.assembler.*" %>
-
-
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
+<%@ page import="java.util.*" %>
  <%
 Object forwardName = null;
 if ( request.getAttribute("forwardName") != null)
@@ -69,13 +69,15 @@ additional_jsp_buffer.append("<table width='90%' border='0' cellspacing='2' cell
 additional_jsp_buffer.append("<tr> <td colspan='2'>&nbsp;<strong>For assembly process:</strong> </td> </tr>");
 additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Select what vectors to trim</td>");
 additional_jsp_buffer.append("<td><select NAME='isRunVectorTrimming' id='isRunVectorTrimming'>");
-additional_jsp_buffer.append("<option value='"+PhredPhrap.VECTOR_LIBRARY_NAME+"' selected> All available vectors");
-additional_jsp_buffer.append("<option value='"+PhredPhrap.VECTOR_LIBRARY_NAME_EMPTY+"' > No vector triming");
-additional_jsp_buffer.append("<option value='vector_pDonor221_altered.txt' > pDonor221 only");
-additional_jsp_buffer.append("<option value='pBY011_cleaned.txt' > pBY011 only");
-additional_jsp_buffer.append("<option value='pBY011_cleaned_201.txt' > pBY011 and pDONR201");
-additional_jsp_buffer.append("<option value='pDONR201_cleaned.txt' > pDonor201 only");
-additional_jsp_buffer.append("<option value='vector_pDonorDual_altered.txt' > pDonorDual only");
+
+String vector_file_path = null;String vector_name = null;
+for (Enumeration e = BecProperties.getInstance().getVectorLibraries().keys() ; e.hasMoreElements() ;)
+{
+	vector_name = (String) e.nextElement();
+	vector_file_path = (String)BecProperties.getInstance().getVectorLibraries().get(vector_name);
+	additional_jsp_buffer.append(" <OPTION VALUE='" + vector_file_path +"'>"+vector_name);
+}
+
 additional_jsp_buffer.append("</select></td> </tr>");
 additional_jsp_buffer.append("<tr> <td colspan='2'><strong> <input type='checkbox' checked name='all' id='all' onClick='isTrimm(this, this.checked)'>");
 additional_jsp_buffer.append(" Perform quality trimming:</strong></td> </tr>");
@@ -86,7 +88,7 @@ additional_jsp_buffer.append(" <td><input type = text value = 50 name='"+PhredPh
 additional_jsp_buffer.append(" </tr> <tr> <td>"+line_padding+"Last base to include</td> <td><input type = text value = 900 name='"+PhredPhrap.QUALITY_TRIMMING_LAST_BASE + "' ></td> </table>");
 
 
-		
+
 
 if ( forwardName_int ==  Constants.PROCESS_FIND_GAPS)
 {
@@ -99,24 +101,23 @@ break;
 
 
 
-            
-case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:{ break;}            
+
+case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:{ break;}
 case Constants.PROCESS_RUN_DISCREPANCY_FINDER:{ break;}
 
 case Constants.PROCESS_NOMATCH_REPORT:
-{ 
+{
 
 additional_jsp_buffer.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
 additional_jsp_buffer.append("<tr> <td>"+line_padding+"<strong>Database Name</strong></td>");
-additional_jsp_buffer.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> <OPTION VALUE='"+ BlastWrapper.getHumanDBLocation() +"'>" + BlastWrapper.HUMANDB_NAME );
-additional_jsp_buffer.append(" <OPTION VALUE='"+ BlastWrapper.getYeastDBLocation() +"'>");
-additional_jsp_buffer.append( BlastWrapper.YEASTDB_NAME);
-additional_jsp_buffer.append("<OPTION VALUE='"+ BlastWrapper.getPseudomonasDBLocation() +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
-additional_jsp_buffer.append("<OPTION VALUE='"+ BlastWrapper.getMGCDBLocation() +"'>"+ BlastWrapper.MGCDB_NAME );
-additional_jsp_buffer.append("<OPTION VALUE='"+ BlastWrapper.getYPDBLocation() +"'>"+ BlastWrapper.YPDB_NAME );
-additional_jsp_buffer.append("<OPTION VALUE='"+ BlastWrapper.getFTDBLocation()+"'>"+ BlastWrapper.FTDB_NAME );
-additional_jsp_buffer.append("<OPTION VALUE='"+ BlastWrapper.getClontechDBLocation()+"'>"+ BlastWrapper.ClontechDB_NAME );
-additional_jsp_buffer.append("<OPTION VALUE='"+ BlastWrapper.getNIDDKDBLocation()+"'>"+ BlastWrapper.NIDDKDB_NAME );
+additional_jsp_buffer.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> ");
+String dbpath = null;String dbname = null;
+for (Enumeration e = BecProperties.getInstance().getBlastableDatabases().keys() ; e.hasMoreElements() ;)
+{
+	dbname = (String) e.nextElement();
+	dbpath = (String)BecProperties.getInstance().getBlastableDatabases().get(dbname);
+	additional_jsp_buffer.append(" <OPTION VALUE='" + dbpath +"'>"+dbname);
+}
 additional_jsp_buffer.append("</SELECT></td> </tr>");
 additional_jsp_buffer.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
 additional_jsp_buffer.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
@@ -125,7 +126,7 @@ additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.GI +"'>"+ PublicI
 additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.PANUMBER +"'>"+ PublicInfoItem.PANUMBER );
 additional_jsp_buffer.append("<OPTION VALUE='"+ PublicInfoItem.SGD +"'>"+ PublicInfoItem.SGD );
 additional_jsp_buffer.append("</SELECT></td> </tr>");
-  additional_jsp = additional_jsp_buffer.toString();   
+  additional_jsp = additional_jsp_buffer.toString();
 break;}
 
 case Constants.PROCESS_RUN_PRIMER3 :
@@ -138,18 +139,23 @@ additional_jsp_buffer.append("<td ><div align='center'><em>The following paramet
 additional_jsp_buffer.append("Minimun distance between two stretches that should be combined ");
 additional_jsp_buffer.append("<input type='text' width=20 value=50 name='minDistanceBetweenStretchesToBeCombined'></td></tr>");
 
-  
+
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_NONE + "' checked>");
 additional_jsp_buffer.append("Is not to cover Low Quality Regions</td></tr>");
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+  PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR +"'>");
 additional_jsp_buffer.append("Is cover any Low Quality Regions</td></tr>");
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY +"'>");
 additional_jsp_buffer.append("Is cover only Low Quality Regions with discrepancies</td></tr>");
-additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS+"' disabled>");
+additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS+"' >");
 additional_jsp_buffer.append("Is cover only Regions with Discrepancies inside Low Quality Regions</td></tr>");
-additional_jsp = additional_jsp_buffer.toString();   
+additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY+"' >");
+additional_jsp_buffer.append("Is cover any Discrepancy inside Low Quality Regions</td></tr>");
+additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY+"' >");
+additional_jsp_buffer.append("Is cover only Low Quality Discrepancies inside Low Quality Regions</td></tr>");
+
+additional_jsp = additional_jsp_buffer.toString();
 isTryMode = true; break;}
- 
+
 
 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:
 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :
@@ -160,12 +166,16 @@ additional_jsp_buffer.append("<input type='radio' name='"+ PrimerDesignerRunner.
 additional_jsp_buffer.append("Display primers for Reference Sequence</strong> </td></tr><tr><td><strong>");
 additional_jsp_buffer.append("<input type='radio' name='"+PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE +"' value='"+ OligoCalculation.TYPE_OF_OLIGO_CALCULATION_STRETCH_COLLECTION +"'>");
 additional_jsp_buffer.append("Display primers for Stretch Collection</strong></td></tr><tr>");
-additional_jsp = additional_jsp_buffer.toString();  
+additional_jsp = additional_jsp_buffer.toString();
 
  break;
 }
 
-
+case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:
+    {
+        additional_jsp ="<tr><td ><i>Note:</i>No more than 20 clones per request!</td></tr>";
+        break;
+        }
 
 case Constants.PROCESS_CREATE_REPORT:{break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :{ break;}
@@ -177,7 +187,7 @@ case Constants.PROCESS_DELETE_CLONE_REVERSE_READ  :{  break;}
 case Constants.PROCESS_DELETE_CLONE_SEQUENCE: { break;}
 case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{ break;}
 case  Constants.PROCESS_DELETE_TRACE_FILES :{ break;}
-case  Constants.PROCESS_MOVE_TRACE_FILES  :{ break;}                 
+case  Constants.PROCESS_MOVE_TRACE_FILES  :{ break;}
 }
 if ( isTryMode )
 {

@@ -68,7 +68,7 @@ case Constants.PROCESS_RUN_END_READS_WRAPPER:{ isPlateLabel = true; isPlateLabel
 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:{ isPlateLabel = true; isPlateLabelChecked=true;break;}
 
 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{ isPlateLabel = true; isCloneId = true; isFLEXSequenceId = true;isPlateLabelChecked=true; isACESequenceId = true;break;}
-case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :{ isPlateLabel = true;isPlateLabelChecked=true;  isCloneId = true; isACESequenceId = true;break;}
+case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS :{ isCloneId = true; isCloneIdChecked= true;break;}//{ isPlateLabel = true;isPlateLabelChecked=true;  isCloneId = true; isACESequenceId = true;break;}
             
 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isACESequenceId = true;break;}            
 case Constants.PROCESS_RUN_DISCREPANCY_FINDER:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isACESequenceId = true;break;}
@@ -76,7 +76,7 @@ case Constants.PROCESS_RUN_DISCREPANCY_FINDER:{ isPlateLabel = true; isPlateLabe
 case Constants.PROCESS_NOMATCH_REPORT:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true;break;}
 
 case Constants.PROCESS_RUN_PRIMER3 :{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isFLEXSequenceId = true; isACESequenceId = true;break;}
- case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isFLEXSequenceId = true; isACESequenceId = true;break;}
+ case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:{ isCloneId = true; isCloneIdChecked= true;break;}//{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isFLEXSequenceId = true; isACESequenceId = true;break;}
 case Constants.PROCESS_CREATE_REPORT:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true;  isACESequenceId = true;break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :{ isPlateLabel = true;isPlateLabelChecked=true; break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :{ isCloneId = true; isCloneIdChecked= true; break;}
@@ -86,6 +86,7 @@ case Constants.PROCESS_DELETE_CLONE_FORWARD_READ :{ isPlateLabel = true;isPlateL
 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ  :{ isPlateLabel = true;isPlateLabelChecked=true; isCloneId = true;  break;}
 case Constants.PROCESS_DELETE_CLONE_SEQUENCE: { isCloneId = true; isCloneIdChecked= true;isACESequenceId = true;break;}
 case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{ isCloneId = true; isCloneIdChecked= true;break;}
+case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:{ isCloneId = true; isCloneIdChecked= true;break;}
 case  Constants.PROCESS_DELETE_TRACE_FILES :{ break;}
  case Constants.PROCESS_MOVE_TRACE_FILES  :{ break;}                    
 }

@@ -7,6 +7,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.user.*"%>
 <%@ page import="edu.harvard.med.hip.bec.Constants"%>
 
@@ -28,7 +29,9 @@
 <% 
 User user = (User)session.getAttribute(Constants.USER_KEY);
  boolean isAdmin = false;
- if (user.getUserGroup().equals("Administrator") )
+ boolean is_eval_version =  false;
+if (edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("IS_EVALUATION_VERSION") != null) is_eval_version = true;
+if (user.getUserGroup().equals("Administrator") )
 {
     isAdmin = true;
 }%>
@@ -97,7 +100,8 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       Run isolate ranker (settings required)</font></td>
   </tr>
 
-<% if (! edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+<% if (! is_eval_version )
+//edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
 {%>
   <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"><font color="#000080">&nbsp; 
@@ -152,7 +156,8 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
 <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Clone Evaluation</font></b></td>
 </tr>
-<% if (! edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+
+<% if (! is_eval_version)
 {%>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
@@ -208,11 +213,20 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> >
       View internal primers </font></td>
   </tr>
-<% if (! edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+  
+ <% if (! is_eval_version  )
+//edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
 {%>
+
+
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
+      <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID %> >
+      Review oligo order(s) for Clone<P></font></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
       Review oligo plate<P></font></td>
 </tr>
 <tr> 

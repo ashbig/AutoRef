@@ -104,14 +104,14 @@
  <%= IsolateTrackingEngine.getStatusAsString( clone.getCloneStatus () ) %> </td>
                 <td <%= row_color %> align="center">
                 <% if (clone.getSequenceId() > 0)
-                {%>	<a href="#" onCLick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+                {%>	<a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 		<%= clone.getSequenceId()%></a> <%}else{%>&nbsp; <%}%></td>
                 <td <%= row_color %> align="center">
              <% if ( clone.getSequenceId () > 0){ %> 
             <%=BaseSequence.getSequenceAnalyzedStatusAsString(clone.getSequenceAnalisysStatus ()) %> <%}else{%>&nbsp; <%}%></td>
                 <td  <%= row_color %> align="center">
  <% if (clone.getSequenceAnalisysStatus ()==BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES ){%>
-<input type=BUTTON value="Report"  onClick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<input type=BUTTON value="Report"  onClick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 <%}%> &nbsp;</td>
                 <td <%= row_color %> align="center"><% if ( clone.getCloneQuality() == -1){ %> &nbsp; 
 <%}else{%><%=BaseSequence.getSequenceQualityAsString(clone.getCloneQuality()) %> <%}%></td>

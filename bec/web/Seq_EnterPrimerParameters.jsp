@@ -109,8 +109,8 @@
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
-    <td colspan=2><div align="right"> <b> <a href="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetSpec.do?forwardName=<%=Spec.PRIMER3_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> "> 
-        View Mine </a>&nbsp;&nbsp;<a href="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetSpec.do?forwardName=<%=Spec.PRIMER3_SPEC_INT%>"> 
+    <td colspan=2><div align="right"> <b> <a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.PRIMER3_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> "> 
+        View Mine </a>&nbsp;&nbsp;<a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.PRIMER3_SPEC_INT%>"> 
         View All </a></b> </div>
       <p> 
       <p> 
@@ -130,26 +130,26 @@
           <td width="25%" valign="top" height="1" bgColor="#e4e9f8"> <font color="#000080"><b>Primer 
             Length (bp)</b></font></td>
           <td width="25%" height="1" bgColor="#e4e9f8"> <p><b>Min:</b> 
-              <input type="text" name="P_primer_min" size="20" value="18">
+              <input type="text" name="P_primer_min" size="20" value="18" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
           <td width="25%" height="1" bgColor="#e4e9f8"> <p><b>Opt:</b> 
-              <input type="text" name="p_primer_opt" size="20" value="21">
+              <input type="text" name="p_primer_opt" size="20" value="21" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
           <td width="25%" height="1" bgColor="#e4e9f8"> <p><b>Max:</b> 
-              <input type="text" name="p_primer_max" size="20" value="27">
+              <input type="text" name="p_primer_max" size="20" value="27" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
         </tr>
         <tr> 
           <td width="25%" height="26"  bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Primer 
             Tm (°C)</b></font></td>
           <td width="25%" height="26"  bgcolor="#b8c6ed"> <p><b>Min: </b> 
-              <input type="text" name="p_primer_tm_min" size="20" value="57">
+              <input type="text" name="p_primer_tm_min" size="20" value="57" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
           <td width="25%" height="26"  bgcolor="#b8c6ed"> <p><b>Opt:</b> 
-              <input type="text" name="p_primer_tm_opt" size="20" value="60">
+              <input type="text" name="p_primer_tm_opt" size="20" value="60" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
           <td width="25%" height="26"  bgcolor="#b8c6ed"> <p><b>Max:</b>&nbsp; 
-              <input type="text" name="p_primer_tm_max" size="20" value="63">
+              <input type="text" name="p_primer_tm_max" size="20" value="63" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
         </tr>
         <tr> 
@@ -193,7 +193,7 @@
       <font size="2"><b>(For a left primer, primer start position is the position 
       of the leftmost base)</b></font></font></td>
     <td width="43%" height="44"  bgcolor="#b8c6ed"> <p> 
-        <input type="text" name="p_upstream_distance_view"  onchange='onChangeValue(this, this.value)' size="20" value="100" id="p_upstream_distance_view">
+        <input type="text" name="p_upstream_distance_view"  onchange='onChangeValue(this, this.value)' size="20" value="100" id="p_upstream_distance_view" onBlur="checkNumeric(this,0,1000,'','','');">
         <input type="hidden" name="p_upstream_distance"  value="100" id="p_upstream_distance" >
         <strong>bases</strong></p></td>
   </tr>
@@ -202,7 +202,7 @@
       between 3p Universal Primer and STOP codon&nbsp;&nbsp; <font size="2">(For 
       a right primer, primer start position is the position of the rightmost base)&nbsp;&nbsp;</font></b></font></td>
     <td width="43%" height="44"bgColor="#e4e9f8"> <p> 
-        <input type="text" name="p_downstream_distance_view" size="20" value="100" id="p_downstream_distance_view" onchange='onChangeValue(this, this.value)'>
+        <input type="text" name="p_downstream_distance_view" size="20" value="100" id="p_downstream_distance_view" onchange='onChangeValue(this, this.value)' onBlur="checkNumeric(this,0,1000,'','','');">
         <input type="hidden" name="p_downstream_distance"  value="100" id="p_downstream_distance" onchange='onChangeValue(this, this.value)'>
         <strong>bases</strong></p></td>
   </tr>
@@ -210,21 +210,21 @@
     <td width="57%" height="44"  bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Estimated 
       high quality read length (ERL)</b></font></td>
     <td width="43%" height="44"  bgcolor="#b8c6ed"> <p> 
-        <input type="text" name="p_single_read_length" size="20" value="400">
+        <input type="text" name="p_single_read_length" size="20" value="400" onBlur="checkNumeric(this,0,1000,'','','');">
         <strong>bases</strong></p></td>
   </tr>
   <tr> 
     <td width="57%" height="3" bgColor="#e4e9f8" valign="top"><font color="#000080"><b>Window 
       size for testing primers</b></font></td>
     <td width="43%" height="3" bgColor="#e4e9f8"> <p> 
-        <input type="text" name="p_buffer_window_len" size="20" value="50">
+        <input type="text" name="p_buffer_window_len" size="20" value="50" onBlur="checkNumeric(this,0,1000,'','','');">
         <strong> bases</strong></p></td>
   </tr>
 <tr> 
     <td width="57%" height="3" bgColor="#b8c6ed" valign="top"><font color="#000080"><b>
 Distance between sequencing primer and start of high quality read length</b></font></td>
     <td width="43%" height="3" bgColor="#b8c6ed"> <p> 
-        <input type="text" name="P_EST_SEQ" size="20" value="50">
+        <input type="text" name="P_EST_SEQ" size="20" value="50" onBlur="checkNumeric(this,0,1000,'','','');">
         <strong>bases</strong></p></td>
   </tr>
   <tr> 

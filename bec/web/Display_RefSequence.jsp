@@ -49,7 +49,7 @@
  
   <TR> 
     <TD >Species:</td>
-    <td><%= refsequence.getSpeciesAsString()%></TD>
+    <td><%= edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getSpeciesName(refsequence.getSpecies())%></TD>
   </TR>
  
   <TR> 
