@@ -30,6 +30,10 @@
     <!-- Customer request form bean -->
     <form-bean      name="customerRequestForm"
                     type="edu.harvard.med.hip.flex.form.CustomerRequestForm"/>
+
+    <!-- Create process plate form bean -->
+    <form-bean      name="createProcessPlateForm"
+                    type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
    
   </form-beans>
 
@@ -121,6 +125,30 @@
                 type="edu.harvard.med.hip.flex.action.ProcessQueueAction">
         <forward name="success" path="/ProcessQueue.jsp"/>
     </action>
+
+    <!-- Process the protocol retieval and display -->
+    <action    path="/CreateProcessPlate"
+               type="edu.harvard.med.hip.flex.action.CreateProcessPlateAction">
+      <forward  name="success"   path="/SelectProtocol.jsp"/>
+    </action>  
+
+    <!-- Process the protocol selection -->
+    <action    path="/SelectProtocol"
+               type="edu.harvard.med.hip.flex.action.SelectProtocolAction"
+               name="createProcessPlateForm"
+               scope="session"
+               input="/SelectProtocol.jsp">
+      <forward  name="success"   path="/GetInput.jsp"/>
+    </action> 
+ 
+    <!-- Process the process plate creation (get input) -->
+    <action    path="/GetInput"
+               type="edu.harvard.med.hip.flex.action.GetInputAction"
+               name="createProcessPlateForm"
+               scope="request"
+               input="/GetInput.jsp">
+      <forward  name="success"   path="/CreatePlate.jsp"/>
+    </action>  
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
