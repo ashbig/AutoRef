@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.1 2003-03-07 17:44:52 dzuo Exp $
+ * $Id: Sample.java,v 1.2 2003-04-17 19:39:33 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -309,7 +309,9 @@ public class Sample {
         if(Protocol.GENERATE_SEQUENCING_GLYCEROL_PLATES.equals(processname))
             type = ISOLATE;
         
-        
+        if(Protocol.REARRAY_TO_DNA_TEMPLATE.equals(processname))
+            type = DNA;
+                
         return type;
     }
     
