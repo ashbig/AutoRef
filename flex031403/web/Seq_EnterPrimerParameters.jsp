@@ -17,10 +17,12 @@
 </head>
 
 <body background='background.gif'>
-<h2><bean:message key="flex.name"/> Set Parameters for Primer Calculation</h2>
+<h2><bean:message key="flex.name"/> : Set Parameters for Primer Calculation</h2>
 <hr>
 <p>&nbsp;</p><html:errors/>
-<html:form action="/Set_SubmitSpec.do" > 
+<html:form action="/Seq_SubmitSpec.do" > 
+
+<html:hidden property="forwardName" />
 <h3 >Create new set of primer picking parameters </h3>
 <i>If you are not sure about certain
 parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[parameter help file]</a>.</b>
@@ -40,18 +42,18 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
     <td width="25%" valign="top" height="1" background="barbkgde.gif">
         <b>Primer Length (bp)</b></td>
     <td width="25%" height="1" background="barbkgde.gif">
-        <p><b>Min:</b> <input type="text" name="primer_min" size="20" value="18"></p>
+        <p><b>Min:</b> <input type="text" name="P_primer_min" size="20" value="18"></p>
 
     </td>
     <td width="25%" height="1" background="barbkgde.gif">
  
      
-        <p><b>Opt:</b> <input type="text" name="primer_opt" size="20" value="21"></p>
+        <p><b>Opt:</b> <input type="text" name="p_primer_opt" size="20" value="21"></p>
   
     </td>
     <td width="25%" height="1" background="barbkgde.gif">
      
-        <p><b>Max:</b> <input type="text" name="primer_max" size="20" value="27"></p>
+        <p><b>Max:</b> <input type="text" name="p_primer_max" size="20" value="27"></p>
      
     </td>
   </tr>
@@ -60,16 +62,16 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       Tm (°C)</b></td>
     <td width="25%" height="26" background="barbkgde.gif">
  
-        <p><b>Min: </b><input type="text" name="primer_tm_min" size="20" value="57"></p>
+        <p><b>Min: </b><input type="text" name="p_primer_tm_min" size="20" value="57"></p>
      
     </td>
     <td width="25%" height="26" background="barbkgde.gif">
-  <p><b>Opt:</b> <input type="text" name="primer_tm_opt" size="20" value="60"></p>
+  <p><b>Opt:</b> <input type="text" name="p_primer_tm_opt" size="20" value="60"></p>
 
     </td>
     <td width="25%" height="26" background="barbkgde.gif">
     
-        <p><b>Max:</b>&nbsp; <input type="text" name="primer_tm_max" size="20" value="63"></p>
+        <p><b>Max:</b>&nbsp; <input type="text" name="p_primer_tm_max" size="20" value="63"></p>
     
     </td>
   </tr>
@@ -78,17 +80,17 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       GC%</b></td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
    
-        <p><b>Min:</b>&nbsp; <input type="text" name="primer_gc_min" size="20" value="30"></p>
+        <p><b>Min:</b>&nbsp; <input type="text" name="p_primer_gc_min" size="20" value="30"></p>
      
     </td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
     
-        <p><b>Opt:</b> <input type="text" name="primer_gc_opt" size="20" value="50"></p>
+        <p><b>Opt:</b> <input type="text" name="p_primer_gc_opt" size="20" value="50"></p>
 
     </td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
      
-        <p><b>Max:</b>&nbsp; <input type="text" name="primer_gc_max" size="20" value="70"></p>
+        <p><b>Max:</b>&nbsp; <input type="text" name="p_primer_gc_max" size="20" value="70"></p>
      
     </td>
   </tr>
@@ -107,7 +109,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       a left primer, primer start position is the position of the leftmost base)</b></font></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
      
-        <p><input type="text" name="upstream_distance" size="20" value="100">
+        <p><input type="text" name="p_upstream_distance" size="20" value="100">
         bases</p>
    
     </td>
@@ -119,7 +121,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       base)&nbsp;&nbsp;</font></b></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
  
-        <p><input type="text" name="downstream_distance" size="20" value="100">
+        <p><input type="text" name="p_downstream_distance" size="20" value="100">
         bases</p>
     
     </td>
@@ -129,7 +131,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       high quality read length (ERL)</b></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
      
-        <p><input type="text" name="single_read_length" size="20" value="400">
+        <p><input type="text" name="p_single_read_length" size="20" value="400">
         bases</p>
      
     </td>
@@ -139,7 +141,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       size for testing primers</b></td>
     <td width="50%" colspan="2" height="3" background="barbkgde.gif">
       
-        <p><input type="text" name="buffer_window_len" size="20" value="50">
+        <p><input type="text" name="p_buffer_window_len" size="20" value="50">
         bases</p>
      
     </td>
@@ -148,9 +150,9 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
     <td width="50%" colspan="2" height="3" align="center" valign="top" background="barbkgde.gif">
       <p align="left"><b>Number of strands to sequence</b></td>
     <td width="50%" colspan="2" height="3" align="center" valign="bottom" background="barbkgde.gif">
-         <p align="left"><input type="radio" value="0" name="number_of_strands">
+         <p align="left"><input type="radio" value="0" name="p_number_of_strands">
         <b>Single Strand</b> (Coding strand, forward primers)</p>
-        <p align="left"><input type="radio" name="number_of_strands" value="1" checked>
+        <p align="left"><input type="radio" name="p_number_of_strands" value="1" checked>
         <b>Both Strands</b>  (Both forward and reverse primers)</p>
       
     </td>
@@ -172,6 +174,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
 <HR>
 
 <% ArrayList sets = (ArrayList)request.getAttribute("specs");
+
    if (sets.size() > 0 )
   {
 %><h3>Available Sets </h3>
@@ -179,7 +182,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
     for (int count = 0; count < sets.size() ; count++)
     {
 	Primer3Spec spec = (Primer3Spec) sets.get(count);
-        
+ 
 	%>
 <P>
  <P> <font color="#2693A6" size="4"> <b>Set Name</b></font>
@@ -197,18 +200,18 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
     <td width="25%" valign="top" height="1" background="barbkgde.gif">
         <b>Primer Length (bp)</b></td>
     <td width="25%" height="1" background="barbkgde.gif">
-        <p><b>Min:</b><%= spec.getParameterByNameString("primer_min") %></p>
+        <p><b>Min:</b><%= spec.getParameterByNameString("p_primer_min".toUpperCase()) %></p>
 
     </td>
     <td width="25%" height="1" background="barbkgde.gif">
  
      
-        <p><b>Opt:</b> <%= spec.getParameterByNameString("primer_opt")%></p>
-  
+        <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_opt".toUpperCase())%></p>
+
     </td>
     <td width="25%" height="1" background="barbkgde.gif">
      
-        <p><b>Max:</b> <%= spec.getParameterByNameString("primer_max")%></p>
+        <p><b>Max:</b> <%= spec.getParameterByNameString("p_primer_max".toUpperCase())%></p>
      
     </td>
   </tr>
@@ -217,16 +220,16 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       Tm (°C)</b></td>
     <td width="25%" height="26" background="barbkgde.gif">
  
-        <p><b>Min: </b><%= spec.getParameterByNameString("primer_tm_min")%></p>
+        <p><b>Min: </b><%= spec.getParameterByNameString("p_primer_tm_min".toUpperCase())%></p>
      
     </td>
     <td width="25%" height="26" background="barbkgde.gif">
-  <p><b>Opt:</b> <%= spec.getParameterByNameString("primer_tm_opt")%></p>
+  <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_tm_opt".toUpperCase())%></p>
 
     </td>
     <td width="25%" height="26" background="barbkgde.gif">
     
-        <p><b>Max:</b><%= spec.getParameterByNameString("primer_tm_max")%></p>
+        <p><b>Max:</b><%= spec.getParameterByNameString("p_primer_tm_max".toUpperCase())%></p>
     
     </td>
   </tr>
@@ -235,17 +238,17 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       GC%</b></td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
    
-        <p><b>Min:</b><%= spec.getParameterByNameString("primer_gc_min")%></p>
+        <p><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></p>
      
     </td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
     
-        <p><b>Opt:</b> <%= spec.getParameterByNameString("primer_gc_opt")%></p>
+        <p><b>Opt:</b> <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></p>
 
     </td>
     <td width="25%" height="1" background="barbkgde.gif" valign="top">
      
-        <p><b>Max:</b>&nbsp; <%= spec.getParameterByNameString("primer_gc_max")%></p>
+        <p><b>Max:</b>&nbsp; <%= spec.getParameterByNameString("p_primer_gc_max".toUpperCase())%></p>
      
     </td>
   </tr>
@@ -264,7 +267,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       a left primer, primer start position is the position of the leftmost base)</b></font></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
      
-        <p><%= spec.getParameterByNameString("upstream_distance") %>
+        <p><%= spec.getParameterByNameString("p_upstream_distance".toUpperCase()) %>
         bases</p>
    
     </td>
@@ -276,7 +279,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       base)&nbsp;&nbsp;</font></b></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
  
-        <p><%= spec.getParameterByNameString("downstream_distance")%>
+        <p><%= spec.getParameterByNameString("p_downstream_distance".toUpperCase())%>
         bases</p>
     
     </td>
@@ -286,7 +289,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       high quality read length (ERL)</b></td>
     <td width="50%" colspan="2" height="44" background="barbkgde.gif">
      
-        <p><%= spec.getParameterByNameString("single_read_length")%>
+        <p><%= spec.getParameterByNameString("p_single_read_length".toUpperCase())%>
         bases</p>
      
     </td>
@@ -296,7 +299,7 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
       size for testing primers</b></td>
     <td width="50%" colspan="2" height="3" background="barbkgde.gif">
       
-        <p><%= spec.getParameterByNameString("buffer_window_len")%>
+        <p><%= spec.getParameterByNameString("p_buffer_window_len".toUpperCase())%>
         bases</p>
      
     </td>
@@ -305,7 +308,10 @@ parameter settings, leave them unchanged </i> <a href="helpPrimer3Param.htm">[pa
     <td width="50%" colspan="2" height="3" align="center" valign="top" background="barbkgde.gif">
       <p align="left"><b>Number of strands to sequence</b></td>
     <td width="50%" colspan="2" height="3" align="center" valign="bottom" background="barbkgde.gif">
-<% if ( spec.getParameterByNameInt("number_of_strands") ==1 )
+<% 
+
+	
+if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals("1") )
      { %>  <p><b>Single Strand</b> (Coding strand, forward primers)</p>
      <%}else{%>
         

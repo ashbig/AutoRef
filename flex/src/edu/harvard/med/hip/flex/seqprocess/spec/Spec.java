@@ -18,88 +18,118 @@ import edu.harvard.med.hip.flex.util.*;
 public abstract class Spec
 {
     private int m_id = -1;
-    private String m_name = null;
-    private String m_type = null;
-    private Hashtable m_params = null;
+    protected String m_name = null;
+    protected String m_type = null;
+    protected Hashtable m_params = null;
     
     /** Creates a new instance of EndReadsSpec */
   
     public Spec(Hashtable p, String na, String t) throws FlexDatabaseException
     {
         m_name = na;
+        m_params = new Hashtable();
         m_params = p;
         m_type = t;
         
     }
-    
+     public Spec(Hashtable p, String na, String t, int id) throws FlexDatabaseException
+    {
+        m_name = na;
+        m_params = new Hashtable();
+        m_params = p;
+        m_type = t;
+        m_id = id;
+    }
     
     public Spec(int id, String ts) throws FlexDatabaseException
     {
         m_id = id;
         m_type =ts;
         String sql = "select specname,spectype,specid from spec where specid = " + id;
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        ResultSet rs = t.executeQuery(sql);
         
+        ResultSet rs = null;
+        ResultSet rsl = null;
        
         String spec_name = null;
-        Hashtable params = new Hashtable();
+        String n = null;
+        int v = -1;
+        Hashtable m_params = new Hashtable();
         try
         {
-            while(rs.next())
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+              rs = t.executeQuery(sql);
+            if(rs.next())
             {
                 m_name = rs.getString("specname");
-                ResultSet rs1 = t.executeQuery("select paramname,paramvalue from spec_parameters where specid="+id);
-                while(rs1.next())
+                rsl = t.executeQuery("select paramname,paramvalue from spec_parameters where specid="+id);
+                while(rsl.next())
                 {
-                    m_params.put(rs1.getString("paramname"), rs1.getString("paramvalue"));
+                  //  n = rs1.getString("paramname");
+                  //  v = rs1.getInt("paramvalue");
+                  //  m_params.put(n,String.valueOf(v));
+                    m_params.put(rsl.getString("paramname"), String.valueOf(rsl.getInt("paramvalue") ));
+             
                 }
                
             }
-          
-            
-        } catch(SQLException sqlE)
+         
+        } catch(Exception sqlE)
         {
+            System.out.println(sqlE.getMessage());
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rsl);
         }
     }
     
     
     public void insert(Connection conn) throws FlexDatabaseException
     {
-        if (m_id != -1) 
-            m_id = FlexIDGenerator.getID("specid");
+        if (m_id == -1)
+                m_id = FlexIDGenerator.getID("specid");
+        
+         cleanup_parameters();
+     
         Statement stmt = null;
-        String key = null; Integer val = null;
+        PreparedStatement pstmt = null;
+        String key = null; int val = -1;
         String sql = "INSERT INTO spec (specid, specname, spectype)"+
         " VALUES(" + m_id + ",'" + m_name +"','" + m_type + "')";
-        
+        System.out.println(sql);
         try
         {
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
            
             Enumeration e = m_params.keys();
+            sql = "INSERT INTO spec_parameters (specid, paramname, paramvalue)"+
+                    " VALUES(" + m_id + ",?,?)";
             while (e.hasMoreElements())
             {
+               
                 key = (String)e.nextElement();
-                val = (Integer)m_params.get(key);
-                try{
-                    sql = "INSERT INTO spec_parameters (specid, paramname, paramvalue)"+
-                    " VALUES(" + m_id + ",'" + key.toUpperCase() +"','" + val + "')";
-                   stmt.executeUpdate(sql);
-                }
-                catch(Exception ee)                {}
+                val = Integer.parseInt( (String)m_params.get(key));
+            System.out.println(key+"_"+val);
+                //    sql = "INSERT INTO spec_parameters (specid, paramname, paramvalue)"+
+                  //  " VALUES(" + m_id + ",'" + key.toUpperCase() +"','" + val + "')";
+                   //stmt.executeUpdate(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.setString(1, key.toUpperCase());
+                    pstmt.setInt(2, val);
+                
+                    DatabaseTransaction.executeUpdate(pstmt);
+              
             }
-        } catch (SQLException sqlE)
+        } catch (Exception sqlE)
         {
+            System.out.println(sqlE.getMessage());
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally
         {
             DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeStatement(pstmt);
         }
     } //insertSpec group
     
@@ -130,11 +160,11 @@ public abstract class Spec
                     params.put(rs1.getString("paramname"), rs1.getString("paramvalue"));
                 }
                 if (spec_type.equals(EndReadsSpec.END_READS_SPEC))
-                    specs.add(new EndReadsSpec(params, spec_name) );
+                    specs.add(new EndReadsSpec(params, spec_name, spec_id) );
                  else if (spec_type.equals(FullSeqSpec.FULL_SEQ_SPEC))
-                    specs.add(new FullSeqSpec(params, spec_name) );
+                    specs.add(new FullSeqSpec(params, spec_name, spec_id) );
                 else if (spec_type.equals(Primer3Spec.PRIMER3_SPEC))
-                    specs.add(new Primer3Spec(params, spec_name) );
+                    specs.add(new Primer3Spec(params, spec_name, spec_id) );
             }
             return specs;
             
@@ -161,22 +191,8 @@ public abstract class Spec
         return (String)m_params.get(param_name);
     }    
     
-    
-    //-------------------- mani -----------------------
-     public static void main(String [] args) {
-        Connection c = null;
-        int oligoid = 1;
-        
-        try {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            c = t.requestConnection();
-           ArrayList a = Spec.getAllSpecs(EndReadsSpec.END_READS_SPEC);
-        }
-        catch(Exception e)
-        {}
-        System.exit(0);
-     }
-     
-        
+    //---------------------------
+     protected abstract void cleanup_parameters()   ;
+   
 }
 

@@ -62,17 +62,12 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
             {
                 String name=(String)requestNames.nextElement();
                 String value=(String)request.getParameter(name);
-                if ( !name.equalsIgnoreCase("submit") && !name.equalsIgnoreCase("set_name") ||
-                    !name.equalsIgnoreCase("forwardName")  )
-                {    
-                    params.put( name, value);
-                    System.out.println(name.toUpperCase());
-                }
+             
+                params.put( name.toUpperCase(), value);
                 if (name.equalsIgnoreCase("SET_NAME")) spec_name = value;
             }
 
-             System.out.println(spec_name);
-            
+                
             if ( forwardName.equals(EndReadsSpec.END_READS_SPEC) )
             {
                 EndReadsSpec spec = new EndReadsSpec(params, spec_name);
@@ -114,8 +109,9 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                 
                 created_spec = "Spec type: UNIVERSAL OLIGO PAIR \nSet Name: "+spec_name;
                 olp.insert(conn);  
-                conn.commit();
+               
             }
+            conn.commit();
             request.setAttribute("created_spec", created_spec);                 
             return (mapping.findForward("success"));
         }

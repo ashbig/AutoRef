@@ -18,7 +18,7 @@ import edu.harvard.med.hip.flex.util.*;
 public class FullSeqSpec extends Spec
 {
     public static final String FULL_SEQ_SPEC = "FULL_SEQ_SPEC";
-    
+    public static final int FULL_SEQ_SPEC_INT = 1;
     
     /** Creates a new instance of EndReadsSpec */
    
@@ -26,6 +26,12 @@ public class FullSeqSpec extends Spec
     {
          super( p,  na, FULL_SEQ_SPEC);
     }
+    
+     public FullSeqSpec(Hashtable p, String na,int id) throws FlexDatabaseException
+    {
+         super( p,  na, FULL_SEQ_SPEC,id);
+    }
+     
     public FullSeqSpec(int id) throws FlexDatabaseException
     {
          super( id, FULL_SEQ_SPEC);
@@ -37,4 +43,27 @@ public class FullSeqSpec extends Spec
      {
          return getAllSpecs(FULL_SEQ_SPEC);
      }
+     
+     protected void cleanup_parameters()
+     {
+           String k = null;
+         
+         for (Enumeration e = m_params.keys() ; e.hasMoreElements() ;)
+         {
+                k = (String)e.nextElement();
+             
+                if ( k.length() < 4)
+               {
+                   m_params.remove(k);
+                   continue;
+               }
+                if (! k.substring(0,3).toUpperCase().equalsIgnoreCase("FS_") )
+                {
+                    m_params.remove(k);
+                    
+                }
+                
+         }
+     }
+     
 }
