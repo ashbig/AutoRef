@@ -130,6 +130,10 @@
     <form-bean      name="uploadAgarResultsForm"
                     type="edu.harvard.med.hip.flex.form.UploadAgarResultsForm"/>
 
+    <!-- Form used to import MGC master clone list -->
+    <form-bean      name="mgcCloneInfoImportForm"
+                    type="edu.harvard.med.hip.flex.form.MgcCloneInfoImportForm"/>
+
     </form-beans>
     
    
@@ -154,7 +158,7 @@
     <forward    name="importSequence" path="/GetProjects.do?forwardName=IMPORT_SEQUENCES"/>
     <forward    name="addResearcher" path="/AddResearcher.jsp"/>
     <forward    name="mgcPlateHandle" path="/GetProjects.do?forwardName=MGC_PLATE_HANDLE"/>
-    <forward    name="importMGCMaster" path="/ImportMGCMaster.jsp"/>
+    <forward    name="importMGCMaster" path="/ImportMgcCloneList.jsp"/>
     <forward    name="requestMGC" path="/RequestMGC.jsp"/>
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>
     
@@ -683,6 +687,15 @@
             input="/SaveContaierDetail.jsp">
       <forward name="success" path="/SaveContainerInfo.jsp"/>
       <forward name="fail" path="/SaveContainerInfoFail.jsp"/>
+    </action>
+
+    <!-- Action mapping for MGC master clone list import -->
+    <action path="/ImportMgcCloneInfo"
+            type="edu.harvard.med.hip.flex.action.ImportMgcCloneInfoAction"
+            name="mgcCloneInfoImportForm"
+            scope="request"
+            input="/ImportMgcCloneList.jsp">
+      <forward name="proccessing" path="/overview.jsp"/>
     </action>
 
     <!-- Export container detail information to a file -->
