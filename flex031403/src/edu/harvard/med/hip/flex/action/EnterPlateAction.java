@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2001-06-21 16:31:45 $
+ * $Revision: 1.11 $
+ * $Date: 2001-06-29 17:02:01 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.10 $ $Date: 2001-06-21 16:31:45 $
+ * @version    $Revision: 1.11 $ $Date: 2001-06-29 17:02:01 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -146,7 +146,7 @@ public class EnterPlateAction extends ResearcherAction {
         // Find the right process
         Process process = null;
         try {
-            process = Process.findProcess(container,protocol);
+            process = Process.findCompleteProcess(container,protocol);
         } catch (FlexDatabaseException fde) {
             request.setAttribute(Action.EXCEPTION_KEY, fde);
             return mapping.findForward("error");
