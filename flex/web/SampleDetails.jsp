@@ -24,32 +24,75 @@
 <html>
 <head><title>Sample Details</title></head> 
 <body>
-<h2>Sample <bean:write name="sample" property="id"/></h2>
-<br>
+<h2>Sample ID <bean:write name="sample" property="id"/></h2>
+
 <table>
+<h3>Sample details</h3>
 <tr>
-    <th>sequence</th>
+    <th>Sequence</th>
     <td>
         <flex:linkFlexSequence sequenceName="sequence">
             <bean:write name="sequence" property="id"/>
         </flex:linkFlexSequence>
 
     </td>
-    <th>container</th>
+    
+    <th>Type</th>
+    <td><bean:write name="sample" property="type"/></td>
+    
+    <th>Status</th>
+    <td><bean:write name="sample" property="status"/></td>
+    
+    <th>Container</th>
     <td>
-       <%--  <flex:linkContainer name="container">
+        <flex:linkContainer name="container" process="process">
             <bean:write name="container" property="label"/>
         </flex:linkContainer>
---%>
+
     </td>
-</tr>
-<tr>
-    <th>
-    </th>
-    <td>
-    </td>
+    
+    <logic:notEqual name="sample" property="constructid" value="-1">
+        <th>Construct</th>
+        <td><bean:write name="sample" property="constructid"/></td>
+    </logic:notEqual>
+
+    <logic:notEqual name="sample" property="oligoid" value="-1">
+        <th>Oligo</th>
+        <td><bean:write name="sample" property="oligoid"/></td>
+    </logic:notEqual>
+
+    <th>Well</th>
+    <td><bean:write name="sample" property="position"/></td>
 </tr>
 </table>
+ <h3>Result for Protocol 
+        <bean:write name="process" property="protocol"/>
+ </h3>
+<logic:present name="result">
+    <bean:write name="result" property="value"/>
+    <%-- No go through and display the files --%>
+    <table>
+        <tr>
+        <th>File Type</th>
+        <th>File</th>
+        </tr>
+    <logic:iterate name="result" property="fileReferences" id="fileRef">
+        <tr>
+            <td><bean:write name="fileRef" property="fileType"/></td>
+            <td>
+                <html:link page='<%="/"+fileRef.toString()%>'>
+                    <bean:write name="fileRef" property="baseName"/>
+                </html:link>    
+            </td>
+        </tr>
+    </logic:iterate>
+    </table>
+</logic:present>
+
+<logic:notPresent name="result">
+    No results for this protocol
+</logic:notPresent>
+
 
 </body>
 </html>

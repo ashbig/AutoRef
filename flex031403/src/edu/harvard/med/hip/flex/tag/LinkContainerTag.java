@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-29 19:12:31 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.3 $
+ * $Date: 2001-07-09 22:17:18 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -57,8 +57,8 @@ import org.apache.struts.util.*;
 /**
  * Link to a container detail page.
  *
- * @author $Author: dongmei_zuo $
- * @version $Revision: 1.2 $ $Date: 2001-06-29 19:12:31 $
+ * @author $Author: jmunoz $
+ * @version $Revision: 1.3 $ $Date: 2001-07-09 22:17:18 $
  */
 
 public class LinkContainerTag extends TagSupport {
@@ -219,7 +219,7 @@ public class LinkContainerTag extends TagSupport {
             url.append(container.getId());
             
         }
-        if(process!=null || process.length() >0) {
+        if(process!=null && process.length() >0) {
             Process processObj = null;
             try {
                processObj=(Process)RequestUtils.lookup(pageContext,this.process, 

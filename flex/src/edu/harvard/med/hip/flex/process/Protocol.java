@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.9 2001-06-21 14:42:27 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.10 2001-07-09 22:17:18 jmunoz Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -63,11 +63,43 @@ public class Protocol {
      * Constructor.
      *
      * @param id The protocol id.
-     *
-     * @return The Protocol object.
      */
-    public Protocol(int id) {
-        this.id = id;
+    public Protocol(int id) throws FlexDatabaseException {
+           String sql = "select protocolid, processcode, processname " +
+        "from processprotocol " +
+        "where protocolid = '" + id +"'";
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        // only one result should be returned if any
+        //Vector protocolVect = t.executeSql(sql);
+        CachedRowSet protocolRowSet = t.executeQuery(sql);
+        // only one protocol should be found
+        if(protocolRowSet.size() == 1) {
+            
+            try {
+                protocolRowSet.next();
+                
+        /*
+         * if a record is found, assign values to the object
+         * and find the sub protocols
+         */
+                
+                this.id = protocolRowSet.getInt("PROTOCOLID");
+                
+                this.processcode = protocolRowSet.getString("PROCESSCODE");
+                this.processname = protocolRowSet.getString("PROCESSNAME");
+            } catch(SQLException sqlE) {
+                throw new FlexDatabaseException("Cannot initialize protocol with process name: "+processname+"\n"+sqlE+"\nSQL: "+sql);
+            } finally {
+                DatabaseTransaction.closeResultSet(protocolRowSet);
+            }
+            
+            this.processname = processname;
+            
+            populateSubProtocols();
+        } else {
+            throw new FlexDatabaseException("No database record found for " + id);
+        }
     }
     
     /**
@@ -99,7 +131,7 @@ public class Protocol {
      * @exception FlexDatabaseException
      */
     public Protocol(String processname) throws FlexDatabaseException {
-        String sql = "select protocolid, processcode " +
+        String sql = "select protocolid, processcode, processname " +
         "from processprotocol " +
         "where processname = '" + processname +"'";
         
@@ -121,11 +153,13 @@ public class Protocol {
                 this.id = protocolRowSet.getInt("PROTOCOLID");
                 
                 this.processcode = protocolRowSet.getString("PROCESSCODE");
+                this.processname = protocolRowSet.getString("PROCESSNAME");
             } catch(SQLException sqlE) {
                 throw new FlexDatabaseException("Cannot initialize protocol with process name: "+processname+"\n"+sqlE+"\nSQL: "+sql);
             } finally {
                 DatabaseTransaction.closeResultSet(protocolRowSet);
             }
+            
             this.processname = processname;
             
             populateSubProtocols();
@@ -181,7 +215,7 @@ public class Protocol {
      * @return The process name.
      */
     public String getProcessname() {
-        return processname;
+        return this.processname;
     }
     
     /**
@@ -191,6 +225,15 @@ public class Protocol {
      */
     public Vector getSubprotocol() {
         return subprotocol;
+    }
+    
+    /**
+     * string representation of protocol.
+     *
+     * @return processname of the protocol
+     */
+    public String toString() {
+        return this.processname;
     }
     
     public static void main(String [] args) throws Exception {

@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.26 2001-07-09 16:35:18 wenhong_mar Exp $
+ * $Id: Process.java,v 1.27 2001-07-09 22:17:18 jmunoz Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -111,7 +111,7 @@ public class Process {
      */
     public static Process findProcess(int executionId)
     throws FlexDatabaseException, FlexProcessException{
-        String sql = "Select * from processexecution";
+        String sql = "Select * from processexecution where executionid="+executionId;
         ResultSet rs = DatabaseTransaction.getInstance().executeQuery(sql);
         Process retProcess = null;
         try {

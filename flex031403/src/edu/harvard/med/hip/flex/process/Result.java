@@ -47,8 +47,8 @@ import edu.harvard.med.hip.flex.util.*;
 /**
  * Represents the result of a process execution for a sample.
  *
- * @author     $Author: wenhong_mar $
- * @version    $Revision: 1.12 $ $Date: 2001-07-05 11:24:07 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.13 $ $Date: 2001-07-09 22:17:18 $
  */
 
 public class Result {
@@ -103,6 +103,23 @@ public class Result {
      * @param value The value of the result.
      */
     public Result(Process process, Sample sample, String type, String value) {
+        this.process = process;
+        this.sample = sample;
+        this.type = type;
+        this.value= value;
+    }
+    
+     /**
+     * Constructor.
+     * 
+     * @param id The id of the result
+     * @param process The process used to generate this result.
+     * @param result The sample used to generate this result.
+     * @param type The type of the result.
+     * @param value The value of the result.
+     */
+    public Result(int id, Process process, Sample sample, String type, String value) {
+        this.id = id;
         this.process = process;
         this.sample = sample;
         this.type = type;
@@ -185,7 +202,7 @@ public class Result {
     throws FlexDatabaseException {
         Result result = null;
         String sql=
-        "select r.resulttype as type, r.resultvalue as value " +
+        "select r.resultid,r.resulttype as type, r.resultvalue as value " +
         "from result r, sample s, processexecution p " +
         "WHERE r.sampleid = s.sampleid " +
         "AND r.executionid = p.executionid " +
@@ -207,7 +224,8 @@ public class Result {
             if(rs.next()) {
                 String type = rs.getString("TYPE");
                 String value = rs.getString("VALUE");
-                result = new Result(process, sample, type, value);
+                int resultId = rs.getInt("RESULTID");
+                result = new Result(resultId, process, sample, type, value);
             }
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
@@ -261,6 +279,17 @@ public class Result {
      */
     public String toString() {
         return this.value;
+    }
+    
+    public static void main (String [] args) throws Exception {
+        Result test = Result.findResult(new Sample(30702), Process.findProcess(1));
+        System.out.println("result id: " + test.getId());
+        List list = test.getFileReferences();
+        Iterator iter =list.iterator();
+        System.out.println("list has " + list.size() + " elements");
+        while(iter.hasNext()) {
+            System.out.println(iter.next());
+        }
     }
 } // End class Result
 
