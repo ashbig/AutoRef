@@ -302,7 +302,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
                  +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid "
-                 +"  and i.isolatetrackingid (select isolatetrackingid from flexinfo where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
+                 +"  and i.isolatetrackingid in (select isolatetrackingid from flexinfo where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+"))";
             }
             case  Constants.ITEM_TYPE_PLATE_LABELS :
             {
