@@ -468,7 +468,7 @@ public class RefSequence extends BaseSequence
     
   
     
-    public static RefSequence findSequenceByGi(int gi)
+    public static RefSequence findSequenceByTheoreticalInfo(String info_type, String info_value, boolean isIncludePublicInfo)
     {
         RefSequence seq = null;
         DatabaseTransaction t = null;
@@ -478,14 +478,13 @@ public class RefSequence extends BaseSequence
         {
             t = DatabaseTransaction.getInstance();
             
-            String sql = "select sequenceid, nametype, namevalue\n"+
-            "from name where nametype='GI' and namevalue='"+gi+"'";
+            String sql = "select sequenceid from name where nametype='"+info_type+"' and namevalue='"+info_value+"'";
             crs = t.executeQuery(sql);
             
             if(crs.next())
             {
                 int id = crs.getInt("SEQUENCEID");
-                seq = new RefSequence(id);
+                seq = new RefSequence(id, isIncludePublicInfo);
             }
         } catch (SQLException sqlE)
         {
@@ -538,7 +537,7 @@ public class RefSequence extends BaseSequence
         try
         {
             //DatabaseTransaction t = DatabaseTransaction.getInstance();
-          //  RefSequence theoretical_sequence = RefSequence.findSequenceByGi(4503092);
+            RefSequence theoretical_sequence = RefSequence.findSequenceByTheoreticalInfo("SGD","YLR048W",false);
           //  int refseqid = theoretical_sequence.getId();
        
          //   String query="ATGGAGCTACGTGTGGGGAACAAGTACCGCCTGGGACGGAAGATCGGGAGCGGGTCCTTCGGAGATATCTACCTGGGTGCCAACATCGCCTCTGGTGAGGAAGTCGCCATCAAGCTGGAGTGTGTGAAGACAAAGCACCCCCAGCTGCACATCGAGAGCAAGTTCTACAAGATGATGCAGGGTGGCGTGGGGATCCCGTCCATCAAGTGGTGCGGAGCTGAGGGCGACTACAACGTGATGGTCATGGAGCTGCTGGGGCCTAGCCTCGAGGACCTGTTCAACTTCTGTTCCCGCAAATTCAGCCTCAAGACGGTGCTGCTCTTGGCCGACCAGATGATCAGCCGCATCGAGTATATCCACTCCAAGAACTTCATCCACCGGGACGTCAAGCCCGACAACTTCCTCATGGGGCTGGGGAAGAAGGGCAACCTGGTCTACATCATCGACTTCGGCCTGGCCAAGAAGTACCGGGACGCCCGCACCCACCAGCACATTCCCTACCGGGAAAACAAGAACCTGACCGGCACGGCCCGCTACGCTTCCATCAACACGCACCTGGGCATTGAGCAAAGCCGTCGAGATGACCTGGAGAGCCTGGGCTACGTGCTCATGTACTTCAACCTGGGCTCCCTGCCCTGGCAGGGGCTCAAAGCAGCCACCAAGCGCCAGAAGTATGAACGGATCAGCGAGAAGAAGATGTCAACGCCCATCGAGGTCCTCTGCAAAGGCTATCCCTCCGAATTCTCAACATACCTCAACTTCTGCCGCTCCCTGCGGTTTGACGACAAGCCCGACTACTCTTACCTACGTCAGCTCTTCCGCAACCTCTTCCACCGGCAGGGCTTCTCCTATGACTACGTCTTTGACTGGAACATGCTGAAATTCGGTGCAGCCCGGAATCCCGAGGATGTGGACCGGGAGCGGCGAGAACACGAACGCGAGGAGAGGATGGGGCAGCTACGGGGGTCCGCGACCCGAGCCCTGCCCCCTGGCCCACCCACGGGGGCCACTGCCAACCGGCTCCGCAGTGCCGCCGAGCCCGTGGCTTCCACGCCAGCCTCCCGCATCCAGCCGGCTGGCAATACTTCTCCCAGAGCGATCTCGCGGGTCGACCGGGAGAGGAAGGTGAGTATGAGGCTGCACAGGGGTGCGCCCGCCAACGTCTCCTCCTCAGACCTCACTGGGCGGCAAGAGGTCTCCCGGATCCCAGCCTCACAGACAAGTGTGCCATTTGACCATCTCGGGAAGTTGG";
