@@ -86,12 +86,14 @@ import java.util.*;
                 try// by stretch collection
                 {
                     stretch_collection = findStretches(Integer.parseInt( (String) clone_ids.get(count_clones)), trimming_spec, cloning_strategy);
-                    stretch_collection.setSpecId(m_spec_id);
-                          //define lqr for contgi sequences
-                    if ( m_isRunLQRFinderForContigs && m_process_type == Constants.PROCESS_FIND_GAPS)
-                            getLQRForDefinedContigs( stretch_collection, trimming_spec);
+                        
                     if (stretch_collection != null )
                     {
+                         stretch_collection.setSpecId(m_spec_id);
+                                 //define lqr for contgi sequences
+                        if ( m_isRunLQRFinderForContigs && m_process_type == Constants.PROCESS_FIND_GAPS)
+                                getLQRForDefinedContigs( stretch_collection, trimming_spec);
+
                         if ( ! m_isTryMode )
                         {
                              if ( process_id == -1)
@@ -99,21 +101,18 @@ import java.util.*;
                                 process_id = createProcessRecord(  conn,  pst_check_prvious_process_complition, pst_insert_process_object) ;
                                 pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values("+process_id+",?,"+Constants.PROCESS_OBJECT_TYPE_STRETCH_COLLECTION+")");
                             }
-
-
                             stretch_collection.insert(conn);
                             pst_insert_process_object.setInt(1,stretch_collection.getId() );
                             DatabaseTransaction.executeUpdate(pst_insert_process_object);
                             conn.commit();
                         }
-                        
                         ArrayList print_items = SpecialReportsRunner.getReportForStretchCollection(
-                                        (String)clone_ids.get(count_clones), 
-                                        stretch_collection, 
-                                        m_number_of_bases_covered_by_forward_er ,
-                                        m_number_of_bases_covered_by_reverse_er,
-                                        true, true);
-                        Algorithms.writeArrayIntoFile( print_items, true, report_file_name);
+                            (String)clone_ids.get(count_clones), 
+                            stretch_collection, 
+                            m_number_of_bases_covered_by_forward_er ,
+                            m_number_of_bases_covered_by_reverse_er,
+                            true, true);
+                        Algorithms.writeArrayIntoFile( print_items, true, report_file_name, false);
                     }
                     
                 }
@@ -127,7 +126,6 @@ import java.util.*;
         }
         catch(Exception e)
         {
-
             DatabaseTransaction.rollback(conn);
             m_error_messages.add(e.getMessage());
         }
@@ -459,11 +457,8 @@ import java.util.*;
         try
         {
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setItems(" 146364        146277 ");
-             
-             
-             runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-             runner.setProcessType(Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE);
+             runner.setInputData( Constants.ITEM_TYPE_CLONEID," 622   ");
+             runner.setProcessType(Constants.PROCESS_FIND_GAPS);
              runner.setIsTryMode(true);
              //SlidingWindowTrimmingSpec spec =   SlidingWindowTrimmingSpec.getDefaultSpec();
           //   spec.setTrimmingType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);

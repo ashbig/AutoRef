@@ -11,6 +11,7 @@ import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.util_objects.*;
 import  edu.harvard.med.hip.bec.bioutil.*;
+import  edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.programs.assembler.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
@@ -53,6 +54,7 @@ public class GapMapper
         try
         {
             int clone_id = m_clone_id;
+            int refsequence_start = 0;
             CloneDescription clone_description = CloneDescription.getCloneDescription( clone_id);
             if ( clone_description== null) 
             {
@@ -65,6 +67,9 @@ public class GapMapper
             BaseSequence clone_refsequence  = getRefsequence(clone_description);
             // build refsequence file
             PhredPhrap pp = new PhredPhrap();
+                //delete all .phd files from previous processing
+            FileOperations.deleteAllFilesFormDirectory(clone_description.getReadFilePath() + File.separator +"phd_dir");
+      
             pp.createFakeTraceFile( clone_refsequence.getText(), clone_refsequence.getId(), 18,clone_description.getReadFilePath() , "refsequence");
             //run phrap assembler
             pp.run(clone_description.getReadFilePath() , "refseqassembly"+clone_refsequence.getId()+".fasta.screen.ace.1" );
@@ -72,7 +77,8 @@ public class GapMapper
             //parse phrap output extrcting exact read data
             PhredPhrapParser pparser = new PhredPhrapParser();
             //find gaps & contigs
-            CloneAssembly clone_assembly = pparser.parseAllData(clone_description.getReadFilePath() +File.separator+ "contig_dir"+File.separator+"refseqassembly"+clone_refsequence.getId()+".fasta.screen.ace.1");
+            String refseq_read_name = clone_description.getReadFilePath() +File.separator+ "contig_dir"+File.separator+"refseqassembly"+clone_refsequence.getId()+".fasta.screen.ace.1";
+            CloneAssembly clone_assembly = pparser.parseAllData( refseq_read_name );
   //it should be only one contig
             if ( clone_assembly == null || clone_assembly.getContigs()== null || clone_assembly.getContigs().size() != 1)
             {
@@ -107,19 +113,24 @@ public class GapMapper
                         }
                         scores_as_array = compliment_scores;
                     }
+                    if ( read.getName().toUpperCase().indexOf( "REFSEQUENCE") != -1)
+                         refsequence_start = read.getQualityStart();
                     read.setScores(scores_as_array);
                 }
                 int linker5_length = m_cloning_startegy.getLinker5().getSequence().length();
     
-                ScoredElement[][]  bases = contig.prepareContigAligmentHorizontalStructure("refsequence", linker5_length);
+                ScoredElement[][]  bases = contig.prepareContigAligmentHorizontalStructure("refsequence", refsequence_start, linker5_length);
                // ArrayList gaps = Contig.findGaps(bases);
-                ArrayList contigs = Contig.findContigs(bases, clone_refsequence.getText().length(), linker5_length, m_trimming_spec);
+                ArrayList contigs = Contig.findContigs(bases, 
+                                clone_refsequence.getText().length(),
+                                linker5_length,
+                                m_trimming_spec);
                
                 ArrayList gaps = Contig.findGaps(contigs, linker5_length, clone_refsequence.getText().length() );
                 ArrayList stretches = contigs;
                 stretches.addAll(gaps);
                 
-                if (gaps != null && contigs != null && gaps.size() > 0 && contigs.size() > 0)
+                if (( gaps != null && gaps.size() > 0) || (contigs != null  && contigs.size() > 0))
                 {
                 //return calculate gap positions to refseq coordinates - linkers?
                   // ArrayList stretches = recalculateStretches(gaps, contigs);
@@ -136,7 +147,7 @@ public class GapMapper
         }
         catch(Exception e)
         {
-            System.out.println(e.getMessage());
+          //  System.out.println(e.getMessage());
             m_error_messages.add ("Cannot define contigs for clone "+ m_clone_id);
         }
     }
