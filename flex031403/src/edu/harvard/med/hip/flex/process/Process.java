@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.3 2001-05-24 12:13:05 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.4 2001-05-29 14:27:28 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -217,8 +217,7 @@ public class Process {
             valueSql = valueSql + ",'"+extrainfo+"'";
         }
         
-        sql = sql+")\n"+valueSql+")";
-        
+        sql = sql+")\n"+valueSql+")";   
         DatabaseTransaction.executeUpdate(sql, c);
         
         if(processObjects.isEmpty()) {
@@ -250,7 +249,7 @@ public class Process {
             Protocol protocol = new Protocol(1, "test", "This is a test");
             Researcher researcher = new Researcher(100, "Tester", "AB0000", "Y");
             int id = FlexIDGenerator.getID("executionid");
-            Process p = new Process(id, protocol, "Testing", researcher, "2001-04-12", "sub test", null);
+            Process p = new Process(id, protocol, "T", researcher, "2001-04-12", "sub test", null);
             System.out.println("Process id:\t"+p.getExecutionid());
             System.out.println("Process protocol:\t"+p.getProtocol().getProcesscode());
             System.out.println("Process status:\t"+p.getStatus());
@@ -262,31 +261,33 @@ public class Process {
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection c = t.requestConnection();
-            DatabaseTransaction.executeUpdate("insert into processprotocol values (1, 'test', 'This is a test', null)", c);
-            DatabaseTransaction.executeUpdate("insert into researcher values (100, 'Tester', 'AB0000', 'Y')", c);
-            DatabaseTransaction.executeUpdate("insert into containertype values ('test')", c);
-            DatabaseTransaction.executeUpdate("insert into containerlocation values (1, 'testlocation',null)", c);
-            DatabaseTransaction.executeUpdate("insert into sampletype values ('PCR')", c);
+            //DatabaseTransaction.executeUpdate("insert into processprotocol values (1, 'test', 'This is a test', null)", c);
+            //DatabaseTransaction.executeUpdate("insert into researcher values (100, 'Tester', 'AB0000', 'Y')", c);
+            //DatabaseTransaction.executeUpdate("insert into containertype values ('test')", c);
+            //DatabaseTransaction.executeUpdate("insert into containerlocation values (1, 'testlocation',null)", c);
+            //DatabaseTransaction.executeUpdate("insert into sampletype values ('PCR')", c);
             
             for(int i = 0; i<5; i++) {
                 int containerid = FlexIDGenerator.getID("containerid");
-                String sql = "insert into containerheader values("+containerid+", 'test', 1, 'AB0000')";
+                System.out.println("Insert into containerheader:");
+                String sql = "insert into containerheader values("+containerid+", 'test', 1, 'AB0000', null)";
                 DatabaseTransaction.executeUpdate(sql, c);
                 ProcessObject pobject = new ProcessContainer(containerid, id, "I");
                 p.addProcessObject(pobject);
             }
             
             int containerid = FlexIDGenerator.getID("containerid");
-            String sql = "insert into containerheader values("+containerid+", 'test', 1, 'AB0000')";
+            String sql = "insert into containerheader values("+containerid+", 'test', 1, 'AB0000', null)";
             DatabaseTransaction.executeUpdate(sql, c);
             
             for(int i=0; i<5; i++) {
-                int from = FlexIDGenerator.getID("oligoid");
-                int to = FlexIDGenerator.getID("oligoid");
-                DatabaseTransaction.executeUpdate("insert into oligo values("+from+", 'AATTCTG', 30, null)", c);
-                DatabaseTransaction.executeUpdate("insert into oligo values("+to+", 'AATCGG', 30, null)", c);
+                int from = i+1;
+                int to = from+5;
+                //DatabaseTransaction.executeUpdate("insert into oligo values("+from+", 'AATTCTG', 30, null)", c);
+                //DatabaseTransaction.executeUpdate("insert into oligo values("+to+", 'AATCGG', 30, null)", c);
                 int samplefrom = FlexIDGenerator.getID("sampleid");
                 int sampleto = FlexIDGenerator.getID("sampleid");
+                                System.out.println("insert into sample values("+samplefrom+", 'PCR',"+containerid+",'A1',null,"+from+",null)");
                 DatabaseTransaction.executeUpdate("insert into sample values("+samplefrom+", 'PCR',"+containerid+",'A1',null,"+from+",null)", c);
                 DatabaseTransaction.executeUpdate("insert into sample values("+sampleto+", 'PCR',"+containerid+",'A1',null,"+to+",null)", c);
                 SampleLineage sl = new SampleLineage(id, samplefrom, sampleto);
@@ -310,52 +311,55 @@ public class Process {
             }
             
             DatabaseTransaction dataTrans = DatabaseTransaction.getInstance();
-            rs = dataTrans.executeQuery("select * from sample");
+            //rs = dataTrans.executeQuery("select * from sample");
             
-            while(rs.next()) {
-                System.out.println(rs);
-            }
-            rs.close();
+            //while(rs.next()) {
+            //    System.out.println(rs);
+            //}
+            //rs.close();
             p.insert(c);
+            c.commit();
             
             System.out.println("After insert process: ");
-            rs = dataTrans.executeQuery("select * from processexecution");
+            rs = dataTrans.executeQuery("select * from processexecution where executionid = "+id);
             while(rs.next()) {
-                System.out.println(rs);
+                System.out.println("Executionid is:\t"+rs.getInt("EXECUTIONID"));
             }
             rs.close();
             
             System.out.println("After insert objects: ");
             rs = dataTrans.executeQuery("select * from processobject where executionid="+id);
             while(rs.next()) {
-                System.out.println(rs);
+                System.out.println(rs.getInt("EXECUTIONID"));
             }
             rs.close();
             
             System.out.println("After insert sample lineage: ");
             rs = dataTrans.executeQuery("select * from samplelineage where executionid="+id);
             while(rs.next()) {
-                System.out.println(rs);
+                System.out.println(rs.getInt("EXECUTIONID"));
             }
             rs.close();
             
             System.out.println();
             
-            Process p1 = new Process(protocol, "testing p1", researcher);
+            Process p1 = new Process(protocol, "t", researcher);
             p1.setSubprotocol("new subprotocol");
             p1.setExtrainfo("this is test");
             p1.insert(c);
-            rs = dataTrans.executeQuery("select * from processexecution");
+            rs = dataTrans.executeQuery("select * from processexecution where executionid="+id);
             while(rs.next()) {
-                System.out.println(rs);
+                System.out.println(rs.getInt("EXECUTIONID"));
             }
             rs.close();
+            c.close();
         } catch (FlexDatabaseException e) {
             System.out.println(e);
         } catch (SQLException sqlE) {
             System.out.println(sqlE);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
+            System.exit(0);
         }
         
     }
