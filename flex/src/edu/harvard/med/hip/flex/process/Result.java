@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-19 12:42:05 $
+ * $Revision: 1.4 $
+ * $Date: 2001-06-19 12:42:28 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -42,12 +42,13 @@ import java.util.*;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.util.*;
 
 /**
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-19 12:42:05 $
+ * @version    $Revision: 1.4 $ $Date: 2001-06-19 12:42:28 $
  */
 
 public class Result {
@@ -102,17 +103,22 @@ public class Result {
      * @param conn The connection to use when doing the insert.
      */
     public void insert(Connection conn) throws FlexDatabaseException {
+        PreparedStatement ps = null;
         try {
             DatabaseTransaction dt = DatabaseTransaction.getInstance();
-            String sql = "insert into result values(resultid.nextval,?,?,'?','?')";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1,sample.getId());
-            ps.setInt(2,process.getExecutionid());
-            ps.setString(3,this.type);
-            ps.setString(4,this.value);
+            String sql = "insert into result values(?,?,?,?,?)";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1,FlexIDGenerator.getID("RESULTID"));
+            ps.setInt(2,this.sample.getId());
+            ps.setInt(3,this.process.getExecutionid());
+            ps.setString(4,this.type);
+            ps.setString(5,this.value);
             dt.executeUpdate(ps);
+            
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
+        } finally {
+        DatabaseTransaction.closeStatement(ps);
         }
     }
     
