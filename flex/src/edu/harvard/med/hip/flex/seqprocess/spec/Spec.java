@@ -37,7 +37,7 @@ public abstract class Spec
     {
         m_id = id;
         m_type =ts;
-        String sql = "select * from spec where specid = " + id;
+        String sql = "select specname,spectype,specid from spec where specid = " + id;
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         
@@ -49,7 +49,7 @@ public abstract class Spec
             while(rs.next())
             {
                 m_name = rs.getString("specname");
-                ResultSet rs1 = t.executeQuery("select * from spec_parameters where specid="+id);
+                ResultSet rs1 = t.executeQuery("select paramname,paramvalue from spec_parameters where specid="+id);
                 while(rs1.next())
                 {
                     m_params.put(rs1.getString("paramname"), rs1.getString("paramvalue"));
@@ -87,8 +87,8 @@ public abstract class Spec
             {
                 key = (String)e.nextElement();
                 val = (Integer)m_params.get(key);
-                sql = "INSERT INTO specparams (specid, paramname, paramvalue)"+
-                " VALUES(" + m_id + ",'" + key +"','" + val + "')";
+                sql = "INSERT INTO spec_parameters (specid, paramname, paramvalue)"+
+                " VALUES(" + m_id + ",'" + key.toUpperCase() +"','" + val + "')";
                stmt.executeUpdate(sql);
             }
         } catch (SQLException sqlE)
@@ -108,7 +108,7 @@ public abstract class Spec
     public static ArrayList getAllSpecs(String spec_type) throws FlexDatabaseException
     { 
         ArrayList specs = new ArrayList();
-        String sql = "select * from spec where spectype = '" + spec_type + "'";
+        String sql = "select specid,specname,spectype from spec where spectype = '" + spec_type + "'";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         
@@ -121,7 +121,7 @@ public abstract class Spec
             {
                 spec_id = rs.getInt("specid");
                 spec_name = rs.getString("specname");
-                ResultSet rs1 = t.executeQuery("select * from spec_parameters where specid="+spec_id);
+                ResultSet rs1 = t.executeQuery("select paramname,paramvalue from spec_parameters where specid="+spec_id);
                 while(rs1.next())
                 {
                     params.put(rs1.getString("paramname"), rs1.getString("paramvalue"));
@@ -147,12 +147,16 @@ public abstract class Spec
     public Hashtable getParameters()    { return m_params;}
     public String    getName(){ return m_name;}
     public int       getId(){return m_id;}
-    public int       getParameterByName(String param_name)
+    public int       getParameterByNameInt(String param_name)
     { 
         Integer param = (Integer)m_params.get(param_name);
         return ( param == null) ? -1: param.intValue();
     }
-        
+     public String       getParameterByNameString(String param_name)
+    { 
+      
+        return (String)m_params.get(param_name);
+    }    
     
     
     //-------------------- mani -----------------------
