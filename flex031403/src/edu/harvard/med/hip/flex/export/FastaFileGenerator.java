@@ -35,23 +35,26 @@ public class FastaFileGenerator {
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
     public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
 
-//    public final static String BLAST_BASE_DIR="/kotel/data/FLEXRepository/";
-//    public final static String BLAST_DB_DIR="Blast/";
-
     public static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     public static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
     public static final String PSEUDOMONASDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Pseudomonas/genes";
+    public static final String MGCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"MGC/genes";
     public static final String LOGFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/blastdb.log";
     public static final String SEQUENCEIDFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/sequenceid.txt";
     
-//    public static final String HUMANDB="/tmp/Human/genes";
-//    public static final String YEASTDB="/tmp/Yeast/genes";
-//    public static final String LOGFILE="/tmp/Log/blastdb.log";
-//    public static final String SEQUENCEIDFILE="/tmp/Log/sequenceid.txt";
+    //public static final String HUMANDB="/tmp/Human/genes";
+    //public static final String YEASTDB="/tmp/Yeast/genes";
+    //public static final String PSEUDOMONASDB="/tmp/Pseudomonas/genes";
+    //public static final String MGCDB="/tmp/MGC/genes";
+    //public static final String LOGFILE="/tmp/Log/blastdb.log";
+    //public static final String SEQUENCEIDFILE="/tmp/Log/sequenceid.txt";
     
     public static final String HUMAN = "'Homo sapiens'";
     public static final String YEAST = "'Saccharomyces cerevisiae'";
     public static final String PSEUDOMONAS = "'Pseudomonas aeruginosa'";
+    
+    public static final String SPECIES = "Species";
+    public static final String MGCPROJECT = "MGC Project";
     
     public static void generateFastaFiles() {
         Logger log = new Logger(LOGFILE);
@@ -67,20 +70,30 @@ public class FastaFileGenerator {
         }
         log.logging("Last sequenceid: "+lastSequence);
         
-        int maxid1 = generateFile(log, HUMANDB, HUMAN, lastSequence);
+        // Generate FASTA file for all human genes.
+        int maxid1 = generateFile(log, HUMANDB, HUMAN, lastSequence, SPECIES);
         if(maxid1 == -1) {
             logAndMail(log, "Error occured when generate human database file.");
             return;
         }
         
-        int maxid2 = generateFile(log, YEASTDB, YEAST, lastSequence);
+        // Generate FASTA file for all yeast genes.
+        int maxid2 = generateFile(log, YEASTDB, YEAST, lastSequence, SPECIES);
         if(maxid2 == -1) {
             logAndMail(log, "Error occured when generate yeast database file.");
             return;
         }
 
-        int maxid3 = generateFile(log, PSEUDOMONASDB, PSEUDOMONAS, lastSequence);
+        // Generate FASTA file for all Pseudomonas genes.
+        int maxid3 = generateFile(log, PSEUDOMONASDB, PSEUDOMONAS, lastSequence, SPECIES);
         if(maxid3 == -1) {
+            logAndMail(log, "Error occured when generate pseudomonas database file.");
+            return;
+        }
+        
+        // Generate FASTA file for all MGC clones.
+        int maxid4 = generateFile(log, MGCDB, MGCPROJECT, lastSequence, MGCPROJECT);
+        if(maxid4 == -1) {
             logAndMail(log, "Error occured when generate pseudomonas database file.");
             return;
         }
@@ -92,6 +105,10 @@ public class FastaFileGenerator {
         
         if(maxid3 > newLastSequence) {
             newLastSequence = maxid3;
+        }
+        
+        if(maxid4 > newLastSequence) {
+            newLastSequence = maxid4;
         }
         
         if(!writeLastSequence(newLastSequence, log)) {
@@ -115,7 +132,7 @@ public class FastaFileGenerator {
         } 
     }
     
-    private static int generateFile(Logger log, String db, String species, int seq) {
+    private static int generateFile(Logger log, String db, String species, int seq, String criteria) {
         DatabaseTransaction t = null;
         ResultSet rs = null;
         PrintWriter pr = null;
@@ -124,11 +141,7 @@ public class FastaFileGenerator {
         try {
             t = DatabaseTransaction.getInstance();
             pr = new PrintWriter(new BufferedWriter(new FileWriter(db, true)));
-            String sql = "select sequenceid " +
-            "from flexsequence " +
-            "where genusspecies = " +species + " " +
-            "and sequenceid > "+seq + " " +
-            "order by sequenceid";
+            String sql = getSql(species, seq, criteria);
         
             rs = t.executeQuery(sql);            
             while(rs.next()) {
@@ -188,6 +201,27 @@ public class FastaFileGenerator {
         } catch (MessagingException ex){
             System.out.println(ex);
         }
+    }
+
+    private static String getSql(String where, int seq, String criteria) {
+        String sql = null;
+        
+        if(criteria == SPECIES) {
+            sql = "select sequenceid " +
+                    "from flexsequence " +
+                    "where genusspecies = " +where + " " +
+                    "and sequenceid > "+seq + " " +
+                    "order by sequenceid";
+        } 
+        
+        if(criteria == MGCPROJECT) {
+            sql = "select sequenceid "+
+                " from mgcclone "+
+                " where sequenceid > "+seq+
+                " order by sequenceid";
+        }
+        
+        return sql;
     }
     
     public static void main(String [] args) {
