@@ -13,11 +13,11 @@
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 <html>
 <head>
-    <title><bean:message key="flex.name"/> : Query Sequence History</title>
+    <title><bean:message key="flex.name"/> : Query Clone History</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
-    <h2><bean:message key="flex.name"/> : Query Sequence History</h2>
+    <h2><bean:message key="flex.name"/> : Query Clone History</h2>
     <hr>
     <html:errors/>
     <p>
