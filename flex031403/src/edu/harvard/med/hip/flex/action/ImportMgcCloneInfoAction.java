@@ -55,11 +55,32 @@ public class ImportMgcCloneInfoAction extends AdminAction {
             saveErrors(request,errors);
             return new ActionForward(mapping.getInput());
         }
-        
+        /*
         MgcMasterListImporter importer = new MgcMasterListImporter();
         importer.importMgcCloneInfoIntoDB(input, fileName) ;
+         **/
+        ImportInformationRunner import_info = new ImportInformationRunner(input, fileName);
+        Thread t = new Thread(import_info);
+        t.start();
         return mapping.findForward("proccessing");
     }
+    
+    class ImportInformationRunner implements Runnable
+    {
+        private InputStream m_Input = null;
+        private String      m_filename= null;
+        public ImportInformationRunner(InputStream in, String fn)
+        {
+            m_Input = in;
+            m_filename = fn;
+        }
+        public void run()
+        {
+             MgcMasterListImporter importer = new MgcMasterListImporter();
+             importer.importMgcCloneInfoIntoDB(m_Input, m_filename) ;
+        }
+    }
+            
 }
 
 
