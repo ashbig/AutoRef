@@ -9,6 +9,7 @@
  * Usage of the class is very simple. Construct a BlastParser object with 
  * a blast output result file. Call parseBlast() and then call accessor methods
  * to obtain information you are interested.
+ * $Id $
  */
 
 package flex.ApplicationCode.Java.blast;

@@ -1,5 +1,7 @@
 /**
  * Describes an input token.
+ *
+ * $Id $
  */
 
 package flex.ApplicationCode.Java.blast;

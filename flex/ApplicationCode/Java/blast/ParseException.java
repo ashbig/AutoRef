@@ -2,6 +2,8 @@
  * This exception is thrown when parse errors are encountered.
  * You can explicitly create objects of this exception type by
  * calling the method generateParseException.
+ *
+ * $Id $
  */
 
 package flex.ApplicationCode.Java.blast;

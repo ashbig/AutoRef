@@ -1,6 +1,8 @@
 /** Used with BlastParserTokenManager. BlastParserTokenManager works with only 
   * ascii characters. This class provides BlastParserTokenManager with the 
   * required input stream.
+  *
+  * $Id $
   */
 
 package flex.ApplicationCode.Java.blast;

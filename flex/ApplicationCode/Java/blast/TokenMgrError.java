@@ -1,4 +1,8 @@
-/** describe a lexical error BlastParserTokenManager generates. */
+/** 
+ * Describe a lexical error BlastParserTokenManager generates. 
+ *
+ * $Id $
+ */
 
 package flex.ApplicationCode.Java.blast;
 

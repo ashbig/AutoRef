@@ -1,6 +1,7 @@
 /*
  * This class represents lexical analyzer. The only public method for BlastParser
  * to get a token is getNextToken method. Used with BlastParser.
+ * $Id $
  */
 
 package flex.ApplicationCode.Java.blast;

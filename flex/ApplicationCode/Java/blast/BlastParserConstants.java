@@ -1,5 +1,7 @@
 /** Store a table of all lexical constants for BlastParser and 
  *  BlastParserTokenManager 
+ *
+ * $Id $
  */
 
 package flex.ApplicationCode.Java.blast;

@@ -4,6 +4,8 @@
  * Copyright 2001-2001 Harvard Institute of Proteomics. All Rights Reserved.
  * 
  * Author Tao Wei
+ *
+ * $Id $
  */
 //package org.harvard.hip.flex;
 
