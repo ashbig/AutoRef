@@ -478,7 +478,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     }
                     else
                     {
-                         container_names.append("<script language='JavaScript' src='/BEC/scripts.js'></script> ");
+                         container_names.append("<script language='JavaScript' src='"+edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION+"scripts.js'></script> ");
                        
                         for (int index = 0; index < labels.size(); index ++)
                         {
