@@ -19,11 +19,21 @@
 <html:form action="/GetNewOligoLocation.do" focus="researcherBarcode">
 <input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
 <input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+<input type="hidden" name="projectname" value=<bean:write name="projectname"/>> 
+<input type="hidden" name="workflowid" value="<%= request.getAttribute("workflowname")%>" > 
+
 <logic:present name="templateid">
     <input type="hidden" name="templateid" value=<bean:write name="templateid"/>> 
 </logic:present>
 
 <table>
+     <td class="prompt">Project name:</td>
+    <td><bean:write name="projectname"/></td>
+    </tr>
+    <tr>
+    <td class="prompt">Workflow name:</td>
+    <td><%= request.getAttribute("workflowname")%></td>
+    </tr>
     <tr>
     <td class="label">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
@@ -90,6 +100,7 @@
         </html:select></td>
     </tr>
 
+    <logic:present name="EnterOligoPlateAction.threepOpenD">
     <tr>
     <td class="label">3P fusion oligo daughter plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpenD" property="label"/></td>
@@ -102,6 +113,7 @@
         />
         </html:select></td>
     </tr>
+     </logic:present>
 
     <logic:present name="EnterOligoPlateAction.threepClosedD">
     <tr>
