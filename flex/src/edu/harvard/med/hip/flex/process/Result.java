@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-18 19:48:30 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-18 20:08:07 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -47,7 +47,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-18 19:48:30 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-18 20:08:07 $
  */
 
 public class Result {
@@ -107,6 +107,50 @@ public class Result {
         }
     }
     
+    /**
+     * Find the process result for a given sample and a process.
+     *
+     * @param sample The sample object.
+     * @param process The process object.
+     * @return The result for the given sample and process.
+     * @exception FlexDatabaseException.
+     */
+    public static Result findResult(Sample sample, Process process) throws FlexDatabaseException {
+        Result result = null;
+        String sql=
+        "select r.resulttype as type, r.resultvalue as value " +
+        "from result r, sample s, processexecution p " +
+        "WHERE r.sampleid = s.sampleid " +
+        "AND r.executionid = p.executionid " +
+        "AND s.sampleid = ? " +
+        "AND p.executionid = ?";
+        
+        DatabaseTransaction dt = DatabaseTransaction.getInstance();
+        Connection conn = dt.requestConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conn.prepareStatement(sql);            
+            ps.setInt(1, sample.getId());
+            ps.setInt(2, process.getExecutionid());
+            
+            rs = dt.executeQuery(ps);
+            
+            // if we find a process then create it
+            if(rs.next()) {
+                String type = rs.getString("TYPE");
+                String value = rs.getString("VALUE");
+                result = new Result(process, sample, type, value);
+            }            
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(ps);
+            DatabaseTransaction.closeConnection(conn);            
+        }
+        return result;
+    }
     
 } // End class Result
 
