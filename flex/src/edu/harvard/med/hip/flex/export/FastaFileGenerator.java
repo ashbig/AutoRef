@@ -34,11 +34,12 @@ import javax.mail.internet.*;
 public class FastaFileGenerator {
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
     public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
-
+    
     public static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     public static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
     public static final String PSEUDOMONASDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Pseudomonas/genes";
     public static final String MGCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"MGC/genes";
+    public static final String YPDB=BLAST_BASE_DIR+BLAST_DB_DIR+"YP/genes";
     public static final String LOGFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/blastdb.log";
     public static final String SEQUENCEIDFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/sequenceid.txt";
     
@@ -52,6 +53,7 @@ public class FastaFileGenerator {
     public static final String HUMAN = "'Homo sapiens'";
     public static final String YEAST = "'Saccharomyces cerevisiae'";
     public static final String PSEUDOMONAS = "'Pseudomonas aeruginosa'";
+    public static final String YP = "'Yersinia pestis'";
     
     public static final String SPECIES = "Species";
     public static final String MGCPROJECT = "MGC Project";
@@ -83,11 +85,18 @@ public class FastaFileGenerator {
             logAndMail(log, "Error occured when generate yeast database file.");
             return;
         }
-
+        
         // Generate FASTA file for all Pseudomonas genes.
         int maxid3 = generateFile(log, PSEUDOMONASDB, PSEUDOMONAS, lastSequence, SPECIES);
         if(maxid3 == -1) {
             logAndMail(log, "Error occured when generate pseudomonas database file.");
+            return;
+        }
+        
+        // Generate FASTA file for all Yersinia pestis genes.
+        int maxid5 = generateFile(log, YPDB, YP, lastSequence, SPECIES);
+        if(maxid5 == -1) {
+            logAndMail(log, "Error occured when generate yersinia database file.");
             return;
         }
         
@@ -111,6 +120,10 @@ public class FastaFileGenerator {
             newLastSequence = maxid4;
         }
         
+        if(maxid5 > newLastSequence) {
+            newLastSequence = maxid5;
+        }
+        
         if(!writeLastSequence(newLastSequence, log)) {
             logAndMail(log, "Error occured while writting to sequence file");
             return;
@@ -129,7 +142,7 @@ public class FastaFileGenerator {
         }catch (Exception ex) {
             log.logging(ex.getMessage());
             return -1;
-        } 
+        }
     }
     
     private static int generateFile(Logger log, String db, String species, int seq, String criteria) {
@@ -142,8 +155,8 @@ public class FastaFileGenerator {
             t = DatabaseTransaction.getInstance();
             pr = new PrintWriter(new BufferedWriter(new FileWriter(db, true)));
             String sql = getSql(species, seq, criteria);
-        
-            rs = t.executeQuery(sql);            
+            
+            rs = t.executeQuery(sql);
             while(rs.next()) {
                 int id = rs.getInt("SEQUENCEID");
                 log.logging("Processing sequence: "+id);
@@ -166,7 +179,7 @@ public class FastaFileGenerator {
             return -1;
         }catch (Exception ex) {
             log.logging(ex.getMessage());
-            return -1;            
+            return -1;
         }finally {
             DatabaseTransaction.closeResultSet(rs);
         }
@@ -202,23 +215,23 @@ public class FastaFileGenerator {
             System.out.println(ex);
         }
     }
-
+    
     private static String getSql(String where, int seq, String criteria) {
         String sql = null;
         
         if(criteria == SPECIES) {
             sql = "select sequenceid " +
-                    "from flexsequence " +
-                    "where genusspecies = " +where + " " +
-                    "and sequenceid > "+seq + " " +
-                    "order by sequenceid";
-        } 
+            "from flexsequence " +
+            "where genusspecies = " +where + " " +
+            "and sequenceid > "+seq + " " +
+            "order by sequenceid";
+        }
         
         if(criteria == MGCPROJECT) {
             sql = "select sequenceid "+
-                " from mgcclone "+
-                " where sequenceid > "+seq+
-                " order by sequenceid";
+            " from mgcclone "+
+            " where sequenceid > "+seq+
+            " order by sequenceid";
         }
         
         return sql;
