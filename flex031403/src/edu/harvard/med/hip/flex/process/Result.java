@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-19 12:42:28 $
+ * $Revision: 1.5 $
+ * $Date: 2001-06-21 16:49:05 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-19 12:42:28 $
+ * @version    $Revision: 1.5 $ $Date: 2001-06-21 16:49:05 $
  */
 
 public class Result {
@@ -58,6 +58,22 @@ public class Result {
     
     // result type for a transform
     public static final String TRANSFORMATION_TYPE = "TRANSFORMATION";
+
+    // the following defines the result values for GEL.
+    public final static String CORRECT = "Correct";
+    public final static String INCORRECT = "Incorrect";
+    public final static String MUL_W_CORRECT = "Multiple with correct";
+    public final static String MUL_WO_CORRECT = "Multiple without correct";
+    public final static String NO_PRODUCT = "No product";
+    
+    // the following defines the result values for TRANSFORMATION.
+    public final static String MANY = "Many";
+    public final static String FEW = "Few";
+    public final static String NONE = "None";
+
+    // the following defines the result values for controls.
+    public final static String SUCCEEDED = "Succeeded";
+    public final static String FAILED = "Failed";   
     
     // The process used to generate this result
     private Process process;
