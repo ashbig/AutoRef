@@ -43,7 +43,7 @@
     <tr>
       <td width="784" colspan="2" height="32" valign="top" align="left">
         <p> <map name="FPMap0">
-        <area href="about_bec.html" shape="rect" coords="22, 5, 76, 22">
+        <area href="about_bec.jsp" shape="rect" coords="22, 5, 76, 22">
         <area href="process.html" shape="rect" coords="83, 6, 171, 23">
         <area href="CustomerRegistration.jsp" shape="rect" coords="179, 3, 273, 23">
         <area href="mailto:elena_taycheru@hms.harvard.edu" shape="rect" coords="280, 2, 363, 23">
