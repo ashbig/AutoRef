@@ -38,35 +38,35 @@ import edu.harvard.med.hip.flex.workflow.*;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class GetColonyLocationAction extends GetLocationAction {
     
     protected int [] getDestLocations(ActionForm form) {
         int [] destLocations = ((PickColonyForm)form).getDestLocations();
         return destLocations;
-    }    
+    }
     
-    protected void setSourceLocations(HttpServletRequest request, ActionForm form) throws FlexCoreException, FlexDatabaseException {   
+    protected void setSourceLocations(HttpServletRequest request, ActionForm form) throws FlexCoreException, FlexDatabaseException {
         Vector containers = new Vector();
-        containers.addElement((Container)request.getSession().getAttribute("EnterSourcePlateAction.agarPlateF1")); 
-        containers.addElement((Container)request.getSession().getAttribute("EnterSourcePlateAction.agarPlateC1"));            
         
-        int locations [] = new int[2];        
-        locations[0] = ((PickColonyForm)form).getAgarF1Location();
-        locations[1] = ((PickColonyForm)form).getAgarC1Location(); 
+        Container container1 = (Container)request.getSession().getAttribute("EnterSourcePlateAction.agarPlateF1");
+        Location location1 = new Location(((PickColonyForm)form).getAgarF1Location());
+        container1.setLocation(location1);
+        containers.addElement(container1);
         
-        for(int i=0; i<2; i++) {
-            Location location = new Location(locations[i]);          
-            Container container = (Container)containers.elementAt(i);
-            container.setLocation(location);
+        if(request.getSession().getAttribute("EnterSourcePlateAction.agarPlateC1") != null) {
+            Container container2 = (Container)request.getSession().getAttribute("EnterSourcePlateAction.agarPlateC1");
+            Location location2 = new Location(((PickColonyForm)form).getAgarC1Location());
+            container2.setLocation(location2);
+            containers.addElement(container2);
         }
         
-        request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateF1");        
-        request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateC1"); 
-        request.getSession().setAttribute("EnterSourcePlateAction.oldContainers", containers);    
+        request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateF1");
+        request.getSession().removeAttribute("EnterSourcePlateAction.agarPlateC1");
+        request.getSession().setAttribute("EnterSourcePlateAction.oldContainers", containers);
     }
-        
+    
     // Get the workflow and project from the form and store in request.
     protected void storeProjectWorkflow(HttpServletRequest request, ActionForm form) {
         int workflowid = ((PickColonyForm)form).getWorkflowid();
@@ -74,5 +74,5 @@ public class GetColonyLocationAction extends GetLocationAction {
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
         request.setAttribute("writeBarcode", new Integer(1));
-    }     
+    }
 }

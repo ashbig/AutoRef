@@ -182,9 +182,12 @@ public class PickColonyForm extends ProjectWorkflowForm {
             errors.add("agarPlateF1", new ActionError("error.plate.invalid.barcode", agarPlateF1));
             isReturn = true;
         }
-        if((agarPlateC1 == null) || (agarPlateC1.trim().length()!=11)) {
-            errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
-            isReturn = true;
+        
+        if(projectid != Project.PSEUDOMONAS) {
+            if((agarPlateC1 == null) || (agarPlateC1.trim().length()!=11)) {
+                errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
+                isReturn = true;
+            }
         }
         
         if(isReturn) {
@@ -192,7 +195,7 @@ public class PickColonyForm extends ProjectWorkflowForm {
         }
         
         if(projectid == Project.PSEUDOMONAS) {
-            if((agarPlateC1.charAt(LASTINDEX) != 'F')) {
+            if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11 && (agarPlateC1.charAt(LASTINDEX) != 'F')) {
                 errors.add("agarPlateC1", new ActionError("error.plate.invalid.barcode", agarPlateC1));
                 isReturn = true;
             }
@@ -205,8 +208,10 @@ public class PickColonyForm extends ProjectWorkflowForm {
         
         // Check whether the two pairs matching with each other.
         if(projectid == Project.PSEUDOMONAS) {
-            if(!(agarPlateF1.substring(3, 9).equals(agarPlateC1.substring(3, 9)))) {
-                errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
+            if(agarPlateC1 != null && agarPlateC1.trim().length()>= 11) {
+                if(!(agarPlateF1.substring(3, 9).equals(agarPlateC1.substring(3, 9)))) {
+                    errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateC1));
+                }
             }
         } else {
             if(!(agarPlateF1.substring(0, 3).equals(agarPlateC1.substring(0, 3)))) {

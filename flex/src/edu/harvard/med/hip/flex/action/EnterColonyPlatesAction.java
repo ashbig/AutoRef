@@ -38,7 +38,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class EnterColonyPlatesAction extends EnterSourcePlateAction {
     
@@ -48,8 +48,13 @@ public class EnterColonyPlatesAction extends EnterSourcePlateAction {
         String agarPlateC1 = ((PickColonyForm)form).getAgarPlateC1();
         
         Vector containers = new Vector();
-        containers.addElement(agarPlateF1);
-        containers.addElement(agarPlateC1);
+        
+        if(agarPlateF1 != null && agarPlateF1.trim().length() != 0) {
+            containers.addElement(agarPlateF1);
+        }
+        if(agarPlateC1 != null && agarPlateC1.trim().length() != 0) {
+            containers.addElement(agarPlateC1);
+        }
         
         return containers;
     }
@@ -57,8 +62,10 @@ public class EnterColonyPlatesAction extends EnterSourcePlateAction {
     // Set the container location for the form bean.
     protected void setSourceLocations(ActionForm form, int [] locations){
         ((PickColonyForm)form).setAgarF1Location(locations[0]);
-        ((PickColonyForm)form).setAgarC1Location(locations[1]);
-    }   
+        
+        if(locations.length > 1)
+            ((PickColonyForm)form).setAgarC1Location(locations[1]);
+    }
     
     protected SubProtocol getSubProtocol(ActionForm form) {
         String subProtocolName = ((PickColonyForm)form).getSubProtocolName();
@@ -69,9 +76,11 @@ public class EnterColonyPlatesAction extends EnterSourcePlateAction {
     // Store the source container in the session.
     protected void storeSourceContainerInSession(HttpServletRequest request, Vector oldContainers) {
         request.getSession().setAttribute("EnterSourcePlateAction.agarPlateF1", (Container)oldContainers.elementAt(0));
-        request.getSession().setAttribute("EnterSourcePlateAction.agarPlateC1", (Container)oldContainers.elementAt(1));
-    } 
-           
+        
+        if(oldContainers.size() > 1)
+            request.getSession().setAttribute("EnterSourcePlateAction.agarPlateC1", (Container)oldContainers.elementAt(1));
+    }
+    
     // Get the projectid from the form.
     protected int getProjectid(ActionForm form) {
         return ((PickColonyForm)form).getProjectid();
@@ -80,6 +89,6 @@ public class EnterColonyPlatesAction extends EnterSourcePlateAction {
     // Get the workflowid from the form.
     protected int getWorkflowid(ActionForm form) {
         return ((PickColonyForm)form).getWorkflowid();
-    }    
+    }
 }
 

@@ -43,6 +43,7 @@
         </html:select></td>
     </tr>
 
+    <logic:present name="EnterSourcePlateAction.agarPlateC1">
     <tr>
     <td class="label">Closed agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateC1" property="label"/></td>
@@ -55,6 +56,7 @@
         />
         </html:select></td>
     </tr>
+    </logic:present>
 
     <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
     <tr>
