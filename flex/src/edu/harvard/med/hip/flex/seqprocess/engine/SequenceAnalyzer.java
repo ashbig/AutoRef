@@ -54,7 +54,7 @@ public class SequenceAnalyzer
     public int run_blastn( String dbFileName , int hits, File fname) throws  FlexUtilException,ParseException
     {
       
-        String queryFile = makeQueryFile(m_sequence.getText(), "bn", m_sequence.getId());
+        String queryFile = makeQueryFile(INPUT,m_sequence.getText(), "bn", m_sequence.getId());
         Blaster blaster = setBlaster(dbFileName, Blaster.BLAST_PROGRAM_BLASTN, queryFile, null,  hits);
         blaster.blast(queryFile+".in", queryFile+".out");
      
@@ -74,7 +74,7 @@ public class SequenceAnalyzer
     {
         boolean isHomolog = false;
         
-        String queryFile = makeQueryFile(m_sequence.getText(), "bx",m_sequence.getId());
+        String queryFile = makeQueryFile(INPUT,m_sequence.getText(), "bx",m_sequence.getId());
         Blaster blaster = setBlaster(dbFileName, Blaster.BLAST_PROGRAM_TBLASTX, queryFile, null, hits);
         blaster.blast(queryFile+".in", queryFile+".out");
         BlastParser parser = new BlastParser(queryFile+".out", hits);
@@ -98,16 +98,16 @@ public class SequenceAnalyzer
         if (blastType.equals(Blaster.BLAST_PROGRAM_TBLASTX))
         {
             prefix = "b2x";
-            queryFile = makeQueryFile(query, prefix,m_sequence.getId());
-            subjFile = makeQueryFile(subj, prefix,tr.getId())+".in";
+            queryFile = makeQueryFile(INPUT,query, prefix,m_sequence.getId());
+            subjFile = makeQueryFile(INPUT,subj, prefix,tr.getId())+".in";
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_TBLASTX, queryFile, subjFile, hits);
             
         }
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTX))
         {  
             prefix = "b2tp";
-            queryFile = makeQueryFile(m_sequence.getText(), prefix,m_sequence.getId());
-            subjFile = makeQueryFile(SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),prefix, tr.getId())+".in";
+            queryFile = makeQueryFile(INPUT,m_sequence.getText(), prefix,m_sequence.getId());
+            subjFile = makeQueryFile(INPUT,SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),prefix, tr.getId())+".in";
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTX, queryFile, subjFile, hits);
             blaster.setGapExtend(1);
             blaster.setGapOpen(11);
@@ -116,8 +116,8 @@ public class SequenceAnalyzer
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTP))
         {
             prefix = "b2p";
-            queryFile = makeQueryFile(SequenceManipulation.getTranslation(m_sequence.getText(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE), prefix,m_sequence.getId());
-            subjFile = makeQueryFile(SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),prefix, tr.getId())+".in";
+            queryFile = makeQueryFile(INPUT,SequenceManipulation.getTranslation(m_sequence.getText(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE), prefix,m_sequence.getId());
+            subjFile = makeQueryFile(INPUT,SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),prefix, tr.getId())+".in";
             
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTP, queryFile, subjFile, hits);
            
@@ -125,8 +125,8 @@ public class SequenceAnalyzer
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTN))
         {
             prefix = "b2n";
-             queryFile = makeQueryFile(m_sequence.getText(),prefix,m_sequence.getId());
-             subjFile = makeQueryFile(tr.getCodingSequence(), prefix,tr.getId()) +".in";
+             queryFile = makeQueryFile(INPUT,m_sequence.getText(),prefix,m_sequence.getId());
+             subjFile = makeQueryFile(INPUT,tr.getCodingSequence(), prefix,tr.getId()) +".in";
              blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTN, queryFile, subjFile, hits);
               blaster.setGapExtend(0);
               blaster.setGapOpen(1);
@@ -258,11 +258,11 @@ public class SequenceAnalyzer
         return blaster;
     }
     //Print the sequence cds to a file in a fasta format.
-    private  String makeQueryFile(String text, String prefics, int id) throws FlexUtilException
+    public static String makeQueryFile(String dirname,String text, String prefics, int id) throws FlexUtilException
     {
         java.util.Date d = new java.util.Date();
         java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM_dd_yyyy");
-        String fileName = INPUT+prefics+id;//System.currentTimeMillis();
+        String fileName = dirname+prefics+id;//System.currentTimeMillis();
         try
         {
             PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(fileName+".in")));

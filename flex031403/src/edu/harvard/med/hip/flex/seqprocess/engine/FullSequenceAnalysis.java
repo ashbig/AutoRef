@@ -14,6 +14,7 @@ import edu.harvard.med.hip.flex.seqprocess.spec.*;
 import edu.harvard.med.hip.flex.seqprocess.core.sequence.*;
 import edu.harvard.med.hip.flex.seqprocess.core.blast.*;
 import edu.harvard.med.hip.flex.seqprocess.core.feature.*;
+import edu.harvard.med.hip.flex.seqprocess.programs.needle.*;
 
 import edu.harvard.med.hip.flex.blast.*;
 import edu.harvard.med.hip.flex.core.*;
@@ -92,7 +93,61 @@ public class FullSequenceAnalysis
                 }
             }
             
-            updateDatabase(res_p,res_n,mutations);
+            updateDatabase(null,res_p,res_n,mutations);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage()); 
+            throw new FlexDatabaseException("Can not update db");
+        }
+        
+        
+    }
+    
+    
+     //main function run full analysis for the experimental sequence
+    
+    public void analizeUsingNeedle()throws FlexDatabaseException
+    {
+        BlastResult res_n = null;
+        BlastResult res_p = null;
+        NeedleResult res_needle = null;
+        ArrayList mutations = new ArrayList();
+        //run blast n 
+        try{
+            //run blast for display
+            SequenceAnalyzer analyzer = new SequenceAnalyzer(m_full_sequence);
+            res_n = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTN, 1);
+            //run needle 
+            NeedleWrapper nw = new NeedleWrapper();
+            res_needle = nw.runNeedle();
+            if (res_needle.getIdentity() != 100.0)
+            {
+                
+                if (res_needle.getIdentity() < 60.0)
+                {
+                     m_full_sequence.setStatus(FullSequence.STATUS_NOMATCH);
+                     m_full_sequence.setQuality(FullSequence.QUALITY_NOT_DEFINED);
+                     return;
+                }
+                else// not 100 on nucleotide level
+                {
+                     res_p = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTX,1);
+                     mutations = Mutation.run_mutation_analysis(res_needle,
+                                                                
+                                                                m_full_sequence.getId(), 
+                                                                m_t_sequence.getId() );
+                     setSequenceStatus(mutations);
+                     m_full_sequence.setStatus(FullSequence.STATUS_ANALIZED);
+
+                }
+            }
+            else//identity 100%
+            {
+                m_full_sequence.setQuality(FullSequence.QUALITY_RECOMENDED_STORAGE);
+                m_full_sequence.setStatus(FullSequence.STATUS_ANALIZED);
+            }
+            updateDatabase(res_needle, res_p,res_n,mutations);
         }
         catch(Exception e)
         {
@@ -104,13 +159,17 @@ public class FullSequenceAnalysis
     }
     
     //functions update database with results of analyzes
-    private void updateDatabase(BlastResult res_p,BlastResult res_n,ArrayList mutations) throws FlexDatabaseException
+    private void updateDatabase(NeedleResult res_needle, 
+                                BlastResult res_p,
+                                BlastResult res_n,
+                                ArrayList mutations) throws FlexDatabaseException
     {
         try{
             
             m_full_sequence.updateQuality(m_conn);
             m_full_sequence.updateStatus(m_conn);
             if (res_n != null) res_n.insert(m_conn);
+            if (res_needle != null) res_needle.insert(m_conn);
             if (res_p != null)
             {
                 res_p.insert(m_conn);
@@ -140,7 +199,7 @@ public class FullSequenceAnalysis
     }
     //function set flag if isolate is OK for storage or not 
     // suggestion for project manager
-        private void setSequenceStatus(ArrayList mutations)
+        private void setSequenceStatus(ArrayList mutations) throws FlexDatabaseException
         {
             m_full_sequence.setMutation(mutations);
             m_full_sequence.setQuality(m_spec);
@@ -171,8 +230,8 @@ public class FullSequenceAnalysis
             
             FullSequenceAnalysis fsl =new FullSequenceAnalysis
                     (fl,sequence, t.requestConnection(),null);
-            fsl.analize();
-            t.requestConnection().commit();
+          //  fsl.analize();
+          //  t.requestConnection().commit();
         } catch (Exception e)
         {
             System.out.println(e);
