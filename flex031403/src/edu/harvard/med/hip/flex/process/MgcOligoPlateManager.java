@@ -222,11 +222,12 @@ public class MgcOligoPlateManager extends OligoPlateManager
 
         //put on queue
         queueItem = new QueueItem( cont, createDNA, project, workflow);
-        queueItem = new QueueItem( cont, createGlycerol, project, workflow);
+        QueueItem queueItem1 = new QueueItem( cont, createGlycerol, project, workflow);
         queueItems.add(queueItem);
+        queueItems.add(queueItem1);
 
         containerQueue.addQueueItems(queueItems, conn);
-       
+      
     }
     
   //function writes robot file
