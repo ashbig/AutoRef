@@ -66,7 +66,7 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
 
     // Return the subthreadid for culture plate from agar plate.
     protected String getSubThread(Container c) {        
-        String processcode = c.getLabel().substring(0, 2);
+        String processcode = c.getLabel().substring(1, 3);
         
         if(processcode.equals("AA")) {
             return new String("1");

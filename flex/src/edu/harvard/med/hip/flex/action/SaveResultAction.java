@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.20 $
- * $Date: 2001-08-01 23:07:46 $
- * $Author: jmunoz $
+ * $Revision: 1.21 $
+ * $Date: 2001-08-21 21:58:09 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -63,8 +63,8 @@ import edu.harvard.med.hip.flex.workflow.*;
  * Will save information about the result into the db and manage the workflow.
  *
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.20 $ $Date: 2001-08-01 23:07:46 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.21 $ $Date: 2001-08-21 21:58:09 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -180,7 +180,9 @@ public class SaveResultAction extends ResearcherAction {
             dummyContainerList.add(container);
             
             // Do process stuff
-            WorkflowManager manager = new WorkflowManager("ProcessPlateManager");
+            Project project = queueItem.getProject();
+            Workflow workflow = queueItem.getWorkflow();
+            WorkflowManager manager = new WorkflowManager(project, workflow, "ProcessPlateManager");
             Process process = manager.createProcessRecord(Process.SUCCESS, protocol, researcher, 
                                         null, null, null, 
                                         dummyContainerList, lineages, conn);       
