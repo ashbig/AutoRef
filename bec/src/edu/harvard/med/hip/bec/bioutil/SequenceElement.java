@@ -17,8 +17,8 @@ public class SequenceElement
         private int m_query_index = -1;
         private int m_subject_index = -1;
         private int m_base_score = 0;
-        private char m_query_base ;
-        private char m_subject_base;
+        private char m_query_base ='\u0000';
+        private char m_subject_base ='\u0000';
 
         public SequenceElement( int query_index  ,int subject_index ,int base_score,char query_base,char subject_base)
         {
