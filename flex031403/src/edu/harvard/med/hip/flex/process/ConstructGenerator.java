@@ -112,11 +112,11 @@ public class ConstructGenerator {
             // and insert oligo infor into the oligo table
             try{
                 result_5p = pc.calculateFivepOligo(seq);
-                result_5p.insert(conn);
+                result_5p.insert(conn, "5p");
                 result_3s = pc.calculateThreepCloseOligo(seq);
-                result_3s.insert(conn);
+                result_3s.insert(conn, "3p");
                 result_3op = pc.calculateThreepOpenOligo(seq);
-                result_3op.insert(conn);
+                result_3op.insert(conn,"3p");
             } catch(FlexDatabaseException sqlex){
                 throw new FlexDatabaseException(sqlex);
             }
