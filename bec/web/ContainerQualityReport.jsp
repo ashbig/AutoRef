@@ -132,14 +132,27 @@ Container container = (Container)request.getAttribute("container") ;
 //build array of cell entries
         int rows = ((Integer)request.getAttribute("rows")).intValue();
         int cols = ((Integer)request.getAttribute("cols")).intValue();
+
+        int forwardName = ((Integer)request.getAttribute("forwardName")).intValue();
 	Sample sample = null;	int constructid = -1; int border_index = -1;
         String[][] cell_data = new String[rows][cols];
-int row = 0; int col = 0;System.out.println("l");
+        int row = 0; int col = 0;
+        String anchor = null;
+     
          for (int count = 0; count < container.getSamples().size(); count ++)
         {	
                 sample = (Sample)container.getSamples().get(count);
-                String anchor = "<A HREF=\"\" onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT  
+
+if ( forwardName == Constants.CONTAINER_RESULTS_VIEW)
+{
+                anchor = "<A HREF=\"\" onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT  
 		+ "&amp;ID="+ sample.getId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
+}
+if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateTrackingEngine() != null)
+{
+   anchor = "<A HREF=\"\" onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+ Constants.CONSTRUCT_DEFINITION_REPORT 
+		+ "&amp;ID="+ sample.getIsolateTrackingEngine().getConstructId()+"','"+sample.getIsolateTrackingEngine().getConstructId()+"','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
+}
                 row = (count ) % rows; col =(int) (count  /rows );
                 if (constructid != sample.getIsolateTrackingEngine().getConstructId())
                 {

@@ -64,7 +64,8 @@ public class Seq_GetItemAction extends ResearcherAction
                 forwardName == Constants.CONTAINER_ISOLATE_RANKER_REPORT ||
                 forwardName ==Constants.PROCESS_PUT_CLONES_ON_HOLD ||
                  forwardName == Constants.PROCESS_ACTIVATE_CLONES ||
-                 forwardName == Constants.PROCESS_CHECK_READS_AVAILABILITY )//rocessing from container label
+                 forwardName == Constants.PROCESS_CHECK_READS_AVAILABILITY 
+                 || forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER)//rocessing from container label
                {
                      
                     label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
@@ -89,7 +90,8 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.LINKER_DEFINITION_INT ||
                forwardName == Constants.CLONING_STRATEGY_DEFINITION_INT ||
                forwardName == Constants.SAMPLE_ISOLATE_RANKER_REPORT ||
-               forwardName == Constants.READ_REPORT_INT 
+               forwardName == Constants.READ_REPORT_INT ||
+               forwardName == Constants.CONSTRUCT_DEFINITION_REPORT
                )
                {
                     id = Integer.parseInt( (String) request.getParameter("ID"));
@@ -138,10 +140,19 @@ public class Seq_GetItemAction extends ResearcherAction
                 {
                     
                     container.restoreSampleIsolate(false,false);
-                    System.out.println("Container samples "+container.getSamples().size());
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
                     return (mapping.findForward("display_container_details"));
+                }
+                case Constants.PROCESS_APROVE_ISOLATE_RANKER:
+                {
+                    container.restoreSampleIsolateNoFlexInfo();
+                    request.setAttribute("container",container);
+                    request.setAttribute("forwardName", new Integer(forwardName));
+                    request.setAttribute("rows", new Integer(8));
+                    request.setAttribute("cols", new Integer(12));
+
+                    return (mapping.findForward("display_isolate_ranker_report"));
                 }
                  case Constants.CONTAINER_RESULTS_VIEW:
                 {
@@ -177,8 +188,10 @@ public class Seq_GetItemAction extends ResearcherAction
                   
                        
                 }
+                 /*
                 case Constants.CONTAINER_ISOLATE_RANKER_REPORT:
                 {
+                    
                     container.restoreSampleIsolateNoFlexInfo();
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
@@ -187,7 +200,7 @@ public class Seq_GetItemAction extends ResearcherAction
                    
                     return (mapping.findForward("display_isolate_ranker_report"));
                 }
-                
+                */
                 case Constants.SAMPLE_ISOLATE_RANKER_REPORT:
                 {
                     Sample sample = new Sample(id);
@@ -222,6 +235,15 @@ public class Seq_GetItemAction extends ResearcherAction
                     
                     request.setAttribute("discrepancy_report",discrepancy_report_html);
                     return (mapping.findForward("display_sample_isolate_ranker_report"));
+                }
+                case Constants.CONSTRUCT_DEFINITION_REPORT:
+                {
+                    Construct construct = new Construct(id);
+                    ArrayList clones_data = Construct.getClonesData(id);
+                    request.setAttribute("clones_data",clones_data);
+                    request.setAttribute("construct",construct);
+                     request.setAttribute("forwardName", new Integer(Constants.PROCESS_APROVE_ISOLATE_RANKER));
+                    return (mapping.findForward("construct_report"));
                 }
                 case Constants.READ_REPORT_INT:
                 {

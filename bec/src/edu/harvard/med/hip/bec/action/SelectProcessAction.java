@@ -90,16 +90,31 @@ public class SelectProcessAction extends ResearcherAction
                     ArrayList primers = BioVector.getVectorPrimers(vector_id);
                     ArrayList spec_names = new ArrayList();
                     ArrayList control_names = new ArrayList();
-                    spec_collection.add( primers);spec_names.add("5p primer");control_names.add("5p_primerid");
-                    spec_collection.add(  primers);spec_names.add("3p primer");control_names.add("3p_primerid");
+                    
+                    if ( primers == null || primers.size() == 0)
+                    {
+                          errors.add(ActionErrors.GLOBAL_ERROR,
+                            new ActionError("error.container.querry.parameter", 
+                                "There are no primers assosiated with this vector. \nPlease contact BEC development team."));
+                            saveErrors(request,errors);
+                             
+                            return new ActionForward(mapping.getInput());
+                    }
+                    spec_collection.add( primers);
+                    spec_names.add("5p primer");
+                    control_names.add("5p_primerid");
+                    spec_collection.add(  primers);
+                    spec_names.add("3p primer");
+                    control_names.add("3p_primerid");
                     request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
                     request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
                     request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
                     // there are isolates subject to isolateranking
-                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS);
+                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS,  vector_id);
                     request.setAttribute(Constants.PLATE_NAMES_COLLECTION, plateNames);
-                       
+                    
                     request.setAttribute("process_name", "Request End Reads");
+                      request.setAttribute("forwardName", new Integer(Constants.PROCESS_RUN_END_READS));
                     return (mapping.findForward("select_plates"));
                 }
                 case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
@@ -107,22 +122,28 @@ public class SelectProcessAction extends ResearcherAction
                      EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
                     runner.setUser(user);
                     t = new Thread(runner);
-                    t.start();
-                    break;
+                     request.setAttribute(Constants.JSP_TITLE,"Request for end read wrapper invocation" );
+                   request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
+                   // t.start();
+                   return mapping.findForward("processing");
                 }
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper
                 {
                     AssemblyRunner runner = new AssemblyRunner();
+    
                     runner.setUser(user);
                     runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
                     t = new Thread(runner);
-                    t.start();
-                    break;
+                      request.setAttribute(Constants.JSP_TITLE,"Request for end read assembler invocation." );
+                   request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
+                   // t.start();
+                   return mapping.findForward("processing");
+                    
                 }
                 case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY:
                 {
                      request.setAttribute("forwardName", new Integer(Constants.PROCESS_CHECK_READS_AVAILABILITY));
-                    request.setAttribute(Constants.JSP_TITLE,"select Plates to Check Clone Status");
+                    request.setAttribute(Constants.JSP_TITLE,"select Plate to Check Clone Status");
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
@@ -149,12 +170,17 @@ public class SelectProcessAction extends ResearcherAction
                     request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
                      request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
                     // there are isolates subject to isolateranking
-                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_RUN_ISOLATE_RUNKER);
+                    ArrayList plateNames = Container.findContainerLabelsForProcess(Constants.PROCESS_RUN_ISOLATE_RUNKER,-1);
                     request.setAttribute(Constants.PLATE_NAMES_COLLECTION, plateNames);
                     request.setAttribute("process_name", "Run Isolate Ranker");
                     return (mapping.findForward("select_plates"));
                 }
-               
+                 case Constants.PROCESS_APROVE_ISOLATE_RANKER:
+                {
+                    
+                    request.setAttribute(Constants.JSP_TITLE,"select Plate to Approve Isolate Ranker Results");
+                     return (mapping.findForward("scan_label"));
+                }
                
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER: // add new internal primer
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
