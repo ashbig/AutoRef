@@ -93,6 +93,9 @@ public class Constants {
     // key used to find the edit mode of a form
     public static final String FORM_MODE_KEY="EDIT_MODE";
     
+    //key used to find the list of oligo plate labels
+    public static final String OLIGO_PLATE_LABEL_LIST_KEY="OLIGO_PLATE_LABEL_LIST";
+    
     
     /** Creates new Constants */
     private Constants() {
