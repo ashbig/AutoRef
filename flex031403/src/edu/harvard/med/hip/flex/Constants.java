@@ -96,6 +96,9 @@ public class Constants {
     // key used to find a sample
     public static final String SAMPLE_KEY="SAMPLE";
     
+    // key used to find a sample id
+    public static final String SAMPLE_ID_KEY="SAMPLE_ID";
+    
     // key used to find the collection of samples
     public static final String SAMPLES_KEY = "SAMPLES";
     
