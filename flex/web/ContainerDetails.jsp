@@ -8,6 +8,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 
 
@@ -104,9 +105,9 @@
     
     <tr>
         <td>
-            <html:link page='<%="/"+file.toString()%>'>
+            <flex:linkFileRef name="file">
                 <bean:write name="file" property="baseName"/>
-            </html:link>
+            </flex:linkFileRef>
         </td>
         <td><bean:write name="file" property="fileType"/></td>
     </tr>

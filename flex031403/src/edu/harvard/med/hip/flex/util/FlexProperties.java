@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-10 14:54:05 $
- * $Author: dzuo $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-12 20:34:23 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -43,8 +43,8 @@ import java.util.*;
 /**
  * Holds sytem level properties.
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2001-07-10 14:54:05 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-12 20:34:23 $
  */
 
 public class FlexProperties {
@@ -55,7 +55,7 @@ public class FlexProperties {
     private Properties properties;
 
     // The instance
-    protected static FlexProperties instance = null;
+    private static FlexProperties instance = null;
 
     /**
      * Protected constructor.
@@ -98,6 +98,7 @@ public class FlexProperties {
      * @return The property requested.
      */
     public String getProperty(String key) {
+        
         return properties.getProperty(key);
     }
     
@@ -119,7 +120,7 @@ public class FlexProperties {
     
     public static void main(String [] args) {
         FlexProperties sysProps = StaticPropertyClassFactory.makePropertyClass("FlexProperties");
-        System.out.println("Test: " + sysProps.getProperty("flex.repository.basedir"));
+        System.out.println("Test: " + sysProps.getProperty("flex.repository.baseurl"));
     }         
 } // End class FlexProperties
 
