@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.4 2001-04-26 22:26:08 dongmei_zuo Exp $ 
+/* $Id: ContainerProcessQueue.java,v 1.5 2001-05-08 09:27:36 dongmei_zuo Exp $ 
  *
  * File     	: ContainerProcessQueue.java 
  * Date     	: 04162001
@@ -76,7 +76,7 @@ public class ContainerProcessQueue implements ProcessQueue {
 						"where c.containerid = q.containerid\n" +
 						"and c.locationid = l.locationid\n"+
 						"and q.protocolid = "+protocolid+
-						"and to_char(dateadded, 'fmYYYY-MM-DD') = "+date);
+						"and to_char(dateadded, 'fmYYYY-MM-DD') = '"+date+"'");
 
 		LinkedList items = restore(protocol, sql, t);
 		return items;
