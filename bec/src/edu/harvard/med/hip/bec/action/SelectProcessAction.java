@@ -191,43 +191,41 @@ public class SelectProcessAction extends ResearcherAction
                 {
                 }
                 case Constants.PROCESS_RUN_PRIMER3://run primer3
-               
                 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER://run discrepancy finder
                 {
-                    ArrayList plates =  new ArrayList();
-                    ArrayList specNames = new ArrayList();
-                    ArrayList specLists = new ArrayList();
-                    ArrayList specParamNames = new ArrayList();
+                    //requesred to submit spec/specs
+                    //file with sequence ids
+                    // type of sequence ids
+                     ArrayList spec_collection = new ArrayList();
+                     ArrayList spec_names = new ArrayList();
+                    ArrayList control_names = new ArrayList();
+                    String title = null;
+                     if (forwardName == Constants.PROCESS_RUN_PRIMER3)
+                    {
+                        spec_collection.add( Primer3Spec.getAllSpecNames() );
+                        spec_names.add("Primer3 ");
+                        control_names.add(Spec.PRIMER3_SPEC);
+                        title = "run Primer Designer for the set of clones";
+                     }
+                     else if (forwardName == Constants.PROCESS_RUNPOLYMORPHISM_FINDER)
+                     {
+                        spec_collection.add( PolymorphismSpec.getAllSpecNames());
+                        spec_names.add("Polymorphism Finder");
+                        control_names.add(Spec.POLYMORPHISM_SPEC);
+                        title = "run Polymorphism Finder for the set of clones";
+                     }
+                     else if (forwardName == Constants.PROCESS_RUN_DISCREPANCY_FINDER)
+                     {
+                         title = "run Discrepancy Finder for the set of clones";
+                     }
+                   
                     
-                    if (forwardName == 10)
-                    {
-                        ArrayList primer3_specs = Primer3Spec.getAllSpecs();
-                        specNames.add("Primer designer");
-                        specLists.add(primer3_specs);
-                        specParamNames.add("primer3_specid");
-                        request.setAttribute("title", "Design Primers");
-                        //plates = getPlates();
-                    }
-                    if (forwardName == 14)//run polymorphism finder
-                    {
-                        ArrayList polym_specs = PolymorphismSpec.getAllSpecs();
-                        specNames.add("Polymorphism finder");
-                        specLists.add(polym_specs);
-                        specParamNames.add("polym_specid");
-                         request.setAttribute("title", "Run Polymorphism Finder");
-                        //plates = getPlates();
-                    }
-                    if (forwardName == 13)//run discrepancy finder
-                    {
-                         request.setAttribute("title", "Run Discrepancy Finder");
-                        //plates = getPlates();
-                    }
-                    
-                    request.setAttribute("plates", plates);
-                    request.setAttribute("specLists", specLists);
-                    request.setAttribute("specNames", specNames);
-                    request.setAttribute("specParamNames", specParamNames);
+                    request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
+                    request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
+                    request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
+                    request.setAttribute(Constants.JSP_TITLE,title);
+                   
                     return (mapping.findForward("run_process"));
                 }
                 
