@@ -253,14 +253,14 @@ public class SpecialReportsRunner extends ProcessRunner
              {
                  isGoodQualityTraceFile = isTraceFilePassQualityCheck( phdFiles[phd_files_count],  pass_score , first_base ,last_base ,min_length );
                   if ( isGoodQualityTraceFile )
-                      print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getName() + Constants.TAB_DELIMETER + "PASS");
+                      print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath() + Constants.TAB_DELIMETER + "PASS");
                   else
-                     print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getName() + Constants.TAB_DELIMETER + "FAIL");
+                     print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath() + Constants.TAB_DELIMETER + "FAIL");
                      trace_files_count++;phd_files_count++;
              }
              else if ( compare_result < 0 )
              {
-                 print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getName()+ Constants.TAB_DELIMETER + "N/A");
+                 print_items.add(cloneid + Constants.TAB_DELIMETER + traceFiles[trace_files_count].getAbsolutePath()+ Constants.TAB_DELIMETER + "N/A");
                  trace_files_count++;
              }
              else if ( compare_result > 0 )
@@ -805,7 +805,7 @@ public class SpecialReportsRunner extends ProcessRunner
           SpecialReportsRunner runner = new SpecialReportsRunner();
             runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
             runner.setReportType(Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY);
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID," 143490   ");
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID," 143490 4426   ");
           runner.run();
              
          }catch(Exception e){}
