@@ -109,18 +109,22 @@
         
         
             
-        <td>
+        
           <logic:present name="process">
+            <td>
             <flex:findResult processName="process" sampleName="sample" id="result"/>
+            
             <logic:present name="result">
                 <flex:write name="result"/>
             </logic:present>
+          
             <logic:notPresent name="result">
                 &nbsp;
             </logic:notPresent>
+            </td>
           </logic:present>
           
-            </td>
+          
         
     </flex:row>
     </logic:iterate>

@@ -26,7 +26,7 @@
 </table>
 
 <p>
-<table border="1" cellpading="2" cellspace="0" width=90%>
+<table border="1" cellpading="2" cellspacing="0" width=90%>
 <tr class="headerRow">
 <th>FLEXGene ID</th><th>Description</th><th>Status</th>
 </tr>

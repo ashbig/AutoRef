@@ -57,7 +57,7 @@ Please follow the following hint.
 
 <logic:present name="customerRequest" scope="request">
 <p>You have the following cloning requests:
-<table border="1" cellpadding="2" cellspacing="0" width="100%">
+<table border="1" cellpadding="2" cellspacing="0" width="100%" align="center">
 <tr class="headerRow"><th>Date</th><th>Total Sequences</th><th>Processed Sequences</th><th>Non-processed Sequences</th></tr>
 <logic:iterate id="oneRequest" name="customerRequest">
 <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">

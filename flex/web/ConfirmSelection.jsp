@@ -35,7 +35,7 @@ appropriate selection and submit your cloning request to FLEXGene.</h3>
 <logic:present name="newSequences">
 <p>
 <h3>Category: Good quality sequences not already present in FLEXGene</h3>
-<table border="1">
+<TABLE border="1" cellpadding="2" cellspacing="0">
     <tr class="headerRow">
         <th></th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
     </tr>
@@ -61,7 +61,7 @@ appropriate selection and submit your cloning request to FLEXGene.</h3>
 <logic:present name="sameSequence">
 <p>
 <h3>Category: Good quality sequences already present in FLEXGene</h3>
-<table border="1">
+<TABLE border="1" cellpadding="2" cellspacing="0">
     <tr class="headerRow">
         <th></th><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
     </tr>
@@ -102,7 +102,7 @@ Query CDS length: <bean:write name="cdsMatch" property="value.blastResults.cdsle
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 [ <a target=_new href="ViewAlignment.do?gi=<bean:write name="cdsMatch" property="key"/>">View Alignment</a> ]
-<table border=1>
+<TABLE border="1" cellpadding="2" cellspacing="0">
     <tr class="headerRow">
         <td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
     </tr>
@@ -139,7 +139,7 @@ Query CDS length: <bean:write name="homo" property="value.blastResults.cdslength
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 [ <a target=_new href="ViewAlignment.do?gi=<bean:write name="homo" property="key"/>">View Alignment</a> ]
-<table border=1>
+<TABLE border="1" cellpadding="2" cellspacing="0">
     <tr class="headerRow">
         <td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
     </tr>
@@ -174,7 +174,7 @@ Query CDS length: <bean:write name="homo" property="value.blastResults.cdslength
 <logic:present name="badSequences">
 <p>
 <h3>Category: Questionable quality sequences</h3>
-<table border=1>
+<TABLE border="1" cellpadding="2" cellspacing="0">
     <tr class="headerRow">
         <th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
     </tr>
