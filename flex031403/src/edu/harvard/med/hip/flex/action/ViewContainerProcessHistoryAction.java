@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2002-11-25 23:53:39 $
+ * $Revision: 1.7 $
+ * $Date: 2002-12-12 17:02:30 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -55,7 +55,7 @@ import edu.harvard.med.hip.flex.database.*;
  * Action called when requesting to view the process history of a container
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.6 $ $Date: 2002-11-25 23:53:39 $
+ * @version    $Revision: 1.7 $ $Date: 2002-12-12 17:02:30 $
  */
 
 public class ViewContainerProcessHistoryAction extends CollaboratorAction
@@ -108,8 +108,7 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
             else if(containerBarcode!=null && containerBarcode.length() !=0)
             {
                 
-                List containerList =
-                Container.findContainers(containerBarcode);
+                List containerList = Container.findContainersFromView(containerBarcode);
                 if(containerList.size() >0)
                 {
                     container = (Container)containerList.get(0);

@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2002-02-25 16:40:41 $
- * $Author: dzuo $
+ * $Revision: 1.5 $
+ * $Date: 2002-12-12 17:02:23 $
+ * $Author: Elena $
  *
  ******************************************************************************
  *
@@ -57,8 +57,8 @@ import org.apache.struts.action.*;
  * Finds the container(s) speficied by the id or the label, and puts it into
  * the request to display the details of a container.
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.4 $ $Date: 2002-02-25 16:40:41 $
+ * @author     $Author: Elena $
+ * @version    $Revision: 1.5 $ $Date: 2002-12-12 17:02:23 $
  */
 
 public class ViewContainerDetailsAction extends CollaboratorAction {
@@ -113,7 +113,7 @@ public class ViewContainerDetailsAction extends CollaboratorAction {
                 container.restoreSample();
                 containerList.add(container);
             } else if(containerBarcode!=null && containerBarcode.length() !=0) {
-                containerList = Container.findContainers(containerBarcode);
+                containerList = Container.findContainersFromView(containerBarcode);
             } else {
               throw new FlexCoreException("Unable to find any containers with label " + containerBarcode); 
             }
