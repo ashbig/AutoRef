@@ -112,7 +112,7 @@ public class RNAMutation extends Mutation {
         
         String sql = "INSERT INTO discrepancy  (DISCREPANCYID  ,POSITION ,LENGTH ,CHANGEORI ,CHANGEMUT "
  +",TYPE ,SEQUENCEID ,POLYMFLAG ,POLYMID ,POLMDATE,CODONORI ,CODONMUT ,UPSTREAM ,DOWNSTREAM "
- +",CODONPOS ,CHANGETYPE ,DISCRNUMBER ,DISCQUALITY )   VALUES(?,?,?,?,?,?,?,?,?,sysdate, ?,?,?,?,?,?,?,?)" ;
+ +",CODONPOS ,CHANGETYPE ,DISCRNUMBER ,DISCQUALITY ,DISCRPOSITION)   VALUES(?,?,?,?,?,?,?,?,?,sysdate, ?,?,?,?,?,?,?,?,?)" ;
     
         try
         {
@@ -140,6 +140,7 @@ public class RNAMutation extends Mutation {
             pstmt.setInt(15,m_change_type);
             pstmt.setInt(16,m_number);
              pstmt.setInt(17,m_quality);
+              pstmt.setInt(18,m_exp_position);
             DatabaseTransaction.executeUpdate(pstmt);
               
             
