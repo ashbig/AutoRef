@@ -98,6 +98,18 @@
     <form-bean      name="printLabelForm"
                     type="edu.harvard.med.hip.flex.form.PrintLabelForm"/>
 
+    <!-- Form used to print a barcode -->
+    <form-bean      name="importForm"
+                    type="edu.harvard.med.hip.flex.form.ImportForm"/>
+
+    <!-- Form used to add a name type to the database -->
+    <form-bean      name="nametypeForm"
+                    type="edu.harvard.med.hip.flex.form.NametypeForm"/>
+
+    <!-- Form used to add a name type to the database -->
+    <form-bean      name="addResearcherForm"
+                    type="edu.harvard.med.hip.flex.form.AddResearcherForm"/>
+
     </form-beans>
     
    
@@ -119,6 +131,8 @@
     <forward    name="enterProcessResults" path="/PickResultType.jsp"/>
     <forward    name="containerProcessHistory" path="/ContainerScan.jsp"/>
     <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>
+    <forward    name="importSequence" path="/GetProjects.do?forwardName=IMPORT_SEQUENCES"/>
+    <forward    name="addResearcher" path="/AddResearcher.jsp"/>
   </global-forwards>
   
 
@@ -177,6 +191,7 @@
                 name="projectWorkflowForm"
                 type="edu.harvard.med.hip.flex.action.GetProjectsAction">
         <forward    name="success"   path="/SelectProject.jsp"/>
+        <forward    name="success_import_sequence"   path="/ImportSequence.jsp"/>
     </action>
 
     <!-- Process user's selection of a project -->
@@ -544,6 +559,39 @@
     <!-- Action that will be used to export all the sequences to FASTA file -->
     <action path="/ExportFLEXtoFASTA"
             type="edu.harvard.med.hip.flex.action.ExportFLEXtoFASTAAction">
+    </action>
+
+    <!-- Action used to import the sequence files into the database -->
+    <action path="/ImportSequence"
+            name="importForm"
+            type="edu.harvard.med.hip.flex.action.ImportSequenceAction"
+            input="/ImportSequence.jsp">
+      <forward name="success" path="/ImportSuccessful.jsp"/>
+      <forward name="fail" path="/ImportFail.jsp"/>
+    </action>
+
+    <!-- Get all the nametype from the database -->
+    <action path="/GetNametype"
+            type="edu.harvard.med.hip.flex.action.GetNametypeAction">
+      <forward name="success" path="/DisplayNametype.jsp"/>
+    </action>
+
+    <!-- Add a name type to the database -->
+    <action path="/AddNametype"
+            name="nametypeForm"
+            type="edu.harvard.med.hip.flex.action.AddNametypeAction"
+            input="/AddNametype.jsp">
+      <forward name="success" path="/DisplayAddNametype.jsp"/>
+      <forward name="fail" path="/DisplayFailAddNametype.jsp"/>
+    </action>
+
+    <!-- Add a name type to the database -->
+    <action path="/AddResearcher"
+            name="addResearcherForm"
+            type="edu.harvard.med.hip.flex.action.AddResearcherAction"
+            input="/AddResearcher.jsp">
+      <forward name="success" path="/DisplayResearcher.jsp"/>
+      <forward name="fail" path="/DisplayFailResearcher.jsp"/>
     </action>
 
     <!-- The standard administrative actions available with Struts -->
