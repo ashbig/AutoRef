@@ -8,7 +8,7 @@
 <center><b>Y/(X+Y): incidence rate of this disease out of the papers studying this gene</b><BR></center>
 <center><b>Y/(Y+Z): incidence rate of this gene out of the papers studying this disease</b><BR></center>
 <br>
-<center><b>The distribution of product of incidence (log value) for all the breast cancer related genes</b></center>
+<center><b>For example, the distribution of product of incidence (log value) for all the breast cancer related genes</b></center>
 <center><img src="product_incidence.jpg"></center>
 <jsp:include page="links.jsp" flush="true"/> 
 </body>

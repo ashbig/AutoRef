@@ -12,7 +12,7 @@
 <center><b>n = a+b+c+d, total number of papers</b><BR></center><br>
 <center><font size=5 face=Arial color=blue><b>relative risk of gene = (b/(b+a))/(d/(d+c))</b></font><BR></center>
 <BR>
-<center><b>The distribution of relative risk of gene (log value) for all the breast cancer related genes</b></center>
+<center><b>For example, the distribution of relative risk of gene (log value) for all the breast cancer related genes</b></center>
 <center><img src="relative_risk_gene.jpg"></center>
 <jsp:include page="links.jsp" flush="true"/>
 </body>

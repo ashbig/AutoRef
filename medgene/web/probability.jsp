@@ -8,7 +8,7 @@
 <center><b>Y: papers studying both the gene and the disease</b><BR></center>
 <center><b>X+Y+Z: papers studying either the gene or the disease</b><BR></center>
 <BR>
-<center><b>The distribution of probability (log value) for all the breast cancer related genes</b></center>
+<center><b>For example, the distribution of probability (log value) for all the breast cancer related genes</b></center>
 <center><img src="probability.jpg"></center>
 <jsp:include page="links.jsp" flush="true"/> 
 </body>
