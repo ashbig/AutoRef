@@ -68,7 +68,6 @@ public class EnterExpressionResultAction extends ResearcherAction {
         
         String plateBarcode = container.getLabel();
         String nextForward = ((EnterResultForm)form).getNextForward();
-        request.getSession().removeAttribute("newExpressionPlate");
         
         List pcrResultList = ((EnterResultForm)form).getPcrResultList();
         List floResultList = ((EnterResultForm)form).getFloResultList();
@@ -80,20 +79,144 @@ public class EnterExpressionResultAction extends ResearcherAction {
         List cloneidList = ((EnterResultForm)form).getCloneidList();
         
         FormFile filename = ((EnterResultForm)form).getFilename();
-        boolean hasFile = true;
+        FormFile floFilename = ((EnterResultForm)form).getFloFilename();
+        FormFile proFilename = ((EnterResultForm)form).getProFilename();
+        FormFile restrictFilename = ((EnterResultForm)form).getRestrictFilename();
+        FormFile colonyFilename = ((EnterResultForm)form).getColonyFilename();
         
-        if (filename == null || filename.getFileName().equals("") || filename.getFileSize() == 0) {
+        boolean hasFile = true;
+        boolean hasFloFile = true;
+        boolean hasProFile = true;
+        boolean hasRestrictFile = true;
+        boolean hasColonyFile = true;
+        
+        if (filename == null || filename.getFileName().trim().equals("")) {
             hasFile = false;
         }
-
+          
+        if (floFilename == null || floFilename.getFileName().trim().equals("")) {
+            hasFloFile = false;
+        }
+                
+        if (proFilename == null || proFilename.getFileName().trim().equals("")) {
+            hasProFile = false;
+        }
+                
+        if (restrictFilename == null || restrictFilename.getFileName().trim().equals("")) {
+            hasRestrictFile = false;
+        }
+                
+        if (colonyFilename == null || colonyFilename.getFileName().trim().equals("")) {
+            hasColonyFile = false;
+        }
+        
+        boolean isRetInput = false;
+        if(hasFile && filename.getFileSize() == 0) {
+            // display error message on entry form
+            errors.add("filename", new ActionError("error.file.invalid", filename.getFileName()));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }        
+        if(hasFloFile && floFilename.getFileSize() == 0) {
+            // display error message on entry form
+            errors.add("floFilename", new ActionError("error.file.invalid", floFilename.getFileName()));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }
+        if(hasProFile && proFilename.getFileSize() == 0) {
+            // display error message on entry form
+            errors.add("proFilename", new ActionError("error.file.invalid", proFilename.getFileName()));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }
+        if(hasRestrictFile && restrictFilename.getFileSize() == 0) {
+            // display error message on entry form
+            errors.add("restrictFilename", new ActionError("error.file.invalid", restrictFilename.getFileName()));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }
+        if(hasColonyFile && colonyFilename.getFileSize() == 0) {
+            // display error message on entry form
+            errors.add("colonyFilename", new ActionError("error.file.invalid", colonyFilename.getFileName()));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }
+        
         // make sure the name doesn't have any spaces in it
         if(hasFile && filename.getFileName().indexOf(" ") != -1) {
             // display error message on entry form
-            errors.add("filename", new ActionError("error.gelimage.nospaces"));
+            errors.add("filename", new ActionError("error.file.nospaces"));
             saveErrors(request,errors);
+            isRetInput = true;
+        }
+        if(hasFloFile && floFilename.getFileName().indexOf(" ") != -1) {
+            // display error message on entry form
+            errors.add("floFilename", new ActionError("error.file.nospaces"));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }
+        if(hasProFile && proFilename.getFileName().indexOf(" ") != -1) {
+            // display error message on entry form
+            errors.add("proFilename", new ActionError("error.file.nospaces"));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }
+        if(hasColonyFile && colonyFilename.getFileName().indexOf(" ") != -1) {
+            // display error message on entry form
+            errors.add("colonyFilename", new ActionError("error.file.nospaces"));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }
+        if(hasRestrictFile && restrictFilename.getFileName().indexOf(" ") != -1) {
+            // display error message on entry form
+            errors.add("restrictFilename", new ActionError("error.file.nospaces"));
+            saveErrors(request,errors);
+            isRetInput = true;
+        }
+        
+        if(isRetInput) {            
+            boolean well = ((EnterResultForm)form).getWell();
+            boolean sampleid = ((EnterResultForm)form).getSampleid();
+            boolean geneSymbol = ((EnterResultForm)form).getGeneSymbol();
+            boolean pa = ((EnterResultForm)form).getPa();
+            boolean sgd = ((EnterResultForm)form).getSgd();
+            boolean masterClone = ((EnterResultForm)form).getMasterClone();
+            boolean researcher = ((EnterResultForm)form).getResearcher();
+            boolean restriction = ((EnterResultForm)form).getRestriction();
+            boolean pcr = ((EnterResultForm)form).getPcr();
+            boolean colony = ((EnterResultForm)form).getColony();
+            boolean florescence = ((EnterResultForm)form).getFlorescence();
+            boolean protein = ((EnterResultForm)form).getProtein();
+            boolean status = ((EnterResultForm)form).getStatus();
+            
+            if(well) {request.setAttribute("well", new Boolean(well));}
+            if(sampleid) {request.setAttribute("sampleid", new Boolean(sampleid));}
+            if(geneSymbol) {request.setAttribute("geneSymbol", new Boolean(geneSymbol));}
+            if(pa) {request.setAttribute("pa", new Boolean(pa));}
+            if(sgd) {request.setAttribute("sgd", new Boolean(sgd));}
+            if(masterClone) {request.setAttribute("masterClone", new Boolean(masterClone));}
+            if(researcher) {request.setAttribute("researcher", new Boolean(researcher));}
+            if(restriction) {request.setAttribute("restriction", new Boolean(restriction));}
+            if(pcr) {request.setAttribute("pcr", new Boolean(pcr));}
+            if(colony) {request.setAttribute("colony", new Boolean(colony));}
+            if(florescence) {request.setAttribute("florescence", new Boolean(florescence));}
+            if(protein) {request.setAttribute("protein", new Boolean(protein));}
+            if(status) {request.setAttribute("status", new Boolean(status));}
+            request.setAttribute("newPlate", ((EnterResultForm)form).getNewPlate());
+            request.setAttribute("nextForward", nextForward);
+            request.setAttribute("pcrResultList", pcrResultList);
+            request.setAttribute("floResultList", floResultList);
+            request.setAttribute("proteinResultList", proteinResultList);
+            request.setAttribute("restrictionResultList", restrictionResultList);
+            request.setAttribute("colonyResultList", colonyResultList);
+            request.setAttribute("statusList", statusList);
+            request.setAttribute("commentsList", commentsList);
+            request.setAttribute("cloneidList", cloneidList);
+            
             return new ActionForward(mapping.getInput());
         }
-       
+        
+        request.getSession().removeAttribute("newExpressionPlate");
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -113,6 +236,10 @@ public class EnterExpressionResultAction extends ResearcherAction {
             Process process = manager.createProcessRecord(Process.SUCCESS, protocol, r,null, null, null,containers, null, conn);
             
             List newResultList = new ArrayList();
+            List newFloResultList = new ArrayList();
+            List newProResultList = new ArrayList();
+            List newRestrictResultList = new ArrayList();
+            List newColonyResultList = new ArrayList();
             Vector samples = container.getSamples();
             for(int i=0; i<samples.size(); i++) {
                 ExpressionCloneSample sample = (ExpressionCloneSample)samples.get(i);
@@ -134,7 +261,7 @@ public class EnterExpressionResultAction extends ResearcherAction {
                 if(!newFloResult.equals(flo.trim())) {
                     if(!newFloResult.equals(CloneSample.NOT_DONE)) {
                         Result result = new Result(process, sample, Result.EXPRESSION_FLORESCENCE, newFloResult);
-                        newResultList.add(result);
+                        newFloResultList.add(result);
                     }
                 }
                 
@@ -142,7 +269,7 @@ public class EnterExpressionResultAction extends ResearcherAction {
                 if(!newColonyResult.equals(colony.trim())) {
                     if(!newColonyResult.equals(CloneSample.NOT_DONE)) {
                         Result result = new Result(process, sample, Result.EXPRESSION_COLONY, newColonyResult);
-                        newResultList.add(result);
+                        newColonyResultList.add(result);
                     }
                 }
                 
@@ -150,7 +277,7 @@ public class EnterExpressionResultAction extends ResearcherAction {
                 if(!newRestrictionResult.equals(restriction.trim())) {
                     if(!newRestrictionResult.equals(CloneSample.NOT_DONE)) {
                         Result result = new Result(process, sample, Result.EXPRESSION_RESTRICTION, newRestrictionResult);
-                        newResultList.add(result);
+                        newRestrictResultList.add(result);
                     }
                 }
                 
@@ -158,17 +285,41 @@ public class EnterExpressionResultAction extends ResearcherAction {
                 if(!newProteinResult.equals(protein.trim())) {
                     if(!newProteinResult.equals(CloneSample.NOT_DONE)) {
                         Result result = new Result(process, sample, Result.EXPRESSION_PROTEIN, newProteinResult);
-                        newResultList.add(result);
+                        newProResultList.add(result);
                     }
                 }
             }
-                        
+            
             //insert record into FILEREFERENCE table if any.
             FileReference fileRef = null;
             if(hasFile) {
-                fileRef = handleFileReference(conn, filename, container);
+                fileRef = handleFileReference(conn, filename, container, FileReference.EXP_GEL_TYPE);
             }
             Result.insert(conn, newResultList, fileRef);
+            
+            fileRef = null;
+            if(hasProFile) {
+                fileRef = handleFileReference(conn, proFilename, container, FileReference.EXP_PRO_TYPE);
+            }
+            Result.insert(conn, newProResultList, fileRef);
+            
+            fileRef = null;
+            if(hasFloFile) {
+                fileRef = handleFileReference(conn, floFilename, container, FileReference.EXP_FLO);
+            }
+            Result.insert(conn, newFloResultList, fileRef);
+            
+            fileRef = null;
+            if(hasColonyFile) {
+                fileRef = handleFileReference(conn, colonyFilename, container, FileReference.EXP_COLONY_TYPE);
+            }
+            Result.insert(conn, newColonyResultList, fileRef);
+            
+            fileRef = null;
+            if(hasRestrictFile) {
+                fileRef = handleFileReference(conn, restrictFilename, container, FileReference.EXP_RESTRICTION);
+            }
+            Result.insert(conn, newRestrictResultList, fileRef);
             
             DatabaseTransaction.commit(conn);
             request.setAttribute("plateBarcode", plateBarcode);
@@ -204,7 +355,7 @@ public class EnterExpressionResultAction extends ResearcherAction {
      * @exception IOException when an error occurs writing the file to the
      *              repository
      */
-    private FileReference handleFileReference(Connection conn, FormFile image, Container container)
+    private FileReference handleFileReference(Connection conn, FormFile image, Container container, String type)
     throws FlexDatabaseException, IOException{
         FileReference fileRef = null;
         
@@ -223,8 +374,8 @@ public class EnterExpressionResultAction extends ResearcherAction {
         }
         
         String subDirName = Integer.toString(cal.get(Calendar.YEAR)) + monthNumS;
-        String localPath = FileRepository.EXP_GEL_LOCAL_PATH + subDirName + "/";
-        fileRef = FileReference.createFile(conn, image.getFileName(), FileReference.EXP_GEL_TYPE ,localPath, container);
+        String localPath = FileRepository.EXP_LOCAL_PATH + subDirName + "/";
+        fileRef = FileReference.createFile(conn, image.getFileName(), type ,localPath, container);
         
         FileRepository.uploadFile(fileRef, image.getInputStream());
         

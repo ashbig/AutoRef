@@ -87,7 +87,7 @@ function put5()
 <html:errors/>
 <p>
 <html:form action="/EnterExpressionResult.do" focus="sourcePlate"  enctype="multipart/form-data">
-
+<html:hidden property="newPlate"/>
 <table>
     <tr>
         <td class="prompt">Plate:</td>
@@ -101,21 +101,27 @@ function put5()
     <tr class="headerRow">
     <logic:present name="sampleid">
         <th>Sample Id</th>
+        <html:hidden property="sampleid"/>
     </logic:present>
     <logic:present name="well">
         <th>Well</th>
+        <html:hidden property="well"/>
     </logic:present>
     <logic:present name="geneSymbol">
         <th>Gene Symbol</th>  
+        <html:hidden property="geneSymbol"/>
     </logic:present>
     <logic:present name="pa">
         <th>PA</th>  
+        <html:hidden property="pa"/>
     </logic:present>
     <logic:present name="sgd">
         <th>SGD</th> 
+        <html:hidden property="sgd"/>
     </logic:present>
     <logic:present name="masterClone">
         <th>Master Clone ID</th> 
+        <html:hidden property="masterClone"/>
     </logic:present>  
     <logic:present name="colony">
         <th>Colony Result
@@ -125,6 +131,7 @@ function put5()
                 <option>FAIL
             </select>
         </th>  
+        <html:hidden property="colony"/>
     </logic:present>
     <logic:present name="pcr">
         <th>PRC Result         
@@ -134,6 +141,7 @@ function put5()
                 <option>FAIL
             </select>
         </th>
+        <html:hidden property="pcr"/>
     </logic:present> 
     <logic:present name="florescence">
         <th>Florescence Result
@@ -143,6 +151,7 @@ function put5()
                 <option>FAIL
             </select>
         </th>
+        <html:hidden property="florescence"/>
     </logic:present>
     <logic:present name="protein">
         <th>Protein Expression Result
@@ -152,6 +161,7 @@ function put5()
                 <option>FAIL
             </select>
         </th> 
+        <html:hidden property="protein"/>
     </logic:present>
     <logic:present name="restriction">
         <th>Restriction Digestion Result
@@ -161,6 +171,7 @@ function put5()
                 <option>FAIL
             </select>
         </th> 
+        <html:hidden property="restriction"/>
     </logic:present> 
     <logic:present name="status">
         <th>Final Status
@@ -170,9 +181,11 @@ function put5()
                 <option>FAIL
             </select>
         </th>  
+        <html:hidden property="status"/>
     </logic:present>
     <logic:present name="researcher">
         <th>Author</th>  
+        <html:hidden property="researcher"/>
     </logic:present>
     <th>Start Date</th>  
     <th>Comments</th>  
@@ -230,7 +243,7 @@ function put5()
                 <option selected>FAIL
             </logic:equal>
         </select>  
-    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_COLONY %>">history</a>
+    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?well=<bean:write name="sample" property="position"/>&sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_COLONY %>&gene=<flex:write name="sample" property="geneSymbol"/>&plate=<bean:write name="newPlate"/>">history</a>
     </td>
     </logic:present>
     <logic:present name="pcr">
@@ -252,7 +265,7 @@ function put5()
                 <option selected>FAIL
             </logic:equal>
         </select>
-    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_PCR %>">history</a>
+    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?well=<bean:write name="sample" property="position"/>&sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_PCR %>&gene=<flex:write name="sample" property="geneSymbol"/>&plate=<bean:write name="newPlate"/>">history</a>
     </td>
     </logic:present>
     <logic:present name="florescence">
@@ -274,7 +287,7 @@ function put5()
                 <option selected>FAIL
             </logic:equal>
         </select>
-    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_FLORESCENCE %>">history</a>
+    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?well=<bean:write name="sample" property="position"/>&sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_FLORESCENCE %>&gene=<flex:write name="sample" property="geneSymbol"/>&plate=<bean:write name="newPlate"/>">history</a>
     </td>
     </logic:present>
     <logic:present name="protein">
@@ -296,7 +309,7 @@ function put5()
                 <option selected>FAIL
             </logic:equal>
         </select>
-    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_PROTEIN %>">history</a>
+    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?well=<bean:write name="sample" property="position"/>&sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_PROTEIN %>&gene=<flex:write name="sample" property="geneSymbol"/>&plate=<bean:write name="newPlate"/>">history</a>
     </td>
     </logic:present>
     <logic:present name="restriction">
@@ -318,7 +331,7 @@ function put5()
                 <option selected>FAIL
             </logic:equal>
         </select>       
-    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_RESTRICTION %>">history</a>            
+    <a target="resulthistory" href="/FLEX/ExpressionResultHistory.do?well=<bean:write name="sample" property="position"/>&sampleid=<bean:write name="sample" property="id"/>&resulttype=<%=Result.EXPRESSION_RESTRICTION %>&gene=<flex:write name="sample" property="geneSymbol"/>&plate=<bean:write name="newPlate"/>">history</a>            
     </td>
     </logic:present>
     <logic:present name="status">
@@ -355,23 +368,69 @@ function put5()
     </td>
     </flex:row>
     </logic:iterate>
-
+    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">    
+        <logic:present name="sampleid">
+            <td>&nbsp;</td>
+        </logic:present>
+        <logic:present name="well">
+            <td>&nbsp;</td>
+        </logic:present>
+        <logic:present name="geneSymbol">
+            <td>&nbsp;</td>
+        </logic:present>
+        <logic:present name="pa">
+            <td>&nbsp;</td>
+        </logic:present>
+        <logic:present name="sgd">
+            <td>&nbsp;</td>
+        </logic:present>
+        <logic:present name="masterClone">
+            <td>&nbsp;</td>
+        </logic:present>  
+        <logic:present name="colony">
+            <td class="prompt">Upload file: <html:file property="colonyFilename" /></td> 
+        </logic:present>    
+        <logic:present name="pcr">
+            <td class="prompt">Upload file: <html:file property="filename" /></td> 
+        </logic:present>  
+        <logic:present name="florescence">
+            <td class="prompt">Upload file: <html:file property="floFilename" /></td> 
+        </logic:present>  
+        <logic:present name="protein">
+            <td class="prompt">Upload file: <html:file property="proFilename" /></td> 
+        </logic:present>  
+        <logic:present name="restriction">
+            <td class="prompt">Upload file: <html:file property="restrictFilename" /></td> 
+        </logic:present>      
+        <logic:present name="status">
+            <td>&nbsp;</td>
+        </logic:present>
+        <logic:present name="researcher">
+            <td>&nbsp;</td>
+        </logic:present>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+    </flex:row>
 </table>
 
-<p>
-<table>
-    <tr>
-        <td class="prompt">Upload gel image file:</td>
-        <td><html:file property="filename" /></td>
+<p><b>Existing files associated with this plate:</b></p>
+<TABLE border="1" cellpadding="2" cellspacing="0">
+    <tr class="headerRow">
+        <th>File Name</th><th>File Type</th>
     </tr>
-</table>
-
-<p><b>Existing image files associated with this plate:</b></p>
 <logic:iterate id="file" name="newExpressionPlate" property="fileReferences">
+    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+        <td>
             <flex:linkFileRef name="file">
                 <bean:write name="file" property="baseName"/>
-            </flex:linkFileRef><br>
+            </flex:linkFileRef>
+        </td>
+        <td><bean:write name="file" property="fileType"/></td>
+    </flex:row>
 </logic:iterate>
+</table>
+
+
 
 <p>
 <table>

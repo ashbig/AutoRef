@@ -56,6 +56,10 @@ public class EnterResultForm extends CreateExpressionPlateForm {
     
     protected Researcher r;
     protected FormFile filename = null;
+    protected FormFile floFilename = null;
+    protected FormFile proFilename = null;
+    protected FormFile colonyFilename = null;
+    protected FormFile restrictFilename = null;
     
     /** Creates a new instance of EnterResultForm */
     public EnterResultForm() {
@@ -97,6 +101,10 @@ public class EnterResultForm extends CreateExpressionPlateForm {
     public void setNextForward(String s) {this.nextForward = s;}
     public void setResearcherObject(Researcher r) {this.r = r;}
     public void setFilename(FormFile f) {this.filename = f;}
+    public void setFloFilename(FormFile f) {this.floFilename = f;}
+    public void setProFilename(FormFile f) {this.proFilename = f;}
+    public void setColonyFilename(FormFile f) {this.colonyFilename = f;}
+    public void setRestrictFilename(FormFile f) {this.restrictFilename = f;}
     
     public String getNewPlate() {return newPlate;}
     public boolean getWell() {return well;}
@@ -134,6 +142,10 @@ public class EnterResultForm extends CreateExpressionPlateForm {
     public String getNextForward() {return nextForward;}
     public Researcher getResearcherObject() {return r;}
     public FormFile getFilename() {return filename;}
+    public FormFile getFloFilename() {return floFilename;}
+    public FormFile getProFilename() {return proFilename;}
+    public FormFile getColonyFilename() {return colonyFilename;}
+    public FormFile getRestrictFilename() {return restrictFilename;}
     
     public void setCloneValues(Vector samples) {
         pcrResultList = new ArrayList();
@@ -161,7 +173,7 @@ public class EnterResultForm extends CreateExpressionPlateForm {
             cloneidList.add((new Integer(s.getCloneid())).toString());
         }
     }
-
+    
     /**
      * Reset all properties to their default values.
      *
@@ -187,8 +199,12 @@ public class EnterResultForm extends CreateExpressionPlateForm {
         newPlate = null;
         researcherBarcode = null;
         filename = null;
-    }   
-        
+        floFilename = null;
+        proFilename = null;
+        colonyFilename = null;
+        restrictFilename = null;
+    }
+    
     /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any
@@ -206,8 +222,8 @@ public class EnterResultForm extends CreateExpressionPlateForm {
         
         if ((newPlate == null) || (newPlate.trim().length() < 1)) {
             errors.add("newPlate", new ActionError("error.plate.invalid.master", newPlate));
-        } 
+        }
         
-        return errors;        
-    }       
+        return errors;
+    }
 }
