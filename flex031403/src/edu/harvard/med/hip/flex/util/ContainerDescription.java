@@ -24,16 +24,17 @@ public class ContainerDescription
     private boolean             m_isReady = false;
     
     /** Creates a new instance of ContainerDescription */
-    public ContainerDescription(String l, String m, int id, int glycerol_id)
+    public ContainerDescription(String l, String m, int id, int glycerol_id, int culture_id)
     {
         m_label = l;
         m_marker = m;
         m_id = id;
         m_glycerol_id = glycerol_id;
+        m_culture_id = culture_id;
     }
-    public ContainerDescription(String l, String m, int id, int glycerol_id, int n)
+    public ContainerDescription(String l, String m, int id, int glycerol_id,  int culture_id, int n)
     {
-       this(l,m,id, glycerol_id);
+       this(l,m,id, glycerol_id,  culture_id);
        m_number_of_sequences = n;
     }
     
@@ -53,5 +54,5 @@ public class ContainerDescription
     public void             setNumberOfSequences(int n  )    {m_number_of_sequences = n;    }
     //status shows if culture block for this mgc container exists on queue
     public void             setStatus(boolean s){ m_isReady = s;}
-    public void             setCultureId(int id) { m_culture_id = id;}
+    
 }
