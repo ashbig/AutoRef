@@ -22,12 +22,14 @@ public class BlastWrapper
     public static final String YEASTDB_NAME="Saccharomyces cerevisiae";
     public static final String PSEUDOMONASDB_NAME="Pseudomonas aeruginosa";
     public static final String MGCDB_NAME="MGC";
+    public static final String YPDB_NAME="Yersinia Pastis";
    
     
     public static  String HUMANDB=null;
     public static  String YEASTDB=null;
     public static  String PSEUDOMONASDB=null;
     public static  String MGCDB=null;
+    public static  String YPDB=null;
    
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
@@ -36,6 +38,7 @@ public class BlastWrapper
             YEASTDB="d:\\blast_db\\Yeast\\genes";
             PSEUDOMONASDB="d:\\blast_db\\Pseudomonas\\genes";
             MGCDB="d:\\blast_db\\MGC\\genes";
+            YPDB="d:\\blast_db\\YP\\genes";
         }
             
         else
@@ -44,6 +47,7 @@ public class BlastWrapper
             YEASTDB="c:\\blast_db\\Yeast\\genes";
             PSEUDOMONASDB="c:\\blast_db\\Pseudomonas\\genes";
             MGCDB="c:\\blast_db\\MGC\\genes";
+            YPDB="c:\\blast_db\\YP\\genes";
         }
     }
     public   static String getHumanDBLocation()
@@ -66,6 +70,11 @@ public class BlastWrapper
     {
         BlastWrapper wr = new BlastWrapper();
         return MGCDB;
+    }
+    public   static String getYPDBLocation()
+    {
+        BlastWrapper wr = new BlastWrapper();
+        return YPDB;
     }
         
      
