@@ -6,6 +6,7 @@
 <%@ page import="edu.harvard.med.hip.bec.programs.assembler.*" %>
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.util_objects.*" %>
+<%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="java.util.*" %>
  <%
 Object forwardName = null;
@@ -212,6 +213,22 @@ case Constants.PROCESS_DELETE_CLONE_SEQUENCE: { break;}
 case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{ break;}
 case  Constants.PROCESS_DELETE_TRACE_FILES :{ break;}
 case  Constants.PROCESS_MOVE_TRACE_FILES  :{ break;}
+case Constants.PROCESS_PROCESS_OLIGO_PLATE:
+{
+ additional_jsp_buffer.append("<tr><td colspan='2'><table border =0 width='100%'>");
+additional_jsp_buffer.append("<tr>     <td><strong>Set Container Status:</strong></td>");
+additional_jsp_buffer.append( " <td>   <select name='status'>");
+additional_jsp_buffer.append(   "     <option value="+ OligoContainer.STATUS_RECIEVED+ ">Recieved</option>");
+additional_jsp_buffer.append(    "    <option value="+  OligoContainer.STATUS_SENT_FOR_SEQUENCING+">Used for sequencing</option>");
+additional_jsp_buffer.append(   "   </select>   </td></tr>");
+additional_jsp_buffer.append( " <tr>     <td><strong>Order Comments</strong></td>");
+additional_jsp_buffer.append( "   <td> 	<textarea name='order_comments' rows='2' cols='40' ></textarea></td></tr>");
+additional_jsp_buffer.append(" <tr>     <td><strong>Sequencing Comments</strong></td>");
+additional_jsp_buffer.append( "   <td> <textarea name='sequencing_comments' rows='6' cols='50' ");
+additional_jsp_buffer.append(  "  if ( container.getStatus() !=  OligoContainer.STATUS_RECIEVED) { disabled}></textarea></td></tr>");
+additional_jsp = additional_jsp_buffer.toString();
+break;
+}
 }
 if ( isTryMode )
 {
