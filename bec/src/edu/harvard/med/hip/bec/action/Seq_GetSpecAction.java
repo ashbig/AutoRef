@@ -57,10 +57,34 @@ public class Seq_GetSpecAction extends ResearcherAction
         
         try 
         {
+           
             //get system user
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+          
             String username = user.getUsername();
         //    request.setAttribute("forwardName", new Integer(forwardName));
+            
+            //show spec by id
+            if ( forwardName >= Spec.SPEC_SHOW_SPEC)
+            {
+                int spec_id = forwardName / Spec.SPEC_SHOW_SPEC;
+              
+                 Spec config = Spec.getSpecById(spec_id);
+                 specs.add(config);
+                request.setAttribute("specs", specs);
+                switch  (config.getType())
+                {
+                    case EndReadsSpec.END_READS_SPEC_INT:
+                        return (mapping.findForward("end_reads_spec"));
+                    case FullSeqSpec.FULL_SEQ_SPEC_INT:
+                        return (mapping.findForward("full_seq_spec"));
+                    case Primer3Spec.PRIMER3_SPEC_INT:
+                        return (mapping.findForward("primer3_spec"));
+                    case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
+                        return (mapping.findForward("polymorphism_spec"));
+                 }
+            }
+            
             switch  (forwardName)
             {
                 case Spec.END_READS_SPEC_INT:
@@ -89,25 +113,25 @@ public class Seq_GetSpecAction extends ResearcherAction
                 }
                 case Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
                 {
-                    specs = EndReadsSpec.getAllSpecsBySubmitter( username);
+                    specs = EndReadsSpec.getAllSpecsBySubmitter( user.getId());
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("end_reads_spec"));
                 }
                 case Spec.FULL_SEQ_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
                 {
-                     specs = FullSeqSpec.getAllSpecsBySubmitter(username);
+                     specs = FullSeqSpec.getAllSpecsBySubmitter(user.getId());
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("full_seq_spec"));
                 }
                 case Spec.PRIMER3_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
                 {
-                     specs = Primer3Spec.getAllSpecsBySubmitter( username);
+                     specs = Primer3Spec.getAllSpecsBySubmitter( user.getId());
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("primer3_spec"));
                 }
-                 case Spec.POLYMORPHISM_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
+                case Spec.POLYMORPHISM_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
                 {
-                     specs = PolymorphismSpec.getAllSpecsBySubmitter( username);
+                     specs = PolymorphismSpec.getAllSpecsBySubmitter( user.getId());
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("polymorphism_spec"));
                 }

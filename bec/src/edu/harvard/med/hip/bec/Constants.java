@@ -160,7 +160,58 @@ public class Constants {
     //process object types
     public static final int            PROCESS_OBJECT_TYPE_RESULT = 1;
     public static final int            PROCESS_OBJECT_TYPE_CONTAINER = 0;
+    public static final int            PROCESS_OBJECT_TYPE_CONSTRUCT = 2;
     
+    // key used to find vector object in session.
+    //jsp tags
+    public static final String VECTOR_ID_KEY = "VECTORID";
+    public static final String LINKER_ID_KEY = "LINKERID";
+    public static final String VECTOR_COL_KEY = "COL_VECTOR";
+    public static final String LINKER_COL_KEY = "COL_LINKER";
+    public static final String PLATES_COL_KEY = "COL_PLATES";
+    
+    
+    public static final String JSP_TITLE = "title";
+    
+    //for  display; definition of items to display
+    //processes 20 - 50 
+    public static final int PROCESS_UPLOAD_PLATES =  20;//upload plates
+     public static final int PROCESS_RUN_END_READS = 21;//run sequencing for end reads
+     public static final int PROCESS_RUN_END_READS_WRAPPER = 22;//run end reads wrapper
+     public static final int PROCESS_RUN_ASSEMBLER = 23;//run assembly wrapper
+      public static final int PROCESS_CHECK_READS_AVAILABILITY =24;//check reads
+      public static final int PROCESS_RUN_ISOLATE_RUNKER = 25;//run isolate runker
+      public static final int PROCESS_APROVE_ISOLATE_RANKER = 26;//approve isolate ranker
+      public static final int PROCESS_PUT_CLONES_ON_HOLD = 27; //put clones on hold
+      public static final int PROCESS_ADD_NEW_INTERNAL_PRIMER = 28; // add new internal primer
+      public static final int PROCESS_VIEW_INTERNAL_PRIMERS = 29;//view internal primers
+      public static final int PROCESS_APPROVE_INTERNAL_PRIMERS = 30;//approve internal primers
+      public static final int PROCESS_RUN_PRIMER3= 31;//run primer3
+      public static final int PROCESS_RUNPOLYMORPHISM_FINDER= 32; //run polymorphism finder
+      public static final int PROCESS_RUN_DISCREPANCY_FINDER= 33;//run discrepancy finder
+      public static final int PROCESS_RUN_DESIGION_TOOL = 34;//run decision tool
+      
+      public static final int PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE = 35;//run decision tool
+              
+    //items for display 1-19
+  
+   
+    public static final int VECTOR_DEFINITION_INT = 1;
+    public static final int LINKER_DEFINITION_INT = 2;
+    public static final int PRIMER_DEFINITION_INT = 3;
+    public static final int REFSEQUENCE_DEFINITION_INT = 4;
+      public static final int SPEC_DEFINITION_INT = 5;
+        public static final int CONTAINER_DEFINITION_INT = 6;
+    public static final int CLONING_STRATEGY_DEFINITION_INT = 7;
+     public static final int CONTAINER_PROCESS_HISTORY = 8;
+    public static final int CLONE_SEQUENCE_DEFINITION_INT = 9;
+    public static final int CONTAINER_RESULTS_VIEW = 9;
+  
+    //submit data from file
+    public static final String FILE_DESCRIPTION = "file_description";
+    public static final String FILE_TITLE = "file_title";
+    public static final String FILE_NAME =  "fileName";
+    public static final String ADDITIONAL_JSP = "additional_jsp";
     
     
     /**

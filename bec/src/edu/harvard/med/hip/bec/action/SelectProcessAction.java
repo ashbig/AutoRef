@@ -15,19 +15,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
+import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.engine.*;
-
+import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
@@ -61,56 +55,60 @@ public class SelectProcessAction extends ResearcherAction
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         ArrayList specs = new ArrayList();
         
-        
-        
+         System.out.println( forwardName);
         try
         {
             
             request.setAttribute("forwardName", new Integer(forwardName));
             switch  (forwardName)
             {
-                case 1://upload plates
+                case Constants.PROCESS_UPLOAD_PLATES://upload plates
                 {
-                    ArrayList biotails = BioTail.getAllTails();
-                    ArrayList vectors = BioVector.getAllVectors();
-                    
-                    request.setAttribute("vectors", vectors);
-                    request.setAttribute("biotails", biotails);
+                   
+                    ArrayList biolinkers = BioLinker.getAllLinkers();
+                                 ArrayList vectors = BioVector.getAllVectors();
+                   
+                    request.setAttribute(Constants.VECTOR_COL_KEY, vectors);
+                    request.setAttribute(Constants.LINKER_COL_KEY, biolinkers);
                     return (mapping.findForward("upload_plates"));
                 }
-                case 2://run sequencing for end reads
+                case Constants.PROCESS_RUN_END_READS://run sequencing for end reads
                 {
                 }
-                case 3://run end reads wrapper
-                case 12://run assembly wrapper
+                case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
+                case Constants.PROCESS_RUN_ASSEMBLER://run assembly wrapper
                 {
-                    RunProcess process = new RunProcess(forwardName, null);
-                    process.run();
+                  //  RunProcess process = new RunProcess(forwardName, null);
+                  //  process.run();
                 }
-                case 4://check reads
-                {
-                }
-                case 5://run isolate runker
+                case Constants.PROCESS_CHECK_READS_AVAILABILITY://check reads
                 {
                 }
-                case 6://view isolate ranker
+                case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
                 {
                 }
-                case 7: //send plate to seq
+                case Constants.PROCESS_APROVE_ISOLATE_RANKER://approve isolate ranker
+                {
+                    request.setAttribute(Constants.JSP_TITLE, "approve Isolate Ranking");
+                    return (mapping.findForward("scan_lable"));
+                }
+                case Constants.PROCESS_PUT_CLONES_ON_HOLD: //put clones on hold
+                {
+                    request.setAttribute(Constants.JSP_TITLE, "activate/deactivate Clones");
+                    return (mapping.findForward("scan_lable"));
+                }
+                case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER: // add new internal primer
+                case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
+                {
+                   
+                }
+                case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS://approve internal primers
                 {
                 }
-                case 8: case 11://recieve from seq
-                {
-                    String currentDate = Constants.getCurrentDate();
-                    request.setAttribute("currentDate",currentDate);
-                    return (mapping.findForward("recieve_orders"));
-                }
-                case 9://upload data from seq
-                {
-                }
-                case 10://run primer3
-                case 14: //run polymorphism finder
-                case 13://run discrepancy finder
+                case Constants.PROCESS_RUN_PRIMER3://run primer3
+               
+                case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder
+                case Constants.PROCESS_RUN_DISCREPANCY_FINDER://run discrepancy finder
                 {
                     ArrayList plates =  new ArrayList();
                     ArrayList specNames = new ArrayList();
@@ -148,8 +146,22 @@ public class SelectProcessAction extends ResearcherAction
                     return (mapping.findForward("run_process"));
                 }
                 
-                case 15://run decision tool
+                case Constants.PROCESS_RUN_DESIGION_TOOL://run decision tool
                 {
+                }
+                
+                case Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE:
+                {
+                    String file_description = "<I>You are about to run Discrepancy Finder as a stand aloan application. The <B>requested file format</b> is: sequence Id, reference sequence (Cds only), experimental sequence."
+                    +"The process will take some time. The e-mail report will be sent to you upon completion."; 
+                    String file_title = "Please select the sequence information file:";
+                    String additional_jsp = "<INPUT TYPE=CHECKBOX NAME='send_needle_results' value=0>Attach needle aligment files.";
+                    request.setAttribute(Constants.JSP_TITLE, "run Discrepancy Finder for set of sequences");
+                    request.setAttribute(Constants.FILE_DESCRIPTION, file_description);
+                    request.setAttribute(Constants.FILE_TITLE, file_title);
+                    request.setAttribute(Constants.FILE_NAME,Constants.FILE_NAME);
+                    request.setAttribute(Constants.ADDITIONAL_JSP, additional_jsp);
+                    return (mapping.findForward("submit_data_file"));
                 }
             }
             

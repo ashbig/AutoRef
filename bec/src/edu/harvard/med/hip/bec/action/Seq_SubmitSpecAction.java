@@ -88,7 +88,7 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
             {
                 case EndReadsSpec.END_READS_SPEC_INT:
                 {
-                    EndReadsSpec spec = new EndReadsSpec(params, spec_name, username);
+                    EndReadsSpec spec = new EndReadsSpec(params, spec_name, user.getId());
                      
                     spec.insert(conn);
                     conn.commit();
@@ -99,7 +99,7 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                  }
                 case FullSeqSpec.FULL_SEQ_SPEC_INT:
                 {
-                    FullSeqSpec spec = new FullSeqSpec(params, spec_name, username);
+                    FullSeqSpec spec = new FullSeqSpec(params, spec_name, user.getId());
                     spec.insert(conn);
                     conn.commit();
                     created_specs.add(spec);
@@ -109,7 +109,7 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                 }
                 case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
                 {
-                    PolymorphismSpec spec = new PolymorphismSpec(params, spec_name, username);
+                    PolymorphismSpec spec = new PolymorphismSpec(params, spec_name, user.getId());
                     spec.insert(conn);
                     conn.commit();
                     created_specs.add(spec);
@@ -119,7 +119,7 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                 }
                 case Primer3Spec.PRIMER3_SPEC_INT:
                 {
-                    Primer3Spec spec = new Primer3Spec(params, spec_name, username);
+                    Primer3Spec spec = new Primer3Spec(params, spec_name, user.getId());
                     spec.insert(conn);
                     conn.commit();
                     created_specs.add(spec);

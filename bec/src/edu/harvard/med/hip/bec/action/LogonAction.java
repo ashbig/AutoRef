@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2003-05-09 19:53:59 $
+ * $Revision: 1.4 $
+ * $Date: 2003-06-24 20:18:35 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.bec.Constants;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: Elena $
- * @version $Revision: 1.3 $ $Date: 2003-05-09 19:53:59 $
+ * @version $Revision: 1.4 $ $Date: 2003-06-24 20:18:35 $
  */
 
 public final class LogonAction extends Action
@@ -159,7 +159,7 @@ public final class LogonAction extends Action
         
    
     // Forward control to the specified success URI
-    
+    request.setAttribute("process_mode", "debug");
     return (mapping.findForward("success"));
     
 }
