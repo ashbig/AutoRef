@@ -23,7 +23,7 @@ import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
-import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
@@ -37,6 +37,11 @@ import edu.harvard.med.hip.bec.util_objects.*;
 public class AssemblyRunner implements Runnable
 {
 
+     public static final int       END_READS_ASSEMBLY = 10;
+     public static final int       FULL_SEQUENCE_ASSEMBLY = -10;
+     public static final int       MINIMUM_LINKER_COVERAGE = 10;
+     
+     public static final int       MAXIMUM_READ_LENGTH = 800;
     /** Creates a new instance of tester */
     public  AssemblyRunner()
     {
@@ -54,11 +59,12 @@ public class AssemblyRunner implements Runnable
         private String      m_result_type = null;
         private User        m_user = null;
          private String      m_vector_file_name = null;
-
+          private int      m_assembly_mode = END_READS_ASSEMBLY;
 
         public  void        setUser(User v){m_user=v;}
         public void         setResultType(String v){ m_result_type=v;}
         public void         setVectorFileName(String v){m_vector_file_name = v;}
+        public void         setAssemblyMode(int mode){ m_assembly_mode = mode;}
 
         public void run()
         {
@@ -124,7 +130,7 @@ public class AssemblyRunner implements Runnable
                                 }
                                 base_refsequence =  new BaseSequence(refsequence.getCodingSequence(), BaseSequence.BASE_SEQUENCE );
                                 base_refsequence.setId(refsequence.getId());
-                                if (base_refsequence.getText().length() >2000)
+                                if (m_assembly_mode == END_READS_ASSEMBLY && base_refsequence.getText().length() >2000)
                                 {
                                     IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
                                                         clone_definition.getIsolateTrackingId(),  conn );
@@ -144,8 +150,16 @@ public class AssemblyRunner implements Runnable
                            clone_sequence_id = -1;
                           
                            clone_assembly = assembleSequence( clone_definition );
+                           //if only one read and it covers the whole sequence it can be 
+                               //taken as assembled sequence if pass checks, create psevdo assembly object  
+                           if (clone_assembly == null  &&  m_assembly_mode == END_READS_ASSEMBLY && base_refsequence.getText().length() < MAXIMUM_READ_LENGTH )
+                           {
+                               clone_assembly = getAssemblyFromRead(clone_definition, base_refsequence.getText().length() + MINIMUM_LINKER_COVERAGE);
+                           }
                            if (clone_assembly == null )
                            {
+                               
+                              
                                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
                                                         clone_definition.getIsolateTrackingId(),  conn );
                                 IsolateTrackingEngine.updateAssemblyStatus(
@@ -178,9 +192,7 @@ public class AssemblyRunner implements Runnable
                                   || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED )
 
                                {
-                                        clone_sequence_id = insertSequence(clone_definition, contig,
-
-                                        process_id,conn );
+                                        clone_sequence_id = insertSequence(clone_definition, contig,   process_id,conn );
                                         if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
                                        // System.out.println("Clone "+clone_definition.getFlexCloneId() +" "+result+" "+clone_definition.getFlexSequenceId()+" "+clone_sequence_id);
                                }
@@ -440,6 +452,52 @@ public class AssemblyRunner implements Runnable
              throw new BecDatabaseException("Cannot create process");
          }
      }
+     
+     
+     
+     private CloneAssembly getAssemblyFromRead(CloneDescription clone_definition, int refsequence_length)
+     {
+         
+         ArrayList reads = null;
+         Read read = null; String sequence = null; String scores = null;
+         int read_length = -1;
+         try
+         {
+             reads = Read.getReadByIsolateTrackingId(clone_definition.getIsolateTrackingId( ));
+             if ( reads.size() > 1)return null;
+             read = (Read)reads.get(0);
+             //if read reverse get compliment
+             if ( read.getType() == Read.TYPE_ENDREAD_REVERSE)
+             {
+                    sequence = SequenceManipulation.getCompliment(read.getSequence().getText()) ;
+     int[] arr_scores = SequenceManipulation.getScoresComplement(read.getSequence().getScores());
+                 scores = Algorithms.convertArrayToString(arr_scores, " ");
+   //System.out.println(Algorithms.convertArrayToString(arr_scores, " "));
+             }
+             else
+             {
+                 sequence = read.getSequence().getText() ;
+                 scores = read.getSequence().getScores();
+             }
+         }
+         catch(Exception e){ return null;}
+         
+       
+         //take longest read
+         if (read == null) return null;
+         CloneAssembly clone_assembly = new CloneAssembly();
+         clone_assembly.setNumOfReads(1);
+         Contig contig = new Contig();
+         contig.setNumberOfReadsInContig(1);
+         contig.setName("");   
+         System.out.println(scores);
+         contig.setSequence(sequence );         contig.setScores(scores);
+         clone_assembly.addContig(contig);
+         
+         return clone_assembly;
+     }
+
+
 /*
      protected class SequenceDescription
      {
@@ -491,9 +549,33 @@ public static void main(String args[])
     AssemblyRunner runner = new AssemblyRunner();
     try
     {
-                    runner.setUser( AccessManager.getInstance().getUser("htaycher1","htaycher"));
-                    runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
-                     runner.run();
+        CloneDescription clone_definition = new CloneDescription();
+        clone_definition.setIsolateTrackingId(10934);
+        clone_definition.setFlexCloneId(32955);
+        BaseSequence base_refsequence =  new BaseSequence("GTGGAACTCTTCAAAGAATTCACCTTCGAATCCGCCCATCGCCTGCCCCACGTCCCCGAAGGCCACAAATGCGGGCGCCTGCACGGCCACTCGTTCCGTGTCGCCATCCACATCGAAGGCGAGGTCGATCCGCATACCGGCTGGATCCGCGACTTCGCGGAAATCAAGGCGATCTTCAAGCCGATCTACGAGCAACTCGACCACAATTATCTGAACGATATTCCAGGCCTGGAAAACCCCACCAGCGAAAACCTCTGCCGCTGGATCTGGCAACAACTCAAGCCGCTGTTGCCGGAACTCTCCAAGGTCCGCGTCCACGAAACTTGCACCAGCGGTTGCGAATATCGGGGCGATTGA"
+     
+        
+        
+        
+        , BaseSequence.BASE_SEQUENCE );
+        base_refsequence.setId(123);
+                                
+        CloneAssembly clone_assembly = runner.getAssemblyFromRead( clone_definition,  base_refsequence.getText().length());
+        Contig contig = (Contig) clone_assembly.getContigs().get(0);
+        
+        
+        
+        BioLinker linker3 = BioLinker.getLinkerById(32);
+        BioLinker linker5 = BioLinker.getLinkerById(31);
+                                 
+        int cds_start = linker5.getSequence().length();
+       int  cds_stop = linker5.getSequence().length() +  base_refsequence.getText().length();
+       
+        base_refsequence.setText( linker5.getSequence() + base_refsequence.getText()+linker3.getSequence());
+
+        int result = contig.checkForCoverage(clone_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
+        System.out.print(result);
+         
     }catch(Exception e){}
     System.exit(0);
 }
