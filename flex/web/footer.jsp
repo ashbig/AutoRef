@@ -21,7 +21,7 @@
 
 <table width="710" cellpadding="0" cellspacing="0" border="0">
 <tr>
-              <td height="23" align="center"><font size="2">This system and the underlying database was built in conjunction with
+              <td height="23" align="center"><font size="2">This system and the underlying database were built in conjunction with
 <a href="http://www.3rdmill.com" target="_blank">3rd Millennium Inc.</a></font> </td>
             </tr>
 </table>

@@ -107,24 +107,32 @@
               </table></td>
               <td>&nbsp;&nbsp;</td>
             <td valign="top" nowrap>
-<br><b>FLEXGene (Full-Length Expression)</b> will be a complete repository<br>
-of full-length cDNA clones for the human and other model organisms.<br>
-The clones are all constructed using a recombination-based vector system<br>
-so that their coding regions can be simultaneously transferred into any <br>
-protein expression vector allowing the broadest variety of experiments.<br><br>
 
-FLEXGene database allows user to browse and search the available<br>
-human clones using genbank accesion number, GI, locus ID or gene symbol.<br>
-Non registered users can search up to 30 terms each time. Registered<br>
-users can search unlimited terms each time.<br><br>
+<br>
+<p><b>FLEXGene (Full-length Expression) cDNAs</b></p>
+    <ul>
+        <li>Recombination-based vector system
+        <li>Simultaneous transfer into protein expression vectors
+        <li>Makes possible a broad range of experiments
+        <li>Building towards a complete repository of full-length cDNA clones for human
+            <br>and other model organisms
+    </ul>
 
-<p><b>Please select one of the following:</b></p>
+
+<p><b>FLEXGene Database</b><br>
+    <i>Human clones searchable by Genbank accession number, GI, locus ID 
+    or gene symbol</i></p>
+<ul>
+    <li>Any user, CLICK <a href="GetSearchTerms.do">HERE</a></li> TO SEARCH UP TO 30 TERMS
+    <li>Registered users, LOG IN FOR UNLIMITED SEARCHES</li>
+    <li>Not a member?  Click  <html:link forward="register" target="_top">here</html:link> to register
+</ul>
+
 <ul>
     <li><a href="BrowseFlex.jsp">View available clones</a></li>
-    <li><a href="GetSearchTerms.do">Search FLEXGene database</a></li>
 </ul>
  
-<br><br><i><b>For clone request, please contact <a href="mailto:jason_kramer@hms.harvard.edu">Jason Kramer</a></b></i>
+<br><br><i><b>To request clones, please contact <a href="mailto:jason_kramer@hms.harvard.edu">Jason Kramer</a></b></i>
 </td>
 <td>&nbsp;&nbsp</td>
           </tr>
@@ -140,7 +148,7 @@ users can search unlimited terms each time.<br><br>
           <table border=0 cellspacing=0 cellpadding=2 width=100%>
             <!--DWLayoutTable-->
             <tr>
-              <td height="23" align="center"><font size="2">This system and the underlying database was built in conjunction with
+              <td height="23" align="center"><font size="2">This system and the underlying database were built in conjunction with
 <a href="http://www.3rdmill.com" target="_blank">3rd Millennium Inc.</a></font> </td>
             </tr>
           </table>
