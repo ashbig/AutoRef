@@ -10,6 +10,7 @@ import java.util.*;
 import java.io.*;
 import org.apache.regexp.*;
 import edu.harvard.med.hip.bec.engine.*;
+import edu.harvard.med.hip.bec.util.*;
 /**
  *
  * @author  htaycher
@@ -28,7 +29,7 @@ public class NeedleParser
     private static  RE p_score = null ; 
   
     /** Creates a new instance of Needle */
-    private NeedleParser()
+    private NeedleParser() throws BecUtilException
     {
         try{
           // # Identity:    1120/1147 (97.6%)
@@ -41,18 +42,19 @@ public class NeedleParser
             p_score = new RE("Score:\\s*(\\d*\\.\\d*)") ; 
             //sequence
             //1 ATGAGCGGCGGCGGGCCTTGGCCTAGAGCGCTCCCAAGAAGTGGCTTACA     50
-            p_sequence = new RE("^\\s*[^\\#](\\d+) (\\s*\\S*)(\\d*)") ; 
+            p_sequence = new RE("^\\s*[^\\#](\\S*)\\s*(\\d+) (\\s*\\S*)(\\d*)") ; 
           
        }
        catch(Exception e)
        {
            System.out.println(e.getMessage());
+            throw new BecUtilException("Cannot build patterns for needle parser");
        }
     }
     
     
       
-    public static void parse(String foutput_name, NeedleResult res)
+    public static void parse(String foutput_name, NeedleResult res) throws BecUtilException
     {
          if (m_instance == null)  m_instance = new NeedleParser();
         
@@ -95,13 +97,13 @@ public class NeedleParser
                   // System.out.println(line);
                    if (isQuerySeq)
                    {
-                        query+=p_sequence.getParen(2);
+                        query+=p_sequence.getParen(3);
                         isQuerySeq = false;
                         isRefSeq = true;
                    }
                    else if (isRefSeq)
                    {
-                        ref+=p_sequence.getParen(2);
+                        ref+=p_sequence.getParen(3);
                         isQuerySeq = true;
                         isRefSeq = false;
                    }
@@ -115,6 +117,7 @@ public class NeedleParser
          }
          catch(Exception e)
          {
+             throw new  BecUtilException("Cannot parse needle output");
          }
     }
     
@@ -134,7 +137,7 @@ public class NeedleParser
         }
      */
         
-        String queryFile = "e:\\htaycher\\sequencing\\needle\\ex1.txt";
+        String queryFile = "c:\\emboss-2.5.1\\emboss\\needle.out";
         NeedleResult res = null;
         try
         {

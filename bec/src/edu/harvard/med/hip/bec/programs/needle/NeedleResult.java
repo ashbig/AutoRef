@@ -26,14 +26,14 @@ public class NeedleResult
     private int m_subject_seqid = - 1;
     
     //params
-    private float         m_gapopen_penalty = -1;
-    private float         m_gap_ext_penalty = -1;
+    private double         m_gapopen_penalty = -1;
+    private double         m_gap_ext_penalty = -1;
     
     //results
-    private float       m_identity = -1;
-    private float       m_similarity = -1;
-    private float      m_gaps = -1;
-    private float       m_score = -1;
+    private double       m_identity = -1;
+    private double       m_similarity = -1;
+    private double      m_gaps = -1;
+    private double       m_score = -1;
     
     private String      m_filename = null;
     private String m_date = null;
@@ -98,11 +98,11 @@ public class NeedleResult
         try
         {
             pstmt = conn.prepareStatement(sql);
-            pstmt.setFloat(1, m_identity);
-             pstmt.setFloat(2, m_score);
-              pstmt.setFloat(3,m_similarity);
-               pstmt.setFloat(4,m_gapopen_penalty);
-                pstmt.setFloat(5, m_gap_ext_penalty);
+            pstmt.setDouble(1, m_identity);
+             pstmt.setDouble(2, m_score);
+              pstmt.setDouble(3,m_similarity);
+               pstmt.setDouble(4,m_gapopen_penalty);
+                pstmt.setDouble(5, m_gap_ext_penalty);
                 pstmt.setInt(6, m_query_seqid); 
                 pstmt.setInt(7, m_subject_seqid); 
                
@@ -132,14 +132,14 @@ public class NeedleResult
     public int getSubjectSequenceId (){ return m_subject_seqid   ;}
     
     //params
-    public float         getGapOpen (){ return m_gapopen_penalty  ;}
-    public float         getGapExtend (){ return m_gap_ext_penalty  ;}
+    public double         getGapOpen (){ return m_gapopen_penalty  ;}
+    public double         getGapExtend (){ return m_gap_ext_penalty  ;}
     
     //results
-    public float        getIdentity (){ return m_identity  ;}
-    public float        getSimilarity (){ return m_similarity  ;}
-    public float        getGaps (){ return m_gaps  ;}
-    public float        getScore (){ return m_score  ;}
+    public double        getIdentity (){ return m_identity  ;}
+    public double        getSimilarity (){ return m_similarity  ;}
+    public double        getGaps (){ return m_gaps  ;}
+    public double        getScore (){ return m_score  ;}
     public String       getFileName (){ return m_filename  ;}
     public String       getQuery (){ return m_query  ;}
     public String       getSubject (){ return m_subject  ;}
@@ -147,12 +147,12 @@ public class NeedleResult
     public void         setId (int s){   m_id  = s;}
     public void         setQuerySequenceId(int s){   m_query_seqid   = s;}
     public void         setSubjectSequenceId (int s){   m_subject_seqid   = s;}
-    public void         setGapOpen (float s){   m_gapopen_penalty  = s;}
-    public void         setGapExtend (float s){   m_gap_ext_penalty  = s;}
-    public void         setIdentity (float s){   m_identity  = s;}
-    public void         setSimilarity (float s){   m_similarity  = s;}
-    public void         setGaps (float s){   m_gaps  = s;}
-    public void         setScore (float s){   m_score  = s;}
+    public void         setGapOpen (double s){   m_gapopen_penalty  = s;}
+    public void         setGapExtend (double s){   m_gap_ext_penalty  = s;}
+    public void         setIdentity (double s){   m_identity  = s;}
+    public void         setSimilarity (double s){   m_similarity  = s;}
+    public void         setGaps (double s){   m_gaps  = s;}
+    public void         setScore (double s){   m_score  = s;}
     public void         setFileName (String s){   m_filename  = s;}
     public void         setQuery (String s){   m_query  = s;}
     public void         setSubject (String s){   m_subject  = s;}

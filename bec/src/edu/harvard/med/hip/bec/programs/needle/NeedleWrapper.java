@@ -10,14 +10,16 @@ import java.util.*;
 import java.io.*;
 import org.apache.regexp.*;
 import edu.harvard.med.hip.bec.engine.*;
+import  edu.harvard.med.hip.bec.bioutil.*;
+import  edu.harvard.med.hip.bec.util.*;
 /**
  *
  * @author  htaycher
  */
 public class NeedleWrapper
 {
-    private float         m_gapopen = 10;
-    private float         m_gapext = 0.5F;
+    private double         m_gapopen = 10;
+    private double         m_gapext = 0.5F;
     
     private String      m_query = null;
     private int         m_query_id=-1;
@@ -35,18 +37,18 @@ public class NeedleWrapper
     {
     }
     
-    public void         setGapOpen(float s){ m_gapopen = s;}
-    public  void        setGapExtend(float s){ m_gapext = s;}
+    public void         setGapOpen(double s){ m_gapopen = s;}
+    public  void        setGapExtend(double s){ m_gapext = s;}
     public void         setQueryId(int id){ m_query_id = id;}
     public void         setReferenceId(int id){ m_ref_id = id;}
     public void         setQuerySeq(String s){ m_query = s;}
     public void         setRefSeq(String s){ m_reference = s;}
     public void         setOutputFileDir(String s){m_output_file_dir = s;}
     
-    public float          getGapOpen(){ return m_gapopen;}
-    public float          getGapExtend(){ return m_gapext;}
+    public double          getGapOpen(){ return m_gapopen;}
+    public double          getGapExtend(){ return m_gapext;}
     
-    public  NeedleResult runNeedle()
+    public  NeedleResult runNeedle() throws BecUtilException
     {
         
         m_needle = new NeedleResult();
@@ -54,45 +56,40 @@ public class NeedleWrapper
         m_needle.setGapOpen(m_gapopen);
         m_needle.setQuerySequenceId(m_query_id);
         m_needle.setSubjectSequenceId(m_ref_id);
-        
-        try
-        {
-        /*    String query_file = SequenceAnalyzer.makeQueryFile(m_output_file_dir,m_query, 
-                                                                "needle", m_query_id);
-            String ref_file = SequenceAnalyzer.makeQueryFile(m_output_file_dir,m_reference, 
-                                                                "needle", m_ref_id);
-            String output_name=m_output_file_dir+"needle"+m_query_id+"_"+m_ref_id+".out";
-         **/
-           String output_name="/c/tmp/needleout.out";
-           String query_file="/c/tmp/needle-1.in";
-           String ref_file="/c/tmp/needle-2.in";
+   
+        String query_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_query,                                                                 "needle", String.valueOf(m_query_id));
+            String ref_file = SequenceManipulation.makeQueryFileInFASTAFormat(m_output_file_dir,m_reference,                                                                "needle", String.valueOf(m_ref_id));           
+  String output_name=m_output_file_dir+"needle"+m_query_id+"_"+m_ref_id+".out";
+         
+         //  String output_name="/c/tmp/needleout.out";
+        //  String query_file="/c/tmp/needle123.in";
+        //  String ref_file="/c/tmp/needle127.in";
             m_needle.setFileName(output_name);
-            boolean res = run(query_file,ref_file,output_name);
+            boolean res = run(query_file+".in",ref_file+".in",output_name);
             if (res)
             {
                 NeedleParser.parse(output_name, m_needle);
                 return m_needle;
             }
-            else
-            {
-                return null;
-            }
-        }
-        catch(Exception e)
-        {
             return null;
-        }
-        
+           
     }
     
+      public  NeedleResult runNeedleTest(String output_name) throws BecUtilException
+    {
+        
+        m_needle = new NeedleResult();
+        NeedleParser.parse(output_name, m_needle);
+        return m_needle;
+         
+    }
     
-    
-    private boolean run(String q_name, String ref_name, String output_name)
+    private boolean run(String q_name, String ref_name, String output_name)throws BecUtilException
     {
         String cmd = null;
         
-       cmd = "c:\\EMBOSS-2.5.1\\emboss\\needle.exe  "+q_name+ " "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
-        
+        cmd = "c:\\EMBOSS-2.5.1\\emboss\\needle.exe  "+q_name+ " "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
+        System.out.println(cmd);
         //blastcmd = "/usr/local/emboss/bin/needle "+q_name+ ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile "+.out ";
         
         try
@@ -116,10 +113,14 @@ public class NeedleWrapper
             }
         } catch (IOException e)
         {
+            
             e.printStackTrace();
+            throw new  BecUtilException("Cannot run needle");
         } catch (InterruptedException e)
         {
+            
             System.err.println("User requests stop primer3:");
+            throw new  BecUtilException("Cannot run needle");
         }
         return true;
     }
