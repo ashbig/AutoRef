@@ -25,7 +25,7 @@
     <username>flex_owner</username>
     <password>flex</password>
     <minimumSize>1</minimumSize>
-    <maximumSize>5</maximumSize>
+    <maximumSize>20</maximumSize>
     <maximumSoft>false</maximumSoft>
     <initialConnections>1</initialConnections>
     <connectionTimeout>600</connectionTimeout>
@@ -35,7 +35,7 @@
     <!-- logging info-->
     <logFile>poolman.log</logFile>
 
-    <debugging>true</debugging>
+    <debugging>false</debugging>
 
     <!-- Query Cache Attributes-->
 
