@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.3 2003-10-20 18:33:14 dzuo Exp $
+ * $Id: Oligo.java,v 1.4 2003-11-17 21:00:15 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -28,6 +28,9 @@ public class Oligo {
      private static final String YEAST_REV_3p_CLOSE = "GTATCCCCGGGAATTGCCATG";
     private static final String YEAST_REV_3p_FUSION = "";
     private static final String YEAST_REV_5p = "CAGGCTTCCAGCTGACCACC";
+    private static final String GATEWAY_YP_5p = "TACAAAAAAGCAGGCTCCACC";
+    private static final String GATEWAY_YP_3p = "GTACAAGAAAGCTGGGTCCTA";
+    
   //  private Project project;
   //  private Workflow workflow;
     private int id;
@@ -104,7 +107,7 @@ public class Oligo {
      * Add the 5p tag to 5p oligo corresponding to the project and workflow
      */
     public void setTagSequence_5p(Project project, Workflow workflow) {
-        //int projectId = project.getId();
+        int projectId = project.getId();
         /*
         if (projectId == Project.BREASTCANCER) {
             //breast cancer project
@@ -132,6 +135,12 @@ public class Oligo {
             tagSequence = PSEUDOMONAS_5p + sequence;
         } else if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
             tagSequence = GATEWAYTAG_5p + sequence;
+        } else if(workflowid == Workflow.GATEWAY_WORKFLOW) {
+            if(projectId == Project.YP) {
+                tagSequence = GATEWAY_YP_5p + sequence;
+            } else {
+                tagSequence = GATEWAYTAG_5p + sequence;
+            }
         } else {
             tagSequence = CLONETECH_5p + sequence;
         }
@@ -142,7 +151,7 @@ public class Oligo {
      * the stop codon is included into the tag sequence
      */
     public void setTagSequence_3p_Close(Project project, Workflow workflow) {
-        //int projectId = project.getId();
+        int projectId = project.getId();
         /*
         if (projectId == Project.BREASTCANCER) {
             //breast cancer project
@@ -175,6 +184,12 @@ public class Oligo {
             tagSequence = GATEWAYTAG_3p_CLOSE_PA + sequence;
         } else if (workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
             tagSequence = GATEWAYTAG_3p_CLOSE + sequence; 
+        } else if(workflowid == Workflow.GATEWAY_WORKFLOW) {
+            if(projectId == Project.YP) {
+                tagSequence = GATEWAY_YP_3p + sequence;
+            } else {
+                tagSequence = GATEWAYTAG_3p_CLOSE + sequence;
+            }
         } else {
             tagSequence = CLONETECH_3p_CLOSE + sequence;
         }        

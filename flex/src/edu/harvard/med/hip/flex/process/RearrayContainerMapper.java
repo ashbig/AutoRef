@@ -69,9 +69,9 @@ public class RearrayContainerMapper {
             
             Sample s = null;
             if(Sample.CONTROL_POSITIVE.equals(sample.getSampletype()) ||
-                Sample.CONTROL_NEGATIVE.equals(sample.getSampletype()) ||
-                Sample.EMPTY.equals(sample.getSampletype())) {            
-                    s = new Sample(sample.getSampletype(), position, containerid, sample.getConstructid(),-1, Sample.GOOD);
+            Sample.CONTROL_NEGATIVE.equals(sample.getSampletype()) ||
+            Sample.EMPTY.equals(sample.getSampletype())) {
+                s = new Sample(sample.getSampletype(), position, containerid, sample.getConstructid(),-1, Sample.GOOD);
             } else {
                 s = new Sample(sampletype, position, containerid, sample.getConstructid(),-1, Sample.GOOD);
             }
@@ -114,8 +114,15 @@ public class RearrayContainerMapper {
         for(int i=0; i<samples.size(); i++) {
             RearrayPlateMap sample = (RearrayPlateMap)samples.get(i);
             sourceContainers.add(new Container(sample.getSourcePlateid(), null, null, null));
-            //Sample s = new Sample(sampletype, sample.getDestWell(), containerid, sample.getConstructid(), -1, Sample.GOOD);
-            Sample s = new Sample(sample.getSampletype(), sample.getDestWell(), containerid, sample.getConstructid(), -1, Sample.GOOD);
+            
+            Sample s = null;
+            if(Sample.CONTROL_POSITIVE.equals(sample.getSampletype()) ||
+            Sample.CONTROL_NEGATIVE.equals(sample.getSampletype()) ||
+            Sample.EMPTY.equals(sample.getSampletype())) {
+                s = new Sample(sample.getSampletype(), sample.getDestWell(), containerid, sample.getConstructid(), -1, Sample.GOOD);
+            } else {
+                s = new Sample(sampletype, sample.getDestWell(), containerid, sample.getConstructid(), -1, Sample.GOOD);
+            }
             s.setCloneid(sample.getCloneid());
             container.addSample(s);
             sampleLineageSet.addElement(new SampleLineage(sample.getSampleid(), s.getId()));
@@ -172,22 +179,22 @@ public class RearrayContainerMapper {
         RearrayContainerMapper mapper = null;
         
         try {
-/*            
+/*
             samples = readFile(file);
             printSamples(samples);
-            
+ 
             mapper = new RearrayContainerMapper(samples, true);
             container = mapper.mapContainer("96 WELL PLATE", "ABC000123", -1, new Location("FREEZER"), "ISOLATE");
             printSamples(samples);
             printContainer(container);
-*/            
+ */
             samples = readFile(file2);
             printSamples(samples);
             
             mapper = new RearrayContainerMapper(samples, true);
             container = mapper.mapContainerWithDest("96 WELL PLATE", "ABC000123", -1, new Location("FREEZER"), "ISOLATE");
             printSamples(samples);
-            printContainer(container);  
+            printContainer(container);
             
             Vector lineageset = mapper.getSampleLineageSet();
             printLineageset(lineageset);
@@ -278,7 +285,7 @@ public class RearrayContainerMapper {
             System.out.println("oligo 3p reversed:\t"+sample.getOligoid3pReversed());
             System.out.println();
         }
-    }  
+    }
     
     private static void printLineageset(Vector lineages) {
         System.out.println("===================================================");
