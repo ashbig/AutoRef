@@ -100,7 +100,7 @@ public class Rearrayer
                 Integer seq_key = new Integer(ms.getSequenceId());
                 if (sequences.containsKey(seq_key ) )
                 {
-                    seqDesc = new SequenceDescription(ms.getSequenceId(), ms.getPosition(), contDesc, ms.getImageId());
+                    seqDesc = new SequenceDescription(ms.getSequenceId(), ms.getPosition(), ms.getId(), contDesc, ms.getImageId());
                     seqDesc.setCdsLength( ((Sequence)sequences.get(seq_key)).getCDSLength()   );
                     m_sequence_descriptions.add( seqDesc );
                     sequence_ids.remove(seq_key);
