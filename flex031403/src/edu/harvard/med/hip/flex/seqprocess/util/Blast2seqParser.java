@@ -236,14 +236,17 @@ public class Blast2seqParser
         boolean isSequenceMatch = false;
         String line = null;
         BufferedReader  fin = null;
+       
          String query = ""; String qend = "";
           String qstart = ""; String sstart = "";
        String subject = "";String send = "";
        String fquery = "";String fmatch = "";String fsubject = "";
        StringBuffer buf = new StringBuffer();
         
-        try {
+        try 
+        {
             fin = new BufferedReader(new FileReader(queryFile));
+            
             while ((line = fin.readLine()) != null)
             {
                 
@@ -351,6 +354,12 @@ public class Blast2seqParser
             System.out.println(e.getMessage());
             throw new Exception();
         }
+       finally
+       {
+           fin.close();
+         
+       }
+           
         return buf.toString();
     }
         

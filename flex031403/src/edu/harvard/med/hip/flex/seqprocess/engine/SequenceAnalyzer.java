@@ -101,9 +101,7 @@ public class SequenceAnalyzer
             queryFile = makeQueryFile(query, prefix,m_sequence.getId());
             subjFile = makeQueryFile(subj, prefix,tr.getId())+".in";
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_TBLASTX, queryFile, subjFile, hits);
-            blaster.setGapped(false);
-            blaster.setFilter("-F F");
-            blaster.setType(Blaster.QUERY_TYPE_PROTEIN);
+            
         }
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTX))
         {  
@@ -111,8 +109,9 @@ public class SequenceAnalyzer
             queryFile = makeQueryFile(m_sequence.getText(), prefix,m_sequence.getId());
             subjFile = makeQueryFile(SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),prefix, tr.getId())+".in";
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTX, queryFile, subjFile, hits);
-            blaster.setFilter("-F F");
-            blaster.setGapped(false);
+            blaster.setGapExtend(1);
+            blaster.setGapOpen(11);
+            
         }
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTP))
         {
@@ -121,8 +120,7 @@ public class SequenceAnalyzer
             subjFile = makeQueryFile(SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),prefix, tr.getId())+".in";
             
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTP, queryFile, subjFile, hits);
-            blaster.setFilter("-F F");
-            blaster.setGapped(false);
+           
         }
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTN))
         {
@@ -130,13 +128,15 @@ public class SequenceAnalyzer
              queryFile = makeQueryFile(m_sequence.getText(),prefix,m_sequence.getId());
              subjFile = makeQueryFile(tr.getCodingSequence(), prefix,tr.getId()) +".in";
              blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTN, queryFile, subjFile, hits);
+              blaster.setGapExtend(0);
+              blaster.setGapOpen(1);
         }
         String outputfile = OUTPUT+prefix+m_sequence.getId()+".out";
         blaster.setExecutable(Blaster.BLAST_EXEC_BLAST2SEQ);
         blaster.blast_bl2seq(queryFile+".in", outputfile);
         String cmdLine = "bl2seq -p" + blastType + " " + blaster.getExpect() + " " + blaster.getGapped() +          
-           " -j " + subjFile + " -i " + queryFile+".in" +  " -o " + outputfile;
-        
+           " -j " + subjFile + " -i " + queryFile+".in" +  " -o " + outputfile +
+        " " + blaster.getFilter() + " " + blaster.getGapOpen() +" "+blaster.getGapExtend(); 
         System.out.println(cmdLine);
         return parseResult(outputfile, blastType, tr.getId(),cmdLine, hits);
     }
@@ -251,6 +251,9 @@ public class SequenceAnalyzer
         blaster.setExpect(10e-50);
         blaster.setSubjectFileName(subjFile);
         blaster.setDBPath( dbFileName);
+        blaster.setFilter("F");
+       
+        blaster.setGapped(true);
         
         return blaster;
     }

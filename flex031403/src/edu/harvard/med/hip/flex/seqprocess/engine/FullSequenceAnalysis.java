@@ -48,8 +48,7 @@ public class FullSequenceAnalysis
         m_full_sequence = f;
         m_t_sequence = t;
         m_conn = con;
-       
-    }
+     }
     
     
     //main function run full analysis for the experimental sequence
@@ -64,11 +63,11 @@ public class FullSequenceAnalysis
         //run blast n 
         try{
             SequenceAnalyzer analyzer = new SequenceAnalyzer(m_full_sequence);
-             res_n = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTN, 5);
+             res_n = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTN, 1);
             if (res_n.getHits().size() > 0)
             {
                 best_hit_n =(BlastHit) res_n.getHits().get(0);
-                if (best_hit_n.getIdentity() < 80.0)
+                if (best_hit_n.getIdentity() < 60.0)
                 {
                      m_full_sequence.setStatus(FullSequence.STATUS_NOMATCH);
                      m_full_sequence.setQuality(FullSequence.QUALITY_NOT_DEFINED);
@@ -84,9 +83,9 @@ public class FullSequenceAnalysis
                 }
                 else// not 100 on nucleotide level
                 {
-                     res_p = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTX,5);
+                     res_p = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTX,1);
                    //  best_hit_p = (BlastHit)res_n.getHits().get(0);
-                  //   mutations = Mutation.run_mutation_analysis(res_n,res_p,                                                 m_full_sequence, m_t_sequence );
+                     mutations = Mutation.run_mutation_analysis(res_n,res_p, m_full_sequence, m_t_sequence );
                      setSequenceStatus(mutations);
                     m_full_sequence.setStatus(FullSequence.STATUS_ANALIZED);
 
@@ -118,13 +117,15 @@ public class FullSequenceAnalysis
                 for (int mut_count = 0; mut_count < mutations.size();mut_count++)
                 {
                     Mutation mut =(Mutation)mutations.get(mut_count);
-                    if (mut.getType() == Mutation.RNA)
+                    if ( mut.getType() == Mutation.RNA )
                     {
-                        ((AAMutation)mutations.get(mut_count)).insert(m_conn);
+                        mut.setHitId( ((BlastHit)res_n.getHits().get(0)).getId());
+                        ((RNAMutation)mutations.get(mut_count)).insert(m_conn);
                     }
                     else if (mut.getType() == Mutation.AA)
                     {
-                        ((RNAMutation)mutations.get(mut_count)).insert(m_conn);
+                        mut.setHitId(((BlastHit)res_p.getHits().get(0)).getId());
+                        ((AAMutation)mutations.get(mut_count)).insert(m_conn);
                     }
                 }
             }
@@ -132,6 +133,7 @@ public class FullSequenceAnalysis
         }
         catch(Exception e)
         {
+            System.out.println(e.getMessage());
             throw new FlexDatabaseException("Can not update db");
         }
                 
@@ -140,7 +142,8 @@ public class FullSequenceAnalysis
     // suggestion for project manager
         private void setSequenceStatus(ArrayList mutations)
         {
-            m_full_sequence.setQuality(0);
+            m_full_sequence.setMutation(mutations);
+            m_full_sequence.setQuality(m_spec);
         }
     
     
@@ -160,13 +163,14 @@ public class FullSequenceAnalysis
 
             
            // fl.insert(t.requestConnection());
-            FullSequence fl = new FullSequence(31481);
+            FullSequence fl = new FullSequence(31483);
             
             TheoreticalSequence sequence = new TheoreticalSequence(fl.getRefseqId());
            // FullSequence fl = new FullSequence(query,f.getId());
            // fl.insert(t.requestConnection());
             
-            FullSequenceAnalysis fsl =new FullSequenceAnalysis(fl,sequence, t.requestConnection(),null);
+            FullSequenceAnalysis fsl =new FullSequenceAnalysis
+                    (fl,sequence, t.requestConnection(),null);
             fsl.analize();
             t.requestConnection().commit();
         } catch (Exception e)
