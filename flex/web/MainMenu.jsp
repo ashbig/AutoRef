@@ -45,10 +45,13 @@
                 </html:link>
                 </small>
                 </td>
-            </tr>
+            </tr> 
 <tr>
     <td><hr></td>
 </tr>
+<tr>
+    <td>&nbsp</td>
+</tr> 
 <tr>
     <td>
         <small>
@@ -57,8 +60,9 @@
      </td>
 </tr>
 <tr>
-    <td><hr></td>
+    <td>&nbsp</td>
 </tr>
+
 </table>
 </div>
 </center>
