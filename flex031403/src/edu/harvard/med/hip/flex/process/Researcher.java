@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.7 2001-06-14 14:19:40 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.8 2001-06-14 14:47:38 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -170,6 +170,15 @@ public class Researcher {
             int Id = r.getId("SYSTEM");
             System.out.println("The Id for user SYSTEM is " + Id);
         } catch (FlexDatabaseException e){
+            System.out.println(e);
+        }
+        
+        try {
+            Researcher r = new Researcher(null);
+            System.out.println("Error");
+        } catch (FlexProcessException e) {
+            System.out.println(e);
+        } catch (FlexDatabaseException e) {
             System.out.println(e);
         }
     } //main
