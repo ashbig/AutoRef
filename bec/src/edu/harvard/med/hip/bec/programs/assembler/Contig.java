@@ -295,6 +295,7 @@ public class Contig
                   
                   if ( sequence != null && sequence.getText().length() > spec.getMinContigLength())
                   {
+                     // System.out.println(sequence.getText());
                       contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
                       contigs.add(contig);
                   }
@@ -355,7 +356,7 @@ public class Contig
          //sequence[current_base++];
              }
          }
-     /*    
+        /*
          for ( base_count = 0; base_count < m_sequence.length(); base_count++)
          {
                 System.out.print(bases_array[0][base_count].getIndex()+" "+ bases_array[0][base_count].getBase() +" " + bases_array[0][base_count].getScore());
@@ -364,17 +365,21 @@ public class Contig
                 System.out.print( " "+bases_array[3][base_count] .getIndex()+" "+ bases_array[3][base_count].getBase() +" " + bases_array[3][base_count].getScore());
                  System.out.println("" );
          }
-      */    
-
+          
+*/
          return bases_array;
     }
     
     
     
-     public ScoredElement[][]         prepareContigAligmentHorizontalStructure(String refseq_read_name, int linker_5_length)
+     public ScoredElement[][]         prepareContigAligmentHorizontalStructure
+                (String refseq_read_name, int refsequence_start,  int linker_5_length)
+                throws BecUtilException
     {
+        try
+        {
          ScoredElement[][]       bases_array     = new ScoredElement[m_sequence.length()][m_num_of_reads_in_contig +1 ];
-         int refseq_index = -linker_5_length;
+         int refseq_index = refsequence_start - linker_5_length - 1;
          //fill in array
           for (int row_number = 0; row_number < m_sequence.length(); row_number++)
           {
@@ -406,15 +411,16 @@ public class Contig
                  current_read = 1;
              else 
                  current_read = not_refseq_current_read++;
-              current_base = read.getQualityStart()-1;
-              base_count =  read.getStart() + read.getQualityStart() -2;
-              for (;  current_base  <  read.getQualityEnd()-1;)
+              current_base = read.getAlignStart()-1;
+              base_count =  read.getStart() + read.getAlignStart() -2;
+              for (;  current_base  <  read.getAlignEnd()-1;)
              {
               // System.out.println(read_count +" "+base_count+" "+current_base+" "+sequence[current_base]);
-                 if ( current_read == 1 && sequence[current_base] != '*') // for indexing for sequence, * excluded
+               if(current_base >= contig_array.length )              break;
+               if ( current_read == 1 && sequence[current_base] != '*') // for indexing for sequence, * excluded
                  {
-                       if ( refseq_index == 0) refseq_index =1 ;
-                        bases_array[base_count][current_read].setIndex( refseq_index++);
+                       if ( refseq_index == 0 ) refseq_index = 1 ;
+                       bases_array[base_count][current_read].setIndex( refseq_index++);
                  }
              //    else
                    //  bases_array[base_count][current_read].setIndex( current_base);
@@ -424,6 +430,7 @@ public class Contig
              }
          }
          /*
+        
          for ( base_count = 0; base_count < m_sequence.length(); base_count++)
          {
              for (int read_count = 0; read_count <m_num_of_reads_in_contig+1;read_count++)
@@ -435,6 +442,10 @@ public class Contig
          }
 */
          return bases_array;
+        }catch(Exception e)
+        {
+            throw new BecUtilException("Cannot build assembly chema for the clone.");
+        }
     }
    //------------------------------------------- 
    
