@@ -147,10 +147,17 @@ public class OligoCalculation
             if ( m_oligos == null || m_oligos.size() <1) return;
           if (m_id == BecIDGenerator.BEC_OBJECT_ID_NOTSET)
                  m_id = BecIDGenerator.getID("oligoid");
+        if (m_primer_design_for_stretches_additional_parameters!= null)
+        {
              sql = "INSERT INTO oligo_calculation (oligocalculationid, sequenceid, primer3configid, dateadded,resultid, STRETCHCOLLECTIONID,STRETCHDEFPARAMS ) "+
             " VALUES("+ m_id+"," + m_refsequence_id +","+m_primer3_spec_id +",sysdate,"+m_result_id +","+ m_stretch_collection_id +",'"
             +m_primer_design_for_stretches_additional_parameters+"')";
-            
+        }
+        else
+        {
+             sql = "INSERT INTO oligo_calculation (oligocalculationid, sequenceid, primer3configid, dateadded,resultid ) "+
+            " VALUES("+ m_id+"," + m_refsequence_id +","+m_primer3_spec_id +",sysdate,"+m_result_id  +")";
+        }
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             for (int count = 0; count < m_oligos.size(); count++)
