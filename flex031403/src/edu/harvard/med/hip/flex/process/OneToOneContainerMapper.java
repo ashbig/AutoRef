@@ -17,6 +17,7 @@ import edu.harvard.med.hip.flex.process.FlexProcessException;
 import edu.harvard.med.hip.flex.database.FlexDatabaseException;
 import edu.harvard.med.hip.flex.process.Result;
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.util.*;
 
 /**
  *
@@ -24,47 +25,16 @@ import edu.harvard.med.hip.flex.core.*;
  * @version 
  */
 public class OneToOneContainerMapper implements ContainerMapper {
-//    public final static String containerTypeFile = "E:\\flexDev/flex/src/edu/harvard/med/hip/flex/process/ContainerType.properties";
-    public final static String containerTypeFile = "/usr/local/jakarta-tomcat-3.2.1/webapps/FLEX/WEB-INF/classes/edu/harvard/med/hip/flex/process/ContainerType.properties";
-    //    public final static String containerTypeFile = "edu/harvard/med/hip/flex/process/ContainerType.properties";
-    
-//    PropertyResourceBundle containerType = null;
-    protected Properties containerType = null;
-    
+    protected FlexProperties containerType = null;    
     protected Vector sampleLineageSet = new Vector();
-    
-    /** Creates new ContainerMapper */
-/*
-    public ContainerMapper() throws FlexProcessException {      
-        try {
-            InputStream fis = ClassLoader.getSystemResourceAsStream(containerTypeFile);            
-            containerType = new PropertyResourceBundle(fis);
-            fis.close ();
-        } catch (Exception ex) {
-            throw new FlexProcessException(
-            "Problem loading ContainerType Property File : "       
-            + ex.getMessage());
-        }   
-    }
-*/
 
     /**
      * Constructor.
      *
      * @return The ContainerMapper object.
-     * @exception FlexProcessException.
      */
-    public OneToOneContainerMapper() throws FlexProcessException {      
-        try {
-            FileInputStream fis = new FileInputStream(containerTypeFile);
-            containerType = new Properties();
-            containerType.load(fis);
-            fis.close ();
-        } catch (Exception ex) {
-            throw new FlexProcessException(
-            "Problem loading ContainerType Property File : "       
-            + ex.getMessage());
-        }   
+    public OneToOneContainerMapper() {             
+        containerType = StaticPropertyClassFactory.makePropertyClass("ContainerTypeProperties");
     }
 
     /**
@@ -181,16 +151,12 @@ public class OneToOneContainerMapper implements ContainerMapper {
     }
     
     public static void main(String [] args) {
-        try {
-            ContainerMapper mapper = new OneToOneContainerMapper();
-            String containerType = mapper.getContainerType("generate DNA plates");
+        ContainerMapper mapper = new OneToOneContainerMapper();
+        String containerType = mapper.getContainerType("generate DNA plates");
 
-            if("96 WELL PLATE".equals(containerType))
-                System.out.println("Testing static method getContainerType - OK");
-            else
-                System.out.println("Testing static method getContainerType - ERROR");
-        } catch (FlexProcessException e) {
-            System.out.println(e);
-        } 
+        if("96 WELL PLATE".equals(containerType))
+            System.out.println("Testing static method getContainerType - OK");
+        else
+            System.out.println("Testing static method getContainerType - ERROR");
     }
 }

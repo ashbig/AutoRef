@@ -1,10 +1,10 @@
 /*
- * File : SystemProperties.java
- * Classes : SystemProperties
+ * File : FlexProperties.java
+ * Classes : FlexProperties
  *
  * Description :
  *
- *      Singleton class that hold system level properties.
+ *      Abstract singleton class that hold flex properties.
  *
  *
  * Author : Juan Munoz (jmunoz@3rdmill.com)
@@ -14,8 +14,8 @@
  *
  * The following information is used by CVS
  * $Revision: 1.1 $
- * $Date: 2001-07-06 21:48:58 $
- * $Author: dongmei_zuo $
+ * $Date: 2001-07-10 14:54:05 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -43,28 +43,29 @@ import java.util.*;
 /**
  * Holds sytem level properties.
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-07-06 21:48:58 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.1 $ $Date: 2001-07-10 14:54:05 $
  */
 
-public class SystemProperties {
+public class FlexProperties {
+    // The name of the properties file holding the system config info.
+    public final static String SYSTEM_FILE_LOC="config/SystemConfig.properties";
+    
     // The properties
     private Properties properties;
 
     // The instance
-    private static SystemProperties instance;
-    
-    // The name of the properties file holding the system config info.
-    public final static String SYSTEM_FILE_LOC="config/SystemConfig.properties";
+    protected static FlexProperties instance = null;
+
     /**
      * Protected constructor.
      *
      */
-    protected SystemProperties() {
+    protected FlexProperties() {
         this.properties = new Properties();
         //try to get the properties file from the class path
-        InputStream iStream = 
-            Thread.currentThread().getContextClassLoader().getResourceAsStream(SYSTEM_FILE_LOC);
+        InputStream iStream = getInputStream();
+        
         if(iStream !=null) {
             try {
             Properties prop = new Properties();
@@ -88,21 +89,7 @@ public class SystemProperties {
     public void setProperties(Properties props) {
         this.properties = props;
     }
-    
-    /**
-     * Gets the instance of systemproperties.
-     *
-     * @return the single SystemProperites instance.
-     */
-    public static SystemProperties getInstance() {
-        if(instance == null) {
-            instance = new SystemProperties();
-        }
-        return SystemProperties.instance;
-    }
-    
-    
-    
+            
     /**
      * Retrieves the system property for the provided key.
      *
@@ -114,11 +101,27 @@ public class SystemProperties {
         return properties.getProperty(key);
     }
     
+    /**
+     * Gets the instance of FlexProperties.
+     *
+     * @return the single FlexProperties instance.
+     */
+    public static FlexProperties getInstance() {
+        if(instance == null) {
+            instance = new FlexProperties();
+        }
+        return instance;
+    } 
+    
+    protected InputStream getInputStream() {
+        return (Thread.currentThread().getContextClassLoader().getResourceAsStream(SYSTEM_FILE_LOC));
+    }  
+    
     public static void main(String [] args) {
-        SystemProperties sysProps = SystemProperties.getInstance();
-        System.out.println("Test: " + sysProps.getProperty("Test"));
-    }
-} // End class SystemProperties
+        FlexProperties sysProps = StaticPropertyClassFactory.makePropertyClass("FlexProperties");
+        System.out.println("Test: " + sysProps.getProperty("flex.repository.basedir"));
+    }         
+} // End class FlexProperties
 
 
 /*
