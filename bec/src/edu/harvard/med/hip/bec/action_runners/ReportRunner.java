@@ -62,7 +62,7 @@ public class ReportRunner extends ProcessRunner
         private boolean    m_clone_seq_cds_start = false;
         private boolean    m_clone_seq_cds_stop = false;
         private boolean    m_clone_seq_text = false;
-        
+        private boolean    m_assembly_attempt_status = false; 
         private String      m_report_title = "";
    
 
@@ -96,7 +96,8 @@ public class ReportRunner extends ProcessRunner
                     Object score,
                      Object clone_seq_cds_start ,
                     Object clone_seq_cds_stop ,
-                    Object clone_seq_text 
+                    Object clone_seq_text ,
+                    Object assembly_attempt_status
                  )
      {
         if( clone_id!= null){ m_clone_id= true; m_report_title += "Clone ID\t";} //    Clone Id
@@ -121,6 +122,7 @@ public class ReportRunner extends ProcessRunner
         if( ref_seq_text != null) {m_ref_seq_text= true; m_report_title += "REF:Text\t";}//      Sequence Text
         if( ref_cds != null) {m_ref_cds= true; m_report_title += "REF:CDS \t";}//     CDS
        
+        if ( assembly_attempt_status != null){ m_assembly_attempt_status = true; m_report_title += "Clone: Sequence Assembly Attempt Status\t";}
         if( clone_seq_id != null){ m_clone_seq_id= true; m_report_title += "Clone:Sequence Id\tClone:Sequence Type\t";}//      Clone Sequence Id
         if( clone_status != null) {m_clone_status = true;m_report_title += "Clone: Sequence Status\t";}//      Clone Sequence Analysis Status
         if( clone_seq_cds_start != null){ m_clone_seq_cds_start= true;m_report_title += "Clone:Cds Start\t";}
@@ -166,7 +168,7 @@ public class ReportRunner extends ProcessRunner
     }
     
     
-    private ArrayList getCloneInfo(int submission_type, String sql_items)
+    private ArrayList getCloneInfo(int submission_type, String sql_items) throws Exception
     {
         ArrayList clones = new ArrayList();
         String sql = null;
@@ -181,6 +183,7 @@ public class ReportRunner extends ProcessRunner
             while(rs.next())
             {
                  clone = new UICloneSample();
+                 clone.setCloneAssemblyStatus   (rs.getInt("assembly_status"));
                  clone.setPlateLabel (rs.getString("LABEL"));
                  clone.setPosition (rs.getInt("POSITION"));
                  clone.setSampleType (rs.getString("SAMPLETYPE"));
@@ -200,21 +203,25 @@ public class ReportRunner extends ProcessRunner
                  clone.setCloneSequenceCdsStop(rs.getInt("clonesequencecdsstop"));
                  if ( m_dir_name )
                     clone.setTraceFilesDirectory( getTraceFilesDirName( clone.getSampleId() ));
-                 
+                 if ( clone.getSampleType().indexOf("CONTROL") != 1)
+                 {
+                     clones.add(clone);
+                     continue;
+                 }
                  if ( previous_clone == null || ( previous_clone != null && previous_clone.getCloneId () != clone.getCloneId()))
                  {
                     clones.add(clone);
                     previous_clone = clone;
                  }
             }
-           
-            
+            return clones;
         }
         catch(Exception e)
         {
             m_error_messages.add("Cannot get data for clone "+e.getMessage() +"\n"+sql);
+            throw new Exception();
         }
-       return clones;
+       
     }
     
     
@@ -224,7 +231,7 @@ public class ReportRunner extends ProcessRunner
         if ( submission_type == Constants.ITEM_TYPE_PLATE_LABELS)//plates
         {
             
-            sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
+            sql="select assembly_status , FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
@@ -235,7 +242,7 @@ public class ReportRunner extends ProcessRunner
         } 
         else if (submission_type == Constants.ITEM_TYPE_CLONEID)
         {
-            sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
+            sql="select assembly_status,FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID,  a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop,analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
@@ -246,7 +253,7 @@ public class ReportRunner extends ProcessRunner
        
         else if (submission_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)//bec sequence id
         {
-                sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
+                sql="select assembly_status,FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
@@ -254,6 +261,7 @@ public class ReportRunner extends ProcessRunner
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
 +"  and a.SEQUENCEID in ("+sql_items+") order by s.containerid,position,  a.submissiondate desc";
         }
+   
         return sql;
     }
     private Hashtable extractRefSequences(ArrayList clones) 
@@ -357,6 +365,7 @@ public class ReportRunner extends ProcessRunner
              if (write_cycle == 0) fr.write(m_report_title+"\n");        
             for (int count = 0; count < clones.size(); count++)
             {
+                
                 clone= (UICloneSample) clones.get(count);
                 fr.write(writeClone(clone,refsequences,reads)+"\n");
 
@@ -374,8 +383,9 @@ public class ReportRunner extends ProcessRunner
       StringBuffer cloneinfo= new StringBuffer();
       CloneSequence clone_sequence = null;
       UIRead read = null;
-      RefSequence refsequence = null;
-       ArrayList discrepancies =  null;
+      RefSequence refsequence = null; ArrayList contigs = null; 
+       ArrayList discrepancies =  null;boolean isItemsAnalized = true;
+        Stretch stretch = null;
       if ( clone.getRefSequenceId()>0)
       {
          refsequence = (RefSequence)refsequences.get(new Integer(clone.getRefSequenceId()));
@@ -385,7 +395,8 @@ public class ReportRunner extends ProcessRunner
      if(  m_clone_id){ cloneinfo.append(clone.getCloneId()+"\t");}//    Clone Id
     if( m_plate_label){ cloneinfo.append( clone.getPlateLabel ()+"\t");}// Plate Label
     if( m_sample_id){ cloneinfo.append(clone.getSampleId() +"\t");}//      Sample Id
-    if(  m_sample_type){ cloneinfo.append(clone.getSampleType ()+"\t");} //      Sample Type
+
+    if(  m_sample_type ){ cloneinfo.append(clone.getSampleType()+"\t");} //      Sample Type
     if( m_position){ cloneinfo.append(clone.getPosition ()+"\t");}//      Sample Position
     if( m_score)
     {
@@ -457,6 +468,13 @@ public class ReportRunner extends ProcessRunner
         if( m_ref_cds){  cloneinfo.append("\t");}//     CDS
     }
 
+     if ( m_assembly_attempt_status )
+     { 
+         if ( clone.getCloneId() == 0)
+             cloneinfo.append("N/A\t");
+         else
+              cloneinfo.append(IsolateTrackingEngine.getAssemblyStatusAsString (clone.getCloneAssemblytStatus())+"\t");
+     }
     if( m_clone_seq_id )
     { 
         cloneinfo.append(clone.getSequenceId ()+"\t");
@@ -491,12 +509,7 @@ public class ReportRunner extends ProcessRunner
     { 
         try
         {
-            discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
-            String discrepancy_report_html = Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_5P, true,true);
-         discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.RNA, true,true);
-         discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_3P, true,true);
-
-         cloneinfo.append(discrepancy_report_html);
+           cloneinfo.append( getDiscrepancyReport(discrepancies, clone, true));
         }
         catch(Exception e){}
         cloneinfo.append("\t");           
@@ -505,17 +518,9 @@ public class ReportRunner extends ProcessRunner
     }//    Discrepancies High Quality (separated by type)
     if(  m_clone_disc_low)
     { 
-         try
+        try
         {
-            if ( discrepancies == null )
-            {
-             discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
-            }
-            String discrepancy_report_html = Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_5P, true,false);
-            discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.RNA, true,false);
-            discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_3P, true,false);
-            
-            cloneinfo.append(discrepancy_report_html);
+            cloneinfo.append( getDiscrepancyReport(discrepancies, clone, false));
         }
         catch(Exception e){}
         cloneinfo.append("\t"); 
@@ -555,6 +560,43 @@ public class ReportRunner extends ProcessRunner
        return null;
     }
   
+    private String              getDiscrepancyReport(ArrayList clone_discrepancies, 
+                            UICloneSample clone, boolean quality)
+                            throws Exception
+    {
+        Stretch stretch = null; ArrayList contigs = null;
+        if ( clone_discrepancies != null ) return getDiscrepancySummaryReport(  quality, clone_discrepancies);
+       
+        clone_discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
+            //if clone sequence exists
+        if ( clone.getSequenceId() > 1 ) clone_discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
+        else 
+        {    
+            contigs = IsolateTrackingEngine.getStretches( clone.getIsolateTrackingId(), Stretch.GAP_TYPE_CONTIG  );
+            if (contigs != null && contigs.size() > 0)
+            {
+                for (int count = 0; count < contigs.size(); count++)
+                {
+                    stretch = (Stretch) contigs.get(count);
+                    if ( stretch.getAnalysisStatus() == -1) { return "Contig data have not been analized for the clone";}
+                    clone_discrepancies.addAll( stretch.getSequence().getDiscrepancies()); 
+                }
+            }
+            else
+            {
+               }
+        }
+        return getDiscrepancySummaryReport( quality, clone_discrepancies);
+    }
+    
+    private String     getDiscrepancySummaryReport(boolean quality, ArrayList discrepancies)
+    {
+            String discrepancy_report_html = Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_5P, true,quality);
+            discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.RNA, true,quality);
+            discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_3P, true,quality);
+
+            return discrepancy_report_html;
+    }
      public static void main(String args[]) 
      
     {
@@ -564,10 +606,11 @@ public class ReportRunner extends ProcessRunner
         try
         {
              
-            user = AccessManager.getInstance().getUser("htaycher1","htaycher");
+            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             input = new ReportRunner();
-            input.setItems(" 35284      35285      35286      35287      35288      35289      35290      35291      35292      35293      35294      35295      35296      35297      35298      35299      35300      35301      35302      35303      35304      35305      35306      35307      35308      35309      35310      35311      35312      35313      35314      35315      35316      35317      35318      35319      35320      35321      35322      35323      35324      35325      35326      35327      35328      35329      35330      35331      35332      35333      35334      35335      35336      35337      35338      35339      35340      35341      35342      35343      35344      35345      35346      35347      35348      35349      35350      35351      35352      35353      35354      35355      35356      35357      35358      35359      35360      35361      35362      35363      35364      35365      35366      35367      35368      35369      35370      35371      35372      35373      35374      35375       2765       2766       2392 ");
-            input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+            input.setItems("  BSA000865   BSA000863");
+            
+            input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
      //       input.setFields(
       //              "clone_id");
             /*, //    Clone Id
