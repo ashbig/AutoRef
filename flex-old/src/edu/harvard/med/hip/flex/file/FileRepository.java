@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-06 19:28:45 $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-09 16:01:46 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -45,13 +45,13 @@ import java.util.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.1 $ $Date: 2001-07-06 19:28:45 $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-09 16:01:46 $
  */
 
 public class FileRepository {
     
     // base directory for the file repository
-    public final static String REPOSITORY_PATH="/kotel/data/";
+    public final static String REPOSITORY_PATH="/tmp/";
     
     // local path to store gelimages
     public final static String GEL_LOCAL_PATH="gelimages/";

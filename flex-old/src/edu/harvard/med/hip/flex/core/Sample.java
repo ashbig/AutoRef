@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.1 2001-07-06 19:28:43 jmunoz Exp $
+ * $Id: Sample.java,v 1.2 2001-07-09 16:00:57 jmunoz Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -308,7 +308,11 @@ public class Sample {
      */
     public Container getContainer()
     throws FlexDatabaseException, FlexCoreException {
-        return new Container(getContainerid());
+        System.out.println("container id: " + containerid);
+        Container container = new Container(getContainerid());
+        System.out.println("label: " + container.getLabel());
+        System.out.println("about to return: " + container);
+        return container;
     }
     
     /**

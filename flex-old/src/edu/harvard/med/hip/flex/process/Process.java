@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.1 2001-07-06 19:28:52 jmunoz Exp $
+ * $Id: Process.java,v 1.2 2001-07-09 16:02:39 jmunoz Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -53,6 +53,25 @@ public class Process {
         this.protocol = protocol;
         this.executionStatus = executionStatus;
         this.researcher = researcher;
+        this.executionid = FlexIDGenerator.getID("executionid");
+    }
+    
+    /**
+     * Constructor.
+     *
+     * @param protocol The protocol used for this process.
+     * @param executionStatus The execution status of the process.
+     * @param researcher The researcher who executes the process.
+     * @param processObjects The collection of processobjects
+     * @return The Process object.
+     * @exception FlexDatabaseException.
+     */
+    public Process(Protocol protocol, String executionStatus,
+    Researcher researcher, Vector processObjects) throws FlexDatabaseException {
+        this.protocol = protocol;
+        this.executionStatus = executionStatus;
+        this.researcher = researcher;
+        this.processObjects = processObjects;
         this.executionid = FlexIDGenerator.getID("executionid");
     }
     

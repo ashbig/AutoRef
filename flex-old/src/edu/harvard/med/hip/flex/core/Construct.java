@@ -1,5 +1,5 @@
 /**
- * $Id: Construct.java,v 1.1 2001-07-06 19:28:41 jmunoz Exp $
+ * $Id: Construct.java,v 1.2 2001-07-09 16:00:56 jmunoz Exp $
  * This class maps to the ConstructDesign table in the database.
  * @File Construct.java
  * @date 4/28/01
@@ -34,7 +34,7 @@ public class Construct {
     private int seqId;
     private int oligoId_5p;
     private int oligoId_3p;
-      
+    
     /**
      * Constructor.
      *
@@ -101,8 +101,8 @@ public class Construct {
         this.platesetId = platesetId;
         setSizeClass();
     }
-
-        /**
+    
+    /**
      * Constructor.
      *
      * @param id The constructID
@@ -283,19 +283,17 @@ public class Construct {
         int oligothreep = threepOligo.getOligoID();
         
         String platesetIdString = null;
-        if (platesetId < 0)
-        {
+        if (platesetId < 0) {
             platesetIdString = "null";
         }
-        else
-        {
+        else {
             platesetIdString = String.valueOf(platesetId);
         }
-        String sql = "INSERT INTO ConstructDesign\n" +               
+        String sql = "INSERT INTO ConstructDesign\n" +
         "(constructid, sequenceid, oligoid_5p, oligoid_3p," +
         " constructtype, constructsizeclass, constructpairid, platesetid)\n" +
         " VALUES(" +id+ "," +seqID+ "," +oligofivep+ "," +oligothreep+ "," +
-        "'" + type + "', " + "'" + sizeClass + "'," 
+        "'" + type + "', " + "'" + sizeClass + "',"
         + pairId + "," + platesetIdString + ")";
         
         Statement stmt = null;
@@ -306,7 +304,7 @@ public class Construct {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
-        }              
+        }
     } //insertConstruct
     
     public static void main(String [] args) {
@@ -316,7 +314,7 @@ public class Construct {
         int oligo5p = 10;
         int oligo3s = 11;
         
-        try {           
+        try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
             
@@ -324,10 +322,10 @@ public class Construct {
             System.out.println("inserting...");
             cons.insert(c);
             System.out.println("Construct ID: " + cons.getId());
-           // System.out.println("sequence ID: "+ cons.getSequenceId());
-           // System.out.println("CDS: "+seq.getCDSLength());
-           // System.out.println("Sequence length: " + seq.getSeqLength());
-           // System.out.println("Start pos: " + seq.getStart());
+            // System.out.println("sequence ID: "+ cons.getSequenceId());
+            // System.out.println("CDS: "+seq.getCDSLength());
+            // System.out.println("Sequence length: " + seq.getSeqLength());
+            // System.out.println("Start pos: " + seq.getStart());
             
         } catch (FlexDatabaseException exception) {
             System.out.println(exception.getMessage());

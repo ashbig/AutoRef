@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.1 2001-07-06 19:28:54 jmunoz Exp $
+ * $Id: Researcher.java,v 1.2 2001-07-09 16:02:40 jmunoz Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -139,7 +139,7 @@ public class Researcher {
     /**
      * @param name .
      *
-     * @return The researcher id.
+     * @return The researcher id of the given name.
      */
     public int getId(String name) throws FlexDatabaseException {
         int Id = -1;
