@@ -112,7 +112,7 @@ public class ReceiveOligoOrdersForm extends ActionForm{
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", researcherBarcode));
         }    
         if((oligoPlateIds == null) || (oligoPlateIds.trim().length()<1)) {
-            errors.add("oligoPlateIds", new ActionError("error.plateId.invalid", oligoPlateIds));
+            errors.add("oligoPlateIds", new ActionError("error.plateid.required", oligoPlateIds));
         }
         if((receiveDate == null) || (receiveDate.trim().length()<1)) {
             errors.add("receiveDate", new ActionError("error.invalid.date", receiveDate));
