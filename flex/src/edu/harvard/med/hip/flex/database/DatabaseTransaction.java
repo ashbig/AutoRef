@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.16 $
- * $Date: 2001-07-09 20:10:24 $
+ * $Revision: 1.17 $
+ * $Date: 2001-07-26 16:02:23 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -54,7 +54,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.16 $ $Date: 2001-07-09 20:10:24 $
+ * @version    $Revision: 1.17 $ $Date: 2001-07-26 16:02:23 $
  */
 
 public class DatabaseTransaction {
@@ -68,35 +68,35 @@ public class DatabaseTransaction {
     // initalize this thing if it isn't allready
     static {
         // look up the Datasource
+        try {
+            Context ctx = new InitialContext();
+            
+            //check to see if pool man is started.
+            ctx.lookup("jndi-walldb");
+        } catch (NamingException ne) {
+            // if the data source is not found, start it up
             try {
-                Context ctx = new InitialContext();
-                
-                //check to see if pool man is started.
-                ctx.lookup("jndi-walldb");
-            } catch (NamingException ne) {
-               // if the data source is not found, start it up
-                try {
-                    com.codestudio.sql.PoolMan.start();  
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                com.codestudio.sql.PoolMan.start();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        }
         
     }
     // Private constructor method. Autocommit is set to false.
     protected DatabaseTransaction() throws FlexDatabaseException {
- 
-            // look up the Datasource
-            try {
-                Context ctx = new InitialContext();
-                
-                // Get the datasource
-                ds = (DataSource) ctx.lookup("jndi-walldb");
-            } catch (NamingException ne) {
-                ne.printStackTrace();
-                throw new FlexDatabaseException(ne);
-            }
-            // ds = PoolMan.findDataSource("jndi-walldb");
+        
+        // look up the Datasource
+        try {
+            Context ctx = new InitialContext();
+            
+            // Get the datasource
+            ds = (DataSource) ctx.lookup("jndi-walldb");
+        } catch (NamingException ne) {
+            ne.printStackTrace();
+            throw new FlexDatabaseException(ne);
+        }
+        // ds = PoolMan.findDataSource("jndi-walldb");
         
         
         
@@ -367,6 +367,30 @@ public class DatabaseTransaction {
         try {
             conn.rollback();
         } catch(Throwable t) {}
+    }
+    
+    /**
+     * Makes a string ready for oracle by replacing the ' with ''.
+     * 
+     * All info entered by the user should be passed to this method 
+     * before going to the dabase.
+     * 
+     * @param string String to convert.
+     *
+     * @return String ready for oracle insert or where clause.
+     */
+    public static String prepareString(String string) {
+        StringBuffer stringBuff = new StringBuffer(string);
+        int quoteIndex = 0;
+        int curIndex = 0;
+        
+        quoteIndex = string.indexOf("'");
+        while (quoteIndex !=-1) {
+            int offset = quoteIndex + curIndex++;
+            stringBuff.insert(offset, "'");
+            quoteIndex = string.indexOf("'",quoteIndex+1);
+        }
+        return stringBuff.toString();
     }
     
     public static void main(String args[]) throws FlexDatabaseException, SQLException{
