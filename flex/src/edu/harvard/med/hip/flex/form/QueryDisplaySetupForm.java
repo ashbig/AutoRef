@@ -28,6 +28,8 @@ public class QueryDisplaySetupForm extends ActionForm {
     private boolean genbank = false;
     private boolean genesymbol = false;
     private boolean pa = false;
+    private boolean sequence = false;
+    private boolean flexstatus = false;
     private boolean label = false;
     private boolean well = false;
     private boolean type = false;
@@ -83,6 +85,22 @@ public class QueryDisplaySetupForm extends ActionForm {
     
     public void setPa(boolean pa) {
         this.pa = pa;
+    }
+    
+    public boolean getSequence() {
+        return sequence;
+    }
+    
+    public void setSequence(boolean sequence) {
+        this.sequence = sequence;
+    }
+    
+    public boolean getFlexstatus() {
+        return flexstatus;
+    }
+    
+    public void setFlexstatus(boolean flexstatus) {
+        this.flexstatus = flexstatus;
     }
     
     public boolean getLabel() {
@@ -148,7 +166,7 @@ public class QueryDisplaySetupForm extends ActionForm {
     public void setIsResultDisplay(boolean isResultDisplay) {
         this.isResultDisplay = isResultDisplay;
     }
-    
+        
     /**
      * Reset all properties to their default values.
      *
@@ -162,6 +180,8 @@ public class QueryDisplaySetupForm extends ActionForm {
         genbank = false;
         genesymbol = false;
         pa = false;
+        sequence = false;
+        flexstatus = false;
         label = false;
         well = false;
         type = false;

@@ -20,11 +20,7 @@
 <html:errors/>
 
 <p>
-<html:form action="/QueryDisplaySetup.do">
-
-<logic:present name="isResultDisplay">
-    <input type="hidden" name="isResultDisplay" value="<bean:write name="isResultDisplay"/>"/>
-</logic:present>
+<html:form action="/CloneQueryDisplaySetup.do">
 
 <table border=0 cellspacing=10 cellpadding=2>
     <tr>
@@ -49,6 +45,17 @@
     <td class="prompt"></td>
     <td><html:checkbox property="sequence"/>Sequence</td>
     <td><html:checkbox property="flexstatus"/>FLEX Status</td>
+    </tr>
+
+    <tr>
+    <td class="prompt">Clone</td>
+    <td><html:checkbox property="clonename"/>Clone Name</td>
+    <td><html:checkbox property="cloneResult"/>Result</td>
+    </tr>
+
+    <tr>
+    <td class="prompt"></td>
+    <td><html:checkbox property="pubhit"/>Public Hit</td>
     </tr>
 
     <tr>

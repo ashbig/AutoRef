@@ -44,6 +44,26 @@
         <td>PA Number</td>
         </logic:present>
 
+        <logic:present name="sequence">
+        <td>Sequence</td>
+        </logic:present>
+
+        <logic:present name="clonename">
+        <td>Clone Name</td>
+        </logic:present>
+
+        <logic:present name="pubhit">
+        <td>Public Hit</td>
+        </logic:present>
+
+        <logic:present name="cloneResult">
+        <td>Clone Result</td>
+        </logic:present>
+
+        <logic:present name="flexstatus">
+        <td>FLEX Status</td>
+        </logic:present>
+
         <logic:present name="label">
         <td>Plate</td>
         </logic:present>
@@ -99,6 +119,26 @@
 
         <logic:present name="pa">
         <td><flex:write name="info" property="panumber"/></td>
+        </logic:present>
+
+        <logic:present name="sequence">
+        <td><flex:write name="info" property="sequence"/></td>
+        </logic:present>
+
+        <logic:present name="clonename">
+        <td><flex:write name="info" property="clonename"/></td>
+        </logic:present>
+
+        <logic:present name="pubhit">
+        <td><flex:write name="info" property="pubhit"/></td>
+        </logic:present>
+
+        <logic:present name="cloneResult">
+        <td><flex:write name="info" property="result"/></td>
+        </logic:present>
+
+        <logic:present name="flexstatus">
+        <td><flex:write name="info" property="status"/></td>
         </logic:present>
 
         <logic:present name="label">

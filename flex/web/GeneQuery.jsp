@@ -22,7 +22,6 @@
 <p>
 <html:form action="/SequenceQuery.do" focus="searchTerm" method="POST" enctype="multipart/form-data">
 <input type="hidden" name="querySelect" value="<bean:write name="querySelect"/>"/>
-
 <table border=0 cellspacing=10 cellpadding=2>
     <tr>
     <td class="prompt">Search Term:</td>
@@ -55,17 +54,6 @@
     <td valign="top"><html:file property="filename" />
     </td>
     </tr>
-
-    <tr>
-    <td class="prompt">FLEXGene Status:</td>
-    <td><html:select property="flexstatus">
-        <html:options
-        name="flexstatus"
-        />
-        <html:option value="-1">All the above</html:option>
-    </html:select></td>
-    <td></td>
-    </tr> 
 </table>
 
 <p>
@@ -81,52 +69,6 @@
         />
     </html:select></td>
     <td></td>
-    </tr>
-
-    <tr>
-    <td class="prompt">Workflow:</td>
-    <td><html:select property="workflow">
-        <html:option value="-1">All</html:option>
-        <html:options
-        collection="workflows"
-        property="id"
-        labelProperty="name"
-        />
-    </html:select></td>
-    <td></td>
-    </tr>
-
-    <tr>
-    <td class="prompt">Have gone through:</td>
-    <td><html:select property="plate">
-        <html:option value="oligo">Oligo Plate (Original)</html:option>
-        <html:option value="oligoD">Oligo Plate (Diluted)</html:option>
-        <html:option value="pcr1">PCR Plate (Step1)</html:option>
-        <html:option value="pcr2">PCR Plate (Step2)</html:option>
-        <html:option value="gel">PCR Gel Plate</html:option>
-        <html:option value="filter">Filter Plate</html:option>
-        <html:option value="bp">BP Reaction Plate</html:option>
-        <html:option value="cr">Capture Reaction Plate</html:option>
-        <html:option value="tr">Transformation Plate</html:option>
-        <html:option value="agar">Agar Plate</html:option>
-        <html:option value="culture">Culture Plate</html:option>
-        <html:option value="dna">DNA Plate</html:option>
-        <html:option value="glycerol">Glycerol Plate</html:option>
-        </html:select>
-    </td>
-    <td></td>
-    </tr>
-
-    <tr>
-    <td class="prompt">Display results if any?</td>
-    <td><html:radio property="isResultDisplay" value="true">
-        Yes
-        </html:radio>
-    </td>
-    <td><html:radio property="isResultDisplay" value="false">
-        No
-        </html:radio>
-    </td>
     </tr>
  
     <tr>

@@ -37,22 +37,16 @@ public class QueryManager {
             return false;
         }
         
-        if(flexstatus == null) {
-            setMessage("FLEX STATUS cannot be null.");
-            return false;
-        }
-        
         String sql;
         boolean isPending = false;
-        if("REJECTED".equals(flexstatus) || "PENDING".equals(flexstatus)) {
+        if(flexstatus == null) {
             sql = "select distinct t.sequenceid, flexstatus, pname, n1.namevalue as gi,"+
             " n2.namevalue as genbankacc, n3.namevalue as genename,"+
             " n4.namevalue as genesymbol, n5.namevalue as panumber"+
             " from"+
             " (select f.sequenceid, f.flexstatus, p.name as pname, p.projectid"+
             " from flexsequence f, project p, requestsequence r"+
-            " where f.flexstatus='"+flexstatus+"'"+
-            " and f.sequenceid=r.sequenceid"+
+            " where f.sequenceid=r.sequenceid"+
             " and r.projectid=p.projectid"+
             " and f.sequenceid in"+
             " (select sequenceid from name"+
@@ -88,9 +82,13 @@ public class QueryManager {
             " and c.workflowid=w.workflowid\n"+
             " and c.oligoid_5p=ou.oligoid\n"+
             " and c.oligoid_3p=oc.oligoid\n"+
-            " and s.sampleid=r.sampleid(+)\n"+
-            " and f.flexstatus='"+flexstatus+"'\n"+
-            " and f.sequenceid in\n"+
+            " and s.sampleid=r.sampleid(+)\n";
+            
+            if(!"-1".equals(flexstatus)) {
+                sql = sql + " and f.flexstatus='"+flexstatus+"'\n";
+            }
+            
+            sql = sql + " and f.sequenceid in\n"+
             " (select sequenceid from name\n"+
             " where nametype='"+searchType+"'\n"+
             " and namevalue in ("+searchList+"))) t,\n"+
@@ -147,11 +145,17 @@ public class QueryManager {
             if("glycerol".equals(plate))
                 sql = sql+" and t.label like '_GS%'";
         }
-     
+        
         DatabaseTransaction dt = null;
+        Connection conn = null;
         RowSet rs = null;
+        RowSet rs1 = null;
+        PreparedStatement stmt = null;
         try {
             dt = DatabaseTransaction.getInstance();
+            conn = dt.requestConnection();
+            stmt = conn.prepareStatement("select * from sequencetext where sequenceid=? order by sequenceorder");
+            
             rs = dt.executeQuery(sql);
             queryInfoList = new ArrayList();
             
@@ -207,6 +211,15 @@ public class QueryManager {
                 info.setGeneSymbol(genesymbol);
                 info.setPanumber(panumber);
                 info.setStatus(status);
+                
+                String sequencetext = "";
+                stmt.setInt(1, sequenceid);
+                rs1 = dt.executeQuery(stmt);
+                while(rs1.next()) {
+                    sequencetext = sequencetext+rs1.getString("SEQUENCETEXT");
+                }
+                info.setSequence(sequencetext);
+                
                 queryInfoList.add(info);
             }
         } catch(Exception e) {
@@ -214,6 +227,127 @@ public class QueryManager {
             return false;
         } finally {
             DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs1);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        
+        return true;
+    }
+    
+    public boolean queryClone(ArrayList searchTerm, String searchType, int project) {
+        if(searchTerm == null || searchTerm.isEmpty()) {
+            setMessage("Search terms are not specified.");
+            return false;
+        }
+        
+        String searchList = convertToSqlList(searchTerm);
+        
+        if(searchList == null) {
+            setMessage("Search terms are not specified.");
+            return false;
+        }
+        
+        String sql = "select distinct t.sequenceid, flexstatus, constructtype,\n"+
+        " containerposition, containerid, label, pname, wname, five,\n"+
+        " three, result, pubhit, clonename, n1.namevalue as gi,\n"+
+        " n2.namevalue as genbankacc, n3.namevalue as genename,\n"+
+        " n4.namevalue as genesymbol, n5.namevalue as panumber\n"+
+        " from"+
+        " (select f.sequenceid, f.flexstatus, c.constructtype,\n"+
+        " c.projectid, c.workflowid, s.containerposition, ch.containerid, ch.label,\n"+
+        " ou.gatewaysequence as five, oc.gatewaysequence as three,\n"+
+        " p.name as pname, w.name as wname, cl.result, cl.pubhit, cl.clonename\n"+
+        " from flexsequence f, constructdesign c,\n"+
+        " sample s, containercell cc, containerheader ch,\n"+
+        " project p, workflow w, oligo ou, oligo oc, clone cl\n"+
+        " where f.sequenceid=c.sequenceid(+)\n"+
+        " and c.constructid=s.constructid(+)\n"+
+        " and s.sampleid=cc.sampleid\n"+
+        " and cc.containerid=ch.containerid\n"+
+        " and c.projectid=p.projectid\n"+
+        " and c.workflowid=w.workflowid\n"+
+        " and c.oligoid_5p=ou.oligoid\n"+
+        " and c.oligoid_3p=oc.oligoid\n"+
+        " and f.sequenceid=cl.sequenceid\n"+
+        " and cl.sampleid=s.sampleid\n"+
+        " and f.sequenceid in\n"+
+        " (select sequenceid from name\n"+
+        " where nametype='"+searchType+"'\n"+
+        " and namevalue in ("+searchList+"))) t,\n"+
+        " givu n1, genbankvu n2, genenamevu n3, genesymbolvu n4, pavu n5\n"+
+        " where t.sequenceid=n1.sequenceid(+)\n"+
+        " and t.sequenceid=n2.sequenceid(+)\n"+
+        " and t.sequenceid=n3.sequenceid(+)\n"+
+        " and t.sequenceid=n4.sequenceid(+)\n"+
+        " and t.sequenceid=n5.sequenceid(+)\n";
+        
+        if(project != -1)
+            sql = sql+" and t.projectid="+project;
+        
+        DatabaseTransaction dt = null;
+        Connection conn = null;
+        RowSet rs = null;
+        RowSet rs1 = null;
+        PreparedStatement stmt = null;
+        try {
+            dt = DatabaseTransaction.getInstance();
+            conn = dt.requestConnection();
+            stmt = conn.prepareStatement("select * from sequencetext where sequenceid=? order by sequenceorder");
+            
+            rs = dt.executeQuery(sql);
+            queryInfoList = new ArrayList();
+            
+            while(rs.next()) {
+                int sequenceid = rs.getInt(1);
+                String status = rs.getString(2);
+                String type = rs.getString(3);
+                int well = rs.getInt(4);
+                int containerid = rs.getInt(5);
+                String label = rs.getString(6);
+                String pname = rs.getString(7);
+                String wname = rs.getString(8);
+                String fivep = rs.getString(9);
+                String threep = rs.getString(10);
+                String result = rs.getString(11);
+                String pubhit = rs.getString(12);
+                String clonename = rs.getString(13);
+                String gi = rs.getString(14);
+                String genbank = rs.getString(15);
+                String genename = rs.getString(16);
+                String genesymbol = rs.getString(17);
+                String panumber = rs.getString(18);
+                
+                CloneQueryInfo info = new CloneQueryInfo(sequenceid, gi, genbank, containerid, label, well);
+                info.setType(type);
+                info.setProject(pname);
+                info.setWorkflow(wname);
+                info.setFivep(fivep);
+                info.setThreep(threep);
+                info.setGeneName(genename);
+                info.setGeneSymbol(genesymbol);
+                info.setPanumber(panumber);
+                info.setStatus(status);
+                info.setResult(result);
+                info.setPubhit(pubhit);
+                info.setClonename(clonename);
+                
+                String sequencetext = "";
+                stmt.setInt(1, sequenceid);
+                rs1 = dt.executeQuery(stmt);
+                while(rs1.next()) {
+                    sequencetext = sequencetext+rs1.getString("SEQUENCETEXT");
+                }
+                info.setSequence(sequencetext);
+                
+                queryInfoList.add(info);
+            }
+        } catch(Exception e) {
+            setMessage(e.getMessage());
+            return false;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeResultSet(rs1);
+            DatabaseTransaction.closeConnection(conn);
         }
         
         return true;
@@ -256,24 +390,24 @@ public class QueryManager {
         ArrayList searchTerm = new ArrayList();
         
         /** Testing for "PENDING" status
-        searchTerm.add("17389294");
-        searchTerm.add("17389297");
-        searchTerm.add("17389300");
-        searchTerm.add("17389303");
-        searchTerm.add("17389306");
-        searchTerm.add("17389309");
-        searchTerm.add("17389312");
-        searchTerm.add("17389315");
-        searchTerm.add("17389318");
-        searchTerm.add("17389321");
-        searchTerm.add("17389324");
-        searchTerm.add("17389327");
-        searchTerm.add("17389330");
-        String searchType = "GI";
-        String flexstatus = "PENDING";
-        int project = -1;
-        int workflow = -1;
-        String plate = "gel";
+         * searchTerm.add("17389294");
+         * searchTerm.add("17389297");
+         * searchTerm.add("17389300");
+         * searchTerm.add("17389303");
+         * searchTerm.add("17389306");
+         * searchTerm.add("17389309");
+         * searchTerm.add("17389312");
+         * searchTerm.add("17389315");
+         * searchTerm.add("17389318");
+         * searchTerm.add("17389321");
+         * searchTerm.add("17389324");
+         * searchTerm.add("17389327");
+         * searchTerm.add("17389330");
+         * String searchType = "GI";
+         * String flexstatus = "PENDING";
+         * int project = -1;
+         * int workflow = -1;
+         * String plate = "gel";
          */
         
         /** Testing for "INPROCESS" status */
@@ -293,7 +427,7 @@ public class QueryManager {
         String flexstatus = "INPROCESS";
         int project = 5;
         int workflow = 6;
-        String plate = "gel";                                                                      
+        String plate = "gel";
         
         if(manager.doQuery(searchTerm, searchType, flexstatus, project, workflow, plate)) {
             ArrayList queryInfoList = manager.getQueryInfoList();
@@ -318,6 +452,7 @@ public class QueryManager {
                     System.out.print("Workflow: "+info.getWorkflow()+"\t");
                     System.out.print("Result: "+info.getResult()+"\t");
                     System.out.print("Flex Status: "+info.getStatus()+"\t");
+                    System.out.print("Sequence: "+info.getSequence()+"\t");
                     System.out.println();
                 }
             }

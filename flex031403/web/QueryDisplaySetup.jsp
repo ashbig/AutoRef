@@ -46,6 +46,12 @@
     </tr>
 
     <tr>
+    <td class="prompt"></td>
+    <td><html:checkbox property="sequence"/>Sequence</td>
+    <td><html:checkbox property="flexstatus"/>FLEX Status</td>
+    </tr>
+
+    <tr>
     <td class="prompt">Plate and Sample</td>
     <td><html:checkbox property="label"/>Label</td>
     <td><html:checkbox property="well"/>Well</td>

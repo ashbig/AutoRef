@@ -28,6 +28,7 @@ public class QueryInfo {
     private String workflow;
     private String result;
     private String status;
+    private String sequence;
     
     /** Creates new QueryInfo */
     public QueryInfo() {
@@ -168,5 +169,13 @@ public class QueryInfo {
     
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    public String getSequence() {
+        return sequence;
+    }
+    
+    public void setSequence(String sequence) {
+        this.sequence = sequence;
     }
 }

@@ -63,6 +63,8 @@ public class QueryDisplaySetupAction extends CollaboratorAction {
         boolean genbank = ((QueryDisplaySetupForm)form).getGenbank();
         boolean genesymbol = ((QueryDisplaySetupForm)form).getGenesymbol();
         boolean pa = ((QueryDisplaySetupForm)form).getPa();
+        boolean sequence = ((QueryDisplaySetupForm)form).getSequence();
+        boolean flexstatus = ((QueryDisplaySetupForm)form).getFlexstatus();
         boolean label = ((QueryDisplaySetupForm)form).getLabel();
         boolean well = ((QueryDisplaySetupForm)form).getWell();
         boolean type = ((QueryDisplaySetupForm)form).getType();
@@ -87,6 +89,10 @@ public class QueryDisplaySetupAction extends CollaboratorAction {
                 request.setAttribute("genesymbol", new Boolean(genesymbol));
             if(pa)
                 request.setAttribute("pa", new Boolean(pa));
+            if(sequence)
+                request.setAttribute("sequence", new Boolean(sequence));
+            if(flexstatus)
+                request.setAttribute("flexstatus", new Boolean(flexstatus));
             if(label)
                 request.setAttribute("label", new Boolean(label));
             if(well)

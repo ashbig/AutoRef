@@ -57,13 +57,20 @@ public class SequenceQueryAction extends CollaboratorAction {
         request.getSession().removeAttribute("output");
         
         ActionErrors errors = new ActionErrors();
+        String querySelect = ((SequenceQueryForm)form).getQuerySelect();
         String searchType = ((SequenceQueryForm)form).getSearchType();
         String searchTermType = ((SequenceQueryForm)form).getSearchTermType();
-        String flexstatus = ((SequenceQueryForm)form).getFlexstatus();
         int project = ((SequenceQueryForm)form).getProject();
         int workflow = ((SequenceQueryForm)form).getWorkflow();
-        String plate = ((SequenceQueryForm)form).getPlate();
-        boolean isResultDisplay = ((SequenceQueryForm)form).getIsResultDisplay();
+        String flexstatus = null;
+        String plate = null;
+        boolean isResultDisplay = false;
+        
+        if("queryGenes".equals(querySelect)) {
+            flexstatus = ((SequenceQueryForm)form).getFlexstatus();
+            plate = ((SequenceQueryForm)form).getPlate();
+            isResultDisplay = ((SequenceQueryForm)form).getIsResultDisplay();
+        }
         
         String searchTerm = null;
         FormFile filename = null;
@@ -114,6 +121,18 @@ public class SequenceQueryAction extends CollaboratorAction {
         
         QueryManager manager = new QueryManager();
         ArrayList output = new ArrayList();
+        
+        if("queryClones".equals(querySelect)) {
+            if(manager.queryClone(searchTermList, searchType, project)) {
+                output = manager.getQueryInfoList();
+                request.getSession().setAttribute("output", output);
+                return (mapping.findForward("success_queryClone"));
+            } else {
+                request.setAttribute(Action.EXCEPTION_KEY, new Exception(manager.getMessage()));
+                return mapping.findForward("error");
+            }
+        }
+        
         if(manager.doQuery(searchTermList,searchType,flexstatus,project,workflow,plate)) {
             output = manager.getQueryInfoList();
             request.getSession().setAttribute("output", output);
@@ -121,7 +140,11 @@ public class SequenceQueryAction extends CollaboratorAction {
             if(isResultDisplay)
                 request.setAttribute("isResultDisplay", new Boolean(isResultDisplay));
             
-            return (mapping.findForward("success"));
+            if("queryGenes".equals(querySelect)) {
+                return (mapping.findForward("success_queryGenes"));
+            } else {
+                return (mapping.findForward("success_queryAllGenes"));
+            }
         } else {
             request.setAttribute(Action.EXCEPTION_KEY, new Exception(manager.getMessage()));
             return mapping.findForward("error");

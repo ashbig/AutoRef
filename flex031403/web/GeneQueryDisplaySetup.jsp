@@ -22,10 +22,6 @@
 <p>
 <html:form action="/QueryDisplaySetup.do">
 
-<logic:present name="isResultDisplay">
-    <input type="hidden" name="isResultDisplay" value="<bean:write name="isResultDisplay"/>"/>
-</logic:present>
-
 <table border=0 cellspacing=10 cellpadding=2>
     <tr>
     <td class="prompt">Sequence</td>
@@ -52,21 +48,9 @@
     </tr>
 
     <tr>
-    <td class="prompt">Plate and Sample</td>
-    <td><html:checkbox property="label"/>Label</td>
-    <td><html:checkbox property="well"/>Well</td>
-    </tr>
-
-    <tr>
-    <td class="prompt"></td>
-    <td><html:checkbox property="type"/>Construct Type (fusion or closed)</td>
-    <td><html:checkbox property="oligo"/>Oligo Sequence</td>
-    </tr>
-
-    <tr>
     <td class="prompt">Project and Workflow</td>
     <td><html:checkbox property="project"/>Project Name</td>
-    <td><html:checkbox property="workflow"/>Workflow Name</td>
+    <td></td>
     </tr>
 
     <tr>

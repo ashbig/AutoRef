@@ -21,6 +21,8 @@
 
 <p>
 <html:form action="/SequenceQuery.do" focus="searchTerm" method="POST" enctype="multipart/form-data">
+<input type="hidden" name="querySelect" value="<bean:write name="querySelect"/>"/>
+
 <table border=0 cellspacing=10 cellpadding=2>
     <tr>
     <td class="prompt">Search Term:</td>
@@ -60,13 +62,13 @@
         <html:options
         name="flexstatus"
         />
+        <html:option value="-1">All the above</html:option>
     </html:select></td>
     <td></td>
     </tr> 
 </table>
 
 <p>
-<i>For FLEXGene status as "INPROCESS" only:</i>
 <table border=0 cellspacing=10 cellpadding=2>
     <tr>
     <td class="prompt">Project:</td>

@@ -20,6 +20,7 @@ import org.apache.struts.upload.*;
  * @version
  */
 public class SequenceQueryForm extends ActionForm {
+    private String querySelect = null;
     private String searchType = null;
     private String searchTermType = "nonfile";
     private String searchTerm = null;
@@ -29,6 +30,14 @@ public class SequenceQueryForm extends ActionForm {
     private int workflow = -1;
     private String plate = null;
     private boolean isResultDisplay = false;
+    
+    public String getQuerySelect() {
+        return querySelect;
+    }
+    
+    public void setQuerySelect(String querySelect) {
+        this.querySelect = querySelect;
+    }
     
     public String getSearchType() {
         return searchType;

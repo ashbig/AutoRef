@@ -1,7 +1,7 @@
 /*
- * QueryDisplaySetupAction.java
+ * CloneQueryDisplaySetupAction.java
  *
- * Created on September 17, 2002, 2:31 PM
+ * Created on October 2, 2002, 5:17 PM
  */
 
 package edu.harvard.med.hip.flex.action;
@@ -30,9 +30,9 @@ import edu.harvard.med.hip.flex.query.*;
 /**
  *
  * @author  dzuo
- * @version
+ * @version 
  */
-public class QueryDisplaySetupAction extends CollaboratorAction {
+public class CloneQueryDisplaySetupAction extends CollaboratorAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -57,22 +57,24 @@ public class QueryDisplaySetupAction extends CollaboratorAction {
         ActionErrors errors = new ActionErrors();
         ArrayList output = (ArrayList)(request.getSession().getAttribute("output"));
         
-        boolean id = ((QueryDisplaySetupForm)form).getId();
-        boolean gi = ((QueryDisplaySetupForm)form).getGi();
-        boolean genename = ((QueryDisplaySetupForm)form).getGenename();
-        boolean genbank = ((QueryDisplaySetupForm)form).getGenbank();
-        boolean genesymbol = ((QueryDisplaySetupForm)form).getGenesymbol();
-        boolean pa = ((QueryDisplaySetupForm)form).getPa();
-        boolean sequence = ((QueryDisplaySetupForm)form).getSequence();
-        boolean flexstatus = ((QueryDisplaySetupForm)form).getFlexstatus();
-        boolean label = ((QueryDisplaySetupForm)form).getLabel();
-        boolean well = ((QueryDisplaySetupForm)form).getWell();
-        boolean type = ((QueryDisplaySetupForm)form).getType();
-        boolean oligo = ((QueryDisplaySetupForm)form).getOligo();
-        boolean project = ((QueryDisplaySetupForm)form).getProject();
-        boolean workflow = ((QueryDisplaySetupForm)form).getWorkflow();
-        String display = ((QueryDisplaySetupForm)form).getDisplay();
-        boolean isResultDisplay = ((QueryDisplaySetupForm)form).getIsResultDisplay();
+        boolean id = ((CloneQueryDisplaySetupForm)form).getId();
+        boolean gi = ((CloneQueryDisplaySetupForm)form).getGi();
+        boolean genename = ((CloneQueryDisplaySetupForm)form).getGenename();
+        boolean genbank = ((CloneQueryDisplaySetupForm)form).getGenbank();
+        boolean genesymbol = ((CloneQueryDisplaySetupForm)form).getGenesymbol();
+        boolean pa = ((CloneQueryDisplaySetupForm)form).getPa();
+        boolean sequence = ((CloneQueryDisplaySetupForm)form).getSequence();
+        boolean flexstatus = ((CloneQueryDisplaySetupForm)form).getFlexstatus();
+        boolean label = ((CloneQueryDisplaySetupForm)form).getLabel();
+        boolean well = ((CloneQueryDisplaySetupForm)form).getWell();
+        boolean type = ((CloneQueryDisplaySetupForm)form).getType();
+        boolean oligo = ((CloneQueryDisplaySetupForm)form).getOligo();
+        boolean project = ((CloneQueryDisplaySetupForm)form).getProject();
+        boolean workflow = ((CloneQueryDisplaySetupForm)form).getWorkflow();
+        String display = ((CloneQueryDisplaySetupForm)form).getDisplay();
+        boolean clonename = ((CloneQueryDisplaySetupForm)form).getClonename();
+        boolean pubhit = ((CloneQueryDisplaySetupForm)form).getPubhit();
+        boolean cloneResult = ((CloneQueryDisplaySetupForm)form).getCloneResult();
         
         if(!output.isEmpty()) {
             request.setAttribute("output", output);
@@ -105,8 +107,12 @@ public class QueryDisplaySetupAction extends CollaboratorAction {
                 request.setAttribute("project", new Boolean(project));
             if(workflow)
                 request.setAttribute("workflow", new Boolean(workflow));
-            if(isResultDisplay)
-                request.setAttribute("isResultDisplay", new Boolean(isResultDisplay));
+            if(clonename)
+                request.setAttribute("clonename", new Boolean(clonename));
+            if(pubhit)
+                request.setAttribute("pubhit", new Boolean(pubhit));
+            if(cloneResult)
+                request.setAttribute("cloneResult", new Boolean(cloneResult));
         }
         
         request.getSession().removeAttribute("output");
