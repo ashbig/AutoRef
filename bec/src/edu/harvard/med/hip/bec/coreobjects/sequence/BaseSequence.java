@@ -52,11 +52,12 @@ public  class BaseSequence
      public static final int CLONE_SEQUENCE_TYPE_EDITED = 1; 
      public static final int CLONE_SEQUENCE_TYPE_FINAL = 2; 
      
-     //analized status for clone sequence only
-  //   public static final int CLONE_SEQUENCE_STATUS_ASSESMBLED = 0; 
-  //   public static final int CLONE_SEQUENCE_STATUS_ANALIZED_DF = 1; 
-   //  public static final int CLONE_SEQUENCE_STATUS_POLYMORPHISM_RESOLVED = 2; 
-   //  public static final int CLONE_SEQUENCE_STATUS_FINAL = 3; 
+     //parameters for sequence quality definition
+     public static final int INTERNAL_QUALITY_WINDOW_SIZE = 25; 
+     public static final int INTERNAL_QUALITY_NUMBER_LOW_QUALITY_BASES = 3; 
+     public static final int INTERNAL_QUALITY_CUTT_OFF = 7; 
+     public static final int INTERNAL_AMBIQUATY_WINDOW_SIZE = 25; 
+     public static final int INTERNAL_AMBIQUATY_NUMBER_BASES = 3; 
     
     
     public static final int QUALITY_BAD = 3;

@@ -25,8 +25,12 @@ public class PhredWrapper
     public static final int            TRIMMING_TYPE_PHRED_ALT = 1;
     public static final int            TRIMMING_TYPE_NOT_TRIMMED = -1;
     
-  
-      
+  //quality constants
+    public static final int             MIN_SEQ_LEN	=20;
+    public static final int             MAX_ENZ_POS	=100;
+    public static final double             MIN_PRB_VAL=0.05;
+    public static final double             MIN_AVG_QUAL	=20.0;
+   //run phred options   
       public static final String SEQUENCE_DIR_NAME = "sequence_dir";
      public static final String QUALITY_DIR_NAME = "quality_dir";
      public static final String CHROMAT_DIR_NAME = "chromat_dir";
