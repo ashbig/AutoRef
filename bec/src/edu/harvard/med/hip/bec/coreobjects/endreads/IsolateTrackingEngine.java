@@ -558,7 +558,7 @@ public class IsolateTrackingEngine
             exclude_istr = "and isolatetrackingid not in ("+exclude_istr+")";
         }
         String sql = null;  
-        if (species == RefSequence.SPECIES_NOT_SET)
+        if (species == DatabaseToApplicationDataLoader.SPECIES_NOT_SET)
             sql = "select isolatetrackingid,constructid,status,rank,score,sampleid  from isolatetracking where status in ("+processtatus+")";
         else
             sql = "select iso.ASSEMBLY_STATUS as assemblystatus, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
