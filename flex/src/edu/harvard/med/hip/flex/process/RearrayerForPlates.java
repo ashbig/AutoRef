@@ -21,8 +21,8 @@ import edu.harvard.med.hip.flex.util.*;
  */
 public class RearrayerForPlates {
     private static final String DILIM = "\t";
-    //private static final String filePath = "/tmp/";
-    private static final String filePath = "G:\\";
+    private static final String filePath = "/tmp/";
+    //private static final String filePath = "G:\\";
     private static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     public static final int smallCDSLimit = 2000;
     public static final int mediumCDSLimit = 4000;

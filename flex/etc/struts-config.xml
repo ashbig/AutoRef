@@ -175,7 +175,9 @@
     <form-bean      name="rearrayForm"
                     type="edu.harvard.med.hip.flex.form.RearrayForm"/>
 
-  
+ <!-- Form used to do rearray -->
+    <form-bean      name="rearrayPlateForm"
+                    type="edu.harvard.med.hip.flex.form.RearrayPlateForm"/>  
  
  </form-beans>
 
@@ -203,7 +205,8 @@
     <forward    name="importStatus" path="/MgcPBSelectFile.jsp"/>
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>    
     <forward    name="specialOligoOrder" path="/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER"/>
-    <forward    name="geneQuery" path="/SequenceQueryEntry.jsp"/>   
+    <forward    name="geneQuery" path="/SequenceQueryEntry.jsp"/>  
+    <forward    name="rearray" path="/GetWorkflowForRearray.do"/>   
     
 
 
@@ -911,13 +914,22 @@
                name="rearrayForm"
                scope="request"
                input="/RearrayPlates.jsp">
-      <forward  name="success"   path="/MgcGetLocation.jsp"/>
     </action>
 
     
- 
+<!-- Process of rearraying plates -->
+<action    path="/GetWorkflowForRearray"
+               type="edu.harvard.med.hip.flex.action.GetWorkflowForRearrayAction">
+      <forward  name="success"   path="/Rearray.jsp"/>
+    </action> 
 
-
+<action    path="/Rearray"
+               type="edu.harvard.med.hip.flex.action.RearrayAction"
+               name="rearrayPlateForm"
+               scope="request"
+               input="/GetWorkflowForRearray.do">
+      <forward  name="success"   path="/PrintBarcode.jsp"/>
+    </action> 
 
 
     <!-- The standard administrative actions available with Struts -->
