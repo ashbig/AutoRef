@@ -41,7 +41,7 @@
     <td><strong><input type="radio" name="item_type" value="1" checked>Container Labels</strong></td>
   </tr>
   <tr> 
-    <td><strong>  <input type="radio" name="item_type" value="2"> Clone Ids</strong></td>
+    <td><strong>  <input type="radio" name="item_type" value="2">Clone Ids</strong></td>
   </tr>
   <tr> 
     <td bgColor="#1145A6"> <font color="#FFFFFF"><strong>Enter All search Items</strong></font></td>
@@ -65,10 +65,14 @@
   </tr>
   <tr> 
     <td >   <input type="checkbox" name="clone_id" value="1">    Clone Id</td>
-    <td >   <input type="checkbox" name="checkbox" value="1"> Directory Name</td>
+    <td >   <input type="checkbox" name="dir_name" value="1"> Directory Name</td>
   </tr>
   <tr> 
     <td><input type="checkbox" name="sample_id" value="1">      Sample Id</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td> <input type="checkbox" name="plate_label" value="1">      Plate Label</td>
     <td>&nbsp;</td>
   </tr>
   <tr> 
@@ -77,6 +81,10 @@
   </tr>
   <tr> 
     <td> <input type="checkbox" name="position" value="1">      Sample Position</td>
+    <td>&nbsp;</td>
+  </tr>
+<tr> 
+    <td> <input type="checkbox" name="rank" value="1">      CLone Rank</td>
     <td>&nbsp;</td>
   </tr>
   <tr> 
@@ -91,18 +99,18 @@
   </tr>
   <tr> 
     <td><input type="checkbox" name="ref_cds_start" value="1">      CDS Start</td>
-    <td><input type="checkbox" name="cln_status" value="1">      Clone Sequence Analysis Status</td>
+    <td><input type="checkbox" name="clone_status" value="1">      Clone Sequence Analysis Status</td>
   </tr>
   <tr> 
     <td> <input type="checkbox" name="ref_cds_stop" value="1">      CDS Stop</td>
-    <td><input type="checkbox" name="cln_discr_high" value="1">    Discrepancies High Quality (separated by type)</td>
+    <td><input type="checkbox" name="clone_discr_high" value="1">    Discrepancies High Quality (separated by type)</td>
   </tr>
   <tr> 
     <td><input type="checkbox" name="ref_cds_length" value="1">      CDS Length</td>
-    <td>  <input type="checkbox" name="cln_disc_low" value="1">   Discrepancies Low Quality (separated by type)</td>
+    <td>  <input type="checkbox" name="clone_disc_low" value="1">   Discrepancies Low Quality (separated by type)</td>
   </tr>
   <tr> 
-    <td height="42"> <input type="ref_gs" name="gccontent2" value="1">     GC Content</td>
+    <td > <input type="checkbox" name="ref_gc" value="1">     GC Content</td>
     <td>&nbsp;</td>
   </tr>
   <tr> 
@@ -130,10 +138,7 @@
     <td><input type="checkbox" name="ref_sga" value="1">      SGA Number (for Yeast project only)</td>
     <td>&nbsp;</td>
   </tr>
-  <tr> 
-    <td><input type="checkbox" name="isEmpty2" value="on">      Leave Sequence Info Empty for Empty Well</td>
-    <td>&nbsp;</td>
-  </tr>
+  
 </table>
 
 

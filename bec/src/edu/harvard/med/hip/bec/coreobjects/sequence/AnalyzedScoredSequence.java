@@ -133,8 +133,11 @@ public class AnalyzedScoredSequence extends ScoredSequence
     public ArrayList getDiscrepancies()  throws BecDatabaseException
     {
         if (m_discrepancies != null) return m_discrepancies;
-        m_discrepancies = new ArrayList();
         
+         m_discrepancies = new ArrayList();
+         m_discrepancies = Mutation.getDiscrepanciesBySequenceId(m_id);
+         return m_discrepancies;
+        /*
         String sql = "select discrepancyid,type from discrepancy  where sequenceid="+m_id +" order by discrnumber, type";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = null;
@@ -170,7 +173,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
         {
             DatabaseTransaction.closeResultSet(rs);
         }
-       
+       */
        
     }
     
@@ -247,7 +250,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
    
     
     
-    
+   
    
     
     
@@ -290,8 +293,10 @@ public class AnalyzedScoredSequence extends ScoredSequence
     {
         try
         {
-        int[] res = BaseSequence.analizeSequenceAmbiquty("AAACTTGNNNNATGGGGGGGGGGTCCCCCCCCCCCCCCCCCTNCCCCCCCCCCTGGGGGnnnnnnnnnnnnnnTTTTTTTTTTTTCCCCCCCCCCCCCCATATATAGAGAGAG");
-        System.out.println(res[0]+" "+res[1]);  
+            
+           
+    //    int[] res = BaseSequence.analizeSequenceAmbiquty("AAACTTGNNNNATGGGGGGGGGGTCCCCCCCCCCCCCCCCCTNCCCCCCCCCCTGGGGGnnnnnnnnnnnnnnTTTTTTTTTTTTCCCCCCCCCCCCCCATATATAGAGAGAG");
+      //  System.out.println(res[0]+" "+res[1]);  
         // DatabaseTransaction t = DatabaseTransaction.getInstance();
            // RefSequence theoretical_sequence = RefSequence.findSequenceByGi(4503092);
            // int refseqid = theoretical_sequence.getId();
@@ -315,7 +320,9 @@ public class AnalyzedScoredSequence extends ScoredSequence
            // f.updateQuality(t.requestConnection());
             
            // t.requestConnection().commit();
-             
+              AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(1876);
+               Mutation.toHTMLString(sequence.getDiscrepancies()) ;
+              System.out.println(sequence.getDiscrepancies().size());
         } catch (Exception e)
         {
             System.out.println(e);

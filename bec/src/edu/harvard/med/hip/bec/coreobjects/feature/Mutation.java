@@ -484,21 +484,16 @@ public abstract class Mutation
         }
         return report.toString();
     }
-    //---------------------------------
     
-    /*
-    public ArrayList   getAllMutations(int id, int owner) throws BecDatabaseException
+    public static ArrayList   getDiscrepanciesBySequenceId(int seq_id) throws BecDatabaseException
     {
-        String sql = "select  position,length,subject,query,type "+
-        "hitid,hittype,sequenceid, flag,upstream,downstream,"+
-        "codonori,codonmut,codonpos, mutationtype,mutationnumber from mutation where " ;
+         String sql = "select  DISCREPANCYID  ,POSITION ,LENGTH ,CHANGEORI ,CHANGEMUT "
+ +",TYPE ,SEQUENCEID ,POLYMFLAG ,POLYMID ,POLMDATE,CODONORI ,CODONMUT ,UPSTREAM ,DOWNSTREAM "
+ +",CODONPOS ,CHANGETYPE ,DISCRNUMBER ,DISCRPOSITION  ,DISCRLENGTH  ,DISCQUALITY  from discrepancy where sequenceid = "+seq_id +" order by discrnumber, type";
+        int type =-1; 
+        int mid = -1;
         
-        
-        if (owner == Mutation.OWNER_BLAST_HIT)
-            sql += "hitid = "+ id;
-        else if (owner ==Mutation.OWNER_FULL_SEQUENCE)
-            sql += " sequenceid = " + id;
-        ArrayList res = new ArrayList();
+        ArrayList discrepancies = new ArrayList();
         ResultSet rs = null;
         try
         {
@@ -507,79 +502,77 @@ public abstract class Mutation
             
             while(rs.next())
             {
-                int mutid = rs.getInt("mutationid");
-                int type = rs.getInt("type");
-                int position = rs.getInt("position");
-                int length = rs.getInt("length");
-                String  subject_str = rs.getString("subject");//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
-                String query_str = rs.getString("query");
-                int flag = rs.getInt("flag");
-                int sequenceid = rs.getInt("sequenceid");
-                int mutation_type = rs.getInt("mutationtype");
-                int number = rs.getInt("mutationnumber");
-                if (type == Mutation.RNA)
+                mid = rs.getInt("DISCREPANCYID");
+                type = rs.getInt("TYPE");
+                if  (type == Mutation.AA)
                 {
-                    RNAMutation mut = new RNAMutation();
-                    mut.setPolymFlag(rs.getInt("polymflag"));
-                    mut.setPolymId(rs.getString("polymid"));
-                    mut.setPolymDate(rs.getDate("polymdate"));
-                    mut.setUpstream(rs.getString("upstream"));
-                    mut.setDownStream(rs.getString("downstream"));
-                    mut.setCodonOri(rs.getString("codonori"));
-                    mut.setCodonMut(rs.getString("codonmut"));
-                    mut.setCodonPos(rs.getInt("codonpos"));
-                    mut.setPosition( position);// start of mutation (on object sequence)
-                    mut.setLength( length);
-                    
-                    mut.setChangeMut( query_str);
-                    mut.setChangeOri( subject_str);
-                    mut.setSequenceId( sequenceid) ;
-                    mut.setNumber( number) ;
-                    mut.setChangeType( mutation_type) ;
-                    mut.setId(mutid);
-                    res.add(mut);
-                    
+                    AAMutation cur_aa_mutation = new AAMutation();
+                    cur_aa_mutation.setId(mid);
+                    cur_aa_mutation.setPosition ( rs.getInt("POSITION") );// start of mutation (on object sequence)
+                    cur_aa_mutation.setLength ( rs.getInt("LENGTH") );
+                    cur_aa_mutation.setChangeMut ( rs.getString("CHANGEMUT"));
+                    cur_aa_mutation.setChangeOri ( rs.getString("CHANGEORI"));
+                    cur_aa_mutation.setSequenceId ( seq_id) ;
+                    cur_aa_mutation.setNumber ( rs.getInt("DISCRNUMBER")) ;
+                    cur_aa_mutation.setChangeType ( rs.getInt("CHANGETYPE")) ;
+                    cur_aa_mutation.setQuality( rs.getInt("DISCQUALITY") );
+                    discrepancies.add(cur_aa_mutation);
                 }
-                else     if (type == Mutation.AA)
+                else if (type == Mutation.LINKER_5P || type == Mutation.LINKER_3P )
                 {
-                    AAMutation mut = new AAMutation();
-                    mut.setPosition( position);// start of mutation (on object sequence)
-                    mut.setLength( length);
-                    mut.setChangeMut( query_str);
-                    mut.setChangeOri( subject_str);
-                    mut.setSequenceId( sequenceid) ;
-                    mut.setNumber( number) ;
-                    mut.setChangeType( mutation_type) ;
-                    mut.setId(mutid);
-                    res.add(mut);
+                    LinkerMutation cur_linker_mutation = new LinkerMutation(type == Mutation.LINKER_5P);
+                    cur_linker_mutation.setType(type);
+                    cur_linker_mutation.setId(mid);
+                    cur_linker_mutation.setPosition ( rs.getInt("POSITION") );// start of mutation (on object sequence)
+                    cur_linker_mutation.setLength ( rs.getInt("LENGTH") );
+                    cur_linker_mutation.setChangeMut ( rs.getString("CHANGEMUT"));
+                    cur_linker_mutation.setChangeOri ( rs.getString("CHANGEORI"));
+                    cur_linker_mutation.setSequenceId ( seq_id) ;
+                    cur_linker_mutation.setNumber ( rs.getInt("DISCRNUMBER")) ;
+                    cur_linker_mutation.setChangeType ( rs.getInt("CHANGETYPE")) ;
+                    cur_linker_mutation.setQuality( rs.getInt("DISCQUALITY") );
+                    cur_linker_mutation.setExpPosition( rs.getInt("DISCRPOSITION") );
+                    discrepancies.add(cur_linker_mutation);
                 }
-                else     if (type == Mutation.LINKER_5P || type == Mutation.LINKER_3P)
+              
+               
+                else if(type == Mutation.RNA)
                 {
-                    
-                    LinkerMutation mut_linker = new LinkerMutation( ( type == Mutation.LINKER_5P));
-                    mut_linker.setPosition( position);// start of mutation (on object sequence)
-                    mut_linker.setLength( length);
-                    mut_linker.setChangeMut( query_str);
-                    mut_linker.setChangeOri( subject_str);
-                    mut_linker.setSequenceId( sequenceid) ;
-                    mut_linker.setNumber( number) ;
-                    mut_linker.setChangeType( mutation_type) ;
-                    mut_linker.setId(mutid);
-                    res.add(mut_linker);
+                    RNAMutation cur_rna_mutation = new RNAMutation();
+                    cur_rna_mutation.setId(mid);
+                     cur_rna_mutation.setPolymFlag( rs.getInt("POLYMFLAG"));
+                     cur_rna_mutation.setPolymDate(rs.getDate("POLMDATE"));
+                     cur_rna_mutation.setPolymId( rs.getString("POLYMID"));
+                    cur_rna_mutation.setUpstream(rs.getString("UPSTREAM"));
+                    cur_rna_mutation.setDownStream(rs.getString("DOWNSTREAM"));
+                    cur_rna_mutation.setCodonOri( rs.getString("CODONORI") );
+                    cur_rna_mutation.setCodonMut(rs.getString("CODONMUT"));
+                    cur_rna_mutation.setCodonPos( rs.getInt("CODONPOS") );
+                     cur_rna_mutation.setPosition ( rs.getInt("POSITION") );// start of mutation (on object sequence)
+                    cur_rna_mutation.setLength ( rs.getInt("LENGTH") );
+                    cur_rna_mutation.setChangeMut ( rs.getString("CHANGEMUT"));
+                    cur_rna_mutation.setChangeOri ( rs.getString("CHANGEORI"));
+                    cur_rna_mutation.setSequenceId ( seq_id) ;
+                    cur_rna_mutation.setNumber ( rs.getInt("DISCRNUMBER")) ;
+                    cur_rna_mutation.setChangeType ( rs.getInt("CHANGETYPE")) ;
+                    cur_rna_mutation.setQuality( rs.getInt("DISCQUALITY") );
+                    cur_rna_mutation.setExpPosition( rs.getInt("DISCRPOSITION") );
+                    discrepancies.add(cur_rna_mutation);
                 }
-                
-                
             }
+               return discrepancies; 
         } catch (Exception sqlE)
         {
-            throw new BecDatabaseException("Error occured while initializing blasthit with id: "+m_id+"\n"+sqlE+"\nSQL: "+sql);
+            throw new BecDatabaseException("Error occured while getting discrepancies for sequence with id: "+seq_id+"\n"+sqlE+"\nSQL: "+sql);
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);
         }
-        return res;
+       
+       
+        
     }
-    */
+   
     //function returns macro change type for discrepancy, used for  spec query
     public static int       getMacroChangeType(int change_type)
     {

@@ -289,14 +289,56 @@ public class RunProcessAction extends ResearcherAction
                 request.setAttribute(Constants.ADDITIONAL_JSP,"For " +chkStr.length+ " clones from plate "+ request.getParameter("containerLabel") +" status have been changes" );
                 return mapping.findForward("processing");
             }
-
-             
-            
-
-            case             Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE : 
+            case Constants.PROCESS_CREATE_REPORT:
             {
+                String  item_ids = (String) request.getParameter("items");
+                if (item_ids == null || item_ids.trim().equals("") )
+                {
+                    errors.add(ActionErrors.GLOBAL_ERROR,  new ActionError("error.parameter.invalid", "No search items provided"));
+                    saveErrors(request,errors);
+                    return new ActionForward("/RunReport.jsp");
+                }
+                ReportRunner runner = new ReportRunner();
+                runner.setItems(item_ids);
+                runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                // value="2"//Clone Ids</strong//
+                runner.setFields(
+                    request.getParameter("clone_id"), //    Clone Id
+                    request.getParameter("dir_name"), // Directory Name
+                    request.getParameter("sample_id"), //      Sample Id   
+                    request.getParameter("plate_label"), //      Plate Label   
+                    request.getParameter("sample_type"), //      Sample Type
+                    request.getParameter("position"), //      Sample Position
+                    request.getParameter("ref_sequence_id"), //      Sequence ID
+                    request.getParameter("clone_seq_id"), //      Clone Sequence Id   
+                    request.getParameter("ref_cds_start"), //      CDS Start
+                    request.getParameter("clone_status"),//      Clone Sequence Analysis Status
+                    request.getParameter("ref_cds_stop"), //      CDS Stop
+                    request.getParameter("clone_discr_high"), //    Discrepancies High Quality (separated by type)
+                    request.getParameter("ref_cds_length"), //      CDS Length
+                    request.getParameter("clone_disc_low"), //   Discrepancies Low Quality (separated by type)
+                    request.getParameter("ref_gc"), //     GC Content   
+                    request.getParameter("ref_seq_text"), //      Sequence Text   
+                    request.getParameter("ref_cds"), //     CDS
+                    request.getParameter("ref_gi"), //      GI Number   
+                    request.getParameter("ref_gene_symbol"), //      Gene Symbol
+                    request.getParameter("ref_panum"), //      PA Number (for Pseudomonas project only)
+                    request.getParameter("ref_sga"), //      SGA Number (for Yeast project only)
+                    request.getParameter("rank") //      Leave Sequence Info Empty for Empty Well
+                 );
+            
+                    runner.setUser(user);
+                t = new Thread(runner);
+                t.start();
+                 
+                request.setAttribute(Constants.JSP_TITLE,"processing Report Generation request");
+                request.setAttribute(Constants.ADDITIONAL_JSP,"Processing items:<P>"+item_ids);
+            
+                break;
+
             }
 
+         
 
 
         }

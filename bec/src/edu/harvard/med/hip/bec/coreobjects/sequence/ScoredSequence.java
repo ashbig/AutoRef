@@ -119,6 +119,7 @@ public class ScoredSequence extends BaseSequence
         
         return m_scores_numbers;
     }
+     
     
     public void setScoresAsArray(int[] v){m_scores_numbers =v;}
     public void setScores(String v){m_scores =v;}

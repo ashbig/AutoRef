@@ -42,6 +42,9 @@ public  class BaseSequence
     public static final int CLONE_SEQUENCE_STATUS_NOMATCH = 4;
     public static final int CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED = 2;
     public static final int CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED = 5;
+    //public static final int CLONE_SEQUENCE_STATUS_HOLDER = 6;
+    
+    
     
     //sequence assembly status for clone sequence only
     // !!!!!!! final should have max value we count on this !!!!!
@@ -138,8 +141,8 @@ public  class BaseSequence
         }
         catch (Exception sqlE)
         {
-            System.out.println(sqlE.getMessage());
-            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+            //System.out.println(sqlE.getMessage());
+            throw new BecDatabaseException(sqlE.getMessage()+"\nSQL: "+sql);
         } finally
         {
           

@@ -277,6 +277,21 @@ public class RefSequence extends BaseSequence
          return m_currentGi;
         
     }
+    public String getPublicInfoParameter(String param_name)
+    {
+        String value = null;
+        param_name = param_name.toUpperCase();
+         for (int elm = 0; elm < m_publicInfo.size(); elm++)
+        {
+            PublicInfoItem info_item = (PublicInfoItem)m_publicInfo.get(elm);
+            if( info_item.getName().equals(param_name))
+            {
+                return info_item.getValue() ;
+               
+            }
+        }
+        return "";
+    }
     /**
      * Return Genbank gi number.
      *
