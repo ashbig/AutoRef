@@ -87,14 +87,14 @@ throws IOException
 public static void notifyUser(String user_name, String fileName, Vector messages) throws Exception
     {
         AccessManager am = AccessManager.getInstance();
-        //String to = am.getEmail( m_username );
-        String to = "etaycher@hms.harvard.edu";
+        String to = am.getEmail( m_username );
+        //String to = "etaycher@hms.harvard.edu";
         String from = "etaycher@hms.harvard.edu";
         String subject = "User Notification: Mgc clone master list "+fileName+" was uploaded to database";
         subject += "\nReport is attached.";
         String msgText = null;
         File fl = Algorithms.writeFile(messages,"Report")  ;
    
-        Mailer.sendMessageWithAttachedFile( to,  from, "", subject, msgText, fl);
+        Mailer.sendMessageWithAttachedFile( to,  from, null, subject, msgText, fl);
     }
 }
