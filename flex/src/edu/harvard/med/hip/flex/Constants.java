@@ -140,6 +140,9 @@ public class Constants {
     
     // key used to find the map holding the stats for results
     public static final String RESULT_STATS_KEY = "RESULT_STATS";
+
+    // forward name used for approve sequence after select the workflow.
+    public static final String APPROVE_SEQUENCES = "APPROVE_SEQUENCES";
     
     /** Creates new Constants */
     private Constants() {
