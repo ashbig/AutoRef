@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.13 2001-08-28 17:36:25 dzuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.14 2002-06-10 16:47:02 dzuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -60,7 +60,15 @@ public class SequenceProcessQueue implements ProcessQueue {
      */
     public LinkedList getQueueItems(Protocol protocol, Project project, Workflow workflow) 
     throws FlexDatabaseException {
-        return null;
+        String sql = "select q.sequenceid as id, "+
+        "to_char(q.dateadded, 'fmYYYY-MM-DD') as dateadded\n" +
+        "from queue q\n" +
+        "where q.protocolid = "+protocol.getId()+
+        " and q.projectid = "+project.getId()+
+        " and q.workflowid = "+workflow.getId();
+        
+        LinkedList items = restore(protocol, project, workflow, sql);
+        return items;        
     }
     
     /**
