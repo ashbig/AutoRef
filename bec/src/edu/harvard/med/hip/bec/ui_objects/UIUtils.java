@@ -17,6 +17,7 @@ import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
+import edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.utility.*;
 //import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.database.*;
@@ -40,7 +41,7 @@ public class UIUtils
     if (ApplicationHostDeclaration.IS_BIGHEAD)
         m_needle_output_path = "d:\\tmp\\";
     else
-        m_needle_output_path = "/tmp/";
+        m_needle_output_path = "c:\\tmp\\";
     }
     private RefSequence m_refsequence = null;
     private int         m_refsequence_id = -1;
@@ -106,18 +107,23 @@ public class UIUtils
             boolean isCompliment = false;
         if ( sequence_type==BaseSequence.READ_SEQUENCE)
             {
-                Object[] res = getRefsequenceAndCloningStrategy( sequence_id);
-                m_refsequence =(RefSequence) res[0]; clstr= (CloningStrategy)res[1];
+                CloneDescription clone_description = getRefsequenceAndCloningStrategy( sequence_id);
+                clstr = CloningStrategy.getById(clone_description.getCloningStrategyId());
+                m_refsequence =new RefSequence(clone_description.getBecRefSequenceId());
+                BaseSequence seq = Construct.getRefSequenceForAnalysis(clstr.getStartCodon(),
+                           clstr.getFusionStopCodon(),clstr.getClosedStopCodon(),
+                            m_refsequence.getCodingSequence(), clone_description.getConstructFormat());
+               
                 if ( clstr != null)
                 {
                       linker3 = BioLinker.getLinkerById( clstr.getLinker3Id() );
                       linker5 = BioLinker.getLinkerById( clstr.getLinker5Id() );
-                      m_refsequence.setText( linker5.getSequence()+m_refsequence.getCodingSequence() + linker3.getSequence());
+                      m_refsequence.setText( linker5.getSequence().toLowerCase()+seq.getText().toUpperCase() + linker3.getSequence().toLowerCase());
                 }
                 else
                 {
                         //construct reference sequence
-                        m_refsequence.setText( m_refsequence.getCodingSequence());
+                        m_refsequence.setText( seq.getText());
                 }
                 int containerid = BaseSequence.getContainerId(sequence_id, BaseSequence.READ_SEQUENCE);
 
@@ -189,28 +195,31 @@ public class UIUtils
      
     }
    
-    private  Object[] getRefsequenceAndCloningStrategy(int readsequenceid)throws BecDatabaseException
+    private  CloneDescription getRefsequenceAndCloningStrategy(int readsequenceid)throws BecDatabaseException
     {
-        String sql = "select cloningstrategyid, refsequenceid from sequencingconstruct where constructid in (select constructid from isolatetracking where "
+        String sql = "select constructid, format,cloningstrategyid, refsequenceid from sequencingconstruct where constructid in (select constructid from isolatetracking where "
         +" sampleid in (select sampleid from result  where resultid in (select resultid from readinfo where readsequenceid = "+readsequenceid+")))";
            DatabaseTransaction t = DatabaseTransaction.getInstance();
            int refseq_id = -1;
            int clonstr_id = -1;
-           RefSequence refsequence=null; CloningStrategy clstr = null;
-           Object[] res = new Object[2];
+           CloneDescription clone_description = null;
         ResultSet rs = null;
         try
         {
             rs = t.executeQuery(sql);
             while(rs.next())
             {
-                refseq_id= rs.getInt("refsequenceid");
-                refsequence=new RefSequence(refseq_id);
-                clonstr_id=rs.getInt("cloningstrategyid");
-                clstr = CloningStrategy.getById(clonstr_id);
-                res[0]=refsequence;res[1]=clstr;
+                clone_description = new CloneDescription();
+                clone_description.setBecRefSequenceId (rs.getInt("refsequenceid"));
+              //   clone_description.setIsolateTrackingId ();
+              
+                 clone_description.setConstructId(rs.getInt("constructid"));
+                 clone_description.setConstructFormat(rs.getInt("format"));
+                 clone_description.setCloningStrategyId(rs.getInt("cloningstrategyid")); 
+               
+                
             }
-            return res;
+            return clone_description;
           
         } catch (SQLException sqlE)
         {
