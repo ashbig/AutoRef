@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessExecution.java,v 1.4 2003-05-09 19:53:14 Elena Exp $
+ * $Id: ProcessExecution.java,v 1.5 2003-05-30 16:45:09 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -85,7 +85,7 @@ public class ProcessExecution
     public void             addSpecIds (int v){  m_spec_ids.add(new Integer(v))  ;}
     public void              setRequestId (int v){  m_request_id = v ;}
   
-    public void insertConnectorToVectorPrimer (Connection conn, int spec_type) throws BecDatabaseException
+    public void insertConnectorToSpec (Connection conn, int spec_type) throws BecDatabaseException
     {
         Statement stmt = null; Spec spec = null; String sql = null;
         try

@@ -26,6 +26,7 @@ import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.*;
 
 /**
  * Represents the result of a process execution for a sample.
@@ -124,7 +125,7 @@ public class Result
         String sql =null;
         try
         {
-            DatabaseTransaction dt = DatabaseTransaction.getInstance();
+            //DatabaseTransaction dt = DatabaseTransaction.getInstance();
             if (m_value_id != BecIDGenerator.BEC_OBJECT_ID_NOTSET)
                 sql = "insert into result  (resultid, sampleid, resulttype, resultvalueid)"+
                 " values("+m_id+","+m_sample_id+","+m_type+","+m_value_id+")";
@@ -135,7 +136,7 @@ public class Result
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
     
-            sql = "insert into processresult (processid,resultid) values("+process_id+","+m_id+")";
+            sql = "insert into process_object (processid,objectid,objecttype) values("+process_id+","+m_id+","+Constants.PROCESS_OBJECT_TYPE_RESULT+")";
             stmt.executeUpdate(sql);
             
         } catch (SQLException sqlE)

@@ -1,16 +1,10 @@
 /*
- * CreatEndReadContainersAction.java
- *
- * Created on April 4, 2003, 3:34 PM
+ * tester.java
+ * end reads processing request
+ * Created on May 6, 2003, 3:00 PM
  */
 
 package edu.harvard.med.hip.bec.action;
-
-/**
- *
- * @author  htaycher
- */
-import java.util.*;
 
 import java.sql.*;
 import java.io.*;
@@ -31,44 +25,21 @@ import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
-
-public class RunEndReadsRequestAction extends ResearcherAction
+  import java.util.*;
+/**
+ *
+ * @author  htaycher
+ */
+public class tester
 {
     
-    
-    public ActionForward becPerform(ActionMapping mapping,
-                                    ActionForm form,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response)
-                                    throws ServletException, IOException
+    /** Creates a new instance of tester */
+    public tester()
     {
-        // place to store errors
-        ActionErrors errors = new ActionErrors();
-        
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        
-        // The form holding the status changes made by the user
-        ArrayList master_container_ids = null;//get from form
-        boolean isForward = false;//get from form
-        boolean isReverse = false;//get from form
-        int     forward_primerid = -1;//get from form
-        int     reverse_primerid = -1;//get from form
-        
-        
-        
-        ActionRunner runner = new ActionRunner();
-        runner.setContainerIds(master_container_ids );
-        if ( isForward ) runner.setForwardPrimerId(forward_primerid );
-        if ( isReverse ) runner.setRevercePrimerId(reverse_primerid);
-        runner.setUser(user);
-        Thread t = new Thread(runner);
-        t.start();
-        return mapping.findForward("proccessing");
-    
+         i_error_messages = new ArrayList();
     }
     
-    class ActionRunner implements Runnable
-    {
+  
         private ArrayList   i_master_container_ids = null;//get from form
         private boolean     i_isForward = false;//get from form
         private boolean     i_isReverse = false;//get from form
@@ -77,11 +48,7 @@ public class RunEndReadsRequestAction extends ResearcherAction
         private User        i_user = null;
         
         private ArrayList   i_error_messages = null;
-        
-        public ActionRunner()
-        {
-            i_error_messages = new ArrayList();
-        }
+      
         public void         setContainerIds(ArrayList v)        { i_master_container_ids = v;}
         public void         setForwardPrimerId(int id)        {i_forward_primerid = id; i_isForward =true;}
         public void         setRevercePrimerId(int id)        {i_reverse_primerid = id; i_isReverse = true;}
@@ -117,25 +84,29 @@ public class RunEndReadsRequestAction extends ResearcherAction
                                                         actionrequest.getId(),
                                                         specids,
                                                         Constants.TYPE_ID) ;
-                //patch here
-                 process.insertConnectorToSpec(conn, Spec.VECTORPRIMER_SPEC_INT);
+                
                  processes.add(process);
                  //finally we must insert request
                 actionrequest.insert(conn);
+                //patch here
+                 process.insertConnectorToSpec(conn, Spec.VECTORPRIMER_SPEC_INT);
                 
                 //get master plates from db
                 Container container = null;Sample smp = null;
+                
                 int[] result_types = {Result.RESULT_TYPE_ENDREAD_FORWARD,Result.RESULT_TYPE_ENDREAD_REVERSE};
                 for (int count =0; count < i_master_container_ids.size(); count++)
                 {
-                    container = new Container(( (Integer)i_master_container_ids.get(count)).intValue());
+                    container = new Container( ( (Integer)i_master_container_ids.get(count)).intValue());
                     requested_plates += container.getLabel();
-                     //check wether this plate has end read results already
+                    
+                    //check wether this plate has end read results already
                     if (container.checkForResultTypes(result_types))
                     {
                         i_error_messages.add("Plate "+container.getLabel()+" has enr read result - it wont be processed");
                         continue;
                     }
+                  
                     container.restoreSampleIsolate();
                     master_plates.add(container);
                 }
@@ -158,15 +129,21 @@ public class RunEndReadsRequestAction extends ResearcherAction
                     catch(Exception e)
                     {}
                 }
-                 //send email to user
+                //send email to user
                 if (file_list != null && file_list.size()>0)
                 {
                     Mailer.sendMessageWithFileCollections(i_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Request for end reads sequencing", "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates, file_list);
+                    "elena_taycher@hms.harvard.edu", "Request for end reads sequencing", 
+                    "Please find attached rearray and naming files for your request\n Requested plates:\n"+requested_plates,
+                    file_list);
                 }
-                     // commit the transaction
-                conn.commit();
-           }
+  
+                // commit the transaction
+                if (master_plates.size() != 0)
+                    conn.commit();
+              
+                
+            }
             
             catch(Exception ex)
             {
@@ -186,13 +163,14 @@ public class RunEndReadsRequestAction extends ResearcherAction
                         "elena_taycher@hms.harvard.edu", "Request for end reads sequencing: error messages.", "Errors\n Processing of requested for the following plates:\n"+requested_plates ,i_error_messages);
                 
                     }
-                }catch(Exception e)
-                {}
+                }
+                    catch(Exception e){}
                 DatabaseTransaction.closeConnection(conn);
             }
             
         }
         
+     
         
         private void processPlate(Container container, ArrayList file_list, Connection conn, int process_id) throws Exception
         {
@@ -226,17 +204,18 @@ public class RunEndReadsRequestAction extends ResearcherAction
                                                 BecIDGenerator.BEC_OBJECT_ID_NOTSET      );
                         result.insert(conn, process_id );
                         cloneid = istrk.getFlexInfo().getFlexCloneId();
-                         //change isolate status
+                        //change isolate status
                         if ( !isStatusUpdated) 
                         {
 
                             IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_INITIATED,istrk.getId(),  conn );
                              isStatusUpdated = true;
                         }
+
                     }
-                      
+                       
                     naming_file_entries_forward.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_FORWARD)  );
-                //    rearray_file_entries_forward.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-F", smp.getPosition()));
+                   // rearray_file_entries_forward.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-F", smp.getPosition()));
                 }
                 if (i_isReverse)
                 {
@@ -249,8 +228,8 @@ public class RunEndReadsRequestAction extends ResearcherAction
                                             istrk.getSampleId(),     null,
                                             Result.RESULT_TYPE_ENDREAD_REVERSE,     
                                             BecIDGenerator.BEC_OBJECT_ID_NOTSET
-                                            );      
-                        result.insert(conn, process_id);         
+                                            );
+                        result.insert(conn, process_id);
                          //change isolate status
                          if ( !isStatusUpdated) 
                         {
@@ -259,7 +238,7 @@ public class RunEndReadsRequestAction extends ResearcherAction
                          }
                     }
                     naming_file_entries_reverse.add(  createNamingFileEntry( smp, NamingFileEntry.ORIENTATION_REVERSE )  );
-                //    rearray_file_entries_reverse.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-R", smp.getPosition()));
+                    //rearray_file_entries_reverse.add(new RearrayFileEntry( cloneid,container.getLabel(),smp.getPosition(),  container.getLabel()+"-R", smp.getPosition()));
                    
                 }
            }
@@ -269,15 +248,15 @@ public class RunEndReadsRequestAction extends ResearcherAction
             {
                 file = NamingFileEntry.createNamingFile(naming_file_entries_forward,"/tmp/"+ container.getLabel() + "_naming_endreads_f.txt");
                 file_list.add(file);
-           //     file = RearrayFileEntry.createRearrayFile( rearray_file_entries_forward, "/tmp/"+ container.getLabel() + "rearray_endreads_f.txt");
+               // file = RearrayFileEntry.createRearrayFile( rearray_file_entries_forward, "/tmp/"+ container.getLabel() + "rearray_endreads_f.txt");
               //  file_list.add(file);
             }
             if (i_isReverse)
             {
                 file = NamingFileEntry.createNamingFile(naming_file_entries_reverse,"/tmp/"+ container.getLabel() + "_naming_endreads_r.txt");
                 file_list.add(file);
-              //  file = RearrayFileEntry.createRearrayFile( rearray_file_entries_reverse, "/tmp/"+ container.getLabel() + "rearray_endreads_r.txt");
-               // file_list.add(file);
+             //   file = RearrayFileEntry.createRearrayFile( rearray_file_entries_reverse, "/tmp/"+ container.getLabel() + "rearray_endreads_r.txt");
+             //   file_list.add(file);
             }
     }
         
@@ -287,12 +266,34 @@ public class RunEndReadsRequestAction extends ResearcherAction
             NamingFileEntry entry =new  NamingFileEntry(smp.getIsolateTrackingEngine().getFlexInfo().getFlexCloneId()
                         , orientation,
                         smp.getIsolateTrackingEngine().getFlexInfo().getFlexPlateId(),
-                        Algorithms.convertWellFromInttoA8_12( smp.getPosition()), 
+                       Algorithms.convertWellFromInttoA8_12( smp.getPosition()), 
                         smp.getIsolateTrackingEngine().getFlexInfo().getFlexSequenceId(),
                         0);
             return entry;
         }
-    }
     
+    
+    
+      public static void main(String args[]) 
+     
+    {
+        ArrayList master_container_ids = new ArrayList();
+        master_container_ids.add(new Integer(92));
+     
+      
+        tester runner = new tester();
+        runner.setContainerIds(master_container_ids );
+        runner.setForwardPrimerId(5 );
+        runner.setRevercePrimerId(6);
+        User user  = null;
+        try
+        {
+            user = AccessManager.getInstance().getUser("htaycher","htaycher");
+        }
+        catch(Exception e){}
+        runner.setUser(user);
+        runner.run();
+        System.exit(0);
+     }
     
 }

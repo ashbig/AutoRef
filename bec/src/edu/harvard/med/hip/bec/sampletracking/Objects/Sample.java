@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.4 2003-04-25 20:19:47 Elena Exp $
+ * $Id: Sample.java,v 1.5 2003-05-30 16:45:08 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -224,7 +224,7 @@ public class Sample
     {      
         boolean res = true;
         if (m_type.startsWith("CONTROL")) res = false;
-        if (m_type.equals("EMPTY")) res = false;
+        if (m_type.equalsIgnoreCase("EMPTY")) res = false;
         return res;
     }
    

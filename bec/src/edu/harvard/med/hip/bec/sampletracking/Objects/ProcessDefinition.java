@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.5 2003-05-09 19:53:14 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.6 2003-05-30 16:45:08 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -20,6 +20,7 @@ import javax.sql.*;
  */
 public class ProcessDefinition
 {
+     public static final     String    RUN_UPLOAD_PLATE = "Upload new Plate";
     public static final     String    RUN_ENDREADS_SEQUENCING = "Run End Reads Sequencing";
     public static final     String    RUN_ENDREADS_WRAPPER = "Run End Reads Wrapper";
     public static final     String    RUN_ENDREADS_EVALUATION = "Run End Reads Evaluation";

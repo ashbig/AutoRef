@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.6 2003-05-15 18:35:46 Elena Exp $
+ * $Id: Container.java,v 1.7 2003-05-30 16:45:08 Elena Exp $
  *
  * File     	: Container.java
 
@@ -19,7 +19,7 @@ import  edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import  edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import sun.jdbc.rowset.*;
-
+import edu.harvard.med.hip.bec.*;
 /**
  * Generic representation of all types of containers.
  */
@@ -372,6 +372,7 @@ public class Container
         "values ("+m_id+",'"+m_type+"','"+m_label+"',"+m_status+")";
         Sample s = null;
         DatabaseTransaction.executeUpdate(sql,conn);
+      
         
         //foreach sample, insert record into containercell and sample table
         for (int ind = 0; ind < m_samples.size(); ind++)

@@ -53,6 +53,85 @@ public class TraceFilesDistributor
         
         //obtain trace file list from source trace file directory
         File sourceDir = new File(inputTraceDir); //trace file directory
+        //distribute wrong file format files
+        distributeWrongNamingFormatFiles( wrongformatfiles ,  sourceDir);
+        //distribute empty samples files
+        distributeEmptySampleFiles( emptysamples_directory , sourceDir);
+        //distribute control files
+        distributeControlFiles( wrongformatfiles ,  sourceDir);
+        
+        File [] sourceFiles = sourceDir.listFiles();
+        
+      //  TraceFilesDistributor distributor = new TraceFilesDistributor();
+        
+        //call file transfer and Phred moduels for each trace file
+        //Phred output sequence and trace files are parsed and saved to reads.
+        File destinationFile = null; //destination trace file dir after file transfer
+        File traceFile = null;
+        boolean isError_directory_exists = false;
+        String destinationFileName  ; String destination_dir = null;
+        for (int count = 0; count < sourceFiles.length; count++)
+        {
+            traceFile = sourceFiles[count];
+              // check this file shoud be distibuted
+            if ( m_name_of_files_to_distribute == null ||
+                (m_name_of_files_to_distribute != null &&
+                   !m_name_of_files_to_distribute.contains(traceFile.getName()) 
+                   ))
+                continue;
+            try
+            {
+                //create file structure and distribute trace file into chromat_dir
+                destinationFileName = distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);//distributor.distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);
+                destinationFile = new File(destinationFileName);
+                if (destinationFile != null)
+                {
+                    chromat_files.add(destinationFileName);
+                }
+                
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                m_error_messages.add("Cannot distribute file "+traceFile.getName());
+            }
+            
+        } // for
+        return chromat_files;
+        
+    }//processPipeline
+    
+      /* outputBaseDir specify the base directory for trace file distribution
+      * inputTraceDir specify the directory where the trace files get dumped from sequencer
+      * errorDir specify where the error log is stored for trace files failed Phred run
+      */
+    public void distributeNotActiveChromatFiles(String inputTraceDir,  String wrongformatfiles, String emptysamples_directory)
+    {
+        ArrayList chromat_files = new ArrayList();
+      
+        //obtain trace file list from source trace file directory
+        File sourceDir = new File(inputTraceDir); //trace file directory
+        //distribute wrong file format files
+    //    distributeWrongNamingFormatFiles( wrongformatfiles ,  sourceDir);
+        //distribute empty samples files
+        distributeEmptySampleFiles( emptysamples_directory , sourceDir);
+        //distribute control files
+        distributeControlFiles( wrongformatfiles ,  sourceDir);
+    }
+    
+         /* outputBaseDir specify the base directory for trace file distribution
+      * inputTraceDir specify the directory where the trace files get dumped from sequencer
+      * errorDir specify where the error log is stored for trace files failed Phred run
+      */
+     /*
+    public ArrayList distributeChromatFiles(String inputTraceDir, String outputBaseDir, String wrongformatfiles, String emptysamples_directory)
+    {
+        ArrayList chromat_files = new ArrayList();
+        //obtain file path for base directory for trace file distribution
+        File baseDir = new File(outputBaseDir);
+        
+        //obtain trace file list from source trace file directory
+        File sourceDir = new File(inputTraceDir); //trace file directory
         File [] sourceFiles = sourceDir.listFiles();
         
       //  TraceFilesDistributor distributor = new TraceFilesDistributor();
@@ -109,7 +188,7 @@ public class TraceFilesDistributor
         return chromat_files;
         
     }//processPipeline
-    
+    */
     /*
     private void distributeFiles(File[] files, String base_directory)
     {
@@ -195,6 +274,95 @@ public class TraceFilesDistributor
             return false;
         }
         return true;
+    }
+    
+    
+    private void distributeEmptySampleFiles(String emptysamples_directory , File sourceDir)
+    {
+        FilenameFilter filter = new FilenameFilter()
+        {
+            public boolean accept(File dir, String name)
+            {
+                 PhredOutputFileName pr = new PhredOutputFileName(name);
+                 if ( pr.isWriteFileFormat( PhredOutputFileName.FORMAT_OURS ))
+                 {
+                    //check if control - put them into error directory
+                    if ( pr.getCloneidNumber() == 0 && pr.getSequenceidNumber() != 0)
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
+                 }
+                 else
+                     return false;
+               }
+        };
+        
+        File[] empty_files = sourceDir.listFiles(filter);
+        for (int file_count = 0; file_count < empty_files.length; file_count++)
+        {
+             moveFile(empty_files[file_count], emptysamples_directory, m_isEmptySamples_directory_exists);
+        }
+
+    }
+    
+    private void distributeControlFiles(String wrongformatfiles , File sourceDir)
+    {
+        FilenameFilter filter = new FilenameFilter()
+        {
+            public boolean accept(File dir, String name)
+            {
+                 PhredOutputFileName pr = new PhredOutputFileName(name);
+                 if ( pr.isWriteFileFormat( PhredOutputFileName.FORMAT_OURS ))
+                 {
+                    //check if control - put them into error directory
+                    if ( pr.getCloneidNumber() == 0 && pr.getSequenceidNumber() == 0)
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
+                 }
+                 else
+                     return false;
+               }
+        };
+        
+        File[] control_files = sourceDir.listFiles(filter);
+        for (int file_count = 0; file_count < control_files.length; file_count++)
+        {
+             moveFile(control_files[file_count], wrongformatfiles, m_isError_directory_exists);
+        }
+
+    }
+    
+    
+    private void distributeWrongNamingFormatFiles(String wrongformatfiles , File sourceDir)
+    {
+        FilenameFilter filter = new FilenameFilter()
+        {
+            public boolean accept(File dir, String name)
+            {
+                if ( !name.endsWith(".ab1"))
+                {
+                    return true;
+                }
+                PhredOutputFileName pr = new PhredOutputFileName(name);
+                if ( pr.isWriteFileFormat( PhredOutputFileName.FORMAT_OURS ))
+                    return false;
+                else
+                     return true;
+            }
+        };
+        
+        File[] wrong_namingformat__files = sourceDir.listFiles(filter);
+        for (int file_count = 0; file_count < wrong_namingformat__files.length; file_count++)
+        {
+             m_error_messages.add("File "+wrong_namingformat__files[file_count].getName() +" has wrong format.");
+            moveFile(wrong_namingformat__files[file_count], wrongformatfiles, m_isError_directory_exists);
+        }
+
     }
     
     //retunr destination directory name if file OK

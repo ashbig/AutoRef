@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2003-05-09 19:51:35 $
+ * $Revision: 1.3 $
+ * $Date: 2003-05-30 16:44:36 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.2 $ $Date: 2003-05-09 19:51:35 $
+ * @version    $Revision: 1.3 $ $Date: 2003-05-30 16:44:36 $
  */
 
 public class Mailer
@@ -69,7 +69,7 @@ public class Mailer
      * @param msgText The text of the message.
      * @param fileCol Collection of file objects.
      */
-    public static void sendMessage(String to, String from,
+    public static void sendMessageWithFileCollections(String to, String from,
     String cc, String subject, String msgText, Collection fileCol)
     throws MessagingException
     {
@@ -247,6 +247,7 @@ public class Mailer
      public static void sendMessage(String to, String from, String cc, String subject,
     String msgText) throws MessagingException
     {
+        System.out.println(msgText);
         Mailer.sendMessage(to,from,cc,subject,msgText, null);
     }
     
@@ -254,11 +255,14 @@ public class Mailer
     String title, ArrayList msgs) throws MessagingException
     {
         String errors = "";
-        for (int ind = 0; ind < msgs.size(); ind++)
+        if (msgs != null)
         {
-            errors += "\n"+(String) msgs.get(ind);
+            for (int ind = 0; ind < msgs.size(); ind++)
+            {
+                errors += "\n"+(String) msgs.get(ind);
+            }
         }
-        Mailer.sendMessage(to,from,cc,subject,title+errors, null);
+        Mailer.sendMessageWithAttachedFile( to,  from,cc,  subject,  title+errors, null);
     }
     
      
@@ -305,8 +309,7 @@ throws IOException
         Collection fileCol = new LinkedList();
         fileCol.add(new File("/NETLOG.TXT"));
         fileCol.add(new File("/j0272560(t).gif"));
-        Mailer.sendMessage("jmunoz@3rdmill.com","jmunoz@3rdmill.com",
-        "jmunoz@3rdmill.com","Test","Test of cc and file", fileCol);
+   //     Mailer.sendMessage("jmunoz@3rdmill.com","jmunoz@3rdmill.com",        "jmunoz@3rdmill.com","Test","Test of cc and file", fileCol);
         
         Mailer.sendMessage("jmunoz@3rdmill.com","dzuo@hms.harvard.edu", "test","Testing 12 3");
     }

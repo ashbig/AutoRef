@@ -111,12 +111,21 @@ public class Algorithms
         String res = "";
         for (int count = 0; count < arr.length;count++)
         {
-            res += arr[count]+delim;
-            if (count != arr.length - 1) res += delim;
+            res += arr[count];
+            if (count != arr.length - 1 ) res += delim;
         }
         return res;
     }
-    
+    public static  String convertStringArrayToString(ArrayList arr, String delim)
+    {
+        String res = "";
+        for (int count = 0; count < arr.size();count++)
+        {
+            res += (String)arr.get(count);
+            if (count != arr.size()- 1 ) res += delim;
+        }
+        return res;
+    }
     public static int numberOf(String str, char ch)
     {
         int res = 0;
@@ -209,6 +218,8 @@ public class Algorithms
     public static void main(String args[])
     {
         int i = 40;
+        int[] iii ={1};
+        convertArrayToString(iii,",");
         String s = convertWellFromInttoA8_12(i);
         System.out.println(i+" "+s); i =1;
         s = convertWellFromInttoA8_12(i);

@@ -49,7 +49,10 @@ public class NamingFileEntry
      
         public String toString()
         {
-            return m_plateid+DILIM+m_wellid+DILIM+m_sequenceid+DILIM+m_cloneid+DILIM+m_orientation+m_readnum+".ab1";
+            if ( m_sequenceid != -1)
+                 return m_plateid+DILIM+m_wellid+DILIM+m_sequenceid+DILIM+m_cloneid+DILIM+m_orientation+m_readnum+".ab1";
+            else
+                return m_plateid+DILIM+m_wellid+DILIM+"0"+DILIM+"0"+DILIM+m_orientation+m_readnum+".ab1";
         }
         
         //function writes robot file
