@@ -19,6 +19,7 @@ public class QueryInfo {
     private String geneSymbol;
     private String panumber;
     private String label;
+    private int plateid;
     private int well;
     private String type;
     private String fivep;
@@ -32,10 +33,11 @@ public class QueryInfo {
     public QueryInfo() {
     }
 
-    public QueryInfo(int id, String gi, String genbankAcc, String label, int well) {
+    public QueryInfo(int id, String gi, String genbankAcc, int plateid, String label, int well) {
         this.id = id;
         this.gi = gi;
         this.genbankAcc = genbankAcc;
+        this.plateid = plateid;
         this.label = label;
         this.well = well;
     }
@@ -86,6 +88,14 @@ public class QueryInfo {
     
     public void setPanumber(String panumber) {
         this.panumber = panumber;
+    }
+    
+    public int getPlateid() {
+        return plateid;
+    }
+    
+    public void setPlateid(int plateid) {
+        this.plateid = plateid;
     }
     
     public String getLabel() {
