@@ -254,8 +254,8 @@ if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateT
     {//System.out.println(cell_data[count][count_col]);
         if (  cell_data[count][count_col] == null )
         {
-            cell_data[count][count_col] = " <td class='nosample' style='border:solid 2px black' ><div align=center>" + (count+1)*(count_col+1) +"</div></td>";
-                                    
+            cell_data[count][count_col] = " <td class='nosample' style='border:solid 2px black' ><div align=center>" + ((count+1)+(count_col)* 8) +"</div></td>";
+  System.out.println(count+" "+count_col+" "+(count+1)*(count_col+1));                                  
         }%>
        <%= cell_data[count][count_col] %>
     <%}
