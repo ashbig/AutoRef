@@ -40,7 +40,7 @@ public class UICloneSample
     private int             m_clone_quality = -1;
     private int             m_clone_rank = -1;
     private int             m_clone_score = -1;
-    
+    private int             m_clone_assembly_status = -1;
     private String          m_tracefiles_dir = null;
     /** Creates a new instance of CloneSample */
     public UICloneSample()
@@ -50,7 +50,10 @@ public class UICloneSample
     
     public String          getPlateLabel (){ return m_plate_lable  ;}
     public int             getPosition (){ return m_poisition  ;}
-    public String          getSampleType (){ return m_sample_type  ;}
+    public String          getSampleType ()
+    { 
+        return m_sample_type  ;
+    }
     public int             getCloneId (){ return m_clone_id  ;}
     public int             getCloneStatus (){ return m_clone_status_in_analisys_pipline  ;}
     public int             getSequenceId (){ return m_clone_sequence_id  ;}
@@ -64,6 +67,7 @@ public class UICloneSample
     public int             getSampleId(){ return m_sample_id ;}
     public int             getRefSequenceId(){ return m_refsequence_id ;}
     public int             getFLEXRefSequenceId(){ return m_flex_refsequence_id ;}
+    public int             getCloneAssemblytStatus(){ return  m_clone_assembly_status;}
     
     public int             getCloneSequenceCdsStart (){ return m_clone_sequence_cds_start ;}
    public int             getCloneSequenceCdsStop (){ return m_clone_sequence_cds_stop ;}
@@ -88,7 +92,7 @@ public class UICloneSample
     public void             setCloneSequenceCdsStart (int v){  m_clone_sequence_cds_start =v;}
    public void             setCloneSequenceCdsStop (int v){  m_clone_sequence_cds_stop =v;}
    public void           setTraceFilesDirectory(String v){  m_tracefiles_dir = v;} 
-
+   public void              setCloneAssemblyStatus(int v){  m_clone_assembly_status = v;}
      
      public static CloneSequence setCloneSequence(UICloneSample clone_sample,int[] sequence_analysis_status ) throws BecDatabaseException
     {
