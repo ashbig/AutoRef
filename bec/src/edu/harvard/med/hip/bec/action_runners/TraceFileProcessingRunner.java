@@ -27,7 +27,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
 {
      
     
-    private String              m_renaming_file_name = "rename.txt";
+    private String              m_renaming_file_name = "rename";
     private int                m_process_name = -1;
     private String             m_read_direction = null;
     private String             m_read_type = null;
@@ -37,7 +37,6 @@ public class TraceFileProcessingRunner extends ProcessRunner
     private boolean            m_isDelete = false;
     private InputStream         m_input = null;
     private int                 m_sequencing_facility = -1;
-    
     
     
     private String              OUTPUT_DIR = null;
@@ -52,6 +51,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
                   OUTPUT_DIR = "d:\\eval_trace_files_dump";
              }
         }
+        else
+        {
+            OUTPUT_DIR = "C:\\bio\\original_files";
+        }
     }
     
     public void setProcessType(int process_name){m_process_name=process_name;}
@@ -59,7 +62,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
     public void setReadType(String read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
     public void setFileExtension(String ext){ m_file_extension = ext;}
     public void     setSequencingFacility(int v){m_sequencing_facility = v;}
-     public String getTitle()    {return "Request for trace files manipulation.";    }
+     public String getTitle()    { return "Request for trace files manipulation.";    }
     
      
     public void setInputDirectory(String inputdir)
@@ -118,9 +121,12 @@ public class TraceFileProcessingRunner extends ProcessRunner
      //-------------------------------------------
      private void       createRenamingFile()throws Exception
      {
-        // delete previous renaming file from directory
-          File fl =   new File(m_inputdir + File.separator +m_renaming_file_name );
-          if (fl.exists()) fl.delete();
+          String renaming_file_name =   m_inputdir + File.separator +m_renaming_file_name + System.currentTimeMillis() + ".txt" ;
+         
+          //print input mail file
+         // File mappint_file = new File(m_input);
+     //    m_file_list_reports.add(mapping_file);
+          //  if (fl.exists()) fl.delete();
          //read mapping file hash key - sequencing facility name, item - hip name
          Hashtable plate_map_names =  readPlateMapping();
          ////read directory && parse file names
@@ -136,10 +142,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
             ArrayList renaming_file_entries = getRenamingFileEnties(sequencing_facility_file_items, 
                                                                  hip_clone_items,
                                                                     plate_map_names);
-            Algorithms.writeArrayIntoFile( renaming_file_entries, true, m_inputdir + File.separator +m_renaming_file_name);
+            Algorithms.writeArrayIntoFile( renaming_file_entries, true, renaming_file_name);
            
          }
-          File renaming_file =   new File(m_inputdir + File.separator +m_renaming_file_name );
+          File renaming_file =   new File( renaming_file_name );
           m_file_list_reports.add( renaming_file );
          
      }
@@ -149,16 +155,22 @@ public class TraceFileProcessingRunner extends ProcessRunner
      {
          String plate_names = "";String plate_name = null;String plate_name_last = "";
          ArrayList plate_names_for_processing = new ArrayList();
+         String current_plate = null;
          int number_of_plates = 1;
          for (int plate_count = 0; plate_count < sequencing_facility_file_items.size(); plate_count++)
          {
              plate_name = ((SequencingFacilityFileName)sequencing_facility_file_items.get(plate_count)).getPlateName();
              if ( !plate_name_last.equalsIgnoreCase(plate_name))
              {
-                 number_of_plates++;
-                 plate_names += "'"+(String)plate_map_names.get(plate_name) +"',";
+                 
+                 current_plate = (String)plate_map_names.get(plate_name) ;
+                 if (current_plate != null) 
+                 {
+                     plate_names += "'"+(String)plate_map_names.get(plate_name) +"',";
+                     number_of_plates++;
+                 }
              }
-            if ( !plate_names.equals("") && (number_of_plates % 5==0 || plate_count == sequencing_facility_file_items.size()-1))// by 5 plates 
+             if ( !plate_names.equals("") && (number_of_plates % 5==0 || plate_count == sequencing_facility_file_items.size()-1))// by 5 plates 
              {
                   plate_names = plate_names.substring(0, plate_names.length() -1);
                   plate_names_for_processing.add(plate_names);
@@ -170,10 +182,14 @@ public class TraceFileProcessingRunner extends ProcessRunner
          }
          return plate_names_for_processing;
      }
+     
      private Hashtable       readPlateMapping() throws Exception
      {
            //only for windows
         String sequencing_facility_plate = null;String hip_name = null;
+        
+        m_additional_info =  Constants.LINE_SEPARATOR + "Plate mapping information" + Constants.LINE_SEPARATOR;
+        
         String line = null; ArrayList plate_names = null;
         Hashtable plate_map = new Hashtable();        BufferedReader fin=null;
         try
@@ -181,6 +197,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
             fin = new BufferedReader(new InputStreamReader(m_input));
             while ((line = fin.readLine()) != null)
            {
+                m_additional_info += line + Constants.LINE_SEPARATOR;
                 plate_names = Algorithms.splitString(line, "\t");
                 sequencing_facility_plate =  (String)plate_names.get(0);
                 hip_name =(String)plate_names.get(1);
@@ -265,7 +282,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
           return renaming_file_entries;
       }
     
-     
+   /*  
      private void printRenamingFile(ArrayList renaming_file_entries)throws Exception
      {
          File fl = null;FileWriter fr = null;
@@ -286,6 +303,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
              throw new BecDatabaseException("Can not write renaming file");
          }
      }
+    **/
      
      //********************************************
      private void       runFileRenaming() throws Exception
@@ -482,12 +500,12 @@ public class TraceFileProcessingRunner extends ProcessRunner
      
     {   try
          {
-          TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
-          runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
-            runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
-            runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
-            runner.setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
-runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\files_to_transfer\\mapping.txt"));
+TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
+runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
+runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
+runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
+runner.setInputDirectory("C:\\bio\\original_files");
+runner.setRenamingFile(new  FileInputStream("C:\\bio\\original_files\\map.txt"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        
            
