@@ -8,6 +8,10 @@ import edu.harvard.med.hip.flex.user.*;
 import java.io.*;
 
 public class Algorithms{
+    
+   // private static final String filePath = "/tmp/";
+     private static final String filePath = "c:/";
+    
 public static ArrayList rearangeSawToothPatternInFlexSequence(ArrayList sequences)
     {
         ArrayList result = new ArrayList();
@@ -57,7 +61,7 @@ public static LinkedList rearangeSawToothPatternInOligoPattern(LinkedList sequen
             // compare
         } );
         //get middle element
-        int middle = (int)Math.ceil((double)sequences.size() / 2);
+        int middle = (int)Math.ceil((double)sequences.size() / 2)- 1;
         for (int count = 0; count < middle; count++)
         {
             result.add(sequences.get(count));
@@ -69,35 +73,16 @@ public static LinkedList rearangeSawToothPatternInOligoPattern(LinkedList sequen
     }
 
 
-public static File writeFile(Vector fileData, String file_name)
-throws IOException
-{
-    File fl = new File(file_name);
-    FileWriter fr = new FileWriter(fl);
-    
-    for (int count = 0; count < fileData.size(); count++)
+
+
+
+
+
+public static void main(String args[])
     {
-        fr.write((String)fileData.get(count));
-    }
-    fr.flush();
-    fr.close();
- 
-    return fl;
+      
+        
+}
 }
 
 
-//send e-mail to the user with all GI separated to three groups
-public static void notifyUser(String user_name, String fileName, Vector messages) throws Exception
-    {
-        AccessManager am = AccessManager.getInstance();
-        String to = am.getEmail( user_name );
-        String cc = "etaycher@hms.harvard.edu";
-        String from = "etaycher@hms.harvard.edu";
-        String subject = "User Notification: Mgc clone master list "+fileName+" was uploaded to database";
-        subject += "\nReport is attached.";
-        String msgText = null;
-        File fl = Algorithms.writeFile(messages,"Report")  ;
-   
-        Mailer.sendMessageWithAttachedFile( to,  from, cc, subject, msgText, fl);
-    }
-}
