@@ -63,13 +63,30 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         String receiveDate = ((ReceiveOligoOrdersForm)form).getReceiveDate();
         Researcher researcher = null;
         Protocol protocol = null;
+        String processname = ((ReceiveOligoOrdersForm)form).getProcessname();
+       
+     
         LinkedList containerList = new LinkedList();
         LinkedList queueItems = new LinkedList();
         
+        //get process plates plate
+        if (processname != null && processname.equals(Protocol.RECEIVE_SEQUENCING_RESULTS))
+        {
+         
+            request.setAttribute("workflowname", ((ReceiveOligoOrdersForm)form).getWorkflowname() );
+            request.setAttribute("workflowid", new Integer( ((ReceiveOligoOrdersForm)form).getWorkflowid()));
+            request.setAttribute("projectid",  new Integer( ((ReceiveOligoOrdersForm)form).getProjectid() )   );
+            request.setAttribute("projectname", ((ReceiveOligoOrdersForm)form).getProjectname());
+            request.setAttribute("processname", ((ReceiveOligoOrdersForm)form).getProcessname());
+        }
+     
         // Validate the researcher barcode.
         try {
             researcher = new Researcher(barcode);
-            protocol = new Protocol(Protocol.RECEIVE_OLIGO_PLATES);
+            if ( processname == null)
+                protocol = new Protocol(Protocol.RECEIVE_OLIGO_PLATES);
+            else
+                protocol = new Protocol(processname);
         } catch (FlexProcessException ex) {
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
@@ -83,7 +100,7 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         ReceiveOligoOrdersForm formProper = (ReceiveOligoOrdersForm) form;
         List ids = formProper.getOligoPlateList();
         request.getSession().setAttribute("plateList",ids);
-        
+  
         Connection conn = null;
         ListIterator iter = ids.listIterator();
         Container container = null;
@@ -117,15 +134,16 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
                 Workflow workflow = item.getWorkflow();
                 Project project = item.getProject();
                 Process process = findProcess(processes, project, workflow);
-                if(process == null) {
+                if(process == null)
+                {
                     process = new Process(protocol, Process.SUCCESS, researcher, project, workflow);
                     processes.addElement(process);
                 }
                                 
                 //Add process object to "receive oligo plates" process.
                 ContainerProcessObject ioContainer =
-                new ContainerProcessObject(container.getId(), process.getExecutionid(),
-                edu.harvard.med.hip.flex.process.ProcessObject.IO);
+                                    new ContainerProcessObject(container.getId(), process.getExecutionid(),
+                                    edu.harvard.med.hip.flex.process.ProcessObject.IO);
                 //System.out.println("receive oligo plates process object created");
                 
                 // Insert the process and process objects into database.
@@ -138,6 +156,20 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             
         } //while
         
+        Vector locations = null;
+        if (processname != null && processname.equals(Protocol.RECEIVE_SEQUENCING_RESULTS))
+        {
+            try
+            {
+                locations =Location.getLocations();
+            } 
+            catch(Exception e)
+            {
+                request.setAttribute(Action.EXCEPTION_KEY, e);
+                return (mapping.findForward("error"));
+            }
+        }
+
         //insert process records into db
         try{
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -157,6 +189,17 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             return (mapping.findForward("error"));
         } finally {
             DatabaseTransaction.closeConnection(conn);
+        }
+        
+        
+        
+        if (processname != null && processname.equals(Protocol.RECEIVE_SEQUENCING_RESULTS))
+        {
+            
+            request.getSession().setAttribute("EnterSourcePlateAction.newContainers", new Vector(containerList ) );
+            request.setAttribute("locations", locations);
+
+            return (mapping.findForward("success_receive_sequencing_results"));
         }
         
         //save containerList to session
