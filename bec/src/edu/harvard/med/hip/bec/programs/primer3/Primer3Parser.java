@@ -62,8 +62,8 @@ public class Primer3Parser
             p_right_sequence = new RE("PRIMER_RIGHT_SEQUENCE=(\\S+)") ; 
             p_left = new RE("PRIMER_LEFT=(\\d*),(\\d*)") ; 
             p_right = new RE("PRIMER_RIGHT=(\\d*),(\\d*)") ; 
-            p_left_tm = new RE("PRIMER_LEFT_TM=(\\d*)") ; 
-            p_right_tm = new RE("PRIMER_RIGHT_TM=(\\d*)") ; 
+            p_left_tm = new RE("PRIMER_LEFT_TM=(\\d*\\.\\d*)") ; 
+            p_right_tm = new RE("PRIMER_RIGHT_TM=(\\d*\\.\\d*)") ; 
             p_left_gc = new RE("PRIMER_LEFT_GC_PERCENT=(\\d*)") ; 
             p_right_gc = new RE("PRIMER_RIGHT_GC_PERCENT=(\\d*)") ; 
             p_error = new RE("PRIMER_ERROR") ; 
@@ -205,9 +205,9 @@ public class Primer3Parser
                    r_start = Integer.parseInt(p_right.getParen(1));
                }
                if ( p_left_tm.match(line) ) 
-                    oligo_left.setTm( Integer.parseInt(p_left_tm.getParen(1)));
+                    oligo_left.setTm( Double.parseDouble(p_left_tm.getParen(1)));
                if ((runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND) && p_right_tm.match(line) ) 
-                   oligo_right.setTm( Integer.parseInt(p_right_tm.getParen(1)));
+                   oligo_right.setTm( Double.parseDouble(p_right_tm.getParen(1)));
                if (p_left_gc.match(line) ) 
                    oligo_left.setGCContent( Integer.parseInt(p_left_gc.getParen(1)));
                if ((runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND) && p_right_gc.match(line) ) 
