@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.bec.sampletracking.mapping;
 import java.util.*;
 import java.io.*;
+import edu.harvard.med.hip.utility.*;
 /**
  *
  * @author  htaycher
@@ -16,8 +17,14 @@ public class NamingFileEntry
     public static final String ORIENTATION_FORWARD = "F";
     public static final String ORIENTATION_REVERSE = "R";
     private static final String DILIM = "_";
-    private static final String FILE_PATH = "/tmp/";
-    
+   
+    private  static String FILE_PATH = null;
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+            FILE_PATH = "d:\\tmp\\";
+        else
+            FILE_PATH = "c:\\tmp\\";
+    }
     private int     m_plateid = -1;
     private String  m_wellid = null;
     private int     m_cloneid = -1;
