@@ -230,7 +230,8 @@ public class Constants {
     public static final int         PROCESS_DELETE_CLONE_FORWARD_READ = 77;//
     public static final int         PROCESS_DELETE_CLONE_REVERSE_READ = 78;//
     public static final int         PROCESS_DELETE_CLONE_SEQUENCE = 79;//
- 
+  public static final int         PROCESS_GET_TRACE_FILE_NAMES = 80;
+  public static final int         PROCESS_DELETE_TRACE_FILES = 81;
    
      //69
        

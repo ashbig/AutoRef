@@ -10,6 +10,7 @@ package edu.harvard.med.hip.bec.action_runners;
 import java.sql.*;
 import java.io.*;
 
+import edu.harvard.med.hip.bec.programs.phred.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
@@ -34,7 +35,20 @@ public class DeleteObjectRunner extends ProcessRunner
     
     
     private int                     m_action_type = -1;
-     public String       getTitle()     {  return "Request for objects deletion execution.";     }
+     public String       getTitle()    
+     {  
+         switch(m_action_type)
+         {
+            case Constants.PROCESS_DELETE_PLATE : return "delete Plates";
+            case Constants.PROCESS_DELETE_CLONE_READS : return "delete Clone End Reads (forward and reverse";
+            case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : return "delete Clone forward End Reads";
+            case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : return "delete Clone reverse End Reads";
+            case Constants.PROCESS_DELETE_CLONE_SEQUENCE : return "delete Clone sequences";
+             case  Constants.PROCESS_GET_TRACE_FILE_NAMES :return "get Trace Files' names";
+            case  Constants.PROCESS_DELETE_TRACE_FILES :return "delete Trace Files from hard drive";
+             default: return  "";
+        }
+     }
     public   void        setActionType(int v){ m_action_type = v;}  
     
     public void run()
@@ -51,7 +65,20 @@ public class DeleteObjectRunner extends ProcessRunner
                {
                    try
                    {
-                        deleteItems(conn, (String)sql_groups_of_items.get(count) , report_file_name);
+                       switch(m_action_type)
+                       {
+                            case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{getTraceFileNames((String)sql_groups_of_items.get(count),report_file_name); break;}
+                            case  Constants.PROCESS_DELETE_TRACE_FILES :{deleteTraceFiles(report_file_name); break;}
+                            case Constants.PROCESS_DELETE_PLATE : 
+                            case Constants.PROCESS_DELETE_CLONE_READS : 
+                            case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : 
+                            case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : 
+                            case Constants.PROCESS_DELETE_CLONE_SEQUENCE : 
+                            {
+                               deleteItems(conn, (String)sql_groups_of_items.get(count) , report_file_name);
+                               break;
+                            }
+                       }
                    } catch(Exception e)
                     {
                         DatabaseTransaction.rollback(conn);
@@ -82,6 +109,89 @@ public class DeleteObjectRunner extends ProcessRunner
     }
     
     //----------------------------------------------------
+    private void            getTraceFileNames(String sql_groups_of_items,String report_file_name) throws Exception
+    {
+        ArrayList directoryNames = getDirectoryNames(sql_groups_of_items);
+        File directory = null;File[] trace_files = null;
+        ArrayList fileNames = new ArrayList();
+        EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
+        String common_path = erw.getOuputBaseDir();
+        String dir_name = null;
+        for ( int count = 0; count < directoryNames.size(); count++)
+        {
+            dir_name = (String)directoryNames.get(count);
+            directory = new File(common_path+File.separator+ dir_name +File.separator+ PhredWrapper.CHROMAT_DIR_NAME);
+            trace_files = directory.listFiles();
+            fileNames.add("Clone Id: " + dir_name.substring( dir_name.lastIndexOf(File.separator) + 1));
+            if ( trace_files != null)
+            {
+                for ( int trace_count = 0; trace_count < trace_files.length; trace_count++)
+                {
+                    fileNames.add( directory.getAbsolutePath() + File.separator +trace_files[trace_count].getName());
+                }
+            }
+            else
+                fileNames.add( "No trace files have been submitted for the clone");
+            if (fileNames.size() >= 200 || count == directoryNames.size() - 1)
+            {
+                printReport(fileNames,   report_file_name , "");
+                fileNames = new ArrayList();
+            }
+        }
+        
+    }
+    
+    
+    private    ArrayList  getDirectoryNames(String sql_groups_of_items)throws Exception
+    {
+         ArrayList res = new ArrayList();
+      
+        String sql = "select  FLEXSEQUENCEID , FLEXCLONEID from flexinfo where flexcloneid in ("
+        + sql_groups_of_items + ") order by FLEXCLONEID ";
+           
+        ResultSet rs = null;
+        try
+        {
+           // DatabaseTransactionLocal t   = DatabaseTransactionLocal.getInstance();
+            rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            
+            while(rs.next())
+            {
+                res.add( rs.getInt("FLEXSEQUENCEID") + File.separator + rs.getInt("FLEXCLONEID") );
+            }
+            return res;
+        } catch (Exception sqlE)
+        {
+            m_error_messages.add("Error occured while getting file names: "+"\n"+sqlE+"\nSQL: "+sql);
+            throw new BecDatabaseException("Error occured while getting file names: "+"\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransactionLocal.closeResultSet(rs);
+        }
+    }
+    
+    private void            deleteTraceFiles(String report_file_name) 
+    {
+        File file_to_delete = null;
+        ArrayList file_names_to_delete = Algorithms.splitString(m_items);
+        ArrayList fileNames = new ArrayList();
+        for (int file_count = 0; file_count < file_names_to_delete.size(); file_count++)
+        {
+            file_to_delete = new File( (String) file_names_to_delete.get(file_count) );
+            if ( file_to_delete.exists() )
+            {
+                file_to_delete.delete();
+                fileNames.add("Deleting file: "+(String) file_names_to_delete.get(file_count) );
+            }
+            else
+                fileNames.add("File "+(String) file_names_to_delete.get(file_count) +" does not exists.");
+            if (fileNames.size() >= 200 || file_count == file_names_to_delete.size() - 1)
+            {
+                printReport(fileNames,   report_file_name , "");
+                fileNames = new ArrayList();
+            }
+        }
+    }
     private void deleteItems(Connection conn, String sql_items, String report_file_name) throws Exception
     {
         ArrayList sql_for_deletion = new ArrayList();
@@ -118,7 +228,7 @@ public class DeleteObjectRunner extends ProcessRunner
               DatabaseTransaction.executeUpdate( (String)sql_for_deletion.get(count) , conn);
               exc_items.add((String)sql_for_deletion.get(count));
         }
-        DatabaseTransaction.getInstance().requestConnection().commit();
+        conn.commit();
     
         printReport(exc_items,   report_file_name, "Executed items");
     }
@@ -336,12 +446,12 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
             input = new DeleteObjectRunner();
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
           //  input.setItems("    734 345 ");
-          //  input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+            input.setItemsType( Constants.ITEM_TYPE_CLONEID);
             input.setUser(user);
             
            
-            input.setActionType(Constants.PROCESS_DELETE_CLONE_FORWARD_READ);
-           input.setItems("    119699 ");
+            input.setActionType(Constants.PROCESS_DELETE_TRACE_FILES);
+           input.setItems("c:\\bio\\plate_analysis\\clone_samples\\1879\\776\\chromat_dir\\5947_C01_1879_776_R0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_F0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_R0.ab1");
            input.run();
           //   input.setItems("    734 345 ");
         //    input.setItemsType( Constants.ITEM_TYPE_CLONEID);
