@@ -164,7 +164,9 @@ public class IsolateRanker
            //create refsequence for analysis
             refsequence = new BaseSequence();
             refsequence.setId( construct.getRefSeqId());
-            refsequence.setText( m_cloning_strategy.getLinker5().getSequence() + construct_refseqence.getText() + m_cloning_strategy.getLinker3().getSequence() );
+            String linker5_seq =  m_cloning_strategy.getLinker5().getSequence();
+            String linker3_seq = m_cloning_strategy.getLinker3().getSequence();
+            refsequence.setText( linker5_seq.toLowerCase()+ construct_refseqence.getText().toUpperCase() + linker3_seq.toLowerCase() );
             
             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
