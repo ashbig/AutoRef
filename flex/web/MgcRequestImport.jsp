@@ -18,7 +18,7 @@
 <p>
 
 
-
+<html:form action="/MgcImportRequest.do" enctype="multipart/form-data"> 
 
 <table>
     <tr>
@@ -32,6 +32,18 @@
     <td><bean:write name="workflowname" /></td>
     </tr>
 </table>
+
+<% 
+Integer project_id = (Integer)request.getAttribute("projectid");
+if ( project_id.intValue() == 3)//pseudonomas
+{
+
+%>
+<P>This project does not have MGC workflow.
+
+<%}
+else
+{%>
 <p><i>This page allows you to upload the MGC request  into the
 database from <b>request file</b>. 
 The request file <b>must</b> contains GI numbers only.
@@ -45,7 +57,7 @@ The request uploading may take some time. The e-mail notification will be sent t
 </i> 
 
 <p>
-<html:form action="/MgcImportRequest.do" enctype="multipart/form-data"> 
+
 <p>
 
 <input name="projectid" type="hidden" value="<bean:write name="projectid" />" >
@@ -65,6 +77,10 @@ The request uploading may take some time. The e-mail notification will be sent t
 
 <P><P>
 <html:submit/>
+
+
+<%}
+%>
 </html:form>
 
 
