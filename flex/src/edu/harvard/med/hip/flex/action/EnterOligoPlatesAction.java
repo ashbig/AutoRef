@@ -142,7 +142,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 
                 if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                     if(mgc != null) {
-                        template = Container.findNextContainerFromPrevious(mgc, Protocol.CREATE_DNA_FROM_REARRAYED_CULTURE);
+                        //template = Container.findNextContainerFromPrevious(mgc, Protocol.CREATE_DNA_FROM_REARRAYED_CULTURE);
+                        template = mgc;
                         if(template == null) {
                             errors.add("fivepPlate", new ActionError("error.mgc.template.unavailable"));
                             saveErrors(request, errors);
