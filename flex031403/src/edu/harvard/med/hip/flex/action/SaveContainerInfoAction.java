@@ -60,13 +60,14 @@ public class SaveContainerInfoAction extends CollaboratorAction {
         boolean agar = ((SaveContainerInfoForm)form).getAgar();
         boolean culture = ((SaveContainerInfoForm)form).getCulture();
         boolean isEmpty = ((SaveContainerInfoForm)form).getIsEmpty();
+        boolean panumber = ((SaveContainerInfoForm)form).getPanumber();
         
         response.setContentType("application/ms-excel");
         boolean ret = false;
         
         try {
             PrintWriter out = response.getWriter();
-            ContainerInfoExporter exporter = new ContainerInfoExporter(sampleid, type, position, status, result, sequenceid, cdsstart, cdsstop, cdslength, gccontent, sequencetext, cds, gi, genesymbol, pcr, agar, culture, isEmpty);
+            ContainerInfoExporter exporter = new ContainerInfoExporter(sampleid, type, position, status, result, sequenceid, cdsstart, cdsstop, cdslength, gccontent, sequencetext, cds, gi, genesymbol, panumber, pcr, agar, culture, isEmpty);
             ret = exporter.doExport(id, executionid, out);
             out.close();
         } catch (IOException ex) {

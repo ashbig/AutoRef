@@ -101,6 +101,10 @@
     <td>Gene Symbol</td>
 </tr>
 <tr>
+    <td><html:checkbox property="panumber" /></td>
+    <td>PA Number (for Pseudomonas project only)</td>
+</tr>
+<tr>
     <td><html:checkbox property="isEmpty" /></td>
     <td>Leave Sequence Info Empty for Empty Well</td>
 </tr>

@@ -35,6 +35,7 @@ public class ContainerInfoExporter {
     private boolean cds = false;
     private boolean gi = false;
     private boolean genesymbol = false;
+    private boolean panumber = false;
     private boolean pcr = false;
     private boolean agar = false;
     private boolean culture = false;
@@ -47,7 +48,7 @@ public class ContainerInfoExporter {
     public ContainerInfoExporter(boolean sampleid, boolean type, boolean position,
     boolean status, boolean result, boolean sequenceid, boolean cdsstart, boolean cdsstop,
     boolean cdslength, boolean gccontent, boolean sequencetext, boolean cds, boolean gi,
-    boolean genesymbol, boolean pcr, boolean agar, boolean culture, boolean isEmpty) {
+    boolean genesymbol, boolean panumber, boolean pcr, boolean agar, boolean culture, boolean isEmpty) {
         this.sampleid = sampleid;
         this.type = type;
         this.position = position;
@@ -62,6 +63,7 @@ public class ContainerInfoExporter {
         this.cds = cds;
         this.gi = gi;
         this.genesymbol = genesymbol;
+        this.panumber = panumber;
         this.pcr = pcr;
         this.agar = agar;
         this.culture = culture;
@@ -111,6 +113,8 @@ public class ContainerInfoExporter {
                 out.print("GI\t");
             if(genesymbol)
                 out.print("Gene Symbol\t");
+            if(panumber)
+                out.print("PA Number\t");
             out.println();
             
             for(int i=0; i<samples.size(); i++) {
@@ -202,6 +206,8 @@ public class ContainerInfoExporter {
                     out.print(sequence.getGiString()+"\t");
                 if(genesymbol)
                     out.print(sequence.getGenesymbolString()+"\t");
+                if(panumber)
+                    out.print(sequence.getPanumber()+"\t");
                 
                 out.println();
             }

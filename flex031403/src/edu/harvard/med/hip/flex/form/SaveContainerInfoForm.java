@@ -40,6 +40,7 @@ public class SaveContainerInfoForm extends ActionForm {
     private boolean pcr = false;
     private boolean agar = false;
     private boolean culture = false;
+    private boolean panumber = false;
     
     /** Creates new SaveContainerInfoForm */
     public SaveContainerInfoForm() {
@@ -204,6 +205,14 @@ public class SaveContainerInfoForm extends ActionForm {
     public void setCulture(boolean culture) {
         this.culture = culture;
     }
+
+    public boolean getPanumber() {
+        return panumber;
+    }
+    
+    public void setPanumber(boolean panumber) {
+        this.panumber = panumber;
+    }
     
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         sampleid = false;
@@ -224,5 +233,6 @@ public class SaveContainerInfoForm extends ActionForm {
         pcr = false;
         agar = false;
         culture = false;
+        panumber = false;
     }    
 }
