@@ -112,8 +112,9 @@ public class ContainerMapper {
         Vector oldSamples = container.getSamples();
         Enumeration enum = oldSamples.elements();
         while(enum.hasMoreElements()) {
+            System.out.println("Start mapping sample...");
             Sample s = (Sample)enum.nextElement();
-            
+            System.out.println("Get sample type");
             if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
                 type = Sample.CONTROL_POSITIVE;
             } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
@@ -125,7 +126,7 @@ public class ContainerMapper {
             } else {
                 type = Sample.getType(protocol.getProcessname());
             }
-            
+            System.out.println("Create a new sample");
             Sample newSample = new Sample(type, s.getPosition(), s.getContainerid(), s.getOligoid(), edu.harvard.med.hip.flex.core.Sample.GOOD);
             newContainer.addSample(newSample);
         }
