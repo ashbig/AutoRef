@@ -43,13 +43,19 @@ public class DiseaseGeneManager {
         Vector diseases = queryDiseases(conn, sql);
         
         if(diseases != null && diseases.size() == 0) {
-            sql = "select dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.hip_disease_id=dl.hip_disease_id and dn.disease_nick_name_value='"+term+"'";
+            sql = "select dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.hip_disease_id=dn.hip_disease_id and dn.disease_nick_name_value='"+term+"'";
             diseases = queryDiseases(conn, sql);
         } 
         
         if(diseases != null && diseases.size() == 0) {
-            sql = "select dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.disease_mesh_term like '%"+term+"%' or (dl.hip_disease_id=dl.hip_disease_id and dn.disease_nick_name_value='%"+term+"%'";
-            diseases = queryDiseases(conn, sql);
+//            sql = "select distinct dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.disease_mesh_term like '%"+term+"%' or (dl.hip_disease_id=dn.hip_disease_id and dn.disease_nick_name_value like '%"+term+"%'";
+
+            TreeSet diseaseSet = new TreeSet(new DiseaseComparator());
+            sql = "select * from disease_list where disease_mesh_term like '%"+term+"%'";
+            diseaseSet.addAll(queryDiseases(conn, sql));
+            sql = "select distinct dl.hip_disease_id, dl.disease_mesh_term, dl.date_added from disease_list dl, disease_nicknames dn where dl.hip_disease_id=dn.hip_disease_id and dn.disease_nick_name_value like '%"+term+"%'";
+            diseaseSet.addAll(queryDiseases(conn, sql));
+            diseases = new Vector(diseaseSet);
         }
         
         manager.disconnect();

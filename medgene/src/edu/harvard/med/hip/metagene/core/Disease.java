@@ -6,6 +6,8 @@
 
 package edu.harvard.med.hip.metagene.core;
 
+import java.util.*;
+
 /**
  *
  * @author  dzuo
@@ -39,5 +41,5 @@ public class Disease {
      */
     public String getTerm() {
         return term;
-    }
+    }   
 }
