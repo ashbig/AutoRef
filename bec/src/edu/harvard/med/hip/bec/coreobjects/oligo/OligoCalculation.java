@@ -18,6 +18,10 @@ import java.util.*;
 public class OligoCalculation
 {
      public static final String   WRITE_PARAM_DELIM = "|";
+     
+     public static final int      TYPE_OF_OLIGO_CALCULATION_REFSEQUENCE = 1;
+     public static final int      TYPE_OF_OLIGO_CALCULATION_STRETCH_COLLECTION = 2;
+     public static final int      TYPE_OF_OLIGO_CALCULATION_ANY = 3;
    //--------------------------
     private ArrayList           m_oligos = null;
     private Primer3Spec         m_primer3_spec = null;
@@ -97,7 +101,15 @@ public class OligoCalculation
    public void        setStretchOligoCalculationParams(String s){ m_primer_design_for_stretches_additional_parameters=s;}
   
     //function gets all oligo calculations from db for the provided id
-    public static ArrayList       getOligoCalculations(String item_ids,int item_type)                     throws BecDatabaseException
+   public static ArrayList       getOligoCalculations(String item_ids,int item_type)            
+            throws BecDatabaseException
+   {
+       return  getOligoCalculations( item_ids, item_type,TYPE_OF_OLIGO_CALCULATION_ANY);            
+  
+   }
+    public static ArrayList       getOligoCalculations(String item_ids,int item_type, 
+            int type_of_oligo_calculation)            
+            throws BecDatabaseException
     {
         String sql = null;
         ArrayList oligo_calculations = new ArrayList();
@@ -109,12 +121,12 @@ public class OligoCalculation
             {
                 case  Constants.ITEM_TYPE_CLONEID:
                 {
-                    oligo_calculations.addAll(getByCloneId(Integer.parseInt( (String)items.get(index) )));
+                    oligo_calculations.addAll(getByCloneId(Integer.parseInt( (String)items.get(index) ), type_of_oligo_calculation));
                     break;
                 }
                 case Constants.ITEM_TYPE_PLATE_LABELS :
                 {   
-                    oligo_calculations.addAll(getByPlateLabel((String) items.get( index)));
+                    oligo_calculations.addAll(getByPlateLabel((String) items.get( index),type_of_oligo_calculation));
                     break;
                 }
                 case Constants.ITEM_TYPE_BECSEQUENCE_ID :
@@ -202,22 +214,65 @@ public class OligoCalculation
    
    
     //can return sets calculated ander different configs for Primer3
-   public static ArrayList getByCloneId(int cloneid)throws BecDatabaseException
+   public static ArrayList getByCloneId(int cloneid, int type_of_oligo_calculation)throws BecDatabaseException
    {
-        String sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS   "
+        String sql = null;
+        if ( type_of_oligo_calculation == TYPE_OF_OLIGO_CALCULATION_REFSEQUENCE )
+        {
+            sql=         "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS   "
++" from  oligo_calculation where STRETCHCOLLECTIONID is null and  sequenceid = "
++" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
++" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+"))) order by oligocalculationid";
+
+        }
+        else if ( type_of_oligo_calculation ==    TYPE_OF_OLIGO_CALCULATION_STRETCH_COLLECTION )
+        {
+   sql=  "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS   "
++" from  oligo_calculation where STRETCHCOLLECTIONID > 0 and sequenceid = "
++" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
++" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+"))) order by oligocalculationid";
+
+        }
+     else if ( type_of_oligo_calculation ==  TYPE_OF_OLIGO_CALCULATION_ANY )
+     {
+sql=         "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS   "
 +" from  oligo_calculation where sequenceid = "
 +" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
 +" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+"))) order by oligocalculationid";
+
+     }
         return getByRule(sql);
    }
      //can return sets calculated ander different configs for Primer3
-   public static ArrayList getByPlateLabel(String label)throws BecDatabaseException
+   public static ArrayList getByPlateLabel(String label, int type_of_oligo_calculation)throws BecDatabaseException
    {
-        String sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS    "
+           String sql = null;
+        if ( type_of_oligo_calculation == TYPE_OF_OLIGO_CALCULATION_REFSEQUENCE )
+        {
+       sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS    "
++" from  oligo_calculation where STRETCHCOLLECTIONID is null and sequenceid in "
++" (select refsequenceid from sequencingconstruct where constructid in  (select constructid from isolatetracking where sampleid in"
++" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid";
+   
+        }
+        else if ( type_of_oligo_calculation ==    TYPE_OF_OLIGO_CALCULATION_STRETCH_COLLECTION )
+        {
+  sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS    "
++" from  oligo_calculation where STRETCHCOLLECTIONID > 0 and sequenceid in "
++" (select refsequenceid from sequencingconstruct where constructid in  (select constructid from isolatetracking where sampleid in"
++" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid";
+   
+        }
+     else if ( type_of_oligo_calculation ==  TYPE_OF_OLIGO_CALCULATION_ANY )
+     {
+  sql = "select  oligocalculationid, sequenceid, primer3configid, dateadded , STRETCHCOLLECTIONID,STRETCHDEFPARAMS    "
 +" from  oligo_calculation where sequenceid in "
 +" (select refsequenceid from sequencingconstruct where constructid in  (select constructid from isolatetracking where sampleid in"
 +" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid";
-        return getByRule(sql);
+    
+     }
+        
+         return getByRule(sql);
    }
     
     private static ArrayList getByRule(String sql)throws BecDatabaseException
@@ -225,7 +280,7 @@ public class OligoCalculation
         ArrayList res = new ArrayList();
         ResultSet rs = null;
          OligoCalculation oc = null;
-        try
+         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
@@ -289,12 +344,12 @@ public class OligoCalculation
         try
         {
              ArrayList oligo_calculations = new ArrayList();
-             String item_ids = "140146     140130     135373     132414     132422     132430  ";
+             String item_ids = "140146    140130 ";
              ArrayList items = Algorithms.splitString(item_ids);
              ArrayList oligo_calculations_per_item = new ArrayList();
              for (int index = 0; index < items.size();index++)
              {
-                oligo_calculations_per_item = OligoCalculation.getOligoCalculations((String)items.get(index),Constants.ITEM_TYPE_CLONEID);
+                oligo_calculations_per_item = OligoCalculation.getOligoCalculations((String)items.get(index),Constants.ITEM_TYPE_CLONEID, TYPE_OF_OLIGO_CALCULATION_REFSEQUENCE);
                 oligo_calculations.add( oligo_calculations_per_item);
              }
         }
