@@ -1,5 +1,5 @@
 /**
- * $Id: ProcessDefinition.java,v 1.16 2004-05-26 20:03:38 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.17 2005-02-14 17:19:00 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -9,6 +9,7 @@
 package edu.harvard.med.hip.bec.sampletracking.objects;
 
 import edu.harvard.med.hip.bec.database.*;
+import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.util.*;
 import java.util.*;
 import sun.jdbc.rowset.*;
@@ -46,12 +47,7 @@ public class ProcessDefinition
     private String          m_process_name = null;
     private ArrayList       m_spectype_ids = null;
     
-   // public static final     int  END_READ_CONTAINER_CREATIONS = 0;
-   // public static final     String  CODE_END_READ_CONTAINER_CREATIONS = "ER";
-    
-    private static   ArrayList   m_process_definitions = null;
-    
-
+   /*
     public ProcessDefinition(int id) throws BecDatabaseException
     {
       
@@ -61,6 +57,9 @@ public class ProcessDefinition
     {
       
     }
+    **/
+    
+   
     public ProcessDefinition(int id,  String name, ArrayList ids) 
     {
        m_id = id;
@@ -68,66 +67,20 @@ public class ProcessDefinition
        m_spectype_ids = ids;
     }
     
-    
-    public static int      ProcessIdFromProcessName(String name)throws BecDatabaseException
-    {
-        String sql = "select  processdefinitionid from processdefinition "+
-            "where processname = '"+name +"'";
-        CachedRowSet crs = null;
-        try
-        {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            crs = t.executeQuery(sql);
-            if (crs.next())
-                return crs.getInt("processdefinitionid");
-            else 
-                return -1;
-        
-        } catch (Exception sqlE)
-        {
-            throw new BecDatabaseException("Error occured while initializing processdefinition with name: "+name+"\n");
-        } finally
-        {
-            DatabaseTransaction.closeResultSet(crs);
-        }
-    }
-    
-    /**
-     * Finds all processes available on the system 
-     
-     */
-    
-  
-    public static ArrayList findAllProcess()    throws BecDatabaseException,BecUtilException
-    {
-        if (m_process_definitions == null)
-            
-        {
-            String sql = "Select * from process ";
-            ResultSet rs = DatabaseTransaction.getInstance().executeQuery(sql);
-            ArrayList res = new ArrayList();
-            ProcessDefinition process= null;
-            try
-            {
-                if(rs.next())
-                {
-
-                    //process = new ProcessDefinition();
-                    res.add(process);
-
-                } else
-                {
-                    throw new BecUtilException("No process definition found on the system");
-                }
-            } catch (SQLException sqlE)
-            {
-                throw new BecDatabaseException(sqlE);
-            }
-        }
-        return m_process_definitions;
-    }
+    public int             getId(){ return m_id ;}
+    public String          getName(){ return m_process_name ;}
+    public ArrayList       getSpecs(){ return m_spectype_ids ;}
     
    
+    public static int      ProcessIdFromProcessName(String name)throws BecDatabaseException
+    {
+        Hashtable def = DatabaseToApplicationDataLoader.getProcessDefinitions();
+        if (def == null || def.size()== 0 )
+            throw new BecDatabaseException("Process definitions are not loaded into the system");
+        return ((ProcessDefinition)def.get(name)).getId();
+    }
+    
+    
   
     //******************************************************/
     //			Test				//
