@@ -38,9 +38,9 @@ public class MgcRequestImporter
     public static final String DILIM = "\t!";
     public static final String DEFAULT = "NA";
 
-    public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
+   // public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
     //public static final String BLASTABLE_DATABASE_NAME = "E:\\flexDev\\MGC\\genes";    
-    //public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";
+   public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";
  
     private Project             m_Project = null;
     private Workflow            m_workflow = null;
@@ -49,6 +49,9 @@ public class MgcRequestImporter
     private int                 m_SuccessCount = 0;
     private int                 m_FailCount = 0;
     private int                 m_TotalCountRequests = 0;
+    private double              m_percent_indentity = 0.95;
+    private int                 m_cdslengthLimit = 70;
+    private boolean             m_isPutOnQueue = true;
     
     private Vector              m_messages = null;
     
@@ -67,7 +70,9 @@ public class MgcRequestImporter
     public Workflow             getWorkflow()    { return m_workflow;}
     public Request              getRequest()    { return m_Request;}
     public String               getUserName()    { return m_UserName;}
-    
+    public void                 setPercentIndentity(double pi){m_percent_indentity = (pi >1.0)? pi/100: pi;}
+    public void                 setCdslengthLimit(int cl){ m_cdslengthLimit =cl;}
+    public void                 setIsPutOnQueue(boolean l){m_isPutOnQueue = l;}
     /**
      * Import the requests into the database.
      *
@@ -106,15 +111,18 @@ public class MgcRequestImporter
         //save request to db
         if (prev_step)
         {
-            m_Request.insert(conn);
-            DatabaseTransaction.commit(conn);
-            System.out.println("inserted request");
-
-            m_Request = new Request(m_Request.getId());
             ArrayList contNames = new ArrayList();
-            if (prev_step) prev_step = putOnQueue(conn, contNames)  ;
+             if ( m_isPutOnQueue) 
+            {
+                m_Request.insert(conn);
+                DatabaseTransaction.commit(conn);
+                System.out.println("inserted request");
 
-            DatabaseTransaction.commit(conn);
+                m_Request = new Request(m_Request.getId());
+                prev_step = putOnQueue(conn, contNames)  ;
+
+                DatabaseTransaction.commit(conn);
+            }
             try
             {
                 Vector ms = messages(requestGI, sequencesMatchedByGI, sequencesMatchedByBlast,
@@ -151,7 +159,7 @@ public class MgcRequestImporter
           //put mgc containers on queue
          //put containers on queue
         //get requesred mgc containers 
-        ArrayList mgc_containers = null;
+            ArrayList mgc_containers = null;
         try{
 
             mgc_containers = findMgcContainers(m_Request.getSequences());
@@ -424,12 +432,14 @@ public class MgcRequestImporter
                 fc = (FlexSequence) en.nextElement();
                 fanalyzer = new FlexSeqAnalyzer(fc);
                 
-                seq_id = fanalyzer.findExactCdsMatch( BLASTABLE_DATABASE_NAME );
+               // seq_id = fanalyzer.findExactCdsMatch( BLASTABLE_DATABASE_NAME );
+                seq_id = fanalyzer.findExactMatchOrHomolog(m_percent_indentity ,  m_cdslengthLimit ,BLASTABLE_DATABASE_NAME);
+                
                 if (seq_id != -1)//match found
                 {
                     FlexSequence fc_restored = new FlexSequence(seq_id);
                     m_Request.addSequence(fc_restored);
-                    sequencesMatchedByBlast.add(fc.getGi());
+                    sequencesMatchedByBlast.add( fc.getGi() + "(sequence id " + seq_id +")");
                 }
                 else
                 {
@@ -501,7 +511,8 @@ public class MgcRequestImporter
         ms.add( "\n\nContainers for request: \n");
         for (int count = 0; count< contNames.size(); count++)
         {
-            ms.add( contNames.get(count) + "\n");
+            ms.add( contNames.get(count) + "\t");
+            if ( (count + 1) % 2 == 0 ) ms.add("\n");
         }
         return ms;
         
@@ -536,6 +547,7 @@ public class MgcRequestImporter
         ArrayList temp = new ArrayList();
         for(int count = 0; count < flex_seq.size(); count++)
         {
+            
             temp.add(new Integer(   ((FlexSequence)flex_seq.get(count)).getId()) );
         }
         //starting from first sequence
@@ -544,6 +556,7 @@ public class MgcRequestImporter
             current_sequence_id = ((Integer)temp.get(0)).intValue() ;
             mgc_container = MgcContainer.findMGCContainerFromSequenceID(current_sequence_id);
             mgc_container.restoreSample();
+           
             //check if any other sequence in request come from the same container
             for (int count = 0; count < mgc_container.getSamples().size(); count++)
             {
@@ -552,6 +565,7 @@ public class MgcRequestImporter
                 if (temp.contains( seq_key ) )
                 {
                     temp.remove(seq_key);
+                   
                     if (temp.isEmpty()) continue;
                 }
             }
@@ -592,7 +606,7 @@ public class MgcRequestImporter
         
         
        /*
-        String file = "E:\\Users\\HIP\\HTaycher\\demo\\request.txt";
+        String file = "C:\\GI.txt";
         InputStream input;
         
         try
@@ -613,16 +627,15 @@ public class MgcRequestImporter
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             MgcRequestImporter importer = new MgcRequestImporter(new Project(5),new Workflow(7),"htaycher");
+            importer.setPercentIndentity(95);
+            importer.setCdslengthLimit(70);
             importer.performImport(input,conn) ;
-            
-            
         }
         
         catch (Exception e)
         {}
         finally
         { DatabaseTransaction.closeConnection(conn); }
-        
         
         */
         
@@ -633,12 +646,13 @@ public class MgcRequestImporter
         Vector gi_data = new Vector();
         FlexSequence fs = null;
         MgcMasterListImporter ms = new MgcMasterListImporter();
-        
+         FlexSeqAnalyzer fanalyzer = null;
         try
         {
 
-            current_gi = "4502048";
-            genBankSeq = gb.search("\"MGC:2509\"" );
+            current_gi = "4885066";
+           // genBankSeq = gb.search("\"MGC:2509\"" );
+            genBankSeq = gb.search(current_gi);
             if (genBankSeq.isEmpty() )
             {
                 System.out.println ( "(Sequence not found)");
@@ -648,16 +662,12 @@ public class MgcRequestImporter
             if (((String)seqData.get("species")).indexOf("sapiens") != -1)
             {
                 fs = ms.createFlexSequence( seqData,(GenbankSequence) genBankSeq.get(0));
-
+                fanalyzer = new FlexSeqAnalyzer(fs);
+                int seq_id = fanalyzer.findExactMatchOrHomolog(0.95 ,   70,BLASTABLE_DATABASE_NAME);
             }
-
-
-
+             
             }catch(Exception e)
-            {
-                
-                
-            }
+            {}
         
        
         System.exit(0);
