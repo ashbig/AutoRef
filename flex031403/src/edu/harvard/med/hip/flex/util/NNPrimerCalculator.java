@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.12 2002-03-15 17:07:15 dzuo Exp $
+ * $Id: NNPrimerCalculator.java,v 1.13 2002-08-05 20:10:31 dzuo Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * modified 12/13/01 All of the stop (close) oligos now use the universal stop
@@ -81,26 +81,26 @@ public class NNPrimerCalculator implements PrimerCalculator
 	private String convert (String dimer)
 	{
 		String digitalDimer = "";
-		if (dimer.substring(0,1).equals("A")) {
+		if (dimer.substring(0,1).equalsIgnoreCase("A")) {
 			digitalDimer += "0"; 
 		}
-		else if (dimer.substring(0,1).equals("T")) {
+		else if (dimer.substring(0,1).equalsIgnoreCase("T")) {
 			digitalDimer += "1";
 		}
-		else if (dimer.substring(0,1).equals("C")) {
+		else if (dimer.substring(0,1).equalsIgnoreCase("C")) {
 			digitalDimer += "2";
 		}
 		else {
 			digitalDimer += "3";
 		}
 
-		if (dimer.substring(1,2).equals("A")) {
+		if (dimer.substring(1,2).equalsIgnoreCase("A")) {
 			digitalDimer += "0"; 
 		}
-		else if (dimer.substring(1,2).equals("T")) {
+		else if (dimer.substring(1,2).equalsIgnoreCase("T")) {
 			digitalDimer += "1";
 		}
-		else if (dimer.substring(1,2).equals("C")) {
+		else if (dimer.substring(1,2).equalsIgnoreCase("C")) {
 			digitalDimer += "2";
 		}
 		else {
@@ -227,19 +227,19 @@ public class NNPrimerCalculator implements PrimerCalculator
 	private String getComplementBase(String base)
  	{
   		String result = null;
-  		if (base.equals("A"))
+  		if (base.equalsIgnoreCase("A"))
   		{
    			result = "T";
   		}
-  		else if (base.equals("C"))
+  		else if (base.equalsIgnoreCase("C"))
   		{
    			result = "G";
   		}
-  		else if (base.equals("G"))
+  		else if (base.equalsIgnoreCase("G"))
   		{
    			result = "C";
   		}
-  		else if (base.equals("T"))
+  		else if (base.equalsIgnoreCase("T"))
   		{
    			result = "A";
   		}
