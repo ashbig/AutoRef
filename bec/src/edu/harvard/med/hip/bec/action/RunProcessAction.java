@@ -103,7 +103,7 @@ public class RunProcessAction extends ResearcherAction
                     t = new Thread(runner);                    t.start();
                     break;
                 }
-                
+               
                 case Constants.PROCESS_RUN_END_READS : //run sequencing for end reads
                 {
                     master_container_ids = new ArrayList();
@@ -274,6 +274,7 @@ public class RunProcessAction extends ResearcherAction
                                  for ( int count = 0; count < str_colections.size(); count++)
                                  {
                                      strcol = (StretchCollection) str_colections.get(count);
+                                     if ( strcol.getType() != StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) continue;
                                      strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
                                  }
                                  stretch_collections.put( (String) items.get(index), str_colections);
@@ -285,6 +286,7 @@ public class RunProcessAction extends ResearcherAction
                             if ( strcol != null)
                             {
                                 strcol.setStretches( StretchCollection.createListOfUIContigs(strcol,Constants.ITEM_TYPE_CLONEID));
+                                if ( strcol.getType() != StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS) continue;
                                 stretch_collections.put( (String) items.get(index), strcol);
                             }
                          }
@@ -297,7 +299,7 @@ public class RunProcessAction extends ResearcherAction
                 }
                 case Constants.LQR_COLLECTION_REPORT_INT:
                 {
-                     String  item_ids = (String) request.getParameter("items");
+                    String  item_ids = (String) request.getParameter("items");
                     item_ids = item_ids.toUpperCase().trim();
                     int item_type = Integer.parseInt(request.getParameter("item_type"));
                     
@@ -314,6 +316,7 @@ public class RunProcessAction extends ResearcherAction
                             if ( clone_sequence != null)
                             {
                                 lqr_for_clone = StretchCollection.getByCloneSequenceId(clone_sequence.getId() , false);
+                                if ( lqr_for_clone.getType() != StretchCollection.TYPE_COLLECTION_OF_LQR) continue;
                                 StretchCollection.prepareStretchCollectionForDisplay(lqr_for_clone,clone_sequence);
                                 display_items.put( items.get(index), lqr_for_clone);
                             }
@@ -418,12 +421,28 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_NOMATCH_REPORT:
                 case Constants.PROCESS_FIND_GAPS:
                 case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
+                case Constants.PROCESS_RUN_END_READS_WRAPPER:
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:    
                 {
                     String title = "";
                     ProcessRunner runner = null;
                     switch (forwardName)
                     {
-                        case Constants.PROCESS_RUN_PRIMER3: //run primer3
+                         case Constants.PROCESS_RUN_END_READS_WRAPPER:
+                         {
+                              runner = new EndReadsWrapperRunner();
+                              title = "request for end read wrapper invocation";
+                              break;//run end reads wrapper
+                         }
+                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
+                        {
+                            //run assembly wrapper
+                             runner = new AssemblyRunner();
+                               ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.END_READS_ASSEMBLY);
+                             title = "request for end read wrapper invocation";
+                             break;
+                        }
+                         case Constants.PROCESS_RUN_PRIMER3: //run primer3
                          {
                               runner = new PrimerDesignerRunner();
                               title = "request for Primer Designer";
@@ -448,6 +467,8 @@ public class RunProcessAction extends ResearcherAction
                         {
                              runner = new AssemblyRunner();
                              ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
+                 //      System.out.println((String)request.getParameter("vectors_file_name"));
+                            // ((AssemblyRunner)runner).setVectorFileNames((String)request.getParameter("vectors_file_name"));
                              title = "request for Clone sequence assembly";
                              break;
                         }

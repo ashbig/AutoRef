@@ -43,6 +43,9 @@ public class AssemblyRunner extends ProcessRunner
      public static final int       MINIMUM_LINKER_COVERAGE = 10;
      
      public static final int       MAXIMUM_READ_LENGTH = 800;
+     private String                 m_vector_file_names = null;
+     
+     public void                    setVectorFileNames(String   s){    m_vector_file_names = s;}
     /** Creates a new instance of tester */
     public  AssemblyRunner()
     {
@@ -127,7 +130,7 @@ public class AssemblyRunner extends ProcessRunner
                               
                                 base_refsequence =  new BaseSequence(refsequence.getCodingSequence(), BaseSequence.BASE_SEQUENCE );
                                 base_refsequence.setId(refsequence.getId());
-                                if (m_assembly_mode == END_READS_ASSEMBLY && base_refsequence.getText().length() >2000)
+                                if (m_assembly_mode == END_READS_ASSEMBLY && base_refsequence.getText().length() >1600)
                                 {
                                     IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED,
                                                         clone_definition.getIsolateTrackingId(),  conn );
@@ -360,10 +363,24 @@ public class AssemblyRunner extends ProcessRunner
          {
              case END_READS_ASSEMBLY :
              {
+                 //submission by plate
+                 ArrayList items = Algorithms.splitString( m_items);
+                 if ( items == null || items.size() == 0) return null;
+                   StringBuffer plate_names = new StringBuffer();
+                    for (int index = 0; index < items.size(); index++)
+                    {
+                        plate_names.append( "'");
+                        plate_names.append((String)items.get(index));
+                        plate_names.append("'");
+                        if (index == 10) break;
+                        if ( index != items.size()-1 ) plate_names.append(",");
+                    }
+       
                  sql = "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
-+" and status in ("+ status +") and rownum < "+MAX_NUMBER_OF_ROWS_TO_RETURN+"   order by containerid ,refsequenceid";
++" and status in ("+ status +") and containerid in ( select containerid from containerheader where label in "
++ "("+plate_names.toString()+ ")) order by containerid ,refsequenceid";
                 break;
              }
              case FULL_SEQUENCE_ASSEMBLY :

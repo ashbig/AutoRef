@@ -126,26 +126,7 @@ public class SelectProcessAction extends ResearcherAction
                     return (mapping.findForward("select_plates"));
                  
                 }
-                case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
-                {
-                     EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
-                    runner.setUser(user);
-                    request.setAttribute(Constants.JSP_TITLE,"Request for end read wrapper invocation" );
-                    request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
-                    t = new Thread(runner);                   t.start();
-                    return mapping.findForward("processing");
-                }
                 
-                case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper
-                {
-                    AssemblyRunner runner = new AssemblyRunner();
-                    runner.setUser(user);
-                    runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
-                    request.setAttribute(Constants.JSP_TITLE,"Request for end read assembler invocation." );
-                    request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finished.");
-                    t = new Thread(runner);                    t.start();
-                   return mapping.findForward("processing");
-                }
                 case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY:
                 {
                      request.setAttribute("forwardName", new Integer(Constants.PROCESS_CHECK_READS_AVAILABILITY));
@@ -223,6 +204,8 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
                 case Constants.LQR_COLLECTION_REPORT_INT:
                 case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
+                case Constants.PROCESS_RUN_END_READS_WRAPPER:
+                case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
                 {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
@@ -231,6 +214,12 @@ public class SelectProcessAction extends ResearcherAction
                      StringBuffer additional_jsp = new StringBuffer();
                     switch( forwardName)
                     {
+                        case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
+                                  {title="run End Reads Wrapper";break; }
+                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper
+                                {title="run Assembler for End Reads";break; }
+                        case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :
+                            {title="add new Internal Primer";break; }
                         case Constants.PROCESS_RUN_PRIMER3:
                         {
                             spec_collection.add( Primer3Spec.getAllSpecNames() );

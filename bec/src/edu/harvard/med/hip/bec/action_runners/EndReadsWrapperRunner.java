@@ -79,7 +79,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
     public EndReadsWrapperRunner()
     {
         m_error_messages = new ArrayList();
-         m_outputBaseDir =  OUTPUT_BASE_ROOT+CLONES_DIR;
+        m_outputBaseDir =  OUTPUT_BASE_ROOT+CLONES_DIR;
         m_inputTraceDir =  INPUT_BASE_DIR;
         m_control_samples_directory =  OUTPUT_BASE_ROOT + CONTROLS_DIR;
         m_outputBaseDir_wrongformatfiles =OUTPUT_BASE_ROOT +ERROR_WRONG_FORMAT_FILES_DIR;
@@ -155,16 +155,27 @@ public class EndReadsWrapperRunner extends ProcessRunner
         +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
         Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE +")) order by FLEXCLONEID ";
      */   
-        
-        
-         String sql = "select  FLEXSEQUENCINGPLATEID as plateid ,FLEXSEQUENCEID as sequenceid "
-         +",FLEXCLONEID as cloneid,position,resulttype as orientation"
-        +" from flexinfo f, isolatetracking iso, result r, sample s "
-        +" where  f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID  and r.sampleid =s.sampleid"
-        +" and iso.sampleid=s.sampleid and iso.sampleid in"
-        +" (select sampleid from  result where resultvalueid is null and resulttype in ("+
-        Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE +")) order by FLEXCLONEID ";
-        
+        ArrayList items = Algorithms.splitString( m_items);
+        if ( items == null || items.size() == 0) return null;
+        StringBuffer plate_names = new StringBuffer();
+        for (int index = 0; index < items.size(); index++)
+        {
+            plate_names.append( "'");
+            plate_names.append((String)items.get(index));
+            plate_names.append("'");
+            if (index == 10) break;
+            if ( index != items.size()-1 ) plate_names.append(",");
+        }
+       
+        String sql = "select  FLEXSEQUENCINGPLATEID as plateid ,FLEXSEQUENCEID as sequenceid , "
++" FLEXCLONEID as cloneid,position,resulttype as orientation from flexinfo f, "
++"  isolatetracking iso, result r, sample s  where  f.ISOLATETRACKINGID =iso.ISOLATETRACKINGID "
++"   and r.sampleid =s.sampleid and iso.sampleid=s.sampleid and iso.sampleid in "
++" (select sampleid from  result where resultvalueid is null and resulttype in ("
++         Result.RESULT_TYPE_ENDREAD_FORWARD +","+Result.RESULT_TYPE_ENDREAD_REVERSE      
++  ")         and sampleid in ( select sampleid from sample where containerid "
++"  in ( select containerid from containerheader where label in (" + plate_names.toString()+")))) order by FLEXCLONEID ";
+           
         ResultSet rs = null;NamingFileEntry entry = null;
         String orientation_str = "";
         try
@@ -235,6 +246,22 @@ public class EndReadsWrapperRunner extends ProcessRunner
         FileReference filereference = null;
          try
           {
+              if ( ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION ) // check for read quality 
+              {
+                    if (  read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL || read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL)
+                        return;
+                    if ( read.getTrimEnd() - read.getTrimStart() > 65)
+                        return;
+                    int[] scores = read.getScoresAsArray();
+                    int bases_to_check = ( scores.length <= 300 ) ? scores.length : 300;
+                    int good_bases = 0;
+                    for ( int bases = 1; bases <= bases_to_check; bases++)
+                    {
+                        if ( scores[bases] >= 20) good_bases++;
+                    }
+                    if ( good_bases < 100 && bases_to_check >= 300 )
+                        return;
+              }
               //read = (Read) reads.get(count);
               istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
               read.setIsolateTrackingId( istr_info[0]);
