@@ -46,7 +46,7 @@
         <area href="about_bec.jsp" shape="rect" coords="22, 5, 76, 22">
         <area href="process.html" shape="rect" coords="83, 6, 171, 23">
         <area href="CustomerRegistration.jsp" shape="rect" coords="179, 3, 273, 23">
-        <area href="mailto:elena_taycheru@hms.harvard.edu" shape="rect" coords="280, 2, 363, 23">
+        <area href="mailto:hip_informatics@hms.harvard.edu" shape="rect" coords="280, 2, 363, 23">
 		</map><img border="0" src="./jpg/bar_11.jpg" width="454" height="24" usemap="#FPMap0">
 		<a href="http://www.hms.harvard.edu"><img border="0" src="./jpg/bar_13.jpg" width="315" height="24"></a></p>
 		<p><html:errors/></p>
@@ -93,7 +93,7 @@
      </font></p>
      <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      <map name="FPMap4">
-     <area href="mailto:elena_taycher@hms.harvard.edu" shape="rect" coords="0, 4, 23, 23"></map>
+     <area href="mailto:hip_informatics@hms.harvard.edu" shape="rect" coords="0, 4, 23, 23"></map>
 	 <img border="0" src="./jpg/email_us.gif" width="24" height="24" usemap="#FPMap4">&nbsp;&nbsp;&nbsp;<br>
      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#008080">Email us</font></p>
   <center>

@@ -265,8 +265,8 @@ public class EndReadsWrapper
          //send errors
                     if (error_messages.size()>0)
                     {
-                         Mailer.sendMessage("elena_taycher@hms.harvard.edu", "elena_taycher@hms.harvard.edu",
-                        "elena_taycher@hms.harvard.edu", "Request for end reads wrapper: error messages.", "Errors\n ",error_messages);
+                         Mailer.sendMessage("hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",
+                        "hip_informatics@hms.harvard.edu", "Request for end reads wrapper: error messages.", "Errors\n ",error_messages);
                 
                     }
                 }

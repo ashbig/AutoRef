@@ -256,8 +256,8 @@ public class SubmitDataFileAction extends ResearcherAction
                     //send report  
                     String msgText = "Please find Discrepancy Finder Report enclosed.";
                    
-                    Mailer.sendMessageWithFileCollections(i_email,  "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Discrepancy Finder Report.",  msgText, files);
+                    Mailer.sendMessageWithFileCollections(i_email,  "hip_informatics@hms.harvard.edu",
+                    "hip_informatics@hms.harvard.edu", "Discrepancy Finder Report.",  msgText, files);
                  
             }
             catch(Exception e){if (reader != null) try{reader.close();}catch(Exception i){}}

@@ -68,7 +68,7 @@
           </tbody>
         </table>
           <p><font color="#000000"><span style="mso-spacerun: yes; font-family: Times New Roman; mso-fareast-font-family: Times New Roman; mso-ansi-language: EN-US; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">If
-            you have some question, please contact <a href="mailto:elena_taycher@hms.harvard.edu">BEC
+            you have some question, please contact <a href="mailto:hip_informatics@hms.harvard.edu">BEC
             development Group</a>.</span></font></td>
     </tr>
   </table><br><br>
