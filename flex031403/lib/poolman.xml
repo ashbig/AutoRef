@@ -24,9 +24,10 @@
     <nativeResults>true</nativeResults>
     <username>flex_owner</username>
     <password>flex</password>
-    <minimumSize>5</minimumSize>
-    <maximumSize>30</maximumSize>
-    <initialConnections>10</initialConnections>
+    <minimumSize>1</minimumSize>
+    <maximumSize>5</maximumSize>
+    <maximumSoft>false</maximumSoft>
+    <initialConnections>1</initialConnections>
     <connectionTimeout>600</connectionTimeout>
     <userTimeout>12</userTimeout>
     <shrinkBy>10</shrinkBy>

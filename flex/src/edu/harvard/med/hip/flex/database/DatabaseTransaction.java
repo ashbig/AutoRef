@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2001-06-22 14:47:23 $
+ * $Revision: 1.12 $
+ * $Date: 2001-06-22 15:16:47 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.11 $ $Date: 2001-06-22 14:47:23 $
+ * @version    $Revision: 1.12 $ $Date: 2001-06-22 15:16:47 $
  */
 
 public class DatabaseTransaction {
@@ -117,6 +117,7 @@ public class DatabaseTransaction {
      */
     public Connection requestConnection(boolean autoCommit)
     throws FlexDatabaseException {
+        System.out.println("connection requested");
         Connection conn = null;
         try {
             conn = ds.getConnection();
@@ -317,6 +318,7 @@ public class DatabaseTransaction {
     public static void closeStatement(Statement stmt) {
         try {
             stmt.close();
+            System.out.println("connection clossed");
         } catch(Throwable t){}
     }
     
@@ -348,14 +350,14 @@ public class DatabaseTransaction {
      *
      * @param conn The <code>Connection</code> to close.
      */
-    public static void rollback(Connection conn) {
+    public static void rollback(Connection conn)  {
         try {
             conn.rollback();
         } catch(Throwable t) {}
     }
     
-    public static void main(String args[]) {
-        RowSet rs = null;
+    public static void main(String args[]) throws FlexDatabaseException, SQLException{
+        ResultSet rs = null;
         
         DatabaseTransaction dt = null;
         Connection conn = null;
@@ -364,29 +366,38 @@ public class DatabaseTransaction {
         
         
         // test execute sql
-        try {
-            
-            dt = DatabaseTransaction.getInstance();
-            for (int i = 0 ; i < 300 ; i++) {
+        
+        
+        dt = DatabaseTransaction.getInstance();
+        for (int i = 0 ; i < 300 ; i++) {
+            try {
+                String sql = "select * from userprofile where username=?";
+                
                 System.out.println("i: " + i);
-               edu.harvard.med.hip.flex.process.Process.findProcess(new edu.harvard.med.hip.flex.core.Container(200),new edu.harvard.med.hip.flex.process.Protocol(8));
-               // rs = dt.executeQuery("select * from dual");
-               
-            }
-        } catch(FlexDatabaseException fde) {
-            fde.printStackTrace();
-       } catch(edu.harvard.med.hip.flex.core.FlexCoreException core) {
+                edu.harvard.med.hip.flex.process.Process.findProcess(new edu.harvard.med.hip.flex.core.Container(200),new edu.harvard.med.hip.flex.process.Protocol(8));
+         //       conn = dt.requestConnection();
+                
+           //     ps = conn.prepareStatement(sql);
+             //   ps.setString(1,"jmunoz");
+               // rs = ps.executeQuery();
+                
+                
+            } catch(FlexDatabaseException fde) {
+                fde.printStackTrace();
+            } catch(edu.harvard.med.hip.flex.core.FlexCoreException core) {
             core.printStackTrace();
-        
+               
         }
-        finally {
-            DatabaseTransaction.closeResultSet(rs);
-            
+            finally {
+                DatabaseTransaction.closeResultSet(rs);
+                DatabaseTransaction.closeStatement(ps);
+                DatabaseTransaction.closeConnection(conn);
+            }
         }
-        
         
         
         System.out.println("End of Main");
+        System.exit(0);
     } // end main()
     
     

@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.11 2001-06-21 16:31:45 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.12 2001-06-22 15:16:48 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -86,25 +86,30 @@ public class Researcher {
     public Researcher(int id) throws FlexDatabaseException{
         DatabaseTransaction dt = DatabaseTransaction.getInstance();
         ResultSet rs = null;
+        System.out.println("in researcher");
         try {
             rs =
             dt.executeQuery("select RESEARCHERID, RESEARCHERBARCODE, "+
-                             "ACTIVEFLAG_YN, RESEARCHERNAME " +
-                              "from RESEARCHER where Researcherid = " + id);
+            "ACTIVEFLAG_YN, RESEARCHERNAME " +
+            "from RESEARCHER where Researcherid = " + id);
             if(rs.next()) {
-                                           
+                
                 this.id=rs.getInt("RESEARCHERID");
-                                           
+                
                 this.barcode=rs.getString("RESEARCHERBARCODE");
-                                        
-            this.isActive=rs.getString("ACTIVEFLAG_YN");
-                                           
+                
+                this.isActive=rs.getString("ACTIVEFLAG_YN");
+                
                 this.name=rs.getString("RESEARCHERNAME");
             } else {
+                DatabaseTransaction.closeResultSet(rs);
                 throw new FlexDatabaseException("Researcher with id " + id + " does not exist");
+                
             }
         } catch(SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
         }
     }
     /**
