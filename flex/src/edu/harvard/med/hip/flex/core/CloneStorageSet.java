@@ -27,8 +27,8 @@ public class CloneStorageSet {
     }
     
     public void insert(Connection conn) throws FlexDatabaseException, SQLException {
-        String sql = "insert into clonestorage (storageid, storagesampleid, storagetype, storageform, cloneid)"+
-                    " values(storageid.nextval,?,?,?,?)";
+        String sql = "insert into clonestorage (storageid, storagesampleid, storagetype, storageform, cloneid, storagecontainerid, storagecontainerlabel, storagecontainerposition)"+
+                    " values(storageid.nextval,?,?,?,?,?,?,?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         for(int i=0; i<allStorages.size(); i++) {
@@ -37,6 +37,9 @@ public class CloneStorageSet {
             stmt.setString(2, c.getStorageType());
             stmt.setString(3, c.getStorageForm());
             stmt.setInt(4, c.getCloneid());
+            stmt.setInt(5, c.getContainerid());
+            stmt.setString(6, c.getLabel());
+            stmt.setInt(7, c.getPosition());
             DatabaseTransaction.executeUpdate(stmt);
         }
     }
