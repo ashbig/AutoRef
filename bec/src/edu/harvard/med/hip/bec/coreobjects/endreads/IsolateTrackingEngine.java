@@ -108,7 +108,7 @@ public class IsolateTrackingEngine
     private CloneSequence   m_clone_sequence = null;
     private ArrayList   m_clone_sequences = null;
     private ArrayList   m_endreads = null;
-    
+    private ArrayList   m_contigs = null;// we put contigs as separate type of entities than reads
     
     //temporary property used for rank definition
     private int         t_cds_length_covered_by_reads = 0;
@@ -169,6 +169,7 @@ public class IsolateTrackingEngine
     public void      setEndReadId(int[] v){  m_end_reads_id = v;}// sample id of the sample used for the forward read
     public void      setFlexInfo(FlexInfo v){ m_flexinfo = v;}
     public void      setEndReads(ArrayList reads)    {          m_endreads = reads;    }
+    public void      setContigs(ArrayList contigs)    { m_contigs = contigs;}
     public void         setAssemblyStatus(int v){ m_assembly_status = v;}
     public void     setCloneSequence(CloneSequence c){ m_clone_sequence =c ;}
     public void     setCloneSequences(ArrayList c){ m_clone_sequences=c ;}
@@ -268,6 +269,31 @@ public class IsolateTrackingEngine
     public void     setReverseEndRead(Read v)    {  m_reverse_endread =v;    }
     
     public ArrayList    getEndReads()    {         return m_endreads;    }
+    public ArrayList    getContigs( ) throws Exception
+    {     
+        if ( m_contigs == null)
+        {
+            m_contigs =getStretches(m_id, Stretch.GAP_TYPE_CONTIG ) ;
+        }
+        return m_contigs; 
+    }
+        
+    public static  ArrayList    getStretches(int isolatetrck_id, int stretch_type ) throws Exception
+    {     
+        ArrayList result = new ArrayList();
+        StretchCollection strcol = StretchCollection.getByIsolateTrackingId(isolatetrck_id);
+        if ( strcol != null && strcol.getStretches() != null && strcol.getStretches().size() > 0)
+        {
+            for (int count = 0 ; count < strcol.getStretches().size(); count++)
+            {
+                if (( (Stretch) strcol.getStretches().get(count)).getType() == stretch_type)
+                {
+                    result.add(strcol.getStretches().get(count));
+                }
+            }
+        }
+        return result; 
+    }
     
     
     public void updateStatus(int status)throws BecDatabaseException
@@ -278,7 +304,7 @@ public class IsolateTrackingEngine
     public static void updateStatus(int status, int isolatetrackingid, Connection conn )throws BecDatabaseException
     {
          String sql=null;
-        try
+         try
         {
               sql = "update isolatetracking set status="+status+" where isolatetrackingid="+ isolatetrackingid;
 
@@ -288,7 +314,7 @@ public class IsolateTrackingEngine
         {
             throw new BecDatabaseException("Cannot update isolate status "+sql);
         }
-    }
+  }
     
     public static void updateRankAndScore(int rank, int score, int isolatetrackingid, Connection conn )throws BecDatabaseException
     {
@@ -365,7 +391,7 @@ public class IsolateTrackingEngine
     
     //function checks wether isolate quality (by number of discrepancies) below minimum
     //it's calculates isolta score as well
-    public void setBlackRank(FullSeqSpec cutoff_spec, EndReadsSpec spec, int refsequence_length) throws BecDatabaseException
+    public void setBlackRank(FullSeqSpec cutoff_spec, EndReadsSpec spec, int refsequence_length, int type_of_available_data) throws BecDatabaseException
     {
         //if no match exit or no good reads are available for the isolate
         if (  m_status == PROCESS_STATUS_ER_NO_READS ||
@@ -381,16 +407,12 @@ public class IsolateTrackingEngine
             m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
             return;
         }
-        if (m_clone_sequence != null)
+        switch ( type_of_available_data)
         {
-            setBlackRankBasedOnCloneSequence( cutoff_spec,  spec, refsequence_length);
+            case 1: {setBlackRankBasedOnCloneSequence( cutoff_spec,  spec, refsequence_length);break;}
+            case 2: {setBlackRankBasedOnContigs( cutoff_spec,  spec, refsequence_length) ;break;}
+            case 3: {   setBlackRankBasedOnReads( cutoff_spec,  spec, refsequence_length) ; break;}
         }
-        else
-        {
-             setBlackRankBasedOnReads( cutoff_spec,  spec, refsequence_length) ;
-    
-        }
-     
     }
     
     
@@ -1039,6 +1061,61 @@ public class IsolateTrackingEngine
         }
     }
     
+    
+     private void setBlackRankBasedOnContigs(FullSeqSpec cutoff_spec, EndReadsSpec spec, int refsequence_length) throws BecDatabaseException
+    {
+           
+        //check for ambiquouty condition
+        try
+        {
+            //check for ambiquouty condition
+            for (int contig_count = 0; contig_count < m_contigs.size(); contig_count ++)
+            {
+               if (!BaseSequence.isPassAmbiquoutyTest(cutoff_spec, ((Stretch) m_contigs.get(contig_count)).getSequence().getText() ))
+               {
+                   m_rank = RANK_BLACK;
+                   m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+                   return;
+               }
+            }
+
+
+            ArrayList discrepancies_pairs = new ArrayList();
+            ArrayList discrepancies_descriptions = null;
+       //check wherther reads are overlap
+       //case of one read or no overlap
+         Stretch contig = null; int overlap_length = 0; int isolate_penalty = 0;
+         int refseq_coverage = 0;
+         for (int contig_count = 0; contig_count < m_contigs.size(); contig_count++)
+         {
+               contig  = (Stretch)m_contigs.get(contig_count);
+               refseq_coverage = contig.refsequenceCoveredLength();
+               overlap_length += refseq_coverage;
+               if ( refseq_coverage != 0 ) //can not be otherwise
+               {
+                    isolate_penalty +=  AnalyzedScoredSequence.calculatedScore(contig.getSequence(), spec);
+               }
+               discrepancies_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions(
+                     contig.getSequence().getDiscrepancies());
+                if ( ! (discrepancies_descriptions == null || discrepancies_descriptions.size() == 0))
+                    discrepancies_pairs.addAll(discrepancies_descriptions); 
+           }
+           if ( DiscrepancyDescription.isMaxNumberOfDiscrepanciesReached(discrepancies_pairs,cutoff_spec) )
+           {   
+                m_rank = RANK_BLACK;
+                m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+           }
+           else
+           {
+               m_score =(int) ( (1000 *  isolate_penalty) /overlap_length );
+           }
+           return;
+       }
+         catch(Exception e)
+        {
+            throw new BecDatabaseException(e.getMessage());
+        }
+    }
     
     
     
