@@ -146,7 +146,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                 }
              }
          }
-
+         conn.commit();
 
     }
 
@@ -402,8 +402,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         catch(Exception e){}
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
-        String  item_ids = " 775";
-
+       
+        runner.setInputData( Constants.ITEM_TYPE_CLONEID, "1032 112384 112388 ");
     //    runner.setItems(item_ids.toUpperCase().trim());
       //  runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
         runner.setUser(user);
