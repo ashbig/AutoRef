@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $ 
+/* $Id: ContainerProcessQueue.java,v 1.2 2001-05-23 16:25:19 dongmei_zuo Exp $ 
  *
  * File     	: ContainerProcessQueue.java 
  * Date     	: 04162001
@@ -7,9 +7,9 @@
 
 package edu.harvard.med.hip.flex.process;
 
-import flex.ApplicationCode.Java.core.*;
-import flex.ApplicationCode.Java.database.*;
-import flex.ApplicationCode.Java.util.*;
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.util.*;
 
 import java.util.*;
 import java.math.*;

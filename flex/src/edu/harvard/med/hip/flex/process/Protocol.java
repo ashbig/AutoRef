@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.2 2001-05-23 16:25:19 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -20,7 +20,7 @@ import sun.jdbc.rowset.*;
  * protocol table.
  */
 public class Protocol {
-    private long id;
+    private int id;
     private String processcode;
     private String processname;
     private Vector subprotocol = new Vector();
@@ -75,7 +75,7 @@ public class Protocol {
          * and find the sub protocols
          */
             try {
-                this.id = protocolRowSet.getLong("PROTOCOLID");
+                this.id = protocolRowSet.getInt("PROTOCOLID");
             } catch (SQLException sqlE) {
                 throw new FlexDatabaseException(sqlE);
             }
@@ -120,7 +120,7 @@ public class Protocol {
      *
      * @return The protocol id.
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
     
