@@ -463,7 +463,17 @@
                input="/GetNewOligoResearcher.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
       <forward  name="fail"   path="/ProcessPlatesFail.jsp"/>
-    </action> 
+    </action>  
+
+    <!-- Print the barcode file to the HTML -->
+    <action    path="/DisplayBarcodeFile"
+               type="edu.harvard.med.hip.flex.action.DisplayBarcodeFileAction"
+               name="getResearcherBarcodeForm"
+               scope="request"
+               validate="false"
+               input="/PrintBarcode.jsp">
+      <forward  name="success"   path="/DisplayBarcodeFile.jsp"/>
+    </action>  
 
     <!-- Print more barcodes -->
     <action    path="/PrintBarcode"

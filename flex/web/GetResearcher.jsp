@@ -19,6 +19,11 @@
 <html:form action="/GetResearcher.do" focus="researcherBarcode">
 <input type="hidden" name="workflowid" value=<bean:write name="workflowid"/>>
 <input type="hidden" name="projectid" value=<bean:write name="projectid"/>> 
+
+<logic:present name="writeBarcode">
+<input type="hidden" name="writeBarcode" value=<bean:write name="writeBarcode"/>> 
+</logic:present>
+
 <table>
     <tr>
     <td class="label">Process name:</td>

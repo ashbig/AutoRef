@@ -25,6 +25,11 @@
 <p><html:submit property="submit" value="Reprint Barcode"/></td>
 </center>
 </html:form>
+
+<logic:present name="writeBarcode">
+<a href="DisplayBarcodeFile.do">View Barcode File</a>
+</logic:present>
+
 </body>
 </html>
 
