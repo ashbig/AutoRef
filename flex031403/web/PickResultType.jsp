@@ -34,8 +34,8 @@ Select the type of result you wish to enter.
     <tr>
         <td>
             <select name="<%=Constants.PROTOCOL_NAME_KEY%>">
-                <option value="<%=Protocol.RUN_PCR_GEL%>">PCR Gel</option>
-                <option value="<%=Protocol.GENERATE_AGAR_PLATES%>">Agar Plate</option>
+                <option value="<%=Protocol.ENTER_PCR_GEL_RESULTS%>">PCR Gel</option>
+                <option value="<%=Protocol.ENTER_AGAR_PLATE_RESULTS%>">Agar Plate</option>
             </select>
         </td>
     </tr>

@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.11 $
- * $Date: 2001-07-30 19:04:52 $
+ * $Revision: 1.12 $
+ * $Date: 2001-07-30 21:42:58 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.11 $ $Date: 2001-07-30 19:04:52 $
+ * @version    $Revision: 1.12 $ $Date: 2001-07-30 21:42:58 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -97,9 +97,12 @@ public class SaveResultAction extends ResearcherAction {
         // The Queue item and process must be in the session
         QueueItem queueItem =
         (QueueItem)session.getAttribute(Constants.QUEUE_ITEM_KEY);
-        Process process = (Process)session.getAttribute(Constants.PROCESS_KEY);
         
-        if(queueItem == null || process == null) {
+        String protocolName = (String)session.getAttribute(Constants.PROTOCOL_NAME_KEY);
+        
+        Protocol protocol =null;
+        
+        if(queueItem == null || protocolName == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.session.missing.attribute",
             queueItem==null ? Constants.QUEUE_ITEM_KEY : Constants.PROCESS_KEY));
@@ -150,6 +153,7 @@ public class SaveResultAction extends ResearcherAction {
                     resultMap.put(curResult, new Integer(1));
                 }
             }
+            
             // shove it into the request.
             request.setAttribute(Constants.RESULT_STATS_KEY,resultMap);
             return mapping.findForward("confirm");
@@ -162,6 +166,22 @@ public class SaveResultAction extends ResearcherAction {
         
         try {
             conn = DatabaseTransaction.getInstance().requestConnection();
+            
+            Researcher researcher = new Researcher();
+            
+            protocol = new Protocol(protocolName);
+            
+            // create a new process 
+            Process process = new Process(protocol, Process.SUCCESS, researcher);
+            
+            // create the container process object
+            ContainerProcessObject cpo = 
+                new ContainerProcessObject(container.getId(),process.getExecutionid(),ProcessObject.IO);
+            
+            // associate the process object with the process
+            process.addProcessObject(cpo);
+            
+            process.insert(conn); 
             
             // save the results.
             saveResults(resultType,process, resultForm, conn);
@@ -231,8 +251,8 @@ public class SaveResultAction extends ResearcherAction {
         // create the file reference, could be null if no file is associated
         // with the form.
         FileReference fileRef = handleFileReference(conn,resultForm);
-        // Go through and get the result and record it.
         
+        // Go through and get the result and record it.
         for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
             
             Sample curSample = (Sample)samples.get(i);
@@ -240,11 +260,21 @@ public class SaveResultAction extends ResearcherAction {
             // if the sample is of an empty type then just go on to the next
             // one without writting anything to the DB.
             if(curSample.getType().toUpperCase().indexOf("EMPTY") == -1) {
+                // insert a record into sample linage, mapping the sample to itself
+                SampleLineage sampleL= 
+                    new SampleLineage(process.getExecutionid(), curSample.getId(), curSample.getId());
+                
+                // do the db insert
+                sampleL.insert(conn);
+                
+                // create a new result
                 Result curResult =
                 new Result(process,curSample,resultType,resultForm.getResult(i));
                 
+                // insert into db
                 curResult.insert(conn);
                 
+                // associate file ref if necessary
                 if(fileRef != null) {
                     curResult.associateFileReference(conn, fileRef);
                 }

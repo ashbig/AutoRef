@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.14 $
- * $Date: 2001-07-27 18:47:01 $
+ * $Revision: 1.15 $
+ * $Date: 2001-07-30 21:42:58 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.14 $ $Date: 2001-07-27 18:47:01 $
+ * @version    $Revision: 1.15 $ $Date: 2001-07-30 21:42:58 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -144,54 +144,12 @@ public class EnterPlateAction extends ResearcherAction {
             return retForward;
         } 
         
-        // Find the right process
-        Process process = null;
-        try {
-            process = Process.findCompleteProcess(container,protocol);
-        } catch (FlexDatabaseException fde) {
-            request.setAttribute(Action.EXCEPTION_KEY, fde);
-            return mapping.findForward("error");
-        } 
-        
-        // if no process is found, then the container can't be processed
-        if(process == null) {
-            errors.add(ActionErrors.GLOBAL_ERROR, 
-                new ActionError("error.queue.notready", 
-                    container.getLabel()));
-            retForward = new ActionForward(mapping.getInput());
-            saveErrors(request,errors);
-            return retForward;
-        }
-        /*
-         * make sure the researcher is the same as the one from the previous 
-         * step.
-         */
-        
-       if (! researcherBarcode.equals(process.getResearcher().getBarcode())) {
-           errors.add("researcherBarcode", 
-            new ActionError("error.researcher.barcode.missmatch", researcherBarcode));
-           saveErrors(request,errors);
-           retForward = new ActionForward(mapping.getInput());
-           return retForward;
-       }
-        
-        // make sure the process execution is in process
-        if(process == null || ! process.getStatus().trim().equals(process.INPROCESS)) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.queue.notready", container.getLabel()));
-            saveErrors(request,errors);
-            retForward = new ActionForward(mapping.getInput());
-            return retForward;
-        }
-        
-        
-        
+       
         
         /*
-         * otherwise, we can get the info we need and put it into the request
+         * get the info we need and put it into the request
          * to display.
          */
-        
         Vector samples = container.getSamples();
         try {
             container.restoreSample();
@@ -204,11 +162,11 @@ public class EnterPlateAction extends ResearcherAction {
         HttpSession session = request.getSession();
         
         // create the form with default values for the detail entry page
-        if(protocolName.equals(Protocol.RUN_PCR_GEL)) {
+        if(protocolName.equals(Protocol.ENTER_PCR_GEL_RESULTS)) {
             // put the form in the session
             session.setAttribute("gelEntryForm",new GelResultsForm(container));
             retForward = mapping.findForward("gelEntry");
-        } else if(protocolName.equals(Protocol.GENERATE_AGAR_PLATES)) {
+        } else if(protocolName.equals(Protocol.ENTER_AGAR_PLATE_RESULTS)) {
             
             // put the form in the session
             session.setAttribute("transformEntryForm",
@@ -218,13 +176,10 @@ public class EnterPlateAction extends ResearcherAction {
             retForward = new ActionForward(mapping.getInput());
         }
         
-        
         // put Queue item in the session
         session.setAttribute(Constants.QUEUE_ITEM_KEY, queueItem);
-        // put the process in the session
-        session.setAttribute(Constants.PROCESS_KEY, process);
-        
-        
+        // put the protocol string into the session
+        session.setAttribute(Constants.PROTOCOL_NAME_KEY, protocolName);
         
         return retForward;
     }
