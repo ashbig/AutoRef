@@ -119,8 +119,8 @@
                       <p>&nbsp;<b>&nbsp;<font face="Verdana" size="2" color="#0066FF">MedGene
                       has been published on </font><font face="Verdana" size="2" color="#FF0000">
                       <br>
-                      &nbsp; <i>Journal of Proteome Research (2,p405-12)and Nature Biotechnology (21,p976-7)</i> <br>
-                      &nbsp; </font><font face="Verdana" size="2" color="#0066FF">soon.</font></b></p>
+                      &nbsp; <i>Journal of Proteome Research <br>(vol 2, page 405-12) <br>Nature Biotechnology <br>(vol 21, page 976-7).</i> <br>
+                      &nbsp; </font><font face="Verdana" size="2" color="#0066FF"></font></b></p>
                   </td>
                 </tr>
               </table>
