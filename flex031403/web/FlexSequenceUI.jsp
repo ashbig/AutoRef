@@ -14,8 +14,8 @@
  
  
  The following information is used by CVS
- $Revision: 1.2 $
- $Date: 2001-06-04 15:39:54 $
+ $Revision: 1.3 $
+ $Date: 2001-06-13 16:29:10 $
  $Author: dongmei_zuo $
  
  ******************************************************************************
@@ -34,9 +34,7 @@
 --%>
 
 <%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html>

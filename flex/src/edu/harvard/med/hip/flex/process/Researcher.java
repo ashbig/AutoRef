@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.5 2001-06-11 14:34:05 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.6 2001-06-13 16:29:10 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -57,25 +57,24 @@ public class Researcher {
         this.barcode = barcode;
         String sql ="select * from researcher where researcherbarcode = '"+barcode+"'";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
-        CachedRowSet crs = null;
-        crs = t.executeQuery(sql);
         
-        if(crs.size()==0) {
-            throw new FlexProcessException("Cannot initialize Researcher with barcode: "+barcode);
-        }
-        
-        try {
-            while(crs.next()) {
-                
-                id = crs.getInt("RESEARCHERID");
-                name = crs.getString("RESEARCHERNAME");
-                barcode = crs.getString("RESEARCHERBARCODE");
-                isActive = crs.getString("ACTIVEFLAG_YN").trim();
+        ResultSet rs = t.executeQuery(sql);
+        try{
+            if(rs.next()) {
+                id = rs.getInt("RESEARCHERID");
+                name = rs.getString("RESEARCHERNAME");
+                barcode = rs.getString("RESEARCHERBARCODE");
+                isActive = rs.getString("ACTIVEFLAG_YN").trim();
+            } else {
+                throw new FlexProcessException("Cannot initialize Researcher with barcode: "+barcode);
             }
+            
+            
+            
         } catch(SQLException sqlE) {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
-            DatabaseTransaction.closeResultSet(crs);
+            DatabaseTransaction.closeResultSet(rs);
         }
     }
     

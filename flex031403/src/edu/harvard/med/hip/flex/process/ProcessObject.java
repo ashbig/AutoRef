@@ -35,6 +35,7 @@ public abstract class ProcessObject {
         this.executionid = executionid;
         this.iotype = iotype;
     }
+
     
     /**
      * Return the input/output type.
@@ -53,6 +54,25 @@ public abstract class ProcessObject {
     public int getId() {
         return id;
     }
+    
+    /**
+     *  Sets the execution id for this process object
+     *
+     * @param execId The execution id to set.
+     */
+    public void setExecutionid(int execId) {
+        this.executionid = execId;
+    }
+    
+    /**
+     * Gets the execution id for this process object.
+     *
+     * @return the execution id for this process object
+     */
+    public int getExecutionid(int execId) {
+        return this.executionid;
+    }
+    
     
     /**
      * Insert the record into processobject table.

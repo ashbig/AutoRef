@@ -16,8 +16,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-05 17:47:12 $
+ * $Revision: 1.5 $
+ * $Date: 2001-06-13 16:29:10 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -59,7 +59,7 @@ import org.apache.struts.action.*;
  * to this action to process the exception.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-05 17:47:12 $
+ * @version    $Revision: 1.5 $ $Date: 2001-06-13 16:29:10 $
  */
 
 public class ProcessErrorAction extends Action {
@@ -104,9 +104,9 @@ public class ProcessErrorAction extends Action {
             String curProp = (String)propIter.next();
             Iterator errorIter = errors.get(curProp);
             while(errorIter.hasNext()) {
-                String errorString = (String)errorIter.next();
+                Object errorObj = errorIter.next();
                 
-                logMessage.append(curProp + ": " + errorString + "\n");
+                logMessage.append(curProp + ": " + errorObj + "\n");
             }
         }
         

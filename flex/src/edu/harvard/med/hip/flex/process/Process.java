@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.4 2001-05-29 14:27:28 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.5 2001-06-13 16:29:10 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -38,7 +38,8 @@ public class Process {
      * @return The Process object.
      * @exception FlexDatabaseException.
      */
-    public Process(Protocol protocol, String executionStatus, Researcher researcher) throws FlexDatabaseException {
+    public Process(Protocol protocol, String executionStatus, 
+    Researcher researcher) throws FlexDatabaseException {
         this.protocol = protocol;
         this.executionStatus = executionStatus;
         this.researcher = researcher;
@@ -57,7 +58,9 @@ public class Process {
      * @param extrainfo The extra information of the process.
      * @return The Process object.
      */
-    public Process(int executionid, Protocol protocol, String executionStatus, Researcher researcher, String processDate, String subprotocol, String extrainfo) {
+    public Process(int executionid, Protocol protocol, 
+    String executionStatus, Researcher researcher, String processDate, 
+    String subprotocol, String extrainfo) {
         this.executionid = executionid;
         this.protocol = protocol;
         this.executionStatus = executionStatus;
@@ -176,11 +179,13 @@ public class Process {
     }
     
     /**
-     * Add the process object to this process.
+     * Add the process object to this process with the correct
+     * process execution id.
      *
      * @param processObject The process object to be added.
      */
     public void addProcessObject(ProcessObject processObject) {
+        processObject.setExecutionid(this.executionid);
         processObjects.addElement(processObject);
     }
     

@@ -31,17 +31,23 @@
     <form-bean      name="customerRequestForm"
                     type="edu.harvard.med.hip.flex.form.CustomerRequestForm"/>
 
+   
+    <!-- Plate entry form bean-->
+    <form-bean      name="plateEntryForm"
+                    type="edu.harvard.med.hip.flex.form.PlateEntryForm"/>
+
     <!-- Create process plate form bean -->
     <form-bean      name="createProcessPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
    
+
   </form-beans>
 
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
     <forward    name="login"        path="/login.jsp"/>
-    <forward    name="error"        path="/ProcessErrors.do"/>
+    <forward    name="error"        path="/ProcessError.do"/>
   </global-forwards>
   
 
@@ -122,9 +128,21 @@
 
     <!-- Process a accept/discard pending sequence request-->
     <action     path="/ProcessQueue"
-                type="edu.harvard.med.hip.flex.action.ProcessQueueAction">
+                type="edu.harvard.med.hip.flex.action.ProcessQueueAction"
+                input="/ViewPendingRequests.do">
         <forward name="success" path="/ProcessQueue.jsp"/>
     </action>
+
+
+    <!-- Displays a form to enter a plate id -->
+    <action     path="/EnterPlate"
+                type="edu.harvard.med.hip.flex.action.EnterPlateAction"
+                name="plateEntryForm"
+                scope="request"
+                input="/EnterProcessResults.jsp">
+        <forward name="success" path="/EnterProcessResults.jsp"/>
+    </action>
+
 
     <!-- Process the protocol retieval and display -->
     <action    path="/CreateProcessPlate"
@@ -149,6 +167,7 @@
                input="/GetInput.jsp">
       <forward  name="success"   path="/CreatePlate.jsp"/>
     </action>  
+
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->

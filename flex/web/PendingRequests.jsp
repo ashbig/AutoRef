@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.4 2001-06-04 15:26:34 dongmei_zuo Exp $ 
+        $Id: PendingRequests.jsp,v 1.5 2001-06-13 16:29:10 dongmei_zuo Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -10,8 +10,8 @@
 	as pending
 --%>
 
-
 <%@ page language="java" %>
+<%@ page import="edu.harvard.med.hip.flex.Constants"%>
 <%@ taglib uri="/WEB-INF/struts.tld" prefix="struts" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
@@ -25,7 +25,7 @@
 <body>
     <H1><CENTER>Pending Requests</CENTER></H1> 
     <BR>
-    
+    <html:errors/>
     <FORM method="POST" action="ProcessQueue.do">
 
     <TABLE BORDER>
@@ -47,8 +47,7 @@
                 <flex:linkFlexSequence sequenceName="curQueueItem" seqProperty="item">
                     <bean:write name="curQueueItem" property="item.id"/>
                 </flex:linkFlexSequence>
-                
-               
+                           
             </TD>
             <TD>
                 <bean:write name="curQueueItem" property="item.description"/>
@@ -70,9 +69,9 @@
             </TD>
             <TD>
                 <SELECT name="INDEX<%=seqCount++%>">
-                    <Option > Pending
-                    <Option > Rejected
-                    <Option> Accepted
+                    <Option> Pending</option>
+                    <Option> Rejected</option>
+                    <Option> Accepted</option>
                 </SELECT>   
             </TD>
         </TR>
@@ -80,6 +79,9 @@
 
 
 </TABLE>
+Researcher Barcode: <INPUT type="text" name="<%=Constants.RESEARCHER_BARCODE_KEY%>">
+<br>
+
 <INPUT title="Process Requests" name="Process Requests" type="submit">
 <INPUT type="reset">
 </FORM>

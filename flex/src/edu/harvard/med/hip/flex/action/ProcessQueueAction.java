@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-05 17:32:07 $
+ * $Revision: 1.4 $
+ * $Date: 2001-06-13 16:29:10 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -57,7 +57,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-05 17:32:07 $
+ * @version    $Revision: 1.4 $ $Date: 2001-06-13 16:29:10 $
  */
 public class ProcessQueueAction extends InternalFlexAction {
     
@@ -76,9 +76,6 @@ public class ProcessQueueAction extends InternalFlexAction {
     public ActionForward flexPerform(ActionMapping mapping, ActionForm form,
     HttpServletRequest request,HttpServletResponse response)
     throws ServletException, IOException {
-        
-        
-        
         // The ActionForward that will be returned
         ActionForward retForward = null;
         
@@ -88,12 +85,30 @@ public class ProcessQueueAction extends InternalFlexAction {
         // place to store errors
         ActionErrors errors = new ActionErrors();
         
+        /*
+         * Make sure the researcher barcode is in the request.
+         */
+        
+        String researcherBarcode =
+        request.getParameter(Constants.RESEARCHER_BARCODE_KEY);
+        try {
+            Researcher researcher = new Researcher(researcherBarcode);
+        } catch (Exception e) {
+            errors.add(ActionErrors.GLOBAL_ERROR,new ActionError("error.researcher.invalid.barcode",researcherBarcode));
+            saveErrors(request,errors);
+            return new ActionForward(mapping.getInput());
+        }
+        
+        
+        
         // The database connection used for the transaction
         Connection conn = null;
         
         // The protocol from the seesion which will be 'approve sequences'
         Protocol approveProtocol =
         (Protocol)session.getAttribute(Constants.APPROVE_PROTOCOL_KEY);
+        
+        
         
         // get the queue from the session
         SequenceProcessQueue sequenceQueue =
@@ -107,17 +122,24 @@ public class ProcessQueueAction extends InternalFlexAction {
         LinkedList acceptedList = new LinkedList();
         LinkedList rejectedList = new LinkedList();
         
-        
-        
         Enumeration paramEnum = request.getParameterNames();
         QueueItem queueItem = null;
         
         try {
+            
+            
+            // Process object
+            edu.harvard.med.hip.flex.process.Process process =
+            new edu.harvard.med.hip.flex.process.Process(approveProtocol,"",
+            new Researcher(researcherBarcode));
+            // conncection to use for transactions
             conn = DatabaseTransaction.getInstance().requestConnection();
             
             // Create the protocol for the next phase (design construct);
             Protocol designProtocol = new Protocol("design constructs");
             while(paramEnum.hasMoreElements()) {
+                
+                
                 String index  = (String)paramEnum.nextElement();
                 
                 //List Indexes start with 'INDEX', ignore the rest
@@ -125,9 +147,15 @@ public class ProcessQueueAction extends InternalFlexAction {
                     continue;
                 }
                 String status = request.getParameter(index);
-                
+                System.out.println("QueueItem list: " + queueItemList);
+                System.out.println("index: " + index);
                 queueItem = (QueueItem)queueItemList.get(Integer.parseInt(index.substring(5)));
                 FlexSequence curSeq = (FlexSequence)queueItem.getItem();
+                
+                // create a new processes Object
+                ProcessObject processObj =
+                new SequenceProcessObject(curSeq.getId(),process.getExecutionid(),"B");
+                
                 if(status == null) {
                     errors.add(ActionErrors.GLOBAL_ERROR,
                     new ActionError("error.sequence.status", "NULL status"));
@@ -135,11 +163,12 @@ public class ProcessQueueAction extends InternalFlexAction {
                 } else if(status.equalsIgnoreCase("Accepted")) {
                     curSeq.updateStatus("INPROCESS", conn);
                     acceptedList.add(queueItem);
-                    
+                    process.addProcessObject(processObj);
                     
                 } else if(status.equalsIgnoreCase("Rejected")) {
                     curSeq.updateStatus("REJECTED", conn);
                     rejectedList.add(queueItem);
+                    process.addProcessObject(processObj);
                     
                 } else if(status.equalsIgnoreCase("Pending")) {
                     
@@ -172,9 +201,15 @@ public class ProcessQueueAction extends InternalFlexAction {
                     QueueItem item = (QueueItem)iter.next();
                     item.setProtocol(designProtocol);
                 }
-               
+                
                 
                 sequenceQueue.addQueueItems(acceptedList, conn);
+                
+                /*
+                 * finally we must insert into the process and
+                 * process object tables
+                 */
+                process.insert(conn);
                 
             }
             
@@ -215,15 +250,25 @@ public class ProcessQueueAction extends InternalFlexAction {
         } catch (FlexDatabaseException fde) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error",fde));
-            retForward = mapping.findForward("error");
         } catch(SQLException sqlE) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error",sqlE));
-            retForward = mapping.findForward("error");
+        } catch(FlexProcessException fpe){
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.process.error", fpe));
+            
         } finally {
+            
+            if(errors.size() > 0) {
+                saveErrors(request,errors);
+                retForward = mapping.findForward("error");
+                DatabaseTransaction.rollback(conn);
+            } else {
+                DatabaseTransaction.commit(conn);
+            }
+            
             DatabaseTransaction.closeConnection(conn);
         }
-        
         return retForward;
     } //end flexPerform
     
