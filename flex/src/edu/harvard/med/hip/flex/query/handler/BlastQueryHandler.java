@@ -26,7 +26,7 @@ public class BlastQueryHandler extends QueryHandler {
     public static final int DEFAULT_HITS = 5;
     public static final String DEFAULT_DB = SearchDatabase.HUMAN;
     public static final int DEFAULT_PID = 90;
-    public static final int DEFAULT_LENGTH = 70;
+    public static final int DEFAULT_LENGTH = 100;
     public static final int DIRECT_SEARCH = 1;
     public static final int SEARCH_BY_GI = 2;
     public static final String FILEPATH = Constants.TMPDIR;
@@ -134,6 +134,7 @@ public class BlastQueryHandler extends QueryHandler {
         populator.persistRecords();
         
         Blaster blaster = new Blaster();
+        System.out.println("database: "+db);
         blaster.setDBPath(db);
         blaster.setHits(hits);
         

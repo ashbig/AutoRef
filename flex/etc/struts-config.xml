@@ -238,7 +238,10 @@
                     
     <form-bean      name="exportSearchResultsForm"
                     type="edu.harvard.med.hip.flex.form.ExportSearchResultsForm"/> 
-                                               
+                     
+    <form-bean      name="enterSrcPlatesForm"
+                    type="edu.harvard.med.hip.flex.form.EnterSrcPlatesForm"/> 
+                                              
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -354,7 +357,8 @@
             <forward name="success_special_oligo_order" path="/SpecialOligoOrder.jsp"/>
             <forward name="success_result_entry" path="/PickResultType.jsp"/>
             <forward name="success_select_process" path="/SelectProcessForSucRate.jsp"/>
-            <forward name="success_perimeter_rearray" path="/PerimeterRearrayInput.jsp"/>            
+            <forward name="success_perimeter_rearray" path="/PerimeterRearrayInput.jsp"/>   
+            <forward name="success_create_dna" path="/EnterSrcPlates.jsp"/>          
             <forward    name="success"   path="/SelectProject.jsp"/>    
     </action>
 
@@ -1330,7 +1334,26 @@
                input="/GetPerimeterRearrayLocations.jsp">
       <forward  name="success"   path="/GetResearcher.jsp"/>
     </action>                  
-                            
+     
+     <action    path="/EnterSrcPlates"
+               type="edu.harvard.med.hip.flex.action.EnterSrcPlatesAction"
+               name="enterSrcPlatesForm"
+               scope="request"
+               validate="false"
+               input="/EnterSrcPlates.jsp">
+      <forward  name="success"   path="/GetLocations.jsp"/>
+    </action>     
+                         
+    <!-- Process the location selection -->
+    <action    path="/GetLocations"
+               type="edu.harvard.med.hip.flex.action.GetLocationsAction"
+               name="enterSrcPlatesForm"
+               scope="request"
+               validate="false"
+               input="/GetLocations.jsp">
+      <forward  name="success"   path="/GetResearcher.jsp"/>
+    </action> 
+             
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->

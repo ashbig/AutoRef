@@ -104,10 +104,14 @@ public class OneToOneContainerMapper implements ContainerMapper {
         String barcode = c.getLabel();
         int index = barcode.indexOf("-");
         
-        if(index<0)
-            return null;
+        if(index<0) {
+            index = barcode.indexOf(".");
+            if(index < 0) {
+                return null;
+            }
+        }
         
-        return (barcode.substring(index+1));
+        return (barcode.substring(index));
     }
     
     // Creates the new samples from the samples of the previous plate.
@@ -162,6 +166,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
             }
             
             Sample newSample = new Sample(type, s.getPosition(), newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
+            newSample.setCloneid(s.getCloneid());
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
         }

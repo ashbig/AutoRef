@@ -189,6 +189,7 @@ public class Constants {
         "FULL_SEQUENCE_BLAST_P_FORMATED";
     
     public static final String PERIMETER_REARRAY = "PERIMETER_REARRAY";
+    public static final String CREATE_EXP_DNA = "CREATE_EXP_DNA";
     
     //The following fields represents values in species table.
     public static final String HUMAN = "Homo sapiens";

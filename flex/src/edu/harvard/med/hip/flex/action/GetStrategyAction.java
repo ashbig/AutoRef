@@ -62,13 +62,13 @@ public class GetStrategyAction extends ResearcherAction {
             errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
-        } else {
+        } /**else {
             if(!sourcePlate.substring(1, 3).equals("MG")) {
                 errors.add("sourcePlate", new ActionError("error.plate.invalid.master", sourcePlate));
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }
-        }
+        }*/
         
         List containers = null;
         try {

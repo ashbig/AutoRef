@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.3 2004-01-28 15:59:10 dzuo Exp $
+ * $Id: Container.java,v 1.4 2004-04-08 16:07:41 dzuo Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -290,7 +290,7 @@ public class Container {
         if((subthreadid == null) || (subthreadid.trim().length() == 0))
             return (projectCode+processcode+fmt.format(threadid));
         else
-            return (projectCode+processcode+fmt.format(threadid)+"-"+subthreadid);
+            return (projectCode+processcode+fmt.format(threadid)+subthreadid);
     }
     
     /**

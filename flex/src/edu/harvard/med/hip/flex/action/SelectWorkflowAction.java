@@ -124,6 +124,15 @@ public class SelectWorkflowAction extends ResearcherAction {
                 request.setAttribute("perimeterRearrayInputForm", f);
                 return (mapping.findForward("success_perimeter_rearray"));
             }
+            if(Constants.CREATE_EXP_DNA.equals(forwardName) && workflowid==Workflow.EXPRESSION_WORKFLOW) {
+                EnterSrcPlatesForm f = new EnterSrcPlatesForm();
+                f.setProjectid(projectid);
+                f.setWorkflowid(workflowid);
+                f.setProjectname(projectname);
+                f.setWorkflowname(workflow.getName());
+                request.setAttribute("enterSrcPlatesForm", f);
+                return (mapping.findForward("success_create_dna"));
+            }
             
             return (mapping.findForward("success"));
         } catch (Exception e) {

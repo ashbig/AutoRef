@@ -14,8 +14,6 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import org.apache.struts.upload.*;
 
-import edu.harvard.med.hip.flex.form.*;
-
 /**
  *
  * @author  DZuo

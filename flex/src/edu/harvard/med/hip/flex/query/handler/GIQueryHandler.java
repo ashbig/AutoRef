@@ -13,12 +13,20 @@ import javax.sql.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.query.core.*;
 import edu.harvard.med.hip.flex.query.QueryException;
+import edu.harvard.med.hip.flex.query.bean.SearchDatabase;
+import edu.harvard.med.hip.flex.export.FastaFileGenerator;
+import edu.harvard.med.hip.flex.workflow.Project;
+import edu.harvard.med.hip.flex.core.FlexSequence;
 
 /**
  *
  * @author  dzuo
  */
 public class GIQueryHandler extends QueryHandler {
+    protected String db;
+    
+    public void setDb(String db) {this.db = db;}
+    public String getDb() {return db;}
     
     public GIQueryHandler() {super();}
     
@@ -60,12 +68,93 @@ public class GIQueryHandler extends QueryHandler {
            return;
         }
         
+        String s = "";
+        if(FastaFileGenerator.HUMANDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from flexsequence"+
+                " where genusspecies = 'Homo sapiens')";
+        }        
+        if(FastaFileGenerator.MGCDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from mgcclone)";
+        }      
+        if(FastaFileGenerator.PSEUDOMONASDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from flexsequence"+
+                " where genusspecies = 'Pseudomonas aeruginosa')";
+        }     
+        if(FastaFileGenerator.YEASTDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from flexsequence"+
+                " where genusspecies = 'Saccharomyces cerevisiae')";
+        }   
+        if(FastaFileGenerator.YPDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from flexsequence"+
+                " where genusspecies = 'Yersinia pestis')";
+        }  
+        if(FastaFileGenerator.BCDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from requestsequence"+
+                " where projectid="+Project.BREASTCANCER+")";
+        }
+        if(FastaFileGenerator.NIDDKDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from requestsequence"+
+                " where projectid="+Project.NIDDK+")";
+        }
+        if(FastaFileGenerator.CLONTECHDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from requestsequence"+
+                " where projectid="+Project.CLONTECH+")";
+        }
+        if(FastaFileGenerator.RZPDWALLDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from requestsequence"+
+                " where projectid="+Project.RZPD_WALL+")";
+        }   
+        if(FastaFileGenerator.FTDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from flexsequence"+
+                " where genusspecies = 'Francisella tularensis')";
+        } 
+        if(FastaFileGenerator.KINASEDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from requestsequence"+
+                " where projectid="+Project.KINASE+")";
+        }
+        if(FastaFileGenerator.SEQVERIFIEDDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from flexsequence"+
+                "  where flexstatus='"+FlexSequence.OBTAINED+"')";
+        }
+        if(FastaFileGenerator.VERIFIEDBCDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select f.sequenceid from flexsequence f, requestsequence r"+
+                "  where f.sequenceid=r.sequenceid"+
+                " and r.projectid="+Project.BREASTCANCER+
+                " and f.flexstatus='"+FlexSequence.OBTAINED+"')";
+        }
+        if(FastaFileGenerator.VERIFIEDKINASEDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select f.sequenceid from flexsequence f, requestsequence r"+
+                "  where f.sequenceid=r.sequenceid"+
+                " and r.projectid="+Project.KINASE+
+                " and f.flexstatus='"+FlexSequence.OBTAINED+"')";
+        }
+        if(FastaFileGenerator.VERIFIEDHUMANDB.equals(db)) {
+            s = " and g.sequenceid in "+
+                " (select sequenceid from flexsequence"+
+                "  where genusspecies = 'Homo sapiens'"+
+                " and flexstatus='"+FlexSequence.OBTAINED+"')";
+        }
+            
         String sql = "select distinct b.namevalue as genbank,"+
         " g.namevalue as gi,"+
         " g.sequenceid as sequenceid"+
         " from genbankvu b, givu g"+
         " where b.sequenceid=g.sequenceid"+
-        " and g.namevalue = ?"+
+        " and g.namevalue = ?"+s+
         " order by gi";
         String sql2 = "select namevalue from name where nametype='LOCUS_ID'"+
                     " and sequenceid=?";
@@ -129,6 +218,17 @@ public class GIQueryHandler extends QueryHandler {
     }
     
     protected void setQueryParams(List params) {
+        db = BlastQueryHandler.DEFAULT_DB;
+        
+        if(params == null)
+            return;
+        
+        for(int i=0; i<params.size(); i++) {
+            Param p = (Param)params.get(i);
+            if(Param.BLASTDB.equals(p.getName()) && p.getValue() != null && p.getValue().length()!=0) {
+                setDb(SearchDatabase.getDbByName(p.getValue()));
+            }
+        }
     }  
     
     public static void main(String args[]) {

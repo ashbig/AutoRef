@@ -94,7 +94,7 @@ public class GetResearcherAction extends ResearcherAction{
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
         String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
         
-        if(protocol != null && protocol.getProcessname().equals(Protocol.PERIMETER_REARRAY)) {
+        if(workflowid == Workflow.EXPRESSION_WORKFLOW) {
             if(newContainers == null || oldContainers == null ||
             protocol == null || sampleLineageSet == null) {
                 return (mapping.findForward("fail"));

@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
+<%@ page import="edu.harvard.med.hip.flex.Constants" %>
 
 <html>
 <head>
@@ -20,7 +21,8 @@
 <ul>
     <li><a href="EnterMasterPlateBarcode.jsp">Create Expression Plate</a>
     <li><a href="EnterExpressionPlateBarcode.jsp">Enter Expression Plate Result</a>
-    <li><a href="GetProjects.do?forwardName=PERIMETER_REARRAY">Cell Culture Perimeter Rearray For Expression Clones</a>
+    <li><a href="GetProjects.do?forwardName=<%=Constants.CREATE_EXP_DNA%>">Create DNA from glycerol</a>
+    <li><a href="GetProjects.do?forwardName=<%=Constants.PERIMETER_REARRAY%>">Cell Culture Perimeter Rearray For Expression Clones</a>
 </ul>
 
 </body>
