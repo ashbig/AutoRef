@@ -29,7 +29,7 @@
 <html:errors/>
 <p>
 <logic:present name="process">
-    <h3>Results desplayed are for protocol 
+    <h3>Results displayed are for protocol 
     <bean:write name="process" property="protocol.processname"/>
     </h3>
 </logic:present>
@@ -77,14 +77,14 @@
 <!-- display the container sample info.-->
 <TABLE border="1" cellpadding="2" cellspacing="0">
     <tr class="headerRow">
-        <th>ID</th> 
-         <th>MGC Id</th>
-        <th>Image Id</th>
-        <th>Vector</th>
-        <th>Type</th>
-        <th>Position</th>
-        <th>Status</th>
-         <th>Sequence Id</th>
+        <th>&nbsp;&nbsp;ID&nbsp;&nbsp;</th> 
+         <th>&nbsp;&nbsp;MGC Id&nbsp;&nbsp;</th>
+        <th>&nbsp;&nbsp;Image Id&nbsp;&nbsp;</th>
+        <th>&nbsp;&nbsp;Vector&nbsp;&nbsp;</th>
+        <th>&nbsp;&nbsp;Type&nbsp;&nbsp;</th>
+        <th>&nbsp;&nbsp;Position&nbsp;&nbsp;</th>
+        <th>&nbsp;&nbsp;Status&nbsp;&nbsp;</th>
+         <th>&nbsp;&nbsp;Sequence Id&nbsp;&nbsp;</th>
         <logic:present name="process">
             <th>Result</th>
         </logic:present>
