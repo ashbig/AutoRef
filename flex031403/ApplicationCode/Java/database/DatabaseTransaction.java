@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTransaction.java,v 1.2 2001-04-25 18:37:06 dongmei_zuo Exp $
+ * $Id: DatabaseTransaction.java,v 1.3 2001-04-26 13:39:39 dongmei_zuo Exp $
  *
  * File     : DatabaseTransaction.java 
  * Date     : 04162001
@@ -13,7 +13,7 @@ package flex.ApplicationCode.Java.database;
 
 import java.sql.*;
 import java.util.*;
-
+import java.math.BigDecimal;
 import flex.ApplicationCode.Java.util.*;
 
 /**
@@ -222,14 +222,13 @@ public class DatabaseTransaction {
 			while (results.next()) {
 				Hashtable h = new Hashtable(cols);
 				int i;
-				
+			
 				for (i = 1; i<=cols; i++) {
 					Object o = results.getObject(i);
-
-					if(o == null) 
-						o = "No Value";
-
-					h.put(meta.getColumnLabel(i), o);
+	
+					if(o != null) {
+						h.put(meta.getColumnLabel(i), o);
+					}
 				}
 				v.addElement(h);
 			}
