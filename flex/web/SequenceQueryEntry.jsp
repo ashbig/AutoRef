@@ -40,6 +40,11 @@
         Search available sequence verified clones for specific genes.
     </html:radio>
     </dd>
+    <dd>
+    <html:radio property="querySelect" value="querySuccessRate">
+        Estimate project success rate.
+    </html:radio>
+    </dd>
     <p>
     <dd>
     <html:submit property="submit" value="Continue"/>

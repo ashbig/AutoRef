@@ -63,7 +63,6 @@ public class SelectProjectAction extends ResearcherAction {
         int projectid = ((ProjectWorkflowForm)form).getProjectid();
         String forwardName = ((ProjectWorkflowForm)form).getForwardName();        
         request.setAttribute("projectid", new Integer(projectid));
-        
                 
         try {
             Project project = new Project(projectid);

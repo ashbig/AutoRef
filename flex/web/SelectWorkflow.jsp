@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<h2><bean:message key="flex.name"/> : Select Workflow</h2>
+<h2><bean:message key="flex.name"/> : Select Workflow</h2>      
 <hr>
 <html:errors/>
 <p>

@@ -81,9 +81,13 @@ public class SequenceQueryEntryAction extends CollaboratorAction {
                 return (mapping.findForward("success_queryAllGenes"));
             } else if("queryGenes".equals(querySelect)) {
                 return (mapping.findForward("success_queryGenes"));
-            } else {
+            } else if("queryClones".equals(querySelect)){
                 return (mapping.findForward("success_queryAllGenes"));
-            }
+            } else if("querySuccessRate".equals(querySelect)){
+                request.setAttribute("forwardName", new String("QUERY_SUCCESS_RATE"));
+                return (mapping.findForward("success_querySuccessRate"));                
+            } else
+                return (mapping.findForward("fail"));
         } catch (Exception e) {
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));

@@ -1,5 +1,5 @@
 /**
- * $Id: Construct.java,v 1.2 2003-04-17 19:40:02 dzuo Exp $
+ * $Id: Construct.java,v 1.3 2003-05-01 18:51:39 yanhui Exp $
  * This class maps to the ConstructDesign table in the database.
  * @File Construct.java
  * @date 4/28/01
@@ -11,6 +11,13 @@
  *
  * modified 6/30/01:    wmar
  * added new constructor
+
+ *
+ * modified 1/16/2003:    hweng
+ * added new attribute and constructor
+ *
+
+
  */
 
 package edu.harvard.med.hip.flex.core;
@@ -18,6 +25,8 @@ import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
 import edu.harvard.med.hip.flex.workflow.*;
 import java.sql.*;
+import java.util.Vector;
+
 
 public class Construct {
     private static final int SIZELOWER = 2000;
@@ -33,6 +42,7 @@ public class Construct {
     private String sizeClass;
     private int pairId;
     private int platesetId = -1;
+    private Vector samples = new Vector();
     
     private int seqId;
     private int oligoId_5p;
@@ -139,6 +149,15 @@ public class Construct {
         this.platesetId = platesetId;
     }
     
+
+    public Construct(int id, String type, Vector samples) {
+        this.id = id;
+        this.type = type;        
+        this.samples = samples;
+    } 
+
+
+
     /**
      * Finds a construct based on its id.
      *
@@ -259,6 +278,13 @@ public class Construct {
         return pairId;
     }
     
+    
+    public Vector getSamples(){
+        return this.samples;
+    }
+    
+
+
     /**
      * set the construct pairId
      *

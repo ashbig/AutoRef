@@ -1,5 +1,5 @@
 /**
- * $Id: Sequence.java,v 1.1 2003-03-07 17:44:53 dzuo Exp $
+ * $Id: Sequence.java,v 1.2 2003-05-01 18:51:39 yanhui Exp $
  * The Sequence class serves as a base class for any type of DNA sequence
  * Start and Stop reprensent the position of the ATG start and the stop codon
  * @File     	: Sequence.java
@@ -12,11 +12,19 @@
  *
  * modified:    06122001 wmar
  *              Added testing method
+
+ *
+ * modified:    03102003 hweng
+ *              Added new Sequence construct
+ *
+
+
  */
 
 package edu.harvard.med.hip.flex.core;
 import edu.harvard.med.hip.flex.database.*;
 import java.sql.*;
+import java.util.Vector;
 
 public class Sequence {
     private static final int seqFragmentLength = 60;
@@ -24,6 +32,15 @@ public class Sequence {
     protected int stop = -1;
     protected String text = null;
     protected int seqID = -1;  //for testing
+
+    protected String namevalue;
+    ///
+    protected Vector constructs;
+    protected int CDS_len;
+    
+
+
+
     /**
      * Constructor.  Returns a Sequence object
      * @param seqID  Unique identifier for each sequence
@@ -39,6 +56,20 @@ public class Sequence {
         this.text = getSeqText(seqId);
     }
     
+        
+    public Sequence(int seqId, String name) {
+        this.seqID = seqId;
+        this.namevalue = name;
+    }
+    
+    
+    public Sequence(int seqId, int CDSlen, Vector constructs){
+        this.seqID = seqId;
+        this.CDS_len = CDSlen;
+        this.constructs = constructs;
+    }
+
+
     /**
      * Return the sequence id
      * @return the sequence id
@@ -71,6 +102,7 @@ public class Sequence {
         return stop;
     }
     
+
     /**
      * Return the integer that represents the length of the coding region
      * @return the length of the coding region
@@ -78,7 +110,12 @@ public class Sequence {
     public int getCDSLength() {
         return (stop - start + 1);
     }
-    
+        
+    public int getCDS_len() {
+        return this.CDS_len;
+    }
+
+
     /**
      * Return the integer that represents the length of the entire sequence
      * @return the length of the entire sequence text
@@ -87,6 +124,14 @@ public class Sequence {
         return text.length();
     }
     
+    /** Return the constructs associated with the seqence */
+    public Vector getConstructs() {
+        return this.constructs;
+    }
+
+
+
+
     /**
      * Return the sequence fragment which is 60 bases downstream
      * from the start position for five prime oligo calculation
@@ -204,6 +249,9 @@ public class Sequence {
         return result;
     } // getReverseComplement
     
+
+
+
     public static void main(String [] args) {
         Connection c = null;
         int seqId = 22; // for testing...

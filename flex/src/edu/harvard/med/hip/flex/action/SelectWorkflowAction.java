@@ -33,6 +33,7 @@ import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.workflow.*;
+import edu.harvard.med.hip.flex.query.*;
 
 /**
  *
@@ -107,6 +108,12 @@ public class SelectWorkflowAction extends ResearcherAction {
                 request.setAttribute("medium", new Integer(medium));
                 request.setAttribute("large", new Integer(large));
                 return mapping.findForward("success_special_oligo_order");
+            }
+            if("QUERY_SUCCESS_RATE".equals(forwardName)){                
+                request.setAttribute("month_collection", DateCollection.getMonthCollection());
+                request.setAttribute("day_collection", DateCollection.getDayCollection());
+                request.setAttribute("year_collection", DateCollection.getYearCollection());
+                return mapping.findForward("success_select_process");
             }
             
             return (mapping.findForward("success"));

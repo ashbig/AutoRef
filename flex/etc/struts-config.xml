@@ -171,6 +171,27 @@
     <form-bean      name="sequenceQueryEntryForm"
                     type="edu.harvard.med.hip.flex.form.SequenceQueryEntryForm"/>
 
+  
+    <!-- Form used to get process and format information for success rate estimation -->
+    <form-bean      name="processForSucRateForm"
+                    type="edu.harvard.med.hip.flex.form.ProcessForSucRateForm"/>
+
+    <!-- Form used to get success criteria for success rate estimation -->
+    <form-bean      name="successCriteriaForm"
+                    type="edu.harvard.med.hip.flex.form.SuccessCriteriaForm"/>
+
+    <!-- Form used to display experiment sample for success rate estimation -->
+    <form-bean      name="displayExpSampleForm"
+                    type="edu.harvard.med.hip.flex.form.DisplayExpSampleForm"/>
+
+    <form-bean      name="exportSeqSampleInfoForm"
+                    type="edu.harvard.med.hip.flex.form.ExportSeqSampleInfoForm"/>
+
+    <form-bean      name="displayExpSampleByPageForm"
+                    type="edu.harvard.med.hip.flex.form.DisplayExpSampleByPageForm"/>
+
+
+
  <!-- Form used to do rearray -->
     <form-bean      name="rearrayForm"
                     type="edu.harvard.med.hip.flex.form.RearrayForm"/>
@@ -179,6 +200,7 @@
     <form-bean      name="rearrayPlateForm"
                     type="edu.harvard.med.hip.flex.form.RearrayPlateForm"/>  
  
+
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -290,6 +312,7 @@
             <forward name="success_mgc_plate_handle" path="/MGCPlateHandle.do"/>
             <forward name="success_special_oligo_order" path="/SpecialOligoOrder.jsp"/>
             <forward name="success_result_entry" path="/PickResultType.jsp"/>
+            <forward name="success_select_process" path="/SelectProcessForSucRate.jsp"/>
             <forward    name="success"   path="/SelectProject.jsp"/>
      
     
@@ -844,7 +867,7 @@
                input="/SequenceQueryEntry.jsp">
       <forward  name="success_queryGenes"   path="/QueryDisplaySetup.jsp"/>
       <forward  name="success_queryAllGenes"   path="/GeneQueryDisplaySetup.jsp"/>
-      <forward  name="success_queryClone"   path="/CloneQueryDisplaySetup.jsp"/>
+      <forward  name="success_queryClone"   path="/CloneQueryDisplaySetup.jsp"/>      
     </action> 
 
     <!-- Action mapping for sequence query -->
@@ -885,8 +908,66 @@
                input="/SequenceQueryEntry.jsp">
       <forward  name="success_queryAllGenes"   path="/GeneQuery.jsp"/>
       <forward  name="success_queryGenes"   path="/SequenceQuery.jsp"/>
+      <forward  name="success_querySuccessRate"    path="/SelectProject.jsp"/>        
     </action> 
     
+
+    <!-- Process user's selection of process name and clone format for success rate estimation -->
+    <action     path="/SelectProcessForSucRate"
+                type="edu.harvard.med.hip.flex.action.SelectProcessForSucRateAction"
+                name="processForSucRateForm"
+                scope="request"
+                input = "/SelectProcessForSucRate.jsp">
+       <forward name="success_estimation" path="/DisplaySuccessRate.jsp"/>
+       <forward name="require_success_criteria" path="/SelectSuccessCriteria.jsp"/>
+    </action>
+
+    <!-- Process user's selection of success criteria for success rate estimation -->
+    <action     path="/SelectSucCriteria"
+                type="edu.harvard.med.hip.flex.action.SelectSucCriteriaAction"
+                name="successCriteriaForm"
+                scope="request"
+                input = "/SelectSuccessCriteria.jsp">
+       <forward name="success" path="/DisplaySuccessRate.jsp"/>      
+    </action>
+
+
+    <!-- Process the sequence sample display for success rate estimation -->
+    <action     path="/DisplayExpSample"
+                type="edu.harvard.med.hip.flex.action.DisplayExpSampleAction"
+                name="displayExpSampleForm"
+                scope="request"
+                input = "/DisplaySuccessRate.jsp">
+       <forward name="success" path="/DisplayExpSample.jsp"/>      
+    </action>
+
+    <!-- Process the sequence sample display plate by plate for success rate estimation -->
+    <action     path="/DisplayPlateSuccessInfo"
+                type="edu.harvard.med.hip.flex.action.DisplayPlateSuccessInfoAction"
+                name="displayExpSampleForm"
+                scope="request"
+                input = "/DisplaySuccessRate.jsp">
+       <forward name="success" path="/DisplayPlateSuccessInfo.jsp"/>      
+    </action>
+
+    <action     path="/ExportSeqSampleInfo"
+                type="edu.harvard.med.hip.flex.action.ExportSeqSampleInfoAction"      
+                name="exportSeqSampleInfoForm"
+                scope="request"
+                input = "/DisplayExpSample.jsp">
+       <forward name="fail" path="/FailtoExportSeqSampleInfo.jsp"/>      
+    </action>
+
+    <action     path="/DisplayExpSampleByPage"
+                type="edu.harvard.med.hip.flex.action.DisplayExpSampleByPageAction"      
+                name="displayExpSampleByPageForm"
+                scope="request"
+                input = "/DisplayExpSample.jsp">
+       <forward name="success" path="/DisplayExpSample.jsp"/>      
+    </action>
+
+
+
   <!-- Process the receiving of new oligo plates -->
     <action    path="/ReceiveOligoPlates"
                type="edu.harvard.med.hip.flex.action.ReceiveOligoPlatesAction"
@@ -930,6 +1011,7 @@
                input="/GetWorkflowForRearray.do">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action> 
+
 
 
     <!-- The standard administrative actions available with Struts -->

@@ -12,12 +12,16 @@
 </head>
 <body>
 
-<h2><bean:message key="flex.name"/> : Select Project</h2>
+<h2><bean:message key="flex.name"/> : Select Project</h2>   
 <hr>
 <html:errors/>
 <p>
+
 <html:form action="/SelectProject.do">
-<html:hidden property="forwardName" />
+<logic:present name="forwardName">
+    <input type="hidden" name="forwardName" value="<bean:write name="forwardName"/>">
+</logic:present>
+
 <table>
     <tr>
     <td class="prompt">Select the project:</td>

@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.2 2003-04-17 19:39:33 dzuo Exp $
+ * $Id: Sample.java,v 1.3 2003-05-01 18:51:39 yanhui Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -13,6 +13,10 @@
  *                added one constructor for oligo samples.
  *                changed datatype of position from String to integer
  *                according to the new schema.
+ *
+ * Modified     : 01-16-2003 [hweng]
+ *                added new attributes and new constructor
+ *
  */
 
 package edu.harvard.med.hip.flex.core;
@@ -58,6 +62,7 @@ public class Sample {
     protected int oligoid = -1;
     protected String status;
     protected String result;
+    protected String label;
     
     protected int cdslength = -1;
     
@@ -152,6 +157,18 @@ public class Sample {
         
         this.id = FlexIDGenerator.getID("sampleid");
     }
+    
+    
+    public Sample(int sampleid, String type, String result, String label, int pos){
+        this.id = sampleid;
+        this.type = type;
+        this.result = result;
+        this.label = label;
+        this.position = pos;
+    }
+        
+    
+    
     
     /**
      * Constructor.
@@ -308,10 +325,11 @@ public class Sample {
             type = ISOLATE;
         if(Protocol.GENERATE_SEQUENCING_GLYCEROL_PLATES.equals(processname))
             type = ISOLATE;
-        
+                
         if(Protocol.REARRAY_TO_DNA_TEMPLATE.equals(processname))
             type = DNA;
                 
+        
         return type;
     }
     
@@ -452,6 +470,17 @@ public class Sample {
         Container container = new Container(getContainerid());
         return container;
     }
+    
+    
+    public String getLabel(){
+        return this.label;
+    }
+    
+    public String getResult(){
+        return this.result;
+    }
+    
+   
     
     /**
      * Set the construct id to the given value.
