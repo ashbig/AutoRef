@@ -2,16 +2,17 @@
 <script defer="defer" type="text/javascript"><!--
   
 /*Start of form validation: items not empty*/
+
   function validateForm(formElement)
    {
         var str =  trim(formElement.items.value);
         if (( formElement.items.value == null) || ( str == "" ) )
 	{
-		alert('Please submit items to process.')
-                formElement.fileName.focus()
-                return false
+		alert("Please submit items to process.");
+                formElement.items.focus();
+                return false;
    	}
-   	return true
+   	else { return true;}
    }
    function trim(strText)
     { 
