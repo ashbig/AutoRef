@@ -55,6 +55,8 @@ public class OligoPlater
     
     private Project     project = null;
     private Workflow    workflow = null;
+    private Protocol    m_protocol = null;
+    private Vector      m_nextProtocols = null;
     private int         m_negativeControlPosition = 96;
     private int         m_totalWells = 94;
     
@@ -77,6 +79,8 @@ public class OligoPlater
         this.project = project;
         this.workflow = workflow;
         if (project.getId() == Project.PSEUDOMONAS) m_isPseudomonas = true;
+        m_protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
+        m_nextProtocols = workflow.getNextProtocol(m_protocol);
     }
     
     /**
@@ -96,7 +100,7 @@ public class OligoPlater
    
     
     public void setTotalWells(int wells)
-    { m_totalWells = wells;}
+    { m_totalWells = wells; m_negativeControlPosition = m_totalWells + 2;}
     public int getTotalWells()
     { return m_totalWells;}
     public void setPlateType(String  ptype)
@@ -108,9 +112,16 @@ public class OligoPlater
     public boolean getReorderRequest()
     { return m_isReorderSequences;}
     
-    public void setMgcContainerId(int mgcContainerId)
+    public void setMgcContainerId(int mgcContainerId)throws FlexDatabaseException
     {
         m_mgcContainerId = mgcContainerId;
+        if (m_mgcContainerId != -1)
+        {
+            //mgc project set different protocol
+            m_protocol = new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS);
+            m_nextProtocols = new Vector();
+            m_nextProtocols.add(new Protocol(Protocol.RECEIVE_OLIGO_PLATES)  );
+        }
     }
     
     /**
@@ -482,7 +493,7 @@ public class OligoPlater
     protected void insertProcessInput() throws FlexDatabaseException
     {
         //System.out.println("insert process input record...");
-        Protocol protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
+       
         Researcher r = new Researcher();
         String status = "S"; //SUCCESS
         String extraInfo = "";
@@ -491,7 +502,7 @@ public class OligoPlater
         r = new Researcher(userId);
         
         // insert process execution record into process execution table
-        process = new Process(protocol,status,r, project, workflow);
+        process = new Process(m_protocol,status,r, project, workflow);
         
         //System.out.println("Generate oligo orders Execution ID: "+ process.getExecutionid());
         
@@ -543,12 +554,10 @@ public class OligoPlater
     protected void insertReceiveOligoQueue() throws FlexDatabaseException
     {
         //System.out.println("insert receive oligo queue record...");
-        Protocol protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
-        Vector nextProtocols = workflow.getNextProtocol(protocol);
         QueueItem queueItem = null;
         ContainerProcessQueue containerQueue = new ContainerProcessQueue();
         
-        Iterator iter = nextProtocols.iterator();
+        Iterator iter = m_nextProtocols.iterator();
         while(iter.hasNext())
         {
             Protocol nextProtocol = (Protocol)iter.next();
@@ -577,10 +586,9 @@ public class OligoPlater
     protected void removeOrderOligoQueue() throws FlexDatabaseException
     {
         
-        Protocol protocol = new Protocol(Protocol.GENERATE_OLIGO_ORDERS);
-        
+              
         String sql = "DELETE FROM queue\n" +
-        "WHERE protocolid = "+ protocol.getId()  + "\n" +
+        "WHERE protocolid = "+ m_protocol.getId()  + "\n" +
         "AND constructid = ?" + "\n" +
         "AND workflowid = "+workflow.getId()+"\n"+
         "AND projectid = "+project.getId();
