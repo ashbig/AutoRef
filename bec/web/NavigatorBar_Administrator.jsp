@@ -45,6 +45,8 @@ myNavBar1.addMenu(dhtmlMenu);
 	dhtmlMenu.addItem(new NavBarMenuItem("Biological Evaluation of Clones", "Seq_EnterFullSeqParameters.jsp"));
 	dhtmlMenu.addItem(new NavBarMenuItem("Primer Design", "Seq_EnterPrimerParameters.jsp"));
 	dhtmlMenu.addItem(new NavBarMenuItem("Polymorphism Finder", "Seq_EnterPolymorphismParameters.jsp"));
+        dhtmlMenu.addItem(new NavBarMenuItem("Sequence Trimming Parameters", "Seq_EnterSlidingWindowParameters.jsp"));
+
 dhtmlMenu.addItem(new NavBarMenuItem("Available Vectors Information", "/BEC/Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_VECTORS_DEFINITION_INT%>"));
 dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "/BEC/Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_LINKERS_DEFINITION_INT%>"));
 	myNavBar1.addMenu(dhtmlMenu);
