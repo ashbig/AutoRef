@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2004-10-12 19:38:26 $
+ * $Revision: 1.9 $
+ * $Date: 2004-10-19 17:09:49 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import edu.harvard.med.hip.bec.database.*;
  * Utility class to send simple messages.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.8 $ $Date: 2004-10-12 19:38:26 $
+ * @version    $Revision: 1.9 $ $Date: 2004-10-19 17:09:49 $
  */
 
 public class Mailer
@@ -117,7 +117,7 @@ public class Mailer
                     File curFile = (File)fileIter.next();
                     DataSource source = new FileDataSource(curFile);
                     filePart.setDataHandler(new DataHandler(source));
-                    filePart.setFileName(curFile.getAbsolutePath());
+                    filePart.setFileName(curFile.getName());
                     
                     mp.addBodyPart(filePart);
                 }
