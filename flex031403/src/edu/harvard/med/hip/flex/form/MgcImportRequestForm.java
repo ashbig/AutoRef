@@ -28,78 +28,46 @@ import edu.harvard.med.hip.flex.workflow.*;
  */
 public class MgcImportRequestForm extends ActionForm
 {
-    protected String forwardName = null;
-    protected int projectid;
-    protected int workflowid;
-    protected FormFile mgcRequestFile = null;
-    protected String workflowname = null;
-    protected String projectname = null;
-    
+    protected String        forwardName = null;
+    protected int           projectid = -1;
+    protected int           workflowid = -1;
+    protected FormFile      mgcRequestFile = null;
+    protected String        workflowname = null;
+    protected String        projectname = null;
+    private   int           m_requiredCdslengthLimit = 70;
+    private   double        m_requiredPercentIdentity = 0.95;
+    private   boolean       m_isPutOnQueue = true;
     /**
      * Set the mgc request file to the given value.
      *
      * @param mgcrequestFIle The value to be set to.
      */
-    public void setMgcRequestFile(FormFile mgcRequestFile)
-    {
-        this.mgcRequestFile = mgcRequestFile;
-    }
+    public void         setIsPutOnQueue(boolean isPutOnQueue)   {      m_isPutOnQueue = isPutOnQueue;    }
+    public boolean      getIsPutOnQueue()                          {        return m_isPutOnQueue;    }
     
-    public FormFile getMgcRequestFile()
-    {
-        return mgcRequestFile;
-    }
+    public void         setMgcRequestFile(FormFile mgcRequestFile)   {      this.mgcRequestFile = mgcRequestFile;    }
+    public FormFile     getMgcRequestFile()                          {        return mgcRequestFile;    }
+   
+    public void         setForwardName(String forwardName)            {        this.forwardName = forwardName;    }
+    public String       getForwardName()                               {        return forwardName;    }
     
+    public void         setWorkflowname(String name)    {        this.workflowname = name;    }
+    public String       getWorkflowname()    {        return workflowname;    }
     
-    public void setForwardName(String forwardName)
-    {
-        this.forwardName = forwardName;
-    }
+    public void         setProjectname(String name)    {        projectname = name;    }
+    public String       getProjectname()    {        return projectname;    }
     
-    public String getForwardName()
-    {
-        return forwardName;
-    }
+    public void         setProjectid(int projectid)    {        this.projectid = projectid;   }
+    public int          getProjectid()    {        return projectid;    }
     
-    public void setWorkflowname(String name)
-    {
-        this.workflowname = name;
-    }
+    public void         setWorkflowid(int workflowid)    {        this.workflowid = workflowid;    }
+    public int          getWorkflowid()   {        return workflowid;    }
     
-    public String getWorkflowname()
-    {
-        return workflowname;
-    }
+    public void         setRequiredCdslengthLimit(int requiredCdslengthLimit)    {        m_requiredCdslengthLimit = requiredCdslengthLimit;    }
+    public int          getRequiredCdslengthLimit()   {        return m_requiredCdslengthLimit;    }
     
-    public void setProjectname(String name)
-    {
-        projectname = name;
-    }
-    
-    public String getProjectname()
-    {
-        return projectname;
-    }
-    
-    public void setProjectid(int projectid)
-    {
-        this.projectid = projectid;
-    }
-    
-    public int getProjectid()
-    {
-        return projectid;
-    }
-    
-    public void setWorkflowid(int workflowid)
-    {
-        this.workflowid = workflowid;
-    }
-    
-    public int getWorkflowid()
-    {
-        return workflowid;
-    }
+    public void         setRequiredPercentIdentity(double requiredPercentIdentity)    {  m_requiredPercentIdentity = requiredPercentIdentity;    }
+    public double       getRequiredPercentIdentity()   {        return m_requiredPercentIdentity;    }
     
     /**
      * Validate the properties that have been set from this HTTP request,
