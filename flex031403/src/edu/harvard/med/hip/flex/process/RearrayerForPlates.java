@@ -372,7 +372,7 @@ public class RearrayerForPlates
             if (( count > 0 && (count + 1) % (m_wells_on_plate - m_number_of_controls) == 0)
                         || count == ( seq.size() - 1) )
             {
-                System.out.println(count);
+               
                 if (m_isFullPlate && plate_sequences.size() == (m_wells_on_plate - m_number_of_controls) || !m_isFullPlate  )
                 {
                     //create new plate
