@@ -47,8 +47,8 @@ import edu.harvard.med.hip.flex.util.*;
 /**
  * Represents the result of a process execution for a sample.
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.14 $ $Date: 2001-07-27 18:47:01 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.15 $ $Date: 2001-07-30 18:52:22 $
  */
 
 public class Result {
@@ -76,9 +76,7 @@ public class Result {
     public final static String NO_PRODUCT = "No product";
     
     // the following defines the result values for TRANSFORMATION.
-    public final static String MANY = "Many";
-    public final static String FEW = "Few";
-    public final static String NONE = "None";
+    public final static String MORE = "More";
     
     // the following defines the result values for controls.
     public final static String SUCCEEDED = "Succeeded";
