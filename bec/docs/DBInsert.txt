@@ -138,6 +138,43 @@ insert into config_parameter_name (paramname) values ('FS_PELONG_POLM');
 insert into config_parameter_name (paramname) values ('FS_S_POLM');
 insert into config_parameter_name (paramname) values ('FS_TRANC_POLM');
 
+insert into config_parameter_name (paramname) values ('FS_NSTART_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_NSTART_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_NSTART_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_NSTART_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_NSTART_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_NSTOP_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_NSTOP_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_NSTOP_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_NSTOP_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_NCDS_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_NCDS_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_NCDS_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_NCDS_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_NFRAME_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_NFRAME_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_NFRAME_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_NFRAME_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_NINFRAME_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_NINFRAME_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_NINFRAME_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_NINFRAME_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_N5SUB_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_N5SUB_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_N5SUB_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_N5SUB_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_N5INS_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_N5INS_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_N5INS_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_N5INS_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_N3SUB_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_N3SUB_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_N3SUB_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_N3SUB_FAIL_L');
+insert into config_parameter_name (paramname) values ('FS_N3INS_PASS_H');
+insert into config_parameter_name (paramname) values ('FS_N3INS_PASS_L');
+insert into config_parameter_name (paramname) values ('FS_N3INS_FAIL_H');
+insert into config_parameter_name (paramname) values ('FS_N3INS_FAIL_L');
 
 
 
@@ -171,6 +208,45 @@ insert into config_parameter_name (paramname) values ('ER_3S_H');
 insert into config_parameter_name (paramname) values ('ER_3S_L');
 insert into config_parameter_name (paramname) values ('ER_3DI_L');
 insert into config_parameter_name (paramname) values ('ER_3DI_H');
+
+insert into config_parameter_name (paramname) values ('ER_NSTART_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_NSTART_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_NSTART_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_NSTART_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_NSTART_FAIL_L');
+insert into config_parameter_name (paramname) values ('ER_NSTOP_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_NSTOP_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_NSTOP_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_NSTOP_FAIL_L');
+insert into config_parameter_name (paramname) values ('ER_NCDS_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_NCDS_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_NCDS_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_NCDS_FAIL_L');
+insert into config_parameter_name (paramname) values ('ER_NFRAME_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_NFRAME_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_NFRAME_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_NFRAME_FAIL_L');
+insert into config_parameter_name (paramname) values ('ER_NINFRAME_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_NINFRAME_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_NINFRAME_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_NINFRAME_FAIL_L');
+insert into config_parameter_name (paramname) values ('ER_N5SUB_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_N5SUB_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_N5SUB_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_N5SUB_FAIL_L');
+insert into config_parameter_name (paramname) values ('ER_N5INS_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_N5INS_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_N5INS_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_N5INS_FAIL_L');
+insert into config_parameter_name (paramname) values ('ER_N3SUB_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_N3SUB_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_N3SUB_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_N3SUB_FAIL_L');
+insert into config_parameter_name (paramname) values ('ER_N3INS_PASS_H');
+insert into config_parameter_name (paramname) values ('ER_N3INS_PASS_L');
+insert into config_parameter_name (paramname) values ('ER_N3INS_FAIL_H');
+insert into config_parameter_name (paramname) values ('ER_N3INS_FAIL_L');
+
 
 insert into config_parameter_name (paramname) values ('FS_5S_PASS_H');
    insert into  config_parameter_name (paramname) values ('FS_5S_PASS_L') ;
@@ -240,7 +316,7 @@ values (vectorid.nextval,'5p linker','GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTAT
 values (vectorid.nextval,'3p linker','-GGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC');                              
 
 insert into linker (linkerid, name,sequence)
-values (vectorid.nextval,'5p Short Pseudomonas linker','ACAAGTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACC-');                             
+values (vectorid.nextval,'5p Short Pseudomonas linker','CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACC-');                             
 insert into linker (linkerid, name,sequence)
 values (vectorid.nextval,'3p Short Pseudomonas linker','-GACCCAGCTTTCTTGTACAAAGTGGT');                                         
         
