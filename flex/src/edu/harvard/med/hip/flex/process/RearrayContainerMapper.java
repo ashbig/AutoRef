@@ -67,8 +67,8 @@ public class RearrayContainerMapper {
             int sourcePlateId = sample.getSourcePlateid();
             sourceContainers.add(new Container(sourcePlateId, null, null, null));
             
-            Sample s = new Sample(sampletype, position, containerid, sample.getConstructid(),-1, Sample.GOOD);
-//            Sample s = new Sample(sample.getSampletype(), position, containerid, sample.getConstructid(),-1, Sample.GOOD);
+            //Sample s = new Sample(sampletype, position, containerid, sample.getConstructid(),-1, Sample.GOOD);
+            Sample s = new Sample(sample.getSampletype(), position, containerid, sample.getConstructid(),-1, Sample.GOOD);
             s.setCloneid(sample.getCloneid());
             container.addSample(s);
             sampleLineageSet.addElement(new SampleLineage(sample.getSampleid(), s.getId()));
@@ -108,8 +108,8 @@ public class RearrayContainerMapper {
         for(int i=0; i<samples.size(); i++) {
             RearrayPlateMap sample = (RearrayPlateMap)samples.get(i);
             sourceContainers.add(new Container(sample.getSourcePlateid(), null, null, null));
-            Sample s = new Sample(sampletype, sample.getDestWell(), containerid, sample.getConstructid(), -1, Sample.GOOD);
-            //Sample s = new Sample(sample.getSampletype(), sample.getDestWell(), containerid, sample.getConstructid(), -1, Sample.GOOD);
+            //Sample s = new Sample(sampletype, sample.getDestWell(), containerid, sample.getConstructid(), -1, Sample.GOOD);
+            Sample s = new Sample(sample.getSampletype(), sample.getDestWell(), containerid, sample.getConstructid(), -1, Sample.GOOD);
             s.setCloneid(sample.getCloneid());
             container.addSample(s);
             sampleLineageSet.addElement(new SampleLineage(sample.getSampleid(), s.getId()));
@@ -199,7 +199,7 @@ public class RearrayContainerMapper {
     }
     
     private static ArrayList readFile(String file)
-    throws IOException, FlexDatabaseException, SQLException {
+    throws IOException, FlexDatabaseException, SQLException, RearrayException {
         BufferedReader in = new BufferedReader(new FileReader(file));
         String line = null;
         ArrayList inputSamples = new ArrayList();
