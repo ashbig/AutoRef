@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.5 2003-06-11 18:12:05 dzuo Exp $
+ * $Id: Sample.java,v 1.6 2003-09-12 18:43:57 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -69,9 +69,23 @@ public class Sample {
     
     protected int cloneid = 0;
     
+    protected String geneSymbol;
+    protected String pa;
+    protected String sgd;
+    protected String genbank;
+    
     public void setCloneid(int cloneid) {this.cloneid = cloneid;}
+    public void setGeneSymbol(String s) {this.geneSymbol = s;}
+    public void setPa(String s) {this.pa = s;}
+    public void setSgd(String s) {this.sgd = s;}
+    public void setGenbank(String s) {this.genbank = s;}
+    
     public int getCloneid() {return cloneid;}
-
+    public String getGeneSymbol() {return geneSymbol;}
+    public String getPa() {return pa;}
+    public String getSgd() {return sgd;}
+    public String getGenbank() {return genbank;}
+    
     public Sample() {}
         
     /**

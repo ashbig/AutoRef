@@ -186,6 +186,12 @@ public class Constants {
     public static final String FULL_SEQUENCE_BLAST_P_FORMATED = 
         "FULL_SEQUENCE_BLAST_P_FORMATED";
     
+    //The following fields represents values in species table.
+    public static final String HUMAN = "Homo sapiens";
+    public static final String MOUSE = "Mus musculus";
+    public static final String YEAST = "Saccharomyces cerevisiae";
+    public static final String PSEUDOMONAS = "Pseudomonas aeruginosa";
+    
     /** Creates new Constants */
     private Constants() {
     }

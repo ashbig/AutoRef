@@ -21,7 +21,7 @@
  *    your 3 letters initials.
  *
  *    Jun-18-2001 : JMM - Class created.
- * 
+ *
  * Revision:    07-03-2001  [wmar]
  *              added getFilereferences() method
  *
@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.19 $ $Date: 2002-04-18 20:48:02 $
+ * @version    $Revision: 1.20 $ $Date: 2003-09-12 18:43:14 $
  */
 
 public class Result {
@@ -71,12 +71,18 @@ public class Result {
     // result type for DNA GEL
     public static final String DNA_GEL_TYPE="DNA GEL";
     
+    public static final String EXPRESSION_PCR = "EXPRESSION PCR GEL";
+    public static final String EXPRESSION_FLORESCENCE = "FLORESCENCE";
+    public static final String EXPRESSION_COLONY = "EXPRESSION COLONY";
+    public static final String EXPRESSION_RESTRICTION = "RESTRICTION DIGEST";
+    public static final String EXPRESSION_PROTEIN = "EXPRESSION PROTEIN";
+    
     // the following defines the result values for GEL.
     public final static String CORRECT = "Correct";
     public final static String INCORRECT = "Incorrect";
     public final static String MUL_W_CORRECT = "Multiple with correct";
     public final static String MUL_WO_CORRECT = "Multiple without correct";
-    public final static String NO_PRODUCT = "No product";    
+    public final static String NO_PRODUCT = "No product";
     public final static String NO_BAND = "No visible band with cloning attempt";
     public final static String GROW = "Grow";
     public final static String NOGROW = "Not Grow";
@@ -122,9 +128,9 @@ public class Result {
         this.value= value;
     }
     
-     /**
+    /**
      * Constructor.
-     * 
+     *
      * @param id The id of the result
      * @param process The process used to generate this result.
      * @param result The sample used to generate this result.
@@ -138,15 +144,15 @@ public class Result {
         this.type = type;
         this.value= value;
     }
-
+    
     /**
      * Return the result type.
      *
      * @return The result type.
      */
-     public String getType() {
-         return type;
-     }
+    public String getType() {
+        return type;
+    }
     
     /**
      * Return the result value.
@@ -212,6 +218,36 @@ public class Result {
     }
     
     /**
+     * Static class to insert a list of results into result table.
+     *
+     * @param conn The database connection as a Connection object.
+     * @param results A list of Result objects.
+     * @exception FlexDatabaseException.
+     */
+    public static void insert(Connection conn, List results) throws FlexDatabaseException {
+        PreparedStatement ps = null;
+        String sql = "insert into result values(resultid.nextval,?,?,?,?)";
+        
+        try {
+            DatabaseTransaction dt = DatabaseTransaction.getInstance();
+            ps = conn.prepareStatement(sql);
+            
+            for(int i=0; i<results.size(); i++) {
+                Result result = (Result)results.get(i);
+                ps.setInt(1, result.getSample().getId());
+                ps.setInt(2, result.getProcess().getExecutionid());
+                ps.setString(3, result.getType());
+                ps.setString(4, result.getValue());
+                dt.executeUpdate(ps);
+            }        
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeStatement(ps);
+        }
+    }
+    
+    /**
      * Find the process result for a given sample and a process.
      *
      * @param sample The sample object.
@@ -257,6 +293,68 @@ public class Result {
         }
         return result;
     }
+   
+    /**
+     * Find all the process result for a given sample.
+     *
+     * @param sampleid The sampleid record.
+     * @param resulttype The result type record.
+     * @return A list of results for the given sample.
+     * @exception FlexDatabaseException.
+     */
+    public static List findResults(int sampleid, String resulttype)
+    throws FlexDatabaseException {
+        List results = new ArrayList();
+        String sql="select rs.resultid, rs.resultvalue, p.executionid, p.protocolid,"+
+                  " p.executionstatus, r.researcherid, r.researchername, r.researcherbarcode,"+
+                  " p.processdate, p.subprotocolname, p.extrainformation"+
+                  " from result rs, processexecution p, researcher r"+
+                  " where rs.executionid=p.executionid"+
+                  " and p.researcherid=r.researcherid"+
+                  " and rs.sampleid=?"+
+                  " and rs.resulttype=?"+
+                  " order by p.processdate desc";
+        
+        DatabaseTransaction dt = DatabaseTransaction.getInstance();
+        Connection conn = dt.requestConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, sampleid);
+            ps.setString(2, resulttype);
+            
+            rs = dt.executeQuery(ps);
+            
+            while(rs.next()) {
+                int resultId = rs.getInt(1);
+                String value = rs.getString(2);
+                int executionid = rs.getInt(3);
+                int protocolid=rs.getInt(4);
+                String executionstatus = rs.getString(5);
+                int researcherid = rs.getInt(6);
+                String researchername = rs.getString(7);
+                String researcherbarcode = rs.getString(8);
+                String processdate = rs.getString(9);
+                String subprotocol = rs.getString(10);
+                String extrainfo = rs.getString(11);
+                
+                Researcher researcher = new Researcher(researcherid, researchername, researcherbarcode,null);
+                Protocol protocol = new Protocol(protocolid, null, null, null);
+                Process process = new Process(executionid, protocol, executionstatus, researcher, processdate, subprotocol, extrainfo);
+                Sample sample = new Sample(sampleid, -1, -1);
+                Result result = new Result(resultId, process, sample, resulttype, value);
+                results.add(result);
+            }
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(ps);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        return results;
+    }
     
     /**
      * Associates a file reference with this result.
@@ -288,8 +386,8 @@ public class Result {
      * @return fileRefList The list of fileReference objects
      */
     public LinkedList getFileReferences() throws FlexDatabaseException{
-       LinkedList fileRefList = FileReference.findFile(this); 
-       return fileRefList;        
+        LinkedList fileRefList = FileReference.findFile(this);
+        return fileRefList;
         
     } //getFileReferences
     
@@ -302,7 +400,7 @@ public class Result {
         return this.value;
     }
     
-    public static void main (String [] args) throws Exception {
+    public static void main(String [] args) throws Exception {
         Result test = Result.findResult(new Sample(30702), Process.findProcess(1));
         System.out.println("result id: " + test.getId());
         List list = test.getFileReferences();

@@ -208,7 +208,15 @@
                     
     <form-bean      name="viewCloneForm"
                     type="edu.harvard.med.hip.flex.form.ViewCloneForm"/>  
-                   
+             
+    <form-bean      name="createExpressionPlateForm"
+                    type="edu.harvard.med.hip.flex.form.CreateExpressionPlateForm"/>  
+                    
+    <form-bean      name="enterResultForm"
+                    type="edu.harvard.med.hip.flex.form.EnterResultForm"/>  
+               
+    <form-bean      name="expressionResultHistoryForm"
+                    type="edu.harvard.med.hip.flex.form.ExpressionResultHistoryForm"/>                          
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -239,8 +247,7 @@
     <forward    name="rearray" path="/GetWorkflowForRearray.do"/>  
     <forward    name="browseFlex" path="/BrowseFlex.jsp"/>  
     <forward    name="genericRearray" path="/RearraySelection.jsp"/>    
-    
-
+    <forward    name="expressionClone" path="/ExpressionCloneEntry.jsp"/>      
 
   </global-forwards>
   
@@ -1103,7 +1110,62 @@
                input="/BrowseFlex.jsp">
       <forward  name="success"   path="/CloneDisplay.jsp"/>
     </action>    
-                               
+  
+    <action    path="/GetStrategy"
+               type="edu.harvard.med.hip.flex.action.GetStrategyAction"
+               scope="request"
+               input="/GetStrategy.do">
+      <forward  name="success"   path="/SelectExpressionVector.jsp"/>
+    </action>    
+    
+    <action    path="/CreateExpressionPlate"
+               type="edu.harvard.med.hip.flex.action.CreateExpressionPlateAction"
+               name="createExpressionPlateForm"
+               scope="request"
+               input="/GetStrategy.do">
+      <forward  name="success"   path="/SetDisplay.jsp"/>
+    </action> 
+   
+    <action    path="/SetDisplay"
+               type="edu.harvard.med.hip.flex.action.SetDisplayAction"
+               name="enterResultForm"
+               scope="session"
+               validate="false"
+               input="/SetDisplay.jsp">
+      <forward  name="success"   path="/EnterResult.jsp"/>
+      <forward  name="fail"     path="/NoPlateInSession.jsp"/>
+    </action> 
+        
+    <action    path="/EnterExpressionResult"
+               type="edu.harvard.med.hip.flex.action.EnterExpressionResultAction"
+               name="enterResultForm"
+               scope="session"
+               validate="false"
+               input="/EnterResult.jsp">
+      <forward  name="success"   path="/GetStrategy.do"/>
+      <forward  name="success_result"   path="/EnterExpressionPlateBarcode.jsp"/>
+      <forward  name="fail"     path="/NoPlateInSession.jsp"/>
+    </action> 
+        
+    <action    path="/EnterExpressionPlateBarcode"
+               type="edu.harvard.med.hip.flex.action.EnterExpressionPlateBarcodeAction"
+               name="enterResultForm"
+               scope="session"
+               validate="true"
+               input="/EnterExpressionPlateBarcode.jsp">
+      <forward  name="success"   path="/SetDisplay.jsp"/>
+    </action> 
+        
+    <action    path="/ExpressionResultHistory"
+               type="edu.harvard.med.hip.flex.action.ExpressionResultHistoryAction"
+               name="expressionResultHistoryForm"
+               scope="request"
+               validate="false">
+      <forward  name="success"   path="/ExpressionResultHistory.jsp"/>
+      <forward  name="noresult"     path="/ExpressionResultHistoryNoResult.jsp"/>
+      <forward  name="fail"     path="/ExpressionResultHistoryFail.jsp"/>
+    </action>     
+                                       
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->

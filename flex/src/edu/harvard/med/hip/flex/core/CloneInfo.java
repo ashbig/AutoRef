@@ -18,6 +18,9 @@ import edu.harvard.med.hip.flex.database.*;
 public class CloneInfo extends CDNASequence {
     public static final String SEQ_VERIFIED = "SEQUENCE VERIFIED";
     public static final String NOT_SEQ_VERIFIED = "NOT SEQUENCE VERIFIED";
+    public static final String IN_PROCESS = "IN PROCESS";
+    public static final String SUCESSFUL = "SUCESSFUL";
+    public static final String FAIL = "FAIL";
     
     protected int cloneid;
     protected String clonename;
