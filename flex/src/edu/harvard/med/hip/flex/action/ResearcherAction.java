@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-14 14:53:42 $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-06 21:48:58 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -25,6 +25,7 @@
  *    your 3 letters initials.
  *
  *    Jun-14-2001 : JMM - Class created. 
+ *    Jul-06-2001 : JMM - session now times out after 8 hours.
  *
  */
 
@@ -51,7 +52,7 @@ import edu.harvard.med.hip.flex.user.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-14 14:53:42 $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-06 21:48:58 $
  */
 
 public abstract class  ResearcherAction extends FlexAction {
@@ -78,6 +79,10 @@ public abstract class  ResearcherAction extends FlexAction {
         ActionForward retForward = null;
         ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
+        
+        // make it so the session doesn't time out for 8 hours.
+        session.setMaxInactiveInterval(480);
+        
         if(isUserLoggedIn(session) &&
         isUserAuthorize(session, Constants.RESEARCHER_GROUP)) {
             retForward = flexPerform(mapping,form,request,response);

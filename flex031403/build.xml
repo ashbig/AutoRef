@@ -44,7 +44,13 @@
     <copy todir="${system.lib}">
         <fileset dir="lib" includes="poolman.xml,poolman.policy,jndi.properties"/>
     </copy>
+    <mkdir dir="${deploy.home}/WEB-INF/perl"/>
+    <mkdir dir="${deploy.home}/WEB-INF/perl/UTIL"/>
     <mkdir dir="${javadoc.home}"/>
+    <copy todir="${deploy.home}/WEB-INF/perl">
+      <fileset dir="ApplicationCode/Perl"/>
+    </copy>
+
   </target>
 
 

@@ -23,8 +23,6 @@
         <th><CENTER>Researcher</CENTER></th>
         <th><CENTER>Notes</CENTER></th>
         <th><CENTER>Container</CENTER></th>
-        <th><CENTER>Container Type</CENTER></th>
-        <th><CENTER>Container Label</CENTER></th>
         <th><CENTER>Position</CENTER></th>
         <th><CENTER>Sample</CENTER></th>
         <th><CENTER>Sample Type</CENTER></th>
@@ -46,11 +44,9 @@
             <td><CENTER><bean:write name="process" property="researcher.name"/></CENTER></td>
             <td><CENTER><bean:write name="process" property="extrainfo"/></CENTER></td>
             <td><CENTER><flex:linkContainer name="container" process="process">
-                            <bean:write name="container" property="id"/>
+                            <bean:write name="container" property="label"/>
                         </flex:linkContainer>
                 </CENTER></td>
-            <td><CENTER><bean:write name="container" property="type"/></CENTER></td>
-            <td><CENTER><bean:write name="container" property="label"/></CENTER></td>
             <td><CENTER><bean:write name="sample" property="position"/></CENTER></td>
             <td><CENTER><bean:write name="sample" property="id"/></CENTER></td>
             <td><CENTER><bean:write name="sample" property="type"/></CENTER></td>
