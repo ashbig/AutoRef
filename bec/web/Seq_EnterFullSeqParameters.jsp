@@ -401,107 +401,107 @@
           <td width="44%" bgcolor="#e4e9f8" ><strong><font color="#000080">Start 
             codon substitution</font></strong></td>
           <td width="16%" bgcolor="#e4e9f8"><div align="center"> 
-              <input name="FS_NSTART_PASS_H" type="input" id="FS_NSTART_PASS_H" value="0" size="5" >
+              <input name="FS_NSTART_PASS_H" type="input" id="FS_NSTART_PASS_H" value="100" size="5" >
             </div></td>
           <td width="14%"bgcolor="#e4e9f8"><div align="center"> 
-              <input name="FS_NSTART_PASS_L" type="input" id="FS_NSTART_PASS_L" value="0" size="5" > 
+              <input name="FS_NSTART_PASS_L" type="input" id="FS_NSTART_PASS_L" value="100" size="5" > 
             </div></td>
-          <td width="13%"bgcolor="#e4e9f8"><div align="center"> <input name="FS_NSTART_FAIL_H" type="input" id="FS_NSTART_FAIL_H" value="0" size="5" > 
+          <td width="13%"bgcolor="#e4e9f8"><div align="center"> <input name="FS_NSTART_FAIL_H" type="input" id="FS_NSTART_FAIL_H" value="100" size="5" > 
             </div></td>
-          <td width="13%"bgcolor="#e4e9f8"><div align="center"> <input name="FS_NSTART_FAIL_L" type="input" id="FS_NSTART_FAIL_L" value="0" size="5" > 
+          <td width="13%"bgcolor="#e4e9f8"><div align="center"> <input name="FS_NSTART_FAIL_L" type="input" id="FS_NSTART_FAIL_L" value="100" size="5" > 
             </div></td>
         </tr>
         <tr> 
           <td bgColor="#b8c6ed"><b><strong><font color="#000080">Stop codon substitution</font></strong></b></td>
           <td bgColor="#b8c6ed"><div align="center"> <font color="#000080"><strong><b> 
-              <input name="FS_NSTOP_PASS_H" type="input" id="FS_NSTOP_PASS_H" value="0" size="5" > </b></strong></font></div></td>
+              <input name="FS_NSTOP_PASS_H" type="input" id="FS_NSTOP_PASS_H" value="100" size="5" > </b></strong></font></div></td>
           <td bgColor="#b8c6ed"><div align="center"> <font color="#000080"><strong><b> 
-              <input name="FS_NSTOP_PASS_L" type="input" id="FS_NSTOP_PASS_L" value="0" size="5" > </b></strong></font></div></td>
+              <input name="FS_NSTOP_PASS_L" type="input" id="FS_NSTOP_PASS_L" value="100" size="5" > </b></strong></font></div></td>
           <td bgColor="#b8c6ed"><div align="center"> <font color="#000080"><strong><b> 
-              <input name="FS_NSTOP_FAIL_H" type="input" id="FS_NSTOP_FAIL_H" value="0" size="5" > </b></strong></font></div></td>
+              <input name="FS_NSTOP_FAIL_H" type="input" id="FS_NSTOP_FAIL_H" value="100" size="5" > </b></strong></font></div></td>
           <td bgColor="#b8c6ed"><div align="center"> <font color="#000080"><strong><b> 
-              <input name="FS_NSTOP_FAIL_L" type="input" id="FS_NSTOP_FAIL_L" value="0" size="5" > </b></strong></font></div></td>
+              <input name="FS_NSTOP_FAIL_L" type="input" id="FS_NSTOP_FAIL_L" value="100" size="5" > </b></strong></font></div></td>
         </tr>
         <tr> 
           <td bgColor="#e4e9f8"><strong><font color="#000080">Substituttion cds 
             region </font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NCDS_PASS_H"  type="input" id="FS_NCDS_PASS_H" value="0" size="5" >
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NCDS_PASS_H"  type="input" id="FS_NCDS_PASS_H" value="100" size="5" >
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NCDS_PASS_L" type="input" id="FS_NCDS_PASS_L" value="0" size="5" > 
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NCDS_PASS_L" type="input" id="FS_NCDS_PASS_L" value="100" size="5" > 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NCDS_FAIL_H"  type="input" id="FS_NCDS_FAIL_H" value="0" size="5" >
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NCDS_FAIL_H"  type="input" id="FS_NCDS_FAIL_H" value="100" size="5" >
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NCDS_FAIL_L" type="input" id="FS_NCDS_FAIL_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NCDS_FAIL_L" type="input" id="FS_NCDS_FAIL_L" value="100" size="5" > 
             </div></td>
         </tr>
         <tr> 
           <td bgColor="#b8c6ed"><strong><font color="#000080">Frameshift Insertion</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NFRAME_PASS_H" type="input" id="FS_NFRAME_PASS_H" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NFRAME_PASS_H" type="input" id="FS_NFRAME_PASS_H" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NFRAME_PASS_L" type="input" id="FS_NFRAME_PASS_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NFRAME_PASS_L" type="input" id="FS_NFRAME_PASS_L" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NFRAME_FAIL_H" type="input" id="FS_NFRAME_FAIL_H" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NFRAME_FAIL_H" type="input" id="FS_NFRAME_FAIL_H" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NFRAME_FAIL_L" type="input" id="FS_NFRAME_FAIL_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NFRAME_FAIL_L" type="input" id="FS_NFRAME_FAIL_L" value="100" size="5" > 
             </div></td>
         </tr>
 		<tr> 
           <td bgColor="#e4e9f8"><strong><font color="#000080">Inframe Insertion</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NINFRAME_PASS_H"  type="input" id="FS_NINFRAME_PASS_H" value="0" size="5" >
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NINFRAME_PASS_H"  type="input" id="FS_NINFRAME_PASS_H" value="100" size="5" >
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NINFRAME_PASS_L" type="input" id="FS_NINFRAME_PASS_L" value="0" size="5" > 
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NINFRAME_PASS_L" type="input" id="FS_NINFRAME_PASS_L" value="100" size="5" > 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NINFRAME_FAIL_H"  type="input" id="FS_NINFRAME_FAIL_H" value="0" size="5" > 
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_NINFRAME_FAIL_H"  type="input" id="FS_NINFRAME_FAIL_H" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NINFRAME_FAIL_L" type="input" id="FS_NINFRAME_FAIL_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_NINFRAME_FAIL_L" type="input" id="FS_NINFRAME_FAIL_L" value="100" size="5" > 
             </div></td>
         </tr>
         <tr> 
           <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution 5' 
             linker region</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5SUB_PASS_H" type="input" id="FS_N5SUB_PASS_H" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5SUB_PASS_H" type="input" id="FS_N5SUB_PASS_H" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5SUB_PASS_L" type="input" id="FS_N5SUB_PASS_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5SUB_PASS_L" type="input" id="FS_N5SUB_PASS_L" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5SUB_FAIL_H" type="input" id="FS_N5SUB_FAIL_H" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5SUB_FAIL_H" type="input" id="FS_N5SUB_FAIL_H" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5SUB_FAIL_L" type="input" id="FS_N5SUB_FAIL_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5SUB_FAIL_L" type="input" id="FS_N5SUB_FAIL_L" value="100" size="5" > 
             </div></td>
         </tr>
 		<tr> 
           <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion 5' linker 
             region </font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N5INS_PASS_H" type="input" id="FS_N5INS_PASS_H" value="0" size="5" >
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N5INS_PASS_H" type="input" id="FS_N5INS_PASS_H" value="100" size="5" >
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N5INS_PASS_L" type="input" id="FS_N5INS_PASS_L" value="0" size="5" > 
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N5INS_PASS_L" type="input" id="FS_N5INS_PASS_L" value="100" size="5" > 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N5INS_FAIL_H" type="input" id="FS_N5INS_FAIL_H" value="0" size="5" >
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N5INS_FAIL_H" type="input" id="FS_N5INS_FAIL_H" value="100" size="5" >
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5INS_FAIL_L" type="input" id="FS_N5INS_FAIL_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N5INS_FAIL_L" type="input" id="FS_N5INS_FAIL_L" value="100" size="5" > 
             </div></td>
         </tr>
         <tr> 
           <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution 3' 
             linker region</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3SUB_PASS_H" type="input" id="FS_N3SUB_PASS_H" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3SUB_PASS_H" type="input" id="FS_N3SUB_PASS_H" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3SUB_PASS_L" type="input" id="FS_N3SUB_PASS_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3SUB_PASS_L" type="input" id="FS_N3SUB_PASS_L" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3SUB_FAIL_H" type="input" id="FS_N3SUB_FAIL_H" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3SUB_FAIL_H" type="input" id="FS_N3SUB_FAIL_H" value="100" size="5" > 
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3SUB_FAIL_L" type="input" id="FS_N3SUB_FAIL_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3SUB_FAIL_L" type="input" id="FS_N3SUB_FAIL_L" value="100" size="5" > 
             </div></td>
         </tr>
 		<tr> 
           <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion 3' linker 
             region </font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N3INS_PASS_H" type="input" id="FS_N3INS_PASS_H" value="0" size="5" >
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N3INS_PASS_H" type="input" id="FS_N3INS_PASS_H" value="100" size="5" >
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N3INS_PASS_L" type="input" id="FS_N3INS_PASS_L" value="0" size="5" > 
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N3INS_PASS_L" type="input" id="FS_N3INS_PASS_L" value="100" size="5" > 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N3INS_FAIL_H" type="input" id="FS_N3INS_FAIL_H" value="0" size="5" >
+          <td bgColor="#e4e9f8"><div align="center"> <input name="FS_N3INS_FAIL_H" type="input" id="FS_N3INS_FAIL_H" value="100" size="5" >
             </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3INS_FAIL_L" type="input" id="FS_N3INS_FAIL_L" value="0" size="5" > 
+          <td bgColor="#b8c6ed"><div align="center"> <input name="FS_N3INS_FAIL_L" type="input" id="FS_N3INS_FAIL_L" value="100" size="5" > 
             </div></td>
         </tr>
         
