@@ -26,6 +26,7 @@ public class Workflow {
     protected Vector flow;
     
     public static final int COMMON_WORKFLOW = 1;
+    public static final int MGC_PLATE_HANDLE_WORKFLOW = 7;
     
     /** Creates new Workflow */
     public Workflow() {
