@@ -39,9 +39,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
     private int                 m_sequencing_facility = -1;
     
     
-    private String              OUTPUT_DIR = null;
-    private String              INPUT_DIR = null;
-    {
+    private String              OUTPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR");
+    private String              INPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");
+   /* {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
              INPUT_DIR = "F:\\Sequences for BEC\\files_to_transfer";
@@ -55,7 +55,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
         {
             OUTPUT_DIR = "C:\\bio\\original_files";
         }
-    }
+    }*/
     
     public void setProcessType(int process_name){m_process_name=process_name;}
     public void setReadDirection(String read_direction)    { m_read_direction = read_direction;}
@@ -67,12 +67,12 @@ public class TraceFileProcessingRunner extends ProcessRunner
      
     public void setInputDirectory(String inputdir)
     {
-        if (ApplicationHostDeclaration.IS_BIGHEAD ) m_inputdir = INPUT_DIR;
+        if (! BecProperties.getInstance().isInDebugMode() ) m_inputdir = INPUT_DIR;
         else         m_inputdir = inputdir;
     }
     public void setOutputDirectory(String outputdir)
     { 
-        if (ApplicationHostDeclaration.IS_BIGHEAD) m_outputdir = OUTPUT_DIR;
+        if ( !BecProperties.getInstance().isInDebugMode()) m_outputdir = OUTPUT_DIR;
         else        m_outputdir = outputdir;
     }
     public void setDelete(String delete)
@@ -146,7 +146,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
            
          }
           File renaming_file =   new File( renaming_file_name );
-          m_file_list_reports.add( renaming_file );
+          if ( renaming_file!= null )m_file_list_reports.add( renaming_file );
          
      }
      
@@ -223,7 +223,16 @@ public class TraceFileProcessingRunner extends ProcessRunner
             for (int i = 0 ; i< trace_files.length;i++)
             {
                 file_name = trace_files[i].getName();
-                br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
+                try
+                {
+                    br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
+                }
+                catch(Exception e)
+                {
+                    
+                    m_error_messages.add("Cannot process files in input directory "+file_name);
+                    continue;
+                }
                 if ( br.isWriteFormat() ) 
                 {
                     if ( m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR)
@@ -503,13 +512,16 @@ public class TraceFileProcessingRunner extends ProcessRunner
      
     {   try
          {
+              BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+     
 TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
-runner.setProcessType(Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER);
-runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
-runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
+runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
+runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
+runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
 runner.setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
 runner.setOutputDirectory( "C:\\bio\\original_files");
-runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\files_to_transfer\\rename1099341664500.txt"));
+runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Kolodner\\mapping.txt"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        runner.setDelete("YES");
            

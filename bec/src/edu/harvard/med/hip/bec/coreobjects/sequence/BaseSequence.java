@@ -58,6 +58,9 @@ public  class BaseSequence
     public static final int QUALITY_GOOD = 2;
      public static final int QUALITY_REVIEW = 1;
     public static final int QUALITY_NOT_DEFINED = 0;
+    public static final int QUALITY_CANNOT_PROCESS = -1;
+    public static final int QUALITY_CANNOT_PROCESS_NO_DATA = -2;
+    
     
     protected int m_id =  BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     protected String m_text = null;
@@ -259,6 +262,9 @@ public  class BaseSequence
             case QUALITY_BAD : return  "Bad";
             case QUALITY_GOOD : return  "Good";
             case QUALITY_REVIEW : return  "Review";
+            case QUALITY_CANNOT_PROCESS: return "Can not be process";
+            case QUALITY_CANNOT_PROCESS_NO_DATA: return "Can not be process, no data";
+            
             case QUALITY_NOT_DEFINED : 
             default  : return  "Not defined";
 

@@ -202,7 +202,7 @@ public abstract class ProcessRunner implements Runnable
                     message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
                 if ( m_additional_info != null)
                    message += m_additional_info;
-                 Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "elena_taycher@hms.harvard.edu", title, message);
+                 Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "hip_informatics@hms.harvard.edu", title, message);
                      
             }
      
@@ -248,6 +248,37 @@ public abstract class ProcessRunner implements Runnable
              m_items = final_string.toString();
          
          }
+     }
+    
+     
+     
+     public static String cleanUpItems(int items_type, String submit_items)
+     {
+         char[] items_char = null;
+         StringBuffer final_string = new StringBuffer();
+         if ( items_type == Constants.ITEM_TYPE_CLONEID ||
+            items_type == Constants.ITEM_TYPE_BECSEQUENCE_ID ||
+            items_type == Constants.ITEM_TYPE_FLEXSEQUENCE_ID)
+         {
+             ArrayList items = Algorithms.splitString(submit_items);
+             if (items == null || items.size() < 1) return null;
+             
+             for (int count = 0; count < items.size(); count++)
+             {
+                 items_char = ((String)items.get(count)).toCharArray();
+                 for ( int char_count = 0; char_count < items_char.length; char_count++)
+                 {
+                     if ( ! Character.isDigit(items_char[char_count]) ) break;
+                     if ( char_count == items_char.length - 1)
+                         final_string.append( (String)items.get(count) + " ");
+                    
+                 }
+             }
+          //   System.out.println(final_string.toString());
+            return final_string.toString();
+         
+         }
+         return submit_items;
      }
     
      

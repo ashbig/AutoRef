@@ -144,6 +144,32 @@ public class DiscrepancyDescription
         return null;
     }
     
+    public boolean    isPolymorphism()
+    {
+        switch (m_discrepancydefinition_type )
+        {
+            case TYPE_AA :
+            { 
+                RNAMutation cur_rna_discr = null;
+               for (int rna_count = 0; rna_count <  m_rna_describes_aa.size(); rna_count++)
+               {
+                   cur_rna_discr = (RNAMutation)m_rna_describes_aa.get(rna_count);
+                   if ( cur_rna_discr.getPolymorphismFlag() != Mutation.FLAG_POLYM_YES )
+                       return false;
+               }
+               return true;
+            }
+            case TYPE_NOT_AA_LINKER:
+            case TYPE_NOT_AA_AMBIQUOUS:
+            {
+               return false;
+            }
+            default: return false;
+        }
+    }
+    
+    
+    
     
     public static ArrayList   assembleDiscrepancyDefinitions(ArrayList discrepancies)
     {
@@ -182,9 +208,11 @@ public class DiscrepancyDescription
     //remember linker3 and gene specific mutations have their one position definition system
     public static ArrayList   getDiscrepancyDescriptionsNoDuplicates(ArrayList arr2,ArrayList arr1)
     {
-        if (arr1 == null && arr2 == null) return null;
-        if (arr1 != null & arr2 == null) return assembleDiscrepancyDefinitions(arr1);
-        if (arr1 == null && arr2 != null) return assembleDiscrepancyDefinitions(arr2);
+        if ( ( arr1 == null || arr1.size() == 0 ) && ( arr2 == null || arr2.size() == 0)) return null;
+        if ( (arr1 != null && arr1.size() > 0) && ( arr2 == null || arr2.size() == 0 )) 
+            return assembleDiscrepancyDefinitions(arr1);
+        if ( ( arr1 == null || arr1.size() == 0 ) && ( arr2 != null && arr2.size() > 0))
+            return assembleDiscrepancyDefinitions(arr2);
         ArrayList res1 = assembleDiscrepancyDefinitions(arr1);
         ArrayList res2 = assembleDiscrepancyDefinitions(arr2);
          DiscrepancyDescription discr_definition_res1 =  null; 
@@ -276,6 +304,7 @@ public class DiscrepancyDescription
         int global_change_type = Mutation.TYPE_NOT_DEFINE;
  //get total number of discrepancies per each global type
         int quality = Mutation.QUALITY_NOTKNOWN;
+        boolean   isIgnorIfPolymorphism = false;
         DiscrepancyDescription discr_definition = null;
         int[] total_discrepancy_numbers_pass_high_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
         int[] total_discrepancy_numbers_pass_low_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
@@ -320,6 +349,12 @@ public class DiscrepancyDescription
             }
             if (global_change_type != Mutation.TYPE_NOT_DEFINE)
             {
+               /* isIgnorIfPolymorphism = cutoff_spec.isIgnorPolymorphismByType(global_change_type);
+                if ( isIgnorIfPolymorphism && discr_definition.isPolymorphism() )// need to check if discrepancy is polymorphism and continue if yes
+                {
+                    continue;
+                }
+                */
                 if ( quality == Mutation.QUALITY_LOW)
                     total_discrepancy_numbers_pass_low_quality[-global_change_type ]++;
                 else
@@ -356,6 +391,7 @@ public class DiscrepancyDescription
         if ( discrepancy_descriptions == null || discrepancy_descriptions.size() ==0)
             return BaseSequence.QUALITY_GOOD;
         int global_change_type = Mutation.TYPE_NOT_DEFINE;
+        boolean isIgnorIfPolymorphism = false;
  //get total number of discrepancies per each global type
         int quality = Mutation.QUALITY_NOTKNOWN;
         DiscrepancyDescription discr_definition = null;
@@ -402,6 +438,12 @@ public class DiscrepancyDescription
             }
             if (global_change_type != Mutation.TYPE_NOT_DEFINE)
             {
+               /* isIgnorIfPolymorphism = cutoff_spec.isIgnorPolymorphismByType(global_change_type);
+                if ( isIgnorIfPolymorphism && discr_definition.isPolymorphism() )// need to check if discrepancy is polymorphism and continue if yes
+                {
+                    continue;
+                }
+                **/
                 if ( quality == Mutation.QUALITY_LOW)
                     total_discrepancy_numbers_pass_low_quality[-global_change_type ]++;
                 else

@@ -22,7 +22,7 @@ public class RefSequence extends BaseSequence
 {
     
   
-    
+   /* 
     public static final int SPECIES_NOT_SET = 0;
     public static final int SPECIES_HUMAN = 1;
     public static final int SPECIES_YEAST = 2;
@@ -35,7 +35,7 @@ public class RefSequence extends BaseSequence
      // public static final int SPECIES_HOLDER = 9;
      // public static final int SPECIES_HOLDER = 10;
      // public static final int SPECIES_HOLDER = 11;
-    
+    */
     private int m_species = -1;
     private String m_dateadded= null;
    
@@ -156,20 +156,7 @@ public class RefSequence extends BaseSequence
      * @return The species value.
      */
     public int getSpecies()    {    return m_species;}
-    public String getSpeciesAsString()  
-    {    
-        switch( m_species)
-        {
-            case SPECIES_NOT_SET : return "Not known";
-            case SPECIES_HUMAN : return "Homo sapiens";
-            case SPECIES_YEAST : return "Saccharomyces cerevisiae";
-            case SPECIES_MOUSE : return "Mus musculus";
-            case SPECIES_PSEUDOMONAS : return "Pseudomonas aeruginosa";
-            case SPECIES_YP: return "Yersinia pestis";
-            case SPECIES_FT: return "Francisella tularensis ";
-            default:return "Not known";
-        }
-    }
+    
     public String getDateadded()    {    return m_dateadded;}
     public String getFastaHeader()    {    return new String(">"+ super.getId());}
     public ArrayList getPublicInfo()    {    return m_publicInfo;}
@@ -369,45 +356,7 @@ public class RefSequence extends BaseSequence
        
     }
     
-    /**
-     * Return sequence description.
-     *
-     * @return The sequence description.
-     *
-    public String getDescription()
-    {
-        if(m_currentDescription != null) return m_currentDescription;
-        
-        String description = null;
-        for (int elm = 0; elm < m_publicInfo.size(); elm++)
-        {
-            Hashtable h = (Hashtable)m_publicInfo.get(elm);
-            
-            if(((String)h.get(NAMETYPE)).equals(GENBANK_ACCESSION))
-            {
-                description = (String)h.get(DESCRIPTION);
-                if (description != null)
-                    return description;
-            }
-            
-            if(((String)h.get(NAMETYPE)).equals(GI))
-            {
-                description = (String)h.get(DESCRIPTION);
-                if (description != null)
-                    return description;
-            }
-            
-            if(((String)h.get(NAMETYPE)).equals(UNIGENE_SID))
-            {
-                description = (String)h.get(DESCRIPTION);
-                if (description != null)
-                    return description;
-            }
-        }
-        return description;
-    }
-    
-    */
+  
     
     /**
      * Restore the data from database by sequence id.
