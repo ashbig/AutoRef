@@ -470,15 +470,16 @@ public class AssemblyRunner implements Runnable
              if ( read.getType() == Read.TYPE_ENDREAD_REVERSE)
              {
                     sequence = SequenceManipulation.getCompliment(read.getSequence().getText()) ;
-     int[] arr_scores = SequenceManipulation.getScoresComplement(read.getSequence().getScores());
-                 scores = Algorithms.convertArrayToString(arr_scores, " ");
+                    int[] arr_scores = SequenceManipulation.getScoresComplement(read.getSequence().getScores());
+                    scores = Algorithms.convertArrayToString(arr_scores, " ");
    //System.out.println(Algorithms.convertArrayToString(arr_scores, " "));
              }
-             else
+             else if ( read.getType() == Read.TYPE_ENDREAD_FORWARD)
              {
                  sequence = read.getSequence().getText() ;
                  scores = read.getSequence().getScores();
              }
+             else return null;
          }
          catch(Exception e){ return null;}
          
