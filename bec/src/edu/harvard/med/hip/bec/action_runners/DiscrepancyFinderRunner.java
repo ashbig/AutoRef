@@ -60,35 +60,37 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             if ( sequence_descriptions == null || sequence_descriptions.size() <1 ) return;
             //create process
             process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DISCREPANCY_FINDER,new ArrayList(),m_user) ;
-            try
-            {
-                synchronized(this)
+           
+                for  (int index =  0;  index < sequence_descriptions.size(); index++)
                 {
-                    for  (int index =  0;  index < sequence_descriptions.size(); index++)
-                    {
                         clone = (CloneDescription) sequence_descriptions.get(index);
-                        if (isSequenceProcessed(clone, pst_check_clone_sequence) )
+                        synchronized(this)
                         {
-                            continue;
+                             try
+                            {
+                                if (isSequenceProcessed(clone, pst_check_clone_sequence) )
+                                {
+                                    continue;
+                                }
+                            //process sequence
+                                clone_sequence = processSequence(clone);
+                            //update clone data / status
+                                updateInsertCloneInfo(conn,clone_sequence, clone);
+
+                                //insert process_object
+                                pst_insert_process_object.setInt(1,process_id);
+                                pst_insert_process_object.setInt(2, clone_sequence.getId());
+                                DatabaseTransaction.executeUpdate(pst_insert_process_object);
+
+                                conn.commit();
+                            }
+                            catch(Exception e)
+                            {
+                                m_error_messages.add(e.getMessage());
+                            }
                         }
-                    //process sequence
-                        clone_sequence = processSequence(clone);
-                    //update clone data / status
-                        updateInsertCloneInfo(conn,clone_sequence, clone);
-    
-                        //insert process_object
-                        pst_insert_process_object.setInt(1,process_id);
-                        pst_insert_process_object.setInt(2, clone_sequence.getId());
-                        DatabaseTransaction.executeUpdate(pst_insert_process_object);
-                        
-                        conn.commit();
-                    }
                 }
-            }
-            catch(Exception e)
-            {
-                m_error_messages.add(e.getMessage());
-            }
+            
         }
         catch(Exception e)
         {
