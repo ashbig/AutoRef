@@ -31,7 +31,7 @@ public class NeedleWrapper
     private int         m_ref_id =-1;
     
     private NeedleResult m_needle = null;
-    private String  m_output_file_dir = "/tmp/";//parsing
+    private String  m_output_file_dir = "d:\\tmp\\";//parsing
     //windows
   //  private String  m_needle_path = "c:\\EMBOSS-2.5.1\\emboss\\needle.exe  ";
      private String  m_needle_path = "d:\\bio_programs\\EMBOSS-2.5.1\\emboss\\needle.exe  ";
@@ -129,10 +129,10 @@ public class NeedleWrapper
         
         // for windows /c/file_name
         if (isWindows)
-            cmd = m_needle_path+" /c" + q_name+ " /c"+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile /c" + output_name;
+            cmd = m_needle_path+Algorithms.convertWindowsFileNameIntoUnix( q_name)+ " "+Algorithms.convertWindowsFileNameIntoUnix( ref_name) + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
         else
             cmd = m_needle_path+q_name+ " "+ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile " + output_name;
-        //System.out.println(cmd);
+        System.out.println(cmd);
         //blastcmd = "/usr/local/emboss/bin/needle "+q_name+ ref_name + " -gapopen " + m_gapopen + " -gapextend " +  m_gapext +" -outfile "+.out ";
         
         try
