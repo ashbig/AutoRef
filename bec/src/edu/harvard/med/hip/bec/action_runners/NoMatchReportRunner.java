@@ -42,7 +42,7 @@ public class NoMatchReportRunner extends ProcessRunner
     public void         setPassParamBlastMinimumStretch(int i){m_blast_minimum_stretch = i;}
     public void         setBlastableDBName(String v){ m_blastable_dbname = v;}
     public void         setIdTypeToDisplay(String v){ if ( v != null && v.length() != 0) m_id_type = v;}
-    public String getTitle()    { return "Request for NO MATCH report.";    }
+    public String       getTitle()    { return "Request for NO MATCH report.";    }
     
     
     public void run()
@@ -276,7 +276,9 @@ public class NoMatchReportRunner extends ProcessRunner
     }
     private File            printReport(ArrayList clones, Hashtable blast_clone_reports)
     {
-        String title = " Clone Id\tPlate Label\tPosition\t Exspected FLEX Sequence Id\tConstructId\tSummary\tDetails\n";
+        String title = " Clone Id\tPlate Label\tPosition\t Exspected FLEX Sequence Id";
+        if ( m_id_type != null && !m_id_type.equalsIgnoreCase("NONE")) title+="\t"+m_id_type;
+        title +=    "\tConstructId\tSummary\tDetails\n";
         FileWriter in = null; 
         File report = new File(Constants.getTemporaryFilesPath() + "NoMatchReport"+System.currentTimeMillis()+".txt");
         try
@@ -312,7 +314,7 @@ public class NoMatchReportRunner extends ProcessRunner
         clone_info.append( clone.getPlateLabel ()+"\t");
         clone_info.append( clone.getPosition ()+"\t");
         clone_info.append(  clone.getFLEXRefSequenceId()+"\t");
-        if ( m_id_type != null)clone_info.append(clone.getSampleType ()+"\t");
+        if ( m_id_type != null && !m_id_type.equalsIgnoreCase("NONE"))clone_info.append(clone.getSampleType ()+"\t");
         clone_info.append(clone.getConstructId ()+"\t");
         BlastCloneReport blast_clone_report = (BlastCloneReport)blast_clone_reports.get( new Integer(clone.getCloneId ()));
         clone_info.append(     blast_clone_report.getSummary(m_id_type)+"\t");
@@ -416,10 +418,10 @@ public class NoMatchReportRunner extends ProcessRunner
     try
     {
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-         runner.setItems("   8719	      8985	      8915	      9024	      9062	      8309	      8501	      8041	      8042	      8069	      8105	      8121	     20453	     20461	     20516	     20539	     20549	     20606	      7294	      7252	      7275	      7276	      7232	      7234	      7216	      7222	      7206	      7152	      7125	      7127	      7558	      7562	      7580	      7619	      7622	      7650	      7655	      7656	      7733	      7734	      7735	      7752	     20861	      9102	      9110	      9524	      9535	      9545	      9577	      9663	     20942	     20943	     20959	     20979	     21223	     21228	     21235	     21378	     21295	     21299	     21406	     21707	     21785	     21789	      8583	      8584	      8600	      8604	      8661	      8159	      8226	      8257	     20802	     20041	     19996	     19925	      7804	      7843	      7844	      7848	      7894	      7910	      7917	      7923	      7933	      7968	      7971	      9220	      9277	      9278	      9262	     19833	     19841	      9730	      9738	     19860	     19861	     21056	     21155	     21508	     21553	     21826	     21835	     21840	     21926	     10371	     10195	     10470	     10263	     10242	     10284	     10299");
-        runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
+         runner.setItems("   151436");
+         runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
           runner.setBlastableDBName("c:\\blast_db\\Yeast\\genes");     
-          runner.setIdTypeToDisplay(PublicInfoItem.GI);
+          runner.setIdTypeToDisplay("GI");
         runner.run();    
     }catch(Exception e){}
     System.exit(0);
