@@ -1,0 +1,40 @@
+Application configuration:
+
+
+Application is configured by three variables
+defined in 
+            package edu.harvard.med.hip.utility
+            class   ApplicationHostDeclaration
+ a. IS_BIGHEAD sets all class passes to third party programs and 
+server directories according to OS of the server;
+ b. IS_BIGHEAD_FOR_EXPRESSION_EVALUATION sets all if blocks inside java 
+code for DIFFERENT versions of ACE package code ;
+ c.  JSP_REDIRECTION sets jsp redirection for each version of application;
+
+
+should ACE package run on more than two possible server machines, variables 
+IS_BIGHEAD  and IS_BIGHEAD_FOR_EXPRESSION_EVALUATION
+                a. renamed to SERVER_MACHINE
+                b. get type int
+                c. all server machines should get own value
+
+1.	To configure new application for the same server:
+            
+            set JSP_REDIRECTION and IS_BIGHEAD_FOR_EXPRESSION_EVALUATION;
+2.	To reconfigure from one server machine to another
+            set IS_BIGHEAD;
+
+set values of program/directory passes in the following java files
+
+set phredPhrap script according to machine settings
+
+
+3.	To reconfigure from Win to Unix 
+            a.	Verify all steps in 2.
+            b.	change and recompile trimming_java_script.java, put
+ trimming_java_script$classes into phredPhrap directory
+            c. recompile all third party programms
+                1. EMBOSS package
+                2. primer3
+                3. assembled package
+
