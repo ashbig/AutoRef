@@ -22,7 +22,7 @@
 <bean:define name="sample" property="container" id="container"/>
 
 <html>
-<head><title>Sample Details</title></head>
+<head><title>Sample Details</title></head> 
 <body>
 <h2>Sample <bean:write name="sample" property="id"/></h2>
 <br>

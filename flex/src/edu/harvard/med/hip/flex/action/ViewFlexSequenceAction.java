@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-14 19:35:06 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.4 $
+ * $Date: 2001-07-09 18:16:42 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -51,8 +51,8 @@ import edu.harvard.med.hip.flex.database.*;
  *
  * Class description - Full description
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-14 19:35:06 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.4 $ $Date: 2001-07-09 18:16:42 $
  */
 
 public class ViewFlexSequenceAction extends FlexAction {
@@ -105,7 +105,8 @@ public class ViewFlexSequenceAction extends FlexAction {
               
           }
             
-            // format the sequence in fasta and make the cds part red
+            
+          // format the sequence in fasta and make the cds part red
             String seqText = displaySeq.getSequencetext();
             StringBuffer formatedHTMLSeq = new StringBuffer();
             // keep track of the sequence index
