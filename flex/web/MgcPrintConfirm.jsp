@@ -19,7 +19,17 @@
 <p>
 
   
-<bean:write name="printedLabels" />
+<h3><bean:write name="message" /> </h3>
+<p>
+<table>
+<logic:iterate name="printedLabels" id ="label" >
+<tr>
+    <td>    <bean:write name="label" /> </td>
+</tr>
+</logic:iterate>
+
+
+</table>
 
 </body>
 </html>
