@@ -146,16 +146,12 @@ public class OligoPlateManager {
                     //all of the oligo plate header and sample info are inserted in DB
                     //three text files for order oligos will be generated
                     plater = new OligoPlater(oligoPatternList, cg.getConstructList(), conn);
-<<<<<<< OligoPlateManager.java
+
                     plater.generateOligoOrder();
-                   // plater.insertProcessInputOutput();
-                    System.out.println("receive oligo plates queue inserted.");
-=======
-                    plater.createOligoPlates();
                     plater.insertProcessInputOutput();
-                    plater.insertReceiveOligoQueue();
+                   //plater.insertReceiveOligoQueue();
                     //System.out.println("receive oligo plates queue inserted.");
->>>>>>> 1.11
+
                     plater.removeOrderOligoQueue();
                     //System.out.println("order oligo queue removed.");
                     
@@ -165,15 +161,13 @@ public class OligoPlateManager {
                     DatabaseTransaction.commit(conn);
                 } catch(FlexDatabaseException sqlex){
                     //System.out.println(sqlex);
-<<<<<<< OligoPlateManager.java
+
                     System.out.println(sqlex.getMessage());
                     DatabaseTransaction.rollback(conn);                    
                 } catch(IOException ioe){
                     System.out.println("Error occurred while writing to oligo order files");
                     System.out.println(ioe.getMessage());
-=======
-                    System.err.println(sqlex.getMessage());
->>>>>>> 1.11
+
                     DatabaseTransaction.rollback(conn);
                 }
                 finally {
