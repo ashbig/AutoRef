@@ -79,10 +79,17 @@ public class CloneRearrayParamSetAction extends RearrayParamSetAction {
             manager.setDestStorageType(StorageType.WORKING);
             manager.setDestStorageForm(StorageForm.DNA);
         } else if(Workflow.REARRAY_EXP_WORKING == workflow) {
-            manager.setProtocolName(Protocol.REARRAY_EXP_WORKING);
-            manager.setSampleType(Sample.ISOLATE);
+            String sampleType = ((GenericRearrayForm)form).getSampleType();
+            if("dna".equals(sampleType.trim())) {
+                manager.setProtocolName(Protocol.REARRAY_EXP_WORKING_DNA);
+                manager.setSampleType(Sample.DNA);
+                manager.setDestStorageForm(StorageForm.DNA);
+            } else if("glycerol".equals(sampleType.trim())) {
+                manager.setProtocolName(Protocol.REARRAY_EXP_WORKING);
+                manager.setSampleType(Sample.ISOLATE);
+                manager.setDestStorageForm(StorageForm.GLYCEROL);
+            }
             manager.setDestStorageType(StorageType.WORKING);
-            manager.setDestStorageForm(StorageForm.GLYCEROL);
         }
     }
     

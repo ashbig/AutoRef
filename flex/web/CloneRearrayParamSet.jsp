@@ -50,7 +50,6 @@
     <table>
         <tr>
             <td class="prompt">Select the source plate format:</td>
-            <logic:notEqual name="workflow" value="34">
             <logic:equal name="dist" value="yes">
             <td><select name="sourceFormat">
                 <option value="workingGlycerol"/>Working Glycerol
@@ -60,21 +59,16 @@
             </logic:equal>
             <logic:equal name="dist" value="no">
             <td><select name="sourceFormat">
+                <logic:notEqual name="workflow" value="34">
                 <option value="glycerol"/>Original Production Glycerol Stock
                 <option value="dna"/>Original Production DNA
+                </logic:notEqual>
                 <option value="workingGlycerol"/>Working Glycerol
                 <option value="workingDna"/>Working DNA
                 </select>
             </td>
             </logic:equal>
-            </logic:notEqual>
 
-            <logic:equal name="workflow" value="34">
-            <td><select name="sourceFormat">
-                <option value="workingGlycerol"/>Working Glycerol
-                </select>
-            </td>
-            </logic:equal>
         </tr>
         <tr>
             <td class="prompt">New plate type for rearrayed plates:</td>
@@ -82,6 +76,16 @@
                 <option value="96 WELL PLATE"/>96 Well Plate
                 </select>
             </td>
+        </tr>
+        <tr>
+            <logic:equal name="workflow" value="34">
+            <td class="prompt">New sample type for rearrayed plates:</td>
+            <td><select name="sampleType">
+                <option value="dna"/>DNA
+                <option value="glycerol"/>Glycerol
+                </select>
+            </td>
+            </logic:equal>
         </tr>
     </table>
     
