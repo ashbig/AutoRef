@@ -51,6 +51,10 @@
     <form-bean      name="displayLinksForm"
                     type="edu.harvard.med.hip.metagene.form.DisplayLinksForm"/>
 
+    <!-- get medline records form bean -->
+    <form-bean      name="displayPaperLinksForm"
+                    type="edu.harvard.med.hip.metagene.form.DisplayPaperLinksForm"/>
+
     <!-- get genes page form bean -->
     <form-bean      name="geneSearchForm"
                     type="edu.harvard.med.hip.metagene.form.GeneSearchForm"/>
@@ -186,6 +190,16 @@
       <forward  name="success"   path="/DisplayLinks.jsp"/>
       <forward  name="fail"   path="/DisplayLinksFail.jsp"/>
     </action>
+
+    <!-- Process the medline paper link display -->
+    <action    path="/DisplayPaperLinks"
+               type="edu.harvard.med.hip.metagene.action.DisplayPaperLinksAction"
+               name="displayPaperLinksForm"
+               scope="request"
+               input="/DisplayGenes.jsp">
+      <forward  name="success"   path="/DisplayPaperLinks.jsp"/>
+    </action>
+
 
     <!-- Process gene search -->
     <action    path="/GeneSearch"

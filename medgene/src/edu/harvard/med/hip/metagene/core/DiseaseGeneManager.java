@@ -73,10 +73,7 @@ public class DiseaseGeneManager {
     public Vector getAssociationsByDisease(int disease, int stat, int number) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
- 
-        
-        //Connection conn = pool.getConnection();
-        
+         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -600,10 +597,7 @@ public class DiseaseGeneManager {
     public Disease queryDiseaseById(int id) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
- 
-        
-        //Connection conn = pool.getConnection();
-        
+
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -641,10 +635,7 @@ public class DiseaseGeneManager {
     public Statistics queryStatById(int id) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
- 
-        
-        //Connection conn = pool.getConnection();
-        
+
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -680,10 +671,7 @@ public class DiseaseGeneManager {
     public GeneIndex queryGeneIndexById(int id) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();
- 
-        
-        //Connection conn = pool.getConnection();
-        
+
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -716,5 +704,43 @@ public class DiseaseGeneManager {
         }
         manager.disconnect(conn);
         return geneIndex;
-    }                
+    }       
+    
+    
+    public Vector getMedlineRecords(int disease_id, String gene_index){
+        DBManager dbm = new DBManager();
+        Connection con = dbm.connect();
+        if(con == null){
+            System.out.println("Cannot connect to the database.");
+            return null;
+        }
+        
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Vector pubmed_ids = new Vector();
+        
+        String sql = "select mr.pubmedid from medline_records mr, disease_list dl " +
+                     "where dl.disease_mesh_term = mr.disease_index " +
+                     "and dl.hip_disease_id = ? and mr.gene_index = ? ";
+        try{
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, disease_id);
+            pstmt.setString(2, gene_index);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                int pubmed_id = rs.getInt(1);
+                pubmed_ids.add(new Integer(pubmed_id).toString());
+            }
+            rs.close();
+            pstmt.close();
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            dbm.disconnect(con);
+        }
+        return pubmed_ids;
+    }
+        
+    
+    
 }
