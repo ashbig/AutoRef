@@ -60,6 +60,9 @@
     <form-bean      name="EnterOligoPlateLocationForm"
                     type="edu.harvard.med.hip.flex.form.EnterOligoPlateLocationForm"/>
 
+    <!-- Customer receive oligo orders form bean -->
+    <form-bean      name="PrintOligoPlateBarcodeForm"
+                    type="edu.harvard.med.hip.flex.form.PrintOligoPlateBarcodeForm"/>
 
     <!-- Find registration form bean -->
     <form-bean      name="findRegistrationForm"
@@ -276,6 +279,15 @@
                scope="request"
                input="/EnterOligoPlateLocation.jsp">
       <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
+    </action>
+
+    <!-- Process the printing of new oligo plate barcodes -->
+    <action    path="/PrintOligoPlateBarcode"
+               type="edu.harvard.med.hip.flex.action.PrintOligoPlateBarcodeAction"
+               name="PrintOligoPlateBarcodeForm"
+               scope="request"
+               input="/PrintOligoPlateBarcode.jsp">
+      <forward  name="success"   path="/PrintOligoPlateBarcode.jsp"/>
     </action>
 
     <!-- Displays the container details page -->
