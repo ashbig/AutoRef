@@ -68,6 +68,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             String fivepPlate = ((CreatePCRPlateForm)form).getFivepPlate();
             String threepOpenPlate = ((CreatePCRPlateForm)form).getThreepOpenPlate();
             String threepClosedPlate = ((CreatePCRPlateForm)form).getThreepClosedPlate();
+            String cdnaLibrary = ((CreatePCRPlateForm)form).getCdnaLibrary();
             LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems"); 
             QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate);
             if(item == null) {
@@ -115,6 +116,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             request.getSession().setAttribute("EnterOligoPlateAction.locations", locations);
             request.getSession().setAttribute("EnterOligoPlateAction.item", item);
             request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
+            request.getSession().setAttribute("EnterOligoPlateAction.cdnaLibrary", cdnaLibrary);
 
             return (mapping.findForward("success"));   
         } catch (Exception ex) {
