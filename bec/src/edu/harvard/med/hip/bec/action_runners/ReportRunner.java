@@ -107,7 +107,7 @@ public class ReportRunner extends ProcessRunner
         if ( score!= null) {m_score= true;  m_report_title += "Clone Score\t";}//
         if ( rank!= null) {m_rank= true;  m_report_title += "Clone Rank\t";}//
         if( dir_name != null) {m_dir_name = true;  m_report_title += "Clone Directory Name\t";}// Directory Name
-        if ( read_length != null) {m_read_length= true;  m_report_title += "End reads length: Forward\tEnd reads length:Reverse\t";}
+        if ( read_length != null) {m_read_length= true;  m_report_title += "End reads length: Forward/Reverse\t";}
       
         if( ref_sequence_id != null){ m_ref_sequence_id= true;  m_report_title += "REF: Bec ID\tREF: FLEX Id\t ";}//      Sequence ID
         if( ref_cds_start != null) {m_ref_cds_start= true; m_report_title += "REF:CDS Start\t";} //      CDS Start
@@ -230,7 +230,7 @@ public class ReportRunner extends ProcessRunner
                 plate_names.append( "'");
                 plate_names.append((String)items.get(index));
                 plate_names.append("'");
-                if (index == 3) break;
+                if (index == 10) break;
                 if ( index != items.size()-1 ) plate_names.append(",");
             }
             sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
