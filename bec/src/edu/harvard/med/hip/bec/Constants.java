@@ -250,7 +250,8 @@ public class Constants {
     public static final int AVAILABLE_CONTAINERS_INT = 21;
     public static final int STRETCH_REPORT_INT = 22;
     public static final int STRETCH_COLLECTION_REPORT_INT = 23;
-    
+    public static final int STRETCH_COLLECTION_REPORT_ALL_INT = 24;
+    public static final int LQR_COLLECTION_REPORT_INT = 25;
     //type of items submitted for action : 1-4
     public static final int ITEM_TYPE_CLONEID = 1;
     public static final int ITEM_TYPE_PLATE_LABELS = 2;

@@ -3,27 +3,21 @@ package edu.harvard.med.hip.bec.action_runners;
 
 import java.sql.*;
 import java.io.*;
-
-import  edu.harvard.med.hip.bec.programs.primer3.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.util.*;
-import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
-import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.Constants;
-import edu.harvard.med.hip.bec.sampletracking.mapping.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
-import edu.harvard.med.hip.bec.programs.assembler.*;
 import edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.bec.ui_objects.*;
 import edu.harvard.med.hip.bec.modules.*;
-  import java.util.*;
-  import edu.harvard.med.hip.utility.*;
+import java.util.*;
+
 /**
  *
  * @author  HTaycher
@@ -33,35 +27,20 @@ import edu.harvard.med.hip.bec.modules.*;
     public static final int TYPE_COLLECTION_OF_LQR = 0;
     public static final int TYPE_COLLECTION_OF_GAPS = 1;
     
-    
-    
-    private int             m_process_type = TYPE_COLLECTION_OF_LQR;
-    private boolean                 m_isTryMode = false;
-    
-    //parameters for LQS definition
-    private int             m_lq_window_size = BaseSequence.INTERNAL_QUALITY_WINDOW_SIZE; 
-    private int             m_lq_number_of_lqbases = BaseSequence.INTERNAL_QUALITY_NUMBER_LOW_QUALITY_BASES ; 
-    private int             m_lq_number_of_lqconsbases = BaseSequence.INTERNAL_QUALITY_NUMBER_LOW_QUALITY_BASES_CONQ ; 
-    private int             m_lq_cutoff = 7; 
-    
+    private int                             m_process_type = TYPE_COLLECTION_OF_GAPS;
+    private boolean                         m_isTryMode = false;
+    private SlidingWindowTrimmingSpec       m_trimming_spec = null;
     //parameters for gap definition
-    private int                     m_min_contig_length = 50;
-    private int                     m_min_contig_avg_score = 20;
+    private int                             m_min_contig_length = 50;
+    private int                             m_min_contig_avg_score = 20;
    
     public void         setProcessType(int v){ m_process_type = v;}
     public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
     public void         setMinContigLength(int v){ m_min_contig_length  = v;}
     public void         setMinAvgContigScore(int v){ m_min_contig_avg_score = v;} 
-                          
-    
-    
+    public void         setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
     
     public String   getTitle()    {return "Request for Gap Finder execution";    }   
-    public void    setLQWindowSize (int v){m_lq_window_size = v ; } 
-    public void    setLQNumberOfBases (int v){m_lq_number_of_lqbases = v ;} 
-    public void    setLQConsNumberOfBases (int v){m_lq_number_of_lqconsbases = v  ;} 
-    public void    setLQCutOff (int v){m_lq_cutoff = v ;} 
-
     
     public void run()
     {
@@ -75,7 +54,6 @@ import edu.harvard.med.hip.bec.modules.*;
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
             ArrayList clone_ids = Algorithms.splitString( m_items);
-          
             for (int count_clones = 0; count_clones < clone_ids.size(); count_clones++)
             {
                 try// by stretch collection
@@ -88,11 +66,10 @@ import edu.harvard.med.hip.bec.modules.*;
                              if ( process_id == -1) 
                             {
                                 process_id = createProcessRecord(  conn,  pst_check_prvious_process_complition, pst_insert_process_object) ;
+                            
                             }
+                             //create history record -----------
                             stretch_collection.insert(conn);
-                             //insert process_object
-                          //  pst_insert_process_object.setInt(1, stretch_collection.getId());
-                          //  DatabaseTransaction.executeUpdate(pst_insert_process_object);
                             conn.commit();
                         }
                         else 
@@ -103,23 +80,18 @@ import edu.harvard.med.hip.bec.modules.*;
                                 m_file_list_reports.add(reportFile);
                                 reportFileWriter =  new FileWriter(reportFile);
                             }
-                            String stretch_collection_report = getReportForStretchCollection(stretch_collection);
+                            String stretch_collection_report = getReportForStretchCollection((String)clone_ids.get(count_clones), stretch_collection);
                             reportFileWriter.write( stretch_collection_report);
                             reportFileWriter.flush();
                         }
-                       
                     }
                 }
-                 
                 catch(Exception e)
                 {
                     DatabaseTransaction.rollback(conn);
                     m_error_messages.add(e.getMessage());
                 }
          }
-           
-            
-           
         }
         catch(Exception e)
         {
@@ -132,33 +104,49 @@ import edu.harvard.med.hip.bec.modules.*;
             sendEMails( getTitle() );
         }
     }
-    
-    
+   
     //-------------------------------
-    
-    private StretchCollection findStretches( int clone_id)
+    private StretchCollection findStretches( int clone_id)throws Exception
     {
         StretchCollection stretch_collection = null;
         if ( m_process_type == TYPE_COLLECTION_OF_LQR)
         {
-           // AnalizedScoredequence clone_sequence = getLastCloneSequence(clone_id);
+            CloneDescription clone_description = CloneDescription.getCloneDescription( clone_id);
+            CloneSequence clone_sequence = CloneSequence.getOneByCloneId(clone_id);
+            if ( clone_sequence != null && clone_description != null) //sequence assembled , checking for lqr
+            {
+                ArrayList lqr_stretches = ScoredSequence.getLQR(clone_sequence,  m_trimming_spec);
+                stretch_collection = new StretchCollection();
+                stretch_collection.setType ( StretchCollection.TYPE_COLLECTION_OF_LQR);
+                stretch_collection.setRefSequenceId (  clone_description.getBecRefSequenceId());
+                stretch_collection.setIsolatetrackingId ( clone_description.getIsolateTrackingId());
+                stretch_collection.setCloneId (clone_description.getCloneId());
+                stretch_collection.setCloneSequenceId( clone_sequence.getId() );
+                stretch_collection.setStretches( lqr_stretches);
+            }
+            else
+            {
+            }
         }
         else if (m_process_type == TYPE_COLLECTION_OF_GAPS)
         {
             GapMapper mapper = new GapMapper();
             mapper.setCloneId(clone_id);
-           // mapper.setMinContigLength(m_min_contig_length);
-            mapper.setMinAvgContigScore(m_min_contig_avg_score);
+            mapper.setMinContigLength(m_min_contig_length);
+          //  mapper.setMinAvgContigScore(m_min_contig_avg_score);
+            mapper.setTrimmingSpec( m_trimming_spec);
             mapper.run();
             stretch_collection = mapper.getStretchCollection();
             if ( mapper.getErrorMessages() != null && mapper.getErrorMessages().size() > 0)
                 m_error_messages.addAll( mapper.getErrorMessages());
         }
+        /*
           for (int count =0; count < stretch_collection.getStretches().size(); count++)
           {
               Stretch s = (Stretch) stretch_collection.getStretches().get(count);
               System.out.println(count + " "+s.getCdsStart()+" "+s.getCdsStop() );
           }
+         */
         return stretch_collection ;
     }
     private void   createPreparedStatements(int process_id, Connection conn, 
@@ -187,56 +175,50 @@ import edu.harvard.med.hip.bec.modules.*;
     
      
             //PreparedStatement pst_get_flexsequenceid,PreparedStatement pst_get_flexsequence_length,
-     private String getReportForStretchCollection( StretchCollection oligo_calculation)throws Exception
+     private String getReportForStretchCollection(String clone_id, StretchCollection stretch_collection)throws Exception
     {
        // System.out.println("A"+oligo_calculation.getSequenceId());
         StringBuffer buf = new StringBuffer();
-        /*
-        int flexrefsequenceid = -1;
-        pst_get_flexsequenceid.setInt(1,oligo_calculation.getSequenceId());
-        ResultSet rs = DatabaseTransaction.getInstance().executeQuery(pst_get_flexsequenceid);
-        if(rs.next())
-        {
-            flexrefsequenceid = rs.getInt("flexsequenceid");
-            // System.out.println("AS "+flexrefsequenceid);
-        }
-        int refsequence_cdslength = -1;
-        pst_get_flexsequence_length.setInt(1,oligo_calculation.getSequenceId());
-        rs = DatabaseTransaction.getInstance().executeQuery(pst_get_flexsequence_length);
-        if(rs.next())
-        {
-            refsequence_cdslength = rs.getInt("cdslength");
-            // System.out.println("AS1 "+refsequence_cdslength);
-        }
-        
         buf.append(Constants.LINE_SEPARATOR );
-        buf.append("RefSequence Id: "+oligo_calculation.getSequenceId()+Constants.LINE_SEPARATOR);
-        buf.append("RefSequence Length: "+refsequence_cdslength+Constants.LINE_SEPARATOR);
-        buf.append("FLEX RefSequence Id: "+flexrefsequenceid+Constants.LINE_SEPARATOR);
-        for (int oligo_index = 0; oligo_index < oligo_calculation.getOligos().size();oligo_index ++)
+        buf.append("Clone Id: "+ clone_id+Constants.LINE_SEPARATOR);
+        int refseq_cds_length = RefSequence.getCdsLength(stretch_collection.getRefSequenceId());
+        buf.append("RefSequence Id: "+stretch_collection.getRefSequenceId() );
+         buf.append("\tRefSequence Cds Length: "+refseq_cds_length );
+        buf.append(Constants.LINE_SEPARATOR);
+        ArrayList stretchs = Stretch.sortByPosition(stretch_collection.getStretches() );
+        Stretch stretch = null;
+        CloneSequence clone_sequence = null;
+        if ( m_process_type == TYPE_COLLECTION_OF_LQR )
         {
-            buf.append( ((Oligo)oligo_calculation.getOligos().get(oligo_index)).geneSpecificOligotoString()+Constants.LINE_SEPARATOR);
+                clone_sequence = CloneSequence.getOneByCloneId(Integer.parseInt( clone_id) );
         }
-         **/
+        for (int index = 0; index < stretch_collection.getStretches().size();index ++)
+        {
+            stretch = (Stretch)stretch_collection.getStretches().get(index);
+            
+            if ( m_process_type == TYPE_COLLECTION_OF_LQR )
+            {
+                buf.append( stretch.getStretchTypeAsString( stretch.getType()) + " "+ (index + 1) + "\t");
+                buf.append( "Cds Start " + ( stretch.getCdsStart()- clone_sequence.getCdsStart() ) );
+                buf.append("\tCds Stop " + ( stretch.getCdsStop() -  clone_sequence.getCdsStart() ) );
+                buf.append("\t Sequence Region "+stretch.getCdsStart() +" - "+ stretch.getCdsStop() );
+            }
+            else
+                buf.append( stretch.toString() );
+            buf.append(Constants.LINE_SEPARATOR );
+            if ( stretch.getSequence() != null)
+            {
+                buf.append( stretch.getSequence().getText() );
+                buf.append(Constants.LINE_SEPARATOR );
+                buf.append( stretch.getSequence().getScores() );
+                buf.append(Constants.LINE_SEPARATOR );
+            }
+        }
         return buf.toString();
     }
      
      
-     /*REF: FLEX Id	Clone ID
-833	6345 *
-
-2055	3214 *   ??????????????????
-2394	3491
-2417	3515   ???????????????????
-2445	3558  ??????????????????
-2657	884
-2695	3724
-2875	4090
-5173	6596
-
-5618	6858 *
-5785	6947 *
-3558 3491 3515 884 6947 6858 3724 */
+     /*3558 3491 3515 884 6947 6858 3724 */
      
         public static void main(String [] args)
     {
@@ -244,11 +226,23 @@ import edu.harvard.med.hip.bec.modules.*;
         try
         {
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setItems(" 3558 3491 3515 884 6947 6858");
+             runner.setItems("775	776	755	757	647	649	663	664	575		");
              runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-             runner.setProcessType(TYPE_COLLECTION_OF_GAPS);
-             runner.setIsTryMode(false);
+             runner.setProcessType(TYPE_COLLECTION_OF_LQR);
+             runner.setIsTryMode(true);
+             SlidingWindowTrimmingSpec spec =   SlidingWindowTrimmingSpec.getDefaultSpec();
+             spec.setTrimmingType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);
+             spec.setQWindowSize( 10);
+             runner.setTrimmingSpec(spec);
              runner.run();
+            /* spec.setType( SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW);
+             runner.setTrimmingSpec(spec);
+             runner.run();
+              spec =  new SlidingWindowTrimmingSpec();
+             spec.setType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);
+             runner.setTrimmingSpec(spec);
+             runner.run();
+             */
         }catch(Exception e){}
         System.exit(0);
        

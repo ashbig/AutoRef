@@ -53,7 +53,12 @@ if ( forwardName_int == Constants.PROCESS_SHOW_CLONE_HISTORY
 || forwardName_int == Constants.PROCESS_ORDER_INTERNAL_PRIMERS
 || forwardName_int == Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS
 || forwardName_int == Constants.PROCESS_NOMATCH_REPORT
-|| forwardName_int == Constants.PROCESS_RUN_DECISION_TOOL)
+|| forwardName_int == Constants.PROCESS_RUN_DECISION_TOOL
+||  forwardName_int == Constants.PROCESS_FIND_GAPS
+||  forwardName_int == Constants.STRETCH_COLLECTION_REPORT_INT
+||  forwardName_int == Constants.STRETCH_COLLECTION_REPORT_ALL_INT
+||  forwardName_int == Constants.LQR_COLLECTION_REPORT_INT
+)
 {
 isCloneIdOnly = true;
 }
