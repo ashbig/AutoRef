@@ -5,6 +5,7 @@
  */
 
 package edu.harvard.med.hip.flex.form;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.*;
 
@@ -13,10 +14,12 @@ import org.apache.struts.action.*;
  * @author  Wendy Mar
  * @version
  */
-public class ReceiveOligoOrdersForm {
+public class ReceiveOligoOrdersForm extends ActionForm{
+    public final static String DELIMITER = "\n\t, ";
     private String oligoPlateIds = null;
     private String receiveDate = null;
     private String researcherBarcode = null;
+    private List oligoPlateList = null;
     
     /** Creates new ReceiveOligo */
     public ReceiveOligoOrdersForm() {
@@ -29,6 +32,7 @@ public class ReceiveOligoOrdersForm {
      */
     public void setOligoPlateIds(String oligoPlateIds) {
         this.oligoPlateIds = oligoPlateIds;
+        oligoPlateList = parseOligoPlateId(oligoPlateIds);
     }
     
     /**
@@ -38,6 +42,15 @@ public class ReceiveOligoOrdersForm {
      */
     public String getOligoPlateIds() {
         return this.oligoPlateIds;
+    }
+
+    /**
+     * Return the list of oligoPlate labels.
+     *
+     * @return The oligoPlateList.
+     */
+    public List getOligoPlateList() {
+        return this.oligoPlateList;
     }
     
     /**
@@ -106,4 +119,24 @@ public class ReceiveOligoOrdersForm {
         
         return errors;
     }
+    
+    /**
+     * parse the oligo plate IDs user entered into to textarea into a list
+     * of plateIds.
+     * @param oligoPlateIds The user input text
+     * @return A list of oligoPlateIds
+     */
+    private LinkedList parseOligoPlateId(String oligoPlateIds) {
+        LinkedList oligoPlateList = new LinkedList();
+        StringTokenizer tokenizer = null;
+        String plateId = null;
+        
+        tokenizer = new StringTokenizer(oligoPlateIds, DELIMITER);
+        while (tokenizer.hasMoreTokens()) {
+            plateId = tokenizer.nextToken();
+            oligoPlateList.add(plateId);
+        } //while
+        
+        return oligoPlateList;
+    } //parseOligoPlateIds
 }

@@ -74,8 +74,6 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             return (mapping.findForward("error"));
         }
         
-        
-     //   LinkedList oligoPlateIdList = parseOligoPlateId(oligoPlateIds);
 
        ReceiveOligoOrdersForm formProper = (ReceiveOligoOrdersForm) form;
        //formProper.setOligoPlateIds(oligoPlateIds);
