@@ -58,7 +58,7 @@ public class ConfirmSelectionAction extends FlexAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping,
+    public synchronized ActionForward flexPerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -77,16 +77,23 @@ public class ConfirmSelectionAction extends FlexAction {
         
         try {        
             Protocol p = new Protocol(Protocol.APPROVE_SEQUENCES);
-
+ 
             for(int i=0; i<selection.length; i++) {
                 String gi = selection[i];
                 FlexSequence sequence = (FlexSequence)sequences.get(gi);
-                r.addSequence(sequence);
                 
                 if(FlexSequence.NEW.equals(sequence.getFlexstatus())) {
-                    QueueItem item = new QueueItem(sequence, p);
-                    l.addLast(item);
+                    // Check the database to see if it is in the database.
+                    FlexSequence found = FlexSequence.findSequenceByGi(sequence.getGi());
+                    if(found != null) {
+                        sequence = found;
+                    } else {
+                        QueueItem item = new QueueItem(sequence, p);
+                        l.addLast(item);
+                    }
                 }
+                
+                r.addSequence(sequence);
             }
 
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -97,6 +104,7 @@ public class ConfirmSelectionAction extends FlexAction {
             queue.addQueueItems(l, conn);
 
             conn.commit();
+       
             return (mapping.findForward("success"));
         } catch (Exception sqlE) {
             try {
