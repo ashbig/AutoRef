@@ -136,16 +136,14 @@ public class MgcRequestImporter
         Protocol next_protocol = null;
         //put containers on queue
         //get requesred mgc containers 
-        Rearrayer re = new Rearrayer( new ArrayList(m_Request.getSequences()) );
+       
         ArrayList mgc_containers = null;
-        try
-        {
-            re.findMgcContainers( );
-            mgc_containers = re.getContainers();
+        try{
+            mgc_containers = findMgcContainers(m_Request.getSequences());
         } catch (Exception e)
         {
             return false;
-        }
+        }    
 //put mgc containers on queue
         Protocol protocol = null;
         Protocol protocolSeq = null;
@@ -164,7 +162,7 @@ public class MgcRequestImporter
         
         for (int cont_count = 0; cont_count < mgc_containers.size(); cont_count++)
         {
-            queueItem = new QueueItem((MgcContainer) mgc_containers.get(cont_count),protocol, m_Project, m_workflow);
+            queueItem = new QueueItem((Container) mgc_containers.get(cont_count),protocol, m_Project, m_workflow);
             queueItems.add(queueItem);
         }
         try{
@@ -199,78 +197,7 @@ public class MgcRequestImporter
         return true;
         
     }
-    /*   
-    private boolean putOnQueue(Connection conn)
-    {
-        Vector sequences = m_Request.getSequences();
-        Rearrayer re = new Rearrayer( new ArrayList(sequences) );
-        ArrayList mgc_containers = null;
-        try
-        {
-            re.findMgcContainers( );
-            mgc_containers = re.getContainers();
-        } catch (Exception e)
-        {
-            return false;
-        }
-        
-        //put containers on Queue
-     *
-        Protocol protocol = null;
-        Protocol protocolSeq = null;
-        try{
-            protocol = new Protocol(  Protocol.CREATE_CULTURE_FROM_MGC);
-            protocolSeq = new Protocol(  Protocol.MGC_DESIGN_CONSTRUCTS);
-        }catch(FlexDatabaseException ex)
-        {
-            m_messages.add("Can not get protocol for CREATE_CULTURE_FROM_MGC");
-            return false;
-        }
-       // Protocol nextProtocol = workflow.getNextProtocol(protocol).get(0);
-        QueueItem queueItem = null;
-        LinkedList queueItems = new LinkedList();
-        ContainerProcessQueue containerQueue = new ContainerProcessQueue();
-        
-        for (int cont_count = 0; cont_count < mgc_containers.size(); cont_count++)
-        {
-            queueItem = new QueueItem((MgcContainer) mgc_containers.get(cont_count),protocol, m_Project, m_workflow);
-            queueItems.add(queueItem);
-        }
-        try{
-            containerQueue.addQueueItems(queueItems, conn);
-        }
-        catch(Exception e)
-        {
-            m_messages.add("Can not put containers on queue for CREATE_CULTURE_FROM_MGC");
-            return false;
-        }
-        queueItems.clear();
-        
-        
-        //put sequences for oligo design on queue
-        
-        SequenceProcessQueue cloneQueue = new SequenceProcessQueue();
-        
-        for (int clone_count = 0; clone_count < m_Request.getSequences().size(); clone_count++)
-        {
-            queueItem = new QueueItem((FlexSequence) m_Request.getSequences().get(clone_count),protocolSeq, m_Project, m_workflow);
-            queueItems.add(queueItem);
-        }
-         try{
-             cloneQueue.addQueueItems(queueItems, conn);
-        }
-        catch(Exception e)
-        {
-            m_messages.add("Can not put sequences on queue for MGC_DESIGN_CONSTRUCTS");
-            return false;
-        }
-       
-        return true;
-        
-    }
-    
-    
-      */  
+ 
          
     /*Function parses request file and returns list of GI numbers
      */
@@ -495,6 +422,83 @@ public class MgcRequestImporter
     }
     
     
+    
+    
+    //*********************find containers ******************************
+    /* function gets array of FlexSequences from request
+    * @param   list of FlexSequences from request
+    *@return list of containers with mgc clones 
+     **/
+    private ArrayList findMgcContainers(Vector flex_seq) throws Exception
+    {
+        ArrayList mgc_containers = null;
+        if ( flex_seq == null || flex_seq.size() == 0) return mgc_containers;
+        mgc_containers = findMgcContainersFromDB(flex_seq);
+        return checkForGlycerolStock(mgc_containers);
+    }
+      /*function finds all containers that contain samples with these sequences.
+    @param vector of FlexSequences 
+    @return array of MGC containers that contain thses sequences
+       **/
+    private ArrayList findMgcContainersFromDB(Vector flex_seq) throws Exception
+    {
+        int current_sequence_id = -1;
+        MgcContainer mgc_container = null;
+        ArrayList    mgc_containers = new ArrayList();
+        int seq_id = -1;
+          
+        ArrayList temp = new ArrayList();
+        for(int count = 0; count < flex_seq.size(); count++)
+        {
+            temp.add(new Integer(   ((FlexSequence)flex_seq.get(count)).getId()) );
+        }
+        //starting from first sequence
+        while (! temp.isEmpty() )
+        {
+            current_sequence_id = ((Integer)temp.get(0)).intValue() ;
+            mgc_container = MgcContainer.findMGCContainerFromSequenceID(current_sequence_id);
+            mgc_container.restoreSample();
+            //check if any other sequence in request come from the same container
+            for (int count = 0; count < mgc_container.getSamples().size(); count++)
+            {
+                MgcSample ms = (MgcSample)mgc_container.getSamples().get(count);
+                Integer seq_key = new Integer(ms.getSequenceId());
+                if (temp.contains( seq_key ) )
+                {
+                    temp.remove(seq_key);
+                    if (temp.isEmpty()) continue;
+                }
+             }
+             mgc_containers.add(mgc_container);
+        }
+        return mgc_containers;
+    }
+    
+    
+    /* Fuction replaced Mgc container by glycerol stock container if
+     * glycerol stock is available
+     *@param array of MGC containers
+     *@return array of mgc/glycerol stock containers 
+     **/
+    private ArrayList checkForGlycerolStock(ArrayList mgc_containers) throws Exception
+    {
+        MgcContainer current_mgc_container = null;
+        for (int count = 0; count < mgc_containers.size(); count++)
+        {
+            current_mgc_container = (MgcContainer) mgc_containers.get(count) ;
+            if ( current_mgc_container.getGlycerolContainerid() > 0)
+            {
+                Container gly_container = new Container(current_mgc_container.getGlycerolContainerid()) ;
+                mgc_containers.remove(count);
+                mgc_containers.add(count, gly_container);
+            }
+        }
+        return mgc_containers;
+    }
+    
+    
+    
+    //*****************************************************************
     //****************************Testing*******************************
     
     public static void main(String args[])
@@ -519,8 +523,9 @@ public class MgcRequestImporter
         {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            MgcRequestImporter importer = new MgcRequestImporter(new Project(5),new Workflow(7),"dzuo");
+            MgcRequestImporter importer = new MgcRequestImporter(new Project(5),new Workflow(7),"htaycher");
             importer.performImport(input,conn) ;
+            
             
         }
          
