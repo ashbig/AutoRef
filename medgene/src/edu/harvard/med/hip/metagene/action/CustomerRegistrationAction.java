@@ -100,12 +100,12 @@ public final class CustomerRegistrationAction extends Action {
                 Calendar calendar = new GregorianCalendar();
                 Date d = new Date();
                 calendar.setTime(d);  
-                //String registration_date = "" + (calendar.get(Calendar.MONTH) + 1) + "/" +
-                //            calendar.get(Calendar.DAY_OF_MONTH) + "/" +
-                //            calendar.get(Calendar.YEAR);
-                String registration_date = "" + calendar.get(Calendar.DAY_OF_MONTH) + "-" +
-                                Usermanager.toMonth(calendar.get(Calendar.MONTH) + 1) + "-" +
-                                calendar.get(Calendar.YEAR);                
+                String registration_date = "" + (calendar.get(Calendar.MONTH) + 1) + "/" +
+                            calendar.get(Calendar.DAY_OF_MONTH) + "/" +
+                            calendar.get(Calendar.YEAR);
+                //String registration_date = "" + calendar.get(Calendar.DAY_OF_MONTH) + "-" +
+                //                Usermanager.toMonth(calendar.get(Calendar.MONTH) + 1) + "-" +
+                //                calendar.get(Calendar.YEAR);                
                 if(manager.addUser(user_id,email,password,organization,reminder,firstname,lastname,phone, registration_date, 0)) {
                     return (mapping.findForward("success"));
                 } else {

@@ -248,7 +248,7 @@ public class Usermanager {
             return 0;
         }
         
-        String sql = "select type from userprofile where userid = '"+userid+"'";
+        String sql = "select user_type from userprofile where userid = '"+userid+"'";
         Statement stmt = null;        
         
         try {
