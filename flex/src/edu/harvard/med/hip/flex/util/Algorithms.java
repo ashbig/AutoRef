@@ -9,8 +9,8 @@ import java.io.*;
 
 public class Algorithms {
     
-    // private static final String filePath = "/tmp/";
-    private static final String filePath = "c:/";
+    private static final String filePath = "/tmp/";
+    //private static final String filePath = "c:/";
     
     public static ArrayList rearangeSawToothPatternInFlexSequence(ArrayList sequences) {
         for (int i=0; i< sequences.size();i++)
