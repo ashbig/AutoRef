@@ -8,10 +8,12 @@ package edu.harvard.med.hip.flex.util;
 
 import java.util.*;
 import java.io.*;
-import edu.harvard.med.hip.flex.core.Container;
+import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.special_projects.UpdateClonename;
 import edu.harvard.med.hip.flex.process.SeqContainerMapper;
 import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.database.*;
+import java.sql.*;
 
 /**
  *
@@ -23,10 +25,12 @@ public class RearrayedSeqPlatesHandler {
     
     /** Creates a new instance of RearrayedSeqPlatesHandler */
     public RearrayedSeqPlatesHandler() {
+        populator = new SummaryTablePopulator();
     }
     
     public RearrayedSeqPlatesHandler(boolean isFile) {
         this.isFile = isFile;
+        populator = new SummaryTablePopulator();
     }
     
     public RearrayedSeqPlatesHandler(boolean isFile, SummaryTablePopulator populator) {
@@ -35,9 +39,6 @@ public class RearrayedSeqPlatesHandler {
     }
     
     public void processSummaryTable(List containers, int strategyid, String cloneType) {
-        if(populator == null)
-            return;
-        
         if(populator.populateObtainedMasterClonesWithContainers(containers, strategyid, cloneType)) {
             populator.sendEmail(true, containers);
         } else {
@@ -62,6 +63,31 @@ public class RearrayedSeqPlatesHandler {
         }
     }
     
+    public void insertSeqPlatesIntoClonestorage(List containers) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+        
+            populator.populateClonestorageTableWithContainers(containers, StorageType.WORKING, StorageForm.GLYCEROL, conn);
+            
+            DatabaseTransaction.commit(conn);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            DatabaseTransaction.rollback(conn);
+            
+            try {
+                sendEmail(containers, ex.getMessage());
+            } catch (Exception exc) {
+                System.out.println(exc);
+            }
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
     public void emailFailed(List containers) throws Exception {
         String message = "The following containers failed cloneid update:\n";
         for(int i=0; i<containers.size(); i++) {
@@ -70,6 +96,17 @@ public class RearrayedSeqPlatesHandler {
         }
         
         Mailer.sendMessage("dongmei_zuo@hms.harvard.edu","dongmei_zuo@hms.harvard.edu", "cloneid update failed",message);
+    }
+    
+    public void sendEmail(List containers, String error) throws Exception {
+        String message = "The following containers failed working storage insert:\n";
+        for(int i=0; i<containers.size(); i++) {
+            Container c = (Container)containers.get(i);
+            message = message+c.getId()+"\t"+c.getLabel()+"\n";
+            message = message+"\nError: \n"+error+"\n";
+        }
+        
+        Mailer.sendMessage("dongmei_zuo@hms.harvard.edu","dongmei_zuo@hms.harvard.edu", "working storage insert failed",message);
     }
     
     public void emailFile(List containers, String researcherBarcode) {

@@ -58,6 +58,7 @@ public class ThreadedRearrayedSeqPlatesHandler extends RearrayedSeqPlatesHandler
         }
         processSummaryTable(glycerolContainers, strategyid, cloneType);
         processSeqPlates(containers, researcherBarcode);
+        insertSeqPlatesIntoClonestorage(containers);
     }
  
        public static void main(String args[]) {

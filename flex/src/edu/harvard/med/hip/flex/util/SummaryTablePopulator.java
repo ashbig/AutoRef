@@ -43,7 +43,7 @@ public class SummaryTablePopulator {
             numConstructs = populateCloningprogressTable(samples, conn);
             numMasterclones = populateObtainedmastercloneTable(samples, conn);
             numClones = populateClonesTable(samples, strategyid, cloneType, conn);
-            numClonestorage = populateClonestorageTable(samples, conn);
+            numClonestorage = populateOriginalStorageTable(samples, conn);
             numSamples = updateSampleTable(samples, conn);
             numSeqs = updateSequenceTable(samples, conn);
             
@@ -194,14 +194,15 @@ public class SummaryTablePopulator {
         
         return ret;
     }
-    
-    public int populateClonestorageTable(List samples, Connection conn) throws FlexDatabaseException, SQLException {
+
+    public int populateOriginalStorageTable(List samples, Connection conn) throws FlexDatabaseException, SQLException {
         String sql = "insert into clonestorage"+
         " select storageid.nextval, o.sampleid, 'Original Storage',"+
         " 'GLYCEROL', c.cloneid, o.containerid, o.containerlabel, o.containerposition"+
         " from obtainedmasterclone o, clones c"+
         " where o.mastercloneid=c.mastercloneid"+
         " and o.sampleid=?";
+
         PreparedStatement stmt = conn.prepareStatement(sql);
         int ret = 0;
         
@@ -209,6 +210,30 @@ public class SummaryTablePopulator {
             Integer sample = (Integer)samples.get(i);
             int sampleid = sample.intValue();
             stmt.setInt(1, sampleid);
+            int num = DatabaseTransaction.executeUpdate(stmt);
+            ret += num;
+        }
+        
+        DatabaseTransaction.closeStatement(stmt);
+        
+        return ret;
+    }
+  
+    public int populateClonestorageTableWithContainers(List containers, String storageType, String storageForm, Connection conn) throws FlexDatabaseException, SQLException {
+        String sql = "insert into clonestorage"+
+        " select storageid.nextval, s.sampleid, '"+storageType+"',"+
+        " '"+storageForm+"', s.cloneid, c.containerid, c.label, s.containerposition"+
+        " from sample s, containerheader c"+
+        " where s.containerid=c.containerid"+
+        " and s.sampletype='ISOLATE'"+
+        " and c.containerid=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        int ret = 0;
+        
+        for (int i=0; i<containers.size(); i++) {
+            Container container = (Container)containers.get(i);
+            int containerid = container.getId();
+            stmt.setInt(1, containerid);
             int num = DatabaseTransaction.executeUpdate(stmt);
             ret += num;
         }
@@ -413,8 +438,8 @@ public class SummaryTablePopulator {
     public static void main(String args[]) {
         //List containers = getContainers();
         List containers = new ArrayList();
-        containers.add(new Integer(9709));
-        containers.add(new Integer(9710));
+        containers.add(new Integer(9861));
+        containers.add(new Integer(9863));
         
         /**
         List samples = new ArrayList();
