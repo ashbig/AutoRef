@@ -21,6 +21,7 @@ import java.util.*;
 public class ColonyPickLogFileParser {
     public static final String DILIM = " ";
     public static final int TOTALCOUNT = 96;
+    public static final String NOBARCODE = "N/A";
     
     private InputStream input;
     private String errorMessage;
@@ -137,6 +138,10 @@ public class ColonyPickLogFileParser {
                     if(barcode.equals("none")) {
                         setErrorMessage("A barcode has to be entered");
                         return false;
+                    }
+                    
+                    if(barcode.equals(NOBARCODE)) {
+                        continue;
                     }
                     
                     ColonyCountInfo info = new ColonyCountInfo(well, found, pick);
