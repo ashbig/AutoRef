@@ -48,7 +48,7 @@
         <td><bean:write name="sample" property="position"/></td>
         <td><bean:write name="sample" property="status"/></td>
         <td><bean:write name="sample" property="constructid"/></td>
-        <td><bean:write name="sample" property="Oligoid"/></td>
+        <td><bean:write name="sample" property="oligoid"/></td>
     </tr>
     </logic:iterate>
 </table>
