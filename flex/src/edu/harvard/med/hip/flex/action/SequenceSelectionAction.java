@@ -75,12 +75,15 @@ public class SequenceSelectionAction extends FlexAction {
         Hashtable badSequences = new Hashtable();
         Hashtable sameSequence = new Hashtable();
         Hashtable homologs = new Hashtable();
+        Hashtable cdsMatchSequences = new Hashtable();
         Hashtable sequences = new Hashtable();
+        Vector submittedSequences = new Vector();
         
         try {
             for(int i=0; i<selections.length; i++) {
                 String gi = selections[i];
                 FlexSequence sequence = (FlexSequence)searchResult.get(gi);
+                submittedSequences.addElement(sequence);
             
                 //for the new sequences, need more info from genbank.
                 if(sequence.getFlexstatus().equals("NEW")) {
@@ -103,7 +106,12 @@ public class SequenceSelectionAction extends FlexAction {
                                 Homologs h = new Homologs();
                                 h.setHomolog(analyzer.getHomolog());
                                 h.setBlastResults(analyzer.getBlastResults());
-                                homologs.put(gi, h);
+                                
+                                if(analyzer.getBlastResults().getEvalue().equals("0.0")) {
+                                    cdsMatchSequences.put(gi, h);
+                                } else {
+                                    homologs.put(gi, h);
+                                }
                                 
                                 Enumeration enum = analyzer.getHomolog().elements();
                                 while(enum.hasMoreElements()) {
@@ -144,6 +152,13 @@ public class SequenceSelectionAction extends FlexAction {
             if(homologs.size() > 0) {
                 request.setAttribute("homologs", homologs);
                 count++;
+            }
+            if(cdsMatchSequences.size() > 0) {
+                request.setAttribute("cdsMatchSequences", cdsMatchSequences);
+                count++;
+            }
+            if(submittedSequences.size() > 0) {
+                request.setAttribute("submittedSequences", submittedSequences);
             }
             
             request.getSession().setAttribute("sequences", sequences);

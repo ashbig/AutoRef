@@ -57,7 +57,7 @@ Please follow the following hint.
 <logic:iterate id="oneRequest" name="customerRequest">
 <p>Date: <bean:write name="oneRequest" property="date"/>
 <table border=1 align=center width=90%>
-<th>Sequence ID</th><th>Description</th><th>Status</th>
+<th>FLEXGene ID</th><th>Description</th><th>Status</th>
 
 <logic:iterate id="sequence" name="oneRequest" property="sequences">
 <tr>
