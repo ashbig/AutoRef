@@ -41,6 +41,7 @@ public class OligoPlater {
     private Container container_5p;
     private Container container_3s;
     private Container container_3op;
+    private Process process = null;
     
     private String plateOutFileName1 = null;
     private String plateOutFileName2 = null;
@@ -80,6 +81,9 @@ public class OligoPlater {
         container_5p.updatePlatesetId(platesetId,conn);
         container_3s.updatePlatesetId(platesetId,conn);
         container_3op.updatePlatesetId(platesetId,conn);
+        
+        //insert process output: oligo containers
+        insertProcessOutput();
         
         //insert receive oligo queue
         insertReceiveOligoQueue();
@@ -128,6 +132,9 @@ public class OligoPlater {
         int geneNum = 0;
         
         GeneComparator comparator = new GeneComparator();
+        
+        //insert process input: construct design
+        insertProcessInput();
         
         // Sort oligos in ascending order of CDS length.
         OligoPattern[] geneArray = new OligoPattern[0];
@@ -311,9 +318,8 @@ public class OligoPlater {
             currentGeneIndex += 47;
 
            // System.out.println("next plate gene index: "+currentGeneIndex);
-           // System.out.print("Creating a new set of oligo plates...");
             
-            //System.out.println("next plate gene index: "+currentGeneIndex);
+            System.out.println("next plate gene index: "+currentGeneIndex);
         } //outter while to fill oligo plates
         
     } // generateOligoOrder
@@ -354,9 +360,9 @@ public class OligoPlater {
         container_5p.setLabel(label_5p);
         container_3s.setLabel(label_3s);
         container_3op.setLabel(label_3op);
-        //System.out.println("5p oligo plate label: "+ label_5p);
-        //System.out.println("3s oligo plate label: "+ label_3s);
-        //System.out.println("3op oligo plate label: "+ label_3op);
+        System.out.println("5p oligo plate label: "+ label_5p);
+        System.out.println("3s oligo plate label: "+ label_3s);
+        System.out.println("3op oligo plate label: "+ label_3op);
         
     }
     
@@ -417,8 +423,8 @@ public class OligoPlater {
     /**
      * insert process execution io for "generate oligo order" protocol
      */
-    protected void insertProcessInputOutput() throws FlexDatabaseException {
-        Process process = null;
+    private void insertProcessInput() throws FlexDatabaseException {
+        
         Protocol protocol = new Protocol("generate oligo orders");
         Researcher r = new Researcher();
         String status = "S"; //SUCCESS
@@ -430,28 +436,31 @@ public class OligoPlater {
         // insert process execution record into process execution table
         process = new Process(protocol,status,r);
         
-
       //  System.out.println("Generate oligo orders Execution ID: "+ process.getExecutionid());
         
-        //Insert one process input records for each output construct design
-        //(two per sequence)
+        //Insert one process input records for each output construct design (two per sequence)
         ListIterator iter = constructList.listIterator();
         String ioType = "I";
         Construct construct = null;
         ConstructProcessObject cpo = null;
         int constructId = -1;
-        //System.out.println("Inserting construct process output object...");
+        
         while (iter.hasNext()){
             construct = (Construct)iter.next();
             constructId = construct.getId();
             cpo = new ConstructProcessObject(constructId,process.getExecutionid(),ioType);
-            process.addProcessObject(cpo);
-            
+            process.addProcessObject(cpo);            
         } //while
         process.insert(conn);
         
+    } //insertProcessInput
+    
+    /**
+     * insert the output oligo plates to process object table
+     */
+    private void insertProcessOutput() throws FlexDatabaseException {
         //insert the container output object
-        ioType = "O";
+        String ioType = "O";
         ContainerProcessObject platepo_5p =
         new ContainerProcessObject(container_5p.getId(),process.getExecutionid(),ioType);
         platepo_5p.insert(conn);
@@ -461,7 +470,7 @@ public class OligoPlater {
         ContainerProcessObject platepo_3op =
         new ContainerProcessObject(container_3op.getId(),process.getExecutionid(),ioType);
         platepo_3op.insert(conn);
-    } //inputProcessInputOutput
+    }
     
     /**
      * insert "receive oligo plates" queue record for each plate created

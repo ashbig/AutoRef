@@ -148,12 +148,10 @@ public class OligoPlateManager {
                     plater = new OligoPlater(oligoPatternList, cg.getConstructList(), conn);
 
                     plater.generateOligoOrder();
-                    plater.insertProcessInputOutput();
+                   // plater.insertProcessInputOutput();
                    //plater.insertReceiveOligoQueue();
-                    //System.out.println("receive oligo plates queue inserted.");
 
                     plater.removeOrderOligoQueue();
-                    //System.out.println("order oligo queue removed.");
                     
                     //remove sequences from queue
                     removeQueueSequence(seqList);
