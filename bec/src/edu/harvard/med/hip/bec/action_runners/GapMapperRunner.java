@@ -100,7 +100,7 @@ import java.util.*;
                 {
                     stretch_collection = findStretches(Integer.parseInt( (String) clone_ids.get(count_clones)), trimming_spec, cloning_strategy);
                         
-                    if (stretch_collection != null )
+                    if (stretch_collection != null && stretch_collection.getStretches() != null && stretch_collection.getStretches().size() > 0)
                     {
                         stretch_collection.setSpecId(m_spec_id);
     //define lqr for contgi sequences
@@ -497,10 +497,14 @@ import java.util.*;
         GapMapperRunner runner = new GapMapperRunner();
         try
         {
+               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+            sysProps.verifyApplicationSettings();
+            edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+       
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setInputData( Constants.ITEM_TYPE_CLONEID,"  1484 2054 5095");            
+             runner.setInputData( Constants.ITEM_TYPE_CLONEID,"  157041 157471	");            
              runner.setProcessType(Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE);
-             runner.setIsTryMode(true);
+             runner.setIsTryMode(false);
              //SlidingWindowTrimmingSpec spec =   SlidingWindowTrimmingSpec.getDefaultSpec();
           //   spec.setTrimmingType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);
              //spec.setQWindowSize( 10);
