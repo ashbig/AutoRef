@@ -11,7 +11,7 @@
 <%-- 
 Define the type of result to enter, if none is given, gell result is the default
 --%>
-<bean:parameter name="<%=Constants.PROTOCOL_NAME_KEY%>" id="resultType" value="<%=Protocol.RUN_PCR_GEL%>"/>
+<bean:define name="<%=Constants.PROTOCOL_NAME_KEY%>" id="resultType"/>
 
 <html>
 <head>

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-27 18:47:01 $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-27 21:03:30 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.flex.process.*;
  * on the protocol it is passed.
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.1 $ $Date: 2001-07-27 18:47:01 $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-27 21:03:30 $
  */
 
 public class GetQueueItemsAction extends ResearcherAction {
@@ -94,6 +94,7 @@ public class GetQueueItemsAction extends ResearcherAction {
             
             // shove the items into the session.
             request.getSession().setAttribute("SelectProtocolAction.queueItems",queueItems);
+            request.getSession().setAttribute(Constants.PROTOCOL_NAME_KEY, protocolName);
         } catch (Exception e) {
             request.setAttribute(Action.EXCEPTION_KEY, e);
             retForward = mapping.findForward("error");

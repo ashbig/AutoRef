@@ -41,7 +41,22 @@
     <h3>Comfirm the Transformation result</h3>
 </logic:equal>
 
-
+<%-- if the stats are present display them in a table--%>
+<logic:present name="<%=Constants.RESULT_STATS_KEY%>">
+    <table>
+        <logic:iterate name="<%=Constants.RESULT_STATS_KEY%>" id="curStat">
+        <tr>
+            <td class="prompt">
+                <bean:write name="curStat" property="key"/>
+            </td>
+            <td>
+                <bean:write name="curStat" property="value"/>
+            </td>
+        </tr>
+        </logic:iterate>
+    </table>
+</logic:present>
+<br>
 <table>
     <tr>
         <td>Plate ID:</td> <td><bean:write name="transformEntryForm" property="container.id"/></td>

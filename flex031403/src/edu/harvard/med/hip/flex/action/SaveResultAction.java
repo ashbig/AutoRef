@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2001-07-27 18:47:01 $
+ * $Revision: 1.10 $
+ * $Date: 2001-07-27 21:03:30 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -65,7 +65,7 @@ import edu.harvard.med.hip.flex.process.Result;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.9 $ $Date: 2001-07-27 18:47:01 $
+ * @version    $Revision: 1.10 $ $Date: 2001-07-27 21:03:30 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -141,63 +141,38 @@ public class SaveResultAction extends ResearcherAction {
         
         // if the form is editable, forward to the confirm page.
         if(resultForm.isEditable()) {
+            // make some statistics about what's been selected
+            Map resultMap = new HashMap();
+            for (int i = 0; i<resultForm.size(); i++) {
+                String curResult = resultForm.getResult(i);
+                // increment the count if we have allready encountered this result
+                if(resultMap.containsKey(curResult)) {
+                    resultMap.put(curResult,
+                    new Integer(((Integer)resultMap.get(curResult)).intValue() + 1));
+                } else {
+                    // otherwise make the count 1
+                    resultMap.put(curResult, new Integer(1));
+                }
+            }
+            // shove it into the request.
+            request.setAttribute(Constants.RESULT_STATS_KEY,resultMap);
             return mapping.findForward("confirm");
         }
         
-        
+
         Container container =resultForm.getContainer();
         Vector samples = container.getSamples();
-        
+ 
         Connection conn = null;
         
         
         
         try {
             conn = DatabaseTransaction.getInstance().requestConnection();
-            // save the file to the db if this is a gel result
             
-            // option file reference for gel results
-            FileReference fileRef = null;
-            if(form instanceof GelResultsForm) {
-                GelResultsForm gelForm = (GelResultsForm)form;
-                
-                // the image file
-                FormFile image = gelForm.getGelImage();
-                
-                Calendar cal = Calendar.getInstance();
-                // month starts with 0 so add 1 so it looks normal
-                int monthNum = cal.get(Calendar.MONTH) + 1;
-                
-                //String version of monthNum
-                String monthNumS = Integer.toString(monthNum);
-                
-                // append a 0 if its less than 10
-                if(monthNum < 10) {
-                    monthNumS = "0"+monthNum;
-                }
-                
-                String subDirName = Integer.toString(cal.get(Calendar.YEAR)) +
-                monthNumS;
-                String localPath = FileRepository.GEL_LOCAL_PATH+subDirName+"/";
-                fileRef =
-                FileReference.createFile(conn, image.getFileName(),
-                FileReference.GEL_TYPE,localPath, container);
-            }
-            for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
-                
-                Sample curSample = (Sample)samples.get(i);
-                
-                curSample.setStatus(resultForm.getStatus(i));
-                Result curResult =
-                new Result(process,curSample,resultType,resultForm.getResult(i));
-                curSample.update(conn);
-                curResult.insert(conn);
-                
-                // associate the result with the file if its a gel resul
-                if(form instanceof GelResultsForm) {
-                    curResult.associateFileReference(conn, fileRef);
-                }
-            }
+            // save the results.
+            saveResults(resultType,process, resultForm, conn);
+            
             /*
              * now we need to remove the container from the queue,
              * and insert it for the Agar process.
@@ -248,15 +223,7 @@ public class SaveResultAction extends ResearcherAction {
             
             // upload the file to the repository if its a gel image
             if(form instanceof GelResultsForm) {
-                try {
-                    FileRepository.uploadFile(fileRef,
-                    ((GelResultsForm)form).getGelImage().getInputStream());
-                } catch (IOException ioE) {
-                    retForward = mapping.findForward("error");
-                    request.setAttribute(Action.EXCEPTION_KEY, ioE);
-                    DatabaseTransaction.rollback(conn);
-                    return retForward;
-                }
+                
             }
             DatabaseTransaction.commit(conn);
         } catch (FlexDatabaseException fde) {
@@ -269,6 +236,12 @@ public class SaveResultAction extends ResearcherAction {
             request.setAttribute(Action.EXCEPTION_KEY, fpe);
             DatabaseTransaction.rollback(conn);
             return retForward;
+        } catch (IOException ioE) {
+            retForward = mapping.findForward("error");
+            request.setAttribute(Action.EXCEPTION_KEY, ioE);
+            DatabaseTransaction.rollback(conn);
+            return retForward;
+            
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
@@ -280,13 +253,76 @@ public class SaveResultAction extends ResearcherAction {
             session.removeAttribute("transformEntryForm");
             session.removeAttribute("gelEntryForm");
             session.removeAttribute("SelectProtocolAction.queueItems");
+            session.removeAttribute(Constants.PROTOCOL_NAME_KEY);
             request.setAttribute(Constants.CONTAINER_KEY, container);
+            
             retForward=mapping.findForward("success");
         }
         return retForward;
     } //end flexPerform
-
     
+    /**
+     * Save what the user has choosen to the database.
+     *
+     * @param resultType Type or result to save
+     * @param process The process the result referencess
+     * @param resultForm The form holding the results.
+     * @param conn The databae Connection used to the transactions.
+     *
+     * @exception FlexDatabaseException when there is a database error.
+     */
+    private void saveResults(String resultType, Process process, ContainerResultsForm resultForm, Connection conn)
+    throws FlexDatabaseException, IOException {
+        
+        Container container = resultForm.getContainer();
+        Vector samples = container.getSamples();
+        
+        // optional file reference for gel results
+        FileReference fileRef = null;
+        if(resultForm instanceof GelResultsForm) {
+            GelResultsForm gelForm = (GelResultsForm)resultForm;
+            
+            // the image file
+            FormFile image = gelForm.getGelImage();
+            
+            Calendar cal = Calendar.getInstance();
+            // month starts with 0 so add 1 so it looks normal
+            int monthNum = cal.get(Calendar.MONTH) + 1;
+            
+            //String version of monthNum
+            String monthNumS = Integer.toString(monthNum);
+            
+            // append a 0 if its less than 10
+            if(monthNum < 10) {
+                monthNumS = "0"+monthNum;
+            }
+            
+            String subDirName = Integer.toString(cal.get(Calendar.YEAR)) +
+            monthNumS;
+            String localPath = FileRepository.GEL_LOCAL_PATH+subDirName+"/";
+            fileRef =
+            FileReference.createFile(conn, image.getFileName(),
+            FileReference.GEL_TYPE,localPath, container);
+           
+            FileRepository.uploadFile(fileRef,
+            gelForm.getGelImage().getInputStream());
+        }
+        // Go through and get the result and record it.
+        
+        for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
+            
+            Sample curSample = (Sample)samples.get(i);
+            curSample.setStatus(resultForm.getStatus(i));
+            Result curResult =
+            new Result(process,curSample,resultType,resultForm.getResult(i));
+            
+            curSample.update(conn);
+            curResult.insert(conn);
+            if(fileRef != null) {
+                 curResult.associateFileReference(conn, fileRef);
+            }
+        }
+    }
     
 } // End class EnterTransformDetailsAction
 

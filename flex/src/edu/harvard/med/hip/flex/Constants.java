@@ -138,6 +138,9 @@ public class Constants {
     // key used to find the forward to use
     public static final String FORWARD_KEY = "FORWARD";
     
+    // key used to find the map holding the stats for results
+    public static final String RESULT_STATS_KEY = "RESULT_STATS";
+    
     /** Creates new Constants */
     private Constants() {
     }

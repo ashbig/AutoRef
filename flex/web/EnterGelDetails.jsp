@@ -42,7 +42,22 @@
     <h3>Comfirm the gel result</h3>
 </logic:equal>
 
-
+<%-- if the stats are present display them in a table--%>
+<logic:present name="<%=Constants.RESULT_STATS_KEY%>">
+    <table>
+        <logic:iterate name="<%=Constants.RESULT_STATS_KEY%>" id="curStat">
+        <tr>
+            <td class="label">
+                <bean:write name="curStat" property="key"/>
+            </td>
+            <td>
+                <bean:write name="curStat" property="value"/>
+            </td>
+        </tr>
+        </logic:iterate>
+    </table>
+<br>
+</logic:present>
 <table border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td class="label">Plate ID:</td> <td><bean:write name="gelEntryForm" property="container.id"/></td>
