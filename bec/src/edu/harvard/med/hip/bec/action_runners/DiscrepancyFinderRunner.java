@@ -86,7 +86,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                                 pst_insert_process_object.setInt(2, clone_sequence.getId());
                                 DatabaseTransaction.executeUpdate(pst_insert_process_object);
 
-                             //   conn.commit();
+                               conn.commit();
                             }
                             catch(Exception e)
                             {
