@@ -86,9 +86,9 @@
 
     <tr>
     <td></td>
-    <td><input type="radio" name="searchTermType" value="nonfile" checked="checked">Enter sequence ids: (separated by spaces)
+    <td><input type="radio" name="searchSubmissionType" value="nonfile" checked="checked">Enter sequence ids: (separated by spaces)
     </td>
-    <td><input type="radio" name="searchTermType" value="file">Upload file containing sequence ids: (separated by spaces)
+    <td><input type="radio" name="searchSubmissionType" value="file">Upload file containing sequence ids: (separated by spaces)
     </td>
     </tr>
 
