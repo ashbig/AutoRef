@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.8 2001-06-14 14:47:38 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.9 2001-06-14 14:57:36 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -140,6 +140,30 @@ public class Researcher {
         
         return Id;
     }
+
+    /**
+     * Return true if the barcode is valid; false otherwise.
+     *
+     * @param barcode The barcode to be validated.
+     * @return True if the barcode is valid; false otherwise.
+     */
+    public static boolean isValid(String barcode) throws FlexDatabaseException {
+        String sql ="select * from researcher where researcherbarcode = '"+barcode+"'";
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        
+        ResultSet rs = t.executeQuery(sql);
+        try{
+            if(rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch(SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
     
     //******************************************************//
     //			Test				//
@@ -178,6 +202,16 @@ public class Researcher {
             System.out.println("Error");
         } catch (FlexProcessException e) {
             System.out.println(e);
+        } catch (FlexDatabaseException e) {
+            System.out.println(e);
+        }
+        
+        try {
+            if(Researcher.isValid(""))
+                System.out.println("Testing isValid method - ERROR");
+            else {
+                System.out.println("Testing isValid method - OK");
+            }
         } catch (FlexDatabaseException e) {
             System.out.println(e);
         }
