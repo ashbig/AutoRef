@@ -37,7 +37,7 @@
     </td>
     <th>container</th>
     <td>
-       <%-- <flex:linkContainer name="container">
+       <%--  <flex:linkContainer name="container">
             <bean:write name="container" property="label"/>
         </flex:linkContainer>
 --%>
