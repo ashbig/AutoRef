@@ -6,6 +6,8 @@
 
 package edu.harvard.med.hip.metagene.core;
 
+import java.util.*;
+
 /**
  *
  * @author  dzuo

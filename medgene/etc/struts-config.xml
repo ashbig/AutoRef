@@ -63,7 +63,7 @@
 
     <!-- Process a user selection in the main page -->
     <action    path="/main"
-               type="edu.harvard.med.hip.metagene.action.MainAction"
+               type="edu.harvard.med.hip.metagene.action.MainMenuAction"
                name="mainForm"
               scope="request"
               input="/main.jsp">

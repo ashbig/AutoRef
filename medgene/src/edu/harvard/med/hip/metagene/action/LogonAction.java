@@ -22,11 +22,13 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.metagene.form.LogonForm;
+import edu.harvard.med.hip.metagene.database.*;
+import edu.harvard.med.hip.metagene.user.*;
 
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 
 public final class LogonAction extends Action {
@@ -52,21 +54,18 @@ public final class LogonAction extends Action {
     HttpServletResponse response)
     throws ServletException, IOException {
         
-        
-        
-        
         // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
         String username = ((LogonForm) form).getUsername();
         String password = ((LogonForm) form).getPassword();
         
-        
-        request.setAttribute("username", username);
-        request.setAttribute("password", password);
-        
-        return (mapping.findForward("success"));
-        
+        Usermanager manager = new Usermanager();
+        if(manager.authenticate(username, password)) {
+            return (mapping.findForward("success"));
+        } else {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.login.invalid"));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
     }
-    
-    
 }

@@ -6,6 +6,12 @@
 
 package edu.harvard.med.hip.metagene.form;
 
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
 /**
  *
  * @author  dzuo
@@ -37,7 +43,7 @@ public class GetGenesForm extends ActionForm {
     }
     
     public int getNumber() {
-        this.number = number;
+        return number;
     }
     
     public void setNumber(int number) {

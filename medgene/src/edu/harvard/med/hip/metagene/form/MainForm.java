@@ -6,6 +6,12 @@
 
 package edu.harvard.med.hip.metagene.form;
 
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
 /**
  *
  * @author  dzuo

@@ -13,8 +13,7 @@
     <h1>Welcome to METAGENE</h1>
     <hr>
     <html:errors/>
-    <p>
-  
+    <p>  
 
     <html:form action="logon.do" focus="username" target="_top">
         <table>

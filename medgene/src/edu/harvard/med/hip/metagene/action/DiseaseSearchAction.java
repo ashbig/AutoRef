@@ -22,7 +22,9 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.metagene.form.DiseaseSearchForm;
-import edu.harvard.med.hip.metagene.form.DiseaseGeneManager;
+import edu.harvard.med.hip.metagene.core.*;
+
+import java.util.*;
 
 /**
  *

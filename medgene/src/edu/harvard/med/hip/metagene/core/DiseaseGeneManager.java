@@ -8,6 +8,11 @@
 
 package edu.harvard.med.hip.metagene.core;
 
+import java.util.*;
+import java.sql.*;
+
+import edu.harvard.med.hip.metagene.database.*;
+
 /**
  *
  * @author  dzuo
@@ -60,7 +65,7 @@ public class DiseaseGeneManager {
             return null;
         }        
         
-        Vector geneIndexes = queryGeneIndexes(conn);
+        Vector geneIndexes = queryGeneIndexes(conn, stat, disease);
                 
         if(geneIndexes != null) {
             int count = 0;
@@ -100,7 +105,7 @@ public class DiseaseGeneManager {
         return diseases;
     }
     
-    private Vector queryGeneIndexes(Connection conn) {
+    private Vector queryGeneIndexes(Connection conn, int stat, int disease) {
         String sql = "select g.gene_index_id, g.gene_index, t.index_type, g.date_added, s.statistic_score"+
                     " from disease_and_gene_association dg, gene_index g, index_type t,"+
                     " association_data a, statistic_analysis s"+

@@ -6,6 +6,11 @@
 
 package edu.harvard.med.hip.metagene.core;
 
+import java.util.*;
+import java.sql.*;
+
+import edu.harvard.med.hip.metagene.database.*;
+
 /**
  *
  * @author  dzuo
@@ -25,7 +30,7 @@ public class Statistics {
         return id;
     }
     
-    public int getType() {
+    public String getType() {
         return type;
     }
     

@@ -58,12 +58,7 @@ public class GetGenesAction extends Action {
         int number = ((GetGenesForm)form).getNumber();              
         
         
-        if("geneDisease".equals(selected)) {
-            return (mapping.findForward("success_disease"));
-        } else if("diseaseGene".equals(selected)) {
-            return (mapping.findForward("success_gene"));
-        } else {
             return (mapping.findForward("failure"));
-        }        
+     
     }   
 }
