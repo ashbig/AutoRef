@@ -237,7 +237,7 @@ public class UIUtils
         {
             
             UIUtils ut= new UIUtils();
-            String g = ut.getHTMLtransformedNeedleAlignment(BaseSequence.READ_SEQUENCE,3003) ;
+            String g = ut.getHTMLtransformedNeedleAlignment(BaseSequence.READ_SEQUENCE,1715) ;
         System.out.print(g);
         }catch(Exception e){}
         System.exit(0);

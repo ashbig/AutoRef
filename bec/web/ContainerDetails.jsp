@@ -11,11 +11,13 @@
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
+<%@ page import="edu.harvard.med.hip.bec.ui_objects.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
+<%@ page import="edu.harvard.med.hip.bec.Constants" %>
 
 <%-- The container that was searched --%>
-<logic:present name="<%=Constants.CONTAINER_KEY%>"> 
-    <bean:define name="<%=Constants.CONTAINER_KEY%>" id="searchContainer"/>
-</logic:present>
+
 <html>
 
 <body>
@@ -25,7 +27,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         <td >
-    <font color="#008000" size="5"><b> container Process History  </font>
+    <font color="#008000" size="5"><b> container Description  </font>
     <hr>
     
     <p>
@@ -88,10 +90,10 @@
     </tr>
 <%  
     String row_color = " bgColor='#e4e9f8'";
-	Sample sample=null;
+	UICloneSample sample=null;
     for (int count = 0; count < container.getSamples().size(); count ++)
 	{
-		sample = (Sample)container.getSamples().get(count);
+		sample = (UICloneSample)container.getSamples().get(count);
 		if (count % 2 == 0)
 		{
 		  row_color = " bgColor='#e4e9f8'";
@@ -104,9 +106,9 @@
 	<tr>
 
 		<td <%= row_color %>><%= sample.getPosition() %> </td>
-		<td <%= row_color %>> <%= sample.getType()%></td>
-		<td <%= row_color %>> <%= sample.getId()%></td>
-		<td <%= row_color %>> <%= sample.getIsolateTrackingEngine().getStatusAsString()%></td>
+		<td <%= row_color %>> <%= sample.getSampleType()%></td>
+		<td <%= row_color %>> <%= sample.getSampleId()%></td>
+		<td <%= row_color %>> <%= IsolateTrackingEngine.getStatusAsString( sample.getCloneStatus () )%></td>
 		<td <%= row_color %>> 
 	<% if (sample.getRefSequenceId() == -1)
 	{%>
@@ -122,10 +124,10 @@
 		</td>
 	    
 		<td <%= row_color %>> 
-		<% if ( sample.getCloneSequenceId() != -1)
+		<% if ( sample.getSequenceId() != -1)
 		{%>
-<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_INT%>&amp;ID= <%= sample.getCloneSequenceId()%>','<%= sample.getCloneSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
-		<%= sample.getCloneSequenceId()%></a>
+<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= sample.getSequenceId()%>','<%= sample.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+		<%= sample.getSequenceId()%></a>
 
 		<%}else{%>&nbsp;
 		<%}%></td>

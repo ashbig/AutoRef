@@ -62,29 +62,26 @@ public class DesicionTool
     {
         //get sample data
         Container container =   Container.findContainerDescriptionFromLabel(m_plate_label);
-        if (container == null)return ;
-        container.restoreSampleIsolate(false,false);
+         int[] sequence_analysis_status = {
+                BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,
+                BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED ,
+                BaseSequence.CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED };
+       m_clones = container.restoreUISamples(container);
         //fill in clone info
-        UICloneSample clone = null; Sample sample = null;
-        for (int clone_count = 0; clone_count < container.getSamples().size(); clone_count++)
+        UICloneSample clone = null; 
+        for (int clone_count = 0; clone_count < m_clones.size(); clone_count++)
         {
-            sample = (Sample) container.getSamples().get(clone_count);
-            clone = new UICloneSample();
-            clone.setPlateLabel (container.getLabel() ); 
-            clone.setPosition (sample.getPosition()); 
-            clone.setSampleType (sample.getType()); 
-            clone.setCloneId ( sample.getIsolateTrackingEngine().getFlexInfo().getFlexCloneId()); 
-            clone.setCloneStatus (sample.getIsolateTrackingEngine().getStatus() ); 
-            clone.setConstructId (sample.getIsolateTrackingEngine().getConstructId()); 
-            clone.setIsolateTrackingId(sample.getIsolateTrackingEngine().getId()); 
-            clone.setRank(sample.getIsolateTrackingEngine().getRank());
+            clone = (UICloneSample) m_clones.get(clone_count);
+            
 //get info for the most relevant sequence 
-            CloneSequence clone_sequence = setCloneSequence(clone);
+            CloneSequence clone_sequence = UICloneSample.setCloneSequence(clone, sequence_analysis_status);
             if ( clone_sequence != null)clone.setCloneQuality( defineQuality( clone_sequence) );
-            m_clones.add(clone);
         }
     }
-    
+    /*
     private CloneSequence setCloneSequence(UICloneSample clone_sample) throws BecDatabaseException
     {
          int[] sequence_analysis_status = {
@@ -107,7 +104,7 @@ public class DesicionTool
             return clseq;
     }
     
-    
+    */
     private int defineQuality( CloneSequence clone_sequence)throws BecDatabaseException
     {
         if ( clone_sequence.getDiscrepancies() == null || clone_sequence.getDiscrepancies().size() == 0)

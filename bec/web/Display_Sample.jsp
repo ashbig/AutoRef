@@ -146,7 +146,7 @@ else {%>No discrepancies<%}%>
             clonesequence = (UISequence) clone_sequences.get(seq_count);
         %>
         <tr>
-          <td width="17%"><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT%>&amp;ID=<%= clonesequence.getId()%>','<%= clonesequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+          <td width="17%"><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= clonesequence.getId()%>','<%= clonesequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 		<%= clonesequence.getId() %></a></td>
          <td width="17%"><%= clonesequence.getCloneSequenceTypeAsString() %></td>
          <td width="17%"><%= clonesequence.getAnalysisStatusAsString() %></td>

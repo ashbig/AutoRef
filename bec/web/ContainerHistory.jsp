@@ -14,9 +14,7 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 
 <%-- The container that was searched --%>
-<logic:present name="<%=Constants.CONTAINER_KEY%>"> 
-    <bean:define name="<%=Constants.CONTAINER_KEY%>" id="searchContainer"/>
-</logic:present>
+
 <html>
 
 <body>

@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.20 2003-10-10 15:41:42 Elena Exp $
+ * $Id: Container.java,v 1.21 2003-10-16 17:17:21 Elena Exp $
  *
  * File     	: Container.java
 
@@ -11,11 +11,13 @@ import java.math.BigDecimal;
 import java.sql.*;
 import javax.sql.*;
 
+import edu.harvard.med.hip.bec.ui_objects.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.file.*;
 import edu.harvard.med.hip.bec.user.*;
 import  edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import  edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import  edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import sun.jdbc.rowset.*;
@@ -578,6 +580,32 @@ public class Container
             DatabaseTransaction.closeResultSet(crs);
         }
          
+    }
+    public  static ArrayList restoreUISamples(Container container)throws BecDatabaseException
+    {
+        //get sample data
+       ArrayList results = new ArrayList();
+        if (container == null) return results;
+        container.restoreSampleIsolate(false,false);
+        //fill in clone info
+        UICloneSample clone = null; Sample sample = null;
+        for (int clone_count = 0; clone_count < container.getSamples().size(); clone_count++)
+        {
+            sample = (Sample) container.getSamples().get(clone_count);
+            clone = new UICloneSample();
+            clone.setPlateLabel (container.getLabel() ); 
+            clone.setPosition (sample.getPosition()); 
+            clone.setSampleType (sample.getType()); 
+            clone.setCloneId ( sample.getIsolateTrackingEngine().getFlexInfo().getFlexCloneId()); 
+            clone.setCloneStatus (sample.getIsolateTrackingEngine().getStatus() ); 
+            clone.setConstructId (sample.getIsolateTrackingEngine().getConstructId()); 
+            clone.setIsolateTrackingId(sample.getIsolateTrackingEngine().getId()); 
+            clone.setRank(sample.getIsolateTrackingEngine().getRank());
+            clone.setSampleId(sample.getId());
+            clone.setRefSequenceId(sample.getRefSequenceId());
+            results.add(clone);
+        }
+        return results;
     }
     
      /**
@@ -1706,11 +1734,13 @@ public class Container
        ArrayList c  = null;Container container =null;
        ArrayList b = new ArrayList();
        
-       b.add("PGS000121-8");b.add("PGS000121-1");b.add("YGS000357-1");b.add("YGS000357-1-2");b.add("YGS000357-4");
+      
         try
         {
-              c = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS, 5);
-           System.out.println(c.size());
+            container = Container.findContainerDescriptionFromLabel("YGS000357-1");
+            ArrayList ui_clones = container.restoreUISamples(container);
+            UICloneSample.setCloneSequences(ui_clones, null);
+            container.setSamples(ui_clones);
              
              
         }

@@ -248,7 +248,7 @@ public class Constants {
     public static final int AVAILABLE_VECTORS_DEFINITION_INT = 17;
     public static final int AVAILABLE_LINKERS_DEFINITION_INT = 18;
     public static final int CONSTRUCT_DEFINITION_REPORT = 19;
-    public static final int CLONE_SEQUENCE_DEFINITION_REPORT = 20;
+    public static final int CLONE_SEQUENCE_DEFINITION_REPORT_INT = 20;
     
    
     

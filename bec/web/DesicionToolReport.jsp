@@ -110,7 +110,7 @@ System.out.println(clone_info.size());
 
  <%= IsolateTrackingEngine.getStatusAsString( clone.getCloneStatus () ) %> </td>
                 <td <%= row_color %> align="center"><% if (clone.getSequenceId() != -1)
-                {%>	<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+                {%>	<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= clone.getSequenceId()%>','<%= clone.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 		<%= clone.getSequenceId()%></a> <%}else{%>&nbsp; <%}%></td>
                  <td <%= row_color %> align="center">
  <% if ( clone.getSequenceAnalisysStatus () == -1){ %> &nbsp; 

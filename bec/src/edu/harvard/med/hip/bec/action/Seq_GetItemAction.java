@@ -94,7 +94,7 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.SAMPLE_ISOLATE_RANKER_REPORT ||
                forwardName == Constants.READ_REPORT_INT ||
                forwardName == Constants.CONSTRUCT_DEFINITION_REPORT ||
-               forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT
+               forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT
                
                )
                {
@@ -146,7 +146,18 @@ public class Seq_GetItemAction extends ResearcherAction
                 case Constants.CONTAINER_DEFINITION_INT:
                 {
                     
-                    container.restoreSampleIsolate(false,false);
+                    //container.restoreSampleIsolate(false,false);
+                  //  container.restoreSampleCloneSequenceId();
+                 
+        
+                   ArrayList ui_clones = container.restoreUISamples(container);
+                    //fill in clone info
+                    UICloneSample clone = null; 
+                    
+            //get info for the most relevant sequence 
+                    UICloneSample.setCloneSequences(ui_clones, null);
+                    
+                    container.setSamples(ui_clones);
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
                     return (mapping.findForward("display_container_details"));
@@ -295,7 +306,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("sequence",sequence);
                     return (mapping.findForward("display_discrepancyreport"));
                 }
-                case Constants.CLONE_SEQUENCE_DEFINITION_REPORT:
+                case Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT:
                 {
                     CloneSequence clone_sequence = new CloneSequence(id);
                     request.setAttribute("clone_sequence",clone_sequence);

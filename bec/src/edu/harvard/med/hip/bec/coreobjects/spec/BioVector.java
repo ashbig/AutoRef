@@ -23,6 +23,10 @@ public class BioVector
 {
     public final static int VECTOR_TYPE_MASTER = 1;
     public final static int VECTOR_TYPE_EXSPRESION = 2;
+   // public final static int VECTOR_TYPE_FUTURE_HOLDER = 3;
+    
+    
+    
     public final static String VECTOR_TYPE_MASTER_STR = "entry vector";
     public final static String VECTOR_TYPE_EXSPRESION_STR = "destination vector";
     
