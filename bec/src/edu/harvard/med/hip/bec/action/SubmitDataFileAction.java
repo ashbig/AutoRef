@@ -138,7 +138,10 @@ public class SubmitDataFileAction extends ResearcherAction
            SequencePair pair = null;
            ArrayList alg_files = new ArrayList();
            int refseqid = -1;
+            StringBuffer report = new StringBuffer();
+           ArrayList files = new ArrayList();
            String refseq = null;BaseSequence  refsequence =null;
+           BufferedReader reader = null;
            String cloneseq=null;AnalyzedScoredSequence clonesequence = null;String line = null;
             try
                 {
@@ -146,10 +149,11 @@ public class SubmitDataFileAction extends ResearcherAction
                     // NeedleResult res = new NeedleResult();
                     ArrayList pairs = new ArrayList();
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(i_Input));
-
+                    reader = new BufferedReader(new InputStreamReader(i_Input));
+                    report.append("<html><body>");
                     while((line = reader.readLine()) != null)
                     {
+                        if (line.trim().length() < 1) break;
                         StringTokenizer st = new StringTokenizer(line, "\t");
                         String [] info = new String[3];
                         int i = 0;
@@ -174,59 +178,45 @@ public class SubmitDataFileAction extends ResearcherAction
                          d.run();
                           alg_files.addAll( d.getAligmentFileNames() );
                         //write down mutations
-                         i_report.add("Sequence id: "+refseqid +"\n");
+                          //write down mutations
+                          report.append("<hr><h2>Sequence id: "+refseqid +"</h2>");
                          if ( clonesequence.getDiscrepancies() == null || 
                                 clonesequence.getDiscrepancies().size() == 0)
                          {
-                             i_report.add("\t\t No discrepancies have been detected\n\n");
+                            report.append("<h3> No discrepancies have been detected </h3>");
                          }
                          else
                          {
-                             int discrepancy_number = 1;Mutation discr=null;
-                             for (int count = 0; count < clonesequence.getDiscrepancies().size(); count++)
-                             {
-                                 discr = (Mutation) clonesequence.getDiscrepancies().get(count);
-                                 if ( discrepancy_number != discr.getNumber())
-                                 {
-                                    i_report.add("\n\t\t New Discrepancy ");
-                                    discrepancy_number = discr.getNumber();
-                                 }
-                                 i_report.add( discr.toString() );
-                               
-                             }
+                             report.append(Mutation.toHTMLString( clonesequence.getDiscrepancies()));
                          }
-                                    
                     }
                     reader.close();
+                       //write report file
+                    File reportFile = new File("/tmp/"+"report"+System.currentTimeMillis()+".html");
+                    FileWriter fr = new FileWriter(reportFile);
+                    fr.write(report.toString());
+                    fr.close();
+                    files.add( reportFile);
                     //get alginment files if needed
                     if ( i_isAttachNeedleFiles)
                     {
                       
-                        ArrayList files = new ArrayList();
+                        
                         for (int inf = 0; inf < alg_files.size(); inf++)
                         {
                             try{
-                            System.out.print("semding files"+(String) alg_files.get(inf));
-                            files.add(new File((String) alg_files.get(inf)));
+                                                   files.add(new File((String) alg_files.get(inf)));
                             }catch(Exception ee){}
                         }
-                        System.out.print("semding files"+files.size());
-                        String msgText = "Discrepancy Finder Report.";
-                        for (int ind = 0; ind < i_report.size(); ind++)
-                        {
-                            msgText += "\n"+(String) i_report.get(ind);
-                        }
-                        Mailer.sendMessageWithFileCollections(i_email,  "elena_taycher@hms.harvard.edu",
-     "elena_taycher@hms.harvard.edu", "Discrepancy Finder Report.",  msgText, files);
-                        System.out.print("semding files"+files.size());
                     }
-                    else
-                    {
-                        Mailer.sendMessage(i_email, "elena_taycher@hms.harvard.edu",
-                            "elena_taycher@hms.harvard.edu", "Discrepancy Finder Report.", "Discrepancy Finder Report" ,i_report);
-                    }
+                    //send report  
+                    String msgText = "Please find Discrepancy Finder Report enclosed.";
+                   
+                    Mailer.sendMessageWithFileCollections(i_email,  "elena_taycher@hms.harvard.edu",
+                    "elena_taycher@hms.harvard.edu", "Discrepancy Finder Report.",  msgText, files);
+                 
             }
-            catch(Exception e){}
+            catch(Exception e){if (reader != null) try{reader.close();}catch(Exception i){}}
         }
      }
 }
