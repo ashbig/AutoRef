@@ -60,7 +60,9 @@ public class ExportFLEXtoFASTAAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
+        System.out.println("export...");
         FastaFileGenerator.generateFastaFiles();
+        System.out.println("export done");
         return (mapping.findForward("success"));
     }
 }
