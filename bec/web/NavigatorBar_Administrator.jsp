@@ -69,6 +69,8 @@ dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?for
 dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "/BEC/logon.do"));
 dhtmlMenu.addItem(new NavBarMenuItem("Sample History", "ChipGeneGeneAnalysis_1.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Available Containers", "/BEC/Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_CONTAINERS_INT%>"));
+dhtmlMenu.addItem(new NavBarMenuItem("Run Report", "/BEC/RunReport.jsp"));
+
 myNavBar1.addMenu(dhtmlMenu);
 
 dhtmlMenu = new NavBarMenu(100, 220);
