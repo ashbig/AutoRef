@@ -28,10 +28,22 @@ public class SubmitDataFileForm extends Seq_GetSpecForm
 {
    
     protected FormFile      m_file = null;
+    protected FormFile      m_file_2 = null;
+     protected FormFile      m_file_3 = null;
+      protected FormFile      m_file_4 = null;
    
    
-    public void         setFileName(FormFile requestFile)   {      m_file = requestFile;    }
+    public void         setFileName(FormFile requestFile)   {   System.out.println("in form");   m_file = requestFile;    }
     public FormFile     getFileName()                          {        return m_file;    }
+   
+    public void         setFileName_2(FormFile requestFile)   {      m_file_2 = requestFile;    }
+    public FormFile     getFileName_2()                          {        return m_file_2;    }
+   
+    public void         setFileName_3(FormFile requestFile)   {      m_file_3 = requestFile;    }
+    public FormFile     getFileName_3()                          {        return m_file_3;    }
+   
+    public void         setFileName_4(FormFile requestFile)   {      m_file_4 = requestFile;    }
+    public FormFile     getFileName_4()                          {        return m_file_4;    }
    
     
     /**
@@ -50,8 +62,8 @@ public class SubmitDataFileForm extends Seq_GetSpecForm
       
         
         ActionErrors errors = new ActionErrors();
-        if ((m_file.getFileName() == null) || (m_file.getFileName().trim().length() < 1))
-            errors.add("submitionFile", new ActionError("submition file required"));
+      //  if ((m_file.getFileName() == null) || (m_file.getFileName().trim().length() < 1))
+       //     errors.add("submitionFile", new ActionError("submition file required"));
         
         
         return errors;
