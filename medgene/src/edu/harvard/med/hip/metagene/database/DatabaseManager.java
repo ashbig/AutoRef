@@ -60,6 +60,7 @@ public class DatabaseManager {
             return connection;
         }
         catch( SQLException e ) {
+            System.out.println(e);
             return null;
         }
     }

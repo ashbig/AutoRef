@@ -66,8 +66,8 @@ public class SearchGenesAction extends MetageneAction {
         
         if("Get Diseases".equals(submit)) {
             DiseaseGeneManager manager = new DiseaseGeneManager();
-            Vector diseases = manager.getDiseasesByGeneIndex(indexid, stat, number);
-            request.setAttribute("diseases", diseases);
+            Vector associations = manager.getAssociationsByGeneIndex(indexid, stat, number);
+            request.setAttribute("associations", associations);
             return (mapping.findForward("success"));
         }
         

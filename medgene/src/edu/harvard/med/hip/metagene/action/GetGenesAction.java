@@ -67,7 +67,7 @@ public class GetGenesAction extends MetageneAction {
         
         if("Get Genes".equals(submit)) {
             DiseaseGeneManager manager = new DiseaseGeneManager();
-            Vector associations = manager.getAssociations(disease, stat, number);
+            Vector associations = manager.getAssociationsByDisease(disease, stat, number);
             request.setAttribute("associations", associations);
             return (mapping.findForward("success"));
         }

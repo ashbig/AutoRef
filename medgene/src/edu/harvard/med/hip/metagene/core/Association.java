@@ -18,15 +18,17 @@ public class Association {
     private Gene gene;
     private GeneIndex geneIndex;
     private StatAnalysis stat;
-
+    private AssociationData data;
+    
     /** Creates new Association */
     public Association() {
     }
     
-    public Association(Disease disease, GeneIndex geneIndex, StatAnalysis stat) {
+    public Association(Disease disease, GeneIndex geneIndex, StatAnalysis stat, AssociationData data) {
         this.disease = disease;
         this.geneIndex = geneIndex;
         this.stat = stat;
+        this.data = data;
     }
     
     public Association(Disease disease, Gene gene, StatAnalysis stat) {
@@ -53,6 +55,10 @@ public class Association {
     
     public StatAnalysis getStat() {
         return stat;
+    }
+    
+    public AssociationData getData() {
+        return data;
     }
     
     public boolean geneInCommon(Association a) {

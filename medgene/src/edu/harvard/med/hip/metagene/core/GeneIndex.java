@@ -20,6 +20,10 @@ public class GeneIndex {
     private String index;
     private String type;
     private String date;
+
+    public GeneIndex(int indexid) {
+        this.indexid = indexid;
+    }
     
     /** Creates new GeneIndex */
     public GeneIndex(int indexid, String index, String type, String date) {

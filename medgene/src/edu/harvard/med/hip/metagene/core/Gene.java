@@ -14,6 +14,9 @@ import java.util.*;
  * @version 
  */
 public class Gene {
+    public static final String GENE = "GENE";
+    public static final String FAMILY = "FAMILY";
+    
     private int hipGeneId;
     private String symbol;
     private int qualityidSymbol;
@@ -23,9 +26,10 @@ public class Gene {
     private int locusid;
     private Vector nicknames;
     private Vector information;
+    private String type;
     
     /** Creates new Gene */
-    public Gene(int id, String symbol, int qualSymbol, String name, int qualName, String date, int locusid) {
+    public Gene(int id, String symbol, int qualSymbol, String name, int qualName, String date, int locusid, String type) {
         this.hipGeneId = id;
         this.symbol = symbol;
         this.qualityidSymbol = qualSymbol;
@@ -33,6 +37,7 @@ public class Gene {
         this.qualityidName = qualName;
         this.date = date;
         this.locusid = locusid;
+        this.type = type;
     } 
  
     public int getHipGeneId() {
@@ -115,5 +120,9 @@ public class Gene {
     
     public int getLocusid() {
         return locusid;
+    }
+    
+    public String getType() {
+        return type;
     }
 }

@@ -60,7 +60,7 @@ public class DiseaseGeneManager {
         return diseases;
     }
     
-    public Vector getAssociations(int disease, int stat, int number) {
+    public Vector getAssociationsByDisease(int disease, int stat, int number) {
         DatabaseManager manager = new DatabaseManager();
         Connection conn = manager.connect();
         
@@ -84,16 +84,16 @@ public class DiseaseGeneManager {
                     continue;
                 }
                 
-                Association existedAssociation = found(newAssociations, association);
+                //                Association existedAssociation = found(newAssociations, association);
                 
-                if(existedAssociation != null) {
-                    if(association.getStat().compareTo(existedAssociation.getStat()) < 0) {
-                        newAssociations.removeElement(existedAssociation);
-                        newAssociations.addElement(association);
-                    }
-                } else {
-                    newAssociations.addElement(association);
-                }
+                //                if(existedAssociation != null) {
+                //                    if(association.getStat().compareTo(existedAssociation.getStat()) < 0) {
+                //                        newAssociations.removeElement(existedAssociation);
+                //                        newAssociations.addElement(association);
+                //                    }
+                //                } else {
+                newAssociations.addElement(association);
+                //                }
             }
         }
         
@@ -130,7 +130,9 @@ public class DiseaseGeneManager {
     }
     
     private Vector queryAssociations(Connection conn, int statid, int diseaseid) {
-        String sql = "select g.gene_index_id, g.gene_index, t.index_type, g.date_added, s.statistic_score, st.statistic_type"+
+        String sql = "select g.gene_index_id, g.gene_index, t.index_type,"+
+        " g.date_added, s.statistic_score, st.statistic_type, a.singlehit_disease,"+
+        " a.singlehit_gene, a.doublehit, a.doublenegative, a.date_added"+
         " from disease_and_gene_association dg, gene_index g, index_type t,"+
         " association_data a, statistic_analysis s, statistic_type st"+
         " where dg.gene_index_id=g.gene_index_id"+
@@ -165,10 +167,17 @@ public class DiseaseGeneManager {
                 double statScore = rs.getDouble(5);
                 //System.out.println(count+": id: "+id+" and score: "+statScore);
                 String statType = rs.getString(6);
+                int singlehitDisease = rs.getInt(7);
+                int singlehitGene = rs.getInt(8);
+                int doublehit = rs.getInt(9);
+                int doublehitNegative = rs.getInt(10);
+                String dateadded = rs.getString(11);
+                
                 Statistics stat = new Statistics(statid, statType);
                 StatAnalysis statAnalysis = new StatAnalysis(stat, statScore);
                 GeneIndex geneIndex = new GeneIndex(id, index, type, date);
-                Association assoc = new Association(disease, geneIndex, statAnalysis);
+                AssociationData data = new AssociationData(singlehitDisease,singlehitGene,doublehit,doublehitNegative,dateadded);
+                Association assoc = new Association(disease, geneIndex, statAnalysis, data);
                 Gene gene = queryGeneByIndex(conn, assoc.getGeneIndex());
                 assoc.setGene(gene);
                 associations.addElement(assoc);
@@ -197,7 +206,7 @@ public class DiseaseGeneManager {
                 " order by date_added desc";
                 stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, geneIndex.getIndexid());
-            } else {
+/*            } else {
                 sql = "select gl.hip_gene_id, gl.symbol_value, gl.quality_id_symbol,"+
                 " gl.formal_name_value, gl.quality_id_name, gl.date_added, gl.locus_id"+
                 " from gene_list gl, family_mapping f, parent_list p"+
@@ -208,28 +217,54 @@ public class DiseaseGeneManager {
                 stmt = conn.prepareStatement(sql);
                 stmt.setString(1, geneIndex.getIndex());
             }
-            
-            rs = stmt.executeQuery();
-            
-            if(rs.next()) {
-                int id = rs.getInt(1);
-                String symbol = rs.getString(2);
-                int qualSymbol = rs.getInt(3);
-                String name = rs.getString(4);
-                int qualName = rs.getInt(5);
-                String date = rs.getString(6);
-                int locusid = rs.getInt(7);
-                gene = new Gene(id, symbol, qualSymbol, name, qualName, date, locusid);
-            }
-            
-            rs.close();
-            stmt.close();
-            
-            if(gene != null) {
-                Vector nicknames = queryNicknamesByGene(conn, gene.getHipGeneId());
-                gene.setNicknames(nicknames);
-                Vector geneinfo = queryGeneinfoByGene(conn, gene.getHipGeneId());
-                gene.setInformation(geneinfo);
+ */
+                rs = stmt.executeQuery();
+                
+                if(rs.next()) {
+                    int id = rs.getInt(1);
+                    String symbol = rs.getString(2);
+                    int qualSymbol = rs.getInt(3);
+                    String name = rs.getString(4);
+                    int qualName = rs.getInt(5);
+                    String date = rs.getString(6);
+                    int locusid = rs.getInt(7);
+                    gene = new Gene(id, symbol, qualSymbol, name, qualName, date, locusid, Gene.GENE);
+                }
+                
+                rs.close();
+                stmt.close();
+                
+                if(gene != null) {
+                    Vector nicknames = queryNicknamesByGene(conn, gene.getHipGeneId());
+                    gene.setNicknames(nicknames);
+                    Vector geneinfo = queryGeneinfoByGene(conn, gene.getHipGeneId());
+                    gene.setInformation(geneinfo);
+                }
+            } else {
+                sql = "select p.parent_id, p.parent_value, p.date_added"+
+                " from parent_list p"+
+                " where p.parent_value=?";
+                stmt = conn.prepareStatement(sql);
+                stmt.setString(1, geneIndex.getIndex());
+                
+                rs = stmt.executeQuery();
+                
+                if(rs.next()) {
+                    int id = rs.getInt(1);
+                    String value = rs.getString(2);
+                    String date = rs.getString(3);
+                    gene = new Gene(id, null, -1, value, -1, date, -1, Gene.FAMILY);
+                }
+                
+                rs.close();
+                stmt.close();
+                
+                if(gene != null) {
+                    Vector nicknames = queryChildren(conn, gene.getHipGeneId());
+                    gene.setNicknames(nicknames);
+                    Vector geneinfo = new Vector();
+                    gene.setInformation(geneinfo);
+                }
             }
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -244,6 +279,34 @@ public class DiseaseGeneManager {
         ResultSet rs = null;
         String sql = "select gene_nick_name_value from gene_nicknames"+
         " where hip_gene_id="+id;
+        Vector nicknames = new Vector();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            
+            while(rs.next()) {
+                String name = rs.getString(1);
+                nicknames.addElement(name);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        
+        return nicknames;
+    }
+    
+    private Vector queryChildren(Connection conn, int id) {
+        Statement stmt = null;
+        ResultSet rs = null;
+        String sql = "select l.symbol_value"+
+        " from gene_list l, family_mapping m"+
+        " where l.hip_gene_id = m.hip_gene_id"+
+        " and m.parent_id = "+id;
+        
         Vector nicknames = new Vector();
         
         try {
@@ -310,7 +373,7 @@ public class DiseaseGeneManager {
             
             if(association.getGene() == null) {
                 System.out.println("association"+association.getGeneIndex().getIndexid());
-            }            
+            }
             
             if(asso.getGene().getHipGeneId() == association.getGene().getHipGeneId()) {
                 existed = asso;
@@ -408,7 +471,7 @@ public class DiseaseGeneManager {
         return geneIndexes;
     }
     
-    public Vector getDiseasesByGeneIndex(int geneIndex, int stat, int number) {
+    public Vector getAssociationsByGeneIndex(int geneIndexid, int statid, int number) {
         DatabaseManager manager = new DatabaseManager();
         Connection conn = manager.connect();
         
@@ -419,35 +482,51 @@ public class DiseaseGeneManager {
         
         Statement stmt = null;
         ResultSet rs = null;
-        String sql = "select d.hip_disease_id, d.disease_mesh_term, d.date_added"+
-        " from disease_list d, disease_and_gene_association a,"+
+        
+        String sql = "select d.hip_disease_id, d.disease_mesh_term, d.date_added,"+
+        " s.statistic_score, st.statistic_type, ad.singlehit_disease,"+
+        " ad.singlehit_gene, ad.doublehit, ad.doublenegative, ad.date_added"+
+        " from disease_list d, disease_and_gene_association a, statistic_type st,"+
         " association_data ad, statistic_analysis s"+
         " where d.hip_disease_id=a.hip_disease_id"+
         " and a.association_id=ad.association_id"+
         " and ad.data_id=s.data_id"+
-        " and a.gene_index_id="+geneIndex+
-        " and s.statistic_id="+stat;
+        " and s.statistic_id = st.statistic_id"+
+        " and a.gene_index_id="+geneIndexid+
+        " and s.statistic_id="+statid;
         
-        if(stat == Statistics.FISCHERID)
+        if(statid == Statistics.FISCHERID)
             sql = sql + " order by s.statistic_score";
         else
             sql = sql + " order by s.statistic_score desc";
         
-        Vector diseases = new Vector();
+        Vector associations = new Vector();
         
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             
             while(rs.next()) {
-                if(diseases.size() == number)
+                if(associations.size() == number)
                     break;
                 
                 int id = rs.getInt(1);
                 String term = rs.getString(2);
                 String date = rs.getString(3);
+                double statScore = rs.getDouble(4);
+                String statType = rs.getString(5);
+                int singlehitDisease = rs.getInt(6);
+                int singlehitGene = rs.getInt(7);
+                int doublehit = rs.getInt(8);
+                int doublehitNegative = rs.getInt(9);
+                String dateadded = rs.getString(10);
                 Disease disease = new Disease(id, term, date);
-                diseases.addElement(disease);
+                GeneIndex geneIndex = new GeneIndex(geneIndexid);
+                Statistics stat = new Statistics(statid, statType);
+                StatAnalysis statAnalysis = new StatAnalysis(stat, statScore);
+                AssociationData data = new AssociationData(singlehitDisease,singlehitGene,doublehit,doublehitNegative,dateadded);
+                Association assoc = new Association(disease, geneIndex, statAnalysis, data);
+                associations.addElement(assoc);
             }
             
             rs.close();
@@ -459,6 +538,6 @@ public class DiseaseGeneManager {
         }
         
         manager.disconnect();
-        return diseases;
+        return associations;
     }
 }
