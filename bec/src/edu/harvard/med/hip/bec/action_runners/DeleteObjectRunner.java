@@ -297,7 +297,7 @@ public class DeleteObjectRunner extends ProcessRunner
         sql = "delete from   resultfilereference  where ";
         sql +=" resultid in  (select resultid from result where ";
          if ( sql_result_type != null ) sql+= sql_result_type;
-        sql +="sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
+        sql +=" sampleid in (select sampleid from isolatetracking where isolatetrackingid in "
         +sql_where+"))";      sql_for_deletion.add(sql);
     
 //filereference

@@ -275,8 +275,12 @@ public class Algorithms
         return res;
     }
     
-    
     public static void writeArrayIntoFile( ArrayList messages, boolean isAppend, String file_name) throws Exception
+    {
+         writeArrayIntoFile(  messages,  isAppend,  file_name, true);
+    }
+    
+    public static void writeArrayIntoFile( ArrayList messages, boolean isAppend, String file_name, boolean isPrintLineSeparator) throws Exception
     {
          FileWriter fr = null;
          try
@@ -284,7 +288,8 @@ public class Algorithms
             fr =  new FileWriter(file_name, isAppend);
             for (int count = 0; count < messages.size(); count++)
             {
-                    fr.write((String) messages.get(count)+"\n");
+                    fr.write((String) messages.get(count));
+                    if (isPrintLineSeparator) fr.write("\n");
             }
             fr.flush();
             fr.close();
