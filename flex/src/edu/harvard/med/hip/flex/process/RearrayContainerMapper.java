@@ -67,8 +67,14 @@ public class RearrayContainerMapper {
             int sourcePlateId = sample.getSourcePlateid();
             sourceContainers.add(new Container(sourcePlateId, null, null, null));
             
-            //Sample s = new Sample(sampletype, position, containerid, sample.getConstructid(),-1, Sample.GOOD);
-            Sample s = new Sample(sample.getSampletype(), position, containerid, sample.getConstructid(),-1, Sample.GOOD);
+            Sample s = null;
+            if(Sample.CONTROL_POSITIVE.equals(sample.getSampletype()) ||
+                Sample.CONTROL_NEGATIVE.equals(sample.getSampletype()) ||
+                Sample.EMPTY.equals(sample.getSampletype())) {            
+                    s = new Sample(sample.getSampletype(), position, containerid, sample.getConstructid(),-1, Sample.GOOD);
+            } else {
+                s = new Sample(sampletype, position, containerid, sample.getConstructid(),-1, Sample.GOOD);
+            }
             s.setCloneid(sample.getCloneid());
             container.addSample(s);
             sampleLineageSet.addElement(new SampleLineage(sample.getSampleid(), s.getId()));
