@@ -140,19 +140,46 @@ public class ReportRunner extends ProcessRunner
         Hashtable reads = new Hashtable();//containes reads by isolatetrackingid
         try
         {
+           String  report_file_name =    Constants.getTemporaryFilesPath() + "GeneralReport"+ System.currentTimeMillis()+ ".txt";
+          
             //convert item into array
            items = Algorithms.splitString( m_items);
-          
-          ArrayList clones = getCloneInfo(m_items_type,items);
-          refsequences= extractRefSequences( clones);
-           if ( m_read_length )
-           {
-                reads = extractReads(clones);
-                
-           }
-          report = printReport(clones,refsequences,reads);
-         // file_list.add(report);
-            m_file_list_reports.add(report);   
+           ArrayList cycle_items = new ArrayList();
+           int cycle_number = 0; int last_item_in_cycle = 0; int first_item_in_cycle = 0;
+          while (last_item_in_cycle < items.size() )
+          {
+              // get items for cycle
+              switch ( m_items_type)
+              {
+                  case Constants.ITEM_TYPE_PLATE_LABELS:
+                  {
+                      first_item_in_cycle = last_item_in_cycle;
+                      last_item_in_cycle = first_item_in_cycle + 5;
+                      last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
+                      break;
+                  }
+                  case Constants.ITEM_TYPE_CLONEID:
+                  case Constants.ITEM_TYPE_BECSEQUENCE_ID:
+                  {
+                      first_item_in_cycle = last_item_in_cycle;
+                      last_item_in_cycle = first_item_in_cycle + 100;
+                      last_item_in_cycle = ( last_item_in_cycle > items.size()- 1 ) ? items.size() :last_item_in_cycle;
+                      break;
+                  }
+                  default: throw new BecUtilException("Wrong data type.");
+              }
+              cycle_items = new ArrayList();
+              for ( int item_count = first_item_in_cycle; item_count < last_item_in_cycle; item_count++)
+              {
+                  cycle_items.add(items.get(item_count));
+               }
+              cycle_number++;
+              ArrayList clones = getCloneInfo(m_items_type,cycle_items);
+              refsequences= extractRefSequences( clones);
+               if ( m_read_length )               reads = extractReads(clones);
+              printReport(report_file_name,clones,refsequences,reads, first_item_in_cycle);
+          }
+          m_file_list_reports.add(new File(report_file_name));   
         }
         catch(Exception ex)
         {
@@ -230,7 +257,7 @@ public class ReportRunner extends ProcessRunner
                 plate_names.append( "'");
                 plate_names.append((String)items.get(index));
                 plate_names.append("'");
-                if (index == 10) break;
+              //  if (index == 2) break;
                 if ( index != items.size()-1 ) plate_names.append(",");
             }
             sql="select FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
@@ -351,33 +378,31 @@ public class ReportRunner extends ProcessRunner
     
      
      
-  private File  printReport(ArrayList clones,Hashtable refsequences,Hashtable reads)
+  private void  printReport(String report_file_name, ArrayList clones,
+                            Hashtable refsequences,Hashtable reads,
+                            int write_cycle)
   {
-        File fl = null;
+    //   String report_file_name = null;
         String temp = null;
+         
         FileWriter fr = null;
         UICloneSample clone = null;
         try
         {
+            fr =  new FileWriter(report_file_name, true);
+             if (write_cycle == 0) fr.write(m_report_title+"\n");        
             for (int count = 0; count < clones.size(); count++)
             {
                 clone= (UICloneSample) clones.get(count);
-                if (count == 0)
-                {
-                    fl =   new File(Constants.getTemporaryFilesPath() + System.currentTimeMillis()+ ".txt");
-                    fr =  new FileWriter(fl);
-                    fr.write(m_report_title+"\n");
-                }
-
                 fr.write(writeClone(clone,refsequences,reads)+"\n");
 
             }
             fr.flush();
             fr.close();
-            return fl;
+         //  return new File(report_file_name);
         }
         catch(Exception e){ try { fr.close();}catch(Exception n){} }
-        return null;
+      //  return null;
     
   }
   private String writeClone(UICloneSample clone,Hashtable refsequences,Hashtable reads )
@@ -577,10 +602,11 @@ public class ReportRunner extends ProcessRunner
              
             user = AccessManager.getInstance().getUser("htaycher1","htaycher");
             input = new ReportRunner();
-            input.setItems("YRG000503");
-            input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
-            input.setFields(
-                    "clone_id", //    Clone Id
+            input.setItems(" 35284      35285      35286      35287      35288      35289      35290      35291      35292      35293      35294      35295      35296      35297      35298      35299      35300      35301      35302      35303      35304      35305      35306      35307      35308      35309      35310      35311      35312      35313      35314      35315      35316      35317      35318      35319      35320      35321      35322      35323      35324      35325      35326      35327      35328      35329      35330      35331      35332      35333      35334      35335      35336      35337      35338      35339      35340      35341      35342      35343      35344      35345      35346      35347      35348      35349      35350      35351      35352      35353      35354      35355      35356      35357      35358      35359      35360      35361      35362      35363      35364      35365      35366      35367      35368      35369      35370      35371      35372      35373      35374      35375       2765       2766       2392 ");
+            input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+     //       input.setFields(
+      //              "clone_id");
+            /*, //    Clone Id
                     "dir_name", // Directory Name
                     "sample_id", //      Sample Id
                     "plate_label", //      Plate Label
@@ -607,6 +633,7 @@ public class ReportRunner extends ProcessRunner
                     "clone_seq_cds_start",
                     "clone_seq_cds_stop",
                     "clone_seq_text");
+             **/
            input.run();
         }
         catch(Exception e){}
