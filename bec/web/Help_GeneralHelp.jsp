@@ -227,9 +227,7 @@ User input information for the module - list of plates which trace files should 
     to the number of trace files. If 'renaming.txt' file is empty or number of 
     the entries is less than expected one of the following problems occured: 
     <ul>
-      <li>Indicated in mapping file plates have not been submitted into ACE.</li>
-      <li>Indicated in mapping file plates have not been submitted for end reads 
-        sequencing into ACE or primers were not designed by ACE.</li>
+      <li>Plates indicated in mapping file have not been submitted into ACE (for end reads option only).</li>
       <li>Trace files have not been named properly by sequencing facility. The 
         following formats are accepted: 
         <table width="80%" border="1" cellspacing="2" cellpadding="2">
@@ -256,8 +254,9 @@ User input information for the module - list of plates which trace files should 
           </tr>
         </table>
       </li>
-      <li>Some of the files can be named not properly that will result in the 
-        number of rows in renaming file less than number of trace files.<br>
+      <li>Some of the files have not been named properly that will result in the 
+        number of records in renaming file less than number of trace files 
+in HIPDRIVE\Sequences for BEC\files_to_transfer directory.<br>
       </li>
     </ul>
   </li>
