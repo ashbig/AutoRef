@@ -64,44 +64,57 @@ public class EnterSourcePlateAction extends ResearcherAction {
         ActionErrors errors = new ActionErrors();
 
         try {
-            // Validate container label.
-            String sourcePlate = ((CreateProcessPlateForm)form).getSourcePlate();
-            LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems"); 
-            QueueItem item = getValidPlate(queueItems, sourcePlate);
-            if(item == null) {
-                errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
+            Vector containers = getContainers(form);
+            
+            int locations[] = new int[containers.size()];
+            
+            LinkedList items = new LinkedList();
+            Vector oldContainers = new Vector();
+            LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems");             
+            
+            for(int i=0; i<containers.size(); i++) {
+                String container = (String)containers.elementAt(i);
+                
+                // Validate container label.
+                QueueItem item = getValidPlate(queueItems, container);                
+                if(item == null) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.barcode", container));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+                
+                Container oldContainer = (Container)item.getItem();
+                locations[i] = oldContainer.getLocation().getId();
+                oldContainers.addElement(oldContainer);
+                items.addLast(item);                
             }
-                  
-            Container container = (Container)item.getItem();
-            ((CreateProcessPlateForm)form).setSourceLocation(container.getLocation().getId());
-
+            
+            // set the locations of the form bean.
+            setSourceLocations(form, locations);
+            
             //map the container to the new container
             Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
-            ContainerMapper mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
-            Vector oldContainers = new Vector();
-            oldContainers.addElement(container);
-            Vector newContainers = mapper.doMapping(oldContainers, protocol);
-            Vector sampleLineageSet = mapper.getSampleLineageSet();
+            ContainerMapper mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());           
+            Vector newContainers = mapper.doMapping(oldContainers, protocol);              
+            Vector sampleLineageSet = mapper.getSampleLineageSet();            
             
             // Get all the locations.
-            Vector locations = Location.getLocations();
-            
+            Vector locationList = Location.getLocations();
+
             // store all the information to the session.
-            request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", container);  
+            storeSourceContainerInSession(request, oldContainers); 
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);  
             request.getSession().setAttribute("EnterSourcePlateAction.sampleLineageSet", sampleLineageSet);
-            request.getSession().setAttribute("EnterSourcePlateAction.locations", locations);
-            request.getSession().setAttribute("EnterSourcePlateAction.item", item);
-
+            request.getSession().setAttribute("EnterSourcePlateAction.locations", locationList);
+            request.getSession().setAttribute("EnterSourcePlateAction.items", items);
+    
             return (mapping.findForward("success"));   
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         } 
-    }
- 
+    }        
+        
     // Validate the source plate barcode.
     protected QueueItem getValidPlate(LinkedList queueItems, String sourcePlate) { 
         if(queueItems == null) {
@@ -119,4 +132,24 @@ public class EnterSourcePlateAction extends ResearcherAction {
         
         return found;
     }
+    
+    // Get the source containers from the form bean.
+    protected Vector getContainers(ActionForm form) {
+        String sourcePlate = ((CreateProcessPlateForm)form).getSourcePlate();
+        
+        Vector containers = new Vector();
+        containers.addElement(sourcePlate);
+        
+        return containers;
+    }    
+
+    // Set the container location for the form bean.
+    protected void setSourceLocations(ActionForm form, int [] locations) {
+        ((CreateProcessPlateForm)form).setSourceLocation(locations[0]);
+    }
+    
+    // Store the source container in the session.
+    protected void storeSourceContainerInSession(HttpServletRequest request, Vector oldContainers) {
+        request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", (Container)oldContainers.elementAt(0));
+    }    
 }

@@ -76,8 +76,8 @@ public class GetResearcherAction extends ResearcherAction{
         }
 
         Vector newContainers = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.newContainers");
-        Container container = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");
-        QueueItem item = (QueueItem)request.getSession().getAttribute("EnterSourcePlateAction.item");
+        Vector oldContainers = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.oldContainers");
+        LinkedList items = (LinkedList)request.getSession().getAttribute("EnterSourcePlateAction.items");
         Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         Vector sampleLineageSet = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sampleLineageSet");
         
@@ -87,7 +87,11 @@ public class GetResearcherAction extends ResearcherAction{
             conn = t.requestConnection();
 
             // update the location of the old container.
-            container.updateLocation(container.getLocation().getId(), conn);
+            for(int i=0; i<oldContainers.size(); i++) {
+                Container oldContainer = (Container)oldContainers.elementAt(i);
+                oldContainer.updateLocation(oldContainer.getLocation().getId(), conn);
+            }
+            
             // Insert the new containers and samples into database.
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
@@ -106,11 +110,14 @@ public class GetResearcherAction extends ResearcherAction{
             
             Process process = new Process(protocol, executionStatus, researcher);
             // Add old container as input container.
-            ContainerProcessObject inputContainer = 
-                new ContainerProcessObject(container.getId(), 
-                process.getExecutionid(), 
-                edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
-            process.addProcessObject(inputContainer);
+            for(int i=0; i<oldContainers.size(); i++) {
+                Container oldContainer = (Container)oldContainers.elementAt(i);
+                ContainerProcessObject inputContainer = 
+                    new ContainerProcessObject(oldContainer.getId(), 
+                    process.getExecutionid(), 
+                    edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
+                process.addProcessObject(inputContainer);
+            }
             
             // Add new containers as output containers.
             for(int i=0; i<newContainers.size(); i++) {
@@ -129,15 +136,13 @@ public class GetResearcherAction extends ResearcherAction{
             process.insert(conn);
             
             // Remove the container from the queue.
-            LinkedList newItems = new LinkedList();
-            newItems.addLast(item);
             ContainerProcessQueue queue = new ContainerProcessQueue();
-            queue.removeQueueItems(newItems, conn);
+            queue.removeQueueItems(items, conn);
             
             // for gel and transformation protocols, we use the same protocol for queue.
             if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
                 Protocol.PERFORM_TRANSFORMATION.equals(protocol.getProcessname())) {
-                newItems.clear();
+                LinkedList newItems = new LinkedList();
                 for(int i=0; i<newContainers.size(); i++) {
                     Container newContainer = (Container)newContainers.elementAt(i);
                     newItems.addLast(new QueueItem(newContainer, protocol));
@@ -150,7 +155,7 @@ public class GetResearcherAction extends ResearcherAction{
 
                 // Add the new containers to the queue for each protocol.
                 for(int i=0; i<nextProtocols.size(); i++) {
-                    newItems.clear();
+                    LinkedList newItems = new LinkedList();
                     for(int j=0; j<newContainers.size(); j++) {
                         Container newContainer = (Container)newContainers.elementAt(j);
                         newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));                        
@@ -171,9 +176,9 @@ public class GetResearcherAction extends ResearcherAction{
             // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
             request.getSession().removeAttribute("SelectProtocolAction.protocol");
-            request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
+            request.getSession().removeAttribute("EnterSourcePlateAction.oldContainers");
             request.getSession().removeAttribute("EnterSourcePlateAction.locations");
-            request.getSession().removeAttribute("EnterSourcePlateAction.item");
+            request.getSession().removeAttribute("EnterSourcePlateAction.items");
             request.getSession().removeAttribute("EnterSourcePlateAction.sampleLineageSet");
 
             return (mapping.findForward("success"));            

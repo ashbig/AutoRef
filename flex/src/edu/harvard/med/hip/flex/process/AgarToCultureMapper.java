@@ -18,6 +18,8 @@ import java.util.*;
  * @version 
  */
 public class AgarToCultureMapper extends OneToOneContainerMapper {
+    public static final int COLONYNUM = 4;
+    public static final int AGARWELLNUM = 6;
     
     /**
      * Constructor.
@@ -39,14 +41,80 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
      */
     public Vector doMapping(Vector containers, Protocol protocol) 
                             throws FlexDatabaseException { 
-        String newContainerType = getContainerType(protocol.getProcessname());
         Container f1 = (Container)containers.elementAt(0);
-        Container c1 = (Container)containers.elementAt(1);
-        Container f2 = (Container)containers.elementAt(2);
-        Container c2 = (Container)containers.elementAt(3);
-
         Vector newContainers = new Vector();
+        String newContainerType = getContainerType(protocol.getProcessname());
+        String subthread = getSubThread(f1);
+        String newBarcode = Container.getLabel(protocol.getProcesscode(), f1.getPlatesetid(), subthread);     
+        Container newContainer = new Container(newContainerType, null, newBarcode, f1.getPlatesetid());
+
+        int index = 0;
+        Enumeration enum = containers.elements();
+        while(enum.hasMoreElements()) {
+            Container c = (Container)enum.nextElement();
+            c.restoreSample();
+            mappingSamples(c, newContainer, protocol, index); 
+            index = index+COLONYNUM*AGARWELLNUM;
+        }
+        newContainers.addElement(newContainer);
+        
         return newContainers;
     }   
 
+    // Return the subthreadid for culture plate from agar plate.
+    protected String getSubThread(Container c) {        
+        String processcode = c.getLabel().substring(0, 1);
+        
+        if(processcode.equals("AA")) {
+            return new String("1");
+        }
+        if(processcode.equals("AC")) {
+            return new String("2");
+        }
+        if(processcode.equals("AE")) {
+            return new String("3");
+        } 
+        if(processcode.equals("AG")) {
+            return new String("4");
+        }
+        if(processcode.equals("AI")) {
+            return new String("5");
+        }
+        if(processcode.equals("AK")) {
+            return new String("6");
+        }
+        if(processcode.equals("AM")) {
+            return new String("7");
+        }
+        if(processcode.equals("AO")) {
+            return new String("8");
+        }
+        return null;
+    } 
+    
+    // Creates the new samples from the samples of the previous plate.
+    protected void mappingSamples(Container container, Container newContainer, Protocol protocol, int index) throws FlexDatabaseException { 
+        String type;
+        Vector oldSamples = container.getSamples();
+        Enumeration enum = oldSamples.elements();
+        while(enum.hasMoreElements()) {
+            Sample s = (Sample)enum.nextElement();
+            if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
+                type = Sample.CONTROL_POSITIVE;
+            } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
+                type = Sample.CONTROL_NEGATIVE;
+            } else if(Sample.EMPTY.equals(s.getType())) {
+                type = Sample.EMPTY;
+            } else {
+                type = Sample.getType(protocol.getProcessname());
+            }
+            
+            for(int i=1; i<=COLONYNUM; i++) {
+                Sample newSample = new Sample(type, index+i, newContainer.getId(), s.getOligoid(), Sample.GOOD);
+                newContainer.addSample(newSample);
+                sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
+            }            
+            index = index+COLONYNUM;
+        }
+    }      
 }

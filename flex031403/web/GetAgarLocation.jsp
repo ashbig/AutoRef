@@ -21,11 +21,11 @@
 
     <tr>
     <td><b>Fusion agar plate barcode:</b></td>
-    <td><bean:write name="EnterAgarPlatesAction.agarF1" property="label"/></td>
+    <td><bean:write name="EnterSourcePlateAction.agarPlateF1" property="label"/></td>
     <td><b>Location:</b></td>
     <td><html:select property="agarF1Location">
         <html:options
-        collection="EnterAgarPlatesAction.locations"
+        collection="EnterSourcePlateAction.locations"
         property="id"
         labelProperty="type"
         />
@@ -34,11 +34,11 @@
 
     <tr>
     <td><b>Closed agar plate barcode:</b></td>
-    <td><bean:write name="EnterAgarPlatesAction.agarC1" property="label"/></td>
+    <td><bean:write name="EnterSourcePlateAction.agarPlateC1" property="label"/></td>
     <td><b>Location:</b></td>
     <td><html:select property="agarC1Location">
         <html:options
-        collection="EnterAgarPlatesAction.locations"
+        collection="EnterSourcePlateAction.locations"
         property="id"
         labelProperty="type"
         />
@@ -47,11 +47,11 @@
 
     <tr>
     <td><b>Fusion agar plate barcode:</b></td>
-    <td><bean:write name="EnterAgarPlatesAction.agarF2" property="label"/></td>
+    <td><bean:write name="EnterSourcePlateAction.agarPlateF2" property="label"/></td>
     <td><b>Location:</b></td>
     <td><html:select property="agarF2Location">
         <html:options
-        collection="EnterAgarPlatesAction.locations"
+        collection="EnterSourcePlateAction.locations"
         property="id"
         labelProperty="type"
         />
@@ -60,29 +60,32 @@
 
     <tr>
     <td><b>Closed agar plate barcode:</b></td>
-    <td><bean:write name="EnterAgarPlatesAction.agarC2" property="label"/></td>
+    <td><bean:write name="EnterSourcePlateAction.agarPlateC2" property="label"/></td>
     <td><b>Location:</b></td>
     <td><html:select property="agarC2Location">
         <html:options
-        collection="EnterAgarPlatesAction.locations"
+        collection="EnterSourcePlateAction.locations"
         property="id"
         labelProperty="type"
         />
         </html:select></td>
     </tr>
 
+    <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
     <tr>
-    <td><b>Culture block barcode:</b></td>
-    <td><bean:write name="EnterAgarPlatesAction.newContainer" property="label"/></td>
+    <td><b>Destination plate barcode:</b></td>
+    <td><bean:write name="newContainer" property="label"/></td>
     <td><b>Location:</b></td>
-    <td><html:select property="destLocation">
+    <td><html:select property="destLocations">
         <html:options
-        collection="EnterAgarPlatesAction.locations"
+        collection="EnterSourcePlateAction.locations"
         property="id"
         labelProperty="type"
         />
-        </html:select></td>
+        </html:select>
+    </td>
     </tr>
+    </logic:iterate>    
 
     <tr>
     <td></td><td><html:submit property="submit" value="Continue"/></td>

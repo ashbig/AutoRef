@@ -19,12 +19,14 @@
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
+    <logic:iterate id="oldContainer" name="EnterSourcePlateAction.oldContainers">
     <tr>
     <td><b>Source plate barcode:</b></td>
-    <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterSourcePlateAction.oldContainer" property="id"/>"><bean:write name="EnterSourcePlateAction.oldContainer" property="label"/></a></td>
+    <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="oldContainer" property="id"/>"><bean:write name="oldContainer" property="label"/></a></td>
     <td><b>Source plate location:</b></td>
-    <td><bean:write name="EnterSourcePlateAction.oldContainer" property="location.type"/></td>
+    <td><bean:write name="oldContainer" property="location.type"/></td>
     </tr>
+    </logic:iterate> 
 
     <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
     <tr>

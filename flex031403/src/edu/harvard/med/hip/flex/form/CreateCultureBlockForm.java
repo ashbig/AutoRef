@@ -34,7 +34,7 @@ public class CreateCultureBlockForm extends ActionForm {
     private int agarC1Location;
     private int agarF2Location;
     private int agarC2Location;
-    private int destLocation;
+    private int [] destLocations;
     
     /**
      * Get the first fusion agar plate barcode.
@@ -181,22 +181,22 @@ public class CreateCultureBlockForm extends ActionForm {
     }    
     
     /**
-     * Return the location of the destination plate.
+     * Set the destination locations.
      *
-     * @return The location of the destination plate.
+     * @param destLocations The destination locations.
      */
-    public int getDestLocation() {
-        return destLocation;
+    public void setDestLocations(int [] destLocations) {
+        this.destLocations = destLocations;
     }
     
     /**
-     * Set the destination location to the given value.
+     * Return the destination locations.
      *
-     * @param destLocation The value to be set to.
+     * @return The destination locations.
      */
-    public void setDestLocation(int destLocation) {
-        this.destLocation = destLocation;
-    }
+    public int [] getDestLocations() {
+        return destLocations;
+    }    
     
     /**
      * Validate the properties that have been set from this HTTP request,
@@ -242,7 +242,13 @@ public class CreateCultureBlockForm extends ActionForm {
         if(!(agarPlateF2.substring(0, 1).equals(agarPlateC2.substring(0, 1)))) {
             errors.add("agarPlateF2", new ActionError("error.plate.mismatch", agarPlateF2, agarPlateC2));
         }
-                
+        if(agarPlateF1.substring(0, 1).equals("AA") && !(agarPlateF2.substring(0, 1).equals("AB"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateF1, agarPlateF2));
+        }       
+        if(agarPlateC1.substring(0, 1).equals("AA") && !(agarPlateC2.substring(0, 1).equals("AB"))) {
+            errors.add("agarPlateF1", new ActionError("error.plate.mismatch", agarPlateC1, agarPlateC2));
+        }
+        
         return errors;
     }       
 }

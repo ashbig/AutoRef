@@ -25,8 +25,8 @@ import edu.harvard.med.hip.flex.core.Location;
 public class CreateProcessPlateForm extends ActionForm {
     private String processname = null;
     private String sourcePlate = null;
-    private int sourceLocation;
     private String destPlate = null;
+    private int sourceLocation;
     private int [] destLocations;
     
     /**
@@ -104,7 +104,7 @@ public class CreateProcessPlateForm extends ActionForm {
     /**
      * Set the source location.
      *
-     * @param sourceLocation The source location.
+     * @param sourceLocations The source location.
      */
     public void setSourceLocation(int sourceLocation) {
         this.sourceLocation = sourceLocation;

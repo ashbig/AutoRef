@@ -312,7 +312,7 @@
                scope="request"
                validate="false"
                input="/GetAgarLocation.jsp">
-      <forward  name="success"   path="/GetAgarResearcher.jsp"/>
+      <forward  name="success"   path="/GetResearcher.jsp"/>
     </action> 
 
      <!-- Process the researcher barcode input -->

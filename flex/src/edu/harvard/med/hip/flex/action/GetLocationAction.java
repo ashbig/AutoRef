@@ -61,18 +61,13 @@ public class GetLocationAction extends ResearcherAction{
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
-
-        int [] destLocations = ((CreateProcessPlateForm)form).getDestLocations();  
-        int sourceLocation = ((CreateProcessPlateForm)form).getSourceLocation();                
+        ActionErrors errors = new ActionErrors();        
+        int [] destLocations = getDestLocations(form);                 
               
-        try {
-
-            // Set the location for the old container.  
-            Location sLocation = new Location(sourceLocation);    
-            Container oldContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");             
-            oldContainer.setLocation(sLocation);
-
+        try {                  
+            // Set the location for the old container.
+            setSourceLocations(request, form);   
+            
             // Set the locations for the new containers.
             Vector newContainers = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.newContainers");              
             for(int i=0; i<destLocations.length; i++) {  
@@ -86,5 +81,21 @@ public class GetLocationAction extends ResearcherAction{
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
+    }    
+ 
+    protected int [] getDestLocations(ActionForm form) {
+        int [] destLocations = ((CreateProcessPlateForm)form).getDestLocations();
+        return destLocations;
+    }
+    
+    protected void setSourceLocations(HttpServletRequest request, ActionForm form) throws FlexCoreException, FlexDatabaseException {   
+        int sourceLocation = ((CreateProcessPlateForm)form).getSourceLocation(); 
+        Location sLocation = new Location(sourceLocation);          
+        Container oldContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");             
+        oldContainer.setLocation(sLocation);
+        Vector oldContainers = new Vector();
+        oldContainers.addElement(oldContainer);
+        request.getSession().removeAttribute("EnterSourcePlateAction.oldContainer");
+        request.getSession().setAttribute("EnterSourcePlateAction.oldContainers", oldContainers);    
     }
 }

@@ -29,6 +29,8 @@ public class StaticContainerMapperFactory {
     public static ContainerMapper makeContainerMapper(String processname) throws FlexProcessException {
         if(Protocol.GENERATE_AGAR_PLATES.equals(processname)) {
             return new AgarContainerMapper();
+        } else if(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES.equals(processname)) {
+            return new AgarToCultureMapper();
         } else {
             return new OneToOneContainerMapper();
         }
