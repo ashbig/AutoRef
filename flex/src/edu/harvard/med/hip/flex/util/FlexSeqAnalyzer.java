@@ -1,0 +1,309 @@
+/*
+ * $Id: FlexSeqAnalyzer.java,v 1.1 2001-05-23 19:45:11 dongmei_zuo Exp $
+ *
+ * File     : FlexSeqAnalyzer.java 
+ * Date     : 05102001
+ * Author	: Dongmei Zuo
+ */
+
+package flex.ApplicationCode.Java.util;
+
+import flex.ApplicationCode.Java.core.*;
+import flex.ApplicationCode.Java.database.*;
+import flex.ApplicationCode.Java.blast.*;
+import java.util.*;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.io.*;
+
+/**
+ * This class compares a sequence with existing flex sequences
+ * in the database to find whether the given sequence is same or
+ * homologous to any flex sequence.
+ */
+public class FlexSeqAnalyzer {
+	private static final String BLASTDB = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/blast/BlastDB/genes";
+	private static final String INPUT = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/input";
+	private static final String OUTPUT = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/output";
+	private static final double PERCENTIDENTITY = 0.9;
+	private static final double PERCENTALIGNMENT = 0.9;
+
+	private FlexSequence sequence;
+	private Vector sameSequence = new Vector();
+	private Hashtable homolog = new Hashtable();
+	private Hashtable blastResults = new Hashtable();
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param sequence The FlexSequence object.
+	 * @return A FlexSeqAnalyzer object.
+	 */
+	public FlexSeqAnalyzer(FlexSequence sequence) {
+		this.sequence = sequence;
+	}
+	
+	/**
+	 * Return true if there exists exact sequence match in the database.
+	 * Return false otherwise.
+	 *
+	 * @return True if there exists exact sequence match in the database;
+	 *         false otherwise.
+	 * @exception FlexDatabaseException.
+	 */
+	 public boolean findSame() throws FlexDatabaseException {	
+	 	Vector v = new Vector();	
+		if(!sameGCContent(v)) {
+			return false;
+		}
+	
+		if(!sameSequenceText(v)) {
+			return false;
+		}
+		
+		return true;	
+	 }
+	 
+	 /**
+	  * Return true if there is homolog in the flex database. Return false
+	  * otherwise.
+	  *
+	  * @return True if there is homolog in the flex database; false otherwise.
+	  * @exception FlexUtilException, FlexDatabaseException, ParseException.
+	  */
+	public boolean findHomolog() throws FlexUtilException, FlexDatabaseException, ParseException {
+		boolean isHomolog = false;
+		DatabaseTransaction t = DatabaseTransaction.getInstance();
+		String queryFile = makeQueryFile();
+		Blaster blaster = new Blaster();
+		blaster.setHits(1);
+		blaster.setDBPath(BLASTDB);
+		blaster.blast(queryFile+".in", queryFile+".out");
+		BlastParser parser = new BlastParser(queryFile+".out");
+		parser.parseBlast();
+		ArrayList homologs = parser.getHomologList();
+		
+		BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(0);
+		int homologid = Integer.parseInt(homologItem.getSubID());
+			
+		BlastParser.Alignment y = (BlastParser.Alignment)homologItem.getAlignItem(0);
+		String identity = y.getIdentity();
+		StringTokenizer st = new StringTokenizer(identity);
+		int numerator = Integer.parseInt(st.nextToken(" /"));
+		int denomenator = Integer.parseInt(st.nextToken(" /"));
+		int percentIdentity = numerator/denomenator;
+		int start = y.getQryStart();
+		int end = y.getQryEnd();
+		int cdslength = sequence.getCdslength();
+		int percentAlignment = (end-start+1)/cdslength;
+		String evalue = y.getEvalue();
+		
+		if(percentIdentity>=PERCENTIDENTITY && percentAlignment>=PERCENTALIGNMENT) {
+			FlexSequence s = new FlexSequence(homologid);
+			s.restore(homologid, t);
+			homolog.put(s.getGi(), s);
+			isHomolog = true;
+		}
+		
+		if(isHomolog) {
+			homolog.put(sequence.getGi(), sequence);
+			blastResults.put("evalue", evalue);
+			blastResults.put("identity", identity);
+			blastResults.put("cdslength", new Integer(cdslength));
+		}
+		
+		return isHomolog;
+	}
+	
+	/**
+	 * Return the same sequences as a hashtable including this sequence.
+	 *
+	 * @return A Vector object containing all the same sequences including this one.
+	 */
+	public Vector getSameSequence() {
+		return sameSequence;
+	}
+	
+	/**
+	 * Return the homologs as a hashtable including this sequence.
+	 *
+	 * @return A Hashtable object containing all the homologs including this one.
+	 */
+	public Hashtable getHomolog() {
+		return homolog;
+	}
+	
+	/**
+	 * Return the blastResults for this sequence.
+	 *
+	 * @return The blastResults for this sequence.
+	 */
+	public Hashtable getBlastResults() {
+		return blastResults;
+	}
+	
+	//**********************************************************************//
+	//						Private methods									//
+	//**********************************************************************//
+	
+	//Query the database to find the sequences that have the same GC content.
+	private boolean sameGCContent(Vector v) throws FlexDatabaseException {
+		String sql = "select sequenceid from flexsequence\n"+
+					 "where gccontent="+sequence.getGccontent();
+					 //+"\n"+
+					 //"and sequenceid <> "+sequence.getId();
+
+ 		DatabaseTransaction t = DatabaseTransaction.getInstance();
+		Vector results = t.executeSql(sql);
+		Enumeration enum = results.elements();
+		while(enum.hasMoreElements()) {
+			Hashtable h = (Hashtable)enum.nextElement();
+			int id = ((BigDecimal)(h.get("SEQUENCEID"))).intValue();
+			v.addElement(new Integer(id));
+		}
+		if(v.isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}	
+	}	
+	
+	//Query the database to find exact sequence match.
+	private boolean sameSequenceText(Vector v) throws FlexDatabaseException {
+		boolean returnValue = false;
+		
+		DatabaseTransaction t = DatabaseTransaction.getInstance();
+		Connection c = t.getConnection();
+		String sql = "select s.sequenceid as id "+
+					 "from flexsequence s, sequencetext t "+
+					 "where s.sequenceid = t.sequenceid "+
+					 "and s.sequenceid = ? "+
+					 "and t.sequenceorder = ? "+
+					 "and t.sequencetext = ?";		
+		try {
+			PreparedStatement stmt = c.prepareStatement(sql);
+
+			String sequencetext = sequence.getSequencetext();
+		
+			Enumeration enum = v.elements();
+			while(enum.hasMoreElements()) {
+				int id = ((Integer)enum.nextElement()).intValue();
+				stmt.setInt(1, id);
+			
+				boolean isSame = true;
+				int sequenceid =-1;
+				int order = 1;
+				for(int i=0; i<sequencetext.length(); i=i+4000) {
+					String subseq = getSubSeq(sequencetext, i);		 		
+					stmt.setInt(2, order); 
+					stmt.setString(3, subseq);
+				
+					ResultSet rs = stmt.executeQuery();
+					if (!rs.next()) {
+						isSame=false;
+						rs.close();
+						break;
+					} else {
+						sequenceid = rs.getBigDecimal("ID").intValue();
+						rs.close();
+					}
+					order++;
+				}	
+			
+				if(isSame) {
+					FlexSequence s = new FlexSequence(sequenceid);
+					s.restore(sequenceid, t);
+					sameSequence.addElement(s);
+					
+					returnValue = true;
+				}
+			}
+			stmt.close();
+			
+			if(returnValue) {
+				sameSequence.addElement(sequence);
+			}
+			
+			return returnValue;
+		} catch (SQLException e) {
+			throw new FlexDatabaseException(e.getMessage());
+		}
+	}			
+			
+	//Return the substring of a string with 4000 char long.
+	private String getSubSeq(String sequencetext, int i) {
+		if(i+4000 < sequencetext.length()) {
+			return sequencetext.substring(i, i+4000);
+		} else {
+			return sequencetext.substring(i);
+		}
+	}
+
+	//Print the sequence cds to a file in a fasta format.
+	private String makeQueryFile() throws FlexUtilException {
+		java.util.Date d = new java.util.Date(); 
+		java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM_dd_yyyy");
+		String fileName = sequence.getGi()+"_" + f.format(d);	
+		try {
+			PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(fileName+".in")));	
+			pr.print(sequence.getFastaHeader());
+			pr.println(sequence.getCDSFasta());
+			pr.close();
+			
+			return fileName;
+		}catch (IOException e) {
+			throw new FlexUtilException(e.getMessage());
+		}
+	}
+		
+	//**********************************************************************//
+	//						Private methods									//
+	//**********************************************************************//
+		
+	public static void main(String [] args) {
+		try {
+			DatabaseTransaction t = DatabaseTransaction.getInstance();
+			FlexSequence sequence = new FlexSequence(4598);
+			sequence.restore(4598, t);
+			sequence.setId(-1);
+			FlexSeqAnalyzer analyzer = new FlexSeqAnalyzer(sequence);
+			if(analyzer.findSame()) {
+				Vector sequences = analyzer.getSameSequence();
+				Enumeration enum = sequences.elements();
+				while(enum.hasMoreElements()) {
+					FlexSequence s = (FlexSequence)enum.nextElement();
+//						s.restore(s.getId(), t);
+					System.out.println("\t"+s.getId());
+					System.out.println("\t"+s.getSequencetext());
+					System.out.println("\t"+s.getFlexstatus());
+				}
+			} else {
+				System.out.println("Testing findSame() - ERROR");
+			}
+			
+			if(analyzer.findHomolog()) {
+				Hashtable homologs = analyzer.getHomolog();
+				Enumeration enum = homologs.keys();
+				while(enum.hasMoreElements()) {
+					String gi = (String)enum.nextElement();
+					Hashtable h = (Hashtable)homologs.get(gi);
+					Enumeration ks = h.keys();
+					while(ks.hasMoreElements()) {
+						String k = (String)ks.nextElement();
+						FlexSequence s = (FlexSequence)h.get(k);
+						s.restore(s.getId(), t);
+						System.out.println("\t"+s.getId());
+						System.out.println("\t"+s.getSequencetext());
+						System.out.println("\t"+s.getFlexstatus());
+					}
+				}
+			}					
+		} catch (FlexDatabaseException e) {
+			System.out.println(e);
+		} catch (FlexUtilException e) {
+			System.out.println(e);
+		}catch (ParseException e) {
+			System.out.println(e);
+		}
+	}			
+}	
