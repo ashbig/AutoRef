@@ -31,6 +31,7 @@
     </html:select>
 
     <p>Please choose a <a href="statistic_menu.jsp" target="_blank">statistical method</a> to rank the gene list:
+<p>
     <html:select property="stat">
         <html:options
         collection = "stats"
@@ -51,6 +52,8 @@
     </html:select>
 
     <p>
+<p>For performance issue, we only display limited genes here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
+<p>
     <html:submit property="submit" value="Get Genes"/>
     <html:submit property="submit" value="New Search"/>
     </html:form>

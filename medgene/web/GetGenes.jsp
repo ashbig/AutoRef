@@ -49,7 +49,7 @@
         <!html:option key="top 1000" value="1000"/>
         <!html:option key="top 2000" value="2000"/>
     </html:select>
-
+    <p>For performance issue, we only display limited genes here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
     <p>
     <html:submit property="submit" value="Get Genes"/>
     <html:submit property="submit" value="New Search"/>
