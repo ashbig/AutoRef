@@ -152,7 +152,7 @@
     </table>
     </dl>
 
-<p><b><u>Researcher ID:   <html:text property="researcherBarcode"/></u></b>
+<p><b><u>Researcher ID:   <html:password property="researcherBarcode"/></u></b>
 <p><b><u>Upload file:   <html:file property="inputFile" size="50"/></u></b>
 
 <p>

@@ -183,7 +183,7 @@ public class RearrayParamSetAction extends ResearcherAction {
             manager.setIsDestWellAsNumber(false);
         
         setSampleTypeAndProtocol(form, manager);
-        
+
         manager.setPlateType(plateType);
         manager.setLocation(location);
         manager.setProjectid(project);

@@ -142,6 +142,7 @@ public class RearrayManager {
     public String getStorageType() {return storageType;}
     public String getDestStorageForm() {return destStorageForm;}
     public String getDestStorageType() {return destStorageType;}
+    public String getSampleType() {return sampleType;}
     
     /** Creates a new instance of RearrayManager */
     public RearrayManager(InputStream fileInput) {
@@ -489,6 +490,7 @@ public class RearrayManager {
             if((i+1)%(numOfWellsOnPlate-numOfControls)==0 || (i==(samples.size()-1)&&!isFullPlate)) {
                 int threadid = FlexIDGenerator.getID("threadid");
                 String label = getLabel(pw, protocol, threadid);
+             
                 Container container = createPlate(plateSamples, plateType,sampleType,threadid,label,conn);
                 //rearrayedContainers.add(container);
                 
