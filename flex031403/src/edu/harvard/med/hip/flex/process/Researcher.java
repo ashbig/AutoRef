@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.15 2001-10-31 20:17:32 dzuo Exp $
+ * $Id: Researcher.java,v 1.16 2002-06-11 19:33:58 Elena Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -29,6 +29,8 @@ public class Researcher {
     private String name;
     private String barcode;
     private String isActive;
+    
+    public static final String          SYSTEM = "DEFAULT";
     
     /**
      * Constructor.
