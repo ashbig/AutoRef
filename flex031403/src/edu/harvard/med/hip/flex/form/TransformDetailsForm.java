@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-15 19:20:51 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-18 11:42:29 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -55,24 +55,62 @@ import edu.harvard.med.hip.flex.core.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-15 19:20:51 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-18 11:42:29 $
  */
 
 public class TransformDetailsForm extends ActionForm{
     
     // store the status indexed properties as a List
-    List statusList;
+    private List statusList;
     
     // store the results as an index property
-    List resultList;
+    private List resultList;
+    
+    // store the container for this form
+    private Container container;
     
     /**
      * Default Constructor
      */
     public TransformDetailsForm() {
+        this(null);
+    }
+    
+    /**
+     * Constructor that takes in a container
+     *
+     * @param the container this form is representing
+     */
+    public TransformDetailsForm(Container container) {
+        this.container = container;
+        
+        // set values in the form, if the container is not null.
+        if(container != null) {
+            reset(container);
+        }
         statusList = new LinkedList();
         resultList = new LinkedList();
     }
+    
+    
+    /**
+     * Access for the container
+     *
+     * @return The container this form represents
+     */
+    public Container getContainer() {
+        return this.container;
+    }
+    
+    /**
+     * Mutator for the container
+     *
+     * @param container, the container to set to
+     */
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+    
     
     /**
      * Accessor for the status
@@ -145,17 +183,14 @@ public class TransformDetailsForm extends ActionForm{
             i++;
         }
     }
+    
     /**
      * Get the number of indexes.
      *
      * @return the size of the lists
      */
     public int size() {
-        int size = 0;
-        if (resultList != null) {
-            size = resultList.size();
-        }
-        return size;
+        return container == null ? 0 : container.getSamples().size();
     }
 } // End class TransformDetailsForm
 

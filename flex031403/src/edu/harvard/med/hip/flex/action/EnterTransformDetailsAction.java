@@ -8,13 +8,13 @@
  *
  *
  * Author : Juan Munoz (jmunoz@3rdmill.com)
- * 
+ *
  * See COPYRIGHT file for copyright information
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-15 19:20:51 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-18 11:42:29 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@
  *    Add entries here when updating the code. Remember to date and insert
  *    your 3 letters initials.
  *
- *    Jun-15-2001 : JMM - Class created. 
+ *    Jun-15-2001 : JMM - Class created.
  *
  */
 
@@ -32,16 +32,20 @@
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
-*/
+ */
 
 
 package edu.harvard.med.hip.flex.action;
 
 import java.io.*;
+import java.util.*;
+import java.sql.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.*;
 
 import org.apache.struts.action.*;
@@ -50,7 +54,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-15 19:20:51 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-18 11:42:29 $
  */
 
 public class EnterTransformDetailsAction extends ResearcherAction {
@@ -60,7 +64,7 @@ public class EnterTransformDetailsAction extends ResearcherAction {
      */
     public EnterTransformDetailsAction() {
     }
-
+    
     /**
      * Does the real work for the perform method which must be overriden by the
      * Child classes.
@@ -73,15 +77,34 @@ public class EnterTransformDetailsAction extends ResearcherAction {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping, ActionForm form, 
-    HttpServletRequest request, HttpServletResponse response) 
+    public ActionForward flexPerform(ActionMapping mapping, ActionForm form,
+    HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        ActionForward retForward = null;
         TransformDetailsForm transForm = (TransformDetailsForm) form;
-        for(int i = 0; transForm != null &&i <transForm.size() ;i++) {
-            System.out.println(i+ ": status: " + transForm.getStatus(i));
-            System.out.println(i+ ": result: " + transForm.getResult(i));
+        Vector samples = transForm.getContainer().getSamples();
+        Connection conn = null;
+        try {
+            conn = DatabaseTransaction.getInstance().requestConnection();
+            for(int i = 0; transForm != null &&i <transForm.size() ;i++) {
+                Sample curSample = (Sample)samples.get(i);
+                curSample.setStatus(transForm.getStatus(i));
+               
+                curSample.update(conn);
+                
+                System.out.println(i+ ": status: " + transForm.getStatus(i));
+                System.out.println(i+ ": result: " + transForm.getResult(i));
+            }
+            DatabaseTransaction.commit(conn);
+        } catch (FlexDatabaseException fde) {
+            retForward = mapping.findForward("error");
+            request.setAttribute(Action.EXCEPTION_KEY, fde);
+            DatabaseTransaction.rollback(conn);
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
         }
-        return null;
+        
+        return retForward;
     } //end flexPerform
     
     
@@ -92,4 +115,4 @@ public class EnterTransformDetailsAction extends ResearcherAction {
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
-*/
+ */
