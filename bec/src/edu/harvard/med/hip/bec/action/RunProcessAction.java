@@ -299,7 +299,7 @@ public class RunProcessAction extends ResearcherAction
                     return new ActionForward("/RunReport.jsp");
                 }
                 ReportRunner runner = new ReportRunner();
-                runner.setItems(item_ids);
+                runner.setItems(item_ids.toUpperCase().trim());
                 runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
                 // value="2"//Clone Ids</strong//
                 runner.setFields(
@@ -324,7 +324,8 @@ public class RunProcessAction extends ResearcherAction
                     request.getParameter("ref_gene_symbol"), //      Gene Symbol
                     request.getParameter("ref_panum"), //      PA Number (for Pseudomonas project only)
                     request.getParameter("ref_sga"), //      SGA Number (for Yeast project only)
-                    request.getParameter("rank") //      Leave Sequence Info Empty for Empty Well
+                    request.getParameter("rank") ,
+                    request.getParameter("read_length") //      end reads length
                  );
             
                     runner.setUser(user);
