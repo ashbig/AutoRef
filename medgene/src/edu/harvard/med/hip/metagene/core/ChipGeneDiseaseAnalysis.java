@@ -22,24 +22,24 @@ public class ChipGeneDiseaseAnalysis {
     
     // The direct_gene_hashmap contains all non-family genes and all children
     // genes from the gene families. But it doesn't contain the gene families themselves.
-    private HashMap direct_gene_hashmap = new HashMap();
+    protected HashMap direct_gene_hashmap = new HashMap();
     
     // The source for finding indirect genes. It contains all non-family genes index ids plus
     // family gene index ids. However, it doesn't include all children genes from the families.
-    private Vector source_for_indirect_genes = new Vector();
+    protected Vector source_for_indirect_genes = new Vector();
     
     // The indirect_gene_hashmap contains all indirectly disease-associated genes 
     // from the input chip genes. 
-    private HashMap indirect_gene_hashmap = new HashMap();
+    protected HashMap indirect_gene_hashmap = new HashMap();
     
     // direct gene tree contains all directly disease-associated genes
-    private TreeSet direct_gene_tree = new TreeSet(new GeneComparator());
+    protected TreeSet direct_gene_tree = new TreeSet(new GeneComparator());
 
     // indirect gene tree contains all indirectly disease-associated genes
-    private TreeSet indirect_gene_tree = new TreeSet (new GeneComparator());
+    protected TreeSet indirect_gene_tree = new TreeSet (new GeneComparator());
     
     // new gene tree contains all non-associated genes
-    private TreeSet new_gene_tree = new TreeSet(new GeneComparator());
+    protected TreeSet new_gene_tree = new TreeSet(new GeneComparator());
 
     
 public long start, end2;
