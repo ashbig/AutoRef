@@ -31,9 +31,10 @@ public class MgcContainerCollection {
     {
         ArrayList labels = new ArrayList();
         String label = null;
+        String marker = null;
         String orgContainerName = null;
         int container_id = -1;
-        String sql = "select c.containerid as id, mc.oricontainer as orgcontainer, c.label as label \n " + 
+        String sql = "select c.containerid as id, mc.oricontainer as orgcontainer, mc.marker as marker, c.label as label \n " + 
         " from mgccontainer mc , containerheader c \n " +
         " where  mc.mgccontainerid =  c.containerid  and " +
          "mc.filename = '" + fileName + "' and mc.glycerolcontainerid is null" ;        
@@ -47,9 +48,10 @@ public class MgcContainerCollection {
                 
                 orgContainerName = crs.getString("ORGCONTAINER");
                 label = crs.getString("LABEL");
+                marker = crs.getString("MARKER");
                 container_id = crs.getInt("ID");
-     
-                labels.add ( new MgcContainer(container_id, fileName, null, orgContainerName,  label));
+                    
+                labels.add ( new MgcContainer(container_id, fileName, null, orgContainerName,  label, marker));
               }
         } catch (Exception ex) 
         {
