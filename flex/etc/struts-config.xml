@@ -275,7 +275,7 @@
     <!--<forward    name="rearray" path="/GetWorkflowForRearray.do"/>  -->
     <forward    name="browseFlex" path="/BrowseFlex.jsp"/>  
     <forward    name="genericRearray" path="/RearraySelection.jsp"/>    
-    <forward    name="expressionClone" path="/ExpressionCloneEntry.jsp"/>     
+    <forward    name="expressionClone" path="/.jsp"/>     
     <forward    name="perimeterRearray" path="/GetProjects.do?forwardName=PERIMETER_REARRAY"/>
     <forward    name="queryFlex" path="/GetSearchTerms.do"/>   
     <forward    name="queryHistory" path="/GetAllSearchRecords.do"/>

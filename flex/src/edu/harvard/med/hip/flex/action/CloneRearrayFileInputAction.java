@@ -71,7 +71,8 @@ public class CloneRearrayFileInputAction extends ResearcherAction {
             dist = "no";
         }
         
-        if(workflow == Workflow.REARRAY_SEQ_GLYCEROL || workflow == Workflow.REARRAY_SEQ_DNA) {
+        if(workflow == Workflow.REARRAY_SEQ_GLYCEROL || workflow == Workflow.REARRAY_SEQ_DNA
+        || workflow == Workflow.REARRAY_EXP_WORKING) {
             dist = "no";
         }
         

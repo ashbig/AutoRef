@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.40 2004-04-22 17:23:27 dzuo Exp $
+ * $Id: Protocol.java,v 1.41 2005-01-13 20:30:52 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -115,6 +115,8 @@ public class Protocol {
     "Rearray clones to distribution DNA plates";
     public static final String REARRAY_DIST_GLYCEROL =
     "Rearray clones to distribution glycerol stocks";
+    public static final String REARRAY_EXP_WORKING = 
+    "Rearray expression clones to working glycerol stocks";
     public static final String CREATE_EXPRESSION_PLATE = "Create expression plate";
     public static final String ENTER_EXPRESSION_RESULT = "Enter expression result";
     public static final String REARRAY_OLIGO = "Rearray oligo plates";

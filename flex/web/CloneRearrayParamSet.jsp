@@ -50,6 +50,7 @@
     <table>
         <tr>
             <td class="prompt">Select the source plate format:</td>
+            <logic:notEqual name="workflow" value="34">
             <logic:equal name="dist" value="yes">
             <td><select name="sourceFormat">
                 <option value="workingGlycerol"/>Working Glycerol
@@ -63,6 +64,14 @@
                 <option value="dna"/>Original Production DNA
                 <option value="workingGlycerol"/>Working Glycerol
                 <option value="workingDna"/>Working DNA
+                </select>
+            </td>
+            </logic:equal>
+            </logic:notEqual>
+
+            <logic:equal name="workflow" value="34">
+            <td><select name="sourceFormat">
+                <option value="workingGlycerol"/>Working Glycerol
                 </select>
             </td>
             </logic:equal>

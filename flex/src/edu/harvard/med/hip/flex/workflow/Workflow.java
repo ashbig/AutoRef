@@ -58,6 +58,7 @@ public class Workflow {
     
     public static final int IMPORT_EXTERNAL_CLONE = 31;
     public static final int MGC_GATEWAY_CLOSED = 32;
+    public static final int REARRAY_EXP_WORKING = 34;
     
     /** Creates new Workflow */
     public Workflow() {

@@ -160,6 +160,9 @@ public class CreateExpressionPlateAction extends ResearcherAction {
             WorkflowManager manager = new WorkflowManager(p, workflow, "ProcessPlateManager");
             manager.createProcessRecord(Process.SUCCESS, protocol, r,null, containers, newContainers,null, sampleLineageSet, conn);
             DatabaseTransaction.commit(conn);
+            
+            //add the new containers to storage table as working glycerol
+            addToStorage(newContainers);
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
@@ -192,6 +195,11 @@ public class CreateExpressionPlateAction extends ResearcherAction {
         
         return (mapping.findForward("success"));
     }
+    
+    protected void addToStorage(List containers) {
+        ThreadedCloneStorageManager storageManager = new ThreadedCloneStorageManager(containers, StorageType.WORKING, StorageForm.GLYCEROL);
+        new java.lang.Thread(storageManager).start();
+    }   
 }
 
 

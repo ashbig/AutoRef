@@ -83,6 +83,7 @@ public class RearraySelectionAction extends ResearcherAction {
                 Workflow w6 = new Workflow(Workflow.REARRAY_SEQ_DNA);
                 Workflow w7 = new Workflow(Workflow.REARRAY_DIST_GLYCEROL);
                 Workflow w8 = new Workflow(Workflow.REARRAY_DIST_DNA);
+                Workflow w9 = new Workflow(Workflow.REARRAY_EXP_WORKING);
                 workflows.add(w1);
                 workflows.add(w2);
                 workflows.add(w3);
@@ -91,6 +92,7 @@ public class RearraySelectionAction extends ResearcherAction {
                 workflows.add(w6);
                 workflows.add(w7);
                 workflows.add(w8);
+                workflows.add(w9);
             }
             
             request.setAttribute("projects", projects);

@@ -740,7 +740,7 @@ public class RearrayManager {
         //String file = "G:\\rearraytest_source.txt";
         //String file = "G:\\rearraytest_dest.txt";
         //String file = "G:\\rearraytest_dest_dup.txt";
-        String file = "G:\\rearraytest_clone.txt";
+        String file = "G:\\rearraytest_exp.txt";
         
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -770,9 +770,9 @@ public class RearrayManager {
             //manager.setIsDestPlateSet(true);
             
             manager.setResearcherBarcode("joy");
-            manager.setProjectid(2);
-            manager.setWorkflowid(21);
-            manager.setProtocolName(Protocol.REARRAY_DIST_GLYCEROL);
+            manager.setProjectid(1);
+            manager.setWorkflowid(34);
+            manager.setProtocolName(Protocol.REARRAY_EXP_WORKING);
             //manager.setIsStorage(true);
             manager.setStorageForm(StorageForm.GLYCEROL);
             manager.setStorageType(StorageType.WORKING);
