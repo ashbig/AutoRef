@@ -110,7 +110,8 @@ public class SequencingFacilityFileName
         ArrayList items = Algorithms.splitString(htmbc_file_name,"_");
          if ( items.size() != 7) return;
         m_file_name = htmbc_file_name;
-      
+        
+        m_version = (String)items.get(0);//run plate id
         m_well_name = (String)items.get(4);
         m_well_number = Algorithms.convertWellFromA8_12toInt(m_well_name);
         m_extention = htmbc_file_name.substring(htmbc_file_name.indexOf('.') + 1);
