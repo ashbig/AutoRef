@@ -120,6 +120,18 @@ public class Algorithms
         }
         return copy;
     }
+    public static String cleanWhiteSpaces(String str)
+    {
+        String copy = "";  // The reversed copy.
+        char[] ar =copy.toCharArray();
+        //       from str.length() - 1 down to 0.
+        for ( int i = 0; i < ar.length;  i++ )
+        {
+            if (Character.isLetterOrDigit(ar[i]) ) copy += ar[i];
+          
+        }
+        return copy;
+    }
     
     
     
