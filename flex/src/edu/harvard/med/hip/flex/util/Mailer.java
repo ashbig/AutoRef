@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2002-06-06 18:25:52 $
- * $Author: Elena $
+ * $Revision: 1.9 $
+ * $Date: 2003-09-25 13:17:36 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -50,14 +50,14 @@ import edu.harvard.med.hip.flex.database.*;
  *
  * Utility class to send simple messages.
  *
- * @author     $Author: Elena $
- * @version    $Revision: 1.8 $ $Date: 2002-06-06 18:25:52 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.9 $ $Date: 2003-09-25 13:17:36 $
  */
 
 public class Mailer
 {
     
-    public final static String SMTP_HOST ="hms.harvard.edu";
+    public final static String SMTP_HOST ="email.med.harvard.edu";
     
     /**
      * Utility Method to send a message
@@ -269,7 +269,8 @@ public static void notifyUser(String user_name, String file_name, String subject
 private static File writeFile(Vector fileData, String file_name)
 throws IOException
 {
-    File fl = new File( "/tmp/"  + file_name);
+    //File fl = new File( "/tmp/"  + file_name);
+    File fl = new File( "G:\\"  + file_name);
     FileWriter fr = new FileWriter(fl);
     
     for (int count = 0; count < fileData.size(); count++)
