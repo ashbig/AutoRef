@@ -20,6 +20,7 @@ import java.util.Hashtable;
 public class CustomerRequestForm extends ActionForm {
     private String searchString = null;
     private String [] checkOrder = null;
+    private String [] selection = null;
     
     /**
      * Set the searchString to the given value.
@@ -55,5 +56,23 @@ public class CustomerRequestForm extends ActionForm {
      */
     public void setCheckOrder(String [] checkOrder) {
         this.checkOrder = checkOrder;
+    }
+
+    /**
+     * Return the selection field.
+     *
+     * @return The selection field.
+     */
+    public String [] getSelection() {
+        return selection;
+    }
+    
+    /**
+     * Set the selection field to the given value.
+     *
+     * @param selection The value to be set to.
+     */
+    public void setSelection(String [] selection) {
+        this.selection = selection;
     }
 }

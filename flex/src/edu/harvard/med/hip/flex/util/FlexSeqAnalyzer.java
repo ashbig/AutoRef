@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.4 2001-06-01 18:27:18 dongmei_zuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.5 2001-06-06 20:31:52 dongmei_zuo Exp $
  *
  * File     : FlexSeqAnalyzer.java 
  * Date     : 05102001
@@ -31,8 +31,8 @@ public class FlexSeqAnalyzer {
 
 	private FlexSequence sequence;
 	private Vector sameSequence = new Vector();
-	private Hashtable homolog = new Hashtable();
-	private Hashtable blastResults = new Hashtable();
+	private Vector homolog = new Vector();
+	private BlastResults blastResults = new BlastResults();
 	
 	/**
 	 * Constructor.
@@ -103,15 +103,15 @@ public class FlexSeqAnalyzer {
 		if(percentIdentity>=PERCENTIDENTITY && percentAlignment>=PERCENTALIGNMENT) {
 			FlexSequence s = new FlexSequence(homologid);
 			s.restore(homologid);
-			homolog.put(s.getGi(), s);
+			homolog.addElement(s);
 			isHomolog = true;
 		}
 		
 		if(isHomolog) {
-			homolog.put(sequence.getGi(), sequence);
-			blastResults.put("evalue", evalue);
-			blastResults.put("identity", identity);
-			blastResults.put("cdslength", new Integer(cdslength));
+			homolog.addElement(sequence);
+			blastResults.setEvalue(evalue);
+			blastResults.setIdentity(identity);
+			blastResults.setCdslength(cdslength);
 		}
 		
 		return isHomolog;
@@ -127,20 +127,20 @@ public class FlexSeqAnalyzer {
 	}
 	
 	/**
-	 * Return the homologs as a hashtable including this sequence.
+	 * Return the homologs as a vector including this sequence.
 	 *
-	 * @return A Hashtable object containing all the homologs including this one.
+	 * @return A Vector object containing all the homologs including this one.
 	 */
-	public Hashtable getHomolog() {
+	public Vector getHomolog() {
 		return homolog;
 	}
 	
 	/**
 	 * Return the blastResults for this sequence.
 	 *
-	 * @return The blastResults for this sequence.
+	 * @return The BlastResults object for this sequence.
 	 */
-	public Hashtable getBlastResults() {
+	public BlastResults getBlastResults() {
 		return blastResults;
 	}
 	
@@ -293,11 +293,10 @@ public class FlexSeqAnalyzer {
 			}
 			
 			if(analyzer.findHomolog()) {
-				Hashtable homologs = analyzer.getHomolog();
-				Enumeration enum = homologs.keys();
+				Vector homologs = analyzer.getHomolog();
+				Enumeration enum = homologs.elements();
 				while(enum.hasMoreElements()) {
-					String gi = (String)enum.nextElement();
-					Hashtable h = (Hashtable)homologs.get(gi);
+					Hashtable h = (Hashtable)enum.nextElement();
 					Enumeration ks = h.keys();
 					while(ks.hasMoreElements()) {
 						String k = (String)ks.nextElement();

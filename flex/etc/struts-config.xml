@@ -68,6 +68,12 @@
     </action>
 
     <!-- Process a customer request -->
+    <action    path="/CustomerRequest"
+               type="edu.harvard.med.hip.flex.action.CustomerRequestAction">
+      <forward  name="success"   path="/SequenceSearch.jsp"/>
+    </action>   
+
+    <!-- Process a customer request -->
     <action    path="/SequenceSearch"
                type="edu.harvard.med.hip.flex.action.SequenceSearchAction"
                name="customerRequestForm"
@@ -85,6 +91,7 @@
               input="/SequenceSelection.jsp">
       <forward  name="success"   path="/ConfirmSelection.jsp"/>
       <forward  name="failure"  path="/SequenceSearch.jsp"/>
+      <forward  name="empty" path="/SubmissionEmpty.jsp"/>
     </action> 
 
     <!-- Process a customer request -->
@@ -95,6 +102,12 @@
               input="/ConfirmSelection.jsp">
       <forward  name="success"   path="/SequenceSearch.jsp"/>
       <forward  name="failure"  path="/SequenceSearch.jsp"/>
+    </action> 
+
+    <!-- Process a customer request -->
+    <action    path="/ViewAlignment"
+               type="edu.harvard.med.hip.flex.action.ViewAlignmentAction">
+      <forward  name="success"   path="/DisplayAlignment.jsp"/>
     </action> 
 
     <!-- Process  view pending sequence requests-->

@@ -9,36 +9,7 @@
 <project basedir="." default="compile" name="FLEX">
 
 
-<!-- Property Definitions.  Each of the following properties are used by       
-    convention in this build file.  The values specified can be overridden at       
-    run time by adding a "-Dname=value" argument to the command line that       
-    invokes Ant.  This technique is normally used to copy the values of       
-    the ANT_HOME and TOMCAT_HOME environment variables into the "ant.home" and      
-    "tomcat.home" properties, which are normally not defined explicitly.            
-    app.name       Base name of this application, used to construct filenames                      
-    and directories.             
-    deploy.home    The name of the directory into which the deployment                      
-                   hierarchy will be created.  Normally, this will be the                      
-                   name of a subdirectory under $TOMCAT_HOME/webapps.             
-    System.lib     The name of the directory of the tomcat lib directory.
-    lib.dir        directory where the included jars/zips are      
-    dist.home      The name of the base directory in which distribution files
-                   are created.             
-    dist.src       The name of the distribution JAR file containing the                      
-                   application source code, to be stored in the "dist.home"                      
-                   directory.  This filename should end with ".jar".             
-    dist.war       The name of the Web ARchive (WAR) file containing our                      
-                   deployable application.  This filename should end with                      
-                   ".war".             
-   javadoc.home   The name of the base directory in which                     
-                    the JavaDoc documentation for this application
-                    is generated.             
-   tomcat.home    The name of the base directory in which                     
-                  Tomcat has been installed.normally set automatically from the value                        
-                  of the TOMCAT_HOME environment variable.             
-                  The FLEX application will be deployed to a subdirectory named "FLEX",      
-                  and will therefore be accessible at: 
-                  http://localhost:<port>/FLEX -->
+<!-- Property Definitions.  Each of the following properties are used by            convention in this build file.  The values specified can be overridden at            run time by adding a "-Dname=value" argument to the command line that            invokes Ant.  This technique is normally used to copy the values of            the ANT_HOME and TOMCAT_HOME environment variables into the "ant.home" and           "tomcat.home" properties, which are normally not defined explicitly.                 app.name       Base name of this application, used to construct filenames                           and directories.                  deploy.home    The name of the directory into which the deployment                                          hierarchy will be created.  Normally, this will be the                                          name of a subdirectory under $TOMCAT_HOME/webapps.                  System.lib     The name of the directory of the tomcat lib directory.     lib.dir        directory where the included jars/zips are           dist.home      The name of the base directory in which distribution files                    are created.                  dist.src       The name of the distribution JAR file containing the                                          application source code, to be stored in the "dist.home"                                          directory.  This filename should end with ".jar".                  dist.war       The name of the Web ARchive (WAR) file containing our                                          deployable application.  This filename should end with                                          ".war".                 javadoc.home   The name of the base directory in which                                          the JavaDoc documentation for this application                     is generated.                 tomcat.home    The name of the base directory in which                                        Tomcat has been installed.normally set automatically from the value                                           of the TOMCAT_HOME environment variable.                                The FLEX application will be deployed to a subdirectory named "FLEX",                         and will therefore be accessible at:                    http://localhost:<port>/FLEX -->
      
 
   <property name="tomcat.home" value="../jakarta-tomcat-3.2.2"/>
@@ -52,11 +23,7 @@
   <property name="javadoc.home" value="${deploy.home}/javadoc"/>
   
 
-<!-- The "prepare" target is used to construct the deployment home            
-     directory structure (if necessary), and to copy in static files            
-     as required.  In the example below, Ant is instructed to create            
-     the deployment directory, copy the contents of the "web/" source            
-      hierarchy, and set up the WEB-INF subdirectory appropriately. -->
+<!-- The "prepare" target is used to construct the deployment home                  directory structure (if necessary), and to copy in static files                  as required.  In the example below, Ant is instructed to create                  the deployment directory, copy the contents of the "web/" source                   hierarchy, and set up the WEB-INF subdirectory appropriately. -->
 
   <target name="prepare">
     <mkdir dir="${deploy.home}"/>
@@ -81,9 +48,7 @@
   </target>
 
 
-<!-- The "clean" target removes the deployment home directory structure,            
-    so that the next time the "compile" target is requested, it will need      
-    to compile everything from scratch. -->
+<!-- The "clean" target removes the deployment home directory structure,                 so that the next time the "compile" target is requested, it will need           to compile everything from scratch. -->
 
   <target name="clean">
     <delete dir="${deploy.home}"/>
@@ -93,18 +58,7 @@
   </target>
 
 
-<!-- The "compile" target is used to compile (or recompile) the Java classes      
-    that make up this web application.  The recommended source code directory      
-    structure makes this very easy because the <javac> task automatically            
-    works its way down a source code hierarchy and compiles any class that            
-    has not yet been compiled, or where the source file is newer than the      
-    class file.             
-    Feel free to adjust the compilation option parameters (debug,            
-    optimize, and deprecation) to suit your requirements.  It is also            
-    possible to base them on properties, so that you can adjust this            
-    behavior at runtime.             
-    The "compile" task depends on the "prepare" task, so the deployment            
-    home directory structure will be created if needed the first time. -->
+<!-- The "compile" target is used to compile (or recompile) the Java classes           that make up this web application.  The recommended source code directory           structure makes this very easy because the <javac> task automatically                 works its way down a source code hierarchy and compiles any class that                 has not yet been compiled, or where the source file is newer than the           class file.                  Feel free to adjust the compilation option parameters (debug,                 optimize, and deprecation) to suit your requirements.  It is also                 possible to base them on properties, so that you can adjust this                 behavior at runtime.                  The "compile" task depends on the "prepare" task, so the deployment                 home directory structure will be created if needed the first time. -->
 
   <target depends="prepare" name="compile">
     <javac classpath="${netbeans.filesystems.path}" debug="on" deprecation="off" destdir="${deploy.home}/WEB-INF/classes" optimize="off" srcdir="src"/>

@@ -1,12 +1,12 @@
 /*
- * ConfirmSelectionAction.java
+ * SequenceSelectionAction.java
  *
  * Created on May 31, 2001, 5:47 PM
  *
  * This class performs the flex database search for the sequences user submitted.
  */
 
-package src.edu.harvard.med.hip.flex.action;
+package edu.harvard.med.hip.flex.action;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -36,7 +36,7 @@ import edu.harvard.med.hip.flex.database.*;
  * @author  Dongmei Zuo
  * @version 
  */
-public class ConfirmSelectionAction extends FlexAction {
+public class SequenceSelectionAction extends FlexAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
