@@ -12,6 +12,8 @@ package edu.harvard.med.hip.bec.bioutil;
  */
 public class BioConstants {
     
+    
+    public static final int SUBSTITUTION_TABLE_BLOSSOM62 = 0;
     /** Creates a new instance of Constants */
    /*#  Matrix made by matblas from blosum62.iij#  
     * column uses minimum score#  BLOSUM Clustered 
@@ -23,7 +25,7 @@ public class BioConstants {
     private static final char[] AA= {  'A',  'R',  'N',  'D'  ,'C' , 'Q', 'E' , 'G', 'H',  'I',  'L',  'K',
                 'M',  'F',  'P',  'S',  'T',  'W',  'Y',  'V',  'B',  'Z',  'X',  '*'};
                 
-    private static final int[][] score = {
+    private static final int[][] BLOSSOM_62= {
         {4,-1,-2,-2,0,-1,-1,0,-2,-1,-1,-1,-1,-2,-1,1,0,-3,-2,0,-2,-1,0,-4},
         {-1,5,0,-2,-3,1,0,-2,0,-3,-2,2,-1,-3,-2,-1,-1,-3,-2,-3,-1,0,-1,-4},
         {-2,0,6,1,-3,0,0,0,1,-3,-3,0,-2,-3,-2,1,0,-4,-2,-3,3,0,-1,-4},
@@ -48,11 +50,17 @@ public class BioConstants {
         {-1,0,0,1,-3,3,4,-2,0,-3,-3,1,-1,-3,-1,0,-1,-3,-2,-2,1,4,-1,-4},
         {0,-1,-1,-1,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-2,0,0,-2,-1,-1,-1,-1,-1,-4},
         {-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,1}};
+    public static int getScore(char ori, char mut, int substitution_table)
+    {
+        if ( substitution_table == SUBSTITUTION_TABLE_BLOSSOM62)
+            return BLOSSOM_62[getIndex(ori)][getIndex(mut)];
+        else 
+            return 0;
+    }
     public static int getScore(char ori, char mut)
     {
-        return score[getIndex(ori)][getIndex(mut)];
+        return getScore( ori,  mut, SUBSTITUTION_TABLE_BLOSSOM62);
     }
-    
     
     private static int getIndex(char a)
     {
