@@ -78,7 +78,7 @@ public class CloneInfoSet {
                 String cloneid = (String)cloneids.get(i);
                 stmt.setInt(1, Integer.parseInt(cloneid));
                 rs = DatabaseTransaction.executeQuery(stmt);
-                if(rs.next()) {
+                while(rs.next()) {
                     int id = rs.getInt(1);
                     String clonename = rs.getString(2);
                     String clonetype = rs.getString(3);
@@ -199,9 +199,16 @@ public class CloneInfoSet {
         clones.add("110891");
         clones.add("110900");
         
+        List seqids = new ArrayList();
+        seqids.add("17918");
+        //seqids.add("19142");
+        //seqids.add("18000");
+        //seqids.add("17973");
+        
         CloneInfoSet info = new CloneInfoSet();
         try {
-            info.restoreByCloneid(clones);
+            //info.restoreByCloneid(clones);
+            info.restoreBySequenceid(seqids);
             List allClones = info.getAllCloneInfo();
             printAllClones(allClones);
         } catch (Exception ex) {
