@@ -25,12 +25,9 @@ import java.io.*;
 
 public class MgcOligoPlateManager extends OligoPlateManager
 {
-    public static String MGC_PROTOCOL = Protocol.MGC_DESIGN_CONSTRUCTS;
     protected static final String filePath = "/tmp/";
     protected static final String DELIM = "\t";
-    private boolean        m_isResortSequences = false;
-    private String         m_plateType = "96 WELL OLIGO PLATE";
-   
+      
     /**
      * Constructor
      * Creates new OligoPlateManager
@@ -73,16 +70,15 @@ public class MgcOligoPlateManager extends OligoPlateManager
                  boolean isFull, Protocol protocol)  throws FlexDatabaseException
    {
           this(conn, project,  workflow, 94,  isFull,  protocol);
+          m_isReorderSequences = false;
    }
    
    protected void setProtocol() throws FlexDatabaseException {
-       this.protocol = new Protocol(MGC_PROTOCOL);
+       this.protocol = new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS);
    }
    
     
-    public void                     setOrderRequest(boolean order)   {    m_isResortSequences = order;    }
-    public boolean                      getOrderRequest()  {       return m_isResortSequences;    }
-     
+        
     /* function overwrites createOligoPlates method for OligoPlater
      * 1. if only full plates are requered removes trailing sequences;
      * 2. sort sequences by marker/ number of sequences on container
@@ -131,12 +127,13 @@ public class MgcOligoPlateManager extends OligoPlateManager
       //new rearrayed container
             
             Container rearrayed_cont = createContainer(plate_label, threadId,plate_sequences, plate_sequence_descriptions);
+            DatabaseTransaction.commit(conn);
             createOligoPlate(plate_sequences, rearrayed_cont.getId());
             File robot_file = createRearrayFile(plate_sequence_descriptions, plate_label);
             fileList.add( robot_file );
             //put on queue plates for creating DNA plate & Glycerol stock
             putPlateOnQueue(rearrayed_cont);
-            
+            DatabaseTransaction.commit(conn);
             
         }
    
@@ -164,10 +161,11 @@ public class MgcOligoPlateManager extends OligoPlateManager
         for (int count = 0; count < seq.size(); count ++)
         {
             SequenceDescription sd = (SequenceDescription) seqDesc.get(count);
-            if (orgContainer_id != -1 && orgContainer_id != sd.getContainerDescription().getId() )
+            if ( orgContainer_id != sd.getContainerDescription().getId() )
             { //input containers - all original mgc/glycerol containers
                   //create fake container
-                Container ct= new Container(  sd.getContainerDescription().getId() , null,
+                orgContainer_id = sd.getContainerDescription().getId() ;
+                Container ct= new Container(  orgContainer_id , null,
                                                   location, sd.getContainerDescription().getLabel());
                               
                 orgContainers.add(ct);
@@ -237,8 +235,8 @@ public class MgcOligoPlateManager extends OligoPlateManager
         {
             SequenceDescription sd = (SequenceDescription) plate.get(count_seq);
             temp = sd.getImageId()+DELIM+ sd.getContainerDescription().getLabel()+DELIM+
-                    sd.getPosition() +DELIM+  label+ DELIM+  (count_seq + 2);
-            System.out.println(temp);
+                    sd.getPosition() +DELIM+  label+ DELIM+  (count_seq + 2) +"\n";
+            
             fr.write(temp);
 
         }
@@ -267,7 +265,7 @@ public class MgcOligoPlateManager extends OligoPlateManager
             w = new Workflow(7);
        
             MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 5, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS));
-            om.setIsReorder(false);
+           
             System.out.println("About to start thread");
             om.orderOligo();
             System.out.println("finished calling thread");
