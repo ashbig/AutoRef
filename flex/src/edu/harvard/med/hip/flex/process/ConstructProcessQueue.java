@@ -256,7 +256,7 @@ public class ConstructProcessQueue implements ProcessQueue {
         try {
             QueueFactory factory = new StaticQueueFactory();
             ContainerProcessQueue queue = (ContainerProcessQueue)factory.makeQueue("ConstructProcessQueue");
-            Protocol protocol = new Protocol(1, null, "identify sequences from unigene");
+            Protocol protocol = new Protocol(1, null, Protocol.IDENTIFY_SEQUENCES_FROM_UNIGENE);
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection c = t.requestConnection();

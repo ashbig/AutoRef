@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.17 2001-08-21 18:55:11 dzuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.18 2002-06-26 18:09:47 Elena Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -310,7 +310,7 @@ public class ContainerProcessQueue implements ProcessQueue {
         try {
             QueueFactory factory = new StaticQueueFactory();
             ContainerProcessQueue queue = (ContainerProcessQueue)factory.makeQueue("ContainerProcessQueue");
-            Protocol protocol = new Protocol(1, null, "identify sequences from unigene");
+            Protocol protocol = new Protocol(1, null, Protocol.IDENTIFY_SEQUENCES_FROM_UNIGENE);
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection c = t.requestConnection();

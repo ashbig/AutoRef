@@ -142,7 +142,7 @@ public class SequenceOligoQueue {
         
         return result; //return the LinkedList
     } // getQueueItems
-    
+     
     /**
      * Retrieve the batch of queued items which are waiting for the
      * next workflow process on a particular date from the Queue table
@@ -280,12 +280,14 @@ public class SequenceOligoQueue {
         return itemlist;
     } //restore
     
+ 
+    
     public static void main(String [] args) {
         Connection c = null;
         SequenceOligoQueue queue = new SequenceOligoQueue();
         
         try {
-            Protocol protocol = new Protocol("design constructs");
+            Protocol protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
             

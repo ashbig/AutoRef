@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.15 2002-06-10 19:43:06 dzuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.16 2002-06-26 18:11:06 Elena Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -280,7 +280,7 @@ public class SequenceProcessQueue implements ProcessQueue {
         "and sequenceid = ?\n" +
         "and projectid = ?\n" +
         "and workflowid = ?";
-        
+       
         PreparedStatement stmt = null;
         try {
             stmt = c.prepareStatement(sql);
@@ -294,7 +294,7 @@ public class SequenceProcessQueue implements ProcessQueue {
                 String date = item.getDate();
                 FlexSequence s = (FlexSequence)item.getItem();
                 int sequenceid = s.getId();
-                
+                   
                 stmt.setInt(1, protocolid);
                 stmt.setString(2, date);
                 stmt.setInt(3, sequenceid);
@@ -356,7 +356,7 @@ public class SequenceProcessQueue implements ProcessQueue {
         try {
             QueueFactory factory = new StaticQueueFactory();
             SequenceProcessQueue queue = (SequenceProcessQueue)factory.makeQueue("SequenceProcessQueue");
-            Protocol protocol = new Protocol(1, null, "identify sequences from unigene");
+            Protocol protocol = new Protocol(1, null, Protocol.IDENTIFY_SEQUENCES_FROM_UNIGENE);
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();

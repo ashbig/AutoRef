@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.24 2002-06-04 21:00:19 Elena Exp $
+ * $Id: Protocol.java,v 1.25 2002-06-26 18:09:29 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -23,53 +23,54 @@ public class Protocol {
     /*
      * the protocol strings
      */
-    public static final String APPROVE_SEQUENCES = "approve sequences";
+    public static final String APPROVE_SEQUENCES = "Approve sequences";
+    public static final String CUSTOMER_REQUEST = "Customer request";
     public static final String IDENTIFY_SEQUENCES_FROM_UNIGENE=
-        "identify sequences from unigene";
-    public static final String DESIGN_CONSTRUCTS= "design constructs";
+        "Identify sequences from unigene";
+    public static final String DESIGN_CONSTRUCTS= "Design constructs";
     
     public static final String MGC_DESIGN_CONSTRUCTS= "MGC design constructs and rearray";
-    public static final String GENERATE_OLIGO_ORDERS= "generate oligo orders";
-    public static final String RECEIVE_OLIGO_PLATES= "receive oligo plates";
-    public static final String DILUTE_OLIGO_PLATE = "dilute oligo plate";
-    public static final String GENERATE_PCR_PLATES = "generate step1 PCR plates";
-    public static final String GENERATE_STEP2_PCR_PLATES = "generate step2 PCR plates";
-    public static final String RUN_PCR_GEL = "run PCR gel";
-    public static final String GENERATE_FILTER_PLATES="generate filter plates";
+    public static final String GENERATE_OLIGO_ORDERS= "Generate oligo orders";
+    public static final String RECEIVE_OLIGO_PLATES= "Receive oligo plates";
+    public static final String DILUTE_OLIGO_PLATE = "Dilute oligo plate";
+    public static final String GENERATE_PCR_PLATES = "Generate step1 PCR plates";
+    public static final String GENERATE_STEP2_PCR_PLATES = "Generate step2 PCR plates";
+    public static final String RUN_PCR_GEL = "Run PCR gel";
+    public static final String GENERATE_FILTER_PLATES="Generate filter plates";
     public static final String GENERATE_BP_REACTION_PLATES=
-        "generate BP reaction plates";
+        "Generate BP reaction plates";
     public static final String GENERATE_TRANSFORMATION_PLATES =
-        "generate transformation plates";
+        "Generate transformation plates";
     public static final String GENERATE_AGAR_PLATES=
-        "generate agar plates";
+        "Generate agar plates";
     public static final String GENERATE_CULTURE_BLOCKS_FOR_ISOLATES=
-        "generate culture blocks for isolates";
-    public static final String GENERATE_DNA_PLATES="generate DNA plates";
+        "Generate culture blocks for isolates";
+    public static final String GENERATE_DNA_PLATES="Generate DNA plates";
     public static final String GENERATE_GLYCEROL_PLATES=
-        "generate glycerol plates";
+        "Generate glycerol plates";
     public static final String GENERATE_SEQUENCING_PCR_PLATES=
-        "generate sequencing PCR plates";
+        "Generate sequencing PCR plates";
     public static final String GENERATE_SEQUENCING_DNA_PLATES = 
-        "generate sequencing DNA plates";
+        "Generate sequencing DNA plates";
     public static final String SUBMIT_SEQUENCING_ORDERS=
-        "submit sequencing orders";
+        "Submit sequencing orders";
     public static final String RECEIVE_SEQUENCING_RESULTS=
-        "receive sequencing results";
+        "Receive sequencing results";
     public static final String PERFORM_TRANSFORMATION = 
-        "perform transformation";
+        "Perform transformation";
     public static final String ENTER_PCR_GEL_RESULTS = 
-        "enter PCR gel results";
+        "Enter PCR gel results";
     public static final String ENTER_AGAR_PLATE_RESULTS = 
-        "enter agar plate results";
+        "Enter agar plate results";
     public static final String ENTER_DNA_GEL_RESULTS = 
-        "enter DNA gel results";
+        "Enter DNA gel results";
     public static final String GENERATE_CAPTURE_REACTION = 
-        "generate capture reaction plate";
+        "Generate capture reaction plate";
     public static final String GENERATE_GRID_PLATE = 
-        "generate agar plates (48 well grid plate)";
+        "Generate agar plates (48 well grid plate)";
     public static final String PICK_COLONY = 
-        "generate culture blocks for isolates from 48 well plates";
-    public static final String ENTER_CULTURE_RESULTS = "enter culture results";
+        "Generate culture blocks for isolates from 48 well plates";
+    public static final String ENTER_CULTURE_RESULTS = "Enter culture results";
     public static final String CREATE_CULTURE_FROM_MGC = 
         "Create culture block from MGC master plate";
     public static final String CREATE_GLYCEROL_FROM_CULTURE = 

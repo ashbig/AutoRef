@@ -37,11 +37,13 @@ public class Workflow {
             //initialize all the flow records.
             Vector next = new Vector();
             next.addElement(new Protocol(Protocol.APPROVE_SEQUENCES));
-            flow.addElement(new FlowRecord(new Protocol("customer request"), next));
+            flow.addElement(new FlowRecord(new Protocol(Protocol.CUSTOMER_REQUEST), next));
             
             next = new Vector();
             next.addElement(new Protocol(Protocol.DESIGN_CONSTRUCTS));
             flow.addElement(new FlowRecord(new Protocol(Protocol.APPROVE_SEQUENCES), next));
+            
+           
             
             next = new Vector();
             next.addElement(new Protocol(Protocol.GENERATE_OLIGO_ORDERS));
@@ -246,7 +248,7 @@ public class Workflow {
             System.out.println("Name is: "+flow.getName());
             System.out.println("Description is: "+flow.getDescription());
             
-            Protocol curr = new Protocol(27);
+            Protocol curr = new Protocol(39);
             System.out.println("Current protocol is: "+curr.getProcessname());
             
             List nexts = flow.getNextProtocol(curr);
