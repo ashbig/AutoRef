@@ -108,8 +108,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 type = Sample.EMPTY;
             } else if(Sample.GEL.equals(s.getType())) {
                 type = getGelSampleType(container, s, protocol);
-            } else if(Sample.TRANSFORMATION.equals(s.getType())) {
-                type = getTransformationSampleType(container, s, protocol);
+            } else if(Sample.AGAR.equals(s.getType())) {
+                type = getAgarSampleType(container, s, protocol);
             } else {
                 type = Sample.getType(protocol.getProcessname());
             }
@@ -135,8 +135,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
         return type;
     }
 
-    protected String getTransformationSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
-        Protocol protocol = new Protocol(Protocol.PERFORM_TRANSFORMATION);
+    protected String getAgarSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
+        Protocol protocol = new Protocol(Protocol.GENERATE_AGAR_PLATES);
         String type = null;
         edu.harvard.med.hip.flex.process.Process p = 
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
@@ -149,7 +149,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
         
         return type;
     }
-    
+            
     public static void main(String [] args) {
         ContainerMapper mapper = new OneToOneContainerMapper();
         String containerType = mapper.getContainerType("generate DNA plates");

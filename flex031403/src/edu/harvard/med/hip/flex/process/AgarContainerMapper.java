@@ -76,7 +76,7 @@ public class AgarContainerMapper extends OneToOneContainerMapper {
             } else if(Sample.EMPTY.equals(s.getType())) {
                 type = Sample.EMPTY;
             } else {
-                type = getTransformationSampleType(container, s, protocol);
+                type = Sample.getType(protocol.getProcessname());   
             }
             
             Sample newSample = new Sample(type, position, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
@@ -84,5 +84,5 @@ public class AgarContainerMapper extends OneToOneContainerMapper {
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
             position++;
         }
-    }       
+    }
 }
