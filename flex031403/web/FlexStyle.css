@@ -1,3 +1,7 @@
+/* styles for status */
+h3.rejected {color: red}
+h3.accepted {color: green}
+
 /* styles for prompts */
 EM, TD.prompt, TD.label {font-style: normal; color: black; font-weight: bold}
 

@@ -1,5 +1,5 @@
 <%--
-        $Id: ProcessQueue.jsp,v 1.8 2001-07-18 15:03:05 jmunoz Exp $ 
+        $Id: ProcessQueue.jsp,v 1.9 2001-07-26 22:07:13 jmunoz Exp $ 
 
         File    : ProcessQueue.jsp
         Date    : 05102001
@@ -17,7 +17,10 @@
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Request Processed</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Request Processed</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
 <H2><bean:message key="flex.name"/> : Request Processed</H2>
 <hr>
@@ -26,11 +29,17 @@
 	<%-- display summary of requests processed --%>
 
 <TABLE>
-<TR><TD>Requests Processed: <bean:write name="<%=edu.harvard.med.hip.flex.Constants.PROCESSED_SEQ_NUM_KEY%>" /></TD>
-<TD>Pending Requests: <bean:write name="<%=edu.harvard.med.hip.flex.Constants.PENDING_SEQ_NUM_KEY%>" /></TD></TR>
+<TR>
+    <TD>Requests Processed:</TD>
+    <TD><bean:write name="<%=edu.harvard.med.hip.flex.Constants.PROCESSED_SEQ_NUM_KEY%>" /></TD>
+</TR>
+<TR>
+    <TD>Pending Requests:</TD>
+    <TD> <bean:write name="<%=edu.harvard.med.hip.flex.Constants.PENDING_SEQ_NUM_KEY%>" /></TD>
+</TR>
 </TABLE>
 	<%--display all accepted sequences--%>
-	<H4>Accepted Sequences</H4>
+	<H3 class="accepted">Accepted Sequences</H3>
         <logic:iterate id="curItem" name="<%=edu.harvard.med.hip.flex.Constants.APPROVED_SEQUENCE_LIST_KEY%>">
             <bean:message key="flex.name"/> id:
             <flex:linkFlexSequence sequenceName="curItem" seqProperty="item">
@@ -57,7 +66,7 @@
         </logic:iterate>
 	
 	<%-- display all rejected sequences --%>
-	<H4> Rejected Sequences</H4>
+	<H3 class="rejected"> Rejected Sequences</H3>
 	<logic:iterate id="curItem" name="<%=edu.harvard.med.hip.flex.Constants.REJECTED_SEQUENCE_LIST_KEY%>">
             <bean:message key="flex.name"/> id:
             <flex:linkFlexSequence sequenceName="curItem" seqProperty="item">

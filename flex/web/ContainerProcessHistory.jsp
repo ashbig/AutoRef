@@ -32,7 +32,6 @@
         <th>Researcher</th>
         <th>Container</th>
         <th>Container Type</th>
-        <th>Container Label</th>
     </tr>
     <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
         
@@ -46,11 +45,10 @@
             <td><flex:write name="process" property="subprotocol"/></td>
             <td><flex:write name="process" property="researcher.name"/></td>
             <td><flex:linkContainer name="container" process="process">
-                            <bean:write name="container" property="id"/>
+                            <bean:write name="container" property="label"/>
                         </flex:linkContainer>
             </td>
             <td><flex:write name="container" property="type"/></td>
-            <td><flex:write name="container" property="label"/></td>
         </flex:row>
     </logic:iterate>
     </table>

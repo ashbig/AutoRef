@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-27 11:41:25 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.4 $
+ * $Date: 2001-07-26 22:07:13 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -54,8 +54,8 @@ import org.apache.struts.util.*;
 /**
  * Link to a squences detail page.
  *
- * @author $Author: dongmei_zuo $
- * @version $Revision: 1.3 $ $Date: 2001-06-27 11:41:25 $
+ * @author $Author: jmunoz $
+ * @version $Revision: 1.4 $ $Date: 2001-07-26 22:07:13 $
  */
 
 public class LinkFlexSequenceTag extends TagSupport {
@@ -91,6 +91,10 @@ public class LinkFlexSequenceTag extends TagSupport {
      */
     private String seqProperty;
     
+    /**
+     * The target to point the link to
+     */
+    private String target;
     
     /**
      * Return the attribute sequenceId
@@ -164,6 +168,24 @@ public class LinkFlexSequenceTag extends TagSupport {
     }
     
     
+    /**
+     * Accessor for the target property.
+     *
+     * @return the target this link should open up in.
+     */
+    public String getTarget() {
+        return this.target;
+    }
+    
+    /**
+     * Mutator for the target attribute.
+     *
+     * @param target The target the link should open up in
+     */
+    public void setTarget(String target) {
+        this.target = target;
+    }
+    
     // --------------------------------------------------------- Public Methods
     
     
@@ -204,8 +226,12 @@ public class LinkFlexSequenceTag extends TagSupport {
         (HttpServletResponse) pageContext.getResponse();
         StringBuffer results = new StringBuffer("<a href=\"");
         results.append(response.encodeURL(url.toString()));
-        results.append("\">");
-        
+        results.append("\"");
+        if(getTarget() !=null && ! getTarget().equals("")) {
+            results.append(" target=\""+getTarget()+ "\"");
+            
+        }
+        results.append(">");
         // Print this element to our output writer
         JspWriter writer = pageContext.getOut();
         try {

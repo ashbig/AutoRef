@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.18 2001-07-24 22:03:29 dzuo Exp $ 
+        $Id: PendingRequests.jsp,v 1.19 2001-07-26 22:07:13 jmunoz Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -55,27 +55,6 @@
                         &nbsp;
                     </logic:present>
                     </td>
-                    <%--<td width="15%" ALIGN="RIGHT"><center>
-                        <logic:present name="prevPage">
-                            <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="prevPage">
-                                << Previous
-                            </html:link>
-                        </logic:present>
-   
-                        <logic:notPresent name="prevPage">
-                            << Previous
-                        </logic:notPresent>
-                        |
-                        <logic:present name="nextPage">
-                            <html:link forward="approveSequences" paramId="<%=Constants.PAGE_KEY%>" paramName="nextPage">
-                                Next >>
-                            </html:link>
-                        </logic:present>
-    
-                        <logic:notPresent name="nextPage">
-                            Next >>
-                        </logic:notPresent>
-                </center></td>--%>
             </tr>
         </table>
         </td>
@@ -95,7 +74,7 @@
     <logic:iterate indexId="seqCount" id="curQueueItem" name="<%=edu.harvard.med.hip.flex.Constants.QUEUE_ITEM_LIST_KEY%>"> 
         <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
             <TD>
-                <flex:linkFlexSequence sequenceName="curQueueItem" seqProperty="item">
+                <flex:linkFlexSequence sequenceName="curQueueItem" seqProperty="item" target="_blank">
                     <bean:write name="curQueueItem" property="item.id"/>
                 </flex:linkFlexSequence>
                            

@@ -59,6 +59,12 @@
     <tr>
         <td class="label">Label:</td>
         <td><bean:write name="container" property="label"/></td>
+        <td>
+            <html:form action="/PrintLabel.do">
+                <html:hidden property="label" value="<%=((edu.harvard.med.hip.flex.core.Container)container).getLabel()%>"/>
+                <html:submit value="Reprint Label"/>
+            </html:form>
+        </td>
     </tr>
 </table>
 <br>

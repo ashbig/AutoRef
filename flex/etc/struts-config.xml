@@ -85,8 +85,14 @@
     <!-- Form used to querry sequence history -->
     <form-bean      name="querySeqHistoryForm"
                     type="edu.harvard.med.hip.flex.form.SequenceHistoryForm"/>
+                    
+    <!-- Form used to print a barcode -->
+    <form-bean      name="printLabelForm"
+                    type="edu.harvard.med.hip.flex.form.PrintLabelForm"/>
 
-  </form-beans>
+    </form-beans>
+    
+   
 
 
 
@@ -451,6 +457,12 @@
       <forward  name="success" path="/SampleDetails.jsp"/>
     </action>
      
+
+    <action path="/PrintLabel"
+            type="edu.harvard.med.hip.flex.action.PrintLabelAction"
+            name="printLabelForm">
+      <forward  name="success" path="/PrintConfirm.jsp"/>
+    </action>
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
