@@ -78,8 +78,12 @@ public class SelectWorkflowAction extends ResearcherAction {
                 return mapping.findForward("success_create_process_plates");
             }
             
-            if(Constants.MGC_PLATE_HANDLE.equals(forwardName)) {
-                return mapping.findForward("success_mgc_plate_handle");
+            if(Constants.CREATE_PROCESS_PLATES.equals(forwardName)) {
+                return mapping.findForward("success_create_process_plates");
+            }
+            
+            if(Constants.MGC_REQUEST_IMPORT.equals(forwardName)) {
+                return mapping.findForward("success_mgc_request_import");
             }            
             
             return (mapping.findForward("success"));
