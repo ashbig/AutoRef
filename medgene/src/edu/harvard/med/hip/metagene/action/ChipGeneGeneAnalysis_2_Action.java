@@ -75,8 +75,8 @@ public class ChipGeneGeneAnalysis_2_Action extends MetageneAction{
             // analysis input genes
             ActionErrors errors = new ActionErrors();    
             ChipGeneGeneAnalysis gda = new ChipGeneGeneAnalysis();  
-            //gda.hashDirectGenes(gene_index_id, 1, input_type);
-            gda.hashDirectGenes(531, 1, input_type);  
+            gda.hashDirectGenes(gene_index_id, 1, input_type);
+            //gda.hashDirectGenes(531, 1, input_type);  
             
             try{
             gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type);       
