@@ -28,7 +28,7 @@ public class MasterToExpressionContainerMapper {
     
     public Container doMapping(Container c, String label, String containertype, Location l, int threadid, String sampletype, String vectorname) throws FlexDatabaseException {
         if(containertype == null || containertype.trim().equals("")) {
-            containertype = "96 WELL PLATE";
+            containertype = ExpressionCloneContainer.EXPRESSION_CONTAINER_TYPE;
         }
         
         if(sampletype == null || sampletype.trim().equals("")) {

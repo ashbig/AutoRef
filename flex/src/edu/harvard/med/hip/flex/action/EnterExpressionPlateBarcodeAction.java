@@ -24,6 +24,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.form.EnterResultForm;
+import edu.harvard.med.hip.flex.file.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.process.MasterToExpressionContainerMapper;
@@ -77,6 +78,14 @@ public class EnterExpressionPlateBarcodeAction extends ResearcherAction {
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
+
+        //create expression plate, sample and clones, and insert into database
+        ExpressionCloneContainer container = (ExpressionCloneContainer)containers.get(0);
+        if(!ExpressionCloneContainer.EXPRESSION_CONTAINER_TYPE.equals(container.getType())) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.plate.invalid.expression", newPlate));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
         
          // Validate the researcher barcode.
         Researcher r = null;
@@ -90,13 +99,10 @@ public class EnterExpressionPlateBarcodeAction extends ResearcherAction {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }          
-        
-        //create expression plate, sample and clones, and insert into database
-        ExpressionCloneContainer container = (ExpressionCloneContainer)containers.get(0);   
-        
+                   
         request.setAttribute("newPlate", newPlate);
         request.getSession().setAttribute("newExpressionPlate", container);
-        
+             
         ((EnterResultForm)form).setResearcherObject(r);
         ((EnterResultForm)form).setWell(true);
         ((EnterResultForm)form).setSampleid(true);
