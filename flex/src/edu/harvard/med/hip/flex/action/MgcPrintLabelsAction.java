@@ -39,18 +39,18 @@ public class MgcPrintLabelsAction extends ResearcherAction{
         
         if (labels == null || labels.length == 0) 
         {
-            request.setAttribute("printedLabels", "No MGC plates have been selected");
+            request.setAttribute("message", "No MGC plates have been selected");
              return mapping.findForward("success");
         }
         
-        String str = "<h3> Barcodes for the following plates have been printed: </h3>";
+        request.setAttribute("message","Barcodes for the following plates have been printed:");
+        ArrayList printedLabels = new ArrayList(); 
         for (int i = 0; i < labels.length; i++)
         {
             PrintLabel.execute(labels[i]);
-            str += labels[i] + "\t";
-            if (i != 0 && i % 10 == 0) str +="\n";
+            printedLabels.add( labels[i] );
         }
-        request.setAttribute("printedLabels", str);
+        request.setAttribute("printedLabels", printedLabels);
         return mapping.findForward("success");
     }    
 
