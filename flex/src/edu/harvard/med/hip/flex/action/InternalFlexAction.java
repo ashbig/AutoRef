@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-05 17:32:07 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-05 18:09:50 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -56,7 +56,7 @@ import org.apache.struts.action.*;
  * Each derived class must implement flexPerform from <code>FlexAction</code>.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-05 17:32:07 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-05 18:09:50 $
  */
 
 public abstract class InternalFlexAction extends FlexAction {
@@ -82,16 +82,21 @@ public abstract class InternalFlexAction extends FlexAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         ActionForward retForward = super.perform(mapping,form,request,response);
+        
         try {
-            if(retForward== null) {
-                User user=(User)request.getSession().getAttribute(Constants.USER_KEY);
-                if(user.getUserGroup().equals(Constants.INTERNAL_GROUP)) {
-                    retForward = flexPerform(mapping,form,request,response);
-                } else {
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("error.user.group", user.getUsername()));
-                }
+            
+            
+            User user=(User)request.getSession().getAttribute(Constants.USER_KEY);
+            
+            if( user == null) {
+                // this allready handled by the super class
+            } else if(user.getUserGroup().equals(Constants.INTERNAL_GROUP)) {
+                retForward = flexPerform(mapping,form,request,response);
+            } else {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.user.group", user.getUsername()));
             }
+            
             
             if(errors.size() >0 ) {
                 saveErrors(request,errors);
