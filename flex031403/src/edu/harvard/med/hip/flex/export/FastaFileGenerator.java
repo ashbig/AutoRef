@@ -40,6 +40,7 @@ public class FastaFileGenerator {
 
     public static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     public static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
+    public static final String PSEUDOMONASDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Pseudomonas/genes";
     public static final String LOGFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/blastdb.log";
     public static final String SEQUENCEIDFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/sequenceid.txt";
     
@@ -50,6 +51,7 @@ public class FastaFileGenerator {
     
     public static final String HUMAN = "'Homo sapiens'";
     public static final String YEAST = "'Saccharomyces cerevisiae'";
+    public static final String PSEUDOMONAS = "'Pseudomonas aeruginosa'";
     
     public static void generateFastaFiles() {
         Logger log = new Logger(LOGFILE);
@@ -76,10 +78,20 @@ public class FastaFileGenerator {
             logAndMail(log, "Error occured when generate yeast database file.");
             return;
         }
+
+        int maxid3 = generateFile(log, PSEUDOMONASDB, PSEUDOMONAS, lastSequence);
+        if(maxid3 == -1) {
+            logAndMail(log, "Error occured when generate pseudomonas database file.");
+            return;
+        }
         
         int newLastSequence = maxid2;
         if(maxid1 > maxid2) {
             newLastSequence = maxid1;
+        }
+        
+        if(maxid3 > newLastSequence) {
+            newLastSequence = maxid3;
         }
         
         if(!writeLastSequence(newLastSequence, log)) {
