@@ -43,16 +43,18 @@ public class Rearrayer
     public Rearrayer(ArrayList sequences, int wells)
     {
         this(sequences);
-        m_total_wells = wells;
+         m_total_wells = wells;
+       
     }
    
        
-    public ArrayList getPlates(ArrayList messages) throws Exception
+    public ArrayList[] getPlates() throws Exception
     {
         if ( m_Sequences == null || m_Sequences.size() == 0) return null;
         //create hashtable of sequences , key - sequence id
         Hashtable sequences = new Hashtable();
         ArrayList sequence_ids = new ArrayList();
+        ArrayList messages = new ArrayList();
         for (int count = 0; count < m_Sequences.size(); count++)
         {
             int seq_id = ((Sequence)m_Sequences.get(count)).getId();
@@ -60,13 +62,18 @@ public class Rearrayer
             sequence_ids.add(new Integer(seq_id));
         }
         m_sequences_by_key = sequences;
-        // create sequence description for each gene in request
+          // create sequence description for each gene in request
         findMgcContainersFromDB(sequence_ids, sequences);
+          
         //check for culture block availability
         messages = checkForCultureBlocks();
-        //sort sequences by marker/ number of sequences by plate
+            //sort sequences by marker/ number of sequences by plate
         sortSequencesByContainerDescription();
-        return getArrangedPlates();
+        ArrayList[] res = new ArrayList[2];
+        res[0] =  messages ;
+        res[1] =  getArrangedPlates();
+        return res;
+       // return getArrangedPlates();
     }
     
  
@@ -133,7 +140,7 @@ public class Rearrayer
            else
            {
                cont_desc.setStatus(false);
-               messages.add("Culture block from container " + cont_desc.getId() +" not available.");
+               messages.add("Culture block from container " + cont_desc.getId() +" not available.\n");
            }
        }
        return messages;
@@ -193,6 +200,7 @@ public class Rearrayer
             //and increase counter to the start of next plate
             if ( ! ((SequenceDescription) m_sequence_descriptions.get(seq_count)).getContainerDescription().getStatus()  )
             {
+              
                 seq_description = new ArrayList();
                 seq_count = plate_start + m_total_wells; 
                 plate_start += m_total_wells;
@@ -202,7 +210,7 @@ public class Rearrayer
             seq_description.add(    m_sequence_descriptions.get(seq_count)  );
             well_on_plate++;
                 //new plate
-            if (well_on_plate % m_total_wells == 0 || seq_count == m_sequence_descriptions.size() )
+            if (well_on_plate % m_total_wells == 0 || seq_count == (m_sequence_descriptions.size()-1)  )
             {
                 well_on_plate = 0;
                 //sort description by saw-tooth pattern

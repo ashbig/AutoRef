@@ -27,16 +27,18 @@ public class MgcOligoPlateManager extends OligoPlateManager
 {
     protected static final String filePath = "/tmp/";
     protected static final String DELIM = "\t";
+    private   String                        m_UserName = null;
       
     /**
      * Constructor
      * Creates new OligoPlateManager
      */
-    public MgcOligoPlateManager(Connection conn) throws FlexDatabaseException
+    public MgcOligoPlateManager(Connection conn, String user) throws FlexDatabaseException
     {
         super(conn);        
         this.isGroupBySize = false;
         this.m_isReorderSequences = false;
+        m_UserName = user;
     }
     
     /**
@@ -49,28 +51,30 @@ public class MgcOligoPlateManager extends OligoPlateManager
      *
      * @exception FlexDatabaseException.
      */
-    public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow)
+    public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow, String user)
     throws FlexDatabaseException
     {
         super(conn, project, workflow);
         this.isGroupBySize = false;    
         this.m_isReorderSequences = false;
+        m_UserName = user;
     }
     
     public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow,
-    int totalWells, boolean isFull, Protocol protocol)  throws FlexDatabaseException
+    int totalWells, boolean isFull, Protocol protocol, String user)  throws FlexDatabaseException
     {
         //m_plateType
         super(conn,project,workflow,totalWells,isFull,false,protocol);
         this.m_isReorderSequences = false;
+        m_UserName = user;
     }
     
-    
    public MgcOligoPlateManager(Connection conn, Project project, Workflow workflow,
-                 boolean isFull, Protocol protocol)  throws FlexDatabaseException
+                 boolean isFull, Protocol protocol, String user)  throws FlexDatabaseException
    {
-          this(conn, project,  workflow, 94,  isFull,  protocol);
+          this(conn, project,  workflow, 94,  isFull,  protocol, user);
           m_isReorderSequences = false;
+          
    }
    
    protected void setProtocol() throws FlexDatabaseException {
@@ -106,8 +110,12 @@ public class MgcOligoPlateManager extends OligoPlateManager
         if (seqList == null || seqList.size() == 0) return;  
         Rearrayer ra = new Rearrayer(new ArrayList(seqList), totalWells);
         
-        ArrayList messages = new ArrayList();
-        ArrayList plates = ra.getPlates( messages );
+        
+        ArrayList[] res = ra.getPlates(  );
+        ArrayList messages = res[0];
+        ArrayList plates = res[1];
+        Mailer.notifyUser(m_UserName,"rearrayMGC.log","MGC: Primer design and rearray",
+            "MGC: Primer design and rearray", new Vector( messages) );
         LinkedList plate_sequences = null;
         ArrayList plate_sequence_descriptions = null;
        
@@ -262,10 +270,10 @@ public class MgcOligoPlateManager extends OligoPlateManager
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
-            p = new Project(5);
-            w = new Workflow(7);
+            p = new Project(6);
+            w = new Workflow(8);
        
-            MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 50, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS));
+            MgcOligoPlateManager om = new MgcOligoPlateManager(c, p, w, 94, false, new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS), "htaycher");
            
             System.out.println("About to start thread");
             om.orderOligo();
