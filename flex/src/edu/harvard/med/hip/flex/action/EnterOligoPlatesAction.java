@@ -82,6 +82,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
         int projectid = ((CreatePCRPlateForm)form).getProjectid();
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
+        Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
         
         try {
             // Validate container label.
@@ -99,7 +100,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             }
             
             String templatePlate = null;
-            if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW) {
+            if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
                 templatePlate = ((CreatePCRPlateForm)form).getTemplatePlate();
                 
                 if((templatePlate == null) || (templatePlate.trim().length()<1)) {
@@ -110,7 +111,6 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             }
             
             String subProtocolName = ((CreatePCRPlateForm)form).getSubProtocolName();
-            Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
             SubProtocol subprotocol = new SubProtocol(subProtocolName);
             LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems");
             QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate);
@@ -134,7 +134,9 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             if(workflowid == Workflow.MGC_PLATE_HANDLE_WORKFLOW) {
                 try {
                     mgc = ps.getMgcContainer();
-                } catch (Exception ex) {}
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
                 
                 if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                     if(mgc != null) {
