@@ -8,6 +8,7 @@ package edu.harvard.med.hip.flex.process;
 
 import java.util.*;
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.util.*;
 /**
  *
  * @author  HTaycher
@@ -21,14 +22,16 @@ public class Rearrayer
     
     private ArrayList m_Sequences = null;//FlexSequences
     private ArrayList m_Containers = null;
+    private Hashtable m_sequence_container = null;//contains MgcContainers keyded by sequenceid
+    //for fast lookup what container this sequence belong to
     
-    /** Creates a new instance of Rearrayer */
-    public Rearrayer()
-    {}
+  
     /** Creates a new instance of Rearrayer */
     public Rearrayer(ArrayList sequences)
     {
-        m_Sequences = sequences;
+        m_Sequences = sequences ;
+        m_Containers = new ArrayList();
+        m_sequence_container = new Hashtable();
     }
     
     /**
@@ -52,33 +55,54 @@ public class Rearrayer
      *
      * @return arrayList of all sequences.
      */
-    public ArrayList getSequences()
+    public ArrayList                        getSequences()
     { return m_Sequences;}
-    public int       getNumberOfRearrayedPlates(int numberOfWells)
+    public int                              getNumberOfRearrayedPlates(int numberOfWells)
     {
         if (numberOfWells <= 0) numberOfWells = 94;
         return (int)Math.ceil((double)m_Sequences.size() / numberOfWells);
     }
     
-    public void setSequences(ArrayList seq )
+    public void                             setSequences(ArrayList seq )
     {  m_Sequences = seq;}
     
+    public MgcContainer                     getContainerBySequenceId(int seq_id)
+    {
+        return (MgcContainer)m_sequence_container.get(new Integer(seq_id));
+    }
     
+    public MgcContainer                     getContainerBySequenceId(FlexSequence seq)
+    {
+        return (MgcContainer)m_sequence_container.get(new Integer(seq.getId()));
+    }
     
     /*Function queries db for all Mgc containers with
      *mgc clones that have these sequences
      **/
     
-    public void findMgcContainers(ArrayList sequences) throws Exception
+    public void                             findMgcContainers(ArrayList sequences) throws Exception
     {
         m_Sequences = sequences;
         findMgcContainers();
+     }
+    
+    public void findMgcContainers() throws Exception
+    {
+        if ( m_Sequences == null || m_Sequences.size() == 0) return;
+        findMgcContainersFromDB();
         checkForGlycerolStock();
     }
     
-    //function finds all containers that contain samples with these sequences.
+    public void findOriginalMgcContainers() throws Exception
+    {
+        if ( m_Sequences == null || m_Sequences.size() == 0) return;
+        findMgcContainersFromDB();
+       
+    }
     
-    private void findMgcContainers() throws Exception
+    //function finds all containers that contain samples with these sequences.
+    //function always gets the last inserted container that containes this sequence
+    private void findMgcContainersFromDB() throws Exception
     {
         int current_sequence_id = -1;
         MgcContainer mgc_container = null;
@@ -93,25 +117,32 @@ public class Rearrayer
             seq_id = ((FlexSequence)m_Sequences.get(count)).getId();
             sequence_id.put(new Integer(seq_id), m_Sequences.get(count));
         }
+        ArrayList temp = new ArrayList(m_Sequences);
         
         //starting from first sequence
-        Enumeration en = sequence_id.keys();
-        while ( en.hasMoreElements() )
+        
+       while (! temp.isEmpty() )
         {
-            current_sequence_id = Integer.parseInt(     (String)en.nextElement()    ) ;
+            current_sequence_id = ((FlexSequence)temp.get(0)).getId() ;
             mgc_container = MgcContainer.findMGCContainerFromSequenceID(current_sequence_id);
             mgc_container.restoreSample();
             mgc_container_in_rearray = new MgcContainerForRearray();
             mgc_container_in_rearray.setContainer(mgc_container);
+            //check if any other sequence in request come from the same container
             for (int count = 0; count < mgc_container.getSamples().size(); count++)
             {
-                seq_id = ((MgcSample)mgc_container.getSamples().get(count)).getId();
-                if (sequence_id.containsKey(new Integer(seq_id)) )//check if another sequnces belong to this container
+                MgcSample ms = (MgcSample)mgc_container.getSamples().get(count);
+                Integer seq_key = new Integer(ms.getSequenceId());
+                if (sequence_id.containsKey(seq_key ) )
                 {
-                    mgc_container_in_rearray.addSequence((FlexSequence) sequence_id.get(new Integer(seq_id))  );
-                    sequence_id.remove( new Integer(seq_id ) );
+                    FlexSequence fs = (FlexSequence)sequence_id.get(seq_key);
+                    mgc_container_in_rearray.addSequence( fs  );
+                    temp.remove(fs);
+                    if (temp.isEmpty()) continue;
                 }
+                
             }
+                          
             m_Containers.add(mgc_container_in_rearray);
         }
         
@@ -130,7 +161,7 @@ public class Rearrayer
         {
             current_mgc_container_for_rearray = (MgcContainerForRearray)m_Containers.get(count);
             current_mgc_container = (MgcContainer) current_mgc_container_for_rearray.getContainer() ;
-            if ( current_mgc_container.getGlycerolContainerid() != -1)
+            if ( current_mgc_container.getGlycerolContainerid() > 0)
             {
                 Container gly_container = new Container(current_mgc_container.getGlycerolContainerid()) ;
                 current_mgc_container_for_rearray.setContainer(gly_container);
@@ -142,14 +173,26 @@ public class Rearrayer
      *that go to the experiment !!! method does not change order of sequences
      *@return arrayList of containers
      */
-    public ArrayList getContainersOrderedByNumberOfSequences()
+    
+    //not debuged yet
+    public ArrayList getContainersOrderedByMarkerNumberOfSequences()
     {
         Collections.sort( m_Containers, new Comparator()
         {
             public int compare(Object cont1, Object cont2)
             {
-                return ((MgcContainerForRearray)cont1).numberOfSequences() -
-                ((MgcContainerForRearray)cont2).numberOfSequences();
+                if ( !(cont1 instanceof MgcContainer) || !(cont2 instanceof MgcContainer)) return 0;
+                
+                MgcContainer mc1 = (MgcContainer) cont1;
+                MgcContainer mc2 = (MgcContainer) cont2;
+                
+                int res = (mc1.getMarker().compareToIgnoreCase(mc2.getMarker())) ;
+                if (res == 0)//same marker
+                    return ((MgcContainerForRearray)cont1).numberOfSequences() -
+                            ((MgcContainerForRearray)cont2).numberOfSequences();
+                else
+                        return res;
+                
             }
         });
         return m_Containers;
@@ -161,15 +204,15 @@ public class Rearrayer
      * @param numberOfWells - how many wells per plate, default 94
      * @return list of ordered sequences
      **/
-    
-    public ArrayList getSequencesOrderedByContainerAndSawToothPattern(int numberOfWells)
+    //not debuged yet
+    public ArrayList getSequencesOrderedByMarkerContainerSTP(int numberOfWells)
     {
         ArrayList orderedSequences = new ArrayList();
         ArrayList temp = new ArrayList();
         int first_sequence_index = 0;
         int last_sequence_index = 0;
         if (numberOfWells <= 0) numberOfWells = 94;
-        getContainersOrderedByNumberOfSequences();
+        getContainersOrderedByMarkerNumberOfSequences();
         //rearange sequences acoording to container order
         for (int count = 0; count < m_Containers.size(); count++)
         {
@@ -188,7 +231,7 @@ public class Rearrayer
                 temp.add( orderedSequences.get(count) );
             }
             //oreder by Saw-tooth , add to the returned list
-            m_Sequences.add( rearangeSawToothPattern(temp));
+            m_Sequences.add( Algorithms.rearangeSawToothPatternInFlexSequence(temp));
             temp.clear();
             first_sequence_index = last_sequence_index  + 1;
         }//end of sequenceCount
@@ -197,36 +240,7 @@ public class Rearrayer
     
     
     
-    public static ArrayList rearangeSawToothPattern(ArrayList sequences)
-    {
-        ArrayList result = new ArrayList();
-        //sort array by cds length
-        Collections.sort(sequences, new Comparator()
-        {
-            public int compare(Object o1, Object o2)
-            {
-                return ((FlexSequence) o1).getCdslength() - ((FlexSequence) o2).getCdslength();
-            }
-            /** Note: this comparator imposes orderings that are
-             * inconsistent with equals. */
-            public boolean equals(java.lang.Object obj)
-            {      return false;  }
-            // compare
-        } );
-        //get middle element
-        int middle = (int)Math.ceil((double)sequences.size() / 2);
-        for (int count = 0; count < middle; count++)
-        {
-            result.add(sequences.get(count));
-            result.add(sequences.get(middle+count));
-        }
-        //ad last element 
-        if (result.size() < sequences.size()) result.add(sequences.get(sequences.size() -1));
-        return result;
-    }
-    
-}
-    /* inner class that holds container that will go to rearray
+     /* inner class that holds container that will go to rearray
      * and sequences from request that belong to this container*/
 class MgcContainerForRearray
 {
@@ -254,6 +268,14 @@ class MgcContainerForRearray
     { m_Sequences.add(fc);}
     public int          numberOfSequences()
     { return m_Sequences.size();}
+    
+    public String       getMarker()
+    {
+        if (m_Container instanceof MgcContainer) 
+            return ((MgcContainer)m_Container).getMarker();
+        else
+            return null;
+    }
     public ArrayList    getNumberOfSequences(int first_sequence,
     int number_of_sequences)
     {
@@ -265,3 +287,24 @@ class MgcContainerForRearray
         return res;
     }
 }
+
+
+//********************************testing**********************************
+ 
+  public static void main(String args[])
+    {
+        try
+        {
+            Request m_Request = new Request(108);
+          
+             Rearrayer re = new Rearrayer( new ArrayList(m_Request.getSequences()) );
+                ArrayList mgc_containers = null;
+               re.findMgcContainers( );
+            mgc_containers = re.getContainers();
+        }catch(Exception e){}
+  }
+            
+ 
+    
+}
+   
