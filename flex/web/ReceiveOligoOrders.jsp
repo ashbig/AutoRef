@@ -6,7 +6,10 @@
 
 <%@page contentType="text/html"%>
 <html>
-<head><title><bean:message key="flex.name"/> : Oligo Order Receiving Form</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Oligo Order Receiving Form</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
 <h2><bean:message key="flex.name"/> : Oligo Order Receiving Form</h2>
 <hr>
@@ -16,19 +19,19 @@
         
         <table>
             <tr>
-                <td>Please enter plate IDs for all of the oligo plates received:<p></td>
+                <td class="prompt">Please enter plate IDs for all of the oligo plates received:<p></td>
             </tr>
             <tr>
                 <td><html:textarea property="oligoPlateIds" rows="12" cols="50"/><p></td>
             </tr>
 
             <tr>
-                <td>Receive Date:&nbsp;&nbsp;&nbsp;
+                <td class="prompt">Receive Date:&nbsp;&nbsp;&nbsp;
                     <html:text property="receiveDate" size="30"/><p></td>
             </tr>
 
             <tr>
-                <td>User Barcode:&nbsp;&nbsp;&nbsp;
+                <td class="prompt"><bean:message key="flex.researcher.barcode.prompt"/>&nbsp;&nbsp;&nbsp;
                     <html:text property="researcherBarcode" size="30"/><p></td>
             </tr>
         </table>

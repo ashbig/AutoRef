@@ -8,6 +8,7 @@
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -30,7 +31,7 @@
     <tr>
     <td>Source plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.oldContainer" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="sourceLocation">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -44,7 +45,7 @@
     <tr>
     <td>Destination plate barcode:</td>
     <td><bean:write name="newContainer" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="destLocations">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -64,4 +65,3 @@
 
 </body>
 </html>
-

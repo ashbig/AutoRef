@@ -11,7 +11,7 @@
 <html>
 <head>
     <title><bean:message key="flex.name"/> : Enter Process Results</title>
-    
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 
 <body>
@@ -32,7 +32,7 @@
         </td>
     </tr>
     <tr>
-        <td>Result Type:</td>
+        <td class="prompt">Result Type:</td>
         <td>
             <html:select property="protocolString">
                 <html:option value="<%=Protocol.PERFORM_TRANSFORMATION%>"><%=Result.TRANSFORMATION_TYPE%></html:option>
@@ -42,11 +42,11 @@
         
     </tr>
     <tr>
-        <td>Plate Label:</td>
+        <td class="prompt">Plate Label:</td>
         <td><html:text property="plateBarcode"/></td>
     </tr>
     <tr>
-       <td><bean:message key="flex.researcher.barcode.prompt"/>:</td>
+       <td class="prompt"><bean:message key="flex.researcher.barcode.prompt"/>:</td>
        <td><html:text property="researcherBarcode"/></td>
     </tr>
     </table>

@@ -7,6 +7,7 @@
 <html>
     <head>
         <title><bean:message key="flex.name"/> : Login</title>
+        <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
     </head>
     <body> 
     <center>
@@ -16,15 +17,14 @@
     <p>
   
 
-
     <html:form action="logon.do" focus="username" target="_top">
         <table>
             <tr>
-                <td>User Name:</td>
+                <TD class="prompt">User Name:</TD>
                 <td><html:text property="username"/></td>
             </tr>
-            <tr>
-                <td>Password:</td>
+            <tr> 
+                <td class="prompt">Password:</td>
                 <td><html:password property="password"/></td>
             </tr>
         </table>

@@ -7,7 +7,8 @@
 
 <html>
 <head>
-<title><bean:message key="flex.name"/> : Create Process Plate </title>
+    <title><bean:message key="flex.name"/> : Create Process Plate </title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -18,7 +19,7 @@
 <html:form action="/EnterOligoPlates.do" focus="fivepPlate">
 <table>
     <tr>
-    <td>Process name:</td>
+    <td class="prompt">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 

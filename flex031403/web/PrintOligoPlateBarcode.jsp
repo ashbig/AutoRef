@@ -7,7 +7,10 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Print Oligo Plate Barcode Form</title></head>
+<head>
+   <title><bean:message key="flex.name"/> : Print Oligo Plate Barcode Form</title>
+   <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
 <h2><bean:message key="flex.name"/> : Print Oligo Plate Barcode Form</h2>
 <hr>

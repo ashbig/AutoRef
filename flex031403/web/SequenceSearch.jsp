@@ -22,13 +22,13 @@
 <html:form action="/SequenceSearch.do" focus="searchString">
 <table>
     <tr>
-    <td>Please enter the search key word:</td>
+    <td class="prompt">Please enter the search key word:</td>
     <td><html:text property="searchString" size="40"/></td>
     </tr>
 
     <logic:present name="species">
     <tr>
-    <td>Search Species:</td>
+    <td class="prompt">Search Species:</td>
     <td><select name="species">
         <option value="all">All
         <logic:iterate id="oneSpecies" name="species" scope="request">

@@ -6,7 +6,10 @@
 <%@ taglib uri="WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@page import="java.util.*" contentType="text/html"%>
 <html>
-<head><title><bean:message key="flex.name"/> : Enter Oligo Plate Location Form</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Enter Oligo Plate Location Form</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
 <h2><bean:message key="flex.name"/> : Enter Oligo Plate Location Form</h2>
 <hr>

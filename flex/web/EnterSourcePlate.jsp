@@ -8,6 +8,7 @@
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -18,17 +19,17 @@
 <html:form action="/EnterSourcePlate.do" focus="sourcePlate">
 <table>
     <tr>
-    <td>Process name:</td>
+    <td class="prompt">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td>Enter the source plate barcode:</td>
+    <td class="prompt">Enter the source plate barcode:</td>
     <td><html:text property="sourcePlate" size="40"/></td>
     </tr>
 
     <tr>
-    <td>Select the protocol:</td>
+    <td class="prompt">Select the protocol:</td>
     <td><html:select property="subProtocolName">
         <bean:define id="subprotocols" name="SelectProtocolAction.protocol" property="subprotocol"/>
         <html:options

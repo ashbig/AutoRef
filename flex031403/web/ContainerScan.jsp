@@ -20,7 +20,7 @@
     <form action="ViewContainerProcessHistory.do" >
     <table>
         <tr>
-            <td>Label:</td>
+            <td class="prompt">Label:</td>
             <td><input type="text" name="<%=Constants.CONTAINER_BARCODE_KEY%>"/></td>
         </tr>
     </table>

@@ -8,6 +8,7 @@
 <html:html locale="true">
 <head>
 <title><bean:message key="flex.name"/> : Cloning Request History</title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 

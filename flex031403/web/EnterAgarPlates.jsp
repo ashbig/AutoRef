@@ -8,6 +8,7 @@
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -18,12 +19,12 @@
 <html:form action="/EnterAgarPlates.do" focus="agarPlateF1">
 <table>
     <tr>
-    <td>Process name:</td>
+    <td class="prompt">Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td>Select the protocol:</td>
+    <td class="prompt">Select the protocol:</td>
     <td><html:select property="subProtocolName">
         <bean:define id="subprotocols" name="SelectProtocolAction.protocol" property="subprotocol"/>
         <html:options
@@ -36,16 +37,16 @@
     </tr>
 
     <tr>
-    <td>Enter the fusion agar plate barcode:</td>
+    <td class="prompt">Enter the fusion agar plate barcode:</td>
     <td><html:text property="agarPlateF1" size="20"/></td>
-    <td>Enter the corresponding closed agar plate barcode:</td>
+    <td class="prompt">Enter the corresponding closed agar plate barcode:</td>
     <td><html:text property="agarPlateC1" size="20"/></td>
     </tr>
 
     <tr>
-    <td>Enter the fusion agar plate barcode:</td>
+    <td class="prompt">Enter the fusion agar plate barcode:</td>
     <td><html:text property="agarPlateF2" size="20"/></td>
-    <td>Enter the corresponding closed agar plate barcode:</td>
+    <td class="prompt">Enter the corresponding closed agar plate barcode:</td>
     <td><html:text property="agarPlateC2" size="20"/></td>
     </tr>
 

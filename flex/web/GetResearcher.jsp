@@ -8,6 +8,7 @@
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -31,7 +32,7 @@
     <tr>
     <td>Source plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="oldContainer" property="id"/>"><bean:write name="oldContainer" property="label"/></a></td>
-    <td>Source plate location:</td>
+    <td class="prompt">Source plate location:</td>
     <td><bean:write name="oldContainer" property="location.type"/></td>
     </tr>
     </logic:iterate> 
@@ -47,7 +48,7 @@
 
 </table>
     <Center>
-    <p><bean:message key="flex.researcher.barcode.prompt"/>:
+    <p><em><bean:message key="flex.researcher.barcode.prompt"/>:</em>
     <html:text property="researcherBarcode" size="40"/>
     <p>
     <html:submit property="submit" value="Create Plate"/>

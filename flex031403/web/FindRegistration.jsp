@@ -6,7 +6,10 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><title><bean:message key="flex.name"/> : Find Registration</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Find Registration</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
 
 <h2><bean:message key="flex.name"/> : Find Registration</h2>
@@ -18,12 +21,12 @@
 <html:form action="FindRegistration.do" focus="firstName">
     <table width="80%" align="center">
         <tr>
-        <td>User Name:</td>
+        <td class="prompt">User Name:</td>
         <td><html:text property="userID" size="40"/></td>
         </tr>
 
         <tr>
-        <td>Or Reminder Text:</td>
+        <td class="prompt">Or Reminder Text:</td>
         <td><html:text property="reminderText" size="40"/></td>
         </tr>
 

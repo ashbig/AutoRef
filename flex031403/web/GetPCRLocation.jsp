@@ -8,6 +8,7 @@
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -30,7 +31,7 @@
     <tr>
     <td>5P oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.fivep" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="fivepSourceLocation">
         <html:options
         collection="EnterOligoPlateAction.locations"
@@ -43,7 +44,7 @@
     <tr>
     <td>3P open oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="threepOpenSourceLocation">
         <html:options
         collection="EnterOligoPlateAction.locations"
@@ -56,7 +57,7 @@
     <tr>
     <td>3P closed oligo plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.threepClosed" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="threepClosedSourceLocation">
         <html:options
         collection="EnterOligoPlateAction.locations"
@@ -69,7 +70,7 @@
     <tr>
     <td>Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="pcrOpenLocation">
         <html:options
         collection="EnterOligoPlateAction.locations"
@@ -83,7 +84,7 @@
     <td>Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrClosed" property="label"/></td>
     <td>Location:</td>
-    <td><html:select property="pcrClosedLocation">
+    <td class="prompt"><html:select property="pcrClosedLocation">
         <html:options
         collection="EnterOligoPlateAction.locations"
         property="id"
@@ -100,4 +101,3 @@
 
 </body>
 </html>
-

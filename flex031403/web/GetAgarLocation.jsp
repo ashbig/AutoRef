@@ -8,6 +8,7 @@
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -30,7 +31,7 @@
     <tr>
     <td>Fusion agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateF1" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="agarF1Location">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -43,7 +44,7 @@
     <tr>
     <td>Closed agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateC1" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="agarC1Location">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -56,7 +57,7 @@
     <tr>
     <td>Fusion agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateF2" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="agarF2Location">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -69,7 +70,7 @@
     <tr>
     <td>Closed agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateC2" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="agarC2Location">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -83,7 +84,7 @@
     <tr>
     <td>Destination plate barcode:</td>
     <td><bean:write name="newContainer" property="label"/></td>
-    <td>Location:</td>
+    <td class="prompt">Location:</td>
     <td><html:select property="destLocations">
         <html:options
         collection="EnterSourcePlateAction.locations"

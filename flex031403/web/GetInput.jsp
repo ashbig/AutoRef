@@ -4,10 +4,12 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -18,7 +20,7 @@
 <html:form action="/GetInput.do" focus="researcherBarcode">
 <table>
     <tr>
-    <td>Enter your ID:</td>
+    <td class="prompt"><bean:message key="flex.researcher.barcode.prompt"/></td>
     <td><html:text property="researcherBarcode" size="40"/></td>
     </tr>
 
@@ -28,7 +30,7 @@
     </tr>
 
     <tr>
-    <td>Select the location for the destination plate:</td>
+    <td class="prompt">Select the location for the destination plate:</td>
     <td><html:select property="destLocation">
         <html:options
         collection="locations"
@@ -46,16 +48,16 @@
 <logic:present name="queueItems">
 <p>
 <h3>The following containers are available:</h3>
-<table>
-<tr>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr class="headerRow">
     <th>ID</th><th>Label</th>
 </tr>
 
 <logic:iterate id="queueItem" name="queueItems" scope="session">
-<tr>
+<flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
     <td><bean:write name="queueItem" property="item.id"/></td>
     <td><bean:write name="queueItem" property="item.label"/></td>
-</tr>
+</flex:row>
 </logic:iterate>
 </table>
 </logic:present>

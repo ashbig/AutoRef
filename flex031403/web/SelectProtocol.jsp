@@ -8,6 +8,7 @@
 <html>
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate</title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -18,7 +19,7 @@
 <html:form action="/SelectProtocol.do">
 <table>
     <tr>
-    <td>Select the process name:</td>
+    <td class="prompt">Select the process name:</td>
     <td><html:select property="processname">
         <html:options
         collection="CreateProcessPlateAction.protocols"
@@ -35,4 +36,3 @@
 
 </body>
 </html>
-

@@ -12,20 +12,27 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 <html>
-<head><title><bean:message key="flex.name"/> : Query Sequence History</title></head>
+<head>
+    <title><bean:message key="flex.name"/> : Query Sequence History</title>
+    <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+</head>
 <body>
     <h2><bean:message key="flex.name"/> : Query Sequence History</h2>
     <hr>
     <html:errors/>
     <p>
     <html:form action="/ViewSequenceProcessHistory">
-        Search By &nbsp;
-        <html:select property="searchParam">
-            <html:options name="<%=Constants.NAME_TYPE_LIST_KEY%>"/>
-        </html:select>
-        &nbsp;
-        <html:text property="paramValue"/>
-        <br>
+        <table>
+            <tr>
+                <td class="prompt">Search By: </td>
+                <td>
+                    <html:select property="searchParam">
+                        <html:options name="<%=Constants.NAME_TYPE_LIST_KEY%>"/>
+                    </html:select>
+                </td>
+                <td><html:text property="paramValue"/></td>
+            </tr>
+        </table>
         <br>
         <html:submit/>
     </html:form>

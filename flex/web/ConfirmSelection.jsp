@@ -3,11 +3,14 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
+
 <%@ page import="edu.harvard.med.hip.flex.Constants" %>
 
 <html:html locale="true">
 <head>
 <title><bean:message key="flex.name"/> : Cloning Request History</title>
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
@@ -32,7 +35,7 @@ appropriated selection and submit your cloning request to FLEXGene.</h3>
 <logic:present name="newSequences">
 <p>
 <h3>Category: Good quality sequences not already present in FLEXGene</h3>
-<table border=1>
+<table border="1">
 <tr>
 <th></th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
 </tr>
@@ -58,7 +61,7 @@ appropriated selection and submit your cloning request to FLEXGene.</h3>
 <logic:present name="displaySameSequence">
 <p>
 <h3>Category: Good quality sequences with CDS already present in FLEXGene</h3>
-<table border=1>
+<table border="1">
 <tr>
 <th></th><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
 </tr>
