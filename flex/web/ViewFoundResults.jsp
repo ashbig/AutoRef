@@ -56,7 +56,11 @@
                     <flex:write name="mfs" property="flexsequenceid"/>
                 </A>
                 </td>
-                <td><flex:write name="mfs" property="flexSequence.flexstatus"/></td>
+                <td>
+                <A HREF="ViewConstructsInfo.do?sequenceid=<bean:write name="mfs" property="flexsequenceid"/>">
+                <flex:write name="mfs" property="flexSequence.flexstatus"/>
+                </A>
+                </td>
                 <td><flex:write name="mfs" property="foundBy"/></td>
                 <logic:equal name="mfs" property="isMatchByGi" value="F">
                 <td><A target="_blank" href="ViewBlastOutput.do?outputFile=<bean:write name="mfs" property="blastHit.outputFile"/>">View Alignments</A></td>

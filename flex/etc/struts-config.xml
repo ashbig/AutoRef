@@ -1280,6 +1280,17 @@
       <forward  name="empty"   path="/ViewResultsEmpty.jsp"/>
     </action>  
                           
+    <action    path="/ViewConstructsInfo"
+               type="edu.harvard.med.hip.flex.action.ViewConstructsInfoAction"
+               name="queryFlexForm"
+               scope="request"
+               validate="false"
+               input="/ViewFoundResults.jsp">
+      <forward  name="success"   path="/DisplayConstructsInfo.jsp"/>
+      <forward  name="fail"   path="/ViewResultsFail.jsp"/>
+      <forward  name="empty"   path="/ViewResultsEmpty.jsp"/>
+    </action> 
+                             
     <action    path="/ViewBlastOutput"
                type="edu.harvard.med.hip.flex.action.ViewBlastOutputAction"
                name="queryFlexForm"
