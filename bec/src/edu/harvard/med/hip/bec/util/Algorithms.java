@@ -9,10 +9,6 @@ import java.io.*;
 public class Algorithms
 {
     
-    // private static final String filePath = "/tmp/";
-    private static final String filePath = "c:/";
-    
-    
     /**
 	 * This function takes the string and converts it into a reversed sequence.
 	 * @param seq  A String object
@@ -277,6 +273,28 @@ public class Algorithms
             res = "/"+res;
         res = replaceChar(res, File.separatorChar, '/');
         return res;
+    }
+    
+    
+    public static void writeArrayIntoFile( ArrayList messages, boolean isAppend, String file_name) throws Exception
+    {
+         FileWriter fr = null;
+         try
+         {
+            fr =  new FileWriter(file_name, isAppend);
+            for (int count = 0; count < messages.size(); count++)
+            {
+                    fr.write((String) messages.get(count)+"\n");
+            }
+            fr.flush();
+            fr.close();
+          
+        }
+         catch(Exception e )
+         {
+             throw new BecUtilException("Can not write file " + file_name +"\n"+ e.getMessage());
+         }
+    
     }
     public static void main(String args[])
     {
