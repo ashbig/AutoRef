@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.22 2002-05-24 16:55:08 Elena Exp $
+ * $Id: Protocol.java,v 1.23 2002-05-24 20:39:01 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -27,6 +27,7 @@ public class Protocol {
     public static final String IDENTIFY_SEQUENCES_FROM_UNIGENE=
         "identify sequences from unigene";
     public static final String DESIGN_CONSTRUCTS= "design constructs";
+    public static final String MGC_DESIGN_CONSTRUCTS= "MGC design constructs";
     public static final String GENERATE_OLIGO_ORDERS= "generate oligo orders";
     public static final String RECEIVE_OLIGO_PLATES= "receive oligo plates";
     public static final String DILUTE_OLIGO_PLATE = "dilute oligo plate";
