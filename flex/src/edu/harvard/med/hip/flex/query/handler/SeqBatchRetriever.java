@@ -24,7 +24,7 @@ abstract public class SeqBatchRetriever {
     /** Creates a new instance of SeqBatchRetriever */
     public SeqBatchRetriever() {
     }
-
+    
     public SeqBatchRetriever(List giList) {
         this.giList = giList;
         this.foundList = new HashMap();
@@ -43,5 +43,13 @@ abstract public class SeqBatchRetriever {
         return noFoundList;
     }
     
-   abstract public void retrieveSequence() throws Exception;
+    /**
+     * Retrive the sequences from FLEXGene database for a list of GI numbers.
+     * Populate foundList and noFoundList.
+     *      foundList:      GI => GiRecord object
+     *      noFoundList:    GI => NoFound object
+     *
+     * @exception Exception
+     */
+    abstract public void retrieveSequence() throws Exception;
 }

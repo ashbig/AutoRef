@@ -24,12 +24,12 @@ public class FlexSeqBatchRetriever extends SeqBatchRetriever {
     }
     
     /**
-     * Retrive the sequences from FLEXGene database. Populate foundList
-     * and noFoundList. 
+     * Retrive the sequences from FLEXGene database for a list of GI numbers.
+     *  Populate foundList and noFoundList. 
+     *      foundList:      GI => GiRecord object
+     *      noFoundList:    GI => NoFound object
      *
-     * @exception QueryException
-     * @exception FlexDatabaseException
-     * @exception SQLException
+     * @exception Exception
      */
     public void retrieveSequence() throws Exception {
         if(giList == null || giList.size() == 0) {
@@ -59,6 +59,8 @@ public class FlexSeqBatchRetriever extends SeqBatchRetriever {
                 int gi = rs.getInt("GI");
                 String sequenceFile = rs.getString("SEQUENCEFILE");
                 GiRecord giRecord = new GiRecord(gi, genbank, sequenceFile);
+                giRecord.setCdsStart(rs.getInt("CDSSTART"));
+                giRecord.setCdsStop(rs.getInt("CDSSTOP"));
                 foundList.put(element, giRecord);
             } else {
                 NoFound nf = new NoFound(element, NoFound.GI_NOT_IN_FLEX);

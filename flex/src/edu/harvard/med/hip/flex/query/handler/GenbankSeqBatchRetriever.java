@@ -33,8 +33,10 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
     
     
     /**
-     * Retrive the sequences from FLEXGene database. Populate foundList
-     * and noFoundList.
+     * Retrive the sequences from FLEXGene database for a list of GI numbers.
+     * Populate foundList and noFoundList.
+     *      foundList:      GI => GiRecord object
+     *      noFoundList:    GI => NoFound object
      *
      * @exception Exception
      */
@@ -80,7 +82,7 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
         giList.add("37550355");
         giList.add("16923985");
         giList.add("34851998");
- /**      
+  /**  
         SeqBatchRetriever retriever = new GenbankSeqBatchRetriever(giList);
         
         try {
@@ -108,7 +110,7 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
             NoFound nf = (NoFound)noFounds.get(key);
             System.out.println("\t"+key+"\t"+nf.getReason());
         }
-*/   
+*/ 
         
         Map noFoundList = new HashMap();
         
@@ -149,7 +151,7 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
         while(iter.hasNext()) {
             String key = (String)iter.next();
             GiRecord gr = (GiRecord)foundList.get(key);
-            System.out.println("\t"+key+"\t"+gr.getCdsStart()+"\t"+gr.getCdsStop()+"\t"+gr.getGenbankAccession()+"\t"+gr.getSequenceText());
+            System.out.println("\t"+key+"\t"+gr.getCdsStart()+"\t"+gr.getCdsStop()+"\t"+gr.getGenbankAccession()+"\t"+gr.getSequenceText()+"\t"+gr.getSequenceFile());
         }
         
         System.out.println("\nNo Found:");
@@ -160,7 +162,7 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
             NoFound nf = (NoFound)noFoundList.get(key);
             System.out.println("\t"+key+"\t"+nf.getReason());
         }       
-       
+    
       // ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((List)(retriever.getFoundList().values()));
       // populator.persistRecords();        
     }
