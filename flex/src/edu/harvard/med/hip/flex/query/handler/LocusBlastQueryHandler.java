@@ -89,9 +89,9 @@ public class LocusBlastQueryHandler extends QueryHandler {
                         if(sr.getLocusid() != null) {
                             mgr.setLocusid(sr.getLocusid());
                         }
-                    }
                     
-                    matchGenbankRecords.addAll(mgrs);
+                        matchGenbankRecords.add(new MatchGenbankRecord(mgr));
+                    }
                 } 
             }
             if(matchGenbankRecords.size() > 0) {

@@ -86,6 +86,7 @@ public class FastaFileGenerator {
         log.logging("Last sequenceid: "+lastSequence);
         
         // Generate FASTA file for all human genes.
+        log.logging("Generate human database");
         int maxid1 = generateFile(log, HUMANDB, HUMAN, lastSequence, SPECIES);
         if(maxid1 == -1) {
             logAndMail(log, "Error occured when generate human database file.");
@@ -93,6 +94,7 @@ public class FastaFileGenerator {
         }
         
         // Generate FASTA file for all yeast genes.
+        log.logging("Generate yeast database");
         int maxid2 = generateFile(log, YEASTDB, YEAST, lastSequence, SPECIES);
         if(maxid2 == -1) {
             logAndMail(log, "Error occured when generate yeast database file.");
@@ -100,6 +102,7 @@ public class FastaFileGenerator {
         }
         
         // Generate FASTA file for all Pseudomonas genes.
+        log.logging("Generate Pseudomonas database");
         int maxid3 = generateFile(log, PSEUDOMONASDB, PSEUDOMONAS, lastSequence, SPECIES);
         if(maxid3 == -1) {
             logAndMail(log, "Error occured when generate pseudomonas database file.");
@@ -107,6 +110,7 @@ public class FastaFileGenerator {
         }
         
         // Generate FASTA file for all Yersinia pestis genes.
+        log.logging("Generate Yersinia database");
         int maxid5 = generateFile(log, YPDB, YP, lastSequence, SPECIES);
         if(maxid5 == -1) {
             logAndMail(log, "Error occured when generate yersinia database file.");
@@ -114,72 +118,84 @@ public class FastaFileGenerator {
         }
         
         // Generate FASTA file for all MGC clones.
+        log.logging("Generate MGC database");
         int maxid4 = generateFile(log, MGCDB, MGCPROJECT, lastSequence, MGCPROJECT);
         if(maxid4 == -1) {
-            logAndMail(log, "Error occured when generate pseudomonas database file.");
+            logAndMail(log, "Error occured when generate MGC database file.");
             return;
         }
         
+        log.logging("Generate BC database");
         int maxid6 = generateFile(log, BCDB, (new Integer(Project.BREASTCANCER)).toString(), lastSequence, PROJECT);
         if(maxid6 == -1) {
             logAndMail(log, "Error occured when generate Breast Cancer database file.");
             return;
         }
         
+        log.logging("Generate NIDDK database");
         int maxid7 = generateFile(log, NIDDKDB, (new Integer(Project.NIDDK)).toString(), lastSequence, PROJECT);
         if(maxid7 == -1) {
             logAndMail(log, "Error occured when generate NIDDK database file.");
             return;
         }
         
+        log.logging("Generate CLONTECH database");
         int maxid8 = generateFile(log, CLONTECHDB, (new Integer(Project.CLONTECH)).toString(), lastSequence, PROJECT);
         if(maxid8 == -1) {
             logAndMail(log, "Error occured when generate NIDDK database file.");
             return;
         }
         
-        int maxid9 = generateFile(log, RZPDWALLDB, (new Integer(Project.CLONTECH)).toString(), lastSequence, PROJECT);
+        log.logging("Generate RZPDWALL database");
+        int maxid9 = generateFile(log, RZPDWALLDB, (new Integer(Project.RZPD_WALL)).toString(), lastSequence, PROJECT);
         if(maxid9 == -1) {
             logAndMail(log, "Error occured when generate RZPD-Wall database file.");
             return;
         }
         
+        log.logging("Generate FT database");
         int maxid10 = generateFile(log, FTDB, FT, lastSequence, SPECIES);
         if(maxid10 == -1) {
             logAndMail(log, "Error occured when generate FT database file.");
             return;
         }
         
+        log.logging("Generate Kinase database");
         int maxid11 = generateFile(log, KINASEDB, (new Integer(Project.KINASE)).toString(), lastSequence, PROJECT);
         if(maxid11 == -1) {
             logAndMail(log, "Error occured when generate Kinase database file.");
             return;
         }
                
+        log.logging("Generate sequence verified database");
         int maxid12 = generateFile(log, SEQVERIFIEDDB, null, lastSequence, VERIFIED);
         if(maxid12 == -1) {
             logAndMail(log, "Error occured when generate Sequence Verified database file.");
             return;
         }
                 
+        log.logging("Generate BC sequence verified database");
         int maxid13 = generateFile(log, VERIFIEDBCDB, null, lastSequence, VERIFIED_BC);
         if(maxid13 == -1) {
             logAndMail(log, "Error occured when generate Sequence Verified BC database file.");
             return;
         }
                 
+        log.logging("Generate kinase sequence verified database");
         int maxid14 = generateFile(log, VERIFIEDKINASEDB, null, lastSequence, VERIFIED_KINASE);
         if(maxid14 == -1) {
             logAndMail(log, "Error occured when generate Sequence Verified Kinase database file.");
             return;
         }
                  
+        log.logging("Generate human sequence verified database");
         int maxid15 = generateFile(log, VERIFIEDHUMANDB, null, lastSequence, VERIFIED_HUMAN);
         if(maxid15 == -1) {
             logAndMail(log, "Error occured when generate Sequence Verified Human database file.");
             return;
         }
                  
+        log.logging("Generate all sequence database");
         int maxid16 = generateFile(log, ALLDB, null, lastSequence, ALL);
         if(maxid16 == -1) {
             logAndMail(log, "Error occured when generate entire database file.");
@@ -371,18 +387,20 @@ public class FastaFileGenerator {
         }
         
         if(criteria.equals(MGCPROJECT)) {
-            sql = "select sequenceid, cdsstart, cdsstop "+
-            " from mgcclone "+
-            " where sequenceid > "+seq+
-            " order by sequenceid";
+            sql = "select distinct f.sequenceid, f.cdsstart, f.cdsstop "+
+            " from mgcclone m, flexsequence f "+
+            " where f.sequenceid > "+seq+
+            " and m.sequenceid=f.sequenceid"+
+            " order by f.sequenceid";
         }
         
         if(criteria.equals(PROJECT)) {
-            sql = "select distinct sequenceid, cdsstart, cdsstop"+
-                  " from requestsequence"+
-                  " where sequenceid > "+seq+
-                  " and projectid="+where+
-                  " order by sequenceid";
+            sql = "select distinct f.sequenceid, f.cdsstart, f.cdsstop"+
+                  " from requestsequence r, flexsequence f"+
+                  " where f.sequenceid > "+seq+
+                  " and r.projectid="+where+
+                  " and r.sequenceid=f.sequenceid"+
+                  " order by f.sequenceid";
         }
         
         if(criteria.equals(VERIFIED)) {

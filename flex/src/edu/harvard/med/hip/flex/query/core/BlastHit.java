@@ -23,6 +23,21 @@ public class BlastHit {
     public BlastHit() {
     }
     
+    public BlastHit(BlastHit b) {
+        this.matchFlexId = b.getMatchFlexId();
+        this.queryLength = b.getQueryLength();
+        this.subjectLength = b.getSubjectLength();
+        this.outputFile = b.getOutputFile();
+        alignments = new ArrayList();
+        List a = b.getAlignments();
+        if(a != null) {
+            for(int i=0; i<a.size(); i++) {
+                BlastAlignment ba = (BlastAlignment)a.get(i);
+                alignments.add(new BlastAlignment(ba));
+            }
+        }
+    }
+    
     public BlastHit(int queryLength, int subjectLength, List alignments, String outputFile) {
         this.queryLength = queryLength;
         this.subjectLength = subjectLength;

@@ -301,8 +301,8 @@ public class LocDetailParser {
             parser.transferTable("genesymbol_tmp", "genesymbol", conn);
             DatabaseTransaction.commit(conn);
             
-            System.out.println("Enable constraints");
-            parser.enableConstraints("generecord", conn);           
+            //System.out.println("Enable constraints");
+            //parser.enableConstraints("generecord", conn);           
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             System.out.println(ex);

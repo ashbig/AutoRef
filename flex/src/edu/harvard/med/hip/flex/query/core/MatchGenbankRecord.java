@@ -34,7 +34,14 @@ public class MatchGenbankRecord {
         this.matchGenbankId = r.getMatchGenbankId();
         this.genbankAccession = r.getGanbankAccession();
         this.gi = r.getGi();
-        this.matchFlexSequence = r.getMatchFlexSequence();
+        matchFlexSequence = new ArrayList();
+        List mfss = r.getMatchFlexSequence();
+        if(mfss != null) {
+            for(int i=0; i<mfss.size(); i++) {
+                MatchFlexSequence mfs = (MatchFlexSequence)mfss.get(i);
+                matchFlexSequence.add(new MatchFlexSequence(mfs));
+            }
+        }
         this.searchMethod = r.getSearchMethod();
         this.searchResultid = r.getSearchResultid();
         this.locusid = r.getLocusid();

@@ -92,9 +92,9 @@ public class GeneSymbolBlastQueryHandler extends QueryHandler {
                         if(sr.getUnigeneid() != null) {
                             mgr.setUnigene(sr.getUnigeneid());
                         }
-                    }
                     
-                    matchGenbankRecords.addAll(mgrs);
+                        matchGenbankRecords.add(new MatchGenbankRecord(mgr));
+                    }
                 } 
             }
             if(matchGenbankRecords.size() > 0) {

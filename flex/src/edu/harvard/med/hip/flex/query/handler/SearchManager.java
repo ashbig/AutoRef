@@ -102,7 +102,7 @@ public class SearchManager {
             List matchGenbanks = result.getFound();
             if(matchGenbanks != null) {
                 for (int j=0; j<matchGenbanks.size(); j++) {
-                    MatchGenbankRecord mgr = new MatchGenbankRecord((MatchGenbankRecord)matchGenbanks.get(j));
+                    MatchGenbankRecord mgr = (MatchGenbankRecord)matchGenbanks.get(j);
                     
                     mgr.setSearchResultid(result.getSearchResultid());
                     mgr.setMatchGenbankId(++matchGenbankid);

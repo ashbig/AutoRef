@@ -27,6 +27,20 @@ public class BlastAlignment {
     public BlastAlignment() {
     }
     
+    public BlastAlignment(BlastAlignment b) {
+        this.id = b.getId();
+        this.matchFlexId = b.getMatchFlexId();
+        this.evalue = b.getEvalue();
+        this.gap = b.getGap();
+        this.identity = b.getIdentity();
+        this.queryStart = b.getQueryStart();
+        this.queryEnd = b.getQueryEnd();
+        this.subStart = b.getSubStart();
+        this.subEnd = b.getSubEnd();
+        this.score = b.getScore();
+        this.strand = b.getStrand();
+    }
+        
     public BlastAlignment(String evalue, String gap, String identity, 
         int queryStart, int queryEnd, int subStart, int subEnd, 
         String score, String strand) {
