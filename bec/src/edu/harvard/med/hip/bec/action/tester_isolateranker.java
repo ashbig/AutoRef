@@ -40,9 +40,9 @@ public class tester_isolateranker
      
     {
         ArrayList master_container_ids = new ArrayList();
-        master_container_ids.add(new Integer(8));
         master_container_ids.add(new Integer(16));
-     //   master_container_ids.add(new Integer(18));
+      //  master_container_ids.add(new Integer(16));
+     //  master_container_ids.add(new Integer(18));
      // master_container_ids.add(new Integer(19));
         tester_isolateranker runner = new tester_isolateranker();
       
@@ -113,21 +113,22 @@ public class tester_isolateranker
                       CloningStrategy container_cloning_strategy = Container.getCloningStrategy(container_id);
                     BioLinker linker3 = BioLinker.getLinkerById( container_cloning_strategy.getLinker3Id() );
                     BioLinker linker5 = BioLinker.getLinkerById( container_cloning_strategy.getLinker5Id() );
-                    isolate_ranker.setLinker5(linker5);
-                    isolate_ranker.setLinker3(linker3);
+                    
                     if (i_isRunPolymorphismFinder)
                     {
                         isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs,  i_polymorphism_spec);
+                        
                     }
                     else
                     {
                          isolate_ranker = new IsolateRanker(i_fullseq_spec,  i_endreads_spec,constructs);
                     }
+                    isolate_ranker.setLinker5(linker5);
+                    isolate_ranker.setLinker3(linker3);
                     if (oligos[0] != null)
                     {
-                         isolate_ranker.set3pMinReadLength(oligos[0].getLeaderLength() + linker5.getSequence().length() + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION);
-   
-                        isolate_ranker.setForwardReadSence( oligos[0].getOrientation() == Oligo.ORIENTATION_SENSE);
+                         isolate_ranker.set5pMinReadLength(oligos[0].getLeaderLength() + linker5.getSequence().length() + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION);
+                         isolate_ranker.setForwardReadSence( oligos[0].getOrientation() == Oligo.ORIENTATION_SENSE);
                     }
                     if (oligos[1] != null)
                     {
