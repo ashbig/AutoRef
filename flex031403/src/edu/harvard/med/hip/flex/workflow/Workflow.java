@@ -27,6 +27,8 @@ public class Workflow {
     
     public static final int COMMON_WORKFLOW = 1;
     public static final int MGC_PLATE_HANDLE_WORKFLOW = 7;
+    public static final int MGC_GATEWAY_WORKFLOW = 8;
+    public static final int MGC_CREATOR_WORKFLOW = 9;
     
     /** Creates new Workflow */
     public Workflow() {
