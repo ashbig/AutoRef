@@ -38,6 +38,11 @@
     <!-- transformation plate details page -->
     <form-bean      name="transformEntryForm"
                     type="edu.harvard.med.hip.flex.form.TransformDetailsForm"/>
+
+    <!-- gel plate details page -->
+    <form-bean      name="gelEntryForm"
+                    type="edu.harvard.med.hip.flex.form.GelDetailsForm"/>
+
     <!-- Create process plate form bean -->
     <form-bean      name="createProcessPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
@@ -166,6 +171,14 @@
                 scope="session"
                 input="/EnterTransformDetails.jsp">
         <forward name="success" path="/EnterProcessResults.jsp"/>
+    </action>
+
+    <!-- Process gel plate details -->
+    <action     path="/EnterGelDetails"
+                type="edu.harvard.med.hip.flex.action.EnterGelDetailsAction"
+                name="gelEntryForm"
+                scope="request">
+         <forward name="success" path="/EnterProcessResults.jsp"/>
     </action>
 
     <!-- Process the protocol retieval and display -->
