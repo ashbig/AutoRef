@@ -43,7 +43,7 @@
 
         </table>
         <p>
-        <input type=submit value="Submit"> <input type=reset value="Clear">
+        <input type=submit value="Confirm and Print Barcode"> <input type=reset value="Clear">
     </html:form>
 </body>
 </html>
