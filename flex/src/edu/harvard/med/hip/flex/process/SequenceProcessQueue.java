@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.5 2001-05-24 14:49:04 dongmei_zuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.6 2001-05-29 14:46:32 dongmei_zuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -97,7 +97,7 @@ public class SequenceProcessQueue implements ProcessQueue {
                 int sequenceid = s.getId();
                 
                 stmt.setInt(1, protocolid);
-                stmt.setInt(1, sequenceid);
+                stmt.setInt(2, sequenceid);
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (SQLException sqlE) {
@@ -195,24 +195,25 @@ public class SequenceProcessQueue implements ProcessQueue {
         try {
             QueueFactory factory = new StaticQueueFactory();
             SequenceProcessQueue queue = (SequenceProcessQueue)factory.makeQueue("SequenceProcessQueue");
-            Protocol protocol = new Protocol(10, "test", "test");
+            Protocol protocol = new Protocol(1, null, "identify sequences from unigene");
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
-            DatabaseTransaction.executeUpdate("insert into species values('Test Species')", c);
-            DatabaseTransaction.executeUpdate("insert into flexstatus values('NEW')", c);
-            DatabaseTransaction.executeUpdate("insert into flexstatus values('REJECTED')", c);
-            DatabaseTransaction.executeUpdate("insert into flexstatus values('QUESTIONABLE')", c);
-            DatabaseTransaction.executeUpdate("insert into processprotocol values (10, 'test', 'test', null)", c);
+            //DatabaseTransaction.executeUpdate("insert into species values('Test Species')", c);
+            //DatabaseTransaction.executeUpdate("insert into flexstatus values('NEW')", c);
+            //DatabaseTransaction.executeUpdate("insert into flexstatus values('REJECTED')", c);
+            //DatabaseTransaction.executeUpdate("insert into flexstatus values('QUESTIONABLE')", c);
+            //DatabaseTransaction.executeUpdate("insert into processprotocol values (10, 'test', 'test', null)", c);
             
-            for (int i=1; i<5; i++) {
-                DatabaseTransaction.executeUpdate("insert into flexsequence(sequenceid, flexstatus, genusspecies) values("+i+", 'REJECTED', 'Test Species')", c);
-            }
+            //for (int i=1; i<5; i++) {
+            //    DatabaseTransaction.executeUpdate("insert into flexsequence(sequenceid, flexstatus, genusspecies) values("+i+", 'REJECTED', 'Test Species')", c);
+            //}
             
             System.out.println("Insert into queue:");
             for(int i=1; i<5; i++) {
                 System.out.println("Sequence ID: "+i);
-                DatabaseTransaction.executeUpdate("insert into queue(protocolid, dateadded, sequenceid) values(10, sysdate,"+i+")", c);
+                DatabaseTransaction.executeUpdate("insert into queue(protocolid, dateadded, sequenceid) values(1, sysdate,"+i+")", c);
+                c.commit();
             }
             System.out.println("OK");
             LinkedList items = queue.getQueueItems(protocol);
@@ -227,6 +228,7 @@ public class SequenceProcessQueue implements ProcessQueue {
             
             System.out.println("Remove items from queue:");
             queue.removeQueueItems(items, c);
+            c.commit();
             
             System.out.println("Get items from queue:");
             LinkedList newitems = queue.getQueueItems(protocol);
@@ -239,6 +241,7 @@ public class SequenceProcessQueue implements ProcessQueue {
             
             System.out.println("Add items to queue:");
             queue.addQueueItems(items, c);
+            c.commit();
             System.out.println("Get items from queue:");
             newitems = queue.getQueueItems(protocol);
             iter = newitems.listIterator();
@@ -248,18 +251,26 @@ public class SequenceProcessQueue implements ProcessQueue {
                 System.out.println("Sequence ID: "+seq.getId());
             }
             
+            System.out.println("Remove items from queue:");
+            queue.removeQueueItems(items, c);
+            c.commit();
             
+            System.out.println("Get items from queue:");
+            newitems = queue.getQueueItems(protocol);
+            iter = newitems.listIterator();
+            while (iter.hasNext()) {
+                QueueItem item = (QueueItem) iter.next();
+                FlexSequence seq = (FlexSequence)item.getItem();
+                System.out.println("Sequence ID: "+seq.getId());
+            }                       
         } catch (FlexDatabaseException exception) {
             System.out.println(exception.getMessage());
         } catch (FlexProcessException exception) {
             System.out.println(exception.getMessage());
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         } finally {
-            try {
-                c.rollback();
-            } catch (Exception e) {}
-            
-            DatabaseTransaction.closeConnection(c);
-           
+            DatabaseTransaction.closeConnection(c);           
         }
     }
 }

@@ -123,9 +123,9 @@ public class AccessManager {
         try {
             rs = t.executeQuery(sql);
             if(rs.next()) {
-                return false;
-            } else {
                 return true;
+            } else {
+                return false;
             }
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
