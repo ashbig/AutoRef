@@ -26,8 +26,7 @@ import java.io.*;
 public class MgcOligoPlateManager extends OligoPlateManager
 {
     protected static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
-    protected static final String filePath = "/tmp/";
-    //protected static final String filePath = "G:\\";
+    protected static final String filePath = FlexProperties.getInstance().getProperty("tmp");
     protected static final String DELIM = "\t";
     
     private   String                        m_UserName = null;
