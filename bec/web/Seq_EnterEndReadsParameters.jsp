@@ -42,7 +42,7 @@
     <tr>
       <td width="100%"><html:errors/></td>
     </tr>
-	<tr><td><i>If you are not sure about certain parameter settings, leave them unchanged 
+	<tr><td><i>If you are not sure about certain parameter settings, use default settings  
 </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. </td></tr>
   </table>
   </center>
@@ -85,7 +85,7 @@
  
   </td></tr>
   <tr> 
-    <td colspan=2 ><p><b>Mutation penalty for sequence scoring (gene region)</b> </p> 
+    <td colspan=2 ><p><b>Penalty for mutation in the gene region</b> </p> 
      
       <table width="85%" border="0" align="center">
         <tr> 
@@ -112,7 +112,7 @@
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Nonconservative substitution</font></strong></td>
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Non-conservative substitution</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> 
               <input name="ER_NC_H" type="input" id="ER_NC_H" value="50" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
@@ -130,7 +130,7 @@
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Inframe deletion</font></strong></td>
+          <td bgColor="#e4e9f8"><strong><font color="#000080">In-frame deletion</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> 
               <input name="ER_IDEL_H" type="input" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
@@ -139,7 +139,7 @@
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Inframe insertion</font></strong></td>
+          <td bgColor="#b8c6ed"><strong><font color="#000080">In-frame insertion</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> 
               <input name="ER_IINS_H" type="input" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
@@ -157,7 +157,7 @@
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">No translation (e.g., no ATG)</font></strong></td>
+          <td bgColor="#b8c6ed"><strong><font color="#000080">No translation (no ATG)</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> 
               <input name="ER_NOTRANSLATION_H" type="input" id="ER_NOTRANSLATION_H" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
@@ -166,7 +166,7 @@
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Post-elongation (e.g., no stop codon)</font></strong></td>
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Post-elongation (no stop codon)</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> 
               <input name="ER_PLONG_H" type="input" id="ER_PLONG_H" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
@@ -176,7 +176,7 @@
         </tr>
       </table></td>
   </tr>
-  <td colspan=2 ><p><b>Mutation penalty for sequence scoring (linker region)</b> </p> 
+  <td colspan=2 ><p><b>Penalty for mutation in the linker region</b> </p> 
      
       <table width="85%" border="0" align="center">
         <tr> 
@@ -222,105 +222,110 @@
       </table></td>
   </tr>
   <tr><td colspan="2">
-      <p><b>Mutation penalty for sequence scoring (discrepancy introduced by ambiquous 
-        bases)</b> <input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
+      <p><b>Penalty for mutation introduced by ambiguous bases
+</b> <P><input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show </p>
       <p></p>
-	  <DIV ID="divShowHide" STYLE="  position:relative;  clip:rect(0px 120px 120px 0px); ">
-      <table width="85%" border="0" align="center">
-    <tr> 
-          <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base 
-              Confidence </font></strong></div></td>
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High 
-              </font> </strong></div></td>
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low 
-              </font></strong></div></td>
-        </tr>
-        <tr> 
-          <td width="44%" bgcolor="#e4e9f8" ><strong><font color="#000080">Start 
-            codon substitution</font></strong></td>
-          <td width="16%" bgcolor="#e4e9f8"><div align="center"> <input name="ER_NSTART_PASS_H" type="input" id="ER_NSTART_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');"></div></td>
-          <td width="14%"bgcolor="#e4e9f8"><div align="center"> <input name="ER_NSTART_PASS_L" type="input" id="ER_NSTART_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');"> 
-            </div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#b8c6ed"><b><strong><font color="#000080">Stop codon substitution</font></strong></b></td>
-          <td bgColor="#b8c6ed"><div align="center">       
-              <input name="ER_NSTOP_PASS_H" type="input" id="ER_NSTOP_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-             </div></td>
-          <td bgColor="#b8c6ed"><div align="center">  
-              <input name="ER_NSTOP_PASS_L" type="input" id="ER_NSTOP_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-             </div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Substituttion cds 
-            region </font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> 
-              <input name="ER_NCDS_PASS_H" type="input" id="ER_NCDS_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');" >
-            </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> 
-              <input name="ER_NCDS_PASS_L" type="input" id="ER_NCDS_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-            </div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Frameshift Insertion</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> 
-              <input name="ER_NFRAME_PASS_H" type="input" id="ER_NFRAME_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-            </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> 
-              <input name="ER_NFRAME_PASS_L" type="input" id="ER_NFRAME_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-            </div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Inframe Insertion</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> 
-              <input name="ER_NINFRAME_PASS_H" type="input" id="ER_NINFRAME_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-            </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> 
-              <input name="ER_NINFRAME_PASS_L" type="input" id="ER_NINFRAME_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');"> 
-            </div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution 5' 
-            linker region</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> 
-              <input name="ER_N5SUB_PASS_H" type="input" id="ER_N5SUB_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-            </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> 
-              <input name="ER_N5SUB_PASS_L" type="input" id="ER_N5SUB_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-            </div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion 5' linker 
-            region </font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> 
-              <input name="ER_N5INS_PASS_H" type="input" id="ER_N5INS_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
-            </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> 
-              <input name="ER_N5INS_PASS_L" type="input" id="ER_N5INS_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');"> 
-            </div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution 3' 
-            linker region</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> 
-              <input name="ER_N3SUB_PASS_H" type="input" id="ER_N3SUB_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');"> 
-            </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> 
-              <input name="ER_N3SUB_PASS_L" type="input" id="ER_N3SUB_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');"> 
-            </div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion 3' linker 
-            region </font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> 
-              <input name="ER_N3INS_PASS_H" type="input" id="ER_N3INS_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');"> 
-            </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> 
-              <input name="ER_N3INS_PASS_L" type="input" id="ER_N3INS_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');"> 
-            </div></td>
-        </tr>
-		</table></div>
+	  <DIV ID="divShowHide" STYLE="  position:relative;  clip:rect(0px 120px 120px 0px); "> 
+        <table width="85%" border="0" align="center">
+          <tr> 
+            <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base 
+                Confidence </font></strong></div></td>
+            <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High 
+                </font> </strong></div></td>
+            <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low 
+                </font></strong></div></td>
+          </tr>
+          <tr> 
+            <td width="44%" bgcolor="#e4e9f8" ><strong><font color="#000080">Start 
+              codon substitution</font></strong></td>
+            <td width="16%" bgcolor="#e4e9f8"><div align="center"> 
+                <input name="ER_NSTART_PASS_H" type="input" id="ER_NSTART_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+            <td width="14%"bgcolor="#e4e9f8"><div align="center"> 
+                <input name="ER_NSTART_PASS_L" type="input" id="ER_NSTART_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+          <tr> 
+            <td bgColor="#b8c6ed"><b><strong><font color="#000080">Stop codon 
+              substitution</font></strong></b></td>
+            <td bgColor="#b8c6ed"><div align="center"> 
+                <input name="ER_NSTOP_PASS_H" type="input" id="ER_NSTOP_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+            <td bgColor="#b8c6ed"><div align="center"> 
+                <input name="ER_NSTOP_PASS_L" type="input" id="ER_NSTOP_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+          <tr> 
+            <td bgColor="#e4e9f8"><strong><font color="#000080">Substituttion 
+              cds region </font></strong></td>
+            <td bgColor="#e4e9f8"><div align="center"> 
+                <input name="ER_NCDS_PASS_H" type="input" id="ER_NCDS_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');" >
+              </div></td>
+            <td bgColor="#e4e9f8"><div align="center"> 
+                <input name="ER_NCDS_PASS_L" type="input" id="ER_NCDS_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+          <tr> 
+            <td bgColor="#b8c6ed"><strong><font color="#000080">Frameshift Insertion</font></strong></td>
+            <td bgColor="#b8c6ed"><div align="center"> 
+                <input name="ER_NFRAME_PASS_H" type="input" id="ER_NFRAME_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+            <td bgColor="#b8c6ed"><div align="center"> 
+                <input name="ER_NFRAME_PASS_L" type="input" id="ER_NFRAME_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+          <tr> 
+            <td bgColor="#e4e9f8"><strong><font color="#000080">Inframe Insertion</font></strong></td>
+            <td bgColor="#e4e9f8"><div align="center"> 
+                <input name="ER_NINFRAME_PASS_H" type="input" id="ER_NINFRAME_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+            <td bgColor="#e4e9f8"><div align="center"> 
+                <input name="ER_NINFRAME_PASS_L" type="input" id="ER_NINFRAME_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+          <tr> 
+            <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution in 5' 
+              linker region</font></strong></td>
+            <td bgColor="#b8c6ed"><div align="center"> 
+                <input name="ER_N5SUB_PASS_H" type="input" id="ER_N5SUB_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+            <td bgColor="#b8c6ed"><div align="center"> 
+                <input name="ER_N5SUB_PASS_L" type="input" id="ER_N5SUB_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+          <tr> 
+            <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion in 5' linker 
+              region </font></strong></td>
+            <td bgColor="#e4e9f8"><div align="center"> 
+                <input name="ER_N5INS_PASS_H" type="input" id="ER_N5INS_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+            <td bgColor="#e4e9f8"><div align="center"> 
+                <input name="ER_N5INS_PASS_L" type="input" id="ER_N5INS_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+          <tr> 
+            <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution in 3' 
+              linker region</font></strong></td>
+            <td bgColor="#b8c6ed"><div align="center"> 
+                <input name="ER_N3SUB_PASS_H" type="input" id="ER_N3SUB_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+            <td bgColor="#b8c6ed"><div align="center"> 
+                <input name="ER_N3SUB_PASS_L" type="input" id="ER_N3SUB_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+          <tr> 
+            <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion in 3' linker 
+              region </font></strong></td>
+            <td bgColor="#e4e9f8"><div align="center"> 
+                <input name="ER_N3INS_PASS_H" type="input" id="ER_N3INS_PASS_H" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+            <td bgColor="#e4e9f8"><div align="center"> 
+                <input name="ER_N3INS_PASS_L" type="input" id="ER_N3INS_PASS_L" value="0" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+              </div></td>
+          </tr>
+        </table>
+      </div>
 		</td>
   </tr>
 </table>

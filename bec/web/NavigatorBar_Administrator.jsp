@@ -34,12 +34,15 @@ myNavBar1.addMenu(dhtmlMenu);
 
 <% User user = (User)session.getAttribute(Constants.USER_KEY);
 //	System.out.println(user.getUserGroup());
+int user_level = 0;
+if (user.getUserGroup().equals("Researcher")) user_level = 0;
+else if (user.getUserGroup().equals("Researcher2")) user_level = 1;
+else if (user.getUserGroup().equals("Manager")) user_level =2;
+else if (user.getUserGroup().equals("Administrator")) user_level = 3;
+%>
 
-%>
-<% if (!user.getUserGroup().equals("Researcher"))
-{
-    
-%>
+<% if ( user_level > 1)
+{%>
 	dhtmlMenu = new NavBarMenu(150, 290);
 	dhtmlMenu.addItem(new NavBarMenuItem("Configure System", ""));
 	dhtmlMenu.addItem(new NavBarMenuItem("End Reads Evaluation", "Seq_EnterEndReadsParameters.jsp"));
@@ -50,23 +53,22 @@ myNavBar1.addMenu(dhtmlMenu);
 
 dhtmlMenu.addItem(new NavBarMenuItem("Available Vectors Information", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_VECTORS_DEFINITION_INT%>"));
 dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_LINKERS_DEFINITION_INT%>"));
-	myNavBar1.addMenu(dhtmlMenu);
 
+<% if ( user_level == 3){%>
+dhtmlMenu.addItem(new NavBarMenuItem("Database Configuration", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>/SelectDatabaseConfigurationOption.jsp"));
+<%}%>
+myNavBar1.addMenu(dhtmlMenu);
 
 <%}%>
 
-<% if (!user.getUserGroup().equals("Researcher"))
-{
-    
-%>      dhtmlMenu = new NavBarMenu(100, 200);
+<% if ( user_level > 0 )
+{%>      dhtmlMenu = new NavBarMenu(100, 200);
 	dhtmlMenu.addItem(new NavBarMenuItem("Process", "SelectProcess.jsp"));
 	myNavBar1.addMenu(dhtmlMenu);
 <%}%>
 
-<% if (!user.getUserGroup().equals("Researcher"))
-{
-    
-%>      dhtmlMenu = new NavBarMenu(100, 200);
+<% if (user_level > 2)
+{%>      dhtmlMenu = new NavBarMenu(100, 200);
 	dhtmlMenu.addItem(new NavBarMenuItem("Trace Files", ""));
        <!-- dhtmlMenu.addItem(new NavBarMenuItem ("Create File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create file for sequencing facility"));-->
         dhtmlMenu.addItem(new NavBarMenuItem("Create Renaming File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create renaming file for trace files"));
@@ -74,20 +76,25 @@ dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "<%= edu.h
 		
 myNavBar1.addMenu(dhtmlMenu);
 <%}%>
-
+<% if (user_level > 0)
+{%>
 dhtmlMenu = new NavBarMenu(100, 220);
 dhtmlMenu.addItem(new NavBarMenuItem("Search", ""));
 dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=container Process History"));
 dhtmlMenu.addItem(new NavBarMenuItem("Container Description", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_TITLE%>=container Description"));
 dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_TITLE%>=container Results"));
 dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "InitiateProcess.jsp?forwardName=<%=Constants.PROCESS_SHOW_CLONE_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=clone History"));
+<% if (user_level > 1){%>
+dhtmlMenu.addItem(new NavBarMenuItem("System Configuration", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_SPECIFICATION_INT%>"));
+<%}%>
+<% if (user_level > 1){%>
 dhtmlMenu.addItem(new NavBarMenuItem("Available Containers", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_CONTAINERS_INT%>"));
-
+<%}%>
 dhtmlMenu.addItem(new NavBarMenuItem("Run Report", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>/SelectReport.jsp"));
-
-
 myNavBar1.addMenu(dhtmlMenu);
+<%}%>
 
+<!-- for any user -->
 dhtmlMenu = new NavBarMenu(100, 220);
 dhtmlMenu.addItem(new NavBarMenuItem("Help", ""));
 dhtmlMenu.addItem(new NavBarMenuItem("ACE Help", "Help_GeneralHelp.jsp"));
@@ -141,7 +148,7 @@ function init() {
 <table width="90%" border="0" cellspacing="2" cellpadding="2">
   <tr> 
     <td width="80%"><font color="#3333CC"> 
-      <h1><strong>Automatic Evaluation of Clones (ACE)</strong></h1>
+      <h1><strong>Automatic Clones Evaluation  (ACE)</strong></h1>
       </font></td>
     <!--<td > <img align="top" border="0" src="./jpg/earth.gif" width=76 height="76" > -->
     </td>

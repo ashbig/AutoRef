@@ -1,7 +1,18 @@
 <%@page contentType="text/html"%>
 <%@ page errorPage="ProcessError.do"%>
 <html>
-<head><title>JSP Page</title></head>
+<head><title>JSP Page</title>
+<style>
+<!--
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+</head>
 <body>
 <jsp:include page="NavigatorBar_Administrator.jsp" />
 	<p><P>
@@ -24,89 +35,95 @@
 </div>
 
 
-
 <table width="74%" border="0" cellpadding="2" cellspacing="2" align="center">
   <tr> <td>
-<p><strong>ACE (Automatic Clones Evaluation)</strong> - modular software package 
-  to automate and facilitate the process of biologically evaluating cDNA clones. 
-  ACE is designed to perform the following operations:</p>
-<ul>
-  <li><strong><em>Clone Sequence Assembly</em></strong> - First step is presorting 
-    the sequence reads from these nearly identical clones before assembling the 
-    sequences, otherwise it will appear to most sequence assembly software that 
-    they all came from the same clone. (This is because assembly software was 
-    originally developed for genomic sequencing and therefore assumes that all 
-    of the multiple sequence reads belong to the same genome). Second step is 
-    assembling of clone sequence. 
-    <p></p>
-  </li>
-  <li><em><strong>Discrepancies annotation</strong></em> - ACE evaluates each clone 
-    in comparison to the expected reference sequence to categorize all discrepancies 
-    and determines if the clones are acceptable for protein expression based on 
-    user specified criteria. 
-    <P></P>
-  </li>
-  <li> <strong><em>Isolates Picking</em></strong> &#8211; In situations where 
-    multiple isolates for the same gene have been created, it is advantageous 
-    to sequence the isolates sequentially (instead of in parallel) in order to 
-    save the costs of sequencing clones unnecessarily. ACE approach here is to 
-    sequence all clones with end reads only and then to pick a &#8220;best candidate&#8221; 
-    for full-length sequencing. 
-    <P></P>
-  </li>
-  <li><strong><em>Primer Design for Internal Sequencing</em></strong> &#8211; 
-    Protein expression cloning projects often use primer walking as a sequencing 
-    strategy because the clones are rarely in vectors that are optimal for other 
-    sequencing methods, such as transposon insertion. Additionally, the ability 
-    to use the same set of primers on multiple isolates of the same gene lowers 
-    the relative cost of this approach. Moreover, the expected sequence of the 
-    clones is known, so the primers can be designed and acquired in advance. 
-    <P></P>
-  </li>
-  <li><strong><em>Gap Mapping</em></strong> - would the sequence assembly was 
-    not successful as a result of wrong primers' placement or failure of some sequencing 
-    reads ACE is able to locates segments of sequence that require additional 
-    reads and design primers to cover these regions only.</li>
-</ul>
+  <p class="MsoNormal"><b>ACE, the Automatic Clone Evaluation software, 
+  facilitates the process of making sequence-verified, single-gene cDNA 
+  collections.</b></p>
+  <p class="MsoNormal"><b>ACE can help you to answer the following questions:</b></p>
+      <p class="MsoNormal" style="margin-bottom: 0in">&nbsp;
+      <ul style="margin-top: 0in; margin-bottom: 0in" type="disc">
+        <li class="MsoNormal"><i>Which isolates match the reference sequence?</i></li>
+        <li class="MsoNormal"><i>What base-pair changes, insertions, or deletions 
+          are detected?</i></li>
+        <li class="MsoNormal"><i>Which of several isolates is the best one to 
+          choose for the cDNA collection?</i></li>
+      </ul>
+  <p class="MsoNormal"><b>To do this, ACE software tools can perform the 
+  following steps:</b></p>
+  <p class="MsoNormal"><i>Clone Sequence Assembly</i></p>
+  <p class="MsoNormal">To assemble sequences for each of your clone isolates, 
+  you'll first import sequence trace files into ACE for assembly and quality 
+  control.&nbsp; In the early stages of clone evaluation, the trace files will 
+  probably be end reads that is, sequences obtained with vector-specific 
+  primers that may or may not cover the entire clone.&nbsp; Later, the trace files 
+  will include internal sequence reads.&nbsp; The ACE &quot;Assembler&quot; tool will 
+  assemble sequences so they can be compared to reference sequences.</p>
+  <p class="MsoNormal"><i>Define gaps in the sequence (gap mapping)</i></p>
+  <p class="MsoNormal">After end-reads and have been imported and assembled, you 
+  can use the Gap Mapper tool to identify gaps in the sequence (for example, for 
+  large cDNA clones where end-reads with vector-specific primers will not cover the 
+  whole clone).</p>
+  <p class="MsoNormal"><i>Primer Design for Internal Sequencing</i></p>
+  <p class="MsoNormal">After end-reads have been imported and assembled, you can 
+  use the Primer Designer tool to design sequence-specific primers for your 
+  clone and create a digital array of the primers in an appropriate format (such 
+  as 96-well plate format).&nbsp; The sequence reads obtained with internal primers 
+  will then be used for another round of sequence assembly and evaluation.</p>
+  <p class="MsoNormal"><i>Evaluate Clones based on Sequence Quality and 
+  Discrepancies</i></p>
+  <p class="MsoNormal">After each round of sequencing (end-reads or internal 
+  primers), ACE can assemble sequences and use your criteria to (1) throw out 
+  low-quality sequence regions and (2) identify clones that have mutations or&nbsp; 
+    discrepancies as compared with the reference sequence.&nbsp; </p>
+  <p class="MsoNormal"><i>Choose the Best Clones to send on through the pipeline 
+  ( Isolate Ranking )</i></p>
+  <p class="MsoNormal">After assembling sequences and identifying discrepancies, 
+  you can ask ACE to accept or reject clones based on various user-defined 
+  parameters. You can choose to throw out isolates for which high-quality 
+  sequences reveal the presence of non-conservative amino acid substitutions, 
+  non-sense mutations, or other unacceptable discrepancies.</p>
 <p><strong>ACE Tutorial </strong>(for <strong>HIP users ONLY</strong>)</p>
 <ol>
-  <li>Create sequencing plate and send it for sequencing.</li>
-  <li>Inform informatics team that plates have been send for sequencing. The following 
-    information should be provided: (a) plate labels (case sensitive); (b) sequencing 
-    facility name.</li>
+        <li>Create a sequencing plate and send for sequencing.</li>
+        <li>Let the informatics team know that you have sent plates for sequencing. 
+          Provide the following information: (1) Plate labels (case sensitive); 
+          (2) the name of sequencing facility you are using.</li>
   <li>Get conformation from informatics team that database reflects request 
     from step 2.</li>
-  <li><a name="back_upload_plates">&nbsp;</a><a href="#upload_plates">Upload plates 
-    information</a> into ACE (Process-&gt;Upload template plates information). 
-    Wait for e-mail that confirms plate upload.</li>
-  <li><a name="back_order_er">&nbsp;</a><a href="#order_er">Inform ACE which end 
-    reads were ordered </a>(forward, reverse, both) and which primers have been 
-    used by go to Process-&gt; Put request for end reads sequencing. </li>
-  <li><a name="back_submit_trace_files">&nbsp;</a><a href="#submit_trace_files">Submit 
-    trace files. </a></li>
-  <li><a name="back_er_wrapper">&nbsp;</a><a href="#er_wrapper">Run End reads 
-    Wrapper</a></li>
-  <li><a name="back_assembler">&nbsp;</a><a href="#assembler">Run assembler for 
-    end reads</a></li>
-  <li><a name="back_is_ranker">&nbsp;</a><a href="#is_ranker">Run Isolate Runker</a></li>
-  <li>Get <a name="back_general_report">&nbsp;</a><a href="#general_report">cloneids 
-    </a>for the best candidate for full-length sequencing, <em> e.i.</em> clones 
-    that were evaluated by ACE as acceptable by were not assembled based on end 
-    reads.</li>
-  <li><a name="back_primer_ds">&nbsp;</a><a href="#primer_ds">Design primers for 
-    clones</a></li>
-  <li>Submit internal reads trace files and <a href="#assembler">assemble</a> 
-    sequences (see step 6)</li>
-  <li>For clone that failed assembly find out wether <a name="back_er_failed_report">&nbsp;</a><a href="#er_failed_report">end 
-    reads should be repeated </a> to get assembled sequence and repeat them.</li>
-  <li><a name="back_gap_mapper">&nbsp;</a><a href="#gap_mapper">Run Gap Mapper 
-    </a>for not assembled clones</li>
-  <li><a href="#primer_ds">Design primers</a> to cover gaps in sequence coverage 
-    and repeate steps 6, 12.</li>
-  <li>For clones that have low quality discrepancy run <a name="back_lqr">&nbsp;</a><a href="#lqr">Low Quality 
-    Regions Finder</a>, design primers to cover low quality regions and repeat 
-    steps 6, 12 and 17.</li>
-  <li>Discrepancy finder can be run at any time to annotate clone sequence discrepancies.<br>
+        <li><a name="back_upload_plates">&nbsp;</a><a href="#upload_plates">Upload 
+          plates information</a> into ACE (select &quot;Upload template plates 
+          information&quot; from Process menu). Submit requested information and 
+          wait for e-mail that the plates were uploaded.</li>
+        <li><a name="back_order_er">&nbsp;</a><a href="#order_er">Enter into ACE 
+          which end reads were ordered </a>(forward, reverse, or both) and what 
+          primers were used (choose from the list). </li>
+        <li><a name="back_submit_trace_files">&nbsp;</a><a href="#submit_trace_files">Submit 
+          trace files. </a>( be sure that you have used the correct naming convention).</li>
+        <li><a name="back_er_wrapper">&nbsp;</a><a href="#er_wrapper">Run &quot;End 
+          reads Wrapper&quot;</a> to evaluate end readds.</li>
+        <li><a name="back_assembler">&nbsp;</a><a href="#assembler">Run &quot;Assembler 
+          for end reads</a>&quot;.</li>
+        <li><a name="back_is_ranker">&nbsp;</a><a href="#is_ranker">Run &quot;Isolate 
+          Runker</a>&quot; to determined which clones to send through the pipeline.</li>
+        <li>Ask ACE to provide list of <a name="back_general_report">&nbsp;</a><a href="#general_report">cloneids 
+          </a>for the best candidate to continue to working on..</li>
+        <li>Use &quot;Primer Designer&quot; tool to <a name="back_primer_ds">&nbsp;</a><a href="#primer_ds">design 
+          internal primers for clones</a></li>
+        <li>Submit you trace files and use &quot;Assembler&quot; to <a href="#assembler">assemble</a> 
+          sequences (see step 6).</li>
+        <li>Ask ACE to provide list of Clone IDs for which <a name="back_er_failed_report">&nbsp;</a><a href="#er_failed_report">end 
+          reads should be repeated </a> in order to get an assembled sequence.</li>
+        <li><a name="back_gap_mapper">&nbsp;</a><a href="#gap_mapper">Run Gap 
+          Mapper </a> to define regions where you still need more primers to get 
+          assembled sequence for the clones.</li>
+        <li>Use &quot;Primer Dsigner&quot; to <a href="#primer_ds">Design primers</a> 
+          to cover gaps in sequence coverage and repeate steps 6, 12.</li>
+        <li>Ask for a list of clones with low quality discrepancis run <a name="back_lqr">&nbsp;</a><a href="#lqr">Low 
+          Quality Regions Finder</a>, design primers to cover low quality regions 
+          and repeat steps 6, 12 and 17.</li>
+        <li>AT ANY TIME - run &quot;Discrepancy finder&quot; to annotate clone 
+          sequences .<br>
   </li>
 </ol>
 <hr>

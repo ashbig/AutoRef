@@ -1,6 +1,8 @@
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%@ page import="java.util.*" %>
-<script defer="defer" type="text/javascript"><!--
+<script defer="defer" type="text/javascript">
+
+<!--
   
 /*Start of form validation: items not empty*/
 
@@ -111,33 +113,33 @@ if ( isPlateLabel )
 { 
     cells[current_entity] = "<strong><input type='radio' name='item_type' value='"+ Constants.ITEM_TYPE_PLATE_LABELS +"'";
     if (isPlateLabelChecked) cells[current_entity] += "checked";
-cells[current_entity++] += ">Container Labels</strong>";
+cells[current_entity++] += ">Plate Labels</strong>";
 
 }
  if ( isCloneId)
 {
     cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_CLONEID+"'";
     if (isCloneIdChecked)cells[current_entity] += "checked";
-    cells[current_entity++] += ">Clone Id </strong>";
+    cells[current_entity++] += ">Clone ID </strong>";
 
 }
  if ( isACESequenceId )
 {
     cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_BECSEQUENCE_ID+"'";
     if (isACESequenceIdChecked) cells[current_entity] += "checked";
-    cells[current_entity++] += ">ACE Sequence Id </strong>";
+    cells[current_entity++] += ">ACE Sequence ID </strong>";
 
 }
  if ( isFLEXSequenceId )
 {
     cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_FLEXSEQUENCE_ID+"'";
     if (isFLEXSequenceIdChecked) cells[current_entity] += "checked";
-    cells[current_entity++] += ">FLEX Sequence Id</strong>";
+    cells[current_entity++] += ">FLEX Sequence ID</strong>";
 
 }
 if ( isProjectList )
  {
-    cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_PROJECT_NAME+"'";
+    cells[current_entity] = "<strong>  <input disabled type='radio' name='item_type' value='"+Constants.ITEM_TYPE_PROJECT_NAME+"'";
     if (isProjectListChecked) cells[current_entity] += "checked";
   cells[current_entity++] += ">Project Name</strong>";
 
@@ -164,4 +166,3 @@ if ( isProjectList )
     <td align="center" colspan=2><textarea name="items"  rows="10"></textarea></td>
   </tr>
 </table>
-

@@ -41,8 +41,8 @@
       <td width="100%"><html:errors/></td>
     </tr>
 	<tr>
-        <td><i>If you are not sure about certain parameter settings, leave them 
-          unchanged </i> <a href="<%=edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Help_ConfigureSystem.jsp">[parameter help file]</a>. 
+        <td><i>If you are not sure about certain parameter settings use default settings 
+           </i> <a href="<%=edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Help_ConfigureSystem.jsp">[parameter help file]</a>. 
           </i></td>
       </tr>
   </table>
@@ -98,12 +98,12 @@ else if (sets.size() > 0 )
       
       <table width="85%" border="0" align="center">
         <tr> 
-          <td bgcolor="#1145A6"><div align="left"><strong><font color="#FFFFFF">Threshold</font></strong></div></td>
+          <td bgcolor="#1145A6"><div align="left"><strong><font color="#FFFFFF">&nbsp;</font></strong></div></td>
           <td bgcolor="#1145A6" colspan=2><div align="center"><strong><font color="#FFFFFF">PASS 
               </font></strong></div></td>
           <td bgcolor="#1145A6"colspan=2><div align="center"><strong><font color="#FFFFFF">FAIL 
               </font></strong></div></td>
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Ignor 
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Ignore 
               if polymorphism </font></strong></div></td>
         </tr>
         <tr> 
@@ -153,7 +153,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Nonconservative 
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Non-conservative 
             substitution</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_NC_PASS_H")%> 
             </div></td>
@@ -192,7 +192,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Inframe deletion</font></strong></td>
+          <td bgColor="#e4e9f8"><strong><font color="#000080">In-frame deletion</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_PASS_H")%></div></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_PASS_L")%></div></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_FAIL_H")%> 
@@ -209,7 +209,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Inframe insertion</font></strong></td>
+          <td bgColor="#b8c6ed"><strong><font color="#000080">In-frame insertion</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_PASS_H")%></div></td>
           <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_PASS_L")%></div></td>
           <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_FAIL_H")%></div></td>
@@ -244,8 +244,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">No translation (e.g., 
-            no ATG)</font></strong></td>
+          <td bgColor="#b8c6ed"><strong><font color="#000080">No translation (no ATG)</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_PASS_H")%></div></td>
           <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_PASS_L")%></div></td>
           <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_FAIL_H")%> 
@@ -263,8 +262,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Post-elongation(e.g., 
-            no stop codon)</font></strong></td>
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Post-elongation (no stop codon)</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_PASS_H")%> 
             </div></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_PASS_L")%> 
@@ -291,7 +289,7 @@ else if (sets.size() > 0 )
       <p></p>
       <table width="85%" border="0" align="center">
         <tr> 
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Threshold</font></strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">&nbsp;</font></strong></div></td>
           <td bgcolor="#1145A6" colspan=2><div align="center"><strong><font color="#FFFFFF">PASS 
               </font></strong></div></td>
           <td bgcolor="#1145A6"colspan=2><div align="center"><strong><font color="#FFFFFF">FAIL 
@@ -299,7 +297,7 @@ else if (sets.size() > 0 )
         </tr>
         <tr> 
           <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base 
-              Confidence </font></strong></div></td>
+              Confidence: </font></strong></div></td>
           <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High 
               </font> </strong></div></td>
           <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low 
@@ -376,7 +374,7 @@ else if (sets.size() > 0 )
  ">
       <table width="85%" border="0" align="center">
         <tr> 
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Threshold</font></strong></div></td>
+          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">&nbsp;</font></strong></div></td>
           <td bgcolor="#1145A6" colspan=2><div align="center"><strong><font color="#FFFFFF">PASS 
               </font></strong></div></td>
           <td bgcolor="#1145A6"colspan=2><div align="center"><strong><font color="#FFFFFF">FAIL 
@@ -413,7 +411,7 @@ else if (sets.size() > 0 )
           <td bgColor="#b8c6ed"><div align="center">      <%= spec.getParameterByNameString("FS_NSTOP_FAIL_L" )%> </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Substituttion cds 
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Substitution cds 
             region </font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_NCDS_PASS_H" )%> 
             </div></td>
@@ -447,7 +445,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution 5' 
+          <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution in 5' 
             linker region</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_N5SUB_PASS_H")%> 
             </div></td>
@@ -459,7 +457,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
 		<tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion 5' linker 
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion in 5' linker 
             region </font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_N5INS_PASS_H" )%> 
             </div></td>
@@ -471,7 +469,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution 3' 
+          <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution in 3' 
             linker region</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_N3SUB_PASS_H")%> 
             </div></td>
@@ -483,7 +481,7 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
 		<tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion 3' linker 
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion in 3' linker 
             region </font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_N3INS_PASS_H" )%> 
             </div></td>
@@ -500,12 +498,12 @@ else if (sets.size() > 0 )
   <tr><td colspan="2">&nbsp;</td></tr>
   <tr> 
     <td  nowrap bgColor="#b8c6ed"><strong><font color="#000080">Maximum number 
-      of ambiquous bases per 100 bases:</font></strong></td>
+      of ambiguous bases per 100 bases:</font></strong></td>
     <td  align="left"bgColor="#b8c6ed" nowrap><%= spec.getParameterByNameString("FS_N_100")%></td>
   </tr>
   <tr> 
-    <td width="64%"  nowrap bgColor="#e4e9f8"> <strong><font color="#000080">Max 
-      number of consequative ambiquous bases :</font></strong></td>
+    <td width="64%"  nowrap bgColor="#e4e9f8"> <strong><font color="#000080">Maximum 
+      number of consecutive ambiguous bases :</font></strong></td>
     <td width="26%"  align="left" nowrap bgColor="#e4e9f8"><%= spec.getParameterByNameString("FS_N_ROW")%></td>
   </tr></tr>
 </table>

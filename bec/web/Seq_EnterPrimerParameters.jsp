@@ -132,7 +132,7 @@
           <td width="25%" height="1" bgColor="#e4e9f8"> <p><b>Min:</b> 
               <input type="text" name="P_primer_min" size="20" value="18" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
-          <td width="25%" height="1" bgColor="#e4e9f8"> <p><b>Opt:</b> 
+          <td width="25%" height="1" bgColor="#e4e9f8"> <p><b>Optimal:</b> 
               <input type="text" name="p_primer_opt" size="20" value="21" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
           <td width="25%" height="1" bgColor="#e4e9f8"> <p><b>Max:</b> 
@@ -145,7 +145,7 @@
           <td width="25%" height="26"  bgcolor="#b8c6ed"> <p><b>Min: </b> 
               <input type="text" name="p_primer_tm_min" size="20" value="57" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
-          <td width="25%" height="26"  bgcolor="#b8c6ed"> <p><b>Opt:</b> 
+          <td width="25%" height="26"  bgcolor="#b8c6ed"> <p><b>Optimal:</b> 
               <input type="text" name="p_primer_tm_opt" size="20" value="60" onBlur="checkNumeric(this,5,100,'','','');">
             </p></td>
           <td width="25%" height="26"  bgcolor="#b8c6ed"> <p><b>Max:</b>&nbsp; 
@@ -158,7 +158,7 @@
           <td width="25%" height="1" bgColor="#e4e9f8" valign="top"> <p><b>Min:</b>&nbsp; 
               <input type="text" name="p_primer_gc_min" size="20" value="30">
             </p></td>
-          <td width="25%" height="1" bgColor="#e4e9f8" valign="top"> <p><b>Opt:</b> 
+          <td width="25%" height="1" bgColor="#e4e9f8" valign="top"> <p><b>Optimal:</b> 
               <input type="text" name="p_primer_gc_opt" size="20" value="50">
             </p></td>
           <td width="25%" height="1" bgColor="#e4e9f8" valign="top"> <p><b>Max:</b>&nbsp; 

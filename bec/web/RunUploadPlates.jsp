@@ -55,7 +55,7 @@
   <tr> 
 		<td>
 
-<strong>Upload plate information: </strong><p></p></td>
+<strong>Enter palte names here: </strong><p></p></td>
 <td>
  <textarea name="plate_names" id="plate_names" rows="10">
  </textarea>
@@ -70,7 +70,7 @@
   </strong> </td> </tr>
   <tr><td>&nbsp;</td></tr>
   <tr>
-    <td colspan="2" bgcolor="#1145A6" height="29"> <font color="#FFFFFF"><strong>Common parameters </strong></font> 
+    <td colspan="2" bgcolor="#1145A6" height="29"> <font color="#FFFFFF"><strong>Choose common parameters </strong></font> 
     </td>
   </tr>
 <tr> 

@@ -85,20 +85,20 @@ else if (sets.size() > 0 )
     <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("SW_Q_NUMBER_LOW_QUALITY_BASES")%></td>
   </tr>
 <tr> 
-    <td bgColor="#b8c6ed"><font color="#000080"><b>Max number of consequative low-quality bases (not implemented):</font></b> </td>
+    <td bgColor="#b8c6ed"><font color="#000080"><b>Max number of consecutive low-quality bases (not implemented yet):</font></b> </td>
     <td bgColor="#b8c6ed"><%= spec.getParameterByNameString("SW_Q_N_LOW_QUALITY_BASES_CONQ")%></td>
   </tr>
 
 <tr> 
-    <td bgColor="#e4e9f8"><b><font color="#000080">Window size for ambiquous bases trimming (not implemented):</font></b> </td>
+    <td bgColor="#e4e9f8"><b><font color="#000080">Window size for ambiguous bases trimming (not implemented yet):</font></b> </td>
     <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("SW_A_WINDOW_SIZE") %> </td>
   </tr>
 <tr> 
-    <td bgColor="#b8c6ed"><b><font color="#000080">Max number of ambiquous bases (not implemented):</font></b> </td>
+    <td bgColor="#b8c6ed"><b><font color="#000080">Max number of ambiguous bases (not implemented yet):</font></b> </td>
     <td bgColor="#b8c6ed"><%= spec.getParameterByNameString("SW_A_NUMBER_BASES") %></td>
   </tr>
 <tr> 
-    <td bgColor="#e4e9f8"><b><font color="#000080">Max number of consequative ambiquous bases (not implemented):</font></b> </td>
+    <td bgColor="#e4e9f8"><b><font color="#000080">Max number of consecutive ambiguous bases (not implemented yet):</font></b> </td>
     <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("SW_A_N_LOW_QUALITY_BASES_CONQ") %> </td>
   </tr>
 <TR><TD COlspan=2>&nbsp</TD></TR>

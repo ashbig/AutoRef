@@ -15,6 +15,7 @@
 <html>
 
 <head>
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
 
 <title> <bean:message key="bec.name"/> : <%=Constants.JSP_TITLE%></title>
   

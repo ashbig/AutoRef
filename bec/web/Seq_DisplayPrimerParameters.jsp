@@ -39,7 +39,7 @@
       <td width="100%"><html:errors/></td>
     </tr>
 	<tr>
-        <td><i>Prameter Definition </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. 
+        <td><i>Parameter Definition </i> <a href="Help_ConfigureSystem.jsp">[parameter help file]</a>. 
           </i></td>
       </tr>
   </table>
@@ -71,13 +71,13 @@ else
   </tr>
   <tr> 
     <td colspan="4" height="48"  bgcolor="#1145A6"> <font color="white" size="4"> 
-      <b>Primer Picking Parameters</b></font></td>
+      <b>Primer Design Parameters</b></font></td>
   </tr>
   <tr> 
     <td width="35%" valign="top" height="1" bgColor="#e4e9f8" > <font color="#000080"><b>Primer 
       Length (bp)</b></font></td>
     <td width="20%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_min".toUpperCase()) %></font></p></td>
-    <td width="20%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Opt:</b> 
+    <td width="20%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Optimal:</b> 
         <%= spec.getParameterByNameString("p_primer_opt".toUpperCase())%></font></p></td>
     <td width="25%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Max:</b> 
         <%= spec.getParameterByNameString("p_primer_max".toUpperCase())%></font></p></td>
@@ -87,15 +87,15 @@ else
       Tm (°C)</b></font></td>
     <td width="20%" height="26" bgcolor="#b8c6ed"> <p><font color="#000080"><b>Min: 
         </b><%= spec.getParameterByNameString("p_primer_tm_min".toUpperCase())%></font></p></td>
-    <td width="20%" height="26"bgcolor="#b8c6ed"> <p><font color="#000080"><b>Opt:</b> 
+    <td width="20%" height="26"bgcolor="#b8c6ed"> <p><font color="#000080"><b>Optimal:</b> 
         <%= spec.getParameterByNameString("p_primer_tm_opt".toUpperCase())%></font></p></td>
     <td width="25%" height="26" bgcolor="#b8c6ed"> <p><font color="#000080"><b>Max:</b><%= spec.getParameterByNameString("p_primer_tm_max".toUpperCase())%></font></p></td>
   </tr>
   <tr> 
     <td width="35%" height="1" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Primer 
-      GC%</b></font></td>
+      %GC</b></font></td>
     <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></p></td>
-    <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Opt:</b> 
+    <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Optimal:</b> 
         <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></font></p></td>
     <td width="25%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Max:</b> 
         <%= spec.getParameterByNameString("p_primer_gc_max".toUpperCase())%></font></p></td>
@@ -154,13 +154,13 @@ Distance between sequencing primer and start of high quality read length</b></fo
 
 	
 if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_ONE_STRAND_FORWARD) ))
-{ %> Single Strand (Coding strand, forward primers)      <%}
+{ %> Single Strand (forward primers)      <%}
 else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_ONE_STRAND_REVERSE) ))
-{%>Single Strands(Compliment to coding strand, reverse primers only)      <%}
+{%>Single Strands (reverse primers only)      <%}
 else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_BOTH_STRAND ) ))
-{%>Both Strands(Both forward and reverse primers)      <%}
+{%>Both Strands (Both forward and reverse primers)      <%}
 else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE) ))
-{%>Both Strands(Both forward and reverse primers, double coverage)      <%}%>
+{%>Both Strands (Both forward and reverse primers, double coverage)      <%}%>
   </p></b> 
     </td>
   </tr>

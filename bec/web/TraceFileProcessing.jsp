@@ -121,7 +121,7 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
 else if ( forwardName_int == Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER)
 {%>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td>Please specify renaming file</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
+<tr><td>Enter the renaming file name</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
 <%if ( BecProperties.getInstance().isInDebugMode() ) 
 {%>
 
@@ -138,7 +138,7 @@ else if ( forwardName_int == Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER)
 else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER)
 {%>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td><b>Please specify maping file(format sequencing facility plate name&nbsp; &nbsp;&nbsp;FLEX label)</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
+<tr><td><b>Please specify maping file(format: sequencing facility plate name&nbsp; &nbsp;&nbsp;FLEX plate label)</td><td><input type="file" name="fileName" id="fileName" value="">		</td></tr>
 <%if ( BecProperties.getInstance().isInDebugMode() ) 
 {%>
 
@@ -155,14 +155,14 @@ else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFIL
 </td></tr></table>
 <tr><td>&nbsp;</td></tr>
 </td></tr>
-<tr><td><b>Please specify read type </td>
+<tr><td><b>Please specify the read type </td>
 <td><input type=radio name=read_type value="<%= Constants.READ_TYPE_ENDREAD_STR%>" checked>End Read
 <input type=radio name=read_type value="<%= Constants.READ_TYPE_INTERNAL_STR%>" >Internal Read
 </td></tr>
 
 </table>
 <%} %>
-<div align="center"> <P></P><input type="SUBMIT" name="Submit"></div>
+<div align="center"> <P></P>  <input type="submit" name="Submit" value="Submit"></div>
 
 
 </form>

@@ -7,7 +7,13 @@
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.util_objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
+<%@ page import="edu.harvard.med.hip.bec.action_runners.*" %>
 <%@ page import="java.util.*" %>
+
+<head>
+<script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
+</head>
+
  <%
 Object forwardName = null;
 if ( request.getAttribute("forwardName") != null)
@@ -31,21 +37,49 @@ switch( forwardName_int)
 case Constants.PROCESS_SHOW_CLONE_HISTORY :{ break;}
 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:{
 
-additional_jsp = "<tr><td colspan='2'><table border =0 width='100%'>"
+additional_jsp_buffer.append("<tr><td colspan='2'><table border =0 width='100%'>");
+additional_jsp_buffer.append("<tr><td colspan=2  bgColor='#1145A6' ><font color='#FFFFFF'><strong>Primers selection rule  </strong></font> </td></tr>");
+additional_jsp_buffer.append("<tr><td> <input checked type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COOLECTION_ONLY+"> <b>Only primers designed for Stretch Collections</td></tr>");
+additional_jsp_buffer.append("<tr><td>  <input  type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_REFSEQ_ONLY+" ><b> Only primers designed for Refernce Sequence</td></tr> ");
+additional_jsp_buffer.append("<tr><td>  <input  type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COLLECTION_REFSEQ+" ><b> Primers designed for Stretch Collections and Reference Sequence</td></tr>");
+
+additional_jsp_buffer.append("<tr><td colspan=2 bgColor='#1145A6' ><font color='#FFFFFF'><strong><P>Primers placement rule </strong></font> </td></tr>");
+additional_jsp_buffer.append("<tr><td> <input  type=RADIO name='oligo_placement_format' value="+ PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER+" checked><b>All primers for clone together </td></tr>");
+//+"<tr><td>  <input disabled type=RADIO name='oligo_placement_format' value="+ PrimerOrderRunner.PLACEMENT_FORMAT_N_PRIMER+" ><b><i>Nth</i> primer for clone. Primer number (ordered by position from 5p end)"
+//+"  <input type=text value='1' name='primer_number'  >";
+additional_jsp_buffer.append("<tr><td><strong>Place first primer in well:</strong></td><td> <input  type=text name='first_well' value='B01' ></td></tr>");
+additional_jsp_buffer.append("<tr><td><strong>Place last primer in well:</strong></td><td> <input  type=text name='last_well' value='G12' ></td></tr></table></td></tr>");
+
+//for company order file
+
+additional_jsp_buffer.append("<tr><td colspan=2 bgColor='#1145A6' ><font color='#FFFFFF'><strong><P>");
+additional_jsp_buffer.append("<input type='checkbox' name='show' value='1' checked onclick= \"javascript:showhide('divShowHide', this.checked); \">");
+additional_jsp_buffer.append("Create order file</strong></font> </td></tr>");
+additional_jsp_buffer.append("\n<tr><td><DIV  ID='divShowHide' STYLE='position:relative;  clip:rect(0px 120px 120px 0px);'> ");
+additional_jsp_buffer.append(" \n<table width='85%' border='0' align='center'>");
+additional_jsp_buffer.append("\n <tr> <td align='center' bgColor='#e4e9f8'><strong>Column Content </strong></td><td bgColor='#e4e9f8' align='center'><strong>Column Number </strong></td></tr>");
+additional_jsp_buffer.append("\n <tr> <td><strong> Primer Sequence</strong></td><td><input size='2' type='text' name='primer_sequence' value=0 onBlur= \";checkNumeric(this,0,30,'','',''); \"> </td></tr>");
+
+   additional_jsp_buffer.append("\n <tr> <td><strong> Primer Name (Sample Id)</strong></td><td><input type='text' size='2' name='primer_name' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"> </td></tr>");
+
+additional_jsp_buffer.append("\n <tr> <td><strong>Primer Column</strong> </td><td><input type='text' size='2' name='primer_column' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"> </td></tr>");
+additional_jsp_buffer.append("\n <tr> <td><strong>Primer Row</strong></td><td> <input type='text' size='2' name='primer_row' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"> </td></tr>");
+additional_jsp_buffer.append(" \n<tr> <td><strong>Plate Name</strong> </td><td> <input type='text' size='2' name='plate_name' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"></td></tr>");
+additional_jsp_buffer.append(" \n<tr><td colspan=2 align='center' bgColor='#e4e9f8'><strong>Empty Well Presentation</strong></td><tr>");
+additional_jsp_buffer.append("\n<tr> <td><strong>No primer Sequence presentation</strong></td><td><input type='text' size='5' name='empty_sequence' value='.'> </td></tr>");
+additional_jsp_buffer.append("\n<tr> <td><strong>No primer Sequence Name presentation</strong></td><td><input type='text' size='5' name='empty_sequence_name' value=' '> </td></tr>");
+
+additional_jsp_buffer.append(" \n<tr><tr><td colspan=2 align='center' bgColor='#e4e9f8'><strong>Number of Order Files</strong></td><tr>");
+additional_jsp_buffer.append("<tr> <td><strong>Create order file for:</strong></td><td><select name='number_of_files' > ");
+additional_jsp_buffer.append("<option selected value='"+PrimerOrderRunner.NO_ORDER_FILES+"' >--------<option value='"+PrimerOrderRunner.ONE_FILE_PER_PLATE+"' >One file per oligo plate<option value='"+PrimerOrderRunner.ONE_FILE_PER_ORDER+"'>One file per order</select></td></tr>");
+
+additional_jsp_buffer.append("</table></div></td></tr>");
+      
 
 
-+"<tr><td  bgColor='#1145A6' ><font color='#FFFFFF'><strong>Primers selection rule  </strong></font> </td></tr>"
-+"<tr><td> <input checked type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COOLECTION_ONLY+"> <b>Only primers designed for Stretch Collections</td></tr>"
-+"<tr><td>  <input  type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_REFSEQ_ONLY+" ><b> Only primers designed for Refernce Sequence</td></tr> "
-+"<tr><td>  <input  type=RADIO name='oligo_grouping_rule' value="+ PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COLLECTION_REFSEQ+" ><b> Primers designed for Stretch Collections and Reference Sequence</td></tr>"
-+"<tr><td>&nbsp</td></tr></table>";
+additional_jsp = additional_jsp_buffer.toString();
 
-additional_jsp += "<tr><td colspan='2'><table border =0 width='100%'>"
 
-+"<tr><td colspan=2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Primers placement format </strong></font> </td></tr>"
-+"<tr><td> <input  type=RADIO name='oligo_placement_format' value="+ PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER+" checked><b>All primers for clone together </td></tr>"
-+"<tr><td>  <input disabled type=RADIO name='oligo_placement_format' value="+ PrimerOrderRunner.PLACEMENT_FORMAT_N_PRIMER+" ><b><i>Nth</i> primer for clone. Primer number (ordered by position from 5p end)"
-+"  <input type=text value='1' name='primer_number'  ></td></tr></table></td></tr>";
 isTryMode = true; break;}
 case Constants.PROCESS_RUN_DECISION_TOOL:{break;}
 

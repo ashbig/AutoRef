@@ -85,7 +85,7 @@
    onBlur="checkNumeric(this,1,50,'','','');"></td>
   </tr>
 <tr> 
-    <td bgColor="#b8c6ed"><b><font color="#000080">Max number of consequative low-quality bases (not implemented):</font></b> </td>
+    <td bgColor="#b8c6ed"><b><font color="#000080">Max number of consecutive low-quality bases (not implemented):</font></b> </td>
     <td bgColor="#b8c6ed"><input name="SW_Q_N_LOW_QUALITY_BASES_CONQ" type="text" 
     id="SW_Q_N_LOW_QUALITY_BASES_CONQ"
     value="<%= SlidingWindowTrimmingSpec.QUALITY_NUMBER_LOW_QUALITY_BASES_CONQ %>" width="50" 
@@ -93,19 +93,19 @@ onBlur="checkNumeric(this,1,50,'','','');"></td>
   </tr>
 
 <tr> 
-    <td bgColor="#e4e9f8"><b><font color="#000080">Window size for ambiquous bases trimming (not implemented):</font></b> </td>
+    <td bgColor="#e4e9f8"><b><font color="#000080">Window size for ambiguous bases trimming (not implemented yet):</font></b> </td>
     <td bgColor="#e4e9f8"><input name="SW_A_WINDOW_SIZE" type="text" 
     id="SW_A_WINDOW_SIZE"     value="<%= SlidingWindowTrimmingSpec.AMBIQUATY_WINDOW_SIZE %>" width="50" 
 onBlur="checkNumeric(this,1,50,'','','');"></td>
   </tr>
 <tr> 
-    <td bgColor="#b8c6ed"><b><font color="#000080">Max number of ambiquous bases (not implemented):</font></b> </td>
+    <td bgColor="#b8c6ed"><b><font color="#000080">Max number of ambiguous bases (not implemented yet):</font></b> </td>
     <td bgColor="#b8c6ed"><input name="SW_A_NUMBER_BASES" type="text" 
     id="SW_A_NUMBER_BASES"     value="<%= SlidingWindowTrimmingSpec.AMBIQUATY_NUMBER_BASES %>" width="50" 
 onBlur="checkNumeric(this,1,50,'','','');"></td>
   </tr>
 <tr> 
-    <td bgColor="#e4e9f8"><b><font color="#000080">Max number of consequative ambiquous bases (not implemented):</font></b> </td>
+    <td bgColor="#e4e9f8"><b><font color="#000080">Max number of consecutive ambiguous bases (not implemented yet):</font></b> </td>
     <td bgColor="#e4e9f8"><input name="SW_A_N_LOW_QUALITY_BASES_CONQ" type="text" 
     id="SW_A_N_LOW_QUALITY_BASES_CONQ"     value="<%= SlidingWindowTrimmingSpec.AMBIQUATY_NUMBER_LOW_QUALITY_BASES_CONQ %>"  
 onBlur="checkNumeric(this,1,50,'','','');"></td>

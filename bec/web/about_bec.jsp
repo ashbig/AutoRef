@@ -45,7 +45,7 @@
               <td width="7%" bgColor="#b8c6ed">
                 <p align="center">3</p>
               </td>
-                <td width="93%" bgColor="#b8c6ed">Design internal primers</td>
+                <td width="93%" bgColor="#b8c6ed"><font color="#000080">Design internal primers</font></td>
             </tr>
             <tr>
               <td width="7%" bgColor="#e4e9f8">
@@ -57,7 +57,7 @@
               <td width="7%" bgColor="#b8c6ed">
                 <p align="center">5</p>
               </td>
-                <td width="93%" bgColor="#b8c6ed">View alignments and quality reports</td>
+                <td width="93%" bgColor="#b8c6ed"><font color="#000080">View alignments and quality reports</font></td>
             </tr>
             <tr>
               <td width="7%" bgColor="#e4e9f8">

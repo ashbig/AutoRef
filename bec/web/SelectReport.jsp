@@ -27,7 +27,7 @@
   </table>
   <table border="0" cellpadding="0" cellspacing="0" width="80%">
     <tr>      <td width="100%">
- <i>If you are not sure what kind of information each report provides please consult <a href="Help_SpecialReports.jsp"> help
+ <i>If you are not sure what kind of information each report provides, please consult <a href="Help_SpecialReports.jsp"> help
 </a>. </i> 
   </td>    </tr>
   </table>
@@ -40,9 +40,9 @@
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
 <tr><td>
-<input type="radio" name="forwardName" value="<%=Constants.PROCESS_CREATE_REPORT%>" checked><strong>Genral Report </strong><br>
+<input type="radio" name="forwardName" value="<%=Constants.PROCESS_CREATE_REPORT%>" checked><strong>General Report </strong><br>
 <P>
-<input type="radio" name="forwardName" value="<%=  Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING%>" ><strong>Order list for End Reads repeat </strong><br>
+<input type="radio" name="forwardName" value="<%=  Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING%>" ><strong>Order list for End Reads repeat</strong><br>
 <!--<input type="radio" name="forwardName" value="<%= Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING%>"> <strong> Order list for Internal Reads repeat</strong>  <br> -->
 
 <P><input type="radio" name="forwardName" value="<%= Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY%>"> <strong> Trace Files Quality Report</strong>  <br>
