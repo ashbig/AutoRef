@@ -84,6 +84,12 @@ public class Constants {
     // key used to find a container
     public static final String CONTAINER_KEY = "CONTAINER";
     
+    // key used to find the id of a container
+    public static final String CONTAINER_ID_KEY = "CONTAINER_ID";
+    
+    // key used to find the barcode of a container
+    public static final String CONTAINER_BARCODE_KEY= "CONTAINER_BARCODE";
+    
     // key used to find the collection of samples
     public static final String SAMPLES_KEY = "SAMPLES";
     
