@@ -69,4 +69,12 @@ public class GiRecord {
     public int getCdsStop() {
         return cdsStop;
     }
+    
+    public void setCdsStart(int i) {
+        this.cdsStart = i;
+    }
+    
+    public void setCdsStop(int i) {
+        this.cdsStop = i;
+    }
 }

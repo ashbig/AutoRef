@@ -83,14 +83,14 @@ public class OneToOneContainerMapper implements ContainerMapper {
             if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                 newBarcode = projectCode+DAUGHTER_OLIGO_PLATE+container.getLabel().substring(2);
             } else if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname()) ||
-                Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname()) ||
-                Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(protocol.getProcessname())) {
+            Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname()) ||
+            Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(protocol.getProcessname())) {
                 newBarcode = projectCode+protocol.getProcesscode()+container.getLabel().substring(3);
             } else {
                 newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
             }
             
-            Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());           
+            Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
             getSamples(container);
             mappingSamples(container, newContainer, protocol);
             newContainers.addElement(newContainer);
@@ -114,9 +114,33 @@ public class OneToOneContainerMapper implements ContainerMapper {
     protected void mappingSamples(Container container, Container newContainer, Protocol protocol) throws FlexDatabaseException {
         String type;
         Vector oldSamples = container.getSamples();
-        Enumeration enum = oldSamples.elements();
-        while(enum.hasMoreElements()) {
-            Sample s = (Sample)enum.nextElement();
+        for (int i=0; i<oldSamples.size(); i++) {
+            Sample s = (Sample)oldSamples.get(i);
+            /**
+             * char [] c = s.getType().toCharArray();
+             * switch(c[0]) {
+             * case 'C':
+             * case 'E':
+             * case 'O':
+             * if(c[1]=='R')
+             * type = Sample.getType(protocol.getProcessname());
+             * else
+             * type = s.getType();
+             * break;
+             * case 'G':
+             * type = getGelSampleType(container, s, protocol);
+             * break;
+             * case 'I':
+             * type = getCultureSampleType(container, s, protocol);
+             *
+             * if(type == null)
+             * type = Sample.getType(protocol.getProcessname());
+             * break;
+             * default:
+             * type = Sample.getType(protocol.getProcessname());
+             * }
+             **/
+            
             if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
                 type = Sample.CONTROL_POSITIVE;
             } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
@@ -149,9 +173,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
         edu.harvard.med.hip.flex.process.Process p =
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
         Result result = Result.findResult(s, p);
-        if(Result.CORRECT.equals(result.getValue()) || 
-           Result.MUL_W_CORRECT.equals(result.getValue()) ||
-           Result.NO_BAND.equals(result.getValue())) {
+        if(Result.CORRECT.equals(result.getValue()) ||
+        Result.MUL_W_CORRECT.equals(result.getValue()) ||
+        Result.NO_BAND.equals(result.getValue())) {
             type = Sample.getType(newProtocol.getProcessname());
         } else {
             type = Sample.EMPTY;
@@ -159,13 +183,13 @@ public class OneToOneContainerMapper implements ContainerMapper {
         
         return type;
     }
-
+    
     protected String getCultureSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
         Protocol protocol = new Protocol(Protocol.ENTER_CULTURE_RESULTS);
         String type = null;
         edu.harvard.med.hip.flex.process.Process p =
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
-
+        
         if(p == null) {
             return null;
         }
@@ -178,7 +202,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
         }
         
         return type;
-    }    
+    }
     
     protected String getProjectCode(Project project, Workflow workflow) {
         String projectCode = "";
@@ -188,9 +212,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
         }
         return projectCode;
     }
- 
+    
     protected void getSamples(Container container) throws FlexDatabaseException {
-        container.restoreSample();
+        container.restoreSampleWithoutSeq();
     }
     
     public static void main(String [] args) {

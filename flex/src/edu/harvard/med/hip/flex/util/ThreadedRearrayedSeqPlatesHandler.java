@@ -15,6 +15,9 @@ import java.util.*;
 public class ThreadedRearrayedSeqPlatesHandler extends RearrayedSeqPlatesHandler implements Runnable {
     private String researcherBarcode;
     private List containers;
+    private List glycerolContainers;
+    private int strategyid;
+    private String cloneType;
     
     /** Creates a new instance of ThreadedRearrayedSeqPlatesHandler */
     public ThreadedRearrayedSeqPlatesHandler() {
@@ -25,6 +28,15 @@ public class ThreadedRearrayedSeqPlatesHandler extends RearrayedSeqPlatesHandler
         super(b);
         this.containers = containers;
         this.researcherBarcode = barcode;
+    }
+    
+    public ThreadedRearrayedSeqPlatesHandler(List containers, String barcode, boolean b, SummaryTablePopulator populator, List glycerolContainers, int strategyid, String cloneType) {
+        super(b, populator);
+        this.containers = containers;
+        this.researcherBarcode = barcode;
+        this.glycerolContainers = glycerolContainers;
+        this.strategyid = strategyid;
+        this.cloneType = cloneType;
     }
     
     /** When an object implementing interface <code>Runnable</code> is used
@@ -39,6 +51,7 @@ public class ThreadedRearrayedSeqPlatesHandler extends RearrayedSeqPlatesHandler
      *
      */
     public void run() {
+        processSummaryTable(glycerolContainers, strategyid, cloneType);
         processSeqPlates(containers, researcherBarcode);
     }
     

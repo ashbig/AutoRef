@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.36 2002-12-17 15:01:30 Elena Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.37 2004-01-29 18:16:46 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -27,11 +27,8 @@ public class FlexSeqAnalyzer {
     public static final String HUMANDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Human/genes";
     public static final String YEASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Yeast/genes";
     public static final String MGCDB=BLAST_BASE_DIR+BLAST_DB_DIR+"Mgc/genes";
-
-   //private static final String HUMANDB="E:/flexDev/BlastDB/genes";
-    //private static final String BLASTDB="E:/flexDev/BlastDB/genes";
-    private static final String INPUT = "/tmp/";
-    private static final String OUTPUT = "/tmp/";
+    private static final String INPUT = FlexProperties.getInstance().getProperty("tmp");
+    private static final String OUTPUT = FlexProperties.getInstance().getProperty("tmp");
     
     private FlexSequence sequence;
     private Vector sameSequence = new Vector();

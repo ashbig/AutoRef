@@ -19,6 +19,7 @@ import edu.harvard.med.hip.flex.user.*;
  */
 public class RearrayedSeqPlatesHandler {
     protected boolean isFile = false;
+    SummaryTablePopulator populator = null;
     
     /** Creates a new instance of RearrayedSeqPlatesHandler */
     public RearrayedSeqPlatesHandler() {
@@ -26,6 +27,22 @@ public class RearrayedSeqPlatesHandler {
     
     public RearrayedSeqPlatesHandler(boolean isFile) {
         this.isFile = isFile;
+    }
+    
+    public RearrayedSeqPlatesHandler(boolean isFile, SummaryTablePopulator populator) {
+        this.isFile = isFile;
+        this.populator = populator;
+    }
+    
+    public void processSummaryTable(List containers, int strategyid, String cloneType) {
+        if(populator == null)
+            return;
+        
+        if(populator.populateObtainedMasterClonesWithContainers(containers, strategyid, cloneType)) {
+            populator.sendEmail(true, containers);
+        } else {
+            populator.sendEmail(false, containers);
+        }
     }
     
     public void processSeqPlates(List containers, String researcherBarcode) {
@@ -64,7 +81,6 @@ public class RearrayedSeqPlatesHandler {
             fileCol.add(new File(filepath+c.getLabel()));
         }
         Mailer.sendMessage("dzuo@hms.harvard.edu",user.getUserEmail(),"dzuo@hms.harvard.edu","Files for rearrayed sequencing plates","Attached are your files for rearrayed sequencing plates", fileCol);
-        //Mailer.sendMessage("dzuo@hms.harvard.edu","dzuo@hms.harvard.edu","dzuo@hms.harvard.edu","Files for rearrayed sequencing plates","Attached are your files for rearrayed sequencing plates", fileCol);
     }
     
     public static void main(String args[]) {
@@ -73,7 +89,7 @@ public class RearrayedSeqPlatesHandler {
         List containers = new ArrayList();
         containers.add(c1);
         containers.add(c2);
-         
+        
         RearrayedSeqPlatesHandler handler = new RearrayedSeqPlatesHandler(true);
         handler.processSeqPlates(containers, "joy");
     }

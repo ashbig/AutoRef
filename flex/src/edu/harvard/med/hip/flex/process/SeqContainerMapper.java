@@ -103,11 +103,14 @@ public class SeqContainerMapper extends OneToOneContainerMapper {
                     System.out.println(ex);
                 }
                 
-                String type = s.getType();
-                if(isCulture && type.equals("ISOLATE"))
-                    type = getCultureSampleType(container, s, protocol);
-                
                 if(s != null) {
+                    String type = s.getType();
+                    if(isCulture && type.equals("ISOLATE")) {
+                        String newtype = getCultureSampleType(container, s, protocol);
+                        if(newtype != null)
+                            type = newtype;
+                    }
+                    
                     Sample newSample = new Sample(type, startPos, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
                     newSample.setCloneid(s.getCloneid());
                     newContainer.addSample(newSample);

@@ -212,7 +212,7 @@ public class SummaryTablePopulator {
         String msg = "===========================================================\n";
         String to = "dzuo@hms.harvard.edu";
         String from = "dzuo@hms.harvard.edu";
-        String cc = "flexgene_manager@hms.harvard.edu";
+        String cc = "dzuo@hms.harvard.edu";
         String subject = "Summary table populating - ";
         
         java.util.Date d = new java.util.Date();
@@ -270,9 +270,8 @@ public class SummaryTablePopulator {
         containers.add(new Integer(6448));
         containers.add(new Integer(6447));
         containers.add(new Integer(6446));
-        containers.add(new Integer(4583));
-        containers.add(new Integer(3109));
 
+        //change cloning strategy accordingly.
         int cloningStrategyid = 4;
         String cloneType = CloneInfo.MASTER_CLONE;
         
