@@ -186,12 +186,7 @@ public class OligoPlateManager {
         String subject = "Testing Oligo Order";
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
-        try{
-            Mailer.sendMessage(to, from, cc, subject, msgText, fileList);
-        } catch(MessagingException ex){
-            ex.printStackTrace();
-        }
-        
+        Mailer.sendMessage(to, from, cc, subject, msgText, fileList);   
     }
     
     

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html"%>
 <%@ page language="java" %>
-<%@ page errorPage="ProcessError.do"%>
+
 
 <%@ page import="edu.harvard.med.hip.flex.*" %>
 <%@ page import="edu.harvard.med.hip.flex.core.*" %>
@@ -10,6 +10,10 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
+<%-- The container that was searched --%>
+<logic:present name="<%=Constants.CONTAINER_KEY%>"> 
+    <bean:define name="<%=Constants.CONTAINER_KEY%>" id="searchContainer"/>
+</logic:present>
 <html>
 <head>
     <title><bean:message key="flex.name"/> : Container Process History</title>
@@ -31,10 +35,12 @@
         <th>Container Label</th>
     </tr>
     <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
-        <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+        
         <bean:define id="process" name="threadElem" property="process"/>
         <bean:define id="protocol" name="process" property="protocol"/>
         <bean:define id="container" name="threadElem" property="object"/>
+        <flex:row property="object" match="searchContainer" matchStyleClass="highlightRow" oddStyleClass="oddRow" evenStyleClass="evenRow">
+
             <td><flex:write name="protocol" property="processname"/></td>
             <td><flex:write name="process" property="date"/></td>
             <td><flex:write name="process" property="subprotocol"/></td>

@@ -12,7 +12,9 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
-
+<logic:present name="<%=Constants.SAMPLE_KEY%>">
+    <bean:define id="querySample" name="<%=Constants.SAMPLE_KEY%>"/>
+</logic:present>
 
 <html>
 <head>
@@ -44,13 +46,15 @@
     </tr>
  
     <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
-        <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+        
 
         <bean:define id="process" name="threadElem" property="process"/>
         <bean:define id="protocol" name="process" property="protocol"/>
         <bean:define id="sample" name="threadElem" property="object"/>
         <bean:define id="seq" name="sample" property="flexSequence"/>
         <bean:define id="container" name="sample" property="container"/>
+                                                                                     
+        <flex:row property="object" match="querySample"  matchStyleClass="highlightRow" oddStyleClass="oddRow" evenStyleClass="evenRow">
             <td><bean:write name="protocol" property="processname"/></td>
             <td><bean:write name="process" property="date"/></td>
             <td><flex:write name="process" property="subprotocol"/></td>

@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-07-03 17:12:57 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.3 $
+ * $Date: 2001-07-24 18:46:07 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -52,8 +52,8 @@ import org.apache.struts.action.*;
  * This action displays the sequence process history querry page.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-07-03 17:12:57 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.3 $ $Date: 2001-07-24 18:46:07 $
  */
 
 public class SequenceProcessHistoryAction extends ResearcherAction{
@@ -83,6 +83,9 @@ public class SequenceProcessHistoryAction extends ResearcherAction{
             retForward = mapping.findForward("error");
             return retForward;
         }
+        // add sample id to the first item
+        nameTypeList.add(0,Constants.SAMPLE_ID_KEY);
+        
         // add the flex id to the first item
         nameTypeList.add(0,Constants.FLEX_SEQUENCE_ID_KEY);
         

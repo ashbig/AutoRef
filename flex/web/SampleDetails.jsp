@@ -117,7 +117,7 @@
     <bean:write name="result" property="value"/>
     <%-- No go through and display the files --%>
     <TABLE border="1" cellpadding="2" cellspacing="0">
-        <tr class="rowHeader">
+        <tr class="headerRow">
             <th>File Type</th>
             <th>File</th>
         </tr>

@@ -227,10 +227,13 @@
         <info>
           Format a HTML Table Row (i.e. <TR>....</TR>)
         </info>
+        <attribute><name>match</name></attribute>
+        <attribute><name>property</name></attribute>
         <attribute><name>oddColor</name></attribute>
         <attribute><name>evenColor</name></attribute>
         <attribute><name>oddStyleClass</name></attribute>
         <attribute><name>evenStyleClass</name></attribute>
+        <attribute><name>matchStyleClass</name></attribute>
         <attribute><name>align</name></attribute>
         <attribute><name>valign</name></attribute>
 

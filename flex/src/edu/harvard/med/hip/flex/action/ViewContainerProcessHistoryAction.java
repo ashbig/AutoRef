@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-02 18:17:26 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-24 18:46:07 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -54,8 +54,8 @@ import edu.harvard.med.hip.flex.database.*;
 /**
  * Action called when requesting to view the process history of a container
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-07-02 18:17:26 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-24 18:46:07 $
  */
 
 public class ViewContainerProcessHistoryAction extends ResearcherAction{
@@ -78,6 +78,10 @@ public class ViewContainerProcessHistoryAction extends ResearcherAction{
         ActionErrors errors = new ActionErrors();
         
         ActionForward retForward = null;
+        
+        // the container that was searched
+        Container container = null;
+        
         /*
          * Either the container id or the container barcode parameter must
          * be in the request
@@ -90,15 +94,15 @@ public class ViewContainerProcessHistoryAction extends ResearcherAction{
         try {
             if(containerIdS!=null && containerIdS.length() !=0 ) {
                 
-                Container container = new Container(Integer.parseInt(containerIdS));
+                container = new Container(Integer.parseInt(containerIdS));
                 plateSetId = container.getPlatesetid();
                 
             } else if(containerBarcode!=null && containerBarcode.length() !=0) {
                 List containerList =
                 Container.findContainers(containerBarcode);
                 if(containerList.size() >0) {
-                    plateSetId =
-                    ((Container)containerList.get(0)).getPlatesetid();
+                    container = (Container)containerList.get(0);
+                    plateSetId = container.getPlatesetid();
                 }
                 
                 
@@ -139,6 +143,7 @@ public class ViewContainerProcessHistoryAction extends ResearcherAction{
                 retForward=mapping.findForward("success");
                 ContainerThread thread = ContainerThread.findContainerThread(plateSetId);
                 request.setAttribute(Constants.THREAD_KEY, thread);
+                request.setAttribute(Constants.CONTAINER_KEY, container);
             } catch(Exception e) {
                 retForward = mapping.findForward("error");
                 request.setAttribute(Action.EXCEPTION_KEY, e);
