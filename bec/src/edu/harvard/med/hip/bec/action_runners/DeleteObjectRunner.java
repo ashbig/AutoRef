@@ -446,12 +446,12 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
             input = new DeleteObjectRunner();
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
           //  input.setItems("    734 345 ");
-            input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+         //   input.setItemsType( Constants.ITEM_TYPE_CLONEID);
             input.setUser(user);
             
            
             input.setActionType(Constants.PROCESS_DELETE_TRACE_FILES);
-           input.setItems("c:\\bio\\plate_analysis\\clone_samples\\1879\\776\\chromat_dir\\5947_C01_1879_776_R0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_F0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_R0.ab1");
+        //   input.setItems("c:\\bio\\plate_analysis\\clone_samples\\1879\\776\\chromat_dir\\5947_C01_1879_776_R0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_F0.ab1 c:\\bio\\plate_analysis\\clone_samples\\43920\\119340\\chromat_dir\\7947_A02_43920_119340_R0.ab1");
            input.run();
           //   input.setItems("    734 345 ");
         //    input.setItemsType( Constants.ITEM_TYPE_CLONEID);

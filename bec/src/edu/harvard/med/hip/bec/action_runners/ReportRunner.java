@@ -616,9 +616,9 @@ public class ReportRunner extends ProcessRunner
              
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             input = new ReportRunner();
-            input.setItems("  BSA000865   BSA000863");
+          //  input.setItems("  BSA000865   BSA000863");
             
-            input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
+           // input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
      //       input.setFields(
       //              "clone_id");
             /*, //    Clone Id

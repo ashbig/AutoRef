@@ -402,10 +402,10 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         catch(Exception e){}
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
-        String  item_ids = " 148173  6024  158511	";
+        String  item_ids = " 775";
 
-        runner.setItems(item_ids.toUpperCase().trim());
-        runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
+    //    runner.setItems(item_ids.toUpperCase().trim());
+      //  runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
         runner.setUser(user);
         //Thread t = new Thread(runner);
        // t.start();

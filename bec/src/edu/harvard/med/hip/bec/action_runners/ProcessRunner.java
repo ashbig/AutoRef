@@ -51,20 +51,20 @@ public abstract class ProcessRunner implements Runnable
     }
     
     public  void        setUser(User v){m_user=v;}
-    public  void        setItems(String item_ids)
-    {
-        m_items = item_ids;
-    }
-     public  void        setItemsType( int type)
+ //   public  void        setItems(String item_ids)    {        m_items = item_ids;    }
+ //    public  void        setItemsType( int type)     {   m_items_type = type;     }
+     public void       setInputData(int type,String item_ids)
      {
-         
          m_items_type = type;
+         m_items = item_ids;
+         cleanUpItems();
+     
      }
     public  String        getItems()   {      return  m_items;    }   
      
      public void run()
      {
-          cleanUpItems();
+         cleanUpItems();
          if (this instanceof PrimerDesignerRunner)
          {  ((PrimerDesignerRunner)this).run(); }
          else if  (this instanceof PolymorphismFinderRunner)
@@ -81,9 +81,7 @@ public abstract class ProcessRunner implements Runnable
               ((SpecialReportsRunner)this).run();
            else if (this instanceof DeleteObjectRunner)
               ((DeleteObjectRunner)this).run();
-         
-   
-     }
+    }
      
      
      public abstract String getTitle();
@@ -243,8 +241,10 @@ public abstract class ProcessRunner implements Runnable
                      if ( ! Character.isDigit(items_char[char_count]) ) break;
                      if ( char_count == items_char.length - 1)
                          final_string.append( (String)items.get(count) + " ");
+                    
                  }
              }
+             System.out.println(final_string.toString());
              m_items = final_string.toString();
          
          }
@@ -256,8 +256,7 @@ public abstract class ProcessRunner implements Runnable
       public static void main(String args[]) 
       {
             ReportRunner  input = new ReportRunner();
-            input.setItems(" 35284    cloneid  35285      35286      35287      35288      35289      35290      35291      35292      35293      35294      35295      35296      35297      35298      35299      35300      35301      35302      35303      35304      35305      35306      35307      35308      35309      35310      35311      35312      35313      35314      35315      35316      35317      35318      35319      35320      35321      35322      35323      35324      35325      35326      35327      35328      35329      35330      35331      35332      35333      35334      35335      35336      35337      35338      35339      35340      35341      35342      35343      35344      35345      35346      35347      35348      35349      35350      35351      35352      35353      35354      35355      35356      35357      35358      35359      35360      35361      35362      35363      35364      35365      35366      35367      35368      35369      35370      35371      35372      35373      35374      35375       2765       2766       2392 ");
-            input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+            input.setInputData(Constants.ITEM_TYPE_CLONEID," 35284    cloneid  35285      35286      35287      35288      35289      35290      35291      35292      35293      35294      35295      35296      35297      35298      35299      35300      35301      35302      35303      35304      35305      35306      35307      35308      35309      35310      35311      35312      35313      35314      35315      35316      35317      35318      35319      35320      35321      35322      35323      35324      35325      35326      35327      35328      35329      35330      35331      35332      35333      35334      35335      35336      35337      35338      35339      35340      35341      35342      35343      35344      35345      35346      35347      35348      35349      35350      35351      35352      35353      35354      35355      35356      35357      35358      35359      35360      35361      35362      35363      35364      35365      35366      35367      35368      35369      35370      35371      35372      35373      35374      35375       2765       2766       2392 ");
             System.out.println( input.getItems() );
             input.cleanUpItems();
              System.out.println( input.getItems() );

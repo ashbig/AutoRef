@@ -30,7 +30,9 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.programs.assembler.*;
 import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.util_objects.*;
-  import java.util.*;
+import  edu.harvard.med.hip.bec.file.*;
+  
+import java.util.*;
 /**
  *
  * @author  htaycher
@@ -298,11 +300,11 @@ public class AssemblyRunner extends ProcessRunner
             if (m_vector_file_name != null)pp.setVectorFileName(m_vector_file_name);
             String output_file_name =  sequence_definition.getCloneId()+ ".fasta.screen.ace.1";
             //delete quality and sequence files from end read processing
-            deletePrevioudProcessingFiles(trace_files_directory_path + File.separator +"quality_dir");
-            deletePrevioudProcessingFiles(trace_files_directory_path + File.separator +"sequence_dir");
+            FileOperations.deleteAllFilesFormDirectory(trace_files_directory_path + File.separator +"quality_dir");
+            FileOperations.deleteAllFilesFormDirectory(trace_files_directory_path + File.separator +"sequence_dir");
             
             //delete all .phd files from previous processing
-            deletePrevioudProcessingFiles(trace_files_directory_path + File.separator +"phd_dir");
+            FileOperations.deleteAllFilesFormDirectory(trace_files_directory_path + File.separator +"phd_dir");
             pp.run(trace_files_directory_path, output_file_name );
            //get phrdphrap output
             PhredPhrapParser pparser = new PhredPhrapParser();
@@ -314,28 +316,7 @@ public class AssemblyRunner extends ProcessRunner
              throw new BecDatabaseException("Error while trying to assemble sequence for isolte: "+ sequence_definition.getIsolateTrackingId()+" with cloneid :"+sequence_definition.getCloneId()+" error "+ e.getMessage());
          }
      }
-  //delete quality and sequence files from end read processing
-     private void  deletePrevioudProcessingFiles(String trace_files_directory_path)
-     {
-         try
-         {
-              File sourceDir = new File(trace_files_directory_path );
-              File [] sourceFiles = sourceDir.listFiles();
-              if ( sourceFiles == null ) return;
-             if ( sourceFiles.length > 0)
-             {
-                 for (int count = 0; count < sourceFiles.length;count++)
-                 {
-                     sourceFiles[count].delete();
-                 }
-             }
-           
-         }
-         catch(Exception e)
-         {
-             System.out.println("Cannot delete files "+e.getMessage());
-         }
-     }
+  
             
      
       private ArrayList getExspectedSequenceDescriptions(Connection conn, String status, String sql_items)throws BecDatabaseException
@@ -586,8 +567,8 @@ public static void main(String args[])
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
         runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
          runner.setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
-             runner.setItems("775	");
-        runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
+       //      runner.setItems("116384	");
+      // runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
                                       
         runner.run();           
         /*

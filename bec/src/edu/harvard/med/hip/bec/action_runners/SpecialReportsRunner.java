@@ -598,10 +598,11 @@ public class SpecialReportsRunner extends ProcessRunner
            runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
            runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
             runner.setReportType(Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING);
-            runner.setItems(" BSA000768   ");
+         //   runner.setItems(" BSA000768   ");
             
             
-            runner.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
+       //     runner.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
+            
          runner.run();
              
          }catch(Exception e){}

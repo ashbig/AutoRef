@@ -244,8 +244,8 @@ import edu.harvard.med.hip.bec.ui_objects.*;
     try
     {
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-         runner.setItems("582 ");
-         runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
+        // runner.setItems("582 ");
+       //  runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
                     runner.setSpecId(4);
                       runner.run();
                 

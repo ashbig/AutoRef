@@ -411,8 +411,8 @@ public class NoMatchReportRunner extends ProcessRunner
     try
     {
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-         runner.setItems("   151436");
-         runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
+       //  runner.setItems("   151436");
+      //   runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
           runner.setBlastableDBName("c:\\blast_db\\Yeast\\genes");     
           runner.setIdTypeToDisplay("GI");
         runner.run();    
