@@ -139,7 +139,6 @@ public class OligoPlateManager {
                     cg.insertProcessInputOutput();
                     cg.insertConstructQueue();
                     LinkedList oligoPatternList = cg.getOligoPatternList();
-                    //System.out.println("Items in the oligoPatternList: "+ oligoPatternList.size());
                     
                     //all of the oligo plate header and sample info are inserted in DB
                     //three text files for order oligos will be generated
@@ -209,11 +208,17 @@ public class OligoPlateManager {
                 totalQueue = totalSeqQueue(smallCDSLimit);
                 System.out.println("There are total of " + totalQueue + " small sequences in the queue");
                 if (totalQueue >= 94){
-                    System.out.println("Calculating oligos...");
                     createOligoPlates();
-                    sendOligoOrders();
-                    System.out.println("Oligo order files have been mailed!");
-                    DatabaseTransaction.commit(conn);
+                    //avoid sending out empty email without files attached
+                    if (fileList.size() >= 1){
+                        sendOligoOrders();
+                        System.out.println("Oligo order files have been mailed!");
+                        DatabaseTransaction.commit(conn);
+                    } //inner if
+                    else{
+                        System.out.println("File error, no order is mailed!");
+                        DatabaseTransaction.rollback(conn);
+                    } //inner else
                 } else {
                     System.out.println("There are not enough sequences in queue to create an oligo plate!");
                 }

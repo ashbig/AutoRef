@@ -94,12 +94,10 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         Connection conn = null;
         ListIterator iter = ids.listIterator();
         Container container = null;
-        //System.out.println("Total labels entered by user: "+ ids.size());
         
         //insert receive plates process execution record for each plate received.
         while (iter.hasNext()) {
             String label = (String)iter.next();
-            //System.out.println("The oligo plate label is: "+label);
             
             // Validate container label entered with items in queue
             try{

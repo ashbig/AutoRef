@@ -75,8 +75,12 @@ public class SetReceiveDateAction extends ResearcherAction {
             protocol = new Protocol("receive oligo plates");
             ContainerProcessQueue cpq = new ContainerProcessQueue();
             LinkedList items = cpq.getQueueItems(protocol);
+            //remove the attributes from the session.
+            if(request.getSession().getAttribute("SelectProtocolAction.queueItems") != null) {
+                request.getSession().removeAttribute("SelectProtocolAction.queueItems");
+            }
             if(items.size() > 0) {
-                request.setAttribute("SelectProtocolAction.queueItems", items);
+                request.getSession().setAttribute("SelectProtocolAction.queueItems", items);
             }
         } catch (Exception e) {
             request.setAttribute(Action.EXCEPTION_KEY, e);

@@ -78,19 +78,23 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             Container container = (Container)iter.next();
             current_platesetid = container.getPlatesetid();
             Plateset plateset = new Plateset(current_platesetid);
-            platesetList.add(plateset);
-            System.out.println("platesetid is: "+ plateset.getId());
-            container.setLocation(oligoPlateLocation);
-            container.updateLocation(locationid, conn); //update location if only one plate entered
-            System.out.println("update the location for first container: "+container.getLabel());
+            platesetList.add(plateset);           
+            
+            //System.out.println("platesetid is: "+ plateset.getId());
+            //container.setLocation(oligoPlateLocation);
+            //update location if only one plate entered
+            //container.updateLocation(locationid, conn);
+            //removeReceiveOligoQueue(container,conn);
+            //System.out.println("update the location for first container: "+container.getLabel());
             
             //oligo plates received may belong to more than one plateset
             while (iter.hasNext()){
-                // Set the location for the containers.                
-                container.setLocation(oligoPlateLocation);                
+                // Set the location for the containers.
+                container.setLocation(oligoPlateLocation);
                 container.updateLocation(locationid, conn);
+              //  addOligoPlate2List(container);
                 System.out.println("update the location for container: "+container.getLabel());
-                
+                                
                 old_platesetid = current_platesetid;
                 container = (Container)iter.next();
                 current_platesetid = container.getPlatesetid();
@@ -102,9 +106,11 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
                 } //if
                 
             } //while
-            //update the location for the last oligo plate
+            
+            //update the location for the last or the only oligo plate received
             container.setLocation(oligoPlateLocation);
             container.updateLocation(locationid, conn);
+            removeReceiveOligoQueue(containerList,conn);
             DatabaseTransaction.commit(conn);
             System.out.println("update the location for last container: "+container.getLabel());
         } catch (Exception ex) {
@@ -125,7 +131,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
                 if (complete) {
                     System.out.println("inserting generate PCR plate queue...");
                     insertPCRQueue(plateset, conn);
-                    removeReceiveOligoQueue(containerList, conn);
+               //     removeReceiveOligoQueue(containerList, conn);
                     DatabaseTransaction.commit(conn);
                 }
             } //while
@@ -161,7 +167,6 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             if (count < 3) {
                 complete = false;
             }
-            //System.out.println("total places received: "+ count);
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException("Error occured while check plateset: "+platesetid+"\n"+"\nSQL: "+sqlE);
         } finally {
