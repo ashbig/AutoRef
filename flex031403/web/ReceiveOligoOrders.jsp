@@ -22,12 +22,12 @@
                 <td bgcolor="lightgrey"><b>Please enter plate IDs for all of the oligo plates received:</b></td>
             </tr>
             <tr>
-                <td><form:textarea property="oligoPlateIds" size="80"/></td>
+                <td><html:textarea property="oligoPlateIds" size="60"/></td>
             </tr>
 
             <tr>
                 <td bgcolor="lightgrey"><b>Receive Date:</b></td>
-                <td><form:text property="receiveDate" size="40"/></td>
+                <td><html:text property="receiveDate" size="40"/></td>
             </tr>
 
             <tr>
