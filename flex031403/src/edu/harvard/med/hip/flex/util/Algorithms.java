@@ -149,7 +149,17 @@ public class Algorithms
         return copy;
     }
     
-    
+    public static ArrayList splitString(String value, String spliter)
+    {
+        ArrayList res = new ArrayList();
+        StringTokenizer st = new StringTokenizer(value, spliter);
+        while(st.hasMoreTokens())
+        {
+            String val = st.nextToken().trim();
+            res.add( val );
+        }
+        return res;
+    }
     public static int numberOf(String str, char ch)
     {
         int res = 0;

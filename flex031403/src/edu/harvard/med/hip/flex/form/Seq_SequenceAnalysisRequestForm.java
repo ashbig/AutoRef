@@ -35,7 +35,7 @@ public class Seq_SequenceAnalysisRequestForm extends ActionForm
     }
     public void setFullsequence(String s)
     {
-        
+      
          m_sequencetext = s.trim();
     }
     
