@@ -18,21 +18,13 @@ import edu.harvard.med.hip.utility.*;
 public class Constants {
    
     private static final String DILIM = "_";
-   
-    private  static String TEMPORARY_FILES_FILE_PATH = null;
-    public  static String        getTemporaryFilesPath()
+      
+     public  static String        getTemporaryFilesPath()
     {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-        {
-            TEMPORARY_FILES_FILE_PATH = "d:\\tmp\\";
-            return TEMPORARY_FILES_FILE_PATH;
-        }
-        else
-        {
-            TEMPORARY_FILES_FILE_PATH = "c:\\tmp\\";
-            return TEMPORARY_FILES_FILE_PATH;
-        }
+        return edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TEMPORARY_FILES_FILE_PATH")+java.io.File.separator;
     }
+  
+    
     
     public static String           getItemTypeAsString(int object_type)
      {
@@ -95,7 +87,7 @@ public class Constants {
     
     // key used to find the flex sequence
     public static final String SEQUENCE_KEY = "SEQUENCE";
-    
+  
      // key used to find the page number
     public static final String PAGE_KEY="PAGE";
     
@@ -146,9 +138,7 @@ public class Constants {
     // key used to find the map holding the stats for results
     public static final String RESULT_STATS_KEY = "RESULT_STATS";
 
-    // forward name used for approve sequence after select the workflow.
-    public static final String APPROVE_SEQUENCES = "APPROVE_SEQUENCES";
-    
+     
          // key used to find The full sequence id.
     public static final String FULL_SEQUENCE_ID_KEY = "FULL_SEQUENCE_ID";
      // key used to find the full sequence
@@ -254,7 +244,7 @@ public class Constants {
   public static final int         PROCESS_GET_TRACE_FILE_NAMES = 80;
   public static final int         PROCESS_DELETE_TRACE_FILES = 81;
    public static final int         PROCESS_MOVE_TRACE_FILES = 82;
- 
+  public static final int         PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID = 83;
      //69
        
     //items for display 1-40
