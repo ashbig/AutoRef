@@ -51,7 +51,7 @@ public class UIUtils
     public RefSequence getRefSequence(){ return m_refsequence;}
     public void          setRefSequenceId(int i){m_refsequence_id = i;}
     
-    public  String getHTMLtransformedNeedleAlignmentForTrimedRead(int[] scores, int sequence_id) throws Exception
+    public  String getHTMLtransformedNeedleAlignmentForTrimedRead(int[] scores, int sequence_id, int sequence_type) throws Exception
     {
        //try get scores if possible
          String scores_str = BaseSequence.getSequenceInfo(sequence_id, BaseSequence.SEQUENCE_INFO_SCORE);
@@ -62,6 +62,26 @@ public class UIUtils
                 for (int count = 0; count < scores_parsed.size(); count++)
                 {
                    scores[count] =  (Integer.parseInt( (String) scores_parsed.get(count)));
+                }
+                if ( sequence_type==BaseSequence.READ_SEQUENCE)
+                {
+                    Read read =  Read.getReadByReadSequenceId(sequence_id);
+                    boolean isCompliment = false;
+                    isCompliment = isCompliment( sequence_id, read);
+                    //convert scores ifd compliment requered
+                    if ( !isCompliment) 
+                        scores =  convertScoresForComplement( scores, read.getTrimStart(), read.getTrimEnd() );
+                    else
+                    {
+                        int[] scores_converted = new int[read.getTrimEnd() - read.getTrimStart() +1];
+                        int j=0;
+                        for (int count= read.getTrimStart() ; count < read.getTrimEnd() ; count++)
+                        {
+                            scores_converted[j++] = scores[count];
+                        }
+                        scores = scores_converted;
+                    }
+                        
                 }
          }
        String needle_file_name = null;
@@ -114,7 +134,7 @@ public class UIUtils
         }
         // get refsequnce 
          //get for read primer direction
-            boolean isCompliment = false;
+        boolean isCompliment = false;
         if ( sequence_type==BaseSequence.READ_SEQUENCE)
             {
                 CloneDescription clone_description = getRefsequenceAndCloningStrategy( sequence_id);
@@ -135,6 +155,8 @@ public class UIUtils
                         //construct reference sequence
                         m_refsequence.setText( seq.getText());
                 }
+                
+                /*
                 int containerid = BaseSequence.getContainerId(sequence_id, BaseSequence.READ_SEQUENCE);
 
                 Oligo[] oligos = Container.findEndReadsOligos(containerid);
@@ -153,22 +175,12 @@ public class UIUtils
                 {
                       isCompliment =( oligos[1].getOrientation() == Oligo.ORIENTATION_SENSE) ; 
                 }
-                
+                */
+                isCompliment = isCompliment( sequence_id, read);
                 //convert scores ifd compliment requered
+                if ( !isCompliment) 
+                    scores =  convertScoresForComplement( scores,  0,  scores.length);
                 
-                if ( !isCompliment)
-                {
-                    
-                    
-                    int[] scores_converted = new int[scores.length];
-                    int j=0;
-                    for (int count= scores.length -1 ; count >= 0; count--)
-                    {
-                        scores_converted[j++] = scores[count];
-                    }
-                    scores = scores_converted;
-                    
-                }
             }
 
            
@@ -183,6 +195,42 @@ public class UIUtils
     }
     
     //-------------------------------------
+    private boolean   isCompliment(int sequence_id, Read read)throws Exception
+    {
+        boolean isCompliment = false;
+        int containerid = BaseSequence.getContainerId(sequence_id, BaseSequence.READ_SEQUENCE);
+        
+        Oligo[] oligos = Container.findEndReadsOligos(containerid);
+
+        if (oligos[0] != null && (read.getType() ==  Read.TYPE_ENDREAD_FORWARD || 
+                    read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL || 
+                    read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH || 
+                    read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT))
+        {
+               isCompliment = (oligos[0].getOrientation() == Oligo.ORIENTATION_SENSE);
+        }
+        if (oligos[1] != null && (read.getType() ==  Read.TYPE_ENDREAD_REVERSE || 
+                    read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL || 
+                    read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH || 
+                    read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT))
+        {
+              isCompliment =( oligos[1].getOrientation() == Oligo.ORIENTATION_SENSE) ; 
+        }
+        return isCompliment;
+    }
+    
+    private int[]      convertScoresForComplement(int[] scores, int start, int end)
+    {
+         int[] scores_converted = new int[end-start +1];
+        int j=0;
+        for (int count= end -1 ; count >= start; count--)
+        {
+            scores_converted[j++] = scores[count];
+        }
+        return scores_converted;
+    }
+    
+    
      //function runs needle and parse output
     private   String runNeedle(BaseSequence refsequence, BaseSequence expsequence, boolean isCompliment) throws BecUtilException
     {
@@ -248,7 +296,7 @@ public class UIUtils
             
             UIUtils ut= new UIUtils();
             ut.setRefSequenceId(14584);
-            String g = ut.getHTMLtransformedNeedleAlignmentForTrimedRead(null,14800) ;
+            String g = ut.getHTMLtransformedNeedleAlignmentForTrimedRead(null,14800,0) ;
         System.out.print(g);
         }catch(Exception e){}
         System.exit(0);

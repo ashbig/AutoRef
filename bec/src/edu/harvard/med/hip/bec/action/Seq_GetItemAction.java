@@ -144,18 +144,12 @@ public class Seq_GetItemAction extends ResearcherAction
                
                 case Constants.CONTAINER_DEFINITION_INT:
                 {
-                    
-                    //container.restoreSampleIsolate(false,false);
-                  //  container.restoreSampleCloneSequenceId();
-                 
-        
-                   ArrayList ui_clones = container.restoreUISamples(container);
+                    ArrayList ui_clones = container.restoreUISamples(container);
                     //fill in clone info
                     UICloneSample clone = null; 
                     
             //get info for the most relevant sequence 
                     UICloneSample.setCloneSequences(ui_clones, null);
-                    
                     container.setSamples(ui_clones);
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
@@ -322,10 +316,11 @@ public class Seq_GetItemAction extends ResearcherAction
                     if ( request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR) != null)
                     {
                         int refseq_id = Integer.parseInt(request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));
-                       
+                        
                         ut.setRefSequenceId(refseq_id);
                         request.setAttribute("refsequenceid" , request.getParameter(BaseSequence.THEORETICAL_SEQUENCE_STR));
-                        needle_output = ut.getHTMLtransformedNeedleAlignmentForTrimedRead(null,id);
+                        int sequenceType = Integer.parseInt( (String)request.getParameter("TYPE")) ;
+                        needle_output = ut.getHTMLtransformedNeedleAlignmentForTrimedRead(null,id, sequenceType);
                     }
                     else
                     {
