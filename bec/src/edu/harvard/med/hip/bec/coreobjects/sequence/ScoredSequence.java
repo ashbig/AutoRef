@@ -132,6 +132,18 @@ public class ScoredSequence extends BaseSequence
     public int      getTrimStart(){ return m_trim_start ;}
     public int      getTrimEnd( ){return m_trim_end ;}
      
+    public  boolean isTheSame(ScoredSequence seq)
+    {
+        boolean isSame = true;
+        if ( !this.getText().equalsIgnoreCase( seq.getText() ))
+                 return false;
+        for ( int count = 0; count < this.getScoresAsArray().length ; count ++)
+        {
+            if ( this.getScoresAsArray()[count] != seq.getScoresAsArray()[count] )
+                return false;
+        }
+        return isSame;
+    }
    public String toHTMLString()
    {
        StringBuffer res = new StringBuffer();
@@ -188,8 +200,41 @@ public class ScoredSequence extends BaseSequence
        
        return res.toString();
    }
-   
-   
+   /*
+   public static ArrayList  findLowQualityRegions(ScoredSequence sequence, 
+                    int window, int quality_cutoff, int max_number_lqbases)
+   {
+       int count_not_pass_criteria_bases = 0;
+       int window_start = 0;
+       int window_end = window_start + window;
+       boolean isFirstWindow = true;
+       sequence.getScoresAsArray();
+       for (; window_end < sequence.getText().length(); window_end++)
+       {
+           if (isFirstWindow)
+           {
+               isFirstWindow = false;
+               window_start++;
+               for (int count = window_start; count < window_end; count++)
+               {
+                  if ( sequence.getScoresAsArray()[count] < BaseSequence.INTERNAL_QUALITY_CUTT_OFF)
+                        count_not_pass_criteria_bases++;
+               }
+               if ( count_not_pass_criteria_bases >= BaseSequence.INTERNAL_QUALITY_NUMBER_LOW_QUALITY_BASES)
+                   return false;
+               continue;
+           }
+           if ( sequence.getScoresAsArray()[window_start] < BaseSequence.INTERNAL_QUALITY_CUTT_OFF)
+               count_not_pass_criteria_bases--;
+           if ( sequence.getScoresAsArray()[window_end] < BaseSequence.INTERNAL_QUALITY_CUTT_OFF)
+               count_not_pass_criteria_bases++;
+           if ( count_not_pass_criteria_bases >= BaseSequence.INTERNAL_QUALITY_NUMBER_LOW_QUALITY_BASES)
+                   return false;
+           window_start++;
+       }
+       return true;
+   }
+   */
    //quality conformation
    public static boolean isPassQualityCheck(ScoredSequence sequence , int coverage_start, int coverage_end)
    {
@@ -199,6 +244,10 @@ public class ScoredSequence extends BaseSequence
        if ( ! isPassAmbiguityCheck(sequence)) return false;
        return true;
    }
+   
+   
+   
+   //--------------------------------private --------------------------------------------------
    private static boolean  isPassQualityCheck(ScoredSequence sequence)
    {
        if ((sequence.getTrimEnd() == 0 && sequence.getTrimStart() == 0)

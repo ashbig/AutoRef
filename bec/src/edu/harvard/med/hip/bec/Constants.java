@@ -218,6 +218,7 @@ public class Constants {
      
      public static final int            PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER = 67;
      public static final int            PROCESS_INITIATE_TRACEFILES_TRANSFER = 68;
+     public static final int            PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER = 70;
      public static final int            PROCESS_NOMATCH_REPORT  = 69;
        //69
        

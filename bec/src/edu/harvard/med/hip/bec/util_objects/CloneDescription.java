@@ -30,6 +30,7 @@ public class CloneDescription
          private int        m_clone_sequence_id = -1;
          private int        m_clone_sequence_type = -1;
          private int        m_clone_sequence_status = -1;
+         private String     m_plate_name = null;
          
          public CloneDescription(){}
          public CloneDescription(int v1, int v2, int v3, int v4, int v5, 
@@ -69,7 +70,10 @@ public class CloneDescription
          public int        getCloningStrategyId(){ return m_cloning_strategy_id;}
          public int         getIsolateStatus(){ return m_isolate_status;}
          public int         getPosition(){ return m_position;}
-
+          public String      getPlateName(){ return m_plate_name;}
+          
+          
+          public void      setPlateName(String v){  m_plate_name = v;} 
          public void        setReadFilePath(String c){ m_read_filepath=c;}
          public void        setFlexSequenceId  ( int v){  m_flex_sequenceid =v  ;}
          public void        setCloneId ( int v){  m_cloneid   =v;}
