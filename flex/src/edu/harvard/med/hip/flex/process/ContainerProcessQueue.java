@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.8 2001-06-26 15:43:52 dongmei_zuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.9 2001-06-26 15:46:59 dongmei_zuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -204,6 +204,7 @@ public class ContainerProcessQueue implements ProcessQueue {
             Location location = new Location(locationid, locationtype,description);
             
             Container c = new Container(id, type, location, label);
+            c.setPlatesetid(platesetid);
             QueueItem item = new QueueItem(c, protocol, date);
             items.addLast(item);
         }
