@@ -111,7 +111,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             //run primer3 with specified spec
             Primer3Wrapper primer3 = new Primer3Wrapper();
             primer3.setSpec(m_spec);
-            m_number_of_bases_to_start_stop_requier_er = m_spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");
+            m_number_of_bases_to_start_stop_requier_er = (int)m_spec.getParameterByNameInt("P_SINGLE_READ_LENGTH") / 2;
             //gett refsequence ids or stretch collections ids
             ArrayList  query_items =     getObjectIds(-1);
             if ( query_items == null || query_items.size() <1 ) return;
@@ -489,8 +489,8 @@ public class PrimerDesignerRunner extends ProcessRunner
    // extend them to the right and to the left by spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN")
        int window_size = m_spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN")
                     +m_spec.getParameterByNameInt("P_EST_SEQ");
-       
-       boundaries = extandBoundaries(stretchcollectionid,boundaries, window_size, cds_length); 
+       int coverage_direction =  m_spec.getParameterByNameInt("P_NUMBER_OF_STRANDS");
+       boundaries = extandBoundaries(stretchcollectionid,boundaries, window_size, cds_length, coverage_direction); 
        if ( boundaries.size() < 1) return null;
       
        //order pair by start position     
@@ -608,7 +608,7 @@ public class PrimerDesignerRunner extends ProcessRunner
     
     // functions for stretch collection calculations
     private ArrayList extandBoundaries(int stretchcollectionid, 
-            ArrayList boundaries, int window_size, int refsequence_length)
+            ArrayList boundaries, int window_size, int refsequence_length, int coverage_direction)
             throws Exception
     {
         ArrayList result = new ArrayList();
@@ -626,7 +626,14 @@ public class PrimerDesignerRunner extends ProcessRunner
             }
             else
             {
-                boundary= stretch_boundaries[0] - window_size;
+                if ( coverage_direction == Primer3Wrapper.WALKING_TYPE_ONE_STRAND_REVERSE )
+                {
+                     boundary= stretch_boundaries[0];
+                }
+                else
+                {
+                    boundary= stretch_boundaries[0] - window_size;
+                }
                 boundary = (boundary < 0 ) ? 0 :boundary;
                 stretch_boundaries[0] =  boundary;
             }
@@ -640,7 +647,15 @@ public class PrimerDesignerRunner extends ProcessRunner
             }
             else
             {
-                boundary = stretch_boundaries[1] + window_size;
+                if ( coverage_direction == Primer3Wrapper.WALKING_TYPE_ONE_STRAND_FORWARD )
+                {
+                    boundary = stretch_boundaries[1];
+                }
+                else
+                {
+                    boundary = stretch_boundaries[1] + window_size;
+                }
+                
                 boundary  = ( boundary > refsequence_length ) ? refsequence_length  : boundary ;
                 stretch_boundaries[1] =  boundary;
             }
@@ -774,7 +789,7 @@ public class PrimerDesignerRunner extends ProcessRunner
            input.setInputData( Constants.ITEM_TYPE_CLONEID," 134377    134389 134377");
          //   input.setInputData( Constants.ITEM_TYPE_CLONEID,"145895");
             input.setUser(user);
-            input.setSpecId(42);
+            input.setSpecId(37);
             input.setIsTryMode(true);
             input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_REFERENCE_CDS);
             input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR);
