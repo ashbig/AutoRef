@@ -24,12 +24,12 @@ public class SearchRecord {
     public static final String COMPLETE = "COMPLETE";
     public static final String FAIL = "FAIL";
     
-    private int searchid;
-    private String searchName;
-    private String searchDate;
-    private String searchType;
-    private String searchStatus;
-    private String username;
+    protected int searchid;
+    protected String searchName;
+    protected String searchDate;
+    protected String searchType;
+    protected String searchStatus;
+    protected String username;
     
     /** Creates a new instance of SearchRecord */
     public SearchRecord() {

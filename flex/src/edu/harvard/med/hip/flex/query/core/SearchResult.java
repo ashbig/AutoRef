@@ -101,4 +101,17 @@ public class SearchResult {
     public int getSearchid() {
         return searchid;
     }
+    
+    public int getNumOfFoundFlex() {
+        if(found == null || found.size() == 0)
+            return 0;
+        
+        int num = 0;
+        for(int i=0; i<found.size(); i++) {
+            MatchGenbankRecord mgr = (MatchGenbankRecord)found.get(i);
+            num += mgr.getNumOfMatchFlexSequence();
+        }
+        
+        return num;
+    }
 }
