@@ -32,7 +32,7 @@ for each clone. It will be used for quering ncbi to get clone sequnce.
 <tr>
     <td class="prompt">Please select the mgc clone distribution file:</td>
     <td><html:file property="mgcCloneFile" /></td>
-    <td>[<a href="ViewMgcCloneSampleFile.jsp">sample file</a>]</td>
+    <td>[<a href="ViewMgcSampleFile.jsp">sample file</a>]</td>
 </tr>
 
 
