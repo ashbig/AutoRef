@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.21 $
- * $Date: 2001-08-21 21:58:09 $
+ * $Revision: 1.22 $
+ * $Date: 2002-04-02 21:02:54 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.21 $ $Date: 2001-08-21 21:58:09 $
+ * @version    $Revision: 1.22 $ $Date: 2002-04-02 21:02:54 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -141,10 +141,12 @@ public class SaveResultAction extends ResearcherAction {
             resultType = Result.PCR_GEL_TYPE;
         } else if(form instanceof ContainerResultsForm) {
             resultType = Result.AGAR_PLATE_TYPE;
+        } else if(form instanceof CultureResultsForm) {
+            resultType = Result.CULTURE_PLATE_TYPE;
         }
         
         ResultForm resultForm = (ResultForm) form;
-        
+
         // if the form is editable, forward to the confirm page with stats.
         if(resultForm.isEditable()) {
             
@@ -155,8 +157,16 @@ public class SaveResultAction extends ResearcherAction {
                 // shove it into the request.
                 request.setAttribute(Constants.RESULT_STATS_KEY,stats);
             }
+            
+            if(form instanceof CultureResultsForm) {
+                Map stats = getResultStats((CultureResultsForm)form);
+                
+                // shove it into the request.
+                request.setAttribute(Constants.RESULT_STATS_KEY,stats);
+            }
+            
             ActionForward confirm = mapping.findForward("confirm");
-            System.out.println("confirm path " + confirm.getPath());
+//            System.out.println("confirm path " + confirm.getPath());
             return mapping.findForward("confirm");
         }
         
@@ -220,6 +230,7 @@ public class SaveResultAction extends ResearcherAction {
             session.removeAttribute(Constants.QUEUE_ITEM_KEY);
             session.removeAttribute("transformEntryForm");
             session.removeAttribute("gelEntryForm");
+            session.removeAttribute("cultureEntryForm");
             session.removeAttribute("SelectProtocolAction.queueItems");
             session.removeAttribute(Constants.PROTOCOL_NAME_KEY);
             request.setAttribute(Constants.CONTAINER_KEY, container);
@@ -262,6 +273,8 @@ public class SaveResultAction extends ResearcherAction {
         ContainerResultsForm containerForm = null;
         if(resultForm instanceof ContainerResultsForm) {
             containerForm = (ContainerResultsForm) resultForm;
+        } else if(resultForm instanceof CultureResultsForm) {
+            containerForm = (CultureResultsForm) resultForm;
         } else {
             return;
         }

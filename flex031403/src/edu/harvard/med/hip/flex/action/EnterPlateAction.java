@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.18 $
- * $Date: 2001-08-01 16:22:57 $
- * $Author: jmunoz $
+ * $Revision: 1.19 $
+ * $Date: 2002-04-02 21:02:17 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -57,8 +57,8 @@ import org.apache.struts.action.*;
  * process result for.
  *
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.18 $ $Date: 2001-08-01 16:22:57 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.19 $ $Date: 2002-04-02 21:02:17 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -178,6 +178,11 @@ public class EnterPlateAction extends ResearcherAction {
             // put the form into the session
             session.setAttribute("dnaEntryForm", resultForm);
             retForward = mapping.findForward("dnaEntry");
+        } else if(protocolName.equals(Protocol.ENTER_CULTURE_RESULTS)) {
+            resultForm = new CultureResultsForm(container);
+            // put the form into the session
+            session.setAttribute("cultureEntryForm", resultForm);
+            retForward = mapping.findForward("cultureEntry");
         } else {
             retForward = new ActionForward(mapping.getInput());
         }

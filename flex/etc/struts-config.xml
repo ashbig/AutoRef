@@ -53,6 +53,10 @@
     <form-bean      name="dnaEntryForm"
                     type="edu.harvard.med.hip.flex.form.DNAGelForm"/>
 
+    <!-- form used to enter results for a culture block -->
+    <form-bean      name="cultureEntryForm"
+                    type="edu.harvard.med.hip.flex.form.CultureResultsForm"/>
+
     <!-- Create process plate form bean -->
     <form-bean      name="createProcessPlateForm"
                     type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
@@ -121,6 +125,10 @@
     <!-- Form used to save the container details to a file -->
     <form-bean      name="saveContainerInfoForm"
                     type="edu.harvard.med.hip.flex.form.SaveContainerInfoForm"/>
+
+    <!-- Form used to upload the agar results -->
+    <form-bean      name="uploadAgarResultsForm"
+                    type="edu.harvard.med.hip.flex.form.UploadAgarResultsForm"/>
 
     </form-beans>
     
@@ -300,6 +308,7 @@
         <forward name="transformEntry" path="/EnterTransformDetails.jsp"/>
         <forward name="gelEntry"    path="/EnterGelDetails.jsp"/>
         <forward name="dnaEntry"    path="/EnterDNAGelDetails.jsp"/>
+        <forward name="cultureEntry"    path="/EnterCultureDetails.jsp"/>
     </action>
     
     <!-- Save a gel plate result-->
@@ -330,6 +339,16 @@
                 input="/EnterTransformDetails.jsp">
          <forward name="success" path="/PickResultType.jsp"/>
          <forward name="confirm" path="/EnterTransformDetails.jsp?EDIT_MODE=read"/>
+    </action>
+
+    <!-- save a transform plate result -->
+    <action     path="/SaveCultureResult"
+                type="edu.harvard.med.hip.flex.action.SaveResultAction"
+                name="cultureEntryForm"
+                scope="session"
+                input="/EnterCultureDetails.jsp">
+         <forward name="success" path="/PickResultType.jsp"/>
+         <forward name="confirm" path="/EnterCultureDetails.jsp?EDIT_MODE=read"/>
     </action>
 
     <!-- Process the protocol retieval and display -->
@@ -593,6 +612,16 @@
     <action path="/GetQueueItems"
             type="edu.harvard.med.hip.flex.action.GetQueueItemsAction">
       <forward name="enterProcessResults" path="/EnterProcessResults.jsp"/>
+      <forward name="enter_agar_result" path="/UploadAgarResults.jsp"/>
+    </action>
+
+    <!-- Upload the agar results -->
+    <action path="/UploadAgarResults"
+            type="edu.harvard.med.hip.flex.action.UploadAgarResultsAction"
+            name="uploadAgarResultsForm"
+            scope="request"
+            input="/UploadAgarResults.jsp">
+      <forward name="success" path="/UploadAgarResultsSuccess.jsp"/>
     </action>
 
     <!-- Action that will be used to export all the sequences to FASTA file -->

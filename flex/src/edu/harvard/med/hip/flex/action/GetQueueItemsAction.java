@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-08-01 23:07:46 $
- * $Author: jmunoz $
+ * $Revision: 1.5 $
+ * $Date: 2002-04-02 21:02:31 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -52,8 +52,8 @@ import edu.harvard.med.hip.flex.process.*;
  * This class will put a collection of queue items into the request based
  * on the protocol it is passed.
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.4 $ $Date: 2001-08-01 23:07:46 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.5 $ $Date: 2002-04-02 21:02:31 $
  */
 
 public class GetQueueItemsAction extends ResearcherAction {
@@ -109,6 +109,12 @@ public class GetQueueItemsAction extends ResearcherAction {
             request.setAttribute(Action.EXCEPTION_KEY, e);
             retForward = mapping.findForward("error");
         }
+        
+        // For agar result, we'll forward to a different page.
+        if(Protocol.ENTER_AGAR_PLATE_RESULTS.equals(protocolName)) {
+            return mapping.findForward("enter_agar_result");
+        }
+        
         // construct the next page pages on what was passed in.
         retForward = mapping.findForward(nextForward);
         return retForward;
