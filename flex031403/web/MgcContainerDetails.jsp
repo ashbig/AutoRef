@@ -101,9 +101,15 @@
           
         <td>
         <logic:present name="sample" property="sequenceId">
-           <a href="/FLEX/ViewSequence.do?FLEX_SEQUENCE_ID=<bean:write name="sample" property="sequenceId"/>   ">
-                <bean:write name="sample" property="sequenceId"/>
-           </a>
+            <logic:equal  name="sample" property="sequenceId" value="0" >
+                N/A
+            </logic:equal>
+
+            <logic:notEqual name="sample" property="sequenceId" value="0" > 
+               <a href="/FLEX/ViewSequence.do?FLEX_SEQUENCE_ID=<bean:write name="sample" property="sequenceId"/>   ">
+                    <bean:write name="sample" property="sequenceId"/>
+               </a>
+            </logic:notEqual> 
         </logic:present>
         <logic:notPresent name="sample" property="sequenceId">
             N/A
