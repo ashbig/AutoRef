@@ -107,7 +107,7 @@ public class SequenceQueryAction extends CollaboratorAction {
             }
         }
         
-        if(searchTerm == null || searchTerm.trim() == "") {
+        if(searchTerm == null || searchTerm.trim().equals("")) {
             errors.add("searchTerm", new ActionError("error.query.noSearchTerm"));
             saveErrors(request,errors);
             return new ActionForward(mapping.getInput());
