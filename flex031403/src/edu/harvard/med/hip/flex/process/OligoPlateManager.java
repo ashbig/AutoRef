@@ -149,7 +149,9 @@ public class OligoPlateManager {
                     plater.createOligoPlates();
                     plater.insertProcessInputOutput();
                     plater.insertReceiveOligoQueue();
-                    System.out.println("inserting the receive oligo plates protocol into queue.");                    
+                    System.out.println("receive oligo plates queue inserted.");
+                    plater.removeOrderOligoQueue();
+                    System.out.println("order oligo queue removed.");
                     
                     //remove sequences from queue
                     removeQueueSequence(seqList);
@@ -173,8 +175,8 @@ public class OligoPlateManager {
     
     public void sendOligoOrders() throws MessagingException{
         String to = "wmar@hms.harvard.edu";
-        String from = "wmar@hms.harvard.edu";
-        String cc = "cruel@3rdmill.com";
+        String from = "flexgene_manager@hms.harvard.edu";
+        String cc = "allison_halleck@hms.harvard.edu";
         String subject = "Testing Oligo Order";
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";

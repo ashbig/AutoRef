@@ -155,9 +155,9 @@ public class OligoPlater {
         plateOutFileName2 = filePath + container_3s.getLabel();
         plateOutFileName3 = filePath + container_3op.getLabel();
         
-        plateWriter_5p = new FileWriter(plateOutFileName1);
-        plateWriter_3s = new FileWriter(plateOutFileName2);
-        plateWriter_3op = new FileWriter(plateOutFileName3);
+        plateWriter_5p = new FileWriter(container_5p.getLabel());
+        plateWriter_3s = new FileWriter(container_3s.getLabel());
+        plateWriter_3op = new FileWriter(container_3op.getLabel());
         
         // Loop over plates.
         while (!done) {
@@ -216,7 +216,7 @@ public class OligoPlater {
                 
                 oligoSample_3s = generateOligoSample(currentGene,"3s", containerId_3s, well);
                 System.out.println("PlateID: "+containerId_3s+"; " + "3s lower oligo well: "+ well + "; "
-                + "sampleID: "+ oligoSample_3s.getId() +"; " + currentGene.getCDSLength());
+                + "sampleID: "+ oligoSample_3s.getId() +"; "+oligoSample_3s.getConstructid()+"; " + currentGene.getCDSLength());
                 container_3s.addSample(oligoSample_3s);
                 
                 plateWriter_3s.write(container_3s.getLabel()+"\t");
@@ -226,7 +226,7 @@ public class OligoPlater {
                 
                 oligoSample_3op = generateOligoSample(currentGene,"3op", containerId_3op, well);
                 System.out.println("PlateID: "+containerId_3op+"; " + "3op lower oligo well: "+ well + "; "
-                + "sampleID: "+ oligoSample_3op.getId() +"; " + currentGene.getCDSLength());
+                + "sampleID: "+ oligoSample_3op.getId() +"; "+oligoSample_3op.getConstructid()+"; " +currentGene.getCDSLength());
                 container_3op.addSample(oligoSample_3op);
                 
                 plateWriter_3op.write(container_3op.getLabel()+"\t");
@@ -337,6 +337,7 @@ public class OligoPlater {
     private Sample generateOligoSample(OligoPattern currentOligo, String oligoType, int plateId, int wellId)
     throws FlexDatabaseException {
         int oligoId;
+        int constructid;
         String sampleType = null;
         String status = "G";
         Sample sample = null;
@@ -344,17 +345,20 @@ public class OligoPlater {
         if (oligoType.equals("5p")) {
             oligoId = currentOligo.getOligoId_5p();
             sampleType = "OLIGO_5P";
+            sample = new Sample(sampleType, wellId, plateId, oligoId, status);
         }
         else if (oligoType.equals("3s")) {
             oligoId = currentOligo.getOligoId_3s();
+            constructid = currentOligo.getCloseConstructid();
             sampleType = "OLIGO_3C";
+            sample = new Sample(sampleType, wellId, plateId, constructid, oligoId, status);
         }
         else {
             oligoId = currentOligo.getOligoId_3op();
+            constructid = currentOligo.getOpenConstructid();
             sampleType = "OLIGO_3F";
+            sample = new Sample(sampleType, wellId, plateId, constructid, oligoId, status);
         }
-        
-        sample = new Sample(sampleType, wellId, plateId, oligoId, status);
         
         return sample;
     } //generateOligoSample
