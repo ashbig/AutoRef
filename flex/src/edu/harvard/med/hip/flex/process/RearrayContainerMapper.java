@@ -86,7 +86,7 @@ public class RearrayContainerMapper {
         }
         
         if(isControl) {
-            Sample controlNegative = new Sample(Sample.CONTROL_NEGATIVE,position,containerid, -1, Sample.BAD);
+            Sample controlNegative = new Sample(Sample.CONTROL_NEGATIVE,position,containerid, -1, Sample.GOOD);
             container.addSample(controlNegative);
         }
         
