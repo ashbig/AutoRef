@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.11 2002-09-06 20:01:04 dzuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.12 2002-12-18 17:00:34 Elena Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -105,12 +105,13 @@ public class GenbankGeneFinder {
             String inputLine;
             boolean breakSeq = false;
             while ((inputLine = in.readLine()) != null) {
+              
                 if(inputLine.trim().indexOf("/organism=") == 0) {
                     organism = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\""));
                 }
                 // /db_xref="LocusID:<a href=http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=71>71</a>"
                 if(inputLine.indexOf("LocusID:") != -1 && locus_link_id.equals("") ) {
-                    locus_link_id = inputLine.substring(inputLine.indexOf(">")+1, inputLine.lastIndexOf("<") - 1);
+                    locus_link_id = inputLine.substring(inputLine.indexOf(">")+1, inputLine.lastIndexOf("<") );
                 }
                 //  /gene="CKMT2"
                 if(inputLine.indexOf("/gene=") != -1 && gene_name.equals("") ) {
@@ -172,6 +173,7 @@ public class GenbankGeneFinder {
                     }
                 }
             }
+  
             in.close();
             
             h.put("species", organism);
@@ -193,7 +195,7 @@ public class GenbankGeneFinder {
     public static void main(String [] args) {
         GenbankGeneFinder finder = new GenbankGeneFinder();
         try{
-            Vector v = finder.search("7706522");
+            Vector v = finder.search("5031798");
             Enumeration enum = v.elements();
             while(enum.hasMoreElements()) {
                 GenbankSequence sequence = (GenbankSequence)enum.nextElement();
@@ -203,7 +205,7 @@ public class GenbankGeneFinder {
                 System.out.println();
             }
             
-            Hashtable h = finder.searchDetail("7706522");
+            Hashtable h = finder.searchDetail("5031798");
             System.out.println(h);
         } catch (FlexUtilException e) {
             System.out.println(e);
