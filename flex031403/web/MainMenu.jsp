@@ -8,7 +8,7 @@
 <head><title>JSP Page</title></head>
 <body>
 <logic:present scope="session" name="user">
-    Hello <bean:write name="user" property="username"/>
+    Hello <bean:write name="USER" property="username"/>
 </logic:present>
 <struts:errors/>
 </body>

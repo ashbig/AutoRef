@@ -8,6 +8,9 @@
     <body> <center>
     <h2>Welcome to FLEXGene Database</h2>
     <hr>
+   <html:errors/>
+
+
     <form:form action="logon.do" focus="username">
         <table>
             <tr>
