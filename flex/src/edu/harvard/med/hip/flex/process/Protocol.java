@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.31 2003-01-07 20:51:59 Elena Exp $
+ * $Id: Protocol.java,v 1.32 2003-04-17 19:44:23 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -95,7 +95,8 @@ public class Protocol {
         "Rearray PCR plates";
      public static final String GENERATE_SEQUENCING_GLYCEROL_PLATES = 
         "Generate sequencing glycerol plates";
-    
+     public static final String REARRAY_TO_DNA_TEMPLATE = 
+        "Rearray to DNA template plate";
     
     private int id;
     private String processcode;
