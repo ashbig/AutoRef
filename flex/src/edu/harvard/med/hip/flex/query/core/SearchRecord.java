@@ -17,8 +17,8 @@ public class SearchRecord {
     private String searchName;
     private String searchDate;
     private String searchType;
-    private double blastpid;
-    private int blastlength;
+    private String searchStatus;
+    private List params;
     private List searchResult;
     
     /** Creates a new instance of SearchRecord */
@@ -57,27 +57,27 @@ public class SearchRecord {
         return searchType;
     }
     
-    public void setBlastpid(double blastpid) {
-        this.blastpid = blastpid;       
-    }
-    
-    public double getBlastpid() {
-        return blastpid;
-    }
-    
-    public void setBlastlength(int blastlength) {
-        this.blastlength = blastlength;
-    }
-    
-    public int getBlastlength() {
-        return blastlength;
-    }
-    
     public void setSearchResult(List l) {
         this.searchResult = l;
     }
     
     public List getSearchResult() {
         return searchResult;
+    }
+    
+    public void setSearchStatus(String s) {
+        this.searchStatus = s;
+    }
+    
+    public String getSearchStatus() {
+        return searchStatus;
+    }
+    
+    public void setParams(List l) {
+        this.params = l;
+    }
+    
+    public List getParams() {
+        return params;
     }
 }

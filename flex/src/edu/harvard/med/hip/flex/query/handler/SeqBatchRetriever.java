@@ -10,6 +10,8 @@ import java.sql.*;
 import java.util.*;
 import javax.sql.*;
 
+import edu.harvard.med.hip.flex.query.QueryException;
+
 /**
  *
  * @author  dzuo
@@ -18,7 +20,6 @@ abstract public class SeqBatchRetriever {
     protected List giList;
     protected List foundList;
     protected List noFoundList;
-    protected String error;
     
     /** Creates a new instance of SeqBatchRetriever */
     public SeqBatchRetriever() {
@@ -42,16 +43,5 @@ abstract public class SeqBatchRetriever {
         return noFoundList;
     }
     
-    public String getError() {
-        return error;
-    } 
-    
-    public boolean retrieveSequence(List giList) {
-        this.giList = giList;
-        this.foundList = new ArrayList();
-        this.noFoundList = new ArrayList();
-        return retrieveSequence();
-    }
-    
-   abstract public boolean retrieveSequence();
+   abstract public List retrieveSequence() throws QueryException, Exception;
 }

@@ -12,66 +12,58 @@ import javax.sql.*;
 
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.query.core.*;
+import edu.harvard.med.hip.flex.query.QueryException;
 
 /**
  *
  * @author  dzuo
  */
-public class FlexSeqBatchRetriever extends SeqBatchRetriever {
-    
-    /** Creates a new instance of FlexSeqBatchRetriever */
-    public FlexSeqBatchRetriever() {
-    }
-    
+public class FlexSeqBatchRetriever extends SeqBatchRetriever {       
     public FlexSeqBatchRetriever(List giList) {
         super(giList);
     }
-        
-    public boolean retrieveSequence() {
-        if(giList == null || giList.size() == 0) {
-            error = "No query list provided.";
-            return false;
+    
+    /**
+     * Retrive the sequences from FLEXGene database. Populate foundList
+     * and noFoundList. Return a list of GIs that are found in the database.
+     *
+     * @return A list of GIs that are found in the database.
+     * @exception QueryException
+     * @exception FlexDatabaseException
+     * @exception SQLException
+     */
+    public List retrieveSequence() throws QueryException, FlexDatabaseException, SQLException {
+        if(giList == null) {
+            throw new QueryException("No query list provided.");
         }
         
-        noFoundList.addAll(giList); 
         List foundGi = new ArrayList();
         String sql = "select * from girecord where gi=?";
-        DatabaseTransaction t = null;
-        Connection conn = null;
-        PreparedStatement stmt = null;
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        Connection conn = t.requestConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = null;
-        try {
-            t = DatabaseTransaction.getInstance();
-            conn = t.requestConnection();
-            stmt = conn.prepareStatement(sql);
+        
+        for(int i=0; i<giList.size(); i++) {
+            String element = (String)giList.get(i);
+            stmt.setInt(1, Integer.parseInt(element));
+            rs = DatabaseTransaction.executeQuery(stmt);
             
-            for(int i=0; i<noFoundList.size(); i++) {
-                String element = (String)(noFoundList.get(i));
-                stmt.setString(1, element);
-                rs = DatabaseTransaction.executeQuery(stmt);
-                
-                if (rs.next()) {
-                    String gi = rs.getString("GI");
-                    String genbank = rs.getString("GENBANKACCESSION");
-                    int genbankVersion = rs.getInt("GENBANKVERSION");
-                    String sequenceFile = rs.getString("SEQUENCEFILE");
-                    GiRecord giRecord = new GiRecord(gi, genbank, genbankVersion, sequenceFile);
-                    foundList.add(giRecord);  
-                    foundGi.add(element);
-                }
+            if (rs.next()) {
+                String type = rs.getString("TYPE");
+                int gi = rs.getInt("GI");
+                String sequenceFile = rs.getString("SEQUENCEFILE");
+                GiRecord giRecord = new GiRecord(gi, sequenceFile);
+                giRecord.setType(type);
+                foundList.add(giRecord);
+                foundGi.add(element);
+            } else {
+                NoFound nf = new NoFound(element, null);
+                noFoundList.add(nf);
             }
-            
-            noFoundList.removeAll(foundGi);
-            
-            return true;
-        } catch (FlexDatabaseException ex) {
-            error = ex.getMessage();
-            return false;
-        } catch (SQLException e) {
-            error = e.getMessage();
-            return false;
-        } finally {
-            DatabaseTransaction.closeResultSet(rs);
         }
-    }    
+        
+        DatabaseTransaction.closeResultSet(rs);
+        return foundGi;
+    }
 }

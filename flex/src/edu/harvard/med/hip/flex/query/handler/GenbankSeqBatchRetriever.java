@@ -13,6 +13,7 @@ import javax.sql.*;
 import edu.harvard.med.hip.flex.util.GenbankGeneFinder;
 import edu.harvard.med.hip.flex.util.FlexUtilException;
 import edu.harvard.med.hip.flex.query.core.*;
+import edu.harvard.med.hip.flex.query.QueryException;
 
 /**
  *
@@ -28,17 +29,23 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
         super(giList);
     }
     
-    public boolean retrieveSequence() {
-        if(giList == null || giList.size() == 0) {
-            error = "No query list provided.";
-            return false;
+    
+    /**
+     * Retrive the sequences from FLEXGene database. Populate foundList
+     * and noFoundList. Return a list of GIs that are found in the database.
+     *
+     * @return A list of GIs that are found in the database.
+     * @exception QueryException
+     */
+    public List retrieveSequence() throws QueryException {
+        if(giList == null) {
+            throw new QueryException("No query list provided.");
         }
         
-        noFoundList.addAll(giList);
         List foundGi = new ArrayList();
         
         for(int i=0; i<noFoundList.size(); i++) {
-            String element = (String)(noFoundList.get(i));
+            String element = (String)(giList.get(i));
             GenbankGeneFinder finder = new GenbankGeneFinder();
             
             try {
@@ -52,19 +59,17 @@ public class GenbankSeqBatchRetriever extends SeqBatchRetriever {
                     noFoundList.add(nofound);
                 } else {
                     String genbank = (String)(searchResult.get("accession"));
-                    int genbankVersion = -1;
-                    GiRecord giRecord = new GiRecord(element, genbank, genbankVersion, element, start, stop);
+                    GiRecord giRecord = new GiRecord(Integer.parseInt(element), genbank, element, start, stop);
                     giRecord.setSequenceText((String)(searchResult.get("sequencetext")));
                     foundList.add(giRecord);
                     foundGi.add(element);
                 }
             } catch (FlexUtilException ex) {
-                error = ex.getMessage();
-                return false;
+                NoFound nf = new NoFound(element, NoFound.GI_NOT_IN_NCBI);
+                noFoundList.add(nf);
             }
         }
         
-        noFoundList.removeAll(foundGi);        
-        return true;
+        return foundGi;
     }
 }
