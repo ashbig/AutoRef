@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.4 2003-05-14 17:59:19 dzuo Exp $
+ * $Id: Sample.java,v 1.5 2003-06-11 18:12:05 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -66,6 +66,11 @@ public class Sample {
     
     protected int cdslength = -1;
     protected int sequenceid = -1;
+    
+    protected int cloneid = 0;
+    
+    public void setCloneid(int cloneid) {this.cloneid = cloneid;}
+    public int getCloneid() {return cloneid;}
 
     public Sample() {}
         
@@ -210,6 +215,7 @@ public class Sample {
                     oligoid = -1;
                 
                 status = rs.getString("STATUS_GB");
+                cloneid = rs.getInt("CLONEID");
                 
                 String newSql = "select distinct f.cdslength as cdslength from flexsequence f, "+
                 "constructdesign c, sample s where f.sequenceid = "+
@@ -338,7 +344,27 @@ public class Sample {
                 
         if(Protocol.REARRAY_TO_DNA_TEMPLATE.equals(processname))
             type = DNA;
-                
+            
+        if(Protocol.REARRAY_GLYCEROL.equals(processname))
+            type = ISOLATE;
+        
+        if(Protocol.REARRAY_ARCHIVE_DNA.equals(processname))
+            type = DNA;
+        
+        if(Protocol.REARRAY_ARCHIVE_GLYCEROL.equals(processname))
+            type = ISOLATE;
+        
+        if(Protocol.REARRAY_DIST_DNA.equals(processname))
+            type = DNA;
+        
+        if(Protocol.REARRAY_DIST_GLYCEROL.equals(processname))
+            type = ISOLATE;
+        
+        if(Protocol.REARRAY_SEQ_DNA.equals(processname))
+            type = DNA;
+        
+        if(Protocol.REARRAY_SEQ_GLYCEROL.equals(processname))
+            type = ISOLATE;
         
         return type;
     }
@@ -636,6 +662,12 @@ public class Sample {
             sql = sql + ",status_gb";
             valuesql = valuesql + ",'"+status+"'";
         }
+        
+        if(cloneid != 0) {
+            sql = sql + ",cloneid";
+            valuesql = valuesql + ","+cloneid;
+        }
+        
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
