@@ -14,6 +14,7 @@ import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
@@ -386,6 +387,7 @@ public class ReportRunner implements Runnable
       CloneSequence clone_sequence = null;
       UIRead read = null;
       RefSequence refsequence = null;
+       ArrayList discrepancies =  null;
       if ( clone.getRefSequenceId()>0)
       {
          refsequence = (RefSequence)refsequences.get(new Integer(clone.getRefSequenceId()));
@@ -439,12 +441,36 @@ public class ReportRunner implements Runnable
     
     if(  m_clone_discr_high)
     { 
+        try
+        {
+            discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
+            String discrepancy_report_html = Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_5P, true,true);
+         discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.RNA, true,true);
+         discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_3P, true,true);
+
+         cloneinfo.append(discrepancy_report_html);
+        }
+        catch(Exception e){}
+        cloneinfo.append("\t");           
         //clone_sequence = 
        // cloneinfo.append(+"\t");
     }//    Discrepancies High Quality (separated by type)
     if(  m_clone_disc_low)
     { 
-        //cloneinfo.append(+"\t");
+         try
+        {
+            if ( discrepancies == null )
+            {
+             discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
+            }
+            String discrepancy_report_html = Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_5P, true,false);
+         discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.RNA, true,false);
+         discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_3P, true,false);
+
+         cloneinfo.append(discrepancy_report_html);
+        }
+        catch(Exception e){}
+        cloneinfo.append("\t"); 
     } //   Discrepancies Low Quality (separated by type)
 //clone.setSequenceAnalisysStatus (rs.getInt("analysisSTATUS"));
   
