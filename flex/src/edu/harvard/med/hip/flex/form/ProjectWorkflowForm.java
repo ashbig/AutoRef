@@ -16,6 +16,7 @@ import org.apache.struts.action.*;
 public class ProjectWorkflowForm extends ActionForm {
     protected String forwardName = null;
     protected int projectid;
+    protected String projectname;
     protected int workflowid;
     
     public void setForwardName(String forwardName) {
@@ -24,6 +25,14 @@ public class ProjectWorkflowForm extends ActionForm {
     
     public String getForwardName() {
         return forwardName;
+    }
+    
+    public void setProjectname(String projectname) {
+        this.projectname = projectname;
+    }
+    
+    public String getProjectname() {
+        return projectname;
     }
     
     public void setProjectid(int projectid) {
