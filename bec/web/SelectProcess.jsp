@@ -97,7 +97,7 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       Run isolate ranker (settings required)</font></td>
   </tr>
 
-<% if (! ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+<% if (! edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
 {%>
   <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"><font color="#000080">&nbsp; 
@@ -152,7 +152,7 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
 <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Clone Evaluation</font></b></td>
 </tr>
-<% if (! ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+<% if (! edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
 {%>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
@@ -206,7 +206,7 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> >
       View internal primers </font></td>
   </tr>
-<% if (! ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+<% if (! edu.harvard.med.hip.utility.ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
 {%>
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
