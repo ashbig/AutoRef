@@ -15,19 +15,21 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.4 2003-07-07 13:12:35 Elena Exp $
+ * $Id: Oligo.java,v 1.5 2003-10-20 17:27:36 Elena Exp $
  * @@File:	Oligo.java
 
  */
 public class Oligo
 {
-
+    
     // insert SYSTEM as user
     public static final int TYPE_COMMON = 1;
-    public static final int TYPE_GENESEPECIFIC_CALCULATED = 2;
-    public static final int TYPE_GENESEPECIFIC_MANUALADDED = 3;
     public static final int TYPE_UNIVERSAL = 0;
     public static final int TYPE_VECTORSPECIFIC = 2;
+    public static final int TYPE_GENESEPECIFIC_CALCULATED = 3;
+    public static final int TYPE_GENESEPECIFIC_MANUALADDED = 4;
+    //public static final int TYPE_HOLDER = 5;
+    //public static final int TYPE_HOLDER = 6;
     public static final int TYPE_NOTKNOWN = -1;
 
     //for inner primers
@@ -43,7 +45,8 @@ public class Oligo
     //for end reads primers
     public static final int POSITION_FORWARD = 5;
     public static final int POSITION_REVERSE = 3;
-
+    
+   
     private int             m_id = -1;
     private int             m_submitterid = -1;//for manually added genespecific oligo
     private String          m_sequence = null;

@@ -16,7 +16,7 @@ import java.util.*;
 public class OligoCalculation
 {
     public static final int     QUERYTYPE_RESULTID = 0;
-    public static final int     QUERYTYPE_SEQUENCEID = 0;
+    public static final int     QUERYTYPE_REFSEQUENCEID = 1;
     
     private ArrayList           m_oligos = null;
     private Primer3Spec         m_primer3_spec = null;
@@ -72,14 +72,14 @@ public class OligoCalculation
    public void         setOligos(ArrayList v){  m_oligos = v;}
     
     //function gets all oligo calculations from db for the provided id
-    public ArrayList       getOligoCalculations(int id, int id_type) throws BecDatabaseException
+    public static ArrayList       getOligoCalculations(int id, int id_type) throws BecDatabaseException
     {
         String sql = null;
         if (id_type == QUERYTYPE_RESULTID)
         {
            sql =  "select oligocalculationid, sequenceid, primer3configid, dateadded,resultid from oligospec where resultid = "+id;
         }
-        else if (id_type == QUERYTYPE_SEQUENCEID)
+        else if (id_type == QUERYTYPE_REFSEQUENCEID)
         {
              sql =  "select oligocalculationid, sequenceid, primer3configid, dateadded,resultid from oligospec where sequenceid = "+id;
         }
@@ -108,9 +108,9 @@ public class OligoCalculation
             }
             return res;
         } 
-        catch (SQLException sqlE)
+        catch (Exception sqlE)
         {
-            throw new BecDatabaseException("Error occured while initializing Oligo with id: "+m_id+"\n"+sqlE+"\nSQL: "+sql);
+            throw new BecDatabaseException("Error occured while initializing OligoCalculation with id: "+id+"\n"+sqlE+"\nSQL: "+sql);
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);

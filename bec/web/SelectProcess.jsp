@@ -7,6 +7,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.user.*"%>
+<%@ page import="edu.harvard.med.hip.bec.Constants"%>
 
 <html>
 
