@@ -26,6 +26,9 @@ public class Workflow {
     protected Vector flow;
     
     public static final int COMMON_WORKFLOW = 1;
+    public static final int STANDARD_WORKFLOW = 6;
+    public static final int CREATOR_WORKFLOW = 5;
+    public static final int PSEUDOMONAS_WORKFLOW = 4;
     public static final int MGC_PLATE_HANDLE_WORKFLOW = 7;
     public static final int MGC_GATEWAY_WORKFLOW = 8;
     public static final int MGC_CREATOR_WORKFLOW = 9;
