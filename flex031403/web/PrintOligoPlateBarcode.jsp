@@ -13,7 +13,7 @@
 <hr>
 <html:errors/>
 <p>
-<h3>Please click the buttons to print out plate barcodes:<p></h3>
+<h3>Please click the button to print out plate barcodes:<p></h3>
     <% List ids = (List) request.getSession().getAttribute("plateList"); %>
 
     <html:form action="/PrintOligoPlateBarcode.do" focus="location">

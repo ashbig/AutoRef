@@ -11,7 +11,7 @@
     <hr>
     <html:errors/>
     <p>
-    <h3>You have successfully registrated to FLEXGene.</h3>
+    <h3>You have successfully registered to FLEXGene.</h3>
 <a href="login.jsp">Login to <bean:message key="flex.name"/></a>
 </body>
 </html>
