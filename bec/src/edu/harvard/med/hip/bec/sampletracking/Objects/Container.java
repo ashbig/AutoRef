@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.19 2003-10-10 15:29:17 Elena Exp $
+ * $Id: Container.java,v 1.20 2003-10-10 15:41:42 Elena Exp $
  *
  * File     	: Container.java
 
@@ -327,14 +327,17 @@ public class Container
                 label =  rs.getString("label");
                 if (process_code ==  Constants.PROCESS_SELECT_PLATES_FOR_END_READS)
                 {
-                    sqlCheckVector = sqlCheckVector +rs.getInt("containerid") + "))";
-                    rsCheckParam = t.executeQuery(sqlCheckVector);
+                   // sqlCheckVector = sqlCheckVector +rs.getInt("containerid") + "))";
+                    rsCheckParam = t.executeQuery(sqlCheckVector +rs.getInt("containerid") + "))");
                     if ( rsCheckParam.next() )
                     {
-                        if (param_id != rsCheckParam.getInt("vectorid") ) break;
+                        if (param_id == rsCheckParam.getInt("vectorid") ) container_labels.add(   label  );
                     }
                 }
-                container_labels.add(   label  );
+                else if(process_code ==  Constants.PROCESS_RUN_ISOLATE_RUNKER)
+                {
+                    container_labels.add(   label  );
+                }
             }
             return container_labels;
         } catch (Exception sqlE)
