@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-05-21 20:24:42 $
+ * $Revision: 1.2 $
+ * $Date: 2003-10-08 12:46:20 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -52,7 +52,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-05-21 20:24:42 $
+ * @version    $Revision: 1.2 $ $Date: 2003-10-08 12:46:20 $
  */
 
 public class DatabaseTransactionLocal
@@ -61,16 +61,16 @@ public class DatabaseTransactionLocal
     //modify for web application
     
     public static final String BEC_url = "jdbc:oracle:thin:@kotel:1532:wall";
-    public static final String BEC_username = "bec_dev";
+    public static final String BEC_username = "bec_test";
     public static final String BEC_password = "bec";
     
-    public static final String FLEX_url = "jdbc:oracle:thin:@kotel:1532:wall";
-    public static final String FLEX_username = "flex_test";
-    public static final String FLEX_password = "flex";
+    public static final String FLEX_url = "jdbc:oracle:thin:@kotel:1532:flex";
+    public static final String FLEX_username = "flex_production";
+    public static final String FLEX_password = "3monkeys";
     
     
     private  String url = "jdbc:oracle:thin:@kotel:1532:wall";
-    private   String username = "bec_dev";
+    private   String username = "bec_test";
     private   String password = "bec";
     // singleton instance.
     private static DatabaseTransactionLocal instance = null;
