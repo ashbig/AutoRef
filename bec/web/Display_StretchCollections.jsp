@@ -56,8 +56,6 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
   </table>  </center>
 </div>
 
-<!--<% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
-{%><form action="RunProcess.do" ><%}%>-->
 
 <% 
 
@@ -76,6 +74,7 @@ StretchCollection strcol = null;
 ArrayList stretchColl = null;
 for (int index = 0; index < items.size(); index ++)
 {
+    stretchColl = null;
    if (forwardName_int == Constants.STRETCH_COLLECTION_REPORT_INT)
     {
         strcol = (StretchCollection)stretch_collections.get((String) items.get(index));
