@@ -33,8 +33,9 @@ public class NeedleWrapper
     private NeedleResult m_needle = null;
     private String  m_output_file_dir = "/tmp/";//parsing
     //windows
-    private String  m_needle_path = "c:\\EMBOSS-2.5.1\\emboss\\needle.exe  ";
-    
+  //  private String  m_needle_path = "c:\\EMBOSS-2.5.1\\emboss\\needle.exe  ";
+     private String  m_needle_path = "d:\\bio_programs\\EMBOSS-2.5.1\\emboss\\needle.exe  ";
+     
     //unix
   
     
