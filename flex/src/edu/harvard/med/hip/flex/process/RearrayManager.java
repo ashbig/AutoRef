@@ -26,8 +26,8 @@ import edu.harvard.med.hip.flex.user.User;
 public class RearrayManager {
     public static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     public static final String DILIM = "\t";
-    //public static final String FILEPATH = "/tmp/";
-    public static final String FILEPATH = "G:\\";
+    public static final String FILEPATH = "/tmp/";
+    //public static final String FILEPATH = "G:\\";
     public static final String LEFTFILE = "left";
     
     protected InputStream fileInput = null;

@@ -95,7 +95,7 @@ public class GenericRearrayer {
      * @param samples A list of samples.
      * @return A sorted list of samples.
      */
-    public ArrayList groupByDest(List samples) throws Exception {
+    public ArrayList groupByDest(List samples) throws RearrayException {
         Hashtable containers = new Hashtable();
         
         for(int i=0; i<samples.size(); i++) {
@@ -132,7 +132,7 @@ public class GenericRearrayer {
                     lastPosition = position;
                 } else {
                     if(lastLabel.equals(label) && lastPosition == position) {
-                        throw new Exception("Duplicate destination wells: "+rs.getRearrayInputSample().getDestPlate()+": "+rs.getRearrayInputSample().getDestWell());
+                        throw new RearrayException("Duplicate destination wells: "+rs.getRearrayInputSample().getDestPlate()+": "+rs.getRearrayInputSample().getDestWell());
                     } else {
                         lastLabel = label;
                         lastPosition = position;

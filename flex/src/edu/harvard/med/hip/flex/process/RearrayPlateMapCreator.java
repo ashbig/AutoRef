@@ -26,6 +26,7 @@ public class RearrayPlateMapCreator {
     
     protected boolean isPlateAsLabel = true;
     protected boolean isWellAsNumber = true;
+    protected boolean isDestWellAsNumber = true;
     
     public RearrayPlateMapCreator() {}
     
@@ -34,6 +35,9 @@ public class RearrayPlateMapCreator {
         this.isPlateAsLabel = b1;
         this.isWellAsNumber = b2;
     }
+    
+    public void setIsDestWellAsNumber(boolean b) {this.isDestWellAsNumber = b;}
+    public boolean getIsDestWellAsNumber() {return isDestWellAsNumber;}
     
     /**
      * Get all the necessary information from the database for the given input samples.
@@ -45,7 +49,7 @@ public class RearrayPlateMapCreator {
      */
     public ArrayList createRearraySamples(List inputSamples, Connection conn)
     throws SQLException {
-        String s1 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label"+
+        String s1 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype"+
         " from flexsequence f, constructdesign c, containerheader ch,"+
         " (select * from sample where containerid in ("+
         " select containerid from containerheader where label=?)) s"+
@@ -53,7 +57,7 @@ public class RearrayPlateMapCreator {
         " and c.constructid=s.constructid"+
         " and s.containerid=ch.containerid"+
         " and s.containerposition=?";
-        String s2 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label"+
+        String s2 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype"+
         " from flexsequence f, constructdesign c, containerheader ch,"+
         " (select * from sample where containerid=?) s"+
         " where f.sequenceid=c.sequenceid"+
@@ -81,19 +85,22 @@ public class RearrayPlateMapCreator {
                 }
                 
                 int position;
-                int destPosition = -1;
                 if(!isWellAsNumber) {
                     position = Algorithms.convertWellFromA8_12toInt(s.getSourceWell());
                     //System.out.println(s.getSourceWell()+"\t"+position);
-                    if(s.getDestWell() != null) {
-                        //System.out.println("dest: "+destPosition);
-                        destPosition = Algorithms.convertWellFromA8_12toInt(s.getDestWell());
-                    }
                 } else {
                     position = Integer.parseInt(s.getSourceWell());
-                    if(s.getDestWell() != null)
-                        destPosition = Integer.parseInt(s.getDestWell());
                 }
+                   
+                int destPosition = -1;                 
+                if(s.getDestWell() != null) {
+                    if(!isDestWellAsNumber) {    
+                        destPosition = Algorithms.convertWellFromA8_12toInt(s.getDestWell());
+                    } else {
+                        destPosition = Integer.parseInt(s.getDestWell());
+                    }
+                }
+                
                 stmt.setInt(2, position);
                 
                 rs = DatabaseTransaction.executeQuery(stmt);
@@ -110,11 +117,13 @@ public class RearrayPlateMapCreator {
                     int cdslength = rs.getInt(9);
                     int containerid = rs.getInt(10);
                     String label = rs.getString(11);
+                    String sampletype = rs.getString(12);
                     RearrayPlateMap m = new RearrayPlateMap(sampleid,constructid,constructtype,oligoid5p,oligoid3p,sequenceid,cdsstart,cdsstop,cdslength,containerid,label);
                     m.setSourceWell(position);
                     m.setRearrayInputSample(s);
                     m.setDestPlateLabel(s.getDestPlate());
                     m.setDestWell(destPosition);
+                    m.setSampletype(sampletype);
                     samples.add(m);
                 }
             }
@@ -189,7 +198,7 @@ public class RearrayPlateMapCreator {
     throws SQLException {
         ArrayList newSamples = new ArrayList();
         
-        String sql = "select s.sampleid, s.constructid, s.containerid, s.containerposition, c.label"+
+        String sql = "select s.sampleid, s.constructid, s.containerid, s.containerposition, c.label, s.sampletype"+
         " from containerheader c, sample s"+
         " where c.containerid=s.containerid"+
         " and s.oligoid=?"+
@@ -212,11 +221,13 @@ public class RearrayPlateMapCreator {
                     int containerid = rs.getInt(3);
                     int containerposition = rs.getInt(4);
                     String label = rs.getString(5);
+                    String sampletype = rs.getString(6);
                     RearrayPlateMap s = new RearrayPlateMap(sampleid, constructid, null, -1, -1, -1, -1, -1, -1, containerid, label);
                     s.setSourceWell(containerposition);
                     s.setRearrayInputSample(sample.getRearrayInputSample());
                     s.setDestPlateLabel(sample.getDestPlateLabel());
                     s.setDestWell(sample.getDestWell());
+                    s.setSampletype(sampletype);
                     
                     newSamples.add(s);
                 }

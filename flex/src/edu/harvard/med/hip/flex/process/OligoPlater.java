@@ -25,8 +25,8 @@ import java.io.*;
 public class OligoPlater
 {
     
-    protected static final String filePath = "/tmp/";
-    //protected static final String filePath = "G:\\";
+    //protected static final String filePath = "/tmp/";
+    protected static final String filePath = "G:\\";
     //protected static final String filePath = "H:\\Dev\\OligoOrder\\";
     
     protected static final int positiveControlPosition = 1;
@@ -75,6 +75,10 @@ public class OligoPlater
     
     public void setIsOnlyClose(boolean b) {this.m_isOnlyClose = b;}
     public void setIsOnlyOpen(boolean b) {this.m_isOnlyOpen = b;}
+    
+    public Container get5pContainer() {return container_5p;}
+    public Container get3fContainer() {return container_3op;}
+    public Container get3cContainer() {return container_3s;}
     
     /**
      * Creates new OligoPlater

@@ -38,6 +38,7 @@ public class Workflow
     public static final int CONVERT_FUSION_TO_CLOSE = 12;
     public static final int CONVERT_CLOSE_TO_FUSION = 13;
     public static final int DNA_TEMPLATE_CREATOR = 14;
+    //public static final int TEMPLATE_CREATOR_PCRA = 15;
     
     /** Creates new Workflow */
     public Workflow()

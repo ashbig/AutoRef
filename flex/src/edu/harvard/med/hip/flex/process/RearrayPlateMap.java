@@ -31,7 +31,8 @@ public class RearrayPlateMap {
     protected int cdslength =-1;
     protected int oligoid3pReversed = -1;
     protected int constructid = -1;
-    protected int sampleid = -1;    
+    protected int sampleid = -1; 
+    protected String sampletype = null;
     
     protected String constructtype = null;
     
@@ -65,6 +66,7 @@ public class RearrayPlateMap {
     public void setOligo3pReversed(int id) {this.oligoid3pReversed = id;}
     public void setDestPlateLabel(String label) {this.destPlateLabel = label;}
     public void setDestWell(int id) {this.destWell = id;}
+    public void setSampletype(String sampletype) {this.sampletype = sampletype;}
     
     public int getSourcePlateid() {return sourcePlateid;}
     public String getSourcePlateLabel() {return sourcePlateLabel;}
@@ -81,5 +83,6 @@ public class RearrayPlateMap {
     public int getOligoid3p() {return oligoid3p;}
     public int getOligoid3pReversed() {return oligoid3pReversed;}
     public int getConstructid() {return constructid;}
+    public String getSampletype() {return sampletype;}
     public RearrayInputSample getRearrayInputSample() {return inputSample;}
 }
