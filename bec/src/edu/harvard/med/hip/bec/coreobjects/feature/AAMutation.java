@@ -8,6 +8,7 @@
     
     import  edu.harvard.med.hip.bec.util.*;
     import  edu.harvard.med.hip.bec.database.*;
+    import edu.harvard.med.hip.bec.bioutil.SequenceManipulation;
     import java.sql.*;
     /**
      *
@@ -23,9 +24,9 @@
         }
         
          public AAMutation() {super(); m_type=AA;}
-        public int              getChangeType()
+        public int              getChangeType(String str_mut, String str_ori)
         { 
-            if (m_change_type ==-1) m_change_type = setType();
+            if (m_change_type ==-1) m_change_type = setType( str_mut, str_ori);
             return m_change_type;
         }
         
@@ -52,7 +53,7 @@
          
         
          
-        private int setType()
+        private int setType(String str_mut, String str_ori)
         {
             String o =m_change_ori.toUpperCase();
             String m = m_change_mut.toUpperCase();
@@ -61,7 +62,7 @@
             
             int type = Mutation.TYPE_NOT_DEFINE;
              
-            if (m_position == 1 )
+            if (m_position == 1 )//start codon
             {
                  if (o != null && m==null)
                 {
@@ -73,10 +74,10 @@
                 }
                 else if(o != null && m != null && o.equals(m ) )
                 {
-                    return Mutation.TYPE_AA_SILENT;
+                    return Mutation.TYPE_AA_SILENT_CONSERVATIVE;
                 }
             }
-            //never executed - fix this
+            //fix this //stop codon
             else if(o != null &&  o.substring( 0, 1).equals("*") )
             {
                 if (m != null && !o.substring( 0, 1).equals(m.substring( 0, 1)))
@@ -90,9 +91,9 @@
             }
             else if(o!= null && m != null && o.equals(m))
             {
-                return Mutation.TYPE_AA_SILENT_CONSERVATIVE;
+                return Mutation.TYPE_AA_SILENT;
             }
-            else if(m != null && m.equals("*"))
+            else if(m != null && m.equals("*") )
             {
                 return Mutation.TYPE_AA_TRUNCATION;
             }
@@ -101,19 +102,29 @@
                 (o != null && m != null &&  o.length() > m.length() && m.charAt(0) !='*'))
             {
                 type = Mutation.TYPE_AA_DELETION;
-                if (o != null && m != null)//?????????  && $o !~ $m && $o !~ $m) 
+                if ( o != null && str_ori.length() % 3 == 0 && m == null )
                 {
-                    return Mutation.TYPE_AA_DELETION_COMPLEX; 
+                    m_change_ori = SequenceManipulation.getSequenceTranslation(str_ori);
+                    return Mutation.TYPE_AA_INFRAME_DELETION;
                 }
+                else if ( o != null && str_ori.length() % 3 != 0 && m == null )
+                    return Mutation.TYPE_AA_FRAMESHIFT_DELETION;
+                else   if (o != null && m != null)
+                   return Mutation.TYPE_AA_DELETION_COMPLEX; 
             }
-            else if(o== null || o.length() == 0 ||
+            else if  (o== null || o.length() == 0 ||
                 ( o != null && m!= null && o.length() < m.length()  &&  m.charAt( 0) != '*' ))  
             {
                 type = Mutation.TYPE_AA_INSERTION;	
-                if (o!=null && m!= null)//??????????????? && $o !~ $m && $o !~ $m)
+                if ( o == null &&  m != null && str_mut.length() % 3 == 0)
                 {
-                    return Mutation.TYPE_AA_INSERTION_COMPLEX; 
+                    m_change_mut = SequenceManipulation.getSequenceTranslation(str_mut);
+                    return Mutation.TYPE_AA_INFRAME_INSERTION;
                 }
+                else if ( o == null && str_mut.length() % 3 != 0 &&  m != null)
+                    return Mutation.TYPE_AA_FRAMESHIFT_INSERTION;
+                else if(o!=null && m!= null)//??????????????? && $o !~ $m && $o !~ $m)
+                     return Mutation.TYPE_AA_INSERTION_COMPLEX; 
             }
             else if  (o != null && m!=null && !o.equals(m) && o.length() == 1 
                 && m.length()  == 1 )

@@ -71,22 +71,26 @@ package edu.harvard.med.hip.bec.coreobjects.feature;
             || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1))
             )
             {
-                return Mutation.TYPE_LINKER_3_INS_DEL;
+                 if ( m != null && m.indexOf("N") != -1)return Mutation.TYPE_N_INSERTION_LINKER3;
+                 return Mutation.TYPE_LINKER_3_INS_DEL;
             }
             else if ( m_type == Mutation.LINKER_5P && ( (o == null && m!= null) || (o != null && m == null)
             || (o != null && o.indexOf("-") != -1) || (m != null && m.indexOf("-") != -1))
              )
             {
+                if ( m != null && m.indexOf("N") != -1)return Mutation.TYPE_N_INSERTION_LINKER5;
                 return Mutation.TYPE_LINKER_5_INS_DEL;
             }
             else if ( (o != null && m!= null) && (o.length() ==  m.length() )
                      && m_type == Mutation.LINKER_3P)
             {
+                if ( m.indexOf("N") != -1) return Mutation.TYPE_N_SUBSTITUTION_LINKER3;
                 return Mutation.TYPE_LINKER_3_SUBSTITUTION;
             }
             else if ( (o != null && m!= null) && (o.length() ==  m.length() )
                      && m_type == Mutation.LINKER_5P)
             {
+                 if ( m.indexOf("N") != -1) return Mutation.TYPE_N_SUBSTITUTION_LINKER5;
                  return Mutation.TYPE_LINKER_5_SUBSTITUTION;
             }
             

@@ -186,8 +186,8 @@ public class RNAMutation extends Mutation {
     public void             setPolymDate(java.util.Date d){m_polymdate = d;}
     public  void          setUpstream(String v){  m_upstream  = v ;}
     public  void          setDownStream(String v){  m_downstream  = v ;}
-    public  void          setCodonOri(String v){  m_codon_ori  = v ;}
-    public  void          setCodonMut(String v){  m_codon_mut  = v ;}
+    public  void          setCodonOri(String v){  m_codon_ori  = v.toUpperCase() ;}
+    public  void          setCodonMut(String v){  m_codon_mut  = v.toUpperCase() ;}
     public  void             setCodonPos(int v){  m_codon_pos  = v ;}
 
     
@@ -245,14 +245,29 @@ public class RNAMutation extends Mutation {
          String o =m_change_ori;
         String m = m_change_mut;
         if (o.length() == 0 ) o = null;
-            if (m.length() == 0) m = null;
+        if (m.length() == 0) m = null;
         int type = Mutation.TYPE_NOT_DEFINE;
          String aa_ori = null;
          String aa_mut = null;
+         String[] codons_for_processing = {m_codon_ori,m_codon_mut};
+          
+         //process ambiquoaty: this function can change mut_codon_for_processing
+         boolean isAmbiquousBase = processForAmbiquoty(o, m , codons_for_processing);
         
-        //point mutation
-     if (o!= null && m!=null && o.length()==1 &&m.length()==1 && m_codon_ori.indexOf("-") == -1 && m_codon_mut.indexOf("-") == -1  ) 
+        //point substitution in codon , no deletion/insertion in codon
+     if (o!= null && m!=null && o.length()==1 &&m.length()==1 && 
+            m_codon_ori.indexOf("-") == -1 && m_codon_mut.indexOf("-") == -1  ) 
      { 
+         //mono substitution to n
+          if ( isAmbiquousBase ) 
+          {
+              if ( SequenceManipulation.isStartCodon (m_codon_ori) )
+                  return Mutation.TYPE_N_SUBSTITUTION_START_CODON;
+              else if (SequenceManipulation.isStopCodon (m_codon_ori) )
+                  return Mutation.TYPE_N_SUBSTITUTION_STOP_CODON;
+              else 
+                  return Mutation.TYPE_N_SUBSTITUTION_CDS;
+           }
       //   System.out.print(SequenceManipulation.isStartCodon (m_codon_ori)+" "+SequenceManipulation.isStartCodon (m_codon_mut));
          //start codon
          if (m_codon_ori != m_codon_mut && SequenceManipulation.isStartCodon (m_codon_ori)
@@ -285,29 +300,44 @@ public class RNAMutation extends Mutation {
              }
              else if(aa_ori.equals(aa_mut))
              {
-                return Mutation.TYPE_RNA_SILENT;
+                 return Mutation.TYPE_RNA_SILENT;
              }
              else
              {
-              
-                    return Mutation.TYPE_RNA_MISSENSE;
+                 return Mutation.TYPE_RNA_MISSENSE;
              }
          }
     }  
-    else 
+         //insertion or deletion
+    else if ( (o!= null && m==null) || (o== null && m!=null))
     {
       
 	int len = 0;
 	if (o != null) len = o.length();
-        if (m!= null)  len = len - m.length();
-	
-	if (len%3 == 0 ) 
+        if (m!= null)  len = m.length();
+	//starrt codon deletion
+         if (o != null && m == null && SequenceManipulation.isStartCodon (m_codon_ori))
+         {
+             if ( isAmbiquousBase ) return Mutation.TYPE_N_SUBSTITUTION_START_CODON;
+             else return Mutation.TYPE_RNA_NO_TRANSLATION;
+         }
+       
+        //deletion in stop codon
+         if (o != null && m == null && SequenceManipulation.isStopCodon (m_codon_ori))
+         {
+             if ( isAmbiquousBase ) return Mutation.TYPE_N_SUBSTITUTION_STOP_CODON;
+             else return Mutation.TYPE_RNA_POST_ELONGATION;
+         }
+        //inframe / frameshift definition
+         type = (len%3 == 0 )? Mutation.TYPE_RNA_INFRAME: Mutation.TYPE_RNA_FRAMESHIFT;
+          //insertion with stop codon
+        if (m_codon_ori != null && SequenceManipulation.isStopCodon(m_codon_ori) )
         {
-	    type = Mutation.TYPE_RNA_INFRAME;
-	} 
-        else 
-        {
-	    type = Mutation.TYPE_RNA_FRAMESHIFT;
+             if (type == Mutation.TYPE_RNA_INFRAME) 
+                   return Mutation.TYPE_RNA_INFRAME_STOP_CODON;
+            else
+                return Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON;
+	   
 	}
 	if (m == null ) 
         {
@@ -319,26 +349,121 @@ public class RNAMutation extends Mutation {
         else if(o==null ) 
         {
             if (type == Mutation.TYPE_RNA_INFRAME) 
-                    return Mutation.TYPE_RNA_INFRAME_INSERTION;
+            {
+                if ( isAmbiquousBase ) return Mutation.TYPE_N_INFRAME_INSERTION;
+                else     return Mutation.TYPE_RNA_INFRAME_INSERTION;
+            }
             else
-                 return Mutation.TYPE_RNA_FRAMESHIFT_INSERTION;
+            {
+                 if ( isAmbiquousBase ) return Mutation.TYPE_N_FRAMESHIFT_INSERTION;
+                 else return Mutation.TYPE_RNA_FRAMESHIFT_INSERTION;
+            }
 	  
 	}
-	else
-        {
-	  //???????  type += Mutation.TYPE_RNA_COMPLEX;
-	}	
-	if (m_codon_ori != null && SequenceManipulation.isStopCodon(m_codon_ori) )
-        {
-             if (type == Mutation.TYPE_RNA_INFRAME) 
-                   return Mutation.TYPE_RNA_INFRAME_STOP_CODON;
-            else
-                return Mutation.TYPE_RNA_FRAMESHIFT_STOP_CODON;
-	   
-	}
+	
+	
+    }
+         //substitution in codon with deletion insertion
+    else if ( o!= null && m!=null && (m_codon_ori.indexOf("-") != -1 || m_codon_mut.indexOf("-") != -1))
+    {
+        //mono substitution to n
+          if ( isAmbiquousBase ) 
+          {
+              if ( SequenceManipulation.isStartCodon (m_codon_ori) )
+                  return Mutation.TYPE_N_SUBSTITUTION_START_CODON;
+              else if (SequenceManipulation.isStopCodon (m_codon_ori) )
+                  return Mutation.TYPE_N_SUBSTITUTION_STOP_CODON;
+              else 
+                  return Mutation.TYPE_N_SUBSTITUTION_CDS;
+           }
+          else
+              return Mutation.TYPE_RNA_SUBSTITUTION;
     }
 //System.out.print(type);
     return type;
     
    }
+    
+    
+    //returns true - if ambiquoty exists; false otherwise
+    // substitute N by write base in the case of multipal, not only N substitutions in codon
+    public static boolean processForAmbiquoty(String change_ori, String change_mut, 
+            String[] codons_for_processing)
+    {
+        boolean isAmbiquousBase = false;
+        boolean isNotNOnlySubstitution = false;
+        String new_mut_string = "";
+        
+        if ( change_mut == null || codons_for_processing[0] == null || codons_for_processing[1] == null) return false; //deletion 
+        isAmbiquousBase = (change_mut.indexOf("N") != -1);
+        if ( !isAmbiquousBase ) return isAmbiquousBase;
+        //substitution point mutation
+        char []ori = codons_for_processing[0].toCharArray();
+        char[] mut = codons_for_processing[1].toCharArray();
+         if (change_ori!= null && change_mut!=null && 
+             change_ori.length()==1 && change_mut.length()==1 
+             && codons_for_processing[0].indexOf("-") == -1 && codons_for_processing[1].indexOf("-") == -1 
+              && change_mut.equalsIgnoreCase("N")) 
+         {
+             //check if this is double substitution
+           
+             for (int count = 0; count < 3; count ++)
+             {
+                 if ( mut[count] != 'N' && mut[count] != ori[count]) 
+                    isNotNOnlySubstitution = true;
+                 if ( mut[count] == 'N')
+                     new_mut_string += ori[count];
+                 else
+                     new_mut_string += mut[count];
+             }
+             
+             //if not only n substitution - update codon
+             if (isNotNOnlySubstitution)
+                codons_for_processing[1] = new_mut_string;
+           
+         }
+         return true;
+    }
+    
+    
+     public static void main(String args[])
+    {
+        /*
+        String[] codon_for_processing={"AAC","ANA"};
+        
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]);
+         boolean tr=  processForAmbiquoty("A", "N",  codon_for_processing);
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]+" "+tr);
+        
+        codon_for_processing[0]="AAC"; codon_for_processing[1]="ANC";
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]);
+          tr=  processForAmbiquoty("A", "N",  codon_for_processing);
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]+" "+tr);
+        
+      
+        codon_for_processing[0]="AAC"; codon_for_processing[1]="AN-";
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]);
+          tr=  processForAmbiquoty("A", "N",  codon_for_processing);
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]+" "+tr);
+        
+        
+        codon_for_processing[0]="AAC"; codon_for_processing[1]="CN-";
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]);
+          tr=  processForAmbiquoty("A", "N",  codon_for_processing);
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]+" "+tr);
+        
+        codon_for_processing[0]="AAC"; codon_for_processing[1]="ANN";
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]);
+          tr=  processForAmbiquoty("", "NNN",  codon_for_processing);
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]+" "+tr);
+        
+        
+        codon_for_processing[0]="AAC"; codon_for_processing[1]="CNN";
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]);
+          tr=  processForAmbiquoty("A", "N",  codon_for_processing);
+        System.out.println(codon_for_processing[0]+" "+codon_for_processing[1]+" "+tr);
+        */
+        
+        
+     }
 }
