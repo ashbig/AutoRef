@@ -227,11 +227,18 @@ public class Algorithms
         
   
     }
+    
+    
+    public static String convertWindowsFileNameIntoUnix(String filename)
+    {
+        String res = null;
+        res = cleanChar(filename,':');
+        res = "/"+replaceChar(res, File.separatorChar, '/');
+        return res;
+    }
     public static void main(String args[])
     {
-        System.out.println( (int)Math.ceil( 3/3));
-        System.out.println( (int)Math.ceil( 4/3));
-        System.out.println( (int)Math.ceil( 5/3));
+        System.out.println( convertWindowsFileNameIntoUnix("f:\\clone\\me\\as.ase.1") );
     }
     
     
