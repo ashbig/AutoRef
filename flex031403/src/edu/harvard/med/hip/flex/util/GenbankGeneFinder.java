@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.6 2001-07-23 21:01:45 dzuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.7 2002-05-09 21:21:06 Elena Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -82,6 +82,7 @@ public class GenbankGeneFinder {
             url.openStream()));
             
             String organism = "";
+            String locus_link_id = "";
             int start = -1;
             int stop = -1;
             String sequencetext = "";
@@ -89,8 +90,14 @@ public class GenbankGeneFinder {
             int cdscount = 0;
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
+
                 if(inputLine.trim().indexOf("/organism=") == 0) {
                     organism = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\""));
+                }
+                // /db_xref="LocusID:<a href=http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=71>71</a>"
+                if(inputLine.indexOf("LocusID:") != -1) 
+                {
+                    locus_link_id = inputLine.substring(inputLine.indexOf(">")+1, inputLine.lastIndexOf("<") - 1);
                 }
                 
                 if(inputLine.indexOf(">CDS</a>") != -1) {
@@ -153,6 +160,7 @@ public class GenbankGeneFinder {
             h.put("start", new Integer(start));
             h.put("stop", new Integer(stop));
             h.put("sequencetext", sequencetext);
+            h.put("locus_link", locus_link_id);
             
             return h;
         } catch (Exception e) {
@@ -165,7 +173,7 @@ public class GenbankGeneFinder {
     //**************************************************************//
     public static void main(String [] args) {
         GenbankGeneFinder finder = new GenbankGeneFinder();
-        try {
+        try{
             Vector v = finder.search("human kinase");
             Enumeration enum = v.elements();
             while(enum.hasMoreElements()) {
@@ -176,7 +184,7 @@ public class GenbankGeneFinder {
                 System.out.println();
             }
             
-            Hashtable h = finder.searchDetail("13016955");
+            Hashtable h = finder.searchDetail("12653054");
             System.out.println(h);
         } catch (FlexUtilException e) {
             System.out.println(e);
