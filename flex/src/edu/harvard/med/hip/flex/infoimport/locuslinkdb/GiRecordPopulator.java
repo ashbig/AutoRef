@@ -14,30 +14,37 @@ import edu.harvard.med.hip.flex.util.FlexProperties;
 import edu.harvard.med.hip.flex.util.FlexSeqAnalyzer;
 import edu.harvard.med.hip.flex.query.core.GiRecord;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.query.handler.*;
+import edu.harvard.med.hip.flex.core.CDNASequence;
 
 /**
  *
  * @author  DZuo
  */
 public class GiRecordPopulator {
-        public final static String BLAST_FILE_DIR=FlexProperties.getInstance().getProperty("flex.repository.blastfiledir");
+    public final static String BLAST_FILE_DIR=FlexProperties.getInstance().getProperty("flex.repository.blastfiledir");
     
-        private List records;
-        
+    private Collection records;
+    
     /** Creates a new instance of GIRecordPopulator */
-    public GiRecordPopulator(List records) {
+    public GiRecordPopulator(Collection records) {
         this.records = records;
     }
-        
+    
     public void persistRecords() {
         if(records == null || records.size() == 0)
             return;
         
         List insertList = new ArrayList();
-        for(int i=0; i<records.size(); i++) {
-            GiRecord giRecord = (GiRecord)records.get(i);
+        Iterator iter = records.iterator();
+        while(iter.hasNext()) {
+            GiRecord giRecord = (GiRecord)iter.next();
+            //System.out.println("GI:"+giRecord.getGi());
+            //System.out.println("Genbank: "+giRecord.getGenbankAccession());
+            //System.out.println("Sequence file: "+giRecord.getSequenceFile());
+            //System.out.println("sequence: "+giRecord.getSequenceText());
             try {
-                String file = writeFile(giRecord.getGi(), giRecord.getSequenceFile());
+                String file = writeFile(giRecord.getGi(), giRecord.getSequenceText());
                 giRecord.setSequenceFile(file);
                 insertList.add(giRecord);
             } catch (Exception ex) {
@@ -53,6 +60,7 @@ public class GiRecordPopulator {
             insertDB(insertList, conn);
             DatabaseTransaction.commit(conn);
         } catch (Exception ex) {
+            DatabaseTransaction.rollback(conn);
             System.out.println(ex);
         } finally {
             DatabaseTransaction.closeConnection(conn);
@@ -62,7 +70,8 @@ public class GiRecordPopulator {
     private String writeFile(int gi, String sf) throws Exception {
         String file = FlexSeqAnalyzer.BLAST_BASE_DIR+BLAST_FILE_DIR+gi;
         PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-        pr.println(sf);
+        pr.print(">gi|"+gi);
+        pr.println(CDNASequence.convertToFasta(sf));
         pr.close();
         
         return file;
@@ -84,5 +93,28 @@ public class GiRecordPopulator {
         }
         
         DatabaseTransaction.closeStatement(stmt);
+    }
+    
+    public static void main(String args[]) {
+        List giList = new ArrayList();
+        giList.add("32450632");
+        giList.add("21961206");
+        giList.add("33869456");
+        giList.add("33469967");
+        giList.add("33469918");
+        giList.add("33469916");
+        giList.add("16936529");
+        giList.add("37550355");
+        giList.add("16923985");
+        giList.add("34851998");
+        
+        SeqBatchRetriever retriever = new GenbankSeqBatchRetriever(giList);
+        try {
+            retriever.retrieveSequence();
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((Collection)(retriever.getFoundList().values()));
+        populator.persistRecords();
     }
 }

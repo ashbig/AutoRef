@@ -7,6 +7,8 @@
 package edu.harvard.med.hip.flex;
 
 import java.util.*;
+import edu.harvard.med.hip.flex.util.FlexProperties;
+
 /**
  *
  * @author  jmunoz
@@ -192,6 +194,8 @@ public class Constants {
     public static final String YEAST = "Saccharomyces cerevisiae";
     public static final String PSEUDOMONAS = "Pseudomonas aeruginosa";
     
+    public static final String TMPDIR = FlexProperties.getInstance().getProperty("tmp"); 
+  
     /** Creates new Constants */
     private Constants() {
     }

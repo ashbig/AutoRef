@@ -11,6 +11,7 @@ import edu.harvard.med.hip.flex.blast.*;
 import edu.harvard.med.hip.flex.query.core.*;
 import edu.harvard.med.hip.flex.query.QueryException;
 import edu.harvard.med.hip.flex.infoimport.locuslinkdb.ThreadedGiRecordPopulator;
+import edu.harvard.med.hip.flex.Constants;
 
 import java.util.*;
 import java.util.Date;
@@ -27,7 +28,7 @@ public class BlastQueryHandler extends QueryHandler {
     public static final int DEFAULT_LENGTH = 70;
     public static final int DIRECT_SEARCH = 1;
     public static final int SEARCH_BY_GI = 2;
-    public static final String FILEPATH = "G:\\";
+    public static final String FILEPATH = Constants.TMPDIR;
     
     protected int hits = DEFAULT_HITS;
     protected String db = DEFAULT_DB;
@@ -35,6 +36,10 @@ public class BlastQueryHandler extends QueryHandler {
     protected int alignLength = DEFAULT_LENGTH;
     
     protected int searchType = DIRECT_SEARCH;
+    
+    public BlastQueryHandler() {
+        super();
+    }
     
     public BlastQueryHandler(List params) {
         super(params);
@@ -102,8 +107,9 @@ public class BlastQueryHandler extends QueryHandler {
         retriever.retrieveSequence();
         found.putAll(retriever.getFoundList());
         noFound.putAll(retriever.getNoFoundList());
+        noFoundList.putAll(noFound);
         
-        ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((List)(retriever.getFoundList().values()));
+        ThreadedGiRecordPopulator populator = new ThreadedGiRecordPopulator((Collection)(retriever.getFoundList().values()));
         populator.persistRecords();
         
         Blaster blaster = new Blaster();
@@ -121,7 +127,7 @@ public class BlastQueryHandler extends QueryHandler {
             String searchTerm = (String)iter.next();
             GiRecord gr = (GiRecord)found.get(searchTerm);
             int gi = gr.getGi();
-            output = FILEPATH+gi+"_"+db+"_"+hits+"_"+f.format(d);
+            output = FILEPATH+gi+"_"+hits+"_"+f.format(d);
             String sequenceFile = gr.getSequenceFile();
             blaster.blast(sequenceFile, output);
             parser = new BlastParser(output);
@@ -135,7 +141,7 @@ public class BlastQueryHandler extends QueryHandler {
             //evaluate all alignments of each hit to see if it meets the criteria
             for(int j=0; j<homologs.size(); j++) {
                 BlastParser.HomologItem homologItem = (BlastParser.HomologItem)homologs.get(j);
-                int sequenceid = Integer.parseInt(homologItem.getSubID());
+                int sequenceid = Integer.parseInt(homologItem.getSubID().trim());
                 int subLength = homologItem.getSubLen();
                 
                 ArrayList alignments = new ArrayList();
@@ -181,7 +187,7 @@ public class BlastQueryHandler extends QueryHandler {
             }
         }
     }
-
+    
     protected void setQueryParams(List params) {
         for(int i=0; i<params.size(); i++) {
             Param p = (Param)params.get(i);
@@ -199,5 +205,78 @@ public class BlastQueryHandler extends QueryHandler {
             }
         }
     }
-
+    
+    public static void main(String args[]) {
+        List giList = new ArrayList();
+        giList.add("32450632");
+        giList.add("21961206");
+        giList.add("33869456");
+        giList.add("33469967");
+        giList.add("33469918");
+        giList.add("33469916");
+        giList.add("16936529");
+        giList.add("37550355");
+        giList.add("16923985");
+        giList.add("34851998");
+        
+        QueryHandler handler = new BlastQueryHandler();
+        try {
+            handler.handleQuery(giList);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        Map founds = handler.getFoundList();
+        Map noFounds = handler.getNoFoundList();
+        System.out.println("Number of found: "+founds.size());
+        System.out.println("Number of no found: "+noFounds.size());
+        
+        System.out.println("======================== Found List ==============================");
+        Set terms = founds.keySet();
+        Iterator iter = terms.iterator();
+        while(iter.hasNext()) {
+            String term = (String)iter.next();
+            System.out.println("Search term: "+term);
+            List hits = (List)founds.get(term);
+            for(int i=0; i<hits.size(); i++) {
+                MatchFlexSequence mfs = (MatchFlexSequence)hits.get(i);
+                System.out.println("\tFlexsequence ID: "+mfs.getFlexsequenceid());
+                System.out.println("\tIs match by GI: "+mfs.getIsMatchByGi());
+                System.out.println("\tGenbank Acc: "+mfs.getMatchGenbankId());
+                
+                BlastHit bh = mfs.getBlastHit();
+                System.out.println("\t\tFlex ID: "+bh.getMatchFlexId());
+                System.out.println("\t\tQuery length: "+bh.getQueryLength());
+                System.out.println("\t\tSub length: "+bh.getSubjectLength());
+                
+                List alignments = bh.getAlignments();
+                for(int j=0; j<alignments.size(); j++) {
+                    BlastAlignment ba = (BlastAlignment)alignments.get(j);
+                    System.out.println("\t\t\tE value: "+ba.getEvalue());
+                    System.out.println("\t\t\tGap: "+ba.getGap());
+                    System.out.println("\t\t\tID: "+ba.getId());
+                    System.out.println("\t\t\tIdentity: "+ba.getIdentity());
+                    System.out.println("\t\t\tFlex ID: "+ba.getMatchFlexId());
+                    System.out.println("\t\t\tQuery start: "+ba.getQueryStart());
+                    System.out.println("\t\t\tQuery end: "+ba.getQueryEnd());
+                    System.out.println("\t\t\tScore: "+ba.getScore());
+                    System.out.println("\t\t\tStrand: "+ba.getStrand());
+                    System.out.println("\t\t\tSub start: "+ba.getSubStart());
+                    System.out.println("\t\t\tSub end: "+ba.getSubEnd());
+                }
+            }
+        }
+        
+        System.out.println("=============== No Found List ===================");
+        Set noFoundTerms = noFounds.keySet();
+        iter = noFoundTerms.iterator();
+        while(iter.hasNext()) {
+            String t = (String)iter.next();
+            System.out.println("Search term: "+t);
+            NoFound nf = (NoFound)noFounds.get(t);
+            System.out.println("\tReason: "+nf.getReason());
+            System.out.println("\tSearch term: "+nf.getSearchTerm());
+        }
+        
+        System.exit(0);
+    }
 }
