@@ -136,7 +136,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
             ArrayList renaming_file_entries = getRenamingFileEnties(sequencing_facility_file_items, 
                                                                  hip_clone_items,
                                                                     plate_map_names);
-           printRenamingFile(renaming_file_entries);
+            printRenamingFile(renaming_file_entries);
            
          }
           File renaming_file =   new File(m_inputdir + File.separator +m_renaming_file_name );
@@ -206,9 +206,18 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 file_name = trace_files[i].getName();
                 br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
                 if ( br.isWriteFormat() ) 
-                    file_names.add(br);
+                {
+                    if ( m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR)
+                        || m_sequencing_facility == SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC
+                          && (  br.getOrientation().equalsIgnoreCase("F") || br.getOrientation().equalsIgnoreCase("R")))
+                    {
+                        file_names.add(br);
+                    }
+                    else
+                        file_names.add(br);
+                }
                 else
-                    m_error_messages.add("File "+ br.getFileName()+" has wrong format");
+                    m_error_messages.add("File "+file_name+" has wrong format");
             }
              file_names = SequencingFacilityFileName.sortByPlateWell(file_names);
             return file_names;
@@ -368,9 +377,9 @@ public class TraceFileProcessingRunner extends ProcessRunner
              if (m_read_type.equals( Constants.READ_TYPE_INTERNAL_STR ))
              {
                   conn = DatabaseTransactionLocal.getInstance(DatabaseTransactionLocal.FLEX_url , DatabaseTransactionLocal.FLEX_username, DatabaseTransactionLocal.FLEX_password).requestConnection();
-                  sql="select sequenceid as flexsequenceid, flexcloneid,containerposition as position, "
+                  sql="select label, sequenceid as flexsequenceid, cloneid as flexcloneid,containerposition as position, "
                   +" sampletype, s.containerid as containerid from constructdesign d, sample s, containerheader c "
-                  +" where label='"+label+"' and c.containerid=s.containerid and s.constructid=d.constructid(+)";
+                  +" where label in ("+label+") and c.containerid=s.containerid and s.constructid=d.constructid(+)";
              }
              else if (  m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR))
              {
@@ -470,10 +479,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
          {
           TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
           runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
-            runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
-            runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD);
-            runner.setInputDirectory("E:\\Sequences for BEC\\processing_questions\\test");
-runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\files_to_transfer\\plate_mapping.txt"));
+            runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
+            runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
+            runner.setInputDirectory("C:\\bio\\plate_dump\\");
+runner.setRenamingFile(new  FileInputStream("C:\\bio\\plate_dump\\mapping"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        
            

@@ -114,6 +114,8 @@ public class SequencingFacilityFileName
         if (m_well_number > 0 && m_plate_name != null &&  m_version != null &&  m_orientation != null)
             m_isProperName = true;
     }
+     
+     
      private  void htmbcFileName(String htmbc_file_name)
      {
          // IP#_JasonWell_order_hipPlateName_HipWellName_F/R_number.ab1
@@ -126,11 +128,16 @@ public class SequencingFacilityFileName
         m_well_number = Algorithms.convertWellFromA8_12toInt(m_well_name);
         m_extention = htmbc_file_name.substring(htmbc_file_name.indexOf('.') + 1);
         m_orientation = ((String)items.get(5)).toUpperCase();
-        if (m_well_number != -1 && ( m_orientation.equalsIgnoreCase("F") || m_orientation.equalsIgnoreCase("R")))
+        char orientation_first_char = m_orientation.charAt( 0 );
+        if (m_well_number != -1 && 
+        ( orientation_first_char == 'I' || orientation_first_char == 'F' || 
+            orientation_first_char == 'R' || orientation_first_char == 'G'))
              m_isProperName = true;
         
          m_plate_name = (String)items.get(3);
     }
+     
+     
 //    PRG000548_A01_F.ab1
       private  void agencortFileName(String agnc_file_name)
      {
