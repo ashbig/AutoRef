@@ -156,7 +156,7 @@ public class MgcMasterListImporter
         BufferedReader in = new BufferedReader(new InputStreamReader(input));
         try
         {
-            prev_mgc_containers = FlexIDGenerator.getCount("mgccontainer");
+            prev_mgc_containers = FlexIDGenerator.getID("mgccontainerid");
         }
         catch(Exception e)
         {return false;}
@@ -615,7 +615,7 @@ public class MgcMasterListImporter
     public static void main(String args[])
     {
         
-        String file = "c:\\IRAT_IRAU_IRAV_cumulative_1.26Jun02";
+        String file = "E:\\HTaycher\\MGC\\PseudoPlate12.txt";
         InputStream input;
         
         try
