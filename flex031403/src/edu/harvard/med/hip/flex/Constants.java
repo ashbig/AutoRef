@@ -21,6 +21,9 @@ public class Constants {
     
     //constant for external user group
     public static final String CUSTOMER_GROUP = "Customer";
+    
+    //constant for collaborator group
+    public static final String COLLABORATOR_GROUP = "Collaborator";
   
     //Constant for the researcher group
     public static final String RESEARCHER_GROUP="Researcher";

@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-08-07 19:05:52 $
+ * $Revision: 1.4 $
+ * $Date: 2002-02-25 16:40:41 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -55,10 +55,10 @@ import edu.harvard.med.hip.flex.database.*;
  * Action called when requesting to view the process history of a container
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.3 $ $Date: 2001-08-07 19:05:52 $
+ * @version    $Revision: 1.4 $ $Date: 2002-02-25 16:40:41 $
  */
 
-public class ViewContainerProcessHistoryAction extends ResearcherAction{
+public class ViewContainerProcessHistoryAction extends CollaboratorAction{
     
     /**
      * Does the real work for the perform method which must be overriden by the

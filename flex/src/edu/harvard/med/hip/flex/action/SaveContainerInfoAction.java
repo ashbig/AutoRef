@@ -21,7 +21,7 @@ import edu.harvard.med.hip.flex.export.ContainerInfoExporter;
  * @author  dzuo
  * @version
  */
-public class SaveContainerInfoAction extends ResearcherAction {
+public class SaveContainerInfoAction extends CollaboratorAction {
     
     /**
      * Does the real work for the perform method which must be overriden by the

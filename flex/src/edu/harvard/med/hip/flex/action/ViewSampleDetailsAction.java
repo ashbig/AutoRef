@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-07-17 19:57:53 $
- * $Author: jmunoz $
+ * $Revision: 1.4 $
+ * $Date: 2002-02-25 16:40:41 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -54,11 +54,11 @@ import edu.harvard.med.hip.flex.process.Process;
  * Prepares objects for sample detail viewing.
  *
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.3 $ $Date: 2001-07-17 19:57:53 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.4 $ $Date: 2002-02-25 16:40:41 $
  */
 
-public class ViewSampleDetailsAction extends ResearcherAction{
+public class ViewSampleDetailsAction extends CollaboratorAction {
     
     /**
      * Does the real work for the perform method which must be overriden by the

@@ -19,7 +19,7 @@ import edu.harvard.med.hip.flex.form.SaveContainerDetailForm;
  * @author  dzuo
  * @version
  */
-public class SaveContainerDetailAction extends ResearcherAction {
+public class SaveContainerDetailAction extends CollaboratorAction {
     
     /**
      * Does the real work for the perform method which must be overriden by the

@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-07-24 18:46:07 $
- * $Author: jmunoz $
+ * $Revision: 1.4 $
+ * $Date: 2002-02-25 16:40:41 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -52,11 +52,11 @@ import org.apache.struts.action.*;
  * This action displays the sequence process history querry page.
  *
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.3 $ $Date: 2001-07-24 18:46:07 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.4 $ $Date: 2002-02-25 16:40:41 $
  */
 
-public class SequenceProcessHistoryAction extends ResearcherAction{
+public class SequenceProcessHistoryAction extends CollaboratorAction {
 
     /**
      * Does the real work for the perform method which must be overriden by the

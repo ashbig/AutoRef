@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-07-10 14:58:05 $
- * $Author: jmunoz $
+ * $Revision: 1.4 $
+ * $Date: 2002-02-25 16:40:41 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -57,11 +57,11 @@ import org.apache.struts.action.*;
  * Finds the container(s) speficied by the id or the label, and puts it into
  * the request to display the details of a container.
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.3 $ $Date: 2001-07-10 14:58:05 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.4 $ $Date: 2002-02-25 16:40:41 $
  */
 
-public class ViewContainerDetailsAction extends ResearcherAction {
+public class ViewContainerDetailsAction extends CollaboratorAction {
 
     /**
      * Does the real work for the perform method which must be overriden by the
