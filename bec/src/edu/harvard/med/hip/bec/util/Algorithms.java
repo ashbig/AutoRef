@@ -94,6 +94,22 @@ public class Algorithms
     }
     
     
+    
+    public static String replaceString(String str, String oldstr, String newstr)
+    {
+        StringBuffer copy = new StringBuffer();  // The reversed copy.
+        int curindex = 0;
+        for (int count=0;count < str.length();count++)
+        {
+            curindex=str.indexOf(oldstr);
+            if (curindex == -1 || curindex + 1 > str.length()) break;
+            str = str.substring(0,curindex)+newstr +str.substring(curindex+oldstr.length());
+            count=curindex+1;
+        }
+   
+        return str;
+    }
+    
      public static ArrayList splitString(String value)
     {
         return  splitString( value, null);
@@ -240,8 +256,9 @@ public class Algorithms
     }
     public static void main(String args[])
     {
-        System.out.println( convertWindowsFileNameIntoUnix("f:\\clone\\me\\as.ase.1") );
-         System.out.println( convertWindowsFileNameIntoUnix("/clone/me/as.ase.1") );
+        String g = "BBBAAAAABBBSSSBBBDDDDDBBB";
+     
+        System.out.print( g+"   "+replaceString(g,"BBB","-"));
     }
     
     
