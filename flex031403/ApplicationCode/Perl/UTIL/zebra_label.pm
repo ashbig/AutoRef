@@ -13,8 +13,8 @@ my %kLISTS = (
       FO_Y_CUR   => 'NATURAL'
    },
    _DEFAULTS_LABEL => {
-      LH_X       => '70',
-      LH_Y       => '24',
+      LH_X       => '100',
+      LH_Y       => '40',
       LHEIGHT    => '200',
       LWIDTH     => '475',
       OPORT      => '| lpr -P lp1',
@@ -42,7 +42,7 @@ my %kLISTS = (
    },
    _DEFAULTS_LINE   => {
       FONT       => 'AD',
-      BARHEIGHT  => '50',
+      BARHEIGHT  => '35',
       INTLINE    => 'Below',
       FO_X       => '10',
       CHECKDIGIT => 'Y'

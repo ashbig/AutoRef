@@ -23,8 +23,8 @@ public class PrintLabel {
         * static variables
         **/
        static final String printerName = "zebra";
-       static final int labelWidth = 10;
-       static final int labelHeight = 10;
+       static final int labelWidth = 25;
+       static final int labelHeight = 15;
        
        /** 
         * Creates new PrintLabel 
@@ -101,16 +101,16 @@ public class PrintLabel {
                 return msg.toString();
            }
      }
-     
+
      /**
       * Testing
       **/
      public static void main(String[] args) {
           
-            String status = PrintLabel.execute("Pr0000001-8");
+            String status = PrintLabel.execute("Ou000000-f");
             System.out.println("Print Status: " + status);
      }
-} 
+}
 
 /*
 |<---            this code is formatted to fit into 80 columns             --->|
