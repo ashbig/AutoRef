@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.18 $
- * $Date: 2001-08-01 17:29:19 $
+ * $Revision: 1.19 $
+ * $Date: 2001-08-01 19:17:10 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.18 $ $Date: 2001-08-01 17:29:19 $
+ * @version    $Revision: 1.19 $ $Date: 2001-08-01 19:17:10 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -155,6 +155,8 @@ public class SaveResultAction extends ResearcherAction {
                 // shove it into the request.
                 request.setAttribute(Constants.RESULT_STATS_KEY,stats);
             }
+            ActionForward confirm = mapping.findForward("confirm");
+            System.out.println("confirm path " + confirm.getPath());
             return mapping.findForward("confirm");
         }
         

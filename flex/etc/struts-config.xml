@@ -257,6 +257,16 @@
         <forward name="confirm" path="/EnterGelDetails.jsp?EDIT_MODE=read"/>
     </action>
 
+    <!-- Save a dna gel result -->
+    <action     path="/SaveDNAGelResult"
+                type="edu.harvard.med.hip.flex.action.SaveResultAction"
+                name="dnaEntryForm"
+                scope="session"
+                input="/EnterDNAGelDetails.jsp">
+        <forward name="success" path="/PickResultType.jsp"/>
+        <forward name="confirm" path="/EnterDNAGelDetails.jsp?EDIT_MODE=read"/>
+    </action>
+
     <!-- save a transform plate result -->
     <action     path="/SaveTransformResult"
                 type="edu.harvard.med.hip.flex.action.SaveResultAction"

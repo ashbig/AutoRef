@@ -39,7 +39,7 @@
 </logic:equal>
 
 <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
-    <h3>Comfirm the gel result</h3>
+    <h3>Confirm the gel result</h3>
 </logic:equal>
 
 <%-- if the stats are present display them in a table--%>

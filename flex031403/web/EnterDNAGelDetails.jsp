@@ -1,6 +1,6 @@
 <%@page contentType="text/html"%>
 <%@ page language="java" %>
-<%@ page errorPage="ProcessError.do"%>
+
 
 <%@ page import="edu.harvard.med.hip.flex.*" %>
 <%@ page import="edu.harvard.med.hip.flex.core.*"%>
@@ -10,6 +10,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
+
+
 
 <%-- Get the mode of this form, edit or ready only --%>
 <logic:present parameter="<%=Constants.FORM_MODE_KEY%>">
@@ -32,15 +34,23 @@
 <hr>
 <html:errors/>
 <p>
+
 <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
     <h3>Enter the results of this DNA gel</h3>
 </logic:equal>
 
 <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
-    <h3>Comfirm the DNA gel result</h3>
+    <h3>Confirm the DNA gel result</h3>
 </logic:equal>
 <p>
-<html:form action="SaveGelResult.do" enctype="multipart/form-data">
+<html:form action="SaveDNAGelResult.do" enctype="multipart/form-data">
+<logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
+    <html:hidden property="editable" value="false"/>
+</logic:equal>
+
+<logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
+    <html:hidden property="editable" value="true"/>
+</logic:equal>
     <table>
         <tr>
         <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
@@ -49,11 +59,13 @@
         </logic:equal>
         <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
             <td class="prompt">DNA gel image file:</td>
-            <td colspan="3"><bean:write name="gelEntryForm" property="formFile.fileName"/></td>
+            <td colspan="3"><bean:write name="dnaEntryForm" property="formFile.fileName"/></td>
         </logic:equal>
             
         </tr>
     </table>
+    <br>
+    <html:submit/>
 </html:form>
 </body>
 </html>
