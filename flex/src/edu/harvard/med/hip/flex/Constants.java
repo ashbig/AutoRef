@@ -29,6 +29,9 @@ public class Constants {
     // key used to find user object in session.
     public static final String USER_KEY = "USER";
     
+    // key used to find researcher barcode
+    public static final String RESEARCHER_BARCODE_KEY = "RESEARCHER_BARCODE";
+    
     // key used to find The flex sequence id.
     public static final String FLEX_SEQUENCE_ID_KEY = "FLEX_SEQUENCE_ID";
     
