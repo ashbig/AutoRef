@@ -145,7 +145,7 @@ public class NoMatchReportRunner extends ProcessRunner
     +" from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
     +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
     +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-    +" and i.status=" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+" and s.containerid in (select containerid from containerheader where label in ("
+    +" and i.status in (" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+","+IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH+") and s.containerid in (select containerid from containerheader where label in ("
     +plate_names.toString()+")) order by s.containerid,position";
             } 
             case Constants.ITEM_TYPE_CLONEID:
@@ -155,7 +155,7 @@ public class NoMatchReportRunner extends ProcessRunner
         +"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
         +" sequencingconstruct sc where  f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
         +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
-        +"  and i.status=" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+"and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") ";
+        +"  and i.status in (" +IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH+","+IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH+") and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+") ";
             }
             default : return "";
         }
@@ -416,10 +416,10 @@ public class NoMatchReportRunner extends ProcessRunner
     try
     {
          runner.setUser( AccessManager.getInstance().getUser("htaycher345","htaycher"));
-         runner.setItems("YGS000357-1 YGS000357-2 ");
-        runner.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
+         runner.setItems("   8719	      8985	      8915	      9024	      9062	      8309	      8501	      8041	      8042	      8069	      8105	      8121	     20453	     20461	     20516	     20539	     20549	     20606	      7294	      7252	      7275	      7276	      7232	      7234	      7216	      7222	      7206	      7152	      7125	      7127	      7558	      7562	      7580	      7619	      7622	      7650	      7655	      7656	      7733	      7734	      7735	      7752	     20861	      9102	      9110	      9524	      9535	      9545	      9577	      9663	     20942	     20943	     20959	     20979	     21223	     21228	     21235	     21378	     21295	     21299	     21406	     21707	     21785	     21789	      8583	      8584	      8600	      8604	      8661	      8159	      8226	      8257	     20802	     20041	     19996	     19925	      7804	      7843	      7844	      7848	      7894	      7910	      7917	      7923	      7933	      7968	      7971	      9220	      9277	      9278	      9262	     19833	     19841	      9730	      9738	     19860	     19861	     21056	     21155	     21508	     21553	     21826	     21835	     21840	     21926	     10371	     10195	     10470	     10263	     10242	     10284	     10299");
+        runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
           runner.setBlastableDBName("c:\\blast_db\\Yeast\\genes");     
-          runner.setIdTypeToDisplay(PublicInfoItem.SGD);
+          runner.setIdTypeToDisplay(PublicInfoItem.GI);
         runner.run();    
     }catch(Exception e){}
     System.exit(0);
