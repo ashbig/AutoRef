@@ -21,16 +21,18 @@ public class SequenceDescription
     
     //sample parameters
     private int             m_image_id = -1;
+    private int             m_org_sample_id = -1;
     private int             m_org_position = -1;
     //initial MGC container
     private ContainerDescription          m_org_container = null;
     
     
-    public SequenceDescription(int id, int pos, ContainerDescription cont, int imageid)
+    public SequenceDescription(int id, int pos, int sampleid,ContainerDescription cont, int imageid)
     {
         m_seq_id = id;
         m_org_position = pos;
         m_image_id = imageid;
+        m_org_sample_id = sampleid;
         m_org_container = cont;
     }
     
@@ -42,6 +44,6 @@ public class SequenceDescription
     public int                          getImageId(){ return m_image_id;}
     public int                          getCdsLength(){ return m_cds_length;}
     public int                          getContainerId(){ return m_org_container.getId();}
-    
+    public int                          getSampleId(){ return m_org_sample_id;}
 
 }
