@@ -10,6 +10,7 @@ package edu.harvard.med.hip.bec.bioutil;
 
 import edu.harvard.med.hip.bec.util.*;
 import java.io.*;
+import java.util.*;
 /**
  *
  * @author  htaycher
@@ -54,6 +55,18 @@ public class SequenceManipulation
             res[elements - count] = quality_scores_query[count];
         }
         return res;
+    }
+    
+    public static  int[]      getScoresComplement(String scores)
+    {
+        ArrayList arr_scores = Algorithms.splitString(scores);
+        int[] scores_converted = new int[arr_scores.size()];
+       
+        for (int count =  arr_scores.size()- 1; count >= 0; count--)
+        {
+            scores_converted[arr_scores.size()- 1 - count ] =  (Integer.parseInt( (String) arr_scores.get(count)));
+        }
+        return scores_converted;
     }
     //function creates complimentary strend for the given one
     public static String getCompliment(String old)
