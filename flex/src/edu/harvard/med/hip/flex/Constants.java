@@ -165,6 +165,9 @@ public class Constants {
     //forward name for enter result
     public static final String ENTER_RESULT = "ENTER_RESULT";
     
+    
+    //forward name for set project parameters for sequencing 
+    public static final String SEQ_SET_PROJECT_PARAMS = "SEQ_SET_PROJECT_PARAMS";
     /** Creates new Constants */
     private Constants() {
     }
