@@ -113,6 +113,49 @@
     <load-on-startup>10</load-on-startup>
   </servlet>  
   
+  
+
+  <!-- Common Gateway Includes (CGI) processing servlet, which supports     -->
+  <!-- execution of external applications that conform to the CGI spec      -->
+  <!-- requirements.  Typically, this servlet is mapped to the URL pattern  -->
+  <!-- "/cgi-bin/*", which means that any CGI applications that are         -->
+  <!-- executed must be present within the web application.  This servlet   -->
+  <!-- supports the following initialization parameters (default values     -->
+  <!-- are in square brackets):                                             -->
+  <!--                                                                      -->
+  <!--   cgiPathPrefix       The CGI search path will start at              -->
+  <!--                       webAppRootDir + File.separator + this prefix.  -->
+  <!--                       [WEB-INF/cgi]                                  -->
+  <!--                                                                      -->
+  <!--   clientInputTimeout  The time (in milliseconds) to wait for input   -->
+  <!--                       from the browser before assuming that there    -->
+  <!--                       is none.  [100]                                -->
+  <!--                                                                      -->
+  <!--   debug               Debugging detail level for messages logged     -->
+  <!--                       by this servlet.  [0]                          -->
+
+  <!-- IMPORTANT: To use the CGI servlet, you also need to rename the       -->
+  <!--            $CATALINA_HOME/server/lib/servlets-cgi.renametojar file   -->
+  <!--            to $CATALINA_HOME/server/lib/servlets-cgi.jar             -->
+
+  <servlet>
+    <servlet-name>cgi</servlet-name>
+    <servlet-class>org.apache.catalina.servlets.CGIServlet</servlet-class>
+    <init-param>
+      <param-name>clientInputTimeout</param-name>
+      <param-value>100</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>6</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cgiPathPrefix</param-name>
+      <param-value></param-value>
+    </init-param>
+     <load-on-startup>5</load-on-startup>
+   </servlet>
+
   <!-- Action Servlet Mapping -->
   <servlet-mapping>
     <servlet-name>action</servlet-name>
