@@ -92,11 +92,12 @@ public class SearchManager {
         //        searchResultSet.persist(conn, searchRecord.getSearchid());
     }
     
-    public void updateSearchRecord(Connection conn) throws FlexDatabaseException, SQLException {
+    public void updateSearchRecord(Connection conn, String status) throws FlexDatabaseException, SQLException {
+        searchRecord.setSearchStatus(status);
         searchRecord.updateStatus(conn);
     }
     
-    public void updateSearchResults(Connection conn) throws FlexDatabaseException, SQLException {
+    public void insertSearchResults(Connection conn) throws FlexDatabaseException, SQLException {
         int searchResultid = FlexIDGenerator.getMaxid("searchresult", "searchresultid");
         int matchGenbankid = FlexIDGenerator.getMaxid("matchgenbankrecord", "matchgenbankid");
         int matchFlexid = FlexIDGenerator.getMaxid("matchflexsequence", "matchflexid");
@@ -129,16 +130,18 @@ public class SearchManager {
                             matchFlexList.add(mfs);
                             
                             BlastHit blastHit = mfs.getBlastHit();
-                            blastHit.setMatchFlexId(mfs.getMatchFlexId());
-                            blastList.add(blastHit);
-                            
-                            List alignments = blastHit.getAlignments();
-                            if(alignments != null) {
-                                for(int n=0; n<alignments.size(); n++) {
-                                    BlastAlignment alignment = (BlastAlignment)alignments.get(n);
-                                    alignment.setMatchFlexId(mfs.getMatchFlexId());
-                                    alignment.setId(++blastAlignmentid);
-                                    blastAlignmentList.add(alignment);
+                            if(blastHit != null) {
+                                blastHit.setMatchFlexId(mfs.getMatchFlexId());
+                                blastList.add(blastHit);
+                                
+                                List alignments = blastHit.getAlignments();
+                                if(alignments != null) {
+                                    for(int n=0; n<alignments.size(); n++) {
+                                        BlastAlignment alignment = (BlastAlignment)alignments.get(n);
+                                        alignment.setMatchFlexId(mfs.getMatchFlexId());
+                                        alignment.setId(++blastAlignmentid);
+                                        blastAlignmentList.add(alignment);
+                                    }
                                 }
                             }
                         }
@@ -208,12 +211,12 @@ public class SearchManager {
             return false;
         }
     }
-    
-    public void sendEmail() throws IOException, MessagingException {
+
+    public void sendEmail(String userEmail) throws IOException, MessagingException {
         String message = null;
         if(SearchRecord.COMPLETE.equals(searchRecord.getSearchStatus())) {
             message = "Your search has been finished successfully. You can find your search results in our database.";
-            Mailer.sendMessage(user.getUserEmail(), "dzuo@hms.harvard.edu", "dzuo@hms.harvard.edu","FLEXGene search - "+searchRecord.getSearchName());
+            Mailer.sendMessage(userEmail, "dzuo@hms.harvard.edu","FLEXGene search - "+searchRecord.getSearchName(), message);
         } else {
             message = "Your search failed at the following reason. We have attached your search file to this email.\n\n"+error;
             String file = FILEPATH+searchRecord.getSearchName();
@@ -227,9 +230,13 @@ public class SearchManager {
             Collection fileCol = new ArrayList();
             fileCol.add(new File(file));
             
-            Mailer.sendMessage(user.getUserEmail(), "dzuo@hms.harvard.edu",
+            Mailer.sendMessage(userEmail, "dzuo@hms.harvard.edu",
             "dzuo@hms.harvard.edu","FLEXGene search - "+searchRecord.getSearchName(), message, fileCol);
         }
+    }
+    
+    public void sendEmail() throws IOException, MessagingException {
+        sendEmail(user.getUserEmail());
     }
     
     public static void main(String args[]) {
@@ -249,12 +256,8 @@ public class SearchManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             manager.insertSearchRecord(conn);
-            DatabaseTransaction.commit(conn);
         } catch (Exception ex) {
             System.out.println(ex);
-            DatabaseTransaction.rollback(conn);
-        } finally {
-            DatabaseTransaction.closeConnection(conn);
         }
         
         if(manager.doSearch()) {
@@ -316,6 +319,18 @@ public class SearchManager {
                     System.out.println("\tReason: "+nf.getReason());
                     System.out.println("\tSearch term: "+nf.getSearchTerm());
                 }
+            }
+            
+            try {
+                manager.insertSearchResults(conn);
+                manager.updateSearchRecord(conn, SearchRecord.COMPLETE);
+                DatabaseTransaction.commit(conn);
+                manager.sendEmail("dzuo@hms.harvard.edu");
+            } catch (Exception ex) {
+                System.out.println(ex);
+                DatabaseTransaction.rollback(conn);
+            } finally {
+                DatabaseTransaction.closeConnection(conn);
             }
         } else {
             System.out.println("search failed");
