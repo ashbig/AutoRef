@@ -11,6 +11,7 @@ import java.util.*;
 import edu.harvard.med.hip.bec.database.*;
 import java.sql.*;
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.bec.*;
 /**
  *
  * @author  htaycher
@@ -368,8 +369,18 @@ public abstract class Spec
         return getAllSpecIds( query,  spec_type) ;
      }     
      
+     public String printSpecDefinition(String param_separator)throws Exception
+    {
+        StringBuffer sf = new StringBuffer();
+        sf.append("Name: "+ Constants.TAB_DELIMETER +  m_name + param_separator);
+        sf.append("Id: "+ Constants.TAB_DELIMETER +   m_id + param_separator);
+        sf.append(print_parameter_definitions(param_separator));
+        return sf.toString();
+    }
+    //---------------------------
+     protected abstract String print_parameter_definitions(String param_separator) throws Exception ;
      
-     //********************************************************************
+   
      
      private static ArrayList getAllSpecs(String query, int spec_type, boolean mode) throws BecDatabaseException
     { 

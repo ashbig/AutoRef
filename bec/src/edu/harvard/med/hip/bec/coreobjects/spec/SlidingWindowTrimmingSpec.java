@@ -248,7 +248,11 @@ public class SlidingWindowTrimmingSpec extends Spec
      
      protected boolean validateParameters()     {return true;     }
       
-     
+      protected  String print_parameter_definitions(String param_separator) throws Exception 
+      {
+          return null;
+      }
+    
      public static void main(String [] args) 
       
       {

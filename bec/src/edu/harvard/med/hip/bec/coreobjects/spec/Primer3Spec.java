@@ -68,6 +68,11 @@ public class Primer3Spec extends Spec
              System.out.println(e1.getMessage());
          }
      }
+     protected  String print_parameter_definitions(String param_separator) throws Exception 
+      {
+          return null;
+      }
+    
    //-------------------- mani -----------------------
      public static void main(String [] args) {
         Connection c = null;
@@ -126,5 +131,7 @@ h.put("P_UPSTREAM_DISTANCE","1");
      {
          return true;
      }
+     
+     
      
 }

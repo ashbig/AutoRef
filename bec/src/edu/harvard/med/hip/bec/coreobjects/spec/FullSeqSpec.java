@@ -10,6 +10,7 @@ package edu.harvard.med.hip.bec.coreobjects.spec;
 import java.util.*;
 import edu.harvard.med.hip.bec.database.*;
 import java.sql.*;
+import edu.harvard.med.hip.bec.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
@@ -543,6 +544,74 @@ public class FullSeqSpec extends Spec
              System.out.println(e1.getMessage());
          }
      }
+      
+ 
+   protected  String print_parameter_definitions(String param_separator)  throws Exception
+      {
+          StringBuffer sf = new StringBuffer();
+          sf.append(" Maximum acceptable number of discrepancies (gene region)" + param_separator);
+ 
+ sf.append("Base Confidence:"+Constants.TAB_DELIMETER+"High"+Constants.TAB_DELIMETER+"Low"+Constants.TAB_DELIMETER+"High"+Constants.TAB_DELIMETER+"Low" + param_separator);
+ sf.append("Silent mutation"+Constants.TAB_DELIMETER  + this.getParameterByNameInt("FS_S_PASS_H") +Constants.TAB_DELIMETER  +    this.getParameterByNameInt("FS_S_PASS_L")  +Constants.TAB_DELIMETER   );  
+ sf.append(   this.getParameterByNameInt("FS_S_PASS_L")+"\t"  +  this.getParameterByNameInt("FS_S_FAIL_L")+ param_separator);
+ 
+ sf.append("Conservative substitution"  +Constants.TAB_DELIMETER );
+ sf.append(this.getParameterByNameInt("FS_C_PASS_H")+Constants.TAB_DELIMETER  + this.getParameterByNameInt("FS_C_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_C_PASS_L")+Constants.TAB_DELIMETER  +  this.getParameterByNameInt("FS_C_FAIL_L") + param_separator);
+ 
+ sf.append("Nonconservative substitution"      +Constants.TAB_DELIMETER);
+ sf.append(this.getParameterByNameInt("FS_NC_PASS_H")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_NC_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_NC_PASS_L")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_NC_FAIL_L")+ param_separator);
+ 
+ 
+ sf.append("Frameshift"    +Constants.TAB_DELIMETER );  
+ sf.append(this.getParameterByNameInt("FS_FR_PASS_H")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_FR_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_FR_PASS_L")+Constants.TAB_DELIMETER  + this.getParameterByNameInt("FS_FR_FAIL_L")+ param_separator);
+ 
+ sf.append("Inframe deletion" +Constants.TAB_DELIMETER  );  
+ sf.append( this.getParameterByNameInt("FS_IDEL_PASS_H")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_IDEL_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_IDEL_PASS_L")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_IDEL_FAIL_L")+ param_separator);
+ 
+ sf.append("Inframe insertion"   +Constants.TAB_DELIMETER  );     
+ sf.append(this.getParameterByNameInt("FS_IINS_PASS_H")+Constants.TAB_DELIMETER  +  this.getParameterByNameInt("FS_IINS_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_IINS_PASS_L")+Constants.TAB_DELIMETER  +  this.getParameterByNameInt("FS_IINS_FAIL_L")+ param_separator);
+ 
+ sf.append("Truncation"+Constants.TAB_DELIMETER  );       
+ sf.append(this.getParameterByNameInt("FS_TRANC_PASS_H")+Constants.TAB_DELIMETER  + this.getParameterByNameInt("FS_TRANC_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_TRANC_PASS_L")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_TRANC_FAIL_L")+ param_separator);
+ 
+ sf.append("No translation (e.g., no ATG)"  +Constants.TAB_DELIMETER  );  
+ sf.append( this.getParameterByNameInt("FS_NOTRANSLATION_PASS_H")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_NOTRANSLATION_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_NOTRANSLATION_PASS_L")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_NOTRANSLATION_FAIL_L")+ param_separator);
+ 
+ sf.append("Post-elongation(e.g., no stop codon)"+Constants.TAB_DELIMETER  );             
+ sf.append(  this.getParameterByNameInt("FS_PELONG_PASS_H")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_PELONG_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append(  this.getParameterByNameInt("FS_PELONG_PASS_L")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_PELONG_FAIL_L")+ param_separator);
+ 
+ sf.append("Maximum acceptable number of discrepancies (linker region):" + param_separator); 
+ 
+ sf.append("Base Confidence"+ Constants.TAB_DELIMETER +"High"+ Constants.TAB_DELIMETER +"Low"+ Constants.TAB_DELIMETER +"High"+ Constants.TAB_DELIMETER +"Low"+ param_separator); 
+ sf.append("5' substitution"  +Constants.TAB_DELIMETER  );    
+ sf.append(this.getParameterByNameInt("FS_5S_PASS_H")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_5S_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_5S_PASS_L")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_5S_FAIL_L")+ param_separator);
+ 
+ sf.append("5' deletion/insertion"+Constants.TAB_DELIMETER  );     
+ sf.append( this.getParameterByNameInt("FS_5DI_PASS_H")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_5DI_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_5DI_PASS_L")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_5DI_FAIL_L")+ param_separator);
+ 
+ sf.append("3' substitution"+Constants.TAB_DELIMETER  );        
+ sf.append(this.getParameterByNameInt("FS_3S_PASS_H")+Constants.TAB_DELIMETER +this.getParameterByNameInt("FS_3S_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_3S_PASS_L")+Constants.TAB_DELIMETER  +this.getParameterByNameInt("FS_3S_FAIL_L")+ param_separator);
+ 
+ sf.append("3' deletion/insertion"+Constants.TAB_DELIMETER  );          
+  
+ sf.append( this.getParameterByNameInt("FS_3DI_PASS_H")+Constants.TAB_DELIMETER+ this.getParameterByNameInt("FS_3DI_FAIL_H")+Constants.TAB_DELIMETER );
+ sf.append( this.getParameterByNameInt("FS_3DI_PASS_L")+Constants.TAB_DELIMETER+this.getParameterByNameInt("FS_3DI_FAIL_L")+ param_separator);
+ 
+ 
+ 
+          return sf.toString();
+     }
      
      public boolean validateParameters()
      {
@@ -596,4 +665,7 @@ public class FullSeqSpec extends Spec
         catch(Exception e){ System.out.print(specs.size());}
         System.exit(0);
      }
+     
+    
+     
 }

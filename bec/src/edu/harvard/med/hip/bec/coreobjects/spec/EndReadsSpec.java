@@ -468,6 +468,12 @@ public class EndReadsSpec extends Spec
          return true;
      }
      
+     protected  String print_parameter_definitions(String param_separator) throws Exception 
+      {
+          return null;
+      }
+    
+     
      
      
      
@@ -532,4 +538,6 @@ h.put("forwardName","1");
         System.exit(0);
      }
    
+     
+     
 }

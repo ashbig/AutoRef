@@ -83,7 +83,11 @@ public class PolymorphismSpec extends Spec
              System.out.println(e1.getMessage());
          }
      }
-     
+     protected  String print_parameter_definitions(String param_separator) throws Exception 
+      {
+          return null;
+      }
+    
      public boolean validateParameters()
      {
          return true;
