@@ -24,18 +24,18 @@
     <nativeResults>true</nativeResults>
     <username>flex_owner</username>
     <password>flex</password>
-    <minimumSize>1</minimumSize>
+    <minimumSize>5</minimumSize>
     <maximumSize>30</maximumSize>
     <maximumSoft>false</maximumSoft>
-    <initialConnections>1</initialConnections>
-    <connectionTimeout>600</connectionTimeout>
+    <initialConnections>5</initialConnections>
+    <connectionTimeout>1200</connectionTimeout>
     <userTimeout>360</userTimeout>
-    <shrinkBy>10</shrinkBy>
+    <shrinkBy>5</shrinkBy>
     <removeOnExceptions>true</removeOnExceptions>
     <!-- logging info-->
     <logFile>poolman.log</logFile>
 
-    <debugging>true</debugging>
+    <debugging>false</debugging>
 
     <!-- Query Cache Attributes-->
 
@@ -45,22 +45,6 @@
 
   </datasource>
 
-  <!-- ========================================= -->
-  <!-- Admin via JMX HTML Adapter. Disable this  -->
-  <!-- (at least comment it out) for production  -->
-  <!-- environments. When enabled, point your    -->
-  <!-- web browser to the localhost:[port] to    -->
-  <!-- view the JMX html admin agent.            -->
-  <!-- ========================================= -->
-
-  <!-- DISABLED FOR PRODUCTION
-  <admin-agent>
-    <class>com.sun.jdmk.comm.HtmlAdaptorServer</class>
-    <name>Adaptor:name=html</name>
-    <maxClients>10</maxClients>
-    <port>8082</port>
-  </admin-agent>
-  -->
 
 </poolman>
 
