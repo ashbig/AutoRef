@@ -119,7 +119,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
     }   
     
     protected String getGelSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
-        Protocol protocol = new Protocol(Protocol.RUN_PCR_GEL);
+        Protocol protocol = new Protocol(Protocol.ENTER_PCR_GEL_RESULTS);
         String type = null;
         edu.harvard.med.hip.flex.process.Process p = 
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);    

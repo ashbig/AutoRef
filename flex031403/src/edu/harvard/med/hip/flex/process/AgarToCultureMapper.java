@@ -125,7 +125,7 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
     } 
     
     protected String[] getAgarSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
-        Protocol protocol = new Protocol(Protocol.GENERATE_AGAR_PLATES);
+        Protocol protocol = new Protocol(Protocol.ENTER_AGAR_PLATE_RESULTS);
         String type [] = new String[COLONYNUM];
         edu.harvard.med.hip.flex.process.Process p = 
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);

@@ -37,7 +37,7 @@ import edu.harvard.med.hip.flex.util.PrintLabel;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class GetResearcherAction extends ResearcherAction{
     /**
@@ -62,7 +62,7 @@ public class GetResearcherAction extends ResearcherAction{
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String barcode = ((GetResearcherBarcodeForm)form).getResearcherBarcode();
-        Researcher researcher = null;        
+        Researcher researcher = null;
         
         // Validate the researcher barcode.
         try {
@@ -71,11 +71,11 @@ public class GetResearcherAction extends ResearcherAction{
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
-        } catch (FlexDatabaseException ex) {           
+        } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
-
+        
         Vector newContainers = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.newContainers");
         Vector oldContainers = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.oldContainers");
         LinkedList items = (LinkedList)request.getSession().getAttribute("EnterSourcePlateAction.items");
@@ -86,7 +86,7 @@ public class GetResearcherAction extends ResearcherAction{
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-
+            
             // update the location of the old container.
             for(int i=0; i<oldContainers.size(); i++) {
                 Container oldContainer = (Container)oldContainers.elementAt(i);
@@ -99,41 +99,35 @@ public class GetResearcherAction extends ResearcherAction{
                 newContainer.insert(conn);
             }
             
-            // Create a process, process object and sample lineage record. 
+            // Create a process, process object and sample lineage record.
             String executionStatus = null;
             // For GEl and Agar, the status is inprocess.
-            if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
-                Protocol.GENERATE_AGAR_PLATES.equals(protocol.getProcessname())) {
-                executionStatus = edu.harvard.med.hip.flex.process.Process.INPROCESS;
-            } else {
-                executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
-            }
-            
+            executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
             Process process = new Process(protocol, executionStatus, researcher);
             SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
             process.setSubprotocol(subprotocol.getName());
             // Add old container as input container.
             for(int i=0; i<oldContainers.size(); i++) {
                 Container oldContainer = (Container)oldContainers.elementAt(i);
-                ContainerProcessObject inputContainer = 
-                    new ContainerProcessObject(oldContainer.getId(), 
-                    process.getExecutionid(), 
-                    edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
+                ContainerProcessObject inputContainer =
+                new ContainerProcessObject(oldContainer.getId(),
+                process.getExecutionid(),
+                edu.harvard.med.hip.flex.process.ProcessObject.INPUT);
                 process.addProcessObject(inputContainer);
             }
             
             // Add new containers as output containers.
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
-                ContainerProcessObject outputContainer = 
-                    new ContainerProcessObject(newContainer.getId(), 
-                    process.getExecutionid(),
-                    edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
-                process.addProcessObject(outputContainer);  
+                ContainerProcessObject outputContainer =
+                new ContainerProcessObject(newContainer.getId(),
+                process.getExecutionid(),
+                edu.harvard.med.hip.flex.process.ProcessObject.OUTPUT);
+                process.addProcessObject(outputContainer);
             }
             
             // Add sampleLineageSet object.
-            process.setSampleLineageSet(sampleLineageSet);            
+            process.setSampleLineageSet(sampleLineageSet);
             
             // Insert the process and process objects into database.
             process.insert(conn);
@@ -142,42 +136,32 @@ public class GetResearcherAction extends ResearcherAction{
             ContainerProcessQueue queue = new ContainerProcessQueue();
             queue.removeQueueItems(items, conn);
             
-            // for gel and agar protocols, we use the same protocol for queue.
-            if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
-                Protocol.GENERATE_AGAR_PLATES.equals(protocol.getProcessname())) {
+            
+            // Get the next protocols from the workflow.
+            Workflow wf = new Workflow();
+            Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
+            
+            // Add the new containers to the queue for each protocol.
+            for(int i=0; i<nextProtocols.size(); i++) {
                 LinkedList newItems = new LinkedList();
-                for(int i=0; i<newContainers.size(); i++) {
-                    Container newContainer = (Container)newContainers.elementAt(i);
-                    newItems.addLast(new QueueItem(newContainer, protocol));
+                for(int j=0; j<newContainers.size(); j++) {
+                    Container newContainer = (Container)newContainers.elementAt(j);
+                    newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));
                 }
-                queue.addQueueItems(newItems, conn); 
-            } else {            
-                // Get the next protocols from the workflow.
-                Workflow wf = new Workflow();
-                Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
-
-                // Add the new containers to the queue for each protocol.
-                for(int i=0; i<nextProtocols.size(); i++) {
-                    LinkedList newItems = new LinkedList();
-                    for(int j=0; j<newContainers.size(); j++) {
-                        Container newContainer = (Container)newContainers.elementAt(j);
-                        newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));                        
-                    }
-                    queue.addQueueItems(newItems, conn);
-                }
+                queue.addQueueItems(newItems, conn);
             }
             
             // Commit the changes to the database.
             DatabaseTransaction.commit(conn);
-        
+            
             // Print the barcode
             for(int i=0; i<newContainers.size(); i++) {
-                Container newContainer = (Container)newContainers.elementAt(i);            
+                Container newContainer = (Container)newContainers.elementAt(i);
                 String status = PrintLabel.execute(newContainer.getLabel());
                 //System.out.println("Printing barcode: "+status);
             }
-
-            // Remove everything from the session.                                   
+            
+            // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
             request.getSession().removeAttribute("SelectProtocolAction.protocol");
             request.getSession().removeAttribute("EnterSourcePlateAction.oldContainers");
@@ -185,7 +169,7 @@ public class GetResearcherAction extends ResearcherAction{
             request.getSession().removeAttribute("EnterSourcePlateAction.items");
             request.getSession().removeAttribute("EnterSourcePlateAction.sampleLineageSet");
             request.getSession().removeAttribute("EnterSourcePlateAction.subprotocol");
-            return (mapping.findForward("success"));            
+            return (mapping.findForward("success"));
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
@@ -195,4 +179,3 @@ public class GetResearcherAction extends ResearcherAction{
         }
     }
 }
- 
