@@ -23,7 +23,12 @@
 </tr>
 <logic:iterate id="gs" name="goodSequences">
 <tr>
+<logic:equal name="gs" property="value.species" value="Homo sapiens">
 <td><input name="selection" type="checkbox" value="<bean:write name="gs" property="key"/>"></td>
+</logic:equal>
+<logic:notEqual name="gs" property="value.species" value="Homo sapiens">
+<td></td>
+</logic:notEqual>
 <td><a target=_new href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="gs" property="key"/>&dopt=GenBank"><bean:write name="gs" property="value.accession"/></a></td>
 <td><bean:write name="gs" property="value.description"/></td>
 <td><bean:write name="gs" property="value.gi"/></td>
@@ -75,7 +80,12 @@
 </tr>
 <logic:iterate id="h" name="homo" property="value.homolog">
 <tr>
+<logic:equal name="h" property="species" value="Homo sapiens">
 <td><input name="selection" type="checkbox" value="<bean:write name="h" property="gi"/>"></td>
+</logic:equal>
+<logic:notEqual name="h" property="species" value="Homo sapiens">
+<td></td>
+</logic:notEqual>
 <td><font color=red><bean:write name="h" property="id"/><br></font></td>
 <td><a target=_new href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="h" property="gi"/>&dopt=GenBank"><bean:write name="h" property="accession"/><br></a></td>
 <td><bean:write name="h" property="description"/></td>
