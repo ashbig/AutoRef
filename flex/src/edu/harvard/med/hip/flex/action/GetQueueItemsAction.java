@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2002-06-17 21:28:25 $
+ * $Revision: 1.7 $
+ * $Date: 2005-02-10 19:48:37 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -54,7 +54,7 @@ import edu.harvard.med.hip.flex.workflow.*;
  * on the protocol it is passed.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.6 $ $Date: 2002-06-17 21:28:25 $
+ * @version    $Revision: 1.7 $ $Date: 2005-02-10 19:48:37 $
  */
 
 public class GetQueueItemsAction extends ResearcherAction {
@@ -122,6 +122,10 @@ public class GetQueueItemsAction extends ResearcherAction {
         // For agar result, we'll forward to a different page.
         if(Protocol.ENTER_AGAR_PLATE_RESULTS.equals(protocolName)) {
             return mapping.findForward("enter_agar_result");
+        }
+        
+        if(Protocol.ENTER_CULTURE_FILE.equals(protocolName)) {
+            return mapping.findForward("enter_culture_file");
         }
         
         // construct the next page pages on what was passed in.

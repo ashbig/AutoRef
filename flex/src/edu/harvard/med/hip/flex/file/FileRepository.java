@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2003-09-22 16:18:46 $
+ * $Revision: 1.5 $
+ * $Date: 2005-02-10 19:52:02 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.core.Container;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.4 $ $Date: 2003-09-22 16:18:46 $
+ * @version    $Revision: 1.5 $ $Date: 2005-02-10 19:52:02 $
  */
 
 public class FileRepository {
@@ -65,6 +65,7 @@ public class FileRepository {
     // local path to store expression vector gel images
     public final static String EXP_LOCAL_PATH = FlexProperties.getInstance().getProperty("flex.repository.expfile.relativedir");
     
+    public final static String CULTURE_LOCAL_PATH = FlexProperties.getInstance().getProperty("flex.repository.culture.relativedir");
     /**
      * Uploads a file to the server.
      *

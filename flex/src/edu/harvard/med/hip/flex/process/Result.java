@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.21 $ $Date: 2003-09-15 20:08:26 $
+ * @version    $Revision: 1.22 $ $Date: 2005-02-10 19:49:53 $
  */
 
 public class Result {
@@ -86,6 +86,7 @@ public class Result {
     public final static String NO_BAND = "No visible band with cloning attempt";
     public final static String GROW = "Grow";
     public final static String NOGROW = "Not Grow";
+    public final static String WEAKGROW = "Weak Grow";
     
     // the following defines the result values for TRANSFORMATION.
     public final static String MORE = "4+";

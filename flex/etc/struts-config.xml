@@ -247,7 +247,13 @@
                     
     <form-bean      name="importSeqResultsForm"
                     type="edu.harvard.med.hip.flex.form.ImportSeqResultsForm"/> 
-                               
+                    
+    <form-bean      name="enterCultureFileForm"
+                    type="edu.harvard.med.hip.flex.form.EnterCultureFileForm"/> 
+                        
+    <form-bean      name="uploadCultureResultForm"
+                    type="edu.harvard.med.hip.flex.form.UploadCultureResultForm"/> 
+                           
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -793,6 +799,7 @@
             type="edu.harvard.med.hip.flex.action.GetQueueItemsAction">
       <forward name="enterProcessResults" path="/EnterProcessResults.jsp"/>
       <forward name="enter_agar_result" path="/UploadAgarResults.jsp"/>
+      <forward name="enter_culture_file" path="/EnterCultureFile.jsp"/>
     </action>
 
     <!-- Upload the agar results -->
@@ -802,6 +809,23 @@
             scope="request"
             input="/UploadAgarResults.jsp">
       <forward name="success" path="/UploadAgarResultsSuccess.jsp"/>
+    </action>
+
+    <!-- Upload the culture results -->
+    <action path="/EnterCultureFile"
+            type="edu.harvard.med.hip.flex.action.EnterCultureFileAction"
+            name="enterCultureFileForm"
+            scope="request"
+            input="/EnterCultureFile.jsp">
+      <forward name="success" path="/ConfirmCultureResults.jsp"/>
+    </action>
+        
+    <action path="/ConfirmCultureResults"
+            type="edu.harvard.med.hip.flex.action.ConfirmCultureResultsAction"
+            name="uploadCultureResultForm"
+            scope="session"
+            input="/ConfirmCultureResults.jsp">
+      <forward name="success" path="/PickResultType.jsp"/>
     </action>
 
     <!-- Action that will be used to export all the sequences to FASTA file -->
