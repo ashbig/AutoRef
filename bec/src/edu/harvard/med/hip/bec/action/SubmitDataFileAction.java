@@ -196,7 +196,7 @@ public class SubmitDataFileAction extends ResearcherAction
                     }
                     reader.close();
                        //write report file
-                    File reportFile = new File("/tmp/"+"report"+System.currentTimeMillis()+".html");
+                    File reportFile = new File( Constants.getTemporaryFilesPath()+"report"+System.currentTimeMillis()+".html");
                     FileWriter fr = new FileWriter(reportFile);
                     fr.write(report.toString());
                     fr.close();
