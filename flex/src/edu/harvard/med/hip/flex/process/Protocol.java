@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.4 2001-06-11 14:29:41 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.5 2001-06-12 17:18:33 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -24,6 +24,17 @@ public class Protocol {
     private String processcode;
     private String processname;
     private Vector subprotocol = new Vector();
+ 
+    /**
+     * Constructor.
+     *
+     * @param id The protocol id.
+     *
+     * @return The Protocol object.
+     */
+    public Protocol(int id) {
+        this.id = id;
+   }
     
     /**
      * Constructor.
