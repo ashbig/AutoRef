@@ -245,7 +245,8 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_DELETE_CLONE_REVERSE_READ ://
                 case Constants.PROCESS_DELETE_CLONE_SEQUENCE ://
                 case  Constants.PROCESS_GET_TRACE_FILE_NAMES :
-                {
+                case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:
+               {
                     ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
                     ArrayList control_names = new ArrayList();
@@ -263,6 +264,8 @@ public class SelectProcessAction extends ResearcherAction
                         case Constants.PROCESS_RUN_END_READS_WRAPPER: {title="run End Reads Wrapper";break; }
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: {title="run Assembler for End Reads";break; }
                         case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{title="add new Internal Primer";break; }
+                        case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:{title="view Gene Specific Oligos ordered for Clone";break; }
+                        
                         case Constants.PROCESS_RUN_PRIMER3:
                         {
                             spec_collection.add( Primer3Spec.getAllSpecNames() );
@@ -374,6 +377,7 @@ public class SelectProcessAction extends ResearcherAction
                 request.setAttribute(Constants.JSP_TITLE, "activate Clones");
                 return (mapping.findForward("scan_label"));
             }
+            
             
             }
         }
