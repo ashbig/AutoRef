@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-22 18:52:03 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-22 18:56:15 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@
  *    Add entries here when updating the code. Remember to date and insert
  *    your 3 letters initials.
  *
- *    Jun-22-2001 : JMM0 - Class created. 
+ *    Jun-22-2001 : JMM - Class created. 
  *
  */
 
@@ -47,13 +47,22 @@ import javax.mail.internet.*;
  * Utility class to send simple messages. 
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-22 18:52:03 $
+ * @version    $Revision: 1.2 $ $Date: 2001-06-22 18:56:15 $
  */
 
 public class Mailer {
     
     public final static String SMTP_HOST ="hms.harvard.edu";
     
+    
+    /**
+     * Utility method to send a message.
+     *
+     * @param to The address to send to.
+     * @param from Email address of who is sending the message.
+     * @param subject The subject of the message.
+     * @param msgText The text of the message.
+     */
     public static void sendMessage(String to, String from, String subject, 
     String msgText) throws MessagingException {
         Properties props = new Properties();
