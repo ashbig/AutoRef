@@ -57,7 +57,7 @@
 
 <logic:iterate id="sequence" name="oneRequest" property="sequences">
 <tr>
-<td><a href="FlexSequenceUI.jsp?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="sequence" property="id"/>"><bean:write name="sequence" property="id"/></a></td>
+<td><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="sequence" property="id"/>"><bean:write name="sequence" property="id"/></a></td>
 <td><bean:write name="sequence" property="description"/></td>
 <td><bean:write name="sequence" property="flexstatus"/></td>
 </tr>
