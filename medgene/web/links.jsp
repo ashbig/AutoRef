@@ -24,7 +24,7 @@
 [<a href="GeneSearch.jsp">Find Diseases for Gene</a>] 
 [<a href="ChipGeneAnalysis_1.jsp">Analyze a Gene List</a>] 
 [<a href="Logout.do">Log Out</a>]
-[<a href="mailto:yanhui_hu@hms.harvard.edu">Contact Us</a>]
+[<a href="mailto:hip_informatics@hms.harvard.edu">Contact Us</a>]
 
 -->
 </td>
