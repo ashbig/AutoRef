@@ -75,6 +75,8 @@ public class ChipGeneAnalysis_2b_Action extends MetageneAction{
             else
             
                 gene_input = geneInputText;
+            
+            gene_input = gene_input.toUpperCase();
            
             // determine gene input_type value
             if (inputType.equalsIgnoreCase("LocusID"))

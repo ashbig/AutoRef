@@ -119,7 +119,7 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
     
 
     /** classify each gene in the input list and put it in the certain tree
-     *  @param id   gene identifier
+     *  @param id   non-human gene identifier(locusID, Unigene or Accession)
      *  @param mapping  homolog mapping hashmap
      */        
     public void classify(String id, HashMap mapping){
@@ -141,7 +141,7 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
                 }
             }
             
-            if(direct_children_gene_hashmap.containsKey(hs_locus_id)){
+            else if(direct_children_gene_hashmap.containsKey(hs_locus_id)){
                 g = (ChipGene)(direct_children_gene_hashmap.get(hs_locus_id));
                 direct_children_gene_tree.add(new HomologChipGene(g.getGene_symbol(), g.getLocus_id(), g.getScore(), id));            
             }                
