@@ -21,6 +21,10 @@ public class EnterSrcForSequencingForm extends ProjectWorkflowForm {
     protected String plate2 = null;
     protected String plate3 = null;
     protected String plate4 = null;
+    protected String plate5 = null;
+    protected String plate6 = null;
+    protected String plate7 = null;
+    protected String plate8 = null;
     protected String row = "both";
     protected String researcher = null;
     protected int researcherid;
@@ -34,6 +38,10 @@ public class EnterSrcForSequencingForm extends ProjectWorkflowForm {
     public String getPlate2() {return plate2;}
     public String getPlate3() {return plate3;}
     public String getPlate4() {return plate4;}
+    public String getPlate5() {return plate5;}
+    public String getPlate6() {return plate6;}
+    public String getPlate7() {return plate7;}
+    public String getPlate8() {return plate8;}
     public String getRow() {return row;}
     public String getResearcher() {return researcher;}
     public int getResearcherid() {return researcherid;}
@@ -43,6 +51,10 @@ public class EnterSrcForSequencingForm extends ProjectWorkflowForm {
     public void setPlate2(String plate2) {this.plate2 = plate2;}
     public void setPlate3(String plate3) {this.plate3 = plate3;}
     public void setPlate4(String plate4) {this.plate4 = plate4;}
+    public void setPlate5(String plate5) {this.plate5 = plate5;}
+    public void setPlate6(String plate6) {this.plate6 = plate6;}
+    public void setPlate7(String plate7) {this.plate7 = plate7;}
+    public void setPlate8(String plate8) {this.plate8 = plate8;}
     public void setRow(String row) {this.row = row;}
     public void setResearcher(String researcher) {this.researcher = researcher;}
     public void setResearcherid(int researcherid) {this.researcherid = researcherid;}
@@ -59,6 +71,10 @@ public class EnterSrcForSequencingForm extends ProjectWorkflowForm {
         plate2=null;
         plate3=null;
         plate4=null;
+        plate5=null;
+        plate6=null;
+        plate7=null;
+        plate8=null;
         row="both";
         researcher = null;
         isMappingFile = "Yes";
