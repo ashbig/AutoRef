@@ -32,6 +32,17 @@ public class SampleLineage {
         this.from = from;
         this.to = to;
     }
+
+     /**
+     * Constructor.
+     *
+     * @param from The from sample id.
+     * @param to The to sample id.
+     */
+    public SampleLineage(int from, int to) {
+        this.from = from;
+        this.to = to;
+    }
     
     /**
      * Return from field.
