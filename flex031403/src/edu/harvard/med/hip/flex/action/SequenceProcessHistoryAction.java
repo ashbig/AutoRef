@@ -1,30 +1,30 @@
 /*
- * File : ViewSequenceProcessHistory.java
- * Classes : ViewSequenceProcessHistory
+ * File : SequenceProcessHistoryAction.java
+ * Classes : SequenceProcessHistoryAction
  *
  * Description :
  *
- *  View the process history of a sequence.
+ *  This action displays the sequence process history querry page.
  *
  *
  * Author : Juan Munoz (jmunoz@3rdmill.com)
- *
+ * 
  * See COPYRIGHT file for copyright information
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
+ * $Revision: 1.1 $
  * $Date: 2001-07-03 14:54:24 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
  *
- * Revision history (Started on July 2, 2001) :
+ * Revision history (Started on July 3, 2001) :
  *
  *    Add entries here when updating the code. Remember to date and insert
  *    your 3 letters initials.
  *
- *    MMM-DD-YYYY : JMM - Class created.
+ *    Jun-03-2001 : JMM - Class created. 
  *
  */
 
@@ -32,7 +32,7 @@
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
- */
+*/
 
 
 package edu.harvard.med.hip.flex.action;
@@ -43,23 +43,21 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import edu.harvard.med.hip.flex.core.*;
-import edu.harvard.med.hip.flex.core.Thread;
 import edu.harvard.med.hip.flex.Constants;
-import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.core.*;
 
 import org.apache.struts.action.*;
 
 /**
- * Prepares info to display the process history of a sequence.
+ * This action displays the sequence process history querry page.
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-07-03 14:54:24 $
+ * @version    $Revision: 1.1 $ $Date: 2001-07-03 14:54:24 $
  */
 
-public class ViewSequenceProcessHistory extends ResearcherAction{
-    
+public class SequenceProcessHistoryAction extends ResearcherAction{
+
     /**
      * Does the real work for the perform method which must be overriden by the
      * Child classes.
@@ -72,44 +70,31 @@ public class ViewSequenceProcessHistory extends ResearcherAction{
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping, ActionForm form,
-    HttpServletRequest request, HttpServletResponse response)
+    public ActionForward flexPerform(ActionMapping mapping, ActionForm form, 
+    HttpServletRequest request, HttpServletResponse response) 
     throws ServletException, IOException {
-        ActionErrors errors = new ActionErrors();
         ActionForward retForward = null;
-        
-        /*
-         * the id of the sequence must be passed in, or a form must be
-         * provided.
-         */
-        String flexId = null;
-        SequenceHistoryForm historyForm = (SequenceHistoryForm) form;
-        flexId = request.getParameter(Constants.FLEX_SEQUENCE_ID_KEY);
-        if(flexId == null || flexId.equals("")) {
-            errors.add("sequenceId",
-            new ActionError("error.sequence.id.invalid", flexId));
-            saveErrors(request,errors);
-            retForward = new ActionForward(mapping.getInput());
-        } else {
-            try {
-                Thread thread =
-                SequenceThread.findByFlexId(Integer.parseInt(flexId));
-                
-                request.setAttribute(Constants.THREAD_KEY, thread);
-                retForward = mapping.findForward("success");
-            } catch (Exception e) {
-                request.setAttribute(Action.EXCEPTION_KEY, e);
-                retForward = mapping.findForward("error");
-            }
+        List nameTypeList = null;
+        try {
+            nameTypeList = SequenceThread.getNameTypes();
+            retForward = mapping.findForward("success");
+        } catch (Exception e) {
+            request.setAttribute(Action.EXCEPTION_KEY, e);
+            retForward = mapping.findForward("error");
+            return retForward;
         }
+        // add the flex id to the first item
+        nameTypeList.set(0,"FLEX id");
+        
+        request.setAttribute(Constants.NAME_TYPE_LIST_KEY,nameTypeList);
         return retForward;
-    }
-    
-} // End class ViewSequenceProcessHistory
+    }    
+
+} // End class SequenceProcessHistoryAction
 
 
 /*
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
- */
+*/

@@ -79,7 +79,10 @@
     <!-- Get process results form bean -->
     <form-bean      name="GetProcessResultsForm"
                     type="edu.harvard.med.hip.flex.form.GetProcessResultsForm"/>
-
+    
+    <!-- Form used to querry sequence history -->
+    <form-bean      name="querySeqHistoryForm"
+                    type="edu.harvard.med.hip.flex.form.SequenceHistoryForm"/>
 
   </form-beans>
 
@@ -372,9 +375,19 @@
     <!-- Displays the process history for a sequence -->
     <action path="/ViewSequenceProcessHistory"
             type="edu.harvard.med.hip.flex.action.ViewSequenceProcessHistory"
-            input="/login.jsp">
+            name="querySeqHistoryForm"
+            input="/QuerySequenceHistory.do">
       <forward    name="success" path="/SequenceProcessHistory.jsp"/>
     </action>
+
+    <!-- Action used to Display the sequence history query form -->
+    <action path="/QuerySequenceHistory"
+            type="edu.harvard.med.hip.flex.action.SequenceProcessHistoryAction">
+      <forward    name="success" path="/QuerrySequenceHistory.jsp"/>
+    </action>
+
+     
+
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-02 18:17:26 $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-03 14:54:24 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -55,7 +55,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-07-02 18:17:26 $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-03 14:54:24 $
  */
 
 public class ViewSequenceProcessHistory extends ResearcherAction{
@@ -78,8 +78,13 @@ public class ViewSequenceProcessHistory extends ResearcherAction{
         ActionErrors errors = new ActionErrors();
         ActionForward retForward = null;
         
-        // the id of the sequence must be passed in.
-        String flexId = request.getParameter(Constants.FLEX_SEQUENCE_ID_KEY);
+        /*
+         * the id of the sequence must be passed in, or a form must be
+         * provided.
+         */
+        String flexId = null;
+        SequenceHistoryForm historyForm = (SequenceHistoryForm) form;
+        flexId = request.getParameter(Constants.FLEX_SEQUENCE_ID_KEY);
         if(flexId == null || flexId.equals("")) {
             errors.add("sequenceId",
             new ActionError("error.sequence.id.invalid", flexId));
