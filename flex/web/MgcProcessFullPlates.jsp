@@ -112,6 +112,14 @@ else
 </TABLE>
 
 <table>
+<td class="prompt">Is rearray by marker required?</td>
+    <td>
+         
+         <html:radio property="isMarker" value="false"/>Yes
+       <html:radio property="isMarker" value="true"/>No
+    </td>
+</tr> 
+
  <td class="prompt">Is full plate required?</td>
     <td>
          
