@@ -219,7 +219,7 @@
                type="edu.harvard.med.hip.flex.action.GetInputAction"
                name="getProcessPlateInputForm"
                scope="request"
-               input="/SelectProtocol.do">
+               input="/GetInput.jsp">
       <forward  name="success"   path="/ConfirmPlate.jsp"/>
     </action>  
 
