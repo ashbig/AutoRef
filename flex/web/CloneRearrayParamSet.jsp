@@ -72,10 +72,18 @@
         </tr>
         <tr>
             <td class="prompt">New plate type for rearrayed plates:</td>
+            <logic:equal name="workflow" value="34">
+            <td><select name="plateType">
+                <option value="96 WELL EXP PLATE"/>96 Well Plate
+                </select>
+            </td>
+            </logic:equal>
+            <logic:notEqual name="workflow" value="34">
             <td><select name="plateType">
                 <option value="96 WELL PLATE"/>96 Well Plate
                 </select>
             </td>
+            </logic:notEqual>
         </tr>
         <tr>
             <logic:equal name="workflow" value="34">
