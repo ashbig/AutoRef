@@ -21,20 +21,63 @@ IS_BIGHEAD  and IS_BIGHEAD_FOR_EXPRESSION_EVALUATION
 1.	To configure new application for the same server:
             
             set JSP_REDIRECTION and IS_BIGHEAD_FOR_EXPRESSION_EVALUATION;
-2.	To reconfigure from one server machine to another
+
+2.	To reconfigure from one server machine to another (make sure your setting are according to OS)
             set IS_BIGHEAD;
 
-set values of program/directory passes in the following java files
+a. build the follwoing directories (min set)
 
-set phredPhrap script according to machine settings
+            - trace_files_damp
+            - trace_files_root
+            - output
+                - blast_output
+                - needle_output
+                - tmp_needle_output
+                - tmp
+b. setup scheduled jobs
+    i. clean up jobs
+    ii. transfer of blastable databases from FLEX server
+
+
+c. install and set up cygwin for Win machine
+d. recompile all third party programms and setup them
+                1. EMBOSS package
+                2. primer3 (can be transfered as .exe on WIn)
+                3. assembled package
+                4. blast
+e. set phredPhrap script according to machine settings
+
+f. set values of program/directory passes in the following java files
+
+
+file :  edu.harvard.med.hip.bec.Constants.getTemporaryFilesPath()
+file:       TraceFileProcessingRunner
+file:       PhredWrapper
+file:       EndReadsWrapperRunner
+file:       PhredPhrap
+file:       PolymorphismDetector
+file:       NeedleWrapper
+file:       BlastWrapper
+file:       FileOperations
+file:       Contig
+file:       DiscrepancyFinder
+file:       Primer3Wrapper
+file:       Constants
+file:       OutstandingJobs 
 
 
 3.	To reconfigure from Win to Unix 
             a.	Verify all steps in 2.
             b.	change and recompile trimming_java_script.java, put
  trimming_java_script$classes into phredPhrap directory
-            c. recompile all third party programms
-                1. EMBOSS package
-                2. primer3
-                3. assembled package
+            
+            d. change following java file that manipulate file passes
+
+package edu.harvard.med.hip.bec.programs.phred;
+class   PhredPhap
+class   PhredWrapper
+
+package edu.harvard.med.hip.bec.programs.needle;
+class    NeedleWrapper
+
 
