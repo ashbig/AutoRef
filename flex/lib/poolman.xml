@@ -29,7 +29,7 @@
     <maximumSoft>false</maximumSoft>
     <initialConnections>1</initialConnections>
     <connectionTimeout>600</connectionTimeout>
-    <userTimeout>12</userTimeout>
+    <userTimeout>360</userTimeout>
     <shrinkBy>10</shrinkBy>
     <removeOnExceptions>true</removeOnExceptions>
     <!-- logging info-->
