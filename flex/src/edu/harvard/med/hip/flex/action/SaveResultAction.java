@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-06-25 17:30:53 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.8 $
+ * $Date: 2001-07-13 15:33:30 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -64,8 +64,8 @@ import edu.harvard.med.hip.flex.process.Result;
  * Will save information about the result into the db and manage the workflow.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.7 $ $Date: 2001-06-25 17:30:53 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.8 $ $Date: 2001-07-13 15:33:30 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -120,7 +120,15 @@ public class SaveResultAction extends ResearcherAction {
                 saveErrors(request,errors);
                 retForward = new ActionForward(mapping.getInput());
                 return retForward;
-                
+            }
+            
+            // make sure the name doesn't have any spaces in it
+            if(image.getFileName().indexOf(" ") != -1) {
+                // display error message on entry form
+                errors.add("gelImage",
+                new ActionError("error.gelimage.nospaces"));
+                saveErrors(request,errors);
+                return new ActionForward(mapping.getInput());
             }
         } else {
             resultType = Result.TRANSFORMATION_TYPE;
@@ -154,10 +162,21 @@ public class SaveResultAction extends ResearcherAction {
                 
                 // the image file
                 FormFile image = gelForm.getGelImage();
+                
                 Calendar cal = Calendar.getInstance();
+                // month starts with 0 so add 1 so it looks normal
+                int monthNum = cal.get(Calendar.MONTH) + 1;
+                
+                //String version of monthNum
+                String monthNumS = Integer.toString(monthNum);
+                
+                // append a 0 if its less than 10
+                if(monthNum < 10) {
+                    monthNumS = "0"+monthNum;
+                }
                 
                 String subDirName = Integer.toString(cal.get(Calendar.YEAR)) +
-                Integer.toString(cal.get(Calendar.MONTH));
+                monthNumS;
                 String localPath = FileRepository.GEL_LOCAL_PATH+subDirName+"/";
                 fileRef =
                 FileReference.createFile(conn, image.getFileName(),
@@ -169,7 +188,7 @@ public class SaveResultAction extends ResearcherAction {
                 
                 curSample.setStatus(resultForm.getStatus(i));
                 Result curResult =
-                    new Result(process,curSample,resultType,resultForm.getResult(i));
+                new Result(process,curSample,resultType,resultForm.getResult(i));
                 curSample.update(conn);
                 curResult.insert(conn);
                 
@@ -229,8 +248,7 @@ public class SaveResultAction extends ResearcherAction {
             // upload the file to the repository if its a gel image
             if(form instanceof GelResultsForm) {
                 try {
-                    FileRepository.uploadFile(fileRef.getBaseName(),
-                    FileRepository.GEL_LOCAL_PATH,
+                    FileRepository.uploadFile(fileRef,
                     ((GelResultsForm)form).getGelImage().getInputStream());
                 } catch (IOException ioE) {
                     retForward = mapping.findForward("error");

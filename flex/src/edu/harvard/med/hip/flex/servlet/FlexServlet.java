@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-07-12 20:34:23 $
+ * $Revision: 1.4 $
+ * $Date: 2001-07-13 15:33:31 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -53,7 +53,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Overides the ActionServlet to provide flex specific functionality
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.3 $ $Date: 2001-07-12 20:34:23 $
+ * @version    $Revision: 1.4 $ $Date: 2001-07-13 15:33:31 $
  */
 
 public class FlexServlet extends ActionServlet {
@@ -104,7 +104,7 @@ public class FlexServlet extends ActionServlet {
              */
             FlexProperties flexProp = StaticPropertyClassFactory.makePropertyClass(className);
             flexProp.setProperties(prop);
-            System.out.println("keys: " + prop.keySet());
+           
         } catch (IOException ioE) {
             throw new ServletException(ioE);
         }
