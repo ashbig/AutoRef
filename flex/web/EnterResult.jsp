@@ -86,7 +86,7 @@ function put5()
 <hr>
 <html:errors/>
 <p>
-<html:form action="/EnterExpressionResult.do" focus="sourcePlate">
+<html:form action="/EnterExpressionResult.do" focus="sourcePlate"  enctype="multipart/form-data">
 
 <table>
     <tr>
@@ -180,7 +180,7 @@ function put5()
 
     <logic:iterate id="sample" name="allSamples" indexId="i">
     <html:hidden property='<%="cloneid["+ i +"]" %>'/>
-    <tr class="evenRow">
+    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
     <logic:present name="sampleid">
     <td>
         <bean:write name="sample" property="id"/>
@@ -353,13 +353,25 @@ function put5()
     <td>
         <html:textarea property='<%="comments["+ i +"]" %>'/>
     </td>
-    <tr>
-        <html:hidden property='<%="cloneid["+ i +"]" %>'/>
-    </tr>
-    </tr>
+    </flex:row>
     </logic:iterate>
 
 </table>
+
+<p>
+<table>
+    <tr>
+        <td class="prompt">Upload gel image file:</td>
+        <td><html:file property="filename" /></td>
+    </tr>
+</table>
+
+<p><b>Existing image files associated with this plate:</b></p>
+<logic:iterate id="file" name="newExpressionPlate" property="fileReferences">
+            <flex:linkFileRef name="file">
+                <bean:write name="file" property="baseName"/>
+            </flex:linkFileRef><br>
+</logic:iterate>
 
 <p>
 <table>

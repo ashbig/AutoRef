@@ -11,6 +11,8 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.*;
+import org.apache.struts.action.*;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.Researcher;
@@ -53,6 +55,7 @@ public class EnterResultForm extends CreateExpressionPlateForm {
     protected List cloneidList;
     
     protected Researcher r;
+    protected FormFile filename = null;
     
     /** Creates a new instance of EnterResultForm */
     public EnterResultForm() {
@@ -93,6 +96,7 @@ public class EnterResultForm extends CreateExpressionPlateForm {
     public void setCloneid(int index, String value) {this.cloneidList.set(index, value);}
     public void setNextForward(String s) {this.nextForward = s;}
     public void setResearcherObject(Researcher r) {this.r = r;}
+    public void setFilename(FormFile f) {this.filename = f;}
     
     public String getNewPlate() {return newPlate;}
     public boolean getWell() {return well;}
@@ -129,6 +133,7 @@ public class EnterResultForm extends CreateExpressionPlateForm {
     public String getCloneid(int index) {return (String)cloneidList.get(index);}
     public String getNextForward() {return nextForward;}
     public Researcher getResearcherObject() {return r;}
+    public FormFile getFilename() {return filename;}
     
     public void setCloneValues(Vector samples) {
         pcrResultList = new ArrayList();
@@ -181,6 +186,7 @@ public class EnterResultForm extends CreateExpressionPlateForm {
         sourcePlate = null;
         newPlate = null;
         researcherBarcode = null;
+        filename = null;
     }   
         
     /**

@@ -16,8 +16,8 @@
  *              Added static method findFile (Container container)
  *              Added static method findFile (Result result)
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-07 17:53:16 $
+ * $Revision: 1.2 $
+ * $Date: 2003-09-15 20:10:03 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -56,7 +56,7 @@ import edu.harvard.med.hip.flex.process.*;
  * create method or use one of the find methods.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2003-03-07 17:53:16 $
+ * @version    $Revision: 1.2 $ $Date: 2003-09-15 20:10:03 $
  */
 
 public class FileReference {
@@ -69,6 +69,9 @@ public class FileReference {
     
     // file tye for dna gels
     public static final String DNA_GEL_TYPE="DNA_GEL_IMAGE";
+    
+    // file type for expression vector PCR gels
+    public static final String EXP_GEL_TYPE = "EXP_GEL_IMAGE";
     
     // id for the file reference
     private int id;

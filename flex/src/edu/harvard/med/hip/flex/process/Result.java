@@ -48,7 +48,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.20 $ $Date: 2003-09-12 18:43:14 $
+ * @version    $Revision: 1.21 $ $Date: 2003-09-15 20:08:26 $
  */
 
 public class Result {
@@ -112,6 +112,8 @@ public class Result {
     
     // File reference this result is associate with if any.
     private FileReference fileRef;
+    
+    private List fileRefs;
     
     /**
      * Constructor.
@@ -224,22 +226,36 @@ public class Result {
      * @param results A list of Result objects.
      * @exception FlexDatabaseException.
      */
-    public static void insert(Connection conn, List results) throws FlexDatabaseException {
-        PreparedStatement ps = null;
-        String sql = "insert into result values(resultid.nextval,?,?,?,?)";
+    public static void insert(Connection conn, List results, FileReference fileRef) throws FlexDatabaseException {
+        String sql = "insert into result values(?,?,?,?,?)";
+        String sql2 = "insert into resultfilereference values(?,?)";
         
+        PreparedStatement ps = null;
+        PreparedStatement ps2 = null;
         try {
             DatabaseTransaction dt = DatabaseTransaction.getInstance();
             ps = conn.prepareStatement(sql);
+            if(fileRef != null) {
+                ps2 = conn.prepareStatement(sql2);
+            }
             
             for(int i=0; i<results.size(); i++) {
+                int resultid = FlexIDGenerator.getID("RESULTID");
+                
                 Result result = (Result)results.get(i);
-                ps.setInt(1, result.getSample().getId());
-                ps.setInt(2, result.getProcess().getExecutionid());
-                ps.setString(3, result.getType());
-                ps.setString(4, result.getValue());
+                ps.setInt(1, resultid);
+                ps.setInt(2, result.getSample().getId());
+                ps.setInt(3, result.getProcess().getExecutionid());
+                ps.setString(4, result.getType());
+                ps.setString(5, result.getValue());
                 dt.executeUpdate(ps);
-            }        
+                
+                if(fileRef != null) {
+                    ps2.setInt(1, resultid);
+                    ps2.setInt(2, fileRef.getId());
+                    dt.executeUpdate(ps2);
+                }
+            }
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException(sqlE);
         } finally {
@@ -293,7 +309,7 @@ public class Result {
         }
         return result;
     }
-   
+    
     /**
      * Find all the process result for a given sample.
      *
@@ -306,14 +322,14 @@ public class Result {
     throws FlexDatabaseException {
         List results = new ArrayList();
         String sql="select rs.resultid, rs.resultvalue, p.executionid, p.protocolid,"+
-                  " p.executionstatus, r.researcherid, r.researchername, r.researcherbarcode,"+
-                  " p.processdate, p.subprotocolname, p.extrainformation"+
-                  " from result rs, processexecution p, researcher r"+
-                  " where rs.executionid=p.executionid"+
-                  " and p.researcherid=r.researcherid"+
-                  " and rs.sampleid=?"+
-                  " and rs.resulttype=?"+
-                  " order by p.processdate desc";
+        " p.executionstatus, r.researcherid, r.researchername, r.researcherbarcode,"+
+        " p.processdate, p.subprotocolname, p.extrainformation"+
+        " from result rs, processexecution p, researcher r"+
+        " where rs.executionid=p.executionid"+
+        " and p.researcherid=r.researcherid"+
+        " and rs.sampleid=?"+
+        " and rs.resulttype=?"+
+        " order by p.processdate desc";
         
         DatabaseTransaction dt = DatabaseTransaction.getInstance();
         Connection conn = dt.requestConnection();
@@ -398,6 +414,14 @@ public class Result {
      */
     public String toString() {
         return this.value;
+    }
+    
+    public List getFileRefs() {
+        return fileRefs;
+    }
+    
+    public void setFileRefs(List fileRefs) {
+        this.fileRefs = fileRefs;
     }
     
     public static void main(String [] args) throws Exception {

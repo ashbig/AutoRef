@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-07 17:53:16 $
+ * $Revision: 1.2 $
+ * $Date: 2003-09-15 20:08:15 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -41,13 +41,14 @@ import java.io.*;
 import java.util.*;
 
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.core.Container;
 
 /**
  * Reresents the file repository.
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.1 $ $Date: 2003-03-07 17:53:16 $
+ * @version    $Revision: 1.2 $ $Date: 2003-09-15 20:08:15 $
  */
 
 public class FileRepository {
@@ -60,6 +61,10 @@ public class FileRepository {
     
     // local path to store dna gels
     public final static String DNA_GEL_LOCAL_PATH=FlexProperties.getInstance().getProperty("flex.repository.dnagel.relativedir");
+    
+    // local path to store expression vector gel images
+    public final static String EXP_GEL_LOCAL_PATH = FlexProperties.getInstance().getProperty("flex.repository.expgel.relativedir");
+    
     /**
      * Uploads a file to the server.
      *
@@ -76,11 +81,12 @@ public class FileRepository {
         
         // the full path where the file will be placed.
         String fullPath= fullDir + fileRef.getBaseName();
-        
+        System.out.println(fullPath);
         // if the directory doesn't exist create it.
         File dirFile = new File(fullDir);
         if(! dirFile.exists()) {
             dirFile.mkdirs();
+            System.out.println("here");
         }
         
         // write the file.
