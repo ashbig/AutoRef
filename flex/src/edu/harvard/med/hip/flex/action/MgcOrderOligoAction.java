@@ -50,6 +50,7 @@ public class MgcOrderOligoAction extends AdminAction
         ActionErrors errors = new ActionErrors();
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        String username = user.getUsername();
         
         // The form holding the status changes made by the user
         MgcOrderOligoForm requestForm = (MgcOrderOligoForm)form;
@@ -64,34 +65,40 @@ public class MgcOrderOligoAction extends AdminAction
             Workflow workflow = new Workflow(workflowid);
             Protocol protocol  = new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS);
             conn = DatabaseTransaction.getInstance().requestConnection();
-            MgcOligoPlateManager om = new MgcOligoPlateManager(conn,project, workflow, 
-                                         isFullPlatesOnly, protocol);
+            
+            MgcOligoPlateManager om = new MgcOligoPlateManager(conn,project, workflow,
+            isFullPlatesOnly, protocol, username);
             om.orderOligo();
+            
+            return mapping.findForward("success");
         } catch (FlexDatabaseException fde)
         {
+            System.out.println("FDE " + fde.getMessage());
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error",fde));
+            saveErrors(request,errors);
+            DatabaseTransaction.rollback(conn);
+                return mapping.findForward("error");
         }
         catch(Exception ex)
         {
+            System.out.println("E " + ex.getMessage());
             errors.add(Action.EXCEPTION_KEY,
             new ActionError(Action.EXCEPTION_KEY,ex));
-            
-        } finally
-        {
-            if(errors.size() > 0)
-            {
-                saveErrors(request,errors);
-                DatabaseTransaction.rollback(conn);  
+            saveErrors(request,errors);
+            DatabaseTransaction.rollback(conn);
                 return mapping.findForward("error");
-                
-            }
-            else
-            {
-                return mapping.findForward("success");
-            }
         }
+        finally
+        {
+            
+            if (conn != null)
+                DatabaseTransaction.closeConnection(conn);
+            
+        }
+        
         
     }
     
 }
+
