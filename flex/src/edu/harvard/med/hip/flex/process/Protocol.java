@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.6 2001-06-12 18:51:39 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.7 2001-06-18 15:33:48 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -20,11 +20,47 @@ import sun.jdbc.rowset.*;
  * protocol table.
  */
 public class Protocol {
+    /*
+     * the protocol strings
+     */
+    public static final String APPROVE_SEQUENCES = "approve sequences";
+    public static final String IDENTIFY_SEQUENCES_FROM_UNIGENE=
+        "identify sequences from unigene";
+    public static final String DESIGN_CONSTRUCTS= "design constructs";
+    public static final String GENERATE_OLIGO_ORDERS= "generate oligo orders";
+    public static final String RECEIVE_OLIGO_PLATES= "receive oligo plates";
+    public static final String GENERATE_PCR_PLATES = "generate PCR plates";
+    public static final String RUN_PCR_GEL = "run PCR gel";
+    public static final String GENERATE_FILTER_PLATES="generate filter plates";
+    public static final String GENERATE_BP_REACTION_PLATES=
+        "generate BP reaction plates";
+    public static final String GENERATE_TRANSFORMATION_PLATES =
+        "generate transformation plates";
+    public static final String GENERATE_AGAR_PLATES=
+        "generate agar plates";
+    public static final String GENERATE_CULTURE_BLOCKS_FOR_ISOLATES=
+        "generate culture blocks for isolates";
+    public static final String GENERATE_DNA_PLATES="generate DNA plates";
+    public static final String GENERATE_GLYCEROL_PLATES=
+        "generate glycerol plates";
+    public static final String GENERATE_SEQUENCING_PCR_PLATES=
+        "generate sequencing PCR plates";
+    public static final String GENERATE_SEQUENCING_DNA_PLATES = 
+        "generate sequencing DNA plates";
+    public static final String SUBMIT_SEQUENCING_ORDERS=
+        "submit sequencing orders";
+    public static final String RECEIVE_SEQUENCING_RESULTS=
+        "receive sequencing results";
+    public static final String ENTER_GEL_RESULTS="enter gel results";
+    public static final String ENTER_TRANSFORMATION_RESULTS=
+        "enter transformation results";
+        
+        
     private int id;
     private String processcode;
     private String processname;
     private Vector subprotocol = new Vector();
- 
+    
     /**
      * Constructor.
      *
@@ -34,7 +70,7 @@ public class Protocol {
      */
     public Protocol(int id) {
         this.id = id;
-   }
+    }
     
     /**
      * Constructor.
@@ -142,7 +178,7 @@ public class Protocol {
     public String getProcesscode() {
         return processcode;
     }
- 
+    
     /**
      * Return the process name.
      *
