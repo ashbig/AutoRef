@@ -39,7 +39,7 @@
         <html:submit property="submit" value="Submit"/>
     </html:form>
 
-     <html:link forward="register" target="_top">Customer registration</html:link>
+     <html:link forward="register" target="_top">User registration</html:link>
     <br>
     <html:link forward="findRegistration" target="_top">Forgot your password?</html:link>
     <br><br>
