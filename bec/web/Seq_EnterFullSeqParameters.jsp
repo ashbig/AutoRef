@@ -309,7 +309,7 @@
               <input name="FS_5S_PASS_H" type="input" id="FS_5S_PASS_H" value="1" size="5" >
             </div></td>
           <td width="14%"bgcolor="#e4e9f8"><div align="center"> 
-              <input name="FS_5DI_PASS_L" type="input" id="FS_5DI_PASS_L" value="1" size="5">
+              <input name="FS_5S_PASS_L" type="input" id="FS_5S_PASS_L" value="1" size="5">
             </div></td>
           <td width="13%"bgcolor="#e4e9f8"><div align="center"> 
               <input name="FS_5S_FAIL_H" type="input" id="FS_5S_FAIL_H" value="1" size="5" >
