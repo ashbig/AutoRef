@@ -108,8 +108,8 @@ public class CreateExpressionPlateAction extends ResearcherAction {
             labelPrefix = "ScxXG";
         } else if("P".equals(species)) {
             labelPrefix = "PaxXG";
-        } else if("M".equals(species)) {
-            labelPrefix = "MmxXG";
+        } else if("M".equals(species) || "D".equals(species)) {
+            labelPrefix = "MmxXG";        
         } else {
             errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
             saveErrors(request, errors);
