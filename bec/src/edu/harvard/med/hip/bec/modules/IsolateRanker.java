@@ -154,11 +154,15 @@ public class IsolateRanker
 
               // this is for not known gerry sequences
             if (construct.getRefSequence().getText().equals("NNNNN") ) return ;
+            //prepare refsequence
             BaseSequence refsequence = construct.getRefSequenceForAnalysis();
-            
-          
             refsequence.setId( construct.getRefSeqId());
-             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
+            String refsequence_text = refsequence.getText();
+            refsequence.setText(m_linker5.getSequence() + refsequence.getText() +m_linker3.getSequence() );
+            int cdsstart = m_linker5.getSequence().length() ;
+            int cdsstop = m_linker5.getSequence().length() + refsequence.getText().length() ;
+           
+            for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
                 //we process only not yet analized isolates
                 it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
@@ -173,13 +177,13 @@ public class IsolateRanker
                 //no sequence , only reads
                 else if (clonesequence == null && (reads != null && reads.size() > 0))
                 {
-                    processReads(it,refsequence,conn);
+                    processReads(it,refsequence,cdsstart,cdsstop, conn);
                     it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
                     
                 }
                 else if (clonesequence != null )//sequence exists process it
                 {
-                    processSequence(clonesequence,refsequence,conn);
+                    processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
                     if (clonesequence.getStatus() == BaseSequence.STATUS_NOMATCH)
                     {
                         it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
@@ -190,10 +194,11 @@ public class IsolateRanker
                     }
                 }
                 
+                
                     //check wether number of mutations exseedmax allowed
                 it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length());
             }
-            construct.calculateRank( refsequence.getText().length() );
+            construct.calculateRank( refsequence.getText().length() ,m_cutoff_spec);
              for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
                 //update database
@@ -204,7 +209,7 @@ public class IsolateRanker
              }
             construct.updateCurrentIndex( construct.getCurrentIsolateId(),conn);
             
-        //    conn.commit();
+            conn.commit();
             m_finished_constructs.add(new Integer( construct.getId()));
         }
         catch(Exception ex)
@@ -219,7 +224,9 @@ public class IsolateRanker
     //*****************************************************
     //process isolate tracking based on reads
     private void processReads(IsolateTrackingEngine it,BaseSequence refsequence,
-    Connection conn)throws BecUtilException, BecDatabaseException, ParseException
+                    int cdststart, int cdsstop,
+                    Connection conn)
+                    throws BecUtilException, BecDatabaseException, ParseException
     {
         ArrayList reads = it.getEndReads();
          for (int reads_count = 0; reads_count < reads.size(); reads_count ++)
@@ -230,7 +237,7 @@ public class IsolateRanker
             {
      //check for read length
                 if ( !isReadLong(read,conn)) continue;
-                runRead( read, refsequence, conn);
+                runRead( read, refsequence,  cdststart,  cdsstop, conn);
                 if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
                      read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH)
                 {
@@ -244,15 +251,15 @@ public class IsolateRanker
         }
     }
     //function runs analysis of one read
-    private void  runRead( Read read, BaseSequence refsequence, Connection conn)
+    private void  runRead( Read read, BaseSequence refsequence,  int cdststart, int cdsstop,Connection conn)
             throws BecUtilException, BecDatabaseException, ParseException
     {
         
      
         // read can have all mutations analyzed and requers only score recalculation based on new spec
         
-        if (read.getScore() == Constants.SCORE_NOT_CALCULATED && 
-            (read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_FORWARD))
+    //    if (read.getScore() == Constants.SCORE_NOT_CALCULATED && 
+         if (   (read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_FORWARD))
         {
    //prepare detectors
             DiscrepancyFinder df = new DiscrepancyFinder();
@@ -261,11 +268,9 @@ public class IsolateRanker
             df.setQualityCutOff(m_cutoff_score);
             df.setIdentityCutoff(60.0);
             df.setMaxNumberOfDiscrepancies(20);
-            df.setRefSequenceCdsStart( m_linker5.getSequence().length() );
-            df.setRefSequenceCdsStop(m_linker5.getSequence().length() + refsequence.getText().length() );
-            //reassign ref sequence
-            String refsequence_text = refsequence.getText();
-            refsequence.setText(m_linker5.getSequence() + refsequence.getText() +m_linker3.getSequence() );
+            df.setRefSequenceCdsStart(   cdststart );
+            df.setRefSequenceCdsStop(  cdsstop);
+           
             // reasign sequence for only trimmed sequence
              AnalyzedScoredSequence read_sequence =  read.getSequence();
             //store values
@@ -372,7 +377,8 @@ public class IsolateRanker
     
     
     //function runs analysis of one read
-    private void  processSequence( CloneSequence clonesequence, BaseSequence refsequence, Connection conn)
+    private void  processSequence( CloneSequence clonesequence, BaseSequence refsequence, 
+            int cdststart, int cdsstop, Connection conn)
             throws BecUtilException, BecDatabaseException, ParseException
     {
         
@@ -388,14 +394,8 @@ public class IsolateRanker
             df.setQualityCutOff(m_cutoff_score);
             df.setIdentityCutoff(60.0);
             df.setMaxNumberOfDiscrepancies(20);
-            df.setRefSequenceCdsStart( m_linker5.getSequence().length() );
-            df.setRefSequenceCdsStop(m_linker5.getSequence().length() + refsequence.getText().length() );
-            //reassign ref sequence
-            String refsequence_text = refsequence.getText();
-            refsequence.setText(m_linker5.getSequence() + refsequence.getText() +m_linker3.getSequence() );
-            
-    //run read
-
+            df.setRefSequenceCdsStart(  cdststart);
+            df.setRefSequenceCdsStop(  cdsstop );
             df.setSequencePair(new SequencePair(clonesequence ,  refsequence));
             df.setInputType(true);
             df.run();
@@ -422,6 +422,7 @@ public class IsolateRanker
                 clonesequence.updateLinker3Stop(clonesequence.getId(), clonesequence.getLinker3Stop(), conn);
                 clonesequence.insertMutations(conn);
                 clonesequence.setCloneSequenceStatus(BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_DF);
+                clonesequence.updateCloneSequenceStatus(clonesequence.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_DF,conn);
             }
         }
      

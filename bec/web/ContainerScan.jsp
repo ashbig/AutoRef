@@ -78,7 +78,10 @@ else if  (request.getAttribute(Constants.JSP_TITLE ) != null)
         </tr>
 		<tr><td>&nbsp;</td></tr>
 <% 
-if ( Integer.parseInt( (String)forwardName) == Constants.CONTAINER_RESULTS_VIEW)
+int forwardName_int = 0;
+if (forwardName instanceof String) forwardName_int = Integer.parseInt((String)forwardName);
+else if (forwardName instanceof String) forwardName_int = ((Integer) forwardName).intValue();
+if (  forwardName_int== Constants.CONTAINER_RESULTS_VIEW)
 
 {%>
 <tr><td><input type=radio name=show_action value="FER">Show Forward End Reads</td></tr>

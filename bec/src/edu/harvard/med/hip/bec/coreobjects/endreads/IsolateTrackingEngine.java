@@ -359,14 +359,39 @@ public class IsolateTrackingEngine
     }
     
     
+    public int getCdsLengthCovered(int refsequence_length, FullSeqSpec cutoff_spec)
+                                    throws BecDatabaseException
+    { 
+        if (m_clone_sequence == null && t_cds_length_covered_by_reads ==0)
+        {
+           //recalculating for reads
+           ArrayList not_ambiquous_read = getReadPassedAmbiquoutyTest(cutoff_spec);
+           if ( not_ambiquous_read == null || not_ambiquous_read.size() == 0)
+           {
+                  return t_cds_length_covered_by_reads;
+           }
+           isOverlap( not_ambiquous_read , refsequence_length) ;
+           return t_cds_length_covered_by_reads;
+            
+       
+        }
+        else
+            return t_cds_length_covered_by_reads;
+            
+    }
+    
     public int getCdsLengthCovered()
     { 
         if (m_clone_sequence != null)
         {
-            return m_clone_sequence.getLinker3Stop() - m_clone_sequence.getLinker3Stop();
+            return m_clone_sequence.getLinker3Stop() - m_clone_sequence.getLinker5Start();
         }
         else
-            return t_cds_length_covered_by_reads;}
+        {
+            return t_cds_length_covered_by_reads;
+        }
+            
+    }
     
     
     
@@ -700,23 +725,31 @@ public class IsolateTrackingEngine
     //get not amb read
     private ArrayList getReadPassedAmbiquoutyTest(FullSeqSpec cutoff_spec) throws BecDatabaseException
     {
-        ArrayList reads = new ArrayList();
-        for (int read_count = 0; read_count < m_endreads.size(); read_count++)
+        try
         {
-            Read cur_read = (Read) m_endreads.get(read_count);
-            if ( cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL ||
-                    cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH ||
-                   cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT ||
-                    cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT ||
-                    cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
-                    cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL )
-                continue;
-           if (cur_read.isPassAmbiquoutyTest(cutoff_spec) )
-           {
-               reads.add(cur_read);
-           }
+            ArrayList reads = new ArrayList();
+            if ( m_endreads == null) return reads;
+            for (int read_count = 0; read_count < m_endreads.size(); read_count++)
+            {
+                Read cur_read = (Read) m_endreads.get(read_count);
+                if ( cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_FAIL ||
+                        cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH ||
+                       cur_read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT ||
+                        cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT ||
+                        cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
+                        cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL )
+                    continue;
+               if (cur_read.isPassAmbiquoutyTest(cutoff_spec) )
+               {
+                   reads.add(cur_read);
+               }
+            }
+            return reads;
         }
-        return reads;
+        catch (Exception e)
+        {
+            throw new BecDatabaseException(e.getMessage());
+        }
     }
     
    /*
@@ -792,7 +825,8 @@ public class IsolateTrackingEngine
                     ArrayList reads = Read.getReadByIsolateTrackingId( istr.getId() );
                     istr.setEndReads(reads);
                 }
-                
+                 CloneSequence cl = CloneSequence.getByIsolateTrackingId(istr.getId(), CloneSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED);
+                 istr.setCloneSequence(cl);
                 FlexInfo fl = new FlexInfo();
                 fl.setId ( crs.getInt("id"));
                 fl.setIsolateTrackingId ( istr.getId() );
@@ -843,7 +877,7 @@ public class IsolateTrackingEngine
        else
        {
             sequence_penalty = DiscrepancyDescription.getPenalty(discrepancy_descriptions, spec);// by rna mutation
-            m_score =(int) ( 1000 *  (sequence_penalty/ (m_clone_sequence.getRefsequenceCoveredLength())));
+            m_score =(int)  ((1000 *  sequence_penalty)/ m_clone_sequence.getRefsequenceCoveredLength());
        }
     
     }
@@ -881,7 +915,7 @@ public class IsolateTrackingEngine
            }
            else
            {
-               m_score =(int) ( 1000 * ( isolate_penalty/overlap_length ));
+               m_score =(int) ( (1000 *  isolate_penalty) /overlap_length );
            }
            return;
        }

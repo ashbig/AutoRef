@@ -12,6 +12,7 @@
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.sequence.*" %>
 
 <html>
 
@@ -64,7 +65,7 @@
   </tr>
   <tr> 
     <td><strong>Reference Sequence Id:</strong></td>
-    <td> <a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;" > 
+    <td> <a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','newWndRefseqNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
       <%= sample.getRefSequenceId()%></a> </td>
   </tr>
   <tr> 
@@ -84,20 +85,53 @@
   <tr> 
     <td colspan="2"><p><strong>End Reads:</strong></p>
       <table width="74%" border="0" align="center" cellpadding="2" cellspacing="2">
-	  <%for (int read_count = 0; read_count < reads.size(); read_count++)
+	  <%Read read   = null;
+        for (int read_count = 0; read_count < reads.size(); read_count++)
 	  {
-	  		Read read  = (Read)reads.get(read_count);
+	  		 read  = (Read)reads.get(read_count);
 			%>
         <tr>
           <td width="37%"><%= read.getTypeAsString() %></td>
           <td width="33%">
-		 <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READ_REPORT_INT%>&amp;ID=<%= read.getId()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
+		 <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READ_REPORT_INT%>&amp;ID=<%= read.getId()%>','<%= read.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 		 <%= read.getId() %>
 		 </a></td>
           <td width="30%">
- <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= read.getSequenceId()%>&amp;BaseSequence.THEORETICAL_SEQUENCE_STR=<%= sample.getRefSequenceId ()%>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;">
+ <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= read.getSequenceId()%>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 		 </td>
+        
+<td width="30%">
+		
+<input type=BUTTON value="Discrepancy Report" 
+ onClick="window.open('/BEC/Seq_GetItem.do?forwardName=
+ <%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+ 
+
+</td>
         </tr>
+       <%}%>
+      </table>
+       <table width="74%" border="0" align="center" cellpadding="2" cellspacing="2">
+	  <%CloneSequence clonesequence = (CloneSequence)sample.getIsolateTrackingEngine().getCloneSequence();
+	  if ( clonesequence != null)
+        {%>
+        <tr>
+          <td width="17%"><%= clonesequence.getId() %></td>
+          <td width="33%">
+		 &nbsp;
+          <td width="30%">
+ <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= clonesequence.getId() %>&amp;<%=BaseSequence.THEORETICAL_SEQUENCE_STR%>=<%= sample.getRefSequenceId ()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+		 </td>
+<td >
+		
+<input type=BUTTON value="Discrepancy Report" 
+ onClick="window.open('/BEC/Seq_GetItem.do?forwardName=
+ <%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clonesequence.getId()%>','<%= clonesequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+ 
+
+</td>
+        </tr>
+
        <%}%>
       </table>
       <p><strong></strong></p></td>

@@ -368,11 +368,11 @@ public abstract class Mutation
     
     public static String HTMLReport(ArrayList discrepancies, int discrepancy_type, boolean isSeparateByQuality)
     {
-        if (discrepancies == null || discrepancies.size()==0) return "<tr><td colspan=3><strong>No discrepancies</td></tr>";
+        if (discrepancies == null || discrepancies.size()==0) return "";
         StringBuffer report = new StringBuffer();
         String line = "";boolean isExists = false;
         int[][] discrepancy_count  = getDiscrepanciesSeparatedByType( discrepancies,  discrepancy_type,  isSeparateByQuality);
-        for (int j=0; j< 30;j++)
+        for (int j=0; j< 45;j++)
         {
             for (int i = 0; i < 2;i++)
             {
@@ -692,7 +692,7 @@ public abstract class Mutation
     {
         if (discr == null || discr.size() == 0) return null;
         
-        int res[][] = new int[30][2] ;
+        int res[][] = new int[45][2] ;
         for (int count = 0; count < discr.size(); count++)
         {
             Mutation mut = (Mutation) discr.get(count);

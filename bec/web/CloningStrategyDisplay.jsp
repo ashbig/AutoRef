@@ -11,8 +11,8 @@
 <head>
 
 <title>End Reads Parameters</title>
-<LINK REL=StyleSheet HREF="file:///C|/Program%20Files/Apache%20Tomcat%204.0/webapps/BEC/FlexStyle.css" TYPE="text/css" MEDIA=screen>
-<link href="file:///C|/Program%20Files/Apache%20Tomcat%204.0/webapps/BEC/FlexStyle.css" rel="stylesheet" type="text/css">
+<LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
+<link href="FlexStyle.css" rel="stylesheet" type="text/css">
 </head>
 
 <body >
@@ -59,7 +59,27 @@
 </tr>
 <tr> 
 	<td  bgColor="#b8c6ed" ><strong>Sequence: </strong></td>
+<% if (linker5.getSequence().length() > 40)
+{
+    //force sequence wrap
+     char[] linkerseq = linker5.getSequence().toCharArray();
+    StringBuffer linkerseq_formated = new StringBuffer();
+     for (int count1 = 0; count1 < linkerseq.length; count1++)
+    {
+    linkerseq_formated.append(linkerseq[count1]);
+    if (count1 !=0 && count1 % 40 == 0 )linkerseq_formated.append("<BR>");
+    }%>
+     <td bgColor="#b8c6ed"> <%= linkerseq_formated.toString() %></td>
+<%
+}
+else
+{
+
+%>
 	<td bgColor="#b8c6ed"> <%= linker5.getSequence() %></td>
+<%}%>
+
+
 </tr>
 <tr> 
 	<td  bgColor="#e4e9f8" ><b>Linker Id:</b></td>
@@ -75,7 +95,25 @@
 </tr>
 <tr> 
 	<td  bgColor="#b8c6ed" ><strong>Sequence: </strong></td>
+<% if (linker3.getSequence().length() > 40)
+{
+    //force sequence wrap
+     char[] linkerseq = linker3.getSequence().toCharArray();
+    StringBuffer linkerseq_formated = new StringBuffer();
+     for (int count1 = 0; count1 < linkerseq.length; count1++)
+    {
+    linkerseq_formated.append(linkerseq[count1]);
+    if (count1 !=0 && count1 % 40 == 0 )linkerseq_formated.append("<BR>");
+    }%>
+     <td bgColor="#b8c6ed"> <%= linkerseq_formated.toString() %></td>
+<%
+}
+else
+{
+
+%>
 	<td bgColor="#b8c6ed"> <%= linker3.getSequence() %></td>
+<%}%>
 </tr>
 <tr > 
 	<td  bgColor="#e4e9f8" ><b>Linker Id:</b></td>

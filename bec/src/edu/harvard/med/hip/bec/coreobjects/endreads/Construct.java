@@ -226,7 +226,8 @@ public class Construct
     }
     */
     
-     public void calculateRank(int refsequence_length)
+     public void calculateRank(int refsequence_length, FullSeqSpec cutoff_spec)
+                throws BecDatabaseException
     {
       
         
@@ -236,12 +237,17 @@ public class Construct
 
 //(RL1 -- overlap length, S1 - isolate score)
          IsolateTrackingEngine it = null;
+         int cds_coverage = 0;
          for (int isolate_count = 0; isolate_count < m_isolates.size(); isolate_count++)
         {
             it = (IsolateTrackingEngine)m_isolates.get(isolate_count);
+            
             if ( it.getRank() != IsolateTrackingEngine.RANK_BLACK)
             {
-                it.setScore( (int) ( (it.getScore() * it.getCdsLengthCovered() + expected_score * ( refsequence_length - it.getCdsLengthCovered())) / refsequence_length ));
+                cds_coverage =  it.getCdsLengthCovered();
+                if ( cds_coverage == 0)
+                    cds_coverage = it.getCdsLengthCovered( refsequence_length,  cutoff_spec);
+                it.setScore( (int) (1000 * (it.getScore() * cds_coverage + expected_score * ( refsequence_length - cds_coverage)) / refsequence_length ));
             }
         }
         //sort isolate tracking by score
@@ -365,7 +371,7 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
         +" in ( "+plate_ids+" ) )) order by  const.constructid ";
          **/
           String sql = "select const.constructid as constructid, refsequenceid,format,cloningstrategyid,"
-         +" iso.isolatetrackingid as isolatetrackingid,status, score, rank, sampleid "
+         +" iso.isolatetrackingid as isolatetrackingid,status, ASSEMBLY_STATUS,score, rank, sampleid "
         +" from isolatetracking iso, sequencingconstruct const"
         +"  where iso.constructid=const.constructid and iso.isolatetrackingid in "
          +" (  select isolatetrackingid from isolatetracking where sampleid in "
@@ -387,12 +393,28 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
                 istr.setStatus(rs.getInt("status") );
                 istr.setSampleId(rs.getInt("sampleid") );
                 istr.setId( rs.getInt("isolatetrackingid") );
+                istr.setAssemblyStatus( rs.getInt("ASSEMBLY_STATUS"));
                 istr.setConstructId( rs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
+                
+                
                 // exstruct reads if not empty sample
-                if (istr.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY)
+                if (istr.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY
+                    && istr.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS)
                 {
-                    ArrayList reads = Read.getReadByIsolateTrackingId( istr.getId() );
-                    istr.setEndReads(reads);
+                    //check whether assembled sequence is available
+                    if (istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED 
+                    || istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED 
+                    ||istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED
+                    || istr.getAssemblyStatus() == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS)
+                    {
+                        CloneSequence cl = CloneSequence.getByIsolateTrackingId(istr.getId(), CloneSequence.CLONE_SEQUENCE_STATUS_ASSESMBLED);
+                        istr.setCloneSequence(cl);
+                    }
+                    else
+                    {
+                        ArrayList reads = Read.getReadByIsolateTrackingId( istr.getId() );
+                        istr.setEndReads(reads);
+                    }
                 }
                 //check if construct exists already
                 Integer construct_key =  new Integer( rs.getInt("constructid"));

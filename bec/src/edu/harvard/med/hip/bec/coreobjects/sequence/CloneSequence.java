@@ -203,13 +203,13 @@ public class CloneSequence extends AnalyzedScoredSequence
         
         DatabaseTransaction.executeUpdate(sql,conn);
      }
-     public static void updateStatus(int id,  int status, Connection conn)    throws BecDatabaseException
+     public static void updateCloneSequenceStatus(int id,  int status, Connection conn)    throws BecDatabaseException
     {
         String sql = "update assembledsequence  set ANALYSISSTATUS="+status+      " where sequenceid="+id;
         
         DatabaseTransaction.executeUpdate(sql,conn);
      }
-    
+   
     public int getRefsequenceCoveredLength()
     {
         int res = 0;

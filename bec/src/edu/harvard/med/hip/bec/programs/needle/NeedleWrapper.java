@@ -139,14 +139,45 @@ public class NeedleWrapper
             Runtime r = Runtime.getRuntime();
             r.traceMethodCalls(true);
             Process p = r.exec(cmd);
-            BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
-     
-            int x;
-            while ((x = berr.read()) != -1)
+             BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
+            BufferedInputStream binput = new BufferedInputStream(p.getInputStream());
+            int x = 0;int y = 0;
+            
+            boolean    isFinished = false;
+            boolean    isErrDone = false;
+            boolean    isOutDone = false;
+            byte[]      buff = new byte[255];
+            
+            while (!isFinished)
             {
-               // System.out.write(x);
-               // System.out.println(x);
+                if (berr.available() == 0 && binput.available() == 0)
+                {
+                    //System.out.println("Check if done");
+                    try
+                    {
+                        p.exitValue();
+                        isFinished = true;
+                        break;
+                    }
+                    catch (IllegalThreadStateException e)
+                    {
+                        Thread.currentThread().sleep(100);
+                    }
+                    catch(Exception e)
+                    {
+                        throw new BecUtilException("Cannot run phredphrap");
+                    }
+                }
+                else
+                {
+                   
+                    berr.read(buff, 0, Math.min(255, berr.available()));
+                    binput.read(buff, 0, Math.min(255, binput.available()));
+//                    System.out.println("Read stuff");
+                }
+
             }
+           
             p.waitFor();
             if (p.exitValue() != 0)
             {

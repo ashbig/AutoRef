@@ -42,7 +42,8 @@ public class NeedleParser
             p_score = new RE("Score:\\s*(\\d*\\.\\d*)") ; 
             //sequence
             //1 ATGAGCGGCGGCGGGCCTTGGCCTAGAGCGCTCCCAAGAAGTGGCTTACA     50
-            p_sequence = new RE("^\\s*[^\\#](\\S*)\\s*(\\d+)\\s{1}(\\D{50})\\s*(\\d+)") ; 
+            p_sequence = new RE("^\\s*[^\\#](\\S*)\\s*(\\d+)\\s{1}(\\D{1,50})\\s*(\\d+)") ; 
+            // p_sequence = new RE("^\\s*[^\\#](\\d+)\\s*(\\d+)(\\s*)(\\d+)") ; 
           
        }
        catch(Exception e)
@@ -60,11 +61,12 @@ public class NeedleParser
         
         boolean isQuerySeq = true;
         boolean isRefSeq = false;
-        
+        boolean isStartAlignment = false;
         String line = null;
         String query="";
         String ref="";
-        
+      //   ArrayList a = new ArrayList(); int count = 0;
+      //   String cur_query = "";String cur_ref = "";
         BufferedReader  fin = null;
          try 
         {
@@ -76,6 +78,8 @@ public class NeedleParser
                {
                   if (res != null)
                       res.setScore( Float.parseFloat( p_score.getParen(1)) );
+                  isStartAlignment = true;
+                  continue;
                }
                else if ( p_gaps.match(line) )
                {
@@ -92,6 +96,37 @@ public class NeedleParser
                    if (res != null)
                       res.setIdentity( Float.parseFloat( p_identity.getParen(1)) );
                }
+               /*
+               if(isStartAlignment && !line.startsWith("#")  )
+               {
+                   count++;
+                   if (count == 2)
+                   {
+                       // query+=p_sequence.getParen(3);
+                        a = Algorithms.splitString(line, null);
+                    //    System.out.println(p_sequence.getParen(3).length()+" "+p_sequence.getParen(3));
+                        cur_query=null;
+                        if (a.size() == 4)
+                       {
+                           cur_query = (String)a.get(2);
+                       } 
+                      
+                   }
+                   else if ( count == 4)
+                   {
+                       // ref+=p_sequence.getParen(3);
+                       //  System.out.println(p_sequence.getParen(3).length()+" "+p_sequence.getParen(3));
+                        a = Algorithms.splitString(line, null); 
+                       if (a.size() == 4)
+                       {
+                           cur_ref = (String)a.get(2);
+                       }
+                        if (cur_query 
+                        count = 0;
+                      
+                   }
+               }
+               */
                if ( p_sequence.match(line) )
                {
                   // System.out.println(line);
@@ -110,6 +145,7 @@ public class NeedleParser
                         isRefSeq = false;
                    }
                }
+                
             }
             if (res != null)
             {
@@ -131,9 +167,11 @@ public class NeedleParser
     {
          if (m_instance == null)  m_instance = new NeedleParser();
         StringBuffer output = new StringBuffer();
-        boolean isQuerySeq = true;
+        boolean isQuerySeq = false;
         boolean isRefSeq = false;
-        boolean isStart  = false;
+        boolean isEmptyLine = false;
+        boolean isDifference  = false;
+        boolean isStart = false;
         String line = null;
         String query="";
         String ref="";
@@ -145,8 +183,14 @@ public class NeedleParser
             fin = new BufferedReader(new FileReader(foutput_name));
             while ((line = fin.readLine()) != null)
             {
-               
-               if (  isStart && !isQuerySeq &&                         isRefSeq)
+               if ( isEmptyLine )
+               {
+                    output.append("\n");//empty line
+                    isQuerySeq = true;
+                    isEmptyLine=false;
+                    continue;
+               }
+               if (  isDifference )
                {
                    current_line = line.toCharArray();
                    for (int count = 0; count < current_line.length;count++)
@@ -155,9 +199,10 @@ public class NeedleParser
                        {
                            output.append("<font color='blue'><b>"+current_line[count]+"</b></font>");
                        }
-                       else if(count > 1 && current_line[count]==' ' && current_line[count-1]=='|')
+                       else if(count > 1 && current_line[count]==' ' && current_line[count-1]=='|' &&
+                       ( (count+1) < current_line.length && current_line[count+1] != ' '))
                        {
-                           output.append("<font color='red'>:</font>");
+                           output.append("<font color='red'><b>:</b></font>");
                        }
                        else
                        {
@@ -165,20 +210,30 @@ public class NeedleParser
                        }
                    }
                    output.append("\n");
+                   isRefSeq = true;
+                   isDifference = false;
                    continue;
                }
                if ( p_sequence.match(line) )
                {
+                   if ( ! isStart ) 
+                   {
+                       isStart =true;
+                       isQuerySeq = true;
+                   }
                   // System.out.println(line);
                    if (isQuerySeq)
                    {
-                    
-                         output.append(p_sequence.getParen(1));
-                          output.append(p_sequence.getParen(2));
+                         int seq_start = line.indexOf(p_sequence.getParen(3));
+                         int seq_end = seq_start + p_sequence.getParen(3).length();
+                         output.append( line.substring(0, seq_start));
+                        
+                    //      output.append(p_sequence.getParen(2));
                           current_line = p_sequence.getParen(3).toCharArray();
                           for (int count = 0; count < current_line.length;count++)
                           {
-                               if ( scores != null)
+                              if (current_line[count] ==' '){ output.append(' '); continue;}
+                               if ( scores != null && queryseq_count < scores.length)
                                 {
                                     if( scores[queryseq_count] < 20)
                                     {
@@ -199,25 +254,23 @@ public class NeedleParser
                                 }
                                queryseq_count++;
                           }
-                           output.append(p_sequence.getParen(4));
+                           output.append(line.substring(seq_end));
+                           
                     //    System.out.println(p_sequence.getParen(3).length()+" "+p_sequence.getParen(3));
                         isQuerySeq = false;
-                        isRefSeq = true;
-                        isStart = true;
+                        isDifference = true;
                    }
                    else if (isRefSeq)
                    {
                         
-                          output.append(p_sequence.getParen(1));
-                          output.append(p_sequence.getParen(2));
-                          current_line = p_sequence.getParen(3).toCharArray();
-                          for (int count = 0; count < current_line.length;count++)
-                          {
-                          }
-                           output.append(p_sequence.getParen(4));
+                          output.append(line);
+                    //output.append(p_sequence.getParen(2));
+                          //output.append( p_sequence.getParen(3) );
+                          // output.append(p_sequence.getParen(4));
                        //  System.out.println(p_sequence.getParen(3).length()+" "+p_sequence.getParen(3));
-                        isQuerySeq = false;
+                        isEmptyLine = true;
                         isRefSeq = false;
+                       //  isStart = false;
                        
                    }
                     output.append("\n");
@@ -254,7 +307,7 @@ public class NeedleParser
         }
      */
         
-        String queryFile = "c:\\needleoutput\\needle10342_419.out";
+        String queryFile = "c:\\tmp_assembly\\needle684_76.out";
         NeedleResult res = null;
         try
         {
@@ -262,8 +315,8 @@ public class NeedleParser
             
           //  NeedleParser.parse(queryFile,res);
           //  res.recalculateIdentity();
-            String g= NeedleParser.parsetoHTMLString(queryFile,           null, 0, 0);
-            System.out.println(g);
+             NeedleParser.parse(queryFile,res);
+            System.out.println("g");
         }catch(Exception e){}
         System.exit(0);
     }

@@ -53,17 +53,17 @@
 <tr><td>
 <p><strong>Please select process to execute</strong></p><p><P>
 </td></tr> -->
-  <tr>
+  <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Transfer 
       plate information from FLEX into BEC</font></b></td>
   </tr>
-  <tr>
+  <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_UPLOAD_PLATES %> >
       Upload template plates information (settings required)&nbsp;<br>
       </font> <font color="#ECECFF">a</font></td>
   </tr>
-  <tr>
+  <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Run 
       End reads and Rank isolates based on End Reads Evaluation</font></b></td>
   </tr>
@@ -92,14 +92,21 @@
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_APROVE_ISOLATE_RANKER  %>>
       Approve isolate ranking</font> <p></td>
   </tr>
-  <tr>
+  <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Design 
       of internal primers</font></b></td>
   </tr>
-   <tr> 
+  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_PUT_CLONES_ON_HOLD %>>
-      Put clones on hold</font></td>
+      Put clones on hold </font></td>
+  </tr>
+  <tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_ACTIVATE_CLONES %>>
+      Activate clone</font> </td>
+  </tr>
+  <td width="100%" height="25" bgcolor="#DCE8FC"> &nbsp; </font> </td>
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
@@ -119,58 +126,57 @@
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %>>
-      View internal primers
+      View internal primers 
       <P></font></td>
   </tr>
-  <tr>
+  <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Clone 
       Evaluation</font></b></td>
   </tr>
-  <tr>
+  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER  %>>
       Run assembly wrapper</font></td>
   </tr>
-  <tr>
+  <tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+      <input type="radio" name="forwardName" value=<%= Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE  %>>
+      Submit assembled sequences</font></td>
+  </tr>
+  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER %>>
       Run discrepancy finder</font> </td>
   </tr>
-  <tr>
+  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %>>
       Run polymorphism finder(settings required)</font> </td>
   </tr>
-  <tr>
+  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DESIGION_TOOL%>>
-      Run decision tool (settings required) </font>
-      <P></td>
-  </tr>
-  
-  
-  
-  
-<tr><td>&nbsp;
-
-</td></tr> 
-  <tr>
-    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Stand alone processes</font></b></td>
+      Run decision tool (settings required) </font> <P></td>
   </tr>
   <tr>
+    <td>&nbsp; </td>
+  </tr>
+  <tr> 
+    <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Stand 
+      alone processes</font></b></td>
+  </tr>
+  <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_DISCREPANCY_FINDER_STANDALONE %> >
       Run Discrepancy Finder on set of sequences<br>
       </font> <font color="#ECECFF">a</font></td>
   </tr>
-  
-  
-  <tr>
+  <tr> 
     <td> <br> <b><font color="#1145A6">Please make a selection and submit.</font></b> </center> 
-      <p align="left">
+      <p align="left"> 
         <input type="submit" value="continue" name="submit">
         <br>
-        </td>
+    </td>
   </tr>
   <p> 
 </table>

@@ -55,13 +55,15 @@ public class Seq_GetItemAction extends ResearcherAction
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         String label = null;int id = -1;Container container = null;
        
-        
+     
         try
         {
             if ( forwardName == Constants.CONTAINER_PROCESS_HISTORY || forwardName 
                 ==Constants.CONTAINER_DEFINITION_INT ||
                 forwardName == Constants.CONTAINER_RESULTS_VIEW ||
-                forwardName == Constants.CONTAINER_ISOLATE_RANKER_REPORT)//rocessing from container label
+                forwardName == Constants.CONTAINER_ISOLATE_RANKER_REPORT ||
+                forwardName ==Constants.PROCESS_PUT_CLONES_ON_HOLD ||
+                 forwardName == Constants.PROCESS_ACTIVATE_CLONES)//rocessing from container label
                {
                      
                     label = (String)request.getParameter(Constants.CONTAINER_BARCODE_KEY);
@@ -86,24 +88,27 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.LINKER_DEFINITION_INT ||
                forwardName == Constants.CLONING_STRATEGY_DEFINITION_INT ||
                forwardName == Constants.SAMPLE_ISOLATE_RANKER_REPORT ||
-               forwardName == Constants.READ_REPORT_INT
+               forwardName == Constants.READ_REPORT_INT 
                )
                {
                     id = Integer.parseInt( (String) request.getParameter("ID"));
-                 
-               }
+                }
             switch  (forwardName)
             {
                 case Constants.VECTOR_DEFINITION_INT:
                 {
                     BioVector vector = BioVector.getVectorById(id);
-                    request.setAttribute("vector", vector);
+                    ArrayList vectors = new ArrayList();
+                    vectors.add(vector);
+                    request.setAttribute("vectors", vectors);
                     return (mapping.findForward("display_vector"));
                 }
                 case Constants.LINKER_DEFINITION_INT:
                 {
                     BioLinker linker = BioLinker.getLinkerById(id);
-                    request.setAttribute("linker", linker);
+                    ArrayList linkers = new ArrayList();
+                    linkers.add(linker);
+                    request.setAttribute("linkers", linkers);
                     return (mapping.findForward("display_linker"));
                 }
                 case Constants.CLONING_STRATEGY_DEFINITION_INT:
@@ -119,11 +124,11 @@ public class Seq_GetItemAction extends ResearcherAction
                 }
                 case Constants.CONTAINER_PROCESS_HISTORY:
                 {
-                    System.out.println("label "+label);
+                   
                     ArrayList pr_history = Container.getProcessHistoryItems( label);
                     container.getCloningStrategyId();
                     request.setAttribute("container",container) ;
-                    System.out.println("Process historys "+pr_history);
+                   
                     request.setAttribute("process_items",pr_history);
                     return (mapping.findForward("display_container_history"));
                 }
@@ -131,7 +136,7 @@ public class Seq_GetItemAction extends ResearcherAction
                 case Constants.CONTAINER_DEFINITION_INT:
                 {
                     
-                    container.restoreSampleIsolate();
+                    container.restoreSampleIsolate(false,false);
                     System.out.println("Container samples "+container.getSamples().size());
                     container.getCloningStrategyId();
                     request.setAttribute("container",container);
@@ -189,17 +194,31 @@ public class Seq_GetItemAction extends ResearcherAction
             
                     sample.setIsolaterTrackingEngine( IsolateTrackingEngine.getIsolateTrackingEngineBySampleId(sample.getId()));
                     ArrayList discrepancies = new ArrayList();
-                    
+                    CloneSequence   clonesequence   = null;
                     Read read  = null;
-                    for (int read_count = 0; read_count < sample.getIsolateTrackingEngine().getEndReads().size(); read_count++)
+                    if (sample.getIsolateTrackingEngine().getCloneSequence() != null)
                     {
-                        read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(read_count);
-                        discrepancies.addAll( read.getSequence().getDiscrepancies() );
+                        clonesequence = sample.getIsolateTrackingEngine().getCloneSequence();
+                        discrepancies = clonesequence.getDiscrepancies();
                     }
-                    discrepancies = DiscrepancyPair.getDiscrepancyNoDuplicates(discrepancies);
-                    String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+                    else
+                    {
+                        for (int read_count = 0; read_count < sample.getIsolateTrackingEngine().getEndReads().size(); read_count++)
+                        {
+                            read = (Read) sample.getIsolateTrackingEngine().getEndReads().get(read_count);
+                            discrepancies.addAll( read.getSequence().getDiscrepancies() );
+                        }
+                        discrepancies = DiscrepancyDescription.getDiscrepancyNoDuplicates(discrepancies);
+                    }
+                     String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.LINKER_5P, true);
+                     discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+                     discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.LINKER_3P, true);
+                     if (discrepancy_report_html.equals(""))
+                        discrepancy_report_html="<tr><td colspan=3><strong>No discrepancies</strong></td></tr>";
+                   
                     request.setAttribute("container_label", request.getParameter("container_label"));
                     request.setAttribute("sample", sample);
+                    
                     request.setAttribute("discrepancy_report",discrepancy_report_html);
                     return (mapping.findForward("display_sample_isolate_ranker_report"));
                 }
@@ -207,7 +226,13 @@ public class Seq_GetItemAction extends ResearcherAction
                 {
                     Read read = Read.getReadById(id);
                     read.getSequence();
-                    String discrepancy_report_html = Mutation.HTMLReport( read.getSequence().getDiscrepancies(), Mutation.RNA, true);
+                    ArrayList discrepancies = read.getSequence().getDiscrepancies();
+                    
+                    String discrepancy_report_html = Mutation.HTMLReport( discrepancies, Mutation.LINKER_5P, true);
+                     discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.RNA, true);
+                     discrepancy_report_html += Mutation.HTMLReport( discrepancies, Mutation.LINKER_3P, true);
+                     if (discrepancy_report_html.equals(""))
+                        discrepancy_report_html="<tr><td colspan=3><strong>No discrepancies</strong></td></tr>";
                     request.setAttribute("read", read);
                     request.setAttribute("discrepancy_report",discrepancy_report_html);
                     return (mapping.findForward("display_read_report"));
@@ -278,7 +303,50 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("alignment",needle_output);
                     return (mapping.findForward("display_needle_alignment"));
                 }
-              
+                case   Constants.PROCESS_PUT_CLONES_ON_HOLD :
+                 case Constants.PROCESS_ACTIVATE_CLONES:
+                {
+                 //show label scan form  
+                   
+                    String title = null;
+                    if ( forwardName == Constants.PROCESS_PUT_CLONES_ON_HOLD )
+                    {
+                        
+                        title =  "put Active Clones on Hold";
+                    }
+                    else if( forwardName == Constants.PROCESS_ACTIVATE_CLONES )
+                    {
+                        
+                        title =  "activate Clones";
+                    }
+                    
+                    container.restoreSampleIsolate(false,true);
+                    request.setAttribute("container",container);
+                    request.setAttribute("forwardName", new Integer(forwardName));
+                    System.out.print("lll");
+                    request.setAttribute(Constants.JSP_TITLE,title);
+                    return (mapping.findForward("show_activate_list"));
+                }
+                case Constants.AVAILABLE_LINKERS_DEFINITION_INT:
+                {
+                    
+                    ArrayList linkers = BioLinker.getAllLinkers();
+                    
+                    request.setAttribute("linkers", linkers);
+                    request.setAttribute("forwardName", new Integer(forwardName));
+                    return (mapping.findForward("display_linker"));
+                }
+                case Constants.AVAILABLE_VECTORS_DEFINITION_INT:
+                {
+                    System.out.println("a");
+                    request.setAttribute("forwardName", new Integer(forwardName));
+                    ArrayList vectors = BioVector.getAllVectors();
+                    request.setAttribute("vectors", vectors);
+                    System.out.println(vectors.size());
+                    return (mapping.findForward("display_vector"));
+                    
+                }     
+             
             }
             
         }

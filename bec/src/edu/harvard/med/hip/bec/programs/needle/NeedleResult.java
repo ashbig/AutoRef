@@ -166,19 +166,23 @@ public class NeedleResult
         char[] arr_subject =  m_subject.toCharArray();
         int query_base_count = 0;
         int match_count = 0;
+        boolean isStart = false;
         int length = ( arr_query.length  >= arr_subject.length ) ?
                 arr_subject.length -1 : arr_query.length -1 ;
        
         for (int count = 0; count < length;count++)
         {
-            if (arr_query[count] == arr_subject[count]) match_count++;
-            if (arr_query[count] != ' ' )
+            if (!isStart && (arr_query[count] != ' ' && arr_subject[count] != ' '))isStart = true;
+            if (!isStart) continue;
+            if (isStart && arr_query[count] == arr_subject[count]) match_count++;
+            if (isStart && arr_query[count] == ' ' || arr_subject[count] == ' ')
             {
-                query_base_count++;
+                break;
             }
+            if (isStart) query_base_count++;
           //  System.out.println(arr_query[count]+" "+arr_subject[count] +" "+match_count+" "+query_base_count);
         }
-        if ( arr_query.length  > arr_subject.length) query_base_count+= (arr_query.length  - arr_subject.length);
+        //if ( arr_query.length  > arr_subject.length) query_base_count+= (arr_query.length  - arr_subject.length);
        
                 /*
                 try{
@@ -192,7 +196,33 @@ public class NeedleResult
 System.out.println(""+m_query_seqid+"\t"+   m_subject_seqid+"\t"+ m_identity +"\t"+ ( 100 * match_count) / query_base_count
             +"\t"+m_score+"\t"+m_similarity+"\t"+m_gaps );
         */
+                //should never be executed
+        if (query_base_count == 0)
+        {
+             m_identity = 10;
+        }
         m_identity = 100 * match_count / query_base_count;
        // System.out.println(m_identity);
+    }
+    
+    
+    
+    //******************************************
+    public static void main(String args[])
+    {
+        
+         NeedleResult res = new NeedleResult();
+       try
+        {
+        
+          String queryFile ="c:\\test_needle.txt";// "c:\\needleoutput\\needle10339_419.out";
+            //  String queryFile = "c:\\needleATG.out";
+             NeedleParser.parse(queryFile,res);
+             res.recalculateIdentity();
+       
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());}
+          System.exit(0);
     }
 }
