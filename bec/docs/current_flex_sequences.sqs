@@ -1,6 +1,6 @@
 -- C:\BEC\bec\docs\current_flex_sequences.sqs
 --
--- Generated for Oracle 8.1 on Wed Jun 04  14:12:27 2003 by Server Generator 6.5.91.0.9
+-- Generated for Oracle 8.1 on Mon Jul 07  13:53:21 2003 by Server Generator 6.5.91.0.9
  
 PROMPT Creating Sequence 'CONTAINERID'
 CREATE SEQUENCE CONTAINERID
