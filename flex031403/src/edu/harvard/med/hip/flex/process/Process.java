@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.1 2001-05-23 15:40:06 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.2 2001-05-24 10:55:37 dongmei_zuo Exp $
  *
  * File     	: Process.java 
  * Date     	: 04162001
@@ -196,10 +196,10 @@ public class Process {
 	/**
 	 * insert into PROCESSEXECUTION table and PROCESSOBJECT table.
 	 *
-	 * @param t The DatabaseTransaction object.
+	 * @param c The Connection object.
 	 * @exception FlexDatabaseException.
 	 */
-	public void insert(DatabaseTransaction t) throws FlexDatabaseException {
+	public void insert(Connection c) throws FlexDatabaseException {
 		String sql = "insert into processexecution\n" +
 				 "(executionid, protocolid, executionstatus," +
 				 " researcherid, processdate";
@@ -216,8 +216,11 @@ public class Process {
 			valueSql = valueSql + ",'"+extrainfo+"'";
 		}
 		
-		sql = sql+")\n"+valueSql+")";		
-		t.executeSql(sql);
+		sql = sql+")\n"+valueSql+")";	
+		
+		DatabaseTransaction t = DatabaseTransaction.getInstance();
+		Connection c = t.requestConnection();
+		DatabaseTransaction.executeUpdate(sql, c);	
 
 		if(processObjects.isEmpty()) {
 			return;
@@ -226,13 +229,13 @@ public class Process {
 		Enumeration enum = processObjects.elements();
 		while(enum.hasMoreElements()) {
 			ProcessObject pobject = (ProcessObject)enum.nextElement();
-			pobject.insert(t);
+			pobject.insert(c);
 		}
 		
 		enum = sampleLineageSet.elements();
 		while(enum.hasMoreElements()) {
 			SampleLineage slineage = (SampleLineage)enum.nextElement();
-			slineage.insert(t);
+			slineage.insert(c);
 		}
 	}
 	
@@ -257,33 +260,34 @@ public class Process {
 			System.out.println();
 			
 			DatabaseTransaction t = DatabaseTransaction.getInstance();
-			t.executeSql("insert into processprotocol values (1, 'test', 'This is a test', null)");
-			t.executeSql("insert into researcher values (100, 'Tester', 'AB0000', 'Y')");		
-			t.executeSql("insert into containertype values ('test')");
-			t.executeSql("insert into containerlocation values (1, 'testlocation',null)");
-			t.executeSql("insert into sampletype values ('PCR')");
+			Connection c = t.requestConnection();
+			DatabaseTransaction.executeUpdate("insert into processprotocol values (1, 'test', 'This is a test', null)", c);
+			DatabaseTransaction.executeUpdate("insert into researcher values (100, 'Tester', 'AB0000', 'Y')", c);		
+			DatabaseTransaction.executeUpdate("insert into containertype values ('test')", c);
+			DatabaseTransaction.executeUpdate("insert into containerlocation values (1, 'testlocation',null)", c);
+			DatabaseTransaction.executeUpdate("insert into sampletype values ('PCR')", c);
 			
 			for(int i = 0; i<5; i++) {
 				int containerid = FlexIDGenerator.getID("containerid");				
 				String sql = "insert into containerheader values("+containerid+", 'test', 1, 'AB0000')";				
-				t.executeSql(sql);
+				DatabaseTransaction.executeUpdate(sql, c);
 				ProcessObject pobject = new ProcessContainer(containerid, id, "I");
 				p.addProcessObject(pobject);
 			}
 
 			int containerid = FlexIDGenerator.getID("containerid");
 			String sql = "insert into containerheader values("+containerid+", 'test', 1, 'AB0000')";
-			t.executeSql(sql);
+			DatabaseTransaction.executeUpdate(sql, c);
 			
 			for(int i=0; i<5; i++) {
 				int from = FlexIDGenerator.getID("oligoid");
 				int to = FlexIDGenerator.getID("oligoid");
-				t.executeSql("insert into oligo values("+from+", 'AATTCTG', 30, null)");
-				t.executeSql("insert into oligo values("+to+", 'AATCGG', 30, null)");
+				DatabaseTransaction.executeUpdate("insert into oligo values("+from+", 'AATTCTG', 30, null)", c);
+				DatabaseTransaction.executeUpdate("insert into oligo values("+to+", 'AATCGG', 30, null)", c);
 				int samplefrom = FlexIDGenerator.getID("sampleid");
 				int sampleto = FlexIDGenerator.getID("sampleid");
-				t.executeSql("insert into sample values("+samplefrom+", 'PCR',"+containerid+",'A1',null,"+from+",null)");
-				t.executeSql("insert into sample values("+sampleto+", 'PCR',"+containerid+",'A1',null,"+to+",null)");
+				DatabaseTransaction.executeUpdate("insert into sample values("+samplefrom+", 'PCR',"+containerid+",'A1',null,"+from+",null)", c);
+				DatabaseTransaction.executeUpdate("insert into sample values("+sampleto+", 'PCR',"+containerid+",'A1',null,"+to+",null)", c);
 				SampleLineage sl = new SampleLineage(id, samplefrom, sampleto);
 				p.addSampleLineage(sl);
 			}
@@ -304,68 +308,45 @@ public class Process {
 				System.out.println("Object io:\t"+pobject.getIotype());
 			}
 							
-			Vector samples = t.executeSql("select * from sample");
-			enum = samples.elements();
-			while(enum.hasMoreElements()) {
-				Hashtable h = (Hashtable)enum.nextElement();
-				System.out.println(h);
+			CachedRowSet rs = DatabaseTransaction.executeQuery("select * from sample");
+			while(rs.next()) {
+				System.out.println(rs);
 			}
-						
-			p.insert(t);
+			rs.close();			
+			p.insert(c);
 			
 			System.out.println("After insert process: ");
-			Vector v = t.executeSql("select * from processexecution");
-			enum = v.elements();
-			while(enum.hasMoreElements()) {
-				Hashtable h = (Hashtable)enum.nextElement();
-				Enumeration ks = h.keys();
-				while(ks.hasMoreElements()) {
-					Object k = ks.nextElement();
-					System.out.println(k+"\t"+h.get(k));
-				}
+			rs = DatabaseTransaction.executeQuery("select * from processexecution");
+			while(rs.next()) {
+				System.out.println(rs);
 			}
+			rs.close();
 			
 			System.out.println("After insert objects: ");
-			Vector results = t.executeSql("select * from processobject where executionid="+id);
-			enum = results.elements();
-			while(enum.hasMoreElements()) {
-				Hashtable h = (Hashtable)enum.nextElement();
-				Enumeration ks = h.keys();
-				while(ks.hasMoreElements()) {
-					Object k = ks.nextElement();
-					System.out.println(k+"\t"+h.get(k));
-				}
+			rs = DatabaseTransaction.executeQuery("select * from processobject where executionid="+id);
+			while(rs.next()) {
+				System.out.println(rs);
 			}
-		
+			rs.close();
+			
 			System.out.println("After insert sample lineage: ");
-			results = t.executeSql("select * from samplelineage where executionid="+id);
-			enum = results.elements();
-			while(enum.hasMoreElements()) {
-				Hashtable h = (Hashtable)enum.nextElement();
-				Enumeration ks = h.keys();
-				while(ks.hasMoreElements()) {
-					Object k = ks.nextElement();
-					System.out.println(k+"\t"+h.get(k));
-				}
+			rs = DatabaseTransaction.executeQuery("select * from samplelineage where executionid="+id);
+			while(rs.next()) {
+				System.out.println(rs);
 			}
-						
+			rs.close();			
+			
 			System.out.println();
 			
 			Process p1 = new Process(protocol, "testing p1", researcher);
 			p1.setSubprotocol("new subprotocol");
 			p1.setExtrainfo("this is test");
-			p1.insert(t);
-			v = t.executeSql("select * from processexecution");
-			enum = v.elements();
-			while(enum.hasMoreElements()) {
-				Hashtable h = (Hashtable)enum.nextElement();
-				Enumeration ks = h.keys();
-				while(ks.hasMoreElements()) {
-					Object k = ks.nextElement();
-					System.out.println(k+"\t"+h.get(k));
-				}
-				System.out.println();
+			p1.insert(c);
+			rs = DatabaseTransaction.executeQuery("select * from processexecution");
+			while(rs.next()) {
+				System.out.println(rs);
 			}			
+			rs.close();
 		} catch (FlexDatabaseException e) {
 			System.out.println(e);
 		}

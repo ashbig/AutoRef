@@ -1,5 +1,5 @@
 /*
- * $Id: ProcessQueue.java,v 1.2 2001-05-23 16:25:19 dongmei_zuo Exp $
+ * $Id: ProcessQueue.java,v 1.3 2001-05-24 10:55:37 dongmei_zuo Exp $
  *
  * File     : ProcessQueue.java 
  * Date     : 04162001
@@ -24,7 +24,7 @@ public interface ProcessQueue {
 	 * @return A LinkedList of QueueItem objects.
 	 * @exception FlexDatabaseException.
  	 */
-	public LinkedList getQueueItems(Protocol protocol, DatabaseTransaction t) throws FlexDatabaseException;
+	public LinkedList getQueueItems(Protocol protocol) throws FlexDatabaseException;
 
 	/**
  	 * Retrieve the batch of queued items which are waiting for the
@@ -32,39 +32,37 @@ public interface ProcessQueue {
 	 *
 	 * @param protocol The protocol object.
 	 * @param date The date added to the queue in yyyy-mm-dd format. 
-	 * @param t The DatabaseTransaction object that talks to database.
 	 * @return A LinkedList of QueueItem objects.
 	 * @exception FlexDatabaseException.
  	 */
-	public LinkedList getQueueItems(Protocol protocol, String date, DatabaseTransaction t) throws FlexDatabaseException;
+	public LinkedList getQueueItems(Protocol protocol, String Date) throws FlexDatabaseException;
 
 	/**
  	 * Delete all the selected QueueItem objects from the Queue   
 	 * table of the database.
 	 *
 	 * @param LinkedList The List of QueueItem objects.
-	 * @param t The DatabaseTransaction object that talks to database.
+	 * @param c The Connection object that talks to database.
 	 * @exception FlexDatabaseException.
  	 */
-	public void removeQueueItems (LinkedList items, DatabaseTransaction t) throws FlexDatabaseException;
+	public void removeQueueItems (LinkedList items, Connection c) throws FlexDatabaseException;
 
 	/**
  	 * Insert all the selected process objects into the Queue   
 	 * table of the database as QueueItems.
 	 *
 	 * @param LinkedList The List of QueueItem objects.
-	 * @param t The DatabaseTransaction object that talks to database.
+	 * @param c The Connection object that talks to database.
 	 * @exception FlexDatabaseException.
  	 */
-	public void addQueueItems(LinkedList items, DatabaseTransaction t) throws FlexDatabaseException;
+	public void addQueueItems(LinkedList items, Connection c) throws FlexDatabaseException;
 
 	/**
 	 * Update the queued items.
 	 *
 	 * @param LinkedList The List of QueueItem objects.
-	 * @param t The DatabaseTransaction object that talks to database.
-	 * @param t The DatabaseTransaction object that talks to database.
+	 * @param c The Connection object that talks to database.
 	 * @exception FlexDatabaseException.
 	 */
-	public void updateQueueItems (LinkedList items, DatabaseTransaction t) throws FlexDatabaseException;
+	public void updateQueueItems (LinkedList items, Connection c) throws FlexDatabaseException;
 }
