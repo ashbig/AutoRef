@@ -27,7 +27,7 @@ import edu.harvard.med.hip.flex.Constants;
  * @author  htaycher
  * @version
  */
-public class ImportMgcCloneInfoAction extends WorkflowAction
+public class ImportMgcCloneInfoAction extends AdmitAction
 {
     /**
      * Does the real work for the perform method which must be overriden by the
