@@ -1,14 +1,12 @@
 /*
- * CreateProcessPlateAction.java
+ * SelectProtocolAction.java
  *
- * Created on June 12, 2001, 1:49 PM
- *
- * This class gets all the process protocols related to generating process
- * plates from the beans.
+ * Created on June 12, 2001, 4:10 PM
  */
 
 package edu.harvard.med.hip.flex.action;
 
+import java.util.LinkedList;
 import java.util.Vector;
 import java.sql.*;
 import java.io.IOException;
@@ -26,15 +24,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
+import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.process.Protocol;
 
 /**
  *
  * @author  dzuo
  * @version 
  */
-public class CreateProcessPlateAction extends InternalFlexAction {
+public class SelectProtocolAction extends InternalFlexAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -56,24 +56,35 @@ public class CreateProcessPlateAction extends InternalFlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        String sql = "select * from processprotocol where processname like 'generate % plates'";
-        Vector protocol = new Vector();
-        try {        
+        int protocolid = ((CreateProcessPlateForm)form).getProtocol();
+        Protocol protocol = new Protocol(protocolid);
+        ContainerProcessQueue queue = new ContainerProcessQueue();
+        try {
+            LinkedList items = queue.getQueueItems(protocol);
+            
+            if(items.size() > 0) {
+                request.setAttribute("queueItems", items);
+            }
+
+            // Get the location from the database.
+            Vector locations = new Vector();
+            String sql = "select * from containerlocation";
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             ResultSet rs = t.executeQuery(sql);
             while (rs.next()) {
-                int protocolid = rs.getInt("PROTOCOLID");
-                String processname = rs.getString("PROCESSNAME");
-                String processcode = rs.getString("PROCESSCODE");
-                Protocol p = new Protocol(protocolid, processcode, processname);
-                protocol.addElement(p);
+                int id = rs.getInt("LOCATIONID");
+                String type = rs.getString("LOCATIONTYPE");
+                String description = rs.getString("LOCATIONDESCRIPTION");
+                Location l = new Location(id, type, description);
+                locations.addElement(l);
             }
-            request.setAttribute("protocol", protocol);
+            request.setAttribute("locations", locations);
+            
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {
-             return (mapping.findForward("error"));
+            return (mapping.findForward("error"));
         } catch (SQLException ex) {
-             return (mapping.findForward("error"));
+            return (mapping.findForward("error"));
         }
     }
 }

@@ -9,7 +9,7 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Hashtable;
+import java.util.Vector;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -27,6 +27,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.process.Protocol;
 
 /**
  *
@@ -56,14 +57,16 @@ public class CreateProcessPlateAction extends InternalFlexAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         String sql = "select * from processprotocol where processname like 'generate % plates'";
-        Hashtable protocol = new Hashtable();
+        Vector protocol = new Vector();
         try {        
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             ResultSet rs = t.executeQuery(sql);
             while (rs.next()) {
                 int protocolid = rs.getInt("PROTOCOLID");
                 String processname = rs.getString("PROCESSNAME");
-                protocol.put(new Integer(protocolid), processname);
+                String processcode = rs.getString("PROCESSCODE");
+                Protocol p = new Protocol(protocolid, processcode, processname);
+                protocol.addElement(p);
             }
             request.setAttribute("protocol", protocol);
             return (mapping.findForward("success"));

@@ -1,15 +1,12 @@
 /*
- * CreateProcessPlateAction.java
+ * GetInputAction.java
  *
- * Created on June 12, 2001, 1:49 PM
- *
- * This class gets all the process protocols related to generating process
- * plates from the beans.
+ * Created on June 12, 2001, 3:50 PM
  */
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Vector;
+import java.util.Hashtable;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -26,15 +23,12 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.process.Protocol;
-
 /**
  *
  * @author  dzuo
  * @version 
  */
-public class CreateProcessPlateAction extends InternalFlexAction {
+public class GetInputAction extends InternalFlexAction {
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -56,24 +50,7 @@ public class CreateProcessPlateAction extends InternalFlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        String sql = "select * from processprotocol where processname like 'generate % plates'";
-        Vector protocol = new Vector();
-        try {        
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            ResultSet rs = t.executeQuery(sql);
-            while (rs.next()) {
-                int protocolid = rs.getInt("PROTOCOLID");
-                String processname = rs.getString("PROCESSNAME");
-                String processcode = rs.getString("PROCESSCODE");
-                Protocol p = new Protocol(protocolid, processcode, processname);
-                protocol.addElement(p);
-            }
-            request.setAttribute("protocol", protocol);
-            return (mapping.findForward("success"));
-        } catch (FlexDatabaseException ex) {
-             return (mapping.findForward("error"));
-        } catch (SQLException ex) {
-             return (mapping.findForward("error"));
-        }
+        return null;
     }
+
 }

@@ -20,13 +20,15 @@ import org.apache.struts.action.ActionMapping;
  * @version 
  */
 public class CreateProcessPlateForm extends ActionForm {
-    private String protocol = null;
+    private int protocol;
+    private String sourcePlate = null;
     
     /**
      * Set the protocol to the given value.
+     *
      * @param protocol The value to be set to.
      */
-    public void setProtocol(String protocol) {
+    public void setProtocol(int protocol) {
         this.protocol = protocol;
     }
     
@@ -35,7 +37,25 @@ public class CreateProcessPlateForm extends ActionForm {
      *
      * @return The protocol.
      */
-    public String getProtocol() {
+    public int getProtocol() {
         return protocol;
+    }
+    
+    /**
+     * Set the source plate.
+     *
+     * @param sourcePlate The value to be set to.
+     */
+    public void setSourcePlate(String sourcePlate) {
+        this.sourcePlate = sourcePlate;
+    }
+    
+    /**
+     * Return the source plate.
+     *
+     * @return The source plate.
+     */
+    public String getSourcePlate() {
+        return sourcePlate;
     }
 }
