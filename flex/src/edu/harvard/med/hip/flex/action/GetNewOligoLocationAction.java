@@ -75,22 +75,34 @@ public class GetNewOligoLocationAction extends ResearcherAction {
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
         request.setAttribute("templateid", new Integer(templateid));
+        String projectname = (String)request.getAttribute("projectname");
+        request.setAttribute("projectname",projectname);
+         String workflowname =(String) request.getAttribute("workflowname");
+        request.setAttribute("workflowname",workflowname);
         
         try {
             
+          
+            
             // Set the location for the containers.
             Location fivepLocation = new Location(fivepSourceLocation);
-            Location threepOpenLocation = new Location(threepOpenSourceLocation);
+            Location threepOpenLocation = null;
             Location threepClosedLocation = null;
             if(threepClosedSourceLocation != 0) {
                 threepClosedLocation = new Location(threepClosedSourceLocation);
             }
+            if(threepOpenSourceLocation != 0) {
+                threepOpenLocation = new Location(threepOpenSourceLocation);
+            }
             
             Location fivepDLocation = new Location(fivepDaughterLocation);
-            Location threepOpenDLocation = new Location(threepOpenDaughterLocation);
+            Location threepOpenDLocation = null;
             Location threepClosedDLocation = null;
             if(threepClosedDaughterLocation != 0) {
                 threepClosedDLocation = new Location(threepClosedDaughterLocation);
+            }
+             if(threepOpenDaughterLocation != 0) {
+                threepOpenDLocation = new Location(threepOpenDaughterLocation);
             }
             
             Container fivepOligoD = (Container)request.getSession().getAttribute("EnterOligoPlateAction.fivepOligoD");
@@ -101,15 +113,21 @@ public class GetNewOligoLocationAction extends ResearcherAction {
             Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
             
             fivepOligoD.setLocation(fivepDLocation);
-            threepOpenD.setLocation(threepOpenDLocation);
+           
             
+            if(threepOpenD != null) {
+                threepOpenD.setLocation(threepOpenDLocation);
+            }
             if(threepClosedD != null) {
                 threepClosedD.setLocation(threepClosedDLocation);
             }
             
             fivep.setLocation(fivepLocation);
-            threepOpen.setLocation(threepOpenLocation);
+           
             
+            if(threepOpen != null) {
+                threepOpen.setLocation(threepOpenLocation);
+            }
             if(threepClosed != null) {
                 threepClosed.setLocation(threepClosedLocation);
             }
