@@ -76,16 +76,17 @@ public class MgcMasterListImporter
         ArrayList containerCol = new ArrayList();
         Hashtable existingClones = new Hashtable();
         System.out.println(System.currentTimeMillis());
+        System.out.println(m_username);
         boolean res = true;
         writeToFile("Log file for MGC master list upload\n");        
         if (res) res =  getExistingClonesFromDB(existingClones);
-        System.out.println("Get existing clones from db");
+        System.out.println("read");
         if (res) res = readCloneInfo(  input,  fileName, containerCol, existingClones) ;
-        System.out.println("Read file " + containerCol.size() +" containers");
+       System.out.println("read finish");
         if (res) res = readSeqences(containerCol, sequenceCol) ;
-        System.out.println("Read sequences ");
+       System.out.println("seq");
         if (res) res = uploadToDatabase(containerCol, sequenceCol) ;
-        System.out.println("Uploaded to db");
+       System.out.println(m_username);
         if (m_username != null)
         {
             try
@@ -94,6 +95,7 @@ public class MgcMasterListImporter
                     errors_to_print.add( "Report: master mgc list upload.\n File Name "+fileName);
                 else
                     errors_to_print.add( 1,"Report: master mgc list upload.\n File Name "+fileName);
+                System.out.println("send message");
                 Mailer.notifyUser(m_username, "report.txt", "Report: master mgc list upload","Report: master mgc list upload",  errors_to_print);
                // m_writer.flush(); m_writer.close();
                 File m_log_file = new File(FILE_PATH + "import_log.txt");
@@ -290,10 +292,15 @@ public class MgcMasterListImporter
                         genBankSeq = gb.search("\"MGC:" + current_key +"\"");
                         if (genBankSeq.isEmpty() ) continue;
                         for (int countGS = 0; countGS < genBankSeq.size(); countGS++)
-                        {// human and not human have different format, human can come not first
-                            current_gi = ((GenbankSequence)genBankSeq.get(countGS)).getGi();
+                        {// extract only human and those where accession starts from 'BC'
+                            GenbankSequence current_gbs = (GenbankSequence)genBankSeq.get(countGS);
+                            //just 'BC' count
+                            
+                            if ( !current_gbs.getAccession().substring(0,2).equals("BC")      ) continue;
+                            current_gi = current_gbs.getGi();
                             if (current_gi == null || current_gi.equals("") ) continue;
                             seqData = gb.searchDetail(current_gi);
+                            //only human
                             if (((String)seqData.get("species")).indexOf("sapiens") != -1)
                             {
                                 fs = createFlexSequence( seqData, genBankSeq);
@@ -538,8 +545,6 @@ public class MgcMasterListImporter
    {
         try{
             //delete log file 
-            
-           
              m_writer = new  FileWriter(FILE_PATH + "import_log.txt", true);
              m_writer.write(mes);
              m_writer.close();
@@ -552,7 +557,7 @@ public class MgcMasterListImporter
     public static void main(String args[])
     {
         
-        String file = "c:\\mgc_plate_info.txt";
+        String file = "c:\\mgc_test.txt";
         InputStream input;
         
         try
