@@ -136,7 +136,7 @@
     <action    path="/SelectProtocol"
                type="edu.harvard.med.hip.flex.action.SelectProtocolAction"
                name="createProcessPlateForm"
-               scope="session"
+               scope="request"
                input="/SelectProtocol.jsp">
       <forward  name="success"   path="/GetInput.jsp"/>
     </action> 
