@@ -19,9 +19,7 @@ public class RNAMutation extends Mutation {
     
     public static final int RNA_STREAM_RANGE = 20;
     
-    public static final int FLAG_POLYM_YES = 1;
-    public static final int FLAG_POLYM_NO = -1;
-    public static final int FLAG_POLYM_NOKNOWN = 0;
+ 
     
        //for database update - field names
     public static final String FIELD_POLYMID = "polymid";
