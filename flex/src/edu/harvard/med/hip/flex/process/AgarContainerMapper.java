@@ -11,6 +11,7 @@ package edu.harvard.med.hip.flex.process;
 
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.workflow.*;
 import java.util.*;
 
 /**
@@ -39,10 +40,11 @@ public class AgarContainerMapper extends OneToOneContainerMapper {
      * @return The new containers.
      * @exception FlexDatabaseException.
      */
-    public Vector doMapping(Vector containers, Protocol protocol) 
-                            throws FlexDatabaseException { 
+    public Vector doMapping(Vector containers, Protocol protocol, Project project,
+    Workflow workflow) throws FlexDatabaseException {
         String newContainerType = getContainerType(protocol.getProcessname());
         Vector newContainers = new Vector();
+        String projectCode = getProjectCode(project, workflow);
         
         Enumeration enum = containers.elements();
         while (enum.hasMoreElements()) {
@@ -51,7 +53,7 @@ public class AgarContainerMapper extends OneToOneContainerMapper {
             
             for(int i=0; i<processCodes.length; i++) {
                 String processCode = processCodes[i];
-                String newBarcode = Container.getLabel(processCode, container.getThreadid(), getSubThread(container));        
+                String newBarcode = Container.getLabel(projectCode, processCode, container.getThreadid(), getSubThread(container));        
                 Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
                 mappingSamples(container, newContainer, protocol, i); 
                 newContainers.addElement(newContainer);

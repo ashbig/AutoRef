@@ -18,27 +18,28 @@ import edu.harvard.med.hip.flex.database.FlexDatabaseException;
 import edu.harvard.med.hip.flex.process.Result;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class OneToOneContainerMapper implements ContainerMapper {
     public static final String DAUGHTER_OLIGO_PLATE = "D";
     
-    protected FlexProperties containerType = null;    
+    protected FlexProperties containerType = null;
     protected Vector sampleLineageSet = new Vector();
-
+    
     /**
      * Constructor.
      *
      * @return The ContainerMapper object.
      */
-    public OneToOneContainerMapper() {             
+    public OneToOneContainerMapper() {
         containerType = StaticPropertyClassFactory.makePropertyClass("ContainerTypeProperties");
     }
-
+    
     /**
      * Return the sample lineage set.
      *
@@ -53,11 +54,11 @@ public class OneToOneContainerMapper implements ContainerMapper {
      *
      * @param processname The name of the processname.
      * @return The container type.
-     */    
-    public String getContainerType(String processname) {        
+     */
+    public String getContainerType(String processname) {
         return (containerType.getProperty(processname));
     }
-
+    
     /**
      * Creates new containers based on given containers and protocol.
      *
@@ -66,35 +67,37 @@ public class OneToOneContainerMapper implements ContainerMapper {
      * @return The new containers.
      * @exception FlexDatabaseException.
      */
-    public Vector doMapping(Vector containers, Protocol protocol) 
-                            throws FlexDatabaseException { 
+    public Vector doMapping(Vector containers, Protocol protocol, Project project,
+    Workflow workflow) throws FlexDatabaseException {
         String newContainerType = getContainerType(protocol.getProcessname());
         Vector newContainers = new Vector();
         
+        String projectCode = getProjectCode(project, workflow);
+        
         Enumeration enum = containers.elements();
         while (enum.hasMoreElements()) {
-            Container container = (Container)enum.nextElement();    
+            Container container = (Container)enum.nextElement();
             String newBarcode = null;
             
             //For diluting oligo plate, we need to get the new label in a different way.
             if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
-                newBarcode = DAUGHTER_OLIGO_PLATE+container.getLabel().substring(1);
+                newBarcode = projectCode+DAUGHTER_OLIGO_PLATE+container.getLabel().substring(2);
             } else {
-                newBarcode = Container.getLabel(protocol.getProcesscode(), container.getThreadid(), getSubThread(container));        
+                newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
             }
             
             Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
             container.restoreSample();
-            mappingSamples(container, newContainer, protocol); 
+            mappingSamples(container, newContainer, protocol);
             newContainers.addElement(newContainer);
         }
         
         return newContainers;
     }
- 
+    
     // Parse the barcode to get the sub thread.
     protected String getSubThread(Container c) {
-        String barcode = c.getLabel();        
+        String barcode = c.getLabel();
         int index = barcode.indexOf("-");
         
         if(index<0)
@@ -102,9 +105,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
         
         return (barcode.substring(index+1));
     }
-
+    
     // Creates the new samples from the samples of the previous plate.
-    protected void mappingSamples(Container container, Container newContainer, Protocol protocol) throws FlexDatabaseException { 
+    protected void mappingSamples(Container container, Container newContainer, Protocol protocol) throws FlexDatabaseException {
         String type;
         Vector oldSamples = container.getSamples();
         Enumeration enum = oldSamples.elements();
@@ -128,13 +131,13 @@ public class OneToOneContainerMapper implements ContainerMapper {
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
         }
-    }   
+    }
     
     protected String getGelSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
         Protocol protocol = new Protocol(Protocol.ENTER_PCR_GEL_RESULTS);
         String type = null;
-        edu.harvard.med.hip.flex.process.Process p = 
-        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);    
+        edu.harvard.med.hip.flex.process.Process p =
+        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
         Result result = Result.findResult(s, p);
         if(Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())) {
             type = Sample.getType(newProtocol.getProcessname());
@@ -144,11 +147,20 @@ public class OneToOneContainerMapper implements ContainerMapper {
         
         return type;
     }
-            
+    
+    protected String getProjectCode(Project project, Workflow workflow) {
+        String projectCode = "";
+        Workflow wf = project.getWorkflow(workflow);
+        if(wf != null) {
+            projectCode = ((ProjectWorkflow)wf).getCode();
+        }
+        return projectCode;
+    }
+    
     public static void main(String [] args) {
         ContainerMapper mapper = new OneToOneContainerMapper();
         String containerType = mapper.getContainerType("generate DNA plates");
-
+        
         if("96 WELL PLATE".equals(containerType))
             System.out.println("Testing static method getContainerType - OK");
         else

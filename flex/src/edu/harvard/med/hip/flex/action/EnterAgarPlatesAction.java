@@ -79,13 +79,15 @@ public class EnterAgarPlatesAction extends EnterSourcePlateAction {
         request.getSession().setAttribute("EnterSourcePlateAction.agarPlateF2", (Container)oldContainers.elementAt(2));
         request.getSession().setAttribute("EnterSourcePlateAction.agarPlateC2", (Container)oldContainers.elementAt(3));
     } 
+           
+    // Get the projectid from the form.
+    protected int getProjectid(ActionForm form) {
+        return ((CreateCultureBlockForm)form).getProjectid();
+    }
     
-    // Get the workflow and project from the form and store in request.
-    protected void storeProjectWorkflow(HttpServletRequest request, ActionForm form) {
-        int workflowid = ((CreateCultureBlockForm)form).getWorkflowid();
-        int projectid = ((CreateCultureBlockForm)form).getProjectid();
-        request.setAttribute("workflowid", new Integer(workflowid));
-        request.setAttribute("projectid", new Integer(projectid));
+    // Get the workflowid from the form.
+    protected int getWorkflowid(ActionForm form) {
+        return ((CreateCultureBlockForm)form).getWorkflowid();
     }    
 }
 

@@ -10,6 +10,7 @@ package edu.harvard.med.hip.flex.process;
 
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.workflow.*;
 import java.util.*;
 
 /**
@@ -40,13 +41,14 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
      * @return The new containers.
      * @exception FlexDatabaseException, FlexCoreException
      */
-    public Vector doMapping(Vector containers, Protocol protocol) 
-                            throws FlexDatabaseException { 
+    public Vector doMapping(Vector containers, Protocol protocol, Project project,
+    Workflow workflow) throws FlexDatabaseException { 
         Container f1 = (Container)containers.elementAt(0);
         Vector newContainers = new Vector();
         String newContainerType = getContainerType(protocol.getProcessname());
+        String projectCode = getProjectCode(project, workflow);
         String subthread = getSubThread(f1);
-        String newBarcode = Container.getLabel(protocol.getProcesscode(), f1.getThreadid(), subthread);     
+        String newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), f1.getThreadid(), subthread);     
         Container newContainer = new Container(newContainerType, null, newBarcode, f1.getThreadid());
 
         int index = 0;

@@ -115,7 +115,7 @@
     <forward    name="customerRequest"  path="/CustomerRequest.do"/>
     <forward    name="approveSequences" path="/GetProjects.do?forwardName=APPROVE_SEQUENCES"/>
     <forward    name="receiveOligoOrders" path="/SetReceiveDate.do"/>
-    <forward    name="createProcessPlate" path="/CreateProcessPlate.do"/>
+    <forward    name="createProcessPlate" path="/GetProjects.do?forwardName=CREATE_PROCESS_PLATES"/>
     <forward    name="enterProcessResults" path="/PickResultType.jsp"/>
     <forward    name="containerProcessHistory" path="/ContainerScan.jsp"/>
     <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>

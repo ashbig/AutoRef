@@ -141,7 +141,26 @@ public class Project {
         
         return null;
     }
+
+    /**
+     * Return a workflow for a given workflow id.
+     *
+     * @param workflow The workflow used to find the matching workflow.
+     * @return A Workflow object.
+     */
+    public Workflow getWorkflow(Workflow workflow) {
+        Iterator iter = workflows.iterator();
+        while(iter.hasNext()) {
+            Workflow wf = (Workflow)iter.next();
             
+            if(wf.getId() == workflow.getId()) {
+                return wf;
+            }
+        }
+        
+        return null;
+    }
+    
     /**
      * Return all the projects in the database as a Vector.
      *

@@ -385,11 +385,16 @@ public class OligoPlater {
         //System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
         
         plateset = new Plateset(container_5p.getId(), container_3op.getId(),container_3s.getId());
-        
+
+        String projectCode = "";        
+        Workflow wf = project.getWorkflow(workflow);        
+        if(wf != null) {
+            projectCode = ((ProjectWorkflow)wf).getCode();
+        }        
         int threadid = FlexIDGenerator.getID("threadid");
-        label_5p = Container.getLabel(oligoFivePrefix, threadid, null); //upstream
-        label_3s = Container.getLabel(oligoClosePrefix, threadid, null); //closed
-        label_3op = Container.getLabel(oligoFusionPrefix, threadid, null); //fusion
+        label_5p = Container.getLabel(projectCode, oligoFivePrefix, threadid, null); //upstream
+        label_3s = Container.getLabel(projectCode, oligoClosePrefix, threadid, null); //closed
+        label_3op = Container.getLabel(projectCode, oligoFusionPrefix, threadid, null); //fusion
         
         container_5p.setLabel(label_5p);
         container_3s.setLabel(label_3s);

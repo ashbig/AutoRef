@@ -105,13 +105,16 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             
             Vector sampleLineageSet = null;
             
+            Project project = new Project(projectid);
+            Workflow workflow = new Workflow(workflowid);
+            
             if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                 ContainerMapper mp = new OneToOneContainerMapper();
                 Vector oligoPlates = new Vector();
                 oligoPlates.addElement(fivep);
                 oligoPlates.addElement(threepOpen);
                 oligoPlates.addElement(threepClosed);
-                Vector newOligoPlates = mp.doMapping(oligoPlates, protocol);
+                Vector newOligoPlates = mp.doMapping(oligoPlates, protocol, project, workflow);
                 sampleLineageSet = mp.getSampleLineageSet();
                 request.getSession().setAttribute("EnterOligoPlateAction.fivepOligoD", (Container)newOligoPlates.elementAt(0));
                 request.getSession().setAttribute("EnterOligoPlateAction.threepOpenD", (Container)newOligoPlates.elementAt(1));
@@ -126,14 +129,14 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 Vector oldContainers = new Vector();
                 oldContainers.addElement(fivep);
                 oldContainers.addElement(threepOpen);
-                Vector newContainers = mapper.doMapping(oldContainers, protocol);
+                Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
                 Container pcrOpen = (Container)newContainers.elementAt(0);
                 
                 //map the 3p closed oligo plate.
                 oldContainers = new Vector();
                 oldContainers.addElement(fivep);
                 oldContainers.addElement(threepClosed);
-                Vector newContainers2 = mapper.doMapping(oldContainers, protocol);
+                Vector newContainers2 = mapper.doMapping(oldContainers, protocol, project, workflow);
                 Container pcrClosed = (Container)newContainers2.elementAt(0);
                 
                 sampleLineageSet = mapper.getSampleLineageSet();

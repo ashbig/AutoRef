@@ -10,6 +10,7 @@ package edu.harvard.med.hip.flex.process;
 
 import java.util.Vector;
 import edu.harvard.med.hip.flex.database.FlexDatabaseException;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
@@ -22,10 +23,13 @@ public interface ContainerMapper {
      *
      * @param containers Source containers for mapping.
      * @param protocol The protocol for destination containers.
+     * @param project The project used for mapping.
+     * @param workflow The workflow related to the mapping container.
      * @return The new containers.
      * @exception FlexDatabaseException.
      */
-    public Vector doMapping(Vector containers, Protocol protocol) throws FlexDatabaseException; 
+    public Vector doMapping(Vector containers, Protocol protocol, Project project,
+    Workflow workflow) throws FlexDatabaseException; 
 
     /**
      * Return the sample lineage.

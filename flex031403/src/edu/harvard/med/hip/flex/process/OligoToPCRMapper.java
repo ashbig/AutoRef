@@ -12,6 +12,7 @@ import java.util.Vector;
 import java.lang.String;
 import edu.harvard.med.hip.flex.database.FlexDatabaseException;
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  *
@@ -40,18 +41,19 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
      * @return The new containers.
      * @exception FlexDatabaseException, FlexCoreException
      */
-    public Vector doMapping(Vector containers, Protocol protocol) 
-                            throws FlexDatabaseException { 
+    public Vector doMapping(Vector containers, Protocol protocol, Project project,
+    Workflow workflow) throws FlexDatabaseException {
         String newContainerType = getContainerType(protocol.getProcessname());
         Container c1 = (Container)containers.elementAt(0);
         Container c2 = (Container)containers.elementAt(1);
+        String projectCode = getProjectCode(project, workflow);
         
         // Get the new container barcode.
-        String newBarcode = Container.getLabel(protocol.getProcesscode(), c1.getThreadid(), getSubThread(c1));        
-        if(c1.getLabel().charAt(1) == FUSION || c2.getLabel().charAt(1) == FUSION) {
+        String newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), c1.getThreadid(), getSubThread(c1));        
+        if(c1.getLabel().charAt(2) == FUSION || c2.getLabel().charAt(2) == FUSION) {
             newBarcode = newBarcode+"-"+FUSION;
         }
-        if(c1.getLabel().charAt(1) == CLOSED || c2.getLabel().charAt(1) == CLOSED) {
+        if(c1.getLabel().charAt(2) == CLOSED || c2.getLabel().charAt(2) == CLOSED) {
             newBarcode = newBarcode+"-"+CLOSED;
         }
                   

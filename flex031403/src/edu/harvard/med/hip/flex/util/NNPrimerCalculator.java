@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.7 2001-07-20 19:53:15 dzuo Exp $
+ * $Id: NNPrimerCalculator.java,v 1.8 2001-08-21 21:05:24 dzuo Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -116,6 +116,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 	 */
 	private Oligo calTm (String subSeq, String oligoType) throws FlexDatabaseException
 	{
+                //System.out.println("sequence length is: "+subSeq.length());
 		double Tm = 0;
 		double preTm = 0;
 		double totalH = InitH;
@@ -130,6 +131,14 @@ public class NNPrimerCalculator implements PrimerCalculator
 
 		while (Tm < DesiredTM)
 		{
+                    if (pos+2 >= subSeq.length()) {
+                        pos = subSeq.length()-1;
+                        break;
+                    }
+                    
+                    //System.out.println("TM is: "+Tm);
+                    //System.out.println("position is: "+pos);
+                    //System.out.println("position+2 is: "+pos+2);
 			preTm = Tm;
 			dimer = subSeq.substring(pos, pos+2); //slide dimers from seq			
 			//System.out.println(dimer);			
@@ -156,7 +165,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 		if (Math.abs(DesiredTM - Tm) >= Math.abs(DesiredTM - preTm))
 		{
 			Tm = preTm;
-			pos = pos - 1;
+			pos = pos - 2;
 		} //if
 
 		// Tm calculation for oligos less than 21 bases seem to be overestimated
@@ -334,37 +343,50 @@ public class NNPrimerCalculator implements PrimerCalculator
 	public void test () throws FlexDatabaseException
 	{	
 		String seqText = "ATGGCGTTTCTCCGAAGCATGTGGGGCGTGCTGACTGCCCTGGGAAGGTCTGGAGCAGAGCTGTGCACCGGCTGTGGAAGTCGACTGCGCTCCCCCTTCAGGTAG";
-		int seqID = 1;
+                seqText = "CGGGAGGCGGGGACCCACCTGGAAGCGCCGCGGCGCCGCTATCGAGCTTCCTGCAGCGGTGGCCACCCGAGCAAGTGCCGTGGCGGGGGCGGAGAGCGGCCACGGCGGCGGCGCCTCCCCAAGTGGCCCGTTGCGTCCGACTCCAGCCTGGCAACAGAGCGAGACTCCATCTCAAATAAATAAATAAATAAATAAATAAATAAATAAATAAATAAATAAAAATGTGGAATGAATTAGGCAAGTTGGGCTGCTAATGCCTTGCCACTGAATTGAACAGCCACAGACAAACGAGAATGCACTTCTCAGGGCAAAAGAACAAATATTGATGAAGTCAATCCCAACATGCTCATTCCTTTTCCCTAATCTCATCTATTAGATGAGTTCCTCCTTCTCCCAAAGAGGAGTAGGTGAGAGGAGGTGAGAAAGAGGCCATGTCCCACTCTCCTGTGCTTCCAGGGATCAGAATTTCCCTCCCTATTAGGGAAATGCGTTTAAAAAAATTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTAAAAGTTGAGGAGTTTATTAGGGAAATATGAGAGGCATAGACACTCCAAGTGACAGAAAGAAAAGTCTGAAAATGTCCCTTCAAGCCAAGTGGGGGCCTGGCCTTGACCTCTCCAAATCAACAAGAAACTGGTGGGTTAGCAACAACATTCTCTGGCAGCCACATTGCCAGGGCATGAGTGTCTTGACCAGGACTGCCCCGCACTTCCCACCAAAGGTGGGGAGGAGACAAAGACTGTTCACAGAAGCAGTGCAAAGGCAATGAGAACTTTAAGGAAAGTTTGAGAGAGAGAGAAAGAAAGATAGAGGTGAGGAGGACCTTCACAAAGAGTCCCAGGCTTTTGGCTGTGAATGTCTCAAATACATTGACAAGTAGATGTATAAAATGTTACTGAAAAGGTAAAATGCCTAACGTCGTTTCCAACGGTTCCTCTGAACTTCTTCCCACATACCACACCACACCCCAGATGGCAGAGCCCAAAGGCCACACTTTTGAAAAAAGAAAAACAAGAATAAGCCCTGTTGCTCTTTAAGGAGAAAGGAAGGAGCTGAAGGCTGCTGGGGCCTTTCCCATGTGGCCTGTGTTGTGTAAAGCAACTTCCCAGCAGCAGCACGGCACTGTTCTAGGTGAGTGTCTCACCTTTTGTCACCCGAGCTTCAATGTACTCTATTCTCCGTTCAAGGGCTGTCAATTTCTCGTTTAGTGTTGCAAGTCTTGAACGACAAGACATATCGAACGAGTTGAGAAAGTCTGCGATTTTCTTGATGCTGCTGGTGATTATCTCAATGTACTCCCGGTTAGCCCAGTCCTGGTGAATCTCCCGCTGCACCGGATCCTCCTGTCCCGCCATGGCCG";
+                System.out.println("seqText length is: "+seqText.length());
+                int seqID = 219;
 
-		int Start = 0;
-		int Stop = 104;
+		int Start = 432;
+		int Stop = 563;
 		Sequence testSeq = new Sequence(seqID,Start,Stop);
                 
                 try{
+                System.out.println("Calculating fivep oligo...");
 		Oligo result = calculateFivepOligo(testSeq);
-		//System.out.println(result.getSequence());
-		//System.out.println(result.getOligoLength());
-		//System.out.println(result.getGatewayOligoSequence());
-		//System.out.println(result.getType());
-		//System.out.println(result.getTm());
+		System.out.println(result.getSequence());
+		System.out.println(result.getOligoLength());
+		System.out.println(result.getGatewayOligoSequence());
+		System.out.println(result.getType());
+		System.out.println(result.getTm());
 
+                System.out.println("Calculating threep closed oligo...");
 		Oligo result1 = calculateThreepCloseOligo(testSeq);
-		//System.out.println(result1.getSequence());
-		//System.out.println(result1.getOligoLength());
-		//System.out.println(result1.getGatewayOligoSequence());
-		//System.out.println(result1.getType());
-		//System.out.println(result1.getTm());
+		System.out.println(result1.getSequence());
+		System.out.println(result1.getOligoLength());
+		System.out.println(result1.getGatewayOligoSequence());
+		System.out.println(result1.getType());
+		System.out.println(result1.getTm());
 
+                System.out.println("Calculating threep open oligo...");
 		Oligo result2 = calculateThreepOpenOligo(testSeq);
-		//System.out.println(result2.getSequence());
-		//System.out.println(result2.getOligoLength());
-		//System.out.println(result2.getGatewayOligoSequence());
-		//System.out.println(result2.getType());
-		//System.out.println(result2.getTm());
+		System.out.println(result2.getSequence());
+		System.out.println(result2.getOligoLength());
+		System.out.println(result2.getGatewayOligoSequence());
+		System.out.println(result2.getType());
+		System.out.println(result2.getTm());
                 }
                 catch(FlexDatabaseException e){
-                  System.err.println(e.getMessage());  
+                  System.out.println(e.getMessage());  
                 }
 	}
-
+        
+        public static void main(String [] args) {
+            NNPrimerCalculator calculator = new NNPrimerCalculator();
+            try {
+                calculator.test();
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }
 }

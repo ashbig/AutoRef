@@ -63,6 +63,8 @@ public class EnterSourcePlateAction extends ResearcherAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
+        int projectid = getProjectid(form);
+        int workflowid = getWorkflowid(form);
         
         try {
             Vector containers = getContainers(form);
@@ -95,8 +97,10 @@ public class EnterSourcePlateAction extends ResearcherAction {
             
             //map the container to the new container
             Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
+            Project project = new Project(projectid);
+            Workflow workflow = new Workflow(workflowid);
             ContainerMapper mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
-            Vector newContainers = mapper.doMapping(oldContainers, protocol);
+            Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
             Vector sampleLineageSet = mapper.getSampleLineageSet();
             
             // Get all the locations.
@@ -111,10 +115,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
             request.getSession().setAttribute("EnterSourcePlateAction.sampleLineageSet", sampleLineageSet);
             request.getSession().setAttribute("EnterSourcePlateAction.locations", locationList);
             request.getSession().setAttribute("EnterSourcePlateAction.items", items);
-            request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);
-            
-            // Get the workflow and project from the form and store in request.
-            storeProjectWorkflow(request, form);
+            request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);            
+            request.setAttribute("workflowid", new Integer(workflowid));
+            request.setAttribute("projectid", new Integer(projectid));
             
             return (mapping.findForward("success"));
         } catch (Exception ex) {
@@ -167,11 +170,13 @@ public class EnterSourcePlateAction extends ResearcherAction {
         request.getSession().setAttribute("EnterSourcePlateAction.oldContainer", (Container)oldContainers.elementAt(0));
     }
     
-    // Get the workflow and project from the form and store in request.
-    protected void storeProjectWorkflow(HttpServletRequest request, ActionForm form) {
-        int workflowid = ((CreateProcessPlateForm)form).getWorkflowid();
-        int projectid = ((CreateProcessPlateForm)form).getProjectid();
-        request.setAttribute("workflowid", new Integer(workflowid));
-        request.setAttribute("projectid", new Integer(projectid));
+    // Get the projectid from the form.
+    protected int getProjectid(ActionForm form) {
+        return ((CreateProcessPlateForm)form).getProjectid();
+    }
+    
+    // Get the workflowid from the form.
+    protected int getWorkflowid(ActionForm form) {
+        return ((CreateProcessPlateForm)form).getWorkflowid();
     }
 }
