@@ -11,14 +11,14 @@ package edu.harvard.med.hip.flex.process;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class StaticContainerMapperFactory {
-
+    
     /** Creates new StaticContainerMapperFactory */
     public StaticContainerMapperFactory() {
     }
-
+    
     /**
      * Static method to create the new ConainerMapper object.
      *
@@ -35,6 +35,8 @@ public class StaticContainerMapperFactory {
             return new OneToTwoMapper();
         } else if(Protocol.PICK_COLONY.equals(processname)) {
             return new GridPlateToCultureMapper();
+        } else if(Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(processname)) {
+            return new OneToOneNewContainerMapper();
         } else {
             return new OneToOneContainerMapper();
         }

@@ -89,8 +89,8 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
             }
             
-            Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());
-            container.restoreSample();
+            Container newContainer = new Container(newContainerType, null, newBarcode, container.getThreadid());           
+            getSamples(container);
             mappingSamples(container, newContainer, protocol);
             newContainers.addElement(newContainer);
         }
@@ -186,6 +186,10 @@ public class OneToOneContainerMapper implements ContainerMapper {
             projectCode = ((ProjectWorkflow)wf).getCode();
         }
         return projectCode;
+    }
+ 
+    protected void getSamples(Container container) throws FlexDatabaseException {
+        container.restoreSample();
     }
     
     public static void main(String [] args) {

@@ -111,7 +111,7 @@ public class GetResearcherAction extends ResearcherAction{
                 Container oldContainer = (Container)oldContainers.elementAt(i);
                 oldContainer.updateLocation(oldContainer.getLocation().getId(), conn);
             }
-            
+           
             // Insert the new containers and samples into database.
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
@@ -121,10 +121,29 @@ public class GetResearcherAction extends ResearcherAction{
             Workflow workflow = new Workflow(workflowid);
             Project project = new Project(projectid);
             WorkflowManager manager = new WorkflowManager(project, workflow, "ProcessPlateManager");
-            manager.createProcessRecord(executionStatus, protocol, researcher,
-            subprotocol, oldContainers, newContainers,
-            null, sampleLineageSet, conn);
-            manager.processQueue(items, newContainers, protocol, conn);
+            
+            if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname())) {
+                Vector in = new Vector();
+                Vector out = new Vector();
+                in.addElement((Container)newContainers.elementAt(0));
+                out.addElement((Container)newContainers.elementAt(1));
+                
+                manager.createProcessRecord(executionStatus, protocol, researcher,
+                subprotocol, oldContainers, in, null, sampleLineageSet, conn);
+                
+                Protocol p = new Protocol(Protocol.CREATE_GLYCEROL_FROM_CULTURE);
+                Vector sls = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls");
+                
+                manager.createProcessRecord(executionStatus, p, researcher,
+                subprotocol, in, out, null, sls, conn);
+                
+                manager.processQueue(items, in, protocol, conn);
+            } else {
+                manager.createProcessRecord(executionStatus, protocol, researcher,
+                subprotocol, oldContainers, newContainers,
+                null, sampleLineageSet, conn);
+                manager.processQueue(items, newContainers, protocol, conn);
+            }
             
             // Print the barcode
             for(int i=0; i<newContainers.size(); i++) {
@@ -177,6 +196,8 @@ public class GetResearcherAction extends ResearcherAction{
             request.getSession().removeAttribute("EnterSourcePlateAction.items");
             request.getSession().removeAttribute("EnterSourcePlateAction.sampleLineageSet");
             request.getSession().removeAttribute("EnterSourcePlateAction.subprotocol");
+            request.getSession().removeAttribute("EnterSourcePlateAction.sls");
+
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

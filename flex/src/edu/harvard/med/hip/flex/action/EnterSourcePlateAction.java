@@ -114,13 +114,21 @@ public class EnterSourcePlateAction extends ResearcherAction {
             ContainerMapper mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
             Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
             Vector sampleLineageSet = mapper.getSampleLineageSet();
-            
+
             // Get all the locations.
             Vector locationList = Location.getLocations();
             
             // Get the subprotocol name.
             SubProtocol subprotocol = getSubProtocol(form);
             
+            Vector sls = null;
+            if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname())) {
+                Protocol next = new Protocol(Protocol.CREATE_GLYCEROL_FROM_CULTURE);
+                ContainerMapper cMapper = StaticContainerMapperFactory.makeContainerMapper(next.getProcessname());
+                newContainers.addAll(cMapper.doMapping(newContainers, next, project, workflow));
+                sls = cMapper.getSampleLineageSet();
+            }
+           
             // store all the information to the session.
             storeSourceContainerInSession(request, oldContainers);
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", newContainers);
@@ -130,6 +138,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
             request.getSession().setAttribute("EnterSourcePlateAction.subprotocol", subprotocol);
             request.setAttribute("workflowid", new Integer(workflowid));
             request.setAttribute("projectid", new Integer(projectid));
+            
+            if(sls != null)
+                request.getSession().setAttribute("EnterSourcePlateAction.sls", sls);
             
             return (mapping.findForward("success"));
         } catch (Exception ex) {
