@@ -43,6 +43,9 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
         String submit = ((ChipGeneAnalysis_2_Form)form).getSubmit();
         String s;      
         int max_input; // the max size of gene input is allowed
+                       
+        ActionErrors errors = new ActionErrors();    
+        ChipGeneDiseaseAnalysis gda = new ChipGeneDiseaseAnalysis();  
         
         HttpSession session = request.getSession();
         int user_type = ((Integer)(session.getAttribute("user_type"))).intValue();
@@ -80,24 +83,26 @@ public class ChipGeneAnalysis_2_Action extends MetageneAction{
             // determine gene input_type value
             if (inputType.equalsIgnoreCase("Gene Symbol"))
                 input_type = 1;
-            if (inputType.equalsIgnoreCase("Locus ID"))
+            if (inputType.equalsIgnoreCase("Locus ID")){
                 input_type = 2;
+                try{  // catch the incompatibility between gene input and gene input type
+                    StringTokenizer st = new StringTokenizer(gene_input);
+                    while(st.hasMoreTokens()){
+                        int k = Integer.parseInt(st.nextToken());
+                    }
+                }catch(NumberFormatException e){
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+            }
                     
             // analysis input genes
-            ActionErrors errors = new ActionErrors();    
-            ChipGeneDiseaseAnalysis gda = new ChipGeneDiseaseAnalysis();  
-            gda.hashDirectGenes(disease_id, stat_id, input_type);
-            //gda.hashDirectGenes(402, 1, input_type);  //402 483
-            
-            try{
+            gda.hashDirectGenes(disease_id, stat_id, input_type);  //gda.hashDirectGenes(402, 1, input_type);  //402 483
+                        
             gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type, stat_id, max_input);       
             gda.analyzeInputChipGenes(gene_input, input_type, max_input);
-            }catch(NumberFormatException e){
-                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
- 
-            }
+
             String disease_mesh_term = gda.getDiseaseMeshTerm(disease_id);
             //String disease_mesh_term = gda.getDiseaseMeshTerm(402);
             

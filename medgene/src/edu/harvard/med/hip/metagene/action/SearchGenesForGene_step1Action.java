@@ -63,7 +63,7 @@ public class SearchGenesForGene_step1Action extends MetageneAction {
         
         DiseaseGeneManager manager = new DiseaseGeneManager();
         Vector geneIndexes = null;
-        
+               
         if(SearchGenesForGene_step1Form.GENENAME.equals(term) ||
         SearchGenesForGene_step1Form.GENESYMBOL.equals(term)) {
             geneIndexes = manager.queryGeneIndexBySearchTerm(searchTerm);
@@ -81,11 +81,11 @@ public class SearchGenesForGene_step1Action extends MetageneAction {
             geneIndexes = manager.queryGeneIndexByLocusid(locusid);
         }
         
-        if(geneIndexes == null) {
-            return (mapping.findForward("failure"));
-        }
+       // if(geneIndexes == null) {
+       //     return (mapping.findForward("failure"));
+       // }
         
-        if(geneIndexes.size() == 0) {
+        if(geneIndexes.size() == 0 || geneIndexes == null) {
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchterm.invalid", searchTerm));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));

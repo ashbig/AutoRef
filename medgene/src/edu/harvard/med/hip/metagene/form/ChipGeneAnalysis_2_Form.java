@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.*;
 import org.apache.struts.action.*;
+import edu.harvard.med.hip.metagene.core.Statistics;
 
 
 /**
@@ -84,7 +85,9 @@ public class ChipGeneAnalysis_2_Form extends ActionForm {
      */
     public ActionErrors validate(ActionMapping mapping,
                                  HttpServletRequest request) {
-                                        
+                                     
+        request.setAttribute("stats", Statistics.getAllStatistics());  // for error handling                   
+
         ActionErrors errors = new ActionErrors();
    
         if (((chipGeneInputFile == null) || (chipGeneInputFile.getFileName().trim().length() < 1))
@@ -94,9 +97,6 @@ public class ChipGeneAnalysis_2_Form extends ActionForm {
                 ((chipGeneInput != null) && (chipGeneInput.trim().length() > 0)))
             errors.add("chipGeneInput", new ActionError("error.microArrayGeneInput.overloaded"));
 
-//        if ((chipGeneInput == null) || (chipGeneInput.trim().length() < 1))
-//            errors.add("chipGeneInput", new ActionError("error.microArrayGeneInput.required"));
-        
         return errors;
      
     }        

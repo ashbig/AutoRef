@@ -68,8 +68,8 @@ public class ChipGeneAnalysis_1_Action extends MetageneAction {
             return (new ActionForward(mapping.getInput()));
         } else {            
             Vector stats = Statistics.getAllStatistics();
-            request.setAttribute("stats", stats);
-            request.setAttribute("diseases", diseases);
+            request.getSession().setAttribute("stats", stats);
+            request.getSession().setAttribute("diseases", diseases);
             request.setAttribute("species", species);
             if(species.equalsIgnoreCase("Homo sapiens"))                
                 return (mapping.findForward("success_hs"));

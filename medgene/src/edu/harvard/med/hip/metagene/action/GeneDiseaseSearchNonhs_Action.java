@@ -99,6 +99,7 @@ public class GeneDiseaseSearchNonhs_Action extends MetageneAction {
  
         Statistics s = m.queryStatById(stat);        
         request.setAttribute("all_associations", all_associations);
+        //request.setAttribute("number_of_homologs", all_associations.size());
         request.setAttribute("input_type", input_type);
         request.setAttribute("searchTerm", searchTerm);
         request.setAttribute("stat", s);

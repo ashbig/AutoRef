@@ -74,7 +74,9 @@ public class DiseaseGeneManager {
             return null;
         }
         
-        Vector associations = queryAssociations(conn, stat, disease);
+        Vector associations = queryAssociations(conn, stat, disease, number);
+        
+        /*
         Vector newAssociations = new Vector();
         
         if(associations != null) {
@@ -91,10 +93,10 @@ public class DiseaseGeneManager {
                 newAssociations.addElement(association);
             }
         }
-               
+        */   
         manager.disconnect(conn);
         
-        return newAssociations;
+        return associations;
     }
     
     
@@ -132,7 +134,7 @@ public class DiseaseGeneManager {
      *  @param diseaseid     disease id
      *  @return vector of associations
      */
-    protected Vector queryAssociations(Connection conn, int statid, int diseaseid) {
+    protected Vector queryAssociations(Connection conn, int statid, int diseaseid, int number) {
         
         String sql = "select g.gene_index_id, g.gene_index, t.index_type,"+
         " g.date_added, s.statistic_score, st.statistic_type, a.singlehit_disease,"+
@@ -154,7 +156,7 @@ public class DiseaseGeneManager {
         
         Statement stmt = null;
         ResultSet rs = null;
-        Vector associations = null;
+        Vector associations = new Vector();
         Disease disease = new Disease(diseaseid);
         
         try {
@@ -188,6 +190,7 @@ public class DiseaseGeneManager {
             int count = 0;
             while(rs.next()) {
                 count++;
+                if(count > number) break;
                 int id = rs.getInt(1);
                 String index = rs.getString(2);
                 String type = rs.getString(3);

@@ -71,7 +71,7 @@ public class SelectMeshTermsAction extends MetageneAction {
             
             for(int i=0; i<diseases.length; i++) {
                 int disease = diseases[i];
-                Vector associations = manager.getAssociationsByDisease(disease, stat, -1);
+                Vector associations = manager.getAssociationsByDisease(disease, stat, 4000);
                 allAssociations.addElement(associations);
                 
                 Disease d = manager.queryDiseaseById(disease);

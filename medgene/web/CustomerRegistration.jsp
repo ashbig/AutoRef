@@ -32,7 +32,7 @@
       <td width="54%" height="22" valign="bottom" align="left">
         <h1><b><font color="#000080">Member Registration </font></b></h1>
       </td>
-      <td width="46%" height="22" valign="middle" align="right"><font color="#000080"><img border="0" src="jpg/medgene_logo_s.jpg" align="right" width="132" height="27"></font></td>
+      <td width="46%" height="22" valign="middle" align="right"><font color="#000080"><img border="0" src="jpg/medgene_logo_s.jpg" align="right" width="176" height="36"></font></td>
     </tr>
     <tr>
       <td width="100%" colspan="2" height="24">
@@ -104,9 +104,11 @@
 </div>
 <p>&nbsp;</p>
 </html:form>
+
+<table width='80%' align="center">
+  <jsp:include page="links.jsp" flush="true"/>
+</table>
+
 </body>
 
 </html>
-<p>
-<jsp:include page="links.jsp" flush="true"/>
-</body>

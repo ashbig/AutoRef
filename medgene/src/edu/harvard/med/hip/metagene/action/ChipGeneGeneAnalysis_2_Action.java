@@ -41,6 +41,7 @@ public class ChipGeneGeneAnalysis_2_Action extends MetageneAction{
         String submit = ((ChipGeneGeneAnalysis_2_Form)form).getSubmit();
         String s;
         int max_input; // the max size of gene input is allowed
+        ActionErrors errors = new ActionErrors();  
         
         HttpSession session = request.getSession();
         int user_type = ((Integer)(session.getAttribute("user_type"))).intValue();
@@ -79,25 +80,28 @@ public class ChipGeneGeneAnalysis_2_Action extends MetageneAction{
             // determine gene input_type value
             if (inputType.equalsIgnoreCase("Gene Symbol"))
                 input_type = 1;
-            if (inputType.equalsIgnoreCase("Locus ID"))
+            if (inputType.equalsIgnoreCase("Locus ID")){
                 input_type = 2;
+                try{  // catch the incompatibility between gene input and gene input type
+                    StringTokenizer st = new StringTokenizer(gene_input);
+                    while(st.hasMoreTokens()){
+                        int k = Integer.parseInt(st.nextToken());
+                    }
+                }catch(NumberFormatException e){
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+            }
          
               
-            // analysis input genes
-            ActionErrors errors = new ActionErrors();    
+            // analysis input genes              
             ChipGeneGeneAnalysis gda = new ChipGeneGeneAnalysis();  
             gda.hashDirectGenes(gene_index_id, stat_id, input_type);
             //gda.hashDirectGenes(531, 1, input_type);  
-            
-            try{
+
             gda.hashIndirectGenes(gene_input, gda.getSource_for_indirect_genes(), input_type, stat_id, max_input);       
             gda.analyzeInputChipGenes(gene_input, input_type, max_input);
-            }catch(NumberFormatException e){
-                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
- 
-            }
             String gene_symbol = gda.getGeneSymbol(gene_index_id);
             String stat="";
             switch(stat_id){

@@ -78,8 +78,8 @@ public class GeneGeneSearchNonhs_Action extends MetageneAction{
         try{
             if(input_type.equalsIgnoreCase("LocusID") || input_type.equalsIgnoreCase("Unigene"))  
                 Integer.parseInt(searchTerm);
-        }catch(NumberFormatException e){           
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
+        }catch(NumberFormatException e){             
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType", searchTerm));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));            
         }               
@@ -96,13 +96,13 @@ public class GeneGeneSearchNonhs_Action extends MetageneAction{
         else
             request.setAttribute("hs_geneIndexes", "no");
  
-        Statistics s = m.queryStatById(stat);        
+        Statistics s = m.queryStatById(stat);         
         request.setAttribute("all_associations", all_associations);
         request.setAttribute("input_type", input_type);
         request.setAttribute("searchTerm", searchTerm);
         request.setAttribute("stat", s);
         request.setAttribute("number", new Integer(number));
-        
+                
         return (mapping.findForward("success"));
     }
     

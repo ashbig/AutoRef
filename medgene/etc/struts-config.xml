@@ -337,6 +337,7 @@
                input="/GeneGeneSearchNonhs.jsp">
       <forward  name="success"   path="/DisplayGenesFromNonhsGene.jsp"/>
       <forward  name="newsearch"   path="/SelectSpeciesForGeneGene.jsp"/>
+      <forward  name="failure"   path="error.do"/>
     </action>
 
 

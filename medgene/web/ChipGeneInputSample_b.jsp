@@ -1,36 +1,41 @@
 <%@page contentType="text/html"%>
+
 <html>
 <head><title>ChipGeneInputSample</title></head>
 <body>
-<p>
-83681 <br>
-24944 <br>
-25526 <br>
-29629 <br>
-82401 <br>
-79049 <br>
-25130 <br>
-29357 <br>
-25326 <br>
-24923 <br>
-29634 <br>
-25371 <br>
-24236 <br>
-59294 <br>
-25425 <br>
-64626 <br>
-54705 <br>
-65197 <br>
-25249 <br>
-173162 <br>
-60562 <br>
-25347 <br>
-63839 <br>
-29579 <br>
-170912 <br>
-1111 <br>
-
+<p><b>
+<font color="#3333CC">LocusID Input Sample</font></b><font color="#3333CC"><br>
+</font><br>
+16440<br>
+25679<br>
+67618<br>
+<br>
+<br>
+<font color="#3333CC"><b>Unigene Input Sample</b><br>
+</font><br>
+258<br>
+3456<br>
+16<br>
+60496<br>
+26154<br>
+<br>
+<br>
+<font color="#3333CC"><b>Accession Number Input Sample</b><br>
+</font><br>
+BG093395<br>
+L06096<br>
+AI353082<br>
 </p>
+<p><b><i><font face="Arial" color="#3333cc">If you want to upload a gene list as
+a txt file,<br>
+the body of the file should </font><font face="Arial" color="#ff0000">only</font><font face="Arial" color="#3333cc">
+contain gene term (LocusID, Unigene or Accession Number).</font></i></b></p>
 
 </body>
+
 </html>
+
+
+
+
+

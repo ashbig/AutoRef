@@ -307,13 +307,13 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
                 "from gene_list gl, " + 
                 "     (select sa.statistic_score, t.gene1_index_id, t.gene2_index_id " +                                // alias s
                 "           from statistic_analysis sa, association_data ad, " +
-                "                (SELECT /*+ rule */ gga.association_id, gga.gene1_index_id, gga.gene2_index_id " +     // alias t
+                "                (SELECT /*+ rule */ gga.association_id, gga.gene1_index_id, gga.gene2_index_id " +     // alias t                
                 "                        FROM gene_and_gene_association gga WHERE gga.gene1_index_id in ";
         
                 if(input_type == GENE_SYMBOL_INPUT)
                     sql_1[i][j] += "(select gene_index_id from gene_list where symbol_uppercase in ( " + input[i] + " )) ";
                 if(input_type == LOCUS_ID_INPUT)
-                    sql_1[i][j] += "(select gene_index_id from gene_list where gl.locus_id in ( " + input[i] + " )) ";
+                    sql_1[i][j] += "(select gene_index_id from gene_list where locus_id in ( " + input[i] + " )) ";
                 
                 sql_1[i][j] += 
                     "and gga.gene2_index_id in ( " + elements[j] + " )) t " +
@@ -329,13 +329,13 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
                 "from gene_list gl, " + 
                 "     (select sa.statistic_score, t.gene1_index_id, t.gene2_index_id " +                                // alias s
                 "           from statistic_analysis sa, association_data ad, " +
-                "                (SELECT /*+ rule */ gga.association_id, gga.gene1_index_id, gga.gene2_index_id " +     // alias t
+                "                (SELECT /*+ rule */ gga.association_id, gga.gene1_index_id, gga.gene2_index_id " +     // alias t                
                 "                        FROM gene_and_gene_association gga WHERE gga.gene2_index_id in ";
         
                 if(input_type == GENE_SYMBOL_INPUT)
                     sql_2[i][j] += "(select gene_index_id from gene_list where symbol_uppercase in ( " + input[i] + " )) ";
                 if(input_type == LOCUS_ID_INPUT)
-                    sql_2[i][j] += "(select gene_index_id from gene_list where gl.locus_id in ( " + input[i] + " )) ";
+                    sql_2[i][j] += "(select gene_index_id from gene_list where locus_id in ( " + input[i] + " )) ";
                 
                 sql_2[i][j] += 
                     "and gga.gene1_index_id in ( " + elements[j] + " )) t " +
@@ -346,8 +346,8 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
                     
         try{
             for(int i = 0; i < input_array_size; i++){
-                for(int j = 0; j < elements_array_size; j++){//System.out.println("bbbbbbbbbbbbbb");
-                    hashIndirectGenes_aux(con, sql_1[i][j], source_for_indirect_genes, input_type);//System.out.println("aaaaaaaaaaaaaa");
+                for(int j = 0; j < elements_array_size; j++){
+                    hashIndirectGenes_aux(con, sql_1[i][j], source_for_indirect_genes, input_type);
                     hashIndirectGenes_aux(con, sql_2[i][j], source_for_indirect_genes, input_type);                    
                 }
             }
@@ -366,8 +366,8 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
     //////////////////////////////////////////// test ////////////////////////////////////////////////////////////
     
     public static void main(String[] args){
-        String text ="";
-        try{         
+        String text ="258 3456";
+        /*try{         
         BufferedReader in = new BufferedReader(new FileReader("c:\\temp\\rat_locusid.txt"));               
         String s;
         
@@ -377,12 +377,12 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
      
         }catch(Exception e){
             System.out.println(e);
-        }
+        }*/
         
         //long start = System.currentTimeMillis();
         String non_hs_locusIDs = text;
         NonHsChipGeneDiseaseAnalysis ana = new NonHsChipGeneDiseaseAnalysis();
-        HashMap homolog = ana.hashHomolog(non_hs_locusIDs, 1);        
+        HashMap homolog = ana.hashHomolog(non_hs_locusIDs, 2);        
         System.out.println("------ homolog size: " + homolog.size());
         //long end = System.currentTimeMillis();
         //System.out.println("time cost " + (end - start)/1000);
@@ -391,11 +391,11 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
         while (it.hasNext()){
             Object o = it.next();
             System.out.println(o.toString() + " ------ " + ((Integer)(homolog.get(o))).intValue() );
-        }
-         **/
+        }*/
+         
+        System.out.println("-------------------------- " + ana.toHsHomologInput(homolog));
         
-        
-        ana.hashDirectGenes(2031, 1, 2);            
+        ana.hashDirectGenes(483, 1, 2);            
         ana.hashIndirectGenes(ana.toHsHomologInput(homolog), ana.getSource_for_indirect_genes(), 2, 1, 4000);
         ana.analyzeInputChipGenes(text, homolog, 4000);
         

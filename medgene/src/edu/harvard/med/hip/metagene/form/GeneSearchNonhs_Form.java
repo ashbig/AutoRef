@@ -11,6 +11,7 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import edu.harvard.med.hip.metagene.core.Statistics;
 
 /**
  *
@@ -64,8 +65,8 @@ public class GeneSearchNonhs_Form extends ActionForm {
     public ActionErrors validate(ActionMapping mapping,
                                  HttpServletRequest request) {
 
-        ActionErrors errors = new ActionErrors();
-        int id;
+        request.setAttribute("stats", Statistics.getAllStatistics());  // for error handling
+        ActionErrors errors = new ActionErrors();        
         if ((searchTerm == null) || (searchTerm.trim().length() < 1))
             errors.add("searchTerm", new ActionError("error.geneTerm.required"));
         

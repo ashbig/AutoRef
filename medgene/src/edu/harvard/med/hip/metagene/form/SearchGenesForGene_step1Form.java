@@ -63,7 +63,7 @@ public class SearchGenesForGene_step1Form extends ActionForm {
 
         ActionErrors errors = new ActionErrors();
         if ((searchTerm == null) || (searchTerm.trim().length() < 1))
-            errors.add("searchTerm", new ActionError("error.searchTerm.required"));
+            errors.add("searchTerm", new ActionError("error.geneTerm.required"));
 
         return errors;
     }        

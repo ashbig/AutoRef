@@ -43,6 +43,7 @@ public class ChipGeneAnalysis_2b_Action extends MetageneAction{
         String submit = ((ChipGeneAnalysis_2b_Form)form).getSubmit();
         String s;
         int max_input; // the max size of gene input is allowed
+        ActionErrors errors = new ActionErrors();    
         
         HttpSession session = request.getSession();
         int user_type = ((Integer)(session.getAttribute("user_type"))).intValue();
@@ -79,30 +80,43 @@ public class ChipGeneAnalysis_2b_Action extends MetageneAction{
             gene_input = gene_input.toUpperCase();
            
             // determine gene input_type value
-            if (inputType.equalsIgnoreCase("LocusID"))
+            if (inputType.equalsIgnoreCase("LocusID")){
                 input_type = 1;
-            if (inputType.equalsIgnoreCase("Unigene"))
+                try{  // catch the incompatibility between gene input and gene input type
+                    StringTokenizer st = new StringTokenizer(gene_input);
+                    while(st.hasMoreTokens()){
+                        int k = Integer.parseInt(st.nextToken());
+                    }
+                }catch(NumberFormatException e){
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+            }
+            if (inputType.equalsIgnoreCase("Unigene")){
                 input_type = 2;
+                try{  // catch the incompatibility between gene input and gene input type
+                    StringTokenizer st = new StringTokenizer(gene_input);
+                    while(st.hasMoreTokens()){
+                        int k = Integer.parseInt(st.nextToken());
+                    }
+                }catch(NumberFormatException e){
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+            }                
             if (inputType.equalsIgnoreCase("Accession"))
                 input_type = 3;            
             
             // analysis input genes
-            ActionErrors errors = new ActionErrors();    
             NonHsChipGeneDiseaseAnalysis gda = new NonHsChipGeneDiseaseAnalysis();
-
-            try{
-                
             HashMap homolog = gda.hashHomolog(gene_input, input_type);        
             gda.hashDirectGenes(disease_id, stat_id, gda.LOCUS_ID_INPUT);
             //gda.hashDirectGenes(2031, 1, 2);                                     
             gda.hashIndirectGenes(gda.toHsHomologInput(homolog), gda.getSource_for_indirect_genes(), gda.LOCUS_ID_INPUT, stat_id, max_input);
             gda.analyzeInputChipGenes(gene_input, homolog, max_input);
 
-            }catch(NumberFormatException e){
-                errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.chipGene.wrongInputType"));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
-            }
             String disease_mesh_term = gda.getDiseaseMeshTerm(disease_id);           
             
             String stat="";
