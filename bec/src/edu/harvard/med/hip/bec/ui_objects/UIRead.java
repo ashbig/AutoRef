@@ -20,6 +20,10 @@ public class UIRead
     private int             m_type = Read.TYPE_NOT_SET;
     private boolean         m_isAlignmentExists = false;
     private boolean         m_isDiscrepancy = false;
+    private int             m_trim_start = -1;
+    private int             m_trim_stop = -1;
+    
+    
     /** Creates a new instance of UIRead */
     public UIRead()
     {
@@ -30,6 +34,8 @@ public class UIRead
     public String          getTypeAsString (){ return Read.getTypeAsString(m_type)  ;}
     public boolean         isAlignmentExists (){ return m_isAlignmentExists  ;}
     public boolean         isDiscrepancies (){ return m_isDiscrepancy  ;}
+    public int             getTrimStart (){ return m_trim_start;}
+    public int             getTrimStop (){ return m_trim_stop;}
     
     
     public void             setId (int v){ m_id  = v;} 
@@ -37,4 +43,6 @@ public class UIRead
     public void             setType (int v){ m_type  = v;}
     public void             setIsAlignmentExists (boolean v){ m_isAlignmentExists  = v;}
     public void             setIsDiscrepancies (boolean v){ m_isDiscrepancy  = v;}
+    public void             setTrimStart (int v){  m_trim_start = v;}
+    public void            setTrimStop (int v){  m_trim_stop =v;}
 }
