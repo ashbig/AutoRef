@@ -12,9 +12,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.15 $
- * $Date: 2001-06-27 11:41:25 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.16 $
+ * $Date: 2001-07-09 20:10:24 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -39,9 +39,11 @@ package edu.harvard.med.hip.flex.database;
 import java.sql.*;
 import java.util.*;
 import java.math.BigDecimal;
+
+import javax.naming.*;
 import javax.sql.*;
-import com.codestudio.sql.*;
-import com.codestudio.util.*;
+
+
 import sun.jdbc.rowset.*;
 
 /**
@@ -51,8 +53,8 @@ import sun.jdbc.rowset.*;
  *
  * DatabaseTransaction is implemented as a singleton.
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.15 $ $Date: 2001-06-27 11:41:25 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.16 $ $Date: 2001-07-09 20:10:24 $
  */
 
 public class DatabaseTransaction {
@@ -63,32 +65,40 @@ public class DatabaseTransaction {
     // the datasource to get the pooled connections from
     private static DataSource ds = null;
     
-    // start up poolman
+    // initalize this thing if it isn't allready
     static {
-        try {
-            PoolMan.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // look up the Datasource
+            try {
+                Context ctx = new InitialContext();
+                
+                //check to see if pool man is started.
+                ctx.lookup("jndi-walldb");
+            } catch (NamingException ne) {
+               // if the data source is not found, start it up
+                try {
+                    com.codestudio.sql.PoolMan.start();  
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        
     }
     // Private constructor method. Autocommit is set to false.
     protected DatabaseTransaction() throws FlexDatabaseException {
-        try {
+ 
             // look up the Datasource
-            ds = PoolMan.findDataSource("jndi-walldb");
-        }
-        catch( SQLException e ) {
-            System.out.println("unable to find datasource");
             try {
-                Thread.sleep(2000);
-            } catch (Exception e2) {
-                e2.printStackTrace();
+                Context ctx = new InitialContext();
+                
+                // Get the datasource
+                ds = (DataSource) ctx.lookup("jndi-walldb");
+            } catch (NamingException ne) {
+                ne.printStackTrace();
+                throw new FlexDatabaseException(ne);
             }
-            FlexDatabaseException fde =
-            new FlexDatabaseException("Cannot instantiate DatabaseTransaction object.\n"+e.getMessage());
-            
-            throw fde;
-        }
+            // ds = PoolMan.findDataSource("jndi-walldb");
+        
+        
         
     } // end constructor
     
@@ -253,7 +263,7 @@ public class DatabaseTransaction {
             crs = new CachedRowSet();
             results = stmt.executeQuery();
             crs.populate(results);
-      
+            
             
             
         } catch (SQLException e) {
@@ -306,9 +316,7 @@ public class DatabaseTransaction {
      */
     public static void closeConnection(Connection conn) {
         try{
-            //conn.close();            
-            SQLManager manager = SQLManager.getInstance();
-            manager.returnConnection(conn);
+            conn.close();
             
         } catch(Throwable t) {
             t.printStackTrace();
@@ -385,7 +393,7 @@ public class DatabaseTransaction {
                 //new edu.harvard.med.hip.flex.process.Researcher(100);
                 conn1 = dt.requestConnection();
                 
-               
+                
                 ps1 = conn1.prepareStatement(sql1);
                 DatabaseTransaction.executeQuery(ps1);
                 
@@ -397,9 +405,9 @@ public class DatabaseTransaction {
             } catch(FlexDatabaseException fde) {
                 fde.printStackTrace();
             } catch(edu.harvard.med.hip.flex.core.FlexCoreException core) {
-            core.printStackTrace();
-             
-        }
+                core.printStackTrace();
+                
+            }
             catch(SQLException sqlE) {
                 sqlE.printStackTrace();
             }
