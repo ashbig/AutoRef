@@ -23,7 +23,7 @@ public class Primer3Wrapper
 {
     
     public static final String NEW_LINE = "\n";
-    
+    private static final String PRIMER3_EXE =  "c://blast//primer3.exe";
     
     //in parameters
     
@@ -251,7 +251,7 @@ public class Primer3Wrapper
      */
     private boolean run(String input, String output)
     {
-        String cmd =  "c://blast//primer3.exe";
+        String cmd =  PRIMER3_EXE;
          // String cmd = "/kotel/data/blast/bl2seq ";
          InputStream fis = null;
           OutputStream fos = null;
