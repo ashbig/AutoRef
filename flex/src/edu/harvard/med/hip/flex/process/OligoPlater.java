@@ -439,11 +439,11 @@ public class OligoPlater
         
         if( m_isOnlyOpen )
         {
-            plateset = new Plateset(fivepId, threepOpenId, -1);
+            plateset = new Plateset(fivepId, threepOpenId, -1, containerId);
         } 
         else if(m_isOnlyClose)
         {
-            plateset = new Plateset(fivepId,   -1, threepClosedId);
+            plateset = new Plateset(fivepId,   -1, threepClosedId, containerId);
         }
         else
         {

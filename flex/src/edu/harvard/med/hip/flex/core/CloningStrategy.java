@@ -185,12 +185,13 @@ public class CloningStrategy {
             return CREATOR;
         
         if(workflowid == Workflow.STANDARD_WORKFLOW || workflowid == Workflow.PSEUDOMONAS_WORKFLOW
-        || workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.GATEWAY_WORKFLOW) {
+        || workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.GATEWAY_WORKFLOW
+        || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
             if(projectid == Project.HUMAN || projectid == Project.BREASTCANCER || projectid == Project.KINASE) 
                 return HUMAN_GATEWAY;
             if(projectid == Project.PSEUDOMONAS)
                 return PSEUDOMONAS_GATEWAY;
-            if(projectid == Project.YP || projectid == Project.YEAST || projectid == Project.FT)
+            if(projectid == Project.YP || projectid == Project.YEAST || projectid == Project.FT || projectid == Project.AVENTIS)
                 return YP_GATEWAY;
         }
         

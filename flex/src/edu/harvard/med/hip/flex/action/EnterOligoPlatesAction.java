@@ -89,7 +89,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
         
         boolean isOnlyClosed = false;
         boolean isOnlyOpen = false;
-        if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE || projectid == Project.YP || projectid == Project.FT)    isOnlyClosed = true;
+        if ( projectid == Project.YEAST || workflowid == Workflow.CONVERT_FUSION_TO_CLOSE || projectid == Project.YP || projectid == Project.FT || workflowid == Workflow.MGC_GATEWAY_CLOSED)    isOnlyClosed = true;
         if (projectid == Project.PSEUDOMONAS || projectid == Project.KINASE || workflowid == Workflow.CONVERT_CLOSE_TO_FUSION) isOnlyOpen = true;
         
         try {
@@ -124,7 +124,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             }
             
             String templatePlate = null;
-            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR)
+            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR || workflowid == Workflow.MGC_GATEWAY_CLOSED)
             && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
                 templatePlate = ((CreatePCRPlateForm)form).getTemplatePlate();
                 
@@ -138,7 +138,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             String subProtocolName = ((CreatePCRPlateForm)form).getSubProtocolName();
             SubProtocol subprotocol = new SubProtocol(subProtocolName);
             LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems");
-            QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate, templatePlate, projectid);
+            QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate, templatePlate, projectid, workflowid);
             if(item == null) {
                 errors.add("fivepPlate", new ActionError("error.plateset.mismatch", fivepPlate, threepOpenPlate, threepClosedPlate));
                 saveErrors(request, errors);
@@ -161,7 +161,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             Container template = null;
             if(workflowid == Workflow.MGC_CREATOR_WORKFLOW
             || workflowid == Workflow.MGC_GATEWAY_WORKFLOW
-            || workflowid == Workflow.DNA_TEMPLATE_CREATOR) {
+            || workflowid == Workflow.DNA_TEMPLATE_CREATOR
+            || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
                 try {
                     mgc = ps.getMgcContainer();
                 } catch (Exception ex) {
@@ -259,7 +260,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 
                 if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW
                 || workflowid == Workflow.MGC_CREATOR_WORKFLOW
-                || workflowid == Workflow.DNA_TEMPLATE_CREATOR) {
+                || workflowid == Workflow.DNA_TEMPLATE_CREATOR
+                || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
                     request.setAttribute("templateid", new Integer(template.getId()));
                 }
                 return (mapping.findForward("success_oligo_dilute"));
@@ -313,7 +315,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
     private QueueItem getValidItem(LinkedList queueItems,
     String fivepPlate,
     String threepOpenPlate,
-    String threepClosedPlate, String templatePlate, int projectid)
+    String threepClosedPlate, String templatePlate, int projectid,
+    int workflowid)
     throws FlexCoreException, FlexDatabaseException {
         if(queueItems == null) {
             return null;
@@ -335,7 +338,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                         found = item;
                     }
                 }
-                else if(projectid == Project.YEAST) {
+                else if(projectid == Project.YEAST || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
                     if(fivep.isSame(fivepPlate) && threepClosed.isSame(threepClosedPlate)
                     && template.isSame(templatePlate)) {
                         found = item;

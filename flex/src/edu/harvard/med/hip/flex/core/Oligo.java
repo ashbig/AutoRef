@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.6 2004-03-19 00:44:14 dzuo Exp $
+ * $Id: Oligo.java,v 1.7 2004-06-11 17:47:51 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -17,11 +17,11 @@ import edu.harvard.med.hip.flex.workflow.*;
  */
 public class Oligo {
     private static final String GATEWAYTAG_5p = "AAAGCAGGCTCCACC";
-    private static final String GATEWAYTAG_3p_CLOSE = "ACAAGAAAGCTGGGTCCTA";
+    private static final String GATEWAYTAG_3p_CLOSE =  "ACAAGAAAGCTGGGTCCTA";
     private static final String GATEWAYTAG_3p_CLOSE_PA = "AGAAAGCTGGGTCCTA";
     private static final String GATEWAYTAG_3p_FUSION = "ACAAGAAAGCTGGGTCCAA";
     private static final String CLONETECH_5p = "GAAGTTATCAGTCGACACC";
-    private static final String CLONETECH_3p_CLOSE = "ATGGTCTAGAAAGCTTCCCTA";
+    private static final String CLONETECH_3p_CLOSE =  "ATGGTCTAGAAAGCTTCCCTA";
     private static final String CLONETECH_3p_FUSION = "ATGGTCTAGAAAGCTTCCCAA";
     public static final String PSEUDOMONAS_5p = "AAAGCAGGCTCCGAAGGAGATACC";
     public static final String PSEUDOMONAS_3p_FUSION = "AGAAAGCTGGGTCTCC";
@@ -135,8 +135,8 @@ public class Oligo {
             tagSequence = PSEUDOMONAS_5p + sequence;
         } else if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
             tagSequence = GATEWAYTAG_5p + sequence;
-        } else if(workflowid == Workflow.GATEWAY_WORKFLOW) {
-            if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT) {
+        } else if(workflowid == Workflow.GATEWAY_WORKFLOW || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
+            if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT || projectId == Project.AVENTIS) {
                 tagSequence = GATEWAY_YP_5p + sequence;
             } else {
                 tagSequence = GATEWAYTAG_5p + sequence;
@@ -184,8 +184,8 @@ public class Oligo {
             tagSequence = GATEWAYTAG_3p_CLOSE_PA + sequence;
         } else if (workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
             tagSequence = GATEWAYTAG_3p_CLOSE + sequence; 
-        } else if(workflowid == Workflow.GATEWAY_WORKFLOW) {
-            if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT) {
+        } else if(workflowid == Workflow.GATEWAY_WORKFLOW || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
+            if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT || projectId == Project.AVENTIS) {
                 tagSequence = GATEWAY_YP_3p + sequence;
             } else {
                 tagSequence = GATEWAYTAG_3p_CLOSE + sequence;

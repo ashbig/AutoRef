@@ -162,7 +162,6 @@ public class MgcOligoPlateManager extends OligoPlateManager
             m_rearrayed_containers.add(rearrayed_cont);
             
             createOligoPlate(plate.getSequences(), rearrayed_cont.getId());
-           
             File robot_file = createRearrayFile(plate.getSequenceDescriptions(), plate_label);
             
             fileList.add( robot_file );

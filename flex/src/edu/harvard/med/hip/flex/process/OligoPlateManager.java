@@ -164,7 +164,10 @@ public class OligoPlateManager {
         if(project.getId() == Project.PSEUDOMONAS || project.getId() == Project.KINASE) {
             setIsOpenOnly(true);
             setIsSetOpenClose(true);
-        } else if(project.getId() == Project.YEAST || project.getId() == Project.YP || project.getId() == Project.FT) {
+        } else if(project.getId() == Project.YEAST 
+            || project.getId() == Project.YP 
+            || project.getId() == Project.FT
+            || workflow.getId() == Workflow.MGC_GATEWAY_CLOSED) {
             setIsCloseOnly(true);
             setIsSetOpenClose(true);
         }
@@ -304,7 +307,7 @@ public class OligoPlateManager {
     throws FlexDatabaseException, FlexCoreException, IOException, Exception {
         ConstructGenerator cg = null;
         plater = null;
-        
+       
         try{
             cg = new ConstructGenerator(seqList,conn, project, workflow, protocol);
             
@@ -360,9 +363,9 @@ public class OligoPlateManager {
     }
     
     public void sendOligoOrders() throws MessagingException{
-        String to = "dzuo@hms.harvard.edu";
-        String from = "dzuo@hms.harvard.edu";
-        //String cc = "dzuo@hms.harvard.edu";
+        String to = "dongmei_zuo@hms.harvard.edu";
+        String from = "dongmei_zuo@hms.harvard.edu";
+        //String cc = "dongmei_zuo@hms.harvard.edu";
         String cc = "flexgene_manager@hms.harvard.edu";
         String subject = "Oligo order for project - "+project.getName();
         String msgText = "The attached files are our oligo order.\n"+
