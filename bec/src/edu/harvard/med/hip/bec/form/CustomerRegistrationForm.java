@@ -460,16 +460,16 @@ public class CustomerRegistrationForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping){
-        this.firstName = null;
-        this.lastName = null;
-        this.street1 = null;
-        this.street2 = null;
-        this.city = null;
-        this.state = null;
-        this.province = null;
-        this.zipCode = null;
-        this.country = null;
-        this.phone = null;
+      //  this.firstName = null;
+     //   this.lastName = null;
+       // this.street1 = null;
+       // this.street2 = null;
+       // this.city = null;
+       // this.state = null;
+       // this.province = null;
+      //  this.zipCode = null;
+      //  this.country = null;
+       // this.phone = null;
         this.email = null;
         this.organization = null;
         this.user_id = null;
@@ -491,6 +491,7 @@ public class CustomerRegistrationForm extends ActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
+        /*
         if ((firstName == null) || (firstName.length() < 1))
             errors.add("firstName", new ActionError("error.firstname.required"));
         if ((lastName == null) || (lastName.length() < 1))
@@ -505,6 +506,7 @@ public class CustomerRegistrationForm extends ActionForm {
             errors.add("country", new ActionError("error.country.required"));
         if ((phone == null) || (phone.length() < 1))
             errors.add("phone", new ActionError("error.workphone.required"));
+         **/
         if ((email == null) || (email.length() < 1) || (email.indexOf("@") ==-1))
             errors.add("email", new ActionError("error.email.required"));
         if ((organization == null) || (organization.length() < 1))

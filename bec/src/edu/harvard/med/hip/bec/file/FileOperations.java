@@ -19,7 +19,7 @@ public class FileOperations
      * Buffer size when reading from input stream.
      */
     private final static int BUFFER_SIZE = 1024;
-
+    private final static boolean     m_isSameComputer = false;
     
     public static void createDirectory(String directory_path, boolean exsits_exit)   throws Exception
     {
@@ -90,7 +90,7 @@ public class FileOperations
             }
         }
         
-        if (mode_remove)
+        if (m_isSameComputer)
         {
             if (from.renameTo(to)) return;//on the same machine
         }
@@ -104,9 +104,10 @@ public class FileOperations
                 in = new FileInputStream(from);
                 out = new FileOutputStream(to);
                 copy(in, out);
+                out.flush();
                 in.close();
                 in = null;
-                out.flush();
+               
                 out.close();
                 out = null;
                 if (mode_remove && !from.delete())
@@ -153,7 +154,7 @@ public class FileOperations
         int read;
         while((read = in.read(buffer)) != -1)
         {
-            out.write(buffer, 0, read);
+            out.write(buffer);
         }
     }
     
