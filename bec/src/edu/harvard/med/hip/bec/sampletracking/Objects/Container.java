@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.25 2004-03-30 17:19:57 Elena Exp $
+ * $Id: Container.java,v 1.26 2004-04-14 17:42:15 Elena Exp $
  *
  * File     	: Container.java
 
@@ -310,7 +310,12 @@ public class Container
                  sql = "select distinct label,containerid from containerheader where containerid in "
                 + " (select containerid from sample where sampleid in "
                 + " (select sampleid from isolatetracking where status in ("+IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED+
-                ","+IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED +","+ IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH + ")))";
+                ","+IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED +","+ IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH 
+                +","+IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE 
+ +","+IsolateTrackingEngine.PROCESS_STATUS_DISCREPANCY_FINDER_FINISHED 
+ +","+IsolateTrackingEngine.PROCESS_STATUS_POLYMORPHISM_FINDER_FINISHED 
++ ","+IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH 
+                + ")))";
                 break;
             }
         }
