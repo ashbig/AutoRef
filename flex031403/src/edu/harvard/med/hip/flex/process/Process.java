@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.7 2001-06-14 17:16:45 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.8 2001-06-18 16:49:25 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -45,7 +45,7 @@ public class Process {
      * @return The Process object.
      * @exception FlexDatabaseException.
      */
-    public Process(Protocol protocol, String executionStatus, 
+    public Process(Protocol protocol, String executionStatus,
     Researcher researcher) throws FlexDatabaseException {
         this.protocol = protocol;
         this.executionStatus = executionStatus;
@@ -65,8 +65,8 @@ public class Process {
      * @param extrainfo The extra information of the process.
      * @return The Process object.
      */
-    public Process(int executionid, Protocol protocol, 
-    String executionStatus, Researcher researcher, String processDate, 
+    public Process(int executionid, Protocol protocol,
+    String executionStatus, Researcher researcher, String processDate,
     String subprotocol, String extrainfo) {
         this.executionid = executionid;
         this.protocol = protocol;
@@ -75,6 +75,59 @@ public class Process {
         this.processDate = processDate;
         this.subprotocol = subprotocol;
         this.extrainfo = extrainfo;
+    }
+    
+    /**
+     * Find the process execution with the provided container and protocol.
+     *
+     * @param container The container of the process we want.
+     * @param protocol The protocol of the porcess we want.
+     *
+     * @return the process specified by the container and protocol or null
+     *      if no process is found.
+     */
+    public Process findProcess(Container container, Protocol protocol)
+    throws FlexDatabaseException {
+        Process retProcess = null;
+        String sql=
+        "select x.executionid, x.executionstatus, x.researcherid,"+
+        "x.processdate, x.subprotocolname, x.extrainformation "+
+        "from processexecution x, processprotocol p, queue q  "+
+        "WHERE "+
+        "q.protocolid=p.protocolid AND q.containerid=? AND "+
+        "p.protocolid=x.protocolid AND x.protocolid=?";
+        DatabaseTransaction dt = DatabaseTransaction.getInstance();
+        Connection conn = dt.requestConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conn.prepareStatement(sql);
+            
+            ps.setInt(1, container.getId());
+            ps.setInt(2, protocol.getId());
+            
+            rs = dt.executeQuery(ps);
+            
+            // if we find a process then create it
+            if(rs.next()) {
+                retProcess =
+                new Process(rs.getInt("executionid"),
+                protocol,
+                rs.getString("executionstatus"),
+                new Researcher(rs.getInt("researcherid")),
+                rs.getString("processDate"),rs.getString("subprotocolname"),
+                rs.getString("extrainformation"));
+            }
+            
+        } catch (SQLException sqlE) {
+            throw new FlexDatabaseException(sqlE);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(ps);
+            DatabaseTransaction.closeConnection(conn);
+            
+        }
+        return retProcess;
     }
     
     /**
@@ -229,7 +282,7 @@ public class Process {
             valueSql = valueSql + ",'"+extrainfo+"'";
         }
         
-        sql = sql+")\n"+valueSql+")";   
+        sql = sql+")\n"+valueSql+")";
         DatabaseTransaction.executeUpdate(sql, c);
         
         if(processObjects.isEmpty()) {
@@ -299,7 +352,7 @@ public class Process {
                 //DatabaseTransaction.executeUpdate("insert into oligo values("+to+", 'AATCGG', 30, null)", c);
                 int samplefrom = FlexIDGenerator.getID("sampleid");
                 int sampleto = FlexIDGenerator.getID("sampleid");
-                                System.out.println("insert into sample values("+samplefrom+", 'PCR',"+containerid+",'A1',null,"+from+",null)");
+                System.out.println("insert into sample values("+samplefrom+", 'PCR',"+containerid+",'A1',null,"+from+",null)");
                 DatabaseTransaction.executeUpdate("insert into sample values("+samplefrom+", 'PCR',"+containerid+",'A1',null,"+from+",null)", c);
                 DatabaseTransaction.executeUpdate("insert into sample values("+sampleto+", 'PCR',"+containerid+",'A1',null,"+to+",null)", c);
                 SampleLineage sl = new SampleLineage(id, samplefrom, sampleto);
