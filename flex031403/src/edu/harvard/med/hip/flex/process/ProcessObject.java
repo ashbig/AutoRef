@@ -17,9 +17,9 @@ import java.sql.*;
  * This class represents an object that gets executed during a process.
  */
 public abstract class ProcessObject {
-    public final static INPUT = "I";
-    public final static OUTPUT = "O";
-    public final static IO = "B";
+    public final static String INPUT = "I";
+    public final static String OUTPUT = "O";
+    public final static String IO = "B";
     
     protected int id;
     protected int executionid;
