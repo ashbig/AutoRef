@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.12 2001-07-10 15:48:49 dzuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.13 2001-07-31 19:40:48 dzuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -132,7 +132,7 @@ public class ContainerProcessQueue implements ProcessQueue {
      * @param c The Connection object.
      * @exception FlexDatabaseException.
      */
-    public void addQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void addQueueItems(List items, Connection c) throws FlexDatabaseException {
         if (items == null)
             return;
         
@@ -172,7 +172,7 @@ public class ContainerProcessQueue implements ProcessQueue {
      * @param c The database Connection object.
      * @exception FlexDatabaseException.
      */
-    public void removeQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void removeQueueItems(List items, Connection c) throws FlexDatabaseException {
         if (items == null)
             return;
         
@@ -215,7 +215,7 @@ public class ContainerProcessQueue implements ProcessQueue {
      * @param c The Connection object.
      * @exception FlexDatabaseException.
      */
-    public void updateQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void updateQueueItems(List items, Connection c) throws FlexDatabaseException {
     }
     
     /**

@@ -104,7 +104,7 @@ public class PlatesetProcessQueue implements ProcessQueue {
      * @param c The Connection object.
      * @exception FlexDatabaseException.
      */
-    public void addQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void addQueueItems(List items, Connection c) throws FlexDatabaseException {
         if (items == null)
             return;
         
@@ -116,7 +116,7 @@ public class PlatesetProcessQueue implements ProcessQueue {
             stmt = c.prepareStatement(sql);
             
             Vector v = new Vector();
-            ListIterator iter = items.listIterator();
+            Iterator iter = items.iterator();
             
             while (iter.hasNext()) {
                 QueueItem item = (QueueItem) iter.next();
@@ -144,7 +144,7 @@ public class PlatesetProcessQueue implements ProcessQueue {
      * @param c The database Connection object.
      * @exception FlexDatabaseException.
      */
-    public void removeQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void removeQueueItems(List items, Connection c) throws FlexDatabaseException {
         if (items == null)
             return;
         
@@ -158,7 +158,7 @@ public class PlatesetProcessQueue implements ProcessQueue {
             stmt = c.prepareStatement(sql);
             
             Vector v = new Vector();
-            ListIterator iter = items.listIterator();
+            Iterator iter = items.iterator();
             
             while (iter.hasNext()) {
                 QueueItem item = (QueueItem) iter.next();
@@ -187,7 +187,7 @@ public class PlatesetProcessQueue implements ProcessQueue {
      * @param c The Connection object.
      * @exception FlexDatabaseException.
      */
-    public void updateQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void updateQueueItems(List items, Connection c) throws FlexDatabaseException {
     }
     
     /**

@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.10 2001-07-19 17:15:08 jmunoz Exp $
+/* $Id: SequenceProcessQueue.java,v 1.11 2001-07-31 19:40:48 dzuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -54,7 +54,7 @@ public class SequenceProcessQueue implements ProcessQueue {
      * @param offset The offset to get at
      * @param legnth The number of rows to get back.
      */
-    public List getQueueItems(Protocol protocol, int offset, int length)
+    public LinkedList getQueueItems(Protocol protocol, int offset, int length)
     throws FlexDatabaseException {
         String sql = "select * from "+
         "(select q.sequenceid as id, " +
@@ -148,7 +148,7 @@ public class SequenceProcessQueue implements ProcessQueue {
      * @param c The Connection object.
      * @exception FlexDatabaseException.
      */
-    public void addQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void addQueueItems(List items, Connection c) throws FlexDatabaseException {
         if (items == null)
             return;
         
@@ -159,7 +159,7 @@ public class SequenceProcessQueue implements ProcessQueue {
         try {
             stmt= c.prepareStatement(sql);
             Vector v = new Vector();
-            ListIterator iter = items.listIterator();
+            Iterator iter = items.iterator();
             
             while (iter.hasNext()) {
                 QueueItem item = (QueueItem) iter.next();
@@ -187,7 +187,7 @@ public class SequenceProcessQueue implements ProcessQueue {
      * @param c The database Connectin object.
      * @exception FlexDatabaseException.
      */
-    public void removeQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void removeQueueItems(List items, Connection c) throws FlexDatabaseException {
         if (items == null)
             return;
         
@@ -199,7 +199,7 @@ public class SequenceProcessQueue implements ProcessQueue {
         try {
             stmt = c.prepareStatement(sql);
             Vector v = new Vector();
-            ListIterator iter = items.listIterator();
+            Iterator iter = items.iterator();
             
             while (iter.hasNext()) {
                 QueueItem item = (QueueItem) iter.next();
@@ -230,7 +230,7 @@ public class SequenceProcessQueue implements ProcessQueue {
      * @param c The Connection object.
      * @exception FlexDatabaseException.
      */
-    public void updateQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void updateQueueItems(List items, Connection c) throws FlexDatabaseException {
     }
     
     /**

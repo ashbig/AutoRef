@@ -36,7 +36,7 @@ public class ConstructProcessQueue implements ProcessQueue {
      * next workflow process from the Queue table
      *
      * @param protocol The protocol object.
-     * @return A LinkedList of QueueItem objects.
+     * @return A List of QueueItem objects.
      * @exception FlexDatabaseException.
      */
     public LinkedList getQueueItems(Protocol protocol) throws FlexDatabaseException {
@@ -112,7 +112,7 @@ public class ConstructProcessQueue implements ProcessQueue {
      * @param c The Connection object.
      * @exception FlexDatabaseException.
      */
-    public void addQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void addQueueItems(List items, Connection c) throws FlexDatabaseException {
         if (items == null)
             return;
         
@@ -124,7 +124,7 @@ public class ConstructProcessQueue implements ProcessQueue {
             stmt = c.prepareStatement(sql);
             
             Vector v = new Vector();
-            ListIterator iter = items.listIterator();
+            Iterator iter = items.iterator();
             
             while (iter.hasNext()) {
                 QueueItem item = (QueueItem) iter.next();
@@ -152,7 +152,7 @@ public class ConstructProcessQueue implements ProcessQueue {
      * @param c The database Connection object.
      * @exception FlexDatabaseException.
      */
-    public void removeQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void removeQueueItems(List items, Connection c) throws FlexDatabaseException {
         if (items == null)
             return;
         
@@ -166,7 +166,7 @@ public class ConstructProcessQueue implements ProcessQueue {
             stmt = c.prepareStatement(sql);
             
             Vector v = new Vector();
-            ListIterator iter = items.listIterator();
+            Iterator iter = items.iterator();
             
             while (iter.hasNext()) {
                 QueueItem item = (QueueItem) iter.next();
@@ -195,7 +195,7 @@ public class ConstructProcessQueue implements ProcessQueue {
      * @param c The Connection object.
      * @exception FlexDatabaseException.
      */
-    public void updateQueueItems(LinkedList items, Connection c) throws FlexDatabaseException {
+    public void updateQueueItems(List items, Connection c) throws FlexDatabaseException {
     }
     
     /**
@@ -205,7 +205,7 @@ public class ConstructProcessQueue implements ProcessQueue {
         RowSet rs = null;
         try {
         rs = DatabaseTransaction.getInstance().executeQuery(sql);
-       LinkedList items = new LinkedList();
+        LinkedList items = new LinkedList();
         
         while(rs.next()) {
             int id = rs.getInt("ID");
