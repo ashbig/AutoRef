@@ -329,7 +329,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         //define 'no trace files'
         String trace_dir =   trace_files_path +File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory
         //////*********************** for testing ***************************
-      //  trace_dir = "Z:\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
+        trace_dir = "Z:\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
 
         int numberOfFilesStatus = CloneAssembly.isAssemblerRunNeeded(trace_dir, 0);
         if ( numberOfFilesStatus ==  CloneAssembly.ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE
@@ -1009,14 +1009,19 @@ if(     m_is_clone_sequence_disc_det )
     cloneinfo.append(cds    + Constants.TAB_DELIMETER );
 }//           "Detailed Discrepancy Report "
 
-    BioLinker linker = ( BioLinker ) linkers.get( new Integer(clone.getCloningStrategyId()));
+BioLinker linker = null;
+if ( m_is_ref_5_linker )
+{
+    linker = ( BioLinker ) linkers.get( new Integer(clone.getCloningStrategyId()));
     if(     linker != null )    {         cloneinfo.append(linker.getSequence()  + Constants.TAB_DELIMETER);    }//          "5' linker sequence "
     else    {        cloneinfo.append(Constants.TAB_DELIMETER);    }
-
+}
+if ( m_is_ref_3_linker)
+{
     linker = ( BioLinker ) linkers.get( new Integer(-clone.getCloningStrategyId()));
     if(     linker != null )    {         cloneinfo.append(linker.getSequence()  + Constants.TAB_DELIMETER);    }//          "5' linker sequence "
     else    {        cloneinfo.append(Constants.TAB_DELIMETER);    }
-
+}
     if ( clone.getCloneSequenceId() > 0 &&     m_is_clone_sequence_cds )
     {
         cds = clone.getCloneSequenceText().substring( clone.getCloneSequenceCdsStart(), clone.getCloneSequenceCdsStop() );
