@@ -258,7 +258,9 @@ public class SelectProcessAction extends ResearcherAction
                             additional_jsp.append( BlastWrapper.YEASTDB_NAME);
   additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getPseudomonasDBLocation() +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
   additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getMGCDBLocation() +"'>"+ BlastWrapper.MGCDB_NAME );
-additional_jsp.append("</SELECT></td> </tr>");
+ additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getYPDBLocation() +"'>"+ BlastWrapper.YPDB_NAME );
+
+  additional_jsp.append("</SELECT></td> </tr>");
 additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
 additional_jsp.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
 additional_jsp.append("<OPTION VALUE=''> None");
