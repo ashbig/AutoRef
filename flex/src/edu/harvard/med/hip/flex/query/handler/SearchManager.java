@@ -28,7 +28,6 @@ public class SearchManager {
     protected List searchResults;
     protected List searchTerms;
     protected String error = "";
-    protected User user;
     
     public void setSearchRecord(SearchRecord s) {this.searchRecord = s;}
     
@@ -45,29 +44,16 @@ public class SearchManager {
     public List getSearchResults() {return searchResults;}
     
     /** Creates a new instance of SearchManager */
-    public SearchManager(List searchTerms, String searchType, List params, String searchName, User user) {
-        searchRecord = new SearchRecord(searchName,searchType,SearchRecord.INPROCESS,user.getUsername());
+    public SearchManager(List searchTerms, String searchType, List params, String searchName, String user) {
+        searchRecord = new SearchRecord(searchName,searchType,SearchRecord.INPROCESS,user);
         params = params;
         searchTerms = searchTerms;
-        user = user;
     }
     
     public SearchManager(SearchRecord searchRecord, List params, List searchTerms) {
         this.searchRecord = searchRecord;
         this.params = params;
         this.searchTerms = searchTerms;
-    }
-    
-    public static List parseSearchFile(InputStream searchFile) throws FileNotFoundException, IOException {
-        List searchTerms = new ArrayList();
-        BufferedReader in = new BufferedReader(new InputStreamReader(searchFile));
-        String line = null;
-        while((line = in.readLine()) != null) {
-            searchTerms.add(line.trim());
-        }
-        in.close();
-        
-        return searchTerms;
     }
     
     public void insertSearchRecord(Connection conn) throws FlexDatabaseException, SQLException {
@@ -235,8 +221,10 @@ public class SearchManager {
         }
     }
     
-    public void sendEmail() throws IOException, MessagingException {
-        sendEmail(user.getUserEmail());
+    public void sendEmail() throws IOException, MessagingException, FlexDatabaseException {
+        AccessManager manager = AccessManager.getInstance();
+        String userEmail = manager.getEmail(searchRecord.getUsername());
+        sendEmail(userEmail);
     }
     
     public static void main(String args[]) {

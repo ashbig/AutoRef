@@ -226,7 +226,9 @@
                     
     <form-bean      name="createGlycerolAndSeqForm"
                     type="edu.harvard.med.hip.flex.form.CreateGlycerolAndSeqForm"/>    
-                                          
+           
+    <form-bean      name="searchFlexForm"
+                    type="edu.harvard.med.hip.flex.form.SearchFlexForm"/>                               
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -1237,7 +1239,24 @@
                input="/EnterSrcForSequencingConfirm.jsp">
       <forward  name="success"   path="/EnterSrcForSequencingConfirm.jsp"/>
     </action>   
-                                           
+                 
+    <!-- Query related action mappings -->
+    <action    path="/GetSearchTerms"
+               type="edu.harvard.med.hip.flex.action.GetSearchTermsAction"
+               scope="request"
+               input="/GetSearchTerms.do">
+      <forward  name="success"   path="/SearchFlex.jsp"/>
+    </action>   
+             
+    <action    path="/SearchFlex"
+               type="edu.harvard.med.hip.flex.action.SearchFlexAction"
+               name="searchFlexForm"
+               scope="request"
+               validate="true"
+               input="/GetSearchTerms.do">
+      <forward  name="success"   path="/SearchFlexFinish.jsp"/>
+    </action>  
+                            
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
