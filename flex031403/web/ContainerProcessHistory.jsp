@@ -4,6 +4,8 @@
 
 <%@ page import="edu.harvard.med.hip.flex.*" %>
 <%@ page import="edu.harvard.med.hip.flex.core.*" %>
+<%@ page import="edu.harvard.med.hip.flex.process.*" %>
+<%@ page import="java.util.*" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -33,24 +35,61 @@
         <th>Container</th>
         <th>Container Type</th>
     </tr>
-    <logic:iterate id="threadElem" name="<%=Constants.THREAD_KEY%>" property="elements">
-        
-        <bean:define id="process" name="threadElem" property="process"/>
-        <bean:define id="protocol" name="process" property="protocol"/>
-        <bean:define id="container" name="threadElem" property="object"/>
-        <flex:row property="object" match="searchContainer" matchStyleClass="highlightRow" oddStyleClass="oddRow" evenStyleClass="evenRow">
+<% ContainerThread elements  = (ContainerThread) request.getAttribute(Constants.THREAD_KEY);
+Container target = (Container) request.getAttribute(Constants.CONTAINER_KEY);
+int count = 1;
+   Iterator iter = elements.getElements().iterator();
+   while(iter.hasNext()) 
+   {
+         ThreadElement tr = (ThreadElement)iter.next();
 
-            <td><flex:write name="protocol" property="processname"/></td>
-            <td><flex:write name="process" property="date"/></td>
-            <td><flex:write name="process" property="subprotocol"/></td>
-            <td><flex:write name="process" property="researcher.name"/></td>
-            <td><flex:linkContainer name="container" process="process">
-                            <bean:write name="container" property="label"/>
-                        </flex:linkContainer>
+        edu.harvard.med.hip.flex.process.Process p = tr.getProcess();
+        Protocol pr = null;
+        if (p != null)     {        pr = p.getProtocol();     }
+        Container c = (Container)tr.getObject();
+
+        if (c.getId() == target.getId()){%><tr class='highlightRow'><%}
+        else if (count % 2 == 0)  {%><tr class ='evenRow'><%}
+        else if (count % 2 == 1){%><tr class="oddRow"><%}%>
+        <% if (p != null)
+        {
+            String link = "/FLEX/ViewContainerDetails.do?CONTAINER_ID=" + c.getId()  +"&PROCESS_ID="+p.getExecutionid();
+      
+            %>
+                <td> <%= pr.getProcessname() %></td>
+                <td> <%= p.getDate() %></td>
+                <% if (p.getSubprotocol()  != null){ %>
+                    <td> <%= p.getSubprotocol() %></td>
+                <%}else {%>
+                     <td> &nbsp;</td>
+                <%}%>
+                <td> <%= p.getResearcher().getName() %></td>
+                <td> <a href= <%= link %>  >
+                        <%= c.getLabel() %>
+                      </a></td>
+                <td> <%= c.getType() %></td>
+        <%}
+        else
+        {
+             String link_mgc = "/FLEX/MgcViewContainerDetails.do?CONTAINER_ID=" +  c.getId();
+            %>
+            <td> &nbsp;</td>
+            <td> &nbsp;</td>
+            <td> &nbsp;</td>
+            <td> &nbsp;</td>
+            <td> <a href= "<%= link_mgc %>"    >
+                <%= c.getLabel() %>
+                 </a>
             </td>
-            <td><flex:write name="container" property="type"/></td>
-        </flex:row>
-    </logic:iterate>
+             <td> <%= c.getType() %></td>
+        <%}%>
+        </tr>    
+    <%
+    count++;
+    }
+%>
+
+    
     </table>
 </body>
 </html>

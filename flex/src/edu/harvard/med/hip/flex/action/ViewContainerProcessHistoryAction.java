@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2002-02-25 16:40:41 $
- * $Author: dzuo $
+ * $Revision: 1.5 $
+ * $Date: 2002-10-08 17:46:00 $
+ * $Author: Elena $
  *
  ******************************************************************************
  *
@@ -54,11 +54,12 @@ import edu.harvard.med.hip.flex.database.*;
 /**
  * Action called when requesting to view the process history of a container
  *
- * @author     $Author: dzuo $
- * @version    $Revision: 1.4 $ $Date: 2002-02-25 16:40:41 $
+ * @author     $Author: Elena $
+ * @version    $Revision: 1.5 $ $Date: 2002-10-08 17:46:00 $
  */
 
-public class ViewContainerProcessHistoryAction extends CollaboratorAction{
+public class ViewContainerProcessHistoryAction extends CollaboratorAction
+{
     
     /**
      * Does the real work for the perform method which must be overriden by the
@@ -74,13 +75,15 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction{
      */
     public ActionForward flexPerform(ActionMapping mapping, ActionForm form,
     HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException
+    {
         ActionErrors errors = new ActionErrors();
         
         ActionForward retForward = null;
         
         // the container that was searched
         Container container = null;
+        boolean isMGC = false;
         
         /*
          * Either the container id or the container barcode parameter must
@@ -89,62 +92,100 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction{
         String containerIdS = request.getParameter(Constants.CONTAINER_ID_KEY);
         String containerBarcode =
         request.getParameter(Constants.CONTAINER_BARCODE_KEY);
+        containerBarcode = containerBarcode.toUpperCase();
         
+   
         int threadid = -1;
-        try {
-            if(containerIdS!=null && containerIdS.length() !=0 ) {
+        try
+        {
+            if(containerIdS!=null && containerIdS.length() !=0 )
+            {
                 
                 container = new Container(Integer.parseInt(containerIdS));
                 threadid = container.getThreadid();
                 
-            } else if(containerBarcode!=null && containerBarcode.length() !=0) {
+            } 
+            else if(containerBarcode!=null && containerBarcode.length() !=0)
+            {
+                
                 List containerList =
                 Container.findContainers(containerBarcode);
-                if(containerList.size() >0) {
+                if(containerList.size() >0)
+                {
                     container = (Container)containerList.get(0);
                     threadid = container.getThreadid();
+                    String let = containerBarcode.substring(0,3);
+                    
+                // check if it mgc 
+                    if ( let.equalsIgnoreCase("MGC") || let.equalsIgnoreCase("MGS") ||
+                        let.equalsIgnoreCase("MLI") || let.equalsIgnoreCase("MDN") ) 
+                        
+                    {
+                        isMGC = true;
+                    }
                 }
                 
-                
-            } else {
+            } else
+            {
                 
                 throw new FlexCoreException("Unable to find any containers with label " + containerBarcode);
             }
             
-            if(threadid <1) {
+            if(threadid <1 && !isMGC)
+            {
                 
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.container.no.process.history"));
             }
             
             
-        } catch (FlexDatabaseException fde) {
+        } catch (FlexDatabaseException fde)
+        {
             // log the error
             request.setAttribute(Action.EXCEPTION_KEY, fde);
             return mapping.findForward("error");
-        } catch (FlexCoreException fce) {
+        }
+        catch (FlexCoreException fce)
+        {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.container.querry.parameter",
             fce.getMessage()));
-        } catch (NumberFormatException nfe) {
+        } 
+        catch (NumberFormatException nfe)
+        {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.container.querry.parameter",
             nfe.getMessage()));
         }
         
-        if(! errors.empty()) {
+        if(! errors.empty())
+        {
             saveErrors(request,errors);
             Iterator iter = errors.get();
             
             return new ActionForward(mapping.getInput());
             
-        } else {
-            try {
+        } 
+        else
+        {
+            try
+            {
+                ContainerThread thread = null;
+              
+                // check if it mgc 
+                if ( isMGC )
+                {
+                    thread = ContainerThread.findMGCContainerThread( container.getLabel() );
+                }
+                else
+                {
+                     thread = ContainerThread.findContainerThread(threadid);
+                }
                 retForward=mapping.findForward("success");
-                ContainerThread thread = ContainerThread.findContainerThread(threadid);
                 request.setAttribute(Constants.THREAD_KEY, thread);
                 request.setAttribute(Constants.CONTAINER_KEY, container);
-            } catch(Exception e) {
+            } catch(Exception e)
+            {
                 retForward = mapping.findForward("error");
                 request.setAttribute(Action.EXCEPTION_KEY, e);
             }
