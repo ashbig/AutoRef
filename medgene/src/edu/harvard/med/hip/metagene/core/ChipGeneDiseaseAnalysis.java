@@ -28,9 +28,9 @@ public class ChipGeneDiseaseAnalysis {
     // But it doesn't contain the gene families theirselves.
     protected HashMap direct_children_gene_hashmap = new HashMap();
     
-    // The source for finding indirect genes. It contains all non-family genes index ids plus
-    // family gene index ids. However, it doesn't include all children genes from the families.
-    protected Vector source_for_indirect_genes = new Vector();
+    // The source for finding indirect genes. It contains all non-family genes index ids 
+    // and their score with the disease. However, it doesn't include all family and children genes.
+    protected HashMap source_for_indirect_genes = new HashMap();
     
     // The indirect_gene_hashmap contains all indirectly disease-associated genes 
     // from the input chip genes. 
@@ -56,7 +56,7 @@ public long start, end2;
         start = System.currentTimeMillis();      
     }
     
-    public Vector getSource_for_indirect_genes(){
+    public HashMap getSource_for_indirect_genes(){
         return source_for_indirect_genes;
     }    
     public TreeSet getDirect_gene_tree(){
@@ -89,6 +89,7 @@ public long start, end2;
             return;
         }
         
+        // sql_124 selects all non-family genes
         String sql_124 = "select gl.gene_index_id, gl.symbol_value, gl.locus_id, sa.statistic_score " +
 		        " from disease_and_gene_association dg, gene_index gi, "+
 		        " association_data ad, statistic_analysis sa, gene_list gl "+
@@ -99,6 +100,7 @@ public long start, end2;
 		        " and sa.statistic_id = "+stat_id+
 		        " and dg.hip_disease_id="+disease_id;
 
+        // sql_3 selects all children gene of family genes but not the family genes themselves
         String sql_3 = "SELECT gl.gene_index_id, gl.symbol_value, gl.locus_id, sa.statistic_score " +
                       " FROM disease_and_gene_association dg, gene_index gi, " +
                       " association_data ad, statistic_analysis sa, parent_list pl, " +
@@ -122,7 +124,7 @@ public long start, end2;
                 String symbol_value = rs.getString(2);
                 int locus_id = rs.getInt(3);
                 double score = rs.getDouble(4);
-                source_for_indirect_genes.add(new Integer(gene_index_id));     
+                source_for_indirect_genes.put(new Integer(gene_index_id), new Double(score));     
                 
                 ChipGene gene = new ChipGene(symbol_value, locus_id, score);   
                 if(input_type == GENE_SYMBOL_INPUT)
@@ -217,7 +219,7 @@ public long start, end2;
      *  which are already in direct gene hashmap.
      */
     
-    public void hashIndirectGenes(String input_genes, Vector source_for_indirect_genes,
+    public void hashIndirectGenes(String input_genes, HashMap source_for_indirect_genes,
                                       int input_type, int stat_id, int max_input){
         DBManager manager = new DBManager();
         Connection con = manager.connect();
@@ -240,16 +242,21 @@ public long start, end2;
             }
             else
                 break;           
-        }
-         
-        String elements = "";
-        for (int i = 0; i<source_for_indirect_genes.size(); i++){
-            elements = elements + ((Integer)(source_for_indirect_genes.elementAt(i))).intValue() + ", ";
-        }
+        }        
+        input += "''";
+        
+        String elements = "";        
+        Iterator it = source_for_indirect_genes.keySet().iterator();
+        k=0;
+        while (it.hasNext()){
+            elements = elements + ((Integer)(it.next())).intValue() + ", "; k++;
+        }       
+        System.out.println("source for indirect genes hash : " + elements + "-----------------\n" + k);
+        elements += "-1";
         
         String sql_1 = 
             "SELECT gl.symbol_value,  gl.locus_id, " + 
-            "gl.gene_index_id, max(sa.statistic_score) " +
+            "sa.statistic_score, gga.gene2_index_id " +
             "FROM gene_and_gene_association gga, association_data ad, " +
             "statistic_analysis sa, gene_index gi, gene_list gl " ;
         
@@ -262,12 +269,11 @@ public long start, end2;
                 "and gl.gene_index_id = gi.gene_index_id and gi.gene_index_id = gga.gene1_index_id " + 
                 "and gga.gene2_index_id in (" + elements + " ) " +  
                 "and gga.association_id=ad.association_id And ad.data_id=sa.data_id " +
-                "And sa.statistic_id= " + stat_id + " " + 
-                "group by gl.symbol_value, gl.locus_id, gl.gene_index_id";
+                "And sa.statistic_id= " + stat_id ;
 
         String sql_2 = 
             "SELECT gl.symbol_value,  gl.locus_id, " + 
-            "gl.gene_index_id, max(sa.statistic_score) " +
+            "sa.statistic_score, gga.gene1_index_id " +
             "FROM gene_and_gene_association gga, association_data ad, " +
             "statistic_analysis sa, gene_index gi, gene_list gl ";
         
@@ -280,63 +286,70 @@ public long start, end2;
             "and gl.gene_index_id = gi.gene_index_id and gi.gene_index_id = gga.gene2_index_id " + 
             "and gga.gene1_index_id in (" + elements + " ) " +  
             "and gga.association_id=ad.association_id And ad.data_id=sa.data_id " +
-            "And sa.statistic_id= " + stat_id + " " +
-            "group by gl.symbol_value, gl.locus_id, gl.gene_index_id";       
-                
+            "And sa.statistic_id= " + stat_id ;       
+        
+        try{
+            hashIndirectGenes_aux(con, sql_1, source_for_indirect_genes, input_type);
+            hashIndirectGenes_aux(con, sql_2, source_for_indirect_genes, input_type);
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            manager.disconnect(con);
+        }    
+
+      //System.out.println("indirect hashmap size = " + indirect_gene_hashmap.size() + " --------");
+        System.out.println("----------- indirect hash done ----------");
+    }
+    
+    
+    /**
+     * auxiliary method for hashIndirectGenes(...)    
+     */
+    protected void hashIndirectGenes_aux(Connection con, String sql, HashMap source_for_indirect_genes, int input_type)
+        throws SQLException{
+        
         Statement stmt = null;
         ResultSet rs = null;
-         
-        try {
-            stmt = con.createStatement();
-            rs = stmt.executeQuery(sql_1);
-            while(rs.next()) {
-                String gene_symbol = rs.getString(1);
-                int locus_id = rs.getInt(2);                
-                double score = rs.getDouble(4);             
-                if(input_type == GENE_SYMBOL_INPUT)
-                    indirect_gene_hashmap.put(gene_symbol, new ChipGene(gene_symbol, locus_id, score));
-                if(input_type == LOCUS_ID_INPUT)
-                    indirect_gene_hashmap.put(new Integer(locus_id), new ChipGene(gene_symbol, locus_id, score));
-            
-            }
-            rs.close();
-            
-            rs = stmt.executeQuery(sql_2);
-            while(rs.next()){
-                String gene_symbol = rs.getString(1);
-                int locus_id = rs.getInt(2);                
-                double score = rs.getDouble(4);     
-                if(input_type == GENE_SYMBOL_INPUT){                    
-                    if(indirect_gene_hashmap.containsKey(gene_symbol)){
-                        if( ((ChipGene)(indirect_gene_hashmap.get(gene_symbol))).getScore() < score )
+        
+        stmt = con.createStatement();
+        rs = stmt.executeQuery(sql);
+        while(rs.next()) {
+                double score = rs.getDouble(3);           
+                int link_gene_index_id = rs.getInt(4);                         
+                score = ((Double)(source_for_indirect_genes.get(new Integer(link_gene_index_id)))).doubleValue() + score;
+                long temp =  (long)(score * 10000 + ( score > 0 ? .5 : -.5 )); 
+                score = (double) temp / 10000;
+        
+                if(input_type == GENE_SYMBOL_INPUT){      
+                    String gene_symbol = rs.getString(1);     
+                    if(indirect_gene_hashmap.containsKey(gene_symbol)){                        
+                        if( ((ChipGene)(indirect_gene_hashmap.get(gene_symbol))).getScore() < score )                         
                             ((ChipGene)(indirect_gene_hashmap.get(gene_symbol))).setScore(score);
                     }
                     else{
+                        int locus_id = rs.getInt(2);                         
                         indirect_gene_hashmap.put(gene_symbol, new ChipGene(gene_symbol, locus_id, score));
                     }
                 }
-                if(input_type == LOCUS_ID_INPUT){                    
+                
+                if(input_type == LOCUS_ID_INPUT){    
+                    int locus_id = rs.getInt(2); 
                     if(indirect_gene_hashmap.containsKey(new Integer(locus_id))){
+                        score = ((Double)(source_for_indirect_genes.get(new Integer(link_gene_index_id)))).doubleValue() + score;
                         if( ((ChipGene)(indirect_gene_hashmap.get(new Integer(locus_id)))).getScore() < score )
                             ((ChipGene)(indirect_gene_hashmap.get(new Integer(locus_id)))).setScore(score);
                     }
                     else{
+                        String gene_symbol = rs.getString(1);                        
                         indirect_gene_hashmap.put(new Integer(locus_id), new ChipGene(gene_symbol, locus_id, score));
                     }
                 }
-            }
-            rs.close();
-             
-            stmt.close();
-        }catch(SQLException e){
-            System.out.println(e);
-        } finally{
-            manager.disconnect(con);
+
         }
-                        //System.out.println("indirect hashmap size = " + indirect_gene_hashmap.size() + " --------");
-        System.out.println("----------- indirect hash done ----------");
+        rs.close();
+        stmt.close();
     }
-    
+              
         
     /** parse the text file of chip genes, 
      *  construct the ChipGene objects and put them
@@ -471,13 +484,13 @@ public long start, end2;
         System.out.println("----- start -----");
         String text = "";
 /*
-        String text =
+        text =
         "13CDNA73\n 6H9A\n AADAC\n AARS\n AASDHPPT\n ABCA12\n ABCA2\n ABCA4\n ABCA5\n" + 
         "ABCA6\n ABCA8\n ABCB1\n ABCB11\n ABCB6\n ABCC1\n ABCC2\n ABCC5\n ABCC5\n" + 
         "ABCC9\n ABCC9\n ABCD2\n ABCD3\n ABCE1\n" +
-        "TNF GP2 CD14\n NUDT6\n HHHH\n ESR1\n ESR2\n";             
-     */   
-       
+        "TNF GP2 CD14\n NUDT6\n HHHH\n ESR1\n ESR2\n LRPAP1\n PPP2R3\n PPBP\n";             
+*/ text = "POLD1\n PMSCL1\n PMX1\n LRPAP1\n PPP2R3\n PPBP\n";        
+       /*
         try{
          
         BufferedReader in = new BufferedReader(new FileReader("c:\\data\\test.txt"));       
@@ -492,18 +505,18 @@ public long start, end2;
         }catch(Exception e){
             System.out.println(e);
         }
-        
+        */
         
 
          
 //////////////////////////////////
                                                                                         
         ChipGeneDiseaseAnalysis ana = new ChipGeneDiseaseAnalysis();  
-        ana.hashDirectGenes(483, 1, ana.LOCUS_ID_INPUT);  //402 483
+        ana.hashDirectGenes(483, 1, ana.GENE_SYMBOL_INPUT);  //402 483 482
         
 System.out.println("source for indirect gene hash = " + ana.source_for_indirect_genes.size());
-        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.LOCUS_ID_INPUT, 1, 10000);       
-        ana.analyzeInputChipGenes(text, ana.LOCUS_ID_INPUT, 10000);
+        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1, 10000);       
+        ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT, 10000);
         
         
         TreeSet direct = ana.getDirect_gene_tree();        
