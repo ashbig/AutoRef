@@ -125,7 +125,7 @@ public class EnterSourcePlateAction extends ResearcherAction {
                     mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
                 }
             } else {
-                mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
+                mapper = getContainerMapper(protocol.getProcessname(), form);
             }
                 
             Vector newContainers = mapper.doMapping(oldContainers, protocol, project, workflow);
@@ -233,5 +233,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
     // Get the workflowid from the form.
     protected int getWorkflowid(ActionForm form) {
         return ((CreateProcessPlateForm)form).getWorkflowid();
+    }
+    
+    protected ContainerMapper getContainerMapper(String processname, ActionForm form) throws FlexProcessException {
+        return StaticContainerMapperFactory.makeContainerMapper(processname);
     }
 }
