@@ -44,20 +44,30 @@ public class RearrayPlatesAction extends ResearcherAction
         ActionErrors errors = new ActionErrors();
                
         // Get the workflow and project from the form and store in request.
-        int workflowid = ((MgcImportRequestForm)form).getWorkflowid();
-        String workflowname = ((MgcImportRequestForm)form).getWorkflowname();
-        int projectid = ((MgcImportRequestForm)form).getProjectid();
-        String projectname = ((MgcImportRequestForm)form).getProjectname();
-        int protocolid = Integer.parseInt((String)request.getAttribute("protocolid"));
-        
-        FormFile rearrayFile = ((MgcCloneInfoImportForm)form).getMgcCloneFile();
-        String fileName =  ((MgcCloneInfoImportForm)form).getFileName();
+      
+        int workflowid = ((RearrayForm)form).getWorkflowid();
+        String workflowname = ((RearrayForm)form).getWorkflowname();
+        int projectid = ((RearrayForm)form).getProjectid();
+        String projectname = ((RearrayForm)form).getProjectname();
+        String processname = ((RearrayForm)form).getProcessname();
+        FormFile rearrayFile = ((RearrayForm)form).getRequestFile();
+       String platetype =  ((RearrayForm)form).getPlatetype()     ;
+       String sampletype =((RearrayForm)form).getSampletype()    ;
+       boolean isSort = ((RearrayForm)form).getIsSortBySawToothpatern();
+       boolean isArrangeBySize = ((RearrayForm)form).getIsArrangeBySize();
+       boolean isControls = ((RearrayForm)form).getIsControls() ;
+       boolean isPutOnQueue = ((RearrayForm)form).getIsPutOnQueue() ;
+        boolean isFullPlate = ((RearrayForm)form).getIsFullPlate();
+        boolean isSmall = ((RearrayForm)form).getSmall();
+        boolean isMeddium = ((RearrayForm)form).getMedium() ;
+        boolean isLarge = ((RearrayForm)form).getLarge();
+         int  wells_on_plate = ((RearrayForm)form).getWellsOnPlate();
         
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
         request.setAttribute("workflowname", workflowname);
         request.setAttribute("projectname", projectname);
-        request.setAttribute("protocolid", new Integer(protocolid));
+        request.setAttribute("processname", processname);
         
         InputStream input = null;
         try
@@ -81,11 +91,32 @@ public class RearrayPlatesAction extends ResearcherAction
         try
         {
             String username = ((User)request.getSession().getAttribute(Constants.USER_KEY)).getUsername();
-            
+            AccessManager am = AccessManager.getInstance();
+            String user_email = am.getEmail( username );
+           
+            Protocol pr = new Protocol(processname);
+            int protocolid = pr.getId();
             conn = DatabaseTransaction.getInstance().requestConnection();
-            RearrayerForPlates rearrayer = new RearrayerForPlates(conn,projectid, workflowid,protocolid,input,username);
-            rearrayer.createNewPlates();
+            
+            RearrayerForPlates rearrayer = new RearrayerForPlates(conn,projectid, workflowid,protocolid,input,user_email);
+            
+            rearrayer.setWellsNumbers(wells_on_plate);
+            rearrayer.isArrangeBySize(isArrangeBySize);
+            rearrayer.isControls(isControls);
+           // rearrayer.setSampleType(sampletype);
+            rearrayer.setSort(isSort);
+            rearrayer.isSmall(isSmall);
+            rearrayer.isMeddium(isMeddium);
+            rearrayer.isLarge(isLarge);
+            System.out.println(isPutOnQueue);
+            rearrayer.isPutOnQueue(isPutOnQueue);
+
+            rearrayer.createNewPlates(0);
+            conn.commit();
+ 
             request.getSession().setAttribute("EnterSourcePlateAction.newContainers", new Vector(rearrayer.getRearrayContainers() ) );
+            request.setAttribute("locations", Location.getLocations());
+
             return mapping.findForward("success");
         } catch (FlexDatabaseException fde)
         {

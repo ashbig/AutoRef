@@ -34,6 +34,7 @@ public class MgcImportRequestForm extends ActionForm
     protected FormFile      mgcRequestFile = null;
     protected String        workflowname = null;
     protected String        projectname = null;
+    protected String        processname = null;
     private   int           m_requiredCdslengthLimit = 70;
     private   double        m_requiredPercentIdentity = 0.95;
     private   boolean       m_isPutOnQueue = true;
@@ -53,6 +54,9 @@ public class MgcImportRequestForm extends ActionForm
     
     public void         setWorkflowname(String name)    {        this.workflowname = name;    }
     public String       getWorkflowname()    {        return workflowname;    }
+    
+    public void         setProcessname(String name)    {        this.processname = name;    }
+    public String       getProcessname()    {        return processname;    }
     
     public void         setProjectname(String name)    {        projectname = name;    }
     public String       getProjectname()    {        return projectname;    }

@@ -149,6 +149,23 @@ public class Algorithms
         return copy;
     }
     
+    
+    public static String replaceChar(String str, char oldch, char newchar)
+    {
+        StringBuffer copy = new StringBuffer();  // The reversed copy.
+        char[] ar =str.toCharArray();
+        //       from str.length() - 1 down to 0.
+        for ( int i = 0; i < ar.length;  i++ )
+        {
+            if (ar[i] == oldch ) 
+                copy.append( newchar );
+            else
+                copy.append( ar[i]);
+        }
+        
+        return copy.toString();
+    }
+    
     public static ArrayList splitString(String value, String spliter)
     {
         ArrayList res = new ArrayList();
@@ -160,6 +177,11 @@ public class Algorithms
         }
         return res;
     }
+    
+    
+   
+    
+    
     public static int numberOf(String str, char ch)
     {
         int res = 0;
