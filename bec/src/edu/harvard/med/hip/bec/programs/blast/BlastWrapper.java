@@ -31,6 +31,8 @@ public class BlastWrapper
     public static  String MGCDB=null;
     public static  String YPDB=null;
    
+    public static  String BLAST_PASS =  null;
+    
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
         {
@@ -39,10 +41,12 @@ public class BlastWrapper
             PSEUDOMONASDB="d:\\blast_db\\Pseudomonas\\genes";
             MGCDB="d:\\blast_db\\MGC\\genes";
             YPDB="d:\\blast_db\\YP\\genes";
+            BLAST_PASS =  "D:\\bio_programs\\Blast\\";
         }
             
         else
         {
+            BLAST_PASS =  "c:\\blastnew\\";
              HUMANDB="c:\\blast_db\\Human\\genes";
             YEASTDB="c:\\blast_db\\Yeast\\genes";
             PSEUDOMONASDB="c:\\blast_db\\Pseudomonas\\genes";
@@ -108,7 +112,6 @@ public class BlastWrapper
     public static final String BLAST_FAILED_IO = "Blast failed: IO exception";
     
     
-    public static final String BLAST_PASS =  "c:\\blastnew\\";
     //public static final String BLAST_PASS =  "/kotel/data/blast/";
    
     
