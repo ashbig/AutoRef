@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.14 2001-06-22 15:16:47 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.15 2001-06-22 16:34:37 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -91,7 +91,6 @@ public class Process {
      */
     public static Process findProcess(Container container, Protocol protocol)
     throws FlexDatabaseException{
-        System.out.println(" in find Process");
         Process retProcess = null;
         String sql=
         "select x.executionid, x.executionstatus, x.researcherid,"+
@@ -111,9 +110,7 @@ public class Process {
             
             ps.setInt(1, container.getId());
             ps.setInt(2, protocol.getId());
-            System.out.println("executing querry");
             rs = dt.executeQuery(ps);
-            
             // if we find a process then create it
             if(rs.next()) {
                 retProcess =

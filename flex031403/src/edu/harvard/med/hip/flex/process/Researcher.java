@@ -1,5 +1,5 @@
 /**
- * $Id: Researcher.java,v 1.12 2001-06-22 15:16:48 dongmei_zuo Exp $
+ * $Id: Researcher.java,v 1.13 2001-06-22 16:33:40 dongmei_zuo Exp $
  *
  * File     	: Researcher.java
  * Date     	: 04262001
@@ -86,8 +86,8 @@ public class Researcher {
     public Researcher(int id) throws FlexDatabaseException{
         DatabaseTransaction dt = DatabaseTransaction.getInstance();
         ResultSet rs = null;
-        System.out.println("in researcher");
         try {
+            
             rs =
             dt.executeQuery("select RESEARCHERID, RESEARCHERBARCODE, "+
             "ACTIVEFLAG_YN, RESEARCHERNAME " +

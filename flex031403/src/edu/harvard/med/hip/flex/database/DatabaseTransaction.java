@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.12 $
- * $Date: 2001-06-22 15:16:47 $
+ * $Revision: 1.13 $
+ * $Date: 2001-06-22 16:29:55 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.12 $ $Date: 2001-06-22 15:16:47 $
+ * @version    $Revision: 1.13 $ $Date: 2001-06-22 16:29:55 $
  */
 
 public class DatabaseTransaction {
@@ -64,7 +64,11 @@ public class DatabaseTransaction {
     
     // start up poolman
     static {
-        PoolMan.start();
+        try {
+            PoolMan.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     // Private constructor method. Autocommit is set to false.
     protected DatabaseTransaction() throws FlexDatabaseException {
@@ -117,7 +121,6 @@ public class DatabaseTransaction {
      */
     public Connection requestConnection(boolean autoCommit)
     throws FlexDatabaseException {
-        System.out.println("connection requested");
         Connection conn = null;
         try {
             conn = ds.getConnection();
@@ -217,7 +220,7 @@ public class DatabaseTransaction {
             
             rs = stmt.executeQuery(sql);
             crs.populate(rs);
-            return crs;
+            
             
         } catch (SQLException e) {
             throw new FlexDatabaseException(e.getMessage()+"\nSQL: "+sql);
@@ -227,6 +230,7 @@ public class DatabaseTransaction {
             closeStatement(stmt);
             closeConnection(conn);
         }
+        return crs;
     } //end executeSQL
     
     
@@ -248,7 +252,7 @@ public class DatabaseTransaction {
             crs = new CachedRowSet();
             results = stmt.executeQuery();
             crs.populate(results);
-            return crs;
+      
             
             
         } catch (SQLException e) {
@@ -256,6 +260,7 @@ public class DatabaseTransaction {
         } finally {
             closeResultSet(results);
         }
+        return crs;
     } // end executeQuery()
     
     
@@ -300,11 +305,8 @@ public class DatabaseTransaction {
      */
     public static void closeConnection(Connection conn) {
         try{
-            
-            conn.close();
-            
+            conn.close();            
         } catch(Throwable t) {
-            System.out.println("error clossing connection : ");
             t.printStackTrace();
         }
     }
@@ -318,7 +320,6 @@ public class DatabaseTransaction {
     public static void closeStatement(Statement stmt) {
         try {
             stmt.close();
-            System.out.println("connection clossed");
         } catch(Throwable t){}
     }
     
@@ -360,8 +361,10 @@ public class DatabaseTransaction {
         ResultSet rs = null;
         
         DatabaseTransaction dt = null;
-        Connection conn = null;
-        PreparedStatement ps = null;
+        Connection conn1 = null;
+        Connection conn2 = null;
+        PreparedStatement ps1 = null;
+        PreparedStatement ps2 = null;
         
         
         
@@ -371,27 +374,38 @@ public class DatabaseTransaction {
         dt = DatabaseTransaction.getInstance();
         for (int i = 0 ; i < 300 ; i++) {
             try {
-                String sql = "select * from userprofile where username=?";
-                
+                String sql1 = "select * from userprofile where username='jmunoz'";
+                String sql2 = "select * from userprofile where username='jmunoz'";
                 System.out.println("i: " + i);
                 edu.harvard.med.hip.flex.process.Process.findProcess(new edu.harvard.med.hip.flex.core.Container(200),new edu.harvard.med.hip.flex.process.Protocol(8));
-         //       conn = dt.requestConnection();
+                //new edu.harvard.med.hip.flex.process.Researcher(100);
+                conn1 = dt.requestConnection();
                 
-           //     ps = conn.prepareStatement(sql);
-             //   ps.setString(1,"jmunoz");
-               // rs = ps.executeQuery();
+               
+                ps1 = conn1.prepareStatement(sql1);
+                DatabaseTransaction.executeQuery(ps1);
+                
+                conn2 = dt.requestConnection();
+                ps2 = conn2.prepareStatement(sql2);
+                DatabaseTransaction.executeQuery(ps2);
                 
                 
             } catch(FlexDatabaseException fde) {
                 fde.printStackTrace();
             } catch(edu.harvard.med.hip.flex.core.FlexCoreException core) {
             core.printStackTrace();
-               
+             
         }
+            catch(SQLException sqlE) {
+                sqlE.printStackTrace();
+            }
             finally {
                 DatabaseTransaction.closeResultSet(rs);
-                DatabaseTransaction.closeStatement(ps);
-                DatabaseTransaction.closeConnection(conn);
+                DatabaseTransaction.closeStatement(ps2);
+                DatabaseTransaction.closeConnection(conn1);
+                DatabaseTransaction.closeStatement(ps1);
+                DatabaseTransaction.closeConnection(conn2);
+                
             }
         }
         
