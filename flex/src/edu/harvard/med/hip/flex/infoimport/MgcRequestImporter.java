@@ -38,9 +38,9 @@ public class MgcRequestImporter
     public static final String DILIM = "\t!";
     public static final String DEFAULT = "NA";
 
-   // public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
+    public static final String BLASTABLE_DATABASE_NAME = "MGC/genes";
     //public static final String BLASTABLE_DATABASE_NAME = "E:\\flexDev\\MGC\\genes";    
-   public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";
+  // public static final String BLASTABLE_DATABASE_NAME = "c:\\MGC\\genes";
  
     private Project             m_Project = null;
     private Workflow            m_workflow = null;
@@ -93,19 +93,19 @@ public class MgcRequestImporter
         ArrayList  sequenceNotFound = new ArrayList();
         boolean prev_step = true;
         //parse file and fill list of GI;
-         System.out.println("status " + prev_step +" start to read file");
+        // System.out.println("status " + prev_step +" start to read file");
         prev_step =  parseRequestFile( requestInput  , requestGI) ;
-         System.out.println("status " + prev_step +" finished to read file");
+        // System.out.println("status " + prev_step +" finished to read file");
         //search db for the sequences of MgcClones;
         //add matching sequences to request GI numbers;
         ArrayList notMatchedGI = new ArrayList();
         if (prev_step ) prev_step = matchGINumbersToMgcClones(requestGI, sequencesMatchedByGI, notMatchedGI);
         //get sequence for not matching GI
-        System.out.println("status " + prev_step +" matched GI");
+       // System.out.println("status " + prev_step +" matched GI");
         Hashtable sequencesToBlat = new Hashtable();
         if (prev_step) prev_step = readSequences(notMatchedGI, sequencesToBlat, sequenceNotFound) ;
         //blast sequences for not matching GI;
-        System.out.println("status " + prev_step + " get sequences");
+       // System.out.println("status " + prev_step + " get sequences");
         if (prev_step) prev_step = blastSequences(sequencesToBlat, sequencesMatchedByBlast,
                                                     sequencesNotMatchedByBlast,  errorsOnBlastGI);
         //save request to db
