@@ -53,6 +53,7 @@ public class Constants {
     
     // key used to find The flex sequence id.
     public static final String FLEX_SEQUENCE_ID_KEY = "FLEX_SEQUENCE_ID";
+   
     
     // key used to find the fasta formated colorized sequence
     public static final String FASTA_COLOR_SEQUENCE_KEY =
@@ -172,6 +173,19 @@ public class Constants {
     
     //forward name for set project parameters for sequencing 
     public static final String SEQ_SET_PROJECT_PARAMS = "SEQ_SET_PROJECT_PARAMS";
+    
+      // key used to find The full sequence id.
+    public static final String FULL_SEQUENCE_ID_KEY = "FULL_SEQUENCE_ID";
+     // key used to find the full sequence
+    public static final String FULL_SEQUENCE_KEY = "FULL_SEQUENCE";
+    // key used to find the  formated colorized sequence
+    public static final String COLOR_SEQUENCE_KEY = "COLOR_SEQUENCE";
+    public static final String BLAST_FILE_NAME = "BLAST_FILE_NAME";
+    public static final String FULL_SEQUENCE_BLAST_N_FORMATED = 
+        "FULL_SEQUENCE_BLAST_N_FORMATED";
+    public static final String FULL_SEQUENCE_BLAST_P_FORMATED = 
+        "FULL_SEQUENCE_BLAST_P_FORMATED";
+    
     /** Creates new Constants */
     private Constants() {
     }
