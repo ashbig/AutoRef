@@ -119,7 +119,7 @@ public abstract class ProcessRunner implements Runnable
                 title+"\nPlease find attached report file for your request\n Requested item ids:\n"+m_items, 
                 m_file_list_reports);
             }
-            if (m_file_list_reports == null)
+            if (m_file_list_reports == null || m_file_list_reports.size()==0 )
             {
                 String text = title +"\n Process finished \n";
                 if (m_items != null && m_items.length() > 0) text+=" Items processed:\n"+m_items;
