@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.16 2001-06-25 15:04:49 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.17 2001-06-25 15:24:23 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -266,6 +266,22 @@ public class Process {
     public void addSampleLineage(SampleLineage s) {
         s.setExecutionid(executionid);
         sampleLineageSet.addElement(s);
+    }
+ 
+    /**
+     * Set the sample lineage field.
+     *
+     * @param sampleLineageSet A list of SampleLineage object.
+     */
+    public void setSampleLineageSet(Vector sampleLineageSet) {
+        if(sampleLineageSet == null)
+            return;
+        
+        Enumeration enum = sampleLineageSet.elements();
+        while(enum.hasMoreElements()) {
+            SampleLineage s = (SampleLineage)enum.nextElement();
+            addSampleLineage(s);
+        }
     }
     
     /**
