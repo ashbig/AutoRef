@@ -1,6 +1,7 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="java.util.*" %> 
+<%@ page import="edu.harvard.med.hip.flex.util.*" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -13,7 +14,7 @@
 </head>
 <body>
 
-<h2><bean:message key="flex.name"/> : Process full plates</h2>
+<h2><bean:message key="flex.name"/> : Process plates</h2>
 <hr>
 <html:errors/>
 <p>
@@ -40,7 +41,7 @@
     <td><bean:write name="sequences_count" /></td>
     </tr>
 <tr>
-    <td class="prompt">Number of full plates:</td>
+    <td class="prompt">Number of plates:</td>
     <td><bean:write name="full_plates" /></td>
     </tr>
 </table>
@@ -54,26 +55,57 @@ if (plates.size() > 0)
 
 <table  cellpadding=0 cellspacing=2 border=1>
     <tr class="headerRow">
-        <TH>Plate Number</TH>
-        <TH>Sequences</TH>
-        <TH>Marker</TH>
+        <TH>&nbsp;&nbsp;Plate Number&nbsp;&nbsp;</TH>
+        
+        <TH>&nbsp;&nbsp;Marker&nbsp;&nbsp;</TH>
+        <TH>&nbsp;&nbsp;Sequences&nbsp;&nbsp;</TH>
+        <TH>&nbsp;&nbsp;MGC Containers&nbsp;&nbsp;</TH>
     </TR>
 <% 
-int plate_number = 1;
-for (int plate_count = 0 ; plate_count < plates.size();      )
+
+for (int plate_count = 0 ; plate_count < plates.size();    plate_count++  )
 {
+        PlateDescription plate = (PlateDescription)plates.get(plate_count);
 %>
 <tr>
         <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
-            <TD> <%= plate_number %>  </TD>
-            <TD> <%= plates.get(plate_count)     %> </TD>
-            <TD> <%= plates.get(plate_count + 1) %>    </TD>
+<% if ( !plate.getStatus() ) 
+{%>
+
+            <TD><font color=red bold=true> <%= (plate_count+1) %> </font> </TD>
+
+<%} 
+else
+{%>
+            <TD> <%= (plate_count + 1)%>  </TD>
+<%}%>
+            <TD> <%= plate.getMarker()     %> </TD>
+            <TD> <%= plate.getNumberOfSequences() %>    </TD>
+            <TD> 
+                        <% for (int container_count =0; container_count < plate.getContainers().size(); container_count++)
+                        {
+                            ContainerDescription desc = (ContainerDescription)plate.getContainers().get(container_count);
+                            if ( !desc.getStatus() )
+                            {
+                            %>
+                            <font color=red >
+                                <%= desc.getLabel() %>
+                            </font>
+                            <%
+                            }
+                            else
+                            {
+                            %>
+                                <%= desc.getLabel() %>
+                            <%
+                            }
+                        }%>
+            </TD>    
           </flex:row>
           </tr>
   
 <% 
-plate_count += 2;
- plate_number++;
+
 }
 %>
 </TABLE>
@@ -82,8 +114,8 @@ plate_count += 2;
  <td class="prompt">Is full plate required?</td>
     <td>
          
-         <html:radio property="isFullPlate" value="false"/>Yes
-       <html:radio property="isFullPlate" value="true"/>No
+         <html:radio property="isFullPlate" value="true"/>Yes
+       <html:radio property="isFullPlate" value="false"/>No
     </td>
 </tr> 
 </table>
