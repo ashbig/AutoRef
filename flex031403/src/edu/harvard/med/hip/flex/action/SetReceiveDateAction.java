@@ -63,7 +63,7 @@ public class SetReceiveDateAction extends ResearcherAction {
         ReceiveOligoOrdersForm receiveOligoForm = new ReceiveOligoOrdersForm();
         String currentDate = getCurrentDate();
         receiveOligoForm.setReceiveDate(currentDate);
-        System.out.println("current date: " + currentDate);
+        //System.out.println("current date: " + currentDate);
         request.setAttribute("ReceiveOligoOrdersForm",receiveOligoForm);
         return (mapping.findForward("success"));
     }

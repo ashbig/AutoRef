@@ -129,7 +129,7 @@ public class OligoPlater {
         OligoPattern[] geneArray = new OligoPattern[0];
         geneArray = (OligoPattern[]) oligoPatternList.toArray(geneArray);
         oligoPatternList = null;
-        System.out.println("Sorting.");
+        //System.out.println("Sorting.");
         Arrays.sort(geneArray,comparator);
         
         // Map genes to plates and wells, with 94 genes per plate.
@@ -197,15 +197,15 @@ public class OligoPlater {
                     continue;
                 }
                 
-                System.out.println("gene index: "+currentGeneIndex);
+                //System.out.println("gene index: "+currentGeneIndex);
                 // Output lower gene.
                 currentGene = geneArray[currentGeneIndex];
                 
                 // generate three oligo sample objects and insert into sample table
                 // also a record for each oligo sample is inserted into containercell table
                 oligoSample_5p = generateOligoSample(currentGene,"5p", containerId_5p, well);
-                System.out.println("PlateID: "+containerId_5p +"; " + "5p lower oligo well: "+ well + "; "
-                + "sampleID: "+ oligoSample_5p.getId() +"; "+ "oligoID: "+oligoSample_5p.getOligoid()+"; " + currentGene.getCDSLength());
+                //System.out.println("PlateID: "+containerId_5p +"; " + "5p lower oligo well: "+ well + "; "
+                //+ "sampleID: "+ oligoSample_5p.getId() +"; "+ "oligoID: "+oligoSample_5p.getOligoid()+"; " + currentGene.getCDSLength());
                 container_5p.addSample(oligoSample_5p);
                 
                 plateWriter_5p.write(container_5p.getLabel()+"\t");
@@ -214,8 +214,8 @@ public class OligoPlater {
                 plateWriter_5p.write(oligoSample_5p.getPosition()+"\n");
                 
                 oligoSample_3s = generateOligoSample(currentGene,"3s", containerId_3s, well);
-                System.out.println("PlateID: "+containerId_3s+"; " + "3s lower oligo well: "+ well + "; "
-                + "sampleID: "+ oligoSample_3s.getId() +"; "+oligoSample_3s.getConstructid()+"; " + currentGene.getCDSLength());
+                //System.out.println("PlateID: "+containerId_3s+"; " + "3s lower oligo well: "+ well + "; "
+                //+ "sampleID: "+ oligoSample_3s.getId() +"; "+oligoSample_3s.getConstructid()+"; " + currentGene.getCDSLength());
                 container_3s.addSample(oligoSample_3s);
                 
                 plateWriter_3s.write(container_3s.getLabel()+"\t");
@@ -224,8 +224,8 @@ public class OligoPlater {
                 plateWriter_3s.write(oligoSample_3s.getPosition()+"\n");
                 
                 oligoSample_3op = generateOligoSample(currentGene,"3op", containerId_3op, well);
-                System.out.println("PlateID: "+containerId_3op+"; " + "3op lower oligo well: "+ well + "; "
-                + "sampleID: "+ oligoSample_3op.getId() +"; "+oligoSample_3op.getConstructid()+"; " +currentGene.getCDSLength());
+                //System.out.println("PlateID: "+containerId_3op+"; " + "3op lower oligo well: "+ well + "; "
+                //+ "sampleID: "+ oligoSample_3op.getId() +"; "+oligoSample_3op.getConstructid()+"; " +currentGene.getCDSLength());
                 container_3op.addSample(oligoSample_3op);
                 
                 plateWriter_3op.write(container_3op.getLabel()+"\t");
@@ -245,19 +245,19 @@ public class OligoPlater {
                 
                 // generate three oligo sample objects and insert them into the sample table
                 oligoSample_5p = generateOligoSample(currentGene,"5p", containerId_5p, well);
-                System.out.println("PlateID: "+containerId_5p +"; " + "5p upper oligo well: "+ well + "; "
-                + "sampleID: "+ oligoSample_5p.getId() + "; "+"oligoID: "+oligoSample_5p.getOligoid()+"; " + currentGene.getCDSLength());
+                //System.out.println("PlateID: "+containerId_5p +"; " + "5p upper oligo well: "+ well + "; "
+                //+ "sampleID: "+ oligoSample_5p.getId() + "; "+"oligoID: "+oligoSample_5p.getOligoid()+"; " + currentGene.getCDSLength());
                 container_5p.addSample(oligoSample_5p);
                 
                 plateWriter_5p.write(container_5p.getLabel()+"\t");
                 plateWriter_5p.write(currentGene.getOligoId_5p()+"\t");
                 plateWriter_5p.write(currentGene.getOligoseq_5p()+"\t");
-                System.out.println("5p oligo seq is: "+ currentGene.getOligoseq_5p());
+                //System.out.println("5p oligo seq is: "+ currentGene.getOligoseq_5p());
                 plateWriter_5p.write(oligoSample_5p.getPosition()+"\n");
                 
                 oligoSample_3s = generateOligoSample(currentGene,"3s", containerId_3s, well);
-                System.out.println("PlateID: "+containerId_3s+"; " + "3s upper oligo well: "+ well + "; "
-                + "sampleID: "+ oligoSample_3s.getId() +"; " + currentGene.getCDSLength());
+                //System.out.println("PlateID: "+containerId_3s+"; " + "3s upper oligo well: "+ well + "; "
+                //+ "sampleID: "+ oligoSample_3s.getId() +"; " + currentGene.getCDSLength());
                 container_3s.addSample(oligoSample_3s);
                 
                 plateWriter_3s.write(container_3s.getLabel()+"\t");
@@ -266,8 +266,8 @@ public class OligoPlater {
                 plateWriter_3s.write(oligoSample_3s.getPosition()+"\n");
                 
                 oligoSample_3op = generateOligoSample(currentGene,"3op", containerId_3op, well);
-                System.out.println("PlateID: "+containerId_3op+"; " + "3op upper oligo well: "+ well + "; "
-                + "sampleID: "+ oligoSample_3op.getId() +"; " + currentGene.getCDSLength());
+                //System.out.println("PlateID: "+containerId_3op+"; " + "3op upper oligo well: "+ well + "; "
+                //+ "sampleID: "+ oligoSample_3op.getId() +"; " + currentGene.getCDSLength());
                 container_3op.addSample(oligoSample_3op);
                 
                 plateWriter_3op.write(container_3op.getLabel()+"\t");
@@ -278,7 +278,7 @@ public class OligoPlater {
             } //inner while to fill oligo plate wells
             
             currentGeneIndex += 47;
-            System.out.println("next plate gene index: "+currentGeneIndex);
+            //System.out.println("next plate gene index: "+currentGeneIndex);
         } //outter while to fill oligo plates
         
         //add controls to oligo plates
@@ -310,13 +310,13 @@ public class OligoPlater {
         
         // generate new container header object
         container_5p = new Container(plateType, location,label_5p);
-        System.out.println("Created the 5p oligo plate: "+ container_5p.getId());
+        //System.out.println("Created the 5p oligo plate: "+ container_5p.getId());
         
         container_3s = new Container(plateType, location,label_3s);
-        System.out.println("Created the 3s oligo plate: "+ container_3s.getId());
+        //System.out.println("Created the 3s oligo plate: "+ container_3s.getId());
         
         container_3op = new Container(plateType, location,label_3op);
-        System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
+        //System.out.println("Created the 3op oligo plate: "+ container_3op.getId());
         
         plateset = new Plateset(container_5p.getId(), container_3op.getId(),container_3s.getId());
         int platesetId = plateset.getId();
@@ -327,9 +327,9 @@ public class OligoPlater {
         container_5p.setLabel(label_5p);
         container_3s.setLabel(label_3s);
         container_3op.setLabel(label_3op);
-        System.out.println("5p oligo plate label: "+ label_5p);
-        System.out.println("3s oligo plate label: "+ label_3s);
-        System.out.println("3op oligo plate label: "+ label_3op);
+        //System.out.println("5p oligo plate label: "+ label_5p);
+        //System.out.println("3s oligo plate label: "+ label_3s);
+        //System.out.println("3op oligo plate label: "+ label_3op);
         
     }
     
@@ -403,8 +403,8 @@ public class OligoPlater {
         // insert process execution record into process execution table
         process = new Process(protocol,status,r);
         
-        System.out.println("Insert process execution for generate oligo orders...");
-        System.out.println("Generate oligo orders Execution ID: "+ process.getExecutionid());
+        //System.out.println("Insert process execution for generate oligo orders...");
+        //System.out.println("Generate oligo orders Execution ID: "+ process.getExecutionid());
         
         //Insert one process input records for each output construct design
         //(two per sequence)
@@ -413,7 +413,7 @@ public class OligoPlater {
         Construct construct = null;
         ConstructProcessObject cpo = null;
         int constructId = -1;
-        System.out.println("Inserting construct process output object...");
+        //System.out.println("Inserting construct process output object...");
         while (iter.hasNext()){
             construct = (Construct)iter.next();
             constructId = construct.getId();
@@ -452,7 +452,7 @@ public class OligoPlater {
         queueItem = new QueueItem(container_3op, protocol);
         containerQueueItemList.add(queueItem);
         
-        System.out.println("Adding receive oligo plates to queue...");
+        //System.out.println("Adding receive oligo plates to queue...");
         containerQueue.addQueueItems(containerQueueItemList, conn);
     } //insertReceiveOligoQueue
     

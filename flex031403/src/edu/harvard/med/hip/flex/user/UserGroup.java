@@ -42,7 +42,7 @@ public class UserGroup {
             }
         }catch (SQLException sqlex) { sqlex.printStackTrace();
         }catch (FlexDatabaseException ex) {
-            System.out.println("Error: "+ex.getMessage());
+            System.err.println("Error: "+ex.getMessage());
         }
         finally {DatabaseTransaction.closeResultSet(rs);} 
         return menulist;

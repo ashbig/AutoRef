@@ -60,7 +60,7 @@ public class PrintOligoPlateBarcodeAction extends ResearcherAction {
         
         while (iter.hasNext()) {
             Container container = (Container)iter.next();
-            System.out.println("Printing barcode: "+ container.getLabel());
+            //System.out.println("Printing barcode: "+ container.getLabel());
             String label = PrintLabel.execute(container.getLabel());
             
         } //while

@@ -61,7 +61,7 @@ public class PrintBarcodeAction extends ResearcherAction {
         for(int i=0; i<newContainers.size(); i++) {
             Container c = (Container)newContainers.elementAt(i);
             String status = PrintLabel.execute(c.getLabel());
-            System.out.println("Printing barcode: "+status);
+            //System.out.println("Printing barcode: "+status);
         }
         
         return (mapping.findForward("success"));   

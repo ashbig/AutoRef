@@ -51,9 +51,9 @@ public class SubProtocol {
                 this.description = rs.getString("SUBPROTOCOLDESCRIPTION");
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            //System.out.println(ex);
         } catch (FlexDatabaseException ex) {
-            System.out.println(ex);
+            //System.out.println(ex);
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }

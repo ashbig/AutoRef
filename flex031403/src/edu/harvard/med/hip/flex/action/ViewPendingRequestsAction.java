@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.8 $
- * $Date: 2001-07-19 18:00:38 $
- * $Author: jmunoz $
+ * $Revision: 1.9 $
+ * $Date: 2001-07-20 19:53:15 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -56,8 +56,8 @@ import org.apache.struts.action.*;
  * Action that takes care of setting up objects to use in the ViewPendingRequestUI.
  *
  *
- * @author     $Author: jmunoz $
- * @version    $Revision: 1.8 $ $Date: 2001-07-19 18:00:38 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.9 $ $Date: 2001-07-20 19:53:15 $
  */
 
 public class ViewPendingRequestsAction extends WorkflowAction{
@@ -176,7 +176,7 @@ public class ViewPendingRequestsAction extends WorkflowAction{
         } finally {
             
             if(errors.size() > 0) {
-                System.out.println("found error");
+                //System.out.println("found error");
                 saveErrors(request,errors);
                 retForward = new ActionForward(mapping.getInput());
             }

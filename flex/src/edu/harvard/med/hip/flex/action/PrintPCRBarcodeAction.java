@@ -61,10 +61,10 @@ public class PrintPCRBarcodeAction extends ResearcherAction {
         Container pcrClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.pcrClosed");
 
         String status = PrintLabel.execute(pcrOpen.getLabel());
-        System.out.println("Printing barcode: "+status);
+        //System.out.println("Printing barcode: "+status);
         
         status = PrintLabel.execute(pcrClosed.getLabel());
-        System.out.println("Printing barcode: "+status);
+        //System.out.println("Printing barcode: "+status);
         
         return (mapping.findForward("success"));   
     }

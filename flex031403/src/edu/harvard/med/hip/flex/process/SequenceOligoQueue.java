@@ -150,7 +150,7 @@ public class SequenceOligoQueue {
                 stop = rs.getInt(3);
                 seq = new Sequence(id,start,stop);
                 itemlist.add(seq);
-                System.out.println("sequence ID read from queue: "+id);
+                //System.out.println("sequence ID read from queue: "+id);
             } // while
             
         } catch (SQLException sqlex) {

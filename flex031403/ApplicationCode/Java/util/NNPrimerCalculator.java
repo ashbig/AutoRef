@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.3 2001-05-23 14:51:51 wenhong_mar Exp $
+ * $Id: NNPrimerCalculator.java,v 1.4 2001-07-20 19:53:14 dzuo Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -294,8 +294,8 @@ public class NNPrimerCalculator implements PrimerCalculator
 		Oligo threepOligo = null;
 		String type = "threeStop";
 		String subSeq;
-		System.out.println("The 3s fragment is:");
-		System.out.println(sequence.getSeqFragmentStop());
+		//System.out.println("The 3s fragment is:");
+		//System.out.println(sequence.getSeqFragmentStop());
 		//convert seq fragment to its reverse compliment
 		subSeq = getReverseComplement(sequence.getSeqFragmentStop());
 		threepOligo = calTm(subSeq, type);
@@ -318,8 +318,8 @@ public class NNPrimerCalculator implements PrimerCalculator
 		//get rid of the stop codon at the end of the seq
 		subSeq = subSeq.substring(0, (subSeq.length()-3));
 
-		System.out.println("The 3op fragment is:");
-		System.out.println(subSeq);
+		//System.out.println("The 3op fragment is:");
+		//System.out.println(subSeq);
 
 		subSeq = getReverseComplement(subSeq);
 		threepOpenOligo = calTm(subSeq, type);
@@ -333,7 +333,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 		try {
 			calculator.test();
 		} catch (FlexDatabaseException e) {
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.4 2001-05-12 20:44:55 dongmei_zuo Exp $
+ * $Id: Request.java,v 1.5 2001-07-20 19:53:14 dzuo Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -148,7 +148,7 @@ public class Request {
 			r.insert(t);
 			t.abort();
 		} catch (FlexDatabaseException e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: GelImageViewer.java,v 1.3 2001-05-24 14:49:03 dongmei_zuo Exp $
+ * $Id: GelImageViewer.java,v 1.4 2001-07-20 19:53:15 dzuo Exp $
  *
  * File     	: GelImage.java 
  * Date     	: 05102001
@@ -176,9 +176,9 @@ public class GelImageViewer {
 	 	try{
 	 		gelFile= v.findGel4Clone(4221);
 	 	} catch (FlexDatabaseException e){
-	 		System.out.println(e);
+	 		System.err.println(e);
 	 	}
-	 	System.out.println("The gel file name is: " + gelFile);	
+	 	//System.out.println("The gel file name is: " + gelFile);	
 	 } //main
 	
 }

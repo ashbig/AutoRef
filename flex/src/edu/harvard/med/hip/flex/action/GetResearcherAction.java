@@ -174,7 +174,7 @@ public class GetResearcherAction extends ResearcherAction{
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);            
                 String status = PrintLabel.execute(newContainer.getLabel());
-                System.out.println("Printing barcode: "+status);
+                //System.out.println("Printing barcode: "+status);
             }
 
             // Remove everything from the session.                                   

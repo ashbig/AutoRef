@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.6 2001-07-09 16:35:18 wenhong_mar Exp $
+ * $Id: NNPrimerCalculator.java,v 1.7 2001-07-20 19:53:15 dzuo Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * @File     	: NNPrimerCalculator.java 
@@ -190,8 +190,8 @@ public class NNPrimerCalculator implements PrimerCalculator
                    
                 //testing...
                 int oligoId = oligo.getOligoID();
-                System.out.println("OligoId: " + oligoId);
-                System.out.println("OligoSeq: " + oligoSeq);
+                //System.out.println("OligoId: " + oligoId);
+                //System.out.println("OligoSeq: " + oligoSeq);
                 
 		return oligo;
 	} //calTm
@@ -279,7 +279,7 @@ public class NNPrimerCalculator implements PrimerCalculator
 		String subSeq;
 		
 		subSeq = sequence.getSeqFragmentStart();
-                System.out.println("seq 5p fragment: "+ subSeq);
+                //System.out.println("seq 5p fragment: "+ subSeq);
 		fivepOligo = calTm(subSeq, type);		
 
 		return fivepOligo;		
@@ -295,8 +295,8 @@ public class NNPrimerCalculator implements PrimerCalculator
 		Oligo threepOligo = null;
 		String type = "3s";
 		String subSeq;
-		System.out.println("The 3s fragment is:");
-		System.out.println(sequence.getSeqFragmentStop());
+		//System.out.println("The 3s fragment is:");
+		//System.out.println(sequence.getSeqFragmentStop());
 		//convert seq fragment to its reverse compliment
 		subSeq = getReverseComplement(sequence.getSeqFragmentStop());
 		threepOligo = calTm(subSeq, type);
@@ -319,8 +319,8 @@ public class NNPrimerCalculator implements PrimerCalculator
 		//get rid of the stop codon at the end of the seq
 		subSeq = subSeq.substring(0, (subSeq.length()-3));
 
-		System.out.println("The 3op fragment is:");
-		System.out.println(subSeq);
+		//System.out.println("The 3op fragment is:");
+		//System.out.println(subSeq);
 
 		subSeq = getReverseComplement(subSeq);
 		threepOpenOligo = calTm(subSeq, type);
@@ -342,28 +342,28 @@ public class NNPrimerCalculator implements PrimerCalculator
                 
                 try{
 		Oligo result = calculateFivepOligo(testSeq);
-		System.out.println(result.getSequence());
-		System.out.println(result.getOligoLength());
-		System.out.println(result.getGatewayOligoSequence());
-		System.out.println(result.getType());
-		System.out.println(result.getTm());
+		//System.out.println(result.getSequence());
+		//System.out.println(result.getOligoLength());
+		//System.out.println(result.getGatewayOligoSequence());
+		//System.out.println(result.getType());
+		//System.out.println(result.getTm());
 
 		Oligo result1 = calculateThreepCloseOligo(testSeq);
-		System.out.println(result1.getSequence());
-		System.out.println(result1.getOligoLength());
-		System.out.println(result1.getGatewayOligoSequence());
-		System.out.println(result1.getType());
-		System.out.println(result1.getTm());
+		//System.out.println(result1.getSequence());
+		//System.out.println(result1.getOligoLength());
+		//System.out.println(result1.getGatewayOligoSequence());
+		//System.out.println(result1.getType());
+		//System.out.println(result1.getTm());
 
 		Oligo result2 = calculateThreepOpenOligo(testSeq);
-		System.out.println(result2.getSequence());
-		System.out.println(result2.getOligoLength());
-		System.out.println(result2.getGatewayOligoSequence());
-		System.out.println(result2.getType());
-		System.out.println(result2.getTm());
+		//System.out.println(result2.getSequence());
+		//System.out.println(result2.getOligoLength());
+		//System.out.println(result2.getGatewayOligoSequence());
+		//System.out.println(result2.getType());
+		//System.out.println(result2.getTm());
                 }
                 catch(FlexDatabaseException e){
-                  System.out.println(e.getMessage());  
+                  System.err.println(e.getMessage());  
                 }
 	}
 

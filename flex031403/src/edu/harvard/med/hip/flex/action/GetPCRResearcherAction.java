@@ -163,9 +163,9 @@ public class GetPCRResearcherAction extends ResearcherAction {
         
             // Print the barcode
             String status = PrintLabel.execute(pcrOpenContainer.getLabel());
-            System.out.println("Printing barcode: "+status);
+            //System.out.println("Printing barcode: "+status);
             status = PrintLabel.execute(pcrClosedContainer.getLabel());
-            System.out.println("Printing barcode: "+status);
+            //System.out.println("Printing barcode: "+status);
 
              // Commit the changes to the database.
             DatabaseTransaction.commit(conn);

@@ -83,8 +83,8 @@ public class ConstructGenerator {
             cdsLength = seq.getCDSLength();
             count++;
             
-            System.out.println("Calculate oligos for sequence count: " + count);
-            System.out.println("SequenceID: " + seqId + "   " + cdsLength);
+            //System.out.println("Calculate oligos for sequence count: " + count);
+            //System.out.println("SequenceID: " + seqId + "   " + cdsLength);
             // calculate all three types of oligos for each sequence
             // and insert oligo infor into the oligo table
             try{
@@ -113,11 +113,11 @@ public class ConstructGenerator {
             open = new Construct(seq,result_5p,result_3op, "FUSION", pairId);            
             constructList.add(close);
             constructList.add(open);
-            System.out.println("inserting constructs: ");
+            //System.out.println("inserting constructs: ");
             close.insert(conn);
             open.insert(conn);
-            System.out.println("close construct ID: " + close.getId());
-            System.out.println("open construct ID: " + open.getId());
+            //System.out.println("close construct ID: " + close.getId());
+            //System.out.println("open construct ID: " + open.getId());
             
             //create the OligoPattern object and store it in a linked list
             pattern = new OligoPattern(oligoID_5p, oligoID_3s, oligoID_3op, 
@@ -157,8 +157,8 @@ public class ConstructGenerator {
         process = new Process(protocol,status,r);
         int executionId = process.getExecutionid();
         process.insert(conn);
-        System.out.println("Insert process execution for design constructs...");
-        System.out.println("Design Construct Execution ID: "+ process.getExecutionid());
+        //System.out.println("Insert process execution for design constructs...");
+        //System.out.println("Design Construct Execution ID: "+ process.getExecutionid());
         
         //insert sequence input process objects
         String ioFlag = "I";
@@ -167,7 +167,7 @@ public class ConstructGenerator {
         SequenceProcessObject spo = null;
         int seqId = -1;
         
-        System.out.println("Inserting sequence input object...");
+        //System.out.println("Inserting sequence input object...");
         while (iter.hasNext()) {
             seq = (Sequence) iter.next(); //retrieves one sequence from the list
             seqId = seq.getId();
@@ -182,7 +182,7 @@ public class ConstructGenerator {
         Construct construct = null;
         ConstructProcessObject cpo = null;
         int constructId = -1;
-        System.out.println("Inserting construct process output object...");
+        //System.out.println("Inserting construct process output object...");
         while (iter.hasNext()){
             construct = (Construct)iter.next();
             constructId = construct.getId();
@@ -207,7 +207,7 @@ public class ConstructGenerator {
             constructQueueItemList.add(queueItem);           
         } //while
         
-        System.out.println("Adding constructs to queue...");
+        //System.out.println("Adding constructs to queue...");
         constructQueue.addQueueItems(constructQueueItemList, conn); 
     }
     

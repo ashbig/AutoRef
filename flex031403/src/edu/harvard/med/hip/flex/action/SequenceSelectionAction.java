@@ -176,7 +176,6 @@ public class SequenceSelectionAction extends FlexAction {
                 return (mapping.findForward("success"));
             }
         } catch (Exception ex) {
-            System.out.println(ex);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }    

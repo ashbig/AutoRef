@@ -71,12 +71,12 @@ public class ContainerProcessObject extends ProcessObject {
             c = t.requestConnection();
             seqobject.insert(c);
         } catch (FlexDatabaseException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         } finally {
             try {
                 c.close();
             } catch (SQLException ex) {
-                System.out.println(ex);
+                System.err.println(ex);
             }
         }
     }

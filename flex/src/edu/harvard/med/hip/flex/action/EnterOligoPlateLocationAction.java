@@ -79,7 +79,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
                 int locationid = oligoPlateLocation.getId();
                 platesetid = container.getPlatesetid();
                 container.updateLocation(locationid, conn);
-                System.out.println("update the location for container: "+container.getLabel());
+                //System.out.println("update the location for container: "+container.getLabel());
                 DatabaseTransaction.commit(conn);
             }//while
             
@@ -93,7 +93,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             //check plateset to see whether all of the oligo plates
             //belong to the same plateset have been received
             boolean complete = checkPlateset(platesetid);
-            System.out.println("The plateset is ready for PCR: "+ complete);
+            //System.out.println("The plateset is ready for PCR: "+ complete);
             if (complete) {
                 insertPCRQueue(platesetid, conn);
                 removeReceiveOligoQueue(containerList, conn);
@@ -131,7 +131,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             if (count < 3) {
                 complete = false;
             }
-            System.out.println("total places received: "+ count);
+            //System.out.println("total places received: "+ count);
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException("Error occured while check plateset: "+platesetid+"\n"+"\nSQL: "+sqlE);
         } finally {
@@ -185,7 +185,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         QueueItem queueItem = new QueueItem(plateset, protocol);
         platesetQueueItemList.add(queueItem);
         
-        System.out.println("Adding generate PCR plates to queue...");
+        //System.out.println("Adding generate PCR plates to queue...");
         platesetQueue.addQueueItems(platesetQueueItemList, conn);
     } //insertPCRQueue
     

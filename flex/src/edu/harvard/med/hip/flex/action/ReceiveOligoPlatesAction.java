@@ -68,12 +68,12 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
             researcher = new Researcher(barcode);
             protocol = new Protocol("receive oligo plates");
         } catch (FlexProcessException ex) {
-            System.out.println(ex);
+            //System.out.println(ex);
             errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         } catch (FlexDatabaseException ex) {
-            System.out.println(ex);
+            //System.out.println(ex);
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
         }
@@ -82,9 +82,9 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         try{
             process = new edu.harvard.med.hip.flex.process.Process(protocol,
             edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
-            System.out.println("process execution receive oligo plates created");
+            //System.out.println("process execution receive oligo plates created");
         } catch(FlexDatabaseException dbex){
-            System.out.println(dbex);
+            //System.out.println(dbex);
             request.setAttribute(Action.EXCEPTION_KEY, dbex);
             return (mapping.findForward("error"));
         }
@@ -97,13 +97,13 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         Connection conn = null;
         ListIterator iter = ids.listIterator();
         Container container = null;
-        System.out.println("Total labels entered by user: "+ ids.size());
+        //System.out.println("Total labels entered by user: "+ ids.size());
         
         //insert receive plates process execution record
         //for each plate received.
         while (iter.hasNext()) {
             String label = (String)iter.next();
-            System.out.println("The oligo plate label is: "+label);
+            //System.out.println("The oligo plate label is: "+label);
             
             // Validate container label with items in queue
             try{
@@ -130,7 +130,7 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
                 ContainerProcessObject ioContainer =
                 new ContainerProcessObject(container.getId(), process.getExecutionid(),
                 edu.harvard.med.hip.flex.process.ProcessObject.IO);
-                System.out.println("receive oligo plates process object created");
+                //System.out.println("receive oligo plates process object created");
                 
                 // Insert the process and process objects into database.
                 process.addProcessObject(ioContainer);
@@ -159,7 +159,7 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         }
         
         //save containerList to session
-        System.out.println("Size of the containerList: "+ containerList.size());
+        //System.out.println("Size of the containerList: "+ containerList.size());
         request.getSession().setAttribute("containerList",containerList);
         
         return (mapping.findForward("success"));
@@ -210,7 +210,7 @@ public class ReceiveOligoPlatesAction extends ResearcherAction {
         } finally {
             DatabaseTransaction.closeResultSet(rs);
         }
-        System.out.println("oligo plate "+ id + " exist is: "+ isExist);
+        //System.out.println("oligo plate "+ id + " exist is: "+ isExist);
         return isExist;
     } //PlateExist
     

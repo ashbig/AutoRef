@@ -129,11 +129,11 @@ public class OligoPlateManager {
             numSeqsToProcess = totalWells*numPlatesToProcess;
             if (numSeqsToProcess > 0) {
                 numSeqsToTruncate = seqList.size() - numSeqsToProcess;
-                System.out.println("There are total of "+seqList.size()+" sequence in queue");
+                //System.out.println("There are total of "+seqList.size()+" sequence in queue");
                 for (j = 0; j < numSeqsToTruncate; ++j) {
                     seqList.removeLast();
                 } // for
-                System.out.println("There are "+ seqList.size()+" sequences going to be processed");
+                //System.out.println("There are "+ seqList.size()+" sequences going to be processed");
                 
                 try{
                     cg = new ConstructGenerator(seqList,conn);
@@ -141,7 +141,7 @@ public class OligoPlateManager {
                     cg.insertProcessInputOutput();
                     cg.insertConstructQueue();
                     LinkedList oligoPatternList = cg.getOligoPatternList();
-                    System.out.println("Items in the oligoPatternList: "+ oligoPatternList.size());
+                    //System.out.println("Items in the oligoPatternList: "+ oligoPatternList.size());
                     
                     //all of the oligo plate header and sample info are inserted in DB
                     //three text files for order oligos will be generated
@@ -149,9 +149,9 @@ public class OligoPlateManager {
                     plater.createOligoPlates();
                     plater.insertProcessInputOutput();
                     plater.insertReceiveOligoQueue();
-                    System.out.println("receive oligo plates queue inserted.");
+                    //System.out.println("receive oligo plates queue inserted.");
                     plater.removeOrderOligoQueue();
-                    System.out.println("order oligo queue removed.");
+                    //System.out.println("order oligo queue removed.");
                     
                     //remove sequences from queue
                     removeQueueSequence(seqList);
@@ -159,7 +159,7 @@ public class OligoPlateManager {
                     DatabaseTransaction.commit(conn);
                 } catch(FlexDatabaseException sqlex){
                     //System.out.println(sqlex);
-                    System.out.println(sqlex.getMessage());
+                    System.err.println(sqlex.getMessage());
                     DatabaseTransaction.rollback(conn);
                     
                 }finally {

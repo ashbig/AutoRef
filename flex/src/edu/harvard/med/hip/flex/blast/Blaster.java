@@ -170,13 +170,13 @@ public class Blaster extends java.lang.Object {
             }
             p.waitFor();
             if (p.exitValue() != 0) {
-                System.out.println("blast call failed");
+                System.err.println("blast call failed");
                 return Blaster.BLAST_FAILED;
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
-            System.out.println("User requests stop blasting:");
+            System.err.println("User requests stop blasting:");
         }
         return Blaster.BLAST_SUCESS;
     }
