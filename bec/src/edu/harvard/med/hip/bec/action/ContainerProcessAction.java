@@ -77,7 +77,7 @@ public class ContainerProcessAction extends ResearcherAction
             }
             
             container = Container.findContainerDescriptionFromLabel(label);
-            System.out.println("container "+ container.getId() +" "+label);
+            //System.out.println("container "+ container.getId() +" "+label);
             if ( container == null)
             {
                  errors.add(ActionErrors.GLOBAL_ERROR,
@@ -112,14 +112,14 @@ public class ContainerProcessAction extends ResearcherAction
                    
                     String result_type = (String)request.getParameter("show_action");
                     if ( result_type.equalsIgnoreCase("FER"))
-                    { System.out.println("A");
+                    { //System.out.println("A");
                     }
                     else if (result_type.equalsIgnoreCase("RER"))//reverse
-                    {System.out.println("AS");
+                    {//System.out.println("AS");
                     }
                     else if (result_type.equalsIgnoreCase("IR"))
                     {
-                    System.out.println("SA");
+                   // System.out.println("SA");
                   
                        
                     }
