@@ -155,10 +155,9 @@ public class OligoPlater {
         plateOutFileName2 = filePath + container_3s.getLabel();
         plateOutFileName3 = filePath + container_3op.getLabel();
         
-        plateWriter_5p = new FileWriter(container_5p.getLabel());
-        plateWriter_3s = new FileWriter(container_3s.getLabel());
-        plateWriter_3op = new FileWriter(container_3op.getLabel());
-        
+        plateWriter_5p = new FileWriter(plateOutFileName1);
+        plateWriter_3s = new FileWriter(plateOutFileName2);
+        plateWriter_3op = new FileWriter(plateOutFileName3);
         // Loop over plates.
         while (!done) {
             
