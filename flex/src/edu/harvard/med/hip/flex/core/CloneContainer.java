@@ -48,6 +48,10 @@ public class CloneContainer extends Container{
             
             for (int i=0; i<samples.size(); i++) {
                 Sample s = (Sample)samples.get(i);
+                if(Sample.CONTROL_NEGATIVE.equals(s.getType()) || Sample.CONTROL_POSITIVE.equals(s.getType())) {
+                    continue;
+                }
+                
                 CloneSample cs = new CloneSample(s.getId(), s.getType(), s.getPosition(), id, s.getConstructid(), s.getOligoid(), s.getStatus(), s.getCloneid());
                 cs.setCdslength(s.getCdslength());
                 cs.setGenbank(s.getGenbank());
