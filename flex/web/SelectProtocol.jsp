@@ -7,18 +7,22 @@
 
 <html>
 <head>
-<title><bean:message key="flex.name"/> : Create Process Plate</title>
+<title><bean:message key="flex.name"/> : Plate Handling</title>
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
-<h2><bean:message key="flex.name"/> : Create Process Plate</h2>
+<h2><bean:message key="flex.name"/> : Plate Handling</h2>
 <hr>
 <html:errors/>
 <p>
 <html:form action="/SelectProtocol.do">
-<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
-<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
+<logic:present name="projectid">
+    <input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+</logic:present>
+<logic:present name="workflowid">
+    <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
+</logic:present>
 
 <table>
     <tr>
