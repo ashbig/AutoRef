@@ -40,6 +40,18 @@ public abstract class ProcessObject {
         this.iotype = iotype;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param id The id of the processed object.
+     * @param iotype The input/output type of the  processed object.
+     *
+     * @return A ProcessObject object.
+     */
+    public ProcessObject(int id, String iotype) {
+        this.id = id;
+        this.iotype = iotype;
+    }
     
     /**
      * Return the input/output type.

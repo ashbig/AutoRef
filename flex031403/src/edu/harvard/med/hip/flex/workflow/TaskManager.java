@@ -10,7 +10,9 @@
 package edu.harvard.med.hip.flex.workflow;
 
 import java.util.List;
+import java.util.Vector;
 import java.sql.Connection;
+import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.process.Protocol;
 import edu.harvard.med.hip.flex.database.*;
 
@@ -32,5 +34,11 @@ public interface TaskManager {
      * @exception FlexDatabaseException
      */
     public void processQueue(List removedItems, List addedItems, Protocol protocol, Connection conn, Workflow workflow) throws FlexDatabaseException;
+
+    public void createProcessRecord(String executionStatus, Protocol protocol,
+                                    Researcher researcher, SubProtocol subprotocol,
+                                    List iObjects, List oObjects, List ioObjects,
+                                    Vector sampleLineageSet, Connection conn)
+                                    throws FlexDatabaseException;    
 }
 

@@ -29,6 +29,18 @@ public class PlatesetProcessObject extends ProcessObject {
     public PlatesetProcessObject(int id, int executionid, String iotype) {
         super(id, executionid, iotype);
     }
+
+    /**
+     * Constructor.
+     *
+     * @param id The id of the processed object.
+     * @param iotype The input/output type of the  processed object.
+     *
+     * @return A ProcessObject object.
+     */
+    public PlatesetProcessObject(int id, String iotype) {
+        super(id, iotype);
+    }     
     
     /**
      * Insert the record into processobject table.

@@ -29,6 +29,18 @@ public class ConstructProcessObject extends ProcessObject {
     public ConstructProcessObject(int id, int executionid, String iotype) {
         super(id, executionid, iotype);
     }
+
+    /**
+     * Constructor.
+     *
+     * @param id The id of the processed object.
+     * @param iotype The input/output type of the  processed object.
+     *
+     * @return A ProcessObject object.
+     */
+    public ConstructProcessObject(int id, String iotype) {
+        super(id, iotype);
+    }    
     
     /**
      * Insert the record into processobject table.

@@ -1,7 +1,7 @@
 /*
  * AbstractTaskManager.java
  *
- * This class serves as the base class for all specific task managers. 
+ * This class serves as the base class for all specific task managers.
  *
  * Created on August 1, 2001, 11:56 AM
  */
@@ -12,19 +12,20 @@ import java.util.*;
 import java.sql.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.database.*;
 
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public abstract class AbstractTaskManager implements TaskManager {
-
+    
     /** Creates new AbstractTaskManager */
     public AbstractTaskManager() {
     }
-
+    
     /**
      * Process the queue items. Remove the old queue items and add the new queue items.
      *
@@ -53,9 +54,37 @@ public abstract class AbstractTaskManager implements TaskManager {
                 newItems.add(new QueueItem(o, new Protocol((String)nextProtocols.elementAt(i))));
             }
             queue.addQueueItems(newItems, conn);
-        }        
-    }        
-
+        }
+    }
+    
+    public void createProcessRecord(String executionStatus, Protocol protocol,
+                                    Researcher researcher, SubProtocol subprotocol,
+                                    List iObjects, List oObjects, List ioObjects,
+                                    Vector sampleLineageSet, Connection conn)
+                                    throws FlexDatabaseException {
+        // Create a process, process object and sample lineage record.
+        Process process = new Process(protocol, executionStatus, researcher);
+        
+        if(subprotocol != null) {
+            process.setSubprotocol(subprotocol.getName());
+        }
+        
+        if(iObjects != null)
+            addInputObjects(process, iObjects);
+        
+        if(oObjects != null)
+            addOutputObjects(process, oObjects);
+        
+        if(ioObjects != null)
+            addIOObjects(process, ioObjects);
+        
+        if(sampleLineageSet != null)
+            process.setSampleLineageSet(sampleLineageSet);
+        
+        // Insert the process and process objects into database.
+        process.insert(conn);
+    }
+    
     /**
      * Make the queue for removed items.
      *
@@ -69,4 +98,10 @@ public abstract class AbstractTaskManager implements TaskManager {
      * @return The ProcessQueue object.
      */
     public abstract ProcessQueue makeAddedItemsQueue();
+    
+    public abstract void addInputObjects(Process process, List iObjects);
+    
+    public abstract void addOutputObjects(Process process, List oObjects);
+    
+    public abstract void addIOObjects(Process process, List ioObjects);       
 }

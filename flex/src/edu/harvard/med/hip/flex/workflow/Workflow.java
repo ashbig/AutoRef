@@ -89,10 +89,14 @@ public class Workflow {
         flow.addElement(new FlowRecord(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES, next)); 
 
         next = new Vector();
+        next.addElement(Protocol.ENTER_DNA_GEL_RESULTS);        
+        flow.addElement(new FlowRecord(Protocol.GENERATE_DNA_PLATES, next));         
+        
+        next = new Vector();
         next.addElement(Protocol.GENERATE_SEQUENCING_DNA_PLATES);        
         next.addElement(Protocol.GENERATE_GLYCEROL_PLATES);
         next.addElement(Protocol.GENERATE_SEQUENCING_PCR_PLATES);      
-        flow.addElement(new FlowRecord(Protocol.GENERATE_DNA_PLATES, next)); 
+        flow.addElement(new FlowRecord(Protocol.ENTER_DNA_GEL_RESULTS, next)); 
 
         next = new Vector();
         next.addElement(Protocol.SUBMIT_SEQUENCING_ORDERS);        

@@ -98,10 +98,9 @@ public class GetResearcherAction extends ResearcherAction{
                 Container newContainer = (Container)newContainers.elementAt(i);
                 newContainer.insert(conn);
             }
-            
+/*            
             // Create a process, process object and sample lineage record.
             String executionStatus = null;
-            // For GEl and Agar, the status is inprocess.
             executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
             Process process = new Process(protocol, executionStatus, researcher);
             SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
@@ -131,27 +130,13 @@ public class GetResearcherAction extends ResearcherAction{
             
             // Insert the process and process objects into database.
             process.insert(conn);
-/*            
-            // Remove the container from the queue.
-            ContainerProcessQueue queue = new ContainerProcessQueue();
-            queue.removeQueueItems(items, conn);
-            
-            
-            // Get the next protocols from the workflow.
-            Workflow wf = new Workflow();
-            Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
-            
-            // Add the new containers to the queue for each protocol.
-            for(int i=0; i<nextProtocols.size(); i++) {
-                LinkedList newItems = new LinkedList();
-                for(int j=0; j<newContainers.size(); j++) {
-                    Container newContainer = (Container)newContainers.elementAt(j);
-                    newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));
-                }
-                queue.addQueueItems(newItems, conn);
-            }
 */
+            String executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
+            SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterSourcePlateAction.subprotocol");
+
             WorkflowManager manager = new WorkflowManager("ProcessPlateManager");
+            manager.createProcessRecord(executionStatus, protocol, researcher, subprotocol, oldContainers, newContainers, null,
+                                    sampleLineageSet, conn);            
             manager.processQueue(items, newContainers, protocol, conn);
             
             // Commit the changes to the database.
