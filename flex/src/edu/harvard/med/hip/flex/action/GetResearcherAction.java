@@ -6,12 +6,10 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.LinkedList;
-import java.util.MissingResourceException;
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.*;
 import java.sql.*;
 import java.io.*;
+import java.lang.Thread;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +40,7 @@ import edu.harvard.med.hip.flex.util.*;
 public class GetResearcherAction extends ResearcherAction{
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
     public final static String BARCODEFILE = BLAST_BASE_DIR+"barcode/barcode.txt";
-    //public final static String BARCODEFILE = "/tmp/barcode.txt";
+    //public final static String BARCODEFILE = "G:\\dev\\barcode.txt";
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -105,15 +103,15 @@ public class GetResearcherAction extends ResearcherAction{
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-           
+            
             // Insert the new containers and samples into database.
             for(int i=0; i<newContainers.size(); i++) {
                 Container newContainer = (Container)newContainers.elementAt(i);
                 newContainer.insert(conn);
             }
-
+            
             if(Protocol.CREATE_CULTURE_FROM_MGC.equals(protocol.getProcessname())) {
-                Container c = (Container)oldContainers.elementAt(0);                  
+                Container c = (Container)oldContainers.elementAt(0);
                 MgcContainer mgcContainer = MgcContainer.findMGCContainerWithThread(c.getLabel().substring(3));
                 if(mgcContainer == null) {
                     request.setAttribute("workflowid", new Integer(workflowid));
@@ -123,17 +121,17 @@ public class GetResearcherAction extends ResearcherAction{
                     new ActionError("error.mgc.notfound"));
                     saveErrors(request, errors);
                     return (new ActionForward(mapping.getInput()));
-                }        
+                }
                 
                 mgcContainer.updateCultureAndGlycerolAndDnaContainer(((Container)newContainers.elementAt(0)).getId(), ((Container)newContainers.elementAt(1)).getId(), ((Container)newContainers.elementAt(2)).getId(), conn);
-
-                /**
-                if("MGS".equals(c.getLabel().substring(0, 3))) {  
-                    ((Container)oldContainers.elementAt(0)).setLocation(new Location(Location.DESTROYED));
-                }
-                 */
-            }                
                 
+                /**
+                 * if("MGS".equals(c.getLabel().substring(0, 3))) {
+                 * ((Container)oldContainers.elementAt(0)).setLocation(new Location(Location.DESTROYED));
+                 * }
+                 */
+            }
+            
             // update the location of the old container.
             for(int i=0; i<oldContainers.size(); i++) {
                 Container oldContainer = (Container)oldContainers.elementAt(i);
@@ -156,7 +154,7 @@ public class GetResearcherAction extends ResearcherAction{
                 
                 // insert process record for creating glycerol from culture
                 Protocol p = new Protocol(Protocol.CREATE_GLYCEROL_FROM_CULTURE);
-                Vector sls = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls");               
+                Vector sls = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls");
                 manager.createProcessRecord(executionStatus, p, researcher,
                 subprotocol, in, out, null, sls, conn);
                 
@@ -164,7 +162,7 @@ public class GetResearcherAction extends ResearcherAction{
                 out.clear();
                 out.addElement((Container)newContainers.elementAt(2));
                 p = new Protocol(Protocol.CREATE_DNA_FROM_MGC_CULTURE);
-                Vector sls1 = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls1");               
+                Vector sls1 = (Vector)request.getSession().getAttribute("EnterSourcePlateAction.sls1");
                 manager.createProcessRecord(executionStatus, p, researcher,
                 subprotocol, in, out, null, sls1, conn);
                 
@@ -204,6 +202,19 @@ public class GetResearcherAction extends ResearcherAction{
             // Commit the changes to the database.
             DatabaseTransaction.commit(conn);
             //DatabaseTransaction.rollback(conn);
+            
+            //insert into summary table if it is the glycerol stock plate.
+            if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname())) {
+                List containerids = new ArrayList();
+                for(int i=0; i<newContainers.size(); i++) {
+                    Container newContainer = (Container)newContainers.elementAt(i);
+                    containerids.add(new Integer(newContainer.getId()));
+                }
+                int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());
+                
+                ThreadedSummaryTablePopulator populator = new ThreadedSummaryTablePopulator(containerids, strategyid, CloneInfo.MASTER_CLONE);
+                new Thread(populator).start();
+            }
             
             // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
