@@ -28,13 +28,13 @@
         <tr>
         <bean:define id="process" name="threadElem" property="process"/>
         <bean:define id="protocol" name="process" property="protocol"/>
-        <bean:define id="container" name="threadElem" property="container"/>
+        <bean:define id="container" name="threadElem" property="object"/>
             <td><CENTER><bean:write name="protocol" property="processname"/></CENTER></td>
             <td><CENTER><bean:write name="process" property="date"/></CENTER></td>
             <td><CENTER><bean:write name="process" property="subprotocol"/></CENTER></td>
             <td><CENTER><bean:write name="process" property="researcher.name"/></CENTER></td>
             <td><CENTER><bean:write name="process" property="extrainfo"/></CENTER></td>
-            <td><CENTER><flex:linkContainer name="container">
+            <td><CENTER><flex:linkContainer name="container" process="process">
                             <bean:write name="container" property="id"/>
                         </flex:linkContainer>
                 </CENTER></td>

@@ -48,20 +48,20 @@
 
       <required>false</required>
 
-      <rtexprvalue>true</rtexprvalue>
+      <rtexprvalue>false</rtexprvalue>
 
     </attribute>
 
     <attribute>
         <name>sequenceName</name>
         <required>false</required>
-        <rtexprvalue>true</rtexprvalue>
+        <rtexprvalue>false</rtexprvalue>
     </attribute>
     
     <attribute>
         <name>seqProperty</name>
         <required>false</required>
-        <rtexprvalue>true</rtexprvalue>
+        <rtexprvalue>false</rtexprvalue>
     </attribute>
 
   </tag>
@@ -91,20 +91,26 @@
 
       <required>false</required>
 
-      <rtexprvalue>true</rtexprvalue>
+      <rtexprvalue>false</rtexprvalue>
 
     </attribute>
 
     <attribute>
         <name>name</name>
         <required>false</required>
-        <rtexprvalue>true</rtexprvalue>
+        <rtexprvalue>false</rtexprvalue>
     </attribute>
     
     <attribute>
         <name>property</name>
         <required>false</required>
-        <rtexprvalue>true</rtexprvalue>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+
+     <attribute>
+        <name>process</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
     </attribute>
 
   </tag>

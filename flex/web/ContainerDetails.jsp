@@ -14,7 +14,11 @@
 <html>
 <head><title>Container Details</title></head>
 <body>
-
+<logic:present name="<%=Constants.PROCESS_KEY%>">
+    <Center><h3>Results desplayed are for protocol 
+    <bean:write name="<%=Constants.PROCESS_KEY%>" property="protocol.processname"/>
+    </h3></center>
+</logic:present>
 
 <%--Loop through all the containers and display all their details--%>
 <logic:iterate id="container" name="<%=Constants.CONTAINER_LIST_KEY%>">
@@ -77,7 +81,15 @@
         </logic:notEqual>
         <logic:present name="<%=Constants.PROCESS_KEY%>">
             <bean:define id="process" name="<%=Constants.PROCESS_KEY%>"/>
-            <td><%=Result.findResult((Sample)sample,(Process)process)%><td>
+            <td><%
+                   Result result = 
+                        Result.findResult((Sample)sample,(Process)process);
+                  if(result == null) {
+                    out.println("&nbsp;");
+                  } else {
+                        out.println(result);
+                   }
+                %><td>
         </logic:present>
     </tr>
     </logic:iterate>

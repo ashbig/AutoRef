@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-06-27 11:41:25 $
+ * $Revision: 1.2 $
+ * $Date: 2001-06-29 19:12:31 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -49,6 +49,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.process.Process;
 
 import org.apache.struts.util.*;
 
@@ -56,7 +58,7 @@ import org.apache.struts.util.*;
  * Link to a container detail page.
  *
  * @author $Author: dongmei_zuo $
- * @version $Revision: 1.1 $ $Date: 2001-06-27 11:41:25 $
+ * @version $Revision: 1.2 $ $Date: 2001-06-29 19:12:31 $
  */
 
 public class LinkContainerTag extends TagSupport {
@@ -91,6 +93,10 @@ public class LinkContainerTag extends TagSupport {
      */
     private String property;
     
+    /**
+     * The name of the process object.
+     */
+    private String process;
     
     /**
      * Accessor for the contaienr id.
@@ -164,9 +170,24 @@ public class LinkContainerTag extends TagSupport {
         
     }
     
+    /**
+     * Accessor for the process property
+     *
+     * @return process property
+     */
+    public String getProcess() {
+        return this.process;
+    }
     
     
-    
+    /**
+     * Mutator for the process property.
+     *
+     * @param processName the name of the process object
+     */
+    public void setProcess(String processName) {
+        this.process = processName;
+    }
     
     /**
      * Render the beginning of the hyperlink.
@@ -197,6 +218,16 @@ public class LinkContainerTag extends TagSupport {
             }
             url.append(container.getId());
             
+        }
+        if(process!=null || process.length() >0) {
+            Process processObj = null;
+            try {
+               processObj=(Process)RequestUtils.lookup(pageContext,this.process, 
+               null);
+            } catch (ClassCastException cce) {
+                throw new JspException("The specified variable does not contain a Process object\n"+cce.getMessage());
+            }
+            url.append("&"+Constants.PROCESS_ID_KEY+"="+processObj.getExecutionid());
         }
         
         // Generate the hyperlink start element
