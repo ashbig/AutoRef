@@ -81,31 +81,48 @@ public class Association {
             a1 = common;
         }
         
-        return common;
+        return sortCommonAssociations(common);
+        //return common;
     }
     
     public static Vector findCommon(Vector v1, Vector v2) {
         Vector v = new Vector();
-        
+        Association association;
         for(int i=0; i<v1.size(); i++) {
             Association a = (Association)v1.elementAt(i);
-            if(found(a, v2)) {
-                v.addElement(a);
+            if((association = found(a, v2)) != null) {                             
+                v.addElement(association);
             }
         }
         
         return v;
     }
     
-    public static boolean found(Association a, Vector v) {
+    public static Association found(Association a, Vector v) {
         for(int i=0; i<v.size(); i++) {
             Association b = (Association)v.elementAt(i);
             
             if(a.geneInCommon(b)) {
-                return true;
+                double score = a.getStat().getScore() + b.getStat().getScore();
+                long temp = (long)(score * 10000 + ( score > 0 ? .5 : -.5 )); 
+                a.getStat().setScore((double) temp / 10000); 
+                return a;
             }
         }
         
-        return false;
+        return null;
     }  
+    
+    public static Vector sortCommonAssociations(Vector common_assoc){
+        Vector sorted = new Vector(common_assoc.size());
+        TreeSet t = new TreeSet(new AssociationComparatorByScore());
+        for(int i = 0; i < common_assoc.size(); i++){
+            t.add(common_assoc.elementAt(i));
+        }       
+        Iterator i = t.iterator();
+        while(i.hasNext()){
+            sorted.add(i.next());
+        }
+        return sorted;
+    }
 }

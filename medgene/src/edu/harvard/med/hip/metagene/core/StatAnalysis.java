@@ -32,6 +32,10 @@ public class StatAnalysis {
         return score;
     }
     
+    public void setScore(double score){
+        this.score = score;
+    }
+    
     public int compareTo(StatAnalysis a) {
         double aScore = a.getScore();
         int rt = 0;

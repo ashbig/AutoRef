@@ -66,13 +66,12 @@
         <table cellSpacing="0" cellPadding="2" width="100%" align="center" border="1">
           <colgroup>
             <col width="3%">
-            <col width="17%">
+            <col width="20%">
             <col width="5%">
             <col width="9%">
-            <col width="25%">
+            <col width="27%">
             <col width="26%">
-            <col width="5%">
-            <col width="5%">
+            <col width="5%">            
             <col width="5%">
           <thead>
             <tr bgColor="#cccccc">
@@ -89,8 +88,6 @@
                 GO Annotations</font></a></th>
               <th style="background-color: #8181AB"><a href="statistic_menu.jsp" target="_blank"><font color="#FFFFFF">
                 Statistical Score</font></a></th>
-              <th style="background-color: #8181AB"><a href="NumberOfPapers.jsp" target="_blank"><font color="#FFFFFF">
-                Papers</font></a></th>
               <th style="background-color: #8181AB"><a href="DefaultRefSeqID.jsp" target="_blank"><font color="#FFFFFF">
                 Default RefSeq ID</font></a></th>
             </tr>
@@ -142,18 +139,6 @@
 
               <td bgcolor="<% out.print(bgcolor); %>" align="center">
                 <bean:write name="association" property="stat.score"/>&nbsp
-              </td>
-
-              <td bgcolor="<% out.print(bgcolor); %>" align="center">
-                <logic:equal  name="association" property="gene.type" value="GENE">
-                <a href="DisplayPaperLinks.do?disease_id=<bean:write name="association" property="disease.id"/>&gene_index=<bean:write name="association" property="geneIndex.index"/>
-&disease_mesh_term=<bean:write name="disease"/>&gene_symbol=<bean:write name="association" property="gene.symbol"/>" target="_blank">
-                </logic:equal>
-                <logic:equal name="association" property="gene.type" value="FAMILY">
-                <a href="DisplayPaperLinks.do?disease_id=<bean:write name="association" property="disease.id"/>&gene_index=<bean:write name="association" property="geneIndex.index"/>
-&disease_mesh_term=<bean:write name="disease"/>&gene_symbol=<bean:write name="association" property="gene.name"/>" target="_blank">
-                </logic:equal>
-                <bean:write name="association" property="data.doublehit"/></a>&nbsp
               </td>
 
               <td bgcolor="<% out.print(bgcolor); %>">
