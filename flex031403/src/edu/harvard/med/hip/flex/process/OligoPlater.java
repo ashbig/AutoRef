@@ -24,7 +24,7 @@ import java.io.*;
 public class OligoPlater {
     // private final String plateOutFileName1 =
     // FileRepository.REPOSITORY_PATH+FileRepository.OLIGO_ORDER_PATH+uniqueFileName;
-    private static final String filePath = "H:/Dev/OligoOrder/";
+    private static final String filePath = "/tmp/";
     private static final int positiveControlPosition = 1;
     private static final int negativeControlPosition = 96;
     private static final String PositiveControlSampleType = "CONTROL_POSITIVE";
