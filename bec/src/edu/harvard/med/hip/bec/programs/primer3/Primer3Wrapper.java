@@ -28,6 +28,7 @@ public class Primer3Wrapper
     //in parameters
     
     private ArrayList           m_sequences = null;
+    private BaseSequence        m_sequence = null;
     private Primer3Spec         m_spec = null;
     
     
@@ -51,18 +52,57 @@ public class Primer3Wrapper
         m_failed_sequences = new ArrayList();
        
     }
+    /** Creates a new instance of Primer3Caller */
+    public Primer3Wrapper(Primer3Spec spec, BaseSequence sequence)
+    {
+        m_spec = spec;
+        m_sequence = sequence;
+        m_failed_sequences = new ArrayList();
+    }
     
     
     public void runPrimer3() throws BecDatabaseException
     {
         //prepare sequences
-        ArrayList seq = prepareSequences();
+        ArrayList seq = null;
+        if ( m_sequence != null)
+        {
+            seq = prepareSequence(m_sequence);
+        }
+        else if( m_sequences != null)
+        {
+            seq = prepareSequences();
+        }
+        if (seq != null || seq.size()<1) return; 
         //write input file
         writeInputFile(seq);
         //call primer3
         run(m_file_input, m_file_output);
     }
     
+    public ArrayList run() throws Exception
+    {
+        ArrayList oligo_calculations = new ArrayList();
+        //prepare sequences
+        ArrayList seq = null;
+        if ( m_sequence != null)
+        {
+            seq = prepareSequence(m_sequence);
+        }
+        else if( m_sequences != null)
+        {
+            seq = prepareSequences();
+        }
+        if (seq != null || seq.size()<1) return null; 
+        //write input file
+        writeInputFile(seq);
+        //call primer3
+        if ( run(m_file_input, m_file_output))
+        {
+           oligo_calculations = Primer3Parser.parse(m_file_output, m_spec);
+        }
+        return oligo_calculations;
+    }
     
     
     
@@ -88,15 +128,41 @@ public class Primer3Wrapper
         
         for (int count = 0; count < m_sequences.size(); count++)
         {
-            RefSequence tr = (RefSequence) m_sequences.get(count);
-            if (runner_type == 2)
-                one_seq =  bi_directional_walker(   tr.getId(), tr.getText(),  UL, DL,  PHD, ERL, W );
-            else
-                one_seq = one_directional_walker( tr.getId(), tr.getText(),  UL, DL,  PHD, ERL, W  );
+            BaseSequence sequence = (BaseSequence) m_sequences.get(count);
+            one_seq = prepareSequence( sequence, UL,  DL,   PHD, ERL,  W, runner_type );
             if (one_seq != null) res.addAll(one_seq);
             
         }
         return res;
+    }
+    
+    
+    private ArrayList prepareSequence(BaseSequence sequence)throws BecDatabaseException
+    {
+        ArrayList one_seq = null;
+        int runner_type = m_spec.getParameterByNameInt("P_NUMBER_OF_STRANDS");
+        int  UL = m_spec.getParameterByNameInt("P_UPSTREAM_DISTANCE");  //length between upstream universal primer and start codon of target sequence
+        int DL = m_spec.getParameterByNameInt("P_DOWNSTREAM_DISTANCE");  //length between downstream universal primer and stop codon of target sequence
+        int PHD = m_spec.getParameterByNameInt("P_EST_SEQ");  //distance between sequencing primer and start of high quality read length
+        int ERL = m_spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");  //estimated high quality read length
+        int W = m_spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN");    //window size for primer3 to pick primers
+        
+        if (runner_type == 2)
+            one_seq =  bi_directional_walker(   sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W );
+        else
+            one_seq = one_directional_walker( sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W  );
+        return one_seq;
+    }
+    
+     private ArrayList prepareSequence(BaseSequence sequence,int UL, int DL,  int PHD,int ERL, int W,int runner_type )throws BecDatabaseException
+    {
+        ArrayList one_seq = null;
+       
+        if (runner_type == 2)
+            one_seq =  bi_directional_walker(   sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W );
+        else
+            one_seq = one_directional_walker( sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W  );
+        return one_seq;
     }
     
     //function writes one output file for the primer3

@@ -139,27 +139,16 @@ public class Primer3Parser
                }
                if ( seq_id != -1 &&  p_new_record.match(line)  ) //new record
                {
-                   
-                   
                    oligo_left.setStart(_AURL + _ARL * (subseq_count - 1) + l_start + 1);
                    oligo_right.setStart(_AURL + _ARL * (subseq_count - 1) + r_start + 1);
-                  
-                  // oligo_pair = new OligoPair( null, OligoPair.NOT_UNIVERSAL_PAIR, oligo_left, oligo_right);
-              //    System.out.println(oligo_pair.toString());
-                   //check if its another sequence
+                    //check if its another sequence
                    if ( olcalc.getSequenceId() != seq_id)
                    {
                       // oligo_set = new OligoPairSet(null, spec, seq_id);
                        olcalc = new OligoCalculation();
-                     
                        olcalc.setPrimer3SpecId(spec.getId());
                        olcalc.setSequenceId(seq_id);
-                       //res.add(oligo_set);
                    }
-                   
-                   //oligo_set.addOligoPair(oligo_pair);
-                   //if (oligo_left != null) oligo_set.addOligo(oligo_left);
-                  //if (oligo_right != null) oligo_set.addOligo(oligo_right);
                    if (oligo_left != null) olcalc.addOligo(oligo_left);
                      if (oligo_right != null)  olcalc.addOligo(oligo_right);
                        
