@@ -122,9 +122,9 @@ public class MgcMasterListImporter {
                 
                 
                 MgcSample clone = new MgcSample( -1,  -1,
-                Integer.parseInt(info [1]), Integer.parseInt(info[0]),
-                info[8], info[11], Integer.parseInt(info[12]),
-                MgcSample.STATUS_AVAILABLE);
+                                Integer.parseInt(info [1]), Integer.parseInt(info[0]),
+                                info[8], info[11], Integer.parseInt(info[12]),
+                                MgcSample.STATUS_AVAILABLE);
                 
                 cont.addSample(clone);
                 m_successCount++;
@@ -167,7 +167,7 @@ public class MgcMasterListImporter {
                     sequenceCol.put( Integer.toString(current_key), fs );
                     current_gi = null;
                 }
-                catch(Exception e) { return false; }
+                catch(Exception e) {  }
                 
             }
         }//end loop container_count
@@ -233,7 +233,7 @@ public class MgcMasterListImporter {
         "Homo sapiens", null,
         (String)seqData.get("sequencetext"), start, stop,
         cdsLength, gccont, publicInfo);
-        seq.setQuality( seqQuality);
+        seq.setQuality(seqQuality);
         return seq;
     }
     
@@ -260,11 +260,11 @@ public class MgcMasterListImporter {
         MgcSample current_clone = null;
         DatabaseTransaction t = null;
         Connection conn = null;
+        int commit_count = 0;
         
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            DatabaseTransaction.commit(conn);
             
             for (int container_count = 0; container_count < containerCol.size(); container_count++) {
                 
@@ -276,19 +276,22 @@ public class MgcMasterListImporter {
                     current_key = Integer.toString(current_clone.getMgcId());
                     FlexSequence fs = (FlexSequence)sequenceCol.get( current_key);
                     if (fs != null && !fs.getQuality().equals(FlexSequence.QUESTIONABLE)  ) {
-                        fs_key = FlexIDGenerator.getID("sequenceid");
-                        current_clone.setSequenceId(fs_key);
+                        
                         fs.insert(conn);
+                        fs_key = fs.getId();
+                        current_clone.setSequenceId(fs_key);
                     }
-                    else {
-                        current_clone.setStatus(MgcSample.STATUS_NOT_AVAILABLE);
-                    }
+                    if (fs == null) current_clone.setStatus(MgcSample.STATUS_NO_SEQUENCE);
+                    if (fs.getQuality().equals(FlexSequence.QUESTIONABLE ) ) current_clone.setStatus(MgcSample.STATUS_BAD_SEQUENCE);
                     
                 }//end loop clone
                 cont.insert(conn);
+                commit_count++;
+                if ( (commit_count % 10) == 0 ) DatabaseTransaction.commit(conn);
             }//end loop container_count
-        } catch (FlexDatabaseException ex) {   DatabaseTransaction.rollback(conn);  }
+        } catch (FlexDatabaseException ex1) {   DatabaseTransaction.rollback(conn);  }
         catch (Exception ex) {  DatabaseTransaction.rollback(conn);   }
+        DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
         return true;
     }
