@@ -131,7 +131,7 @@ public class Primer3Parser
                {
                    oligo_left = new Oligo();
                    oligo_left.setType(Oligo.TYPE_GENESPECIFIC_CALCULATED);
-                   
+                   oligo_left.setStatus(Oligo.STATUS_DESIGNED);
                    oligo_left.setOrientation(Oligo.ORIENTATION_FORWARD);
                    oligo_left.setName("F"+oligo_count);
                    if ( runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND)
@@ -140,8 +140,9 @@ public class Primer3Parser
                        oligo_right.setType(Oligo.TYPE_GENESPECIFIC_CALCULATED);
                        oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
                        oligo_right.setName("R"+oligo_count);
+                       oligo_left.setStatus(Oligo.STATUS_DESIGNED);
                    }
-                    oligo_count++;
+                   oligo_count++;
                }
                if ( seq_id != -1 &&  p_new_record.match(line)  ) //new record
                {
@@ -156,12 +157,13 @@ public class Primer3Parser
                        olcalc.setSequenceId(seq_id);
                        res.add(olcalc);
                    }
-                   if ( oligo_left.getSequence() != null) olcalc.addOligo(oligo_left);
-                   if (runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND && oligo_right.getSequence() != null) 
-                       olcalc.addOligo(oligo_right);
+                   olcalc.addOligo(oligo_left );
+                   if ( runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND)
+                         olcalc.addOligo(oligo_right );
                        
                    oligo_left = new Oligo();
                    oligo_left.setType(Oligo.TYPE_GENESPECIFIC_CALCULATED);
+                   oligo_left.setStatus(Oligo.STATUS_DESIGNED);
                    oligo_left.setOrientation(Oligo.ORIENTATION_FORWARD);
                    oligo_left.setName("F"+oligo_count);
                     if ( runner_type == Primer3Wrapper.WALKING_TYPE_BOTH_STRAND)
@@ -171,6 +173,7 @@ public class Primer3Parser
                        oligo_right.setType(Oligo.TYPE_GENESPECIFIC_CALCULATED);
                        oligo_right.setOrientation(Oligo.ORIENTATION_REVERSE);
                        oligo_right.setName("R"+oligo_count);
+                       oligo_right.setStatus(Oligo.STATUS_DESIGNED);
                     }
                    oligo_count++;
                }
@@ -222,13 +225,15 @@ public class Primer3Parser
              
            }
            ArrayList result = new ArrayList();
+           Oligo oligo = null;
+           //clean up all errors
            for (int index = 0; index < res.size(); index++)
            {
                  olcalc = (OligoCalculation) res.get(index);
-                 if (olcalc.getOligos() != null && olcalc.getOligos().size()>0)
+                 if ( isOligoCalculationOK (olcalc) ) 
                      result.add(olcalc);
            }
-            return result;
+           return result;
         }
         catch(Exception e)
         {
@@ -239,7 +244,17 @@ public class Primer3Parser
     }
         
     
-    
+    private static boolean isOligoCalculationOK(OligoCalculation olcalc)
+    {
+         if (olcalc.getOligos() == null ) return false;
+         Oligo oligo = null;
+         for (int oligo_counter = 0; oligo_counter < olcalc.getOligos().size();oligo_counter++)
+         {
+             oligo = (Oligo) olcalc.getOligos().get(oligo_counter);
+             if ( oligo.getSequence() == null ) return false;
+         }
+         return true;
+    }
     
     
     //******************************************
@@ -255,7 +270,7 @@ public class Primer3Parser
         }
      */
         ArrayList re = null;
-        String queryFile = "c:\\bio\\primer3out.txt";
+        String queryFile = "c:\\tmp\\primer3output.txt";
         try
         {
             Hashtable ht = new Hashtable();

@@ -11,6 +11,7 @@ package edu.harvard.med.hip.bec.file;
  * @author  htaycher
  */
 import java.io.*;
+import java.util.*;
 import edu.harvard.med.hip.utility.*;
 
 public class FileOperations
@@ -54,7 +55,30 @@ public class FileOperations
     } // createDirectoryOrFail
     
     
-    
+    public static File writeFile(ArrayList file_entries, String title, String file_name) throws Exception
+    {
+        File fl = null;
+        FileWriter fr = null;
+        
+        try
+        {
+            fl =   new File(file_name);
+            fr =  new FileWriter(fl);
+            fr.write(title);
+            for (int count = 0; count < file_entries.size(); count++)
+            {
+                fr.write((String) file_entries.get(count)+"\n");
+            }
+            fr.flush();
+            fr.close();
+             return fl;
+        }
+        catch(Exception e)
+        { 
+            try { fr.close();}catch(Exception n){};
+            throw new Exception ("Cannot create file "+ file_name); }
+       
+    }
     
     //ok for small files : write functions for large ones using System
     public static void copyFile(File source_file, File destination_file,  boolean overwrite) throws Exception

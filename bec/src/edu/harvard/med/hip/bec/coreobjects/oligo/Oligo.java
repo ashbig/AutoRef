@@ -15,17 +15,25 @@ import java.util.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.7 2003-11-14 19:18:34 Elena Exp $
+ * $Id: Oligo.java,v 1.8 2003-11-20 21:32:59 Elena Exp $
  * @@File:	Oligo.java
 
  */
 public class Oligo
 {
+     // status in pipline
+    public static final int STATUS_DESIGNED = 1;
+    public static final int STATUS_APPROVED = 2;
+    public static final int STATUS_ORDERED = 3;
+    public static final int STATUS_REJECTED = 4;
+    public static final int STATUS_PUTONHOLD = 5;
+    public static final int STATUS_ANY = -1;
     
     // insert SYSTEM as user
     public static final int TYPE_COMMON = 1;
     public static final int TYPE_UNIVERSAL = 0;
     public static final int TYPE_VECTORSPECIFIC = 2;
+    
     public static final int TYPE_GENESPECIFIC_CALCULATED = 3;
     public static final int TYPE_GENESPECIFIC_MANUALADDED = 4;
     //public static final int TYPE_HOLDER = 5;
@@ -52,6 +60,7 @@ public class Oligo
     private String          m_sequence = null;
     private double          m_Tm = -1;
     private int             m_type = TYPE_NOTKNOWN;//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
+    private int             m_status = -1;//designed, approved, ordered, rejected
     private int             m_gc_content = -1;
     private int m_position = -1;// for full sequencing, start of the prime regarding sequence start
     private String          m_oligo_name = null;
@@ -84,7 +93,7 @@ public class Oligo
                 int gc_content  ,
                 int oligo_start  ,// for full sequencing, start of the prime regarding sequence start
                 String oligo_name  ,
-                int orientation   , int calculationid  ) throws BecDatabaseException
+                int orientation   , int calculationid , int status ) throws BecDatabaseException
     {
 
        m_sequence =  Algorithms.cleanWhiteSpaces(sequence);
@@ -101,6 +110,7 @@ public class Oligo
         m_oligo_name = oligo_name;
         m_orientation = orientation;
         m_calculationid = calculationid;
+        m_status = status;
 
 
     }
@@ -109,12 +119,25 @@ public class Oligo
     //////////////////////////////getters & setters ////////////////////////////
 
 
-    public String       geneSpecificOligotoString(){ return m_oligo_name +"\t"+m_sequence+"\t"+m_Tm+"\t"+this.getTypeAsString()+"\t"+this.getOrientationAsString();}
+    public String       geneSpecificOligotoString(){ return m_oligo_name +"\t"+m_position+"\t"+m_sequence+"\t"+m_Tm+"\t"+this.getTypeAsString()+"\t"+this.getOrientationAsString();}
     public double       getTm()    {        return m_Tm;    }
     public int          getOligoLength()    {        return m_sequence.length();    }
     public int          getId()    {        return m_id;    }
     public int          getSubmitterId()    {        return m_submitterid;    }
     public int          getType(){ return m_type ;}
+    public int          getStatus() { return m_status;}
+    public String       getStatusAsString()
+    {
+        switch(m_status)
+        {
+            case STATUS_DESIGNED : return "Designed";
+            case STATUS_APPROVED : return "Approved";
+            case STATUS_ORDERED : return "Ordered";
+            case STATUS_REJECTED : return "Rejected";
+            case STATUS_PUTONHOLD: return "Put on hold";
+            default: return "Not known";
+        }
+    }
     public String       getTypeAsString()
     {  
         switch(m_type)
@@ -150,6 +173,7 @@ public class Oligo
     public void         setTm(double s )    {         m_Tm= s ;    }
     public void         setId(int s )    {         m_id= s ;    }
     public void         setType(int s ){  m_type = s ;}//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
+    public void         setStatus(int s ){  m_status = s;}
     public void         setGCContent(int s ) {  m_gc_content = s ;}
     public void         setPosition(int s ) {  m_position= s ;}// for full sequencing, start of the prime regarding sequence start
     public void         setName(String s ) {  m_oligo_name = s ;}
@@ -182,9 +206,9 @@ public class Oligo
             else if (m_type == TYPE_GENESPECIFIC_CALCULATED || m_type ==TYPE_GENESPECIFIC_MANUALADDED)
             {
                  sql = "INSERT INTO geneoligo (oligoid,sequence,  tm,  submissiontype, " +
-                "position, orientation, name,oligocalculationid,submitterid) VALUES(" +m_id+ ",'" + m_sequence + "',"
+                "position, orientation, name,oligocalculationid,submitterid, status) VALUES(" +m_id+ ",'" + m_sequence + "',"
                 +m_Tm + ", " + m_type+"," + m_position +","+ m_orientation + ",'"+ m_oligo_name +"',"
-                +m_calculationid+"," + m_submitterid+")";
+                +m_calculationid+"," + m_submitterid+","+m_status +")";
             }
             else
                 return;
@@ -251,30 +275,45 @@ public class Oligo
     }
 
 
-    public static ArrayList getByOligoCalculationId(int oligocalcid)throws BecDatabaseException
+    public static ArrayList getByOligoCalculationId(int oligocalcid, int oligo_status)throws BecDatabaseException
     {
+        String oligo_status_condition = "";
+       if ( oligo_status != STATUS_ANY)
+       {
+           oligo_status_condition = " status = "+oligo_status +" and ";
+       }
         String sql = "select  oligoid,sequence,  tm,  submissiontype, " +
-            "position, orientation, name,oligocalculationid,submitterid "+
-            " from geneoligo where oligocalculationid = "+oligocalcid +" order by position";
+            "position, status, orientation, name,oligocalculationid,submitterid "+
+            " from geneoligo where "+oligo_status_condition+" oligocalculationid = "+oligocalcid +" order by position";
         return getOligoByRule(sql);
    }
     
     //can return sets calculated ander different configs for Primer3
-   public static ArrayList getByRefSequenceId(int refsequenceid)throws BecDatabaseException
+   public static ArrayList getByRefSequenceId(int refsequenceid, int oligo_status)throws BecDatabaseException
    {
+       String oligo_status_condition = "";
+       if ( oligo_status != STATUS_ANY)
+       {
+           oligo_status_condition = " status = "+oligo_status +" and ";
+       }
         String sql = "select  oligoid,sequence,  tm,  submissiontype, " +
-            "position, orientation, name,oligocalculationid,submitterid "+
-            " from geneoligo where oligocalculationid in (select oligocalculationid "+
+            "position, status,orientation, name,oligocalculationid,submitterid "+
+            " from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid "+
             " from oligo_calculation where sequenceid = "+refsequenceid +") order by oligocalculationid,POSITION";
         return getOligoByRule(sql);
    }
    
    
     //can return sets calculated ander different configs for Primer3
-   public static ArrayList getByCloneId(int cloneid)throws BecDatabaseException
+   public static ArrayList getByCloneId(int cloneid, int oligo_status)throws BecDatabaseException
    {
-        String sql = "select  oligoid,sequence,  tm,  submissiontype, position, orientation, name,oligocalculationid,submitterid "
-+" from geneoligo where oligocalculationid in (select oligocalculationid from oligo_calculation where sequenceid = "
+       String oligo_status_condition = "";
+       if ( oligo_status != STATUS_ANY)
+       {
+           oligo_status_condition = " status = "+oligo_status +" and ";
+       }
+        String sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
++" from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid from oligo_calculation where sequenceid = "
 +" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
 +" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+")))) order by oligocalculationid, POSITION";
         return getOligoByRule(sql);
@@ -282,7 +321,7 @@ public class Oligo
      //can return sets calculated ander different configs for Primer3
    public static ArrayList getByPlateLabel(String label)throws BecDatabaseException
    {
-        String sql = "select  oligoid,sequence,  tm,  submissiontype, position, orientation, name,oligocalculationid,submitterid "
+        String sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
 +" from geneoligo where oligocalculationid in (select oligocalculationid from oligo_calculation where sequenceid = "
 +" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where sampleid ="
 +" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid, POSITION";
@@ -310,6 +349,7 @@ public class Oligo
                 ol.setOrientation(rs.getInt("orientation"));
                 ol.setOligoCalculationId(rs.getInt("oligocalculationid"));
                 ol.setType(rs.getInt("submissiontype"));
+                ol.setStatus(rs.getInt("status"));
                 res.add(ol);
             }
             return res;
@@ -335,7 +375,7 @@ public class Oligo
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
             Oligo o = new Oligo();//"TCGCGTTAACGCTAGCATGGATCTC",-1,"ATTF",Oligo.OT_UNIVERSAL_5p,-1);
-ArrayList res = Oligo.getByRefSequenceId(15001);
+ArrayList res = Oligo.getByRefSequenceId(15001,-1);
             for (int i=0; i < res.size();i++)
             {
                 o = (Oligo)res.get(i);

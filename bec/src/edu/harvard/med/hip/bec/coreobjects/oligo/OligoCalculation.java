@@ -202,7 +202,7 @@ public class OligoCalculation
                 oc.setSequenceId(rs.getInt("sequenceid"));
                 oc.setDate(rs.getDate("dateadded"));
                 oc.setId(rs.getInt("oligocalculationid"));
-                oc.setOligos(Oligo.getByOligoCalculationId(oc.getId()));
+                oc.setOligos(Oligo.getByOligoCalculationId(oc.getId(), Oligo.STATUS_ANY));
                 res.add(oc);
             }
             return res;

@@ -8,6 +8,7 @@ package edu.harvard.med.hip.bec.sampletracking.mapping;
 import java.util.*;
 import java.io.*;
 import edu.harvard.med.hip.utility.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 /**
  *
  * @author  htaycher
@@ -53,7 +54,14 @@ public class NamingFileEntry
         public int     getSequenceId (){ return m_sequenceid  ;}
         public int     getReadNum (){ return m_readnum  ;}
         public String  getOrientation (){ return m_orientation  ;}
-     
+        public static String       getOrientation(int v) 
+        { 
+            if ( v == Oligo.ORIENTATION_FORWARD)
+                return ORIENTATION_FORWARD;
+            else if ( v == Oligo.ORIENTATION_REVERSE)
+                return ORIENTATION_REVERSE;
+            return "Not known";
+        }
         public String toString()
         {
             if ( m_sequenceid != -1)
@@ -75,21 +83,17 @@ public class NamingFileEntry
         
         File fl = null;
         String temp = null;
-        FileWriter fr = null;
+        FileWriter fr = null; NamingFileEntry fe= null;
         if (m_filePath == null) m_filePath = FILE_PATH;
         try{
+            fl =   new File(m_filePath + fe.getPlateId()+ ".txt");
+            fr =  new FileWriter(fl);
+            fr.write("Plate number"+DILIM+"well"+DILIM+"sequence id"+ DILIM+  "clone id\n");
+             
             for (int count = 0; count < file_entries.size(); count++)
             {
-                NamingFileEntry fe= (NamingFileEntry) file_entries.get(count);
-                if (count == 0)
-                {
-                    fl =   new File(m_filePath + fe.getPlateId()+ ".txt");
-                    fr =  new FileWriter(fl);
-                    fr.write("Plate number"+DILIM+"well"+DILIM+"sequence id"+ DILIM+  "clone id\n");
-                }
-
+                fe= (NamingFileEntry) file_entries.get(count);
                 fr.write(fe.toString()+"\n");
-
             }
             fr.flush();
             fr.close();
