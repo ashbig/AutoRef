@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.6 2001-06-11 14:51:23 dongmei_zuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.7 2001-07-06 16:32:25 dongmei_zuo Exp $
  *
  * File     : FlexSeqAnalyzer.java 
  * Date     : 05102001
@@ -22,10 +22,10 @@ import java.io.*;
  * homologous to any flex sequence.
  */
 public class FlexSeqAnalyzer {
-	//private static final String BLASTDB = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/blast/BlastDB/genes";
-    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
-    //private static final String INPUT = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/input";
-	//private static final String OUTPUT = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/output";
+    private static final String BLASTDB = "/usr/local/jakarta-tomcat-3.2.1/webapps/dzuo/blast/BlastDB/genes";
+    //private static final String BLASTDB="E:/flexDev/BlastDB/genes";
+    private static final String INPUT = "/tmp/";
+    private static final String OUTPUT = "/tmp/";
         private static final double PERCENTIDENTITY = 0.9;
 	private static final double PERCENTALIGNMENT = 0.9;
 
@@ -80,7 +80,7 @@ public class FlexSeqAnalyzer {
 		Blaster blaster = new Blaster();
 		blaster.setHits(1);
 		blaster.setDBPath(BLASTDB);
-		blaster.blast(queryFile+".in", queryFile+".out");
+		blaster.blast(INPUT+queryFile+".in", OUTPUT+queryFile+".out");
 		BlastParser parser = new BlastParser(queryFile+".out");
 		parser.parseBlast();
 		ArrayList homologs = parser.getHomologList();
@@ -254,7 +254,7 @@ public class FlexSeqAnalyzer {
 	private String makeQueryFile() throws FlexUtilException {
 		java.util.Date d = new java.util.Date(); 
 		java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM_dd_yyyy");
-		String fileName = sequence.getGi()+"_" + f.format(d);	
+                String fileName = INPUT+sequence.getGi()+"_" + f.format(d);	
 		try {
 			PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(fileName+".in")));	
 			pr.print(sequence.getFastaHeader());
