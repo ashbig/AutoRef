@@ -228,7 +228,6 @@
                 name="projectWorkflowForm"
                 type="edu.harvard.med.hip.flex.action.SelectProjectAction">
         <forward    name="success"   path="/SelectWorkflow.jsp"/>
-        <forward    name="success_mgc_plate_handle"   path="/MGCPlateHandle.do"/>
     </action>
 
     <!-- Process user's selection of a workflow -->
@@ -237,6 +236,7 @@
                 type="edu.harvard.med.hip.flex.action.SelectWorkflowAction">
         <forward name="success_approve_sequences" path="/ViewPendingRequests.do"/>
         <forward name="success_create_process_plates" path="/CreateProcessPlate.do"/>
+        <forward name="success_mgc_plate_handle" path="/MGCPlateHandle.do"/>
         <forward    name="success"   path="/SelectProject.jsp"/>
     </action>
 
