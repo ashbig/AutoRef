@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.21 2002-05-20 16:28:14 dzuo Exp $
+ * $Id: Protocol.java,v 1.22 2002-05-24 16:55:08 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -78,6 +78,8 @@ public class Protocol {
         "Create glycerol stock from rearrayed culture block";
     public static final String CREATE_DNA_FROM_REARRAYED_CULTURE = 
         "Create DNA template plate from rearrayed culture block";
+    public static final String IMPORT_MGC_REQUEST = 
+        "Import MGC request";
     
     private int id;
     private String processcode;
