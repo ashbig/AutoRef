@@ -70,7 +70,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             String threepClosedPlate = ((CreatePCRPlateForm)form).getThreepClosedPlate();
             String subProtocolName = ((CreatePCRPlateForm)form).getSubProtocolName();           
             Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
-            SubProtocol subprotocol = new SubProtocol(protocol.getId(), subProtocolName);
+            SubProtocol subprotocol = new SubProtocol(subProtocolName);
             LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems"); 
             QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate);
             if(item == null) {

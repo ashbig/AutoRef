@@ -102,7 +102,7 @@ public class EnterSourcePlateAction extends ResearcherAction {
             Vector locationList = Location.getLocations();
             
             // Get the subprotocol name.
-            SubProtocol subprotocol = getSubProtocol(form, protocol);
+            SubProtocol subprotocol = getSubProtocol(form);
             
             // store all the information to the session.
             storeSourceContainerInSession(request, oldContainers);
@@ -147,9 +147,9 @@ public class EnterSourcePlateAction extends ResearcherAction {
         return containers;
     }
     
-    protected SubProtocol getSubProtocol(ActionForm form, Protocol protocol) {
+    protected SubProtocol getSubProtocol(ActionForm form) {
         String subProtocolName = ((CreateProcessPlateForm)form).getSubProtocolName();
-        SubProtocol subprotocol = new SubProtocol(protocol.getId(), subProtocolName);
+        SubProtocol subprotocol = new SubProtocol(subProtocolName);
         return subprotocol;
     }
     

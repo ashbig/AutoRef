@@ -35,7 +35,7 @@
         <html:options
         collection="subprotocols"
         property="name"
-        labelProperty="description"
+        labelProperty="name"
         />
         </html:select>
     </td>

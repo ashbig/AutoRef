@@ -25,7 +25,7 @@
 
     <tr>
     <td class="label">Protocol:</td>
-    <td><bean:write name="EnterSourcePlateAction.subprotocol" property="description"/></td>
+    <td><bean:write name="EnterSourcePlateAction.subprotocol" property="name"/></td>
     </tr>
 
     <tr>

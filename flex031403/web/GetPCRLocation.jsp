@@ -25,7 +25,7 @@
 
     <tr>
     <td class="label">PCR protocol:</td>
-    <td><bean:write name="EnterOligoPlateAction.subprotocol" property="description"/></td>
+    <td><bean:write name="EnterOligoPlateAction.subprotocol" property="name"/></td>
     </tr>
 
     <tr>

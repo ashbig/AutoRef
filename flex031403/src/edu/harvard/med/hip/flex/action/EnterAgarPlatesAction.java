@@ -66,9 +66,9 @@ public class EnterAgarPlatesAction extends EnterSourcePlateAction {
         ((CreateCultureBlockForm)form).setAgarC2Location(locations[3]);
     }   
     
-    protected SubProtocol getSubProtocol(ActionForm form, Protocol protocol) {
+    protected SubProtocol getSubProtocol(ActionForm form) {
         String subProtocolName = ((CreateCultureBlockForm)form).getSubProtocolName();
-        SubProtocol subprotocol = new SubProtocol(protocol.getId(), subProtocolName);
+        SubProtocol subprotocol = new SubProtocol(subProtocolName);
         return subprotocol;
     }
     
