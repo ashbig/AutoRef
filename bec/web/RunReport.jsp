@@ -33,24 +33,7 @@
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
 <tr><td>
-<table width="100%" border="0" cellspacing="2" cellpadding="2">
-  <tr> 
-    <td bgColor="#1145A6"> <font color="#FFFFFF"><strong>Select Items Type: </strong></font></td>
-  </tr>
-  <tr> 
-    <td><strong><input type="radio" name="item_type" value="1" checked>Container Labels</strong></td>
-  </tr>
-  <tr> 
-    <td><strong>  <input type="radio" name="item_type" value="2">Clone Ids</strong></td>
-  </tr>
-  <tr> 
-    <td bgColor="#1145A6"> <font color="#FFFFFF"><strong>Enter All search Items</strong></font></td>
-  </tr>
-  <tr> 
-    <td align="center"><textarea name="items"  rows="10"></textarea></td>
-  </tr>
-</table>
-</td></tr>
+<jsp:include page="enter_items.jsp" /></td></tr>
 <tr><td>
 <table width="100%" border="0" cellpadding="2" cellspacing="2">
   <tr> 
@@ -61,7 +44,7 @@
     <td width="50%" bgColor="#e4e9f8" ><div align="center"><font color="000080"><strong>&nbsp;&nbsp;&nbsp;Clone 
         Information: </strong></font></div></td>
     <td width="50%" bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Clone 
-        Trace Files Location</strong></font></div></td>
+              Raw Data Information</strong></font></div></td>
   </tr>
   <tr> 
     <td >   <input type="checkbox" name="clone_id" value="1">    Clone Id</td>
@@ -69,11 +52,12 @@
   </tr>
   <tr> 
     <td><input type="checkbox" name="sample_id" value="1">      Sample Id</td>
-    <td>&nbsp;</td>
+          <td> <input type="checkbox" name="read_length" value="1">
+            End Reads Length(High Quality Region)</td>
   </tr>
   <tr> 
     <td> <input type="checkbox" name="plate_label" value="1">      Plate Label</td>
-    <td>&nbsp;</td>
+          <td>&nbsp; </td>
   </tr>
   <tr> 
     <td> <input type="checkbox" name="sample_type" value="1">      Sample Type</td>
