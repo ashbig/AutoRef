@@ -11,12 +11,64 @@ import java.io.*;
 import java.util.*;
 
 import edu.harvard.med.hip.bec.util.*;
+import edu.harvard.med.hip.utility.*;
 /**
  *
  * @author  htaycher
  */
 public class BlastWrapper
 {
+    public static final String HUMANDB_NAME="Homo sapiens";
+    public static final String YEASTDB_NAME="Saccharomyces cerevisiae";
+    public static final String PSEUDOMONASDB_NAME="Pseudomonas aeruginosa";
+    public static final String MGCDB_NAME="MGC";
+   
+    
+    public static  String HUMANDB=null;
+    public static  String YEASTDB=null;
+    public static  String PSEUDOMONASDB=null;
+    public static  String MGCDB=null;
+   
+    {
+        if (ApplicationHostDeclaration.IS_BIGHEAD)
+        {
+            HUMANDB="d:\\blast_db\\Human\\genes";
+            YEASTDB="d:\\blast_db\\Yeast\\genes";
+            PSEUDOMONASDB="d:\\blast_db\\Pseudomonas\\genes";
+            MGCDB="d:\\blast_db\\MGC\\genes";
+        }
+            
+        else
+        {
+             HUMANDB="c:\\blast_db\\Human\\genes";
+            YEASTDB="c:\\blast_db\\Yeast\\genes";
+            PSEUDOMONASDB="c:\\blast_db\\Pseudomonas\\genes";
+            MGCDB="c:\\blast_db\\MGC\\genes";
+        }
+    }
+    public   static String getHumanDBLocation()
+    {  
+        BlastWrapper wr = new BlastWrapper();
+        return HUMANDB;
+    }
+    public   static String getYeastDBLocation()
+    {
+        BlastWrapper wr = new BlastWrapper();
+        return YEASTDB;
+    }
+    public   static String getPseudomonasDBLocation()
+    {
+        BlastWrapper wr = new BlastWrapper();
+        return PSEUDOMONASDB;
+    }
+            
+    public   static String getMGCDBLocation()
+    {
+        BlastWrapper wr = new BlastWrapper();
+        return MGCDB;
+    }
+        
+     
     // define a set of constants;
     public static final String QUERY_TYPE_DNA = "DNA";
     public static final String QUERY_TYPE_PROTEIN = "PROTEIN";
@@ -187,7 +239,7 @@ public class BlastWrapper
         
             throw new BecUtilException( BLAST_FAILED_NO_DB);
         }
-        System.out.println(m_blast_type + " "+m_db);
+       // System.out.println(m_blast_type + " "+m_db);
         blastcmd = makeBlastCmd();
 
         try

@@ -253,11 +253,11 @@ public class SelectProcessAction extends ResearcherAction
                             StringBuffer additional_jsp = new StringBuffer();
                             additional_jsp.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
                             additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Database Name</strong></td>");
-                            additional_jsp.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> <OPTION VALUE='"+ BlastWrapper.HUMANDB +"'>" + BlastWrapper.HUMANDB_NAME );
-                            additional_jsp.append(" <OPTION VALUE='"+ BlastWrapper.YEASTDB +"'>");
+                            additional_jsp.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> <OPTION VALUE='"+ BlastWrapper.getHumanDBLocation() +"'>" + BlastWrapper.HUMANDB_NAME );
+                            additional_jsp.append(" <OPTION VALUE='"+ BlastWrapper.getYeastDBLocation() +"'>");
                             additional_jsp.append( BlastWrapper.YEASTDB_NAME);
-  additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.PSEUDOMONASDB +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
-  additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.MGCDB +"'>"+ BlastWrapper.MGCDB_NAME );
+  additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getPseudomonasDBLocation() +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
+  additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.getMGCDBLocation() +"'>"+ BlastWrapper.MGCDB_NAME );
 additional_jsp.append("</SELECT></td> </tr>");
 additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
 additional_jsp.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
