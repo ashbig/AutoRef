@@ -104,19 +104,20 @@ public class MgcRequestImporter
         m_Request.insert(conn);
         DatabaseTransaction.commit(conn);
         
+       
+   
+        m_Request = new Request(m_Request.getId());
+        ArrayList contNames = new ArrayList();
+        if (prev_step) prev_step = putOnQueue(conn, contNames)  ;
+       
+        DatabaseTransaction.commit(conn);
         try{
             Vector ms = messages(requestGI, sequencesMatchedByGI, sequencesMatchedByBlast, 
-                                sequencesNotMatchedByBlast, sequenceNotFound, errorsOnBlastGI);
+                                sequencesNotMatchedByBlast, sequenceNotFound, errorsOnBlastGI, contNames);
             Mailer.notifyUser(m_UserName,"importMGC.log","Import MGC request report",
             "Import MGC request report",ms);
            
         }catch(Exception e){}
-   
-        m_Request = new Request(m_Request.getId());
-        if (prev_step) prev_step = putOnQueue(conn)  ;
-       
-        DatabaseTransaction.commit(conn);
-        
         //somthing went wrong notify user and myself
         if (! prev_step) 
                try{
@@ -133,7 +134,7 @@ public class MgcRequestImporter
     /* Function queries for all mgc containers needed for request
      *put on Queue all containers and sequences
      */
-    private boolean putOnQueue(Connection conn)
+    private boolean putOnQueue(Connection conn, ArrayList contNames)
     {
          //put containers on queue
         //get requesred mgc containers 
@@ -141,6 +142,10 @@ public class MgcRequestImporter
         ArrayList mgc_containers = null;
         try{
             mgc_containers = findMgcContainers(m_Request.getSequences());
+            for (int count = 0; count < mgc_containers.size(); count++)
+            {
+                contNames.add( ((Container) mgc_containers.get(count)).getLabel());
+            }
         } catch (Exception e)
         {
             return false;
@@ -405,7 +410,8 @@ public class MgcRequestImporter
     //send e-mail to the user with all GI separated to three groups
     private Vector messages(ArrayList requestGI, ArrayList seqMatchedByGI, 
                 ArrayList sequencesMatchedByBlast, ArrayList sequencesNotMatchedByBlast,
-                ArrayList sequenceNotFound, ArrayList errorsOnBlastGI) 
+                ArrayList sequenceNotFound, ArrayList errorsOnBlastGI,
+                ArrayList contNames) 
                 
           
     {
@@ -452,7 +458,12 @@ public class MgcRequestImporter
              if ( (count + 1) % 5 == 0 ) ms.add("\n");
         }
          
-         
+          ms.add( "\n\nContainers for request: \n");
+        for (int count = 0; count< contNames.size(); count++)
+        {
+             ms.add( contNames.get(count) + "\t");
+             if ( (count + 1) % 5 == 0 ) ms.add("\n");
+        }
         return ms;
         
     }
