@@ -134,10 +134,11 @@ public class SelectProcessAction extends ResearcherAction
     
                     runner.setUser(user);
                     runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
-                    t = new Thread(runner);
-                      request.setAttribute(Constants.JSP_TITLE,"Request for end read assembler invocation." );
-                   request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
-                   // t.start();
+                   
+                    request.setAttribute(Constants.JSP_TITLE,"Request for end read assembler invocation." );
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
+                     t = new Thread(runner);
+                    t.start();
                    return mapping.findForward("processing");
                     
                 }
