@@ -14,7 +14,7 @@ public class RearrayException extends Exception {
 
 	public RearrayException(String s) {
 
-		super("RearrayException: "+s);
+		super(s);
 
 	}
 

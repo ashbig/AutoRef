@@ -59,13 +59,39 @@ public class RearraySelectionAction extends ResearcherAction {
         
         try {
             Vector projects = Project.getAllProjects();
-            Workflow w1 = new Workflow(Workflow.CONVERT_CLOSE_TO_FUSION);
-            Workflow w2 = new Workflow(Workflow.CONVERT_FUSION_TO_CLOSE);
-            ArrayList workflows = new ArrayList();
-            workflows.add(w1);
-            workflows.add(w2);
+            ArrayList workflows = null;
+            
+            if(GenericRearrayForm.REARRAYSAMPLE.equals(rearrayType)) {
+                workflows = new ArrayList();
+                Workflow w1 = new Workflow(Workflow.CONVERT_CLOSE_TO_FUSION);
+                Workflow w2 = new Workflow(Workflow.CONVERT_FUSION_TO_CLOSE);
+                Workflow w3 = new Workflow(Workflow.REARRAY_PLATE);
+                workflows.add(w1);
+                workflows.add(w2);
+                workflows.add(w3);
+            } else if(GenericRearrayForm.REARRAYCLONE.equals(rearrayType)) {
+                workflows = new ArrayList();
+                Workflow w1 = new Workflow(Workflow.REARRAY_WORKING_GLYCEROL);
+                Workflow w2 = new Workflow(Workflow.REARRAY_WORKING_DNA);
+                Workflow w3 = new Workflow(Workflow.REARRAY_ARCHIVE_GLYCEROL);
+                Workflow w4 = new Workflow(Workflow.REARRAY_ARCHIVE_DNA);
+                Workflow w5 = new Workflow(Workflow.REARRAY_SEQ_GLYCEROL);
+                Workflow w6 = new Workflow(Workflow.REARRAY_SEQ_DNA);
+                Workflow w7 = new Workflow(Workflow.REARRAY_DIST_GLYCEROL);
+                Workflow w8 = new Workflow(Workflow.REARRAY_DIST_DNA);
+                workflows.add(w1);
+                workflows.add(w2);
+                workflows.add(w3);
+                workflows.add(w4);
+                workflows.add(w5);
+                workflows.add(w6);
+                workflows.add(w7);
+                workflows.add(w8);
+            }
+            
             request.setAttribute("projects", projects);
             request.setAttribute("workflows", workflows);
+            request.setAttribute("rearrayType", rearrayType);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);

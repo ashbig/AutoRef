@@ -14,17 +14,19 @@
 
 <body>
     
-<html:form action="RearrayParamSet.do" enctype="multipart/form-data">
-    <h2><bean:message key="flex.name"/> : Rearray Samples</h2>
+<html:form action="CloneRearrayParamSet.do" enctype="multipart/form-data">
+    <h2><bean:message key="flex.name"/> : Rearray Clones</h2>
     <hr>
     <html:errors/>
 
 <html:hidden property="fileFormat"/>
-<html:hidden property="plateFormat"/>
-<html:hidden property="wellFormat"/>
 <html:hidden property="destWellFormat"/>
 <html:hidden property="project"/>
 <html:hidden property="workflow"/>
+<logic:present name="dist">
+    <input type="hidden" name="dist" value="<bean:write name="dist"/>">
+</logic:present>
+<input type="hidden" name="workflowName" value="<bean:write name="workflowName"/>">
 <input type="hidden" name="projectName" value="<bean:write name="projectName"/>">
 <input type="hidden" name="workflowName" value="<bean:write name="workflowName"/>">
 <logic:present name="rearrayOption">
@@ -47,39 +49,46 @@
 <dl><dd>
     <table>
         <tr>
+            <td class="prompt">Select the source plate format:</td>
+            <logic:equal name="dist" value="yes">
+            <td><select name="sourceFormat">
+                <option value="workingGlycerol"/>Working Glycerol
+                <option value="workingDna"/>Working DNA
+                <option value="archiveGlycerol"/>Archive Glycerol
+                <option value="archiveDna"/>Archive DNA
+                </select>
+            </td>
+            </logic:equal>
+            <logic:equal name="dist" value="no">
+            <td><select name="sourceFormat">
+                <option value="glycerol"/>Original Production Glycerol Stock
+                <option value="dna"/>Original Production DNA
+                </select>
+            </td>
+            </logic:equal>
+        </tr>
+        <tr>
             <td class="prompt">New plate type for rearrayed plates:</td>
             <td><select name="plateType">
                 <option value="96 WELL PLATE"/>96 Well Plate
                 </select>
             </td>
         </tr>
-        <tr>
-            <td class="prompt">New sample type for rearrayed plates:</td>
-            <td><select name="sampleType">
-                <option value="dna"/>DNA
-                <option value="glycerol"/>Glycerol
-                </select>
-            </td>
-        </tr>
     </table>
     
-    <logic:present name="rearrayOption">
-    <html:hidden property="rearrayOption"/>
     <dd>
+    <logic:equal name="fileFormat" value="format1">
     <p>
     <table bgcolor=e5f6ff><tr><td>
     <p><u><b>Rearray Options</b></u></p>
-        <logic:equal name="fileFormat" value="format1">
             <b>Create destination plates according to: </b>
             <select name="sortBy">
                 <option value="1"/>Input file order
                 <option value="2"/>Source plate with most samples first
                 <option value="3"/>Saw-Tooth pattern
             </select>
-        </logic:equal> 
 
         <p>
-    <logic:equal name="fileFormat" value="format1">
     <b><html:checkbox property="isArrangeBySize">Group the following sequences separately:</html:checkbox></b>
     <dl>
         <dd><html:checkbox property="isSmall">group 1</html:checkbox>
@@ -93,22 +102,8 @@
     <p><b><html:checkbox property="isControl">Leave empty wells for controls (positive control on first well, negative control on last well)</html:checkbox></b>
     <p><b><html:checkbox property="isFullPlate">Do not rearray partial plates (default will be partial plates)</html:checkbox></b>
     <p><b><html:checkbox property="isSourceDup">Allow duplicate samples in source plate</html:checkbox></b>
-    </logic:equal>
-    
-    <logic:notEqual name="workflow" value="16">
-    <p><b>Generate rearrayed oligo plate</b>
-    <dl>
-        <dd><html:radio property="isNewOligo" value="false"/>from existing oligo plates
-        <dd><html:radio property="isNewOligo" value="true"/>from new oligos
-        <dd>Choose oligo format: <select name="oligoFormat">
-                                    <option value="both"/>Both
-                                    <option value="fusion"/>Fusion
-                                    <option value="close"/>Closed
-                                 </select>
-    </dl>
-    </logic:notEqual>
     </td></tr></table>
-    </logic:present>
+    </logic:equal>
 </dl>
 <p><b><u>Output files:   </u></b>
     <dl><dd>

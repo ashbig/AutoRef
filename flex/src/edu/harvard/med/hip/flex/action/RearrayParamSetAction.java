@@ -30,8 +30,9 @@ import edu.harvard.med.hip.flex.core.Location;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.user.User;
+import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.Constants;
+import edu.harvard.med.hip.flex.core.*;
 
 /**
  *
@@ -65,8 +66,7 @@ public class RearrayParamSetAction extends ResearcherAction {
         String wellFormat = ((GenericRearrayForm)form).getWellFormat();
         String destWellFormat = ((GenericRearrayForm)form).getDestWellFormat();
         String plateType = ((GenericRearrayForm)form).getPlateType();
-        String sampleType = ((GenericRearrayForm)form).getSampleType();
-        String location = ((GenericRearrayForm)form).getLocation();
+        String location = Location.UNAVAILABLE;
         int project = ((GenericRearrayForm)form).getProject();
         int workflow = ((GenericRearrayForm)form).getWorkflow();
         boolean isArrangeBySize = ((GenericRearrayForm)form).getIsArrangeBySize();
@@ -78,26 +78,78 @@ public class RearrayParamSetAction extends ResearcherAction {
         boolean isArrangeByFormat = ((GenericRearrayForm)form).getIsArrangeByFormat();
         boolean isControl = ((GenericRearrayForm)form).getIsControl();
         boolean isFullPlate = ((GenericRearrayForm)form).getIsFullPlate();
-        boolean isOligo = ((GenericRearrayForm)form).getIsOligo();
+        //boolean isOligo = ((GenericRearrayForm)form).getIsOligo();
         String isNewOligo = ((GenericRearrayForm)form).getIsNewOligo();
         String oligoFormat = ((GenericRearrayForm)form).getOligoFormat();
         int sortBy = ((GenericRearrayForm)form).getSortBy();
         String output = ((GenericRearrayForm)form).getOutput();
         String researcherBarcode = ((GenericRearrayForm)form).getResearcherBarcode();
-        FormFile inputFile = ((GenericRearrayForm)form).getInputFile();       
+        FormFile inputFile = ((GenericRearrayForm)form).getInputFile();
+        String userEmail = ((GenericRearrayForm)form).getUserEmail();
+        String rearrayOption = ((GenericRearrayForm)form).getRearrayOption();
+        String projectName = ((GenericRearrayForm)form).getProjectName();
+        String workflowName = ((GenericRearrayForm)form).getWorkflowName();
+        String dist = ((GenericRearrayForm)form).getDist();
+        String rearrayType = ((GenericRearrayForm)form).getRearrayType();
+        boolean isSourceDup = ((GenericRearrayForm)form).getIsSourceDup();
         
         request.setAttribute("fileFormat", fileFormat);
+        request.setAttribute("plateFormat", plateFormat);
+        request.setAttribute("wellFormat", wellFormat);
+        request.setAttribute("destWellFormat", destWellFormat);
+        request.setAttribute("project", new Integer(project));
+        request.setAttribute("workflow", new Integer(workflow));
+        request.setAttribute("userEmail", userEmail);
+        request.setAttribute("projectName", projectName);
+        request.setAttribute("workflowName", workflowName);
+        
+        if("on".equals(rearrayOption))
+            request.setAttribute("rearrayOption", rearrayOption);
+        
+        if(dist != null)
+            request.setAttribute("dist", dist);
+        
+        boolean isError = false;
+        
+        if(isArrangeBySize) {
+            boolean isSizeInvalid = false;
+            
+            if(isSmall && lower<0) {
+                isSizeInvalid = true;
+            }
+            if(isMedium && (lower<0 || upper<0)) {
+                isSizeInvalid = true;
+            }
+            if(isLarge && upper<0) {
+                isSizeInvalid = true;
+            }
+            if(isMedium) {
+                if(lower > upper) {
+                    isSizeInvalid = true;
+                }
+            } else {
+                if(isSmall && isLarge) {
+                    isSizeInvalid = true;
+                }
+            }
+            
+            if(isSizeInvalid) {
+                errors.add("lower", new ActionError("error.rearray", "Invalid CDS length"));
+                saveErrors(request,errors);
+                isError = true;
+            }
+        }
         
         if(researcherBarcode == null || researcherBarcode.trim().equals("")) {
             errors.add("researcherBarcode", new ActionError("error.researcherBarcode.required"));
             saveErrors(request,errors);
-            return (new ActionForward(mapping.getInput()));
+            isError = true;
         }
         
         if(inputFile == null || inputFile.getFileName() == null || inputFile.getFileName().trim().equals("")) {
             errors.add("inputFile", new ActionError("error.filename.required"));
             saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
+            isError = true;
         }
         
         InputStream input = null;
@@ -106,31 +158,32 @@ public class RearrayParamSetAction extends ResearcherAction {
         } catch (Exception ex) {
             errors.add("inputFile", new ActionError("error.file.invalid", inputFile.getFileName()));
             saveErrors(request, errors);
+            isError = true;
+        }
+        
+        if(isError) {
             return (new ActionForward(mapping.getInput()));
         }
         
         RearrayManager manager = new RearrayManager(input);
         
-        if("format2".equals(fileFormat)) 
+        if(GenericRearrayForm.REARRAYCLONE.equals(rearrayType))
+            manager.setIsClone(true);
+        
+        if("format2".equals(fileFormat))
             manager.setIsDestPlateSet(true);
         
-        if("number".equals(plateFormat)) 
+        if("number".equals(plateFormat))
             manager.setIsPlateAsLabel(false);
         
-        if("alpha".equals(wellFormat)) 
+        if("alpha".equals(wellFormat))
             manager.setIsWellAsNumber(false);
         
         if("alpha".equals(destWellFormat))
             manager.setIsDestWellAsNumber(false);
         
-        if("dna".equals(sampleType)) {
-            manager.setProtocolName(Protocol.REARRAY_TO_DNA_TEMPLATE);
-            manager.setSampleType("DNA");
-        } else if("glycerol".equals(plateType)) {
-            manager.setProtocolName(Protocol.REARRAY_GLYCEROL);
-            manager.setSampleType("Isolate");
-        }
-    
+        setSampleTypeAndProtocol(form, manager);
+        
         manager.setPlateType(plateType);
         manager.setLocation(location);
         manager.setProjectid(project);
@@ -144,9 +197,9 @@ public class RearrayParamSetAction extends ResearcherAction {
         manager.setIsArrangeByFormat(isArrangeByFormat);
         manager.setIsControl(isControl);
         manager.setIsFullPlate(isFullPlate);
-        manager.setIsOligo(isOligo);
         manager.setSortBy(sortBy);
         manager.setResearcherBarcode(researcherBarcode);
+        manager.setIsSourceDup(isSourceDup);
         
         if("true".equals(isNewOligo))
             manager.setIsNewOligo(true);
@@ -156,31 +209,49 @@ public class RearrayParamSetAction extends ResearcherAction {
         
         if("close".equals(oligoFormat))
             manager.setIsClosed(true);
-       
-        if(workflow == Workflow.CONVERT_CLOSE_TO_FUSION || workflow == Workflow.CONVERT_FUSION_TO_CLOSE)
+        
+        if(workflow == Workflow.CONVERT_CLOSE_TO_FUSION || workflow == Workflow.CONVERT_FUSION_TO_CLOSE) {
+            manager.setIsOligo(true);
             manager.setIsOnQueue(true);
-       
+        } else {
+            manager.setIsOligo(false);
+            manager.setIsOnQueue(false);
+        }
+        
         if("onefile".equals(output))
             manager.setIsOneFile(true);
         
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        Connection conn = null;   
+        setStorageFormAndType(form, manager);
+        
+        //User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        Connection conn = null;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             manager.createAllPlates(conn);
             manager.writeOutputFiles();
-            manager.sendRobotFiles(user.getUserEmail());
+            manager.writeToLog("rearray_log.txt");
+            manager.sendRobotFiles(userEmail);
             ArrayList rearrayedContainers = manager.getRearrayedContainers();
             ArrayList files = manager.getFiles();
             request.setAttribute("containers", rearrayedContainers);
             request.setAttribute("files", files);
-            DatabaseTransaction.commit(conn);            
-            request.getSession().removeAttribute("Rearray.locations");
+            DatabaseTransaction.commit(conn);
+            //request.getSession().removeAttribute("Rearray.locations");
             return (mapping.findForward("success"));
         } catch (RearrayException ex) {
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(ex.getMessage()));
-            saveErrors(request, errors);      
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.rearray", ex.getMessage()));
+            saveErrors(request, errors);
+            DatabaseTransaction.rollback(conn);
+            return (new ActionForward(mapping.getInput()));
+        } catch (NumberFormatException ex) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.rearray", "Wrong format: "+ex.getMessage()));
+            saveErrors(request, errors);
+            DatabaseTransaction.rollback(conn);
+            return (new ActionForward(mapping.getInput()));
+        } catch (IOException ex) {
+            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.rearray", "Error while reading or writing files: "+ex.getMessage()));
+            saveErrors(request, errors);
             DatabaseTransaction.rollback(conn);
             return (new ActionForward(mapping.getInput()));
         } catch (Exception e) {
@@ -190,5 +261,20 @@ public class RearrayParamSetAction extends ResearcherAction {
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
+    }
+    
+    protected void setSampleTypeAndProtocol(ActionForm form, RearrayManager manager) {
+        String sampleType = ((GenericRearrayForm)form).getSampleType();
+        
+        if("dna".equals(sampleType.trim())) {
+            manager.setProtocolName(Protocol.REARRAY_TO_DNA_TEMPLATE);
+            manager.setSampleType(Sample.DNA);
+        } else if("glycerol".equals(sampleType.trim())) {
+            manager.setProtocolName(Protocol.REARRAY_GLYCEROL);
+            manager.setSampleType(Sample.ISOLATE);
+        }
+    }
+    
+    protected void setStorageFormAndType(ActionForm form, RearrayManager manager) {
     }
 }

@@ -17,7 +17,8 @@ import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.util.*;
-import edu.harvard.med.hip.flex.user.User;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.utility.Logger;
 
 /**
  *
@@ -26,9 +27,10 @@ import edu.harvard.med.hip.flex.user.User;
 public class RearrayManager {
     public static final String REARRAYEDPLATETYPE = "96 WELL PLATE";
     public static final String DILIM = "\t";
-    public static final String FILEPATH = "/tmp/";
-    //public static final String FILEPATH = "G:\\";
+    //public static final String FILEPATH = "/tmp/";
+    public static final String FILEPATH = "G:\\";
     public static final String LEFTFILE = "left";
+    public static final String DEFAULTLOGFILE = "rearray_log.txt";
     
     protected InputStream fileInput = null;
     protected ArrayList leftSamples = null;
@@ -59,6 +61,8 @@ public class RearrayManager {
     protected boolean isPlateAsLabel = true;
     protected boolean isWellAsNumber = true;
     protected boolean isDestWellAsNumber = true;
+    protected boolean isStorage = false;
+    protected boolean isSourceDup = false;
     
     protected int sortBy = GenericRearrayer.SORT_BY_NONE;
     protected int numOfWellsOnPlate = 96;
@@ -66,13 +70,19 @@ public class RearrayManager {
     protected int sizeLower = GenericRearrayer.SIZELOWER;
     protected int sizeHigher = GenericRearrayer.SIZEHIGHER;
     protected String plateType = REARRAYEDPLATETYPE;
-    protected String location = Location.FREEZER;
+    protected String location = Location.UNAVAILABLE;
     protected int projectid = -1;
     protected int workflowid = -1;
     protected String protocolName = null;
     protected String labelPrefix = null;
     protected String sampleType = Sample.ISOLATE;
     protected String researcherBarcode = null;
+    
+    protected String storageForm = null;
+    protected String storageType = null;
+    protected String destStorageForm = null;
+    protected String destStorageType = null;
+    protected String logFile = DEFAULTLOGFILE;
     
     protected Project project = null;
     protected Workflow workflow = null;
@@ -102,6 +112,7 @@ public class RearrayManager {
     public void setIsDestWellAsNumber(boolean b) {this.isDestWellAsNumber = b;}
     public void setIsFusion(boolean b) {this.isFusion = b;}
     public void setIsClosed(boolean b) {this.isClosed = b;}
+    public void setIsStorage(boolean b) {this.isStorage = b;}
     
     public void setSortBy(int i) {this.sortBy = i;}
     public void setNumOfWellsOnPlate(int i) {this.numOfWellsOnPlate = i;}
@@ -116,6 +127,19 @@ public class RearrayManager {
     public void setLabelPrefix(String labelPrefix) {this.labelPrefix = labelPrefix;}
     public void setSampleType(String sampleType) {this.sampleType = sampleType;}
     public void setResearcherBarcode(String researcher) {this.researcherBarcode = researcher;}
+    public void setStorageForm(String s) {this.storageForm = s;}
+    public void setStorageType(String s) {this.storageType = s;}
+    public void setDestStorageForm(String s) {this.destStorageForm = s;}
+    public void setDestStorageType(String s) {this.destStorageType = s;}
+    public void setIsSourceDup(boolean b) {this.isSourceDup = b;}
+    public void setLogFile(String s) {this.logFile = s;}
+    
+    public int getProjectid() {return projectid;}
+    public int getWorkflowid() {return workflowid;}
+    public String getStorageForm() {return storageForm;}
+    public String getStorageType() {return storageType;}
+    public String getDestStorageForm() {return destStorageForm;}
+    public String getDestStorageType() {return destStorageType;}
     
     /** Creates a new instance of RearrayManager */
     public RearrayManager(InputStream fileInput) {
@@ -135,7 +159,7 @@ public class RearrayManager {
      */
     public void createAllPlates(Connection conn)
     throws FlexDatabaseException, FlexProcessException, FlexCoreException,
-    FlexWorkflowException,IOException, Exception {
+    FlexWorkflowException,IOException, RearrayException, NumberFormatException, Exception {
         if(projectid != -1 && workflowid != -1) {
             project = new Project(projectid);
             workflow = new Workflow(workflowid);
@@ -145,12 +169,33 @@ public class RearrayManager {
             protocol = new Protocol(protocolName);
         }
         
-        l = new Location(location);        
+        l = new Location(location);
         researcher = new Researcher(researcherBarcode);
         
         ArrayList inputSamples = readFile();
         ArrayList samples = convertSamples(inputSamples, conn);
+        
+        if(samples == null || samples.size() == 0) {
+            throw new RearrayException("No samples found in database.");
+        }
         //printSamples(samples);
+        
+        if(!isSourceDup) {
+            List dups = checkSourceDup(samples);
+            
+            if(dups.size() > 0) {
+                String message = "The following samples occured more than once in source plates:<br>";
+                for(int i=0; i<dups.size(); i++) {
+                    RearrayPlateMap m = (RearrayPlateMap)dups.get(i);
+                    if(isClone) {
+                        message += "\t"+m.getRearrayInputSample().getClone()+"<br>";
+                    } else {
+                        message += "\t"+m.getRearrayInputSample().getSourcePlate()+"\t"+m.getRearrayInputSample().getSourceWell()+"<br>";
+                    }
+                }
+                throw new RearrayException(message);
+            }
+        }
         
         leftSamples = new ArrayList();
         allRearrayedSamples = new Hashtable();
@@ -286,6 +331,86 @@ public class RearrayManager {
         Mailer.sendMessage(to, from, cc, subject, msgText, files);
     }
     
+    public void writeToLog(String filename) throws IOException {
+        java.util.Date today = new java.util.Date();
+        File file = new File(FILEPATH+filename);
+        FileWriter fr = new FileWriter(file);
+        
+        fr.write("Begin: "+today+"\n\n");
+        
+        
+        
+        fr.write("Project:\t"+project.getName()+"\n");
+        fr.write("Workflow:\t"+workflow.getName()+"\n");
+        fr.write("\nRearray Options:");
+        if(sortBy == GenericRearrayer.SORT_BY_NONE) {
+            fr.write("Create destination plates according to:\t"+"Input file order\n");
+        }
+        if(sortBy == GenericRearrayer.SORT_BY_SAWTOOTH) {
+            fr.write("Create destination plates according to:\t"+"Saw-Tooth pattern\n");
+        }
+        if(sortBy == GenericRearrayer.SORT_BY_SOURCE) {
+            fr.write("Create destination plates according to:\t"+"Source plate with most samples first\n");
+        }
+        if(isArrangeBySize) {
+            fr.write("The following sequences grouped separately:");
+            if(isSmall) {
+                fr.write("\tgroup 1\n");
+            }
+            if(isMedium) {
+                fr.write("\tgroup 2\n");
+            }
+            if(isLarge) {
+                fr.write("\tgroup 3\n");
+            }
+            fr.write("\tCDS length to separate group 1 and group 2:\t"+sizeLower+"\n");
+            fr.write("\tCDS length to separate group 2 and group 3:\t"+sizeHigher+"\n");
+        }
+        if(isArrangeByFormat) {
+            fr.write("Separate by construct type (FUSION, CLOSE, etc.):\tYes\n");
+        } else {
+            fr.write("Separate by construct type (FUSION, CLOSE, etc.):\tNo\n");
+        }
+        if(isControl) {
+            fr.write("Leave empty wells for controls (positive control on first well, negative control on last well):\tYes\n");
+        } else {
+            
+            fr.write("Leave empty wells for controls (positive control on first well, negative control on last well):\tNo\n");
+        }
+        if(isFullPlate) {
+            fr.write("Rearray partial plates:\tNo\n");
+        } else {
+            fr.write("Rearray partial plates:\tYes\n");
+        }
+        if(isSourceDup) {
+            fr.write("Allow duplicate samples in source plate:\tYes\n");
+        } else {
+            fr.write("Allow duplicate samples in source plate:\tNo\n");
+        }
+        if(isOligo) {
+            if(isNewOligo) {
+                fr.write("Generate rearrayed oligo plates from new oligos\n");
+            } else {
+                fr.write("Generate rearrayed oligo plates from existing oligo plates\n");
+            }
+            if(isFusion) {
+                fr.write("\tOligo format:\tFusion\n");
+            } else if (isClosed) {
+                fr.write("\tOligo format:\tClosed\n");
+            } else {
+                fr.write("\tOligo format:\tBoth\n");
+            }
+        }
+        
+        today = new java.util.Date();
+        fr.write("\n\nEnd: "+today);
+        
+        fr.flush();
+        fr.close();
+        
+        files.add(file);
+    }
+    
     //---------------------------------------------------------------------------------//
     //                          Private Methods
     //---------------------------------------------------------------------------------//
@@ -317,14 +442,14 @@ public class RearrayManager {
     
     //Convert the input samples into RearrayPlateMap samples.
     protected ArrayList convertSamples(List samples, Connection conn)
-    throws SQLException {
+    throws SQLException, NumberFormatException {
         RearrayPlateMapCreator creator = new RearrayPlateMapCreator(isPlateAsLabel,isWellAsNumber);
         creator.setIsDestWellAsNumber(isDestWellAsNumber);
         
         ArrayList newSamples = null;
         
         if(isClone) {
-            newSamples = creator.createRearrayClones(samples, conn);
+            newSamples = creator.createRearrayClones(samples, storageType, storageForm, conn);
         } else {
             newSamples = creator.createRearraySamples(samples, conn);
         }
@@ -384,7 +509,7 @@ public class RearrayManager {
     
     //Create one rearrayed plate for given samples. Insert records into database.
     protected Container createPlate(List samples, String newPlateType,String newSampleType, int threadid, String label, Connection conn)
-    throws FlexDatabaseException, FlexWorkflowException {
+    throws FlexDatabaseException, FlexWorkflowException, SQLException {
         RearrayContainerMapper mapper = new RearrayContainerMapper(samples, isControl);
         Container container = null;
         
@@ -398,6 +523,10 @@ public class RearrayManager {
         Vector sampleLineageSet = mapper.getSampleLineageSet();
         Set sourceContainers = mapper.getSourceContainers();
         createProcessRecord(sourceContainers, container, sampleLineageSet, conn);
+        
+        if(isStorage) {
+            addToStorage(container, conn);
+        }
         
         rearrayedContainers.add(container);
         
@@ -548,50 +677,96 @@ public class RearrayManager {
         allRearrayedSamples.put("rearray_3c", rearrayedOligo3cSamples);
     }
     
+    //add all the samples with cloneid != 0 in container to clonestorage table.
+    protected void addToStorage(Container c, Connection conn) throws FlexDatabaseException, SQLException {
+        Vector samples = c.getSamples();
+        CloneStorageSet cs = new CloneStorageSet();
+        
+        for(int i=0; i<samples.size(); i++) {
+            Sample s = (Sample)samples.get(i);
+            if(s.getCloneid() > 0) {
+                CloneStorage cloneStorage = new CloneStorage(s.getId(), destStorageType, destStorageForm, s.getCloneid());
+                cs.add(cloneStorage);
+            }
+        }
+        
+        cs.insert(conn);
+    }
+    
+    protected List checkSourceDup(List samples) {
+        GenericRearrayer rearrayer = new GenericRearrayer();
+        List sortedSamples = rearrayer.groupBySource(samples);
+        RearrayPlateMap last = null;
+        List duplicates = new ArrayList();
+        
+        for(int i=0; i<sortedSamples.size(); i++) {
+            RearrayPlateMap current = (RearrayPlateMap)sortedSamples.get(i);
+            
+            if(last != null) {
+                if(last.getSourcePlateid() == current.getSourcePlateid() &&
+                last.getSourceWell() == current.getSourceWell()) {
+                    duplicates.add(last);
+                }
+            }
+            last = current;
+        }
+        
+        return duplicates;
+    }
+    
     /********************************************************************************
      *                          Test
      ********************************************************************************/
     public static void main(String args[]) {
-        //String file = "G:\\rearraytest1.txt";
-        String file = "G:\\rearraytest2.txt";
-        //String file = "G:\\rearraytest4.txt";
+        //String file = "G:\\rearraytest_source.txt";
+        //String file = "G:\\rearraytest_dest.txt";
+        //String file = "G:\\rearraytest_dest_dup.txt";
+        String file = "G:\\rearraytest_clone.txt";
         
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
             InputStream input = new FileInputStream(file);
             RearrayManager manager = new RearrayManager(input);
+            manager.setIsClone(true);
             manager.setIsWellAsNumber(false);
             manager.setIsArrangeByFormat(true);
             //manager.setIsControl(true);
             //manager.setNumOfControls(2);
             //manager.setIsFullPlate(true);
             manager.setIsOneFile(false);
-            manager.setIsOligo(true);
+            //manager.setIsOligo(true);
             //manager.setIsFusion(true);
             //manager.setIsClosed(true);
             //manager.setIsNewOligo(true);
             //manager.setIsOnQueue(true);
-            manager.setSortBy(GenericRearrayer.SORT_BY_SAWTOOTH);
-            manager.setSortBy(GenericRearrayer.SORT_BY_SOURCE);
-            manager.setIsArrangeBySize(true);
-            manager.setSizeLower(600);
-            manager.setSizeHigher(800);
-            manager.setIsSmall(true);
-            manager.setIsMedium(true);
-            manager.setIsLarge(true);
-            manager.setIsDestPlateSet(true);
+            //manager.setSortBy(GenericRearrayer.SORT_BY_SAWTOOTH);
+            //manager.setSortBy(GenericRearrayer.SORT_BY_SOURCE);
+            //manager.setIsArrangeBySize(true);
+            //manager.setSizeLower(600);
+            //manager.setSizeHigher(800);
+            //manager.setIsSmall(true);
+            //manager.setIsMedium(true);
+            //manager.setIsLarge(true);
+            //manager.setIsDestPlateSet(true);
             
             manager.setResearcherBarcode("joy");
-            manager.setProjectid(10);
-            manager.setWorkflowid(14);
-            manager.setProtocolName(Protocol.MGC_DESIGN_CONSTRUCTS);
+            manager.setProjectid(2);
+            manager.setWorkflowid(21);
+            manager.setProtocolName(Protocol.REARRAY_DIST_GLYCEROL);
+            //manager.setIsStorage(true);
+            manager.setStorageForm(StorageForm.GLYCEROL);
+            manager.setStorageType(StorageType.WORKING);
+            //manager.setDestStorageForm(StorageForm.GLYCEROL);
+            //manager.setDestStorageType(StorageType.ARCHIVE);
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             manager.createAllPlates(conn);
             manager.writeOutputFiles();
             manager.sendRobotFiles("dzuo@hms.harvard.edu");
+            DatabaseTransaction.commit(conn);
         } catch (Exception e) {
+            DatabaseTransaction.rollback(conn);
             System.out.println(e.getMessage());
         } finally {
             DatabaseTransaction.closeConnection(conn);

@@ -13,8 +13,8 @@
 
 <body>
     
-<html:form action="RearrayFileInput.do">
-    <h2><bean:message key="flex.name"/> : Rearray Samples</h2>
+<html:form action="CloneRearrayFileInput.do">
+    <h2><bean:message key="flex.name"/> : Rearray Clones</h2>
     <hr>
     <html:errors/>
 
@@ -22,21 +22,11 @@
 
 <p><b><u>Choose the file format:</u></b></p>
 <dl>
-    <dd><html:radio property="fileFormat" value="format1"/>source plate, source well
-    <dd><html:radio property="fileFormat" value="format2"/>source plate, source well, destination plate, destination well
+    <dd><html:radio property="fileFormat" value="format1"/>clone ID
+    <dd><html:radio property="fileFormat" value="format2"/>clone ID, destination plate, destination well
     <dd>
     <p>
     <table>
-        <tr>
-            <td class="prompt">Source Plate:</td>
-            <td><html:radio property="plateFormat" value="label"/>plate label</td>
-            <td><html:radio property="plateFormat" value="number"/>plate ID</td>
-        </tr>
-        <tr>
-            <td class="prompt">Source Well:</td>
-            <td><html:radio property="wellFormat" value="number"/>number</td>
-            <td><html:radio property="wellFormat" value="alpha"/>alphanumeric</td>
-        </tr>
         <tr>
             <td class="prompt">Destination Well:</td>
             <td><html:radio property="destWellFormat" value="number"/>number</td>

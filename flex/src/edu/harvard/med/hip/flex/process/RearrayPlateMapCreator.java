@@ -15,7 +15,7 @@ import java.io.*;
 
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.*;
-import edu.harvard.med.hip.flex.core.Construct;
+import edu.harvard.med.hip.flex.core.*;
 
 /**
  *
@@ -48,8 +48,8 @@ public class RearrayPlateMapCreator {
      * @exception SQLException.
      */
     public ArrayList createRearraySamples(List inputSamples, Connection conn)
-    throws SQLException {
-        String s1 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype"+
+    throws SQLException, NumberFormatException {
+        String s1 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype, s.cloneid"+
         " from flexsequence f, constructdesign c, containerheader ch,"+
         " (select * from sample where containerid in ("+
         " select containerid from containerheader where label=?)) s"+
@@ -57,7 +57,7 @@ public class RearrayPlateMapCreator {
         " and c.constructid=s.constructid"+
         " and s.containerid=ch.containerid"+
         " and s.containerposition=?";
-        String s2 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype"+
+        String s2 = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype, s.cloneid"+
         " from flexsequence f, constructdesign c, containerheader ch,"+
         " (select * from sample where containerid=?) s"+
         " where f.sequenceid=c.sequenceid"+
@@ -91,10 +91,10 @@ public class RearrayPlateMapCreator {
                 } else {
                     position = Integer.parseInt(s.getSourceWell());
                 }
-                   
-                int destPosition = -1;                 
+                
+                int destPosition = -1;
                 if(s.getDestWell() != null) {
-                    if(!isDestWellAsNumber) {    
+                    if(!isDestWellAsNumber) {
                         destPosition = Algorithms.convertWellFromA8_12toInt(s.getDestWell());
                     } else {
                         destPosition = Integer.parseInt(s.getDestWell());
@@ -118,12 +118,14 @@ public class RearrayPlateMapCreator {
                     int containerid = rs.getInt(10);
                     String label = rs.getString(11);
                     String sampletype = rs.getString(12);
+                    int cloneid = rs.getInt(13);
                     RearrayPlateMap m = new RearrayPlateMap(sampleid,constructid,constructtype,oligoid5p,oligoid3p,sequenceid,cdsstart,cdsstop,cdslength,containerid,label);
                     m.setSourceWell(position);
                     m.setRearrayInputSample(s);
                     m.setDestPlateLabel(s.getDestPlate());
                     m.setDestWell(destPosition);
                     m.setSampletype(sampletype);
+                    m.setCloneid(cloneid);
                     samples.add(m);
                 }
             }
@@ -145,9 +147,73 @@ public class RearrayPlateMapCreator {
      * @return A ArrayList that contains all the information for clones.
      * @exception SQLException.
      */
-    public ArrayList createRearrayClones(List inputSamples, Connection conn) {
+    public ArrayList createRearrayClones(List inputSamples, String storageType, String storageForm, Connection conn)
+    throws SQLException, NumberFormatException {
+        String sql = "select s.sampleid,c.constructid,c.constructtype,c.oligoid_5p,c.oligoid_3p,f.sequenceid,f.cdsstart,f.cdsstop,f.cdslength,ch.containerid,ch.label, s.sampletype, s.containerposition"+
+        " from flexsequence f, constructdesign c, containerheader ch,"+
+        " (select * from sample where sampleid in ("+
+        " select storagesampleid from clonestorage where cloneid=?"+
+        " and storageform=?"+
+        " and storagetype=?)) s"+
+        " where f.sequenceid=c.sequenceid"+
+        " and c.constructid=s.constructid"+
+        " and s.containerid=ch.containerid";
+        
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = null;
         ArrayList samples = new ArrayList();
-        return samples;
+        
+        try {
+            for(int i=0; i<inputSamples.size(); i++) {
+                RearrayInputSample s = (RearrayInputSample)inputSamples.get(i);
+                int cloneid = Integer.parseInt(s.getClone());
+                stmt.setInt(1, cloneid);
+                stmt.setString(2, storageForm);
+                stmt.setString(3, storageType);
+                
+                int destPosition = -1;
+                if(s.getDestWell() != null) {
+                    if(!isDestWellAsNumber) {
+                        destPosition = Algorithms.convertWellFromA8_12toInt(s.getDestWell());
+                    } else {
+                        destPosition = Integer.parseInt(s.getDestWell());
+                    }
+                }
+                
+                rs = DatabaseTransaction.executeQuery(stmt);
+                if(rs.next()) {
+                    int sampleid = rs.getInt(1);
+                    int constructid = rs.getInt(2);
+                    if(constructid == 0) constructid=-1;
+                    String constructtype = rs.getString(3);
+                    int oligoid5p = rs.getInt(4);
+                    int oligoid3p = rs.getInt(5);
+                    int sequenceid = rs.getInt(6);
+                    int cdsstart = rs.getInt(7);
+                    int cdsstop = rs.getInt(8);
+                    int cdslength = rs.getInt(9);
+                    int containerid = rs.getInt(10);
+                    String label = rs.getString(11);
+                    String sampletype = rs.getString(12);
+                    int position = rs.getInt(13);
+                    RearrayPlateMap m = new RearrayPlateMap(sampleid,constructid,constructtype,oligoid5p,oligoid3p,sequenceid,cdsstart,cdsstop,cdslength,containerid,label);
+                    m.setSourceWell(position);
+                    m.setRearrayInputSample(s);
+                    m.setDestPlateLabel(s.getDestPlate());
+                    m.setDestWell(destPosition);
+                    m.setSampletype(sampletype);
+                    m.setCloneid(cloneid);
+                    samples.add(m);
+                }
+            }
+            return samples;
+        } catch (FlexDatabaseException ex) {
+            System.out.println(ex);
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
     }
     
     /**
@@ -271,15 +337,18 @@ public class RearrayPlateMapCreator {
         //inputSamples.add(s2);
         //inputSamples.add(s3);
         
-        String file = "G:\\rearraytest1.txt";
+        //String file = "G:\\rearraytest_source.txt";
+        String file = "G:\\rearraytest_clone.txt";
         RearrayPlateMapCreator creator = new RearrayPlateMapCreator(true, false);
+        
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
             ArrayList inputSamples = readFile(file);
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            ArrayList outputSamples = creator.createRearraySamples(inputSamples, conn);
+            //ArrayList outputSamples = creator.createRearraySamples(inputSamples, conn);
+            ArrayList outputSamples = creator.createRearrayClones(inputSamples, StorageType.ORIGINAL, StorageForm.GLYCEROL, conn);
             for(int i=0; i<outputSamples.size(); i++) {
                 RearrayPlateMap sample = (RearrayPlateMap)outputSamples.get(i);
                 System.out.println("source plate ID:\t"+sample.getSourcePlateid());
@@ -377,7 +446,7 @@ public class RearrayPlateMapCreator {
                 System.out.println("source well:\t"+s.getSourceWell());
                 System.out.println("dest plate:\t"+s.getDestPlate());
                 System.out.println("dest well:\t"+s.getDestWell());
-            }      
+            }
             
             System.out.println("========================================================");
             
@@ -403,7 +472,7 @@ public class RearrayPlateMapCreator {
                 System.out.println("source well:\t"+s.getSourceWell());
                 System.out.println("dest plate:\t"+s.getDestPlate());
                 System.out.println("dest well:\t"+s.getDestWell());
-            }     
+            }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         } finally {
@@ -430,7 +499,8 @@ public class RearrayPlateMapCreator {
                 i++;
             }
             
-            RearrayInputSample s = new RearrayInputSample(info[0],info[1],info[2],info[3],false);
+            //RearrayInputSample s = new RearrayInputSample(info[0],info[1],info[2],info[3],false);
+            RearrayInputSample s = new RearrayInputSample(info[0],info[1],info[2],info[3],true);
             inputSamples.add(s);
         }
         in.close();

@@ -1,7 +1,7 @@
 /*
- * RearrayFileInputAction.java
+ * CloneRearrayFileInputAction.java
  *
- * Created on June 3, 2003, 3:20 PM
+ * Created on June 6, 2003, 4:14 PM
  */
 
 package edu.harvard.med.hip.flex.action;
@@ -34,7 +34,7 @@ import edu.harvard.med.hip.flex.user.*;
  *
  * @author  dzuo
  */
-public class RearrayFileInputAction extends ResearcherAction {
+public class CloneRearrayFileInputAction extends ResearcherAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -58,41 +58,46 @@ public class RearrayFileInputAction extends ResearcherAction {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         String fileFormat = ((GenericRearrayForm)form).getFileFormat();
-        String plateFormat = ((GenericRearrayForm)form).getPlateFormat();
-        String wellFormat = ((GenericRearrayForm)form).getWellFormat();
         String destWellFormat = ((GenericRearrayForm)form).getDestWellFormat();
         int project = ((GenericRearrayForm)form).getProject();
         int workflow = ((GenericRearrayForm)form).getWorkflow();
-        String rearrayType=((GenericRearrayForm)form).getRearrayType();
+        String rearrayType = ((GenericRearrayForm)form).getRearrayType();
         
-       try {
+        String dist = "yes";
+        
+        if(workflow == Workflow.REARRAY_ARCHIVE_DNA || workflow == Workflow.REARRAY_ARCHIVE_GLYCEROL
+        || workflow == Workflow.REARRAY_WORKING_DNA || workflow == Workflow.REARRAY_WORKING_GLYCEROL) {
+            ((GenericRearrayForm)form).setIsArrangeByFormat(true);
+            dist = "no";
+        }
+        
+        if(workflow == Workflow.REARRAY_SEQ_GLYCEROL || workflow == Workflow.REARRAY_SEQ_DNA) {
+            dist = "no";
+        }
+        
+       try {           
             //Vector locations = Location.getLocations();                        
             //request.getSession().setAttribute("Rearray.locations", locations);            
             request.setAttribute("fileFormat", fileFormat);
-            request.setAttribute("plateFormat", plateFormat);
-            request.setAttribute("wellFormat", wellFormat);
             request.setAttribute("destWellFormat", destWellFormat);
             request.setAttribute("project", new Integer(project));
             request.setAttribute("workflow", new Integer(workflow));
+            request.setAttribute("dist", dist);
             request.setAttribute("rearrayType", rearrayType);
-          
+            
             Project p = new Project(project);
             Workflow w = new Workflow(workflow);
             request.setAttribute("projectName", p.getName());
             request.setAttribute("workflowName", w.getName());
-                 
+            
             AccessManager manager = AccessManager.getInstance();
             String username = ((User)request.getSession().getAttribute(Constants.USER_KEY)).getUsername();
             String userEmail = manager.getEmail(username);
             request.setAttribute("userEmail", userEmail);
             
-            if(Workflow.REARRAY_PLATE != workflow || "format1".equals(fileFormat)) {
-                request.setAttribute("rearrayOption", "on");
-            }
-            
             return (mapping.findForward("success"));
         } catch (Exception e) {
-            System.out.println("Error: "+e.getMessage());
+            //System.out.println(e.getMessage());
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }

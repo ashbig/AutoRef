@@ -36,10 +36,11 @@ public class GenericRearrayForm extends ActionForm {
     protected String wellFormat = "number";
     protected String destWellFormat = "number";
     protected String plateType = "96 Well Plate";
-    protected String sampleType = "DNA";
-    protected String location = Location.FREEZER;
-    protected int project = Project.BREASTCANCER;
-    protected int workflow = Workflow.TEMPLATE_CREATOR_PCRA;
+    protected String sampleType = null;
+    protected String location = Location.UNAVAILABLE;
+    protected int project;
+    protected int workflow;
+    
     protected boolean isArrangeBySize = false;
     protected boolean isSmall = false;
     protected boolean isMedium = false;
@@ -51,11 +52,20 @@ public class GenericRearrayForm extends ActionForm {
     protected boolean isFullPlate = false;
     protected boolean isOligo = false;
     protected String isNewOligo = "false";
+    protected boolean isSourceDup = false;
+    
     protected String oligoFormat = "Both";
     protected FormFile inputFile = null;
     protected int sortBy = GenericRearrayer.SORT_BY_NONE;
     protected String output = "morefile";
     protected String researcherBarcode = null;
+    //protected String rearrayTarget = null;
+    protected String sourceFormat = null;
+    protected String userEmail = null;
+    protected String rearrayOption = null;
+    protected String dist = null;
+    protected String projectName = null;
+    protected String workflowName = null;
     
     /** Creates a new instance of GenericRearrayForm */
     public GenericRearrayForm() {
@@ -87,6 +97,14 @@ public class GenericRearrayForm extends ActionForm {
     public int getSortBy() {return sortBy;}
     public String getOutput() {return output;}
     public String getResearcherBarcode() {return researcherBarcode;}
+   // public String getRearrayTarget() {return rearrayTarget;}
+    public String getUserEmail() {return userEmail;}
+    public String getRearrayOption() {return rearrayOption;}
+    public String getSourceFormat() {return sourceFormat;}
+    public String getDist() {return dist;}
+    public String getProjectName() {return projectName;}
+    public String getWorkflowName() {return workflowName;}
+    public boolean getIsSourceDup() {return isSourceDup;}
     
     public void setRearrayType(String s) {this.rearrayType = s;}
     public void setFileFormat(String s) {this.fileFormat = s;}
@@ -114,6 +132,14 @@ public class GenericRearrayForm extends ActionForm {
     public void setSortBy(int i) {this.sortBy = i;}
     public void setOutput(String output) {this.output = output;}
     public void setResearcherBarcode(String researcherBarcode) {this.researcherBarcode = researcherBarcode;}
+   // public void setRearrayTarget(String s) {this.rearrayTarget = s;}
+    public void setUserEmail(String userEmail) {this.userEmail = userEmail;}
+    public void setRearrayOption(String rearrayOption) {this.rearrayOption = rearrayOption;}
+    public void setSourceFormat(String s) {this.sourceFormat = s;}
+    public void setDist(String s) {this.dist = s;}
+    public void setProjectName(String s) {this.projectName = s;}
+    public void setWorkflowName(String s) {this.workflowName = s;}
+    public void setIsSourceDup(boolean b) {this.isSourceDup = b;}
     
     /**
      * Reset all properties to their default values.
@@ -127,18 +153,21 @@ public class GenericRearrayForm extends ActionForm {
         plateFormat = "label";
         wellFormat = "number";
         destWellFormat = "number";
-        plateType = "96 Well Plate";
-        sampleType = "DNA";
-        location = Location.FREEZER;
-        project = Project.BREASTCANCER;
-        workflow = Workflow.TEMPLATE_CREATOR_PCRA;
+        plateType = null;
+        sampleType = null;
+        location = Location.UNAVAILABLE;
         isArrangeBySize = false;
         isSmall = false;
         isMedium = false;
         isLarge = false;
         lower = GenericRearrayer.SIZELOWER;
         upper = GenericRearrayer.SIZEHIGHER;
-        isArrangeByFormat = false;
+        
+       // if("storage".equals(rearrayTarget))
+        //    isArrangeByFormat = true;
+       // else
+       //     isArrangeByFormat = false;
+        
         isControl = false;
         isFullPlate = false;
         isOligo = false;
@@ -147,5 +176,11 @@ public class GenericRearrayForm extends ActionForm {
         sortBy = GenericRearrayer.SORT_BY_NONE;
         output = "morefile";
         researcherBarcode = null;
-    } 
+        //rearrayTarget = "storage";
+        sourceFormat = null;
+        dist = null;
+        projectName = null;
+        workflowName = null;
+        isSourceDup = false;
+    }    
 }

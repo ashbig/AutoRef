@@ -35,6 +35,7 @@ public class RearrayPlateMap {
     protected String sampletype = null;
     
     protected String constructtype = null;
+    protected int cloneid = 0;
     
     /** Creates a new instance of PlateMap */
     public RearrayPlateMap() {
@@ -67,6 +68,7 @@ public class RearrayPlateMap {
     public void setDestPlateLabel(String label) {this.destPlateLabel = label;}
     public void setDestWell(int id) {this.destWell = id;}
     public void setSampletype(String sampletype) {this.sampletype = sampletype;}
+    public void setCloneid(int cloneid) {this.cloneid = cloneid;}
     
     public int getSourcePlateid() {return sourcePlateid;}
     public String getSourcePlateLabel() {return sourcePlateLabel;}
@@ -85,4 +87,5 @@ public class RearrayPlateMap {
     public int getConstructid() {return constructid;}
     public String getSampletype() {return sampletype;}
     public RearrayInputSample getRearrayInputSample() {return inputSample;}
+    public int getCloneid() {return cloneid;}
 }
