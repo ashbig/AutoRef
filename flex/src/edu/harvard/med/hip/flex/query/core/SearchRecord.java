@@ -42,6 +42,15 @@ public class SearchRecord {
         this.username = username;
     }
     
+    public SearchRecord(int searchid,String searchName,String searchDate,String searchType,String status, String name) {
+        this.searchid = searchid;
+        this.searchName = searchName;
+        this.searchDate = searchDate;
+        this.searchType = searchType;
+        this.searchStatus = status;
+        this.username = name;
+    }
+    
     public void setSearchid(int searchid) {
         this.searchid = searchid;
     }
