@@ -28,8 +28,10 @@ public class CloneInfo {
     protected String sequence;
     
     /** Creates a new instance of CloneInfo */
-    public CloneInfo(String flexId, String geneSymbol, String genbankAcc, int gi, 
-                     String sugenId, String cloneType) {
+    public CloneInfo(String plateId, String wellIdPosition, String flexId, String geneSymbol, String genbankAcc, int gi, 
+        String sugenId, String cloneType) {
+        this.plateId = plateId;
+        this.wellIdPosition = wellIdPosition;
         this.flexId = flexId;
         this.seqId = seqId;
         this.geneSymbol = geneSymbol;
@@ -45,6 +47,14 @@ public class CloneInfo {
     }
     
     public CloneInfo(){
+    }
+    
+    public String getPlateId(){
+        return plateId;
+    }
+    
+    public String getWellIdPosition(){
+        return wellIdPosition;
     }
     
     public String getFlexId(){
@@ -106,7 +116,7 @@ public class CloneInfo {
         
     public String getSeqFromFlexID(String flexid){
                 
-        DBManager manager = new DBManager();
+        DBManager2 manager = new DBManager2();
         Connection conn = manager.connect();
         
         if (conn == null) {
