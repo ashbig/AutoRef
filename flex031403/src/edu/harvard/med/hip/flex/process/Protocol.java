@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.10 2001-07-09 22:17:18 jmunoz Exp $
+ * $Id: Protocol.java,v 1.11 2001-07-19 17:32:45 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -175,14 +175,16 @@ public class Protocol {
      */
     private void populateSubProtocols() throws FlexDatabaseException {
         String sql =
-        "select subprotocolname from subprotocol where protocolid="+id;
+        "select subprotocolname, subprotocoldescription from subprotocol where protocolid="+id;
         DatabaseTransaction t =
         DatabaseTransaction.getInstance();
         RowSet rs = t.executeQuery(sql);
         try {
             while(rs.next()) {
                 String name = rs.getString("SUBPROTOCOLNAME");
-                subprotocol.addElement(name);
+                String description = rs.getString("SUBPROTOCOLDESCRIPTION");
+                SubProtocol subProtocol = new SubProtocol(name, description);
+                subprotocol.addElement(subProtocol);
             }
         } catch (SQLException sqlE) {
             throw new FlexDatabaseException("Cannot populate subprotocol.\n"+sqlE+"\nSQL: "+sql);
@@ -237,8 +239,12 @@ public class Protocol {
     }
     
     public static void main(String [] args) throws Exception {
-        Protocol test = new Protocol("approve sequences");
-        
-        
+        Protocol test = new Protocol("generate PCR plates");
+        Vector subProtocol = test.getSubprotocol();
+        for(int i=0; i<subProtocol.size(); i++) {
+            SubProtocol p = (SubProtocol)subProtocol.elementAt(i);
+            System.out.println("Name: "+p.getName());
+            System.out.println("Description: "+p.getDescription());
+        }
     }
 }
