@@ -101,6 +101,15 @@ public class PrintLabel {
                 return msg.toString();
            }
      }
+     
+     /**
+      * Testing
+      **/
+     public static void main(String[] args) {
+            PrintLabel printlabel = new PrintLabel();
+            String status = printlabel.execute("Pr0000001-8");
+            System.out.println("Print Status: " + status);
+     }
 } 
 
 /*
