@@ -141,11 +141,11 @@
                 name="plateEntryForm"
                 scope="request"
                 input="/EnterProcessResults.jsp">
-        <forward name="success" path="/EnterProcessResults.jsp"/>
+        <forward name="success" path="/EnterTransformDetails.do"/>
     </action>
     
     <!-- Display form to enter info about a Transformation plate -->
-    <action     path="/"
+    <action     path="/EnterTransformDetails"
                 type="edu.harvard.med.hip.flex.action.EnterTransformDetailsAction"
                 name="transformEntryForm"
                 scope="request">
