@@ -25,7 +25,7 @@ import java.sql.Date;
 import java.io.*;
 import java.math.BigDecimal;
 
-public class DescrepancyFinder
+public class DiscrepancyFinder
 {
     
     //store input & output blast files
@@ -44,17 +44,17 @@ public class DescrepancyFinder
      private boolean m_debug = false;
     
     /** Creates a new instance of DescrepancyFinder */
-    public DescrepancyFinder(SequencePair pair)
+     public DiscrepancyFinder(SequencePair pair)
     {
         m_seqpair = pair;
     }
     
-    public DescrepancyFinder(ArrayList pairs)
+     public DiscrepancyFinder(ArrayList pairs)
     {
         m_seqpairs = pairs;
     }
     
-    public DescrepancyFinder()
+     public DiscrepancyFinder()
     {
     }
     
