@@ -117,23 +117,6 @@ appropriated selection and submit your cloning request to FLEXGene.</h3>
 
 <logic:present name="cdsMatchSequences">
 <logic:iterate id="cdsMatch" name="cdsMatchSequences">
-
-<p>
-Evalue: <bean:write name="cdsMatch" property="value.blastResults.evalue"/><br>
-Identity: <bean:write name="cdsMatch" property="value.blastResults.identity"/><br>
-Query CDS length: <bean:write name="cdsMatch" property="value.blastResults.cdslength"/>      
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-[ <a target=_new href="ViewAlignment.do?gi=<bean:write name="cdsMatch" property="key"/>">View Alignment</a> ]
-
-<table border=1>
-<tr>
-<td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
-</tr>
-
 <logic:iterate id="h" name="cdsMatch" property="value.homolog">
 <tr>
 <logic:equal name="h" property="id" value="-1">
@@ -201,7 +184,6 @@ Query CDS length: <bean:write name="homo" property="value.blastResults.cdslength
 </table>
 
 </logic:iterate>
-</table>
 </logic:present>
 
 <logic:present name="badSequences">
