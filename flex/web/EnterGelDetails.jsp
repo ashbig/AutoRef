@@ -101,6 +101,13 @@
       
         <td>
             <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
+                <%
+                if(curSample.getType().toUpperCase().indexOf("EMPTY") !=-1) {
+                %>
+                    &nbsp;
+                <%
+                } else {
+                %>
                 <html:select property='<%="result["+ i +"]" %>'>
                     <%
                     if(curSample.getType().toUpperCase().indexOf("CONTROL")  !=-1) {
@@ -119,10 +126,11 @@
                     }
                     %>
                 </html:select>
+                <%}%>
              </logic:equal>
              
              <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
-                <bean:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/>
+                <flex:write name="gelEntryForm" property='<%="result["+ i +"]" %>'/>
              </logic:equal>
 
         </td>

@@ -14,8 +14,8 @@
  
  
  The following information is used by CVS
- $Revision: 1.10 $
- $Date: 2001-07-23 21:13:23 $
+ $Revision: 1.11 $
+ $Date: 2001-07-30 19:04:52 $
  $Author: jmunoz $
  
  ******************************************************************************
@@ -41,12 +41,12 @@
 
 <html>
 <head>
-    <title><bean:message key="flex.name"/> : Flex Sequence Info</title>
+    <title><bean:message key="flex.name"/> : FLEX Sequence Info</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
-<H2><bean:message key="flex.name"/> : Flex Sequence Info</h2>
+<H2><bean:message key="flex.name"/> : FLEX Sequence Info</h2>
 <hr>
 <html:errors/>
 <p>

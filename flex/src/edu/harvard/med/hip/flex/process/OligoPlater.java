@@ -23,8 +23,8 @@ import java.io.*;
 
 public class OligoPlater {
     
-    //private static final String filePath = "/tmp/";
-    private static final String filePath = "H:/Dev/OligoOrder/";
+    private static final String filePath = "/tmp/";
+   // private static final String filePath = "H:/Dev/OligoOrder/";
     
     private static final int positiveControlPosition = 1;
     private static final int negativeControlPosition = 96;

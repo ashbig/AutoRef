@@ -52,4 +52,14 @@ public class FlowRecord {
     public Vector getNext() {
         return next;
     }
+    
+    /**
+     * Accessor to the current protocol name.
+     *
+     * @return current protocol name.
+     */
+    public String getCurrent() {
+        return this.current;
+    }
+    
 }

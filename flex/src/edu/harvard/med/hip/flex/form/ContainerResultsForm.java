@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-06-21 16:31:45 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.3 $
+ * $Date: 2001-07-30 19:04:52 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -54,8 +54,8 @@ import edu.harvard.med.hip.flex.core.*;
  * Form for entering results about a container.
  *
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.2 $ $Date: 2001-06-21 16:31:45 $
+ * @author     $Author: jmunoz $
+ * @version    $Revision: 1.3 $ $Date: 2001-07-30 19:04:52 $
  */
 
 public class ContainerResultsForm extends ActionForm{
@@ -201,7 +201,7 @@ public class ContainerResultsForm extends ActionForm{
         int i = 0;
         while(sampleIter.hasNext()) {
             Sample curSample = (Sample)sampleIter.next();
-            resultList.add(i, "Many");
+            resultList.add(i, "");
             statusList.add(i, curSample.getStatus());
             i++;
         }

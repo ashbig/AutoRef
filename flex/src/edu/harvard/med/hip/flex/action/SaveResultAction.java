@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.10 $
- * $Date: 2001-07-27 21:03:30 $
+ * $Revision: 1.11 $
+ * $Date: 2001-07-30 19:04:52 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -57,15 +57,14 @@ import edu.harvard.med.hip.flex.form.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.process.Process;
 import edu.harvard.med.hip.flex.process.Result;
-
-
+import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * Will save information about the result into the db and manage the workflow.
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.10 $ $Date: 2001-07-27 21:03:30 $
+ * @version    $Revision: 1.11 $ $Date: 2001-07-30 19:04:52 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -109,7 +108,6 @@ public class SaveResultAction extends ResearcherAction {
             return retForward;
         }
         
-        
         String resultType = null;
         if(form instanceof GelResultsForm) {
             resultType = Result.PCR_GEL_TYPE;
@@ -135,8 +133,6 @@ public class SaveResultAction extends ResearcherAction {
             resultType = Result.AGAR_PLATE_TYPE;
         }
         
-        
-        
         ContainerResultsForm resultForm = (ContainerResultsForm) form;
         
         // if the form is editable, forward to the confirm page.
@@ -159,73 +155,27 @@ public class SaveResultAction extends ResearcherAction {
             return mapping.findForward("confirm");
         }
         
-
         Container container =resultForm.getContainer();
         Vector samples = container.getSamples();
- 
+        
         Connection conn = null;
-        
-        
         
         try {
             conn = DatabaseTransaction.getInstance().requestConnection();
             
             // save the results.
             saveResults(resultType,process, resultForm, conn);
-            
-            /*
-             * now we need to remove the container from the queue,
-             * and insert it for the Agar process.
-             */
-            StaticQueueFactory queueFactory = new StaticQueueFactory();
-            ProcessQueue queue = queueFactory.makeQueue("ContainerProcessQueue");
-            
-            
-            LinkedList dummyList = new LinkedList();
-            dummyList.add(queueItem);
-            // remove the transform from the queue.
-            queue.removeQueueItems(dummyList, conn);
-            
+            System.out.println("finished save Results");
             /*
              * we must now create the next protocol in the workflow based on
              * what the previous protocol was.
              *
-             * Also if there is a file to upload then, add it to the file
-             * repository and appropriate database tables.
              */
-            Protocol nextProtocol = null;
-            
-            if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.GENERATE_AGAR_PLATES)) {
-                nextProtocol =
-                new Protocol(Protocol.GENERATE_CULTURE_BLOCKS_FOR_ISOLATES);
-            } else if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.RUN_PCR_GEL)) {
-                nextProtocol= new Protocol(Protocol.GENERATE_FILTER_PLATES);
-                
-            } else {
-                retForward = mapping.findForward("error");
-                request.setAttribute(Action.EXCEPTION_KEY,
-                new FlexProcessException("Protocol " +
-                queueItem.getProtocol().getProcessname() +
-                " not valid here\n"));
-                DatabaseTransaction.rollback(conn);
-                DatabaseTransaction.closeConnection(conn);
-                return retForward;
-            }
-            
-            dummyList.clear();
-            dummyList.add(new QueueItem(container,nextProtocol));
-            // add queue item for the generate filter plates process
-            queue.addQueueItems(dummyList, conn);
-            
-            // update the process execution for the Agar
-            process.setExecutionStatus(Process.SUCCESS);
-            process.update(conn);
-            
-            // upload the file to the repository if its a gel image
-            if(form instanceof GelResultsForm) {
-                
-            }
+            manageQueue(conn, queueItem, process, container);
+            System.out.println("finished manageQueue");
+            // finally we commit all our changes.
             DatabaseTransaction.commit(conn);
+            
         } catch (FlexDatabaseException fde) {
             retForward = mapping.findForward("error");
             request.setAttribute(Action.EXCEPTION_KEY, fde);
@@ -261,6 +211,8 @@ public class SaveResultAction extends ResearcherAction {
         return retForward;
     } //end flexPerform
     
+    
+    
     /**
      * Save what the user has choosen to the database.
      *
@@ -273,19 +225,62 @@ public class SaveResultAction extends ResearcherAction {
      */
     private void saveResults(String resultType, Process process, ContainerResultsForm resultForm, Connection conn)
     throws FlexDatabaseException, IOException {
-        
         Container container = resultForm.getContainer();
         Vector samples = container.getSamples();
         
-        // optional file reference for gel results
+        // create the file reference, could be null if no file is associated
+        // with the form.
+        FileReference fileRef = handleFileReference(conn,resultForm);
+        // Go through and get the result and record it.
+        
+        for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
+            
+            Sample curSample = (Sample)samples.get(i);
+            
+            // if the sample is of an empty type then just go on to the next
+            // one without writting anything to the DB.
+            if(curSample.getType().toUpperCase().indexOf("EMPTY") == -1) {
+                Result curResult =
+                new Result(process,curSample,resultType,resultForm.getResult(i));
+                
+                curResult.insert(conn);
+                
+                if(fileRef != null) {
+                    curResult.associateFileReference(conn, fileRef);
+                }
+            }
+        }
+    }
+    
+    
+    
+    /**
+     * Creates and uploads a file.
+     *
+     * @param conn The db connection used to insert the file.
+     * @param form The form holding the results.
+     *
+     * @return FileReference with the file information, could be null if no
+     * file reference is associated with the form.
+     *
+     * @exception FlexDatabaseException when a database error occurs.
+     * @exception IOException when an error occurs writing the file to the
+     *              repository
+     */
+    private FileReference handleFileReference(Connection conn, ActionForm form)
+    throws FlexDatabaseException, IOException{
+        System.out.println("calling handleFileReference");
         FileReference fileRef = null;
-        if(resultForm instanceof GelResultsForm) {
-            GelResultsForm gelForm = (GelResultsForm)resultForm;
+        if(form instanceof GelResultsForm) {
+            Container container = ((GelResultsForm)form).getContainer();
+            GelResultsForm gelForm = (GelResultsForm)form;
             
             // the image file
             FormFile image = gelForm.getGelImage();
             
+            // get the current date
             Calendar cal = Calendar.getInstance();
+            
             // month starts with 0 so add 1 so it looks normal
             int monthNum = cal.get(Calendar.MONTH) + 1;
             
@@ -303,27 +298,59 @@ public class SaveResultAction extends ResearcherAction {
             fileRef =
             FileReference.createFile(conn, image.getFileName(),
             FileReference.GEL_TYPE,localPath, container);
-           
+            
             FileRepository.uploadFile(fileRef,
             gelForm.getGelImage().getInputStream());
         }
-        // Go through and get the result and record it.
-        
-        for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
-            
-            Sample curSample = (Sample)samples.get(i);
-            curSample.setStatus(resultForm.getStatus(i));
-            Result curResult =
-            new Result(process,curSample,resultType,resultForm.getResult(i));
-            
-            curSample.update(conn);
-            curResult.insert(conn);
-            if(fileRef != null) {
-                 curResult.associateFileReference(conn, fileRef);
-            }
-        }
+        return fileRef;
     }
     
+    /**
+     * Helper method to manage the queue.
+     *
+     * Gets rid of the old item on the queue and put on more items for the next
+     * steps.
+     *
+     * @param curProcess the current process execution
+     */
+    private void manageQueue(Connection conn, QueueItem queueItem,
+    Process curProcess, Container container)
+    throws FlexDatabaseException, FlexProcessException {
+        
+         /*
+          * now we need to remove the container from the queue,
+          * and insert a new item for the next protocol.
+          */
+        StaticQueueFactory queueFactory = new StaticQueueFactory();
+        
+        ProcessQueue queue = queueFactory.makeQueue("ContainerProcessQueue");
+        
+        LinkedList dummyList = new LinkedList();
+        dummyList.add(queueItem);
+        
+        // remove the old queue items
+        queue.removeQueueItems(dummyList, conn);
+        Workflow workflow = new Workflow();
+        
+        // find the next step(s) in the work flow
+        Vector flowRecords =
+        workflow.getNextProtocol(curProcess.getProtocol().getProcessname());
+        
+        // for each one, put the container on the queue for that protocol
+        Iterator flowIter = flowRecords.iterator();
+        
+        while(flowIter.hasNext()) {
+            String nextProtocolS = (String)flowIter.next();
+            Protocol nextProtocol = new Protocol(nextProtocolS);
+            dummyList.clear();
+            dummyList.add(new QueueItem(container,nextProtocol));
+            // add queue item for the next process
+            queue.addQueueItems(dummyList, conn);
+        }
+        // update the process execution for the previous step.
+        curProcess.setExecutionStatus(Process.SUCCESS);
+        curProcess.update(conn);
+    }
 } // End class EnterTransformDetailsAction
 
 

@@ -100,29 +100,48 @@
         </td>
         <td>
             <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
-                
-                 
+                <%-- 
+                        This hack should be replaces by a method to a sample
+                        type object so the result values CV can be populated
+                        from the db 
+                --%>
+
+                <%
+                if(curSample.getType().toUpperCase().indexOf("EMPTY") !=-1) {
+                %>
+                    &nbsp;
+                <%
+                } else {
+                %>
                 <html:select property='<%="result["+ i +"]" %>'>
+                    
                     <%
                     if(curSample.getType().toUpperCase().indexOf("CONTROL")  !=-1) {
                      %>
                         <html:option value="<%=Result.SUCCEEDED%>">Succeeded</html:option>
                         <html:option value="<%=Result.FAILED%>">Failed</html:option>
                     <%
+                    } else if (curSample.getType().toUpperCase().indexOf("EMPTY") !=-1) {
+                    %>
+                        <html:option value=""></html:option>
+                    <%
                     } else  {
                     %>
                     
-                    <html:option value="<%=Result.MANY%>">Many</html:option>
-                    <html:option value="<%=Result.FEW%>">Few</html:option>
-                    <html:option value="<%=Result.NONE%>">None</html:option>
+                    <html:option value="0">0</html:option>
+                    <html:option value="1">1</html:option>
+                    <html:option value="2">2</html:option>
+                    <html:option value="3">3</html:option>
+                    <html:option value="<%=Result.MORE%>">More</html:option>
                     <%
                     }
                     %>
                 </html:select>
+                <%}%>
              </logic:equal>
              
              <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
-                <bean:write name="transformEntryForm" property='<%="result["+ i +"]" %>'/>
+                <flex:write name="transformEntryForm" property='<%="result["+ i +"]" %>'/>
              </logic:equal>
 
         </td>
