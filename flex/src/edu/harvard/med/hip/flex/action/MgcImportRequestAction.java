@@ -50,6 +50,10 @@ public class MgcImportRequestAction extends WorkflowAction
         FormFile mgcRequestFile = ((MgcImportRequestForm)form).getMgcRequestFile();
         int      workflowid = ((MgcImportRequestForm)form).getWorkflowid();
         int      projectid      = ((MgcImportRequestForm)form).getProjectid();
+        double   percent_indentity = ((MgcImportRequestForm)form).getRequiredPercentIdentity();
+        int      cdslengthLimit = ((MgcImportRequestForm)form).getRequiredCdslengthLimit();
+        boolean  isPutOnQueue =  ((MgcImportRequestForm)form).getIsPutOnQueue();
+        
        
         Project project = null;
         Workflow workflow = null;
@@ -90,7 +94,11 @@ public class MgcImportRequestAction extends WorkflowAction
         String username = ((User)request.getSession().getAttribute(Constants.USER_KEY)).getUsername();
         
         ImportInformationRunner import_info =
-        new ImportInformationRunner(input, project, workflow, username);
+                        new ImportInformationRunner(input, project, workflow, username);
+        import_info.setPercentIndentity(percent_indentity );
+        import_info.setCdslengthLimit(cdslengthLimit );
+        import_info.setIsPutOnQueue(isPutOnQueue);
+        
         Thread t = new Thread(import_info);
         t.start();
         return mapping.findForward("proccessing");
@@ -102,8 +110,9 @@ public class MgcImportRequestAction extends WorkflowAction
         private Project         m_project = null;
         private Workflow        m_workflow = null;
         private String          m_username = null;
-        
-        
+        private double          m_percent_indentity = 0.95;
+        private int             m_cdslengthLimit = 70;
+        private boolean         m_isPutOnQueue = true;
         
         public ImportInformationRunner(InputStream in, Project project, Workflow wf, String username)
         {
@@ -112,6 +121,10 @@ public class MgcImportRequestAction extends WorkflowAction
             m_workflow = wf;
             m_username = username;
         }
+        
+        public void setPercentIndentity(double pi){ m_percent_indentity = pi;}
+        public void setCdslengthLimit(int cl) { m_cdslengthLimit = cl;}
+        public void setIsPutOnQueue(boolean l) { m_isPutOnQueue = l; }
         
         public void run()
         {
@@ -126,7 +139,12 @@ public class MgcImportRequestAction extends WorkflowAction
                 conn = t.requestConnection();
                 //read request file, get all sequences for request, insert request
                 // return all sequences from request
+                importer.setPercentIndentity(m_percent_indentity );
+                importer.setCdslengthLimit(m_cdslengthLimit );
+                importer.setIsPutOnQueue(m_isPutOnQueue);
+                
                 importer.performImport(m_Input, conn) ;
+                
             }
             catch (Exception e){}
          
