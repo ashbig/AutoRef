@@ -23,6 +23,8 @@ import edu.harvard.med.hip.flex.core.*;
  */
 public class FullSequenceAnalysis
 {
+    public static final         String SEARCH_BY_GI = "GI";
+    public static final         String SEARCH_BY_SEQUENCEID = "REFSEQID";
     private FullSequence        m_full_sequence = null;
     private TheoreticalSequence m_t_sequence = null;
     private Connection          m_conn = null;
@@ -63,29 +65,32 @@ public class FullSequenceAnalysis
         try{
             SequenceAnalyzer analyzer = new SequenceAnalyzer(m_full_sequence);
              res_n = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTN, 5);
-             best_hit_n =(BlastHit) res_n.getHits().get(0);
-            if (best_hit_n.getIdentity() < 80.0)
+            if (res_n.getHits().size() > 0)
             {
-                 m_full_sequence.setStatus(FullSequence.STATUS_NOMATCH);
-                 m_full_sequence.setQuality(FullSequence.QUALITY_NOT_DEFINED);
-                 return;
-            }
-            else if (best_hit_n.getIdentity() ==100.0 &&
-                    best_hit_n.getQStart() == best_hit_n.getSStart() &&
-                     best_hit_n.getQStop() == best_hit_n.getSStop())
-                    // 100% match problem with format here
-            {
-                m_full_sequence.setQuality(FullSequence.QUALITY_RECOMENDED_STORAGE);
-                m_full_sequence.setStatus(FullSequence.STATUS_ANALIZED);
-            }
-            else// not 100 on nucleotide level
-            {
-                 res_p = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTX,5);
-               //  best_hit_p = (BlastHit)res_n.getHits().get(0);
-              //   mutations = Mutation.run_mutation_analysis(res_n,res_p,                                                 m_full_sequence, m_t_sequence );
-                 setSequenceStatus(mutations);
-                m_full_sequence.setStatus(FullSequence.STATUS_ANALIZED);
-                
+                best_hit_n =(BlastHit) res_n.getHits().get(0);
+                if (best_hit_n.getIdentity() < 80.0)
+                {
+                     m_full_sequence.setStatus(FullSequence.STATUS_NOMATCH);
+                     m_full_sequence.setQuality(FullSequence.QUALITY_NOT_DEFINED);
+                     return;
+                }
+                else if (best_hit_n.getIdentity() ==100.0 &&
+                        best_hit_n.getQStart() == best_hit_n.getSStart() &&
+                         best_hit_n.getQStop() == best_hit_n.getSStop())
+                        // 100% match problem with format here
+                {
+                    m_full_sequence.setQuality(FullSequence.QUALITY_RECOMENDED_STORAGE);
+                    m_full_sequence.setStatus(FullSequence.STATUS_ANALIZED);
+                }
+                else// not 100 on nucleotide level
+                {
+                     res_p = analyzer.run_bl2seq(m_t_sequence, Blaster.BLAST_PROGRAM_BLASTX,5);
+                   //  best_hit_p = (BlastHit)res_n.getHits().get(0);
+                  //   mutations = Mutation.run_mutation_analysis(res_n,res_p,                                                 m_full_sequence, m_t_sequence );
+                     setSequenceStatus(mutations);
+                    m_full_sequence.setStatus(FullSequence.STATUS_ANALIZED);
+
+                }
             }
             
             updateDatabase(res_p,res_n,mutations);
@@ -150,23 +155,20 @@ public class FullSequenceAnalysis
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             
        
-            String query="ATGGAGCAGCCGCCGGCGCCTAAGAGTAAACTAAAAAAGCTGAGTGAAGACAGTTTGACTAAGCAGCCTGAAGAAGTTTTTGATGTATTAGAGAAGCTTGGAGAAGGGTCTTATGGAAGTGTATTTAAAGCAATACACAAGGAATCCGGTCAAGTTGTCGCAATTAAACAAGTACCTGTTGAATCAGATCTTCAGGAAATAATCAAAGAAATTTCCATAATGCAGCAATGTGACAGCCCATATGTTGTAAAGTACTATGGCAGTTATTTTAAGAATACAGACCTCTGGATTGTTATGGAGTACTGTGGCGCTGGCTCTGTCTCAGACATAATTAGATTACGAAACAAGACATTAATAGAAGATGAAATTGCAACCATTCTTAAATCTACATTGAAAGGACTAGAATATTTGCACTTTATGAGAAAAATACACAGAGATATAAAAGCTGGAAATATTCTCCTCAATACAGAAGGACATGCAAAATTGGCAGATTTTGGAGTGGCTGGTCAGTTAACAGATACAATGGCAAAACGCAATACTGTAATAGGAACTCCATTTTGGATGGCTCCTGAGGTGATTCAAGAAATAGGCTATAACTGTGTGGCCGACATCTGGTCCCTTGGCATTACTTCTATAGAAATGGCTGAAGGAAAACCTCCTTATGCTGATATACATCCAATGAGGGCTATTTTTATGATTCCCACAAATCCACCACCAACATTCAGAAAGCCAGAACTTTGGTCCGATGATTTCACCGATTTTGTTAAAAAGTGTTTGGTGAAGAATCCTGAGCAGAGAGCTACTGCAACACAACTTTTACAGCATCCTTTTATCAAGAATGCCAAACCTGTATCAATATTAAGAGACCTGATCACAGAAGCTATGGAGATCAAAGCTAAAAGACATGAGGAACAGCAACGAGAATTGGAAGAGGAAGAAGAAAATTCGGATGAAGATGAGCTGGATTCCCACACCATGGTGAAGACTAGTGTGGAGAGTGTGGGCACCATGCGGGCCACAAGCACGATGAGTGAAGGGGCCCAGACCATGATTGAACATAATAGCACGATGTTGGAATCCGACTTGGGGACCATGGTGATAAACAGTGAGGATGAGGAAGAAGAAGATGGAACTATGAAAAGAAATGCAACCTCACCACAAGTACAAAGACCATCTTTCATGGACTACTTTGATAAGCAAGACTTCAAGAATAAGAGTCACGAAAACTGTAATCAGAACATGCATGAACCCTTCCCTATGTCCAAAAACGTTTTTCCTGATAACTGGAAAGTTCCTCAAGATGGAGACTTTGACTTTTTGAAAAATCTAAGTTTAGAAGAACTACAGATGCGGTTAAAAGCACTGGACCCCATGATGGAACGGGAGATAGAAGAACTTCGTCAGAGATACACTGCGAAAAGACAGCCCATTCTGGATGCGATGGATGCAAAGAAAAGAAGGCAGCAAAACTTTTTGG";
+            String query="ATGTCAGCAATACAGGCCGCCTGGCCATCCGGTACAGAATGTATTGCCAAGTACAACTTCCACGGCACTGCCGAGCAGGACCTGCCCTTCTGCAAAGGAGACGTGCTCACCATTGTGGCCGTCACCAAGGACCCCAACTGGTACAAAGCCAAAAACAAGGTGGGCCGTGAGGGCATCATCCCAGCCAACTACGTCCAGAAGCGGGAGGGCGTGAAGGCGGGTACCAAACTCAGCCTCATGCCTTGGTTCCACGGCAAGATCACACGGGAGCAGGCTGAGCGGCTTCTGTACCCGCCGGAGACAGGCCTGTTCCTGGTGCGGGAGAGCACCAACTACCCCGGAGACTACACGCTGTGCGTGAGCTGCGACGGCAAGGTGGAGCACTACCGCATCATGTACCATGCCAGCAAGCTCAGCATCGACGAGGAGGTGTACTTTGAGAACCTCATGCAGCTGGTGGAGCACTACACCTCAGACGCAGATGGACTCTGTACGCGCCTCATTAAACCAAAGGTCATGGAGGGCACAGTGGCGGCCCAGGATGAGTTCTACCGCAGCGGCTGGGCCCTGAACATGAAGGAGCTGAAGCTGCTGCAGACCATCGGGAAGGGGGAGTTCGGAGACGTGATGCTGGGCGATTACCGAGGGAACAAAGTCGCCGTCAAGTGCATTAAGAACGACGCCACTGCCCAGGCCTTCCTGGCTGAAGCCTCAGTCATGACGCAACTGCGGCATAGCAACCTGGTGCAGCTCCTGGGCGTGATCGTGGAGGAGAAGGGCGGGCTCTACATCGTCACTGAGTACATGGCCAAGGGGAGCCTTGTGGACTACCTGCGGTCTAGGGGTCGGTCAGTGCTGGGCGGAGACTGTCTCCTCAAGTTCTCGCTAGATGTCTGCGAGGCCATGGAATACCTGGAGGGCAACAATTTCGTGCATCGAGACCTGGCTGCCCGCAATGTGCTGGTGTCTGAGGACAATGTGGCCAAGGTCAGCGACTTTGGTCTCACCAAGGAGGCGTCCAGCACCCAGGACACGGGCAAGCTGCCAGTCAAGTGGACAGCCCCTGAGGCCCTGAGAGAGAAGAAATTCTCCACTAAGTCTGACGTGTGGAGTTTCGGAATCCTTCTCTGGGAAATCTACTCCTTTGGGCGAGTGCCTTATCCAAGAATTCCCCTGAAGGACGTCGTCCCTCGGGTGGAGAAGGGCTACAAGATGGATGCCCCCGACGGCTGCCCGCCCGCAGTCTATGAAGTCATGAAGAACTGCTGGCACCTGGACGCCGCCATGCGGCCCTCCTTCCTACAGCTCCGAGAGCAGCTTGAGCACATCAAAACCCACGAGCTGCACCTGTTGG";
             
-                 String subject="atggctgaccaactgactgaagagcagattgcagaattcaaagaagctttttcactattt"+
-"gacaaagatggtgatggaactataacaacaaaggaattgggaactgtaatgagatctctt"+
-"gggcagaatcccacagaagcagagttacaggacatgattaatgaagtagatgctgatggt"+
-"aatggcacaattgacttccctgaatttctgacaatgatggcaagaaaaatgaaagacaca"+
-"gacagtgaagaagaaattagagaagcattccgtgtgtttgataaggatggcaatggctat"+
-"attagtgctgcagaacttcgccatgtgatgacaaaccttggagagaagttaacagatgaa"+
-"gaagttgatgaaatgatcagggaagcagatattgatggtgatggtcaagtaaactatgaa"+
-"gagtttgtacaaatgatgacagcaaagtga";
 
-            FullSequence fl = new FullSequence(query,-1);
+            
            // fl.insert(t.requestConnection());
-            FlexSequence f = FlexSequence.findSequenceByGi("5454093");
-            TheoreticalSequence sequence = new TheoreticalSequence(f.getId());
+            FullSequence fl = new FullSequence(31481);
+            
+            TheoreticalSequence sequence = new TheoreticalSequence(fl.getRefseqId());
+           // FullSequence fl = new FullSequence(query,f.getId());
+           // fl.insert(t.requestConnection());
+            
             FullSequenceAnalysis fsl =new FullSequenceAnalysis(fl,sequence, t.requestConnection(),null);
-        fsl.analize();
+            fsl.analize();
+            t.requestConnection().commit();
         } catch (Exception e)
         {
             System.out.println(e);

@@ -28,7 +28,7 @@ public class SequenceAnalyzer
     //private static final String HUMANDB="E:/flexDev/BlastDB/genes";
     //private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
-    private static final String OUTPUT = "/tmp/";
+    private static final String OUTPUT = "/blastoutput/";
     
     private BaseSequence m_sequence = null;
     
@@ -93,11 +93,13 @@ public class SequenceAnalyzer
         Blaster blaster = null;
         String queryFile  = null;
         String subjFile =null;
+        String prefix = null;
         
         if (blastType.equals(Blaster.BLAST_PROGRAM_TBLASTX))
         {
-            queryFile = makeQueryFile(query, "b2x",m_sequence.getId());
-            subjFile = makeQueryFile(subj, "b2x",tr.getId())+".in";
+            prefix = "b2x";
+            queryFile = makeQueryFile(query, prefix,m_sequence.getId());
+            subjFile = makeQueryFile(subj, prefix,tr.getId())+".in";
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_TBLASTX, queryFile, subjFile, hits);
             blaster.setGapped(false);
             blaster.setFilter("-F F");
@@ -105,16 +107,18 @@ public class SequenceAnalyzer
         }
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTX))
         {  
-            queryFile = makeQueryFile(m_sequence.getText(), "b2tp",m_sequence.getId());
-            subjFile = makeQueryFile(SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),"b2tp", tr.getId())+".in";
+            prefix = "b2tp";
+            queryFile = makeQueryFile(m_sequence.getText(), prefix,m_sequence.getId());
+            subjFile = makeQueryFile(SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),prefix, tr.getId())+".in";
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTX, queryFile, subjFile, hits);
             blaster.setFilter("-F F");
             blaster.setGapped(false);
         }
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTP))
         {
-            queryFile = makeQueryFile(SequenceManipulation.getTranslation(m_sequence.getText(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE), "b2p",m_sequence.getId());
-            subjFile = makeQueryFile(SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),"b2p", tr.getId())+".in";
+            prefix = "b2p";
+            queryFile = makeQueryFile(SequenceManipulation.getTranslation(m_sequence.getText(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE), prefix,m_sequence.getId());
+            subjFile = makeQueryFile(SequenceManipulation.getTranslation(tr.getCodingSequence(),SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE),prefix, tr.getId())+".in";
             
             blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTP, queryFile, subjFile, hits);
             blaster.setFilter("-F F");
@@ -122,18 +126,19 @@ public class SequenceAnalyzer
         }
         else if (blastType.equals(Blaster.BLAST_PROGRAM_BLASTN))
         {
-             queryFile = makeQueryFile(m_sequence.getText(), "b2n",m_sequence.getId());
-             subjFile = makeQueryFile(tr.getCodingSequence(), "b2n",tr.getId()) +".in";
+            prefix = "b2n";
+             queryFile = makeQueryFile(m_sequence.getText(),prefix,m_sequence.getId());
+             subjFile = makeQueryFile(tr.getCodingSequence(), prefix,tr.getId()) +".in";
              blaster = setBlaster(null, Blaster.BLAST_PROGRAM_BLASTN, queryFile, subjFile, hits);
         }
-        
+        String outputfile = OUTPUT+prefix+m_sequence.getId()+".out";
         blaster.setExecutable(Blaster.BLAST_EXEC_BLAST2SEQ);
-        blaster.blast_bl2seq(queryFile+".in", queryFile+".out");
-        String cmdLine = "bl2seq " + blastType + " " + blaster.getExpect() + " " + blaster.getGapped() +          
-           " -j " + subjFile + " -i " + queryFile+".in" +  " -o " + queryFile+".out" ;
+        blaster.blast_bl2seq(queryFile+".in", outputfile);
+        String cmdLine = "bl2seq -p" + blastType + " " + blaster.getExpect() + " " + blaster.getGapped() +          
+           " -j " + subjFile + " -i " + queryFile+".in" +  " -o " + outputfile;
         
-       System.out.println(cmdLine);
-        return parseResult(queryFile+".out", blastType, tr.getId(),cmdLine, hits);
+        System.out.println(cmdLine);
+        return parseResult(outputfile, blastType, tr.getId(),cmdLine, hits);
     }
     
     public BlastResult parseResult(String fname, String bltype, int tr_id,String cmdLine, int num_hits)
@@ -298,9 +303,9 @@ public class SequenceAnalyzer
         //    sequence.setText(subject);
           //  sequence.setText(sequence.getText().substring(0,200) + sequence.getText().substring(209) );
             SequenceAnalyzer analyzer = new SequenceAnalyzer(fl);
-       BlastResult res_n = analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_BLASTN,5);
-         BlastResult res_p = analyzer.run_bl2seq( sequence, Blaster.BLAST_PROGRAM_BLASTX,5);
-          BlastResult res_p1 = analyzer.run_bl2seq( sequence, Blaster.BLAST_PROGRAM_BLASTP,5);
+             BlastResult res_n = analyzer.run_bl2seq(  sequence, Blaster.BLAST_PROGRAM_BLASTN,5);
+            BlastResult res_p = analyzer.run_bl2seq( sequence, Blaster.BLAST_PROGRAM_BLASTX,5);
+            BlastResult res_p1 = analyzer.run_bl2seq( sequence, Blaster.BLAST_PROGRAM_BLASTP,5);
             // BlastResult res_n = analyzer.parseResult("/tmp/b2n-1.out", Blaster.BLAST_PROGRAM_BLASTN, sequence.getId(),"", 3);
            // BlastResult res_p = analyzer.parseResult("/tmp/b2tp-1.out", Blaster.BLAST_PROGRAM_BLASTX,  sequence.getId(),"", 3);
             Mutation.run_mutation_analysis(res_n, res_p,(FullSequence)fl,sequence);
