@@ -57,7 +57,18 @@ public class Blast2seqParser
     private static  RE p_stop4= null ; 
 
     private static Blast2seqParser m_instance = null;
-  
+    
+    
+    //colors for blast html output
+    public static final String COLOR_N_MISTMATCH_SUBSTITUTION = "FFFFFF";
+    public static final String COLOR_N_MISTMATCH_DELETION = "F1FFFF";
+    
+    public static final String COLOR_P_MISTMATCH_CONSERVATIVE = "FF00FF";
+    public static final String COLOR_P_MISTMATCH_NONCONSERVATIVE = "FF0FFF";
+    
+    public static final int BLAST_FILE_TYPE_N = 0;
+    public static final int BLAST_FILE_TYPE_P = 1;
+    
     private  Blast2seqParser()
     {
        try{
@@ -215,6 +226,136 @@ public class Blast2seqParser
         
     
     
+    public static String formatBlastOutputToHTML(String queryFile, int mode) throws Exception
+    {
+        if (m_instance == null)
+            m_instance = new Blast2seqParser();
+        boolean isStartOfMatch = false;
+        boolean isInHit = false;
+        boolean isStartOfHit  = false;
+        boolean isSequenceMatch = false;
+        String line = null;
+        BufferedReader  fin = null;
+         String query = ""; String qend = "";
+          String qstart = ""; String sstart = "";
+       String subject = "";String send = "";
+       String fquery = "";String fmatch = "";String fsubject = "";
+       StringBuffer buf = new StringBuffer();
+        
+        try {
+            fin = new BufferedReader(new FileReader(queryFile));
+            while ((line = fin.readLine()) != null)
+            {
+                
+                 if ( p_query.match( line)  )
+                 {
+                     //take next two lines
+                     String line_match = fin.readLine();
+                     String subject_line = fin.readLine();
+                     
+                     //set query items
+                    
+                     query = p_query.getParen(2);
+                    
+                     int start = line.indexOf(query) ;
+                     int end = line.indexOf(query) + query.length() ;
+                     qstart = line.substring(0,start);
+                     qend =  line.substring(end);
+                     //parse subject
+                     p_subject.match( subject_line  );
+                                      
+                     subject += p_subject.getParen(2);
+                     sstart =  subject_line.substring(0,subject_line.indexOf(subject)) ;  
+                     send =  subject_line.substring (subject_line.indexOf(subject) + subject.length() );
+                     
+                     fmatch = line_match.substring(0,start);
+                     //format string
+                     
+                     for (int curr_char = start  ; curr_char < end -1; curr_char++)
+                     {
+                         
+                         if ( mode == BLAST_FILE_TYPE_N )
+                         {
+                             if (line_match.charAt(curr_char) == '|') 
+                             {
+                                 fquery += query.charAt(curr_char - start);
+                                 fmatch += line_match.charAt(curr_char);
+                                 fsubject += subject.charAt(curr_char - start);
+                             }
+                             else
+                                if (subject.charAt(curr_char - start) =='-' || query.charAt(curr_char - start)=='-')
+                                {
+                                     fquery += "<FONT COLOR=\"" + COLOR_N_MISTMATCH_DELETION +"\">"+
+                                            query.charAt(curr_char-start)+"</FONT>";
+                                     fmatch += "<FONT COLOR=\"" + COLOR_N_MISTMATCH_DELETION +"\">"+
+                                            line_match.charAt(curr_char)+"</FONT>";
+                                     fsubject += "<FONT COLOR=\"" + COLOR_N_MISTMATCH_DELETION+ "\">"+
+                                            subject.charAt(curr_char-start)+"</FONT>";
+                                }
+                                 else
+                                 {
+                                     fquery += "<FONT COLOR=\"" + COLOR_N_MISTMATCH_SUBSTITUTION+ "\">"+
+                                            query.charAt(curr_char-start)+"</FONT>";
+                                     fmatch += "<FONT COLOR=\"" + COLOR_N_MISTMATCH_SUBSTITUTION +"\">"+
+                                        line_match.charAt(curr_char)+"</FONT>";
+                                     fsubject += "<FONT COLOR=\"" + COLOR_N_MISTMATCH_SUBSTITUTION+ "\">"+
+                                        subject.charAt(curr_char-start)+"</FONT>";
+                                 }
+                         }
+                         else if (mode == BLAST_FILE_TYPE_P)
+                         {
+                              if (line_match.charAt(curr_char) == query.charAt(curr_char-start) ) 
+                             {
+                                 fquery += query.charAt(curr_char-start);
+                                 fmatch += line_match.charAt(curr_char);
+                                 fsubject += subject.charAt(curr_char-start);
+                             }
+                             else
+                                if (line_match.charAt(curr_char)=='+')
+                                {
+                                     fquery += "<FONT COLOR=\"" + COLOR_P_MISTMATCH_CONSERVATIVE +"\">"+
+                                            query.charAt(curr_char-start)+"</FONT>";
+                                     fmatch += "<FONT COLOR=\"" + COLOR_P_MISTMATCH_CONSERVATIVE +"\">"+
+                                            line_match.charAt(curr_char)+"</FONT>";
+                                     fsubject += "<FONT COLOR=\"" + COLOR_P_MISTMATCH_CONSERVATIVE+ "\">"+
+                                            subject.charAt(curr_char-start)+"</FONT>";
+                                }
+                                 else
+                                 {
+                                     fquery += "<FONT COLOR=\"" + COLOR_P_MISTMATCH_NONCONSERVATIVE+ "\">"+
+                                            query.charAt(curr_char-start)+"</FONT>";
+                                     fmatch += "<FONT COLOR=\"" + COLOR_P_MISTMATCH_NONCONSERVATIVE +"\">"+
+                                        line_match.charAt(curr_char)+"</FONT>";
+                                     fsubject += "<FONT COLOR=\"" + COLOR_P_MISTMATCH_NONCONSERVATIVE+ "\">"+
+                                        subject.charAt(curr_char-start)+"</FONT>";
+                                 }
+                         }
+                     }
+                 }
+                 else
+                 {
+                     if (!query.equals(""))
+                     {
+                         buf.append(qstart);buf.append(fquery);buf.append(qend+"\n");
+                         buf.append(fmatch+"\n");
+                         buf.append(sstart);buf.append(fsubject);buf.append(send+"\n");
+                         query = ""; qend = "";qstart = ""; sstart = "";
+                         subject = ""; send = ""; fquery = ""; fmatch = ""; fsubject = "";
+                     }
+                     buf.append(line+"\n");
+                 }
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+            throw new Exception();
+        }
+        return buf.toString();
+    }
+        
+    
+    
     //******************************************
     public static void main(String args[])
     {
@@ -230,7 +371,11 @@ public class Blast2seqParser
         String queryFile = "c:\\tmp\\b2tp-1.out";
         try
         {
-            Blast2seqParser.parse(queryFile,2);
+            String sa = formatBlastOutputToHTML("c:\\blastoutput\\b2n31482.out", Blast2seqParser.BLAST_FILE_TYPE_N);
+            String o = formatBlastOutputToHTML("c:\\blastoutput\\b2tp31482.out",Blast2seqParser.BLAST_FILE_TYPE_P);
+            System.out.println(sa);
+            System.out.println(o);
+            //Blast2seqParser.parse(queryFile,2);
         }catch(Exception e){}
     }
 }
