@@ -94,7 +94,7 @@ public class MgcRequestImporter
         Hashtable sequencesToBlat = new Hashtable();
         if (prev_step) prev_step = readSequences(notMatchedGI, sequencesToBlat) ;
         //blast sequences for not matching GI;
- //       if (! blastSequences(sequencesToBlat, sequencesMatchedByBlast, sequencesNotMatchedByBlast)) return false;
+        if (prev_step) prev_step = blastSequences(sequencesToBlat, sequencesMatchedByBlast, sequencesNotMatchedByBlast);
         //save request to db
         m_Request.insert(conn);
         DatabaseTransaction.commit(conn);
