@@ -22,10 +22,34 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
     public static final int LOCUSID = 1;
     public static final int UNIGENE = 2;
     public static final int ACCESSION = 3;
+        
+    // direct gene tree contains all directly disease-associated genes
+    protected TreeSet direct_gene_tree = new TreeSet(new HomologChipGeneComparator());
+    
+    // direct children gene treee contains all directly disease-associated genes by family term
+    protected TreeSet direct_children_gene_tree = new TreeSet(new HomologChipGeneComparator());
+
+    // indirect gene tree contains all indirectly disease-associated genes
+    protected TreeSet indirect_gene_tree = new TreeSet (new HomologChipGeneComparator());
+    
+    // new gene tree contains all non-associated genes
+    protected TreeSet new_gene_tree = new TreeSet(new HomologChipGeneComparator());
     
     // no homolog tree contains the non-human genes which has no human homolog
     protected TreeSet no_homolog_tree = new TreeSet();
-    
+        
+    public TreeSet getDirect_gene_tree(){
+        return direct_gene_tree;
+    }    
+    public TreeSet getDirect_children_gene_tree(){
+        return direct_children_gene_tree;
+    }
+    public TreeSet getIndirect_gene_tree(){
+        return indirect_gene_tree;
+    }    
+    public TreeSet getNew_gene_tree(){
+        return new_gene_tree;
+    }    
     public TreeSet getNo_homolog_tree(){
         return no_homolog_tree;
     }
@@ -44,7 +68,7 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
             return null;
         }
         
-        HashMap homolog_mapping = new HashMap();
+        HashMap homolog_mapping = new HashMap();        
         String sql = "";
         if(type == LOCUSID)
             sql = "select distinct h_locusID from Homolog_Mapping where homolog_locusid = ?"; 
@@ -66,12 +90,14 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
                 pstmt.setString(1, non_hs_homolog);
             ResultSet rs = pstmt.executeQuery();
             int h_locusID = -1;
+            Vector human_homologs = new Vector();   // one non-human gene may have more than one human homologs
             while(rs.next()){
-                h_locusID = rs.getInt(1);
+                h_locusID = rs.getInt(1);               
+                human_homologs.add(new Integer(h_locusID));
             }
             rs.close();
             if(h_locusID != -1)
-                homolog_mapping.put(non_hs_homolog, new Integer(h_locusID));
+                homolog_mapping.put(non_hs_homolog, human_homologs);
         }
         pstmt.close();
         }catch(SQLException e){
@@ -90,7 +116,9 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
         Iterator it = mapping.keySet().iterator();
         String input = "";
         while(it.hasNext()){
-            input += ((Integer)(mapping.get(it.next()))).toString() + " ";
+            Vector human_homologs = (Vector)(mapping.get(it.next()));
+            for(int i=0; i<human_homologs.size(); i++)
+                input += ((Integer)(human_homologs.elementAt(i))).toString() + " ";
         }
         return input;
     }
@@ -118,20 +146,23 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
     }
     
 
-    /** classify each gene in the input list and put it in the certain tree
+    /** classify each gene in the input list and put it in the certain tree data structure
      *  @param id   non-human gene identifier(locusID, Unigene or Accession)
      *  @param mapping  homolog mapping hashmap
      */        
     public void classify(String id, HashMap mapping){
 
-        Object hs_locus_id = mapping.get(id);
+        Object hs_locus_ids = mapping.get(id);
+        Object hs_locus_id;
         ChipGene g;
         
-        if(hs_locus_id == null){
+        if(hs_locus_ids == null){
             no_homolog_tree.add(id);
         }
         else{
-            
+          Vector v = (Vector)(hs_locus_ids);
+          for(int i = 0; i < v.size(); i++){
+            hs_locus_id = v.elementAt(i);  
             if(direct_gene_hashmap.containsKey(hs_locus_id)){
                 g = (ChipGene)(direct_gene_hashmap.get(hs_locus_id));
                 direct_gene_tree.add(new HomologChipGene(g.getGene_symbol(), g.getLocus_id(), g.getScore(), id));                                                 
@@ -154,6 +185,7 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
             else{               
                 new_gene_tree.add(new HomologChipGene(" ", ((Integer)hs_locus_id).intValue(), 0.0, id));
             }
+          }
              
         }
 

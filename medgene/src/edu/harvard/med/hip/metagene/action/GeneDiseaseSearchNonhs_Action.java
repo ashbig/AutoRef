@@ -61,7 +61,8 @@ public class GeneDiseaseSearchNonhs_Action extends MetageneAction {
         int stat = ((GeneDiseaseSearchNonhs_Form)form).getStat();
         int number = ((GeneDiseaseSearchNonhs_Form)form).getNumber();
         String submit = ((GeneDiseaseSearchNonhs_Form)form).getSubmit();
-        Vector associations = new Vector();
+        Vector associations = new Vector(); //contain one gene-diseases association
+        Vector all_associations = new Vector(); 
         
         if(submit.equalsIgnoreCase("New Search"))
             return (mapping.findForward("newsearch"));
@@ -84,17 +85,20 @@ public class GeneDiseaseSearchNonhs_Action extends MetageneAction {
             return (new ActionForward(mapping.getInput()));            
         }               
         
-        DiseaseGeneManager m = new DiseaseGeneManager();
-        GeneIndex gene_index = m.getHsGeneIndexByHomolog(searchTerm, term);
-        if(gene_index != null) {                   
-            associations = m.getAssociationsByGeneIndex(gene_index.getIndexid(), stat, number);
-            request.setAttribute("hs_geneIndex", gene_index);
+        DiseaseGeneManager m = new DiseaseGeneManager();         
+        Vector gene_indexes = m.getHsGeneIndexesByHomolog(searchTerm, term);
+        if(gene_indexes != null) {                   
+            for(int i = 0; i < gene_indexes.size(); i++){                
+                associations = m.getAssociationsByGeneIndex(((GeneIndex)(gene_indexes.elementAt(i))).getIndexid(), stat, number);
+                all_associations.add(new GeneDiseasesAssociation(((GeneIndex)(gene_indexes.elementAt(i))).getIndex(), associations));
+            }
+            request.setAttribute("hs_geneIndexes", "yes");
         }
         else
-            request.setAttribute("hs_geneIndex", "no");
+            request.setAttribute("hs_geneIndexes", "no");
  
         Statistics s = m.queryStatById(stat);        
-        request.setAttribute("associations", associations);
+        request.setAttribute("all_associations", all_associations);
         request.setAttribute("input_type", input_type);
         request.setAttribute("searchTerm", searchTerm);
         request.setAttribute("stat", s);

@@ -9,8 +9,7 @@
     <head>
         <title>MedGene : Gene Search</title>
     </head>
-    <body>
-    <% int i = 0; %>
+    <body>    
     <center>
     <h1>Top <bean:write name="number"/> Diseases </h1>            
     </center>
@@ -19,20 +18,22 @@
     <html:errors/>
 
     <br><br>
-    <table width="40%" align="left" border="0">
-    <tr><td>Input gene: </td> <td> <bean:write name="input_type"/> <b><bean:write name="searchTerm"/></b></td></tr>
-    
-    <logic:notEqual name="hs_geneIndex" value="no">   
-    <tr><td>Human homolog: </td> <td> <bean:write name="hs_geneIndex" property="index"/> </td></tr>
-    <tr><td>Statistical method: </td> <td> <bean:write name="stat" property="type"/> </td></tr>
-    </table>
-    <br><br><br><br>    
+    <logic:notEqual name="hs_geneIndexes" value="no">   
+    <br>    
     <hr>
     <b>Note:</b> If you want to find whether your interested diseases are on this page, 
     just click Edit on your browser's menu bar and use Find to search the current page. 
-    <hr><br>
+    <hr><br><br>
 
-    <p>
+    <logic:iterate id="_assoc" name="all_associations">
+    <% int i = 0; %>
+    <table width="40%" align="left" border="0">
+    <tr><td>Input gene: </td> <td> <bean:write name="input_type"/> <b><bean:write name="searchTerm"/></b></td></tr>
+    <tr><td>Human homolog: </td> <td> <bean:write name="_assoc" property="gene_index"/> </td></tr>
+    <tr><td>Statistical method: </td> <td> <bean:write name="stat" property="type"/> </td></tr>
+    </table>
+    <br><br><br><br><br>
+
     <TABLE width="100%" align="center" border="1" cellpadding="2" cellspacing="0">
     <TR bgcolor="gray">
         <TH>Rank</TH>
@@ -41,7 +42,7 @@
         <TH><A HREF="NumberOfPapers.jsp" target="_blank">Number of Papers</A></TH>
     </TR>
 
-    <logic:iterate id="association" name="associations"> 
+    <logic:iterate id="association" name="_assoc" property="associations"> 
         <tr>
             <TD align="center"><% out.println(++i); %></TD>
             <TD>
@@ -51,19 +52,21 @@
                 <bean:write name="association" property="stat.score"/>&nbsp
             </TD>
             <TD align="center">
-                <a href="DisplayPaperLinks.do?disease_id=<bean:write name="association" property="disease.id"/>&gene_index=<bean:write name="hs_geneIndex" property="index"/>
-&disease_mesh_term=<bean:write name="association" property="disease.term"/>&gene_symbol=<bean:write name="hs_geneIndex" property="index"/>" target="_blank">
+                <a href="DisplayPaperLinks.do?disease_id=<bean:write name="association" property="disease.id"/>&gene_index=<bean:write name="_assoc" property="gene_index"/>
+&disease_mesh_term=<bean:write name="association" property="disease.term"/>&gene_symbol=<bean:write name="_assoc" property="gene_index"/>" target="_blank">
                 <bean:write name="association" property="data.doublehit"/></a>&nbsp
             </TD>
         </tr>
     </logic:iterate> 
-
     </TABLE>
+    <br><br><br>
 
-
+    </logic:iterate> 
     </logic:notEqual>
 
-    <logic:equal name="hs_geneIndex" value="no">  
+    <logic:equal name="hs_geneIndexes" value="no">  
+    <table width="40%" align="left" border="0">
+    <tr><td>Input gene: </td> <td> <bean:write name="input_type"/> <b><bean:write name="searchTerm"/></b></td></tr>
     </table><br><br><p> There is no human homolog found by using HomoloGene at NCBI. Therefore, no associated diseases are displayed.
     </logic:equal>
        

@@ -854,10 +854,10 @@ public class DiseaseGeneManager {
     /** get human gene index id by non-human homolog
      *  @param non_hs_homolog   Non-human homolog id
      *  @param type             homolog input type (locus_id | unigene | accession)
-     *  @return                 corresponding human gene index id 
+     *  @return                 vector containing the homolog human gene index ids 
      *                          if no such human homolog, return null.
      */
-    public GeneIndex getHsGeneIndexByHomolog(String non_hs_homolog, int type){
+    public Vector getHsGeneIndexesByHomolog(String non_hs_homolog, int type){
         
         int LOCUSID = 1;
         int UNIGENE = 2;
@@ -867,6 +867,7 @@ public class DiseaseGeneManager {
         Connection con = manager.connect();
         int gene_index_id = -1;         
         String gene_index = "";
+        Vector hs_homolog_geneIndexes = new Vector();
         if (con == null) {
             System.out.println("Cannot connect to the database.");
             return null;
@@ -899,6 +900,7 @@ public class DiseaseGeneManager {
         while(rs.next()){
             gene_index_id = rs.getInt(1);
             gene_index = rs.getString(2);
+            hs_homolog_geneIndexes.add(new GeneIndex(gene_index_id, gene_index, null, null));
         }
         rs.close();
         pstmt.close();
@@ -910,13 +912,14 @@ public class DiseaseGeneManager {
         if(gene_index_id == -1) 
             return null;
         else
-            return (new GeneIndex(gene_index_id, gene_index, null, null));
+            return hs_homolog_geneIndexes;
     }
+    
        
     public static void main(String[] args){
         DiseaseGeneManager m = new DiseaseGeneManager();
-        GeneIndex gene_index = m.getHsGeneIndexByHomolog("29634", 1);
-        Vector associations = m.getAssociationsByGeneIndex(gene_index.getIndexid(), 1, 25);
+        Vector hs_homologs = m.getHsGeneIndexesByHomolog("29634", 1);
+        Vector associations = m.getAssociationsByGeneIndex(((GeneIndex)(hs_homologs.elementAt(0))).getIndexid(), 1, 25);
         for(int i=0; i<associations.size(); i++){
             System.out.println(((Association)(associations.elementAt(i))).getDisease().getTerm());
         }
