@@ -24,8 +24,9 @@ import edu.harvard.med.hip.flex.core.*;
  * @version 
  */
 public class OneToOneContainerMapper implements ContainerMapper {
-    public final static String containerTypeFile = "E:\\flexDev/flex/src/edu/harvard/med/hip/flex/process/ContainerType.properties";
-//    public final static String containerTypeFile = "edu/harvard/med/hip/flex/process/ContainerType.properties";
+//    public final static String containerTypeFile = "E:\\flexDev/flex/src/edu/harvard/med/hip/flex/process/ContainerType.properties";
+    public final static String containerTypeFile = "/usr/local/jakarta-tomcat-3.2.1/webapps/FLEX/WEB-INF/classes/edu/harvard/med/hip/flex/process/ContainerType.properties";
+    //    public final static String containerTypeFile = "edu/harvard/med/hip/flex/process/ContainerType.properties";
     
 //    PropertyResourceBundle containerType = null;
     protected Properties containerType = null;
