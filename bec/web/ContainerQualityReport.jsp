@@ -146,12 +146,12 @@ Container container = (Container)request.getAttribute("container") ;
 if ( forwardName == Constants.CONTAINER_RESULTS_VIEW)
 {
                 anchor = "<A HREF=\"\" onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+ Constants.SAMPLE_ISOLATE_RANKER_REPORT  
-		+ "&amp;ID="+ sample.getId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
+		+ "&amp;ID="+ sample.getId()+"&amp;container_label="+container.getLabel()+"','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
 }
 if (forwardName == Constants.PROCESS_APROVE_ISOLATE_RANKER && sample.getIsolateTrackingEngine() != null)
 {
    anchor = "<A HREF=\"\" onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+ Constants.CONSTRUCT_DEFINITION_REPORT 
-		+ "&amp;ID="+ sample.getIsolateTrackingEngine().getConstructId()+"','"+sample.getIsolateTrackingEngine().getConstructId()+"','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
+		+ "&amp;ID="+ sample.getIsolateTrackingEngine().getConstructId()+"','"+sample.getIsolateTrackingEngine().getConstructId()+"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\"><div align=center>"+ sample.getPosition()+"</div></a>";
 }
                 row = (count ) % rows; col =(int) (count  /rows );
                 if (constructid != sample.getIsolateTrackingEngine().getConstructId())

@@ -87,7 +87,7 @@ if (  forwardName_int== Constants.CONTAINER_RESULTS_VIEW)
 <tr><td><input type=radio name=show_action value="FER">Show Forward End Reads</td></tr>
 <tr><td><input type=radio name=show_action value="RER">Show Reverse End Reads</td></tr>
 
-<tr><td><input type=radio name=show_action value="IR">Show Isolate Ranker Output</td></tr>
+<tr><td><input type=radio name=show_action value="IR" checked>Show Isolate Ranker Output</td></tr>
 <%}%>
  		
        <tr><td>&nbsp; <P></P><input type="SUBMIT"/></td></tr>

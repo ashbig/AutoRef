@@ -87,17 +87,19 @@ Read read =(Read) request.getAttribute("read"); %>
             <P></P>
             <table align=center width="100%" border=0>
               <tr> 
-                <td colspan=3 align=center>phred generated qualities</td>
+                <td colspan=4 align=center>phred generated qualities</td>
               </tr>
               <tr> 
-                <td colspan=3 align=center>&nbsp;</td>
+                <td colspan=4 align=center>&nbsp;</td>
               </tr>
               <tr> 
-                <td width="33%" bgColor =blue>&nbsp;</td>
-                <td width="33%" bgColor = green>&nbsp;</td>
+                <td width="25%" bgColor =orange>&nbsp;</td>
+                <td width="25%" bgColor =blue>&nbsp;</td>
+                <td width="25%" bgColor = green>&nbsp;</td>
                 <td  bgcolor=red>&nbsp;</td>
               </tr>
               <tr align=center> 
+                <td><font size=-2><10</font></td>
                 <td><font size=-2><20</font></td>
                 <td><font size=-2><25</font></td>
                 <td><font size=-2>>=25</font></td>
