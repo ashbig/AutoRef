@@ -121,7 +121,7 @@ public class AccessManager {
      * @param username.
      * @return the user password
      */
-    private String getPassword(String username) throws FlexDatabaseException {
+    public String getPassword(String username) throws FlexDatabaseException {
         String pswd = null; //password
         String sql;
         ResultSet rs = null;
@@ -141,6 +141,65 @@ public class AccessManager {
         }
         
         return pswd;
+    }
+    
+     /**
+     * This method retrieves the user email address from
+     * the userprofile table for a given username.
+     * pre-condition: the given username must exist
+     *
+     * @param username.
+     * @return the user email address
+     */
+    public String getEmail(String username) throws FlexDatabaseException {
+        String email = null; //password
+        String sql;
+        ResultSet rs = null;
+        sql = "SELECT useremail FROM Userprofile"
+        + " WHERE username = '" + username+"'";
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                email = rs.getString(1);
+            }
+        }catch (SQLException sqlex) {
+            sqlex.printStackTrace();
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return email;
+    }
+    
+    /**
+     * This method retrieves the username from
+     * the userprofile table for a given reminder text.
+     *
+     * @param reminder text.
+     * @return the username
+     */
+    public String findUser(String reminder) throws FlexDatabaseException {
+        String username = null; //password
+        String sql;
+        ResultSet rs = null;
+        sql = "SELECT username FROM Userprofile"
+        + " WHERE passwordreminderstring = '" + reminder+"'";
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            if(rs.next()) {
+                username = rs.getString(1);
+            }
+        }catch (SQLException sqlex) {
+            sqlex.printStackTrace();
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return username;
     }
     
     /**
@@ -188,13 +247,17 @@ public class AccessManager {
      * @param info the user contact info.
      */
     
-    public void addUser(String username, String pswd, String email,String group, String org, String info) throws FlexDatabaseException{
-        String sql;
-        sql = "insert into userprofile" + "(username, useremail, userpassword, userorganization, userinformation, usergroup)"
-              +"values (" + "'"+ username +"', '"+ pswd +"', '"+ email +"', '"+ group +"', '"+ org +"', '"+ info +"')";
+    public void addUser(String username, String email,String pswd,String org, String group, String reminder, String firstname, String lastname, String address1, String address2, String city, String state, String province, String zip, String country, String telephone) throws FlexDatabaseException{
+        String sql1;
+        String sql2;
+        sql1 = "insert into userprofile" + "(username, useremail, userpassword, userorganization, usergroup, passwordreminderstring)"
+              +"values (" + "'"+ username +"', '"+ email +"', '"+ pswd +"', '"+ org +"', '"+ group +"', '"+ reminder +"')";
+        sql2 = "insert into useraddress" + "(username, firstname, lastname, organization, addressline1,addressline2,city,state,province,zipcode,country,telephone1)"
+              +"values (" + "'"+ username +"', '"+ firstname+"', '"+ lastname +"', '"+ org +"', '"+ address1 +"', '"+ address2 +"','"+ city +"', '"+ state +"', '"+ province +"', '"+ zip +"', '"+ country +"', '"+ telephone +"' )";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
-        DatabaseTransaction.executeUpdate(sql,conn);
+        DatabaseTransaction.executeUpdate(sql1,conn);
+        DatabaseTransaction.executeUpdate(sql2,conn);
         DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
     }
@@ -219,7 +282,7 @@ public class AccessManager {
             else
                 System.out.println("Testing method authenticate - ERROR");
             
-            manager.addUser("lms","schwartz@bio.umass.edu","worm","umass","<last name>Schwartz</last name>", "Customer");
+            //manager.addUser("lms","schwartz@bio.umass.edu","worm","umass","<last name>Schwartz</last name>", "Customer");
         } catch (FlexDatabaseException e) {
             System.out.println(e);
         }

@@ -55,6 +55,11 @@
     <form-bean      name="customerRegistrationForm"
                     type="edu.harvard.med.hip.flex.form.CustomerRegistrationForm"/>
 
+    <!-- Find registration form bean -->
+    <form-bean      name="findRegistrationForm"
+                    type="edu.harvard.med.hip.flex.form.FindRegistrationForm"/>
+
+
   </form-beans>
 
 
@@ -84,10 +89,19 @@
                type="edu.harvard.med.hip.flex.action.CustomerRegistrationAction"
                name="customerRegistrationForm"
               input="/CustomerRegistration.jsp">
-      <forward  name="success"   path="/login.jsp"/>
+      <forward  name="success"   path="/RegistrationConfirm.jsp"/>
       <forward  name="failure"  path="/CustomerRegistration.jsp"/>
     </action>
     
+    <!-- Process a find registration -->
+    <action    path="/FindRegistration"
+               type="edu.harvard.med.hip.flex.action.FindRegistrationAction"
+               name="findRegistrationForm"
+              input="/FindRegistration.jsp">
+      <forward  name="success"   path="/FindRegistrationConfirm.jsp"/>
+      <forward  name="failure"  path="/FindRegistration.jsp"/>
+    </action>
+
     <action     path="/ProcessError"
                 type="edu.harvard.med.hip.flex.action.ProcessErrorAction">
        <forward name="displayError" path="/FlexError.jsp"/>

@@ -50,6 +50,8 @@ public class CustomerRegistrationForm extends ActionForm {
      */
     private String state = null;
     
+    private String province = null;
+    
      /**
      * The zip code.
      */
@@ -229,6 +231,28 @@ public class CustomerRegistrationForm extends ActionForm {
     public void setState(String state) {
 
         this.state = state;
+
+    }
+    
+    /**
+     * Return the province.
+     *
+     * @return province
+     */
+    public String getProvince() {
+
+	return (this.province);
+
+    }
+
+    /**
+     * Set the province.
+     *
+     * @param state The new province
+     */
+    public void setProvince(String province) {
+
+        this.province = province;
 
     }
     
@@ -442,6 +466,7 @@ public class CustomerRegistrationForm extends ActionForm {
         this.street2 = null;
         this.city = null;
         this.state = null;
+        this.province = null;
         this.zipCode = null;
         this.country = null;
         this.phone = null;
@@ -473,9 +498,7 @@ public class CustomerRegistrationForm extends ActionForm {
         if ((street1 == null) || (street1.length() < 1))
             errors.add("street1", new ActionError("error.street1.required"));
         if ((city == null) || (city.length() < 1))
-            errors.add("city", new ActionError("error.city.required"));
-        if ((state == null) || (state.length() < 1))
-            errors.add("state", new ActionError("error.state.required"));
+            errors.add("city", new ActionError("error.city.required")); 
         if ((zipCode == null) || (zipCode.length() < 1))
             errors.add("zipCode", new ActionError("error.zipcode.required"));
         if ((country == null) || (country.length() < 1))

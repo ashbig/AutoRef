@@ -68,24 +68,14 @@ public final class CustomerRegistrationAction extends Action {
         String street1 = ((CustomerRegistrationForm) form).getStreet1();
         String street2 = ((CustomerRegistrationForm) form).getStreet2();
         String city = ((CustomerRegistrationForm) form).getCity();
+        String province = ((CustomerRegistrationForm) form).getProvince();
         String state = ((CustomerRegistrationForm) form).getState();
         String zipcode = ((CustomerRegistrationForm) form).getZipCode();
         String country = ((CustomerRegistrationForm) form).getCountry();
         String phone = ((CustomerRegistrationForm) form).getPhone(); 
         String reminder = ((CustomerRegistrationForm) form).getReminderText(); 
         
-        String userinformation ="<FirstName>"+firstname+"</FirstName>"+"\n"
-                                  +"<LastName>"+lastname+"</LastName>"+"\n"
-                                  +"<Street1>"+street1+"</Street1>"+"\n"
-                                  +"<Street2>"+street2+"</Street2>"+"\n"
-                                  +"<City>"+city+"</City>"+"\n"
-                                  +"<State>"+state+"</State>"+"\n"
-                                  +"<Zip Code>"+zipcode+"</Zip Code>"+"\n"
-                                  +"<Country>"+country+"</Country>"+"\n"
-                                  +"<Work Phone>"+phone+"</Work Phone>"+"\n"
-                                  +"<Reminding Text>"+reminder+"</Reminding Text>"+"\n";
-        userinformation = firstname;
-          
+         
     /** Creates new CustomerRegistrationAction */
         //public CustomerRegistrationAction() {}
          
@@ -108,7 +98,7 @@ public final class CustomerRegistrationAction extends Action {
             }
             // if the userId has not been used, insert a new user record into the database
             else {
-                accessManager.addUser(user_id,email,password,organization,userinformation,usergroup);
+                accessManager.addUser(user_id,email,password,organization,usergroup,reminder,firstname,lastname,street1,street2,city,state,province,zipcode,country,phone);
                 return (mapping.findForward("success")); 
             }
         } catch (Throwable th) {
