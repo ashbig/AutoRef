@@ -36,7 +36,8 @@ public class MgcMasterListImporter
     
     private static final String DILIM = "!\t";
     private static final String STATUS = FlexSequence.NEW;
-    private static final String FILE_PATH = "/tmp/";
+    //private static final String FILE_PATH = "/tmp/";
+    public static final String FILE_PATH = FlexProperties.getInstance().getProperty("tmp");
     
     private String              m_username = null;
     private FileWriter          m_writer = null;
