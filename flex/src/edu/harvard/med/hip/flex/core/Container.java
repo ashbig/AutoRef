@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.4 2004-04-08 16:07:41 dzuo Exp $
+ * $Id: Container.java,v 1.5 2005-03-23 17:11:45 dzuo Exp $
  *
  * File     	: Container.java
  * Date     	: 04162001
@@ -184,7 +184,7 @@ public class Container {
         "l.locationdescription as description\n"+
         "from containerheader c, containerlocation l\n"+
         "where c.locationid = l.locationid\n"+
-        "and c.label = '"+ label+"'";
+        "and upper(c.label) = '"+ label.toUpperCase()+"'";
         ResultSet rs = null;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -230,7 +230,7 @@ public class Container {
         
         String sql = "select containerid, containertype, label, locationid, "+
         "threadid, locationtype,  description "+
-        "from CONTAINER_BY_LABEL where label = '"+ label+"'";
+        "from CONTAINER_BY_LABEL where upper(label) = '"+ label.toUpperCase()+"'";
         ResultSet rs = null;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -581,7 +581,7 @@ public class Container {
      *	   return false otherwise.
      */
     public boolean isSame(String label){
-        return (label.equals(this.label));
+        return (label.equalsIgnoreCase(this.label));
     }
     
     /**
@@ -762,11 +762,11 @@ public class Container {
      * @exception SQLException
      */
     public static boolean plateExistsInDB(String barcode) throws FlexDatabaseException, SQLException {
-        String sql = "select count(*) from containerheader where label = ?";
+        String sql = "select count(*) from containerheader where upper(label) = ?";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, barcode);
+        stmt.setString(1, barcode.toUpperCase());
         ResultSet rs = DatabaseTransaction.executeQuery(stmt);
         boolean ret = false;
         if(rs.next()) {

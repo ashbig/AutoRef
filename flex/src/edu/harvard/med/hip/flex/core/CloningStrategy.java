@@ -24,6 +24,8 @@ public class CloningStrategy {
     public static final int HUMAN_GATEWAY_EXPRESSION = 6;
     public static final int PSEUDOMONAS_GATEWAY_EXPRESSION = 7;
     public static final int YP_GATEWAY = 8;
+    public static final int CREATOR_EXPRESSION_JP1520 = 10;
+    public static final int GATEWAY_PGW = 13;
     
     protected int id;
     protected String name;
@@ -186,13 +188,21 @@ public class CloningStrategy {
         
         if(workflowid == Workflow.STANDARD_WORKFLOW || workflowid == Workflow.PSEUDOMONAS_WORKFLOW
         || workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.GATEWAY_WORKFLOW
-        || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
+        || workflowid == Workflow.MGC_GATEWAY_CLOSED || workflowid == Workflow.GATEWAY_WITH_EGEL) {
             //if(projectid == Project.HUMAN || projectid == Project.BREASTCANCER || projectid == Project.KINASE) 
             //    return HUMAN_GATEWAY;
            // if(projectid == Project.PSEUDOMONAS)
              //   return PSEUDOMONAS_GATEWAY;
            // if(projectid == Project.YP || projectid == Project.YEAST || projectid == Project.FT || projectid == Project.AVENTIS)
                 return YP_GATEWAY;
+        }
+        
+        if(workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+            return GATEWAY_PGW;
+        }
+        
+        if(workflowid ==  Workflow.TRANSFER_TO_EXP_JP1520) {
+            return CREATOR_EXPRESSION_JP1520;
         }
         
         return 0;

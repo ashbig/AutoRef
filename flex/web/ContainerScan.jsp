@@ -19,7 +19,7 @@
     <hr>
     <html:errors/>
     <p>
-    <H3>Please Scan the Container (case sensitive)</h3>
+    <H3>Please Scan the Container</h3>
     <form action="ViewContainerProcessHistory.do" >
     <table>
         <tr>

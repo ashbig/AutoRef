@@ -18,7 +18,7 @@ import java.util.*;
  */
 public abstract class GridPlateToCultureMapper extends AbstractAgarToCultureMapper {
 //    public static final int AGARWELLNUM = 48;
-    protected int NumOfDestPlates = 4;
+//    protected int NumOfDestPlates = 4;
     protected int startIndexes[] = {1, 5};
     protected int column = 12;
     protected int row = 8;
@@ -46,7 +46,7 @@ public abstract class GridPlateToCultureMapper extends AbstractAgarToCultureMapp
     }    
   
     protected int getNumOfDestPlates() {
-        return NumOfDestPlates;
+        return getColonynum();
     }
     
     protected int getStartIndex(int index) {

@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.20 $
- * $Date: 2002-05-14 21:18:45 $
+ * $Revision: 1.21 $
+ * $Date: 2005-03-23 17:12:26 $
  * $Author: dzuo $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dzuo $
- * @version    $Revision: 1.20 $ $Date: 2002-05-14 21:18:45 $
+ * @version    $Revision: 1.21 $ $Date: 2005-03-23 17:12:26 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -173,7 +173,8 @@ public class EnterPlateAction extends ResearcherAction {
             // put the form in the session
             session.setAttribute("transformEntryForm",resultForm);
             retForward = mapping.findForward("transformEntry");
-        } else if(protocolName.equals(Protocol.ENTER_DNA_GEL_RESULTS)) {
+        } else if(protocolName.equals(Protocol.ENTER_DNA_GEL_RESULTS) 
+            || protocolName.equals(Protocol.ENTER_EGEL)) {
             resultForm = new DNAGelForm(container);
             // put the form into the session
             session.setAttribute("dnaEntryForm", resultForm);

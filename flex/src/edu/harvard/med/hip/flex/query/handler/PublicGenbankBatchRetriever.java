@@ -62,6 +62,7 @@ public class PublicGenbankBatchRetriever extends GenbankBatchRetriever {
     
     public static void main(String args[]) {
         List genbanks = new ArrayList();
+        /**
         genbanks.add("NM_130786");           
         genbanks.add("AC010642");            
         genbanks.add("AF414429");            
@@ -75,7 +76,8 @@ public class PublicGenbankBatchRetriever extends GenbankBatchRetriever {
         genbanks.add("BC001881.1");                                                                      
         genbanks.add("BC001882.1");
         genbanks.add("12345");
-        genbanks.add("abc");
+         **/
+        genbanks.add("NM_001011658");
         
         GenbankBatchRetriever retriever = new PublicGenbankBatchRetriever(genbanks);
         try {

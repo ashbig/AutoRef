@@ -172,7 +172,7 @@ public class GenbankBlastQueryHandler extends QueryHandler {
         genbanks.add("12345");
         genbanks.add("abc");
          **/
-        genbanks.add("U95089");
+        genbanks.add("BC014243");
         
         List params = new ArrayList();
         params.add(new Param(Param.BLASTLENGTH, "79"));

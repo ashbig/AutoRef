@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.11 2004-10-29 19:06:20 dzuo Exp $
+ * $Id: Oligo.java,v 1.12 2005-03-23 17:11:34 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -152,6 +152,8 @@ public class Oligo {
             }
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_5p + sequence;
+        } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+            tagSequence = INGA_5p + sequence;
         } else {
             tagSequence = CLONETECH_5p + sequence;
         }
@@ -205,6 +207,8 @@ public class Oligo {
             }
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_3p_CLOSE + sequence;
+        } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+            tagSequence = GATEWAY_YP_3p + sequence;
         } else {
             tagSequence = CLONETECH_3p_CLOSE + sequence;
         }        
@@ -250,6 +254,8 @@ public class Oligo {
             }
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_3p_FUSION + sequence;
+        } else if (workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+            tagSequence = GATEWAY_YP_3p_FUSION + sequence;
         } else {
             tagSequence = CLONETECH_3p_FUSION + sequence;
         }                

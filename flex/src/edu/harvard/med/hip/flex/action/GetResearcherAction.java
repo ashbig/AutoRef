@@ -229,9 +229,20 @@ public class GetResearcherAction extends ResearcherAction{
                 if("Yes".equals(isMappingFile)) {
                     b = true;
                 }
-                SummaryTablePopulator populator = new SummaryTablePopulator();
-                ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b, populator, containerids, strategyid, CloneInfo.MASTER_CLONE);
-                new Thread(handler).start();
+                
+                if(workflowid == Workflow.TRANSFER_TO_EXP_JP1520) {
+                    List newContainerids = new ArrayList();
+                    for(int i=0; i<newContainers.size(); i++) {
+                        Container newContainer = (Container)newContainers.elementAt(i);
+                        newContainerids.add(new Integer(newContainer.getId()));
+                    }
+                    ThreadedExpressionSummaryTablePopulator p = new ThreadedExpressionSummaryTablePopulator(newContainerids, strategyid);
+                    new Thread(p).start();
+                } else {
+                    SummaryTablePopulator populator = new SummaryTablePopulator();
+                    ThreadedRearrayedSeqPlatesHandler handler = new ThreadedRearrayedSeqPlatesHandler(seqContainers, researcher.getBarcode(), b, populator, containerids, strategyid, CloneInfo.MASTER_CLONE);
+                    new Thread(handler).start();
+                }
             }
             
             if(Protocol.CREATE_TRANSFECTION.equals(protocol.getProcessname())) {

@@ -37,8 +37,9 @@ public class PickColonyForm extends ProjectWorkflowForm
     private int [] destLocations;
     private String subProtocolName = null;
     
-    private String pickingMethod = "interleaved";
+    private String pickingMethod = "nonInterleaved";
     private String isSeqPlates = "Yes";
+    private int colonynum = 4;
     
     /**
      * Set the processname to the given value.
@@ -198,6 +199,10 @@ public class PickColonyForm extends ProjectWorkflowForm
         return isSeqPlates;
     }
     
+    public int getColonynum() {return colonynum;}
+    
+    public void setColonynum(int i) {this.colonynum = i;}
+    
     /**
      * Reset all properties to their default values.
      */
@@ -207,8 +212,9 @@ public class PickColonyForm extends ProjectWorkflowForm
         agarPlateF1 = null;
         agarPlateC1 = null;
         subProtocolName = null;
-        pickingMethod = "interleaved";
+        pickingMethod = "nonInterleaved";
         isSeqPlates = "Yes";
+        colonynum = 4;
     }
     
     /**

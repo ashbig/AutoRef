@@ -93,6 +93,7 @@ public abstract class AbstractAgarContainerMapper extends OneToOneContainerMappe
             }
             
             Sample newSample = new Sample(type, position, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
+            newSample.setCloneid(s.getCloneid());
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
             position++;

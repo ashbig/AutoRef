@@ -17,7 +17,7 @@ public class DatabaseManager {
     public static Connection connection = null;
     
     private String url = "jdbc:oracle:thin:@localhost:1532:WALL";
-    private String username = "flex_owner";
+    private String username = "flex_test";
     private String password = "flex";
     
     /** Creates new DatabaseManager */

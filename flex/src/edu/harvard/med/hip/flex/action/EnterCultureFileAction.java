@@ -123,7 +123,14 @@ public class EnterCultureFileAction extends ResearcherAction {
             return new ActionForward(mapping.getInput());
         }
         
-        CultureResultConverter converter = new CultureResultConverter(input, container.getSamples().size());
+        FileResultConverter converter = null;
+        
+        if(Protocol.ENTER_CULTURE_FILE.equals(protocolName)) {
+            converter = new CultureResultConverter(input, container.getSamples().size());
+        } else {
+            converter = new DNAResultConverter(input, container.getSamples().size());
+        }
+   
         if(!converter.parseFile()) {
             errors.add("cultureFile", new ActionError("flex.infoimport.file", converter.getErrorMessage()));
             saveErrors(request,errors);

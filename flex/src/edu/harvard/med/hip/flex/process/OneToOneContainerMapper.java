@@ -86,6 +86,23 @@ public class OneToOneContainerMapper implements ContainerMapper {
             Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname()) ||
             Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(protocol.getProcessname())) {
                 newBarcode = projectCode+protocol.getProcesscode()+container.getLabel().substring(3);
+            } else if (Protocol.GENERATE_CRE_PLATE.equals(protocol.getProcessname())) {
+                newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
+                
+                if(workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520) {
+                    newBarcode = newBarcode+".006";
+                }
+            } else if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()) &&
+            workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520) {
+                String labelPrefix = null;
+                if(project.getId()==Project.HUMAN) {
+                    labelPrefix = "HsxXG";
+                } else if(project.getId()==Project.YEAST) {
+                    labelPrefix = "ScxXG";
+                } else if(project.getId()==Project.PSEUDOMONAS) {
+                    labelPrefix = "PaxXG";
+                }
+                newBarcode = labelPrefix+container.getLabel().substring(3);
             } else {
                 newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
             }
@@ -153,6 +170,10 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 type = Sample.EMPTY;
             } else if(Sample.GEL.equals(s.getType())) {
                 type = getGelSampleType(container, s, protocol);
+                
+                if(type == null) {
+                    type = Sample.getType(protocol.getProcessname());
+                }
             } else if(Sample.ISOLATE.equals(s.getType())) {
                 type = getCultureSampleType(container, s, protocol);
                 
@@ -166,7 +187,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
             }
             
             Sample newSample = new Sample(type, s.getPosition(), newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
-            newSample.setCloneid(s.getCloneid());
+            if (!Protocol.GENERATE_CRE_PLATE.equals(protocol.getProcessname())) {
+                newSample.setCloneid(s.getCloneid());
+            }
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
         }
@@ -177,6 +200,10 @@ public class OneToOneContainerMapper implements ContainerMapper {
         String type = null;
         edu.harvard.med.hip.flex.process.Process p =
         edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
+        
+        if(p == null)
+            return null;
+        
         Result result = Result.findResult(s, p);
         if(Result.CORRECT.equals(result.getValue()) ||
         Result.MUL_W_CORRECT.equals(result.getValue()) ||
