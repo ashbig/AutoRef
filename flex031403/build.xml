@@ -41,7 +41,7 @@
                   http://localhost:<port>/FLEX -->
      
 
-  <property name="tomcat.home" value="../jakarta-tomcat-3.2.1"/>
+  <property name="tomcat.home" value="../jakarta-tomcat-3.2.2"/>
   <property name="app.name" value="FLEX"/>
   <property name="deploy.home" value="${tomcat.home}/webapps/${app.name}"/>
   <property name="system.lib" value="${tomcat.home}/lib"/>
@@ -75,7 +75,7 @@
       <fileset dir="lib" includes="*.jar,*.zip"/>
     </copy>
     <copy todir="${system.lib}">
-        <fileset dir="lib" includes="poolman.xml,poolman.policy"/>
+        <fileset dir="lib" includes="poolman.xml,poolman.policy,jndi.properties"/>
     </copy>
     <mkdir dir="${javadoc.home}"/>
   </target>
@@ -89,6 +89,7 @@
     <delete dir="${deploy.home}"/>
     <delete file="${system.lib}/poolman.xml"/>
     <delete file="${system.lib}/poolman.policy"/>
+    <delete file="${system.lib}/jndi.properties"/>
   </target>
 
 
