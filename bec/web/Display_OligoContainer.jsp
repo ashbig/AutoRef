@@ -79,8 +79,8 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
-    <td width="19%"><strong>Label:</strong></td>
-    <td width="81%"> 
+    <td ><strong>Label:</strong></td>
+    <td > 
       <%= container.getLabel() %>
     </td>
   </tr>
@@ -92,7 +92,7 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
   </tr>
    <tr> 
     <td><strong>Container Status:</strong></td>
-    <td><strong><%= container.getStatusAsString() %></strong></td>
+    <td><%= container.getStatusAsString() %></td>
   </tr> 
 <% if ( forwardName_int == Constants.PROCESS_PROCESS_OLIGO_PLATE)
 {%>
