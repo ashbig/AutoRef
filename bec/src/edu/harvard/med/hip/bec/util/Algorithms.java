@@ -233,12 +233,15 @@ public class Algorithms
     {
         String res = null;
         res = cleanChar(filename,':');
-        res = "/"+replaceChar(res, File.separatorChar, '/');
+        if (res.charAt(0) != '/')
+            res = "/"+res;
+        res = replaceChar(res, File.separatorChar, '/');
         return res;
     }
     public static void main(String args[])
     {
         System.out.println( convertWindowsFileNameIntoUnix("f:\\clone\\me\\as.ase.1") );
+         System.out.println( convertWindowsFileNameIntoUnix("/clone/me/as.ase.1") );
     }
     
     
