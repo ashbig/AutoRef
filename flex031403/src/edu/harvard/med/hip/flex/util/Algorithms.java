@@ -31,7 +31,7 @@ public static ArrayList rearangeSawToothPatternInFlexSequence(ArrayList sequence
             // compare
         } );
         //get middle element
-        int middle = (int)Math.ceil((double)sequences.size() / 2) - 1;
+        int middle = sequences.size() / 2;
         for (int count = 0; count < middle; count++)
         {
             result.add(sequences.get(count));
@@ -43,6 +43,35 @@ public static ArrayList rearangeSawToothPatternInFlexSequence(ArrayList sequence
         return result;
     }
 
+
+public static ArrayList rearangeSawToothPatternInSequenceDescription(ArrayList sequences)
+    {
+        ArrayList result = new ArrayList();
+        //sort array by cds length
+        Collections.sort(sequences, new Comparator()
+        {
+            public int compare(Object o1, Object o2)
+            {
+               return ((SequenceDescription) o1).getCdsLength() - ((SequenceDescription) o2).getCdsLength();
+            }
+            /** Note: this comparator imposes orderings that are
+             * inconsistent with equals. */
+            public boolean equals(java.lang.Object obj)
+            {      return false;  }
+            // compare
+        } );
+        //get middle element
+       
+        int middle = sequences.size() / 2;
+        for (int count = 0; count < middle; count++)
+        {
+            result.add(sequences.get(count));
+            result.add(sequences.get(middle+count));
+        }
+        //ad last element 
+        if (result.size() < sequences.size()) result.add(sequences.get(sequences.size() -1));
+        return result;
+    }
 
 public static LinkedList rearangeSawToothPatternInOligoPattern(LinkedList sequences)
     {
