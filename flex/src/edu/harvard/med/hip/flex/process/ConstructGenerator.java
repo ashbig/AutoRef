@@ -149,7 +149,7 @@ public class ConstructGenerator
         
         // insert design constructs protocl process execution
         // insertProcessExecution();
-        NNPrimerCalculator pc = new NNPrimerCalculator();
+        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project);
         ListIterator iter = seqList.listIterator();
         
         while (iter.hasNext())
@@ -228,7 +228,7 @@ public class ConstructGenerator
         
         // insert design constructs protocl process execution
         // insertProcessExecution();
-        PMNNPrimerCalculator pc = new PMNNPrimerCalculator();
+        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project);
         ListIterator iter = seqList.listIterator();
         
         while (iter.hasNext())
@@ -298,7 +298,7 @@ public class ConstructGenerator
         
         // insert design constructs protocl process execution
         // insertProcessExecution();
-        PMNNPrimerCalculator pc = new PMNNPrimerCalculator();
+        NNPrimerCalculator pc = StaticPrimerCalculatorFactory.makePrimerCalculator(project);
         ListIterator iter = seqList.listIterator();
         
         while (iter.hasNext())
@@ -474,5 +474,4 @@ public class ConstructGenerator
             throw new FlexDatabaseException(sqlex);
         }
     }
-    
 } //ConstructGenerator
