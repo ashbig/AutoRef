@@ -48,10 +48,26 @@ case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS:
 case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
 case Constants.PROCESS_FIND_GAPS:
 {
-additional_jsp_buffer.append("<tr><td>"+line_padding+"<strong>For assembly process:</strong>");
-additional_jsp_buffer.append("<P>"+line_padding+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select what vectors to trim&nbsp;&nbsp;");
 
-additional_jsp_buffer.append("<select NAME='isRunVectorTrimming' id='isRunVectorTrimming'>");
+
+
+
+additional_jsp_buffer.append(" <script defer='defer' type='text/javascript'><!--");
+additional_jsp_buffer.append("\n function isTrimm(e,checked){	; var form = e.form;");
+additional_jsp_buffer.append("	 if(checked) 	{");
+additional_jsp_buffer.append("\n form.elements."+ PhredPhrap.QUALITY_TRIMMING_SCORE +".value = 0;");
+additional_jsp_buffer.append("\n form.elements."+ PhredPhrap.QUALITY_TRIMMING_FIRST_BASE+".value = 0;");
+ additional_jsp_buffer.append("\n form.elements."+  PhredPhrap.QUALITY_TRIMMING_LAST_BASE+".value = 0;\n}\n else\n {");
+additional_jsp_buffer.append("\n form.elements."+  PhredPhrap.QUALITY_TRIMMING_SCORE+".value= 10;");
+additional_jsp_buffer.append("\nform.elements."+  PhredPhrap.QUALITY_TRIMMING_FIRST_BASE+".value= 50;");
+additional_jsp_buffer.append("form.elements."+  PhredPhrap.QUALITY_TRIMMING_LAST_BASE+".value = 800;\n	}");
+additional_jsp_buffer.append("\n }  \n -->\n</Script>");
+
+additional_jsp_buffer.append("\n <tr><td>");
+additional_jsp_buffer.append("<table width='90%' border='0' cellspacing='2' cellpadding='2' aligh='center'>");
+additional_jsp_buffer.append("<tr> <td colspan='2'>&nbsp;<strong>For assembly process:</strong> </td> </tr>");
+additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Select what vectors to trim</td>");
+additional_jsp_buffer.append("<td><select NAME='isRunVectorTrimming' id='isRunVectorTrimming'>");
 additional_jsp_buffer.append("<option value='"+PhredPhrap.VECTOR_LIBRARY_NAME+"' selected> All available vectors");
 additional_jsp_buffer.append("<option value='"+PhredPhrap.VECTOR_LIBRARY_NAME_EMPTY+"' > No vector triming");
 additional_jsp_buffer.append("<option value='vector_pDonor221_altered.txt' > pDonor221 only");
@@ -59,7 +75,17 @@ additional_jsp_buffer.append("<option value='pBY011_cleaned.txt' > pBY011 only")
 additional_jsp_buffer.append("<option value='pBY011_cleaned_201.txt' > pBY011 and pDONR201");
 additional_jsp_buffer.append("<option value='pDONR201_cleaned.txt' > pDonor201 only");
 additional_jsp_buffer.append("<option value='vector_pDonorDual_altered.txt' > pDonorDual only");
-additional_jsp_buffer.append("</select></td></tr>");
+additional_jsp_buffer.append("</select></td> </tr>");
+additional_jsp_buffer.append("<tr> <td colspan='2'><strong> <input type='checkbox' name='all' id='all' onClick='isTrimm(this, this.checked)'>");
+additional_jsp_buffer.append(" Perform quality trimming:</strong></td> </tr>");
+ additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Phred score&nbsp;&nbsp; </td>");
+ additional_jsp_buffer.append(" <td><input type = text value = 10 name='"+PhredPhrap.QUALITY_TRIMMING_SCORE+"' ></td> </tr>");
+ additional_jsp_buffer.append(" <tr> <td>"+line_padding+"First base to include &nbsp;&nbsp; </td>");
+additional_jsp_buffer.append(" <td><input type = text value = 50 name='"+PhredPhrap.QUALITY_TRIMMING_FIRST_BASE+"' ></td>");
+additional_jsp_buffer.append(" </tr> <tr> <td>"+line_padding+"Last base to include</td> <td><input type = text value = 900 name='"+PhredPhrap.QUALITY_TRIMMING_LAST_BASE + "' ></td> </table>");
+
+
+		
 
 if ( forwardName_int ==  Constants.PROCESS_FIND_GAPS)
 {
@@ -113,7 +139,7 @@ additional_jsp_buffer.append("Minimun distance between two stretches that should
 additional_jsp_buffer.append("<input type='text' width=20 value=50 name='minDistanceBetweenStretchesToBeCombined'></td></tr>");
 
   
-additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_NONE + "'>");
+additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_NONE + "' checked>");
 additional_jsp_buffer.append("Is not to cover Low Quality Regions</td></tr>");
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+  PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR +"'>");
 additional_jsp_buffer.append("Is cover any Low Quality Regions</td></tr>");

@@ -17,6 +17,7 @@ import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 import edu.harvard.med.hip.bec.ui_objects.*;
 
+import  edu.harvard.med.hip.bec.programs.assembler.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.modules.*;
@@ -501,7 +502,10 @@ public class RunProcessAction extends ResearcherAction
                                ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.END_READS_ASSEMBLY);
                              ((AssemblyRunner)runner).setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
                               ((AssemblyRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
-                             
+                                ((AssemblyRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
+                                ((AssemblyRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
+                               ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
+   
                              title = "request for end read wrapper invocation";
                              break;
                         }
@@ -511,7 +515,9 @@ public class RunProcessAction extends ResearcherAction
                               title = "request for Primer Designer";
                               int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
                               ((PrimerDesignerRunner)runner).setSpecId(spec_id);
-      if ( request.getParameter("isTryMode") != null )  ((PrimerDesignerRunner)runner).setIsTryMode( true );
+      if ( request.getParameter("isTryMode") != null )  
+          ((PrimerDesignerRunner)runner).setIsTryMode( true );
+                             // System.out.println(Integer.parseInt(request.getParameter("typeSequenceCoverage")) );
       ((PrimerDesignerRunner)runner).setTypeOfSequenceCoverage( Integer.parseInt(request.getParameter("typeSequenceCoverage"))  );
      ((PrimerDesignerRunner)runner).setIsLQRCoverageType( Integer.parseInt(request.getParameter("typeLQRCoverage")) );
      ((PrimerDesignerRunner)runner).setMinDistanceBetweenStretchesToBeCombined( Integer.parseInt(request.getParameter("minDistanceBetweenStretchesToBeCombined")) ); 
@@ -533,7 +539,10 @@ public class RunProcessAction extends ResearcherAction
                              runner = new AssemblyRunner();
                              ((AssemblyRunner)runner).setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
                              ((AssemblyRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
-                             
+                              ((AssemblyRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
+                                ((AssemblyRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
+                               ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
+   
                  //      System.out.println((String)request.getParameter("vectors_file_name"));
                             // ((AssemblyRunner)runner).setVectorFileNames((String)request.getParameter("vectors_file_name"));
                              title = "request for Clone sequence assembly";
@@ -571,6 +580,11 @@ public class RunProcessAction extends ResearcherAction
                                 ((GapMapperRunner)runner).setIsTryMode( true );
                               ((GapMapperRunner)runner).setProcessType( forwardName ) ;
                               ((GapMapperRunner)runner).setVectorFileName( request.getParameter("isRunVectorTrimming"));
+                              ((GapMapperRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
+                                ((GapMapperRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
+                               ((GapMapperRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
+   
+                              
                               if ( forwardName == Constants.PROCESS_FIND_GAPS)
                               {
                                   title = "request for Gap Mapper run";

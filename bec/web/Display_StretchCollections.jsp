@@ -42,7 +42,9 @@ else if (forwardName instanceof Integer) forwardName_int = ((Integer) forwardNam
     
 </head>
 <body>
+<%  if ( request.getAttribute("caller") == null ) {%>
 <jsp:include page="NavigatorBar_Administrator.jsp" />
+<%}%>
 	<p><P>
 <br>
 

@@ -89,7 +89,7 @@ String item_title = null;
                 case Constants.ITEM_TYPE_FLEXSEQUENCE_ID:
                     {item_title = "FLEX Sequence Id: "; break;}
             }
-
+int cloneid = 0;
 %>
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
@@ -98,11 +98,12 @@ String item_title = null;
 Hashtable ocalc_ids=new Hashtable();
 for (int index = 0; index < items.size(); index ++)
 
-{%>
+{
+    cloneid = Integer.parseInt( (String)items.get(index) );%>
  <tr><td colspan='2'>&nbsp;</td></tr>
   <TR>     <td height='29' width="30%"bgColor="#b8c6ed" >
            <strong><font color="#000080"><%= item_title%></font></td>
-           <td bgColor="#b8c6ed" ><strong><font color="#000080"><%= (String)items.get(index)%></font></strong></td></TR>
+           <td bgColor="#b8c6ed" ><strong><font color="#000080"><%= cloneid%></font></strong></td></TR>
     <% 
     ArrayList ol_per_item = (ArrayList) oligo_calculations.get(index);
     for (int oligo_c_count = 0; oligo_c_count < ol_per_item.size();oligo_c_count++)
@@ -121,7 +122,14 @@ Select Oligo Set </strong></td></tr><%}%> -->
 <a href="<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetSpec.do?forwardName=<%= olc.getPrimer3SpecId()  * Spec.SPEC_SHOW_SPEC %> "> <%= olc.getPrimer3SpecId()%></a></strong></td></TR>
     <tr> <td  ><strong>&nbsp;&nbsp; Reference Sequence Id: </strong></td>
 <td   ><a href="#" onCLick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= olc.getSequenceId()%>','<%=olc.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= olc.getSequenceId()%></a></strong></td></TR>
- <% if ( ocalc_ids.containsKey(new Integer(olc.getId()) ))
+<% if (olc.getStretchCollectioId() > 0)
+{%>
+<tr><td   ><strong>
+<strong>&nbsp;&nbsp; Gaps/LQR Collection Id: </strong>
+<td   ><a href="#" onCLick="window.open('<%=edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.STRETCH_COLLECTION_REPORT_INT%>&amp;ID=<%= olc.getStretchCollectioId() %>&amp;cloneid=<%=cloneid%>','<%=olc.getStretchCollectioId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > <strong><%= olc.getStretchCollectioId()%></a></strong></td></TR>
+<%}%>
+ 
+<% if ( ocalc_ids.containsKey(new Integer(olc.getId()) ))
 {%><tr><td colspan=2>See Primers above</td></tr><% continue;}%>  
  <tr><td colspan='2'>
 <table border='1' cellpadding="2" cellspacing="2" width="100%" align=center>
