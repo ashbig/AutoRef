@@ -68,7 +68,8 @@ public class CreateProcessPlateAction extends FlexAction {
                 Protocol p = new Protocol(protocolid, processcode, processname);
                 protocol.addElement(p);
             }
-            request.getSession().setAttribute("protocol", protocol);
+            
+            request.setAttribute("protocols", protocol);
             return (mapping.findForward("success"));
         } catch (FlexDatabaseException ex) {
              return (mapping.findForward("error"));

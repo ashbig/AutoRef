@@ -22,8 +22,8 @@ import org.apache.struts.action.ActionMapping;
 public class GetProcessPlateInputForm extends ActionForm {
     private String sourcePlate = null;
     private String researcherBarcode = null;
-    private String sourceLocation = null;
-    private String destLocation = null;
+    private int sourceLocation;
+    private int destLocation;
     
     /**
      * Set the source plate.
@@ -66,7 +66,7 @@ public class GetProcessPlateInputForm extends ActionForm {
      *
      * @param sourceLocation The value to be set to.
      */
-    public void setSourceLocation(String sourceLocation) {
+    public void setSourceLocation(int sourceLocation) {
         this.sourceLocation = sourceLocation;
     }
     
@@ -75,7 +75,7 @@ public class GetProcessPlateInputForm extends ActionForm {
      *
      * @return The source location.
      */
-    public String getSourceLocation() {
+    public int getSourceLocation() {
         return sourceLocation;
     }
     
@@ -84,7 +84,7 @@ public class GetProcessPlateInputForm extends ActionForm {
      *
      * @param destLocation The destination location.
      */
-    public void setDestLocation(String destLocation) {
+    public void setDestLocation(int destLocation) {
         this.destLocation = destLocation;
     }
     
@@ -93,7 +93,7 @@ public class GetProcessPlateInputForm extends ActionForm {
      *
      * @return The destination location.
      */
-    public String getDestLocation() {
+    public int getDestLocation() {
         return destLocation;
     }
     

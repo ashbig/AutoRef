@@ -23,7 +23,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.flex.core.Container;
+import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.GetProcessPlateInputForm;
@@ -58,9 +58,10 @@ public class GetInputAction extends ResearcherAction{
         ActionErrors errors = new ActionErrors();
         String barcode = ((GetProcessPlateInputForm)form).getResearcherBarcode();
         String sourcePlate = ((GetProcessPlateInputForm)form).getSourcePlate();
-        String sourceLocation = ((GetProcessPlateInputForm)form).getSourceLocation();
-        String destLocation = ((GetProcessPlateInputForm)form).getDestLocation();
+        int sourceLocation = ((GetProcessPlateInputForm)form).getSourceLocation();
+        int destLocation = ((GetProcessPlateInputForm)form).getDestLocation();
         LinkedList queueItems = (LinkedList)request.getSession().getAttribute("queueItems");
+        Protocol protocol = (Protocol)request.getSession().getAttribute("protocol");
         Researcher researcher = null;
 
         // Validate the researcher barcode.
@@ -77,15 +78,24 @@ public class GetInputAction extends ResearcherAction{
  
         QueueItem item = getValidPlate(queueItems, sourcePlate);
         if(item == null) {
-            errors.add("sourcePlate", new ActionError("error.plateId.invalid", sourcePlate));
+            errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
-        
+       
         // Create the new plate and samples.
         Container container = (Container)item.getItem();
+        String type = Container.getType(protocol.getProcessname());
+        Location sLocation = null;
+        Location dLocation = null;
+        Container newContainer = null;
         
         try {
+            sLocation = new Location(sourceLocation);
+            dLocation = new Location(destLocation);
+            String newBarcode = Container.getBarcode(protocol.getProcesscode(), container.getPlatesetid(), getSubThread(sourcePlate));        
+            newContainer = new Container(type, dLocation, newBarcode);
+            
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             Connection conn = t.requestConnection();
         
@@ -93,20 +103,27 @@ public class GetInputAction extends ResearcherAction{
             LinkedList newItems = new LinkedList();
             newItems.addLast(item);
             ContainerProcessQueue queue = new ContainerProcessQueue();
-            queue.removeQueueItems(newItems, conn);
+            //queue.removeQueueItems(newItems, conn);
         
        
             DatabaseTransaction.closeConnection(conn);
         } catch (FlexDatabaseException ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
+        } catch (FlexCoreException ex) {
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
         }
-            
-        return null;
+        
+        request.getSession().setAttribute("oldContainer", container); 
+        request.getSession().setAttribute("newContainer", newContainer);  
+        request.getSession().setAttribute("sLocation", sLocation);
+        request.getSession().setAttribute("dLocation", dLocation);
+        return (mapping.findForward("success"));
     }
  
     // Validate the source plate barcode.
-    private QueueItem getValidPlate(LinkedList queueItems, String sourcePlate) {        
+    private QueueItem getValidPlate(LinkedList queueItems, String sourcePlate) { 
         if(queueItems == null) {
             return null;
         }
@@ -116,10 +133,16 @@ public class GetInputAction extends ResearcherAction{
             QueueItem item = (QueueItem)queueItems.get(i);
             Container container = (Container)item.getItem();
             if(container.isSame(sourcePlate)) {
-                item = found;
+                found = item;
             }
         }   
         
         return found;
+    }
+    
+    // Parse the barcode to get the sub thread.
+    private String getSubThread(String barcode) {
+        int index = barcode.indexOf("-")+1;
+        return (barcode.substring(index));
     }
 }

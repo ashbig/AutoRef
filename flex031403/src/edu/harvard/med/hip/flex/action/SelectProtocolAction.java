@@ -59,6 +59,7 @@ public class SelectProtocolAction extends FlexAction {
         int protocolid = ((CreateProcessPlateForm)form).getProtocol();
         Protocol protocol = new Protocol(protocolid);
         ContainerProcessQueue queue = new ContainerProcessQueue();
+        
         try {
             LinkedList items = queue.getQueueItems(protocol);
             
@@ -78,6 +79,7 @@ public class SelectProtocolAction extends FlexAction {
                 Location l = new Location(id, type, description);
                 locations.addElement(l);
             }
+            request.getSession().setAttribute("protocol", protocol);
             request.setAttribute("locations", locations);
             
             return (mapping.findForward("success"));
