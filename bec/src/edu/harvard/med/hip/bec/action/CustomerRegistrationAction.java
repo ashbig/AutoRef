@@ -30,10 +30,11 @@ import edu.harvard.med.hip.bec.database.*;
 /**
  *
  * @author  yanhuihu
- * @version 
+ * @version
  */
-public final class CustomerRegistrationAction extends Action {
-
+public final class CustomerRegistrationAction extends Action
+{
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -53,7 +54,8 @@ public final class CustomerRegistrationAction extends Action {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException { 
+    throws ServletException, IOException
+    {
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
@@ -72,47 +74,52 @@ public final class CustomerRegistrationAction extends Action {
         String state = ((CustomerRegistrationForm) form).getState();
         String zipcode = ((CustomerRegistrationForm) form).getZipCode();
         String country = ((CustomerRegistrationForm) form).getCountry();
-        String phone = ((CustomerRegistrationForm) form).getPhone(); 
-        String reminder = ((CustomerRegistrationForm) form).getReminderText(); 
+        String phone = ((CustomerRegistrationForm) form).getPhone();
+        String reminder = ((CustomerRegistrationForm) form).getReminderText();
         
-         
-    /** Creates new CustomerRegistrationAction */
+        
+        /** Creates new CustomerRegistrationAction */
         //public CustomerRegistrationAction() {}
-         
         
-        try {
+        
+        try
+        {
             // get the access manager to check if the user_id has been used.
             AccessManager accessManager = AccessManager.getInstance();
-        
+            
             // ask accessManager if the user_id has been used
-            if(accessManager.userExist(user_id)) {
+            if(accessManager.userExist(user_id))
+            {
                 
                 errors.add("userID",
                 new ActionError("error.userid.used", user_id));
                 saveErrors(request, errors);
-            
-            // return (new ActionForward(mapping.getInput()));
-            //System.out.println("******UserID is used!**********");
-                return (mapping.findForward("failure"));  
+                
+                // return (new ActionForward(mapping.getInput()));
+                //System.out.println("******UserID is used!**********");
+                return (mapping.findForward("failure"));
             }
-        
-           // ask accessManager if the reminder text is unique.
-            else if (accessManager.reminderUnique(reminder)==false) {
+            
+            // ask accessManager if the reminder text is unique.
+            else if (accessManager.reminderUnique(reminder)==false)
+            {
                 errors.add("reminder", new ActionError("error.reminder.used",reminder));
                 saveErrors(request, errors);
                 return (mapping.findForward("failure"));
             }
             // if the userId has not been used and reminder text is unique, insert a new user record into the database
-            else {
+            else
+            {
                 accessManager.addUser(user_id,email,password,organization,usergroup,reminder,firstname,lastname,street1,street2,city,state,province,zipcode,country,phone);
-                return (mapping.findForward("success")); 
+                return (mapping.findForward("success"));
             }
-        } catch (Throwable th) {
+        } catch (Throwable th)
+        {
             //System.out.println(th);
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error",th));
-            return (mapping.findForward("error")); 
+            return (mapping.findForward("error"));
         }
         
-}
+    }
 }

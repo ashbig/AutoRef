@@ -24,11 +24,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.bec.core.spec.*;
-import edu.harvard.med.hip.bec.core.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.engine.*;
 
-import edu.harvard.med.hip.bec.core.oligo.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
@@ -101,7 +101,7 @@ public class SelectProcessAction extends ResearcherAction
                 }
                 case 8: case 11://recieve from seq
                 {
-                    String currentDate = getCurrentDate();
+                    String currentDate = Constants.getCurrentDate();
                     request.setAttribute("currentDate",currentDate);
                     return (mapping.findForward("recieve_orders"));
                 }
@@ -163,15 +163,6 @@ public class SelectProcessAction extends ResearcherAction
         return (mapping.findForward("error"));
     }
     
-    /**
-     * get today's date in dd-mmm-yy format
-     */
-    private String getCurrentDate()
-    {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
-        java.util.Date currentDate = new java.util.Date();
-        return  formatter.format(currentDate);
-        
-    }
+    
     
 }

@@ -1,12 +1,12 @@
 /**
- * $Id: ProcessDefinition.java,v 1.1 2003-03-27 17:45:42 Elena Exp $
+ * $Id: ProcessDefinition.java,v 1.2 2003-04-07 18:47:01 Elena Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
  * describes actions available on the system
  * it is read only class: all available process set on system before delivery
  */
-package edu.harvard.med.hip.bec.sampletracking.Objects;
+package edu.harvard.med.hip.bec.sampletracking.objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
@@ -24,6 +24,9 @@ public class ProcessDefinition
     private String          m_process_name = null;
     private ArrayList       m_spectype_ids = null;
     
+    public static final     int  END_READ_CONTAINER_CREATIONS = 0;
+    public static final     String  CODE_END_READ_CONTAINER_CREATIONS = "ER";
+    
     private static   ArrayList   m_process_definitions = null;
     
 
@@ -32,6 +35,10 @@ public class ProcessDefinition
       
     }
     
+    public ProcessDefinition(String name) throws BecDatabaseException
+    {
+      
+    }
     protected ProcessDefinition(int id, String code, String name, ArrayList ids) 
     {
        m_id = id;

@@ -9,8 +9,8 @@ package edu.harvard.med.hip.bec.programs.primer3;
 import java.io.*;
 import java.util.*;
 import org.apache.regexp.*;
-import edu.harvard.med.hip.bec.core.oligo.*;
-import edu.harvard.med.hip.bec.core.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 /**
  *
  * @author  htaycher

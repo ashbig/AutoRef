@@ -31,9 +31,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.bec.core.spec.*;
-import edu.harvard.med.hip.bec.core.sequence.*;
-import edu.harvard.med.hip.bec.core.oligo.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
@@ -111,13 +111,15 @@ public class Seq_GetSpecAction extends ResearcherAction
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("polymorphism_spec"));
                 }
-                case OligoPair.UNIVERSAL_PAIR_INT:
+              /*
+               case OligoPair.UNIVERSAL_PAIR_INT:
                 {
                     OligoPair op = null;
                     ArrayList o_pairs = op.getOligoPairsByType(OligoPair.UNIVERSAL_PAIR);
                     request.setAttribute("specs", o_pairs);
                     return (mapping.findForward("universal_pair"));
                 }
+               **/
             }
             
         } 

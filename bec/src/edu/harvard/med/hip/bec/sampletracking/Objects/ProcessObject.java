@@ -6,7 +6,7 @@
  * Author	: Dongmei Zuo
  */
 
-package edu.harvard.med.hip.bec.sampletracking.Objects;
+package edu.harvard.med.hip.bec.sampletracking.objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import java.sql.*;
@@ -21,15 +21,15 @@ public  class ProcessObject
     public final static int OUTPUT = 2;
     public final static int IO = 3;
     
-    public final static int OBJECT_TYPE_PLATE = 3;
+    public final static int OBJECT_TYPE_CONTAINER = 3;
     public final static int OBJECT_TYPE_SAMPLE = 1;
     public final static int OBJECT_TYPE_CLONESEQUENCE = 2;
   
     
-    protected int           m_id = -1;
-    protected int           m_executionid = -1;
-    protected int           m_iotype = -1;
-    protected int           m_objecttype = -1;
+    private int           m_objectid = -1;
+    private int           m_executionid = -1;
+    private int           m_iotype = -1;
+    private int           m_objecttype = -1;
     
     /**
      * Constructor.
@@ -42,7 +42,7 @@ public  class ProcessObject
      */
     public ProcessObject(int id, int executionid, int iotype, int objt)
     {
-        m_id = id;
+        m_objectid = id;
         m_executionid = executionid;
         m_iotype = iotype;
         m_objecttype=objt;
@@ -62,7 +62,7 @@ public  class ProcessObject
      *
      * @return The id of the processed object.
      */
-    public int getId()    {        return m_id;    }
+    public int getObjectId()    {        return m_objectid;    }
     
     /**
      *  Sets the execution id for this process object
@@ -89,5 +89,22 @@ public  class ProcessObject
      */
     public void insert(Connection conn)throws BecDatabaseException
     {
+        String sql = "insert into processobject(executionid, inputoutputflag, objectid, objecttype)"+
+        " values ("+m_executionid +","+ m_iotype +","+m_objectid + ","+m_objecttype+")";
+        
+      
+        Statement stmt = null;
+        try
+        {
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+  
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeStatement(stmt);
+        }
     }
 }

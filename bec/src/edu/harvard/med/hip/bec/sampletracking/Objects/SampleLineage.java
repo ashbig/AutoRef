@@ -5,11 +5,12 @@
  * Date     	: 04262001
  * Author	: Dongmei Zuo
  */
-package edu.harvard.med.hip.bec.sampletracking.Objects;
+package edu.harvard.med.hip.bec.sampletracking.objects;
 
 import java.sql.*;
 import java.util.*;
 import edu.harvard.med.hip.bec.database.*;
+import edu.harvard.med.hip.bec.util.*;
 
 /**
  * This class represents a sample lineage corresponding to
@@ -17,9 +18,9 @@ import edu.harvard.med.hip.bec.database.*;
  */
 public class SampleLineage
 {
-    int m_executionid;
-    int m_from;
-    int m_to;
+    private int m_executionid = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
+    private int m_from =-1 ;
+    private int m_to = -1;
     
     /**
      * Constructor.

@@ -6,7 +6,7 @@
 
 package edu.harvard.med.hip.bec.modules;
 
-import edu.harvard.med.hip.bec.core.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 /**
  *
  * @author  htaycher

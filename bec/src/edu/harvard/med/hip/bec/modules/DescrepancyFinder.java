@@ -10,11 +10,11 @@ package edu.harvard.med.hip.bec.modules;
  *
  * @author  htaycher
  */
-import edu.harvard.med.hip.bec.core.sequence.*;
-import edu.harvard.med.hip.bec.core.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.export.*;
-import edu.harvard.med.hip.bec.core.feature.*;
+import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.util.*;
@@ -198,7 +198,7 @@ public class DescrepancyFinder
                     s_sequence.append(sequence_subject_n[count]);
                     s_position++;
                 }
-                if (s_position  % 3 == 0)  codon_number++;
+                if (s_position  % 3 == 1)  codon_number++;
                 
                 
                 if ( sequence_query_n[count] == sequence_subject_n[count ])
@@ -240,7 +240,7 @@ public class DescrepancyFinder
                        cur_rna_mutation.setDownStream(dn);
                        cur_rna_mutation.setCodonOri( cori );
                        cur_rna_mutation.setCodonMut(corm);
-                        cur_rna_mutation.setCodonPos(s_position % 3 +1);
+                        cur_rna_mutation.setCodonPos( s_position  % 3 +1);
                          cur_rna_mutation.setPosition ( mut_start);// start of mutation (on object sequence)
                         cur_rna_mutation.setLength ( s_allel.length());
                        

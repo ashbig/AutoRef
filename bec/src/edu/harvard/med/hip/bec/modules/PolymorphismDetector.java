@@ -7,11 +7,11 @@
 package edu.harvard.med.hip.bec.modules;
 
 
-import edu.harvard.med.hip.bec.core.sequence.*;
-import edu.harvard.med.hip.bec.core.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.programs.blast.*;
 import edu.harvard.med.hip.bec.export.*;
-import edu.harvard.med.hip.bec.core.feature.*;
+import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.util.*;

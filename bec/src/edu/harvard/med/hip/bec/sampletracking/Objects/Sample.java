@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.1 2003-03-27 17:45:41 Elena Exp $
+ * $Id: Sample.java,v 1.2 2003-04-07 18:47:02 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -8,7 +8,7 @@
 
  */
 
-package edu.harvard.med.hip.bec.sampletracking.Objects;
+package edu.harvard.med.hip.bec.sampletracking.objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
@@ -42,9 +42,12 @@ public class Sample
     private String        m_type = null;
     private int           m_containerid = -1;
     private int           m_position = -1;
-    private int           m_agartracking_id = -1;
-    private int           m_oligoid = -1;
+    private int           m_isolatetracking_id = -1;
+    private int           m_clone_id = -1;
+    private int           m_refseq_id = -1; //artifax for connection to FLEX and creation of naming files
     
+    private int           m_oligoid = -1;
+    private int             m_cloneid = -1; //clone id from flex uniqe for clone identification
     private Result          m_result = null;
     
    
@@ -74,7 +77,7 @@ public class Sample
         m_type = type;
         m_position = position;
         m_containerid = containerid;
-        m_agartracking_id = agarid;
+        m_isolatetracking_id = agarid;
         m_oligoid = oligoid;
      
     }
@@ -131,6 +134,11 @@ public class Sample
                 {
                     cdslength = newRs.getInt("CDSLENGTH");
                 }
+                
+                //exstract isolate id for master plate only
+                *
+                *exstract refseqid for master plate
+                
                 **/
             }
         } catch (NullPointerException e)
@@ -182,8 +190,12 @@ public class Sample
      *
      * @return The construct id.
      */
-    public int getAgarTrackingid()    {        return m_agartracking_id;    }
-    
+    public int getIsolateTrackingid()    {        return m_isolatetracking_id;    }
+    public int getRefSequenceId()    {        return m_refseq_id;}
+    public void setIsolateTrackingid(int v)    {         m_isolatetracking_id = v;    }
+    public void setRefSequenceId(int v)    {         m_refseq_id = v;}
+    public void setCloneId(int v)    {         m_clone_id = v;    }
+    public int getCloneId()    {      return   m_clone_id ;}
    
    
     /**
@@ -246,7 +258,7 @@ public class Sample
      *
      * @param id The value to be set to.
      */
-    public void setAgarTrackingid(int id)    {        m_agartracking_id = id;    }
+    public void setIsolaterTrackingid(int id)    {        m_isolatetracking_id = id;    }
     
     /**
      * Set the oligo id to the given value.

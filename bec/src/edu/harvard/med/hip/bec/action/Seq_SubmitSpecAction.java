@@ -29,9 +29,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import edu.harvard.med.hip.bec.core.spec.*;
-import edu.harvard.med.hip.bec.core.sequence.*;
-import edu.harvard.med.hip.bec.core.oligo.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
@@ -89,6 +89,7 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                 case EndReadsSpec.END_READS_SPEC_INT:
                 {
                     EndReadsSpec spec = new EndReadsSpec(params, spec_name, username);
+                     
                     spec.insert(conn);
                     conn.commit();
                     created_specs.add(spec);
@@ -126,7 +127,7 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                     request.setAttribute("message", "The following specification was created.");
                      return (mapping.findForward("primer3_spec"));
                 }
-                case OligoPair.UNIVERSAL_PAIR_INT:
+               /* case OligoPair.UNIVERSAL_PAIR_INT:
                 {
                     
                     Oligo o_5p = new Oligo(
@@ -158,6 +159,7 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                     request.setAttribute("message", "The following specification was created.");
                     return (mapping.findForward("universal_pair"));
                 }
+                **/
             }
            return (mapping.findForward("error")); 
         }

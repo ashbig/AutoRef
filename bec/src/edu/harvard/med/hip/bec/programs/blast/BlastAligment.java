@@ -12,7 +12,7 @@ import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import java.sql.*;
 import java.util.*;
-import edu.harvard.med.hip.bec.core.feature.*;
+import edu.harvard.med.hip.bec.coreobjects.feature.*;
 /**
  *
  * @author  htaycher

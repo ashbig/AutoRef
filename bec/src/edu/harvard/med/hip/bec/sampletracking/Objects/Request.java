@@ -4,7 +4,7 @@
  * Created on March 27, 2003, 11:00 AM
  */
 
-package edu.harvard.med.hip.bec.sampletracking.Objects;
+package edu.harvard.med.hip.bec.sampletracking.objects;
 
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.user.*;
@@ -21,13 +21,17 @@ import javax.sql.*;
 public class Request
 {
     
+    public static final int REQUEST_FINISHED = 1;
+    public static final int REQUEST_NOT_KNOWN = 0;
+    public static final int REQUEST_NOT_FINISHED = -1;
     
     private int m_id = -1;
     private java.util.Date m_submitiondate = null;
-    private int m_submitter_id = -1;
+    private int m_submitter_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private User m_submitter = null;
     private ArrayList m_process_ids = null;
     private ArrayList m_processes = null;
+    private int   m_isFinished = REQUEST_NOT_KNOWN;
     
     /** Creates a new instance of RequestDescription */
     public Request(int id) throws BecDatabaseException
@@ -42,6 +46,7 @@ public class Request
             m_id = id;
          m_submitiondate = d;
          m_submitter  = u;
+         m_submitter_id = u.getId();
          if (mode == Constants.TYPE_ID)
             m_process_ids  = pr;
          else if (mode == Constants.TYPE_OBJECTS)
@@ -67,14 +72,18 @@ public class Request
     public int getId (){ return m_id  ;}
     public java.util.Date getSubmitionDate (){ return m_submitiondate;}
     public int getSubmitterId (){ return m_submitter_id  ;}
-    public User getSubmitter (){ return m_submitter  ;}
+    public User getSubmitter (){ return m_submitter  ;} 
     public ArrayList getProcessIds (){ return m_process_ids  ;}
     public ArrayList getProcesses (){ return m_processes  ;}
-    
+    public void      addProcess(ProcessExecution p)
+    { 
+        if (p.getRequestId() == -1) p.setRequestId( this.getId());
+        m_processes.add(p);
+    }
     
     public static ArrayList getAllRequestsByUser(User u)
     {
-        return null;
+        return getAllRequestsByUserId(  u.getId() );
     }
     
      public static ArrayList getAllRequestsByUserId( int u)
@@ -83,13 +92,38 @@ public class Request
     }
      
      
-    public static boolean isFinished( int requestId)
+    public  int isFinished( int requestId)
     {
-        return false;
+        
+        return m_isFinished;
     }
     
     public void insert(Connection conn) throws BecDatabaseException
     {
+         
+        String sql = "insert into request(requestid, submittiondate, userid)"+
+        " values ("+m_id +","+ m_submitiondate +","+m_submitter_id + ")";
+        
+      
+        Statement stmt = null;
+        try
+        {
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            
+            for (int ind = 0 ; ind < m_processes.size() ;ind++)
+            {
+                ProcessExecution pr = (ProcessExecution)m_processes.get(ind);
+                pr.insert(conn);
+            }
+           
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException(sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeStatement(stmt);
+        }
     }
     
     

@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-14 21:14:52 $
+ * $Revision: 1.2 $
+ * $Date: 2003-04-07 18:47:42 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -64,7 +64,7 @@ import edu.harvard.med.hip.bec.Constants;
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
  * @author $Author: Elena $
- * @version $Revision: 1.1 $ $Date: 2003-03-14 21:14:52 $
+ * @version $Revision: 1.2 $ $Date: 2003-04-07 18:47:42 $
  */
 
 public final class LogonAction extends Action
@@ -99,10 +99,12 @@ public final class LogonAction extends Action
         ActionErrors errors = new ActionErrors();
         String username = ((LogonForm) form).getUsername();
         String password = ((LogonForm) form).getPassword();
-        
-        
-        User user = new User(username,password);
-        
+        User user =  null;
+        try
+        {
+             user = new User(username,password);
+        }
+        catch(Exception e){}
         
         // get the access manager to verify they usernam/password combo.
         AccessManager accessManager = AccessManager.getInstance();

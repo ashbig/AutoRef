@@ -1,10 +1,10 @@
 /**
- * $Id: Container.java,v 1.1 2003-03-27 17:45:42 Elena Exp $
+ * $Id: Container.java,v 1.2 2003-04-07 18:47:01 Elena Exp $
  *
  * File     	: Container.java
 
  */
-package edu.harvard.med.hip.bec.sampletracking.Objects;
+package edu.harvard.med.hip.bec.sampletracking.objects;
 
 import java.util.*;
 import java.math.BigDecimal;
@@ -14,6 +14,7 @@ import javax.sql.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.file.*;
+import edu.harvard.med.hip.bec.user.*;
 
 import sun.jdbc.rowset.*;
 
@@ -22,6 +23,23 @@ import sun.jdbc.rowset.*;
  */
 public class Container
 {
+    public static final String TYPE_ER_REVERSE_CONTAINER = "ER_REVERSE_CONTAINER";
+    public static final String TYPE_ER_FORWARD_CONTAINER = "ER_FORWARD_CONTAINER";
+    public static final String TYPE_ER_CONTAINER = "ER_CONTAINER";
+    public static final String TYPE_MASTER_CONTAINER = "MASTER_CONTAINER";
+   
+    //status for master plate
+    public static final int STATUS_MASTER_SUBMITTED = 0;
+    public static final int STATUS_ER_PROCESS = 1;
+    public static final int STATUS_ER_FINISH = 2;
+    public static final int STATUS_ER_ANALYZED = 3;
+   
+    
+    
+    
+    public static final String SUF_ER_REVERSE_CONTAINER = "R";
+    public static final String SUF_ER_FORWARD_CONTAINER = "F";
+    
     private int         m_id = -1;
     private String      m_type = null;
     private Location    m_location = null;
@@ -29,7 +47,7 @@ public class Container
     private String      m_label = null;
     private ArrayList   m_samples = new ArrayList();
     private int         m_threadid = -1;
-    private int         m_last_step = -1;
+    private int         m_status = -1;
     /**
      * Constructor.
      *
@@ -70,11 +88,9 @@ public class Container
                 
                 m_type = crs.getString("CONTAINERTYPE");
                 int m_locationid = crs.getInt("LOCATIONID");
-               
-                m_location = new Location(m_locationid, crs.getString("LOCATIONTYPE"), crs.getString("LOCATIONDESCRIPTION"));
                 m_label = crs.getString("LABEL");
                 m_threadid = crs.getInt("THREADID");
-                m_last_step = crs.getInt("");
+                m_status = crs.getInt("");
             }
         } catch (NullPointerException ex)
         {
@@ -107,6 +123,7 @@ public class Container
     {
         m_type = type;
         m_location = location;
+        m_status = status;
         m_locationid = m_location.getId();
         m_label = label;
         m_threadid = threadid;
@@ -120,7 +137,7 @@ public class Container
                     int status, int threadid) throws BecDatabaseException
     {
         m_type = type;
-        
+        m_status = status;
         m_locationid = location;
         m_label = label;
         m_threadid = threadid;
@@ -231,7 +248,7 @@ public class Container
      * @return The container id.
      */
     public int getId()    {        return m_id;    }
-    
+    public int getStatus()    {        return m_status;}
     /**
      * Return the label of this container.
      *
@@ -305,7 +322,7 @@ public class Container
      * @param label The label to be set to.
      */
     public void setLabel(String label)    {        m_label = label;    }
-    
+    public void setStatus(int status)    {        m_status = status;    }
     /**
      * Return the type of the container.
      *
@@ -461,6 +478,24 @@ public class Container
         return retValue;
     }
     
+    
+    /**
+     * Update the location record to the database.
+     *
+     * @param locationid The new locationid to be updated to.
+     * @param c The connection used for database update.
+     * @exception The BecDatabaseException.
+     */
+    public void updateStatus(int status, Connection c) throws BecDatabaseException
+    {
+        String sql = "update containerheader "+
+        " set status="+ status +
+        " where containerid="+m_id;
+        m_status = status;
+        DatabaseTransaction.executeUpdate(sql, c);
+    }
+    
+    
     /**
      * Update the location record to the database.
      *
@@ -477,7 +512,24 @@ public class Container
         DatabaseTransaction.executeUpdate(sql, c);
     }
     
-    /**
+   
+  
+    public String[] labelParsing()
+    {
+        String output[] = new String[2];
+        char[] chars = m_label.toCharArray();
+        for (int ind =0; ind < chars.length; ind ++)
+        {
+           
+        }
+        return output;
+    }
+    
+    
+    
+    // ***** statis methods **********************************
+    
+     /**
      * Update the location record to the database.
      *
      * @param locationid The new locationid to be updated to.
@@ -493,8 +545,328 @@ public class Container
         
         DatabaseTransaction.executeUpdate(sql, c);
     }
-  
     
+    
+    // function returns araay of containers of type == container type
+    // that have status one in container statuses
+    //  mode - true  returns platesets of containers  with the same status if applicable
+    //            array of elements (master plate - er foraward - er reverse)
+    //  mode - false only containers of requested type
+    //            array of elements (master plate)
+    
+    //user - if user not null - only containers submitted by user
+    //other wise all containers regardless of user
+    public static ArrayList getContainersBySubmitter(User user, 
+                            String container_type , 
+                            int[] container_status, 
+                            boolean mode) throws BecDatabaseException
+    {
+        ArrayList containers = new ArrayList();
+        
+        String status = ""; 
+        for (int count = 0; count < container_status.length; count ++)
+        {
+            status += container_status[count] + ",";
+        }
+        
+        if (user == null && ! mode)
+        {
+          // return getContainersBySubmitter(   container_type ,    status    );
+        }
+        else if(user == null && mode)
+         {
+           // return getContainersBySubmitter(   status   );
+         }
+        
+        else if (user != null && ! mode)
+        {
+          // return getContainersBySubmitter(   container_type ,    status , user.getId()   );
+            
+        }
+        else if(user != null && mode)
+         {
+           //  return getContainersBySubmitter(       status , user.getId()   );
+            
+         }
+        return null;
+    }
+    /*
+      // function returns array of containers of define type 
+    // that have status one in container statuses
+   
+    public static ArrayList getContainersBySubmitter
+                (  String container_type , String status)
+                throws BecDatabaseException
+    {
+        ArrayList containers = new ArrayList();
+        Container cont = null;
+        
+        String sql =  = "select  containerid,  threadid,  status, " +
+            " containertype,  label,  locationid, "+
+            " from containerheader where containertype = " + container_type 
+            " and status in (" + status + ")";
+       
+        String type = null; int locationid = -1; String label = null; int status = -1;int id = -1;
+        CachedRowSet crs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            
+            while(crs.next())
+            {
+                id = crs.getInt("CONTAINERID");
+                type = crs.getString("CONTAINERTYPE");
+                locationid = crs.getInt("LOCATIONID");
+                label = crs.getString("LABEL");
+                threadid = crs.getInt("THREADID");
+                status = crs.getInt("");
+                cont = new Container( id,  type,  locationid,  label,  status,  threadid);
+                containers.add( cont);
+            }
+            return containers;
+        } catch (Exception e)
+        {
+            throw new BecDatabaseException("Error occured while initializing container with id: "+id+"\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+        
+    }
+    
+    
+    
+     // function returns platesets of containers  with the same status if applicable
+    // that have status one in container statuses
+   //            array of elements (master plate - er foraward - er reverse)
+    
+  
+    public static ArrayList getContainersBySubmitter (   String status)   throws BecDatabaseException
+    {
+        ArrayList containers = new ArrayList();
+        Container cont = null;
+        
+        String sql =  "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, "+
+            "where status in (" + status + ")";
+         }
+     
+        String type = null; int locationid = -1; String label = null; int status = -1;int id = -1;
+        CachedRowSet crs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            
+            while(crs.next())
+            {
+                id = crs.getInt("CONTAINERID");
+                type = crs.getString("CONTAINERTYPE");
+                locationid = crs.getInt("LOCATIONID");
+                label = crs.getString("LABEL");
+                threadid = crs.getInt("THREADID");
+                status = crs.getInt("");
+                cont = new Container( id,  type,  locationid,  label,  status,  threadid);
+                if (type ==
+                containers_hash.put(new Integer(id), cont);
+            }
+           
+            
+            
+            return containers;
+        } catch (Exception e)
+        {
+            throw new BecDatabaseException("Error occured while initializing container with id: "+id+"\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+        
+    }
+    
+    
+    
+       // function returns array of containers of define type 
+    // that have status one in container statuses 
+// initially submitted by user
+   
+    public static ArrayList getContainersBySubmitter (  String container_type , String status, int userid)
+                throws BecDatabaseException
+    {
+        ArrayList containers = new ArrayList();
+        Container cont = null;
+        
+        String status = ""; String sql = null;
+        for (int count = 0; count < container_status.length; count ++)
+        {
+            status += container_status[count] + ",";
+        }
+        
+        if (user == null && ! mode)
+        {
+             sql = "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, "+
+            "where containertype = " + container_type 
+            " and status in (" + status + ")";
+        }
+        else if(user == null && mode)
+         {
+             sql = "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, "+
+            "where status in (" + status + ")";
+         }
+        /*
+        else if (user != null && ! mode)
+        {
+            sql = "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, request r, process p, processobject po "+
+            "where r.requestid = p.requestid and p.executionid = po.executionid and " +
+            " po.objecttype = " + ProcessObject.OBJECT_TYPE_CONTAINER +
+            " and c.containerid = po.objectid " +
+            " and c.status in (" + status + ") and c.containertype = " + container_type "+
+            " and r.resercherid = " + user.getId();
+            
+        }
+        else if(user != null && mode)
+         {
+             sql = "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, request r, process p, processobject po "+
+            "where r.requestid = p.requestid and p.executionid = po.executionid and " +
+            " po.objecttype = " + ProcessObject.OBJECT_TYPE_CONTAINER +
+            " and c.containerid = po.objectid " +
+            " and status in (" + status + ") and r.resercherid = " + user.getId();
+         }
+        
+        String type = null; int locationid = -1; String label = null; int status = -1;int id = -1;
+        CachedRowSet crs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            
+            while(crs.next())
+            {
+                id = crs.getInt("CONTAINERID");
+                type = crs.getString("CONTAINERTYPE");
+                locationid = crs.getInt("LOCATIONID");
+                label = crs.getString("LABEL");
+                threadid = crs.getInt("THREADID");
+                status = crs.getInt("");
+                cont = new Container( id,  type,  locationid,  label,  status,  threadid);
+                containers_hash.put(new Integer(id), cont);
+            }
+           
+            
+            
+            return containers;
+        } catch (Exception e)
+        {
+            throw new BecDatabaseException("Error occured while initializing container with id: "+id+"\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+        
+    }
+    
+    
+    
+       // function returns array of containers of define type 
+    // that have status one in container statuses
+   
+    public static ArrayList getContainersBySubmitter
+                (  String container_type , String status)
+                throws BecDatabaseException
+    {
+        ArrayList containers = new ArrayList();
+        Container cont = null;
+        
+        String status = ""; String sql = null;
+        for (int count = 0; count < container_status.length; count ++)
+        {
+            status += container_status[count] + ",";
+        }
+        
+        if (user == null && ! mode)
+        {
+             sql = "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, "+
+            "where containertype = " + container_type 
+            " and status in (" + status + ")";
+        }
+        else if(user == null && mode)
+         {
+             sql = "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, "+
+            "where status in (" + status + ")";
+         }
+        /*
+        else if (user != null && ! mode)
+        {
+            sql = "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, request r, process p, processobject po "+
+            "where r.requestid = p.requestid and p.executionid = po.executionid and " +
+            " po.objecttype = " + ProcessObject.OBJECT_TYPE_CONTAINER +
+            " and c.containerid = po.objectid " +
+            " and c.status in (" + status + ") and c.containertype = " + container_type "+
+            " and r.resercherid = " + user.getId();
+            
+        }
+        else if(user != null && mode)
+         {
+             sql = "select c.containerid as containerid, c.threadid as threadid, c.status as status, " +
+            "c.containertype as containertype, c.label as label, c.locationid as locationid, "+
+            " from containerheader c, request r, process p, processobject po "+
+            "where r.requestid = p.requestid and p.executionid = po.executionid and " +
+            " po.objecttype = " + ProcessObject.OBJECT_TYPE_CONTAINER +
+            " and c.containerid = po.objectid " +
+            " and status in (" + status + ") and r.resercherid = " + user.getId();
+         }
+        
+        String type = null; int locationid = -1; String label = null; int status = -1;int id = -1;
+        CachedRowSet crs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            
+            while(crs.next())
+            {
+                id = crs.getInt("CONTAINERID");
+                type = crs.getString("CONTAINERTYPE");
+                locationid = crs.getInt("LOCATIONID");
+                label = crs.getString("LABEL");
+                threadid = crs.getInt("THREADID");
+                status = crs.getInt("");
+                cont = new Container( id,  type,  locationid,  label,  status,  threadid);
+                containers_hash.put(new Integer(id), cont);
+            }
+           
+            
+            
+            return containers;
+        } catch (Exception e)
+        {
+            throw new BecDatabaseException("Error occured while initializing container with id: "+id+"\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+        
+        
+    }
     /**
      * Update the threadid record to the database.
      *
