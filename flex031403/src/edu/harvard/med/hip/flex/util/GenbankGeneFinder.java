@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.10 2002-07-10 15:16:16 dzuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.11 2002-09-06 20:01:04 dzuo Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -103,8 +103,8 @@ public class GenbankGeneFinder {
             boolean cdsstart = false;
             int cdscount = 0;
             String inputLine;
+            boolean breakSeq = false;
             while ((inputLine = in.readLine()) != null) {
-                
                 if(inputLine.trim().indexOf("/organism=") == 0) {
                     organism = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\""));
                 }
@@ -155,11 +155,13 @@ public class GenbankGeneFinder {
                 
                 if(inputLine.indexOf("ORIGIN") != -1) {
                     cdsstart = true;
+                    breakSeq = true;
                     continue;
                 }
                 
-                if(inputLine.indexOf("//") == 0) {
+                if(inputLine.indexOf("//") == 0 && breakSeq) {
                     cdsstart = false;
+                    breakSeq = false;
                     break;
                 }
                 
@@ -191,7 +193,7 @@ public class GenbankGeneFinder {
     public static void main(String [] args) {
         GenbankGeneFinder finder = new GenbankGeneFinder();
         try{
-            Vector v = finder.search("4885066");
+            Vector v = finder.search("7706522");
             Enumeration enum = v.elements();
             while(enum.hasMoreElements()) {
                 GenbankSequence sequence = (GenbankSequence)enum.nextElement();
@@ -201,7 +203,7 @@ public class GenbankGeneFinder {
                 System.out.println();
             }
             
-            Hashtable h = finder.searchDetail("4502622");
+            Hashtable h = finder.searchDetail("7706522");
             System.out.println(h);
         } catch (FlexUtilException e) {
             System.out.println(e);
