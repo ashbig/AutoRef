@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.15 2002-08-06 19:14:11 Elena Exp $
+ * $Id: NNPrimerCalculator.java,v 1.16 2002-08-06 19:17:13 Elena Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * modified 12/13/01 All of the stop (close) oligos now use the universal stop
@@ -180,6 +180,7 @@ public class NNPrimerCalculator implements PrimerCalculator
         int indexTwo = 0; // the second index for the two-dimensional array paramH and ParamS
         Oligo oligo = null;
      
+        while (Tm < DESIREDTM)
         {
        
             //System.out.println("TM is: "+Tm);
