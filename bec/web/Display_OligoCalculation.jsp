@@ -10,8 +10,10 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 <html>
 <head>
+<script language="JavaScript" src="/BEC/scripts.js"></script>
+
  <title> <bean:message key="bec.name"/> : <%=Constants.JSP_TITLE%></title>
-  
+   
 <%
         Object forwardName = null;
         if ( request.getAttribute("forwardName") != null)
@@ -106,11 +108,14 @@ for (int index = 0; index < items.size(); index ++)
     for (int oligo_c_count = 0; oligo_c_count < ol_per_item.size();oligo_c_count++)
     {
         OligoCalculation olc = (OligoCalculation) ol_per_item.get(oligo_c_count);
-
+        String chkName = "chkPrimer"+olc.getId();
+        
     %>
 <!--<% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
 {%>   <tr><td colspan=2><strong>&nbsp;&nbsp;  <input type="radio" name ="<%= olc.getSequenceId()%>" > 
 Select Oligo Set </strong></td></tr><%}%> -->
+<% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
+{%><tr><td><strong>&nbsp;&nbsp;<input type=checkbox name=<%= chkName %> value=""  onclick="SetChecked(this, this.checked, '<%= chkName %>')" >Change Status</strong></td></tr><%}%>
     <tr><td ><strong>&nbsp;&nbsp;  Primer3 Specification: </strong></td>
 <td   ><strong>
 <a href="/BEC/Seq_GetSpec.do?forwardName=<%= olc.getPrimer3SpecId()  * Spec.SPEC_SHOW_SPEC %> "> <%= olc.getPrimer3SpecId()%></a></strong></td></TR>
@@ -146,7 +151,7 @@ for (int oligo_count = 0; oligo_count < olc.getOligos().size();oligo_count++)
     %>
 <tr>
 <% if (forwardName_int == -Constants.PROCESS_APPROVE_INTERNAL_PRIMERS)
-{%><td><input type=checkbox name=chkPrimer value=<%=ol.getId() %> <%if (ol.getStatus() != Oligo.STATUS_DESIGNED){%> checked <%}%> ></td><%
+{%><td><input type=checkbox name=chkPrimer id="<%= chkName %>" value=<%=ol.getId() %> <%if (ol.getStatus() != Oligo.STATUS_DESIGNED){%> checked <%}%> ></td><%
 }%>
 <td  ><strong><% if ( ol.getName() != null){%> <%= ol.getName() %> <%}else{%> &nbsp; <%}%></td>
 
