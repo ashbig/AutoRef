@@ -337,9 +337,9 @@ public class PrimerOrderRunner extends ProcessRunner
         {
             input = new PrimerOrderRunner();
             user = AccessManager.getInstance().getUser("htaycher1","htaycher");
-            input.setItems(" 799	       800	       801	       818	       819	       820	       821	       822	       823	       824	       825	       838	       839	       840	       841	       842	       843	       844	       845	       850	       851	       852	       853	       882	       883	       884	       885	       890	       891	       892	       893	       897	       898	       899	       900	       905	       906	       907	       908	       933	       934	       935	       936	       941	       942	       943	       944	       948	       949	       950	       951	       956	       957	       958	       959	      1003	      1004	     35284	     35285	     35286	     35287	     35288	     35289");
+       //     input.setItems(" 799	       800	       801	       818	       819	       820	       821	       822	       823	       824	       825	       838	       839	       840	       841	       842	       843	       844	       845	       850	       851	       852	       853	       882	       883	       884	       885	       890	       891	       892	       893	       897	       898	       899	       900	       905	       906	       907	       908	       933	       934	       935	       936	       941	       942	       943	       944	       948	       949	       950	       951	       956	       957	       958	       959	      1003	      1004	     35284	     35285	     35286	     35287	     35288	     35289");
             
-            input.setItemsType( Constants.ITEM_TYPE_CLONEID);
+       //     input.setItemsType( Constants.ITEM_TYPE_CLONEID);
             input.setUser(user);
             //input.setPrimerNumber();
             input.setPrimerPlacementFormat(PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER );

@@ -35,17 +35,43 @@ import edu.harvard.med.hip.bec.ui_objects.*;
  */
 public class PrimerDesignerRunner extends ProcessRunner 
 {
+    public  static final int        COVERAGE_TYPE_REFERENCE_CDS = 0;
+    public  static final int        COVERAGE_TYPE_GAP_LQR = 1;
+    public  static final int        COVERAGE_TYPE_GAP_LQR_DISCREPANCIES = 3;
+   
+     public  static final int        LQR_COVERAGE_TYPE_NONE = 0;
+     public  static final int        LQR_COVERAGE_TYPE_ANY_LQR = 1;
+     public  static final int        LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY = 2;
+     public  static final int        LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS = 3;
+    
+    
+     
+     public  static final String    STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE = "typeSequenceCoverage";
+     public  static final String    STRETCH_PRIMERS_APNAME_LQR_COVERAGE_TYPE = "typeLQRCoverage";
+     public  static final String    STRETCH_PRIMERS_APNAME_MIN_DISTANCE_BETWEEN_STRETCHES = "minDistanceBetweenStretchesToBeCombined"; 
+   //-----------------------------------------------------------------------------  
     
     private int                     m_spec_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     private Primer3Spec             m_spec = null;
     private boolean                 m_isTryMode = false;
+    private int                     m_type_of_sequence_coverage = COVERAGE_TYPE_REFERENCE_CDS;
+    private int                     m_type_of_lqr_coverage = LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY;//if gaps & lqr: cover only gaps or lqr as well
+    private int                     m_min_distance_between_stretches = 0;
+    
+    private int                     m_min_distance_between_stretches_divider = 30;
+    private int                     m_number_of_bases_to_start_stop_requier_er = 200;
    
     /** Creates a new instance of PolymorphismFinderRunner */
     public void         setSpecId(int v){m_spec_id = v;}
     public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
-    public String       getTitle()     {  return "Request for primer designer execution.";     }
+    public void         setTypeOfSequenceCoverage(int v) { m_type_of_sequence_coverage = v;}
+    public void         setIsLQRCoverageType(int v) { m_type_of_lqr_coverage = v;}
+    public void         setMinDistanceBetweenStretchesToBeCombined(int v){ m_min_distance_between_stretches = v;} 
     
-     
+    public String       getTitle()     {  return "Request for primer designer execution.";     }
+  
+    
+    
     public void run()
     {
          int id = -1; int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
@@ -57,30 +83,40 @@ public class PrimerDesignerRunner extends ProcessRunner
          PreparedStatement pst_get_flexsequenceid = null;
           PreparedStatement pst_insert_process_object = null;
            PreparedStatement pst_get_flexsequence_length= null;
+           PreparedStatement pst_check_oligo_cloning_for_stretches = null;
            FileWriter reportFileWriter = null;
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
             pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_OLIGOCALCULATION+")");
-            pst_check_oligo_cloning = conn.prepareStatement("select sequenceid from oligo_calculation where sequenceid = ? and primer3configid = "+m_spec_id);
+            pst_check_oligo_cloning = conn.prepareStatement("select sequenceid from oligo_calculation where stretchcollectionid <> null and sequenceid = ? and primer3configid = "+m_spec_id);
+            pst_check_oligo_cloning_for_stretches = conn.prepareStatement("select sequenceid from oligo_calculation where stretchcollectionid =?  and primer3configid = "+m_spec_id +
+            " and STRETCHDEFPARAMS='" + buildStretchCollectionParamString()+"'");
+          
             pst_get_flexsequenceid = conn.prepareStatement("select flexsequenceid from view_flexbecsequenceid where becsequenceid = ? ");
             pst_get_flexsequence_length = conn.prepareStatement("select (cdsstop-cdsstart) as cdslength from refsequence where sequenceid = ? ");
  
             //get primer spec
             if ( !getPrimer3Spec()  ) return;
-            //gett refsequence ids 
-            sql = getQueryString(-1);
-            if ( sql == null)        { return ; }
-            ArrayList  ids =     getRefSequenceIds(sql);
+            //run primer3 with specified spec
+            Primer3Wrapper primer3 = new Primer3Wrapper();
+            primer3.setSpec(m_spec);
+            m_number_of_bases_to_start_stop_requier_er = m_spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");
+            //gett refsequence ids or stretch collections ids
+            ArrayList  ids =     getObjectIds(-1);
             if ( ids == null || ids.size() <1 ) return;
-            //create process
-            ArrayList specs =new ArrayList();
-            specs.add(m_spec);
-            process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DESIGN_OLIGO,specs,m_user) ;
-           conn.commit();
+            
+            if (! m_isTryMode )
+            {
+                //create process
+                ArrayList specs =new ArrayList();
+                specs.add(m_spec);
+                process_id = Request.createProcessHistory( conn, ProcessDefinition.RUN_DESIGN_OLIGO,specs,m_user) ;
+                conn.commit();
+            }
             if ( m_isTryMode )
             {
-                File reportFile = new File(Constants.getTemporaryFilesPath() + "primer3Report.txt");
+                File reportFile = new File(Constants.getTemporaryFilesPath() + "PrimerDesignerReport"+System.currentTimeMillis()+".txt");
                 m_file_list_reports.add(reportFile);
                 reportFileWriter =  new FileWriter(reportFile);
                 
@@ -93,46 +129,33 @@ public class PrimerDesignerRunner extends ProcessRunner
                         {
                             Thread.currentThread().sleep(100);
                             id = ((Integer) ids.get(index)).intValue();
-                            if (  isPrimersDesignedForRefsequence(id, pst_check_oligo_cloning) )
-                            {
-                                m_error_messages.add("Primers for refsequence with id "+id +"and this spec already designed.");
-                                if ( !m_isTryMode  ) continue;
-                            }
-                        //get reference sequence to process
-                            BaseSequence refsequence = getRefsequence(id);
-                        //run primer3 with specified spec
-                            Primer3Wrapper primer3 = new Primer3Wrapper();
-                            primer3.setSpec(m_spec);
-                            primer3.setSequence(  refsequence);
-                            ArrayList oligo_calculations = primer3.run();
-     
+                            ArrayList oligo_calculations =getOligoCalculations( id, pst_check_oligo_cloning, pst_check_oligo_cloning_for_stretches,primer3);
+                           
                             if ( primer3.getFailedSequences() != null && primer3.getFailedSequences().size() >0)
                                 m_error_messages.addAll(primer3.getFailedSequences());
                             if ( oligo_calculations == null || oligo_calculations.size() < 1)
                             {
-                                m_error_messages.add("Cannot design primers for refsequence with id: "+refsequence.getId());
                                 continue;
                             }
                             oligo_calculation = (OligoCalculation)oligo_calculations.get(0);
 
                             if ( ! m_isTryMode )
-                                synchronized(this)
-                                {
-                                    oligo_calculation.insert(conn);
-                                 }
-                            else
                             {
-                                
-                                String ol_report = getReportForOligoCalculation(pst_get_flexsequenceid, pst_get_flexsequence_length,oligo_calculation);
-                                reportFileWriter.write( ol_report);
-                                reportFileWriter.flush();
+                                oligo_calculation.insert(conn);
+                                     //insert process_object
+                                pst_insert_process_object.setInt(1,process_id);
+                                pst_insert_process_object.setInt(2, id);
+                                DatabaseTransaction.executeUpdate(pst_insert_process_object);
+                                conn.commit();
                                
                             }
-                            //insert process_object
-                            pst_insert_process_object.setInt(1,process_id);
-                            pst_insert_process_object.setInt(2, id);
-                            DatabaseTransaction.executeUpdate(pst_insert_process_object);
-                            conn.commit();
+                            else
+                            {
+                                String ol_report = getReportForOligoCalculation(pst_get_flexsequenceid, pst_get_flexsequence_length,oligo_calculation, id);
+                                reportFileWriter.write( ol_report);
+                                reportFileWriter.flush();
+                            }
+                           
                         }
                         catch(Exception e)
                         {
@@ -183,24 +206,25 @@ public class PrimerDesignerRunner extends ProcessRunner
     
     private BaseSequence getRefsequence(int id) throws Exception
     {
-  
-        String sequence_text = BaseSequence.getSequenceInfo(id, BaseSequence.SEQUENCE_INFO_TEXT);
-        BaseSequence refsequence = new BaseSequence();
-        refsequence.setText(sequence_text);
-        refsequence.setId(id);
-        return refsequence;
+        RefSequence refsequence = new RefSequence( id, false);
+        
+        String sequence_text = refsequence.getCodingSequence();//BaseSequence.getSequenceInfo(id, BaseSequence.SEQUENCE_INFO_TEXT);
+        BaseSequence refsequence_for_calculations = new BaseSequence();
+        refsequence_for_calculations.setText(sequence_text);
+        refsequence_for_calculations.setId(id);
+        return refsequence_for_calculations;
         
     }
     
     
-    private String      getQueryString(int rownum)
+    private String      getQueryStringToGetRefSequenceIds(int rownum)
     {
         ArrayList items = Algorithms.splitString( m_items);
         switch ( m_items_type)
         {
             case  Constants.ITEM_TYPE_CLONEID :
             {
-                return "select distinct refsequenceid from sequencingconstruct where constructid in "
+                return "select distinct refsequenceid as id from sequencingconstruct where constructid in "
                 +" (select constructid from isolatetracking where isolatetrackingid in "
                 +" (select isolatetrackingid from flexinfo where flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
             }
@@ -214,18 +238,18 @@ public class PrimerDesignerRunner extends ProcessRunner
                     plate_names.append("'");
                     if ( index != items.size()-1 ) plate_names.append(",");
                 }
-                 return "select distinct refsequenceid from sequencingconstruct where constructid in "
+                 return "select distinct refsequenceid as id from sequencingconstruct where constructid in "
                 +"  (select constructid from isolatetracking where sampleid in "
                 +"  (select sampleid from sample where containerid in (select containerid from "
                 +" containerheader where label in ("+plate_names.toString()+"))))";
             }
             case  Constants.ITEM_TYPE_BECSEQUENCE_ID :
             {
-                return "select distinct refsequenceid from assembledsequence where sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
+                return "select distinct refsequenceid as id from assembledsequence where sequenceid in  ("+Algorithms.convertStringArrayToString(items,"," )+")";
             }
             case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
             {
-                return "select distinct refsequenceid from sequencingconstruct where constructid in "
+                return "select distinct refsequenceid as id from sequencingconstruct where constructid in "
                 +" (select constructid from isolatetracking where isolatetrackingid in "
                 +" (select isolatetrackingid from flexinfo where flexsequenceid in ("+Algorithms.convertStringArrayToString(items,"," )+")))";
             }
@@ -233,8 +257,41 @@ public class PrimerDesignerRunner extends ProcessRunner
         return null;
     }
     
+    private String      getQueryStringToGetStretchCollectionIds(int rownum)
+    {
+        ArrayList items = Algorithms.splitString( m_items);
+        switch ( m_items_type)
+        {
+            case  Constants.ITEM_TYPE_CLONEID :
+            {
+                return "select collectionid as id , isolatetrackingid from stretch_collection "
+                +"  where isolatetrackingid in  (select isolatetrackingid from  flexinfo where flexcloneid in ("
+                +Algorithms.convertStringArrayToString(items,"," )+")) order by isolatetrackingid, collectionid desc";
+            }
+            case  Constants.ITEM_TYPE_PLATE_LABELS :
+            {
+                StringBuffer plate_names = new StringBuffer();
+                for (int index = 0; index < items.size(); index++)
+                {
+                    plate_names.append( "'");
+                    plate_names.append((String)items.get(index));
+                    plate_names.append("'");
+                    if ( index != items.size()-1 ) plate_names.append(",");
+                }
+                 return "select collectionid as id , isolatetrackingid from stretch_collection "
+                +"  where isolatetrackingid in   "
+                +"  (select isolatetrackingid from isolatetracking where sampleid in "
+                +"  (select sampleid from sample where containerid in (select containerid from "
+                +" containerheader where label in ("+plate_names.toString()+")))) order by isolatetrackingid, collectionid desc";
+            }
+          
+        }
+        return null;
+    }
+    /*
     private int         getRefSequenceId(String sql) throws Exception
     {
+        
         int id = -1;
         //get sequence id
         DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -257,20 +314,54 @@ public class PrimerDesignerRunner extends ProcessRunner
         
     }
     
-    
-    private ArrayList         getRefSequenceIds(String sql) 
+    */
+    private ArrayList         getObjectIds(int rownum )
     {
+        ArrayList object_ids = null; String sql = null;
+        switch ( m_type_of_sequence_coverage )
+        {
+            case  COVERAGE_TYPE_REFERENCE_CDS : //refsequence
+        
+            {
+                sql =  getQueryStringToGetRefSequenceIds(rownum);
+                if (sql == null) return null;
+                object_ids= getIds( sql ) ;
+                break;
+            }
+            case COVERAGE_TYPE_GAP_LQR :
+            case COVERAGE_TYPE_GAP_LQR_DISCREPANCIES:
+            {
+                sql = getQueryStringToGetStretchCollectionIds( rownum) ;
+                if (sql == null) return null;
+                object_ids= getIds( sql) ;
+                break;
+            }
+            
+        }
+        
+        return object_ids;
+            
+    }
+    private ArrayList         getIds(String sql) 
+    {
+       
         ArrayList ids = new ArrayList();
         //get sequence id
         DatabaseTransaction t = null;
-        ResultSet rs = null;
+        ResultSet rs = null; int prev_isolatetrackingid = -1;
         try
         {
             t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
             while(rs.next())
             {
-                ids.add( new Integer( rs.getInt("refsequenceid")) );
+                //change here to hashmap error
+                if  (  m_type_of_sequence_coverage != COVERAGE_TYPE_REFERENCE_CDS )
+                {
+                    if ( prev_isolatetrackingid == rs.getInt("isolatetrackingid")) continue;
+                    prev_isolatetrackingid = rs.getInt("isolatetrackingid");
+                }
+                ids.add( new Integer( rs.getInt("id")) );
             }
             
         } 
@@ -285,9 +376,113 @@ public class PrimerDesignerRunner extends ProcessRunner
         return ids;
     }
     
-    private boolean             isPrimersDesignedForRefsequence
-                            (int refsequenceid, 
-                            PreparedStatement pst_check_oligo_cloning)
+    private ArrayList           getOligoCalculations( int id, PreparedStatement pst_check_oligo_cloning,PreparedStatement pst_check_oligo_cloning_for_stretches,Primer3Wrapper primer3) throws Exception
+    {
+        if (  m_type_of_sequence_coverage == COVERAGE_TYPE_REFERENCE_CDS ) 
+            return getOligoCalculationsForRefSequence( id,  pst_check_oligo_cloning,  primer3);
+        else 
+            return getOligoCalculationsForStretchCollection(  id,  pst_check_oligo_cloning_for_stretches,  primer3);
+    }
+    
+    private ArrayList           getOligoCalculationsForRefSequence( int refsequenceid, PreparedStatement pst_check_oligo_cloning, Primer3Wrapper primer3)throws Exception
+    {
+        ArrayList oligo_calculations = null;
+        if (  isPrimersDesigned(refsequenceid, pst_check_oligo_cloning) )
+        {
+            m_error_messages.add("Primers for refsequence with id "+refsequenceid +"and this spec already designed.");
+            if ( !m_isTryMode  ) return null;
+        }
+    //get reference sequence to process
+        BaseSequence refsequence = getRefsequence(refsequenceid);
+        primer3.setSequence(  refsequence);
+        oligo_calculations = primer3.run();
+        if ( oligo_calculations == null || oligo_calculations.size() < 1)
+        {
+            m_error_messages.add("Cannot design primers for refsequence with id: "+refsequence.getId());
+
+        }
+        return oligo_calculations;
+    }
+    
+     private ArrayList           getOligoCalculationsForStretchCollection
+                ( int stretchcollectionid, 
+                PreparedStatement pst_check_oligo_cloning_for_stretches, 
+                Primer3Wrapper primer3)throws Exception
+    {
+        ArrayList oligo_calculations = null;
+        if (  isPrimersDesigned(stretchcollectionid, pst_check_oligo_cloning_for_stretches) )
+        {
+            m_error_messages.add("Primers for stretch collection with id "+stretchcollectionid +"and this spec already designed.");
+            if ( !m_isTryMode  ) return null;
+        }
+         //check if primer3 spec is OK: no 5/3' universal primers
+        if ( !(m_spec.getParameterByNameInt("P_UPSTREAM_DISTANCE") == 0 &&
+            m_spec.getParameterByNameInt("P_DOWNSTREAM_DISTANCE") == 0))
+        {
+            m_error_messages.add("Wrong Primer3 configuration choosen. Cannot design primers for stretch collection id: "+stretchcollectionid);
+            return null;
+        }
+    //prepare data: get last stretch collection and refsequence
+        StretchCollection stretch_collection = StretchCollection.getById(stretchcollectionid);
+        BaseSequence refsequence = getRefsequence(stretch_collection.getRefSequenceId());
+        int cds_length = refsequence.getText().length() - 1;
+       
+   //get bondaries of refsequence stretches to be resequenced
+        // format collection of int[2]
+        boolean isStartFromFirstDiscrepancy = true;
+       ArrayList boundaries = stretch_collection.getStretchBoundaries(stretch_collection.getCloneId(),
+                    cds_length,  
+                    m_type_of_lqr_coverage,
+                    isStartFromFirstDiscrepancy);
+
+       if ( boundaries == null || boundaries.size() == 0) return oligo_calculations;
+   // extend them to the right and to the left by spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN")
+       int window_size = m_spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN")
+                    +m_spec.getParameterByNameInt("P_EST_SEQ");
+       
+       boundaries = extandBoundaries(stretchcollectionid,boundaries, window_size, cds_length); 
+       if ( boundaries.size() < 1) return null;
+      
+       //order pair by start position     
+       boundaries = orderByStartPosition(boundaries);
+   // colaps stretch that are too close to each other - less than spec.getParameterByNameInt("P_SINGLE_READ_LENGTH")/3 ?????
+       int min_distance_between_stretches = 0;
+       if ( m_min_distance_between_stretches == 0 )
+            min_distance_between_stretches = m_min_distance_between_stretches;
+       else
+            min_distance_between_stretches = (int) m_spec.getParameterByNameInt("P_SINGLE_READ_LENGTH") / m_min_distance_between_stretches_divider ;
+       boundaries = collapseNeighboringStretches(boundaries, min_distance_between_stretches);
+       
+   // get BaseSeqquence per each stretch, set id == cds start
+        ArrayList base_sequences_for_design = chopRefSequence(refsequence, boundaries);
+        /*
+        System.out.println( stretch_collection.getCloneId());
+        for ( int i = 0; i < base_sequences_for_design.size();i++)
+        {
+            BaseSequence b = (BaseSequence) base_sequences_for_design.get(i);
+            System.out.println( b.getId() + " "+b.getText().length());
+        }
+           
+        */
+    // run primer3 designer on collection of different sequences
+        primer3.setSequences(  base_sequences_for_design);
+        oligo_calculations = primer3.run();
+        if ( oligo_calculations == null || oligo_calculations.size() < 1)
+        {
+            m_error_messages.add("Cannot design primers for  stretch collection with id "+stretchcollectionid );
+            return oligo_calculations;
+        }   
+      // recalculate start position of each primer based on cds start of the stretch
+        oligo_calculations = recalcultaPrimerStartPosition(refsequence.getId(),stretch_collection.getId(), oligo_calculations);
+        
+        return oligo_calculations;
+    }
+     
+     
+     
+    private boolean             isPrimersDesigned
+                            (int id, 
+                            PreparedStatement pst_check_oligo)
                             throws Exception
     {
        
@@ -297,8 +492,8 @@ public class PrimerDesignerRunner extends ProcessRunner
         try
         {
             t = DatabaseTransaction.getInstance();
-            pst_check_oligo_cloning.setInt(1, refsequenceid);
-            rs = t.executeQuery(pst_check_oligo_cloning);
+            pst_check_oligo.setInt(1, id);
+             rs = t.executeQuery(pst_check_oligo);
             if(rs.next())
             {
                 return true;
@@ -310,7 +505,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         } 
         catch (Exception sqlE)
         {
-           throw new Exception("Error occured while restoring sequence with id "+refsequenceid);
+           throw new Exception("Error occured while restoring sequence with id "+id);
         } 
         finally
         {
@@ -320,7 +515,7 @@ public class PrimerDesignerRunner extends ProcessRunner
     }
     
     
-    private String getReportForOligoCalculation(PreparedStatement pst_get_flexsequenceid,PreparedStatement pst_get_flexsequence_length, OligoCalculation oligo_calculation)throws Exception
+    private String getReportForOligoCalculation(PreparedStatement pst_get_flexsequenceid,PreparedStatement pst_get_flexsequence_length, OligoCalculation oligo_calculation, int id)throws Exception
     {
        // System.out.println("A"+oligo_calculation.getSequenceId());
         StringBuffer buf = new StringBuffer();
@@ -342,10 +537,12 @@ public class PrimerDesignerRunner extends ProcessRunner
         }
         
         buf.append(Constants.LINE_SEPARATOR );
+        buf.append( Constants.getItemTypeAsString(m_items_type)+" "+ id+Constants.LINE_SEPARATOR);
         buf.append("RefSequence Id: "+oligo_calculation.getSequenceId()+Constants.LINE_SEPARATOR);
         buf.append("RefSequence Length: "+refsequence_cdslength+Constants.LINE_SEPARATOR);
         buf.append("FLEX RefSequence Id: "+flexrefsequenceid+Constants.LINE_SEPARATOR);
         buf.append("Primer3 Spec Id: "+oligo_calculation.getPrimer3SpecId()+Constants.LINE_SEPARATOR);
+        
         for (int oligo_index = 0; oligo_index < oligo_calculation.getOligos().size();oligo_index ++)
         {
             buf.append( ((Oligo)oligo_calculation.getOligos().get(oligo_index)).geneSpecificOligotoString()+Constants.LINE_SEPARATOR);
@@ -353,6 +550,145 @@ public class PrimerDesignerRunner extends ProcessRunner
         return buf.toString();
     }
     
+    // functions for stretch collection calculations
+    private ArrayList extandBoundaries(int stretchcollectionid, 
+            ArrayList boundaries, int window_size, int refsequence_length)
+            throws Exception
+    {
+        ArrayList result = new ArrayList();
+        int[] stretch_boundaries = null;
+        int cloneid = 0; int boundary = 0;
+        for (int count = 0; count < boundaries.size(); count++)
+        {
+            stretch_boundaries = (int[])boundaries.get(count);
+            // check weather make sence to create primer for the stretch
+            if (stretch_boundaries[1] - window_size - m_number_of_bases_to_start_stop_requier_er < 0 )
+            {
+                if ( cloneid == 0) cloneid = StretchCollection.getCloneIdByStretchCollectionId(stretchcollectionid);
+                m_error_messages.add("Clone "+ cloneid +" needs Forward End read. First stretch has boundaries "+stretch_boundaries[0] + " - "+ stretch_boundaries[1] );
+                continue;
+            }
+            else
+            {
+                boundary= stretch_boundaries[0] - window_size;
+                boundary = (boundary < 0 ) ? 0 :boundary;
+                stretch_boundaries[0] =  boundary;
+            }
+                
+            
+            if (stretch_boundaries[0] + window_size > refsequence_length - m_number_of_bases_to_start_stop_requier_er) 
+            {
+                if ( cloneid == 0) cloneid = StretchCollection.getCloneIdByStretchCollectionId(stretchcollectionid);
+                m_error_messages.add("Clone "+cloneid+" needs Reverse End read. Last stretch has boundaries "+stretch_boundaries[0] + " - "+ stretch_boundaries[1] );
+                continue;
+            }
+            else
+            {
+                boundary = stretch_boundaries[1] + window_size;
+                boundary  = ( boundary > refsequence_length ) ? refsequence_length  : boundary ;
+                stretch_boundaries[1] =  boundary;
+            }
+            result.add(stretch_boundaries);
+        }
+        return result;
+    }
+    
+    private ArrayList orderByStartPosition(ArrayList boundaries)
+    {
+        Collections.sort(boundaries, new Comparator()
+        {
+            public int compare(Object o1, Object o2)
+            {
+                int[] stretch_boundaries_1 = (int[]) o1;
+                int[] stretch_boundaries_2 = (int[]) o2;
+                return -(   stretch_boundaries_2[1] - stretch_boundaries_1[0]  );
+            }
+            // Note: this comparator imposes orderings that are inconsistent with equals. 
+            public boolean equals(java.lang.Object obj) {      return false;  }
+            // compare
+        } );
+        return boundaries;
+    }
+    
+    private ArrayList collapseNeighboringStretches(ArrayList boundaries, int min_distance_beetwen_stretches)
+    {
+        ArrayList result = new ArrayList();
+        int[] last_element = (int[]) boundaries.get(0);
+        int[] current_element = null;
+         for (int count = 1; count < boundaries.size(); count++)
+        {
+            current_element = (int[]) boundaries.get(count);
+            if (  Math.abs(last_element[1] - current_element[0]) < min_distance_beetwen_stretches
+                 || last_element[1] > current_element[0] )
+             {
+                 last_element[1]=current_element[1];
+             }
+            else
+            {
+                result.add(last_element);
+                last_element = current_element;
+            }
+        }
+        if ( result.size() == 0 || ((int[])result.get(result.size() -1 ))[0] != last_element[0] )
+            result.add(last_element);
+        return result;
+    }
+    
+    private ArrayList  chopRefSequence(BaseSequence refsequence, ArrayList boundaries)
+    {
+        ArrayList base_sequences_for_design = new ArrayList();
+        BaseSequence stretch_sequence = null;
+        String sequence_text = null;
+        for (int count = 0; count < boundaries.size(); count++)
+        {
+            int[] current_element = (int[]) boundaries.get(count);
+            stretch_sequence = new BaseSequence();
+            String refsequence_text = refsequence.getText().trim();
+            int start = current_element[0]; int end = current_element[1];
+            sequence_text = refsequence_text.substring(start, end );
+            stretch_sequence.setText(sequence_text);
+            stretch_sequence.setId(current_element[0]);
+            base_sequences_for_design.add(stretch_sequence);
+        }
+        return base_sequences_for_design;
+    }
+   
+    private ArrayList recalcultaPrimerStartPosition(int refsequence_id, int stretch_collection_id, ArrayList oligo_calculations)
+    {
+        ArrayList result = new ArrayList();
+        OligoCalculation olc = null; Oligo oligo = null;
+        OligoCalculation olc_final = new OligoCalculation();
+        olc_final.setPrimer3SpecId( m_spec_id );
+        olc_final.setSequenceId(refsequence_id);
+        olc_final.setStretchCollectionId(stretch_collection_id);
+        String stretch_params =  buildStretchCollectionParamString();
+        olc_final.setStretchOligoCalculationParams( stretch_params );
+ 
+        int total_oligo_count = 1;
+        for (int count=0; count< oligo_calculations.size();count++)
+        {
+            olc = (OligoCalculation) oligo_calculations.get(count);
+            for(int oligo_count = 0; oligo_count < olc.getOligos().size(); oligo_count++)
+            {
+                oligo = (Oligo) olc.getOligos().get(oligo_count);
+                oligo.setPosition( oligo.getPosition() + olc.getSequenceId());
+                oligo.setName( oligo.getName().charAt(0) +""+ total_oligo_count);
+                olc_final.addOligo(oligo);
+                total_oligo_count++;
+            }
+        }
+        result.add(olc_final);
+        return result;
+    }
+    
+    
+    private String buildStretchCollectionParamString()
+    {
+       String stretch_params =  PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_LQR_COVERAGE_TYPE+"="+ m_type_of_lqr_coverage + OligoCalculation.WRITE_PARAM_DELIM
+        +PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_MIN_DISTANCE_BETWEEN_STRETCHES+"="+  m_min_distance_between_stretches +OligoCalculation.WRITE_PARAM_DELIM;
+       return stretch_params;
+    }
+    ///////////////////////////////////////////////////////
      public static void main(String args[]) 
      
     {
@@ -360,14 +696,22 @@ public class PrimerDesignerRunner extends ProcessRunner
         PrimerDesignerRunner input = null;
         User user  = null;
         try
-        {
+        {// 3558           775       776       884       638      6947 
             input = new PrimerDesignerRunner();
-            user = AccessManager.getInstance().getUser("htaycher1","htaycher");
-            input.setItems("PGS000121-1");
-            input.setItemsType( Constants.ITEM_TYPE_PLATE_LABELS);
+            user = AccessManager.getInstance().getUser("lena","htaycher");
+          //  input.setItems("   1085 1269 ");
+           input.setInputData( Constants.ITEM_TYPE_CLONEID," 132414   ");
+         //   input.setInputData( Constants.ITEM_TYPE_CLONEID,"145895");
             input.setUser(user);
-            input.setSpecId(3);
+            input.setSpecId(42);
+            input.setIsTryMode(false);
+            input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_GAP_LQR);
+            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR);
+            input.setMinDistanceBetweenStretchesToBeCombined(60);
+   
             input.run();
+          
+           
         }
         catch(Exception e){}
      

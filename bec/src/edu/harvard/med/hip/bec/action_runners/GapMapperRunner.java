@@ -498,16 +498,15 @@ import java.util.*;
         try
         {
              runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-             runner.setInputData( Constants.ITEM_TYPE_CLONEID,"  132311  130447  129793  122007  122015  122023  122031  122119  122127  122167  122231  122239  122247  122255  122263  122271  122279  122287  122295  122405  122483  122491   129985   121979   122393   122915   123129   123137   127133   		  ");
-            
-             runner.setProcessType(Constants.PROCESS_FIND_GAPS);
-             runner.setIsTryMode(false);
+             runner.setInputData( Constants.ITEM_TYPE_CLONEID,"  1484 2054 5095");            
+             runner.setProcessType(Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE);
+             runner.setIsTryMode(true);
              //SlidingWindowTrimmingSpec spec =   SlidingWindowTrimmingSpec.getDefaultSpec();
           //   spec.setTrimmingType( SlidingWindowTrimmingSpec.TRIM_TYPE_NONE);
              //spec.setQWindowSize( 10);
              runner.setSpecId(32);
-             runner.setVectorFileName("vector_pDonor221_altered.txt");
-             runner.setIsRunLQR(false);
+           //  runner.setVectorFileName("vector_pDonor221_altered.txt");
+             runner.setIsRunLQR(true);
              runner.run();
             /* spec.setType( SlidingWindowTrimmingSpec.TRIM_TYPE_MOVING_WINDOW);
              runner.setTrimmingSpec(spec);
