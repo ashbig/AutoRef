@@ -93,4 +93,8 @@ public class MatchGenbankRecord {
     public int getSearchResultid() {
         return searchResultid;
     }
+    
+    public int getNumOfMatchFlexSequence() {
+        return matchFlexSequence.size();
+    }
 }

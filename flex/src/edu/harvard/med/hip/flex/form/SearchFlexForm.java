@@ -31,6 +31,7 @@ public class SearchFlexForm extends ActionForm {
     protected FormFile filename = null;
     protected int pid = 90;
     protected int length = 100;
+    protected int hits = 5;
     protected String searchDatabase = SearchDatabase.HUMAN;
     
     public String getSearchName() {return searchName;}
@@ -41,6 +42,7 @@ public class SearchFlexForm extends ActionForm {
     public int getPid() {return pid;}
     public int getLength() {return length;}
     public String getSearchDatabase() {return searchDatabase;}
+    public int getHits() {return hits;}
     
     public void setSearchName(String s) {this.searchName = s;}
     public void setSearchType(String s) {this.searchType = s;}
@@ -50,6 +52,7 @@ public class SearchFlexForm extends ActionForm {
     public void setPid(int i) {this.pid = i;}
     public void setLength(int i) {this.length = i;}
     public void setSearchDatabase(String s) {this.searchDatabase = s;}
+    public void setHits(int i) {this.hits = i;}
     
     /** Creates a new instance of SearchFlexForm */
     public SearchFlexForm() {
@@ -69,6 +72,7 @@ public class SearchFlexForm extends ActionForm {
         filename = null;
         pid = 90;
         length = 100;
+        hits = 5;
         searchDatabase = SearchDatabase.HUMAN;
     }
     
