@@ -31,8 +31,8 @@
     </html:form>
 <p>
     </table>
-<BR><BR><A HREF="http://www.nlm.nih.gov/mesh/" target="_new"><b>Link to MeSH home</b></A><BR>
-<A HREF="DiseaseList.jsp" target="_new"><b>Show all disease MeSH terms</b></A>
+<BR><BR><A HREF="http://www.nlm.nih.gov/mesh/" target="_blank"><b>Link to MeSH home</b></A><BR>
+<A HREF="DiseaseList.jsp" target="_blank"><b>Show all disease MeSH terms</b></A>
 <jsp:include page="links.jsp" flush="true"/>
 
 </td></tr></table></body>

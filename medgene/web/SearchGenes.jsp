@@ -35,7 +35,7 @@
         labelProperty = "type" 
         />
     </html:select>
-    [<a href="statistic_menu.jsp" target="_new">help</a>]
+    [<a href="statistic_menu.jsp" target="_blank">help</a>]
 
     <p>Please choose the number of diseases for your list:
     <html:select property="number">

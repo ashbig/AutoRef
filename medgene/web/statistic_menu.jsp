@@ -8,17 +8,17 @@
 <P>
 <HR>
 <BR>
-<A HREF="product_of_incidence.jsp"><font size=3 face=Arial><b> *  Product of incidence</b></font></A><BR>
+<A HREF="product_of_incidence.jsp" target="_blank"><font size=3 face=Arial><b> *  Product of incidence</b></font></A><BR>
 <BR>
-<A HREF="probability.jsp"><font size=3 face=Arial><b> *  Probability</b></font></A><BR> 
+<A HREF="probability.jsp" target="_blank"><font size=3 face=Arial><b> *  Probability</b></font></A><BR> 
 <BR>
-<A HREF="chi_square_analysis.jsp"><font size=3 face=Arial><b> *  Chi square analysis</b></font></A><BR>
+<A HREF="chi_square_analysis.jsp" target="_blank"><font size=3 face=Arial><b> *  Chi square analysis</b></font></A><BR>
 <BR>
-<A HREF="fischer_exact_test.jsp"><font size=3 face=Arial><b> *  Fischer exact test</b></font></A><BR>   
+<A HREF="fischer_exact_test.jsp" target="_blank"><font size=3 face=Arial><b> *  Fischer exact test</b></font></A><BR>   
 <BR>
-<A HREF="relative_risk_of_gene.jsp"><font size=3 face=Arial><b> *  Relative risk of gene</b></font></A><BR>  
+<A HREF="relative_risk_of_gene.jsp" target="_blank"><font size=3 face=Arial><b> *  Relative risk of gene</b></font></A><BR>  
 <BR>
-<A HREF="relative_risk_of_disease.jsp"><font size=3 face=Arial><b> *  Relative risk of disease</b></font></A><BR>
+<A HREF="relative_risk_of_disease.jsp" target="_blank"><font size=3 face=Arial><b> *  Relative risk of disease</b></font></A><BR>
 </p>
 
 </td></tr></table>
