@@ -190,12 +190,6 @@
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>    
     <forward    name="specialOligoOrder" path="/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER"/>
     <forward    name="geneQuery" path="/GetQueryInfo.do"/>   
- 
-  <forward name="seqEnterUniversalPrimer" path="/Seq_EnterUniversalPrimer.jsp" /> 
-  <forward name="seqEnterPrimerParam" path="/Seq_EnterPrimerParameters.jsp" /> 
-  <forward name="seqEnterEndReadsParam" path="/Seq_EnterEndReadsParameters.jsp" /> 
-  <forward name="seqEnterFullSeqParam" path="/Seq_EnterFullSeqParameters.jsp" /> 
-  <forward name="seqSetProjectParam" path="/GetProjects.do?forwardName=SEQ_SET_PROJECT_PARAMS" /> 
   </global-forwards>
   
 
