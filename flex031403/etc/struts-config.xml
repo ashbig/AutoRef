@@ -46,6 +46,10 @@
     <form-bean      name="getProcessPlateInputForm"
                     type="edu.harvard.med.hip.flex.form.GetProcessPlateInputForm"/>
 
+    <!-- Customer registration form bean -->
+    <form-bean      name="customerRegistrationForm"
+                    type="edu.harvard.med.hip.flex.form.CustomerRegistrationForm"/>
+
   </form-beans>
 
 
@@ -68,6 +72,15 @@
               input="/login.jsp">
       <forward  name="success"   path="/MainMenu.jsp"/>
       <forward  name="failure"  path="/login.jsp"/>
+    </action>
+
+    <!-- Process a customer registration -->
+    <action    path="/CustomerRegistration"
+               type="edu.harvard.med.hip.flex.action.CustomerRegistrationAction"
+               name="customerRegistrationForm"
+              input="/CustomerRegistration.jsp">
+      <forward  name="success"   path="/MainMenu.jsp"/>
+      <forward  name="failure"  path="/CustomerRegistration.jsp"/>
     </action>
     
     <action     path="/ProcessError"

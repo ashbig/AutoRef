@@ -19,7 +19,6 @@ import java.util.*;
 public class AccessManager {
     private static AccessManager _instance = null;
     
-    
     // Usage: AccessManager manager = AccessManager.getInstance();
     public static AccessManager getInstance() {
         if (_instance == null) {
@@ -189,20 +188,15 @@ public class AccessManager {
      * @param info the user contact info.
      */
     
-    public void addUser(String username, String pswd, String email,String group, String org, String info) {
+    public void addUser(String username, String pswd, String email,String group, String org, String info) throws FlexDatabaseException{
         String sql;
-        
-        
-        //	try {
-        //	   FlexConnector f = new FlexConnector();
-        //	   rs = f.getResultSet(sql);
-        //
-        //	}catch (SQLException sqlex) {
-        //		sqlex.printStackTrace();
-        //	}
-        
-        
-        //sql code to insert a row into userprofile table
+        sql = "insert into userprofile" + "(username, useremail, userpassword, userorganization, userinformation, usergroup)"
+              +"values (" + "'"+ username +"', '"+ pswd +"', '"+ email +"', '"+ group +"', '"+ org +"', '"+ info +"')";
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        Connection conn = t.requestConnection();
+        DatabaseTransaction.executeUpdate(sql,conn);
+        DatabaseTransaction.commit(conn);
+        DatabaseTransaction.closeConnection(conn);
     }
     
     public void deleteUser() {
@@ -224,6 +218,8 @@ public class AccessManager {
                 System.out.println("Testing method authenticate - OK");
             else
                 System.out.println("Testing method authenticate - ERROR");
+            
+            manager.addUser("lms","schwartz@bio.umass.edu","worm","umass","<last name>Schwartz</last name>", "Customer");
         } catch (FlexDatabaseException e) {
             System.out.println(e);
         }
