@@ -43,6 +43,15 @@ public class GIQueryHandler extends QueryHandler {
         return rt;
     }
     
+    /**
+     * Query FLEXGene database for a list of GI numbers and populate foundList and
+     * noFoundList. 
+     *  foundList:      gi => ArrayList of MatchFlexSequence objects
+     *  noFoundList:    gi => NoFound object
+     *
+     * @param searchTerms A list of GI numbers as search terms.
+     * @exception Exception
+     */
     public void handleQuery(List searchTerms) throws Exception {
         foundList = new HashMap();
         noFoundList = new HashMap();
