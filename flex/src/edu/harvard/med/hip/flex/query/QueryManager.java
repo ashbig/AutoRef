@@ -68,13 +68,13 @@ public class QueryManager {
             isPending = true;
         } else {
             sql = "select distinct t.sequenceid, flexstatus, constructtype,\n"+
-            " containerposition, label, pname, wname, five,\n"+
+            " containerposition, containerid, label, pname, wname, five,\n"+
             " three, resultvalue, n1.namevalue as gi,\n"+
             " n2.namevalue as genbankacc, n3.namevalue as genename,\n"+
             " n4.namevalue as genesymbol, n5.namevalue as panumber\n"+
             " from"+
             " (select f.sequenceid, f.flexstatus, c.constructtype,\n"+
-            " c.projectid, c.workflowid, s.containerposition, ch.label,\n"+
+            " c.projectid, c.workflowid, s.containerposition, ch.containerid, ch.label,\n"+
             " ou.gatewaysequence as five, oc.gatewaysequence as three,\n"+
             " p.name as pname, w.name as wname, r.resultvalue\n"+
             " from flexsequence f, constructdesign c,\n"+
@@ -160,6 +160,7 @@ public class QueryManager {
                 String status = rs.getString(2);
                 String type = null;
                 int well = -1;
+                int containerid = -1;
                 String label = null;
                 String pname = null;
                 String wname = null;
@@ -182,19 +183,20 @@ public class QueryManager {
                 } else {
                     type = rs.getString(3);
                     well = rs.getInt(4);
-                    label = rs.getString(5);
-                    pname = rs.getString(6);
-                    wname = rs.getString(7);
-                    fivep = rs.getString(8);
-                    threep = rs.getString(9);
-                    result = rs.getString(10);
-                    gi = rs.getString(11);
-                    genbank = rs.getString(12);
-                    genename = rs.getString(13);
-                    genesymbol = rs.getString(14);
-                    panumber = rs.getString(15);
+                    containerid = rs.getInt(5);
+                    label = rs.getString(6);
+                    pname = rs.getString(7);
+                    wname = rs.getString(8);
+                    fivep = rs.getString(9);
+                    threep = rs.getString(10);
+                    result = rs.getString(11);
+                    gi = rs.getString(12);
+                    genbank = rs.getString(13);
+                    genename = rs.getString(14);
+                    genesymbol = rs.getString(15);
+                    panumber = rs.getString(16);
                 }
-                QueryInfo info = new QueryInfo(sequenceid, gi, genbank, label, well);
+                QueryInfo info = new QueryInfo(sequenceid, gi, genbank, containerid, label, well);
                 info.setType(type);
                 info.setProject(pname);
                 info.setWorkflow(wname);
@@ -306,6 +308,7 @@ public class QueryManager {
                     System.out.print("Genbank Accesion: "+info.getGenbankAcc()+"\t");
                     System.out.print("Gene Symbol: "+info.getGeneSymbol()+"\t");
                     System.out.print("PA Number: "+info.getPanumber()+"\t");
+                    System.out.print("Plate ID: "+info.getPlateid()+"\t");
                     System.out.print("Plate Label: "+info.getLabel()+"\t");
                     System.out.print("Well: "+info.getWell()+"\t");
                     System.out.print("Construct Type: "+info.getType()+"\t");
