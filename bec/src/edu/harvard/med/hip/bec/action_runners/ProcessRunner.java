@@ -244,7 +244,7 @@ public abstract class ProcessRunner implements Runnable
                     
                  }
              }
-             System.out.println(final_string.toString());
+          //   System.out.println(final_string.toString());
              m_items = final_string.toString();
          
          }
