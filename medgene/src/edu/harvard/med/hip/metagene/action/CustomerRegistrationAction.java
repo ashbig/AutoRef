@@ -1,6 +1,6 @@
 package edu.harvard.med.hip.metagene.action;
 
-import java.util.Hashtable;
+import java.util.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -96,7 +96,15 @@ public final class CustomerRegistrationAction extends Action {
             }
             // if the userId has not been used and reminder text is unique, insert a new user record into the database
             else {
-                if(manager.addUser(user_id,email,password,organization,reminder,firstname,lastname,phone)) {
+               
+                Calendar calendar = new GregorianCalendar();
+                Date d = new Date();
+                calendar.setTime(d);  
+                String registration_date = "" + (calendar.get(Calendar.MONTH) + 1) + "/" +
+                            calendar.get(Calendar.DAY_OF_MONTH) + "/" +
+                            calendar.get(Calendar.YEAR);
+                
+                if(manager.addUser(user_id,email,password,organization,reminder,firstname,lastname,phone, registration_date, 0)) {
                     return (mapping.findForward("success"));
                 } else {
                     System.out.println("error add to db");       

@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.metagene.action;
 
 import java.io.*;
+import java.util.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +67,20 @@ public final class LogonAction extends Action {
             User user = new User(username, password);
             HttpSession session = request.getSession();
             session.setAttribute(Constants.USER_KEY, user);
+
+            // set the attribute of user type in current session for the current user
+            int user_type = manager.getUserType(username);
+            session.setAttribute("user_type", new Integer(user_type));
+            
+            // add log record the table of Usage in medgene database
+            Calendar calendar = new GregorianCalendar();
+            Date d = new Date();
+            calendar.setTime(d);  
+            String login_time = "" + (calendar.get(Calendar.MONTH) + 1) + "/" +
+                            calendar.get(Calendar.DAY_OF_MONTH) + "/" +
+                            calendar.get(Calendar.YEAR);
+            manager.addLog(username, login_time);
+            
             
             // Remove the obsolete form bean
             if (mapping.getAttribute() != null) {
