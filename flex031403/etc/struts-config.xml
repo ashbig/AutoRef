@@ -288,7 +288,7 @@
       <forward  name="success"   path="/PrintBarcode.jsp"/>
     </action> 
 
-     <!-- Process the researcher barcode input -->
+    <!-- Process the researcher barcode input -->
     <action    path="/GetPCRResearcher"
                type="edu.harvard.med.hip.flex.action.GetPCRResearcherAction"
                name="getResearcherBarcodeForm"
@@ -298,13 +298,24 @@
       <forward  name="success"   path="/PrintPCRBarcode.jsp"/>
     </action> 
 
-     <!-- Print more barcodes -->
+    <!-- Print more barcodes -->
     <action    path="/PrintBarcode"
                type="edu.harvard.med.hip.flex.action.PrintBarcodeAction"
                name="createProcessPlateForm"
+               scope="request"
                validate="false"
                input="/PrintBarcode.jsp">
       <forward  name="success"   path="/PrintBarcode.jsp"/>
+    </action> 
+
+    <!-- Print more barcodes -->
+    <action    path="/PrintPCRBarcode"
+               type="edu.harvard.med.hip.flex.action.PrintPCRBarcodeAction"
+               name="createProcessPlateForm"
+               scope="request"
+               validate="false"
+               input="/PrintPCRBarcode.jsp">
+      <forward  name="success"   path="/PrintPCRBarcode.jsp"/>
     </action> 
 
     <!-- Process the receiving of new oligo plates -->
