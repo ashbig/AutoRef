@@ -515,7 +515,7 @@ public long start, end2;
         ana.hashDirectGenes(483, 1, ana.GENE_SYMBOL_INPUT);  //402 483 482
         
 System.out.println("source for indirect gene hash = " + ana.source_for_indirect_genes.size());
-        ana.hashIndirectGenes(text, ana.source_for_indirect_genes, ana.GENE_SYMBOL_INPUT, 1, 10000);       
+        ana.hashIndirectGenes(text, ana.getSource_for_indirect_genes(), ana.GENE_SYMBOL_INPUT, 1, 10000);       
         ana.analyzeInputChipGenes(text, ana.GENE_SYMBOL_INPUT, 10000);
         
         
