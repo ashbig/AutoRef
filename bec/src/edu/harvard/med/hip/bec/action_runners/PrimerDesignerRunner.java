@@ -51,13 +51,18 @@ public class PrimerDesignerRunner extends ProcessRunner
          String sql = "";
          Statement stmt = null;
          PreparedStatement pst_check_oligo_cloning = null;
+         PreparedStatement pst_get_flexsequenceid = null;
           PreparedStatement pst_insert_process_object = null;
+           PreparedStatement pst_get_flexsequence_length= null;
            FileWriter reportFileWriter = null;
         try
         {
             conn = DatabaseTransaction.getInstance().requestConnection();
             pst_insert_process_object = conn.prepareStatement("insert into process_object (processid,objectid,objecttype) values(?,?,"+Constants.PROCESS_OBJECT_TYPE_OLIGOCALCULATION+")");
             pst_check_oligo_cloning = conn.prepareStatement("select sequenceid from oligo_calculation where sequenceid = ? and primer3configid = "+m_spec_id);
+            pst_get_flexsequenceid = conn.prepareStatement("select flexsequenceid from view_flexbecsequenceid where becsequenceid = ? ");
+            pst_get_flexsequence_length = conn.prepareStatement("select (cdsstop-cdsstart) as cdslength from refsequence where sequenceid = ? ");
+ 
             //get primer spec
             if ( !getPrimer3Spec()  ) return;
             //gett refsequence ids 
@@ -110,15 +115,8 @@ public class PrimerDesignerRunner extends ProcessRunner
                             else
                             {
                                 
-                                StringBuffer buf = new StringBuffer();
-                                buf.append(Constants.LINE_SEPARATOR );
-                                buf.append("RefSequence Id: "+oligo_calculation.getSequenceId()+Constants.LINE_SEPARATOR);
-                                buf.append("Primer3 Spec Id: "+oligo_calculation.getPrimer3SpecId()+Constants.LINE_SEPARATOR);
-                                for (int oligo_index = 0; oligo_index < oligo_calculation.getOligos().size();oligo_index ++)
-                                {
-                                    buf.append( ((Oligo)oligo_calculation.getOligos().get(oligo_index)).geneSpecificOligotoString()+Constants.LINE_SEPARATOR);
-                                }
-                                reportFileWriter.write( buf.toString() );
+                                String ol_report = getReportForOligoCalculation(pst_get_flexsequenceid, pst_get_flexsequence_length,oligo_calculation);
+                                reportFileWriter.write( ol_report);
                                 reportFileWriter.flush();
                                
                             }
@@ -313,6 +311,39 @@ public class PrimerDesignerRunner extends ProcessRunner
         
     }
     
+    
+    private String getReportForOligoCalculation(PreparedStatement pst_get_flexsequenceid,PreparedStatement pst_get_flexsequence_length, OligoCalculation oligo_calculation)throws Exception
+    {
+        System.out.println("A"+oligo_calculation.getSequenceId());
+        StringBuffer buf = new StringBuffer();
+        int flexrefsequenceid = -1;
+        pst_get_flexsequenceid.setInt(1,oligo_calculation.getSequenceId());
+        ResultSet rs = DatabaseTransaction.getInstance().executeQuery(pst_get_flexsequenceid);
+        if(rs.next())
+        {
+            flexrefsequenceid = rs.getInt("flexsequenceid");
+             System.out.println("AS "+flexrefsequenceid);
+        }
+        int refsequence_cdslength = -1;
+        pst_get_flexsequence_length.setInt(1,oligo_calculation.getSequenceId());
+        rs = DatabaseTransaction.getInstance().executeQuery(pst_get_flexsequence_length);
+        if(rs.next())
+        {
+            refsequence_cdslength = rs.getInt("cdslength");
+             System.out.println("AS1 "+refsequence_cdslength);
+        }
+        
+        buf.append(Constants.LINE_SEPARATOR );
+        buf.append("RefSequence Id: "+oligo_calculation.getSequenceId()+Constants.LINE_SEPARATOR);
+        buf.append("RefSequence Length: "+refsequence_cdslength+Constants.LINE_SEPARATOR);
+        buf.append("FLEX RefSequence Id: "+flexrefsequenceid+Constants.LINE_SEPARATOR);
+        buf.append("Primer3 Spec Id: "+oligo_calculation.getPrimer3SpecId()+Constants.LINE_SEPARATOR);
+        for (int oligo_index = 0; oligo_index < oligo_calculation.getOligos().size();oligo_index ++)
+        {
+            buf.append( ((Oligo)oligo_calculation.getOligos().get(oligo_index)).geneSpecificOligotoString()+Constants.LINE_SEPARATOR);
+        }
+        return buf.toString();
+    }
     
      public static void main(String args[]) 
      

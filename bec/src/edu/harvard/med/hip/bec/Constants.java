@@ -167,8 +167,8 @@ public class Constants {
    // public static final int            PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE = 3;
     public static final int            PROCESS_OBJECT_TYPE_REFSEQUENCE = 4;
     public static final int            PROCESS_OBJECT_TYPE_CLONE_SEQUENCE = 5;
-   // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 6;
-     // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 7;
+    public static final int            PROCESS_OBJECT_TYPE_OLIGO_ID = 6;
+      public static final int            PROCESS_OBJECT_TYPE_OLIGOCALCULATION = 7;
      // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 8;
     
     
@@ -228,7 +228,10 @@ public class Constants {
     public static final int             PROCESS_CREATE_REPORT = 61;
     public static final int             PROCESS_SHOW_CLONE_HISTORY = 63;
      public static final int            PROCESS_ORDER_INTERNAL_PRIMERS = 64;
-       //64
+     
+     public static final int            PROCESS_PROCESS_OLIGO_PLATE = 65;
+     public static final int            PROCESS_VIEW_OLIGO_PLATE = 66;
+       //67
        
     //items for display 1-40
   
@@ -272,5 +275,16 @@ public class Constants {
         java.util.Date currentDate = new java.util.Date();
         return  formatter.format(currentDate);
         
+    }
+    
+    
+    public static String formatIntegerToString( int number, int mixintdig)
+    {
+        java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
+        fmt.setMaximumIntegerDigits(mixintdig);
+        fmt.setMinimumIntegerDigits(mixintdig);
+        fmt.setGroupingUsed(false);
+        
+        return fmt.format(number);
     }
 }

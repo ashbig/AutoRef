@@ -477,9 +477,7 @@ public class IsolateTrackingEngine
     public static ArrayList getIsolateTrackingEnginesByStatusandSpecies( int[] status, int species,String processed_isolatetr_ids)
         throws BecDatabaseException
     {
-        ArrayList engines = new ArrayList();
         String processtatus=Algorithms.convertArrayToString(status,",");
-       
         if ( processtatus.equalsIgnoreCase("") ) return null;
         String exclude_istr = "";
         if (processed_isolatetr_ids != null && ! processed_isolatetr_ids.equals(""))
@@ -495,6 +493,35 @@ public class IsolateTrackingEngine
             +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid "
             +" from isolatetracking iso, sequencingconstruct c, refsequence r "
             +"where rownum < 30 "+exclude_istr+"and status in ("+ processtatus+") and r.sequenceid=c.refsequenceid and c.constructid=iso.constructid and r.genusspecies="+species+" order by isolatetrackingid";
+        return getByRule(sql);
+        
+    }
+     
+    public static ArrayList getIsolateTrackingEnginesByStatusAndPlates( int[] status, ArrayList plate_ids, String processed_isolatetr_ids)
+        throws BecDatabaseException
+    {
+        String processtatus=Algorithms.convertArrayToString(status,",");
+        String containerids=Algorithms.convertStringArrayToString(plate_ids,",");
+        if ( containerids.endsWith(",") ) containerids = containerids.substring(1, containerids.length()-1);
+        if ( processtatus.equalsIgnoreCase("") ) return null;
+        String exclude_istr = "";
+        if (processed_isolatetr_ids != null && ! processed_isolatetr_ids.equals(""))
+        {
+            exclude_istr = processed_isolatetr_ids.substring(0,processed_isolatetr_ids.length()-1 );
+            exclude_istr = "and isolatetrackingid not in ("+exclude_istr+")";
+        }
+        String sql =  "select iso.ASSEMBLY_STATUS as assemblystatus, iso.isolatetrackingid as isolatetrackingid, iso.constructid as constructid,"
+            +"iso.status as status,iso.rank as rank,iso.score as score,iso.sampleid  as sampleid, containerid "
+            +" from isolatetracking iso, sequencingconstruct c, sample s "
+            +"where rownum < 30 "+exclude_istr+"and status in ("+ processtatus+") and containerid in ("+containerids+") and  c.constructid=iso.constructid   and iso.sampleid=s.sampleid  order by isolatetrackingid";
+        return getByRule(sql);
+        
+    }
+    
+    
+    private static ArrayList getByRule( String sql)        throws BecDatabaseException
+    {
+        ArrayList engines = new ArrayList();
         RowSet crs = null;
         IsolateTrackingEngine it = null;
         try
@@ -511,8 +538,6 @@ public class IsolateTrackingEngine
                 istr.setStatus(crs.getInt("status") );
                 istr.setSampleId(crs.getInt("sampleid") );
                 istr.setId( crs.getInt("isolatetrackingid") );
-                
-              
                 istr.setAssemblyStatus( crs.getInt("assemblystatus"));
                 istr.setConstructId( crs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
                 // exstruct reads if not empty sample

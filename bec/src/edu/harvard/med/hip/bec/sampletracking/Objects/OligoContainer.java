@@ -1,5 +1,5 @@
 /**
- * $Id: OligoContainer.java,v 1.1 2003-12-08 19:16:16 Elena Exp $
+ * $Id: OligoContainer.java,v 1.2 2003-12-17 20:58:44 Elena Exp $
  *
  * File     	: Container.java
 
@@ -34,6 +34,7 @@ public class OligoContainer
     public static final int STATUS_ORDER_CREATED = 0;
     public static final int STATUS_ORDER_SENT = 1;
     public static final int STATUS_RECIEVED = 2;
+    public static final int STATUS_SENT_FOR_SEQUENCING = 3;
     
     
     public static final int MODE_RESTORE_SAMPLES = 1;
@@ -55,7 +56,7 @@ public class OligoContainer
         String sql = "select  OLIGOCONTAINERID ,LABEL ,USERID ,ORDERDATE, STATUS ,"
 +" DESCR_OLIGO_PROCESSING  ,DESCR_SEQUENCING from oligocontainer where OLIGOCONTAINERID = "+id;
         ArrayList containers = getByRule(sql, MODE_RESTORE_SAMPLES);
-        if (containers != null && containers.size() == 0)
+        if (containers != null && containers.size() > 0)
             return (OligoContainer)containers.get(0);
         else 
             return null;
@@ -83,6 +84,7 @@ public class OligoContainer
             case STATUS_ORDER_CREATED: return "Created";
             case STATUS_ORDER_SENT : return "Ordered";
             case STATUS_RECIEVED : return "Recieved";
+            case STATUS_SENT_FOR_SEQUENCING: return "Used for sequencing";
             default: return "Not known";
         }
         
@@ -146,7 +148,7 @@ public class OligoContainer
         
         m_samples.clear();
         
-        String sql = "select sampleid, position, sampletype from sample where containerid="+m_id+" order by POSITION";
+        String sql = "select oligosampleid, position, cloneid,oligoid from oligosample where oligocontainerid="+m_id+" order by POSITION";
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         CachedRowSet crs = t.executeQuery(sql);
@@ -155,16 +157,14 @@ public class OligoContainer
         {
             while(crs.next())
             {
-                
-                int sampleid = crs.getInt("SAMPLEID");
-                String sampletype = crs.getString("SAMPLETYPE");
-                int position = crs.getInt("position");
-                Sample s = new Sample(  sampleid, sampletype, position, m_id);
+                OligoSample s = new OligoSample( crs.getInt("OLIGOSAMPLEID")  , 
+                m_id, crs.getInt("POSITION"),crs.getInt("OLIGOID")  ,
+                Oligo.getByOligoId(crs.getInt("OLIGOID"))  ,crs.getInt("CLONEID"));
                 m_samples.add(s);
             }
         } catch (SQLException sqlE)
         {
-            throw new BecDatabaseException("Error occured while initializing sample\n"+sqlE+"\nSQL: "+sql);
+            throw new BecDatabaseException("Error occured while initializing samples\n"+sqlE+"\nSQL: "+sql);
         } finally
         {
            
@@ -257,16 +257,16 @@ public class OligoContainer
     // These test cases also include tests for Sample class.
     public static void main(String args[]) throws Exception
     {
-       ArrayList c  = null;Container container =null;
-       ArrayList b = new ArrayList();
        
-      
         try
         {
-           
+           OligoContainer c = OligoContainer.getById(124);
+         
+           System.out.println(c.getId());
         }
         catch(Exception e)
         {
+            System.out.println( e.getMessage());
         }
         System.exit(0);
         

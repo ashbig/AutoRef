@@ -1,5 +1,5 @@
 /**
- * $Id: OligoSample.java,v 1.1 2003-12-08 19:16:15 Elena Exp $
+ * $Id: OligoSample.java,v 1.2 2003-12-17 20:58:44 Elena Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -112,7 +112,7 @@ public class OligoSample
     public  int           getPosition (){ return m_position  ;}
     public  int           getOligoId (){ return m_oligo_id  ;}
     public  Oligo         getOligo (){ return m_oligo  ;}
-    public  int           getCLoneId (){ return m_clone_id  ;} 
+    public  int           getCloneId (){ return m_clone_id  ;} 
     
     public void             setId ( int v){  m_id  = v;}
     public void             setContainerId ( int v){  m_containerid  = v;}
