@@ -27,6 +27,8 @@ public class ConstructGenerator {
     private LinkedList seqList;
     private Connection conn;
     private LinkedList oligoPatternList;
+    private LinkedList constructList;
+    //private LinkedList constructListClosed;
     private int platesetId = -1;
     
     /**
@@ -37,7 +39,7 @@ public class ConstructGenerator {
         this.seqList = seqList;
         this.conn = c;
         this.oligoPatternList = new LinkedList();
-        
+        this.constructList = new LinkedList();
     }
     
     /**
@@ -87,11 +89,11 @@ public class ConstructGenerator {
             // and insert oligo infor into the oligo table
             try{
                 result_5p = pc.calculateFivepOligo(seq);
-               // result_5p.insert(conn);
+                result_5p.insert(conn);
                 result_3s = pc.calculateThreepCloseOligo(seq);
-               // result_3s.insert(conn);
+                result_3s.insert(conn);
                 result_3op = pc.calculateThreepOpenOligo(seq);
-               // result_3op.insert(conn);
+                result_3op.insert(conn);
             } catch(FlexDatabaseException sqlex){
                 throw new FlexDatabaseException(sqlex);
             }
@@ -102,7 +104,8 @@ public class ConstructGenerator {
             oligoID_3op = result_3op.getOligoID();
             
             //create the OligoPattern object and store it in a linked list
-            pattern = new OligoPattern(oligoID_5p, oligoID_3s, oligoID_3op, seqId, cdsLength);
+            pattern = new OligoPattern(oligoID_5p, oligoID_3s, oligoID_3op, 
+                result_5p.getSequence(), result_3s.getSequence(), result_3op.getSequence(), cdsLength);
             oligoPatternList.add(pattern);
             
             //generate construct pairID: a open and a close construct derived from
@@ -112,7 +115,9 @@ public class ConstructGenerator {
             // create two new constructs: open and close form and insert them
             // to the ConstructDesign table
             close = new Construct(seq,result_5p,result_3s, "CLOSED", pairId,platesetId);
-            open = new Construct(seq,result_5p,result_3op, "FUSION", pairId,platesetId);
+            open = new Construct(seq,result_5p,result_3op, "FUSION", pairId,platesetId);            
+            constructList.add(close);
+            constructList.add(open);
             System.out.println("inserting constructs: ");
             close.insert(conn);
             open.insert(conn);
@@ -137,31 +142,39 @@ public class ConstructGenerator {
     }
     
     /**
+     * @return The list of newly generated constructs
+     */
+    public LinkedList getConstructList (){
+        return this.constructList;
+    }
+    
+    /**
      * Insert Process Execution record for Design Construct protocol
      * Insert one process object input record for each input sequence
      */
-    protected void insertProcessInputRecords() throws FlexDatabaseException {
+    protected void insertProcessInputOutput() throws FlexDatabaseException {
         Process process = null;
-        Protocol protocol = null;
+        Protocol protocol = new Protocol("design constructs");
         Researcher r = new Researcher();
         String status = "S"; //SUCCESS
         
-        protocol = new Protocol("design constructs");
         int userId = r.getId("SYSTEM");
         r = new Researcher(userId);
         // insert process execution record into process execution table
-        process = new Process(protocol,status,r);        
-        System.out.println("Insert process execution for design constructs...");
-        System.out.println("Execution ID: "+ process.getExecutionid());
-        process.insert(conn);
-        
+        process = new Process(protocol,status,r);
         int executionId = process.getExecutionid();
+        process.insert(conn);
+        System.out.println("Insert process execution for design constructs...");
+        System.out.println("Design Construct Execution ID: "+ process.getExecutionid());
+        
+        //insert sequence input process objects
         String ioFlag = "I";
         ListIterator iter = seqList.listIterator();
         Sequence seq = null;
         SequenceProcessObject spo = null;
         int seqId = -1;
         
+        System.out.println("Inserting sequence input object...");
         while (iter.hasNext()) {
             seq = (Sequence) iter.next(); //retrieves one sequence from the list
             seqId = seq.getId();
@@ -169,13 +182,40 @@ public class ConstructGenerator {
             spo.insert(conn);
         } //while
         
+        //Insert one process output records for each output construct 
+        //(two per sequence)
+        ListIterator iter_construct = constructList.listIterator();
+        String ioType = "O";
+        Construct construct = null;
+        ConstructProcessObject cpo = null;
+        int constructId = -1;
+        System.out.println("Inserting construct process output object...");
+        while (iter.hasNext()){
+            construct = (Construct)iter.next();
+            constructId = construct.getId();
+            cpo = new ConstructProcessObject(constructId,executionId,ioType);
+            cpo.insert(conn);         
+        } //while
+             
     }
     
-    /**
-     * Insert one process object input record for each input Flex sequence
-     */
-    private void insertProcessObject() throws FlexDatabaseException {
+    protected void insertConstructQueue () throws FlexDatabaseException {
+        Protocol protocol = new Protocol("generate oligo orders");
+        ListIterator iter = constructList.listIterator();
+        ConstructProcessQueue constructQueue = new ConstructProcessQueue();
+        QueueItem queueItem = null;
+        Construct construct = null;
+        LinkedList constructQueueItemList = new LinkedList();
         
+        //form a linkedlist of construct queue items
+        while (iter.hasNext()){
+            construct = (Construct)iter.next();
+            queueItem = new QueueItem (construct, protocol);
+            constructQueueItemList.add(queueItem);           
+        } //while
+        
+        System.out.println("Adding constructs to queue...");
+        constructQueue.addQueueItems(constructQueueItemList, conn); 
     }
     
     /**
