@@ -67,10 +67,8 @@ public class SelectProcessAction extends ResearcherAction
             {
                 case Constants.PROCESS_UPLOAD_PLATES://upload plates
                 {
-                   
                     ArrayList biolinkers = BioLinker.getAllLinkers();
                     ArrayList vectors = BioVector.getAllVectors();
-                   
                     request.setAttribute(Constants.VECTOR_COL_KEY, vectors);
                     request.setAttribute(Constants.LINKER_COL_KEY, biolinkers);
                     return (mapping.findForward("upload_plates"));
@@ -84,8 +82,8 @@ public class SelectProcessAction extends ResearcherAction
                 }
                 case Constants.PROCESS_SELECT_PLATES_FOR_END_READS://run sequencing for end reads
                 {
-                     //get all specs for each of the three types and all plates where
-                    int vector_id = Integer.parseInt( (String) request.getParameter(Constants.VECTOR_ID_KEY));
+                                         //get all specs for each of the three types and all plates where
+                   int vector_id = Integer.parseInt( (String) request.getParameter(Constants.VECTOR_ID_KEY));
                     ArrayList spec_collection = new ArrayList();
                     ArrayList primers = BioVector.getVectorPrimers(vector_id);
                     ArrayList spec_names = new ArrayList();
@@ -98,7 +96,10 @@ public class SelectProcessAction extends ResearcherAction
                                 "There are no primers assosiated with this vector. \nPlease contact BEC development team."));
                             saveErrors(request,errors);
                              
-                            return new ActionForward(mapping.getInput());
+                            ArrayList vectors = BioVector.getAllVectors();
+                            request.setAttribute(Constants.VECTOR_COL_KEY, vectors);
+                            request.setAttribute("forwardName", new Integer(Constants.PROCESS_SELECT_PLATES_FOR_END_READS));
+                            return (mapping.findForward("select_vector"));
                     }
                     spec_collection.add( primers);
                     spec_names.add("5p primer");
@@ -116,31 +117,26 @@ public class SelectProcessAction extends ResearcherAction
                     request.setAttribute("process_name", "Request End Reads");
                       request.setAttribute("forwardName", new Integer(Constants.PROCESS_RUN_END_READS));
                     return (mapping.findForward("select_plates"));
+                 
                 }
                 case Constants.PROCESS_RUN_END_READS_WRAPPER://run end reads wrapper
                 {
                      EndReadsWrapperRunner runner = new EndReadsWrapperRunner();
                     runner.setUser(user);
-                    
-                     request.setAttribute(Constants.JSP_TITLE,"Request for end read wrapper invocation" );
-                   request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
-                   t = new Thread(runner);
-                   t.start();
-                   return mapping.findForward("processing");
+                    request.setAttribute(Constants.JSP_TITLE,"Request for end read wrapper invocation" );
+                    request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
+                    t = new Thread(runner);                   t.start();
+                    return mapping.findForward("processing");
                 }
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS://run assembly wrapper
                 {
                     AssemblyRunner runner = new AssemblyRunner();
-    
                     runner.setUser(user);
                     runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
-                   
                     request.setAttribute(Constants.JSP_TITLE,"Request for end read assembler invocation." );
                     request.setAttribute(Constants.ADDITIONAL_JSP,"The system will send you notification when finish");
-                     t = new Thread(runner);
-                    t.start();
+                     t = new Thread(runner);                    t.start();
                    return mapping.findForward("processing");
-                    
                 }
                 case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY:
                 {
@@ -200,7 +196,8 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER: // add new internal primer
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
                 {
-                   
+                     request.setAttribute(Constants.JSP_TITLE,"view Internal Primers");
+                   return (mapping.findForward("initiate_process"));
                 }
                 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS://approve internal primers
                 {
@@ -241,14 +238,13 @@ public class SelectProcessAction extends ResearcherAction
                     request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
                     request.setAttribute(Constants.JSP_TITLE,title);
                    
-                    return (mapping.findForward("run_process"));
+                    return (mapping.findForward("initiate_process"));
                 }
                 
                 case Constants.PROCESS_RUN_DECISION_TOOL://run decision tool
                 {
                     ArrayList spec_collection =  FullSeqSpec.getAllSpecNames() ;
-                     request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
-                   
+                    request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
                     return (mapping.findForward("run_desicion_tool"));
                 }
                 
@@ -289,6 +285,6 @@ public class SelectProcessAction extends ResearcherAction
         return (mapping.findForward("error"));
     }
     
-    
+   
     
 }
