@@ -12,9 +12,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-07-05 15:57:53 $
- * $Author: yhu $
+ * $Revision: 1.8 $
+ * $Date: 2001-07-26 18:43:50 $
+ * $Author: jmunoz $
  *
  ******************************************************************************
  *
@@ -62,8 +62,8 @@ import edu.harvard.med.hip.flex.database.*;
 /**
  * Implementation of <strong>Action</strong> that validates a user logon.
  *
- * @author $Author: yhu $
- * @version $Revision: 1.7 $ $Date: 2001-07-05 15:57:53 $
+ * @author $Author: jmunoz $
+ * @version $Revision: 1.8 $ $Date: 2001-07-26 18:43:50 $
  */
 
 public final class LogonAction extends Action {
@@ -96,6 +96,7 @@ public final class LogonAction extends Action {
         ActionErrors errors = new ActionErrors();
         String username = ((LogonForm) form).getUsername();
         String password = ((LogonForm) form).getPassword();
+        
         
         User user = new User(username,password);
         

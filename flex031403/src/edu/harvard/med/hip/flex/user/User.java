@@ -84,7 +84,7 @@ public class User {
      */
     public String getUserGroup() throws FlexDatabaseException {
         String sql = "SELECT usergroup FROM userprofile" +
-        " WHERE username = '" + name + "'";
+        " WHERE username = '" + DatabaseTransaction.prepareString(name) + "'";
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         RowSet rs = t.executeQuery(sql);
         
@@ -112,7 +112,7 @@ public class User {
         String barcode = null;
         String sql = "select researcherbarcode from userprofile, researcher " +
         "where userprofile.researcherid = researcher.researcherid " +
-        "and username = '" + name + "'";
+        "and username = '" + DatabaseTransaction.prepareString(name) + "'";
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         RowSet rs = t.executeQuery(sql);
@@ -177,7 +177,8 @@ public class User {
         Vector requests = new Vector();
         String sql = "select requestid, username, "+
         "to_char(requestdate, 'fmYYYY-MM-DD') as rdate\n"+
-        "from request where username='"+name+"' order by requestdate desc";
+        "from request where username='"+DatabaseTransaction.prepareString(name)+
+        "' order by requestdate desc";
         RowSet requestRs = t.executeQuery(sql);
         
         try {

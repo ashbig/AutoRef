@@ -56,6 +56,10 @@ public class AccessManager {
         boolean isExist = false;
         String sql;
         ResultSet rs = null;
+        
+        // convert the string to oracle won't complain.
+        name = DatabaseTransaction.prepareString(name);
+        
         sql = "SELECT username FROM Userprofile"
         + " WHERE username = '" + name+"'";
         
@@ -85,6 +89,10 @@ public class AccessManager {
         String sql;
         ResultSet rs = null;
         int count = 0;
+        
+        // Make the reminder string so oracle doesn't complain.
+        reminder = DatabaseTransaction.prepareString(reminder);
+        
         sql = "SELECT count(PASSWORDREMINDERSTRING) FROM Userprofile"
         + " WHERE PASSWORDREMINDERSTRING = '" + reminder+"'";
         
@@ -157,6 +165,10 @@ public class AccessManager {
         String pswd = null; //password
         String sql;
         ResultSet rs = null;
+        
+        // make the string so oracle won't complain.
+        username = DatabaseTransaction.prepareString(username);
+        
         sql = "SELECT userpassword FROM Userprofile"
         + " WHERE username = '" + username+"'";
         
@@ -187,6 +199,10 @@ public class AccessManager {
         String email = null; //password
         String sql;
         ResultSet rs = null;
+        
+        // make the string so oracle won't complain.
+        username = DatabaseTransaction.prepareString(username);
+        
         sql = "SELECT useremail FROM Userprofile"
         + " WHERE username = '" + username+"'";
         
@@ -216,6 +232,10 @@ public class AccessManager {
         String username = null; //password
         String sql;
         ResultSet rs = null;
+        
+        // make the string so oracle won't complain.
+        reminder = DatabaseTransaction.prepareString(reminder);
+        
         sql = "SELECT username FROM Userprofile"
         + " WHERE passwordreminderstring = '" + reminder+"'";
         
@@ -246,6 +266,11 @@ public class AccessManager {
     
     public boolean authenticate(String username, String pw) 
     throws FlexDatabaseException {
+        
+        // make the username and password oracle friendly.
+        username = DatabaseTransaction.prepareString(username);
+        pw = DatabaseTransaction.prepareString(pw);
+        
         String sql = "select * from userprofile\n"+
         "where username='"+username+"'\n"+
         "and userpassword='"+pw+"'";
@@ -279,9 +304,33 @@ public class AccessManager {
      * @param info the user contact info.
      */
     
-    public void addUser(String username, String email,String pswd,String org, String group, String reminder, String firstname, String lastname, String address1, String address2, String city, String state, String province, String zip, String country, String telephone) throws FlexDatabaseException{
+    public void addUser(String username, String email,String pswd,String org, 
+    String group, String reminder, String firstname, String lastname, 
+    String address1, String address2, String city, String state, 
+    String province, String zip, String country, String telephone) 
+    throws FlexDatabaseException{
         String sql1;
         String sql2;
+        
+        
+        // make sure all strings are oracle friendly.
+        username = DatabaseTransaction.prepareString(username);
+        pswd = DatabaseTransaction.prepareString(pswd);
+        email= DatabaseTransaction.prepareString(email);
+        org = DatabaseTransaction.prepareString(org);
+        group = DatabaseTransaction.prepareString(group);
+        reminder = DatabaseTransaction.prepareString(reminder);
+        firstname = DatabaseTransaction.prepareString(firstname);
+        lastname = DatabaseTransaction.prepareString(lastname);
+        address1 = DatabaseTransaction.prepareString(address1);
+        address2 = DatabaseTransaction.prepareString(address2);
+        city = DatabaseTransaction.prepareString(city);
+        state = DatabaseTransaction.prepareString(state);
+        province = DatabaseTransaction.prepareString(province);
+        zip = DatabaseTransaction.prepareString(zip);
+        country = DatabaseTransaction.prepareString(country);
+        telephone = DatabaseTransaction.prepareString(telephone);
+        
         sql1 = "insert into userprofile" + "(username, useremail, userpassword, userorganization, usergroup, passwordreminderstring)"
               +"values (" + "'"+ username +"', '"+ email +"', '"+ pswd +"', '"+ org +"', '"+ group +"', '"+ reminder +"')";
         sql2 = "insert into useraddress" + "(username, firstname, lastname, organization, addressline1,addressline2,city,state,province,zipcode,country,telephone1)"

@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.5 2001-07-19 14:48:10 dzuo Exp $
+ * $Id: Request.java,v 1.6 2001-07-26 18:43:50 jmunoz Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -206,7 +206,7 @@ public class Request {
         
         String sql = "insert into request\n"+
         "(requestid, username, requestdate)\n"+
-        "values("+id+",'"+username+"',sysdate)";
+        "values("+id+",'"+DatabaseTransaction.prepareString(username)+"',sysdate)";
         
         DatabaseTransaction.executeUpdate(sql, conn);
         
