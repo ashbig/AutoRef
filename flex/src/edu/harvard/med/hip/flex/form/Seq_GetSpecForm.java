@@ -13,15 +13,15 @@ import org.apache.struts.action.*;
  */
 public class Seq_GetSpecForm extends ActionForm
 {
-    private String m_forwardName = null;
+    private int m_forwardName = -1;//type of spec
    
     
-    public void setForwardName(String forwardName)
+    public void setForwardName(int forwardName)
     {
         m_forwardName = forwardName;
     }
     
-    public String getForwardName()
+    public int getForwardName()
     {
         return m_forwardName;
     }

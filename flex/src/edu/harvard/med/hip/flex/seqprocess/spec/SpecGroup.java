@@ -18,24 +18,42 @@ import edu.harvard.med.hip.flex.seqprocess.core.oligo.*;
  */
 public class SpecGroup 
 {
-    public final static String  OWNER_PROJECT = "OWNER_PROJECT";
-    public final static String  OWNER_SEQUENCE = "OWNER_SEQUENCE";
-    
+ 
+   /* 
     private int             m_id =- 1;
-    private int             m_owner_id = -1;
-    private String          m_owner_type = null;
-    private Primer3Spec     m_primer = null;
-    private EndReadsSpec    m_end_reads = null;
-    private FullSeqSpec     m_full_seq   = null;
+    private String m_name = null;
+    
+    private int             m_rum_pm_er = -1;
+    private int             m_rum_pm_fs = -1;
+    
+    private int             m_primer_id = -1;
+    private int     m_end_reads_id = -1;
+    private int         m_endreads_cutoff_id  = -1;
+    private int         m_full_seq_id   = -1;
+    private int         m_unprim_id = -1;
+    private int         m_polm_id = -1;
+    private int       m_biovector_id = -1;
+    private int        m_5trail_id = -1;
+    private int        m_3trail_id = -1;
+    
+    private Primer3Spec     m_primer_spec = null;
+    private EndReadsSpec    m_end_reads_spec = null;
+    private FullSeqSpec     m_endreads_cutoff_spec   = null;
+    private FullSeqSpec     m_full_seq_spec   = null;
     private OligoPair       m_universal_primer = null;
+    private PolymorphismSpec m_polm_spec = null;
+    private BioVector       m_biovector = null;
+    private BioTrail        m_5trail = null;
+    private BioTrail        m_3trail = null;
+    
     
     /** Creates a new instance of ProjectSpecification */
-  
+  /*
     //get owner
-    public SpecGroup(int id, String owner) throws FlexDatabaseException
+    public SpecGroup(int id, String owner) throws FlexDatabaseException 
     {
         
-        m_owner_id = id;
+       
         m_owner_type = owner;
         String sql = "select * from spec_group where ownerid = "+id +" and ownertype="+owner ;
         DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -43,9 +61,9 @@ public class SpecGroup
         try{
             if(rs.next()) {
                 m_id = rs.getInt("groupid");
-                m_end_reads = new EndReadsSpec( rs.getInt("endspecid"));
-                m_full_seq = new FullSeqSpec( rs.getInt("fullspecid"));
-                m_primer = new Primer3Spec( rs.getInt("primer3specid"));
+                m_end_reads_id = rs.getInt("er_specid";
+                m_full_seq_id = rs.getInt("fs_specid");
+                m_primer = (Primer3Spec)Spec.getSpecById( rs.getInt("primer3specid"),Primer3Spec.PRIMER3_SPEC_INT);
                 int i = rs.getInt("UniversalPrimerpairid");
                 if (i > 0) m_universal_primer = new OligoPair(i);
             }
@@ -132,9 +150,13 @@ public class SpecGroup
     
     
     public Primer3Spec     getPrimerSpec(){ return m_primer ;}
-    public EndReadsSpec    getEndReadsSpec() { return m_end_reads ;}
-    public FullSeqSpec     getFullSeqSpec(){return m_full_seq   ;}
+    public EndReadsSpec    getEndReadsSpec() { if (m_end_reads != null) return m_end_reads; else return new EndReadsSpec(m_end_reads_id);}
+    public FullSeqSpec     getFullSeqSpec(){ if (m_full_seq  != null) return m_full_seq;  else return new FullSeqSpec(m_full_seq _id); }
     public OligoPair       getUniversalPrimer(){ return m_universal_primer;}
     
-    
+    public int getId()    {  return m_id;  }    
+    public String getName()    {  return m_name;  }
+    public int getOwnerId()    {  return m_owner_id;  }
+    public Object getOwner()    {  return null;  }
+    */
 }

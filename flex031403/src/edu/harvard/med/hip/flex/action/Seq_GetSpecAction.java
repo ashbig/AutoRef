@@ -36,6 +36,8 @@ import edu.harvard.med.hip.flex.seqprocess.core.sequence.*;
 import edu.harvard.med.hip.flex.seqprocess.core.oligo.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.Constants;
 
 public class Seq_GetSpecAction extends ResearcherAction
 {
@@ -48,31 +50,74 @@ public class Seq_GetSpecAction extends ResearcherAction
                                     throws ServletException, IOException
     {
         ActionErrors errors = new ActionErrors();
-        String forwardName = ((Seq_GetSpecForm)form).getForwardName();
+        int forwardName = ((Seq_GetSpecForm)form).getForwardName();
+        ArrayList specs = new ArrayList();
         
-        try
+        
+        
+        try 
         {
-            if ( forwardName.equals(EndReadsSpec.END_READS_SPEC) ||
-                forwardName.equals(FullSeqSpec.FULL_SEQ_SPEC) ||
-                forwardName.equals(Primer3Spec.PRIMER3_SPEC ) )
+            //get system user
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+            String username = user.getUsername();
+        //    request.setAttribute("forwardName", new Integer(forwardName));
+            switch  (forwardName)
             {
-                ArrayList specs = Spec.getAllSpecs(forwardName);
-
-                request.setAttribute("specs", specs);
-                request.setAttribute("forwardName", forwardName);
-            }
-            if ( forwardName.equals(EndReadsSpec.END_READS_SPEC) )
-                return (mapping.findForward("end_reads_spec"));
-            else if (forwardName.equals(FullSeqSpec.FULL_SEQ_SPEC) )
-                return (mapping.findForward("full_seq_spec"));
-            else if( forwardName.equals(Primer3Spec.PRIMER3_SPEC ) )
-                return (mapping.findForward("primer3_spec"));
-            else if( forwardName.equals(OligoPair.UNIVERSAL_PAIR ) )
-            {
-                OligoPair op = null;
-                ArrayList o_pairs = op.getOligoPairsByType(OligoPair.UNIVERSAL_PAIR);
-                request.setAttribute("specs", o_pairs);
-                return (mapping.findForward("universal_pair"));
+                case Spec.END_READS_SPEC_INT:
+                {
+                    specs = EndReadsSpec.getAllSpecs();
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("end_reads_spec"));
+                }
+                case Spec.FULL_SEQ_SPEC_INT:
+                {
+                     specs = FullSeqSpec.getAllSpecs();
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("full_seq_spec"));
+                }
+                case Primer3Spec.PRIMER3_SPEC_INT:
+                {
+                     specs = Primer3Spec.getAllSpecs();
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("primer3_spec"));
+                }
+                case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
+                {
+                     specs = PolymorphismSpec.getAllSpecs();
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("polymorphism_spec"));
+                }
+                case Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
+                {
+                    specs = EndReadsSpec.getAllSpecsBySubmitter( username);
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("end_reads_spec"));
+                }
+                case Spec.FULL_SEQ_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
+                {
+                     specs = FullSeqSpec.getAllSpecsBySubmitter(username);
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("full_seq_spec"));
+                }
+                case Spec.PRIMER3_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
+                {
+                     specs = Primer3Spec.getAllSpecsBySubmitter( username);
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("primer3_spec"));
+                }
+                 case Spec.POLYMORPHISM_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS:
+                {
+                     specs = PolymorphismSpec.getAllSpecsBySubmitter( username);
+                    request.setAttribute("specs", specs);
+                    return (mapping.findForward("polymorphism_spec"));
+                }
+                case OligoPair.UNIVERSAL_PAIR_INT:
+                {
+                    OligoPair op = null;
+                    ArrayList o_pairs = op.getOligoPairsByType(OligoPair.UNIVERSAL_PAIR);
+                    request.setAttribute("specs", o_pairs);
+                    return (mapping.findForward("universal_pair"));
+                }
             }
             
         } 

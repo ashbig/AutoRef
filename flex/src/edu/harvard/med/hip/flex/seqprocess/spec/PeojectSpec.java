@@ -17,8 +17,11 @@ import edu.harvard.med.hip.flex.database.*;
  */
 public class PeojectSpec extends Project
 {
+    /*
     private SpecGroup m_current_spec = null;
+     */
     /** Creates a new instance of PeojectSpec */
+     /*
     public PeojectSpec(int id) throws FlexDatabaseException
     {
         super(id);
@@ -26,4 +29,5 @@ public class PeojectSpec extends Project
     }
     
     public SpecGroup getSpec(){ return m_current_spec;}
+    */
 }

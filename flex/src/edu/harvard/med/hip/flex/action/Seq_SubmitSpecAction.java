@@ -34,28 +34,35 @@ import edu.harvard.med.hip.flex.seqprocess.core.sequence.*;
 import edu.harvard.med.hip.flex.seqprocess.core.oligo.*;
 import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.form.*;
+import edu.harvard.med.hip.flex.user.*;
+import edu.harvard.med.hip.flex.Constants;
 
 public class Seq_SubmitSpecAction  extends ResearcherAction
 {
     
     
     public ActionForward flexPerform(ActionMapping mapping,
-                                    ActionForm form,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response)
-                                    throws ServletException, IOException
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws ServletException, IOException
     {
         ActionErrors errors = new ActionErrors();
-        String forwardName = ((Seq_GetSpecForm)form).getForwardName();
+        int forwardName = ((Seq_GetSpecForm)form).getForwardName();
         String created_spec = null;
+        Connection conn = null;
+        ArrayList created_specs = new ArrayList();
         try
         {
+            //get system user
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+            String username = user.getUsername();
             
             DatabaseTransaction t = DatabaseTransaction.getInstance();
-            Connection conn = t.requestConnection();
+            conn = t.requestConnection();
             
             String spec_name = null;
-           
+            
             Hashtable params = new Hashtable();
             //get all parameters
             Enumeration requestNames = request.getParameterNames();
@@ -63,65 +70,120 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
             {
                 String name=(String)requestNames.nextElement();
                 String value=(String)request.getParameter(name);
-             
-                params.put( name.toUpperCase(), value);
-                if (name.equalsIgnoreCase("SET_NAME")) spec_name = value;
-            }
-
                 
-            if ( forwardName.equals(EndReadsSpec.END_READS_SPEC) )
-            {
-                EndReadsSpec spec = new EndReadsSpec(params, spec_name);
-                spec.insert(conn);
-            }
-            else if (forwardName.equals(FullSeqSpec.FULL_SEQ_SPEC) )
-            {
-                FullSeqSpec spec = new FullSeqSpec(params, spec_name);
-                spec.insert(conn);
-            }
-            else if( forwardName.equals(Primer3Spec.PRIMER3_SPEC ) )
-            {
-                Primer3Spec spec = new Primer3Spec (params, spec_name);
-                spec.insert(conn);
-            }
-            else if( forwardName.equals(OligoPair.UNIVERSAL_PAIR ) )
-            {
-               
-                Oligo o_5p = new Oligo( 
-                                        (String) params.get("FORWARD_SEQUENCE"), 
-                                        Double.parseDouble((String) params.get("FORWARD_TM")), 
-                                        (String) params.get("FORWARD_NAME"), 
-                                        Oligo.OT_UNIVERSAL_5p,
-                                        Integer.parseInt( (String) params.get("FORWARD_START"))
-                                        );
-                
-                
- 
-                Oligo o_3p = new Oligo(
-                
-                                         (String) params.get("REVERSE_SEQUENCE"), 
-                                          Double.parseDouble((String) params.get("REVERSE_TM")), 
-                                        (String) params.get("REVERSE_NAME"), 
-                                        Oligo.OT_UNIVERSAL_3p, 
-                                        Integer.parseInt( (String) params.get("REVERSE_START"))
-                                        );
-                OligoPair olp = new OligoPair(spec_name, OligoPair.UNIVERSAL_PAIR, o_5p,o_3p);
-                
-                
-                created_spec = "Spec type: UNIVERSAL OLIGO PAIR \nSet Name: "+spec_name;
-                olp.insert(conn);  
+                if (name.equalsIgnoreCase("SET_NAME"))
+                {
+                    spec_name = value;
+                }
+                else
+                    params.put( name.toUpperCase(), value);
                
             }
-            conn.commit();
-            request.setAttribute("created_spec", created_spec);                 
-            return (mapping.findForward("success"));
+            
+            //check for name unique, if not add _1 to user selected name
+            String spec_name_suffix = Spec.getNameSuffix(spec_name, forwardName );
+            spec_name += spec_name_suffix;
+           
+            switch ( forwardName)
+            {
+                case EndReadsSpec.END_READS_SPEC_INT:
+                {
+                    EndReadsSpec spec = new EndReadsSpec(params, spec_name, username);
+                    spec.insert(conn);
+                    conn.commit();
+                    created_specs.add(spec);
+                    request.setAttribute("specs", created_specs);
+                    request.setAttribute("message", "The following specification was created.");
+                    return (mapping.findForward("end_reads_spec"));
+                 }
+                case FullSeqSpec.FULL_SEQ_SPEC_INT:
+                {
+                    FullSeqSpec spec = new FullSeqSpec(params, spec_name, username);
+                    spec.insert(conn);
+                    conn.commit();
+                    created_specs.add(spec);
+                    request.setAttribute("specs", created_specs);
+                    request.setAttribute("message", "The following specification was created.");
+                    return (mapping.findForward("full_seq_spec"));
+                }
+                case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
+                {
+                    PolymorphismSpec spec = new PolymorphismSpec(params, spec_name, username);
+                    spec.insert(conn);
+                    conn.commit();
+                    created_specs.add(spec);
+                    request.setAttribute("specs", created_specs);
+                    request.setAttribute("message", "The following specification was created.");
+                    return (mapping.findForward("polymorphism_spec"));
+                }
+                case Primer3Spec.PRIMER3_SPEC_INT:
+                {
+                    Primer3Spec spec = new Primer3Spec(params, spec_name, username);
+                    spec.insert(conn);
+                    conn.commit();
+                    created_specs.add(spec);
+                    request.setAttribute("specs", created_specs);
+                    request.setAttribute("message", "The following specification was created.");
+                     return (mapping.findForward("primer3_spec"));
+                }
+                case OligoPair.UNIVERSAL_PAIR_INT:
+                {
+                    
+                    Oligo o_5p = new Oligo(
+                    (String) params.get("FORWARD_SEQUENCE"),
+                    Double.parseDouble((String) params.get("FORWARD_TM")),
+                    (String) params.get("FORWARD_NAME"),
+                    Oligo.OT_UNIVERSAL_5p,
+                    Integer.parseInt( (String) params.get("FORWARD_START"))
+                    );
+                    
+                    
+                    
+                    Oligo o_3p = new Oligo(
+                    
+                    (String) params.get("REVERSE_SEQUENCE"),
+                    Double.parseDouble((String) params.get("REVERSE_TM")),
+                    (String) params.get("REVERSE_NAME"),
+                    Oligo.OT_UNIVERSAL_3p,
+                    Integer.parseInt( (String) params.get("REVERSE_START"))
+                    );
+                    OligoPair olp = new OligoPair(spec_name, OligoPair.UNIVERSAL_PAIR, o_5p,o_3p);
+                    
+                    
+                   // created_spec = "Spec type: UNIVERSAL OLIGO PAIR \nSet Name: "+spec_name;
+                    olp.insert(conn);
+                    conn.commit();
+                    created_specs.add(olp);
+                    request.setAttribute("specs", created_specs);
+                    request.setAttribute("message", "The following specification was created.");
+                    return (mapping.findForward("universal_pair"));
+                }
+            }
+           return (mapping.findForward("error")); 
         }
         catch(Exception e)
         {
+            DatabaseTransaction.rollback(conn);
             request.setAttribute(Action.EXCEPTION_KEY, e);
             return (mapping.findForward("error"));
         }
-    
+        finally
+        {
+            
+            if(errors.size() > 0)
+            {
+                saveErrors(request,errors);
+                
+                DatabaseTransaction.rollback(conn);
+                return (mapping.findForward("error"));
+            } 
+            else
+            {
+                DatabaseTransaction.commit(conn);
+            }
+            
+            DatabaseTransaction.closeConnection(conn);
+            
+        }
     }
-    
 }
