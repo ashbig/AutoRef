@@ -61,6 +61,7 @@ public class RearrayPlatesAction extends ResearcherAction
         boolean isSmall = ((RearrayForm)form).getSmall();
         boolean isMeddium = ((RearrayForm)form).getMedium() ;
         boolean isLarge = ((RearrayForm)form).getLarge();
+     
          int  wells_on_plate = ((RearrayForm)form).getWellsOnPlate();
         
         request.setAttribute("workflowid", new Integer(workflowid));
@@ -110,17 +111,26 @@ public class RearrayPlatesAction extends ResearcherAction
             rearrayer.isLarge(isLarge);
             rearrayer.isFullPlates(isFullPlate);
             rearrayer.isPutOnQueue(isPutOnQueue);
-
+            
             rearrayer.createNewPlates(0);
             
  
-            request.getSession().setAttribute("EnterSourcePlateAction.newContainers", new Vector(rearrayer.getRearrayContainers() ) );
-            request.setAttribute("locations", Location.getLocations());
-
             
+            request.setAttribute("locations", Location.getLocations());
             //delete item from queue for current protocol;
-            removeQueueItems(conn, projectid, workflowid,  protocolid);
-            conn.commit();
+            if (isPutOnQueue)
+            {
+                request.getSession().setAttribute("EnterSourcePlateAction.newContainers", new Vector(rearrayer.getRearrayContainers() ) );
+                
+
+                removeQueueItems(conn, projectid, workflowid,  protocolid);
+                conn.commit();
+            }
+            else
+            {
+                 request.getSession().setAttribute("EnterSourcePlateAction.newContainers", new Vector( ) );
+                   conn.rollback();
+            }
             return mapping.findForward("success");
         } catch (FlexDatabaseException fde)
         {

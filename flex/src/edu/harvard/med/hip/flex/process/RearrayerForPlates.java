@@ -54,6 +54,7 @@ public class RearrayerForPlates
     private boolean         m_isConttrols = true;
     private boolean         m_isPutOnQueue = true;
     private boolean         m_isFullPlate = true;
+   
     private String          m_sample_type = "";
     
     /** Creates a new instance of RearrayerForPlates */
@@ -101,9 +102,11 @@ public class RearrayerForPlates
        for (int sample_format = 0; sample_format < samples_arranged_by_format.size(); sample_format++)
              {
                 ArrayList current_samples = (ArrayList)samples_arranged_by_format.get(sample_format);
+                
                 if (m_isArrangeBySize)
                 {
                 
+                    ArrayList sequencesAll =  new ArrayList();
                     ArrayList sequences =  new ArrayList();
                     if (m_isSmall)
                     {
@@ -113,7 +116,7 @@ public class RearrayerForPlates
                     }
                     else
                     {
-                        sequences.addAll(getSequencesBySize(LIMITS[0],LIMITS[1], flex_sequences,current_samples));
+                        sequencesAll.addAll(getSequencesBySize(LIMITS[0],LIMITS[1], flex_sequences,current_samples));
                     }
                     if (m_isMeddium)
                     {
@@ -123,7 +126,7 @@ public class RearrayerForPlates
                     }
                     else
                     {
-                        sequences.addAll(getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences,current_samples));
+                        sequencesAll.addAll(getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences,current_samples));
                     }
                     if (m_isLarge)
                     {
@@ -133,10 +136,12 @@ public class RearrayerForPlates
                     }
                     else
                     {
-                        sequences.addAll(getSequencesBySize(LIMITS[2],LIMITS[3], flex_sequences,current_samples));
+                        sequencesAll.addAll(getSequencesBySize(LIMITS[2],LIMITS[3], flex_sequences,current_samples));
                     }
-                    if (sequences.size() != 0)
-                    createContainers(sequences, org_containers, current_samples);
+                    if (sequencesAll.size() != 0)
+                    {
+                            createContainers(sequencesAll, org_containers, current_samples);
+                    }
                 }
                 else
                 {
@@ -183,6 +188,7 @@ public class RearrayerForPlates
     public void                 isSmall(boolean b){ m_isSmall=b;}
     public void                 isMeddium(boolean b){ m_isMeddium=b;}
     public void                 isLarge(boolean b){ m_isLarge =b;}
+  
     //-----------------------------------------
     
     
@@ -707,7 +713,7 @@ public class RearrayerForPlates
         Connection c = null;
         Project p = null;
         Workflow w = null;
-        String fname = "E:\\HTaycher\\Yeast\\rearraytest.txt";
+        String fname = "E:\\HTaycher\\Yeast\\input_file_examples\\rearray1.txt";
         InputStream input = null;
         try
         {
@@ -718,18 +724,27 @@ public class RearrayerForPlates
             int protocolid = 42;
             input = new FileInputStream(fname);
             RearrayerForPlates rearrayer = new RearrayerForPlates(c,projectid, workflowid,protocolid,input,"elena_taycher@hms.harvard.edu");
-           rearrayer.setWellsNumbers(96);
+           rearrayer.setWellsNumbers(50);
             rearrayer.isArrangeBySize(true);
-            rearrayer.isControls(false);
+            rearrayer.isControls(true);
            // rearrayer.setSampleType(sampletype);
             rearrayer.setSort(true);
             rearrayer.isSmall(false);
             rearrayer.isMeddium(false);
-            rearrayer.isLarge(false);
+            rearrayer.isLarge(true);
             rearrayer.isFullPlates(false);
-            rearrayer.isPutOnQueue(false);
+            boolean is = false;
+            rearrayer.isPutOnQueue(is);
+           
             rearrayer.createNewPlates(0);
+             if (is)
+            {
+             c.commit();
+            }
+            else
+            {
             c.rollback();
+            }
            // c.commit();
         } catch (Exception ex)
         {
