@@ -244,7 +244,10 @@
                     
     <form-bean      name="queryStorageCloneForm"
                     type="edu.harvard.med.hip.flex.form.QueryStorageCloneForm"/> 
-                                              
+                    
+    <form-bean      name="importSeqResultsForm"
+                    type="edu.harvard.med.hip.flex.form.ImportSeqResultsForm"/> 
+                               
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -275,7 +278,7 @@
     <!--<forward    name="rearray" path="/GetWorkflowForRearray.do"/>  -->
     <forward    name="browseFlex" path="/BrowseFlex.jsp"/>  
     <forward    name="genericRearray" path="/RearraySelection.jsp"/>    
-    <forward    name="expressionClone" path="/.jsp"/>     
+    <forward    name="expressionClone" path="/ExpressionCloneEntry.jsp"/>     
     <forward    name="perimeterRearray" path="/GetProjects.do?forwardName=PERIMETER_REARRAY"/>
     <forward    name="queryFlex" path="/GetSearchTerms.do"/>   
     <forward    name="queryHistory" path="/GetAllSearchRecords.do"/>
@@ -1370,7 +1373,16 @@
       <forward  name="success"   path="/QueryStorageCloneOutput.jsp"/>
       <forward  name="fail"   path="/QueryStorageCloneOutputFail.jsp"/>
     </action>     
-           
+                                      
+    <action    path="/ImportSeqResults"
+               type="edu.harvard.med.hip.flex.action.ImportSeqResultsAction"
+               name="importSeqResultsForm"
+               scope="request"
+               validate="false"
+               input="/ImportSeqResults.jsp">
+      <forward  name="success"   path="/ViewFoundResults.jsp"/>
+    </action>  
+     
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
