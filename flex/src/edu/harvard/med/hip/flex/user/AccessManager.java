@@ -1,5 +1,6 @@
 package edu.harvard.med.hip.flex.user;
 
+import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.database.*;
 import java.sql.*;
 import java.util.*;
@@ -11,13 +12,13 @@ import java.util.*;
  *
  * Revision: 05-04-2001 by dzuo
  *           Modified authenticate method and tested.
+ *           06-14-2001 by JMM
+ *          Added group authorization
  */
 
 public class AccessManager {
     private static AccessManager _instance = null;
-    private String username;
-    private String password;
-    private String group;
+    
     
     // Usage: AccessManager manager = AccessManager.getInstance();
     public static AccessManager getInstance() {
@@ -40,7 +41,7 @@ public class AccessManager {
      */
     public void changePassword(String pw) {
         // needs to be modified
-        password = pw;
+      
     }
     
     /**
@@ -72,6 +73,46 @@ public class AccessManager {
         return isExist;
     }
     
+   /**
+     * Determins if the logged in user is authorized to execute this action
+     * based on his/her group membership.
+     *
+     *
+     * Currently, the group hiarchy is as follows(most to least privliages).
+     * System Admin, Workflow Admin, Researcher, Customer.
+     *
+     * @param The user in question.
+     * @param group The group to see if the user belongs to.
+     */
+    public boolean isUserAuthorize(User user, String group) {
+        boolean retValue = false;
+        
+        try {
+            
+            //array of groups with the correct privilages
+            
+            String[] groupArray =
+            {Constants.CUSTOMER_GROUP, Constants.RESEARCHER_GROUP,
+             Constants.WORKFLOW_GROUP, Constants.SYSTEM_ADMIN_GROUP};
+             
+             List groupList = Arrays.asList(groupArray);
+             
+             int requiredIndex = groupList.indexOf(group);
+             
+             int userIndex = groupList.indexOf(user.getUserGroup());
+             
+             if(requiredIndex == -1 || userIndex == -1) {
+                 retValue = false;
+             }else if(userIndex >= requiredIndex) {
+                 retValue = true;
+             } else {
+                 retValue = false;
+             }
+        } catch (FlexDatabaseException fde) {
+            retValue = false;
+        }
+        return retValue;
+    }
     
     /**
      * This method retrieves the user password from

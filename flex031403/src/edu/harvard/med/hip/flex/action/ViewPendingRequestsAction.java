@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2001-06-05 17:32:07 $
+ * $Revision: 1.6 $
+ * $Date: 2001-06-14 14:53:42 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -25,6 +25,7 @@
  *    your 3 letters initials.
  *
  *    May-31-2001 : JMM - Class Created.
+ *    Jun-13-2001 : JMM - now only allows workflow managers to access.
  *
  */
 
@@ -54,10 +55,10 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.5 $ $Date: 2001-06-05 17:32:07 $
+ * @version    $Revision: 1.6 $ $Date: 2001-06-14 14:53:42 $
  */
 
-public class ViewPendingRequestsAction extends InternalFlexAction{
+public class ViewPendingRequestsAction extends WorkflowAction{
     
     /**
      * Does the real work for the perform method which must be overriden by the

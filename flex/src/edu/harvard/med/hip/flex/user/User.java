@@ -18,6 +18,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Revision:	05-03-2001 by dzuo
  *				Added the method to get the customer requests and tested.
  *              06-14-2001 by JMM: Added method to get the barcode for a user.
+ *                                 Added toString method.
  */
 public class User {
     private String name;
@@ -110,8 +111,8 @@ public class User {
     public String getBarcode() throws FlexDatabaseException{
         String barcode = null;
         String sql = "select researcherbarcode from userprofile, researcher " +
-            "where userprofile.researcherid = researcher.researcherid " +  
-            "and username = '" + name + "'";
+        "where userprofile.researcherid = researcher.researcherid " +
+        "and username = '" + name + "'";
         
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         RowSet rs = t.executeQuery(sql);
@@ -206,6 +207,16 @@ public class User {
         } finally {
             DatabaseTransaction.closeResultSet(requestRs);
         }
+    }
+    
+    
+    /**
+     * Gets a string representation of the user, which is its username.
+     *
+     * @return string representation of the user (username)
+     */
+    public String toString() {
+        return this.name;
     }
     
     //**********************************************************//

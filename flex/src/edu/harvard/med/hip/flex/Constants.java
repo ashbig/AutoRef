@@ -16,12 +16,17 @@ public class Constants {
      * Application constants
      */
     
-    // constant for interal user group
-    public static final String INTERNAL_GROUP = "internal";
+    // constant for workflow (queue) admin group
+    public static final String WORKFLOW_GROUP = "Workflow Admin";
     
     //constant for external user group
-    public static final String EXTERNAL_GROUP = "external";
+    public static final String CUSTOMER_GROUP = "Customer";
   
+    //Constant for the researcher group
+    public static final String RESEARCHER_GROUP="Researcher";
+    
+    //Constant for the System Admin group
+    public static final String SYSTEM_ADMIN_GROUP="System Admin";
     
     /*
      * Keys used in the session/request

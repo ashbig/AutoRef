@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-13 16:29:10 $
+ * $Revision: 1.5 $
+ * $Date: 2001-06-14 14:53:42 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -25,6 +25,7 @@
  *    your 3 letters initials.
  *
  *    Jun-01-2001 : JMM - class created
+ *    Jun-13-2001 : JMM Now restricts access to workflow (queue) managers
  *
  */
 
@@ -57,9 +58,9 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-13 16:29:10 $
+ * @version    $Revision: 1.5 $ $Date: 2001-06-14 14:53:42 $
  */
-public class ProcessQueueAction extends InternalFlexAction {
+public class ProcessQueueAction extends WorkflowAction {
     
     /**
      * Does the real work for the perform method which must be overriden by the
