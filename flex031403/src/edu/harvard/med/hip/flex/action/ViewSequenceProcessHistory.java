@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-07-26 15:49:58 $
+ * $Revision: 1.8 $
+ * $Date: 2001-07-31 18:36:03 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.7 $ $Date: 2001-07-26 15:49:58 $
+ * @version    $Revision: 1.8 $ $Date: 2001-07-31 18:36:03 $
  */
 
 public class ViewSequenceProcessHistory extends ResearcherAction{
@@ -127,6 +127,7 @@ public class ViewSequenceProcessHistory extends ResearcherAction{
             request.setAttribute(Constants.SAMPLE_KEY, sample);
             request.setAttribute(Constants.THREAD_KEY, thread);
             request.setAttribute(Constants.FLEX_SEQUENCE_KEY, sequence);
+            System.out.println("Sequence: " +sequence);
             retForward = mapping.findForward("success");
         } else {
             //otherwise display the errors on the search page.

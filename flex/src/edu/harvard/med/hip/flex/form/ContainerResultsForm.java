@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-07-30 19:04:52 $
+ * $Revision: 1.4 $
+ * $Date: 2001-07-31 18:36:04 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -55,7 +55,7 @@ import edu.harvard.med.hip.flex.core.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.3 $ $Date: 2001-07-30 19:04:52 $
+ * @version    $Revision: 1.4 $ $Date: 2001-07-31 18:36:04 $
  */
 
 public class ContainerResultsForm extends ActionForm{
@@ -71,6 +71,15 @@ public class ContainerResultsForm extends ActionForm{
     
     // is this form editable
     private boolean editable = true;
+    
+    // The barcode of the researcher entering the results
+    private String researcherBarcode =null;
+    
+    // the protocol name 
+    private String protocolString = null;
+    
+    // the process date in string format
+    private String processDate = null;
     
     /**
      * Default Constructor
@@ -158,6 +167,65 @@ public class ContainerResultsForm extends ActionForm{
         resultList.set(index,value);
     }
     
+    
+    /**
+     * Access for the researcher barcode property
+     *
+     * @return barcode for the researcher doing the expirament
+     */
+    public String getResearcherBarcode() {
+        return this.researcherBarcode;
+    }
+    
+    
+    /**
+     * Mutator for the researcher barcode property
+     *
+     * @param barcode The barcode of the researcher entering results
+     */
+    public void setResearcherBarcode(String barcode) {
+        this.researcherBarcode = barcode;
+    }
+    
+    /**
+     * Accessor for the protocol name property
+     *
+     * @return protocol name from the string.
+     */
+    public String getProtocolString() {
+        return this.protocolString;
+    }
+    
+    
+    /**
+     * Mutator for the protocolstring property.
+     *
+     * @param protocolString The name of the protocol used.
+     */
+    public void setProtocolString(String protocolString) {
+        this.protocolString = protocolString;
+    }
+    
+    
+    /**
+     * Accessor for process date for the queueitem we are entering results for.
+     *
+     * @return date of the process
+     */
+    public String getProcessDate() {
+        return this.processDate;
+    }
+    
+    
+    /**
+     * Mutator for the process date.
+     *
+     * @param the date to set to.
+     */
+    public void setProcessDate(String processDate){
+        this.processDate = processDate;
+    }
+    
     /**
      * Accessor for the editable flag.
      *
@@ -196,6 +264,10 @@ public class ContainerResultsForm extends ActionForm{
         //reset the lists
         statusList.clear();
         resultList.clear();
+
+        this.researcherBarcode = null;
+        this.processDate = null;
+        this.protocolString = null;
         
         Iterator sampleIter = container.getSamples().iterator();
         int i = 0;

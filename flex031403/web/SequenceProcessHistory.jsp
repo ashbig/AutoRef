@@ -26,13 +26,14 @@
     <hr>
     <html:errors/>
     <p>
-    <logic:present name="<%=Constants.FLEX_SEQUENCE_KEY%>"/>
+ <logic:present name="<%=Constants.FLEX_SEQUENCE_KEY%>"/>
         <bean:define name="<%=Constants.FLEX_SEQUENCE_KEY%>" id="sequence"/>    
         Process history shown for sequence
         <flex:linkFlexSequence sequenceName="sequence">
             <bean:write name="sequence" property="id"/>
         </flex:linkFlexSequence>
     </logic:present>
+
     </p>
     <br>
     <TABLE border="1" cellpadding="2" cellspacing="0">

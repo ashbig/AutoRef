@@ -73,6 +73,11 @@
 
 <html:form action="SaveTransformResult.do" enctype="multipart/form-data">
 
+<!-- hidden values needed for the insert-->
+<html:hidden property="processDate"/>
+<html:hidden property="researcherBarcode"/>
+<html:hidden property="protocolString"/>
+
 <logic:equal name="mode" value="<%=Constants.READ_ONLY_MODE%>">
     <html:hidden property="editable" value="false"/>
 </logic:equal>

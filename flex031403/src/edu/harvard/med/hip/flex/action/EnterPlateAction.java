@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.16 $
- * $Date: 2001-07-30 22:09:26 $
+ * $Revision: 1.17 $
+ * $Date: 2001-07-31 18:36:03 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -58,7 +58,7 @@ import org.apache.struts.action.*;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.16 $ $Date: 2001-07-30 22:09:26 $
+ * @version    $Revision: 1.17 $ $Date: 2001-07-31 18:36:03 $
  */
 
 public class EnterPlateAction extends ResearcherAction {
@@ -161,20 +161,26 @@ public class EnterPlateAction extends ResearcherAction {
         // get the session
         HttpSession session = request.getSession();
         
+        ContainerResultsForm containerForm = null;
         // create the form with default values for the detail entry page
         if(protocolName.equals(Protocol.ENTER_PCR_GEL_RESULTS)) {
+            containerForm=new GelResultsForm(container);
             // put the form in the session
-            session.setAttribute("gelEntryForm",new GelResultsForm(container));
+            session.setAttribute("gelEntryForm",containerForm);
             retForward = mapping.findForward("gelEntry");
         } else if(protocolName.equals(Protocol.ENTER_AGAR_PLATE_RESULTS)) {
-            
+            containerForm = new ContainerResultsForm(container);
             // put the form in the session
-            session.setAttribute("transformEntryForm",
-                new ContainerResultsForm(container));
+            session.setAttribute("transformEntryForm",containerForm);
             retForward = mapping.findForward("transformEntry");
         } else {
             retForward = new ActionForward(mapping.getInput());
         }
+        
+        // populate the form with the necissary info
+        containerForm.setResearcherBarcode(researcherBarcode);
+        containerForm.setProtocolString(protocol.getProcessname());
+        containerForm.setProcessDate(queueItem.getDate());
         
         // put Queue item in the session
         session.setAttribute(Constants.QUEUE_ITEM_KEY, queueItem);
