@@ -120,7 +120,7 @@ public abstract class ProcessRunner implements Runnable
      
      protected void             sendEMails()
      {
-         String text = null;
+         String message_text = null;
          try
          {
  //send errors
@@ -151,10 +151,10 @@ public abstract class ProcessRunner implements Runnable
             }
             if (m_error_messages.size()==0 && !(this instanceof ReportRunner))
             {
-                text = title;
-                if (m_items != null) text +=" \n Items processed:\n"+m_items;
+                message_text = title;
+                if (m_items != null) message_text +=" \n Items processed:\n"+m_items;
                  Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                "elena_taycher@hms.harvard.edu", title, text );
+                "elena_taycher@hms.harvard.edu", title, message_text );
 
             }
             if (m_error_messages.size()!=0 && !(this instanceof ReportRunner))

@@ -97,9 +97,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
         String filename_org = null;String filename_dest= null;
         ArrayList file_names = null;String line = null;
         BufferedReader fin=null;
-        System.out.println(m_input);
-        System.out.println(m_inputdir+" "+m_outputdir);
-        try
+       try
         {
             fin = new BufferedReader(new InputStreamReader(m_input));
          }
@@ -111,14 +109,15 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 file_names = Algorithms.splitString(line, "\t");
                 filename_org = m_inputdir + File.separator + (String)file_names.get(0);
                 filename_dest= m_outputdir + File.separator + (String)file_names.get(1);
-                System.out.println(filename_org+" "+filename_dest);
+               
                 try
                 {
                     dest_file = new File(filename_dest);
                     org_file= new File(filename_org);
+               
                     if (org_file.exists() && !dest_file.exists())
                     {
-                       if ( m_isDelete )//copy
+                        if ( m_isDelete )//copy
                             FileOperations.moveFile(org_file, dest_file, true, true);
                        else
                            FileOperations.moveFile(org_file, dest_file, true, false);
