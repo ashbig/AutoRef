@@ -138,7 +138,7 @@
     <form-bean      name="mgcPrintNewLabelsForm"
                     type="edu.harvard.med.hip.flex.form.MgcPrintNewLabelsForm"/>
 
-     <!-- Form used to import MGC reuest -->
+     <!-- Form used to import MGC request -->
     <form-bean      name="mgcImportRequestForm"
                     type="edu.harvard.med.hip.flex.form.MgcImportRequestForm"/>
 
@@ -146,14 +146,13 @@
     <form-bean      name="specialOligoOrderForm"
                     type="edu.harvard.med.hip.flex.form.SpecialOligoOrderForm"/>
 
+
      <!-- Form used to import MGC primer design and rearray -->
     <form-bean      name="mgcOrderOligoForm"
                     type="edu.harvard.med.hip.flex.form.MgcOrderOligoForm"/>
 
-    </form-beans>    
   
-
-
+ </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
@@ -759,6 +758,14 @@
       <forward  name="success" path="/MgcPrintConfirm.jsp"/>
     </action>
   
+<!-- Action process order of oligos for mgc clone project-->
+    <action path="/MgcOrderOligo"
+            type="edu.harvard.med.hip.flex.action.MgcOrderOligoAction"
+            name="mgcOrderOligoForm"
+            scope="request"
+            input="/MgcProcessFullPlates.jsp">
+      <forward name="success" path="/ProcessSpecialOligoOrder.jsp"/>
+     </action>
 
     <!-- Action mapping for MGC request import -->
     <action path="/SpecialOligoOrder"
@@ -769,14 +776,7 @@
       <forward name="success" path="/ProcessSpecialOligoOrder.jsp"/>
     </action>
 
-    <!-- Action mapping for MGC primer design and rearray -->
-    <action path="/MgcOrderOligo"
-            type="edu.harvard.med.hip.flex.action.MgcOrderOligoAction"
-            name="mgcOrderOligoForm"
-            scope="request"
-            input="/MgcProcessFullPlates.jsp">
-      <forward name="success" path="/MgcProcessFullPlatesResult.jsp"/>
-    </action>
+
     
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
