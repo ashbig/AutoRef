@@ -84,22 +84,42 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             ((CreatePCRPlateForm)form).setThreepOpenSourceLocation(threepOpen.getLocation().getId());
             ((CreatePCRPlateForm)form).setThreepClosedSourceLocation(threepClosed.getLocation().getId());
 
+            //map the container to the new container
+            Protocol protocol = (Protocol)request.getSession().getAttribute("SelectProtocolAction.protocol");
+            ContainerMapper mapper = new OligoToPCRMapper();
+           
+            //map the 3p open oligo plate.
+            Vector oldContainers = new Vector();
+            oldContainers.addElement(fivep);
+            oldContainers.addElement(threepOpen);            
+            Vector newContainers = mapper.doMapping(oldContainers, protocol);            
+            Container pcrOpen = (Container)newContainers.elementAt(0);
+         
+            //map the 3p closed oligo plate.
+            oldContainers = new Vector();
+            oldContainers.addElement(fivep);
+            oldContainers.addElement(threepClosed);            
+            Vector newContainers2 = mapper.doMapping(oldContainers, protocol);            
+            Container pcrClosed = (Container)newContainers2.elementAt(0);
+            
+            Vector sampleLineageSet = mapper.getSampleLineageSet();            
+            
             // Get all the locations.
             Vector locations = Location.getLocations();
             
-            request.getSession().setAttribute("EnterPCRPlateAction.fivep", fivep);
-            request.getSession().setAttribute("EnterPCRPlateAction.threepOpen", threepOpen);
-            request.getSession().setAttribute("EnterPCRPlateAction.threepClosed", threepClosed);  
-            request.getSession().setAttribute("EnterPCRPlateAction.locations", locations);
-            request.getSession().setAttribute("EnterPCRPlateAction.item", item);
+            request.getSession().setAttribute("EnterOligoPlateAction.fivep", fivep);
+            request.getSession().setAttribute("EnterOligoPlateAction.threepOpen", threepOpen);
+            request.getSession().setAttribute("EnterOligoPlateAction.threepClosed", threepClosed); 
+            request.getSession().setAttribute("EnterOligoPlateAction.pcrOpen", pcrOpen); 
+            request.getSession().setAttribute("EnterOligoPlateAction.pcrClosed", pcrClosed);  
+            request.getSession().setAttribute("EnterOligoPlateAction.locations", locations);
+            request.getSession().setAttribute("EnterOligoPlateAction.item", item);
+
             return (mapping.findForward("success"));   
-        } catch (FlexDatabaseException ex) {
+        } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
-        } catch (FlexCoreException ex) {
-            request.setAttribute(Action.EXCEPTION_KEY, ex);
-            return (mapping.findForward("error"));
-        }
+        } 
     }
  
     // Validate the source plate barcode.

@@ -11,7 +11,7 @@ package edu.harvard.med.hip.flex.process;
 import java.util.Vector;
 import java.lang.String;
 import edu.harvard.med.hip.flex.database.FlexDatabaseException;
-import edu.harvard.med.hip.flex.core.Container;
+import edu.harvard.med.hip.flex.core.*;
 
 /**
  *
@@ -38,7 +38,7 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
      * @param containers Source containers for mapping.
      * @param protocol The protocol for destination containers.
      * @return The new containers.
-     * @exception FlexDatabaseException.
+     * @exception FlexDatabaseException, FlexCoreException
      */
     public Vector doMapping(Vector containers, Protocol protocol) 
                             throws FlexDatabaseException { 
@@ -57,12 +57,38 @@ public class OligoToPCRMapper extends OneToOneContainerMapper {
                   
         Container newContainer = new Container(newContainerType, null, newBarcode);
         c1.restoreSample();
-        c2.restoreSample();
-        mappingSamples(c1, newContainer, protocol); 
-        mappingSamples(c2, newContainer, protocol); 
+        c2.restoreSample();       
+        mappingSamples(c1, c2, newContainer, protocol); 
         
         Vector newContainers = new Vector();
         newContainers.addElement(newContainer);
         return newContainers;
     }   
+    
+    // Creates the new samples from the samples of the previous plate.
+    protected void mappingSamples(Container c1, Container c2, Container newContainer, Protocol protocol) throws FlexDatabaseException { 
+        try {
+            String type;
+     
+            for(int i=0; i<c1.getSamples().size(); i++) {
+                Sample s1 = c1.getSample(i);
+                Sample s2 = c2.getSample(i);
+ 
+                if(Sample.CONTROL_POSITIVE.equals(s1.getType())) {
+                    type = Sample.CONTROL_POSITIVE;
+                } else if(Sample.CONTROL_NEGATIVE.equals(s1.getType())) {
+                    type = Sample.CONTROL_NEGATIVE;
+                } else {
+                    type = Sample.getType(protocol.getProcessname());
+                }
+            
+                Sample newSample = new Sample(type, i, newContainer.getId(), -1, Sample.GOOD);
+                newContainer.addSample(newSample);
+                sampleLineageSet.addElement(new SampleLineage(s1.getId(), newSample.getId()));
+                sampleLineageSet.addElement(new SampleLineage(s2.getId(), newSample.getId()));
+            }
+        } catch (FlexCoreException e) {
+            throw new FlexDatabaseException(e.getMessage());
+        }
+    }       
 }
