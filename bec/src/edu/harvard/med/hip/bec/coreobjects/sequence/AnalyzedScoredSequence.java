@@ -102,11 +102,11 @@ public class AnalyzedScoredSequence extends ScoredSequence
         {
             super.insert(conn);
           
-           insertMutations(conn);
+            insertMutations(conn);
         }
         catch(Exception e)
         {
-            throw new BecDatabaseException("Cannot insert analyzed sequence.");
+            throw new BecDatabaseException("Cannot insert analyzed sequence.\n"+e.getMessage());
         }
     }
    
@@ -127,7 +127,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
         }
         catch(Exception e)
         {
-            throw new BecDatabaseException("Cannot insert analyzed sequence.");
+            throw new BecDatabaseException("Cannot insert mutation for sequence.\n"+e.getMessage());
         }
     }
     public ArrayList getDiscrepancies()  throws BecDatabaseException
