@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_0.dtd">
+
+<!--
+     This is the Struts configuration file for the example application,
+     using the proposed new syntax.
+
+     NOTE:  You would only flesh out the details in the "form-bean"
+     declarations if you had a generator tool that used them to create
+     the corresponding Java classes for you.  Otherwise, you would
+     need only the "form-bean" element itself, with the corresponding
+     "name" and "type" attributes.
+-->
+
+
+<struts-config>
+
+
+ 
+  <!-- ========== Form Bean Definitions =================================== -->
+  <form-beans>
+
+    <!-- Logon form bean -->
+    <form-bean      name="logonForm"
+                    type="edu.harvard.med.hip.flex.form.LogonForm"/>
+
+    <!-- Customer request form bean -->
+    <form-bean      name="customerRequestForm"
+                    type="edu.harvard.med.hip.flex.form.CustomerRequestForm"/>
+
+   
+    <!-- Plate entry form bean-->
+    <form-bean      name="plateEntryForm"
+                    type="edu.harvard.med.hip.flex.form.PlateEntryForm"/>
+    <!-- transformation plate details page -->
+    <form-bean      name="transformEntryForm"
+                    type="edu.harvard.med.hip.flex.form.ContainerResultsForm"/>
+
+    <!-- gel plate details page -->
+    <form-bean      name="gelEntryForm"
+                    type="edu.harvard.med.hip.flex.form.GelResultsForm"/>
+
+    <!-- Create process plate form bean -->
+    <form-bean      name="createProcessPlateForm"
+                    type="edu.harvard.med.hip.flex.form.CreateProcessPlateForm"/>
+
+    <!-- Get researcher barcode form bean -->
+    <form-bean      name="getResearcherBarcodeForm"
+                    type="edu.harvard.med.hip.flex.form.GetResearcherBarcodeForm"/>
+
+    <!-- Create process plate form bean -->
+    <form-bean      name="createPCRPlateForm"
+                    type="edu.harvard.med.hip.flex.form.CreatePCRPlateForm"/>
+
+    <!-- Create process plate form bean -->
+    <form-bean      name="createCultureBlockForm"
+                    type="edu.harvard.med.hip.flex.form.CreateCultureBlockForm"/>
+    
+    <!-- Customer registration form bean -->
+    <form-bean      name="customerRegistrationForm"
+                    type="edu.harvard.med.hip.flex.form.CustomerRegistrationForm"/>
+
+
+    <!-- Customer receive oligo orders form bean -->
+    <form-bean      name="ReceiveOligoOrdersForm"
+                    type="edu.harvard.med.hip.flex.form.ReceiveOligoOrdersForm"/>
+
+    <!-- Customer receive oligo orders form bean -->
+    <form-bean      name="EnterOligoPlateLocationForm"
+                    type="edu.harvard.med.hip.flex.form.EnterOligoPlateLocationForm"/>
+
+    <!-- Customer receive oligo orders form bean -->
+    <form-bean      name="PrintOligoPlateBarcodeForm"
+                    type="edu.harvard.med.hip.flex.form.PrintOligoPlateBarcodeForm"/>
+
+    <!-- Find registration form bean -->
+    <form-bean      name="findRegistrationForm"
+                    type="edu.harvard.med.hip.flex.form.FindRegistrationForm"/>
+
+    <!-- Get process results form bean -->
+    <form-bean      name="GetProcessResultsForm"
+                    type="edu.harvard.med.hip.flex.form.GetProcessResultsForm"/>
+    
+    <!-- Form used to querry sequence history -->
+    <form-bean      name="querySeqHistoryForm"
+                    type="edu.harvard.med.hip.flex.form.SequenceHistoryForm"/>
+
+  </form-beans>
+
+
+
+  <!-- ========== Global Forward Definitions ============================== -->
+  <global-forwards>
+    <forward    name="login"        path="/login.jsp"/>
+    <forward    name="register"     path="/CustomerRegistration.jsp"/>
+    <forward    name="findRegistration" path="/FindRegistration.jsp"/>
+    <forward    name="error"        path="/ProcessError.do"/>
+    <forward    name="customerRequest"  path="/CustomerRequest.do"/>
+    <forward    name="approveSequences" path="/ViewPendingRequests.do"/>
+    <forward    name="receiveOligoOrders" path="/ReceiveOligoOrders.jsp"/>
+    <forward    name="createProcessPlate" path="/CreateProcessPlate.do"/>
+    <forward    name="enterProcessResults" path="/EnterProcessResults.jsp"/>
+    <forward    name="containerProcessHistory" path="/ContainerScan.jsp"/>
+    <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>
+  </global-forwards>
+  
+
+  <!-- ========== Action Mapping Definitions ============================== -->
+  <action-mappings type="org.apache.struts.action.ActionMapping">
+
+    
+    <!-- Process a user logon -->
+    <action    path="/logon"
+               type="edu.harvard.med.hip.flex.action.LogonAction"
+               name="logonForm"
+              scope="request"
+              input="/login.jsp">
+      <forward  name="success"   path="/main.jsp"/>
+      <forward  name="failure"  path="/login.jsp"/>
+    </action>
+
+    <!-- Process a customer registration -->
+    <action    path="/CustomerRegistration"
+               type="edu.harvard.med.hip.flex.action.CustomerRegistrationAction"
+               name="customerRegistrationForm"
+              input="/CustomerRegistration.jsp">
+      <forward  name="success"   path="/RegistrationConfirm.jsp"/>
+      <forward  name="failure"  path="/CustomerRegistration.jsp"/>
+    </action>
+    
+    <!-- Process a find registration -->
+    <action    path="/FindRegistration"
+               type="edu.harvard.med.hip.flex.action.FindRegistrationAction"
+               name="findRegistrationForm"
+              input="/FindRegistration.jsp">
+      <forward  name="success"   path="/FindRegistrationConfirm.jsp"/>
+      <forward  name="failure"  path="/FindRegistration.jsp"/>
+    </action>
+
+    <action     path="/ProcessError"
+                type="edu.harvard.med.hip.flex.action.ProcessErrorAction">
+       <forward name="displayError" path="/FlexError.jsp"/>
+                
+    </action>
+
+    <!-- Process a request to view a flex sequence -->
+    <action      path="/ViewSequence"
+                type="edu.harvard.med.hip.flex.action.ViewFlexSequenceAction">
+        <forward    name="success"   path="/FlexSequenceUI.jsp"/>
+    </action>
+
+    <!-- Process a customer request -->
+    <action    path="/CustomerRequest"
+               type="edu.harvard.med.hip.flex.action.CustomerRequestAction">
+      <forward  name="success"   path="/SequenceSearch.jsp"/>
+    </action>   
+
+    <!-- Process a customer request -->
+    <action    path="/SequenceSearch"
+               type="edu.harvard.med.hip.flex.action.SequenceSearchAction"
+               name="customerRequestForm"
+              scope="request"
+              input="/SequenceSearch.jsp">
+      <forward  name="success"   path="/SequenceSelection.jsp"/>
+      <forward name="emptysearchresult" path="/SearchResultEmpty.jsp"/>
+    </action>    
+    
+    <!-- Process a customer request -->
+    <action    path="/SequenceSelection"
+               type="edu.harvard.med.hip.flex.action.SequenceSelectionAction"
+               name="customerRequestForm"
+              scope="request"
+              input="/SequenceSelection.jsp">
+      <forward  name="success"   path="/ConfirmSelection.jsp"/>
+      <forward  name="empty" path="/SubmissionEmpty.jsp"/>
+    </action> 
+
+    <!-- Process a customer request -->
+    <action    path="/ConfirmSelection"
+               type="edu.harvard.med.hip.flex.action.ConfirmSelectionAction"
+               name="customerRequestForm"
+              scope="request"
+              input="/ConfirmSelection.jsp">
+      <forward  name="success"   path="/CustomerRequest.do"/>
+    </action> 
+
+    <!-- Process a customer request -->
+    <action    path="/ViewAlignment"
+               type="edu.harvard.med.hip.flex.action.ViewAlignmentAction">
+      <forward  name="success"   path="/DisplayAlignment.jsp"/>
+    </action> 
+
+    <!-- Process  view pending sequence requests-->
+    <action     path ="/ViewPendingRequests"
+                type="edu.harvard.med.hip.flex.action.ViewPendingRequestsAction">
+        <forward name="success" path="/PendingRequests.jsp"/>
+    </action>
+
+    <!-- Process a accept/discard pending sequence request-->
+    <action     path="/ProcessQueue"
+                type="edu.harvard.med.hip.flex.action.ProcessQueueAction"
+                input="/ViewPendingRequests.do">
+        <forward name="success" path="/ProcessQueue.jsp"/>
+    </action>
+
+
+    <!-- Displays a form to enter a plate id -->
+    <action     path="/EnterPlate"
+                type="edu.harvard.med.hip.flex.action.EnterPlateAction"
+                name="plateEntryForm"
+                scope="request"
+                input="/EnterProcessResults.jsp">
+        <forward name="transformEntry" path="/EnterTransformDetails.jsp"/>
+        <forward name="gelEntry"    path="/EnterGelDetails.jsp"/>
+    </action>
+    
+    <!-- Save a gel plate result-->
+    <action     path="/SaveGelResult"
+                type="edu.harvard.med.hip.flex.action.SaveResultAction"
+                name="gelEntryForm"
+                scope="session"
+                input="/EnterGelDetails.jsp">
+        <forward name="success" path="/EnterProcessResults.jsp"/>
+        <forward name="confirm" path="/EnterGelDetails.jsp?EDIT_MODE=read"/>
+    </action>
+
+    <!-- save a transform plate result -->
+    <action     path="/SaveTransformResult"
+                type="edu.harvard.med.hip.flex.action.SaveResultAction"
+                name="transformEntryForm"
+                scope="session"
+                input="/EnterTransformDetails.jsp">
+         <forward name="success" path="/EnterProcessResults.jsp"/>
+         <forward name="confirm" path="/EnterTransformDetails.jsp?EDIT_MODE=read"/>
+    </action>
+
+    <!-- Process the protocol retieval and display -->
+    <action    path="/CreateProcessPlate"
+               type="edu.harvard.med.hip.flex.action.CreateProcessPlateAction">
+      <forward  name="success"   path="/SelectProtocol.jsp"/>
+    </action>  
+
+    <!-- Process protocol selection -->
+    <action    path="/SelectProtocol"
+               type="edu.harvard.med.hip.flex.action.SelectProtocolAction"
+               name="createProcessPlateForm"
+               scope="request"
+               validate="false"
+               input="/SelectProtocol.jsp">
+      <forward  name="success"   path="/EnterSourcePlate.jsp"/>
+      <forward  name="success_pcr"   path="/EnterOligoPlates.jsp"/>
+      <forward  name="success_culture"   path="/EnterAgarPlates.jsp"/>
+    </action> 
+
+    <!-- Process the source plate input -->
+    <action    path="/EnterSourcePlate"
+               type="edu.harvard.med.hip.flex.action.EnterSourcePlateAction"
+               name="createProcessPlateForm"
+               scope="request"
+               validate="false"
+               input="/EnterSourcePlate.jsp">
+      <forward  name="success"   path="/GetLocation.jsp"/>
+    </action> 
+
+    <!-- Process the oligo plate input -->
+    <action    path="/EnterOligoPlates"
+               type="edu.harvard.med.hip.flex.action.EnterOligoPlatesAction"
+               name="createPCRPlateForm"
+               scope="request"
+               validate="true"
+               input="/EnterOligoPlates.jsp">
+      <forward  name="success"   path="/GetPCRLocation.jsp"/>
+    </action> 
+
+    <!-- Process the agar plate input -->
+    <action    path="/EnterAgarPlates"
+               type="edu.harvard.med.hip.flex.action.EnterAgarPlatesAction"
+               name="createCultureBlockForm"
+               scope="request"
+               validate="true"
+               input="/EnterAgarPlates.jsp">
+      <forward  name="success"   path="/GetAgarLocation.jsp"/>
+    </action> 
+
+    <!-- Process the location selection -->
+    <action    path="/GetLocation"
+               type="edu.harvard.med.hip.flex.action.GetLocationAction"
+               name="createProcessPlateForm"
+               scope="request"
+               validate="false"
+               input="/EnterSourcePlate.jsp">
+      <forward  name="success"   path="/GetResearcher.jsp"/>
+    </action> 
+
+    <!-- Process the source plate input -->
+    <action    path="/GetPCRLocation"
+               type="edu.harvard.med.hip.flex.action.GetPCRLocationAction"
+               name="createPCRPlateForm"
+               scope="request"
+               validate="false"
+               input="/GetPCRLocation.jsp">
+      <forward  name="success"   path="/GetPCRResearcher.jsp"/>
+    </action> 
+
+    <!-- Process the source plate input -->
+    <action    path="/GetAgarLocation"
+               type="edu.harvard.med.hip.flex.action.GetAgarLocationAction"
+               name="createCultureBlockForm"
+               scope="request"
+               validate="false"
+               input="/GetAgarLocation.jsp">
+      <forward  name="success"   path="/GetResearcher.jsp"/>
+    </action> 
+
+     <!-- Process the researcher barcode input -->
+    <action    path="/GetResearcher"
+               type="edu.harvard.med.hip.flex.action.GetResearcherAction"
+               name="getResearcherBarcodeForm"
+               scope="request"
+               validate="true"
+               input="/GetResearcher.jsp">
+      <forward  name="success"   path="/PrintBarcode.jsp"/>
+    </action> 
+
+    <!-- Process the researcher barcode input -->
+    <action    path="/GetPCRResearcher"
+               type="edu.harvard.med.hip.flex.action.GetPCRResearcherAction"
+               name="getResearcherBarcodeForm"
+               scope="request"
+               validate="true"
+               input="/GetPCRResearcher.jsp">
+      <forward  name="success"   path="/PrintPCRBarcode.jsp"/>
+    </action> 
+
+    <!-- Print more barcodes -->
+    <action    path="/PrintBarcode"
+               type="edu.harvard.med.hip.flex.action.PrintBarcodeAction"
+               name="createProcessPlateForm"
+               scope="request"
+               validate="false"
+               input="/PrintBarcode.jsp">
+      <forward  name="success"   path="/PrintBarcode.jsp"/>
+    </action> 
+
+    <!-- Print more barcodes -->
+    <action    path="/PrintPCRBarcode"
+               type="edu.harvard.med.hip.flex.action.PrintPCRBarcodeAction"
+               name="createProcessPlateForm"
+               scope="request"
+               validate="false"
+               input="/PrintPCRBarcode.jsp">
+      <forward  name="success"   path="/PrintPCRBarcode.jsp"/>
+    </action> 
+
+    <!-- Process the receiving of new oligo plates -->
+    <action    path="/ReceiveOligoPlates"
+               type="edu.harvard.med.hip.flex.action.ReceiveOligoPlatesAction"
+               name="ReceiveOligoOrdersForm"
+               scope="request"
+               input="/ReceiveOligoOrders.jsp">
+      <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
+    </action>
+     
+    
+    <!-- Process the receiving of new oligo plates -->
+    <action    path="/EnterOligoPlateLocation"
+               type="edu.harvard.med.hip.flex.action.EnterOligoPlateLocationAction"
+               name="EnterOligoPlateLocationForm"
+               scope="request"
+               input="/EnterOligoPlateLocation.jsp">
+      <forward  name="success"   path="/PrintOligoPlateBarcode.jsp"/>
+    </action>
+
+    <!-- Process the printing of new oligo plate barcodes -->
+    <action    path="/PrintOligoPlateBarcode"
+               type="edu.harvard.med.hip.flex.action.PrintOligoPlateBarcodeAction"
+               name="PrintOligoPlateBarcodeForm"
+               scope="request"
+               input="/PrintOligoPlateBarcode.jsp">
+      <forward  name="success"   path="/PrintOligoPlateBarcode.jsp"/>
+    </action>
+
+    <!-- Process the get process results -->
+    <action    path="/GetProcessResults"
+               type="edu.harvard.med.hip.flex.action.GetProcessResultsAction"
+               name="GetProcessResultsForm"
+               scope="request"
+               input="/GetProcessResults.jsp">
+      <forward  name="success"   path="/GetProcessResults.jsp"/>
+    </action>
+
+    <!-- Displays the container details page -->
+    <action     path="/ViewContainerDetails"
+                type="edu.harvard.med.hip.flex.action.ViewContainerDetailsAction"
+                input="/ContainerScan.jsp">
+        <forward   name="success"  path="/ContainerDetails.jsp"/>
+    </action>
+
+    <!-- Displays the process history for a container -->
+    <action     path="/ViewContainerProcessHistory"
+                type="edu.harvard.med.hip.flex.action.ViewContainerProcessHistoryAction"
+                input="/ContainerScan.jsp">
+       <forward    name="success"  path="/ContainerProcessHistory.jsp"/>
+    </action>
+
+    <!-- Displays the process history for a sequence -->
+    <action path="/ViewSequenceProcessHistory"
+            type="edu.harvard.med.hip.flex.action.ViewSequenceProcessHistory"
+            name="querySeqHistoryForm"
+            input="/QuerySequenceHistory.do">
+      <forward    name="success" path="/SequenceProcessHistory.jsp"/>
+    </action>
+
+    <!-- Action used to Display the sequence history query form -->
+    <action path="/QuerySequenceHistory"
+            type="edu.harvard.med.hip.flex.action.SequenceProcessHistoryAction">
+      <forward    name="success" path="/QuerrySequenceHistory.jsp"/>
+    </action>
+
+     
+
+    <!-- The standard administrative actions available with Struts -->
+    <!-- These would be either omitted or protected by security -->
+    <!-- in a real application deployment -->
+    <action    path="/admin/addFormBean"
+               type="org.apache.struts.actions.AddFormBeanAction"/>
+    <action    path="/admin/addForward"
+               type="org.apache.struts.actions.AddForwardAction"/>
+    <action    path="/admin/addMapping"
+               type="org.apache.struts.actions.AddMappingAction"/>
+    <action    path="/admin/reload"
+               type="org.apache.struts.actions.ReloadAction"/>
+    <action    path="/admin/removeFormBean"
+               type="org.apache.struts.actions.RemoveFormBeanAction"/>
+    <action    path="/admin/removeForward"
+               type="org.apache.struts.actions.RemoveForwardAction"/>
+    <action    path="/admin/removeMapping"
+               type="org.apache.struts.actions.RemoveMappingAction"/>
+
+
+  </action-mappings>
+
+</struts-config>

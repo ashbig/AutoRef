@@ -1,0 +1,49 @@
+-- E:\flex_ddl.ind
+--
+-- Generated for Oracle 8.1 on Tue May 08  14:32:35 2001 by Server Generator 6.5.40.3.0
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PROMPT Creating Index 'SAMPLEID_AK'
+CREATE UNIQUE INDEX SAMPLEID_AK ON CONTAINERCELL
+ (SAMPLEID)
+/
+
+PROMPT Creating Index 'NAMEVALUE_IX'
+CREATE INDEX NAMEVALUE_IX ON NAME
+ (NAMEVALUE)
+/
+

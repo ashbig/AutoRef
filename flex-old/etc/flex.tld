@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE taglib
+
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+
+  "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+
+
+
+<taglib>
+
+
+
+  <tlibversion>1.0</tlibversion>
+
+  <jspversion>1.1</jspversion>
+
+  <shortname>FLEX Tag Library</shortname>
+
+ 
+  <info>
+
+    This tag library contains tags for the FLEX application
+  </info>
+
+
+
+  <tag>
+
+    <name>linkFlexSequence</name>
+
+    <tagclass>edu.harvard.med.hip.flex.tag.LinkFlexSequenceTag</tagclass>
+
+    <info>
+
+      Generate a URL-encoded hyperlink to view the details about a flex sequence
+
+
+
+      sequenceId - The id of the sequence in question
+
+    </info>
+
+    <attribute>
+
+      <name>sequenceId</name>
+
+      <required>false</required>
+
+      <rtexprvalue>false</rtexprvalue>
+
+    </attribute>
+
+    <attribute>
+        <name>sequenceName</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    
+    <attribute>
+        <name>seqProperty</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+
+  </tag>
+
+
+
+
+  <tag>
+
+    <name>linkContainer</name>
+
+    <tagclass>edu.harvard.med.hip.flex.tag.LinkContainerTag</tagclass>
+
+    <info>
+
+      Generate a URL-encoded hyperlink to view the details about a container
+
+
+
+      containerId - The id of the sequence in question
+
+    </info>
+
+    <attribute>
+
+      <name>containerId</name>
+
+      <required>false</required>
+
+      <rtexprvalue>false</rtexprvalue>
+
+    </attribute>
+
+    <attribute>
+        <name>name</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    
+    <attribute>
+        <name>property</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+
+     <attribute>
+        <name>process</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+
+  </tag>
+
+</taglib>
+
