@@ -5,14 +5,18 @@
  */
 
 package edu.harvard.med.hip.bec.coreobjects.sequence;
+
 import java.util.*;
 import java.io.*;
 import java.sql.*;
 import edu.harvard.med.hip.bec.database.*;
+import edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.ui_objects.*;
 import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.*;
+import edu.harvard.med.hip.bec.coreobjects.feature.*;
+
 /**
  *
  * @author  HTaycher
@@ -40,6 +44,9 @@ vi.	Type of definition (coverage low quality / no coverage )
     private int         m_clone_id = -1;
     private String      m_submission_date  = null;
     private ArrayList   m_stretches = null;
+    
+    
+    private String      i_html_description = null;
     /** Creates a new instance of GapCollection */
     public StretchCollection()
     {
@@ -53,6 +60,7 @@ vi.	Type of definition (coverage low quality / no coverage )
     public int         getCloneSequenceId (){ return m_clone_sequence_id  ; }
     public int         getCloneId (){ return m_clone_id  ; }
     public ArrayList    getStretches(){ return m_stretches;}
+    public String       getHTMLDescription(){ return i_html_description; }
     
     public void         setId ( int v){ m_id  = v ; }
     public void         setType ( int v){ m_type  = v ; }
@@ -62,6 +70,11 @@ vi.	Type of definition (coverage low quality / no coverage )
     public void         setCloneId ( int v){ m_clone_id  = v ; }
     public void         setStretches(ArrayList v){  m_stretches = v;}
     public void         addStretche(Stretch g){ if (m_stretches == null) m_stretches = new ArrayList(); m_stretches.add(g);}
+    
+    
+    public void         setHTMLDescription(String s){ i_html_description = s;}
+    
+    
     
      public void insert(Connection conn) throws BecDatabaseException
     {
@@ -101,22 +114,53 @@ vi.	Type of definition (coverage low quality / no coverage )
         
      }
      
-     public static StretchCollection getByCloneId(int clone_id, boolean isSequenceIncluded)throws Exception
+     public static Object getByCloneId(int clone_id, boolean isSequenceIncluded, boolean isFirstLastOnly)throws Exception
      {
+         StretchCollection strcol = null;
           String sql = " select  COLLECTIONID  ,REFSEQUENCEID   ,CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
         +" ,ISOLATETRACKINGID   from STRETCH_COLLECTION   where ISOLATETRACKINGID IN (SELECT ISOLATETRACKINGID "
         +" FROM FLEXINFO WHERE FLEXCLONEID =" +clone_id+    " ) order by COLLECTIONID desc";
          ArrayList col = getByRule( sql,  isSequenceIncluded);
-         if (col != null && col.size() > 0 ) return (StretchCollection) col.get(0);
+         if (col != null && col.size() > 0 ) 
+         {
+             if ( isFirstLastOnly)
+             {
+                 strcol = (StretchCollection) col.get(0);
+                 strcol.setCloneId(clone_id);
+                 return strcol;
+             }
+             else
+             {
+                 ArrayList result = new ArrayList();
+                 for (int index = 0; index < col.size(); index ++)
+                 {
+                     strcol = (StretchCollection) col.get(index);
+                     strcol.setCloneId(clone_id);
+                     result.add(strcol);
+                 }
+                 return result;
+             
+             }
+         }
          return null;
      }
-     public static StretchCollection     getByCloneId(int cloneid)throws Exception
+     public static StretchCollection     getLastByCloneId(int cloneid)throws Exception
      {
-         return getByCloneId(cloneid, true);
+         return (StretchCollection) getByCloneId(cloneid, true, true);
+     }
+      public static ArrayList     getAllByCloneId(int cloneid)throws Exception
+     {
+         return (ArrayList) getByCloneId(cloneid, true, false);
      }
       
-     public static ArrayList     getByCloneSequenceId(int clone_sequence_id, boolean isSequenceIncluded)
+      
+      //-------------------------------
+     public static StretchCollection     getByCloneSequenceId(int clone_sequence_id, boolean isSequenceIncluded)throws Exception
      {
+           String sql = " select  COLLECTIONID  ,REFSEQUENCEID   ,CLONESEQUENCEID   ,SUBMISSIONDATE   ,TYPE "
+        +" ,ISOLATETRACKINGID   from STRETCH_COLLECTION   where clonesequenceid ="+clone_sequence_id +" order by COLLECTIONID desc";
+         ArrayList col = getByRule( sql,  isSequenceIncluded);
+         if (col != null && col.size() > 0 ) return (StretchCollection) col.get(0);
          return null;
      }
     
@@ -173,6 +217,56 @@ vi.	Type of definition (coverage low quality / no coverage )
          return subsequences;
      }
  
+     //function prepares str collection for LQR display
+     public static  void prepareStretchCollectionForDisplay
+                        (StretchCollection lqr_for_clone,CloneSequence clone_sequence)
+     {
+         Stretch lqr = null;
+         StringBuffer stretch_collection_html_description = new StringBuffer();
+         StringBuffer stretch_html_description = null;
+         String header = " <th>Name </th><th>Cds Region</th><th>Sequence Region</th>"
+         +" <th>Sequence</th><th>Discrepancy Report </th>";
+         ArrayList discrepancies = null;
+         String discrepancy_report_button_text = null;
+         for (int count = 0; count < lqr_for_clone.getStretches().size(); count++)
+         {
+             lqr = (Stretch) lqr_for_clone.getStretches().get(count);
+             ScoredSequence scored_sequence =  clone_sequence.getSubSequence( lqr.getCdsStart() - 1, lqr.getCdsStop() );
+             String stretch_html_fomated_sequence = scored_sequence.toHTMLStringNoRuler(40) ;
+             String stretch_name = lqr.getStretchTypeAsString(lqr.getType()) + " "+ (count + 1);
+             StringBuffer html_description = new StringBuffer();
+             html_description.append("<TD>"+stretch_name +"</TD>");
+              html_description.append("<TD>"+ (  lqr.getCdsStart()- clone_sequence.getCdsStart()  )
+                    +" - "+ ( lqr.getCdsStop() -  clone_sequence.getCdsStart() )  +"</TD>");
+              html_description.append("<TD>"+lqr.getCdsStart() +" - "+ lqr.getCdsStop() +"</TD>");
+              html_description.append("<TD> <PRE> <font size='-2'>"+ stretch_html_fomated_sequence +"</font></pre></TD>");
+             
+              discrepancies = clone_sequence.getDiscrepanciesInRegion( lqr.getCdsStart() , lqr.getCdsStop(), clone_sequence.getCdsStart() );
+              if ( discrepancies == null || discrepancies.size() == 0 )
+              {
+                  discrepancy_report_button_text = "&nbsp";
+              }
+              else
+              {
+                  String discr_ids = "";
+                  
+                  for(int discr_count = 0; discr_count < discrepancies.size(); discr_count++)
+                  {
+                      discr_ids += ((Mutation)discrepancies.get(discr_count)).getId() + "_";
+                  }
+                  discrepancy_report_button_text = "<input type=BUTTON value=\"Discrepancy Report\"  onClick=\"window.open('/BEC/Seq_GetItem.do?forwardName="+Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT +"&amp;"
+                  +"DISCRIDS="+discr_ids+"','D"+clone_sequence.getId() +"','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;\">";
+              }
+                  
+              html_description.append("<TD>"+discrepancy_report_button_text +"</TD>");
+             
+             stretch_collection_html_description.append( "<TR>"  + html_description.toString() + "</TR>" );
+         }
+         
+         lqr_for_clone.setHTMLDescription(header + stretch_collection_html_description.toString() );
+     }
+                           
+    
      //--------------------------------
      
      private ArrayList  getStretchesToProcess(boolean isApprovedOnly)
@@ -296,4 +390,43 @@ vi.	Type of definition (coverage low quality / no coverage )
          return uireads;
     }
    
+    
+     public static void main(String [] args)
+     {
+         try
+         {
+             /*
+     ArrayList items = Algorithms.splitString("  1986 1916 2349  ");
+                     StretchCollection lqr_for_clone = null; 
+                     int cloneid = 0;
+                     CloneSequence clone_sequence = null;
+                     //we trick system here writing html table 
+                     Hashtable display_items = new Hashtable();
+                     for (int index = 0; index < items.size();index++)
+                     {
+                            cloneid = Integer.parseInt( (String) items.get(index));
+                            clone_sequence = CloneSequence.getOneByCloneId(cloneid);
+                            if ( clone_sequence != null)
+                            {
+                                lqr_for_clone = StretchCollection.getByCloneSequenceId(clone_sequence.getId() , false);
+                                if ( lqr_for_clone != null) 
+                                    StretchCollection.prepareStretchCollectionForDisplay(lqr_for_clone,clone_sequence);
+                         
+                            }
+                             display_items.put( items.get(index), lqr_for_clone);
+ 
+                     }     
+              **/
+         String stic = "23880_23881_23882_23883_23884_23885_23886_23887_23888_23889_";
+         stic = Algorithms.replaceChar( stic, '_', ',');
+          if ( stic.charAt(stic.length() - 1) == ',') stic = stic.substring(0, stic.length() - 1);
+          
+          ArrayList discrepancies = Mutation.getByIds(stic);
+                      
+         String sa =  Mutation.toHTMLString(discrepancies);
+         System.out.println(sa);
+         }
+         catch(Exception e){System.out.println(e.getMessage());}
+     }
+                           
 }

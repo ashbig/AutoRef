@@ -1,17 +1,12 @@
 /*
  * GapMapper.java
- *
+ ** @author  HTaycher
  * Created on May 3, 2004, 4:48 PM
  */
 
 package edu.harvard.med.hip.bec.modules;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
-import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
-import edu.harvard.med.hip.bec.programs.needle.*;
-
-import edu.harvard.med.hip.bec.coreobjects.feature.*;
-//import edu.harvard.med.hip.bec.engine.*;
 import edu.harvard.med.hip.bec.database.*;
 import  edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.util_objects.*;
@@ -22,24 +17,20 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import java.util.*;
 import java.sql.*;
 import java.io.*;
-import java.math.BigDecimal;
-import edu.harvard.med.hip.utility.*;
 
-/**
- *
- * @author  HTaycher
- */
-
-// work on clone bases 
+// work on clone base
 public class GapMapper
 {
     private int                     m_clone_id = -1;
     private ArrayList               m_error_messages = null;
     private CloningStrategy         m_cloning_startegy = null;
     private StretchCollection       m_stretch_collection = null;
-    
+    private SlidingWindowTrimmingSpec       m_trimming_spec = null;
+   
     public  static final int        MIN_CONTIG_LENGTH = 50;
-    private int                     m_min_contig_avg_score = 20;
+    
+   // private int                     m_min_contig_avg_score = 20;
+     private int                     m_min_contig_length = MIN_CONTIG_LENGTH;
     /** Creates a new instance of GapMapper */
     public GapMapper()
     {
@@ -49,9 +40,10 @@ public class GapMapper
     public void                 setCloneId(int v){ m_clone_id = v;}
     public ArrayList            getErrorMessages(){ return m_error_messages; }
     public StretchCollection    getStretchCollection(){ return   m_stretch_collection ;}
-   //public void                 setMinContigLength(int v){ m_min_contig_length = v;}
-    public void                 setMinAvgContigScore(int v){  m_min_contig_avg_score = v;}
-   
+    public void                 setMinContigLength(int v){ m_min_contig_length = v;}
+   // public void                 setMinAvgContigScore(int v){  m_min_contig_avg_score = v;}
+    public void         setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
+  
     public void                 run()
     {
         //get refsequence & linker information
@@ -119,8 +111,8 @@ public class GapMapper
     
                 ScoredElement[][]  bases = contig.prepareContigAligmentHorizontalStructure("refsequence", linker5_length);
                // ArrayList gaps = Contig.findGaps(bases);
-                ArrayList contigs = Contig.findContigs(bases);
-                 ArrayList gaps = Contig.findGaps(contigs, linker5_length, clone_refsequence.getText().length() );
+                ArrayList contigs = Contig.findContigs(bases, clone_refsequence.getText().length(), linker5_length, m_trimming_spec);
+                ArrayList gaps = Contig.findGaps(contigs, linker5_length, clone_refsequence.getText().length() );
                 ArrayList stretches = contigs;
                 stretches.addAll(gaps);
                 
@@ -148,7 +140,8 @@ public class GapMapper
     //_______________________
     
     //goal -> recalculate positions , colaps items if they are less than 50 bp
-    private ArrayList recalculateStretches(ArrayList gaps, ArrayList contigs)
+ /*
+  private ArrayList recalculateStretches(ArrayList gaps, ArrayList contigs)
     {
         ArrayList result = new ArrayList();
         int linker5_length = m_cloning_startegy.getLinker5().getSequence().length();
@@ -216,6 +209,8 @@ public class GapMapper
       
         return result;
     }
+  *
+  */
     private boolean          isCallForGapMapperRelevant(CloneDescription clone_description)throws Exception
     {
         //check 1. there is no assembled sequence
@@ -227,11 +222,12 @@ public class GapMapper
         int assembly_run_status = CloneAssembly.isAssemblerRunNeeded(clone_description.getReadFilePath());
         switch(assembly_run_status)
         {
-            case  CloneAssembly.ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE :
+           /* case  CloneAssembly.ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE :
             {
                  m_error_messages.add("Call for GapMapper on Clone : "+clone_description.getCloneId()+" is irrelevant: no trace files exists for the clone.");
                 return false;
             }
+            **/
             case CloneAssembly.ASSEMBLY_RUN_STATUS_NOT_ALL_TRACE_FILES_INCLUDED :
             {
                  m_error_messages.add("Call for GapMapper on Clone : "+clone_description.getCloneId()+" is irrelevant: assembly was not run on all existing chromat files.");

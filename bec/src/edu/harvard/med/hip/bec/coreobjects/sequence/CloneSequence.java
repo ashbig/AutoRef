@@ -112,6 +112,17 @@ public class CloneSequence extends AnalyzedScoredSequence
             return (CloneSequence) sequences.get(0);
         return null;
     }
+      
+    public static CloneSequence getOneByCloneId(int cloneid) throws BecDatabaseException
+    {
+        String sql = "select sequenceid from assembledsequence where isolatetrackingid = "
+        +" (select isolatetrackingid from flexinfo where flexcloneid = "+cloneid +")";
+        sql += " order by submissiondate desc";
+        ArrayList sequences = getByRule(sql );
+        if (sequences.size() > 0)
+            return (CloneSequence) sequences.get(0);
+        return null;
+    }
     
     public static boolean isAssembledSequenceExists( int clone_id)throws Exception
     {

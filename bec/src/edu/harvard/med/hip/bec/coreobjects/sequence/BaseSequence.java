@@ -52,13 +52,7 @@ public  class BaseSequence
      public static final int CLONE_SEQUENCE_TYPE_EDITED = 1; 
      public static final int CLONE_SEQUENCE_TYPE_FINAL = 2; 
      
-     //parameters for sequence quality definition
-     public static final int INTERNAL_QUALITY_WINDOW_SIZE = 25; 
-     public static final int INTERNAL_QUALITY_NUMBER_LOW_QUALITY_BASES = 3; 
-     public static final int INTERNAL_QUALITY_CUTT_OFF = 7; 
-     public static final int INTERNAL_AMBIQUATY_WINDOW_SIZE = 25; 
-     public static final int INTERNAL_AMBIQUATY_NUMBER_BASES = 3; 
-    
+ 
     
     public static final int QUALITY_BAD = 3;
     public static final int QUALITY_GOOD = 2;
@@ -325,5 +319,17 @@ public  class BaseSequence
         }
       
     }
+    
+    
+     public static void main(String [] args)
+    {
+        try
+        {
+             ScoredSequence s = new ScoredSequence(45184);
+             System.out.println(s.getText());
+        }
+        catch(Exception e){}
+        System.exit(0);
+     }
 }
 

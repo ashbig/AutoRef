@@ -21,6 +21,7 @@ public abstract class Spec
     public static final String END_READS_SPEC = "END_READS_SPEC";
     public static final String FULL_SEQ_SPEC = "FULL_SEQ_SPEC";
     public static final String POLYMORPHISM_SPEC = "POLYMORPHISM_SPEC";
+    public static final String TRIM_SLIDING_WINDOW_SPEC = "POLYMORPHISM_SPEC";
     public static final String NONE_SPEC = "None";
     
     public static final int PRIMER3_SPEC_INT = 3;
@@ -29,6 +30,7 @@ public abstract class Spec
     public static final int POLYMORPHISM_SPEC_INT = 4;
     public static final int VECTORPRIMER_SPEC_INT = 5;
     public static final int CLONINGSTRATEGY_SPEC_INT = 6;
+    public static final int TRIM_SLIDING_WINDOW_SPEC_INT = 7;
     public static final int NONE_SPEC_INT = -1;
     
     
@@ -53,7 +55,7 @@ public abstract class Spec
         m_type = t;
         
     }
-     public Spec(Hashtable p, String na,int sub, int t, int id) 
+    public Spec(Hashtable p, String na,int sub, int t, int id) 
     {
         m_name = na;
         m_params = new Hashtable();
@@ -109,6 +111,9 @@ public abstract class Spec
                     
                     case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
                          return new PolymorphismSpec(params, spec_name, submitter_id,id) ;
+                    case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:
+                        return new SlidingWindowTrimmingSpec(params, spec_name, submitter_id,id) ;
+                        
                  }
             }
             return null;
@@ -169,6 +174,8 @@ public abstract class Spec
                     
                     case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
                          return new PolymorphismSpec(params, name, submitter_id,id) ;
+                    case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:
+                        return new SlidingWindowTrimmingSpec(params, name, submitter_id,id) ;
                  }
             }
             return null;
@@ -409,6 +416,11 @@ public abstract class Spec
                     {
                         specs.add(new PolymorphismSpec(params, spec_name, submitter_id,spec_id)) ;
                         break;
+                    }
+                    case SlidingWindowTrimmingSpec.TRIM_SLIDING_WINDOW_SPEC_INT:
+                    {
+                         specs.add(new SlidingWindowTrimmingSpec(params, spec_name, submitter_id,spec_id)) ;
+                         break;
                     }
                 }
             }

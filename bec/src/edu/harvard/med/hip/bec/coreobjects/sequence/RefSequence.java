@@ -532,6 +532,28 @@ public class RefSequence extends BaseSequence
         }
         return formatedHTMLSeq.toString();
     }
+     public static int getCdsLength(int id)throws BecDatabaseException
+     {
+       String sql =" select CDSSTART  ,CDSSTOP from  REFSEQUENCE where sequenceid = " +id;
+       DatabaseTransaction t = DatabaseTransaction.getInstance();
+       ResultSet rs = null;int result = 0;
+       try
+        {
+            rs = t.executeQuery(sql);
+            if(rs.next())
+            {
+                result = rs.getInt("CDSSTOP") - rs.getInt("CDSSTART");
+            }
+            return result;
+        } catch (SQLException sqlE)
+        {
+            throw new BecDatabaseException("Error occured while restoring sequence with id "+id+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+      
+     }
     //__________________________________________________________________________
     
     public static void main(String [] args)

@@ -184,7 +184,49 @@ public class AnalyzedScoredSequence extends ScoredSequence
     
     
   
-   
+    public ArrayList getDiscrepanciesInRegion(int region_start, int region_end, int cds_start)
+    {
+        ArrayList dicr_in_region = new ArrayList();
+         
+        DiscrepancyDescription discr_definition = null;
+        ArrayList discrepancy_definition = DiscrepancyDescription.assembleDiscrepancyDefinitions(m_discrepancies);
+        if ( discrepancy_definition == null || discrepancy_definition.size() == 0) return null;
+        int position = 0;RNAMutation rm = null;
+        for (int count = 0; count < discrepancy_definition.size(); count ++)
+	{
+            discr_definition = (DiscrepancyDescription)discrepancy_definition.get(count);
+            if ( discr_definition.getDiscrepancyDefintionType() == DiscrepancyDescription.TYPE_AA)
+            {
+                    rm = (RNAMutation)discr_definition.getRNACollection().get(0);
+                    position = rm.getPosition() + cds_start;
+                    if (  position >= region_start  &&  position <= region_end )
+                    {
+                        dicr_in_region.addAll( discr_definition.getAllDiscrepancies() );
+                        if ( position > region_end ) break;
+                        continue;
+                    }
+                    else
+                    {
+                        rm = (RNAMutation)discr_definition.getRNACollection().get(discr_definition.getRNACollection().size() - 1);
+                        position = rm.getPosition() + cds_start;
+                        if (  position >= region_start  &&  position <= region_end )
+                        {
+                            dicr_in_region.addAll( discr_definition.getAllDiscrepancies() );
+                        } 
+                        if ( position > region_end ) break;
+                    }
+           }
+	   else 
+           {
+               position = discr_definition.getRNADefinition().getPosition() + cds_start;
+               if (  position >= region_start  &&  position <= region_end )
+                    dicr_in_region.addAll ( discr_definition.getAllDiscrepancies() );
+               if ( position > region_end ) break;
+           }
+          
+        }
+        return dicr_in_region;
+    }
     
     //__________________________________________________________________________
     

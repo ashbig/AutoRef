@@ -12,19 +12,15 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.bec.programs.needle.*;
-import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.utility.*;
 import edu.harvard.med.hip.bec.Constants;
 import edu.harvard.med.hip.bec.modules.*;
 
-
-
-/**
- *
- * @author  htaycher
- */
 public class Contig
 {
+   
+    
     private   String m_needle_output_path = null;
     {
         if (ApplicationHostDeclaration.IS_BIGHEAD)
@@ -41,17 +37,11 @@ public class Contig
     private int                 m_num_of_reads_in_contig = 0;
     private int                 m_number_of_bases = 0;
     private ArrayList           m_reads = null;
-    //private int m_direction = -1;
-    
-    
+     
     private int                 m_cds_start = 0; //0 based indexes
     private int                 m_cds_stop = 0;
     /** Creates a new instance of CloneAssembly */
-    public Contig()
-    {
-        m_reads = new ArrayList();
-    }
-    
+    public Contig()    {        m_reads = new ArrayList();    }
     
     public String              getSequence(){ return  m_sequence ;}
     public String              getScores(){ return m_scores ;}
@@ -166,7 +156,7 @@ public class Contig
          return gaps;
          
      }
-             
+             /*
     public static ArrayList            findGaps(ScoredElement[][] bases_array)
     { 
         ArrayList gaps = new ArrayList();
@@ -208,8 +198,6 @@ public class Contig
              {
                  gap = new Stretch();
                  gap.setCdsStart (bases_array[base_count][1].getIndex() ); //(int vclone sequence coordinates for low quality)
-          //     gap.setTrimStart ();
-           //     gap.setTrimEnd ();
                 gap.setType ( Stretch.GAP_TYPE_GAP );
                 gap.setStatus( Stretch.STATUS_DETERMINED );
                 isInsideGap = true;
@@ -224,15 +212,16 @@ public class Contig
         return gaps;
     }
     
-    
+    */
     
     //uses horizontal array  returns array of stretch elemnts
-    public static ArrayList            findContigs(ScoredElement[][] bases_array)throws Exception
+    public static ArrayList            findContigs(ScoredElement[][] bases_array, 
+            int refseq_length, int linker5_length, SlidingWindowTrimmingSpec spec)throws Exception
     { 
         ArrayList contigs = new ArrayList();
         ArrayList current_contig = null;//array of scored elements
         Stretch contig = null;
-        ScoredElement current_base_of_contig = null;
+        ScoredElement current_base_of_contig = null;ScoredSequence sequence = null;
         boolean isBaseReadCovered = false;
         boolean isInsideContig = false;
         //find out how namy 'reads' - first is contig, second - reference sequence are in contig
@@ -260,7 +249,8 @@ public class Contig
                      ScoredElement[] real_bases = prepareBaseColumn( bases_array[base_count]);
                      if ( real_bases != null && real_bases.length > 0)
                      {
-                         current_base_of_contig = ScoredElement.createScoreElementFromListOfElements(real_bases, base_count);
+                         char refseq_base = bases_array[base_count][1].getBase();
+                         current_base_of_contig = ScoredElement.createScoreElementFromListOfElements(real_bases,  bases_array[base_count][1].getIndex(), refseq_base);
                          if ( current_contig == null) current_contig = new ArrayList();
                          current_contig.add( current_base_of_contig );
                          
@@ -273,13 +263,17 @@ public class Contig
                         contig.setCdsStop (bases_array[base_count][1].getIndex() -1);
                      else
                          contig.setCdsStop (bases_array[base_count][1].getIndex());
-                     ScoredSequence sequence = ScoredElement.createScoredSequence( current_contig  );
-                     contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
-                  //   contig.trimContigToHighQuality(GapMapper.MIN_CONTIG_LENGTH);
-                     if ( contig.getSequence() != null) contigs.add(contig);
-                     contig = null;
+                    sequence = ScoredElement.trimStretch( current_contig,  contig,  spec);
+                   
+                     if ( sequence != null && sequence.getText().length() > GapMapper.MIN_CONTIG_LENGTH)
+                      {
+                          contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
+                          contigs.add(contig);
+                      }
+                     contig = null;        
                      isInsideContig = false;
                      current_contig = new ArrayList();
+                     sequence = null;
                  }
                  //open gap
                  else if ( isBaseReadCovered && !isInsideContig )
@@ -297,12 +291,13 @@ public class Contig
              if ( isInsideContig && contig!= null)
              {
                  contig.setCdsStop (bases_array[base_count][1].getIndex() -1);
-                 ScoredSequence sequence = ScoredElement.createScoredSequence( current_contig  );
-                 contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
-              //   contig.trimContigToHighQuality(GapMapper.MIN_CONTIG_LENGTH);
-                 if ( contig.getSequence() != null && contig.getSequence().getText().length() > GapMapper.MIN_CONTIG_LENGTH) contigs.add(contig);
-                   
-                 contigs.add(contig);
+                   sequence = ScoredElement.trimStretch( current_contig,  contig,  spec);
+                  
+                  if ( sequence != null && sequence.getText().length() > GapMapper.MIN_CONTIG_LENGTH)
+                  {
+                      contig.setSequence (new AnalyzedScoredSequence(sequence.getText(),sequence.getScores(), -1) );
+                      contigs.add(contig);
+                  }
              }
             return contigs;
         }
@@ -427,7 +422,7 @@ public class Contig
          //sequence[current_base++];
              }
          }
-         
+         /*
          for ( base_count = 0; base_count < m_sequence.length(); base_count++)
          {
              for (int read_count = 0; read_count <m_num_of_reads_in_contig+1;read_count++)
@@ -435,13 +430,13 @@ public class Contig
                 System.out.print(bases_array[base_count][read_count].getIndex()+"\t'"+ bases_array[base_count][read_count].getBase() +"'\t" + bases_array[base_count][read_count].getScore()+"\t");
                  
              }
-             System.out.println("" );
+             
          }
-
+*/
          return bases_array;
     }
    //------------------------------------------- 
-    
+   
     private  static ScoredElement[]  prepareBaseColumn( ScoredElement[] contig_column)
     {
         ArrayList real_bases_in_column = new ArrayList();
@@ -504,55 +499,6 @@ public class Contig
         }
         return elements;
     }
-    /*
-     public   SequenceElement[] prepareSequenceElementsTest(char[] sequence_query_n,
-                                        char[] sequence_subject_n  ,
-                                        int cds_start, int cds_stop   ,int refseq_length    )
-    {
-        int length = ( sequence_query_n.length  >= sequence_subject_n.length ) ?
-                sequence_subject_n.length   :   sequence_query_n.length  ;
-        SequenceElement[] elements = new SequenceElement[4];
-      
-        int q_index = 0;
-        int s_index = 0;
-       
-        for (int count = 0; count < length; count++)
-        {
-          //  System.out.println(count+" "+sequence_subject_n[count]+" "+sequence_query_n[count]);
-            if ( sequence_subject_n[count] !=' ' && sequence_subject_n[count] != '-')
-            {
-                s_index++;
-            }
-            if (sequence_query_n[count] != ' ' && sequence_query_n[count] != '-')
-            {
-                q_index ++;
-               
-            }
-
-            if (s_index == 1)
-            {
-                 elements[0] = new SequenceElement(  q_index  , s_index , -1, sequence_query_n[count],sequence_subject_n[count]);
-            }
-            else if (s_index == cds_start + 1)//array 0 based
-            {
-                m_cds_start =q_index - 1;
-                 elements[1] = new SequenceElement(  q_index  , s_index , -1, sequence_query_n[count],sequence_subject_n[count]);
-            }
-            else if (s_index ==  cds_stop )
-            {
-                m_cds_stop = q_index -1;
-                elements[2] = new SequenceElement(  q_index  , s_index , -1, sequence_query_n[count],sequence_subject_n[count]);
-            }
-            else if (count == length-1 || s_index == refseq_length ) 
-            {
-                elements[3] = new SequenceElement(  q_index  , s_index , -1, sequence_query_n[count],sequence_subject_n[count]);
-                break;
-            }
-    
-        }
-        return elements;
-    }
-    */
     protected int setCoverageStatus(SequenceElement[] start_stop)
     {
         int res = CloneAssembly.STATUS_ASSEMBLY_NOT_KNOWN;
@@ -593,17 +539,13 @@ public class Contig
            String queryFile ="c:\\Document.txt";// "c:\\needleoutput\\needle10339_419.out";
             //  String queryFile = "c:\\needleATG.out";
              NeedleParser.parse(queryFile,res);
-               
-       
-        
-        char[] sequence_query_n = res.getQuery().toUpperCase().toCharArray();
+       char[] sequence_query_n = res.getQuery().toUpperCase().toCharArray();
         char[] sequence_subject_n = res.getSubject().toUpperCase().toCharArray();
         //prepare sequence elements
         Contig c = new Contig();
      //   SequenceElement[] start_stop = c.prepareSequenceElementsTest(sequence_query_n,sequence_subject_n, 70,  460,534 );
         //int r = c.setCoverageStatus(start_stop);
       //  System.out.print( start_stop.length);
-        
-        }catch(Exception e){}
+         }catch(Exception e){}
     }
 }

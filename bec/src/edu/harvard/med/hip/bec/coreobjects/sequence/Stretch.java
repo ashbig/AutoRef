@@ -49,7 +49,7 @@ public class Stretch
     private int             m_type = -1;
     private int             m_status = STATUS_DETERMINED;
     private String          i_refsequence_stretch = null; // for not contigs
-     
+    private String          i_html_description = null; 
     /** Creates a new instance of BioGap */
     public Stretch()
     {
@@ -73,7 +73,7 @@ public class Stretch
     public int              getType (){ return m_type  ;}
     public int              getStatus(){ return m_status;}
     public String           getRefSequenceStretch(){ return i_refsequence_stretch ;}
-    
+    public String           getHTMLDescription(){ return i_html_description;}
     
    public void              setId (int v){   m_id = v;}
     public void             setSequenceId (int v){   m_sequence_id  = v;}//Sequence (int vpointer to analized sequence for contigs)
@@ -86,7 +86,9 @@ public class Stretch
     public void              setType (int v){   m_type  = v;}
     public void               setStatus(int v){ m_status = v;}
     public void                setRefSequenceStretch(String s) { i_refsequence_stretch = s; }
-
+    public void             setHTMLDescription(String s){ i_html_description = s;}
+    
+    
     public static   String    getStretchTypeAsString( int  stretch_type)
     {
         switch (stretch_type)
@@ -97,6 +99,14 @@ public class Stretch
             default: return "Not known";
         }
     }
+    
+    public String toString()
+    {
+        return  "Type " +" "+ getStretchTypeAsString(m_type)
+        +" Cds Start "+m_cds_start +" Cds Stop "+ m_cds_stop ;
+        
+     }
+    
     
      public void insert(Connection conn) throws BecDatabaseException
     {
@@ -128,19 +138,7 @@ public class Stretch
         }
      }
      
-     public void   trimContigToHighQuality(int min_contig_length)
-     {
-             //cut out not ends of low quality
-            m_sequence.setTrimStart(0);
-            m_sequence.setTrimEnd(m_sequence.getText().length());
-            ScoredSequence.isPassQualityCheck5Prime(m_sequence);
-             m_cds_start =  m_cds_start + m_sequence.getTrimStart();
-            ScoredSequence.isPassQualityCheck3Prime(m_sequence);
-            m_cds_stop -= (m_sequence.getText().length()- m_sequence.getTrimEnd());
-            if ( (m_cds_stop -  m_cds_start) < min_contig_length ) { m_sequence = null; return ;}
-            m_sequence.getTrimmedSequence();
-            
-     }
+     
      
      public static ArrayList sortByPosition(ArrayList stretches)
     {
