@@ -14,6 +14,7 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.bioutil.*;
 import edu.harvard.med.hip.utility.Logger;
 import edu.harvard.med.hip.utility.DatabaseManager;
+import edu.harvard.med.hip.bec.programs.blast.*;
 import java.io.*;
 import java.util.*;
 import java.sql.*;
@@ -47,21 +48,10 @@ public class FastaFileGenerator
     public static final String LOGFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/blastdb.log";
     public static final String SEQUENCEIDFILE=BLAST_BASE_DIR+BLAST_DB_DIR+"Log/sequenceid.txt";
      */
-   
-    
-    public static final String HUMANDB="/tmp/Human/genes";
-    public static final String YEASTDB="c:\\blast_db\\Yeast\\genes";
-    public static final String PSEUDOMONASDB="/tmp/Pseudomonas/genes";
-    public static final String MGCDB="/tmp/MGC/genes";
+  
     public static final String LOGFILE="/tmp/blastdb.log";
     public static final String SEQUENCEIDFILE="/tmp/sequenceid.txt";
-    
-  //  public static final String HUMAN = "'Homo sapiens'";
-   // public static final String YEAST = "'Saccharomyces cerevisiae'";
-   // public static final String PSEUDOMONAS = "'Pseudomonas aeruginosa'";
-    
     public static final String SPECIES = "Species";
-    public static final String MGCPROJECT = "MGC Project";
     
     public static void generateFastaFiles() throws Exception
     {
@@ -130,7 +120,7 @@ public class FastaFileGenerator
         }
           */
          // Generate FASTA file for all yeast genes.
-        int maxid2 = generateFile(log, YEASTDB, RefSequence.SPECIES_YEAST, lastSequence, SPECIES);
+        int maxid2 = generateFile(log, BlastWrapper.YEASTDB, RefSequence.SPECIES_YEAST, lastSequence, SPECIES);
         if(maxid2 == -1) {
             logAndMail(log, "Error occured when generate yeast database file.");
             return;

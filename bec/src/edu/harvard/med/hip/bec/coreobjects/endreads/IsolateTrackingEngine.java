@@ -305,8 +305,7 @@ public class IsolateTrackingEngine
     public static void updateRankUserChangerId(int rank,  int userid,int isolatetrackingid, Connection conn )throws BecDatabaseException
     {
          String sql = "update isolatetracking set rank="+rank+ " ,changerrankid ="+userid+" where isolatetrackingid="+ isolatetrackingid;
-        System.out.println(sql);
-        DatabaseTransaction.executeUpdate(sql, conn);
+         DatabaseTransaction.executeUpdate(sql, conn);
     }
     public static void updateAssemblyStatus(int asstatus, int isolatetrackingid, Connection conn )throws BecDatabaseException
     {
