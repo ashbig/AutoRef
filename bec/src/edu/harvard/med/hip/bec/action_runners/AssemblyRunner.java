@@ -381,6 +381,7 @@ public class AssemblyRunner extends ProcessRunner
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and status in ("+ status +") and containerid in ( select containerid from containerheader where label in "
 + "("+plate_names.toString()+ ")) order by containerid ,refsequenceid";
+                 System.out.println(sql);
                 break;
              }
              case FULL_SEQUENCE_ASSEMBLY :
