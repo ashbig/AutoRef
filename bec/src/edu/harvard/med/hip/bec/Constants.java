@@ -163,7 +163,7 @@ public class Constants {
     public static final int            PROCESS_OBJECT_TYPE_CONTAINER = 0;
     public static final int            PROCESS_OBJECT_TYPE_CONSTRUCT = 2;
     public static final int            PROCESS_OBJECT_TYPE_ASSEMBLED_SEQUENCE = 3;
-   // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 4;
+    public static final int            PROCESS_OBJECT_TYPE_REFSEQUENCE = 4;
    // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 5;
    // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 6;
      // public static final int            PROCESS_OBJECT_TYPE_HOLDER = 7;
@@ -252,6 +252,12 @@ public class Constants {
     public static final int CLONE_SEQUENCE_DEFINITION_REPORT_INT = 20;
     public static final int AVAILABLE_CONTAINERS_INT = 21;
     
+    
+    //type of items submitted for action : 1-4
+    public static final int ITEM_TYPE_CLONEID = 1;
+    public static final int ITEM_TYPE_PLATE_LABELS = 2;
+    public static final int ITEM_TYPE_BECSEQUENCE_ID = 3;
+    public static final int ITEM_TYPE_FLEXSEQUENCE_ID = 4;
    
     
     
