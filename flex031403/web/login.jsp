@@ -20,11 +20,11 @@
     <html:form action="logon.do" focus="username" target="_top">
         <table>
             <tr>
-                <td><b>User Name:</b></td>
+                <td>User Name:</td>
                 <td><html:text property="username"/></td>
             </tr>
             <tr>
-                <td><b>Password:</b></td>
+                <td>Password:</td>
                 <td><html:password property="password"/></td>
             </tr>
         </table>

@@ -18,27 +18,27 @@
 <html:form action="/EnterOligoPlates.do" focus="fivepPlate">
 <table>
     <tr>
-    <td><b>Process name:</b></td>
+    <td>Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td><b>Enter 5P oligo plate barcode:</b></td>
+    <td>Enter 5P oligo plate barcode:</td>
     <td><html:text property="fivepPlate" size="40"/></td>
     </tr>
 
     <tr>
-    <td><b>Enter 3P open oligo plate barcode:</b></td>
+    <td>Enter 3P open oligo plate barcode:</td>
     <td><html:text property="threepOpenPlate" size="40"/></td>
     </tr>
 
     <tr>
-    <td><b>Enter 3P closed oligo plate barcode:</b></td>
+    <td>Enter 3P closed oligo plate barcode:</td>
     <td><html:text property="threepClosedPlate" size="40"/></td>
     </tr>
 
     <tr>
-    <td><b>Select protocol used for PCR reaction:</b></td>
+    <td>Select protocol used for PCR reaction:</td>
     <td><html:select property="subProtocolName">
         <bean:define id="subprotocols" name="SelectProtocolAction.protocol" property="subprotocol"/>
         <html:options

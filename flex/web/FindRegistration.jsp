@@ -18,12 +18,12 @@
 <html:form action="FindRegistration.do" focus="firstName">
     <table width="80%" align="center">
         <tr>
-        <td><b>User Name:</b></td>
+        <td>User Name:</td>
         <td><html:text property="userID" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>OR Reminder Text:</b></td>
+        <td>Or Reminder Text:</td>
         <td><html:text property="reminderText" size="40"/></td>
         </tr>
 

@@ -18,19 +18,19 @@
 <html:form action="/GetAgarLocation.do">
 <table>
     <tr>
-    <td><b>Process name:</b></td>
+    <td>Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td><b>Protocol:</b></td>
+    <td>Protocol:</td>
     <td><bean:write name="EnterSourcePlateAction.subprotocol" property="description"/></td>
     </tr>
 
     <tr>
-    <td><b>Fusion agar plate barcode:</b></td>
+    <td>Fusion agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateF1" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><html:select property="agarF1Location">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -41,9 +41,9 @@
     </tr>
 
     <tr>
-    <td><b>Closed agar plate barcode:</b></td>
+    <td>Closed agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateC1" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><html:select property="agarC1Location">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -54,9 +54,9 @@
     </tr>
 
     <tr>
-    <td><b>Fusion agar plate barcode:</b></td>
+    <td>Fusion agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateF2" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><html:select property="agarF2Location">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -67,9 +67,9 @@
     </tr>
 
     <tr>
-    <td><b>Closed agar plate barcode:</b></td>
+    <td>Closed agar plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.agarPlateC2" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><html:select property="agarC2Location">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -81,9 +81,9 @@
 
     <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
     <tr>
-    <td><b>Destination plate barcode:</b></td>
+    <td>Destination plate barcode:</td>
     <td><bean:write name="newContainer" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><html:select property="destLocations">
         <html:options
         collection="EnterSourcePlateAction.locations"

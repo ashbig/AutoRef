@@ -18,53 +18,53 @@
 <html:form action="/GetPCRResearcher.do" focus="researcherBarcode">
 <table>
     <tr>
-    <td><b>Process name:</b></td>
+    <td>Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td><b>PCR protocol:</b></td>
+    <td>PCR protocol:</td>
     <td><bean:write name="EnterOligoPlateAction.subprotocol" property="description"/></td>
     </tr>
 
     <tr>
-    <td><b>5P oligo plate barcode:</b></td>
+    <td>5P oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.fivep" property="id"/>"><bean:write name="EnterOligoPlateAction.fivep" property="label"/></a></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><bean:write name="EnterOligoPlateAction.fivep" property="location.type"/></td>
     </tr>
 
     <tr>
-    <td><b>3P open oligo plate barcode:</b></td>
+    <td>3P open oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.threepOpen" property="id"/>"><bean:write name="EnterOligoPlateAction.threepOpen" property="label"/></a></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><bean:write name="EnterOligoPlateAction.threepOpen" property="location.type"/></td>
     </tr>
 
     <tr>
-    <td><b>3P closed oligo plate barcode:</b></td>
+    <td>3P closed oligo plate barcode:</td>
     <td><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.threepClosed" property="id"/>"><bean:write name="EnterOligoPlateAction.threepClosed" property="label"/></a></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><bean:write name="EnterOligoPlateAction.threepClosed" property="location.type"/></td>
     </tr>
 
     <tr>
-    <td><b>Open PCR plate barcode:</b></td>
+    <td>Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="location.type"/></td>
     </tr>
 
     <tr>
-    <td><b>Open PCR plate barcode:</b></td>
+    <td>Open PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrClosed" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrClosed" property="location.type"/></td>
     </tr>
 </table>
 
     <Center>
-    <p><b><bean:message key="flex.researcher.barcode.prompt"/>:</b>
+    <p><bean:message key="flex.researcher.barcode.prompt"/>:
     <html:text property="researcherBarcode" size="40"/>
     <p>
     <html:submit property="submit" value="Create PCR Plates"/>

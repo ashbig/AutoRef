@@ -18,19 +18,19 @@
 <html:form action="/GetLocation.do">
 <table>
     <tr>
-    <td><b>Process name:</b></td>
+    <td>Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td><b>Protocol:</b></td>
+    <td>Protocol:</td>
     <td><bean:write name="EnterSourcePlateAction.subprotocol" property="description"/></td>
     </tr>
 
     <tr>
-    <td><b>Source plate barcode:</b></td>
+    <td>Source plate barcode:</td>
     <td><bean:write name="EnterSourcePlateAction.oldContainer" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><html:select property="sourceLocation">
         <html:options
         collection="EnterSourcePlateAction.locations"
@@ -42,9 +42,9 @@
 
     <logic:iterate id="newContainer" name="EnterSourcePlateAction.newContainers">
     <tr>
-    <td><b>Destination plate barcode:</b></td>
+    <td>Destination plate barcode:</td>
     <td><bean:write name="newContainer" property="label"/></td>
-    <td><b>Location:</b></td>
+    <td>Location:</td>
     <td><html:select property="destLocations">
         <html:options
         collection="EnterSourcePlateAction.locations"

@@ -14,8 +14,8 @@
  
  
  The following information is used by CVS
- $Revision: 1.8 $
- $Date: 2001-07-18 15:03:04 $
+ $Revision: 1.9 $
+ $Date: 2001-07-20 20:10:11 $
  $Author: jmunoz $
  
  ******************************************************************************
@@ -49,38 +49,39 @@
 <p>
 <TABLE WIDTH=80% ALIGN=CENTER>
     <TR>
-        <TD><B>Flex ID: </B><bean:write name="FLEX_SEQUENCE" property="id"/></TD>
+        <TD>Flex ID:</td><td><bean:write name="FLEX_SEQUENCE" property="id"/></TD>
     </TR>
     <TR>
-        <TD COLSPAN=2><B>Sequence Description: </B> </B><bean:write name="FLEX_SEQUENCE" property="description"/></TD>
+        <TD COLSPAN=2>Sequence Description:</td><td<bean:write name="FLEX_SEQUENCE" property="description"/></TD>
     </TR>
     <TR>
-        <TD><B>Sequence Length: </B></B><bean:write name="FLEX_SEQUENCE" property="sequenceLength"/></TD>
+        <TD>Sequence Length:</td><td<bean:write name="FLEX_SEQUENCE" property="sequenceLength"/></TD>
     </TR>
     <TR>
-        <TD><B>GI Number: </B></B><bean:write name="FLEX_SEQUENCE" property="gi"/></TD>
-        <TD><B>Accession Number: </B></B><bean:write name="FLEX_SEQUENCE" property="accession"/></TD></TR>
-    <TR>
-        <TD><B>Start Position: </B><bean:write name="FLEX_SEQUENCE" property="cdsstart"/></TD>
-        <TD><B>Stop Position: </B><bean:write name="FLEX_SEQUENCE" property="cdsstop"/></TD>
+        <TD>GI Number:</td><td><bean:write name="FLEX_SEQUENCE" property="gi"/></TD>
+        <TD>Accession Number:</td><td<bean:write name="FLEX_SEQUENCE" property="accession"/></TD>
     </TR>
     <TR>
-        <TD><B>CDS Length: </B><bean:write name="FLEX_SEQUENCE" property="cdslength"/></TD>
+        <TD>Start Position:</td><td><bean:write name="FLEX_SEQUENCE" property="cdsstart"/></TD>
+        <TD>Stop Position:</td><td><bean:write name="FLEX_SEQUENCE" property="cdsstop"/></TD>
     </TR>
     <TR>
-        <TD><B>Species: </B><bean:write name="FLEX_SEQUENCE" property="species"/></TD>
+        <TD>CDS Length:</td><td><bean:write name="FLEX_SEQUENCE" property="cdslength"/></TD>
     </TR>
     <TR>
-        <TD><B>Quality: </B><bean:write name="FLEX_SEQUENCE" property="quality"/></TD>
+        <TD>Species:</td><td><bean:write name="FLEX_SEQUENCE" property="species"/></TD>
     </TR>
     <TR>
-        <TD><B>Date Added: </B><bean:write name="FLEX_SEQUENCE" property="dateadded"/></TD>
+        <TD>Quality</td><td><bean:write name="FLEX_SEQUENCE" property="quality"/></TD>
     </TR>
     <TR>
-        <TD><B>GC content: </B><bean:write name="FLEX_SEQUENCE" property="gccontent"/></TD>
+        <TD>Date Added:</td><td><bean:write name="FLEX_SEQUENCE" property="dateadded"/></TD>
     </TR>
     <TR>
-        <TD><B>Sequence: </B></TD>
+        <TD>GC content:</td><td><bean:write name="FLEX_SEQUENCE" property="gccontent"/></TD>
+    </TR>
+    <TR>
+        <TD>Sequence:</TD>
     </TR>
     
     <TR><TD COLSPAN=2>

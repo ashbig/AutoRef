@@ -20,15 +20,15 @@
         
         <table>
             <tr>
-                <td><b>Plate Labels</b></td>
-                <td><b>Location</b></td>
+                <td>Plate Labels</td>
+                <td>Location</td>
             </tr>
         <% ListIterator iter = ids.listIterator(); String id = null; %>
         <% while (iter.hasNext()) { id = (String) iter.next(); %>
 
             <tr>
                 <td>
-                    <b> <%= id %></b>
+                    <%= id %>
                 </td>
                 <td>
                     <html:select property="locations">

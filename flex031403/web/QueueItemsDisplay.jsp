@@ -1,5 +1,5 @@
 <%@ page language="java" %>
-<%--<%@ page errorPage="ProcessError.do"%>--%>
+<%@ page errorPage="ProcessError.do"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -17,7 +17,7 @@
 <p>
 <logic:present name="SelectProtocolAction.queueItems">
 
-<b>The following containers are available:</b>
+<h3>The following containers are available:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr class="headerRow">
     <th>ID</th><th>Label</th>

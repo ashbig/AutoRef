@@ -12,27 +12,32 @@
 </head>
 <body bgcolor="#9bbad6">
 <center>
-<div class="nav">
-<table class="nav" border=0 cellpadding=1 cellspacing=0 width=100%>
+<div>
+<table>
 <tr>
     <TD>
         <center><h3><bean:message key="flex.name"/></h3></center>
-    
-        <TABLE>
-        <logic:iterate name="menulist" id="menuItem" type="edu.harvard.med.hip.flex.user.MenuItem">
-        
-                <html:link forward='<%=menuItem.getMenuItem()%>' target="display"> 
-                   <b> <bean:write name="menuItem" property="description"/></b><p>
-                </html:link>
-                <html:link forward='logout' target="_top"> 
-                   <b>Logout</b><p>
-                </html:link>   
-        
-        </logic:iterate>
-        </TABLE>
     </td>
+</tr>
+
+<logic:iterate name="menulist" id="menuItem" type="edu.harvard.med.hip.flex.user.MenuItem">
+<tr>
     <td>
-    </td>
+        <html:link forward='<%=menuItem.getMenuItem()%>' target="display"> 
+            <bean:write name="menuItem" property="description"/>
+        </html:link>
+     </td>
+</tr>
+            
+        </logic:iterate>
+            <tr>
+                <td>
+                <html:link forward='logout' target="_top"> 
+                   Logout
+                </html:link>
+                </td>
+            </tr>
+        
 </table>
 </div>
 </center>

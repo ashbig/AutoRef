@@ -21,7 +21,7 @@
 <p>
 <table>
 <tr>
-    <td><b>Request Date:</b></td><td><b><bean:write name="customerRequestForm" property="requestDate"/></b></td>
+    <td>Request Date:</td><td><bean:write name="customerRequestForm" property="requestDate"/></td>
 </tr>
 </table>
 

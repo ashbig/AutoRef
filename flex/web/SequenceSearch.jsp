@@ -22,13 +22,13 @@
 <html:form action="/SequenceSearch.do" focus="searchString">
 <table>
     <tr>
-    <td><b>Please enter the search key word:</b></td>
+    <td>Please enter the search key word:</td>
     <td><html:text property="searchString" size="40"/></td>
     </tr>
 
     <logic:present name="species">
     <tr>
-    <td><b>Search Species:</b></td>
+    <td>Search Species:</td>
     <td><select name="species">
         <option value="all">All
         <logic:iterate id="oneSpecies" name="species" scope="request">
@@ -56,7 +56,7 @@ Please follow the following hint.
 </dl>
 
 <logic:present name="customerRequest" scope="request">
-<p><b>You have the following cloning requests:</b>
+<p>You have the following cloning requests:
 <table border="1" cellpadding="2" cellspacing="0" width="100%">
 <tr class="headerRow"><th>Date</th><th>Total Sequences</th><th>Processed Sequences</th><th>Non-processed Sequences</th></tr>
 <logic:iterate id="oneRequest" name="customerRequest">

@@ -15,9 +15,9 @@
 <hr>
 <html:errors/>
 <p>
-<b>You have submitted the following sequences. They are grouped into different
+<h3>You have submitted the following sequences. They are grouped into different
 categories based on similarity to FLEXGene sequences and qualities. Please make
-appropriated selection and submit your cloning request to FLEXGene.</b>
+appropriated selection and submit your cloning request to FLEXGene.</h3>
 
 <p>
 <logic:present name="submittedSequences">
@@ -114,6 +114,23 @@ appropriated selection and submit your cloning request to FLEXGene.</b>
 
 <logic:present name="cdsMatchSequences">
 <logic:iterate id="cdsMatch" name="cdsMatchSequences">
+
+<p>
+Evalue: <bean:write name="cdsMatch" property="value.blastResults.evalue"/><br>
+Identity: <bean:write name="cdsMatch" property="value.blastResults.identity"/><br>
+Query CDS length: <bean:write name="cdsMatch" property="value.blastResults.cdslength"/>      
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+[ <a target=_new href="ViewAlignment.do?gi=<bean:write name="cdsMatch" property="key"/>">View Alignment</a> ]
+
+<table border=1>
+<tr>
+<td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
+</tr>
+
 <logic:iterate id="h" name="cdsMatch" property="value.homolog">
 <tr>
 <logic:equal name="h" property="id" value="-1">
@@ -142,16 +159,15 @@ appropriated selection and submit your cloning request to FLEXGene.</b>
 
 <logic:iterate id="homo" name="homologs">
 <p>
-<b>Evalue</b>: <bean:write name="homo" property="value.blastResults.evalue"/><br>
-<b>Identity</b>: <bean:write name="homo" property="value.blastResults.identity"/><br>
-<b>Query CDS length</b>: <bean:write name="homo" property="value.blastResults.cdslength"/>      
+Evalue: <bean:write name="homo" property="value.blastResults.evalue"/><br>
+Identity: <bean:write name="homo" property="value.blastResults.identity"/><br>
+Query CDS length: <bean:write name="homo" property="value.blastResults.cdslength"/>      
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-[ <b><a target=_new href="ViewAlignment.do?gi=<bean:write name="homo" property="key"/>">View Alignment</a></b> ]
-
+[ <a target=_new href="ViewAlignment.do?gi=<bean:write name="homo" property="key"/>">View Alignment</a> ]
 <table border=1>
 <tr>
 <td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>

@@ -17,7 +17,7 @@
 <p>
 <html:form action="/PrintPCRBarcode.do">
 <Center>
-<b>The following plate has been created:</b>
+<h3>The following plate has been created:</h3>
 <p><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.pcrOpen" property="id"/>"><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></a>
 <p><a href="ViewContainerDetails.do?<%= edu.harvard.med.hip.flex.Constants.CONTAINER_ID_KEY %>=<bean:write name="EnterOligoPlateAction.pcrClosed" property="id"/>"><bean:write name="EnterOligoPlateAction.pcrClosed" property="label"/></a>
 <p><html:submit property="submit" value="Reprint Barcode"/></td>

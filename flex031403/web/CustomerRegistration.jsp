@@ -17,82 +17,82 @@
 <html:form action="CustomerRegistration.do" focus="firstName">
     <table width="80%" align="center">
         <tr>
-        <td><b>First Name:</b></td>
+        <td>First Name:</td>
         <td><html:text property="firstName" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Last Name:</b></td>
+        <td>Last Name:</td>
         <td><html:text property="lastName" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Streetline 1:</b></td>
+        <td>Streetline 1:</td>
         <td><html:text property="street1" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Streetline 2 (optional):</b></td>
+        <td>Streetline 2 (optional):</td>
         <td><html:text property="street2" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>City:</b></td>
+        <td>City:</td>
         <td><html:text property="city" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>State (optional):</b></td>
+        <td>State (optional):</td>
         <td><html:text property="state" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Province (optional):</b></td>
+        <td>Province (optional):</td>
         <td><html:text property="province" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Zip Code:</b></td>
+        <td>Zip Code:</td>
         <td><html:text property="zipCode" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Country:</b></td>
+        <td>Country:</td>
         <td><html:text property="country" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Work Phone:</b></td>
+        <td>Work Phone:</td>
         <td><html:text property="phone" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Email:</b></td>
+        <td>Email:</td>
         <td><html:text property="email" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Organization:</b></td>
+        <td>Organization:</td>
         <td><html:text property="organization" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>User Name:</b></td>
+        <td>User Name:</td>
         <td><html:text property="userID" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Password:</b></td>
+        <td>Password:</td>
         <td><html:password property="password" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Re-enter password:</b></td>
+        <td>Re-enter password:</td>
         <td><html:password property="password2" size="40"/></td>
         </tr>
 
         <tr>
-        <td><b>Reminder Text:</b></td>
+        <td>Reminder Text:</td>
         <td><html:text property="reminderText" size="40"/></td>
         </tr>
 

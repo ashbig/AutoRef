@@ -18,12 +18,12 @@
 <html:form action="/EnterAgarPlates.do" focus="agarPlateF1">
 <table>
     <tr>
-    <td><b>Process name:</b></td>
+    <td>Process name:</td>
     <td><bean:write name="SelectProtocolAction.protocol" property="processname"/></td>
     </tr>
 
     <tr>
-    <td><b>Select the protocol:</b></td>
+    <td>Select the protocol:</td>
     <td><html:select property="subProtocolName">
         <bean:define id="subprotocols" name="SelectProtocolAction.protocol" property="subprotocol"/>
         <html:options
@@ -36,16 +36,16 @@
     </tr>
 
     <tr>
-    <td><b>Enter the fusion agar plate barcode:</b></td>
+    <td>Enter the fusion agar plate barcode:</td>
     <td><html:text property="agarPlateF1" size="20"/></td>
-    <td><b>Enter the corresponding closed agar plate barcode:</b></td>
+    <td>Enter the corresponding closed agar plate barcode:</td>
     <td><html:text property="agarPlateC1" size="20"/></td>
     </tr>
 
     <tr>
-    <td><b>Enter the fusion agar plate barcode:</b></td>
+    <td>Enter the fusion agar plate barcode:</td>
     <td><html:text property="agarPlateF2" size="20"/></td>
-    <td><b>Enter the corresponding closed agar plate barcode:</b></td>
+    <td>Enter the corresponding closed agar plate barcode:</td>
     <td><html:text property="agarPlateC2" size="20"/></td>
     </tr>
 

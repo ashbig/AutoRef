@@ -18,17 +18,17 @@
 <html:form action="/GetInput.do" focus="researcherBarcode">
 <table>
     <tr>
-    <td><b>Enter your ID:</b></td>
+    <td>Enter your ID:</td>
     <td><html:text property="researcherBarcode" size="40"/></td>
     </tr>
 
     <tr>
-    <td><b>Enter the source plate barcode:</b></td>
+    <td>Enter the source plate barcode:</td>
     <td><html:text property="sourcePlate" size="40"/></td>
     </tr>
 
     <tr>
-    <td><b>Select the location for the destination plate:</b></td>
+    <td>Select the location for the destination plate:</td>
     <td><html:select property="destLocation">
         <html:options
         collection="locations"
@@ -45,7 +45,7 @@
 </html:form>
 <logic:present name="queueItems">
 <p>
-<b>The following containers are available:</b>
+<h3>The following containers are available:</h3>
 <table>
 <tr>
     <th>ID</th><th>Label</th>
