@@ -16,10 +16,13 @@
 <table>
     <tr>
     <td><b>Select process protocol:</b></td>
-    <td><select name="protocol">
-        <logic:iterate id="oneProtocol" name="protocols" scope="request">
-            <option value="<bean:write name="oneProtocol" property="processname"/>"><bean:write name="oneProtocol" property="processname"/>
-        </logic:iterate>
+    <td><html:select property="protocol">
+        <html:options
+        collection="protocols"
+        property="processname"
+        labelProperty="processname"
+        />
+    </html:select>
     </td>
 
     <td><html:submit property="submit" value="Continue"/></td>

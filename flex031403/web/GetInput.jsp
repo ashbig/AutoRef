@@ -26,18 +26,24 @@
 
     <tr>
     <td><b>Select new location for the source plate:</b></td>
-    <td><select name="sourceLocation">
-        <logic:iterate id="location" name="locations" scope="request">
-            <option value="<bean:write name="location" property="id"/>"><bean:write name="location" property="type"/>
-        </logic:iterate>
+    <td><html:select property="sourceLocation">
+        <html:options
+        collection="locations"
+        property="id"
+        labelProperty="type"
+        />
+        </html:select>
     </td>
 
     <tr>
     <td><b>Select new location for the destination plate:</b></td>
-    <td><select name="destLocation">
-        <logic:iterate id="location" name="locations" scope="request">
-            <option value="<bean:write name="location" property="id"/>"><bean:write name="location" property="type"/>
-        </logic:iterate>
+    <td><html:select property="destLocation">
+        <html:options
+        collection="locations"
+        property="id"
+        labelProperty="type"
+        />
+        </html:select>
     </td>
 
     <tr>
