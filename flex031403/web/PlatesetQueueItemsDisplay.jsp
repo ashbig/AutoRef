@@ -7,7 +7,8 @@
 <head>
 <title><bean:message key="flex.name"/> : Create Process Plate </title>
 </head>
-<body bgcolor="white">
+<body>
+<h2><bean:message key="flex.name"/> : Create Process Plate</h2>
 <hr>
 
 <logic:present name="SelectProtocolAction.queueItems">

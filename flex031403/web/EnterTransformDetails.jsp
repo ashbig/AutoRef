@@ -21,10 +21,11 @@
 
 
 <html>
-<head><title>Transformation Result Details</title></head>
+<head><title><bean:message key="flex.name"/> : Transformation Result Details</title></head>
 <body>
-
-<center><html:errors/></center>
+<h2><bean:message key="flex.name"/> : Transformation Result Details</h2>
+<hr>
+<html:errors/>
 
 <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
     <h3>Enter The results of this Transformation</h3>

@@ -2,9 +2,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <html>
-<head><title>View Alignment</title></head>
+<head><title><bean:message key="flex.name"/> : View Alignment</title></head>
 <body>
-<center><h2>View Blast Alignment</h2></center>
+<h2><bean:message key="flex.name"/>: View Blast Alignment</h2>
 <hr>
 
 <pre>

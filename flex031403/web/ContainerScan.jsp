@@ -8,8 +8,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <html>
-<head><title>Container Scan</title></head>
+<head><title><bean:message key="flex.name"/> : Container Process History</title></head>
 <body>
+    <h2><bean:message key="flex.name"/> : Container Process History</h2>
+    <hr>
     <html:errors/>
     <center><H3>Please Scan the Container</h3></center>
     <form action="ViewContainerProcessHistory.do" >

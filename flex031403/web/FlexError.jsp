@@ -7,8 +7,10 @@
 <%@page isErrorPage="true"%>
 
 <html>
-<head><title><bean:message key="flex.name"/> Error</title></head>
+<head><title><bean:message key="flex.name"/> : Error</title></head>
 <body>
+    <h2><bean:message key="flex.name"/> : Error</h2>
+    <hr>
     <h3>An error has occured and been logged</h3>
     <html:errors/>
     <logic:present name="exception">

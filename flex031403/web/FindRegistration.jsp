@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><title>Find Registration</title></head>
+<head><title><bean:message key="flex.name"/> : Find Registration</title></head>
 <body bgcolor="white">
 
 <h2><bean:message key="flex.name"/> : Find Registration</h2>

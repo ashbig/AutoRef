@@ -9,9 +9,10 @@
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 <html>
-<head><title>Container Process History</title></head>
+<head><title><bean:message key="flex.name"/> : Container Process History</title></head>
 <body>
-    <h3>Container Process History</h3>
+    <h2><bean:message key="flex.name"/> : Container Process History</h2>
+    <hr>
     <br>
     <table>
     <tr>

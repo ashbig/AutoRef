@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><title>Customer Registration</title></head>
+<head><title><bean:message key="flex.name"/> : Customer Registration</title></head>
 <body bgcolor="white">
 
 <h2><bean:message key="flex.name"/> : Customer Registration</h2>

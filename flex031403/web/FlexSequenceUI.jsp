@@ -14,9 +14,9 @@
  
  
  The following information is used by CVS
- $Revision: 1.4 $
- $Date: 2001-06-14 19:35:06 $
- $Author: dongmei_zuo $
+ $Revision: 1.5 $
+ $Date: 2001-07-16 16:04:28 $
+ $Author: jmunoz $
  
  ******************************************************************************
  
@@ -38,11 +38,13 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <html>
-<head><title>Flex Sequence Info</title></head>
+<head><title><bean:message key="flex.name"/> : Flex Sequence Info</title></head>
 <body>
+
+<H2><bean:message key="flex.name"/> : Flex Sequence Info</h2>
 <html:errors/>
-<H1><CENTER>HIP <bean:message key="flex.name"/> Database</CENTER></H1>
-<HR><BR>
+<HR>
+<BR>
 <TABLE WIDTH=80% ALIGN=CENTER>
     <TR>
         <TD><B>Flex ID: </B><bean:write name="FLEX_SEQUENCE" property="id"/></TD>

@@ -1,5 +1,5 @@
 <%--
-        $Id: ProcessQueue.jsp,v 1.3 2001-07-11 14:37:50 jmunoz Exp $ 
+        $Id: ProcessQueue.jsp,v 1.4 2001-07-16 16:04:29 jmunoz Exp $ 
 
         File    : ProcessQueue.jsp
         Date    : 05102001
@@ -16,10 +16,13 @@
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 <html>
-<head><title>Request Processed Summary</title></head>
+<head><title><bean:message key="flex.name"/> : Request Processed</title></head>
 <body>
-	<H1> Request Summary </H1>
+<H2><bean:message key="flex.name"/> : Request Processed</H2>
+<hr>
+
 	<%-- display summary of requests processed --%>
+
 <TABLE>
 <TR><TD>Requests Processed: <bean:write name="<%=edu.harvard.med.hip.flex.Constants.PROCESSED_SEQ_NUM_KEY%>" /></TD>
 <TD>Pending Requests: <bean:write name="<%=edu.harvard.med.hip.flex.Constants.PENDING_SEQ_NUM_KEY%>" /></TD></TR>

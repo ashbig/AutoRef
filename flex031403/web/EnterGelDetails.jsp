@@ -22,9 +22,10 @@
 
 
 <html>
-<head><title>Gel Result Details</title></head>
+<head><title><bean:message key="flex.name"/> : Gel Result Details</title></head>
 <body>
-
+<h2><bean:message key="flex.name"/> : Gel Result Details</h2>
+<hr>
 <center><html:errors/></center>
 <logic:equal name="mode" value="<%=Constants.EDIT_MODE%>">
     <h3>Enter The results of this gel</h3>

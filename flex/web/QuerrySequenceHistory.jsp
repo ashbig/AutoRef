@@ -10,10 +10,11 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 <html>
-<head><title>Query Sequence History</title></head>
+<head><title><bean:message key="flex.name"/> : Query Sequence History</title></head>
 <body>
-    <center><html:errors/></center>
-    <center><h3>Sequence Process History Search</h3></center>
+    <h2><bean:message key="flex.name"/> : Query Sequence History</h2>
+    <hr>
+    <html:errors/>
     <html:form action="/ViewSequenceProcessHistory">
         Search By &nbsp;
         <html:select property="searchParam">

@@ -7,10 +7,12 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><title>Enter Process Results</title></head>
+<head><title><bean:message key="flex.name"/> : Enter Process Results</title></head>
 <body>
     
 <html:form action="EnterPlate.do" focus="plateBarcode">
+    <h2><bean:message key="flex.name"/> : Enter Process Results</h2>
+    <hr>
     <center>
     <table>
     <html:errors/>

@@ -8,9 +8,10 @@
 <head><title><bean:message key="flex.name"/> : Enter Oligo Plate Location Form</title></head>
 <body>
 <h2><bean:message key="flex.name"/> : Enter Oligo Plate Location Form</h2>
-<h3>Please specify the location for each oligo plate received:<p></h3>
 <hr>
+
 <html:errors/>
+<h3>Please specify the location for each oligo plate received:<p></h3>
 
     <% List ids = (List) request.getSession().getAttribute("plateList"); %>
 

@@ -13,8 +13,10 @@
 
 
 <html>
-<head><title>Container Details</title></head>
+<head><title><bean:message key="flex.name"/> : Container Details</title></head>
 <body>
+<h2><bean:message key="flex.name"/> : Container Details</h2>
+<hr>
 <logic:present name="<%=Constants.PROCESS_KEY%>">
     <Center><h3>Results desplayed are for protocol 
     <bean:write name="<%=Constants.PROCESS_KEY%>" property="protocol.processname"/>
