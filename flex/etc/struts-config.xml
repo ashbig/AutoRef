@@ -143,7 +143,14 @@
                 input="/EnterProcessResults.jsp">
         <forward name="success" path="/EnterProcessResults.jsp"/>
     </action>
-
+    
+    <!-- Display form to enter info about a Transformation plate -->
+    <action     path="/"
+                type="edu.harvard.med.hip.flex.action.EnterTransformDetailsAction"
+                name="transformEntryForm"
+                scope="request">
+        <forward name="sucess" path="/EnterTransformDetails.jsp"/>
+    </action>
 
     <!-- Process the protocol retieval and display -->
     <action    path="/CreateProcessPlate"
