@@ -10,7 +10,7 @@
 <td align = "center">
 [<a href="main.jsp">Main Menu</a>] 
 [<a href="Logout.do">Log Out</a>]
-[<a href="mailto:yanhui_hu@hms.harvard.edu">Contact Us</a>]
+[<a href="mailto:hip_informatics@hms.harvard.edu">Contact Us</a>]
 
 <!--
 [<a href="main.jsp">Home</a>] 

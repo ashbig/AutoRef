@@ -69,7 +69,7 @@
      </font></p>
      <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      <map name="FPMap4">
-     <area href="mailto:yanhui_hu@hms.harvard.edu" shape="rect" coords="0, 4, 23, 23"></map><img border="0" src="./jpg/email_us.gif" width="24" height="24" usemap="#FPMap4">&nbsp;&nbsp;&nbsp;<br>
+     <area href="mailto:hip_informatics@hms.harvard.edu" shape="rect" coords="0, 4, 23, 23"></map><img border="0" src="./jpg/email_us.gif" width="24" height="24" usemap="#FPMap4">&nbsp;&nbsp;&nbsp;<br>
      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#008080">Email us</font></p>
   <center>
   <p>&nbsp;

@@ -39,7 +39,7 @@ dhtmlMenu.addItem(new NavBarMenuItem("sort gene list (gene related)", "ChipGeneG
 myNavBar1.addMenu(dhtmlMenu);
 
 dhtmlMenu = new NavBarMenu(100, 120);
-dhtmlMenu.addItem(new NavBarMenuItem("Contact us", "mailto:yanhui_hu@hms.harvard.edu"));
+dhtmlMenu.addItem(new NavBarMenuItem("Contact us", "mailto:hip_informatics@hms.harvard.edu"));
 myNavBar1.addMenu(dhtmlMenu);
 
 dhtmlMenu = new NavBarMenu(100, 150);
