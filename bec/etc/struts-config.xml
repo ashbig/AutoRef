@@ -160,6 +160,8 @@
              <forward name="display_info" path="/ConfirmProcess.jsp"/>
              <forward name="display_oligo_container" path  = "/Display_OligoContainer.jsp"/>
             <forward name="display_stretch_report" path  = "/Display_Stretch.jsp"/>
+            <forward name="display_stretch_collections" path  = "/Display_StretchCollections.jsp"/>   
+       
 </action>
 
  
@@ -185,9 +187,7 @@
                 input="/SubmitDataFile.jsp"
                 type="edu.harvard.med.hip.bec.action.SubmitDataFileAction">
             <forward name="response" path="/Response.jsp"/>
-          
-           
-
+            <forward name="processing" path="/ConfirmProcess.jsp"/>
     </action>
 
 
