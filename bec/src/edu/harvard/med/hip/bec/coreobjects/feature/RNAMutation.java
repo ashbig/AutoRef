@@ -219,23 +219,23 @@ public class RNAMutation extends Mutation {
     
     
      public void updatePolymorphhismData(Connection conn) throws BecDatabaseException
-    {
-        Statement stmt =null;
-        try
+     {
+         String  sql = null;
+       try
         {
-            String sql = "UPDATE discrepancy SET polymflag = "
-            + m_polymorphismflag + ", polymdate =" + m_polymdate + " ,polymid = " 
-            + m_polymid + " WHERE discrepancyid = "+ m_id;
-            stmt = conn.createStatement();
-            stmt.executeUpdate(sql);
-        } catch (Exception sqlE)
-        {
-            throw new BecDatabaseException("Error occured while calling updateStatus method for mutation "+m_id+"\n"+sqlE);
-        } finally
-        {
-            DatabaseTransaction.closeStatement(stmt);
+             sql = "UPDATE discrepancy SET polymflag= " + m_polymorphismflag + ", polmdate = sysdate ,polymid = '" 
+            + m_polymid + "' WHERE discrepancyid = "+ m_id;
+            DatabaseTransaction.executeUpdate(sql, conn);
+           
         }
+        catch(Exception e)
+        {
+            throw new BecDatabaseException("Cannot update isolate status "+sql);
+        }
+       
     }
+     
+    
     
      
  
