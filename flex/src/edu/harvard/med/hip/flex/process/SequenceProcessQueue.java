@@ -1,4 +1,4 @@
-/* $Id: SequenceProcessQueue.java,v 1.6 2001-05-29 14:46:32 dongmei_zuo Exp $
+/* $Id: SequenceProcessQueue.java,v 1.7 2001-05-29 15:30:36 dongmei_zuo Exp $
  *
  * File     	: SequenceProcessQueue.java
  * Date     	: 05072001
@@ -212,9 +212,10 @@ public class SequenceProcessQueue implements ProcessQueue {
             System.out.println("Insert into queue:");
             for(int i=1; i<5; i++) {
                 System.out.println("Sequence ID: "+i);
-                DatabaseTransaction.executeUpdate("insert into queue(protocolid, dateadded, sequenceid) values(1, sysdate,"+i+")", c);
-                c.commit();
+                DatabaseTransaction.executeUpdate("insert into queue(protocolid, dateadded, sequenceid) values(1, sysdate,"+i+")", c);              
             }
+            c.commit();
+              
             System.out.println("OK");
             LinkedList items = queue.getQueueItems(protocol);
             ListIterator iter = items.listIterator();

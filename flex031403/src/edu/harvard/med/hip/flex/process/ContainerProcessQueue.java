@@ -1,4 +1,4 @@
-/* $Id: ContainerProcessQueue.java,v 1.5 2001-05-25 18:36:20 dongmei_zuo Exp $
+/* $Id: ContainerProcessQueue.java,v 1.6 2001-05-29 15:31:03 dongmei_zuo Exp $
  *
  * File     	: ContainerProcessQueue.java
  * Date     	: 04162001
@@ -235,8 +235,8 @@ public class ContainerProcessQueue implements ProcessQueue {
             for(int i=1; i<6; i++) {
                 System.out.println("Container ID: "+i);
                 DatabaseTransaction.executeUpdate("insert into queue values(1, sysdate, null, null, null,"+i+")", c);
-                c.commit();
             }
+            c.commit();
             
             LinkedList items = queue.getQueueItems(protocol);
             ListIterator iter = items.listIterator();
