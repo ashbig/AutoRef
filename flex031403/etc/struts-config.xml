@@ -207,6 +207,7 @@
               scope="request"
               input="/ConfirmSelection.jsp">
       <forward  name="success"   path="/CustomerRequest.do"/>
+      <forward  name="fail"   path="/RequestFail.jsp"/>
     </action> 
 
     <!-- Process a customer request -->

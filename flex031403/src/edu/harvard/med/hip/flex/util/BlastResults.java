@@ -17,6 +17,8 @@ public class BlastResults {
    private String evalue = null;
    private String identity = null;
    private int cdslength = 0;
+   private double percentIdentity;
+   private double percentAlignment;
    
     /** Creates new BlastResults */
     public BlastResults() {}
@@ -73,5 +75,41 @@ public class BlastResults {
      */
     public int getCdslength() {
         return cdslength;
-    }    
+    }  
+    
+    /**
+     * Set the percentIdentity to the given value.
+     *
+     * @param percentIdentity The value to be set to.
+     */
+    public void setPercentIdentity(double percentIdentity) {
+        this.percentIdentity = percentIdentity;
+    }
+    
+    /**
+     * Get the percentIdentity.
+     *
+     * @return The percentIdentity value.
+     */
+    public double getPercentIdentity() {
+        return percentIdentity;
+    }
+    
+    /**
+     * Set the setPercentAlignment to be the given value.
+     *
+     * @param percentAlignment The value to be set to.
+     */
+    public void setPercentAlignment(double percentAlignment) {
+        this.percentAlignment = percentAlignment;
+    }
+    
+    /**
+     * Return the percentAlignment value.
+     *
+     * @return The percentAlignment value.
+     */
+    public double getPercentAlignment() {
+        return percentAlignment;
+    }
 }

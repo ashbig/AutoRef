@@ -63,6 +63,8 @@ public class ConfirmSelectionAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
+        ActionErrors errors = new ActionErrors();
+
         String [] selection = ((CustomerRequestForm)form).getSelection();
         if(selection == null) {         
             return (mapping.findForward("success"));
@@ -93,7 +95,11 @@ public class ConfirmSelectionAction extends FlexAction {
                     }
                 }
                 
-                r.addSequence(sequence);
+                if(!r.addSequence(sequence)) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.request.exists", (new Integer(sequence.getId())).toString()));
+                    saveErrors(request, errors);
+                    return (mapping.findForward("fail"));
+                }                                      
             }
 
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -116,7 +122,8 @@ public class ConfirmSelectionAction extends FlexAction {
                 return (mapping.findForward("error"));
             } 
         } finally {
-            DatabaseTransaction.closeConnection(conn);
+            if(conn != null)
+                DatabaseTransaction.closeConnection(conn);
         }
     }    
 }

@@ -58,6 +58,91 @@ appropriate selection and submit your cloning request to FLEXGene.</h3>
 </table>
 </logic:present>
 
+<logic:present name="cdsMatchSequences">
+<p>
+<h3>Category: Good quality sequences with exact CDS matchs to FLEXGene sequence</h3>
+<EM>The following sequences in each group have exactly the same CDS to each other.
+Selecting each group will only add the FLEXGene sequence to your request.</EM>
+<logic:iterate id="cdsMatch" name="cdsMatchSequences">
+<p>
+<EM>Evalue</EM>: <bean:write name="cdsMatch" property="value.blastResults.evalue"/><br>
+<EM>Identity</EM>: <bean:write name="cdsMatch" property="value.blastResults.identity"/><br>
+<EM>Query CDS length</EM>: <bean:write name="cdsMatch" property="value.blastResults.cdslength"/>      
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+[ <a target=_new href="ViewAlignment.do?gi=<bean:write name="cdsMatch" property="key"/>">View Alignment</a> ]
+<TABLE border="1" cellpadding="2" cellspacing="0">
+    <tr class="headerRow">
+        <td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
+    </tr>
+    <logic:iterate id="h" name="cdsMatch" property="value.homolog">
+    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+        <logic:equal name="h" property="id" value="-1">
+        <td><font color=red><bean:message key="flex.notapplicable" /></font></td>
+        </logic:equal>
+        <logic:notEqual name="h" property="id" value="-1">
+        <td ROWSPAN=2><input name="selection" type="checkbox" value="<bean:write name="h" property="gi"/>"></td>
+        <td><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="h" property="id"/>"><bean:write name="h" property="id"/></a><br></td>
+        </logic:notEqual>
+        <td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="h" property="gi"/>&dopt=GenBank"><bean:write name="h" property="accession"/><br></a></td>
+        <td><bean:write name="h" property="description"/></td>
+        <td><bean:write name="h" property="gi"/></td>
+        <td><bean:write name="h" property="species"/></td>
+        <td><bean:write name="h" property="flexstatus"/></td>
+        <td><bean:write name="h" property="quality"/></td>
+    </flex:row>
+    </logic:iterate>
+</table>
+</logic:iterate>
+</logic:present>
+
+<logic:present name="homologs">
+<h3>Category: Good quality sequences with near CDS matchs to FLEXGene sequence</h3>
+<EM>A closely related gene has been found in FLEXGene database. It is grouped with the 
+sequence requested. Selecting the following group will only
+add the FLEXGene sequence to your request. If you want to clone the different sequence, please
+send us email to explain the reason. Please include the accession number of the 
+sequence and the FLEXGene ID from the following group.</EM>        
+<logic:iterate id="homo" name="homologs">
+<p>
+<EM>Evalue</EM>: <bean:write name="homo" property="value.blastResults.evalue"/><br>
+<EM>Identity</EM>: <bean:write name="homo" property="value.blastResults.identity"/><br>
+<EM>Query CDS length</EM>: <bean:write name="homo" property="value.blastResults.cdslength"/>      
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+[ <a target=_new href="ViewAlignment.do?gi=<bean:write name="homo" property="key"/>">View Alignment</a> ]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+<a href="mailto:flex_support@hms.harvard.edu">Email cloning request</a>
+<TABLE border="1" cellpadding="2" cellspacing="0">
+    <tr class="headerRow">
+        <td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
+    </tr>
+    <logic:iterate id="h" name="homo" property="value.homolog">
+    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
+        <logic:equal name="h" property="id" value="-1">
+        <td><font color=red><bean:message key="flex.notapplicable" /></font></td>
+        </logic:equal>
+        <logic:notEqual name="h" property="id" value="-1">
+        <td ROWSPAN=2><input name="selection" type="checkbox" value="<bean:write name="h" property="gi"/>"></td>
+        <td><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="h" property="id"/>"><bean:write name="h" property="id"/></a><br></td>
+        </logic:notEqual>
+        <td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="h" property="gi"/>&dopt=GenBank"><bean:write name="h" property="accession"/><br></a></td>
+        <td><bean:write name="h" property="description"/></td>
+        <td><bean:write name="h" property="gi"/></td>
+        <td><bean:write name="h" property="species"/></td>
+        <td><bean:write name="h" property="flexstatus"/></td>
+        <td><bean:write name="h" property="quality"/></td>
+    </flex:row>
+    </logic:iterate>
+</table>
+</logic:iterate>
+</logic:present>
+
 <logic:present name="sameSequence">
 <p>
 <h3>Category: Good quality sequences already present in FLEXGene</h3>
@@ -84,91 +169,6 @@ appropriate selection and submit your cloning request to FLEXGene.</h3>
     </flex:row>
     </logic:iterate>
 </table>
-</logic:present>
-
-<logic:present name="displayHomologs">
-<p>
-<h3>Category: Good quality sequences with related FLEXGene sequence</h3>
-
-<logic:present name="cdsMatchSequences">
-<logic:iterate id="cdsMatch" name="cdsMatchSequences">
-<p>
-Evalue: <bean:write name="cdsMatch" property="value.blastResults.evalue"/><br>
-Identity: <bean:write name="cdsMatch" property="value.blastResults.identity"/><br>
-Query CDS length: <bean:write name="cdsMatch" property="value.blastResults.cdslength"/>      
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-[ <a target=_new href="ViewAlignment.do?gi=<bean:write name="cdsMatch" property="key"/>">View Alignment</a> ]
-<TABLE border="1" cellpadding="2" cellspacing="0">
-    <tr class="headerRow">
-        <td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
-    </tr>
-    <logic:iterate id="h" name="cdsMatch" property="value.homolog">
-    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
-        <logic:equal name="h" property="id" value="-1">
-        <td><font color=red><bean:message key="flex.notapplicable" /><br></font></td>
-        </logic:equal>
-        <logic:notEqual name="h" property="id" value="-1">
-        <td ROWSPAN=2><input name="selection" type="checkbox" value="<bean:write name="h" property="gi"/>"></td>
-        <td><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="h" property="id"/>"><bean:write name="h" property="id"/></a><br></td>
-        </logic:notEqual>
-        <td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="h" property="gi"/>&dopt=GenBank"><bean:write name="h" property="accession"/><br></a></td>
-        <td><bean:write name="h" property="description"/></td>
-        <td><bean:write name="h" property="gi"/></td>
-        <td><bean:write name="h" property="species"/></td>
-        <td><bean:write name="h" property="flexstatus"/></td>
-        <td><bean:write name="h" property="quality"/></td>
-    </flex:row>
-    </logic:iterate>
-</table>
-</logic:iterate>
-</logic:present>
-
-<logic:present name="homologs">
-<logic:iterate id="homo" name="homologs">
-<p>
-Evalue: <bean:write name="homo" property="value.blastResults.evalue"/><br>
-Identity: <bean:write name="homo" property="value.blastResults.identity"/><br>
-Query CDS length: <bean:write name="homo" property="value.blastResults.cdslength"/>      
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-[ <a target=_new href="ViewAlignment.do?gi=<bean:write name="homo" property="key"/>">View Alignment</a> ]
-<TABLE border="1" cellpadding="2" cellspacing="0">
-    <tr class="headerRow">
-        <td></td><th>FLEXGene ID</th><th>Genbank Acc</th><th>Description</th><th>GI</th><th>Organism</th><th>Flex Status</th><th>Quality</th>
-    </tr>
-    <logic:iterate id="h" name="homo" property="value.homolog">
-    <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
-        <logic:equal name="h" property="speciesCategory" value="allowed">
-        <td><input name="selection" type="checkbox" value="<bean:write name="h" property="gi"/>"></td>
-        </logic:equal>
-        <logic:notEqual name="h" property="speciesCategory" value="allowed">
-        <td></td>
-        </logic:notEqual>
-        <logic:equal name="h" property="id" value="-1">
-        <td><font color=red><bean:message key="flex.notapplicable" /><br></font></td>
-        </logic:equal>
-        <logic:notEqual name="h" property="id" value="-1">
-        <td><a href="ViewSequence.do?<%= Constants.FLEX_SEQUENCE_ID_KEY %>=<bean:write name="h" property="id"/>"><bean:write name="h" property="id"/></a><br></td>
-        </logic:notEqual>
-        <td><a target="_new" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=Nucleotide&list_uids=<bean:write name="h" property="gi"/>&dopt=GenBank"><bean:write name="h" property="accession"/><br></a></td>
-        <td><bean:write name="h" property="description"/></td>
-        <td><bean:write name="h" property="gi"/></td>
-        <td><bean:write name="h" property="species"/></td>
-        <td><bean:write name="h" property="flexstatus"/></td>
-        <td><bean:write name="h" property="quality"/></td>
-    </flex:row>
-    </logic:iterate>
-</table>
-</logic:iterate>
-</logic:present>
-
 </logic:present>
 
 <logic:present name="badSequences">

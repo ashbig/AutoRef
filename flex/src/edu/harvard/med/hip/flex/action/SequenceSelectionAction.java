@@ -35,10 +35,10 @@ import java.util.Collections;
 /**
  *
  * @author  Dongmei Zuo
- * @version 
+ * @version
  */
 public class SequenceSelectionAction extends FlexAction {
-
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -67,10 +67,10 @@ public class SequenceSelectionAction extends FlexAction {
         }
         
         String [] selections = ((CustomerRequestForm)form).getCheckOrder();
-        if(selections == null) {         
+        if(selections == null) {
             return (mapping.findForward("empty"));
         }
-             
+        
         Vector newSequences = new Vector();
         Vector badSequences = new Vector();
         Vector sameSequence = new Vector();
@@ -84,10 +84,10 @@ public class SequenceSelectionAction extends FlexAction {
                 String gi = selections[i];
                 FlexSequence sequence = (FlexSequence)searchResult.get(gi);
                 submittedSequences.addElement(sequence);
-         
+                
                 //for the new sequences, need more info from genbank.
                 if(sequence.getFlexstatus().equals(FlexSequence.NEW)) {
-                    setSequenceInfo(sequence, gi);           
+                    setSequenceInfo(sequence, gi);
                     //if the sequence quality is questionable, put it aside.
                     if(FlexSequence.QUESTIONABLE.equals(sequence.getQuality())) {
                         badSequences.addElement(sequence);
@@ -99,6 +99,7 @@ public class SequenceSelectionAction extends FlexAction {
                             //Add the new sequence information to the database.
                             ((FlexSequence)sseqs.elementAt(0)).addPublicInfo(sequence.getPublicInfo());
                             sequence.setId(((FlexSequence)sseqs.elementAt(0)).getId());
+                            sequence.setFlexstatus(((FlexSequence)sseqs.elementAt(0)).getFlexstatus());
                             sameSequence.addElement(sequence);
                             sequences.put(gi, sequence);
                         } else {
@@ -106,8 +107,9 @@ public class SequenceSelectionAction extends FlexAction {
                                 Homologs h = new Homologs();
                                 h.setHomolog(analyzer.getHomolog());
                                 h.setBlastResults(analyzer.getBlastResults());
-
-                                if(analyzer.getBlastResults().getEvalue().equals("0.0")) {
+                                
+                                if(((int)(analyzer.getBlastResults().getPercentIdentity())) == 1 &&
+                                ((int)analyzer.getBlastResults().getPercentAlignment()) == 1) {
                                     cdsMatchSequences.put(gi, h);
                                 } else {
                                     homologs.put(gi, h);
@@ -139,7 +141,7 @@ public class SequenceSelectionAction extends FlexAction {
             if(newSequences.size() > 0) {
                 request.setAttribute("newSequences", newSequences);
                 count++;
-            }            
+            }
             if(badSequences.size() > 0) {
                 request.setAttribute("badSequences", badSequences);
                 count++;
@@ -159,9 +161,6 @@ public class SequenceSelectionAction extends FlexAction {
             if(submittedSequences.size() > 0) {
                 request.setAttribute("submittedSequences", submittedSequences);
             }
-            if(cdsMatchSequences.size() > 0 || homologs.size() > 0) {
-                request.setAttribute("displayHomologs", "1");
-            }
             
             request.getSession().setAttribute("sequences", sequences);
             if(count == 0) {
@@ -172,7 +171,7 @@ public class SequenceSelectionAction extends FlexAction {
         } catch (Exception ex) {
             request.setAttribute(Action.EXCEPTION_KEY, ex);
             return (mapping.findForward("error"));
-        }    
+        }
     }
     
     //call the parser with sequence gid, and set sequence values.
@@ -193,5 +192,5 @@ public class SequenceSelectionAction extends FlexAction {
         else {
             sequence.setQuality(FlexSequence.GOOD);
         }
-    }    
+    }
 }

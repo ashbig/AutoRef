@@ -1,5 +1,5 @@
 /**
- * $Id: Request.java,v 1.6 2001-07-26 18:43:50 jmunoz Exp $
+ * $Id: Request.java,v 1.7 2001-07-26 22:44:35 dzuo Exp $
  *
  * File     	: Request.java
  * Date     	: 05032001
@@ -61,6 +61,9 @@ public class Request {
         this.username = username;
         this.date = date;
         this.sequences = sequences;
+        
+        if (sequences == null) 
+            sequences = new Vector();
     }
     
     /**
@@ -70,6 +73,9 @@ public class Request {
         this.id = id;
         this.username = username;
         this.date = date;
+        
+        if (sequences == null) 
+            sequences = new Vector();
     }
     
     /**
@@ -78,6 +84,10 @@ public class Request {
     public Request(String username, Vector sequences) {
         this.username = username;
         this.sequences = sequences;
+        
+        if (sequences == null) 
+            sequences = new Vector();
+        
     }
     
     /**
@@ -184,9 +194,15 @@ public class Request {
      * Add the sequence to the request.
      *
      * @param sequence The FlexSequence object to be added.
+     * @return True if the sequence is added successfully; false otherwise.
      */
-    public void addSequence(FlexSequence sequence) {
+    public boolean addSequence(FlexSequence sequence) {
+        if(exists(sequence)) {
+            return false;
+        } 
+        
         sequences.addElement(sequence);
+        return true;
     }
     
     /**
@@ -221,6 +237,26 @@ public class Request {
             DatabaseTransaction.executeUpdate(reqSql,conn);
             
         }
+    }
+
+    private boolean exists(FlexSequence sequence) {
+        if(sequences == null) {
+            return false;
+        }
+        
+        if(sequence.getId() == -1) {
+            return false;
+        }
+        
+        Enumeration enum = sequences.elements();
+        while(enum.hasMoreElements()) {
+            FlexSequence seq = (FlexSequence)enum.nextElement();
+            if(seq.getId() == sequence.getId()) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     public static void main(String [] args) {

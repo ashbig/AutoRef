@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.22 2001-07-26 18:15:24 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.23 2001-07-26 22:44:36 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -29,8 +29,8 @@ public class FlexSeqAnalyzer {
 //    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
-    private static final double PERCENTIDENTITY = 0.8;
-    private static final double PERCENTALIGNMENT = 0.8;
+    public static final double PERCENTIDENTITY = 0.95;
+    public static final int CDSLENGTHLIMIT = 70;
     
     private FlexSequence sequence;
     private Vector sameSequence = new Vector();
@@ -81,7 +81,7 @@ public class FlexSeqAnalyzer {
         
         String queryFile = makeQueryFile();
         Blaster blaster = new Blaster();
-        blaster.setHits(1);
+        blaster.setHits(5);
         blaster.setDBPath(BLASTDB);
         blaster.blast(queryFile+".in", queryFile+".out");
         BlastParser parser = new BlastParser(queryFile+".out");
@@ -103,7 +103,7 @@ public class FlexSeqAnalyzer {
         double percentAlignment = (end-start+1)/(double)cdslength;
         String evalue = y.getEvalue();
         
-        if(percentIdentity>=PERCENTIDENTITY && percentAlignment>=PERCENTALIGNMENT) {
+        if(percentIdentity>=PERCENTIDENTITY && numerator >= CDSLENGTHLIMIT) {
             FlexSequence s = new FlexSequence(homologid);
             s.restore(homologid);
             homolog.addElement(s);
@@ -115,6 +115,8 @@ public class FlexSeqAnalyzer {
             blastResults.setEvalue(evalue);
             blastResults.setIdentity(identity);
             blastResults.setCdslength(cdslength);
+            blastResults.setPercentIdentity(percentIdentity);
+            blastResults.setPercentAlignment(percentAlignment);
         }
         
         return isHomolog;
