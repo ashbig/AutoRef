@@ -528,11 +528,11 @@ public class RearrayManager {
         Vector sampleLineageSet = mapper.getSampleLineageSet();
         Set sourceContainers = mapper.getSourceContainers();
         createProcessRecord(sourceContainers, container, sampleLineageSet, conn);
-        
+       /** 
         if(isStorage) {
             addToStorage(container, conn);
         }
-        
+       */ 
         rearrayedContainers.add(container);
         
         return container;

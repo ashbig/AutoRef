@@ -54,8 +54,6 @@
             <td><select name="sourceFormat">
                 <option value="workingGlycerol"/>Working Glycerol
                 <option value="workingDna"/>Working DNA
-                <option value="archiveGlycerol"/>Archive Glycerol
-                <option value="archiveDna"/>Archive DNA
                 </select>
             </td>
             </logic:equal>
@@ -63,8 +61,8 @@
             <td><select name="sourceFormat">
                 <option value="glycerol"/>Original Production Glycerol Stock
                 <option value="dna"/>Original Production DNA
-                <option value="currentGlycerol"/>Current Working Glycerol Stock
-                <option value="currentDna"/>Current Working DNA
+                <option value="workingGlycerol"/>Working Glycerol
+                <option value="workingDna"/>Working DNA
                 </select>
             </td>
             </logic:equal>

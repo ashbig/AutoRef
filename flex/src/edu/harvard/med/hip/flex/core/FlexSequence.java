@@ -1,5 +1,5 @@
 /**
- * $Id: FlexSequence.java,v 1.5 2004-03-10 19:02:23 dzuo Exp $
+ * $Id: FlexSequence.java,v 1.6 2004-03-16 20:10:55 dzuo Exp $
  *
  * File     : FlexSequence.java
  * Date     : 05022001
@@ -26,6 +26,8 @@ public class FlexSequence extends CDNASequence {
     public static final String INPROCESS = "INPROCESS";
     public static final String REJECTED = "REJECTED";
     public static final String PENDING = "PENDING";
+    public static final String FAILED_CLONING = "FAILED CLONING";
+    public static final String CLONE_OBTAINED = "CLONE OBTAINED";
     public static final String NEW = "No FLEXGene Match";
     public static final String GOOD = "GOOD";
     public static final String QUESTIONABLE = "QUESTIONABLE";

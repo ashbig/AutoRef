@@ -6,10 +6,10 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Vector;
-import java.util.ArrayList;
+import java.util.*;
 import java.sql.*;
 import java.io.*;
+import java.lang.Thread;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,44 +38,44 @@ import edu.harvard.med.hip.flex.core.*;
  *
  * @author  dzuo
  */
-public class CloneRearrayParamSetAction extends RearrayParamSetAction {        
+public class CloneRearrayParamSetAction extends RearrayParamSetAction {
     protected void setSampleTypeAndProtocol(ActionForm form, RearrayManager manager) {
         int workflow = ((GenericRearrayForm)form).getWorkflow();
         
         if(Workflow.REARRAY_ARCHIVE_GLYCEROL == workflow) {
             manager.setProtocolName(Protocol.REARRAY_ARCHIVE_GLYCEROL);
             manager.setSampleType(Sample.ISOLATE);
-            manager.setIsStorage(true);
             manager.setDestStorageType(StorageType.ARCHIVE);
             manager.setDestStorageForm(StorageForm.GLYCEROL);
         } else if(Workflow.REARRAY_DIST_GLYCEROL == workflow) {
             manager.setProtocolName(Protocol.REARRAY_DIST_GLYCEROL);
             manager.setSampleType(Sample.ISOLATE);
+            manager.setDestStorageType(StorageType.DIST);
+            manager.setDestStorageForm(StorageForm.GLYCEROL);
         } else if(Workflow.REARRAY_SEQ_GLYCEROL == workflow) {
             manager.setProtocolName(Protocol.REARRAY_SEQ_GLYCEROL);
             manager.setSampleType(Sample.ISOLATE);
         } else if(Workflow.REARRAY_WORKING_GLYCEROL == workflow) {
             manager.setProtocolName(Protocol.REARRAY_WORKING_GLYCEROL);
             manager.setSampleType(Sample.ISOLATE);
-            manager.setIsStorage(true);
             manager.setDestStorageType(StorageType.WORKING);
             manager.setDestStorageForm(StorageForm.GLYCEROL);
         } else if(Workflow.REARRAY_ARCHIVE_DNA == workflow) {
             manager.setProtocolName(Protocol.REARRAY_ARCHIVE_DNA);
             manager.setSampleType(Sample.DNA);
-            manager.setIsStorage(true);
             manager.setDestStorageType(StorageType.ARCHIVE);
             manager.setDestStorageForm(StorageForm.DNA);
         } else if(Workflow.REARRAY_DIST_DNA == workflow) {
             manager.setProtocolName(Protocol.REARRAY_DIST_DNA);
             manager.setSampleType(Sample.DNA);
+            manager.setDestStorageType(StorageType.DIST);
+            manager.setDestStorageForm(StorageForm.DNA);
         } else if(Workflow.REARRAY_SEQ_DNA == workflow) {
             manager.setProtocolName(Protocol.REARRAY_SEQ_DNA);
             manager.setSampleType(Sample.DNA);
         } else if(Workflow.REARRAY_WORKING_DNA == workflow) {
             manager.setProtocolName(Protocol.REARRAY_WORKING_DNA);
             manager.setSampleType(Sample.DNA);
-            manager.setIsStorage(true);
             manager.setDestStorageType(StorageType.WORKING);
             manager.setDestStorageForm(StorageForm.DNA);
         }
@@ -109,5 +109,14 @@ public class CloneRearrayParamSetAction extends RearrayParamSetAction {
             manager.setStorageForm(StorageForm.DNA);
             manager.setStorageType(StorageType.CURRENT);
         }
-    }    
+    }
+    
+    protected void addToStorage(ActionForm form, List containers, String storageType, String storageForm) {
+        int workflow = ((GenericRearrayForm)form).getWorkflow();
+        ThreadedCloneStorageManager manager = new ThreadedCloneStorageManager(containers, storageType, storageForm);
+        
+        if(Workflow.REARRAY_SEQ_GLYCEROL != workflow && Workflow.REARRAY_SEQ_DNA != workflow) {
+            new Thread(manager).start();
+        }
+    }
 }

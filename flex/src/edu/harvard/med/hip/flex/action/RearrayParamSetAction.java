@@ -8,6 +8,7 @@ package edu.harvard.med.hip.flex.action;
 
 import java.util.Vector;
 import java.util.ArrayList;
+import java.util.List;
 import java.sql.*;
 import java.io.*;
 import javax.servlet.RequestDispatcher;
@@ -236,11 +237,13 @@ public class RearrayParamSetAction extends ResearcherAction {
             manager.writeOutputFiles();
             manager.writeToLog("rearray_log.txt");
             manager.sendRobotFiles(userEmail);
+            DatabaseTransaction.commit(conn);
+            
             ArrayList rearrayedContainers = manager.getRearrayedContainers();
+            addToStorage(form,rearrayedContainers,manager.getDestStorageType(), manager.getDestStorageForm());
             ArrayList files = manager.getFiles();
             request.setAttribute("containers", rearrayedContainers);
             request.setAttribute("files", files);
-            DatabaseTransaction.commit(conn);
             //request.getSession().removeAttribute("Rearray.locations");
             return (mapping.findForward("success"));
         } catch (RearrayException ex) {
@@ -283,5 +286,8 @@ public class RearrayParamSetAction extends ResearcherAction {
     }
     
     protected void setStorageFormAndType(ActionForm form, RearrayManager manager) {
+    }
+    
+    protected void addToStorage(ActionForm form, List containers, String storageType, String storageForm) {
     }
 }
