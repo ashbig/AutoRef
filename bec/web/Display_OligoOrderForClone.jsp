@@ -46,16 +46,17 @@ String color[] = { "#e4e9f8","#b8c6ed" };
 
 
 <table border="1" cellpadding="1" cellspacing="1" width="84%" align=center>
-<th>Clone Id</th>
-<th>Oligo Id</th>
-<th>Oligo Name</th>
-<th>Oligo Sequence</th>
-<th>Oligo Position</th>
-<th>Plate</th>
-<th>Well</th>
-<th>Plate Status</th>
-<th>Order Date</th>
-<th>User Id</th>
+<th bgcolor="#1145A6" height="29">Clone Id</th>
+<th bgcolor="#1145A6" height="29">Plate</th>
+<th bgcolor="#1145A6" height="29">Position</th>
+<th bgcolor="#1145A6" height="29">Plate Status</th>
+<th bgcolor="#1145A6" height="29">Plate Order Date</th>
+<th bgcolor="#1145A6" height="29">User Id</th>
+<th bgcolor="#1145A6" height="29">Oligo Id</th>
+<th bgcolor="#1145A6" height="29">Oligo Name</th>
+<th bgcolor="#1145A6" height="29">Oligo Sequence</th>
+<th bgcolor="#1145A6" height="29">Oligo Position</th>
+
 <%
  ArrayList ui_items = (ArrayList)request.getAttribute("processing_items");
     UI_GeneOligo  ui_oligo = null;String row_color = color[0];
@@ -85,17 +86,17 @@ if ( prev_clone_id != ui_oligo.getCloneId ())
 prev_clone_id = ui_oligo.getCloneId (); %>
 
  </td>
+
+<td bgcolor='<%= row_color %>'><%= ui_oligo.getPlateLabel () %></td>
+<td bgcolor='<%= row_color %>'><%= ui_oligo.getWell () %></td>
+<td bgcolor='<%= row_color %>'><%= OligoContainer.getStatusAsString( ui_oligo.getPlateStatus ()) %></td>
+<td bgcolor='<%= row_color %>'><%= ui_oligo.getOrderDate ().substring(0,10) %></td>
+<td bgcolor='<%= row_color %>'><%= ui_oligo.getUserId () %></td></tr>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoID () %></td>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoName () %></td>
 
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoSequence () %></td>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.   getOligoPosition() %></td>
-
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getPlateLabel () %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getWell () %></td>
-<td bgcolor='<%= row_color %>'><%= OligoContainer.getStatusAsString( ui_oligo.   getPlateStatus ()) %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getOrderDate ().substring(0,10) %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getUserId () %></td></tr>
     
     <%}%>
 </table>
