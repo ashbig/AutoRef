@@ -5,9 +5,9 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <html>
-<head><title>FLEXGene: Print Oligo Plate Barcode Form</title></head>
+<head><title><bean:message key="flex.name"/> : Print Oligo Plate Barcode Form</title></head>
 <body>
-<h2>FLEXGene: Print Oligo Plate Barcode Form</h2>
+<h2><bean:message key="flex.name"/> : Print Oligo Plate Barcode Form</h2>
 <h3>Please click the buttons to print out plate barcodes:<p></h3>
 <hr>
 <html:errors/>

@@ -13,7 +13,7 @@
 <tr>
     <TD width=1></td>
     <td><br><br>
-        <h3>FLEXGene</h3>
+        <h3><bean:message key="flex.name"/></h3>
     
 
         <logic:iterate name="menulist" id="menuItem" type="edu.harvard.med.hip.flex.user.MenuItem">

@@ -1,10 +1,10 @@
 <html>
 <head>
-<title>FLEXGene : Cloning Request</title>
+<title><bean:message key="flex.name"/> : Cloning Request</title>
 </head>
 <body bgcolor="white">
 
-<h2>FlexGene : Cloning Request : Sequence Selection</h2>
+<h2><bean:message key="flex.name"/> : Cloning Request : Sequence Selection</h2>
 <hr>
 
 No matching sequences found.

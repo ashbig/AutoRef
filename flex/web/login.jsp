@@ -6,7 +6,7 @@
 <html>
     <head><title><bean:message key="flex.name"/> Login</title></head>
     <body> <center>
-    <h2>Welcome to FLEXGene Database</h2>
+    <h2>Welcome to <bean:message key="flex.name"/> Database</h2>
     <hr>
 
    <html:errors/>

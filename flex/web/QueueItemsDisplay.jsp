@@ -5,7 +5,7 @@
 
 <html>
 <head>
-<title>FLEXGene : Create Process Plate </title>
+<title><bean:message key="flex.name"/> : Create Process Plate </title>
 </head>
 <body bgcolor="white">
 <hr>

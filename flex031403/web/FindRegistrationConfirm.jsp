@@ -15,6 +15,6 @@
     </logic:exists>
 
 <p>
-<a href="login.jsp">Login to FLEXGene</a>
+<a href="login.jsp">Login to <bean:message key="flex.name"/></a>
 </body>
 </html> 

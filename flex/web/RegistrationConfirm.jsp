@@ -8,13 +8,13 @@
 <html>
 <head><title><bean:message key="flex.name"/> Error</title></head>
 <body>
-    <h3>You have successfully registrated to FLEXGene.</h3>
+    <h3>You have successfully registrated to <bean:message key="flex.name"/>.</h3>
     <html:errors/>
     <logic:exists name="exception">
         <bean:write name="exception"/>
     </logic:exists>
 
 <p>
-<a href="login.jsp">Login to FLEXGene</a>
+<a href="login.jsp">Login to <bean:message key="flex.name"/></a>
 </body>
 </html>

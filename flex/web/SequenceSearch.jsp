@@ -6,11 +6,11 @@
 
 <html:html locale="true">
 <head>
-<title>FLEXGene : Cloning Request</title>
+<title><bean:message key="flex.name"/> : Cloning Request</title>
 </head>
 <body bgcolor="white">
 
-<h2>FlexGene : Cloning Request : Sequence Search</h2>
+<h2><bean:message key="flex.name"/> : Cloning Request : Sequence Search</h2>
 <hr>
 
 <html:errors/>

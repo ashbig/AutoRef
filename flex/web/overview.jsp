@@ -1,9 +1,9 @@
  <HTML><HEAD><TITLE>HIP FLEX Database</TITLE></HEAD>
 	<BODY BGCOLOR="white" topmargin=50>
-		<H1><CENTER>HIP FLEXGene Database</CENTER></H1><HR><BR>
+		<H1><CENTER><bean:message key="flex.name"/> Database</CENTER></H1><HR><BR>
 		
-		<H3>FLEXGene Repository</H3>		
-		<p><b>FLEXGene</b> (Full-Length Expression) will be a complete repository of full-length cDNA clones for the human and other model organisms.  The fundamental goal of this repository is to enable high-throughput protein expression.  To this end, the clones are all constructed using a recombination-based vector system so that hundreds or thousands of coding regions can be simultaneously transferred into any protein expression vector overnight.  These transfers can be made mutation free into virtually any kind of expression vector allowing the broadest variety of experiments.</p>
+		<H3><bean:message key="flex.name"/> Repository</H3>		
+		<p><b><bean:message key="flex.name"/></b> (Full-Length Expression) will be a complete repository of full-length cDNA clones for the human and other model organisms.  The fundamental goal of this repository is to enable high-throughput protein expression.  To this end, the clones are all constructed using a recombination-based vector system so that hundreds or thousands of coding regions can be simultaneously transferred into any protein expression vector overnight.  These transfers can be made mutation free into virtually any kind of expression vector allowing the broadest variety of experiments.</p>
 		<p>Because most high-throughput approaches will require the addition of peptide tags, a crucial feature of the cloning strategy is to remove the untranslated regions of each cDNA to allow the production of fusion proteins on either or both ends of the protein if desired.  This repository of "expression-ready" clones is an important next step after the completion of the genome, and one that has the potential to revolutionize the study of protein function by enabling the high-throughput production and analysis of proteins.  </P>
 		
 		<h3>Database</h3>

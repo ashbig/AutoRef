@@ -5,9 +5,9 @@
 <%@ taglib uri="WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@page import="java.util.*" contentType="text/html"%>
 <html>
-<head><title>FLEXGene: Enter Oligo Plate Location Form</title></head>
+<head><title><bean:message key="flex.name"/> : Enter Oligo Plate Location Form</title></head>
 <body>
-<h2>FLEXGene: Enter Oligo Plate Location Form</h2>
+<h2><bean:message key="flex.name"/> : Enter Oligo Plate Location Form</h2>
 <h3>Please specify the location for each oligo plate received:<p></h3>
 <hr>
 <html:errors/>

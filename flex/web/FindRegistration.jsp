@@ -7,7 +7,7 @@
 <head><title>Find Registration</title></head>
 <body bgcolor="white">
 
-<h2>FLEXGene : Find Registration</h2>
+<h2><bean:message key="flex.name"/> : Find Registration</h2>
 <hr>
 
 <html:errors/>

@@ -5,11 +5,11 @@
 
 <html>
 <head>
-<title>FLEXGene : Create Process Plate </title>
+<title><bean:message key="flex.name"/> : Create Process Plate </title>
 </head>
 <body bgcolor="white">
 
-<h2>FlexGene : Create Process Plate</h2>
+<h2><bean:message key="flex.name"/> : Create Process Plate</h2>
 <hr>
 <html:errors/>
 <html:form action="/EnterOligoPlates.do" focus="fivepPlate">
