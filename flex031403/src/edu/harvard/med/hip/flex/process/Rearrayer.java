@@ -22,7 +22,7 @@ public class Rearrayer
     
     private ArrayList m_Sequences = null;//FlexSequences
     private ArrayList m_Containers = null;
-    private Hashtable m_sequence_container = null;//contains MgcContainers keyded by sequenceid
+    
     //for fast lookup what container this sequence belong to
     
   
@@ -31,7 +31,7 @@ public class Rearrayer
     {
         m_Sequences = sequences ;
         m_Containers = new ArrayList();
-        m_sequence_container = new Hashtable();
+    
     }
     
     /**
@@ -65,26 +65,7 @@ public class Rearrayer
     
     public void                             setSequences(ArrayList seq )
     {  m_Sequences = seq;}
-    
-    public MgcContainer                     getContainerBySequenceId(int seq_id)
-    {
-        return (MgcContainer)m_sequence_container.get(new Integer(seq_id));
-    }
-    
-    public MgcContainer                     getContainerBySequenceId(FlexSequence seq)
-    {
-        return (MgcContainer)m_sequence_container.get(new Integer(seq.getId()));
-    }
-    
-    /*Function queries db for all Mgc containers with
-     *mgc clones that have these sequences
-     **/
-    
-    public void                             findMgcContainers(ArrayList sequences) throws Exception
-    {
-        m_Sequences = sequences;
-        findMgcContainers();
-     }
+   
     
     public void findMgcContainers() throws Exception
     {
@@ -174,7 +155,6 @@ public class Rearrayer
      *@return arrayList of containers
      */
     
-    //not debuged yet
     public ArrayList getContainersOrderedByMarkerNumberOfSequences()
     {
         Collections.sort( m_Containers, new Comparator()
@@ -199,97 +179,10 @@ public class Rearrayer
         return m_Containers;
     }
     
-    /*function orders sequences for experiment
-     *first it orders containers, second it orders sequences in saw tooth patern
-     * for plates with (numberOfWells) wells per plate
-     * @param numberOfWells - how many wells per plate, default 94
-     * @return list of ordered sequences
-     **/
-    //not debuged yet
-    public ArrayList getSequencesOrderedByMarkerContainerSTP(int numberOfWells)
-    {
-        ArrayList orderedSequences = new ArrayList();
-        ArrayList temp = new ArrayList();
-        int first_sequence_index = 0;
-        int last_sequence_index = 0;
-        if (numberOfWells <= 0) numberOfWells = 94;
-        getContainersOrderedByMarkerNumberOfSequences();
-        //rearange sequences acoording to container order
-        for (int count = 0; count < m_Containers.size(); count++)
-        {
-            orderedSequences.addAll(((MgcContainerForRearray)m_Containers.get(count)).getSequences()  );
-        }
-        m_Sequences.clear();
-        int sequencesCount = 0;
-        while ( last_sequence_index  != ( orderedSequences.size() -1 )   )
-        {
-            //get sequences for one plate
-            last_sequence_index = (last_sequence_index + numberOfWells )< (orderedSequences.size() -1 )?
-            last_sequence_index + numberOfWells : orderedSequences.size() -1 ;
-            
-            for (int count = first_sequence_index ; count < last_sequence_index; count++)
-            {
-                temp.add( orderedSequences.get(count) );
-            }
-            //oreder by Saw-tooth , add to the returned list
-            m_Sequences.add( Algorithms.rearangeSawToothPatternInFlexSequence(temp));
-            temp.clear();
-            first_sequence_index = last_sequence_index  + 1;
-        }//end of sequenceCount
-        return m_Sequences;
-    }
+   
     
     
-    
-     /* inner class that holds container that will go to rearray
-     * and sequences from request that belong to this container*/
-class MgcContainerForRearray
-{
-    Container m_Container = null;
-    ArrayList    m_Sequences = null;
-    
-    public MgcContainerForRearray()
-    {
-        m_Sequences = new ArrayList();
-    }
-    public MgcContainerForRearray(Container cont, ArrayList seq)
-    {
-        m_Sequences = seq;
-        m_Container = cont;
-    }
-    public Container getContainer()
-    { return m_Container;}
-    public ArrayList    getSequences()
-    { return m_Sequences;}
-    public void         setContainer(Container cont)
-    {  m_Container = cont;}
-    public void         setSequences(ArrayList seq)
-    {  m_Sequences = seq;}
-    public void         addSequence(FlexSequence fc)
-    { m_Sequences.add(fc);}
-    public int          numberOfSequences()
-    { return m_Sequences.size();}
-    
-    public String       getMarker()
-    {
-        if (m_Container instanceof MgcContainer) 
-            return ((MgcContainer)m_Container).getMarker();
-        else
-            return null;
-    }
-    public ArrayList    getNumberOfSequences(int first_sequence,
-    int number_of_sequences)
-    {
-        ArrayList res = new ArrayList();
-        for(int count = first_sequence; count < number_of_sequences + first_sequence; count++)
-        {
-            res.add( m_Sequences.get(count));
-        }
-        return res;
-    }
-}
-
-
+ 
 //********************************testing**********************************
  
   public static void main(String args[])
@@ -298,13 +191,13 @@ class MgcContainerForRearray
         {
             Request m_Request = new Request(108);
           
-             Rearrayer re = new Rearrayer( new ArrayList(m_Request.getSequences()) );
+           //  Rearrayer re = new Rearrayer( new ArrayList(m_Request.getSequences()) );
              //   ArrayList mgc_containers = null;
             //   re.findMgcContainers( );
             //mgc_containers = re.getContainers();
-            re.findOriginalMgcContainers();
-            ArrayList orderedSeq = re.getSequencesOrderedByMarkerContainerSTP(94);
-            
+           // re.findOriginalMgcContainers();
+           // ArrayList orderedSeq = re.getSequencesOrderedByMarkerContainerSTP(94);
+            Algorithms.rearangeSawToothPatternInFlexSequence(new ArrayList(m_Request.getSequences()));
             
         }catch(Exception e){}
   }
@@ -313,3 +206,6 @@ class MgcContainerForRearray
     
 }
    
+   
+ 
+
