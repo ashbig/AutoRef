@@ -299,7 +299,7 @@ public class CreatePCRPlateForm extends ProjectWorkflowForm {
             errors.add("fivepPlate", new ActionError("error.plate.invalid.barcode", fivepPlate));
         }
         
-        if (getProjectid() != Project.YEAST)
+        if (getProjectid() != Project.YEAST || getWorkflowid() != Workflow.CONVERT_CLOSE_TO_FUSION)
         {
             if((threepOpenPlate == null) || (threepOpenPlate.trim().length()<1)) {
                 errors.add("threepOpenPlate", new ActionError("error.plate.invalid.barcode", threepOpenPlate));
