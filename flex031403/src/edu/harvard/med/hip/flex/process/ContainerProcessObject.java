@@ -43,6 +43,21 @@ public class ContainerProcessObject extends ProcessObject {
                      "values("+executionid+",'"+iotype+"',"+id+")";
         DatabaseTransaction.executeUpdate(sql,conn);
     }
+    
+    /**
+     * Update the platesetid in the database.
+     *
+     * @param platesetid The value to be updated.
+     * @param conn The database connection.
+     */
+    public void updatePlateset(int platesetid, Connection conn) throws FlexDatabaseException {
+        String sql = "update processobject "+
+                    " set platesetid="+platesetid+
+                    " where executionid="+executionid+
+                    " and inputoutputflag='"+iotype+"'"+
+                    " and containerid="+id;
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
 
     //**********************************************************//
     //              Testing                                     //
