@@ -14,9 +14,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2002-12-12 17:02:30 $
- * $Author: Elena $
+ * $Revision: 1.8 $
+ * $Date: 2005-03-03 19:28:42 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -54,8 +54,8 @@ import edu.harvard.med.hip.flex.database.*;
 /**
  * Action called when requesting to view the process history of a container
  *
- * @author     $Author: Elena $
- * @version    $Revision: 1.7 $ $Date: 2002-12-12 17:02:30 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.8 $ $Date: 2005-03-03 19:28:42 $
  */
 
 public class ViewContainerProcessHistoryAction extends CollaboratorAction
@@ -92,7 +92,7 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
         String containerIdS = request.getParameter(Constants.CONTAINER_ID_KEY);
         String containerBarcode =
         request.getParameter(Constants.CONTAINER_BARCODE_KEY);
-        containerBarcode = containerBarcode.toUpperCase();
+        //containerBarcode = containerBarcode.toUpperCase();
         
    
         int threadid = -1;
@@ -107,14 +107,14 @@ public class ViewContainerProcessHistoryAction extends CollaboratorAction
             } 
             else if(containerBarcode!=null && containerBarcode.length() !=0)
             {
-                
+                System.out.println("containerBarcode: "+containerBarcode);
                 List containerList = Container.findContainersFromView(containerBarcode);
                 if(containerList.size() >0)
                 {
                     container = (Container)containerList.get(0);
                     threadid = container.getThreadid();
                     String let = containerBarcode.substring(0,3);
-                    
+                    System.out.println("threadid: "+threadid);
                 // check if it mgc 
                     if ( let.equalsIgnoreCase("MGC") || 
                         ( let.equalsIgnoreCase("MGS")  && containerBarcode.indexOf("-") == -1)
