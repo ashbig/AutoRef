@@ -36,7 +36,7 @@
     <a name="direct"> </a><br><br><% int i = 0; %>
        
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
-    <TR> <b>Direct Associated Genes</b> <br><br> </TR>
+    <TR> <b>First degree associations</b> <br><br> </TR>
     <TR bgcolor="#cccccc">
         <TH width="10%">Rank</TH>
         <TH width="30%">Locus ID</TH>
@@ -65,7 +65,7 @@
     <a name="indirect"> </a><br><br><% i = 0; %>
     
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >  
-    <TR> <p> <b>Indirect Associated Genes </b> <br><br>  </TR> 
+    <TR> <p> <b>Second degree association </b> <br><br>  </TR> 
     <TR bgcolor="#cccccc">
         <TH width="10%">Rank</TH>
         <TH width="30%">Locus ID</TH>
@@ -94,7 +94,7 @@
     <a name="new"> </a><br><br><% i = 0; %>
    
     <TABLE width = "80%" align="center" border="1" cellpadding="2" cellspacing="0" >   
-    <TR> <p> <b>Non Associated Genes</b> <br><br>   </TR> 
+    <TR> <p> <b>Genes new to this disease</b> <br><br>   </TR> 
     <TR bgcolor="#cccccc">
         <TH width="10%">Rank</TH>
         <TH width="30%">Locus ID</TH>

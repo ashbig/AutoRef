@@ -17,13 +17,13 @@
     <p>The MedGene database can help you to get the following information:</p>
     <html:form action="main.do">  
     <table width="100%"><tr><td bgcolor="#ccccff"> <p>A list of genes associated with</p> </td></tr></table>     
-        <html:radio property="geneDiseaseSelect" value="geneDisease" />a particular disease<br>      
-        <html:radio property="geneDiseaseSelect" value="multiDisease"/>multiple diseases<br>
-        <html:radio property="geneDiseaseSelect" value="geneGene"/>a particular gene<br><br>
+        <html:radio property="geneDiseaseSelect" value="geneDisease" />A particular disease<br>      
+        <html:radio property="geneDiseaseSelect" value="multiDisease"/>Multiple diseases<br>
+        <html:radio property="geneDiseaseSelect" value="geneGene"/>A particular gene<br><br>
     <table width="100%"><tr><td bgcolor="#ccccff"> <p>A list of diseases associated with</p> </td></tr></table>      
-        <html:radio property="geneDiseaseSelect" value="diseaseGene"/>a particular gene<br><br>
-    <table width="100%"><tr><td bgcolor="#ccccff"> <p>Analysize a gene list</p> </td></tr></table>       
-        <html:radio property="geneDiseaseSelect" value="chipGeneDisease"/>valuate gene lists from disease related high-throughput experiments such as Micro-array <br>
+        <html:radio property="geneDiseaseSelect" value="diseaseGene"/>A particular gene<br><br>
+    <table width="100%"><tr><td bgcolor="#ccccff"> <p>Analyze a gene list</p> </td></tr></table>       
+        <html:radio property="geneDiseaseSelect" value="chipGeneDisease"/>Categorize genes from disease related high-throughput experiments such as micro-array <br>
         <p>
         Please make a selection and submit.
         <p>
