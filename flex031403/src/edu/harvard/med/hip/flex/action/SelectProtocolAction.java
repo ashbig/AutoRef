@@ -84,13 +84,13 @@ public class SelectProtocolAction extends FlexAction {
                 return (mapping.findForward("success_pcr"));
             } else if (Protocol.MGC_DESIGN_CONSTRUCTS.equals(processname)) {
                 queue = new SequenceProcessQueue();
-                items = queue.getQueueItems(protocol, project, workflow);
+                int numOfSeqs = ((SequenceProcessQueue)queue).getQueueSize(protocol, project, workflow);
                 
                 //get total number of genes in queue
-                request.setAttribute("sequences_count", new Integer(items.size()));
-                request.setAttribute("full_plates", new Integer( items.size() / 94 ));
-                if (items.size() % 94 != 0)
-                    request.setAttribute("wells_on_not_full_plate", new Integer(items.size()));
+                request.setAttribute("sequences_count", new Integer(numOfSeqs));
+                request.setAttribute("full_plates", new Integer( numOfSeqs / 94 ));
+                if (numOfSeqs % 94 != 0)
+                    request.setAttribute("wells_on_not_full_plate", new Integer(numOfSeqs%94));
 
                 request.setAttribute("projectname", projectname);
                 request.setAttribute("processname", processname);
