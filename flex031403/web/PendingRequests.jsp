@@ -1,5 +1,5 @@
 <%--
-        $Id: PendingRequests.jsp,v 1.2 2001-05-31 19:26:25 dongmei_zuo Exp $ 
+        $Id: PendingRequests.jsp,v 1.3 2001-06-01 18:10:50 dongmei_zuo Exp $ 
 
         File    : PendingRequests.jsp
         Date    : 05042001
@@ -16,7 +16,7 @@
 <%@ taglib uri="/WEB-INF/struts-form.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
+
 
 <html>
 <head><title>Pending Requests</title></head>
@@ -24,7 +24,7 @@
     <H1><CENTER>Pending Requests</CENTER></H1> 
     <BR>
     
-    <FORM method="POST" action="ProcessQueue.jsp">
+    <FORM method="POST" action="ProcessQueue.do">
 
     <TABLE BORDER>
     <TR>
@@ -35,7 +35,10 @@
         <TH>Requesting Users</TH>
         <TH>Status</TH>
     </TR>
+    
     <!-- iterate through each QueueItem (sequence) that is in the queue -->
+    <!-- keep track of the count -->
+    <% int seqCount = 0;%>
     <logic:iterate id="curQueueItem" name="<%=edu.harvard.med.hip.flex.Constants.QUEUE_ITEM_LIST_KEY%>"> 
         <TR>
             <TD>
@@ -64,7 +67,7 @@
                 </logic:iterate>
             </TD>
             <TD>
-                <SELECT name=<bean:write name="curQueueItem" property="item.id" />>
+                <SELECT name="INDEX<%=seqCount++%>">
                     <Option > Pending
                     <Option > Rejected
                     <Option> Accepted
