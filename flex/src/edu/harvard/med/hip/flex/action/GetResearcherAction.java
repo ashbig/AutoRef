@@ -101,9 +101,9 @@ public class GetResearcherAction extends ResearcherAction{
             
             // Create a process, process object and sample lineage record. 
             String executionStatus = null;
-            // For GEl and Transformation, the status is inprocess.
+            // For GEl and Agar, the status is inprocess.
             if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
-                Protocol.PERFORM_TRANSFORMATION.equals(protocol.getProcessname())) {
+                Protocol.GENERATE_AGAR_PLATES.equals(protocol.getProcessname())) {
                 executionStatus = edu.harvard.med.hip.flex.process.Process.INPROCESS;
             } else {
                 executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
@@ -142,9 +142,9 @@ public class GetResearcherAction extends ResearcherAction{
             ContainerProcessQueue queue = new ContainerProcessQueue();
             queue.removeQueueItems(items, conn);
             
-            // for gel and transformation protocols, we use the same protocol for queue.
+            // for gel and agar protocols, we use the same protocol for queue.
             if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
-                Protocol.PERFORM_TRANSFORMATION.equals(protocol.getProcessname())) {
+                Protocol.GENERATE_AGAR_PLATES.equals(protocol.getProcessname())) {
                 LinkedList newItems = new LinkedList();
                 for(int i=0; i<newContainers.size(); i++) {
                     Container newContainer = (Container)newContainers.elementAt(i);
