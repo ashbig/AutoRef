@@ -43,6 +43,7 @@
   <!-- ========== Action Mapping Definitions ============================== -->
   <action-mappings type="org.apache.struts.action.ActionMapping">
 
+    
     <!-- Process a user logon -->
     <action    path="/logon"
                type="edu.harvard.med.hip.flex.action.LogonAction"
@@ -51,6 +52,13 @@
               input="/login.jsp">
       <forward  name="success"   path="/MainMenu.jsp"/>
       <forward  name="failure"  path="/login.jsp"/>
+    </action>
+
+
+    <!-- Process a request to view a flex sequence -->
+    <action      path="/ViewSequence"
+                type="edu.harvard.med.hip.flex.action.ViewFlexSequenceAction">
+        <forward    name="success"   path="/FlexSequenceUI.jsp"/>
     </action>
 
     <!-- Process a customer request -->
@@ -71,6 +79,7 @@
       <forward  name="success"   path="/SequenceSearch.jsp"/>
       <forward  name="failure"  path="/SequenceSearch.jsp"/>
     </action> 
+
 
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
