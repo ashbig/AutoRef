@@ -119,7 +119,7 @@
     </init-param>
     <init-param>
         <param-name>maxCount</param-name>
-        <param-value>10</param-value>
+        <param-value>100</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
