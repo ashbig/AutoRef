@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.6 2001-06-14 17:05:36 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.7 2001-06-14 17:16:45 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -21,9 +21,11 @@ import java.sql.*;
 public class Process {
     
     // Process Executution status for sucessful process
-    public static String SUCCESS = "Y";
+    public static final String SUCCESS = "Y";
+    
     // Process Executution status for a failed process
-    public static String FAILURE = "N";
+    public static final String FAILURE = "N";
+    
     private int executionid;
     private Protocol protocol;
     private String executionStatus;
