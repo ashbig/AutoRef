@@ -40,7 +40,7 @@ public class ConstructGenerator {
         this.conn = c;
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
-        this.platesetId = setPlatesetId(); //create new plateset ID
+       // this.platesetId = setPlatesetId(); //create new plateset ID
     }
     
     /**
@@ -88,11 +88,11 @@ public class ConstructGenerator {
             // and insert oligo infor into the oligo table
             try{
                 result_5p = pc.calculateFivepOligo(seq);
-                //result_5p.insert(conn);
+                result_5p.insert(conn);
                 result_3s = pc.calculateThreepCloseOligo(seq);
-                //result_3s.insert(conn);
+                result_3s.insert(conn);
                 result_3op = pc.calculateThreepOpenOligo(seq);
-                //result_3op.insert(conn);
+                result_3op.insert(conn);
             } catch(FlexDatabaseException sqlex){
                 throw new FlexDatabaseException(sqlex);
             }
@@ -113,8 +113,8 @@ public class ConstructGenerator {
             
             // create two new constructs: open and close form and insert them
             // to the ConstructDesign table
-            close = new Construct(seq,result_5p,result_3s, "CLOSED", pairId,platesetId);
-            open = new Construct(seq,result_5p,result_3op, "FUSION", pairId,platesetId);            
+            close = new Construct(seq,result_5p,result_3s, "CLOSED", pairId);
+            open = new Construct(seq,result_5p,result_3op, "FUSION", pairId);            
             constructList.add(close);
             constructList.add(open);
             System.out.println("inserting constructs: ");

@@ -1,21 +1,20 @@
 /*
  * OligoPlateManager.java
  * This class manages the oligo calculation, construct generation
- * and oligo plate generation
+ * and oligo plates generation processes
  * Created on May 31, 2001, 3:41 PM
- * @author  Wendy
+ * @author  Wendy Mar
  * @version
  */
 
 package edu.harvard.med.hip.flex.process;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.core.*;
 import java.sql.*;
 import java.util.*;
+import java.io.*;
 
-/**
- *
- *
- */
+
 public class OligoPlateManager {
     private Connection conn;
     /**
@@ -63,8 +62,7 @@ public class OligoPlateManager {
     } //
     
     /**
-     * If there are 94 sequences or 94 X sequence of the same size class
-     * in the queue, retrieve queue records and related sequence records
+     * retrieve queue records and related sequence records
      * where protocol = 'design construct'
      * @return LinkedList A list of sequence objects
      */
@@ -77,30 +75,82 @@ public class OligoPlateManager {
         
         //delete sequence queue record from the queue table
         //seqQueue.removeQueueItems(seqList, protocolId, conn);
-              
+        
+        return seqList;
+    }
+
+        private LinkedList getQueueSequence(int cdsSizeGroupLowerLimit, 
+         int cdsSizeGroupUpperLimit) throws FlexDatabaseException {
+        int protocolId = 3;  // to be modified
+        //int cdsSizeGroup = 2000;
+        LinkedList seqList = new LinkedList();
+        SequenceOligoQueue seqQueue = new SequenceOligoQueue();
+        seqList = seqQueue.getQueueItems(protocolId, cdsSizeGroupLowerLimit,
+        cdsSizeGroupUpperLimit);
+        
+        //delete sequence queue record from the queue table
+        //seqQueue.removeQueueItems(seqList, protocolId, conn);
+        
         return seqList;
     }
     
-    public void createOligoAndConstruct() throws FlexDatabaseException {
+    public void createOligoPlates() throws FlexDatabaseException, FlexCoreException, IOException{
         int smallCDSLimit = 2000;
         int mediumCDSLimit = 4000;
+        int largeCDSLimit = 10000;
         int totalWells = 94;
-       // if ((totalSeqQueue(smallCDSLimit) % 94)== 0){
-            LinkedList seqList = getQueueSequence(smallCDSLimit);
-            ConstructGenerator cg = new ConstructGenerator(seqList, conn);
-            cg.generateOligoAndConstructs();
-          //  LinkedList oligoPatternList = new LinkedList();
-          //  oligoPatternList = cg.getOligoPatternList();
-          //  int platesetId = cg.getPlatesetId();
-          //  OligoPlater plater = new OligoPlater(oligoPatternList,platesetId,conn);
-          //  plater.createOligoPlates();
-            
-      //  } else if ((totalSeqQueue(mediumCDSLimit) % 94)== 0) {
-            
-            
-      //  } else {
-            
-      //  }
+        int platesetId = -1;
+        int numSeqsInQueue = 0;
+        int[] limits = new int[4];
+        limits[0] = 0;
+        limits[1] = smallCDSLimit;
+        limits[2] = mediumCDSLimit;
+        limits[3] = largeCDSLimit;
+        int numPlatesToProcess = 0;
+        int numSeqsToTruncate = 0;
+        LinkedList seqList = null;
+        ConstructGenerator cg = null;
+        OligoPlater plater = null;
+        int i = 0;
+        int j = 0;
+        int numSeqsToProcess = 0;
+        for (i = 0; i < 3; ++i) {
+            //numSeqsInQueue = totalSeqQueue(limits[i]);
+            //numPlatesToProcess = numSeqsInQueue / totalWells;
+            seqList = getQueueSequence(limits[i],limits[i+1]);
+            numPlatesToProcess = seqList.size() / totalWells;
+            numSeqsToProcess = totalWells*numPlatesToProcess;
+            if (numSeqsToProcess > 0) {
+                numSeqsToTruncate = seqList.size() - numSeqsToProcess;
+                System.out.println("There are total of "+seqList.size()+" sequence in queue");
+                for (j = 0; j < numSeqsToTruncate; ++j) {
+                    seqList.removeLast();
+                } // for
+                System.out.println("There are "+ seqList.size()+" sequences going to be processed");
+                cg = new ConstructGenerator(seqList,conn);
+                
+                cg.generateOligoAndConstructs();
+                cg.insertProcessInputOutput();
+                cg.insertConstructQueue();
+                LinkedList oligoPatternList = cg.getOligoPatternList();
+                platesetId = cg.getPlatesetId();
+                System.out.println("Items in the oligoPatternList: "+ oligoPatternList.size());
+                System.out.println("The new plateset ID is: " + platesetId);
+                //all of the oligo plate header and sample info are inserted in DB
+                //three text files for order oligos will be generated
+                plater = new OligoPlater(oligoPatternList, cg.getConstructList(),platesetId,conn);
+                plater.createOligoPlates();
+                plater.insertProcessInputOutput();
+                plater.insertReceiveOligoQueue();
+                
+                
+            } // if
+        } // for
+        
+        
+        
+        
+        
     } //createOligoAndConstruct
     
     //******************************************************//
@@ -114,11 +164,15 @@ public class OligoPlateManager {
             System.out.println("There are total of " + totalQueue + " small sequences in the queue");
             
             System.out.println("Calculating oligos...");
-            om.createOligoAndConstruct();
+            om.createOligoPlates();
             
         } catch (FlexDatabaseException e) {
             System.out.println(e);
-        } finally {
+        } catch (FlexCoreException ex){
+            System.out.println(ex);
+        } catch (IOException IOex){
+            System.out.println(IOex);
+        }finally {
             //  DatabaseTransaction.closeConnection(conn);
         }
         
