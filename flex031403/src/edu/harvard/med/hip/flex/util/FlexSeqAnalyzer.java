@@ -1,5 +1,5 @@
 /*
- * $Id: FlexSeqAnalyzer.java,v 1.17 2001-07-19 14:27:14 dzuo Exp $
+ * $Id: FlexSeqAnalyzer.java,v 1.18 2001-07-24 13:17:45 dzuo Exp $
  *
  * File     : FlexSeqAnalyzer.java
  * Date     : 05102001
@@ -24,9 +24,9 @@ import java.io.*;
 public class FlexSeqAnalyzer {
     public final static String BLAST_BASE_DIR=FlexProperties.getInstance().getProperty("flex.repository.basedir");
     public final static String BLAST_DB_DIR=FlexProperties.getInstance().getProperty("flex.repository.blast.relativedir");
-    private static final String BLASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"BlastDB/genes";
+//    private static final String BLASTDB=BLAST_BASE_DIR+BLAST_DB_DIR+"BlastDB/genes";
     
-//    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
+    private static final String BLASTDB="E:/flexDev/BlastDB/genes";
     private static final String INPUT = "/tmp/";
     private static final String OUTPUT = "/tmp/";
     private static final double PERCENTIDENTITY = 0.9;
@@ -121,7 +121,7 @@ public class FlexSeqAnalyzer {
     }
     
     /**
-     * Return the same sequences as a hashtable including this sequence.
+     * Return the same sequences as a Vector including this sequence.
      *
      * @return A Vector object containing all the same sequences including this one.
      */
@@ -148,7 +148,7 @@ public class FlexSeqAnalyzer {
     }
     
     //**********************************************************************//
-    //						Private methods									//
+    //                          Private methods                             //
     //**********************************************************************//
     
     //Query the database to find the sequences that have the same GC content.
@@ -161,8 +161,7 @@ public class FlexSeqAnalyzer {
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = t.executeQuery(sql);
         try {
-            while(rs.next()) {
-                
+            while(rs.next()) {                
                 int id = rs.getInt("SEQUENCEID");
                 v.addElement(new Integer(id));
             }
@@ -271,7 +270,7 @@ public class FlexSeqAnalyzer {
     }
     
     //**********************************************************************//
-    //						Private methods									//
+    //                          Test                                        //
     //**********************************************************************//
     
     public static void main(String [] args) {
