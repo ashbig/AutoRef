@@ -48,30 +48,48 @@ public class Seq_SequenceAnalysisAction extends WorkflowAction
         int ginumber = ((Seq_SequenceAnalysisRequestForm)form).getGI();
        String expsequence = (String) request.getAttribute("FULLSEQUENCE");
        TheoreticalSequence theoretical_sequence = null;
-        
-       System.out.println("ss "+refseqid);
-       System.out.println("ll "+ginumber);
-       System.out.println(expsequence);
-       
+        String errmessage = null;
+      
+         System.out.println(ginumber);  System.out.println(refseqid);
         try
         {
+            //get theoretical sequence 
             if (refseqid == -1 && ginumber != -1)
             {
-                System.out.println("a");
+                 System.out.println(ginumber);
                 theoretical_sequence = TheoreticalSequence.findSequenceByGi(String.valueOf(ginumber));
-                refseqid = theoretical_sequence.getId();
-                
+                errmessage = "<li>No sequence with GI number: "+ ginumber+" exists.</li>";
             }
+            else
+            {
+                 System.out.println(refseqid);
+                theoretical_sequence = new TheoreticalSequence (refseqid);
+                errmessage = "<li>No sequence with id: "+ refseqid+" exists.</li>";
+            }
+             System.out.println(theoretical_sequence);
+            if ( theoretical_sequence == null)
+            {
+                System.out.println("al");
+               errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(errmessage));
+               saveErrors(request, errors);
+               System.out.println(mapping);
+               System.out.println(mapping.getInput());
+              
+               return new ActionForward(mapping.getInput());
+               
+            }
+            refseqid = theoretical_sequence.getId();
+            
+            //submit fullsequence if it was submitted
             if ( expsequence != null)
             {
-                System.out.println("b");
+               
                     FullSequence full_sequence = new FullSequence(expsequence,refseqid);
-                    System.out.println("gs");
+                    
                     DatabaseTransaction t = DatabaseTransaction.getInstance();
                     Connection conn = t.requestConnection();
                     full_sequence.insert(conn);
-                    if ( theoretical_sequence == null)
-                        theoretical_sequence = new TheoreticalSequence (refseqid);
+                   
                     FullSequenceAnalysis seq_for_analysis =
                                new  FullSequenceAnalysis
                                 (  
