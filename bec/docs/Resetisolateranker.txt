@@ -1,0 +1,233 @@
+update isolatetracking set rank=-1, status=32 where sampleid =
+update readinfo set score=0,readtype=   1    where  readid =
+
+update assembledsequence set  analysisstatus=0  where isolatetrackingid in
+(select isolatetrackingid from isolatetracking where sampleid =)
+
+update isolatetracking set rank=-1, status=32
+where sampleid in (select sampleid from sample 
+where containerid in (65,66)) and status in (19,4,21);
+
+delete from discrepancy where sequenceid in (select readsequenceid from readinfo where readid in
+(select resultvalueid from result where sampleid in (select sampleid from sample where containerid in (65,66) )));
+
+update readinfo set score=0,readtype=1,status=0 where  readid in
+(select resultvalueid from result where sampleid in (
+select sampleid from sample where containerid in (65,66))) and readtype in (4,5);
+
+update readinfo set score=0,readtype=-1 ,status=0 where  readid in
+(select resultvalueid from result where sampleid in (
+select sampleid from sample where containerid in (65,66))) and readtype in (-4,-5);
+
+delete from discrepancy where sequenceid in (select sequenceid from assembledsequence where isolatetrackingid in
+(select isolatetrackingid from isolatetracking where sampleid in (select sampleid from sample where containerid in (65,66) )));
+
+update assembledsequence set  analysisstatus=0  where isolatetrackingid in
+(select isolatetrackingid from isolatetracking where sampleid in 
+(select sampleid from sample where containerid in (65,66) ));
+
+
+
+
+
+
+
+
+
+
+
+
+select rank,status,position,readtype , readid from readinfo r, sample s,result t,isolatetracking iso
+  where  readid in(select resultvalueid from result where sampleid in (
+ select sampleid from sample where containerid=8)) and readtype in (-4,4) and iso.sampleid=s.sampleid and
+ s.sampleid=t.sampleid and r.readid=t.resultvalueid order by position
+
+
+
+select flexsequencingplateid,position,flexsequenceid,flexcloneid from flexinfo f, sample s, isolatetracking i 
+where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid and
+f.isolatetrackingid     in (select isolatetrackingid from isolatetracking where assembly_status=-10) order by
+  flexsequencingplateid,position, flexsequenceid
+
+
+
+
+(select isolatetrackingid from isolatetracking where assembly_status=-7)
+
+
+
+delete from result where resulttype = 21 and sampleid in (select sampleid from isolatetracking where assembly_status=-7);
+delete from sequenceinfo where sequenceid in (select sequenceid from assembledsequence where isolatetrackingid in ( (select isolatetrackingid from isolatetracking where assembly_status=-7)));
+delete  from assembledsequence where isolatetrackingid in ( (select isolatetrackingid from isolatetracking where assembly_status=-7));
+
+
+update isolatetrackingid set status=3, rank=-1,score=0 where  assembly_status=-7;
+
+
+select position,i.isolatetrackingid,i.rank,i.score, i.status,readid, r.score, trimmedstart,trimmedend,readtype
+   from sample s, isolatetracking i,sequencingconstruct c, readinfo r, result rr
+  where s.sampleid=i.sampleid and  c.constructid=i.constructid 
+   and s.sampleid=rr.sampleid and r.readid=rr.resultvalueid and trimmedend-trimmedstart < 250 
+containerid=9 and
+order by position
+
+
+
+select label,position from containerheader c, sample s
+where c.containerid=s.containerid and
+(sampleid in (select sampleid from isolatetracking where isolatetrackingid in
+
+(select isolatetrackingid from flexinfo where flexcloneid=876)))
+ 
+
+
+
+select flexcloneid, oligocalculationid
+from oligo_calculation o, flexinfo f, isolatetracking i, sequencingconstruct c
+where f.isolatetrackingid=i.isolatetrackingid and i.constructid=c.constructid and c.refsequenceid=o.sequenceid and
+primer3configid=7 and flexcloneid in
+
+//delete assembled sequences
+delete  from discrepancy where sequenceid in
+(select sequenceid from assembledsequence where isolatetrackingid in
+ ( select isolatetrackingid from isolatetracking where sampleid in
+(select sampleid from sample where containerid in())));
+
+delete  from sequenceinfo where sequenceid in
+(select sequenceid from assembledsequence where isolatetrackingid in
+ ( select isolatetrackingid from isolatetracking where sampleid in
+(select sampleid from sample where containerid in())));
+
+delete  from assembledsequence where isolatetrackingid in
+ ( select isolatetrackingid from isolatetracking where sampleid in
+(select sampleid from sample where containerid in()));
+
+
+//cleanup reads
+
+delete from sequenceinfo where sequenceid in
+(select readsequenceid from readinfo where isolatetrackingid in 
+(select isolatetrackingid from isolatetracking where sampleid in
+(select sampleid from sample where containerid in(265))));
+
+
+delete from  readinfo where isolatetrackingid in 
+(select isolatetrackingid from isolatetracking where sampleid in
+(select sampleid from sample where containerid in(265)));
+
+delete from  filereference where filereferenceid in
+(select filereferenceid from resultfilereference where resultid in
+(select resultid from result where sampleid in
+(select sampleid from sample where containerid in(265))));
+
+delete from   resultfilereference  where resultid in
+(select resultid from result where sampleid in
+(select sampleid from sample where containerid in(265)));
+
+
+delete from result where sampleid in
+(select sampleid from sample where containerid in(265));
+
+
+//cleanup container
+delete from sequencingconstruct where constructid in
+(select constructid from isolatetracking where sampleid in
+(select sampleid from sample where containerid in(595)));
+
+delete from flexinfo where isolatetrackingid in
+ (select isolatetrackingid from isolatetracking where sampleid in
+(select sampleid from sample where containerid in(595)));
+
+delete from isolatetracking where sampleid in
+(select sampleid from sample where containerid in(595));
+
+delete from sample where containerid in(595);
+
+delete from containerheader where containerid in(595);
+
+
+update isolatetracking set status = 0 where sampleid in
+(select sampleid from sample where containerid in(265));
+
+
+update   result set resultvalueid = null where sampleid in
+(select sampleid from sample where containerid in(265));
+
+
+update isolatetracking set status = 2 where status = 3 and  sampleid in
+(select sampleid from sample where containerid in(265));
+
+
+
+// report
+select count(*) from sample where sampletype like 'I%' and containerid in
+(select containerid from containerheader where label in
+())
+
+select count(*) from assembledsequence where isolatetrackingid in
+(select isolatetrackingid from isolatetracking where sampleid in (
+
+select sampleid from sample where sampletype like 'I%' and containerid in
+(select containerid from containerheader where label in
+( ))
+
+
+
+//clean up primers
+
+delete from geneoligo where oligocalculationid in
+(select oligocalculationid from oligo_calculation where sequenceid in
+(select refsequenceid from sequencingconstruct where constructid in
+(select constructid from isolatetracking where isolatetrackingid in
+(select isolatetrackingid from flexinfo where flexcloneid in
+()))));
+
+
+delete from oligo_calculation where sequenceid in
+(select refsequenceid from sequencingconstruct where constructid in
+(select constructid from isolatetracking where isolatetrackingid in
+(select isolatetrackingid from flexinfo where flexcloneid in
+())));
+
+
+
+
+//clean up gapmapper result
+
+delete from discrepancy where sequenceid in
+(select sequenceid from stretch where collectionid in
+(select collectionid from stretch_collection where 
+type = 1));
+
+delete from sequenceinfo where sequenceid in
+(select sequenceid from stretch where collectionid in
+(select collectionid from stretch_collection where 
+type = 1));
+
+delete from stretch where collectionid in
+(select collectionid from stretch_collection where 
+type = 1);
+
+delete from  stretch_collection where type = 1;
+
+
+
+FLEX
+
+
+1 .check whether plate submitted for sequencing
+
+ select count(sequencingsampleid) from clonesequencing where sequencingsampleid in
+( select sampleid from sample where containerid in 
+(select containerid from containerheader where label in (‘’)))
+
+
+2. submit plate for sequencing
+
+
+insert into clonesequencing
+		select sequencingid.nextval, 'IN PROCESS', sequencing facility name, 
+		sysdate, null, sampleid, cloneid
+		from sample where sampletype = 'ISOLATE'
+		and containerid in
+		(select containerid from containerheader where label in ())
