@@ -340,6 +340,7 @@ public class RunProcessAction extends ResearcherAction
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER: //run discrepancy finder
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
                 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
+                case Constants.PROCESS_NOMATCH_REPORT:
                 {
                     String title = "";
                     ProcessRunner runner = null;
@@ -386,6 +387,14 @@ public class RunProcessAction extends ResearcherAction
                               title = "request for Discrepancy Finder";
                               break;
                         }//run discrepancy finder
+                        case Constants.PROCESS_NOMATCH_REPORT:
+                        {
+                             runner = new NoMatchReportRunner();
+                             ((NoMatchReportRunner)runner).setBlastableDBName( (String) request.getParameter("DATABASE_NAME")) ;
+                              ((NoMatchReportRunner)runner).setIdTypeToDisplay( (String) request.getParameter("ID_NAME")) ;
+                              title = "request for 'NO MATCH' report";
+                              break;
+                        }
                     }
                     
                     String  item_ids = (String) request.getParameter("items");

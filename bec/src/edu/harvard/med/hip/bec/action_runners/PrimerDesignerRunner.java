@@ -77,7 +77,7 @@ public class PrimerDesignerRunner extends ProcessRunner
            conn.commit();
             if ( m_isTryMode )
             {
-                File reportFile = new File(FILE_PATH + "primer3Report.txt");
+                File reportFile = new File(Constants.getTemporaryFilesPath() + "primer3Report.txt");
                 m_file_list_reports.add(reportFile);
                 reportFileWriter =  new FileWriter(reportFile);
                 

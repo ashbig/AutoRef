@@ -305,7 +305,7 @@ public class IsolateTrackingEngine
     public static void updateRankUserChangerId(int rank,  int userid,int isolatetrackingid, Connection conn )throws BecDatabaseException
     {
          String sql = "update isolatetracking set rank="+rank+ " ,changerrankid ="+userid+" where isolatetrackingid="+ isolatetrackingid;
-        
+        System.out.println(sql);
         DatabaseTransaction.executeUpdate(sql, conn);
     }
     public static void updateAssemblyStatus(int asstatus, int isolatetrackingid, Connection conn )throws BecDatabaseException
@@ -633,7 +633,12 @@ public class IsolateTrackingEngine
         if (it != null && it.size() > 0) return (IsolateTrackingEngine)it.get(0);
         return null;
     }
-    
+    public static IsolateTrackingEngine getIsolateTrackingEngineById(int id,String cs_analysis_status, String cq_type, int mode)throws BecDatabaseException
+    {
+        ArrayList it = getIsolateTrackingEnginesByRule(" iso.isolatetrackingid = "+id,  cs_analysis_status,  cq_type, mode);
+        if (it != null && it.size() > 0) return (IsolateTrackingEngine)it.get(0);
+        return null;
+    }
     public void setStatusBasedOnReadStatus(int default_status )
     {
             if ( m_status == PROCESS_STATUS_SUBMITTED_EMPTY ||

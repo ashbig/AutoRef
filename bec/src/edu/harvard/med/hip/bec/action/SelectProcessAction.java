@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
+import edu.harvard.med.hip.bec.programs.blast.*;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
@@ -208,72 +209,78 @@ public class SelectProcessAction extends ResearcherAction
                     
                 }
                 case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER: // add new internal primer
-                {
-                }
                 case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS :
                 case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:
                 case Constants.PROCESS_VIEW_INTERNAL_PRIMERS://view internal primers
                 case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
-                {
-                    String title="";
-                    switch ( forwardName)
-                    {
-                        case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:
-                        {
-                            title="approve Internal Primers";break;
-                        }
-                        case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:
-                        {
-                            title="view Internal Primers";break;
-                        }
-                        case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
-                        {
-                            title="order Internal Primers";break;
-                        }
-                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
-                        {
-                            title="assemble Clone Sequences";break;
-                        }
-                            
-                    }
-                    request.setAttribute(Constants.JSP_TITLE,title);
-                    return (mapping.findForward("initiate_process"));
-                }
-             
                 case Constants.PROCESS_RUN_PRIMER3://run primer3
                 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER: //run polymorphism finder
                 case Constants.PROCESS_RUN_DISCREPANCY_FINDER://run discrepancy finder
+                case Constants.PROCESS_NOMATCH_REPORT:
                 {
-                    //requesred to submit spec/specs
-                    //file with sequence ids
-                    // type of sequence ids
-                     ArrayList spec_collection = new ArrayList();
+                    ArrayList spec_collection = new ArrayList();
                      ArrayList spec_names = new ArrayList();
                     ArrayList control_names = new ArrayList();
                     String title = null;
-                     if (forwardName == Constants.PROCESS_RUN_PRIMER3)
+                    switch( forwardName)
                     {
-                        spec_collection.add( Primer3Spec.getAllSpecNames() );
-                        spec_names.add("Primer3 ");
-                        control_names.add(Spec.PRIMER3_SPEC);
-                        title = "run Primer Designer for the set of clones";
-                     }
-                     else if (forwardName == Constants.PROCESS_RUNPOLYMORPHISM_FINDER)
-                     {
-                        spec_collection.add( PolymorphismSpec.getAllSpecNames());
-                        spec_names.add("Polymorphism Finder");
-                        control_names.add(Spec.POLYMORPHISM_SPEC);
-                        title = "run Polymorphism Finder for the set of clones";
-                     }
-                     else if (forwardName == Constants.PROCESS_RUN_DISCREPANCY_FINDER)
-                     {
-                         title = "run Discrepancy Finder for the set of clones";
-                     }
+                        case Constants.PROCESS_RUN_PRIMER3:
+                        {
+                            spec_collection.add( Primer3Spec.getAllSpecNames() );
+                            spec_names.add("Primer3 ");
+                            control_names.add(Spec.PRIMER3_SPEC);
+                            title = "run Primer Designer for the set of clones";break;
+                         }
+                        case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:
+                         {
+                            spec_collection.add( PolymorphismSpec.getAllSpecNames());
+                            spec_names.add("Polymorphism Finder");
+                            control_names.add(Spec.POLYMORPHISM_SPEC);
+                            title = "run Polymorphism Finder for the set of clones";break;
+                         }
+                        case Constants.PROCESS_RUN_DISCREPANCY_FINDER:
+                        {  title = "run Discrepancy Finder for the set of clones";break;         }
+                        case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:
+                        {title="approve Internal Primers";break; }
+                        case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:
+                        {  title="view Internal Primers";break; }
+                        case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
+                        {title="order Internal Primers";break; }
+                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
+                        {title="assemble Clone Sequences";break; }
+                        case Constants.PROCESS_NOMATCH_REPORT:
+                        { 
+                            StringBuffer additional_jsp = new StringBuffer();
+                            additional_jsp.append( "<tr><td colspan =2 bgColor='#1145A6' ><font color='#FFFFFF'><strong>Process Specification</strong></font></td></tr>");
+                            additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Database Name</strong></td>");
+                            additional_jsp.append("<td><SELECT NAME='DATABASE_NAME' id='DATABASE_NAME'> <OPTION VALUE='"+ BlastWrapper.HUMANDB +"'>" + BlastWrapper.HUMANDB_NAME );
+                            additional_jsp.append(" <OPTION VALUE='"+ BlastWrapper.YEASTDB +"'>");
+                            additional_jsp.append( BlastWrapper.YEASTDB_NAME);
+  additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.PSEUDOMONASDB +"'>"+ BlastWrapper.PSEUDOMONASDB_NAME );
+  additional_jsp.append("<OPTION VALUE='"+ BlastWrapper.MGCDB +"'>"+ BlastWrapper.MGCDB_NAME );
+additional_jsp.append("</SELECT></td> </tr>");
+additional_jsp.append("<tr> <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Display Sequence Identifier</strong></td>");
+additional_jsp.append("<td><SELECT NAME='ID_NAME' id='ID_NAME'>" );
+additional_jsp.append("<OPTION VALUE=''> None");
+additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.GI +"'>"+ PublicInfoItem.GI);
+additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.PANUMBER +"'>"+ PublicInfoItem.PANUMBER );
+additional_jsp.append("<OPTION VALUE='"+ PublicInfoItem.SGD +"'>"+ PublicInfoItem.SGD );
+additional_jsp.append("</SELECT></td> </tr>");
+
+                            request.setAttribute(Constants.ADDITIONAL_JSP, additional_jsp.toString());
                    
-                    
-                    request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
-                    request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
-                    request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
+                            title="run 'NO MATCH' report";break;
+                           
+                        }
+                    }
+                    if ( spec_names != null )
+                    {
+                        request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
+                        request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
+                        request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);
+                    }
+                   
+                        
                     request.setAttribute(Constants.JSP_TITLE,title);
                    
                     return (mapping.findForward("initiate_process"));

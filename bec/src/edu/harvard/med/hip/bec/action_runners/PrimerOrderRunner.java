@@ -253,9 +253,9 @@ public class PrimerOrderRunner extends ProcessRunner
                 
                 if (well_counter == m_wells_per_plate   || primer_counter == primers.size() - 1)
                 {
-                    m_file_list_reports.add( NamingFileEntry.createNamingFile(naming_file_entries,FILE_PATH + container.getLabel()+"_naming_reads.txt"));
-                    m_file_list_reports.add( FileOperations.writeFile(items_template,  "Clone Id\tOrg plate\tOrg well\tDestination plate\tDestination well\n",  FILE_PATH + container.getLabel() +"_template.txt"));
-                    m_file_list_reports.add( FileOperations.writeFile(items_oligo ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  FILE_PATH + container.getLabel() +"_oligo.txt"));
+                    m_file_list_reports.add( NamingFileEntry.createNamingFile(naming_file_entries,Constants.getTemporaryFilesPath() + container.getLabel()+"_naming_reads.txt"));
+                    m_file_list_reports.add( FileOperations.writeFile(items_template,  "Clone Id\tOrg plate\tOrg well\tDestination plate\tDestination well\n",  Constants.getTemporaryFilesPath() + container.getLabel() +"_template.txt"));
+                    m_file_list_reports.add( FileOperations.writeFile(items_oligo ,"Oligo Sample Id\tPlate Name\tWellId\tWellIndex\tCloneId\tPrimerId\tPrimerSequence\tTm\tPrimerLength\n",  Constants.getTemporaryFilesPath() + container.getLabel() +"_oligo.txt"));
                              
                     if (! m_isTryMode ) 
                             conn.commit();

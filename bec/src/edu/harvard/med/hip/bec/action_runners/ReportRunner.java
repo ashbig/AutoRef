@@ -367,7 +367,7 @@ public class ReportRunner extends ProcessRunner
                 clone= (UICloneSample) clones.get(count);
                 if (count == 0)
                 {
-                    fl =   new File(FILE_PATH + System.currentTimeMillis()+ ".txt");
+                    fl =   new File(Constants.getTemporaryFilesPath() + System.currentTimeMillis()+ ".txt");
                     fr =  new FileWriter(fl);
                     fr.write(m_report_title+"\n");
                 }

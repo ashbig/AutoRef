@@ -6,6 +6,8 @@
 
 package edu.harvard.med.hip.bec.coreobjects.sequence;
 
+import java.sql.*;
+import edu.harvard.med.hip.bec.database.*;
 /**
  *
  * @author  htaycher
@@ -59,9 +61,18 @@ public class PublicInfoItem
     public String   getDescription (){ return m_description  ;}
     public String   getUrl (){ return m_url  ;}
     
-    
-
- 
-
-
+   public static String   getCloneAdditionalId (int sequence_id, String name_value)throws Exception
+    {
+        
+         String res = "";ResultSet rs = null;
+         DatabaseTransaction t = DatabaseTransaction.getInstance();
+         String sql="select namevalue from name where sequenceid in "
+            +" (select becsequenceid from view_flexbecsequenceid where flexsequenceid="+sequence_id
+            +" ) and nametype='"+name_value+"'";
+            rs = t.executeQuery(sql);
+           if(rs.next())
+                 res = rs.getString("namevalue"); 
+           return res;
+       
+    }
 }

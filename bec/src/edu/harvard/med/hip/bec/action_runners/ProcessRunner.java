@@ -34,13 +34,6 @@ import edu.harvard.med.hip.bec.ui_objects.*;
  */
 public abstract class ProcessRunner implements Runnable
 {
-    protected  static String FILE_PATH = null;
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-            FILE_PATH = "d:\\tmp\\";
-        else
-            FILE_PATH = "c:\\tmp\\";
-    }
     protected ArrayList   m_error_messages = null;
     protected String      m_items = null;
     protected int         m_items_type = -1;
@@ -147,15 +140,20 @@ public abstract class ProcessRunner implements Runnable
                     subject=" Request for report";
                     text = "Please find attached report files for your request\n Requested item ids:\n"+m_items;
                 }
-                else if (this instanceof ReportRunner)
+                else if (this instanceof TraceFileProcessingRunner)
                 {
                     subject = "Trace files order files request";
                     text="Please find attached Trace files order for your request\n Requested item ids:\n"+m_items;
                 }
+                 else if (this instanceof NoMatchReportRunner)
+                {
+                    subject = "report on No Match clones";
+                    text="Please find attached report file for your request\n Requested item ids:\n"+m_items;
+                }
                 Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
                 "hip_informatics@hms.harvard.edu",subject,                 text,               m_file_list_reports);
             }
-            if (m_error_messages.size()==0 && !(this instanceof ReportRunner))
+            if (m_file_list_reports == null)
             {
                 message_text = title;
                 if (m_items != null) message_text +=" \n Items processed:\n"+m_items;
@@ -163,12 +161,13 @@ public abstract class ProcessRunner implements Runnable
                 "hip_informatics@hms.harvard.edu", title, message_text );
 
             }
-            if (m_error_messages.size()!=0 && !(this instanceof ReportRunner))
+        /*    if (m_error_messages.size()!=0 && !(this instanceof ReportRunner))
             {
                  Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
                 "hip_informatics@hms.harvard.edu", title,title+ " \n Items processed:\n"+m_items +"\nSee another e-mail for error messages.");
 
             }
+         **/
 
         }
         catch(Exception e){}
