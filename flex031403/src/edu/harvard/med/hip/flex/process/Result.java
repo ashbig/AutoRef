@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.9 $
- * $Date: 2001-06-25 19:32:21 $
+ * $Revision: 1.10 $
+ * $Date: 2001-06-26 11:55:45 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -49,7 +49,7 @@ import edu.harvard.med.hip.flex.util.*;
  * Represents the result of a process execution for a sample.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.9 $ $Date: 2001-06-25 19:32:21 $
+ * @version    $Revision: 1.10 $ $Date: 2001-06-26 11:55:45 $
  */
 
 public class Result {
@@ -192,7 +192,7 @@ public class Result {
         "AND r.executionid = p.executionid " +
         "AND s.sampleid = ? " +
         "AND p.executionid = ?";
- System.out.println(sql);       
+        
         DatabaseTransaction dt = DatabaseTransaction.getInstance();
         Connection conn = dt.requestConnection();
         PreparedStatement ps = null;
