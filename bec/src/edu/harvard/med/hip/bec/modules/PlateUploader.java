@@ -138,6 +138,12 @@ public class PlateUploader
                    m_error_messages.add("Plate "+platename+" already exists in BEC");
                    return;
               }
+              String duplicated_clones = duplicatedClones(platename, flex_connection, bec_connection);
+              if ( duplicated_clones != null && duplicated_clones.trim().length() > 0 )
+              {
+                   m_error_messages.add("Clones  "+ duplicated_clones +" from plate" + platename + " already exist in ACE");
+                   return;
+              }
               // get all needed info from flex
 
               // get all related sample info from flex
@@ -166,6 +172,45 @@ public class PlateUploader
     
     //*******************************************************************************
     
+    //returns list of existing cloneids from plate
+    private String duplicatedClones(String platename, Connection flex_connection,
+                                Connection bec_connection)throws BecDatabaseException
+    {
+        String result = ""; int temp = 0;
+         String sql = "select  cd.sequenceid as sequenceid, c.cloneid as CLONEID "+
+        " from clonesequencing c, sample s, constructdesign cd"+
+        " where s.containerid =  (select containerid from containerheader " +
+        " where label='" + platename +"')"+
+        " and c.sequencingsampleid(+)=s.sampleid and s.constructid=cd.constructid(+)";
+        ResultSet rs = null;
+        try
+        {
+           // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
+            rs = DatabaseTransactionLocal.executeQuery(sql,flex_connection);
+            while(rs.next())
+            {
+                temp = rs.getInt("CLONEID");
+                if (temp > 0) result += temp  +",";
+            }
+            result = result.substring(0, result.length() - 1);
+            sql = "select flexcloneid from flexinfo where flexcloneid in ("+ result+")";
+            
+            rs = DatabaseTransactionLocal.executeQuery(sql, bec_connection);
+            result = "";
+            while( rs.next() )
+            {
+                result += rs.getInt("FLEXCLONEID")+" ";
+            }
+           
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while getting info ids for the plate: "+platename+"\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransactionLocal.closeResultSet(rs);
+        }
+        return result;
+    }
     // the following function get plate related info from FLEX
     
     // finds construct ids for the plate samples
@@ -175,18 +220,7 @@ public class PlateUploader
        boolean isCloneIdsSet = false;
         int plate_id  = -1;
         SampleInfo sample ;
-        /*
-        String sql = "select sampleid, sampletype, containerid,"+
-        " containerposition as position, cd.constructtype as format, cd.constructid as constructid, cd.sequenceid as sequenceid, cloneid"+
-        " from clonesequencing c, sample s, constructdesign cd"+
-        " where s.containerid = "+
-        " (select distinct sequencingcontainerid"+
-        " from clonesequencing"+
-        " where sequencingcontainerlabel='" + platename +"')"+
-        " and c.sequencingsampleid(+)=s.sampleid"+
-        " and s.constructid=cd.constructid(+)"+
-        " order by containerposition";
-*/
+     
          String sql = "select sampleid, sampletype, containerid,"+
         " containerposition as position, cd.constructtype as format, cd.constructid as constructid, cd.sequenceid as sequenceid, c.cloneid as CLONEID "+
         " from clonesequencing c, sample s, constructdesign cd"+
