@@ -90,7 +90,30 @@ public class FileOperations
     //ok for small files : write functions for large ones using System
     public static void copyFile(File source_file, File destination_file,  boolean overwrite) throws Exception
     {
-        moveFile(source_file,  destination_file, overwrite, false);
+        //moveFile(source_file,  destination_file, overwrite, false);
+        if (destination_file.exists() && !overwrite)
+             throw new IOException("File with this name already exist.");
+       InputStream in = null;
+       OutputStream out = null;
+       try
+       {
+            in = new FileInputStream(source_file);
+            out = new FileOutputStream(destination_file);
+            copy(in, out);
+            out.flush();    
+            in.close();            in = null;
+            out.close();       out = null;
+        }
+        catch(Exception e)
+        {
+           new IOException( "Cannot copy file");
+        }
+       finally
+       {
+            if (in != null) try { in.close();  } catch (IOException ignore){}
+            if (out != null)try  {     out.close();} catch (IOException ignore)  {  }
+       }
+       
     } // copyFileToFile
     
     
@@ -112,77 +135,42 @@ public class FileOperations
      */
     public static void moveFile(File from, File to, boolean overwrite, boolean mode_remove) throws IOException
     {
-        if (to.exists())
-        {
-            if (overwrite)
-            {
-                if (!to.delete())
-                {
-                    throw new IOException( "Cannot delete file");
-                }
-            }
-            else
-            {
-                throw new IOException("File with this name already exist.");
-            }
-        }
-        
+        if (to.exists() && !overwrite)
+             throw new IOException("File with this name already exist.");
         if (m_isSameComputer)
         {
             if (from.renameTo(to)) return;//on the same machine
         }
         else
         {
-        
-            InputStream in = null;
-            OutputStream out = null;
+            InputStream in = null;           OutputStream out = null;
             try
             {
-                in = new FileInputStream(from);
-                out = new FileOutputStream(to);
+                in = new FileInputStream(from);  out = new FileOutputStream(to);
                 copy(in, out);
                 out.flush();
-                in.close();
-                in = null;
-               
-                out.close();
-                out = null;
-                if (mode_remove)
-                {
-                    try
-                    {
-                        from.delete();
-                    }
-                    catch (Exception e)
-                    {
-                        throw new IOException("Cannot delete original file");
-                    }
-                }
-            } finally
+                in.close();                in = null;
+                out.close();                out = null;
+            } 
+            catch(Exception e)
             {
-                if (in != null)
+                if (in != null)  try{ in.close(); } catch (IOException ignore){}
+                if (out != null) try{ out.close(); } catch (IOException ignore){}
+                throw new IOException("Cannot copy original file");
+            }
+            if (mode_remove)
+            {
+                try
                 {
-                    try
-                    {
-                        in.close();
-                    } catch (IOException ignore)
-                    {
-                    }
-                    in = null;
+                    from.delete();
                 }
-                if (out != null)
+                catch (Exception e)
                 {
-                    try
-                    {
-                        out.flush();
-                        out.close();
-                    } catch (IOException ignore)
-                    {
-                    }
-                    out = null;
+                    throw new IOException("Cannot delete original file");
                 }
             }
-        }
+                
+         }
     }
     
     /**
@@ -208,12 +196,17 @@ public class FileOperations
     {
         try
         {
-            File sourceFile = new File("testfile.txt");
-            File destinationpath = new File("testdir\\testfile.txt");
-            moveFile(sourceFile,destinationpath);
+            File sourceFile = new File("c:\\bio\\test.txt");
+            File destination_file = new File("c:\\test.txt");
+            //copyFile( sourceFile,  destination_file,   true) ;
+            boolean overwrite = true;
+            boolean mode_remove = true;
+            moveFile(sourceFile, destination_file,overwrite,  mode_remove) ;
+ 
         }
         catch (Exception e)
         {
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     } // test
