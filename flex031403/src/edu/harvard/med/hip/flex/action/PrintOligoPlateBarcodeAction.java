@@ -63,7 +63,7 @@ public class PrintOligoPlateBarcodeAction extends ResearcherAction {
             //System.out.println("Printing barcode: "+ container.getLabel());
             String label = PrintLabel.execute(container.getLabel());
             
-        } //while
+        } //while        
         
         return (mapping.findForward("success"));
     }

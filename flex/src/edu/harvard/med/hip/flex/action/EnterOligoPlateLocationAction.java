@@ -137,7 +137,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         }
         
         request.getSession().removeAttribute("ReceiveOligoPlatesAction.queueItems");
-        request.getSession().removeAttribute("containerList");
+//        request.getSession().removeAttribute("containerList");
         
         return (mapping.findForward("success"));
     }
