@@ -123,8 +123,8 @@
           <tr>
             <td width="100%" height="227" valign="top" align="left">
               <br>
-              <span style="background-color: #FFFFFF"><font color="#008080">&nbsp;</font><b><font color="#006666">With
-              MedGene Database, user can retrieve the following information:<br>
+              <span style="background-color: #FFFFFF"><font color="#008080"></font><b><font color="#006666">
+                Based on the co-citations of all Medline records, MedGene can retrieve the following relationships:<br>
               &nbsp;</font></b></span>
               <table border="0" width="100%">
                 <tr>

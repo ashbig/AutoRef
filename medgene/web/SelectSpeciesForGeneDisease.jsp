@@ -57,7 +57,7 @@
         <table border="1" cellpadding="0" cellspacing="0" width="100%" bordercolor="#99CCFF">
           <tr>
             <td width="100%" bgcolor="#99CCFF"><b><font color="#000099">&nbsp; <img border="0" src="jpg/prompt.gif" width="13" height="13">&nbsp;
-              </font><font face="Arial" color="#003399">Please select the species where your gene come from.</font></b></td>
+              </font><font face="Arial" color="#003399">Please select the species where the genes come from.</font></b></td>
           </tr>
           <tr>
             <td width="100%" bgcolor="#F0F8FF"><b>
