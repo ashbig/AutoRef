@@ -13,9 +13,9 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-06 21:48:58 $
- * $Author: dongmei_zuo $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-10 14:53:20 $
+ * $Author: dzuo $
  *
  ******************************************************************************
  *
@@ -52,12 +52,12 @@ import edu.harvard.med.hip.flex.util.*;
  *
  * Overides the ActionServlet to provide flex specific functionality
  *
- * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-07-06 21:48:58 $
+ * @author     $Author: dzuo $
+ * @version    $Revision: 1.2 $ $Date: 2001-07-10 14:53:20 $
  */
 
 public class FlexServlet extends ActionServlet {
-    
+     public static final String filePath = "WEB-INF/classes/config/";
     
      /**
      * Initialize this servlet.  Most of the processing has been factored into
@@ -68,22 +68,31 @@ public class FlexServlet extends ActionServlet {
      */
     public void init() throws ServletException {
         super.init();
-       initFlex();
-        
+        initFlex();        
     }
     
     
+    protected void initFlex() throws ServletException {
+        initFlexProp("FlexProperties", "SystemConfig.properties");
+        initFlexProp("ContainerTypeProperties", "ContainerType.properties");
+         
+    }
     /**
      * Initializes flex specific resources.
+     * 
+     * @param className The name of the FlexProperties subclass.
+     * @param fileName The name of the property file.
      *
      * @exception ServletException when a configuration error is found.
      */
-    protected void initFlex() throws ServletException {
+    protected void initFlexProp(String className, String fileName) throws ServletException {
+        String name = filePath+fileName;
+        
        // first load the system configuration info
         InputStream systemStream = 
-            getServletContext().getResourceAsStream("WEB-INF/classes/config/SystemConfig.properties");
+            getServletContext().getResourceAsStream(name);
         if(systemStream == null) {
-            System.err.println("Unable to read properties file");
+            System.err.println("Unable to read properties file: "+name);
         }
         Properties prop = new Properties();
         try {
@@ -93,7 +102,8 @@ public class FlexServlet extends ActionServlet {
              * give load values from the properties file into the 
              * SystemProperties class
              */
-            SystemProperties.getInstance().setProperties(prop);
+            FlexProperties flexProp = StaticPropertyClassFactory.makePropertyClass(className);
+            flexProp.setProperties(prop);
         } catch (IOException ioE) {
             throw new ServletException(ioE);
         }
