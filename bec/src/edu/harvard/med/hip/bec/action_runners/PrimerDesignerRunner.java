@@ -142,6 +142,7 @@ public class PrimerDesignerRunner extends ProcessRunner
         }
         finally
         {
+            if(conn != null)            DatabaseTransaction.closeConnection(conn);
             if ( m_isTryMode )
             {
                 try {reportFileWriter.close();}catch(Exception e){ try { reportFileWriter.close();}catch(Exception n){} }

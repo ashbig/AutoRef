@@ -98,6 +98,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         }
         finally
         {
+            if(conn != null)            DatabaseTransaction.closeConnection(conn);
             sendEMails();
         }
     }
