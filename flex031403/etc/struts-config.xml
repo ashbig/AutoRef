@@ -95,6 +95,8 @@
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
     <forward    name="login"        path="/login.jsp"/>
+    <forward    name="register"     path="CustomerRegistration.jsp"/>
+    <forward    name="findRegistration" path="FindRegistration.jsp"/>
     <forward    name="error"        path="/ProcessError.do"/>
     <forward    name="customerRequest"  path="/CustomerRequest.do"/>
     <forward    name="approveSequences" path="/ViewPendingRequests.do"/>
