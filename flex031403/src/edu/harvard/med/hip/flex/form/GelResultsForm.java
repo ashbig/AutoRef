@@ -14,7 +14,7 @@
  *
  * The following information is used by CVS
  * $Revision: 1.1 $
- * $Date: 2001-06-20 11:24:31 $
+ * $Date: 2001-06-20 12:07:58 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -50,10 +50,10 @@ import org.apache.struts.upload.*;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.1 $ $Date: 2001-06-20 11:24:31 $
+ * @version    $Revision: 1.1 $ $Date: 2001-06-20 12:07:58 $
  */
 
-public class GelDetailsForm extends ActionForm {
+public class GelResultsForm extends ContainerResultsForm {
     
     
     /**
@@ -92,17 +92,19 @@ public class GelDetailsForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public ActionErrors validate(ActionMapping mapping,
-                                 HttpServletRequest request) {
-
-        ActionErrors errors = new ActionErrors();
+    HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping,request);
+        if(errors==null) {
+            errors = new ActionErrors();
+        }
         if(this.gelImage == null) {
-            errors.add(ActionErrors.GLOBAL_ERROR, 
-                new ActionError("error.gel.file.required"));
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.gel.file.required"));
             
         }
         
         return errors;
-
+        
     }
     
 } // End class GelDetailsForm

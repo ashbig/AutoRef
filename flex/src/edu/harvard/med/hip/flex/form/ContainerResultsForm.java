@@ -1,10 +1,10 @@
 /*
- * File : TransformDetailsForm.java
- * Classes : TransformDetailsForm
+ * File : ContainerResultsForm.java
+ * Classes : ContainerResultsForm
  *
  * Description :
  *
- *      Form to enter info about a transformation plate.
+ *      Form to enter results for a container.
  *
  *
  * Author : Juan Munoz (jmunoz@3rdmill.com)
@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
- * $Date: 2001-06-18 15:07:27 $
+ * $Revision: 1.1 $
+ * $Date: 2001-06-20 12:07:58 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -51,14 +51,14 @@ import edu.harvard.med.hip.flex.Constants;
 import edu.harvard.med.hip.flex.core.*;
 
 /**
- * Form for entering info about a plate transformation.
+ * Form for entering results about a container.
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.3 $ $Date: 2001-06-18 15:07:27 $
+ * @version    $Revision: 1.1 $ $Date: 2001-06-20 12:07:58 $
  */
 
-public class TransformDetailsForm extends ActionForm{
+public class ContainerResultsForm extends ActionForm{
     
     // store the status indexed properties as a List
     private List statusList;
@@ -72,7 +72,7 @@ public class TransformDetailsForm extends ActionForm{
     /**
      * Default Constructor
      */
-    public TransformDetailsForm() {
+    public ContainerResultsForm() {
         this(null);
     }
     
@@ -81,7 +81,7 @@ public class TransformDetailsForm extends ActionForm{
      *
      * @param the container this form is representing
      */
-    public TransformDetailsForm(Container container) {
+    public ContainerResultsForm(Container container) {
         this.container = container;
         statusList = new LinkedList();
         resultList = new LinkedList();
@@ -193,7 +193,7 @@ public class TransformDetailsForm extends ActionForm{
     public int size() {
         return container == null ? 0 : container.getSamples().size();
     }
-} // End class TransformDetailsForm
+} // End class ContainerResultsForm
 
 
 /*
