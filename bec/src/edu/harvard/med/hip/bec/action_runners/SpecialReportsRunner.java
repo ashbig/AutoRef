@@ -141,7 +141,7 @@ public class SpecialReportsRunner extends ProcessRunner
              else
              {
                 if( read_description.getReadId() < 1 )
-                    reverse_reads.add(read_description.getPlateLabel()+"\t"+Algorithms.convertWellFromInttoA8_12(read_description.getPosition())+"\tF" );
+                    reverse_reads.add(read_description.getPlateLabel()+"\t"+Algorithms.convertWellFromInttoA8_12(read_description.getPosition())+"\tR" );
                 else
                 {
                     reverse_expected_reads.add(read_description );
