@@ -27,7 +27,15 @@
 <logic:iterate id="queueItem" name="SelectProtocolAction.queueItems">
 <flex:row oddStyleClass="oddRow" evenStyleClass="evenRow">
     <td><bean:write name="queueItem" property="item.fivepContainer.label"/></td>
+    
+    <logic:present name="queueItem" property="item.threepOpenContainer">
     <td><bean:write name="queueItem" property="item.threepOpenContainer.label"/></td>
+    </logic:present>
+     <logic:notPresent name="queueItem" property="item.threepOpenContainer">
+    <td>&nbsp</td>
+    </logic:notPresent>
+
+
     <logic:present name="queueItem" property="item.threepClosedContainer">
     <td><bean:write name="queueItem" property="item.threepClosedContainer.label"/></td>
     </logic:present>
