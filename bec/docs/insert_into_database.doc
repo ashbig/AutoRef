@@ -1,39 +1,68 @@
+The following table must be populated by sysadmin before BEC can function on db
+SAMPLETYPE
+NAME-TYPE
+USERGROUP
+PROCESSDEFINITION
+CONFIG-PARAM-NAME
+LINKER
+VECTOR
+VECTORFEATURE
+VECTORPRIMER
+COMMONPRIMER
+
+
+
+
+
 insert into usergroup values('Administrator');
 insert into usergroup values('Researcher');
+insert into usergroup values('Manager');
 
 
- insert into menuitem values (menuitemid.nextval, 'seqSelectProcess',3,'Select Process','Sequencing Project');
- insert into menuitem   ( menuitemid, menuitem,displayorder,description) values (menuitemid.nextval, 'home',    0,'Home');                                                                                                           
- insert into menuitem   ( menuitemid, menuitem,displayorder,description) values (menuitemid.nextval, 'addResearcher',1,'Add New Researcher');                                               
- insert into menuitem values (menuitemid.nextval, 'seqEnterParams',2,'Sequence evaluation settings','Sequencing Project');            
- insert into menuitem values (menuitemid.nextval, 'seqSequenceAnalysis',4,'Sequence Analysis','Sequencing Project');
-insert into menuitem       ( menuitemid, menuitem,displayorder,description) values ( menuitemid.nextval ,'help', 20, 'Help');
+insert into nametype values('GENBANK_ACCESSION');   
+insert into nametype values('GI');                  
+insert into nametype values('UNIGENE_SID');         
+insert into nametype values('GENE_SYMBOL');         
+insert into nametype values('SGD');                 
+insert into nametype values('ALT_GENE_NAME');       
+insert into nametype values('ALT_PROTEIN_NAME');    
+insert into nametype values('FUNCTION');            
+insert into nametype values('GENE_NAME');           
+insert into nametype values('GENOMIC_CONTEXT');     
+insert into nametype values('GI_PROTEIN');          
+insert into nametype values('HOMOLOGY');            
+insert into nametype values('PANUMBER');            
+insert into nametype values('PATHWAYS');            
+insert into nametype values('PRIMARY_FUNCTION');    
+insert into nametype values('RATING');              
+insert into nametype values('STRUCTURE_FEATURE');   
+insert into nametype values('LOCUS_ID');            
+insert into nametype values('MGC_ID');              
+insert into nametype values('IMAGE_ID');            
+insert into nametype values('RZPD_CLONEID');  
 
+insert into sampletype values ('ISOLATE');             
+insert into sampletype values ('DNA');                 
+insert into sampletype values ('CONTROL_POSITIVE');    
+insert into sampletype values ('CONTROL_NEGATIVE');    
+insert into sampletype values ('EMPTY');      
+         
 
+insert into processdefinition (processdefinitionid, processname, configtype1)
+values (1,'Run End Reads Sequencing',5);
+insert into processdefinition (processdefinitionid, processname)
+values (2,'Run End Reads Wrapper');
+ insert into processdefinition (processdefinitionid, processname, configtype1,configtype2,configtype3)
+values (3,'Run End Reads Evaluation',1,2,4);
+insert into processdefinition (processdefinitionid, processname)
+values (4,'Confirm clone rank');
+insert into processdefinition (processdefinitionid, processname, configtype1)
+values (5,'Upload new Plate',6);
 
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Administrator', (select menuitemid from menuitem where menuitem='help') );
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Researcher', (select menuitemid from menuitem where menuitem='help') );
-
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Administrator', (select menuitemid from menuitem where menuitem='seqSelectProcess') );
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Researcher', (select menuitemid from menuitem where menuitem='seqSelectProcess') );
-
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Administrator', (select menuitemid from menuitem where menuitem='addResearcher') );
-
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Administrator', (select menuitemid from menuitem where menuitem='seqEnterParams') );
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Researcher', (select menuitemid from menuitem where menuitem='seqEnterParams') );
-
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Administrator', (select menuitemid from menuitem where menuitem='home') );
-insert into usergroupmenuitem (usergroup, menuitemid)
-values ('Researcher', (select menuitemid from menuitem where menuitem='home') );
-
+insert into processdefinition (processdefinitionid, processname)
+values (6,'Run sequence assembly');
+insert into processdefinition (processdefinitionid, processname)
+values (7,'Run sequence assembly from end reads');
 
 
 
@@ -53,63 +82,71 @@ insert into config_parameter_name (paramname) values ('P_PRIMER_GC_OPT');
 insert into config_parameter_name (paramname) values ('P_UPSTREAM_DISTANCE');
 insert into config_parameter_name (paramname) values ('P_EST_SEQ');
 
-
-
-
-
-insert into config_parameter_name (paramname) values ('FS_C_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_C_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_C_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_C_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_FR_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_FR_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_FR_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_FR_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_IDEL_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_IDEL_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_IDEL_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_IDEL_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_IINS_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_IINS_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_IINS_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_IINS_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_N_100');
-insert into config_parameter_name (paramname) values ('FS_N_ROW');
-insert into config_parameter_name (paramname) values ('FS_NC_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_NC_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_NC_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_NC_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_PELONG_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_PELONG_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_PELONG_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_PELONG_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_PHRED_CUT_OFF');
-insert into config_parameter_name (paramname) values ('FS_PHRED_LOW_CUT_OFF');
-insert into config_parameter_name (paramname) values ('FS_S_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_S_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_S_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_S_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_TRANC_FAIL_H');
-insert into config_parameter_name (paramname) values ('FS_TRANC_FAIL_L');
-insert into config_parameter_name (paramname) values ('FS_TRANC_PASS_H');
-insert into config_parameter_name (paramname) values ('FS_TRANC_PASS_L');
-insert into config_parameter_name (paramname) values ('FS_C_POLM');
-insert into config_parameter_name (paramname) values ('FS_FR_POLM');
-insert into config_parameter_name (paramname) values ('FS_IDEL_POLM');
-insert into config_parameter_name (paramname) values ('FS_IINS_POLM');
-insert into config_parameter_name (paramname) values ('FS_NC_POLM');
-insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_POLM');
-insert into config_parameter_name (paramname) values ('FS_PELONG_POLM');
-insert into config_parameter_name (paramname) values ('FS_S_POLM');
-insert into config_parameter_name (paramname) values ('FS_TRANC_POLM');
-
-
-
-
+insert into config_parameter_name (paramname) values ('FS_3DI_FAIL_H');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_3DI_FAIL_L');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_3DI_PASS_H');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_3DI_PASS_L');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_3S_FAIL_H');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_3S_FAIL_L');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_3S_PASS_H');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_3S_PASS_L');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_5DI_FAIL_H');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_5DI_FAIL_L');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_5DI_PASS_H');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_5DI_PASS_L');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_5S_FAIL_H');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_5S_FAIL_L');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_5S_PASS_H');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_5S_PASS_L');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_C_FAIL_H');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_C_FAIL_L');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_C_PASS_H');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_C_PASS_L');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_C_POLM');                                                                                                         
+insert into config_parameter_name (paramname) values ('FS_FR_FAIL_H');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_FR_FAIL_L');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_FR_PASS_H');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_FR_PASS_L');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_FR_POLM');                                                                                                        
+insert into config_parameter_name (paramname) values ('FS_IDEL_FAIL_H');                                                                                                 
+insert into config_parameter_name (paramname) values ('FS_IDEL_FAIL_L');                                                                                                 
+insert into config_parameter_name (paramname) values ('FS_IDEL_PASS_H');                                                                                                 
+insert into config_parameter_name (paramname) values ('FS_IDEL_PASS_L');                                                                                                 
+insert into config_parameter_name (paramname) values ('FS_IDEL_POLM');                                                                                                      
+insert into config_parameter_name (paramname) values ('FS_IINS_FAIL_H');                                                                                                 
+insert into config_parameter_name (paramname) values ('FS_IINS_FAIL_L');                                                                                                 
+insert into config_parameter_name (paramname) values ('FS_IINS_PASS_H');                                                                                                 
+insert into config_parameter_name (paramname) values ('FS_IINS_PASS_L');                                                                                                 
+insert into config_parameter_name (paramname) values ('FS_IINS_POLM');                                                                                                      
+insert into config_parameter_name (paramname) values ('FS_NC_FAIL_H');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_NC_FAIL_L');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_NC_PASS_H');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_NC_PASS_L');                                                                                                   
+insert into config_parameter_name (paramname) values ('FS_NC_POLM');                                                                                                        
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_FAIL_H');                                                                                        
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_FAIL_L');                                                                                        
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_PASS_H');                                                                                        
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_PASS_L');                                                                                        
+insert into config_parameter_name (paramname) values ('FS_NOTRANSLATION_POLM');                                                                                             
+insert into config_parameter_name (paramname) values ('FS_N_100');                                                                                                          
+insert into config_parameter_name (paramname) values ('FS_N_ROW');                                                                                                          
+insert into config_parameter_name (paramname) values ('FS_PELONG_FAIL_H');                                                                                               
+insert into config_parameter_name (paramname) values ('FS_PELONG_FAIL_L');                                                                                               
+insert into config_parameter_name (paramname) values ('FS_PELONG_PASS_H');                                                                                               
+insert into config_parameter_name (paramname) values ('FS_PELONG_PASS_L');                                                                                               
+insert into config_parameter_name (paramname) values ('FS_PELONG_POLM');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_PHRED_CUT_OFF');                                                                                                  
+insert into config_parameter_name (paramname) values ('FS_PHRED_L');OW_CUT_OFF                                                                                           
+insert into config_parameter_name (paramname) values ('FS_S_FAIL_H');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_S_FAIL_L');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_S_PASS_H');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_S_PASS_L');                                                                                                    
+insert into config_parameter_name (paramname) values ('FS_S_POLM');                                                                                                         
+insert into config_parameter_name (paramname) values ('FS_TRANC_FAIL_H');                                                                                                
+insert into config_parameter_name (paramname) values ('FS_TRANC_FAIL_L');                                                                                                
+insert into config_parameter_name (paramname) values ('FS_TRANC_PASS_H');                                                                                                
+insert into config_parameter_name (paramname) values ('FS_TRANC_PASS_L');                                                                                                
+insert into config_parameter_name (paramname) values ('FS_TRANC_POLM');   
 
 insert into config_parameter_name (paramname) values ('ER_PHRED_CUT_OFF');
 insert into config_parameter_name (paramname) values ('ER_PHRED_LOW_CUT_OFF');
@@ -131,6 +168,14 @@ insert into config_parameter_name (paramname) values ('ER_NOTRANSLATION_H');
 insert into config_parameter_name (paramname) values ('ER_NOTRANSLATION_L');
 insert into config_parameter_name (paramname) values ('ER_PLONG_H');
 insert into config_parameter_name (paramname) values ('ER_PLONG_L');
+insert into config_parameter_name (paramname) values ('ER_5S_L');
+insert into config_parameter_name (paramname) values ('ER_5S_H');
+insert into config_parameter_name (paramname) values ('ER_5DI_L');
+insert into config_parameter_name (paramname) values ('ER_5DI_H');
+insert into config_parameter_name (paramname) values ('ER_3S_H');
+insert into config_parameter_name (paramname) values ('ER_3S_L');
+insert into config_parameter_name (paramname) values ('ER_3DI_L');
+insert into config_parameter_name (paramname) values ('ER_3DI_H');
 
 
 insert into config_parameter_name (paramname) values ('PL_BASES'); 
@@ -140,3 +185,99 @@ insert into config_parameter_name (paramname) values ('PL_FILE');
 insert into config_parameter_name (paramname) values ('PL_SPECIES'); 
 
 
+
+insert into linker (linkerid,sequence, name) values (vectorid.nextval,'CAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTTCCAGCTGACCACC-','5p Yeast Linker');
+insert into linker (linkerid,sequence, name)values (vectorid.nextval,'-CATGGCAATTCCCGGGGATACCCAGCTTTCTTGTACAAAGTTGGCATTATAAGAAAGCATTGCTTATCAATTTGTTGC','3p Yeast Linker');
+insert into linker (linkerid, name,sequence)values (vectorid.nextval,'5p Human linker','GCAGGCTCCACC-');                                                      
+insert into linker (linkerid, name,sequence) values (vectorid.nextval,'3p Human linker','-AGAAAGCTGGGTC');                                                      
+insert into linker (linkerid, name,sequence) values (vectorid.nextval,'5p Pseudomonas linker','ACAAGTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACC-');                             
+insert into linker (linkerid, name,sequence) values (vectorid.nextval,'3p Pseudomonas linker','-GACCCAGCTTTCTTGTACAAAGTGGT');                                         
+insert into linker (linkerid, name,sequence) values (vectorid.nextval,'5p linker','GCGGCCGCATAACTTCGTATAGCATACATTATACGAAGTTATCAGTCGACACC-');               
+insert into linker (linkerid, name,sequence) values (vectorid.nextval,'3p linker','-GGAAGCTTTCTAGACCATTCGTTTGGCGCGCGGGCCC');
+
+
+insert into vector (vectorid, vectorname, source,vectortype, VECTORFILENAME ,VECTORFILEPATH )
+    values (vectorid.nextval,'pDONR201','Invitrogen', 1,'pdonr201_map.pdf','/vector/');
+insert into vector (vectorid, vectorname, source,vectortype,VECTORFILENAME ,VECTORFILEPATH )
+    values (vectorid.nextval,'pDNR-Dual','BD Biosciences (Clontech)', 1,'pDNR-Dual_map.pdf','/vector/');
+insert into vector (vectorid, vectorname, source,vectortype,VECTORFILENAME ,VECTORFILEPATH )
+    values (vectorid.nextval,'pBY011','Bhupinder Bullar', 2,'','/vector/');
+
+insert into vectorfeature (featureid,featurename,description,featuretype,vectorid) values (vectorid.nextval,'attP2','recombination site',-1,1);
+insert into vectorfeature values( vectorid.nextval,'recombination site','attP2',-1,(select vectorid from vector where vectorname='pDONR201'));   
+insert into vectorfeature values(vectorid.nextval,'antibiotic selection marker','KanR',0,(select vectorid from vector where vectorname='pDONR201')); 
+insert into vectorfeature values( vectorid.nextval,'antibiotic marker','CmR (reverse orientation)',-1,(select vectorid from vector where vectorname='pDONR201'));   
+insert into vectorfeature values( vectorid.nextval,'origin of replication','pUC ori',0,(select vectorid from vector where vectorname='pDONR201'));   
+insert into vectorfeature values( vectorid.nextval,'recombination site','attP1',-1,(select vectorid from vector where vectorname='pDONR201'));            
+insert into vectorfeature values( vectorid.nextval,'death gene','ccdB',-1,(select vectorid from vector where vectorname='pDONR201'));   
+insert into vectorfeature values( vectorid.nextval,'transcription termination seq','T1',0,(select vectorid from vector where vectorname='pDONR201')  )   ;           
+insert into vectorfeature values( vectorid.nextval,'transcription termination seq','T2',0,(select vectorid from vector where vectorname='pDONR201')  ) ;          
+insert into vectorfeature values( vectorid.nextval,'recombination site','attL1',1,(select vectorid from vector where vectorname='pDONR201')         )  ;     
+insert into vectorfeature values( vectorid.nextval,'recombination site','attL2',1,(select vectorid from vector where vectorname='pDONR201'));   
+insert into vectorfeature values( vectorid.nextval, 'recombination site','LoxP',0,(select vectorid from vector where vectorname='pDNR-Dual'));
+insert into vectorfeature values( vectorid.nextval, 'multiple cloning site','MCS',0,     (select vectorid from vector where vectorname='pDNR-Dual'));   
+insert into vectorfeature values( vectorid.nextval, 'splice donor site','SD',0,            (select vectorid from vector where vectorname='pDNR-Dual'));   
+insert into vectorfeature values( vectorid.nextval, 'antibiotic marker','CmR',0,            (select vectorid from vector where vectorname='pDNR-Dual'));   
+insert into vectorfeature values( vectorid.nextval, 'negative selection marker','SacB',0,           (select vectorid from vector where vectorname='pDNR-Dual'));   
+insert into vectorfeature values( vectorid.nextval,'antibiotic selection marker','AmpR',0, (select vectorid from vector where vectorname='pDNR-Dual'));   
+insert into vectorfeature values( vectorid.nextval, 'origin of replication','pUC ori',0,     (select vectorid from vector where vectorname='pDNR-Dual'));   
+insert into vectorfeature values( vectorid.nextval, 'promoter','T7',0,(select vectorid from vector where vectorname='pDNR-Dual'));   
+insert into vectorfeature values( vectorid.nextval, 'sequencing primer','M13F',0,(select vectorid from vector where vectorname='pDNR-Dual'));   
+insert into vectorfeature values( vectorid.nextval, 'recombination site','attR2',-1,(select vectorid from vector where vectorname='pBY011'));     
+insert into vectorfeature values( vectorid.nextval, 'antibiotic selection marker','AmpR',0,(select vectorid from vector where vectorname='pBY011'));     
+insert into vectorfeature values( vectorid.nextval, 'antibiotic marker','CmR (reverse orientation)',-1, (select vectorid from vector where vectorname='pBY011'));     
+insert into vectorfeature values( vectorid.nextval, 'origin of replication','pUC ori/ ars cen',0,(select vectorid from vector where vectorname='pBY011'));     
+insert into vectorfeature values( vectorid.nextval, 'recombination site','attR1',-1,(select vectorid from vector where vectorname='pBY011'));     
+insert into vectorfeature values( vectorid.nextval, 'death gene','ccdB',-1,(select vectorid from vector where vectorname='pBY011'));     
+insert into vectorfeature values( vectorid.nextval, 'Recombination site','attB1',1,(select vectorid from vector where vectorname='pBY011'));     
+insert into vectorfeature values( vectorid.nextval,'Recombination site','attB2',1,(select vectorid from vector where vectorname='pBY011'));     
+
+
+
+//for yeast
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'Waugh','TCGCGTTAACGCTAGCATGGATCTCG',2);
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'Reverse','GTAACATCAGAGATTTTGAGACAC',2);
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'PBY011_50_3','CAAAAATTGTTAATATACCTCTATAC',2);
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'PBY011_60_5','TGTTGTGTGGAATTGTGAGCGG',2);
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR201'),
+(select primerid from commonprimer where name='Reverse'),
+3,
+-1);
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR201'),
+(select primerid from commonprimer where name='PBY011_50_3'),
+5,
+1);
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR201'),
+(select primerid from commonprimer where name='PBY011_60_5'),
+3,
+-1);
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR201'),
+(select primerid from commonprimer where name='Waugh'),
+5,
+1);
+
+//for pseudomonas
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'Gateway_FarF1','NN',2);
+insert into commonprimer (primerid, name,sequence,type) values(oligoid.nextval,'SEQL_B','NN',2);
+
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR201'),
+(select primerid from commonprimer where name='SEQL_B'),
+3,
+-1);
+insert into vectorprimer (vectorprimerid, vectorid,primerid,position,orientation)
+values(vectorid.nextval, 
+(select vectorid from vector where vectorname='pDONR201'),
+(select primerid from commonprimer where name='Gateway_FarF1'),
+5,
+1);
+                                          
