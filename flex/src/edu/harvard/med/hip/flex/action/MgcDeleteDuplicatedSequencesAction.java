@@ -54,6 +54,7 @@ public class MgcDeleteDuplicatedSequencesAction extends ResearcherAction
         boolean isCleanupDuplicates = requestForm.getIsCleanupDuplicates();
         
         
+        
         SequenceOligoQueue seqQueue = new SequenceOligoQueue();
         LinkedList seqList = null;
         LinkedList seqNoDuplicate = new LinkedList();
@@ -92,7 +93,11 @@ public class MgcDeleteDuplicatedSequencesAction extends ResearcherAction
             try
             {
                 Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
+                ra.setRearrayByMarker(true);
                 plates = ra.getPlates();
+                request.setAttribute("platesInfo_marker", plates);
+                request.setAttribute("full_plates", new Integer( plates.size() ));
+              
             }
             catch(Exception e)
             {
@@ -102,8 +107,8 @@ public class MgcDeleteDuplicatedSequencesAction extends ResearcherAction
         }
         request.setAttribute("workflowid", new Integer(workflowid));
         request.setAttribute("projectid", new Integer(projectid));
-        request.setAttribute("platesInfo", plates);
-        request.setAttribute("full_plates", new Integer( plates.size() ));
+       // request.setAttribute("platesInfo", plates);
+       // request.setAttribute("full_plates", new Integer( plates.size() ));
         request.setAttribute("sequences_count", new Integer(seqList.size() ));
         request.setAttribute("projectname", project.getName());
         request.setAttribute("processname", processname);

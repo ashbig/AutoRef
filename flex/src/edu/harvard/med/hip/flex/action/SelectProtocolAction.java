@@ -126,14 +126,22 @@ public class SelectProtocolAction extends FlexAction
                 }
                 
                 
-                ArrayList plates = new ArrayList();
+                    // ArrayList plates = new ArrayList();
                 //get total number of genes in queue
                 if (numOfSeqs != 0)
                 {
                     try
                     {
                        Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
-                        plates = ra.getPlates();
+                       ra.setRearrayByMarker(true);
+                       ArrayList plates = ra.getPlates();
+                        request.setAttribute("platesInfo_marker", plates);
+                        request.setAttribute("full_plates_marker", new Integer( plates.size() ));
+                        ra.setRearrayByMarker(false);
+                       ArrayList  plates_no_marker = ra.getPlates();
+                        request.setAttribute("platesInfo_no_marker", plates_no_marker);
+                        request.setAttribute("full_plates_no_marker", new Integer( plates_no_marker.size() ));
+                 
                     }
                     catch(Exception e)
                     {
@@ -142,8 +150,8 @@ public class SelectProtocolAction extends FlexAction
                         return (mapping.findForward("error"));
                     }
                 }
-                request.setAttribute("platesInfo", plates);
-                request.setAttribute("full_plates", new Integer( plates.size() ));
+               // request.setAttribute("platesInfo", plates);
+               // request.setAttribute("full_plates", new Integer( plates.size() ));
                 request.setAttribute("sequences_count", new Integer(numOfSeqs));
                 request.setAttribute("projectname", projectname);
                 request.setAttribute("processname", processname);
