@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2001-06-18 12:54:50 $
+ * $Revision: 1.8 $
+ * $Date: 2001-06-22 12:30:51 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -51,7 +51,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.7 $ $Date: 2001-06-18 12:54:50 $
+ * @version    $Revision: 1.8 $ $Date: 2001-06-22 12:30:51 $
  */
 
 public class DatabaseTransaction {
@@ -299,8 +299,12 @@ public class DatabaseTransaction {
      */
     public static void closeConnection(Connection conn) {
         try{
+            System.out.println("about to close connectin");
             conn.close();
-        } catch(Throwable t) {}
+            System.out.println("connection closed");
+        } catch(Throwable t) {
+            System.out.println("error clossing connection");
+        }
     }
     
     
