@@ -9,13 +9,14 @@ package edu.harvard.med.hip.bec.coreobjects.oligo;
 import  edu.harvard.med.hip.bec.*;
 import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.database.*;
+import edu.harvard.med.hip.bec.action_runners.*;
 import java.sql.*;
 import java.util.*;
 
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.12 2004-11-10 20:43:44 Elena Exp $
+ * $Id: Oligo.java,v 1.13 2005-02-10 18:26:52 Elena Exp $
  * @@File:	Oligo.java
 
  */
@@ -316,21 +317,48 @@ public class Oligo
    }
    
    
+   
     //can return sets calculated ander different configs for Primer3
-   public static ArrayList getByCloneId(int cloneid, int oligo_status)throws BecDatabaseException
+   public static ArrayList getByCloneId(int cloneid, int oligo_status, int primers_selection_rule)throws BecDatabaseException
    {
-       String oligo_status_condition = "";
+       String oligo_status_condition = ""; String sql =  "";
        if ( oligo_status != STATUS_ANY)
        {
            oligo_status_condition = " status = "+oligo_status +" and ";
        }
-        String sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
+       if ( primers_selection_rule == PrimerOrderRunner.OLIGO_SELECTION_FORMAT_REFSEQ_ONLY)
+       {
+            sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
++" from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid from oligo_calculation where stretchcollectionid <0 and  sequenceid = "
++" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
++" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+")))) order by oligocalculationid, POSITION";
+    
+       }
+       else if ( primers_selection_rule == PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COLLECTION_REFSEQ)
+       {
+           sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
 +" from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid from oligo_calculation where sequenceid = "
 +" (select refsequenceid from sequencingconstruct where constructid =  (select constructid from isolatetracking where isolatetrackingid ="
 +" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+")))) order by oligocalculationid, POSITION";
+         
+       }
+       else if ( primers_selection_rule == PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COOLECTION_ONLY)
+       {
+            sql = "select  oligoid,sequence,  tm,  submissiontype, position, status,orientation, name,oligocalculationid,submitterid "
++" from geneoligo where "+oligo_status_condition+" oligocalculationid in (select oligocalculationid from oligo_calculation where stretchcollectionid in "
++" (select max(collectionid) from stretch_collection where isolatetrackingid = "
++" (select isolatetrackingid from flexinfo where flexcloneid="+cloneid+"))) order by oligocalculationid, POSITION";
+        }
         return getOligoByRule(sql);
    }
+    //can return sets calculated ander different configs for Primer3
+   public static ArrayList getByCloneId(int cloneid, int oligo_status)throws BecDatabaseException
+   {
+       return getByCloneId( cloneid,  oligo_status, PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COLLECTION_REFSEQ);
+   }
+  
    
+   /*
       //can return sets calculated ander different configs for Primer3
    public static ArrayList getByCloneId(int cloneid, int[] oligo_status)throws BecDatabaseException
    {
@@ -357,7 +385,10 @@ public class Oligo
 +" (select sampleid from sample  where containerid =(select containerid from containerheader where label ='"+label+"')))) order by oligocalculationid, POSITION";
         return getOligoByRule(sql);
    }
-    
+    */
+   
+  
+   //-----------------------
     private static ArrayList getOligoByRule(String sql)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
