@@ -46,7 +46,7 @@
       </b></font></td>
   </tr>
   <tr>
-    <td width="50%" align="center"><a href="CheckReservation.jsp"><img border="0" src="jpg/button11.gif" width="158" height="31"></a></td>
+    <td width="50%" align="center"><a href="http://kinase.bla-gls.org"><img border="0" src="jpg/button11.gif" width="158" height="31"></a></td>
   </tr>
 </table>
 
