@@ -24,6 +24,18 @@
         <td><bean:write name="sample" property="id"/></td>
     </tr>
     <tr>
+        <td class="prompt">Plate:</td>
+        <td><bean:write name="plate"/></td>
+    </tr>
+    <tr>
+        <td class="prompt">Well:</td>
+        <td><bean:write name="well"/></td>
+    </tr>
+    <tr>
+        <td class="prompt">Gene Symbol:</td>
+        <td><bean:write name="gene" /></td>
+    </tr>
+    <tr>
         <td class="prompt">Result Type:</td>
         <td><bean:write name="resulttype"/></td>
     </tr>
@@ -35,6 +47,7 @@
         <th>Result</th>
         <th>Researcher</th>
         <th>Process Date</th>
+        <th>Image File</th>
     </tr>
 
     <logic:iterate id="result" name="results">
@@ -42,6 +55,11 @@
         <td><flex:write name="result" property="value"/></td>
         <td><flex:write name="result" property="process.researcher.name"/></td>
         <td><flex:write name="result" property="process.date"/></td>
+        <td>&nbsp;<logic:iterate id="file" name="result" property="fileRefs">
+            <flex:linkFileRef name="file">
+                <bean:write name="file" property="baseName"/>
+            </flex:linkFileRef>&nbsp;<br>
+        </logic:iterate></td>
     </tr>
     </logic:iterate>
 </table>

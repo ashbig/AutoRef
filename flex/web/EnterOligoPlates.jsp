@@ -32,10 +32,12 @@
     </tr>
 
     <logic:notEqual name="projectid" value="2">
+    <logic:notEqual name="projectid" value="11">
     <tr>
     <td class="prompt">Enter 3P Fusion oligo plate barcode:</td>
     <td><html:text property="threepOpenPlate" size="40"/></td>
     </tr>
+     </logic:notEqual>
      </logic:notEqual>
 
     <logic:notEqual name="projectid" value="3">

@@ -1,5 +1,5 @@
 /**
- * $Id: FlexIDGenerator.java,v 1.7 2002-05-13 13:16:25 Elena Exp $
+ * $Id: FlexIDGenerator.java,v 1.8 2003-11-17 21:10:08 dzuo Exp $
  *
  * File     	: FlexIDGenerator.java
  * Date     	: 04182001
@@ -97,6 +97,21 @@ public class FlexIDGenerator {
         }catch (Exception e){ return -1;}
         return count;
     }
+    
+    public static int getMaxid(String tableName, String idColumn) throws FlexDatabaseException, SQLException {
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        String sql = "select max("+idColumn+") from "+tableName;
+        ResultSet rs = t.executeQuery(sql);
+        int id = 0;
+        if(rs.next()) {
+            id = rs.getInt(1);
+        } else {
+            throw new FlexDatabaseException("Error occured while executing query: "+sql);
+        }
+        DatabaseTransaction.closeResultSet(rs);
+        return id;
+    }
+    
     //******************************************************//
     //			Test				//
     //******************************************************//
