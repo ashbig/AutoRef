@@ -20,6 +20,19 @@
 <html:errors/>
 
 <p>
+You can search FLEXGene database by using the following terms: 
+<ul>
+<li>Genbank Accession
+<li>GI
+<li>Locus ID
+<li>Gene Symbol
+</ul>
+<p>
+For each term except GI, the program will search LocusLink database to find all the matching mRNAs and their GI numbers. It then performs two step query againt the FLEXGene database for each GI number. The first step is to find all the matching sequence records by comparing GI numbers. If at least one sequence record is found, the search returns the results. If no matching sequences are found in the database by this comparison, the program will retrieve the sequences using GI numbers from Genbank, and blast against the FLEXGene database to find all the sequence records that matches the user defined blast criteria. Two blast criteria are used to define a blast match: "Percent Identity" and "Alignment Length". The default setting is 90% for percent identity and 100nt for alignment length, which means any blast hit with at least one alignment above or equal to 90% over 100nt will be returned to the user as match. User can define the maximum number of blast hits shown on the results (default to five). User can also choose which database to blast against. The default sets to all the human genes cloned or attempted to be cloned in the FLEXGene repository. 
+
+<p>Searches are performed offline, and each search is identified by a "Search Name" defined by user. User can view the search results and history from the link "My Search History" on the left menu bar.
+<p>Click <a href="query_flow_v1.pdf">here</a> to view the flow chart.
+<p><hr>
 <html:form action="/SearchFlex.do" focus="searchTerm" method="POST" enctype="multipart/form-data">
 
 <table border=0 cellspacing=10 cellpadding=2>
