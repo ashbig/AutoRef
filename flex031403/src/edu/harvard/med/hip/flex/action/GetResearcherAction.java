@@ -175,7 +175,7 @@ public class GetResearcherAction extends ResearcherAction{
                 System.out.println("Printing barcode: "+status);
             }
 
-            // Remove everything from the session.
+            // Remove everything from the session.                                   
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
             request.getSession().removeAttribute("SelectProtocolAction.protocol");
             request.getSession().removeAttribute("EnterSourcePlateAction.oldContainers");

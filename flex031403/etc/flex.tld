@@ -146,7 +146,7 @@
 
      <attribute>
         <name>process</name>
-        <required>true</required>
+        <required>false</required>
         <rtexprvalue>false</rtexprvalue>
     </attribute>
 
@@ -185,7 +185,40 @@
     
   </tag>
 
+  <tag>
 
+    <name>findResult</name>
+
+    <tagclass>edu.harvard.med.hip.flex.tag.FindResultTag</tagclass>
+
+    <info>
+
+     Create a new page scope result variable based on the process and
+     sample
+      
+
+    </info>
+
+    
+    <attribute>
+        <name>processName</name>
+        <required>true</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    
+    <attribute>
+        <name>sampleName</name>
+        <required>true</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+
+    <attribute>
+        <name>id</name>
+        <required>true</required>
+        <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    
+  </tag>
 
 </taglib>
 

@@ -92,6 +92,7 @@ public class GetLocationAction extends ResearcherAction{
         int sourceLocation = ((CreateProcessPlateForm)form).getSourceLocation(); 
         Location sLocation = new Location(sourceLocation);          
         Container oldContainer = (Container)request.getSession().getAttribute("EnterSourcePlateAction.oldContainer");             
+        System.out.println("oldContainer: " + oldContainer);
         oldContainer.setLocation(sLocation);
         Vector oldContainers = new Vector();
         oldContainers.addElement(oldContainer);

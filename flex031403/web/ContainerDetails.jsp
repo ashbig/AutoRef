@@ -11,7 +11,9 @@
 <%@ taglib uri="/WEB-INF/flex.tld" prefix="flex" %>
 
 
-<bean:define name="<%=Constants.PROCESS_KEY%>" id="process"/>
+<logic:present name="<%=Constants.PROCESS_KEY%>">
+    <bean:define id="process"name="<%=Constants.PROCESS_KEY%>"/>
+</logic:present>
 
 <html>
 <head><title><bean:message key="flex.name"/> : Container Details</title></head>
@@ -20,9 +22,9 @@
 <hr>
 <html:errors/>
 <p>
-<logic:present name="<%=Constants.PROCESS_KEY%>">
+<logic:present name="process">
     <Center><h3>Results desplayed are for protocol 
-    <bean:write name="<%=Constants.PROCESS_KEY%>" property="protocol.processname"/>
+    <bean:write name="process" property="protocol.processname"/>
     </h3></center>
 </logic:present>
 
@@ -65,18 +67,24 @@
         <th>Status</th>
         <th>Construct</th>
         <th>Oligo</th>
-        <logic:present name="<%=Constants.PROCESS_KEY%>">
+        <logic:present name="process">
             <th>Result</th>
         </logic:present>
     </tr>
     <logic:iterate id="sample" name="container" property="samples">
     <tr>
         <td>
+            <logic:present name="process">
+                <flex:linkSample name="sample" process="process">
+                    <bean:write name="sample" property="id"/>
+                </flex:linkSample>
+            </logic:present>
             
-            <flex:linkSample name="sample" process="process">
-                <bean:write name="sample" property="id"/>
-            </flex:linkSample>
-            
+            <logic:notPresent name="process">
+                <flex:linkSample name="sample">
+                    <bean:write name="sample" property="id"/>
+                </flex:linkSample>
+            </logic:notPresent>
         </td>
         <td><bean:write name="sample" property="type"/></td>
         <td><bean:write name="sample" property="position"/></td>
@@ -90,21 +98,39 @@
         <logic:equal name="sample" property="oligoid" value="-1">
             <td>&nbsp;</td>
         </logic:equal>
+
         <logic:notEqual name="sample" property="oligoid" value="-1">
             <td><bean:write name="sample" property="oligoid"/></td>
         </logic:notEqual>
-        <logic:present name="<%=Constants.PROCESS_KEY%>">
+        
+        
             
-            <td><%
-                   Result result = 
+        <td>
+        <%-- Small hack that will print a result if there is one.--%>
+        <%--<%
+                try{
+                    Result result = 
                         Result.findResult((Sample)sample,(Process)process);
-                  if(result == null) {
-                    out.println("&nbsp;");
-                  } else {
-                        out.println(result);
-                   }
-                %><td>
-        </logic:present>
+                    if(result == null) {
+                        out.println("&nbsp;");
+                        } else {
+                            out.println(result);
+                        }
+                       } catch(Throwable th) {
+                            out.println("&nbsp;");
+                       }
+          %>--%>
+          <logic:present name="process">
+            <flex:findResult processName="process" sampleName="sample" id="result"/>
+            <logic:present name="result">
+                <bean:write name="result"/>
+            </logic:present>
+          </logic:present>
+          <logic:notPresent name="process">
+            &nbsp;
+          </logic:notPresent>
+            </td>
+        
     </tr>
     </logic:iterate>
 </table>

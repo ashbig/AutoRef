@@ -13,7 +13,9 @@
 <bean:define name="<%=Constants.SAMPLE_KEY%>" id="sample"/>
 <bean:define id="sequence" name="sample" property="flexSequence"/>
 
-<bean:define name="<%=Constants.PROCESS_KEY%>" id="process"/>
+<logic:present name="<%=Constants.PROCESS_KEY%>">
+    <bean:define name="<%=Constants.PROCESS_KEY%>" id="process"/>   
+</logic:present>
 
 <logic:present name="<%=Constants.RESULT_KEY%>">
     <bean:define name="<%=Constants.RESULT_KEY%>" id="result"/> 
@@ -65,10 +67,18 @@
     
     
     <td>
-        <flex:linkContainer name="container" process="process">
-            <bean:write name="container" property="label"/>
-        </flex:linkContainer>
+        <logic:present name="process">
+            <flex:linkContainer name="container" process="process"> 
+                <bean:write name="container" property="label"/>
+            </flex:linkContainer>
+        </logic:present>
 
+        <logic:notPresent name="process">
+            <flex:linkContainer name="container">
+                <bean:write name="container" property="label"/>
+            </flex:linkContainer>
+        </logic:notPresent>
+    
     </td>
     
     <logic:notEqual name="sample" property="constructid" value="-1">
@@ -82,10 +92,15 @@
     <td><bean:write name="sample" property="position"/></td>
 </tr>
 </table>
- <h3>Result for Protocol 
+
+<logic:present name="process">
+    <h3>Result for Protocol 
         <bean:write name="process" property="protocol"/>
- </h3>
+    </h3>
+
+
 <logic:present name="result">
+    
     <bean:write name="result" property="value"/>
     <%-- No go through and display the files --%>
     <table>
@@ -110,6 +125,7 @@
     No results for this protocol
 </logic:notPresent>
 
+</logic:present>
 
 </body>
 </html>

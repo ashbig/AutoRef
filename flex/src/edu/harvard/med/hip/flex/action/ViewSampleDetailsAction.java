@@ -8,13 +8,13 @@
  *
  *
  * Author :Juan Munoz (jmunoz@3rdmill.com)
- * 
+ *
  * See COPYRIGHT file for copyright information
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2001-07-16 23:11:21 $
+ * $Revision: 1.3 $
+ * $Date: 2001-07-17 19:57:53 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@
  *    Add entries here when updating the code. Remember to date and insert
  *    your 3 letters initials.
  *
- *    Jul-09-2001 : JMM - Class Created. 
+ *    Jul-09-2001 : JMM - Class Created.
  *
  */
 
@@ -32,7 +32,7 @@
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
-*/
+ */
 
 
 package edu.harvard.med.hip.flex.action;
@@ -55,11 +55,11 @@ import edu.harvard.med.hip.flex.process.Process;
  *
  *
  * @author     $Author: jmunoz $
- * @version    $Revision: 1.2 $ $Date: 2001-07-16 23:11:21 $
+ * @version    $Revision: 1.3 $ $Date: 2001-07-17 19:57:53 $
  */
 
 public class ViewSampleDetailsAction extends ResearcherAction{
-
+    
     /**
      * Does the real work for the perform method which must be overriden by the
      * Child classes.
@@ -72,8 +72,8 @@ public class ViewSampleDetailsAction extends ResearcherAction{
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward flexPerform(ActionMapping mapping, ActionForm form, 
-    HttpServletRequest request, HttpServletResponse response) 
+    public ActionForward flexPerform(ActionMapping mapping, ActionForm form,
+    HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         ActionForward retForward = null;
@@ -81,41 +81,49 @@ public class ViewSampleDetailsAction extends ResearcherAction{
         int sampleId = -1;
         int processId = -1;
         
+        Sample sample = null;
+        Process process = null;
+        
+        Result result = null;
+        Exception exception = null;
+        
         // get the sample id from request
         String sampleIdS = request.getParameter(Constants.SAMPLE_ID_KEY);
         
         // get the process id from the request
         String processIdS = request.getParameter(Constants.PROCESS_ID_KEY);
-       
+        
         /*
-         * make sure the sample id and process id are passed 
-         * in and are not empty
+         * make sure the sample id  passed
+         * in and is not empty
          */
-        if(sampleIdS==null || processIdS==null || 
-           sampleIdS.equals("") || processIdS.equals("")) {
-           // error has occured
-           errors.add(ActionErrors.GLOBAL_ERROR, 
+        if(sampleIdS==null || sampleIdS.equals("")) {
+            // error has occured
+            errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.parameter.invalid",Constants.SAMPLE_ID_KEY + "="+sampleIdS + " " +
-                            Constants.PROCESS_ID_KEY + "="+processIdS));
-           retForward = mapping.findForward("error");
+            Constants.PROCESS_ID_KEY + "="+processIdS));
+            retForward = new ActionForward(mapping.getInput());
         }
         
-        Sample sample = null;
-        Process process = null;
-        Result result = null;
-        Exception exception = null;
         try {
-            // find the objects from the database
-            sample = new Sample(Integer.parseInt(sampleIdS));    
-            process = Process.findProcess(Integer.parseInt(processIdS));
-            result = Result.findResult(sample,process);
+            //parse sample and find it
+            sample = new Sample(Integer.parseInt(sampleIdS));
+            
+        /*
+         * if the process was passed in parse it
+         * Find the result as well
+         */
+            if(processIdS != null && ! processIdS.equals("")) {
+                process = Process.findProcess(Integer.parseInt(processIdS));
+                result = Result.findResult(sample,process);
+            }
             
             //shove them into the request
             request.setAttribute(Constants.SAMPLE_KEY, sample);
             request.setAttribute(Constants.PROCESS_KEY, process);
             request.setAttribute(Constants.RESULT_KEY, result);
             
-           
+            
             
             retForward = mapping.findForward("success");
         } catch(NumberFormatException nfe) {
@@ -136,8 +144,8 @@ public class ViewSampleDetailsAction extends ResearcherAction{
         
         return retForward;
         
-    }    
-
+    }
+    
 } // End class ViewSampleDetails
 
 
@@ -145,4 +153,4 @@ public class ViewSampleDetailsAction extends ResearcherAction{
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
 |<---            this code is formatted to fit into 80 columns             --->|
-*/
+ */

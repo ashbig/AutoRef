@@ -13,8 +13,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2001-07-10 14:58:06 $
+ * $Revision: 1.2 $
+ * $Date: 2001-07-17 19:57:53 $
  * $Author: jmunoz $
  *
  ******************************************************************************
@@ -57,7 +57,7 @@ import org.apache.struts.util.*;
  * Link to a sample details page.
  *
  * @author $Author: jmunoz $
- * @version $Revision: 1.1 $ $Date: 2001-07-10 14:58:06 $
+ * @version $Revision: 1.2 $ $Date: 2001-07-17 19:57:53 $
  */
 
 public class LinkSampleTag extends TagSupport {
@@ -198,8 +198,8 @@ public class LinkSampleTag extends TagSupport {
             } catch (ClassCastException cce) {
                 throw new JspException("The specified variable does not contain a Process object\n"+cce.getMessage());
             }
-            url.append("&"+Constants.PROCESS_ID_KEY+"="+processObj.getExecutionid());
-        }
+            url.append("&"+Constants.PROCESS_ID_KEY +"="+processObj.getExecutionid());
+        } 
         
         // Generate the hyperlink start element
         HttpServletResponse response =

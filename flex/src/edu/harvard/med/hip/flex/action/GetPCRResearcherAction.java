@@ -90,7 +90,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-
+            
             // update the location of the old containers.
             fivep.updateLocation(fivep.getLocation().getId(), conn);
             threepOpen.updateLocation(threepOpen.getLocation().getId(), conn);
@@ -159,8 +159,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
                 q.addQueueItems(newItems, conn);
             }
             
-            // Commit the changes to the database.
-            DatabaseTransaction.commit(conn);
+           
         
             // Print the barcode
             String status = PrintLabel.execute(pcrOpenContainer.getLabel());
@@ -168,6 +167,9 @@ public class GetPCRResearcherAction extends ResearcherAction {
             status = PrintLabel.execute(pcrClosedContainer.getLabel());
             System.out.println("Printing barcode: "+status);
 
+             // Commit the changes to the database.
+            DatabaseTransaction.commit(conn);
+            
             // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
             request.getSession().removeAttribute("SelectProtocolAction.protocol");
