@@ -31,6 +31,9 @@ public class UICloneSample
     private int             m_clone_id = -1;
     private int             m_clone_status_in_analisys_pipline = -1;
     private int             m_clone_sequence_id = -1;
+    private int             m_clone_sequence_cds_start = -1;
+    private int             m_clone_sequence_cds_stop = -1;
+    
     private int             m_clone_sequence_analysis_status = -1;
     private int             m_clone_sequence_editing_status = -1;
     private int             m_clone_quality = -1;
@@ -57,6 +60,8 @@ public class UICloneSample
      public int             getScore(){ return  m_clone_score;}
     public int             getSampleId(){ return m_sample_id ;}
     public int             getRefSequenceId(){ return m_refsequence_id ;}
+    public int             getCloneSequenceCdsStart (){ return m_clone_sequence_cds_start ;}
+   public int             getCloneSequenceCdsStop (){ return m_clone_sequence_cds_stop ;}
     
     public void             setPlateLabel (String v){  m_plate_lable  = v ;}
     public void             setPosition (int v){  m_poisition  = v ;}
@@ -73,6 +78,9 @@ public class UICloneSample
       public void             setScore(int v){  m_clone_score = v;}
      public void             setSampleId(int v){   m_sample_id = v;}
     public void             setRefSequenceId(int v){   m_refsequence_id = v;}
+    public void             setCloneSequenceCdsStart (int v){  m_clone_sequence_cds_start =v;}
+   public void             setCloneSequenceCdsStop (int v){  m_clone_sequence_cds_stop =v;}
+    
 
      
      public static CloneSequence setCloneSequence(UICloneSample clone_sample,int[] sequence_analysis_status ) throws BecDatabaseException

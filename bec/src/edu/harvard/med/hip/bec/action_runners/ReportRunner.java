@@ -72,7 +72,9 @@ public class ReportRunner extends ProcessRunner
 	private boolean    m_rank = false;
         private boolean    m_score = false;
         private boolean    m_read_length = false;//length of end reads high quality strip
-        
+        private boolean    m_clone_seq_cds_start = false;
+        private boolean    m_clone_seq_cds_stop = false;
+        private boolean    m_clone_seq_text = false;
         
         private String      m_report_title = "";
    
@@ -112,7 +114,10 @@ public class ReportRunner extends ProcessRunner
                     Object ref_sga, //      SGA Number (for Yeast project only)
                     Object rank ,//      Leave Sequence Info Empty for Empty Well
                     Object read_length,
-                    Object score
+                    Object score,
+                     Object clone_seq_cds_start ,
+                    Object clone_seq_cds_stop ,
+                    Object clone_seq_text 
                  )
      {
         if( clone_id!= null){ m_clone_id= true; m_report_title += "Clone ID\t";} //    Clone Id
@@ -139,9 +144,11 @@ public class ReportRunner extends ProcessRunner
        
         if( clone_seq_id != null){ m_clone_seq_id= true; m_report_title += "Clone:Sequence Id\tClone:Sequence Type\t";}//      Clone Sequence Id
         if( clone_status != null) {m_clone_status = true;m_report_title += "Clone: Sequence Status\t";}//      Clone Sequence Analysis Status
-        if( clone_discr_high != null) m_clone_discr_high= true; //    Discrepancies High Quality (separated by type)
-        if( clone_disc_low != null) m_clone_disc_low= true; //   Discrepancies Low Quality (separated by type)
-       
+        if( clone_discr_high != null) {m_clone_discr_high= true;m_report_title += "Clone:Discrepancy High quality\t";} //    Discrepancies High Quality (separated by type)
+        if( clone_disc_low != null) {m_clone_disc_low= true; m_report_title += "Clone:Discrepancy Low Quality\t";}//   Discrepancies Low Quality (separated by type)
+        if( clone_seq_cds_start != null){ m_clone_seq_cds_start= true;m_report_title += "Clone:Cds Start\t";}
+        if( clone_seq_cds_stop != null) {m_clone_seq_cds_stop= true;m_report_title += "Clone:Cds Stop\t";}
+        if( clone_seq_text != null) {m_clone_seq_text= true;m_report_title += "Clone:Sequence Text\t";}
      }
 
     public void run()
@@ -170,31 +177,10 @@ public class ReportRunner extends ProcessRunner
         catch(Exception ex)
         {
             m_error_messages.add(ex.getMessage());
-
-        }
-        
+       }
         finally
         {
-            /*try
-            {
-     //send errors
-                if (m_error_messages.size()>0)
-                {
-                     Mailer.sendMessage(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Request for report generetion: error messages.", "Errors\n " ,m_error_messages);
-
-                }
-                if (file_list != null && file_list.size()>0)
-                {
-                    Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",
-                    "elena_taycher@hms.harvard.edu", "Request for report generator", 
-                    "Please find attached report files for your request\n Requested item ids:\n"+m_items,
-                    file_list);
-                }
-  
-            }
-            catch(Exception e){}
-          */
+           
             sendEMails();
         }
         
@@ -230,6 +216,8 @@ public class ReportRunner extends ProcessRunner
                  clone.setSampleId(rs.getInt("SAMPLEID"));
                  clone.setScore(rs.getInt("SCORE"));
                  clone.setRefSequenceId(rs.getInt("REFSEQUENCEID"));
+                 clone.setCloneSequenceCdsStart(rs.getInt("cloneseqcdsstart"));
+                 clone.setCloneSequenceCdsStop(rs.getInt("clonesequencecdsstop"));
                  clones.add(clone);
             }
            
@@ -258,7 +246,7 @@ public class ReportRunner extends ProcessRunner
                 if ( index != items.size()-1 ) plate_names.append(",");
             }
             sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
- +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, "
+ +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
@@ -269,7 +257,7 @@ public class ReportRunner extends ProcessRunner
         else if (submission_type == Constants.ITEM_TYPE_CLONEID)
         {
             sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
- +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, "
+ +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID,  a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop,analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where rownum<300 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
@@ -280,7 +268,7 @@ public class ReportRunner extends ProcessRunner
         else if (submission_type == Constants.ITEM_TYPE_BECSEQUENCE_ID)//bec sequence id
         {
                 sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
- +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, "
+ +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
 +" sequencingconstruct sc where rownum<300 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
@@ -498,7 +486,25 @@ public class ReportRunner extends ProcessRunner
         cloneinfo.append(BaseSequence.getCloneSequenceTypeAsString(clone.getSequenceType ()) + "\t");
     }//      Clone Sequence Id
     if( m_clone_status){ cloneinfo.append(BaseSequence.getSequenceAnalyzedStatusAsString( clone.getSequenceAnalisysStatus ())+"\t");}//      Clone Sequence Analysis Status
-    
+    if (m_clone_seq_cds_start){cloneinfo.append( clone.getCloneSequenceCdsStart ()+"\t");}
+    if (m_clone_seq_cds_stop){cloneinfo.append( clone.getCloneSequenceCdsStop ()+"\t");}
+    if (m_clone_seq_text)
+    {
+        String seqtext = "";
+        if ( clone.getSequenceId() > 0)
+        {
+            try
+            {
+               seqtext= BaseSequence.getSequenceInfo( clone.getSequenceId(), BaseSequence.SEQUENCE_INFO_TEXT);
+            }
+            catch(Exception e)
+            {
+                m_error_messages.add("Cannot get sequence text for sequence id"+clone.getSequenceId () +"\n"+e.getMessage());
+            }
+        }
+        cloneinfo.append(seqtext+"\t");
+    }
+       
     if(  m_clone_discr_high)
     { 
         try
@@ -524,10 +530,10 @@ public class ReportRunner extends ProcessRunner
              discrepancies = Mutation.getDiscrepanciesBySequenceId(clone.getSequenceId());
             }
             String discrepancy_report_html = Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_5P, true,false);
-         discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.RNA, true,false);
-         discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_3P, true,false);
-
-         cloneinfo.append(discrepancy_report_html);
+            discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.RNA, true,false);
+            discrepancy_report_html += Mutation.discrepancyTypeQualityReport( discrepancies, Mutation.LINKER_3P, true,false);
+            
+            cloneinfo.append(discrepancy_report_html);
         }
         catch(Exception e){}
         cloneinfo.append("\t"); 
@@ -580,7 +586,10 @@ public class ReportRunner extends ProcessRunner
                     "ref_sga", //      SGA Number (for Yeast project only
                     "rank" ,
                     "read_length", //      end reads length
-                    "score");
+                    "score", 
+                    "clone_seq_cds_start",
+                    "clone_seq_cds_stop",
+                    "clone_seq_text");
            input.run();
         }
         catch(Exception e){}

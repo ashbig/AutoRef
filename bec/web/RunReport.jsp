@@ -91,23 +91,25 @@
   </tr>
   <tr> 
     <td> <input type="checkbox" name="ref_cds_stop" value="1">      CDS Stop</td>
-    <td><input type="checkbox" name="clone_discr_high" value="1">    Discrepancies High Quality (separated by type)</td>
+    <td><input type="checkbox" name="clone_seq_cds_start" value="1">    Clone Sequence Cds Start</td>
   </tr>
   <tr> 
     <td><input type="checkbox" name="ref_cds_length" value="1">      CDS Length</td>
-    <td>  <input type="checkbox" name="clone_disc_low" value="1">   Discrepancies Low Quality (separated by type)</td>
+    <td>  <input type="checkbox" name="clone_seq_cds_stop" value="1">  Clone Sequence Cds Stop</td>
   </tr>
   <tr> 
     <td > <input type="checkbox" name="ref_gc" value="1">     GC Content</td>
-    <td>&nbsp;</td>
-  </tr>
+      <td>  <input type="checkbox" name="clone_seq_text" value="1">   Clone Sequence</td>
+   </tr>
   <tr> 
     <td> <input type="checkbox" name="ref_seq_text" value="1">      Sequence Text</td>
-    <td>&nbsp;</td>
+    <td><input type="checkbox" name="clone_discr_high" value="1">    Discrepancies High Quality (separated by type)</td>
+ 
   </tr>
   <tr> 
     <td> <input type="checkbox" name="ref_cds" value="1">     CDS</td>
-    <td>&nbsp;</td>
+    <td> <input type="checkbox" name="clone_disc_low" value="1">   Discrepancies Low Quality (separated by type)</td>
+  
   </tr>
   <tr> 
     <td> <input type="checkbox" name="ref_gi" value="1">      GI Number</td>
@@ -115,7 +117,7 @@
   </tr>
   <tr> 
     <td>  <input type="checkbox" name="ref_gene_symbol" value="1">      Gene Symbol</td>
-    <td>&nbsp;</font></td>
+    <td>&nbsp;</td>
   </tr>
   <tr> 
     <td>

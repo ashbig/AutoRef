@@ -359,7 +359,10 @@ public class RunProcessAction extends ResearcherAction
                     request.getParameter("ref_sga"), //      SGA Number (for Yeast project only)
                     request.getParameter("rank") ,
                     request.getParameter("read_length"), //      end reads length
-                    request.getParameter("score"));
+                    request.getParameter("score"),
+                    request.getParameter("clone_seq_cds_start"),
+                    request.getParameter("clone_seq_cds_stop"),
+                    request.getParameter("clone_seq_text"));
                     runner.setUser(user);
                     t = new Thread( runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,"processing Report Generation request");
