@@ -501,6 +501,7 @@
                validate="false"
                input="/IsCreateSequencing.jsp">
       <forward  name="success_seq"   path="/EnterSrcForGlycerolAndSeq.jsp"/>
+      <forward  name="success_seq_onerow"   path="/EnterSrcForGlycerolAndSeqOneRow.jsp"/>
       <forward  name="success"   path="/EnterSourcePlate.jsp"/>
     </action> 
     
@@ -512,7 +513,16 @@
                input="/EnterSrcForGlycerolAndSeq.jsp">
       <forward  name="success"   path="/GetMultiLocations.jsp"/>
     </action> 
- 
+     
+     <action    path="/EnterSrcForGlycerolAndSeqOneRow"
+               type="edu.harvard.med.hip.flex.action.EnterSrcForGlycerolAndSeqOneRowAction"
+               name="createGlycerolAndSeqForm"
+               scope="request"
+               validate="true"
+               input="/EnterSrcForGlycerolAndSeqOneRow.jsp">
+      <forward  name="success"   path="/GetMultiLocations.jsp"/>
+    </action> 
+    
     <!-- Process the location selection -->
     <action    path="/GetMultiLocations"
                type="edu.harvard.med.hip.flex.action.GetMultiLocationsAction"
