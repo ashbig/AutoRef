@@ -495,12 +495,12 @@ public class RunProcessAction extends ResearcherAction
                               int spec_id = Integer.parseInt( request.getParameter("PRIMER3_SPEC"));
                               ((PrimerDesignerRunner)runner).setSpecId(spec_id);
       if ( request.getParameter("isTryMode") != null )  ((PrimerDesignerRunner)runner).setIsTryMode( true );
- /*     if ( Integer.parseInt(request.getParameter("isCloseGaps")) == 1 )  ((PrimerDesignerRunner)runner).setIsCloseGaps( true );
+      if ( Integer.parseInt(request.getParameter("isCloseGaps")) == 1 )  ((PrimerDesignerRunner)runner).setIsCloseGaps( true );
      if ( request.getParameter("isLQRIncluded") != null )((PrimerDesignerRunner)runner).setIsLQRIncluded( true );
      if ( request.getParameter("isLQRWithDiscrepancyOnly") != null )((PrimerDesignerRunner)runner).setIsLQRWithDiscrepancyOnly( true );
      if ( request.getParameter("isCoverLQDRegionsOnly") != null )((PrimerDesignerRunner)runner).setIsCoverLQDRegionsOnly( true );
                               ((PrimerDesignerRunner)runner).setMinDistanceBetweenStretchesToBeCombined( Integer.parseInt(request.getParameter("minDistanceBetweenStretchesToBeCombined")) ); 
-  **/
+  
                               break;
                          }
                         case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:
@@ -568,8 +568,12 @@ public class RunProcessAction extends ResearcherAction
                     }
                     
                     String  item_ids = (String) request.getParameter("items");
-                    runner.setItems (item_ids.toUpperCase().trim());
-                    runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                   // runner.setItems (item_ids.toUpperCase().trim());
+                   // runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                    String items = item_ids.toUpperCase().trim();
+                    int items_type =  Integer.parseInt(request.getParameter("item_type"));
+                
+                    runner.setInputData(items_type,items);
                     runner.setUser(user);
                     t = new Thread(runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,title);
@@ -596,8 +600,12 @@ public class RunProcessAction extends ResearcherAction
                     DecisionToolRunner ds = new DecisionToolRunner();
                     ds.setSpecId(bioeval_spec_id);
                     String  item_ids = (String) request.getParameter("items");
-                    ds.setItems(item_ids.toUpperCase().trim());
-                    ds.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                   // ds.setItems(item_ids.toUpperCase().trim());
+                   // ds.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                    String items = item_ids.toUpperCase().trim();
+                    int items_type =  Integer.parseInt(request.getParameter("item_type"));
+                    ds.setInputData(items_type,items);
+                 
                     ds.setUser(user);
                     ds.run();
                    
@@ -633,38 +641,42 @@ public class RunProcessAction extends ResearcherAction
                     String  item_ids = (String) request.getParameter("items");
                     ProcessRunner runner = null;
                     runner = new ReportRunner();
-                    runner.setItems(item_ids.toUpperCase().trim());
-                    runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                   // runner.setItems(item_ids.toUpperCase().trim());
+                   // runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
+                    String items = item_ids.toUpperCase().trim();
+                    int items_type =  Integer.parseInt(request.getParameter("item_type"));
+                    runner.setInputData(items_type,items);
+                 
                     // value="2"//Clone Ids</strong//
                     ((ReportRunner)runner).setFields(
-                    request.getParameter("clone_id"), //    Clone Id
-                    request.getParameter("dir_name"), // Directory Name
-                    request.getParameter("sample_id"), //      Sample Id
-                    request.getParameter("plate_label"), //      Plate Label
-                    request.getParameter("sample_type"), //      Sample Type
-                    request.getParameter("position"), //      Sample Position
-                    request.getParameter("ref_sequence_id"), //      Sequence ID
-                    request.getParameter("clone_seq_id"), //      Clone Sequence Id
-                    request.getParameter("ref_cds_start"), //      CDS Start
-                    request.getParameter("clone_status"),//      Clone Sequence Analysis Status
-                    request.getParameter("ref_cds_stop"), //      CDS Stop
-                    request.getParameter("clone_discr_high"), //    Discrepancies High Quality (separated by type)
-                    request.getParameter("ref_cds_length"), //      CDS Length
-                    request.getParameter("clone_disc_low"), //   Discrepancies Low Quality (separated by type)
-                    request.getParameter("ref_gc"), //     GC Content
-                    request.getParameter("ref_seq_text"), //      Sequence Text
-                    request.getParameter("ref_cds"), //     CDS
-                    request.getParameter("ref_gi"), //      GI Number
-                    request.getParameter("ref_gene_symbol"), //      Gene Symbol
-                    request.getParameter("ref_panum"), //      PA Number (for Pseudomonas project only)
-                    request.getParameter("ref_sga"), //      SGA Number (for Yeast project only)
-                    request.getParameter("rank") ,
-                    request.getParameter("read_length"), //      end reads length
-                    request.getParameter("score"),
-                    request.getParameter("clone_seq_cds_start"),
-                    request.getParameter("clone_seq_cds_stop"),
-                    request.getParameter("clone_seq_text"),
-                    request.getParameter("assembly_attempt_status"));
+                        request.getParameter("clone_id"), //    Clone Id
+                        request.getParameter("dir_name"), // Directory Name
+                        request.getParameter("sample_id"), //      Sample Id
+                        request.getParameter("plate_label"), //      Plate Label
+                        request.getParameter("sample_type"), //      Sample Type
+                        request.getParameter("position"), //      Sample Position
+                        request.getParameter("ref_sequence_id"), //      Sequence ID
+                        request.getParameter("clone_seq_id"), //      Clone Sequence Id
+                        request.getParameter("ref_cds_start"), //      CDS Start
+                        request.getParameter("clone_status"),//      Clone Sequence Analysis Status
+                        request.getParameter("ref_cds_stop"), //      CDS Stop
+                        request.getParameter("clone_discr_high"), //    Discrepancies High Quality (separated by type)
+                        request.getParameter("ref_cds_length"), //      CDS Length
+                        request.getParameter("clone_disc_low"), //   Discrepancies Low Quality (separated by type)
+                        request.getParameter("ref_gc"), //     GC Content
+                        request.getParameter("ref_seq_text"), //      Sequence Text
+                        request.getParameter("ref_cds"), //     CDS
+                        request.getParameter("ref_gi"), //      GI Number
+                        request.getParameter("ref_gene_symbol"), //      Gene Symbol
+                        request.getParameter("ref_panum"), //      PA Number (for Pseudomonas project only)
+                        request.getParameter("ref_sga"), //      SGA Number (for Yeast project only)
+                        request.getParameter("rank") ,
+                        request.getParameter("read_length"), //      end reads length
+                        request.getParameter("score"),
+                        request.getParameter("clone_seq_cds_start"),
+                        request.getParameter("clone_seq_cds_stop"),
+                        request.getParameter("clone_seq_text"),
+                        request.getParameter("assembly_attempt_status"));
                     runner.setUser(user);
                     t = new Thread( runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,"processing Report Generation request");

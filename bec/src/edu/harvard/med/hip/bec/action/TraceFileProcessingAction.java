@@ -61,9 +61,9 @@ public class TraceFileProcessingAction extends ResearcherAction
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.toUpperCase().trim() +". Files will be send to you by e-mail.");
                     runner.setReadDirection((String)request.getParameter("read_direction"));
                     runner.setReadType((String)request.getParameter("read_type"));
-                    runner.setItems(items.toUpperCase().trim() );
-                    runner.setItemsType(Constants.ITEM_TYPE_PLATE_LABELS);
-                    
+                    //runner.setItems(items.toUpperCase().trim() );
+                   // runner.setItemsType(Constants.ITEM_TYPE_PLATE_LABELS);
+                    runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,items.toUpperCase().trim() );
                     break;
                 }
                 case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
