@@ -49,6 +49,7 @@
         <area href="mailto:elena_taycheru@hms.harvard.edu" shape="rect" coords="280, 2, 363, 23">
 		</map><img border="0" src="./jpg/bar_11.jpg" width="454" height="24" usemap="#FPMap0">
 		<a href="http://www.hms.harvard.edu"><img border="0" src="./jpg/bar_13.jpg" width="315" height="24"></a></p>
+		<p><html:errors/></p>
       </td>
     </tr>
     
