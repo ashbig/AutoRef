@@ -1,5 +1,5 @@
 /*
- *	$Id: Handler.java,v 1.5 2001-05-14 12:33:54 dongmei_zuo Exp $ 
+ *	$Id: Handler.java,v 1.6 2001-05-14 15:39:34 dongmei_zuo Exp $ 
  *
  *	File	: Handler.java
  *	Date	: 05042001
@@ -23,20 +23,19 @@ public class Handler {
 	protected String action;
 	protected String errorMessage;
 	protected Hashtable menu = new Hashtable();
+	protected String [] internalMenu = {"Home", "Cloning Request", "Validate Cloning Request", "View Process Result"};
+	protected String [] externalMenu = {"Home", "Cloning Request"};
+	protected Hashtable pageMap = new Hashtable();
 	
-    	public Handler() {
-    		Hashtable h1 = new Hashtable();
-		h1.put("page_first.jsp", "Home");
-   		h1.put("SequenceSearch.jsp", "Cloning Request");
-    		h1.put("PendingRequests.jsp", "Validate Cloning Request");
-    		h1.put("GelImageViewer.htm", "View Process Result");
-    		menu.put("internal", h1);
-   		
-    		Hashtable h2 = new Hashtable();
-		h2.put("page_first.jsp", "Home");
-    		h2.put("SequenceSearch.jsp", "Cloning Request");
-    		menu.put("external", h2);		
-    	}
+    public Handler() {
+    	menu.put("internal", internalMenu); 
+    	menu.put("external", externalMenu);  
+    	 	
+		pageMap.put("Home", "page_first.jsp");
+   		pageMap.put("Cloning Request", "SequenceSearch.jsp");
+    	pageMap.put("Validate Cloning Request", "PendingRequests.jsp");
+    	pageMap.put("View Process Result", "GelImageViewer.htm"); 		
+    }
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -85,12 +84,16 @@ public class Handler {
 	return password;
     }
 
-	public Hashtable getUserMenu(DatabaseTransaction t) throws FlexDatabaseException {
+	public String [] getUserMenu(DatabaseTransaction t) throws FlexDatabaseException {
 		User userObj = new User(username, password);
 		String userGroup = userObj.getUserGroup(t);
-		return (Hashtable)menu.get(userGroup);
+		return (String [])menu.get(userGroup);
 	}
-	
+
+	public Hashtable getPageMap() {
+		return pageMap;
+	}
+		
 	public String getPageName() {
 	    if(pathInfo == null)
 		return null;
@@ -122,7 +125,7 @@ public class Handler {
 			else
 				System.out.println("Testing authenticate method - ERROR");
 					
-			Hashtable userMenu = h.getUserMenu(t);
+			String[] userMenu = h.getUserMenu(t);
 			System.out.println(userMenu);
 		} catch (FlexDatabaseException e) {
 			System.out.println(e);

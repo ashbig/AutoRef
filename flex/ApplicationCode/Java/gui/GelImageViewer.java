@@ -1,5 +1,5 @@
 /**
- * $Id: GelImageViewer.java,v 1.1 2001-05-14 12:20:24 wenhong_mar Exp $
+ * $Id: GelImageViewer.java,v 1.2 2001-05-14 15:39:34 dongmei_zuo Exp $
  *
  * File     	: GelImage.java 
  * Date     	: 05102001
@@ -79,10 +79,12 @@ public class GelImageViewer {
 		
 		return gelName;
 	 }
-	 
-	 public void findPlate4Clone(String gelName) throws FlexDatabaseException 
+	
+	 public String findPlate4Clone(String gelName) throws FlexDatabaseException 
 	 {
 	 	DatabaseTransaction t = null;
+	 	Connection con = null;
+	 	DBResults dbResults = null;
 		ResultSet rs = null;
 		String [] columnName;
   		int columnCount;
@@ -95,6 +97,7 @@ public class GelImageViewer {
 		
 		try{
 			t = DatabaseTransaction.getInstance();
+			con = t.getConnection();
 			rs = t.getResultset(sql);
 			rs.next();
 			
@@ -106,6 +109,24 @@ public class GelImageViewer {
         		for (int i =1; i < columnCount+1; i++) {
           			columnName[i-1] = rsmd.getColumnName(i).trim();
         		} //for
+        		
+        		
+        		dbResults = new DBResults(con, columnCount, columnName);
+        		while (rs.next())
+      			{
+        			String[] row = new String[columnCount];
+        			for (int i=1; i<columnCount+1; i++)
+        			{
+          				String entry = rs.getString(i);
+          				if (entry != null) {
+              					entry = entry.trim();
+          				} //if
+          				row[i-1] = entry;
+        			} //for
+        			dbResults.addRow(row);      
+      			} //while
+
+        		
         		 
 		//	if (rs != null)
 		//	rs.close();
@@ -113,9 +134,8 @@ public class GelImageViewer {
 		 	throw new FlexDatabaseException(e.getMessage());
 		}
 		
-		//return gelName;
+		return (dbResults.toHTMLTable("GREY"));
 	 }
-	 
 	 
 	 public String findGel4Plateset(String platesetID) throws FlexDatabaseException 
 	 {
@@ -141,8 +161,6 @@ public class GelImageViewer {
 		
 		return gelName;
 	 }
-	 
-	 
 	 
 	 public static void main (String args[]) {
 	 	GelImageViewer v = new GelImageViewer();
