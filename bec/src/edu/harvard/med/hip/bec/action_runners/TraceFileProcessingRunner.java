@@ -60,7 +60,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
      
     public void setInputDirectory(String inputdir)
     {
-        if (ApplicationHostDeclaration.IS_BIGHEAD && m_process_name == Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER) m_inputdir = INPUT_DIR;
+        if (ApplicationHostDeclaration.IS_BIGHEAD ) m_inputdir = INPUT_DIR;
         else         m_inputdir = inputdir;
     }
     public void setOutputDirectory(String outputdir)
@@ -154,13 +154,14 @@ public class TraceFileProcessingRunner extends ProcessRunner
                  number_of_plates++;
                  plate_names += "'"+plate_name +"',";
              }
-             if (number_of_plates % 5==0 || plate_count == sequencing_facility_file_items.size()-1)// by 5 plates 
+            if ( !plate_names.equals("") && (number_of_plates % 5==0 || plate_count == sequencing_facility_file_items.size()-1))// by 5 plates 
              {
                   plate_names = plate_names.substring(0, plate_names.length() -1);
                   plate_names_for_processing.add(plate_names);
                   plate_names="";
                   number_of_plates = 1;
              }
+             
              plate_name_last = plate_name ;
          }
          return plate_names_for_processing;
@@ -465,7 +466,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
           runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
             runner.setReadType(Constants.READ_TYPE_ENDREAD_STR);//m_read_type= read_type;}
             runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD);
-            runner.setInputDirectory("E:\\Sequences for BEC\\Pseudomonas\\NewPlates");
+            runner.setInputDirectory("E:\\Sequences for BEC\\Pseudomonas\\NewPlate2");
 runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Pseudomonas\\mapping.txt"));
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        
