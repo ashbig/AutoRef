@@ -93,7 +93,9 @@ public class Seq_GetItemAction extends ResearcherAction
                forwardName == Constants.CLONING_STRATEGY_DEFINITION_INT ||
                forwardName == Constants.SAMPLE_ISOLATE_RANKER_REPORT ||
                forwardName == Constants.READ_REPORT_INT ||
-               forwardName == Constants.CONSTRUCT_DEFINITION_REPORT
+               forwardName == Constants.CONSTRUCT_DEFINITION_REPORT ||
+               forwardName == Constants.CLONE_SEQUENCE_DEFINITION_REPORT
+               
                )
                {
                     id = Integer.parseInt( (String) request.getParameter("ID"));
@@ -292,6 +294,12 @@ public class Seq_GetItemAction extends ResearcherAction
                    // System.out.println("1L");
                     request.setAttribute("sequence",sequence);
                     return (mapping.findForward("display_discrepancyreport"));
+                }
+                case Constants.CLONE_SEQUENCE_DEFINITION_REPORT:
+                {
+                    CloneSequence clone_sequence = new CloneSequence(id);
+                    request.setAttribute("clone_sequence",clone_sequence);
+                    return (mapping.findForward("display_clone_sequence"));
                 }
                 case Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT:
                 {
