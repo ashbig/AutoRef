@@ -114,7 +114,7 @@
                name="customerRequestForm"
               scope="request"
               input="/ConfirmSelection.jsp">
-      <forward  name="success"   path="/SequenceSearch.jsp"/>
+      <forward  name="success"   path="/CustomerRequest.do"/>
     </action> 
 
     <!-- Process a customer request -->
