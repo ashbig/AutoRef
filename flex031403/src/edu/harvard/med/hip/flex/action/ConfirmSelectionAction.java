@@ -76,7 +76,7 @@ public class ConfirmSelectionAction extends FlexAction {
         Connection conn = null;
         
         try {        
-            Protocol p = new Protocol("approve sequences");
+            Protocol p = new Protocol(Protocol.APPROVE_SEQUENCES);
 
             for(int i=0; i<selection.length; i++) {
                 String gi = selection[i];

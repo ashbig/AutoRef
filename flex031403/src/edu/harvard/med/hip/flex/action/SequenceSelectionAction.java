@@ -85,8 +85,12 @@ public class SequenceSelectionAction extends FlexAction {
                     } else {
                         FlexSeqAnalyzer analyzer = new FlexSeqAnalyzer(sequence);
                         if(analyzer.findSame()) {
-                            sameSequence.put(gi, analyzer.getSameSequence());
+                            Vector sseqs = analyzer.getSameSequence();
+                            sameSequence.put(gi, sseqs);
                             sequences.put(gi, sequence);
+                            
+                            //Add the new sequence information to the database.
+                            ((FlexSequence)sseqs.elementAt(0)).addPublicInfo(sequence.getPublicInfo());
                         } else {
                             if(analyzer.findHomolog()) {
                                 Homologs h = new Homologs();
