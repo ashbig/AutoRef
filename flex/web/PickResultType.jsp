@@ -39,6 +39,8 @@ Select the type of result you wish to enter.
                 <option value="<%=Protocol.ENTER_AGAR_PLATE_RESULTS%>">Agar Plate</option>
                 <!--<option value="<%=Protocol.ENTER_CULTURE_RESULTS%>">Culture Plate</option>-->
                 <option value="<%=Protocol.ENTER_CULTURE_FILE%>">Culture Plate</option>
+                <option value="<%=Protocol.ENTER_DNA_RESULT%>">DNA Plate</option>
+                <option value="<%=Protocol.ENTER_EGEL%>">PCR E-Gel</option>
             </select>
         </td>
     </tr>

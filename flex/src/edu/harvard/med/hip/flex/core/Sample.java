@@ -1,5 +1,5 @@
 /**
- * $Id: Sample.java,v 1.9 2004-04-22 17:22:47 dzuo Exp $
+ * $Id: Sample.java,v 1.10 2005-03-23 16:41:20 dzuo Exp $
  *
  * File     	: Sample.java
  * Date     	: 04162001
@@ -52,6 +52,7 @@ public class Sample {
     public final static String CR = "CR";
     public final static String CONTROL_POSITIVE = "CONTROL_POSITIVE";
     public final static String CONTROL_NEGATIVE = "CONTROL_NEGATIVE";
+    public final static String CRE = "CRE";
     
     
     protected int id = -1;
@@ -293,7 +294,7 @@ public class Sample {
      */
     public static String getType(String processname) {
         String type = null;
-        
+        System.out.println(processname);
         if(Protocol.GENERATE_PCR_PLATES.equals(processname) || Protocol.GENERATE_STEP2_PCR_PLATES.equals(processname))
             return PCR;
         
@@ -388,6 +389,9 @@ public class Sample {
         
         if(Protocol.CREATE_TRANSFECTION.equals(processname)) 
             return DNA;
+        
+        if(Protocol.GENERATE_CRE_PLATE.equals(processname)) 
+            return CRE;
         
         return type;
     }

@@ -13,15 +13,16 @@
 
 <html>
 <head>
-    <title><bean:message key="flex.name"/> : Culture Result Details</title>
+    <title><bean:message key="flex.name"/> : Sample Result Details</title>
     <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
-<h2><bean:message key="flex.name"/> : Culture Result Details</h2>
+<h2><bean:message key="flex.name"/> : Sample Result Details</h2>
 <hr>
 <html:errors/>
 <p>
 
+<logic:equal name="<%=Constants.PROTOCOL_NAME_KEY%>" value="<%=Protocol.ENTER_CULTURE_FILE%>">
     <h3>Comfirm the culture plate results</h3>
 
     <table>
@@ -36,15 +37,21 @@
         </tr>
         </logic:iterate>
     </table>
+</logic:equal>
+
+<logic:equal name="<%=Constants.PROTOCOL_NAME_KEY%>" value="<%=Protocol.ENTER_DNA_RESULT%>">
+    <h3>Comfirm the DNA plate results</h3>
+</logic:equal>
 
 <br>
 <table>
     <tr>
         <td>Plate ID:</td> <td><bean:write name="uploadCultureResultForm" property="container.id"/></td>
-        <td>Plate Type:</td> <td><bean:write name="uploadCultureResultForm" property="container.type"/></td>
+        <td>Plate Label:</td> <td><bean:write name="uploadCultureResultForm" property="container.label"/></td>
     </tr>
 
     <tr>
+        <td>Plate Type:</td> <td><bean:write name="uploadCultureResultForm" property="container.type"/></td>
         <td>Process Date:</td> <td><bean:write name="<%=Constants.QUEUE_ITEM_KEY%>" property="date"/></td><td></td>
     </tr>
 </table>
@@ -73,6 +80,7 @@
         <td>
             <bean:write name="curSample" property="position"/>
         </td>
+<!--
         <td>
             <logic:notEqual name="curSample" property="type" value="<%= Sample.EMPTY %>">
              <flex:write name="uploadCultureResultForm" property='<%="result["+ i +"]" %>'/>
@@ -81,7 +89,10 @@
              &nbsp;
              </logic:equal>
         </td>
-        
+ -->     
+        <td>
+             <flex:write name="uploadCultureResultForm" property='<%="result["+ i +"]" %>'/>
+        </td>  
     </flex:row>
     </logic:iterate>
   

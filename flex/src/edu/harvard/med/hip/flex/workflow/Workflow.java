@@ -59,6 +59,9 @@ public class Workflow {
     public static final int IMPORT_EXTERNAL_CLONE = 31;
     public static final int MGC_GATEWAY_CLOSED = 32;
     public static final int REARRAY_EXP_WORKING = 34;
+    public static final int TRANSFER_TO_EXP_JP1520 = 35;
+    public static final int GATEWAY_WITH_EGEL = 36;
+    public static final int GATEWAY_WITH_INFUSION = 37;
     
     /** Creates new Workflow */
     public Workflow() {
@@ -177,7 +180,6 @@ public class Workflow {
             this.flow = w.getFlow();
             return;
         }
-        
         
         flow = new Vector();
         

@@ -65,6 +65,15 @@
     </tr>
 
     <tr>
+    <td class="prompt">Maximum number of colonies to pick:</td>
+    <td><html:select property="colonynum">
+        <html:option value="1"/>
+        <html:option value="2"/>
+        <html:option value="4"/>
+    </html:select></td>
+    </tr>
+
+    <tr>
     <td></td><td><html:submit property="submit" value="Continue"/></td>
     </tr>
 </table>

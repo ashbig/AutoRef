@@ -120,12 +120,18 @@ public class EnterSourcePlateAction extends ResearcherAction {
             ContainerMapper mapper = null;
             if(Protocol.PICK_COLONY.equals(protocol.getProcessname())) {
                 String pickingMethod = ((PickColonyForm)form).getPickingMethod();
+                int colonynum = ((PickColonyForm)form).getColonynum();
                 
                 if("nonInterleaved".equals(pickingMethod)) {
-                    mapper = new NonInterleavedColonyPicking();
+                    if(colonynum == 1) {
+                        mapper = new NonInterleavedOneColonyPicking();
+                    } else {
+                        mapper = new NonInterleavedColonyPicking();
+                    }
                 } else {
                     mapper = StaticContainerMapperFactory.makeContainerMapper(protocol.getProcessname());
                 }
+                ((AbstractAgarToCultureMapper)mapper).setColonynum(colonynum);
             } else {
                 mapper = getContainerMapper(protocol.getProcessname(), form);
             }

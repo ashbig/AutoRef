@@ -13,59 +13,27 @@ import java.util.*;
  *
  * @author  DZuo
  */
-public class CultureResultConverter {
+public class CultureResultConverter extends FileResultConverter {
     public static final String DILIM = "\t";
     public static final int TOTALCOUNT = 96;
     public static final int IGNORELINES = 3;
     public static final int ROW = 8;
     
     public static final double GROW = 0.150;
-    public static final double NOGROW = 0.065;
-    
-    private InputStream input;
-    private String errorMessage;
-    private Map odList;
-    private ArrayList resultList;
-    private int size;
+    public static final double NOGROW = 0.065;    
     
     /** Creates a new instance of CultureResultConverter */
     public CultureResultConverter() {
+        super();
     }
 
     public CultureResultConverter(InputStream input) {
-        this.input = input;
+        super(input);
         this.size = TOTALCOUNT;
-        odList = new HashMap();
-        resultList = new ArrayList();
     }
 
     public CultureResultConverter(InputStream input, int size) {
-        this.input = input;
-        this.size = size;
-        odList = new HashMap();
-        resultList = new ArrayList();
-    }
-    
-    public void setSize(int s) {this.size = s;}
-    public int getSize() {return size;}
-    public ArrayList getResultList() {return resultList;}
-    public Map getOdList() {return odList;}
-    public InputStream getInput() {return input;}
-    
-    /**
-     * Set the errorMessage to be the given value.
-     * @param errorMessage The value to be set to.
-     */
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-    
-    /**
-     * Return the errorMessage.
-     * @return The errorMessage.
-     */
-    public String getErrorMessage() {
-        return errorMessage;
+        super(input, size);
     }
     
     /**

@@ -70,22 +70,28 @@ public class CreateProcessPlateAction extends FlexAction {
             Iterator iter = flow.iterator();
             while(iter.hasNext()) {
                 FlowRecord record = (FlowRecord)iter.next();
+                Protocol current = record.getCurrent();
+                protocol.add(current);
+                
                 Vector p = record.getNext();
                 protocol.addAll(p);
             }
- 
+            
             Vector protocols = new Vector();
             Iterator i = protocol.iterator();
             while(i.hasNext()) {
                 Protocol p = (Protocol)i.next();
-                if(Protocol.APPROVE_SEQUENCES.equals(p.getProcessname()) ||
-                   Protocol.DESIGN_CONSTRUCTS.equals(p.getProcessname()) ||
-                   Protocol.GENERATE_OLIGO_ORDERS.equals(p.getProcessname()) ||
-                   Protocol.RECEIVE_OLIGO_PLATES.equals(p.getProcessname()) ||
-                   Protocol.ENTER_PCR_GEL_RESULTS.equals(p.getProcessname()) ||
-                   Protocol.ENTER_AGAR_PLATE_RESULTS.equals(p.getProcessname()) ||
-                   Protocol.ENTER_DNA_GEL_RESULTS.equals(p.getProcessname()) ||
-                   Protocol.ENTER_CULTURE_RESULTS.equals(p.getProcessname())) {
+                if(Protocol.CUSTOMER_REQUEST.equals(p.getProcessname()) ||
+                Protocol.APPROVE_SEQUENCES.equals(p.getProcessname()) ||
+                Protocol.DESIGN_CONSTRUCTS.equals(p.getProcessname()) ||
+                Protocol.GENERATE_OLIGO_ORDERS.equals(p.getProcessname()) ||
+                Protocol.RECEIVE_OLIGO_PLATES.equals(p.getProcessname()) ||
+                Protocol.ENTER_PCR_GEL_RESULTS.equals(p.getProcessname()) ||
+                Protocol.ENTER_AGAR_PLATE_RESULTS.equals(p.getProcessname()) ||
+                Protocol.ENTER_DNA_GEL_RESULTS.equals(p.getProcessname()) ||
+                Protocol.ENTER_CULTURE_RESULTS.equals(p.getProcessname()) ||
+                Protocol.ENTER_DNA_RESULT.equals(p.getProcessname()) ||
+                Protocol.ENTER_CULTURE_FILE.equals(p.getProcessname())) {
                     continue;
                 }
                 protocols.addElement(p);

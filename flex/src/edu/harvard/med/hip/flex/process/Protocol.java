@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.42 2005-02-10 19:46:42 dzuo Exp $
+ * $Id: Protocol.java,v 1.43 2005-03-23 16:39:16 dzuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -24,7 +24,7 @@ public class Protocol {
      * the protocol strings
      */
     public static final String APPROVE_SEQUENCES = "Approve sequences";
-    public static final String CUSTOMER_REQUEST = "Customer request";
+    public static final String CUSTOMER_REQUEST = "customer request";
     public static final String IDENTIFY_SEQUENCES_FROM_UNIGENE=
     "Identify sequences from unigene";
     public static final String DESIGN_CONSTRUCTS= "Design constructs";
@@ -65,7 +65,7 @@ public class Protocol {
     public static final String ENTER_DNA_GEL_RESULTS =
     "Enter DNA gel results";
     public static final String GENERATE_CAPTURE_REACTION =
-    "Generate capture reaction plate";
+    "Generate infusion reaction plate";
     public static final String GENERATE_GRID_PLATE =
     "Generate agar plates (48 well grid plate)";
     public static final String PICK_COLONY =
@@ -132,6 +132,9 @@ public class Protocol {
     public static final String CREATE_EXP_DNA = "Create expression DNA plate";
     public static final String CREATE_TRANSFECTION = "Create transfection plates";
     public static final String ENTER_CULTURE_FILE = "Enter culture results by uploading file";
+    public static final String ENTER_DNA_RESULT = "Enter DNA results";
+    public static final String GENERATE_CRE_PLATE = "Generate cre reaction plate";
+    public static final String ENTER_EGEL = "Enter PCR e-gel";
     
     private int id;
     private String processcode;

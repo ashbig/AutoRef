@@ -41,7 +41,7 @@ Define the type of result to enter, if none is given, gell result is the default
         <td><html:text property="plateBarcode"/></td>
     </tr>
     <tr>
-        <td class="prompt">Upload the culture result file:</td>
+        <td class="prompt">Upload the OD reading file:</td>
         <td><html:file property="cultureFile" /></td>
     </tr>
     <tr>
