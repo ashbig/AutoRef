@@ -94,27 +94,85 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
     
     // Creates the new samples from the samples of the previous plate.
     protected void mappingSamples(Container container, Container newContainer, Protocol protocol, int index) throws FlexDatabaseException { 
-        String type;
+        String type [] = new String[COLONYNUM];
         Vector oldSamples = container.getSamples();
         Enumeration enum = oldSamples.elements();
         while(enum.hasMoreElements()) {
             Sample s = (Sample)enum.nextElement();
             if(Sample.CONTROL_POSITIVE.equals(s.getType())) {
-                type = Sample.CONTROL_POSITIVE;
+                for(int i=0; i<COLONYNUM; i++) {
+                    type[i] = Sample.CONTROL_POSITIVE;
+                }
             } else if(Sample.CONTROL_NEGATIVE.equals(s.getType())) {
-                type = Sample.CONTROL_NEGATIVE;
+                for(int i=0; i<COLONYNUM; i++) {
+                    type[i] = Sample.CONTROL_NEGATIVE;
+                }
             } else if(Sample.EMPTY.equals(s.getType())) {
-                type = Sample.EMPTY;
+                for(int i=0; i<COLONYNUM; i++) {
+                    type[i] = Sample.EMPTY;
+                }
             } else {
-                type = Sample.getType(protocol.getProcessname());
+                type = getAgarSampleType(container, s, protocol);
             }
             
             for(int i=1; i<=COLONYNUM; i++) {
-                Sample newSample = new Sample(type, index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
+                Sample newSample = new Sample(type[i-1], index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
                 newContainer.addSample(newSample);
                 sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
             }            
             index = index+COLONYNUM;
         }
-    }      
+    } 
+    
+    protected String[] getAgarSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
+        Protocol protocol = new Protocol(Protocol.GENERATE_AGAR_PLATES);
+        String type [] = new String[COLONYNUM];
+        edu.harvard.med.hip.flex.process.Process p = 
+        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
+        Result result = Result.findResult(s, p);
+        
+        if(Result.MORE.equals(result.getValue())) {
+            for(int i=0; i<COLONYNUM; i++) {
+                type[i] = Sample.getType(newProtocol.getProcessname());
+            }
+        } else {
+            try {
+                int colony = Integer.parseInt(result.getValue());
+           
+                if(colony == 0) {
+                    for(int i=0; i<COLONYNUM; i++) {
+                        type[i] = Sample.EMPTY;
+                    }
+                }            
+                if(colony == 1) {
+                    type[0] = Sample.getType(newProtocol.getProcessname());
+                    for(int i=1; i<COLONYNUM; i++) {
+                        type[i] = Sample.EMPTY;
+                    }                
+                }
+                if(colony == 2) {
+                    for(int i=0; i<2; i++) {
+                        type[i] = Sample.getType(newProtocol.getProcessname());
+                    }
+                    for(int i=2; i<COLONYNUM; i++) {
+                        type[i] = Sample.EMPTY;
+                    }                  
+                }
+                if(colony == 3) {
+                    for(int i=0; i<3; i++) {
+                        type[i] = Sample.getType(newProtocol.getProcessname());
+                    }
+                    for(int i=3; i<COLONYNUM; i++) {
+                        type[i] = Sample.EMPTY;
+                    }                  
+                }            
+            } catch (NumberFormatException ex) {
+                for(int i=0; i<COLONYNUM; i++) {
+                    type[i] = Sample.EMPTY;
+                }                
+            }
+        }       
+        
+        return type;
+    }    
 }

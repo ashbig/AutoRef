@@ -108,8 +108,6 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 type = Sample.EMPTY;
             } else if(Sample.GEL.equals(s.getType())) {
                 type = getGelSampleType(container, s, protocol);
-            } else if(Sample.AGAR.equals(s.getType())) {
-                type = getAgarSampleType(container, s, protocol);
             } else {
                 type = Sample.getType(protocol.getProcessname());
             }
@@ -128,21 +126,6 @@ public class OneToOneContainerMapper implements ContainerMapper {
         Result result = Result.findResult(s, p);
         if(Result.CORRECT.equals(result.getValue()) || Result.MUL_W_CORRECT.equals(result.getValue())) {
             type = Sample.getType(newProtocol.getProcessname());
-        } else {
-            type = Sample.EMPTY;
-        }
-        
-        return type;
-    }
-
-    protected String getAgarSampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
-        Protocol protocol = new Protocol(Protocol.GENERATE_AGAR_PLATES);
-        String type = null;
-        edu.harvard.med.hip.flex.process.Process p = 
-        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
-        Result result = Result.findResult(s, p);
-        if(Result.MANY.equals(result.getValue()) || Result.FEW.equals(result.getValue())) {
-                type = Sample.getType(newProtocol.getProcessname());
         } else {
             type = Sample.EMPTY;
         }
