@@ -100,7 +100,7 @@ public class GetResearcherAction extends ResearcherAction{
             
             // Create a process, process object and sample lineage record. 
             String executionStatus = null;
-            // For GEl and Transformation, the statis is inprocess.
+            // For GEl and Transformation, the status is inprocess.
             if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname()) ||
                 Protocol.PERFORM_TRANSFORMATION.equals(protocol.getProcessname())) {
                 executionStatus = edu.harvard.med.hip.flex.process.Process.INPROCESS;
