@@ -93,7 +93,7 @@ OligoContainer container = (OligoContainer)request.getAttribute("container") ;
   <tr> 
     <td><strong>Order Date:</strong></td>
     <td> 
-      <%= container.getDate() %>
+      <%= container.getCreateDate() %>
     </td>
   </tr>
    <tr> 

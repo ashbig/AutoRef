@@ -46,16 +46,16 @@ String color[] = { "#e4e9f8","#b8c6ed" };
 
 
 <table border="1" cellpadding="1" cellspacing="1" width="84%" align=center>
-<th bgcolor="#1145A6" height="29">Clone Id</th>
-<th bgcolor="#1145A6" height="29">Plate</th>
-<th bgcolor="#1145A6" height="29">Position</th>
-<th bgcolor="#1145A6" height="29">Plate Status</th>
-<th bgcolor="#1145A6" height="29">Plate Order Date</th>
-<th bgcolor="#1145A6" height="29">User Id</th>
-<th bgcolor="#1145A6" height="29">Oligo Id</th>
-<th bgcolor="#1145A6" height="29">Oligo Name</th>
-<th bgcolor="#1145A6" height="29">Oligo Sequence</th>
-<th bgcolor="#1145A6" height="29">Oligo Position</th>
+<th bgcolor="#1145A6"><strong><font color=white>Clone Id</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Plate</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Plate Status</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Plate Order Date</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">User Id</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Id</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Name</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Sequence</font></strong></th>
+<th bgcolor="#1145A6"><strong><font color="#FFFFFF">Oligo Position</font></strong></th>
 
 <%
  ArrayList ui_items = (ArrayList)request.getAttribute("processing_items");
@@ -91,7 +91,7 @@ prev_clone_id = ui_oligo.getCloneId (); %>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getWell () %></td>
 <td bgcolor='<%= row_color %>'><%= OligoContainer.getStatusAsString( ui_oligo.getPlateStatus ()) %></td>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOrderDate ().substring(0,10) %></td>
-<td bgcolor='<%= row_color %>'><%= ui_oligo.getUserId () %></td></tr>
+<td bgcolor='<%= row_color %>'><%= ui_oligo.getUserId () %></td>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoID () %></td>
 <td bgcolor='<%= row_color %>'><%= ui_oligo.getOligoName () %></td>
 
