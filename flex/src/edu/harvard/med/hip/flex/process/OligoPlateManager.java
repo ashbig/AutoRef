@@ -24,7 +24,7 @@ import java.io.*;
 public class OligoPlateManager {
     public static final int smallCDSLimit = 2000;
     public static final int mediumCDSLimit = 4000;
-    public static final int largeCDSLimit = 10000;
+    public static final int largeCDSLimit = 100000;
     public static final int LIMITS[] = {0, smallCDSLimit, mediumCDSLimit, largeCDSLimit};
     public static String PROTOCOL = Protocol.DESIGN_CONSTRUCTS;
     
