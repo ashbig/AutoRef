@@ -1,5 +1,5 @@
 /**
- * $Id: FlexIDGenerator.java,v 1.4 2001-05-24 14:49:04 dongmei_zuo Exp $
+ * $Id: FlexIDGenerator.java,v 1.5 2001-06-05 17:40:16 wenhong_mar Exp $
  *
  * File     	: FlexIDGenerator.java
  * Date     	: 04182001
@@ -54,7 +54,7 @@ public class FlexIDGenerator {
     //******************************************************//
     public static void main(String [] args) {
         try {
-            int id = FlexIDGenerator.getID("sampleid");
+            int id = FlexIDGenerator.getID("platesetid");
             System.out.println(id);
         } catch (FlexDatabaseException e) {
             System.out.println(e);
