@@ -16,7 +16,7 @@ import java.sql.*;
 import javax.sql.*;
 
 import edu.harvard.med.hip.flex.database.*;
-
+import edu.harvard.med.hip.flex.core.MgcContainer;
 import sun.jdbc.rowset.*;
 
 
@@ -26,17 +26,18 @@ public class MgcContainerCollection {
     public MgcContainerCollection() {
     }
     
-    public  Hashtable getNewPlates(java.lang.String fileName, Connection conn) 
+    public  ArrayList getNewPlates(java.lang.String fileName) 
             throws Exception
     {
-        Hashtable labels = new Hashtable();
+        ArrayList labels = new ArrayList();
         String label = null;
         String orgContainerName = null;
-        String sql = "select mc.oricontainer as orgcontainer, c.label as label \n " + 
-        "from mgccontainer mc , containerheader c \n " +
-        " where ( mc.mgccontainerid =  c.containerid  and " +
-         "ms.filename = " + fileName + " and glycerolcontainerid <> 1)" ;        
-       
+        int container_id = -1;
+        String sql = "select c.containerid as id, mc.oricontainer as orgcontainer, c.label as label \n " + 
+        " from mgccontainer mc , containerheader c \n " +
+        " where  mc.mgccontainerid =  c.containerid  and " +
+         "mc.filename = '" + fileName + "' and mc.glycerolcontainerid is null" ;        
+      
         CachedRowSet crs = null;
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -46,7 +47,9 @@ public class MgcContainerCollection {
                 
                 orgContainerName = crs.getString("ORGCONTAINER");
                 label = crs.getString("LABEL");
-                labels.put(label, orgContainerName);
+                container_id = crs.getInt("ID");
+     
+                labels.add ( new MgcContainer(container_id, fileName, null, orgContainerName,  label));
               }
         } catch (Exception ex) 
         {
@@ -54,7 +57,24 @@ public class MgcContainerCollection {
         } finally {
             DatabaseTransaction.closeResultSet(crs);
         }
+        
         return labels;
     }
     
+    //**********************************TESTING***************************
+      public static void main(String args[])
+    {
+       
+       ArrayList labels =  new ArrayList(); 
+        try{
+             MgcContainerCollection mgcCol = new MgcContainerCollection();
+             labels =  mgcCol.getNewPlates("mgc_plate_info.txt");
+             System.out.print(labels.size());
+        }catch(Exception e)
+        {};
+            
+   
+       
+    }
+ 
 }
