@@ -167,7 +167,7 @@
     <forward    name="receiveOligoOrders" path="/SetReceiveDate.do"/>
     <forward    name="createProcessPlate" path="/GetProjects.do?forwardName=CREATE_PROCESS_PLATES"/>
     <forward    name="requestMGC" path="/GetProjects.do?forwardName=MGC_REQUEST_IMPORT"/>
-    <forward    name="enterProcessResults" path="/PickResultType.jsp"/>
+    <forward    name="enterProcessResults" path="/GetProjects.do?forwardName=ENTER_RESULT"/>
     <forward    name="containerProcessHistory" path="/ContainerScan.jsp"/>
     <forward    name="sequenceProcessHistory" path="/QuerySequenceHistory.do"/>
     <forward    name="importSequence" path="/GetProjects.do?forwardName=IMPORT_SEQUENCES"/>
@@ -256,6 +256,7 @@
         <forward name="success_mgc_request_import" path="/MgcRequestImport.jsp"/>
         <forward name="success_mgc_plate_handle" path="/MGCPlateHandle.do"/>
         <forward name="success_special_oligo_order" path="/SpecialOligoOrder.jsp"/>
+        <forward name="success_result_entry" path="/PickResultType.jsp"/>
         <forward    name="success"   path="/SelectProject.jsp"/>
     </action>
 
