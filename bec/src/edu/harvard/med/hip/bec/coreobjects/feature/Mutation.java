@@ -101,7 +101,8 @@ public abstract class Mutation
     public static final int MACRO_SPECTYPES_COUNT = 13;
 	                 
     protected int         m_id =-1;
-    protected int         m_position =-1;// start of mutation (on object sequence)
+    protected int         m_position =-1;// start of mutation (on ref sequence)
+     protected int        m_exp_position =-1;// start of mutation (on exp sequence)
     protected int         m_length=-1;// – length of mutation (optional)
     protected int         m_type = -1;// //rna ! AA
     protected String      m_change_mut = null;// – mutation bases of object sequence
@@ -135,6 +136,7 @@ public abstract class Mutation
             {
                 m_type = rs.getInt("TYPE");
                 m_position = rs.getInt("POSITION");
+                m_exp_position = rs.getInt("DISCRPOSITION");
                 m_length = rs.getInt("LENGTH");
                 m_change_ori = rs.getString("CHANGEORI");//primer type: 5p-pcr, 5p-universal, 5p-full_set_n …
                 m_change_mut = rs.getString("CHANGEMUT");
@@ -167,7 +169,7 @@ public abstract class Mutation
         PreparedStatement pstmt = null;
         
         String sql = "INSERT INTO discrepancy  (DISCREPANCYID  ,POSITION ,LENGTH ,CHANGEORI ,CHANGEMUT "
- +",TYPE ,SEQUENCEID ,CHANGETYPE ,DISCRNUMBER,DISCQUALITY  )   VALUES(?, ?, ?, ?,?,?,?,?,?,?)" ;
+ +",TYPE ,SEQUENCEID ,CHANGETYPE ,DISCRNUMBER,DISCQUALITY , DISCRPOSITION )   VALUES(?, ?, ?, ?,?,?,?,?,?,?,?)" ;
     
         try
         {
@@ -185,6 +187,7 @@ public abstract class Mutation
             pstmt.setInt(8,m_change_type);
             pstmt.setInt(9,m_number);
             pstmt.setInt(10,m_quality);
+            pstmt.setInt(11,m_exp_position);
             DatabaseTransaction.executeUpdate(pstmt);
               
             
@@ -201,6 +204,7 @@ public abstract class Mutation
     
     public void         setId(int v)    { m_id =v;}
     public void         setPosition(int v)    { m_position =v;}// start of mutation (on object sequence)
+    public void         setExpPosition(int v)    { m_exp_position =v;}// start of mutation (on object sequence)
     public void         setLength(int v)    { m_length=v;}// – length of mutation (optional)
     public void         setType(int v)    { m_type = v;}// //rna ! AA
     public void      	setChangeMut(String v)    { m_change_mut = v;}// – mutation bases of object sequence
@@ -212,7 +216,8 @@ public abstract class Mutation
     
     public int          getId()    { return m_id ;}
     public int          getSequenceId()    { return m_sequenceid ;}
-    public int          getPosition()    { return m_position ;}// start of mutation (on object sequence)
+    public int          getPosition()    { return m_position ;}// start of mutation (on refseq sequence)
+     public int          getExpPosition()    { return m_exp_position ;}// start of mutation (on experimental sequence)
     public int          getLength()    { return m_length;}// – length of mutation (optional)
     public int          getType()    { return   m_type ;}// – mutation type
     public String       getTypeAsString()
@@ -430,9 +435,10 @@ public abstract class Mutation
         String res = "";
         
         res = "<tr><td>Discrepancy id: </td><td>"+m_id + "</td></tr>" +
-        "<tr><td>Position</td><td>"  + m_position + "</td></tr>" +
+        "<tr><td>Position (Ref Sequence)</td><td>"  + m_position + "</td></tr>" +
         "<tr><td>Length</td><td>" +m_length + "</td></tr>" ;
-        
+        if ( m_exp_position > 0)
+            res += "<tr><td>Position (Exp Sequence)</td><td>"  + m_exp_position + "</td></tr>" ;
         if (m_change_ori ==null)
             res+="<tr><td>Ori Str</td><td>&nbsp;</td></tr>";
         else
