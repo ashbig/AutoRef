@@ -20,6 +20,7 @@ import java.util.*;
 public class AgarToCultureMapper extends OneToOneContainerMapper {
     public static final int COLONYNUM = 4;
     public static final int AGARWELLNUM = 6;
+    public static final int STARTINDEXES[] = {1, 5, 49, 53};
     
     /**
      * Constructor.
@@ -53,8 +54,8 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
         while(enum.hasMoreElements()) {
             Container c = (Container)enum.nextElement();
             c.restoreSample();
-            mappingSamples(c, newContainer, protocol, index); 
-            index = index+COLONYNUM*AGARWELLNUM;
+            mappingSamples(c, newContainer, protocol, STARTINDEXES[index]); 
+            index++;
         }
         newContainers.addElement(newContainer);
         
@@ -115,12 +116,12 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
                 type = getAgarSampleType(container, s, protocol);
             }
             
-            for(int i=1; i<=COLONYNUM; i++) {
-                Sample newSample = new Sample(type[i-1], index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
+            for(int i=0; i<COLONYNUM; i++) {
+                Sample newSample = new Sample(type[i], index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
                 newContainer.addSample(newSample);
                 sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
             }            
-            index = index+COLONYNUM;
+            index = index+COLONYNUM*2;
         }
     } 
     
