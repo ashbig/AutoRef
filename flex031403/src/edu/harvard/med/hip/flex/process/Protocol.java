@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.28 2002-10-03 18:05:20 Elena Exp $
+ * $Id: Protocol.java,v 1.29 2002-11-21 21:24:12 Elena Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -85,6 +85,15 @@ public class Protocol {
         "Import MGC request";
     public static final String CREATE_DNA_FROM_MGC_CULTURE = 
         "Create DNA plate from MGC culture block";
+    
+    //yeast revised orf
+     public static final String REARRAY_CULTURE_PLATES_BASED_ON_SEQUENCING_RESULTS = 
+        "Rearray culture plates based on sequencing results";
+     public static final String REARRAY_PCR_PLATES = 
+        "Rearray PCR plates";
+     public static final String GENERATE_SEQUENCING_GLYCEROL_PLATES = 
+        "Generate sequencing glycerol plates";
+    
     
     private int id;
     private String processcode;
