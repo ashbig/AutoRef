@@ -47,7 +47,9 @@ public class SpecialOligoOrderAction extends WorkflowAction {
         int projectid=((SpecialOligoOrderForm)form).getProjectid();
         int workflowid=((SpecialOligoOrderForm)form).getWorkflowid();
         boolean isFullPlate=((SpecialOligoOrderForm)form).getIsFullPlate();
-        boolean isGroupBySize=((SpecialOligoOrderForm)form).getIsGroupBySize();
+        boolean small = ((SpecialOligoOrderForm)form).getSmall();
+        boolean medium = ((SpecialOligoOrderForm)form).getMedium();
+        boolean large = ((SpecialOligoOrderForm)form).getLarge();
         
         Connection conn = null;
         try {
@@ -55,7 +57,7 @@ public class SpecialOligoOrderAction extends WorkflowAction {
             conn = t.requestConnection();
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
-            OligoPlateManager om = new OligoPlateManager(conn, project, workflow, 94, isFullPlate, isGroupBySize, null);
+            OligoPlateManager om = new OligoPlateManager(conn, project, workflow, 94, isFullPlate, true, small, medium, large, null);
             om.orderOligo();
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);

@@ -19,6 +19,8 @@
 <hr>
 <html:errors/>
 
+Special oligo order can handle partial oligo plate ordering for non-MGC project.
+You can choose to group the oligos together for different size groups.
 <p>
 <html:form action="/SpecialOligoOrder.do" focus="isFullPlate"> 
 
@@ -28,28 +30,32 @@
 <p>
 <table border=0>
     <tr>
-        <td>Number of small sequences on the queue:</td>
+        <td><b>Number of small sequences on the queue:</b></td>
         <td><bean:write name="small" /></td>
     </tr>
     <tr>
-        <td>Number of medium sequences on the queue:</td>
+        <td><b>Number of medium sequences on the queue:</b></td>
         <td><bean:write name="medium" /></td>
     </tr>
     <tr>
-        <td>Number of large sequences on the queue:</td>
+        <td><b>Number of large sequences on the queue:</b></td>
         <td><bean:write name="large" /></td>
     </tr>
 </table>
 
 <p>
 <dl>
-    <dt class="prompt">Is full plate required?
+    <dt><b>Is full plate required?</b>
         <dd><html:radio property="isFullPlate" value="true"/>Yes
         <html:radio property="isFullPlate" value="false"/>No
-    <dt class="prompt">Group sequences into small, medium and large queues?
-        <dd><html:radio property="isGroupBySize" value="true"/>Yes
-        <html:radio property="isGroupBySize" value="false"/>No
+<p>
+    <dt><b>Choose sequences that you want to group together:</b> 
+        (sequences you don't choose will be grouped separately)
+        <dd><html:checkbox property="small" />small genes (0 <= CDS < 2000)
+        <dd><html:checkbox property="medium" />medium genes (2000 <= CDS < 4000)
+        <dd><html:checkbox property="large" />large genes (CDS >= 4000)
 <dl>
+<p>
 <html:submit/>
 </html:form>
 

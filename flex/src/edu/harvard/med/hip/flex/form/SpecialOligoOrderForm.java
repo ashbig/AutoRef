@@ -19,8 +19,10 @@ import org.apache.struts.action.ActionMapping;
  * @version 
  */
 public class SpecialOligoOrderForm extends ProjectWorkflowForm {
-    private boolean isFullPlate = true;
-    private boolean isGroupBySize = true;
+    private boolean isFullPlate = false;
+    private boolean small = false;
+    private boolean medium = false;
+    private boolean large = false;
     
     public void setIsFullPlate(boolean isFullPlate) {
         this.isFullPlate = isFullPlate;
@@ -30,12 +32,28 @@ public class SpecialOligoOrderForm extends ProjectWorkflowForm {
         return isFullPlate;
     }
     
-    public void setIsGroupBySize(boolean isGroupBySize) {
-        this.isGroupBySize = isGroupBySize;
+    public void setSmall(boolean small) {
+        this.small = small;
     }
     
-    public boolean getIsGroupBySize() {
-        return isGroupBySize;
+    public boolean getSmall() {
+        return small;
+    }
+    
+    public void setMedium(boolean medium) {
+        this.medium = medium;
+    }
+    
+    public boolean getMedium() {
+        return medium;
+    }
+    
+    public void setLarge(boolean large) {
+        this.large = large;
+    }
+    
+    public boolean getLarge() {
+        return large;
     }
     
     /**
@@ -45,7 +63,9 @@ public class SpecialOligoOrderForm extends ProjectWorkflowForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        this.isFullPlate = true;
-        this.isGroupBySize = true;
+        this.isFullPlate = false;
+        this.small = false;
+        this.medium = false;
+        this.large = false;
     }   
 }

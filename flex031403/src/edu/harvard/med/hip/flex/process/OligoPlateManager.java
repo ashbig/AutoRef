@@ -39,6 +39,10 @@ public class OligoPlateManager {
     protected boolean     m_isReorderSequences = true;
     protected String      m_plateType = "96 WELL OLIGO PLATE";
     
+    protected boolean isSmall = false;
+    protected boolean isMedium = false;
+    protected boolean isLarge = false;
+    
     /**
      * Constructor
      * Creates new OligoPlateManager
@@ -83,19 +87,50 @@ public class OligoPlateManager {
      * @exception FlexDatabaseException.
      */
     public OligoPlateManager(Connection conn, Project project, Workflow workflow,
-    int totalWells, boolean isFull, boolean isGroupBySize, Protocol protocol) 
+    int totalWells, boolean isFull, boolean isGroupBySize, Protocol protocol)
     throws FlexDatabaseException {
         this( conn, project, workflow);
         this.totalWells = totalWells;
-        // m_plateType = 
+        // m_plateType =
         this.isOnlyFullPlate = isFull;
         this.isGroupBySize = isGroupBySize;
         this.protocol = protocol;
         
-        if(protocol == null)            setProtocol();        
+        if(protocol == null)            setProtocol();
     }
     
-     
+    /**
+     * Constructor.
+     *
+     * @param project The project that the oligo manager works with.
+     * @param workflow The workflow that the oligo manager works with.
+     * @param totalWells The number of total wells on the oligo plate.
+     * @param isFull Whether the full plate require to generate the oligos.
+     * @param isGroupBySize Whether the oligoes should be grouped by size limit.
+     * @param isSmall Whether the oligoes should be grouped by small genes.
+     * @param isMedium Whether the oligoes should be grouped by medium genes.
+     * @param isLarge Whether the oligoes should be grouped by large genes.
+     * @param protocol The protocol that the oligo manager works with.
+     *
+     * @return The OligoPlateManager object.
+     *
+     * @exception FlexDatabaseException.
+     */
+    public OligoPlateManager(Connection conn, Project project, Workflow workflow,
+    int totalWells, boolean isFull, boolean isGroupBySize, boolean isSmall,
+    boolean isMedium, boolean isLarge, Protocol protocol) throws FlexDatabaseException {
+        this( conn, project, workflow);
+        this.totalWells = totalWells;
+        this.isOnlyFullPlate = isFull;
+        this.isGroupBySize = isGroupBySize;
+        this.isSmall = isSmall;
+        this.isMedium = isMedium;
+        this.isLarge = isLarge;
+        this.protocol = protocol;
+        
+        if(protocol == null)
+            setProtocol();
+    }
     
     /**
      * Set the protocol.
@@ -107,8 +142,8 @@ public class OligoPlateManager {
     /**
      *Set isResort parameter (whether sequences will be reordered by OligoPlater
      */
-     protected void setIsReorder(boolean isReorder) {m_isReorderSequences = isReorder;}
-       
+    protected void setIsReorder(boolean isReorder) {m_isReorderSequences = isReorder;}
+    
     
     /**
      * Check the total number of sequences in the Queue table belong to the
@@ -254,8 +289,8 @@ public class OligoPlateManager {
             
             //all of the oligo plate header and sample info are inserted in DB
             //three text files for order oligos will be generated
-            plater = new OligoPlater(oligoPatternList, cg.getConstructList(), 
-                                    conn, project, workflow);
+            plater = new OligoPlater(oligoPatternList, cg.getConstructList(),
+            conn, project, workflow);
             plater.setTotalWells( totalWells );
             plater.setPlateType( m_plateType);
             plater.setReorderRequest(m_isReorderSequences);
@@ -278,13 +313,12 @@ public class OligoPlateManager {
             System.out.println(ioe.getMessage());
             
             DatabaseTransaction.rollback(conn);
-           
+            
         }
-        catch(Exception e)
-        {
-            System.out.println (e.getMessage());
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
-
+        
         
         if (fileList == null || fileList.size() == 0)
             fileList = plater.generateOligoOrderFiles() ;
@@ -296,7 +330,7 @@ public class OligoPlateManager {
         String to = "dzuo@hms.harvard.edu";
         String from = "wmar@hms.harvard.edu";
         String cc = "etaycher@hms.harvard.edu";
-//        String cc = "flexgene_manager@hms.harvard.edu";
+        //        String cc = "flexgene_manager@hms.harvard.edu";
         String subject = "Oligo order for project - "+project.getName();
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
@@ -312,10 +346,31 @@ public class OligoPlateManager {
         
         try {
             if(isGroupBySize) {
-                for (int i = 0; i < LIMITS.length-1; ++i) {
-                    seqList = getQueueSequence(LIMITS[i],LIMITS[i+1]);
-                    performOligoOrder(seqList);
+                seqList = new LinkedList();
+                
+                if(isSmall) {
+                    seqList.addAll(getQueueSequence(LIMITS[0], LIMITS[1]));
+                } else {
+                    LinkedList l = getQueueSequence(LIMITS[0], LIMITS[1]);
+                    performOligoOrder(l);
                 }
+                
+                if(isMedium) {
+                    seqList.addAll(getQueueSequence(LIMITS[1], LIMITS[2]));
+                } else {
+                    LinkedList l = getQueueSequence(LIMITS[1], LIMITS[2]);
+                    performOligoOrder(l);
+                }
+                
+                if(isLarge) {
+                    seqList.addAll(getQueueSequence(LIMITS[2], LIMITS[3]));
+                } else {
+                    LinkedList l = getQueueSequence(LIMITS[2], LIMITS[3]);
+                    performOligoOrder(l);
+                } 
+                
+                if(seqList.size() != 0)
+                    performOligoOrder(seqList);                
             } else {
                 seqList = getQueueSequence();
                 performOligoOrder(seqList);
