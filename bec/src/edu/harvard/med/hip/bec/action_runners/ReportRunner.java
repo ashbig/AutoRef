@@ -32,7 +32,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
  *
  * @author  HTaycher
  */
-public class ReportRunner implements Runnable
+public class ReportRunner extends ProcessRunner 
 {
     
     private  static String FILE_PATH = null;
@@ -44,10 +44,10 @@ public class ReportRunner implements Runnable
     }
     
     
-     private ArrayList   m_error_messages = null;
-    private String      m_items = null;
-    private int         m_items_type = -1;
-    private User        m_user = null;
+    // private ArrayList   m_error_messages = null;
+   // private String      m_items = null;
+   // private int         m_items_type = -1;
+   // private User        m_user = null;
     private boolean    m_clone_id= false; //    Clone Id
 	private boolean    m_dir_name= false; // Directory Name
 	private boolean    m_sample_id= false; //      Sample Id
@@ -81,15 +81,15 @@ public class ReportRunner implements Runnable
     }
 
 
-    public  void        setUser(User v){m_user=v;}
-    public  void        setItems(String item_ids)
-    {
-        m_items = item_ids;
-    }
-     public  void        setItemsType( int type)
-     {
-         m_items_type = type;
-     }
+   // public  void        setUser(User v){m_user=v;}
+   // public  void        setItems(String item_ids)
+   // {
+   //     m_items = item_ids;
+   // }
+   //  public  void        setItemsType( int type)
+    // {
+    //     m_items_type = type;
+   //  }
                 // value="2"//Clone Ids</strong//
      public  void        setFields(
                     Object clone_id, //    Clone Id
@@ -156,9 +156,9 @@ public class ReportRunner implements Runnable
         {
             //convert item into array
            items = Algorithms.splitString( m_items);
-           if ( m_items_type != 1 && m_items_type != 2)//clones
+           if ( m_items_type != 1 && m_items_type != 2 && m_items_type != 4)//clones
            {
-               m_error_messages.add("No item type specified");
+               m_error_messages.add("No item type has been specified.");
                return;
            }
           ArrayList clones = getCloneInfo(m_items_type,items);
@@ -209,35 +209,7 @@ public class ReportRunner implements Runnable
         String sql = null;
         UICloneSample clone = null;
         ResultSet rs = null;
-        if ( submission_type == 1)//plates
-        {
-            StringBuffer plate_names = new StringBuffer();
-            for (int index = 0; index < items.size(); index++)
-            {
-                plate_names.append( "'");
-                plate_names.append((String)items.get(index));
-                plate_names.append("'");
-                if (index == 3) break;
-                if ( index != items.size()-1 ) plate_names.append(",");
-            }
-            sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID, "
- +" i.STATUS,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, refsequenceid , "
-+" i.CONSTRUCTID,  i.ISOLATETRACKINGID, RANK "
-+"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a "
-+" where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid and  "
-+" s.containerid=c.containerid and a.isolatetrackingid =i.isolatetrackingid "
-+"and s.containerid in (select containerid from containerheader where label in ("
-+plate_names.toString()+")) order by s.containerid,position";
-        } 
-        else if (submission_type == 2)
-        {
-            sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID, "
-            +" i.STATUS,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, refsequenceid , "
-            +" i.CONSTRUCTID,  i.ISOLATETRACKINGID, RANK "
-            +"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a "
-            +" where rownum<300 and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid and  "
-            +" s.containerid=c.containerid and a.isolatetrackingid =i.isolatetrackingid ";
-        }
+        sql = constructQueryString(submission_type,items);
         try
         {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -271,6 +243,51 @@ public class ReportRunner implements Runnable
        return clones;
     }
     
+    
+    private String constructQueryString(int submission_type, ArrayList items)
+    {
+        String sql = null;
+        if ( submission_type == 1)//plates
+        {
+            StringBuffer plate_names = new StringBuffer();
+            for (int index = 0; index < items.size(); index++)
+            {
+                plate_names.append( "'");
+                plate_names.append((String)items.get(index));
+                plate_names.append("'");
+                if (index == 3) break;
+                if ( index != items.size()-1 ) plate_names.append(",");
+            }
+            sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID, "
+ +" i.STATUS,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, refsequenceid , "
++" i.CONSTRUCTID,  i.ISOLATETRACKINGID, RANK "
++"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a "
++" where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid and  "
++" s.containerid=c.containerid and a.isolatetrackingid =i.isolatetrackingid "
++"and s.containerid in (select containerid from containerheader where label in ("
++plate_names.toString()+")) order by s.containerid,position";
+        } 
+        else if (submission_type == 2)
+        {
+            sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID, "
+            +" i.STATUS,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, refsequenceid , "
+            +" i.CONSTRUCTID,  i.ISOLATETRACKINGID, RANK "
+            +"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a "
+            +" where rownum<300 and flexcloneid in ("+Algorithms.convertStringArrayToString(items,"," )+")and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid and  "
+            +" s.containerid=c.containerid and a.isolatetrackingid =i.isolatetrackingid ";
+        }
+       
+        else if (submission_type == 4)//bec sequence id
+        {
+            sql="select LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID, "
+            +" i.STATUS,  a.SEQUENCEID as CLONESEQUENCEID,  analysisSTATUS,  SEQUENCETYPE, refsequenceid , "
+            +" i.CONSTRUCTID,  i.ISOLATETRACKINGID, RANK "
+            +"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a "
+            +" where rownum<300 and a.SEQUENCEID in ("+Algorithms.convertStringArrayToString(items,"," )+")and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid and  "
+            +" s.containerid=c.containerid and a.isolatetrackingid =i.isolatetrackingid ";
+        }
+        return sql;
+    }
     private Hashtable extractRefSequences(ArrayList clones) 
     {
         Hashtable refsequences = new Hashtable();

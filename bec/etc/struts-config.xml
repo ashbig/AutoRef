@@ -168,7 +168,7 @@
             <forward name="upload_plates" path="/RunUploadPlates.jsp"/>
              <forward name="run_desicion_tool" path="/RunDesicionTool.jsp"/>
             <forward name="select_vector" path="/SelectVector.jsp"/>
-            <forward name="run_process" path="/InitiateProcessDataFileIn.jsp"/>
+            <forward name="initiate_process" path="/InitiateProcess.jsp"/>
             <forward name="scan_label" path="/ContainerScan.jsp"/>
             <forward name="submit_data_file" path="/SubmitDataFile.jsp"/>
             <forward name="select_plates" path="/SelectPlatesForProcess.jsp"/>
@@ -187,13 +187,7 @@
 
     </action>
 
-<!-- Process action that requiers data file as part of data submition -->
-    <action      path="/RunProcessDataFileIn"
-                name="submitDataFileForm"
-                input="/InitiateProcessDataFileIn.jsp"
-                type="edu.harvard.med.hip.bec.action.RunProcessDataFileInAction">
-            <forward name="processing" path="/ConfirmProcess.jsp"/>
-     </action>
+
 
 <!-- Process  run a process-->
     <action      path="/RunProcess"
