@@ -25,6 +25,23 @@
 <input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
 <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 
+<p>
+<table border=0>
+    <tr>
+        <td>Number of small sequences on the queue:</td>
+        <td><bean:write name="small" /></td>
+    </tr>
+    <tr>
+        <td>Number of medium sequences on the queue:</td>
+        <td><bean:write name="medium" /></td>
+    </tr>
+    <tr>
+        <td>Number of large sequences on the queue:</td>
+        <td><bean:write name="large" /></td>
+    </tr>
+</table>
+
+<p>
 <dl>
     <dt class="prompt">Is full plate required?
         <dd><html:radio property="isFullPlate" value="true"/>Yes
