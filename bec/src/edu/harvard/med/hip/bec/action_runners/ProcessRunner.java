@@ -167,6 +167,8 @@ public abstract class ProcessRunner implements Runnable
       }
      protected void             sendEMails(String title)
      {
+         String message = null;
+          
          try
          {
  //send errors
@@ -175,33 +177,30 @@ public abstract class ProcessRunner implements Runnable
             {
                 String file_name = Constants.getTemporaryFilesPath() + File.separator + "ErrorMessages"+ System.currentTimeMillis()+".txt";
                 Algorithms.writeArrayIntoFile( m_error_messages, false,  file_name) ;
-             /*try// would not like to pick up function from Algorithms
-                 {
-                    FileWriter fr =  new FileWriter(file_name, false);
-                    for (int count = 0; count < m_error_messages.size(); count++)
-                    {
-                            fr.write((String) m_error_messages.get(count)+"\n");
-                    }
-                    fr.flush();                fr.close();
-                 }       catch(Exception e )         {  }*/
+                message = title+ Constants.LINE_SEPARATOR + "Please find error messages for your request in  attached file";
                 Mailer.sendMessageWithAttachedFile(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu",title, 
-                title+"\nPlease error messages for your request in  attached file" , 
+                "hip_informatics@hms.harvard.edu",title, message , 
                 new File(file_name) );
             }
             if (m_file_list_reports != null && m_file_list_reports.size()>0 )//&& this instanceof ReportRunner)
             {
+                message =  title+  Constants.LINE_SEPARATOR +
+                "Please find attached report file for your request.";
+                if ( m_items != null && m_items.length() > 0)
+                    message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
+              
                  Mailer.sendMessageWithFileCollections(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu",title, 
-                title+"\nPlease find attached report file for your request\n Requested item ids:\n"+m_items, 
+                "hip_informatics@hms.harvard.edu",title, message , 
                 m_file_list_reports);
             }
-            if (m_file_list_reports == null || m_file_list_reports.size()==0 )
+            if (( m_file_list_reports == null || m_file_list_reports.size()==0 )
+                 && ( m_error_messages == null || m_error_messages.size() == 0))
             {
-                String text = title +"\n Process finished \n";
-                if (m_items != null && m_items.length() > 0) text+=" Items processed:\n"+m_items;
-                Mailer.sendMessage(m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",
-                "hip_informatics@hms.harvard.edu", title, text  );
+                message =  title+  Constants.LINE_SEPARATOR +"Process finished.";
+                if ( m_items != null && m_items.length() > 0)
+                    message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
+                 Mailer.sendMessage      ( m_user.getUserEmail(), "elena_taycher@hms.harvard.edu",  "elena_taycher@hms.harvard.edu", title, message);
+                     
             }
      
         }
