@@ -230,11 +230,11 @@ public class PhredPhrap
     {
         String command = "";
         if ( m_quality_trimming_phd_score == 0) return "";
-        command = " "+ m_quality_trimming_phd_score ;
+        command = " --trim_score "+ m_quality_trimming_phd_score ;
         if (  m_quality_trimming_phd_first_base == 0) return command;
-        command += " "+ m_quality_trimming_phd_first_base;
+        command += " --trim_start_base "+ m_quality_trimming_phd_first_base;
         if (m_quality_trimming_phd_last_base == 0) return command;
-        command += " "+ m_quality_trimming_phd_last_base ;
+        command += " --trim_last_base "+ m_quality_trimming_phd_last_base ;
         return command;
     }
      //******************************************
