@@ -79,7 +79,7 @@ public class AgarContainerMapper extends OneToOneContainerMapper {
                 type = getTransformationSampleType(container, s, protocol);
             }
             
-            Sample newSample = new Sample(type, position, newContainer.getId(), s.getOligoid(), Sample.GOOD);
+            Sample newSample = new Sample(type, position, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
             position++;

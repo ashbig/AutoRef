@@ -110,7 +110,7 @@ public class AgarToCultureMapper extends OneToOneContainerMapper {
             }
             
             for(int i=1; i<=COLONYNUM; i++) {
-                Sample newSample = new Sample(type, index+i, newContainer.getId(), s.getOligoid(), Sample.GOOD);
+                Sample newSample = new Sample(type, index+i, newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
                 newContainer.addSample(newSample);
                 sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
             }            

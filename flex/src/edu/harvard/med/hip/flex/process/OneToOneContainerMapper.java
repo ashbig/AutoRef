@@ -114,7 +114,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 type = Sample.getType(protocol.getProcessname());
             }
             
-            Sample newSample = new Sample(type, s.getPosition(), newContainer.getId(), s.getOligoid(), Sample.GOOD);
+            Sample newSample = new Sample(type, s.getPosition(), newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
         }
