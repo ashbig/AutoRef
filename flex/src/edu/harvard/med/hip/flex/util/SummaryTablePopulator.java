@@ -438,8 +438,8 @@ public class SummaryTablePopulator {
     public static void main(String args[]) {
         //List containers = getContainers();
         List containers = new ArrayList();
-        containers.add(new Integer(9861));
-        containers.add(new Integer(9863));
+        containers.add(new Integer(10232));
+        containers.add(new Integer(10236));
         
         /**
         List samples = new ArrayList();

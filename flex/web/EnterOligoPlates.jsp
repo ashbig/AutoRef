@@ -89,6 +89,12 @@
     <td><html:text property="templatePlate" size="40"/></td>
     </tr>
     </logic:equal>
+    <logic:equal name="workflowid" value="33">
+    <tr>
+    <td class="prompt">Enter MGC template plate barcode:</td>
+    <td><html:text property="templatePlate" size="40"/></td>
+    </tr>
+    </logic:equal>
     </logic:equal>
 
     <tr>

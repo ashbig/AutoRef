@@ -39,6 +39,7 @@ public class Workflow {
     public static final int DNA_TEMPLATE_CREATOR = 14;
     //public static final int TEMPLATE_CREATOR_PCRA = 15;
     public static final int GATEWAY_WORKFLOW = 28;
+    public static final int HIP_INGA = 33;
     
     public static final int REARRAY_PLATE = 16;
     public static final int REARRAY_TEMPLATE = 26;

@@ -34,7 +34,7 @@
         <TD class="label">Clone Status:</td>
         <td><bean:write name="clone" property="status"/></TD>
         <TD class="label">Reference FLEX Sequence ID:</td>
-        <td><A target="_blank" HREF="ViewSequence.do?FLEX_SEQUENCE_ID=<bean:write name="clone" property="refsequenceid"/>">
+        <td><A HREF="ViewSequence.do?FLEX_SEQUENCE_ID=<bean:write name="clone" property="refsequenceid"/>">
             <bean:write name="clone" property="refsequenceid"/>
             </A>
         </TD>
@@ -52,7 +52,7 @@
         </TD>
         <TD class="label">Vector:</td>
         <TD>
-            <a target="_blank" href="ViewVector.do?vectorname=<bean:write name="clone" property="cloningstrategy.clonevector.name"/>">
+            <a href="ViewVector.do?vectorname=<bean:write name="clone" property="cloningstrategy.clonevector.name"/>">
                 <bean:write name="clone" property="cloningstrategy.clonevector.name"/>
             </a>
         </TD>

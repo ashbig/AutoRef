@@ -179,6 +179,10 @@ public class UpdateClonename {
         return failed;
     }
     
+    /**
+     * This method updates the cloneid field in the rearrayed glycerol from culture
+     * with the cloneid in the glycerol from culture.
+     */
     public void updateRearrayPlateCloneid(int containerid) throws Exception {
         String sql = "select sampleid from sample where containerid="+containerid;
         String sql2 = "select sampleid_from from samplelineage where sampleid_to=?";
@@ -374,6 +378,7 @@ public class UpdateClonename {
     
     public static void main(String args[]) throws Exception {
           DatabaseTransaction t = DatabaseTransaction.getInstance();
+          
           String sql = "select c.cloneid from clones c"+
           " where c.clonename is null"+
           " and c.status='SEQUENCE VERIFIED'";
@@ -386,6 +391,7 @@ public class UpdateClonename {
          
           UpdateClonename u = new UpdateClonename();
           u.updateName(clones);
+           
          /**
         UpdateClonename u = new UpdateClonename();
         /**       List clones = u.readClones();
@@ -403,8 +409,23 @@ public class UpdateClonename {
         } catch (Exception ex) {
             System.out.println(ex);
         }
-       */
         //u.correctConstructid();
         //u.correctConstructidForClones();
+          */
+       /**   
+          try {
+              List containers = new ArrayList();
+              containers.add(new Container(7278));
+              containers.add(new Container(7280));
+              containers.add(new Container(7393));
+              containers.add(new Container(7394));
+              
+              UpdateClonename uc = new UpdateClonename();
+              uc.updateAllRearrayPlateCloneid(containers);
+          } catch (Exception ex) {
+              System.out.println(ex);
+          }
+        **/
     }
+    
 }

@@ -17,7 +17,6 @@
 
 <h2><bean:message key="flex.name"/> : Search FLEXGene Database</h2>
 <hr>
-<html:errors/>
 
 <p>
 You can search FLEXGene database by using the following terms: 
@@ -33,6 +32,8 @@ For each term except GI, the program will search LocusLink database to find all 
 <p>Searches are performed offline, and each search is identified by a "Search Name" defined by user. User can view the search results and history from the link "My Search History" on the left menu bar.
 <!--<p>Click <a href="query_flow_v1.pdf">here</a> to view the flow chart.-->
 <p><hr>
+
+<html:errors/>
 <html:form action="/SearchFlex.do" focus="searchTerm" method="POST" enctype="multipart/form-data">
 
 <table border=0 cellspacing=10 cellpadding=2>
@@ -117,6 +118,10 @@ For each term except GI, the program will search LocusLink database to find all 
     </tr>
 </table>
 </html:form>
+
+<logic:notPresent name="<%=Constants.USER_KEY%>" scope="session">
+<jsp:include page="footer.jsp"/>
+</logic:notPresent>
 
 </body>
 </html:html>

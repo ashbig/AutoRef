@@ -62,7 +62,7 @@
             <td><flex:write name="clone" property="clonename"/></td>
             <td><flex:write name="clone" property="clonetype"/></td>
             <td><flex:write name="clone" property="cloningstrategy.name"/></td>
-            <td><a target="_blank" href="ViewVector.do?vectorname=<bean:write name="clone" property="cloningstrategy.clonevector.name"/>">
+            <td><a href="ViewVector.do?vectorname=<bean:write name="clone" property="cloningstrategy.clonevector.name"/>">
                 <flex:write name="clone" property="cloningstrategy.clonevector.name"/>
             </a></td>
             <td><flex:write name="clone" property="status"/></td>

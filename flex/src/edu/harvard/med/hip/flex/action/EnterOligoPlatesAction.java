@@ -124,7 +124,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             }
             
             String templatePlate = null;
-            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR || workflowid == Workflow.MGC_GATEWAY_CLOSED)
+            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW || workflowid == Workflow.DNA_TEMPLATE_CREATOR || workflowid == Workflow.MGC_GATEWAY_CLOSED || workflowid == Workflow.HIP_INGA)
             && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
                 templatePlate = ((CreatePCRPlateForm)form).getTemplatePlate();
                 
@@ -162,7 +162,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             if(workflowid == Workflow.MGC_CREATOR_WORKFLOW
             || workflowid == Workflow.MGC_GATEWAY_WORKFLOW
             || workflowid == Workflow.DNA_TEMPLATE_CREATOR
-            || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
+            || workflowid == Workflow.MGC_GATEWAY_CLOSED
+            || workflowid == Workflow.HIP_INGA) {
                 try {
                     mgc = ps.getMgcContainer();
                 } catch (Exception ex) {
@@ -261,7 +262,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW
                 || workflowid == Workflow.MGC_CREATOR_WORKFLOW
                 || workflowid == Workflow.DNA_TEMPLATE_CREATOR
-                || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
+                || workflowid == Workflow.MGC_GATEWAY_CLOSED
+                || workflowid == Workflow.HIP_INGA) {
                     request.setAttribute("templateid", new Integer(template.getId()));
                 }
                 return (mapping.findForward("success_oligo_dilute"));

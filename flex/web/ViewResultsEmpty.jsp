@@ -4,6 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="edu.harvard.med.hip.flex.Constants" %>
 
 <html>
 <head>
@@ -18,7 +19,6 @@
 <p>
 
 <h3>No results to display.</H3>
-
 
 </body>
 </html>
