@@ -50,44 +50,52 @@
 
 
 # Get the paramenter from user input.
+  
+ 
+$trim_score ="";
+$trim_first_base = "";
+$trim_last_base = "";
 
 GetOptions("clonepath=s" => \$clone_path,
 		"vectorfile=s" => \$vectorfilename,
 		"outputfilename=s" => \$outputfilename,
 		"trim_score=i" => \$trim_score,
 		"trim_first_base=i" => \$trim_first_base,
-		"trim_last_base=i" => \$trim_last_base,);
+		"trim_last_base=i" => \$trim_last_base);
 $chromatDirPath = $clone_path."/chromat_dir";
+print $chromatDirPath;
+print "----";
 $phdDirPath = $clone_path."/phd_dir";
 #construct output file path
 $outputPath = $clone_path."/contig_dir";
 
 print ($chromatDirPath );
 print ( $outputPath );
-
 $szVersion = "991019";
-$cross_matchExe = "c:/programs_bio/biolocal/cross_match";
-$phredExe = "c:/programs_bio/biolocal/phred";
-$phrapExe = "c:/programs_bio/biolocal/phrap";
-$phd2fasta = "c:/programs_bio/biolocal/phd2fasta";
-$transferConsensusTags = "c:/programs_bio/biolocal/transferConsensusTags.perl";
+$cross_matchExe = "d:/programs_bio/assembler/exe/cross_match";
+$phredExe = "d:/programs_bio/assembler/exe/phred";
+$phrapExe = "d:/programs_bio/assembler/exe/phrap";
+$transferConsensusTags = "d:/programs_bio/assembler/scripts/transferConsensusTags.perl";
+
+$phd2fasta = "d:/programs_bio/assembler/exe/phd2fasta";
 #$transferConsensusTags = "/mk2/users/gordon/phredPhrap/transferConsensusTags.perl";
-$tagRepeats = "c:/programs_bio/biolocal/tagRepeats.perl";
+$tagRepeats = "d:/programs_bio/assembler/scripts/tagRepeats.perl";
 # the following line is important only if you are using polyphred
 # for polymorphism detection
-$polyPhredExe = "c:/programs_bio/biolocal/polyphred";
-$determineReadTypes = "c:/programs_bio/biolocal/determineReadTypes.perl";
-#$java_pass = "/c/j2sdk1.4.0_03/bin/java";
-#$java_trimming_script = "d:/bio_programs/phredphrap/triming_phd_files";
+$polyPhredExe = "d:/programs_bio/assembler/exe/polyphred";
+$determineReadTypes = "d:/programs_bio/assembler/scripts/determineReadTypes.perl";
 
-$java_pass = "/c/Program\\ Files/j2sdk1.4.1_02/bin/java";
-#$java_pass = "c:/Program\\ Files/j2sdk1.4.1_02/bin/java";
+#$c_trimming_script="d:/programs_bio/assembler/exe/trimming";
 
-$java_trimming_script = "c:/programs_bio/biolocal trimming_java_script";
-$c_trimming_script="c:/programs_bio/biolocal/trimming";
+$java_pass = "/c/j2sdk1.4.1_02/bin/java";
+$java_trimming_script = "d:/programs_bio/assembler/exe/ Trimming_java_script";
+
+
+#$c_trimming_script = "d:/j2sdk1.4.1_02/bin/java d:/programs_bio/assembler/scripts/trimming_java_script";
+
 
 # change this to reflect wherever you put you fasta file of vector sequences
-$szVectorFilePath = "c:/programs_bio/biolocal/lib/screenLibs/";
+$szVectorFilePath = "d:/programs_bio/assembler/vectors/";
 
 $szDefaultVectorFileName = "vector_empty.seq";
 if ($vectorfilename eq "")
@@ -99,14 +107,14 @@ else
 {
 	$szDefaultVectorFile = $szVectorFilePath.$vectorfilename;
 }
-$trim_score_value = 0;$trim_first_base_value = 0;$trim_last_base = 0;
+$trim_score_value = 0;$trim_first_base_value = 0;$trim_last_base_value = 0;
 if ($trim_score ne "") 	 { $trim_score_value = $trim_score ;}
 if ( $trim_first_base ne "") 	{ $trim_first_base_value = $trim_first_base ;}
 if ($trim_last_base ne "") 	{$trim_last_base_value = $trim_last_base ;}
 
 print "\n\n--".$szDefaultVectorFile."-----\n";
 # change this to reflect wherever you put the phredpar.dat file
-$szPhredParameterFile = "c:/programs_bio/biolocal/lib/phredpar.dat";
+$szPhredParameterFile = "d:/programs_bio/assembler/scripts/phredpar.dat";
 #$szPhredParameterFile = "/usr/local/common/lib/PhredPar/phredpar.dat";
 #$szPhredParameterFile = "/usr/local/etc/PhredPar/phredpar.dat";
 
@@ -371,7 +379,7 @@ if ( $bTransferTags ) {
 #if (! -e $szEcoli ) {
 #    die "cannot find $szEcoli specifying the pathname of the E.Coli sequences file--specify this in environment variable CROSS_MATCH_ECOLI\n";
 #}
-
+print "***". $chromatDirPath. "***";
 if (! (-e $chromatDirPath) ) {
        die "there must be a subdirectory called chromat_dir containing the ABI chromatigram files";
 }
@@ -506,9 +514,18 @@ print "--------------------------------------------------------\n\n\n";
 
 #$status = `/usr/bin/sh -c \"$java_pass -cp $java_trimming_script $clone_path  10\"`;
 #!system( "$java_pass -cp $java_trimming_script $clone_path  10 ") || die "some problem running crossmatch";
-#print "$c_trimming_script $clone_path./phd_dir/  $trim_score $trim_first_base trim_last_base ";
-!system("$c_trimming_script $clone_path./phd_dir/  $trim_score_value $trim_first_base_value trim_last_base_value ") ||  die "some problem running phd2fasta";
 
+if (  $trim_score > 0)
+{
+print "$java_pass -cp $java_trimming_script $clone_path  $trim_score $trim_first_base $trim_last_base  ";
+!system( "$java_pass -cp $java_trimming_script $clone_path  $trim_score $trim_first_base $trim_last_base  ") || die "some problem running crossmatch";
+}
+
+if ( $trim_score_value > 0)
+{
+  print "triming";
+   #!system("$c_trimming_script $clone_path./phd_dir/  $trim_score_value $trim_first_base_value trim_last_base_value ") ||  die "some problem running triming";
+}
 
 
 

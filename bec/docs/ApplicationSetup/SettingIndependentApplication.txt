@@ -1,0 +1,67 @@
+1. Datatabse tables set by admin:
+
+nametype;
+sampletype  (ISOLATE, CONTROL requered) ;
+processdefinition;
+SPECIESDEFINITION;
+PROJECTDEFINITION;
+
+
+linker;
+vector;
+vectorprimer;
+commonprimer;
+vectorfeature;
+
+
+2. Flexinfo table:
+flexcloneid, flexsequenceid  - requered;
+
+
+
+3. Input data
+
+- refernce sequence submission ( refsequence, sequenceinfo, name );
+
+The sequence file contains  one record per sequence. 
+Each record MUST contain following fields separated by tab
+:
+- sequence id (required).The sequence id is the unique identifier for each sequence. 
+- species (required), 
+- CDS start (required), 
+- CDS stop (required),
+- GC content (optional),
+- cDNA source (optional),
+- chromosome (optional),
+- sequence text (required). 
+
+
+The name file contains reference information for the sequence. It can have from 0 to N records per sequence:
+ - sequence id, 
+ - name type ,
+ - name value ,
+ - name url ;
+ - description. 
+The sequence id is the same id used in the sequence file. 
+The name type field must be valid name types in the database.
+
+
+
+
+
+- clone collection mapping information (containerheader, sample, flexinfo );
+ !!!! changes to be done to go from 96 samples per collection into n !!!!
+
+- unique collection name (required), 
+- user collection id (optional),
+- collection type (optional);
+
+-- per each clone in collection:
+
+- user unique clone  id ( requered);
+- user unique refsequence id ( requered) (same as in sequencing file that used for refsequence 
+submission, or sequence information should  submited into database);
+- user unique construct id ( requered) : construct allows connect several clones to the same rference sequence and
+define their relative quality. 
+- clone position in collection ( requered) (counter , starts from 1);
+- user sampleid for clone (optional)

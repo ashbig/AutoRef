@@ -1,0 +1,71 @@
+#!/usr/bin/perl -w
+#
+# PURPOSE:  removes a list of chromats from an assembly.  After running this,
+#   you must reassemble to create an ace file without the given phd files.
+#   
+# Note:  This removes phd files from the phd_dir directory.  Thus previously
+#        created ace files may no longer be useable after running this since
+#        they may reference some of these phd files.  Fortunately, this
+#        script just copies these phd files to ../deleted_phd_files so
+#        you can move them back to ../edit_dir for the purpose of using
+#        an old ace file.
+#
+# HOW TO USE IT:  make a file of filenames with a list of the chromats
+#        you want removed from the assembly
+#        Run it as:
+#        removeReads (name of fof's)
+#
+
+$szUsage = "Usage: removeReads listOfReads.fof";
+
+die "$szUsage" if ( $#ARGV != 0 );
+
+$szListOfReads = $ARGV[0];
+
+die "Can't read $szListOfReads" if (! -r $szListOfReads );
+
+die "Must be in edit_dir so that ../chromat_dir and ../phd_dir can be found" 
+  if ( (! -r "../chromat_dir") || (! -r "../phd_dir" ) );
+
+die "Must have write access to both ../chromat_dir and ../phd_dir" 
+       if ( (! -w "../chromat_dir" ) || ( ! -w "../phd_dir" ) );
+
+if ( !-e "../deleted_chromats" ) {
+  mkdir( "../deleted_chromats", 0777 ) || die "couldn't create ../deleted_chromats to put the deleted chromats into";
+}
+
+die "Must have write access to ../deleted_chromats" if (! -w "../deleted_chromats" );
+
+if ( !-e "../deleted_phd_files" ) {
+  mkdir( "../deleted_phd_files", 0777 ) || die "couldn't create ../deleted_phd_files to put the deleted phd files into";
+}
+
+die "Must have write access to ../delete_phd_files" if (! -w "../deleted_phd_files" );
+
+
+open( filListOfReads, $szListOfReads ) || die "couldn't open $szListOfReads";
+
+while( <filListOfReads> ) {
+  chomp;
+  if ( rename( "../chromat_dir/$_", "../deleted_chromats/$_" )  ) {
+    print "removed $_\n";
+  }
+  else {
+    print "couldn't move chromat $_ from ../chromat_dir to ../deleted_chromats\n";
+  }
+  $szPhdFiles = "../phd_dir/" . $_ . ".phd.";
+  print "glob pattern: $szPhdFiles\n";
+  foreach $szOnePhdFile (<${szPhdFiles}*> ) {
+    print "one phd file: $szOnePhdFile\n";
+    ( $szNewName = $szOnePhdFile ) =~ s/^\.\.\/phd_dir/..\/deleted_phd_files/;
+    print "new name = $szNewName\n";
+    if ( rename( $szOnePhdFile, $szNewName ) ) {
+      print "removed phd file $szOnePhdFile\n";
+    }
+    else {
+      print "problem removing phd file $szOnePhdFile\n";
+    }
+  }
+}
+
+
