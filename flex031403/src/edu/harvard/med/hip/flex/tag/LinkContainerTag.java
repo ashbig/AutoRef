@@ -1,10 +1,11 @@
 /*
- * File : LinkFlexSequenceTag.java
- * Classes : LinkFlexSequenceTag
+ * File : LinkContainerTag.java
+ * Classes : LinkContainerTag
  *
  * Description :
  *
- * Tag to link to a sequence detail page.
+ * Tag to link to a container detail page.  Either provide an container id
+ * or pass in the container object itself.
  *
  *
  * Author : Juan Munoz (jmunoz@3rdmill.com)
@@ -13,7 +14,7 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.3 $
+ * $Revision: 1.1 $
  * $Date: 2001-06-27 11:41:25 $
  * $Author: dongmei_zuo $
  *
@@ -52,16 +53,16 @@ import edu.harvard.med.hip.flex.core.*;
 import org.apache.struts.util.*;
 
 /**
- * Link to a squences detail page.
+ * Link to a container detail page.
  *
  * @author $Author: dongmei_zuo $
- * @version $Revision: 1.3 $ $Date: 2001-06-27 11:41:25 $
+ * @version $Revision: 1.1 $ $Date: 2001-06-27 11:41:25 $
  */
 
-public class LinkFlexSequenceTag extends TagSupport {
+public class LinkContainerTag extends TagSupport {
     
     
-    // ----------------------------------------------------- Instance Variables
+
     
     
     /**
@@ -73,98 +74,98 @@ public class LinkFlexSequenceTag extends TagSupport {
     
     
     /**
-     * The attribute sequenceid.
+     * The attribute containerid
      */
-    private int sequenceId = -1;
+    private int containerId = -1;
     
     
     /**
-     * The name of the variable holding the sequence or which has a property
-     * which holds the sequence to display.
+     * The name of the variable that is holding the container object
      */
-    private String sequenceName;
+    private String name;
     
     
     /**
-     * The name of the property (or nested property) that holds the sequence
-     * from the <code>sequenceName</code> variable
+     * The name of the property (or nested property) that holds container
+     * from the <code>name</code> variable
      */
-    private String seqProperty;
+    private String property;
     
     
     /**
-     * Return the attribute sequenceId
+     * Accessor for the contaienr id.
      *
-     * @return the sequence id to link to
+     * @return the cotnainer id to link to
      */
-    public int getSequenceId() {
+    public int getContainerId() {
         
-        return (this.sequenceId);
+        return (this.containerId);
         
     }
     
     
     /**
-     * Set the attribute name.
+     * mutator for the sequence id.
      *
-     * @param id The id of the sequence
+     * @param id The id of the container
      */
-    public void setSequenceId(int id) {
+    public void setContainerId(int id) {
         
-        this.sequenceId = id;
+        this.containerId = id;
         
     }
     
     /**
-     * Return the attribute sequence name
+     * Accessor for the name of the variable holding the container object.
      *
-     * @return the name of the <code>flexSequence</code> variable to link to
+     * @return the name of the <code>Container</code> variable to link to
      */
-    public String getSequenceName() {
+    public String getName() {
         
-        return (this.sequenceName);
+        return (this.name);
         
     }
     
     
     /**
-     * Set the attribute sequence.
+     * Mutator for the name of the container variable.
      *
-     * @param seqName The name of the <code>FlexSequence</code> variable 
+     * @param name The name of the <code>Container</code> variable 
      *       to link to.
      */
-    public void setSequenceName(String seqName) {
+    public void setName(String name) {
         
-        this.sequenceName = seqName;
+        this.name = name;
         
     }
     
     /**
-     * Return the attribute seqProperty
+     * Accessor for the property.
      *
-     * @return the name of the property that holds the sequence.
+     * @return the name of the property that holds the <code>Container</code> 
+     *      object
      */
-    public String getSeqProperty() {
+    public String getProperty() {
         
-        return (this.seqProperty);
+        return (this.property);
         
     }
     
     
     /**
-     * Set the attribute seqProperty.
+     * Set the attribute property.
      *
-     * @param seqProp The name of the property that holds the 
-     *      <code>FlexSequence</code> variable to link to.
+     * @param prop The name of the property that holds the 
+     *      <code>Container</code> variable to link to.
      */
-    public void setSeqProperty(String seqProp) {
+    public void setProperty(String prop) {
         
-        this.seqProperty = seqProp;
+        this.property = prop;
         
     }
     
     
-    // --------------------------------------------------------- Public Methods
+    
     
     
     /**
@@ -178,24 +179,23 @@ public class LinkFlexSequenceTag extends TagSupport {
         HttpServletRequest request =
         (HttpServletRequest) pageContext.getRequest();
         StringBuffer url = new StringBuffer(request.getContextPath());
-        url.append("/ViewSequence.do");
+        url.append("/ViewContainerDetails.do");
         
         
         url.append("?");
         
-        url.append(Constants.FLEX_SEQUENCE_ID_KEY+"=");
-        if(sequenceName == null) {
-            url.append(sequenceId);
-        } else {
-            FlexSequence seqObj = null;
+        url.append(Constants.CONTAINER_ID_KEY+"=");
+        if(name == null && containerId!=-1) {
+            url.append(containerId);
+        } else if (name!=null) {
+            Container container = null;
             try {
-                seqObj = (FlexSequence)RequestUtils.lookup(pageContext,sequenceName, 
-                seqProperty, null);
+                container = (Container)RequestUtils.lookup(pageContext,name, 
+                property, null);
             } catch (ClassCastException cce) {
-                throw new JspException("The specified property: " + 
-                seqProperty + " does not contain a FlexSequence object");
+                throw new JspException("The specified variable does not contain a Container object\n"+cce.getMessage());
             }
-            url.append(seqObj.getId());
+            url.append(container.getId());
             
         }
         
@@ -234,8 +234,7 @@ public class LinkFlexSequenceTag extends TagSupport {
         try {
             writer.print("</a>");
         } catch (IOException e) {
-            throw new JspException
-            (messages.getMessage("link.io", e.toString()));
+            throw new JspException(e.getMessage());
         }
         
         return (EVAL_PAGE);
@@ -250,9 +249,9 @@ public class LinkFlexSequenceTag extends TagSupport {
         
         super.release();
         
-        this.sequenceId = -1;
-        this.seqProperty=null;
-        this.sequenceName=null;
+        this.containerId = -1;
+        this.property=null;
+        this.name=null;
         
     }
     

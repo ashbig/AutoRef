@@ -69,7 +69,45 @@
 
 
 
+  <tag>
 
+    <name>linkContainer</name>
+
+    <tagclass>edu.harvard.med.hip.flex.tag.LinkContainerTag</tagclass>
+
+    <info>
+
+      Generate a URL-encoded hyperlink to view the details about a container
+
+
+
+      containerId - The id of the sequence in question
+
+    </info>
+
+    <attribute>
+
+      <name>containerId</name>
+
+      <required>false</required>
+
+      <rtexprvalue>true</rtexprvalue>
+
+    </attribute>
+
+    <attribute>
+        <name>name</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    
+    <attribute>
+        <name>property</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+  </tag>
 
 </taglib>
 
