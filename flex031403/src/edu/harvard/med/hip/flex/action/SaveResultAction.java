@@ -14,8 +14,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2001-06-22 11:25:38 $
+ * $Revision: 1.5 $
+ * $Date: 2001-06-22 20:12:34 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -65,7 +65,7 @@ import edu.harvard.med.hip.flex.process.Result;
  *
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.4 $ $Date: 2001-06-22 11:25:38 $
+ * @version    $Revision: 1.5 $ $Date: 2001-06-22 20:12:34 $
  */
 
 public class SaveResultAction extends ResearcherAction {
@@ -142,6 +142,24 @@ public class SaveResultAction extends ResearcherAction {
         
         try {
             conn = DatabaseTransaction.getInstance().requestConnection();
+            // save the file to the db if this is a gel result
+            
+            // option file reference for gel results
+            FileReference fileRef = null;
+            if(form instanceof GelResultsForm) {
+                GelResultsForm gelForm = (GelResultsForm)form;
+                
+                // the image file
+                FormFile image = gelForm.getGelImage();
+                Calendar cal = Calendar.getInstance();
+                
+                String subDirName = Integer.toString(cal.get(Calendar.YEAR)) +
+                Integer.toString(cal.get(Calendar.MONTH));
+                String localPath = FileRepository.GEL_LOCAL_PATH+subDirName+"/";
+                fileRef =
+                    FileReference.createFile(conn, image.getFileName(),
+                FileReference.GEL_TYPE,localPath, container);
+            }
             for(int i = 0; resultForm != null &&i <resultForm.size() ;i++) {
                 
                 Sample curSample = (Sample)samples.get(i);
@@ -151,6 +169,11 @@ public class SaveResultAction extends ResearcherAction {
                 new Result(process,curSample,Result.TRANSFORMATION_TYPE,resultForm.getResult(i));
                 curSample.update(conn);
                 curResult.insert(conn);
+                
+                // associate the result with the file if its a gel resul
+                if(form instanceof GelResultsForm) {
+                    curResult.associateFileReference(conn, fileRef);
+                }
             }
             /*
              * now we need to remove the container from the queue,
@@ -179,33 +202,6 @@ public class SaveResultAction extends ResearcherAction {
                 new Protocol(Protocol.GENERATE_AGAR_PLATES);
             } else if(queueItem.getProtocol().getProcessname().trim().equals(Protocol.RUN_PCR_GEL)) {
                 nextProtocol= new Protocol(Protocol.GENERATE_FILTER_PLATES);
-                // save the file
-                GelResultsForm gelForm = (GelResultsForm)form;
-                
-                // the image file
-                FormFile image = gelForm.getGelImage();
-                
-                
-                // the directory name is the month preappended with the year.
-                Calendar cal = Calendar.getInstance();
-                String subDirName = Integer.toString(cal.get(Calendar.YEAR)) + 
-                    Integer.toString(cal.get(Calendar.MONTH));
-                String fullPath="";
-                /*Constants.GEL_IMAGE_REPOSITORY_PATH + 
-                        subDirName + "/" + process.getExecutionid()+
-                        image.getFileName();
-                */
-                OutputStream bos = 
-                    new FileOutputStream(fullPath);
-                
-                InputStream stream = image.getInputStream();
-                int bytesRead = 0;
-                byte[] buffer = new byte[8192];
-                while ((bytesRead = stream.read(buffer, 0, 8192)) != -1) {
-                    bos.write(buffer, 0, bytesRead);
-                }
-                bos.close();
-                
                 
             } else {
                 retForward = mapping.findForward("error");
@@ -224,6 +220,13 @@ public class SaveResultAction extends ResearcherAction {
             // update the process execution for the transform
             process.setExecutionStatus(Process.SUCCESS);
             process.update(conn);
+            
+            // upload the file to the repository if its a gel image
+            if(form instanceof GelResultsForm) {
+                FileRepository.uploadFile(fileRef.getBaseName(),
+                    fileRef.getLocalPath(),
+                    ((GelResultsForm)form).getGelImage().getInputStream());
+            }
             DatabaseTransaction.commit(conn);
         } catch (FlexDatabaseException fde) {
             retForward = mapping.findForward("error");
