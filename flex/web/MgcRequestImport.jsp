@@ -17,9 +17,8 @@
 <html:errors/>
 <p>
 
-<html:hidden property="projectid" />
-<html:hidden property="workflowid" />
-<html:hidden property="forwardName" />
+<input name="projectid" type="hidden" value="<bean:write name="projectid" />" >
+<input name="workflowid" type="hidden" value="<bean:write name="workflowid" />" >
 
 <table>
     <tr>
@@ -30,22 +29,23 @@
     <tr>
     <td class="prompt">Workflow name:</td>
     <td><bean:write name="workflowname" /></td>
-
+    </tr>
 </table>
 <p><i>This page allows you to upload the MGC request  into the
-database from <b>request file: <b>. 
-The <b>request file <h3>must</h3></b> contains GI numbers only.
-<b>User of the request:</b> the current user of the system.
+database from <b>request file</b>. 
+The request file <b>must</b> contains GI numbers only.
 GI numbers should be separated by delimiter. 
 We currently support the following delimiters: !, tab (\t). 
+<b>Request User</b>: the current user of the system would be considered the request owner.
+
 <p>
-Request upload can take some time, after request would be uploaded the
+The request upload can take some time, after request would be uploaded the
 e-mail notification will be sent to the user.
-</i>
+</i> 
 
 <p>
-<html:form action="/ImportMgcRequest.do" enctype="multipart/form-data"> 
-
+<html:form action="/MgcImportRequest.do" enctype="multipart/form-data"> 
+<p>
 <table>
 <tr>
     <td class="prompt">Please select the request file:</td>
@@ -60,7 +60,7 @@ e-mail notification will be sent to the user.
 </html:form>
 
 
-</html:form>
+
 
 </body>
 </html>
