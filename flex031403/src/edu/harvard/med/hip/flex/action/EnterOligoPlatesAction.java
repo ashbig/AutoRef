@@ -89,7 +89,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             String fivepPlate = ((CreatePCRPlateForm)form).getFivepPlate();
             String threepOpenPlate = ((CreatePCRPlateForm)form).getThreepOpenPlate();
             String threepClosedPlate = null;
-            if(projectid != Project.PSEUDOMONAS) {
+            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
                 threepClosedPlate = ((CreatePCRPlateForm)form).getThreepClosedPlate();
                 
                 if((threepClosedPlate == null) || (threepClosedPlate.trim().length()<1)) {
@@ -100,8 +100,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             }
             
             String templatePlate = null;
-            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW) 
-                && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
+            if((workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.MGC_CREATOR_WORKFLOW)
+            && Protocol.GENERATE_PCR_PLATES.equals(protocol.getProcessname())) {
                 templatePlate = ((CreatePCRPlateForm)form).getTemplatePlate();
                 
                 if((templatePlate == null) || (templatePlate.trim().length()<1)) {
@@ -114,7 +114,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             String subProtocolName = ((CreatePCRPlateForm)form).getSubProtocolName();
             SubProtocol subprotocol = new SubProtocol(subProtocolName);
             LinkedList queueItems = (LinkedList)request.getSession().getAttribute("SelectProtocolAction.queueItems");
-            QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate, templatePlate);
+            QueueItem item = getValidItem(queueItems, fivepPlate, threepOpenPlate, threepClosedPlate, templatePlate, projectid);
             if(item == null) {
                 errors.add("fivepPlate", new ActionError("error.plateset.mismatch", fivepPlate, threepOpenPlate, threepClosedPlate));
                 saveErrors(request, errors);
@@ -126,14 +126,14 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             Container threepOpen = ps.getThreepOpenContainer();
             Container threepClosed = null;
             
-            if(projectid != Project.PSEUDOMONAS) {
+            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
                 threepClosed = ps.getThreepClosedContainer();
             }
             
             Container mgc = null;
             Container template = null;
-            if(workflowid == Workflow.MGC_CREATOR_WORKFLOW 
-                || workflowid == Workflow.MGC_GATEWAY_WORKFLOW) {
+            if(workflowid == Workflow.MGC_CREATOR_WORKFLOW
+            || workflowid == Workflow.MGC_GATEWAY_WORKFLOW) {
                 try {
                     mgc = ps.getMgcContainer();
                 } catch (Exception ex) {
@@ -170,7 +170,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             ((CreatePCRPlateForm)form).setFivepSourceLocation(fivep.getLocation().getId());
             ((CreatePCRPlateForm)form).setThreepOpenSourceLocation(threepOpen.getLocation().getId());
             
-            if(projectid != Project.PSEUDOMONAS) {
+            if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
                 ((CreatePCRPlateForm)form).setThreepClosedSourceLocation(threepClosed.getLocation().getId());
             }
             
@@ -222,8 +222,8 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 
                 request.getSession().setAttribute("EnterOligoPlateAction.sampleLineageSet", sampleLineageSet);
                 
-                if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW 
-                    || workflowid == Workflow.MGC_CREATOR_WORKFLOW) {
+                if(workflowid == Workflow.MGC_GATEWAY_WORKFLOW
+                || workflowid == Workflow.MGC_CREATOR_WORKFLOW) {
                     request.setAttribute("templateid", new Integer(template.getId()));
                 }
                 return (mapping.findForward("success_oligo_dilute"));
@@ -244,7 +244,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
                 Container pcrOpen = (Container)newContainers.elementAt(0);
                 
                 Container pcrClosed = null;
-                if(projectid != Project.PSEUDOMONAS) {
+                if(projectid != Project.PSEUDOMONAS && projectid != Project.KINASE) {
                     //map the 3p closed oligo plate.
                     oldContainers = new Vector();
                     oldContainers.addElement(fivep);
@@ -275,7 +275,7 @@ public class EnterOligoPlatesAction extends ResearcherAction {
     private QueueItem getValidItem(LinkedList queueItems,
     String fivepPlate,
     String threepOpenPlate,
-    String threepClosedPlate, String templatePlate)
+    String threepClosedPlate, String templatePlate, int projectid)
     throws FlexCoreException, FlexDatabaseException {
         if(queueItems == null) {
             return null;
@@ -291,11 +291,18 @@ public class EnterOligoPlatesAction extends ResearcherAction {
             Container template = ps.getMgcContainer();
             
             if(template != null && templatePlate != null) {
-                if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate) 
+                if(projectid == Project.KINASE) {
+                   if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)
+                    && template.isSame(templatePlate)) {
+                        found = item;    
+                   }
+                } else {
+                    if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)
                     && threepClosed.isSame(threepClosedPlate) && template.isSame(templatePlate)) {
                         found = item;
+                    }
                 }
-            } else if(threepClosed == null) {
+            } else if(threepClosed == null || projectid == Project.KINASE) {
                 if(fivep.isSame(fivepPlate) && threepOpen.isSame(threepOpenPlate)) {
                     found = item;
                 }

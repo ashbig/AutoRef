@@ -121,7 +121,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
                 Plateset plateset = (Plateset)iter.next();
                 QueueItem queueItem = (QueueItem)queueItemIter.next();
                 
-                boolean complete = checkPlateset(plateset);
+                boolean complete = checkPlateset(plateset, queueItem.getProject().getId());
                 
                 if (complete) {
                     //System.out.println("inserting generate PCR plate queue...");
@@ -142,7 +142,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
         return (mapping.findForward("success"));
     }
     
-    private boolean checkPlateset(Plateset plateset) throws FlexCoreException, FlexDatabaseException {
+    private boolean checkPlateset(Plateset plateset, int projectid) throws FlexCoreException, FlexDatabaseException {
         Container fivep = plateset.getFivepContainer();
         Container threepFusion = plateset.getThreepOpenContainer();
         Container threepClosed = plateset.getThreepClosedContainer();
@@ -154,7 +154,7 @@ public class EnterOligoPlateLocationAction extends ResearcherAction {
             Location.UNAVAILABLE.equals(threepClosed.getLocation().getType())) {
                 complete = false;
             }
-        } else if(threepClosed == null) {
+        } else if(threepClosed == null || projectid == Project.KINASE) {
             if(Location.UNAVAILABLE.equals(fivep.getLocation().getType()) ||
             Location.UNAVAILABLE.equals(threepFusion.getLocation().getType())) {
                 complete = false;

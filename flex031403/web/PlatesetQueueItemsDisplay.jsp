@@ -31,6 +31,9 @@
     <logic:present name="queueItem" property="item.threepClosedContainer">
     <td><bean:write name="queueItem" property="item.threepClosedContainer.label"/></td>
     </logic:present>
+    <logic:notPresent name="queueItem" property="item.threepClosedContainer">
+    <td>&nbsp</td>
+    </logic:notPresent>
     <logic:equal name="SelectProtocolAction.protocol" property="processname" value="Generate step1 PCR plates">
     <logic:present name="queueItem" property="item.mgcContainer">
     <td><bean:write name="queueItem" property="item.mgcContainer.label"/></td>

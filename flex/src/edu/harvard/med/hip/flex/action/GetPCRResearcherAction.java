@@ -92,7 +92,7 @@ public class GetPCRResearcherAction extends ResearcherAction {
         SubProtocol subprotocol = (SubProtocol)request.getSession().getAttribute("EnterOligoPlateAction.subprotocol");
         Container templatePlate = (Container)request.getSession().getAttribute("EnterOligoPlateAction.templatePlate");
         
-        if(projectid == Project.PSEUDOMONAS) {
+        if(projectid == Project.PSEUDOMONAS  || projectid == Project.KINASE) {
             if(fivep == null || threepOpen == null ||
             pcrOpenContainer == null ||
             item == null || protocol == null || sampleLineageSet == null ||

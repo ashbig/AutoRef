@@ -93,7 +93,7 @@ public class GetNewOligoResearcherAction extends ResearcherAction {
         Container threepOpen = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepOpen");
         Container threepClosed = (Container)request.getSession().getAttribute("EnterOligoPlateAction.threepClosed");
         
-        if(projectid == Project.PSEUDOMONAS) {
+        if(projectid == Project.PSEUDOMONAS || projectid == Project.KINASE) {
             if(fivepOligoD == null || threepOpenD == null ||
             fivep == null || threepOpen == null) {
                 return (mapping.findForward("fail"));
