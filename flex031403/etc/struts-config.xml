@@ -380,7 +380,7 @@
     <!-- Process the printing of new oligo plate barcodes -->
     <action    path="/PrintOligoPlateBarcode"
                type="edu.harvard.med.hip.flex.action.PrintOligoPlateBarcodeAction"
-               name="EnterOligoPlateLocatinForm"
+               name="EnterOligoPlateLocationForm"
                scope="request"
                input="/PrintOligoPlateBarcode.jsp">
       <forward  name="success"   path="/PrintOligoPlateBarcode.jsp"/>
