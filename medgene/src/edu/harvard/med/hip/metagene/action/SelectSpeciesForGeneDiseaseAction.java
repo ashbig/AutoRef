@@ -55,7 +55,7 @@ public class SelectSpeciesForGeneDiseaseAction extends MetageneAction{
     HttpServletResponse response)
     throws ServletException, IOException {
         
-        String species = ((SelectSpeciesForGeneDiseaseForm)form).getSpecies();
+        String species = ((SelectSpeciesForGeneForm)form).getSpecies();
         Vector stats = Statistics.getAllStatistics();
         request.setAttribute("stats", stats);
         if(species.equalsIgnoreCase("Homo sapiens"))

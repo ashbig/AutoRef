@@ -10,13 +10,13 @@
     </head>
     <body>
     <center>
-    <h1><br>Diseases Associated with a Particular Gene</h1>
+    <h1><br>Genes Associated with a Particular Gene</h1>
     </center>
 
     <table width="80%" align="center" border="0"><tr><td>
     <html:errors/>
    
-    <html:form action="GeneDiseaseSearchNonhs.do">   
+    <html:form action="GeneGeneSearchNonhs.do">   
     <p><br>Please type in your gene term (LocusID, Unigene or Accession). <br></p>
     <table width="80%" align="left">
         <tr>
@@ -39,7 +39,7 @@
         />
     </html:select>
 
-    <p><br>Please choose the number of diseases for your list:
+    <p><br>Please choose the number of genes for your list:
     <html:select property="number">
         <% int i = ((Integer)(session.getAttribute("user_type"))).intValue();
            if (i != 1) { %>
@@ -57,9 +57,9 @@
     </html:select>
 
     <p>
-<p><br>For performance issue, we only display limited diseases here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
+<p><br>For performance issue, we only display limited genes here.  If you want longer list, please <a href="mailto:yanhui_hu@hms.harvard.edu">email us</a>. 
 <p><br>
-    <html:submit property="submit" value="Get Diseases"/>
+    <html:submit property="submit" value="Get Genes"/>
     <html:submit property="submit" value="New Search"/>
 
 
@@ -69,3 +69,4 @@
 <jsp:include page="links.jsp" flush="true"/>
 </body>
 </html>
+

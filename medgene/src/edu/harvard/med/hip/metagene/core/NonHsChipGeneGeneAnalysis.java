@@ -1,7 +1,7 @@
 /*
- * NonHsChipGeneDiseaseAnallysis.java
+ * NonHsChipGeneGeneAnalysis.java
  *
- * Created on June 27, 2002, 10:40 AM
+ * Created on July 11, 2002, 5:08 PM
  */
 
 package edu.harvard.med.hip.metagene.core;
@@ -9,20 +9,24 @@ package edu.harvard.med.hip.metagene.core;
 import java.util.*;
 import java.sql.*;
 import java.io.*;
-
 import edu.harvard.med.hip.metagene.database.*;
 
 /**
  *
  * @author  hweng
  */
-
-public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
+public class NonHsChipGeneGeneAnalysis extends ChipGeneGeneAnalysis {
     
     public static final int LOCUSID = 1;
     public static final int UNIGENE = 2;
     public static final int ACCESSION = 3;
-
+    public NonHsChipGeneDiseaseAnalysis ana;
+        
+    public NonHsChipGeneGeneAnalysis(NonHsChipGeneDiseaseAnalysis ana){
+        this.ana = ana;
+    }
+    
+    
     // direct gene tree contains all directly disease-associated genes
     protected TreeSet direct_gene_tree = new TreeSet(new HomologChipGeneComparator());
     
@@ -53,79 +57,22 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
     public TreeSet getNo_homolog_tree(){
         return no_homolog_tree;
     }
-             
     
     /** map a human homolog locusID to a non-human homolog
      *  @param non_hs_homologs  non human homolog input
      *  @param type             input type(locusID, unigene or accession)
      */
     public HashMap hashHomolog(String non_hs_homologs, int type){
-                
-        DBManager manager = new DBManager();
-        Connection con = manager.connect();
-         
-        if (con == null) {
-            System.out.println("Cannot connect to the database.");
-            return null;
-        }
-        
-        HashMap homolog_mapping = new HashMap();        
-        String sql = "";
-        if(type == LOCUSID)
-            sql = "select distinct h_locusID from Homolog_Mapping where homolog_locusid = ?"; 
-        else if(type == UNIGENE)
-            sql = "select distinct h_locusID from Homolog_Mapping where homolog_unigene = ?"; 
-        else if(type == ACCESSION)
-            sql = "select distinct h_locusID from Homolog_Mapping where homolog_accession = ?";
-        
-        try
-        {
-        
-        PreparedStatement pstmt = con.prepareStatement(sql);        
-        StringTokenizer st = new StringTokenizer(non_hs_homologs);
-        while(st.hasMoreTokens()){
-            String non_hs_homolog = st.nextToken();
-            if(type == LOCUSID || type == UNIGENE)
-                pstmt.setInt(1, Integer.parseInt(non_hs_homolog));
-            else if(type == ACCESSION)
-                pstmt.setString(1, non_hs_homolog);
-            ResultSet rs = pstmt.executeQuery();
-            int h_locusID = -1;
-            Vector human_homologs = new Vector();   // one non-human gene may have more than one human homologs
-            while(rs.next()){
-                h_locusID = rs.getInt(1);               
-                human_homologs.add(new Integer(h_locusID));
-            }
-            rs.close();
-            if(h_locusID != -1)
-                homolog_mapping.put(non_hs_homolog, human_homologs);
-        }
-        pstmt.close();
-        }catch(SQLException e){
-            System.out.println(e);
-        }finally{
-            manager.disconnect(con);
-        }
-        return homolog_mapping;
+        return ana.hashHomolog(non_hs_homologs, type);
     }
-    
-
-    
+            
     /** generate corresponding human homolog input based on the homolog mapping
      *  @param mapping  homolog mapping hashmap
      */
     public String toHsHomologInput(HashMap mapping){
-        Iterator it = mapping.keySet().iterator();
-        String input = "";
-        while(it.hasNext()){
-            Vector human_homologs = (Vector)(mapping.get(it.next()));
-            for(int i=0; i<human_homologs.size(); i++)
-                input += ((Integer)(human_homologs.elementAt(i))).toString() + " ";
-        }
-        return input;
+        return ana.toHsHomologInput(mapping);
     }
-    
-    
+            
     /** parse the text file of input genes, construct the ChipGene objects and put them
      *  into TreeSet data structures according to their relationship to the disease
      *  @param input_genes  non-human input genes
@@ -146,8 +93,7 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
                 break;
         }        
     }
-    
-
+          
     /** classify each gene in the input list and put it in the certain tree data structure
      *  @param id   non-human gene identifier(locusID, Unigene or Accession)
      *  @param mapping  homolog mapping hashmap
@@ -192,14 +138,14 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
         }
 
     }
+
     
-    
-    //////////////////////////////////////////// test ////////////////////////////////////////////////////////////
+    //////////////////////////////////////// test ////////////////////////////////////////////////
     
     public static void main(String[] args){
         String text ="";
         try{         
-        BufferedReader in = new BufferedReader(new FileReader("c:\\temp\\rat_locusid.txt"));               
+        BufferedReader in = new BufferedReader(new FileReader("c:\\temp\\nonhs_gg.txt"));               
         String s;
         
         while((s=in.readLine()) != null){
@@ -212,8 +158,8 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
         
         //long start = System.currentTimeMillis();
         String non_hs_locusIDs = text;
-        NonHsChipGeneDiseaseAnalysis ana = new NonHsChipGeneDiseaseAnalysis();
-        HashMap homolog = ana.hashHomolog(non_hs_locusIDs, 1);        
+        NonHsChipGeneGeneAnalysis ana = new NonHsChipGeneGeneAnalysis(new NonHsChipGeneDiseaseAnalysis());
+        HashMap homolog = ana.hashHomolog(non_hs_locusIDs, 2);        
         System.out.println("------ homolog size: " + homolog.size());
         //long end = System.currentTimeMillis();
         //System.out.println("time cost " + (end - start)/1000);
@@ -221,12 +167,13 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
         Iterator it = homolog.keySet().iterator();
         while (it.hasNext()){
             Object o = it.next();
-            System.out.println(o.toString() + " ------ " + ((Integer)(homolog.get(o))).intValue() );
+            System.out.println( " ------ " + ((Integer)(homolog.get(o))).intValue() );
+            //System.out.println(o.toString() + " ------ " + ((Integer)(homolog.get(o))).intValue() );
         }
-         **/
+        */
         
         
-        ana.hashDirectGenes(2031, 1, 2);
+        ana.hashDirectGenes(560, 1, 2);
         ana.hashIndirectGenes(ana.toHsHomologInput(homolog), ana.source_for_indirect_genes, 2, 1, 4000);
         ana.analyzeInputChipGenes(text, homolog, 4000);
         
@@ -280,11 +227,6 @@ public class NonHsChipGeneDiseaseAnalysis extends ChipGeneDiseaseAnalysis{
         
         System.out.println("-----------------done--------------");
         
-        
+      
     }
-        
-        
-
-        
-    
 }

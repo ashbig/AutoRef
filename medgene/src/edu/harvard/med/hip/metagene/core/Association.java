@@ -13,6 +13,9 @@ import java.util.*;
  * @author  dzuo
  * @version 
  */
+
+// gene-diseases association
+
 public class Association {
     private Disease disease;
     private Gene gene;

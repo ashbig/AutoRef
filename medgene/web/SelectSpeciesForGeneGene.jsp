@@ -10,13 +10,13 @@
     </head>
     <body>
     <center>
-    <h1><br>Diseases Associated with a Particular Gene</h1>
+    <h1><br>Genes Associated with a Particular Gene</h1>
     </center>
 
     <table width="90%" align="center" border="0"><tr><td>
     <html:errors/>
 
-    <html:form action="selectSpeciesForGeneDisease.do">   
+    <html:form action="selectSpeciesForGeneGene.do">   
     <table width="90%" align="center">
         <tr><td bgcolor="#ccccff">
         Please select the species where your gene come from. <br>
@@ -52,9 +52,9 @@
     </html:form>
     <table width="90%" align="center">  
     <tr><td>
-    <p> <font color="red">Note:</font> The disease-gene associations were extracted from Medline only for human genes and diseases at MedGene.
+    <p> <font color="red">Note:</font> The gene-gene associations were extracted from Medline only for human genes at MedGene.
     However, genes from other species listed here will be mapped to human genes by using HomoloGene at NCBI.  
-    Then their relationships to human diseases can be retrieved by using MedGene. 
+    Then their relationships to other human genes can be retrieved by using MedGene. 
     </td></tr></table>
     <br><br><br>
     <jsp:include page="links.jsp" flush="true"/>

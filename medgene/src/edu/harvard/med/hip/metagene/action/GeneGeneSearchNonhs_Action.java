@@ -1,7 +1,7 @@
 /*
- * GeneDiseaseSearchNonhs_Action.java
+ * GeneGeneSearchNonhs_Action.java
  *
- * Created on July 8, 2002, 3:46 PM
+ * Created on July 11, 2002, 2:25 PM
  */
 
 package edu.harvard.med.hip.metagene.action;
@@ -31,8 +31,7 @@ import java.util.*;
  * @author  hweng
  */
 
-
-public class GeneDiseaseSearchNonhs_Action extends MetageneAction {
+public class GeneGeneSearchNonhs_Action extends MetageneAction{
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -61,7 +60,7 @@ public class GeneDiseaseSearchNonhs_Action extends MetageneAction {
         int stat = ((GeneSearchNonhs_Form)form).getStat();
         int number = ((GeneSearchNonhs_Form)form).getNumber();
         String submit = ((GeneSearchNonhs_Form)form).getSubmit();
-        Vector associations = new Vector(); //contain one gene-diseases association
+        Vector associations = new Vector(); //contain one gene-genes association
         Vector all_associations = new Vector(); 
         
         if(submit.equalsIgnoreCase("New Search"))
@@ -85,11 +84,11 @@ public class GeneDiseaseSearchNonhs_Action extends MetageneAction {
             return (new ActionForward(mapping.getInput()));            
         }               
         
-        DiseaseGeneManager m = new DiseaseGeneManager();         
+        GeneGeneManager m = new GeneGeneManager();         
         Vector gene_indexes = m.getHsGeneIndexesByHomolog(searchTerm, term);
         if(gene_indexes != null) {                   
             for(int i = 0; i < gene_indexes.size(); i++){                
-                associations = m.getAssociationsByGeneIndex(((GeneIndex)(gene_indexes.elementAt(i))).getIndexid(), stat, number);
+                associations = m.getGeneGeneAssociationsByGeneIndexID(((GeneIndex)(gene_indexes.elementAt(i))).getIndexid(), stat, number);
                 all_associations.add(new GeneralAssociation(((GeneIndex)(gene_indexes.elementAt(i))).getIndex(), associations));
             }
             request.setAttribute("hs_geneIndexes", "yes");
@@ -106,5 +105,5 @@ public class GeneDiseaseSearchNonhs_Action extends MetageneAction {
         
         return (mapping.findForward("success"));
     }
-
+    
 }

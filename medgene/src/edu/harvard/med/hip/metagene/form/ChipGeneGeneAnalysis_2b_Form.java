@@ -1,7 +1,7 @@
 /*
- * ChipGeneGeneAnalysis_2_Form.java
+ * ChipGeneGeneAnalysis_2b_Form.java
  *
- * Created on June 4, 2002, 12:01 PM
+ * Created on July 11, 2002, 4:38 PM
  */
 
 package edu.harvard.med.hip.metagene.form;
@@ -13,17 +13,26 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.*;
 import org.apache.struts.action.*;
-
-
 /**
  *
  * @author  hweng
  */
-public class ChipGeneGeneAnalysis_2_Form extends ActionForm {
-    protected FormFile chipGeneInputFile;
+public class ChipGeneGeneAnalysis_2b_Form extends ActionForm {
+    /*
+    private String geneInputType = "LocusID";
+        
+    public String getGeneInputType(){
+        return geneInputType;
+    }
+        
+    public void setGeneInputType(String geneInputType){
+        this.geneInputType = geneInputType;
+    }
+    */
+        protected FormFile chipGeneInputFile;
     protected int gene;
     protected int stat;
-    private String geneInputType = "Gene Symbol";
+    private String geneInputType = "LocusID";
     protected String chipGeneInput;
     protected String submit;
 
@@ -97,6 +106,4 @@ public class ChipGeneGeneAnalysis_2_Form extends ActionForm {
         return errors;
      
     }        
-
 }
-

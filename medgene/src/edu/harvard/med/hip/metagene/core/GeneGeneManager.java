@@ -21,7 +21,13 @@ public class GeneGeneManager extends DiseaseGeneManager {
     public GeneGeneManager() {
         super();
     }
-                   
+        
+    /** Get gene-gene association by gene_index_id
+     *  @param gene_index_id  The gene Index ID
+     *  @param statid       Statistics ID 
+     *  @param number       How many genes the user wants to obtain?
+     *  @return             The vector of all associations betweeen this gene and all related genes
+     */               
     public Vector getGeneGeneAssociationsByGeneIndexID(int gene_index_id, int stat_id, int number) {
         DBManager manager = new DBManager();
         Connection conn = manager.connect();

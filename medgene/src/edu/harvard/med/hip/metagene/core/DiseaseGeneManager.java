@@ -851,7 +851,7 @@ public class DiseaseGeneManager {
         return pubmed_ids;
     }
      
-    /** get human gene index id by non-human homolog
+    /** get human gene index ids by non-human homolog
      *  @param non_hs_homolog   Non-human homolog id
      *  @param type             homolog input type (locus_id | unigene | accession)
      *  @return                 vector containing the homolog human gene index ids 
@@ -915,7 +915,7 @@ public class DiseaseGeneManager {
             return hs_homolog_geneIndexes;
     }
     
-       
+    /*
     public static void main(String[] args){
         DiseaseGeneManager m = new DiseaseGeneManager();
         Vector hs_homologs = m.getHsGeneIndexesByHomolog("29634", 1);
@@ -924,5 +924,6 @@ public class DiseaseGeneManager {
             System.out.println(((Association)(associations.elementAt(i))).getDisease().getTerm());
         }
     }
+    */
         
 }

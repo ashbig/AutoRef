@@ -64,12 +64,12 @@
                     type="edu.harvard.med.hip.metagene.form.SearchGenesForm"/>
    
     <!-- select species for gene-Disease form bean -->
-    <form-bean      name="selectSpeciesForGeneDiseaseForm" 
-                    type="edu.harvard.med.hip.metagene.form.SelectSpeciesForGeneDiseaseForm" />
+    <form-bean      name="selectSpeciesForGeneForm" 
+                    type="edu.harvard.med.hip.metagene.form.SelectSpeciesForGeneForm" />
 
-    <!-- get diseases for (non-human gene)-Disease form bean -->
-    <form-bean      name="geneDiseaseSearchNonhsForm" 
-                    type="edu.harvard.med.hip.metagene.form.GeneDiseaseSearchNonhs_Form" /> 
+    <!-- get diseases or genes for non-human gene form bean -->
+    <form-bean      name="geneSearchNonhsForm" 
+                    type="edu.harvard.med.hip.metagene.form.GeneSearchNonhs_Form" /> 
 
     <!-- Search multiple disease -->
     <form-bean      name="multipleDiseaseSearchForm"
@@ -108,6 +108,9 @@
     <form-bean      name="chipGeneGeneAnalysis_2_Form"
                     type="edu.harvard.med.hip.metagene.form.ChipGeneGeneAnalysis_2_Form"/>
     
+    <!-- chip gene gene analysis step2 -->   
+    <form-bean      name="chipGeneGeneAnalysis_2b_Form"
+                    type="edu.harvard.med.hip.metagene.form.ChipGeneGeneAnalysis_2b_Form"/>
 
   </form-beans>
 
@@ -168,7 +171,7 @@
       <forward  name="success_disease"   path="/DiseaseSearch.jsp"/>
       <forward  name="success_gene"   path="/SelectSpeciesForGeneDisease.jsp"/>
       <forward  name="success_multi_disease"   path="/MultipleDiseaseSearch.jsp"/>
-      <forward  name="success_gene_gene"   path="/GeneGeneSearch.jsp"/>
+      <forward  name="success_gene_gene"   path="/SelectSpeciesForGeneGene.jsp"/>
       <forward  name="success_chipGene_disease"  path="/ChipGeneAnalysis_1.jsp" />
       <forward  name="success_chipGene_gene"  path="/ChipGeneGeneAnalysis_1.jsp" />
       <forward  name="failure"  path="/login.jsp"/>
@@ -224,7 +227,7 @@
     <!-- Process gene to diseases search -->
     <action     path="/selectSpeciesForGeneDisease"
                 type="edu.harvard.med.hip.metagene.action.SelectSpeciesForGeneDiseaseAction"
-                name="selectSpeciesForGeneDiseaseForm"
+                name="selectSpeciesForGeneForm"
                 scope="request"
                 input="/SelectSpeciesForGeneDisease.jsp">
        <forward name="success_hs"  path="/GeneSearch.jsp"/>
@@ -254,7 +257,7 @@
     <!-- Process nonhuman gene to diseases search -->
     <action    path="/GeneDiseaseSearchNonhs"
                type="edu.harvard.med.hip.metagene.action.GeneDiseaseSearchNonhs_Action"
-               name="geneDiseaseSearchNonhsForm"
+               name="geneSearchNonhsForm"
                scope="request"
                input="/GeneDiseaseSearchNonhs.jsp">
       <forward  name="success"   path="/DisplayDiseasesFromNonhsGene.jsp"/>
@@ -283,7 +286,17 @@
       <forward  name="newsearch"   path="/MultipleDiseaseSearch.jsp"/>
     </action>
 
-    <!-- Process searching genes for gene step1-->
+    <!-- Process searching genes for gene step0 -->
+    <action     path="/selectSpeciesForGeneGene"
+                type="edu.harvard.med.hip.metagene.action.SelectSpeciesForGeneGeneAction"
+                name="selectSpeciesForGeneForm"
+                scope="request"
+                input="/SelectSpeciesForGeneGene.jsp">
+       <forward name="success_hs"  path="/GeneGeneSearch.jsp"/>
+       <forward name="success_nonhs" path="/GeneGeneSearchNonhs.jsp"/>
+    </action>
+
+    <!-- Process searching genes for gene step1 -->
     <action    path="/SearchGenesForGene_step1"
                type="edu.harvard.med.hip.metagene.action.SearchGenesForGene_step1Action"
                name="searchGenesForGeneStep1Form"
@@ -302,6 +315,19 @@
       <forward  name="success"   path="/DisplayGenesForGene.jsp"/>
       <forward  name="newsearch"   path="/GeneGeneSearch.jsp"/>
     </action>   
+
+    <!-- Process nonhuman gene to genes search -->
+    <action    path="/GeneGeneSearchNonhs"
+               type="edu.harvard.med.hip.metagene.action.GeneGeneSearchNonhs_Action"
+               name="geneSearchNonhsForm"
+               scope="request"
+               input="/GeneGeneSearchNonhs.jsp">
+      <forward  name="success"   path="/DisplayGenesFromNonhsGene.jsp"/>
+      <forward  name="newsearch"   path="/SelectSpeciesForGeneGene.jsp"/>
+    </action>
+
+
+    <!-- ////////////////////////////////////////////////////////////////////////////////////////////// -->
 
     <!-- Process MicroArray data analysis step1 -->    
     <action    path="/chipGeneAnalysis_1"
@@ -337,7 +363,8 @@
                name="chipGeneGeneAnalysis_1_Form"
                scope="request"
                input="/ChipGeneGeneAnalysis_1.jsp">
-      <forward  name="success"   path="/ChipGeneGeneAnalysis_2.jsp"/>
+      <forward name="success_hs"   path="/ChipGeneGeneAnalysis_2.jsp"/>
+      <forward name="success_nonhs" path="/ChipGeneGeneAnalysis_2b.jsp" />
     </action>
 
     <!-- Process MicroArray data (2) analysis step2 -->    
@@ -349,6 +376,14 @@
       <forward  name="success"   path="/DisplayChipGeneGenes.jsp"/>        
     </action>
 
+    <!-- Process MicroArray data (2) analysis step2b -->    
+    <action    path="/chipGeneGeneAnalysis_2b"
+               type="edu.harvard.med.hip.metagene.action.ChipGeneGeneAnalysis_2b_Action"
+               name="chipGeneGeneAnalysis_2b_Form"
+               scope="request"
+               input="/ChipGeneGeneAnalysis_2b.jsp">      
+      <forward  name="success"   path="/DisplayChipGeneGenes_2.jsp"/>   
+    </action>
 
 
     <action     path="/ProcessError"

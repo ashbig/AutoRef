@@ -35,7 +35,7 @@
     <br><br><br><br><br>
 
     <TABLE width="100%" align="center" border="1" cellpadding="2" cellspacing="0">
-    <TR bgcolor="gray">
+    <TR bgcolor="#cccccc">
         <TH>Rank</TH>
         <TH>Disease Name</TH>
         <TH><A HREF="statistic_menu.jsp" target="_blank">Statistical Score</A></TH>

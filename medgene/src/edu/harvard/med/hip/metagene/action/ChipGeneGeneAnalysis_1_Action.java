@@ -61,6 +61,7 @@ public class ChipGeneGeneAnalysis_1_Action extends MetageneAction {
         ActionErrors errors = new ActionErrors();
         String term = ((ChipGeneGeneAnalysis_1_Form)form).getTerm();
         String searchTerm = ((ChipGeneGeneAnalysis_1_Form)form).getSearchTerm();
+        String species = ((ChipGeneGeneAnalysis_1_Form)form).getSpecies();
         
         DiseaseGeneManager manager = new DiseaseGeneManager();
         Vector geneIndexes = null;
@@ -68,7 +69,8 @@ public class ChipGeneGeneAnalysis_1_Action extends MetageneAction {
         if(ChipGeneGeneAnalysis_1_Form.GENENAME.equals(term) ||
         ChipGeneGeneAnalysis_1_Form.GENESYMBOL.equals(term)) {
             geneIndexes = manager.queryGeneIndexBySearchTerm(searchTerm);
-        } else {
+        } 
+        else {
             int locusid;
             
             try {
@@ -95,6 +97,12 @@ public class ChipGeneGeneAnalysis_1_Action extends MetageneAction {
         Vector stats = Statistics.getAllStatistics();
         request.setAttribute("stats", stats);
         request.setAttribute("geneIndexes", geneIndexes);
-        return (mapping.findForward("success"));
+        request.setAttribute("species", species);
+        if(species.equalsIgnoreCase("Homo sapiens"))                
+            return (mapping.findForward("success_hs"));
+        else                
+            return (mapping.findForward("success_nonhs"));        
+
     }
 }
+

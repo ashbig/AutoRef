@@ -28,7 +28,7 @@ public class ChipGeneGeneAnalysis_1_Form extends ActionForm {
     
     private String term;
     private String searchTerm;
-    
+    private String species = "Homo sapiens";
 
     public void setTerm(String term) {
         this.term = term;
@@ -45,7 +45,15 @@ public class ChipGeneGeneAnalysis_1_Form extends ActionForm {
     public String getSearchTerm() {
         return searchTerm;
     }
-    
+        
+    public String getSpecies(){
+        return species;
+    }    
+
+    public void setSpecies(String species){
+        this.species = species;
+    }
+
     /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any

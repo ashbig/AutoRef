@@ -126,6 +126,10 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
     }
     
     
+    /** Get gene symbol from gene index id
+     *  @param gene_index_id    gene index id
+     *  @return                 gene symbol or gene formal name
+     */
     public String getGeneSymbol(int gene_index_id){
  
         DBManager manager = new DBManager();
@@ -137,7 +141,8 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
         }
         
         String symbol = "";
-        String sql = "select symbol_value from gene_list where gene_index_id=" + gene_index_id;
+        //String sql = "select symbol_value from gene_list where gene_index_id=" + gene_index_id;
+        String sql = "select gene_index from gene_index where gene_index_id = " + gene_index_id;
 
         try {
             Statement stmt = con.createStatement();
@@ -157,8 +162,7 @@ public class ChipGeneGeneAnalysis extends ChipGeneDiseaseAnalysis {
     
     
     
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    //////// main method is used for test /////////////////////////
+//////////////////////////////////////// test ////////////////////////////////////////////////
     
     public static void main(String[] args){
 
