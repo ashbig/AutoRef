@@ -24,6 +24,10 @@
 <input type="hidden" name="writeBarcode" value=<bean:write name="writeBarcode"/>> 
 </logic:present>
 
+<logic:present name="isMappingFile">
+<input type="hidden" name="isMappingFile" value=<bean:write name="isMappingFile"/>> 
+</logic:present>
+
 <table>
     <tr>
     <td class="label">Process name:</td>
