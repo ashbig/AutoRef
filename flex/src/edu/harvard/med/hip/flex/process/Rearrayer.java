@@ -9,6 +9,8 @@ package edu.harvard.med.hip.flex.process;
 import java.util.*;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.*;
+import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.workflow.*;
 /**
  *
  * @author  HTaycher
@@ -26,7 +28,8 @@ public class Rearrayer
     private ArrayList m_container_descriptions = null;
     
     private int       m_total_wells = 94;   
- 
+    private ArrayList m_messages = null;
+    
     
   
     /** Creates a new instance of Rearrayer */
@@ -36,6 +39,8 @@ public class Rearrayer
         m_Sequences = sequences ;
         m_sequence_descriptions = new ArrayList();
         m_container_descriptions = new ArrayList();
+        m_messages = new ArrayList();
+       
     }
     
     /** Creates a new instance of Rearrayer */
@@ -47,10 +52,21 @@ public class Rearrayer
        
     }
    
-       
-    public ArrayList[] getPlates() throws Exception
+    public ArrayList                        getMessages(){ return m_messages;} 
+    
+    
+   
+    
+    /*function reaturn array of plates
+    //each plate contains 1. array of sequences; 
+     1. array of sequence descriptions
+     *2. array of used_culture_containers
+     *
+     *
+     **/
+    public ArrayList                        getPlates() throws Exception
     {
-        if ( m_Sequences == null || m_Sequences.size() == 0) return null;
+        if ( m_Sequences == null || m_Sequences.size() == 0) return new ArrayList();
         //create hashtable of sequences , key - sequence id
         Hashtable sequences = new Hashtable();
         ArrayList sequence_ids = new ArrayList();
@@ -66,14 +82,11 @@ public class Rearrayer
         findMgcContainersFromDB(sequence_ids, sequences);
           
         //check for culture block availability
-        messages = checkForCultureBlocks();
+        m_messages = checkForCultureBlocks();
             //sort sequences by marker/ number of sequences by plate
         sortSequencesByContainerDescription();
-        ArrayList[] res = new ArrayList[2];
-        res[0] =  messages ;
-        res[1] =  getArrangedPlates();
-        return res;
-       // return getArrangedPlates();
+        return  getArrangedPlates();
+    
     }
     
  
@@ -99,7 +112,9 @@ public class Rearrayer
             contDesc = new ContainerDescription(mgc_container.getLabel(), 
                                                 mgc_container.getMarker(),
                                                 mgc_container.getId(),
-                                                mgc_container.getGlycerolContainerid());
+                                                mgc_container.getGlycerolContainerid(),
+                                                mgc_container.getCultureContainerid()
+                                                );
             //check if any other sequence in request come from the same container
             for (int count = 0; count < mgc_container.getSamples().size(); count++)
             {
@@ -107,12 +122,16 @@ public class Rearrayer
                 Integer seq_key = new Integer(ms.getSequenceId());
                 if (sequences.containsKey(seq_key ) )
                 {
-                    seqDesc = new SequenceDescription(ms.getSequenceId(), ms.getPosition(), ms.getId(), contDesc, ms.getImageId());
-                    seqDesc.setCdsLength( ((Sequence)sequences.get(seq_key)).getCDSLength()   );
-                    m_sequence_descriptions.add( seqDesc );
-                    sequence_ids.remove(seq_key);
-                    seq_count++;
-                    if (sequence_ids.isEmpty()) continue;
+                    while( sequence_ids.contains(seq_key) )
+                    {
+                        seqDesc = new SequenceDescription(ms.getSequenceId(), ms.getPosition(), ms.getId(), contDesc, ms.getImageId());
+                        seqDesc.setCdsLength( ((Sequence)sequences.get(seq_key)).getCDSLength()   );
+                        m_sequence_descriptions.add( seqDesc );
+                        sequence_ids.remove(seq_key);
+                        seq_count++;
+                        if (sequence_ids.isEmpty()) continue;
+                    }
+                    
                 }
                 
             }
@@ -131,12 +150,23 @@ public class Rearrayer
        int cont_id = -1;
        ContainerDescription cont_desc = null;
        ArrayList messages = new ArrayList();
+       Container culture_container = null;
+       boolean isAvailable = false;
+       
        for (int container_count = 0; container_count < m_container_descriptions.size(); container_count++)
        {
            cont_desc = (ContainerDescription)m_container_descriptions.get(container_count);
-           cont_id = cont_desc.getGlycerolId() == -1 ? cont_desc.getId(): cont_desc.getGlycerolId() ;
-           if (  Container.findNextContainerFromPrevious(cont_id, Protocol.CREATE_CULTURE_FROM_MGC) != null)
-                cont_desc.setStatus(true);
+           //cont_id = cont_desc.getCultureId() == -1 ? cont_desc.getId(): cont_desc.getCultureId() ;
+           cont_id = cont_desc.getCultureId() ;
+           //fresh created MGC container will have -1 culture/gly id if no culture have been created
+           culture_container = null;
+           if (cont_id != -1) culture_container = new Container(cont_id);
+          
+         //  culture_container =  Container.findNextContainerFromPrevious(cont_id, Protocol.CREATE_CULTURE_FROM_MGC);
+           if (  culture_container != null && culture_container.getLocation().getId() != Location.CODE_DESTROYED)
+           {
+               cont_desc.setStatus(true);
+           }
            else
            {
                cont_desc.setStatus(false);
@@ -186,31 +216,53 @@ public class Rearrayer
     {
         //plates collection
         ArrayList plates = new ArrayList();
-        ArrayList plate = new ArrayList();
+        
         //plate description
         LinkedList seq_objects = new LinkedList();
         ArrayList  seq_description = new ArrayList();
+       
         int plate_start = 0;     
         int well_on_plate = 0;
+        ContainerDescription cur_container = null;
+        Integer cont_id = null;
+        int number_of_sequences = 0;
+        String next_marker = null;
+        boolean isNewPlate = false;
+        
         
         //sort sequences by container
-        for (int seq_count = 0 ; seq_count < m_sequence_descriptions.size(); seq_count++)
+        number_of_sequences = m_sequence_descriptions.size();
+        for (int seq_count = 0 ; seq_count < number_of_sequences; seq_count++)
         {
             //check if this sequence container is OK, if not clear arrays 
             //and increase counter to the start of next plate
-            if ( ! ((SequenceDescription) m_sequence_descriptions.get(seq_count)).getContainerDescription().getStatus()  )
+            cur_container = ((SequenceDescription) m_sequence_descriptions.get(seq_count)).getContainerDescription();
+           
+            /*if (mode)
             {
-              
-                seq_description = new ArrayList();
-                seq_count = plate_start + m_total_wells; 
-                plate_start += m_total_wells;
-                continue;
+                if ( ! cur_container.getStatus()  )
+                {
+
+                    seq_description = new ArrayList();
+                    seq_count = plate_start + m_total_wells; 
+                    plate_start += m_total_wells;
+                    continue;
+                }
+             
             }
+            */
             
             seq_description.add(    m_sequence_descriptions.get(seq_count)  );
             well_on_plate++;
                 //new plate
-            if (well_on_plate % m_total_wells == 0 || seq_count == (m_sequence_descriptions.size()-1)  )
+           if ( seq_count != number_of_sequences -1)
+           {
+               next_marker = ((SequenceDescription) m_sequence_descriptions.get(seq_count + 1)).getContainerDescription().getMarker();
+               isNewPlate = ! cur_container.getMarker().equalsIgnoreCase(next_marker    );
+           }
+            if (well_on_plate % m_total_wells == 0 || 
+                seq_count == number_of_sequences -1  || 
+                isNewPlate)
             {
                 well_on_plate = 0;
                 //sort description by saw-tooth pattern
@@ -219,11 +271,13 @@ public class Rearrayer
                 for (int count = 0 ; count < seq_description.size(); count++)
                 {
                     seq_objects.add(  m_sequences_by_key.get(new Integer( ((SequenceDescription)seq_description.get(count)).getId()))  );
-                }
-                plate.add(seq_objects); plate.add(seq_description);
+                } 
+                PlateDescription plate = new PlateDescription(seq_objects, seq_description);
                 plates.add(plate);
-                plate = new ArrayList();
-                seq_description = new ArrayList(); seq_objects = new LinkedList();
+             
+                seq_description = new ArrayList();
+                seq_objects = new LinkedList();
+               
                 plate_start = seq_count + 1;
             }
         }
@@ -241,12 +295,27 @@ public class Rearrayer
     {
         try
         {
-            Request m_Request = new Request(135);
-          ArrayList seq_ids = new ArrayList();
-            for (int count = 0; count < m_Request.getSequences().size(); count++)
+           
+             SequenceOligoQueue seqQueue = new SequenceOligoQueue();
+            LinkedList seqList = seqQueue.getQueueItems(new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS), new Project(5), new Workflow(8) );
+            int numOfSeqs = seqList.size();
+            ArrayList plates = new ArrayList();
+               
+                        //get total number of genes in queue
+            if (numOfSeqs != 0)
             {
-                Integer id = new Integer(((FlexSequence) m_Request.getSequences().get(count)).getId());
-                seq_ids.add( id );
+               Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
+               plates = ra.getPlates();
+               for (int i = 0; i < plates.size();i++)
+               {
+                   PlateDescription p = (PlateDescription) plates.get(i);
+                   for (int j=0;j<p.getSequenceDescriptions().size();j++)
+                   {
+                     SequenceDescription s =( SequenceDescription)p.getSequenceDescriptions().get(j);
+                     System.out.println(s.getId()+"_"+s.getContainerId()+"_"+s.getPosition()+"_"+s.getCdsLength());
+                   }
+               }
+               System.out.println(plates.size());
             }
            // Rearrayer re = new Rearrayer( seq_ids );
           //  ArrayList mgc_containers = null;
