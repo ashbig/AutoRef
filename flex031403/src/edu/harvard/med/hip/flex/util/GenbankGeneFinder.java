@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.7 2002-05-09 21:21:06 Elena Exp $
+ * $Id: GenbankGeneFinder.java,v 1.8 2002-05-10 13:48:12 Elena Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -81,7 +81,7 @@ public class GenbankGeneFinder {
             new InputStreamReader(
             url.openStream()));
             
-            String organism = "";
+            String organism = ""; String gene_name = "";
             String locus_link_id = "";
             int start = -1;
             int stop = -1;
@@ -95,11 +95,15 @@ public class GenbankGeneFinder {
                     organism = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\""));
                 }
                 // /db_xref="LocusID:<a href=http://www.ncbi.nlm.nih.gov/LocusLink/LocRpt.cgi?l=71>71</a>"
-                if(inputLine.indexOf("LocusID:") != -1) 
+                if(inputLine.indexOf("LocusID:") != -1 && locus_link_id.equals("") )
                 {
                     locus_link_id = inputLine.substring(inputLine.indexOf(">")+1, inputLine.lastIndexOf("<") - 1);
                 }
-                
+                //  /gene="CKMT2"
+                if(inputLine.indexOf("/gene=") != -1 && gene_name.equals("") ) 
+                {
+                    gene_name = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\"") - 1);
+                }
                 if(inputLine.indexOf(">CDS</a>") != -1) {
                     cdscount++;
                     
@@ -160,7 +164,8 @@ public class GenbankGeneFinder {
             h.put("start", new Integer(start));
             h.put("stop", new Integer(stop));
             h.put("sequencetext", sequencetext);
-            h.put("locus_link", locus_link_id);
+            if (! locus_link_id.equals("")) h.put("locus_link", locus_link_id);
+            if (! gene_name.equals("")) h.put("gene_name", gene_name);
             
             return h;
         } catch (Exception e) {
@@ -184,7 +189,7 @@ public class GenbankGeneFinder {
                 System.out.println();
             }
             
-            Hashtable h = finder.searchDetail("12653054");
+            Hashtable h = finder.searchDetail("4502854");
             System.out.println(h);
         } catch (FlexUtilException e) {
             System.out.println(e);
