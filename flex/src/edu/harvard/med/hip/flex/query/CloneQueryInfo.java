@@ -9,7 +9,7 @@ package edu.harvard.med.hip.flex.query;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class CloneQueryInfo extends QueryInfo {
     private String clonename;
