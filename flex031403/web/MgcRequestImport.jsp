@@ -79,7 +79,7 @@ The request uploading may take some time. The e-mail notification will be sent t
 <table>
     <tr>
         <td >&nbsp;&nbsp;Required percent identity<td>
-        <td align="right"><html:text property="requiredPercentIdentity" size="4" value="95" /></td>
+        <td align="right"><html:text property="requiredPercentIdentity" size="4" value="90" /></td>
     </tr>
     <tr>
         <td >&nbsp;&nbsp;Required cds length limit<td>
