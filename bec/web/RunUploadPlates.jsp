@@ -77,7 +77,8 @@
     <td  bgColor="#e4e9f8"><b>Start Codon</b></td>
     <TD bgColor="#e4e9f8"> 
     <SELECT NAME="start_codon">
-     		<OPTION VALUE="ATG">ATG
+     		<OPTION VALUE="ATG" selected>ATG
+                <OPTION VALUE="NON">Natural
     </SELECT>
      </div></td>
   </tr>
@@ -86,8 +87,8 @@
     <td  bgColor="#b8c6ed"><b>Fusion Stop Codon</b></td>
     <TD bgColor="#b8c6ed"> 
     <SELECT NAME="fusion_stop_codon">
-   		<OPTION VALUE="GGA">GGA
-                <OPTION VALUE="TTG">TTG
+                <OPTION VALUE="GGA">GGA
+                <OPTION VALUE="TTG" selected>TTG
     	</SELECT>
      </div></td>
   </tr>
@@ -95,9 +96,10 @@
     <td  bgColor="#e4e9f8"><b>Closed Stop Codon</b></td>
     <TD bgColor="#e4e9f8"> 
     <SELECT NAME="closed_stop_codon">
-   		<OPTION VALUE="TGA" selected>TGA
+   		<OPTION VALUE="TGA" >TGA
                 <OPTION VALUE="TAA" >TAA
                 <OPTION VALUE="TAG" >TAG
+                <OPTION VALUE="NON" selected>Natural
     	</SELECT>
      </div></td>
   </tr>
