@@ -165,10 +165,10 @@ public abstract class Spec
                       
                     case Primer3Spec.PRIMER3_SPEC_INT:
                   
-                        return new Primer3Spec(params, spec_name, submitter_id,id) ;
+                        return new Primer3Spec(params, name, submitter_id,id) ;
                     
                     case PolymorphismSpec.POLYMORPHISM_SPEC_INT:
-                         return new PolymorphismSpec(params, spec_name, submitter_id,id) ;
+                         return new PolymorphismSpec(params, name, submitter_id,id) ;
                  }
             }
             return null;
@@ -305,8 +305,9 @@ public abstract class Spec
     }
      public String       getParameterByNameString(String param_name)
     { 
-      
-        return (String)m_params.get(param_name);
+        String param = (String)m_params.get(param_name);
+        if (param == null) param="not set";
+        return param;
     }    
     
     //---------------------------
