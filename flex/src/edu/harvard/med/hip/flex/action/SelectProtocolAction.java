@@ -63,7 +63,7 @@ public class SelectProtocolAction extends FlexAction {
             LinkedList items = queue.getQueueItems(protocol);
             
             if(items.size() > 0) {
-                request.setAttribute("queueItems", items);
+                request.getSession().setAttribute("queueItems", items);
             }
 
             // Get the location from the database.

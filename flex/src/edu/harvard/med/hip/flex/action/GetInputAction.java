@@ -6,7 +6,7 @@
 
 package edu.harvard.med.hip.flex.action;
 
-import java.util.Hashtable;
+import java.util.LinkedList;
 import java.sql.*;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -23,12 +23,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
+import edu.harvard.med.hip.flex.core.Container;
+import edu.harvard.med.hip.flex.process.*;
+import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.form.GetProcessPlateInputForm;
+
 /**
  *
  * @author  dzuo
  * @version 
  */
-public class GetInputAction extends FlexAction{
+public class GetInputAction extends ResearcherAction{
 
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -50,7 +55,49 @@ public class GetInputAction extends FlexAction{
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
+        ActionErrors errors = new ActionErrors();
+        String barcode = ((GetProcessPlateInputForm)form).getResearcherBarcode();
+        String sourcePlate = ((GetProcessPlateInputForm)form).getSourcePlate();
+        String sourceLocation = ((GetProcessPlateInputForm)form).getSourceLocation();
+        String destLocation = ((GetProcessPlateInputForm)form).getDestLocation();
+        LinkedList queueItems = (LinkedList)request.getSession().getAttribute("queueItems");
+        Researcher researcher = null;
+
+        // Validate the researcher barcode.
+        try {
+            researcher = new Researcher(barcode);
+        } catch (FlexProcessException ex) {
+            errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        } catch (FlexDatabaseException ex) {           
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
+        }
+ 
+        if(!isValidPlate(queueItems, sourcePlate)) {
+            errors.add("sourcePlate", new ActionError("error.plateId.invalid", sourcePlate));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+            
         return null;
     }
-
+ 
+    // Validate the source plate barcode.
+    private boolean isValidPlate(LinkedList queueItems, String sourcePlate) {        
+        if(queueItems == null) {
+            return false;
+        }
+        
+        for(int i=0; i<queueItems.size(); i++) {
+            QueueItem item = (QueueItem)queueItems.get(i);
+            Container container = (Container)item.getItem();
+            if(container.isSame(sourcePlate)) {
+                return true;
+            }
+        }   
+        
+        return false;
+    }
 }

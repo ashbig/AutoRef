@@ -53,7 +53,7 @@
     <th>ID</th><th>Label</th>
 </tr>
 
-<logic:iterate id="queueItem" name="queueItems" scope="request">
+<logic:iterate id="queueItem" name="queueItems" scope="session">
 <tr>
     <td><bean:write name="queueItem" property="item.id"/></td>
     <td><bean:write name="queueItem" property="item.label"/></td>
