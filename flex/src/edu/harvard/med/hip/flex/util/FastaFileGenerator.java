@@ -7,6 +7,7 @@
 package edu.harvard.med.hip.flex.util;
 
 import edu.harvard.med.hip.flex.core.*;
+import edu.harvard.med.hip.flex.database.*;
 import edu.harvard.med.hip.flex.util.Mailer;
 import edu.harvard.med.hip.utility.Logger;
 import edu.harvard.med.hip.utility.DatabaseManager;
@@ -102,12 +103,14 @@ public class FastaFileGenerator {
     }
     
     private static int generateFile(Logger log, String db, String species, int seq) {
-        DatabaseManager t = new DatabaseManager();
+//        DatabaseManager t = new DatabaseManager();
+        DatabaseTransaction t = null;
         ResultSet rs = null;
         PrintWriter pr = null;
         int maxid = seq;
         
         try {
+            t = DatabaseTransaction.getInstance();
             pr = new PrintWriter(new BufferedWriter(new FileWriter(db, true)));
             String sql = "select sequenceid " +
             "from flexsequence " +
@@ -115,15 +118,15 @@ public class FastaFileGenerator {
             "and sequenceid > "+seq + " " +
             "order by sequenceid";
         
-            Connection conn = t.connect();
-            if(conn == null) {
-                log.logging("Error occured when connecting to the database");
-                return -1;
-            }
+//            Connection conn = t.connect();
+//            if(conn == null) {
+//                log.logging("Error occured when connecting to the database");
+//                return -1;
+//            }
             
-            Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-            
+//            Statement stmt = conn.createStatement();
+//            rs = stmt.executeQuery(sql);
+            rs = t.executeQuery(sql);            
             while(rs.next()) {
                 int id = rs.getInt("SEQUENCEID");
                 log.logging("Processing sequence: "+id);
@@ -133,7 +136,7 @@ public class FastaFileGenerator {
                 log.logging("...OK");
                 maxid = id;
             }
-            stmt.close();
+            //stmt.close();
             pr.close();
             return maxid;
         }catch (IOException e) {
@@ -142,8 +145,12 @@ public class FastaFileGenerator {
         }catch (SQLException sqlE) {
             log.logging(sqlE.getMessage());
             return -1;
-        } finally {
-            t.disconnect();
+        }catch (FlexDatabaseException ex) {
+            log.logging(ex.getMessage());
+            return -1;
+        }finally {
+            //t.disconnect();
+            DatabaseTransaction.closeResultSet(rs);
         }
     }
     
