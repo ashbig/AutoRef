@@ -7,7 +7,6 @@
 package edu.harvard.med.hip.flex.util;
 
 import edu.harvard.med.hip.flex.database.*;
-import edu.harvard.med.hip.flex.database.DatabaseTransaction;
 import edu.harvard.med.hip.flex.core.*;
 import edu.harvard.med.hip.flex.util.Mailer;
 import edu.harvard.med.hip.utility.Logger;
@@ -135,7 +134,7 @@ public class FastaFileGenerator {
             log.logging(sqlE.getMessage());
             return -1;
         } finally {
-            DatabaseTransaction.closeResultSet(rs);
+            edu.harvard.med.hip.flex.database.DatabaseTransaction.closeResultSet(rs);
         }
     }
     
