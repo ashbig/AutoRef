@@ -25,7 +25,7 @@
     <username>flex_owner</username>
     <password>flex</password>
     <minimumSize>1</minimumSize>
-    <maximumSize>20</maximumSize>
+    <maximumSize>30</maximumSize>
     <maximumSoft>false</maximumSoft>
     <initialConnections>1</initialConnections>
     <connectionTimeout>600</connectionTimeout>

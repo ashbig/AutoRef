@@ -12,8 +12,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.13 $
- * $Date: 2001-06-22 16:29:55 $
+ * $Revision: 1.14 $
+ * $Date: 2001-06-26 17:10:13 $
  * $Author: dongmei_zuo $
  *
  ******************************************************************************
@@ -41,6 +41,7 @@ import java.util.*;
 import java.math.BigDecimal;
 import javax.sql.*;
 import com.codestudio.sql.*;
+import com.codestudio.util.*;
 import sun.jdbc.rowset.*;
 
 /**
@@ -51,7 +52,7 @@ import sun.jdbc.rowset.*;
  * DatabaseTransaction is implemented as a singleton.
  *
  * @author     $Author: dongmei_zuo $
- * @version    $Revision: 1.13 $ $Date: 2001-06-22 16:29:55 $
+ * @version    $Revision: 1.14 $ $Date: 2001-06-26 17:10:13 $
  */
 
 public class DatabaseTransaction {
@@ -306,6 +307,9 @@ public class DatabaseTransaction {
     public static void closeConnection(Connection conn) {
         try{
             conn.close();            
+            SQLManager manager = SQLManager.getInstance();
+            manager.returnConnection(conn);
+            
         } catch(Throwable t) {
             t.printStackTrace();
         }

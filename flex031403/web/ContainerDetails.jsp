@@ -30,7 +30,7 @@
         <td><bean:write name="container" property="type"/></td>
     </tr>
     <tr>
-        <td>Location</td>
+        <td>Location:</td>
         <td><bean:write name="container" property="location.type"/></td>
     </tr>
     <tr>

@@ -1,5 +1,5 @@
 /**
- * $Id: Process.java,v 1.18 2001-06-26 12:49:19 dongmei_zuo Exp $
+ * $Id: Process.java,v 1.19 2001-06-26 17:10:13 dongmei_zuo Exp $
  *
  * File     	: Process.java
  * Date     	: 04162001
@@ -91,6 +91,7 @@ public class Process {
      */
     public static Process findProcess(Container container, Protocol protocol)
     throws FlexDatabaseException{
+        
         Process retProcess = null;
         String sql=
         "select x.executionid, x.executionstatus, x.researcherid,"+
@@ -113,6 +114,7 @@ public class Process {
             rs = dt.executeQuery(ps);
             // if we find a process then create it
             if(rs.next()) {
+                
                 retProcess =
                 new Process(rs.getInt("executionid"),
                 protocol,
@@ -120,7 +122,6 @@ public class Process {
                 new Researcher(rs.getInt("researcherid")),
                 rs.getString("processDate"),rs.getString("subprotocolname"),
                 rs.getString("extrainformation"));
-                
                 
             }
             
@@ -136,6 +137,7 @@ public class Process {
     }
     
     
+
     /**
      * Find the process execution with the provided container and protocol.
      * The process has been completed and the records are removed from 
@@ -192,6 +194,7 @@ public class Process {
         }
         return retProcess;
     }    
+
     
     /**
      * Set the subprotocol field to the given value.
