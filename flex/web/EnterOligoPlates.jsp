@@ -43,7 +43,7 @@
     </tr>
     </logic:notEqual>
 
-    <logic:equal name="SelectProtocolAction.protocol" property="processname" value="generate step1 PCR plates">
+    <logic:equal name="SelectProtocolAction.protocol" property="processname" value="Generate step1 PCR plates">
     <logic:equal name="workflowid" value="8">
     <tr>
     <td class="prompt">Enter MGC template plate barcode:</td>

@@ -19,7 +19,7 @@
 <TABLE border="1" cellpadding="2" cellspacing="0">
 <tr class="headerRow">
     <th>5P Oligo Plate</th><th>3P Fusion Oligo Plate</th><th>3P Closed Oligo Plate</th>
-    <logic:equal name="SelectProtocolAction.protocol" property="processname" value="generate step1 PCR plates">
+    <logic:equal name="SelectProtocolAction.protocol" property="processname" value="Generate step1 PCR plates">
     <th>MGC Template Plate</th>
     </logic:equal>
 </tr>
@@ -31,7 +31,7 @@
     <logic:present name="queueItem" property="item.threepClosedContainer">
     <td><bean:write name="queueItem" property="item.threepClosedContainer.label"/></td>
     </logic:present>
-    <logic:equal name="SelectProtocolAction.protocol" property="processname" value="generate step1 PCR plates">
+    <logic:equal name="SelectProtocolAction.protocol" property="processname" value="Generate step1 PCR plates">
     <logic:present name="queueItem" property="item.mgcContainer">
     <td><bean:write name="queueItem" property="item.mgcContainer.label"/></td>
     </logic:present>
