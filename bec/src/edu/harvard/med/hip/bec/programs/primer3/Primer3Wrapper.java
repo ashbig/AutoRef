@@ -12,6 +12,7 @@ import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.programs.*;
 import edu.harvard.med.hip.bec.file.*;
 import java.sql.*;
@@ -25,8 +26,10 @@ public class Primer3Wrapper
     
     public static final String NEW_LINE = "\n";
   
-    public static final int     WALKING_TYPE_ONE_STRAND = 1;
+    public static final int     WALKING_TYPE_ONE_STRAND_FORWARD = 1;
     public static final int     WALKING_TYPE_BOTH_STRAND = 2;
+     public static final int    WALKING_TYPE_ONE_STRAND_REVERSE = 3;
+    public static final int     WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE = 4;
     //in parameters
     
     private ArrayList           m_sequences = null;
@@ -56,40 +59,72 @@ public class Primer3Wrapper
             m_PRIMER3_EXE =  "c://blast//primer3.exe";
         }
     }
-    /** Creates a new instance of Primer3Caller */
-    public Primer3Wrapper(Primer3Spec spec, ArrayList seq_info)
-    {
-        m_spec = spec;
-        m_sequences = seq_info;
-        m_failed_sequences = new ArrayList();
-       
-    }
-    /** Creates a new instance of Primer3Caller */
-    public Primer3Wrapper(Primer3Spec spec, BaseSequence sequence)
-    {
-        m_spec = spec;
-        m_sequence = sequence;
-        m_failed_sequences = new ArrayList();
-    }
+     /** Creates a new instance of Primer3Caller */
+    public Primer3Wrapper()    {        m_failed_sequences = new ArrayList(); m_sequences = new ArrayList();    }
+    
+    public void         setSpec(Primer3Spec spec) { m_spec = spec;}
+    public void         setSequence( BaseSequence sequence){ m_sequences.add( sequence);}
+    public void         setSequences(ArrayList sequences){ m_sequences = sequences;}
     
     
   
     
     public ArrayList run() throws Exception
     {
-        ArrayList oligo_calculations = new ArrayList();
-        //prepare sequences
-        ArrayList seq = null;
-        if ( m_sequence != null)
+        ArrayList sub_sequences = null; 
+        ArrayList all_sequences = new ArrayList();
+        if ( m_spec == null ) return null; 
+          //prepare sequences
+        int runner_type = m_spec.getParameterByNameInt("P_NUMBER_OF_STRANDS");
+        if ( runner_type != WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE)
         {
-            seq = prepareSequence(m_sequence);
+            all_sequences = prepareSequences(m_spec);
+            return runSetOfSequences(all_sequences);
         }
-        else if( m_sequences != null)
+        else
         {
-            seq = prepareSequences();
-        }
-        if (seq == null || seq.size()<1) return null; 
+            ArrayList final_set = null;
+            
+            Hashtable parameters = m_spec.getParameters();
+            parameters.put("P_NUMBER_OF_STRANDS", String.valueOf(WALKING_TYPE_ONE_STRAND_FORWARD));
+            Primer3Spec   temporary_spec = new Primer3Spec(parameters,"",-1);
+            all_sequences = prepareSequences(temporary_spec);
+            ArrayList oligo_calculations_forward = runSetOfSequences(all_sequences);
        
+            parameters.put("P_NUMBER_OF_STRANDS",String.valueOf(WALKING_TYPE_ONE_STRAND_REVERSE));
+            temporary_spec = new Primer3Spec(parameters,"",-1);
+            all_sequences = prepareSequences(temporary_spec); 
+            ArrayList oligo_calculations_reverse = runSetOfSequences(all_sequences);
+            //add second set of primers 
+            OligoCalculation seq_oligo_calculation_forward = null;
+            OligoCalculation seq_oligo_calculation_reverse = null;
+            for (int count = 0; count < oligo_calculations_forward.size(); count++)
+            {
+                seq_oligo_calculation_forward = (OligoCalculation)oligo_calculations_forward.get(0);
+                seq_oligo_calculation_reverse = (OligoCalculation)oligo_calculations_reverse.get(0);
+                if (seq_oligo_calculation_forward.getSequenceId() == seq_oligo_calculation_reverse.getSequenceId())
+                {
+                    if ( final_set == null) final_set = new ArrayList();
+                    seq_oligo_calculation_forward.addOligos(seq_oligo_calculation_reverse.getOligos());
+                    final_set.add(seq_oligo_calculation_forward);
+                }
+                
+            }
+           
+            return final_set;
+        }
+    }
+    
+    
+    
+    public ArrayList    getFailedSequences()    { return m_failed_sequences;}
+    
+    
+    
+    /////////////////////////////////////////////////////////////////////////////
+    private ArrayList     runSetOfSequences(ArrayList sequences)throws Exception
+    {
+        ArrayList oligo_calculations = new ArrayList();
         //delete old primer3 input / output
         File oldoutput = null; 
         try
@@ -99,7 +134,7 @@ public class Primer3Wrapper
         }
         catch(Exception e){}
          //write input file
-        writeInputFile(seq);
+        writeInputFile(sequences);
         //call primer3
         run(m_file_input, m_file_output);
         try
@@ -114,64 +149,45 @@ public class Primer3Wrapper
     }
     
     
-    
-    public ArrayList    getFailedSequences()    { return m_failed_sequences;}
-    
-    
-    
-    /////////////////////////////////////////////////////////////////////////////
     // parse out long sequences to the smaller ones
     // one seq for a pair of primers
     // create sequence id as sequenceid_numberOfSubsequence
-    private ArrayList prepareSequences()throws BecDatabaseException
+    private ArrayList prepareSequences(Primer3Spec spec)throws BecDatabaseException
     {
         ArrayList res = new ArrayList();
         ArrayList one_seq = null;
-        int runner_type = m_spec.getParameterByNameInt("P_NUMBER_OF_STRANDS");
-        
-        int  UL = m_spec.getParameterByNameInt("P_UPSTREAM_DISTANCE");  //length between upstream universal primer and start codon of target sequence
-        int DL = m_spec.getParameterByNameInt("P_DOWNSTREAM_DISTANCE");  //length between downstream universal primer and stop codon of target sequence
-        int PHD = m_spec.getParameterByNameInt("P_EST_SEQ");  //distance between sequencing primer and start of high quality read length
-        int ERL = m_spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");  //estimated high quality read length
-        int W = m_spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN");    //window size for primer3 to pick primers
+        int runner_type = spec.getParameterByNameInt("P_NUMBER_OF_STRANDS");
+        int  UL = spec.getParameterByNameInt("P_UPSTREAM_DISTANCE");  //length between upstream universal primer and start codon of target sequence
+        int DL = spec.getParameterByNameInt("P_DOWNSTREAM_DISTANCE");  //length between downstream universal primer and stop codon of target sequence
+        int PHD = spec.getParameterByNameInt("P_EST_SEQ");  //distance between sequencing primer and start of high quality read length
+        int ERL = spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");  //estimated high quality read length
+        int W = spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN");    //window size for primer3 to pick primers
         
         for (int count = 0; count < m_sequences.size(); count++)
         {
             BaseSequence sequence = (BaseSequence) m_sequences.get(count);
             one_seq = prepareSequence( sequence, UL,  DL,   PHD, ERL,  W, runner_type );
             if (one_seq != null) res.addAll(one_seq);
-            
         }
         return res;
     }
     
-    
-    private ArrayList prepareSequence(BaseSequence sequence)throws BecDatabaseException
-    {
-        ArrayList one_seq = null;
-        int runner_type = m_spec.getParameterByNameInt("P_NUMBER_OF_STRANDS");
-        int  UL = m_spec.getParameterByNameInt("P_UPSTREAM_DISTANCE");  //length between upstream universal primer and start codon of target sequence
-        int DL = m_spec.getParameterByNameInt("P_DOWNSTREAM_DISTANCE");  //length between downstream universal primer and stop codon of target sequence
-        int PHD = m_spec.getParameterByNameInt("P_EST_SEQ");  //distance between sequencing primer and start of high quality read length
-        int ERL = m_spec.getParameterByNameInt("P_SINGLE_READ_LENGTH");  //estimated high quality read length
-        int W = m_spec.getParameterByNameInt("P_BUFFER_WINDOW_LEN");    //window size for primer3 to pick primers
-        
-        if (runner_type == WALKING_TYPE_BOTH_STRAND)
-            one_seq =  bi_directional_walker(   sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W );
-        else
-            one_seq = one_directional_walker( sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W  );
-        return one_seq;
-    }
+   
     
      private ArrayList prepareSequence(BaseSequence sequence,int UL, int DL,  int PHD,int ERL, int W,int runner_type )throws BecDatabaseException
     {
         ArrayList one_seq = null;
        
-        if (runner_type == 2)
-            one_seq =  bi_directional_walker(   sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W );
-        else
-            one_seq = one_directional_walker( sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W  );
-        return one_seq;
+        switch (runner_type)
+        {
+            case WALKING_TYPE_BOTH_STRAND:
+                return   bi_directional_walker(   sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W );
+            case WALKING_TYPE_ONE_STRAND_FORWARD:
+                return  one_seq = one_directional_walker( sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W  );
+            case   WALKING_TYPE_ONE_STRAND_REVERSE:
+                return one_directional_walker_reverse( sequence.getId(), sequence.getText(),  UL, DL,  PHD, ERL, W  );
+            default:      return one_seq;
+        }
     }
     
     //function writes one output file for the primer3
@@ -278,6 +294,7 @@ public class Primer3Wrapper
         else
         {
             //take AURL off from 5p end (start from ATG) of the original sequence
+            
 	   subSeq = subSeq.substring(AURL);
            is = new InnerSequence( String.valueOf(id)+"_"+counter, subSeq);
             counter++;
@@ -288,6 +305,46 @@ public class Primer3Wrapper
                 //System.out.println("seqId: "+primerId+"; "+"seq len: "+SSL);
                 //if SSL > ARL+ADRL bp, more primers are needed
                subSeq = subSeq.substring(ARL);
+                    //take ARL off 5p end of the subsequence
+                is = new InnerSequence( String.valueOf(id)+"_"+counter, subSeq);
+                counter++;
+                res.add(is);
+            } //while
+        } //else
+        return res;
+    }
+    
+    
+    private ArrayList  one_directional_walker_reverse(int id, String seq,
+                        int UL, int DL, int PHD, int ERL, int W)
+    {
+        
+        ArrayList res = new ArrayList();
+        int ARL = ERL - W - PHD;//adjusted read length
+        int AURL = ERL - UL - W - PHD;//adjusted upstream universal primer read length
+        int ADRL = ERL - DL;//adjusted downstream universal primer read length
+        int THRESHOLD = AURL + ADRL; //THRESHOLD is adjusted 5p UP read length plus 3p UP read length
+        String subSeq = seq;        int counter = 1;        String subSeqId = null;
+        InnerSequence is = null;
+        //if seq length is < (AURL + ADRL)bp, no internal primers are calculated
+        if (seq.length() < THRESHOLD)
+        {
+            m_failed_sequences.add("Sequence shorter than threshold, sequence id : "+id +" sequence text "+seq);//new InnerSequence( String.valueOf(id), seq));
+        } //if len < threshold
+        else
+        {
+              //calculate a pair of primers for the central subsequence
+            subSeq = seq.substring(0, (seq.length() - ADRL));
+         is = new InnerSequence( String.valueOf(id)+"_"+counter, subSeq);
+            counter++;
+            res.add(is);
+            
+            while (subSeq.length() > (ARL+ADRL))
+            {
+                //System.out.println("seqId: "+primerId+"; "+"seq len: "+SSL);
+                //if SSL > ARL+ADRL bp, more primers are needed
+                 subSeq = subSeq.substring(0 ,(subSeq.length()-ARL));
+          
                     //take ARL off 5p end of the subsequence
                 is = new InnerSequence( String.valueOf(id)+"_"+counter, subSeq);
                 counter++;
@@ -414,7 +471,7 @@ public class Primer3Wrapper
         }
      */
         ArrayList re = null;
-        String queryFile = "c:\\bio\\primer3Out.txt";
+        String queryFile = "c:\\tmp\\primer3output.txt";
         try
         {
             Hashtable ht = new Hashtable();
@@ -440,7 +497,7 @@ ht.put("P_UPSTREAM_DISTANCE","120");
  ht.put("P_BUFFER_WINDOW_LEN","50");
 ht.put("P_DOWNSTREAM_DISTANCE","130");
 ht.put("P_EST_SEQ","50");
-ht.put("P_NUMBER_OF_STRANDS","0");
+ht.put("P_NUMBER_OF_STRANDS","4");
 ht.put("P_PRIMER_GC_MAX","70");
 ht.put("P_PRIMER_GC_MIN","30");
 ht.put("P_PRIMER_GC_OPT","50");
@@ -453,13 +510,26 @@ ht.put("P_PRIMER_TM_OPT","58");
 ht.put("P_SINGLE_READ_LENGTH","400");
 ht.put("P_UPSTREAM_DISTANCE","120");
             re = new ArrayList();
-            Primer3Spec ps =  (Primer3Spec)Spec.getSpecById(7);
+            Primer3Spec ps =  new Primer3Spec(ht,"",-1);//(Primer3Spec)Spec.getSpecById(7);
            
             RefSequence tr = new RefSequence(5661);
-       
+             RefSequence tr1 = new RefSequence(5665);
+           ArrayList seq = new ArrayList(); seq.add(tr);//seq.add(tr1);
             
-            Primer3Wrapper pw = new Primer3Wrapper(ps, tr);
-            pw.run();
+            Primer3Wrapper pw = new Primer3Wrapper();
+            pw.setSpec(ps);
+            pw.setSequences( seq);
+              re = pw.run();
+             System.out.println(re.size());
+             for (int c = 0; c < re.size(); c++)
+             {
+                 ArrayList oligos = ((edu.harvard.med.hip.bec.coreobjects.oligo.OligoCalculation)re.get(c)).getOligos();
+                  System.out.println("_____");
+                 for (int count = 0; count < oligos.size(); count++)
+                 {
+                     System.out.println( ((edu.harvard.med.hip.bec.coreobjects.oligo.Oligo) oligos.get(count)).toString() );
+                 }
+             }
           
         }catch(Exception e){}
         System.exit(0);

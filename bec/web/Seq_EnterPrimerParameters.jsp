@@ -121,7 +121,7 @@
       <p> </td>
   </tr>
   <tr> 
-    <td width="100%" height="48" colspan="2" bgcolor="#1145A6"><font color="white" size="4" > 
+    <td height="48" colspan="2" bgcolor="#1145A6"><font color="white" size="4" > 
       <b>Primer Picking Parameters</b></font></td>
   </tr>
   <tr> 
@@ -168,8 +168,8 @@
       </table></td>
   </tr>
   <tr> 
-    <td width="100%" height="1"></td>
-    <td width="50%" height="1"></td>
+    <td width="57%" height="1"></td>
+    <td width="43%" height="1"></td>
   </tr>
   <tr><td colspan="2">&nbsp;</td></tr>
   <tr> 
@@ -188,61 +188,70 @@
       </p></td>
   </tr>
   <tr> 
-    <td width="100%" height="44"  bgcolor="#b8c6ed" valign="top"><b><font color="#000080">Distance 
+    <td width="57%" height="44"  bgcolor="#b8c6ed" valign="top"><b><font color="#000080">Distance 
       between 5p Universal Primer and START codon</font></b><font color="#000080">&nbsp;&nbsp;&nbsp; 
       <font size="2"><b>(For a left primer, primer start position is the position 
       of the leftmost base)</b></font></font></td>
-    <td width="50%" height="44"  bgcolor="#b8c6ed"> <p> 
+    <td width="43%" height="44"  bgcolor="#b8c6ed"> <p> 
         <input type="text" name="p_upstream_distance_view"  onchange='onChangeValue(this, this.value)' size="20" value="100" id="p_upstream_distance_view">
         <input type="hidden" name="p_upstream_distance"  value="100" id="p_upstream_distance" >
-        bases</p></td>
+        <strong>bases</strong></p></td>
   </tr>
   <tr> 
-    <td width="100%" height="44" bgColor="#e4e9f8" valign="top"><font color="#000080"><b>Distance 
+    <td width="57%" height="44" bgColor="#e4e9f8" valign="top"><font color="#000080"><b>Distance 
       between 3p Universal Primer and STOP codon&nbsp;&nbsp; <font size="2">(For 
       a right primer, primer start position is the position of the rightmost base)&nbsp;&nbsp;</font></b></font></td>
-    <td width="50%" height="44"bgColor="#e4e9f8"> <p> 
+    <td width="43%" height="44"bgColor="#e4e9f8"> <p> 
         <input type="text" name="p_downstream_distance_view" size="20" value="100" id="p_downstream_distance_view" onchange='onChangeValue(this, this.value)'>
         <input type="hidden" name="p_downstream_distance"  value="100" id="p_downstream_distance" onchange='onChangeValue(this, this.value)'>
-        bases</p></td>
+        <strong>bases</strong></p></td>
   </tr>
   <tr> 
-    <td width="100%" height="44"  bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Estimated 
+    <td width="57%" height="44"  bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Estimated 
       high quality read length (ERL)</b></font></td>
-    <td width="50%" height="44"  bgcolor="#b8c6ed"> <p> 
+    <td width="43%" height="44"  bgcolor="#b8c6ed"> <p> 
         <input type="text" name="p_single_read_length" size="20" value="400">
-        bases</p></td>
+        <strong>bases</strong></p></td>
   </tr>
   <tr> 
-    <td width="100%" height="3" bgColor="#e4e9f8" valign="top"><font color="#000080"><b>Window 
+    <td width="57%" height="3" bgColor="#e4e9f8" valign="top"><font color="#000080"><b>Window 
       size for testing primers</b></font></td>
-    <td width="50%" height="3" bgColor="#e4e9f8"> <p> 
+    <td width="43%" height="3" bgColor="#e4e9f8"> <p> 
         <input type="text" name="p_buffer_window_len" size="20" value="50">
-        bases</p></td>
+        <strong> bases</strong></p></td>
   </tr>
 <tr> 
-    <td width="100%" height="3" bgColor="#b8c6ed" valign="top"><font color="#000080"><b>
+    <td width="57%" height="3" bgColor="#b8c6ed" valign="top"><font color="#000080"><b>
 Distance between sequencing primer and start of high quality read length</b></font></td>
-    <td width="50%" height="3" bgColor="#b8c6ed"> <p> 
+    <td width="43%" height="3" bgColor="#b8c6ed"> <p> 
         <input type="text" name="P_EST_SEQ" size="20" value="50">
-        bases</p></td>
+        <strong>bases</strong></p></td>
   </tr>
   <tr> 
-    <td width="100%" height="3" align="center" valign="top"  bgcolor="#e4e9f8"> 
+    <td width="57%" height="3" align="center" valign="top"  bgcolor="#e4e9f8"> 
       <p align="left"><font color="#000080"><b>Number of strands to sequence</b></font></td>
-    <td width="50%" height="3" align="center" valign="bottom"  bgcolor="#e4e9f8"> 
+    <td  height="3" align="center" valign="bottom"  bgcolor="#e4e9f8"> 
       <p align="left"> 
-        <input type="radio" value="<%= Primer3Wrapper.WALKING_TYPE_ONE_STRAND %>" name="p_number_of_strands">
+        <input type="radio" value="<%= Primer3Wrapper.WALKING_TYPE_ONE_STRAND_FORWARD %>" name="p_number_of_strands" checked>
         <b>Single Strand</b> (Coding strand, forward primers only)</p>
       <p align="left"> 
-        <input type="radio" name="p_number_of_strands" value="<%= Primer3Wrapper.WALKING_TYPE_BOTH_STRAND %>" checked>
-        <b>Both Strands</b> (Both forward and reverse primers)</p></td>
+        <input type="radio" name="p_number_of_strands" value="<%= Primer3Wrapper.WALKING_TYPE_ONE_STRAND_REVERSE %>" >
+        <b>Single Strand</b> (Compliment to coding strand, reverse primers only)</p>
+      <p align="left"> 
+        <input type="radio" name="p_number_of_strands" value="<%= Primer3Wrapper.WALKING_TYPE_BOTH_STRAND %>" >
+        <b>Both Strands</b> (Both forward and reverse primers)
+     <p align="left"> 
+        <input type="radio" name="p_number_of_strands" value="<%= Primer3Wrapper.WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE %>" >
+        <b>Both Strands</b> (Both forward and reverse primers, double coverage)</td>
+  </tr>
+
+
+
+  <tr> 
+    <td colspan="3" height="3" align="center" valign="bottom"></td>
   </tr>
   <tr> 
-    <td width="100%" colspan="3" height="3" align="center" valign="bottom"></td>
-  </tr>
-  <tr> 
-    <td width="100%" colspan="3" height="1" align="center" valign="bottom"> <p> 
+    <td colspan="3" height="1" align="center" valign="bottom"> <p> 
         <input type="submit" value="Submit" name="B1">
         <input type="reset" value="Reset" name="B2">
       </p>

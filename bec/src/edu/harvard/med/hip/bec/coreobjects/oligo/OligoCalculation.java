@@ -59,7 +59,7 @@ public class OligoCalculation
     
     
     
-    
+    public void     addOligos(ArrayList s)    {  if ( m_oligos == null) m_oligos = new ArrayList();  m_oligos.addAll( s);    }
     public void     addOligo(Oligo s)    {  if ( m_oligos == null) m_oligos = new ArrayList();  m_oligos.add( s);    }
     public void     setPrimer3Spec(Primer3Spec s)    {    m_primer3_spec = s;    }
     public void     setPrimer3SpecId(int s)    {    m_primer3_spec_id= s;    }

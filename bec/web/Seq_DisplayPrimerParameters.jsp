@@ -65,6 +65,7 @@ else
  
 	%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+<tr>     <td colspan ="4"><hr></TD></TR>
   <tr> 
     <td colspan ="2"><b>Set Name</b>&nbsp;&nbsp<%= spec.getName() %> <P></P></td>
   </tr>
@@ -96,7 +97,7 @@ else
     <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></p></td>
     <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Opt:</b> 
         <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></font></p></td>
-    <td width="25%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Max:</b>&nbsp; 
+    <td width="25%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Max:</b> 
         <%= spec.getParameterByNameString("p_primer_gc_max".toUpperCase())%></font></p></td>
   </tr>
   <tr> 
@@ -148,15 +149,19 @@ Distance between sequencing primer and start of high quality read length</b></fo
     <td colspan="2" height="3" align="center" valign="top" bgColor="#e4e9f8" > 
       <p align="left"><font color="#000080"><b>Number of strands to sequence</b></font></td>
     <td colspan="2" height="3" align="center" valign="bottom" bgColor="#e4e9f8" > 
+     <font color="#000080">   <p><b>
       <% 
 
 	
-if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_ONE_STRAND) ))
-     { %><font color="#000080">
-      <p><b>Single Strand</b> (Coding strand, forward primers)</p>
-      <%}else{%>
-      <font color="#000080"><b>Both Strands</b> (Both forward and reverse primers)</p> 
-      <%}%>
+if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_ONE_STRAND_FORWARD) ))
+{ %> Single Strand (Coding strand, forward primers)      <%}
+else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_ONE_STRAND_REVERSE) ))
+{%>Single Strands(Compliment to coding strand, reverse primers only)      <%}
+else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_BOTH_STRAND ) ))
+{%>Both Strands(Both forward and reverse primers)      <%}
+else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE) ))
+{%>Both Strands(Both forward and reverse primers, double coverage)      <%}%>
+  </p></b> 
     </td>
   </tr>
   <tr> 

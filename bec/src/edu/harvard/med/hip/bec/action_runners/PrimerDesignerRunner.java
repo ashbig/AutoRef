@@ -101,7 +101,9 @@ public class PrimerDesignerRunner extends ProcessRunner
                         //get reference sequence to process
                             BaseSequence refsequence = getRefsequence(id);
                         //run primer3 with specified spec
-                            Primer3Wrapper primer3 = new Primer3Wrapper(m_spec,  refsequence);
+                            Primer3Wrapper primer3 = new Primer3Wrapper();
+                            primer3.setSpec(m_spec);
+                            primer3.setSequence(  refsequence);
                             ArrayList oligo_calculations = primer3.run();
      
                             if ( primer3.getFailedSequences() != null && primer3.getFailedSequences().size() >0)
