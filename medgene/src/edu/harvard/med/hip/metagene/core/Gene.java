@@ -72,7 +72,7 @@ public class Gene {
             if(i == 0)
                 rt = nickname;
             else 
-                rt = rt+","+nickname;
+                rt = rt+", "+nickname;
         }
         
         return rt;

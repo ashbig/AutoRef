@@ -13,14 +13,24 @@
     <body>
     <center>
     <h1>Top <bean:write name="number"/> Genes Associated With <bean:write name="source_gene_symbol"/></h1> 
-    <h1>By Statistic Method Of "<bean:write name="stat_type"/>"</h1>
+    <h1>By Statistical Method Of "<bean:write name="stat_type"/>"</h1>
     </center>
 
-    <table width="80%" align="center" border="0"><tr><td> 
+    <table width="80%" align="center" border="0"><tr><td>     
     <html:errors/>
     
     <p>
-    <TABLE border="1" cellpadding="2" cellspacing="0">
+    <TABLE width="100%" align="center" border="1" cellpadding="2" cellspacing="0">
+    <COLGROUP>
+        <COL width="15%">
+        <COL width="5%">
+        <COL width="10%">
+        <COL width="33%">
+        <COL width="25%">
+        <COL width="6%">
+        <COL width="6%">
+    <THEAD>
+
     <TR bgcolor="gray">
         <TH><A HREF="KeySearchTerm.jsp" target="_blank">Key Search Term</A></TH>
         <TH><A HREF="SearchType.jsp" target="_blank">Search Type</A></TH>
@@ -46,7 +56,7 @@
             <TD> By family term </TD>
             </logic:equal>
 
-            <TD>
+            <TD align="center"> 
                 <bean:write name="association" property="target_gene.symbol"/>&nbsp
             </TD>
             <TD>
@@ -55,10 +65,10 @@
             <TD>
                 <bean:write name="association" property="target_gene.gosString"/>&nbsp
             </TD>
-            <TD>
+            <TD align="center">
                 <bean:write name="association" property="stat_analysis.score"/>&nbsp
             </TD>
-            <TD>
+            <TD align="center">
                 <bean:write name="association" property="asso_data.doublehit"/>&nbsp
             </TD>
         </tr>

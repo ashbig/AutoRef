@@ -16,7 +16,9 @@
         <bean:write name="number"/>
     </logic:present>
         Genes Associated With <bean:write name="disease"/>
-        By Statistic Method Of "<bean:write name="stat" property="type"/>"
+    </h1>
+    <h1>
+        By Statistical Method Of "<bean:write name="stat" property="type"/>"
     </h1>
     </center>
 
@@ -25,6 +27,17 @@
     
     <p>
     <TABLE width = "100%" align="center" border="1" cellpadding="2" cellspacing="0" >
+
+    <COLGROUP>
+        <COL width="15%">
+        <COL width="5%">
+        <COL width="10%">
+        <COL width="33%">
+        <COL width="25%">
+        <COL width="6%">
+        <COL width="6%">
+    <THEAD>
+
     <TR bgcolor="gray">
         <TH><A HREF="KeySearchTerm.jsp" target="_blank">Key Search Term</A></TH>
         <TH><A HREF="SearchType.jsp" target="_blank">Search Type</A></TH>
@@ -50,7 +63,7 @@
             <TD>
                 <bean:write name="association" property="geneIndex.searchType"/>&nbsp
             </TD>
-            <TD>
+            <TD align="center">
                 <bean:write name="association" property="gene.symbol"/>&nbsp
             </TD>
             <TD>
@@ -59,10 +72,10 @@
             <TD>
                 <bean:write name="association" property="gene.gosString"/>&nbsp
             </TD>
-            <TD>
+            <TD align="center">
                 <bean:write name="association" property="stat.score"/>&nbsp
             </TD>
-            <TD>
+            <TD align="center">
                 <bean:write name="association" property="data.doublehit"/>&nbsp
             </TD>
         </tr>
