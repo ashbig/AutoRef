@@ -25,7 +25,7 @@ public class Contig
         if (ApplicationHostDeclaration.IS_BIGHEAD)
             m_needle_output_path = "d:\\output\\tmp_assembly\\";
         else
-            m_needle_output_path = "/tmp_assembly/";
+            m_needle_output_path = "c:\\tmp_assembly\\";
     }
     
     private String              m_sequence = null;
