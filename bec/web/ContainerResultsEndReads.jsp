@@ -109,10 +109,7 @@
 			{
 				//System.out.println("result id "+ result.getId() +" "+result.getType() );
 				read = (Read) result.getValueObject();
-				if (read != null)
-				{
-					System.out.println("read id "+ read.getId());
-					}
+				
 			}
 			
 		}
