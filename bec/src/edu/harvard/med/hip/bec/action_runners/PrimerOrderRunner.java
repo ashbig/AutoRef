@@ -183,8 +183,25 @@ public class PrimerOrderRunner extends ProcessRunner
             }
             else
             {
-                m_error_messages.add("There is no primers for clone " + clone_description.getCloneId());
-            }
+                switch ( m_primers_selection_rule)
+                {
+                    case PrimerOrderRunner.OLIGO_SELECTION_FORMAT_REFSEQ_ONLY:
+                    {
+                         m_error_messages.add("There is no primers for reference sequence:  clone " + clone_description.getCloneId());
+                         break;
+                    }
+                    case PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COLLECTION_REFSEQ:
+                    {
+                         m_error_messages.add("There is no primers for clone " + clone_description.getCloneId());
+                         break;
+                    }
+                    case PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COOLECTION_ONLY:
+                    {
+                         m_error_messages.add("There is no primers for stretch collection: clone " + clone_description.getCloneId());
+                         break;
+                    }
+                }
+             }
         }
         if (primers.size() > 0)
                  createPlateFiles(primers,sorted_clone_description,     conn); 
