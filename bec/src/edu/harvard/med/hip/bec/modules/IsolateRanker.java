@@ -213,8 +213,7 @@ public class IsolateRanker
                 it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
                 it.updateRankAndScore(it.getRank(), it.getScore(), it.getId(),  conn );
                 it.updateStatus( it.getStatus(), it.getId(), conn);
-               // }
-             }
+            }
             construct.updateCurrentIndex( construct.getCurrentIsolateId(),conn);
             
            conn.commit();
@@ -241,7 +240,7 @@ public class IsolateRanker
         {
             Read read  = (Read) reads.get(reads_count);
               //not analyzed isolates
-            if (it.getStatus() == IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED)
+            if (read.getStatus() == Read.STATUS_NOT_ANALIZED)
             {
      //check for read length
                 if ( !isReadLong(read,conn)) continue;
@@ -321,6 +320,8 @@ public class IsolateRanker
                 read.setCdsStop( -(read_sequence.getText().length() + 1 - df.getCdsStop() + read.getTrimStart() ));
             }
             read.updateCdsStartStop(conn);
+            read.setStatus(Read.STATUS_ANALIZED);
+            read.updateStatus(conn);
             if (m_isRunPolymorphism)
             {
                  PolymorphismDetector pf = new PolymorphismDetector();
