@@ -47,7 +47,6 @@ myNavBar1.addMenu(dhtmlMenu);
 	dhtmlMenu.addItem(new NavBarMenuItem("Polymorphism Finder", "Seq_EnterPolymorphismParameters.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Available Vectors Information", "/BEC/Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_VECTORS_DEFINITION_INT%>"));
 dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "/BEC/Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_LINKERS_DEFINITION_INT%>"));
-	dhtmlMenu.addItem(new NavBarMenuItem("Help", "Help_ConfigureSystem.jsp"));
 	myNavBar1.addMenu(dhtmlMenu);
 
 
@@ -92,6 +91,8 @@ dhtmlMenu.addItem(new NavBarMenuItem("Isolate Ranker", "Help_IsolateRanker.jsp")
 dhtmlMenu.addItem(new NavBarMenuItem("Discrepancy Finder", "Help_DiscrepancyFinder.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Polymorphism Finder", "Help_PolymorphismFinder.jsp"));
 dhtmlMenu.addItem(new NavBarMenuItem("Primer Designer", "Help_PrimerDesigner.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("Report Runner", "Help_ReportRunner.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("Projects Settings", "Help_ProjectData.jsp"));
 myNavBar1.addMenu(dhtmlMenu);
 
 
