@@ -68,7 +68,8 @@ else if  (request.getAttribute(Constants.JSP_TITLE ) != null)
 		else
 		{
 			forwardName = request.getParameter("forwardName") ;
-		}%>
+		}
+System.out.println("scan label "+forwardName);%>
 
 <input name="forwardName" type="hidden" value="<%= forwardName %>" > 
 <input name="<%= Constants.JSP_TITLE %>" type="hidden" value="<%= title %>" >

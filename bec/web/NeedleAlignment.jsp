@@ -66,7 +66,7 @@ if ( request.getAttribute("trimend") != null)
 {%>
   <TR> 
     <TD >Reference Sequence:</td>
-    <td><a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= request.getAttribute("refsequenceid") %>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;" > 
+    <td><a href="#" onCLick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= request.getAttribute("refsequenceid") %>','newWndNt','width=500,height=400,menubar=no,location=no,scrollbars=yes');return false;" > 
 		<%= request.getAttribute("refsequenceid")%></a></TD>
   </TR>
 <%}%>

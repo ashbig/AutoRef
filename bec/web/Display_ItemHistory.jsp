@@ -40,6 +40,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
 <tr><td>
 <%  
+  
     int item_type = Integer.parseInt( (String)request.getAttribute("item_type"));
     String item_title ="Id:";
     if (item_type == Constants.ITEM_TYPE_CLONEID)
@@ -53,7 +54,7 @@
    {
          history = (ItemHistory)items.get(index);
         %>
-         <table border='0' width="100%">        <TR><TD>     <%= item_title + " "+ history.getItemId()%>           </TD></TR>
+         <table border='0' width="100%">        <TR><TD>    <b> <%= item_title + " "+ history.getItemId()%>    </b>       </TD></TR>
          <TR><TD>
         <%
         if ( history.getStatus() == ItemHistory.HISTORY_PROCESSED)
@@ -66,7 +67,6 @@
                 <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Researcher</font></strong></th>
             </tr>
 <%
-    
     for (int count = 0; count < history.getHistory().size(); count ++)
 	{
 		pr_history = (ProcessHistory)history.getHistory().get(count);
@@ -86,7 +86,7 @@
 		if ( cs.getType() == Spec.PRIMER3_SPEC_INT ||  cs.getType() == Spec.END_READS_SPEC_INT 
 		||  cs.getType() == Spec.FULL_SEQ_SPEC_INT ||  cs.getType() == Spec.POLYMORPHISM_SPEC_INT )
 		{%>
-			<a href="/BEC/Seq_GetSpec.do?forwardName=<%= cs.getId()  * Spec.SPEC_SHOW_SPEC %> "> 
+			<a href="#" onCLick="window.open('/BEC/Seq_GetSpec.do?forwardName=<%= cs.getId()  * Spec.SPEC_SHOW_SPEC %>' ,'newWndRefseqNt','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"> 
 			 <%=cs.getId() %> </a>
 		<%}
 		else

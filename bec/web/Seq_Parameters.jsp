@@ -1,8 +1,8 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
 <%@ page import="java.util.*" %>
-<%@ page import="edu.harvard.med.hip.bec.core.spec.*" %>
-<%@ page import="edu.harvard.med.hip.bec.core.oligo.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -57,14 +57,16 @@ Create new set of parameters or view all available sets.</h3>
     <td><div align="center"> <b><a href="/BEC/Seq_GetSpec.do?forwardName=<%=Spec.POLYMORPHISM_SPEC_INT%>"> 
         View All </a></b> </div></td>
   </tr>
+<!--
   <tr> 
     <td>Universal Primers Pairs</td>
     <td><div align="center"> <b><a href="Seq_EnterUniversalPrimer.jsp"> Create 
         </a></b> </div></td>
     <td>&nbsp;</td>
-    <td><div align="center"> <b><a href="/BEC/Seq_GetSpec.do?forwardName=<%=OligoPair.UNIVERSAL_PAIR_INT%>"> 
+    <td><div align="center"> <b><a href="/BEC/Seq_GetSpec.do?forwardName=< %=OligoPair.UNIVERSAL_PAIR_INT%>"> 
         View All </a></b> </div></td>
   </tr>
+-->
 </table>
 
 

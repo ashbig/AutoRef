@@ -1,14 +1,35 @@
-<%@page contentType="text/html"%>
-<%@ page errorPage="ProcessError.do"%>
 <html>
-<head><title>JSP Page</title></head>
-<body>
-<h2>Help</h2>
-<TABLE border="0" cellpadding="2" cellspacing="2">
+<head>
+<title>create report</title>
+</head>
+<body >
+<jsp:include page="NavigatorBar_Administrator.jsp" />
+	<p><P>
+<br>
+<table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
+    <tr>
+        
+    <td > <font color="#008000" size="5"><b> Help : Report Runner</font> 
+      <hr>    <p>    </td>
+    </tr>
+</table>
 
-<tr><td><a href = "/FLEX/Help_ContainerLabels.jsp"  > Container Labels</a></td></tr>
-<tr><td><a href = "/FLEX/Help_ReportRunner.html"  > Report Runner</a></td></tr>
-<tr><td><a href = "/FLEX/Help_SequenceEvaluation.html"  > Full Sequence Analysis</a>  </td><tr>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr>      <td width="100%"><html:errors/></td>    </tr>
+  </table>
+  </center>
+</div>
+
+
+
+
+<TABLE border="0" cellpadding="2" cellspacing="2" width="74%" align="center">
+
+<tr><td><a href = "Help_ReportRunner.jsp"  > Report runner</a></td></tr>
+<tr><td><a href = "Help_SequenceEvaluation.html"  >NO MATCH report runner</a>  </td><tr>
+<tr><td><a href = "Help_SequenceEvaluation.html"  >NO MATCH report runner</a>  </td><tr>
 
 </table>
 </body>

@@ -13,6 +13,7 @@
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 <%@ page import="edu.harvard.med.hip.bec.Constants" %>
+<%@ page import="edu.harvard.med.hip.utility.*" %>
 <html>
 <head>
 <script language="JavaScript">
@@ -148,7 +149,7 @@ int forwardName = Integer.parseInt( (String) request.getParameter("forwardName")
 	{%>
 	&nbsp;
 	<%}else{%>
-		<a href="#" onCLick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','<%= sample.getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
+		<a href="#" onCLick="window.open('<%= ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','<%= sample.getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 		<%= sample.getRefSequenceId()%></a>
 		
 	<%}%>	</td>

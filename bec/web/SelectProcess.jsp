@@ -96,6 +96,9 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ISOLATE_RUNKER  %>>
       Run isolate ranker (settings required)</font></td>
   </tr>
+
+<% if (! ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+{%>
   <tr> 
     <td width="100%" height="29" bgcolor="#DCE8FC"><font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_APROVE_ISOLATE_RANKER  %>>
@@ -145,10 +148,12 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_FIND_GAPS %> >
       Run Gap Mapper (settings required)</font></td>
   </tr>
-
+<%}%>
 <tr> 
     <td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Clone Evaluation</font></b></td>
 </tr>
+<% if (! ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+{%>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS  %>>
@@ -164,7 +169,7 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE  %> >
       Find low quality regions of clone sequence (settings required)</font></td>
   </tr>
-
+<%}%>
 <TR><TD COlspan=2 bgcolor="#DCE8FC" >&nbsp</TD></TR>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
@@ -201,6 +206,8 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       <input   type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_INTERNAL_PRIMERS  %> >
       View internal primers </font></td>
   </tr>
+<% if (! ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION)
+{%>
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input  <%if (!isAdmin) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_VIEW_OLIGO_PLATE %> >
@@ -232,6 +239,7 @@ User user = (User)session.getAttribute(Constants.USER_KEY);
       Run Discrepancy Finder on set of sequences<br>
       </font> <font color="#ECECFF">a</font></td>
 </tr>
+<%}%>
 <tr> 
     <td> <br> <b><font color="#1145A6">Please make a selection and submit.</font></b> </center> 
       <p align="left">     <input type="submit" value="continue" name="submit">    <br>

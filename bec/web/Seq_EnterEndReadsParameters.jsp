@@ -15,7 +15,7 @@
 <title>End Reads Parameters</title>
 <LINK REL=StyleSheet HREF="FlexStyle.css" TYPE="text/css" MEDIA=screen>
 <link href="FlexStyle.css" rel="stylesheet" type="text/css">
-<script language="JavaScript" src="/BEC/scripts.js"></script>
+<script language="JavaScript" src="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>scripts.js"></script>
 </head>
 
 <body >
@@ -56,8 +56,8 @@
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
 
 <tr><td colspan =2><div align="right"><b>
-<a href="/BEC/Seq_GetSpec.do?forwardName=<%=Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> "> 
-        View Mine </a>&nbsp;&nbsp;<a href="/BEC/Seq_GetSpec.do?forwardName=<%=Spec.END_READS_SPEC_INT%>"> 
+<a href="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetSpec.do?forwardName=<%=Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> "> 
+        View Mine </a>&nbsp;&nbsp;<a href="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetSpec.do?forwardName=<%=Spec.END_READS_SPEC_INT%>"> 
         View All </a></b> </div><P><P><P></P></P></P></td></tr>
 <TR><td colspan="2">
 

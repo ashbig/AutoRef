@@ -69,7 +69,7 @@
   <tr> 
     <td><strong>Cloning Startegy</strong></td>
     <td> 
-      <a href="/BEC/Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
+      <a href="<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%= Constants.CLONING_STRATEGY_DEFINITION_INT %>&amp;ID=<%= container.getCloningStrategyId() %>">
 	    <%= container.getCloningStrategyId() %></A>
     </td>
   </tr>
@@ -141,16 +141,16 @@
 		<td  align="right" <%= row_color %>> <%if (read != null ){%> <%= read.getScore() %><%}else{%> &nbsp;<%}%>  </td>
 		
 		<td <%= row_color %>><%if (read != null ){%>
-		 <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.SCOREDSEQUENCE_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>&amp;trimstart=<%=read.getTrimStart()%>&amp;trimend=<%=read.getTrimEnd()%>','<%= read.getSequenceId() %>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+		 <A HREF="" onClick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.SCOREDSEQUENCE_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>&amp;trimstart=<%=read.getTrimStart()%>&amp;trimend=<%=read.getTrimEnd()%>','<%= read.getSequenceId() %>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 		 <%= read.getSequenceId() %>
 		 </a>
 		 
 		 <%}else{%> &nbsp;<%}%>  </td>
 		<td <%= row_color %> align="center"><%if (read != null ){%>
- <input type=BUTTON value=Report onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+ <input type=BUTTON value=Report onClick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= read.getSequenceId()%>','<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 		 <%}else{%> &nbsp;<%}%>    </td>
 		<td <%= row_color %>><%if (read != null ){%>
- <input type=BUTTON value=Alignment onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= read.getSequenceId()%>','alg<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+ <input type=BUTTON value=Alignment onClick="window.open('<%= edu.harvard.med.hip.utility.ApplicationHostDeclaration.JSP_REDIRECTION %>Seq_GetItem.do?forwardName=<%=Constants.READSEQUENCE_NEEDLE_ALIGNMENT_INT%>&amp;ID=<%= read.getSequenceId()%>','alg<%= read.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
 		 <%}else{%> &nbsp;<%}%>     </td>
 	</tr>
 	<%}%>

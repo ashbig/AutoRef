@@ -129,8 +129,7 @@ else if (sets.size() > 0 )
             </div></td>
           <td width="13%"bgColor="#e4e9f8"> <div align="center"> 
               <input type="checkbox"  disabled
-            <% if (spec.getParameterByNameString("FS_S_POLM") != null
-                && ! spec.getParameterByNameString("FS_S_POLM").equals("not set") ) 
+            <% if (spec.getParameterByName("FS_S_POLM") != null                ) 
           {%>
           	checked
           <%}%> 
@@ -146,8 +145,7 @@ else if (sets.size() > 0 )
           <td bgColor="#b8c6ed"><div align="center">              <%= spec.getParameterByNameString("FS_C_FAIL_L")%> </div></td>
           <td bgColor="#b8c6ed"> <div align="center">      <input type="checkbox"  disabled
 	           
-	           <% if (spec.getParameterByNameString("FS_C_POLM") != null
-                       && ! spec.getParameterByNameString("FS_C_POLM").equals("not set")) 
+	           <% if (spec.getParameterByName("FS_C_POLM") != null) 
 	           {%>
 	           	checked
 	           <%}%> 
@@ -167,8 +165,7 @@ else if (sets.size() > 0 )
             </div></td>
           <td bgColor="#e4e9f8"> <div align="center"> 
               <input type="checkbox"  disabled
-            <% if (spec.getParameterByNameString("FS_NC_POLM") != null
-            && ! spec.getParameterByNameString("FS_NC_POLM").equals("not set")) 
+            <% if (spec.getParameterByName("FS_NC_POLM") != null) 
             {%>
                 checked
             <%}%> 
@@ -187,8 +184,7 @@ else if (sets.size() > 0 )
           <td bgColor="#b8c6ed"> <div align="center"> 
               <input type="checkbox" disabled 
 
-            <% if (spec.getParameterByNameString("FS_FR_POLM") != null
-    && ! spec.getParameterByNameString("FS_FR_POLM").equals("not set")) 
+            <% if (spec.getParameterByName("FS_FR_POLM") != null) 
             {%>
                 checked
             <%}%> 
@@ -205,8 +201,7 @@ else if (sets.size() > 0 )
           <td bgColor="#e4e9f8"> <div align="center"> 
               <input type="checkbox"  disabled
 	            
-	            <% if (spec.getParameterByNameString("FS_IDEL_POLM") != null
-            && ! spec.getParameterByNameString("FS_IDEL_POLM").equals("not set")) 
+	            <% if (spec.getParameterByName("FS_IDEL_POLM") != null) 
 	            {%>
 	            	checked
 	            <%}%> 
@@ -223,8 +218,7 @@ else if (sets.size() > 0 )
           <td bgColor="#b8c6ed"> <div align="center"> 
               <input type="checkbox"  disabled
           
-          <% if (spec.getParameterByNameString("FS_IINS_POLM") != null
-&& ! spec.getParameterByNameString("FS_IINS_POLM").equals("not set")) 
+          <% if (spec.getParameterByName("FS_IINS_POLM") != null) 
           {%>
           	checked
           <%}%> 
@@ -241,8 +235,7 @@ else if (sets.size() > 0 )
           <td bgColor="#e4e9f8"> <div align="center"> 
               <input type="checkbox"  
 	            
-	            <% if (spec.getParameterByNameString("FS_TRANC_POLM") != null
-    && ! spec.getParameterByNameString("FS_TRANC_POLM").equals("not set")) 
+	            <% if (spec.getParameterByName("FS_TRANC_POLM") != null) 
 	            {%>
 	            	checked
 	            <%}%> 
@@ -261,8 +254,7 @@ else if (sets.size() > 0 )
           <td bgColor="#b8c6ed"> <div align="center"> 
               <input type="checkbox" disabled  
 	           
-	           <% if (spec.getParameterByNameString("FS_NOTRANSLATION_POLM") != null
-    && ! spec.getParameterByNameString("FS_NOTRANSLATION_POLM").equals("not set")) 
+	           <% if (spec.getParameterByName("FS_NOTRANSLATION_POLM") != null) 
 	           {%>
 	           	checked
 	           <%}%> 
@@ -284,8 +276,7 @@ else if (sets.size() > 0 )
           <td bgColor="#e4e9f8"> <div align="center"> 
               <input type="checkbox" disabled   
 	            
-	            <% if (spec.getParameterByNameString("FS_PELONG_POLM") != null
-    && ! spec.getParameterByNameString("FS_PELONG_POLM").equals("not set")) 
+	            <% if (spec.getParameterByName("FS_PELONG_POLM") != null) 
 	            {%>
 	            	 checked 
 	            <%}%> 
