@@ -12,6 +12,7 @@ import edu.harvard.med.hip.flex.process.*;
 import edu.harvard.med.hip.flex.user.*;
 import edu.harvard.med.hip.flex.workflow.*;
 import edu.harvard.med.hip.flex.database.*;
+import edu.harvard.med.hip.flex.core.*;
 
 import org.apache.struts.action.*;
 import javax.servlet.*;
@@ -56,17 +57,40 @@ public class MgcOrderOligoAction extends ResearcherAction
         MgcOrderOligoForm requestForm = (MgcOrderOligoForm)form;
         int workflowid = requestForm.getWorkflowid();
         int projectid = requestForm.getProjectid();
+        String barcode = requestForm.getResearcherBarcode();
         String processname = requestForm.getProcessname();
         boolean isFullPlatesOnly = requestForm.getIsFullPlate();
         MgcOligoPlateManager om  = null;
         
-        
+         // Validate the researcher barcode.
+        Researcher researcher = null;
+        try {
+            researcher = new Researcher(barcode);
+        } catch (FlexProcessException ex) {
+            request.setAttribute("workflowid", new Integer(workflowid));
+            request.setAttribute("projectid", new Integer(projectid));
+            
+            errors.add("researcherBarcode", new ActionError("error.researcher.invalid.barcode", barcode));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        } catch (FlexDatabaseException ex) {
+            request.setAttribute(Action.EXCEPTION_KEY, ex);
+            return (mapping.findForward("error"));
+        }
+       
         Connection conn = null;
         try
         {
+            
             Project project = new Project(projectid);
             Workflow workflow = new Workflow(workflowid);
             Protocol protocol  = new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS);
+            
+            request.setAttribute("projectname", project.getName());            
+            request.setAttribute("workflowname", workflow.getName());  
+            request.setAttribute("processname", processname);  
+            request.setAttribute("locations", Location.getLocations());
+            
             conn = DatabaseTransaction.getInstance().requestConnection();
             //check if attribute not_duplicated_sequences is set in session
             //if yes queue has duplicates
@@ -82,8 +106,10 @@ public class MgcOrderOligoAction extends ResearcherAction
                 om = new MgcOligoPlateManager(conn,project, workflow,
                                                                 isFullPlatesOnly, protocol, username);
             }
-            om.orderOligo();
             
+            om.orderOligo();
+   
+            request.getSession().setAttribute("EnterSourcePlateAction.newContainers", new Vector(om.getRearrayContainers() ) );
             return mapping.findForward("success");
         } catch (FlexDatabaseException fde)
         {
