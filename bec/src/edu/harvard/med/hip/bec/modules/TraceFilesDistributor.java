@@ -59,7 +59,7 @@ public class TraceFilesDistributor
         File destinationFile = null; //destination trace file dir after file transfer
         File traceFile = null;
         boolean isError_directory_exists = false;
-        String destinationFileName  ; String destination_directory = null;
+        String destinationFileName  ; String destination_dir = null;
         for (int count = 0; count < sourceFiles.length; count++)
         {
             traceFile = sourceFiles[count];
@@ -70,7 +70,8 @@ public class TraceFilesDistributor
             }
             
             //check for file format // control //empty samples
-            if (! isWriteNamingFormat( traceFile,  wrongformatfiles,     emptysamples_directory,     destination_directory ) || destination_directory == null )
+            destination_dir = isWriteNamingFormat( traceFile,  wrongformatfiles,     emptysamples_directory   );
+            if (destination_dir == null )
             {
                 continue;
             }
@@ -80,7 +81,7 @@ public class TraceFilesDistributor
             try
             {
                 //create file structure and distribute trace file into chromat_dir
-                destinationFileName = distributor.distributeFile(traceFile,outputBaseDir,destination_directory);//baseDir);
+                destinationFileName = distributor.distributeFile(traceFile,outputBaseDir,destination_dir);//baseDir);
                 destinationFile = new File(destinationFileName);
                 if (destinationFile != null)
                 {
@@ -186,10 +187,10 @@ public class TraceFilesDistributor
         return true;
     }
     
-    
-    private boolean isWriteNamingFormat(File traceFile, String wrongformatfiles,
-    String emptysamples_directory,
-    String destination_directory )
+    //retunr destination directory name if file OK
+    //otherwise null
+    private String isWriteNamingFormat(File traceFile, String wrongformatfiles,
+    String emptysamples_directory )
     {
         //check for file format
         PhredOutputFileName pr = new PhredOutputFileName(traceFile.getName());
@@ -200,23 +201,23 @@ public class TraceFilesDistributor
             {
                 
                 moveFile(traceFile, wrongformatfiles, m_isError_directory_exists);
-                return false;
+                return null;
             }
             // check if empty well
             else if (pr.getCloneidNumber() == 0 && pr.getSequenceidNumber() != 0)
             {
                 moveFile(traceFile, emptysamples_directory, m_isEmptySamples_directory_exists);
-                return false;
+                return null;
             }
             //file ok
-            destination_directory = pr.getSequenceid() +File.separator+pr.getCloneid();
-            return true;
+          //  destination_directory = pr.getSequenceid() +File.separator+pr.getCloneid();
+            return pr.getSequenceid() +File.separator+pr.getCloneid();
         }
         else
         {
             m_error_messages.add("File "+traceFile +" has wrong format.");
             moveFile(traceFile, wrongformatfiles, m_isError_directory_exists);
-            return false;
+            return null;
             
         }
    

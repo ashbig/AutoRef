@@ -35,6 +35,7 @@ public class EndReadsWrapper
     private String      m_outputBaseDir_wrongformatfiles = null;
     private String      m_inputTraceDir = null;
     private String      m_errorDir = null;
+    private String      m_empty_samples_directory = null;
     /** Creates a new instance of EndReadsWrapper */
     public EndReadsWrapper()
     {
@@ -43,12 +44,14 @@ public class EndReadsWrapper
         m_errorDir =  ERROR_BASE_DR;
     }
     
-    public EndReadsWrapper(String outputBaseDir, String inputTraceDir, String errorDir, String outputBaseDir_wrongformatfiles)
+    public EndReadsWrapper(String outputBaseDir, String inputTraceDir, String errorDir, 
+    String outputBaseDir_wrongformatfiles, String empty_samples_directory)
     {
         m_outputBaseDir =  outputBaseDir;
         m_inputTraceDir =  inputTraceDir;
         m_errorDir =  errorDir;
         m_outputBaseDir_wrongformatfiles = outputBaseDir_wrongformatfiles;
+        m_empty_samples_directory = empty_samples_directory;
     }
     
     
@@ -63,7 +66,7 @@ public class EndReadsWrapper
         ArrayList error_messages = new ArrayList();
         //distribute chromat files 
         TraceFilesDistributor tfb = new TraceFilesDistributor();
-        ArrayList chromat_files = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir,m_outputBaseDir_wrongformatfiles);
+        ArrayList chromat_files = tfb.distributeChromatFiles(m_inputTraceDir, m_outputBaseDir,m_outputBaseDir_wrongformatfiles, m_empty_samples_directory);
         error_messages = tfb.getErrorMesages();
         return runPhredandParseOutput( chromat_files,  error_messages);
         //run phred and parse output
@@ -106,11 +109,11 @@ public class EndReadsWrapper
         String traceDir = "C:\\bio\\phred\\out";
         String errorDir = "C:\\bio\\phred\\err";
         String dr ="c:\\bio\\phred\\err";
-        
+         String dr_empty ="c:\\bio\\phred\\empty";
       //  PipelineDriver task = new PipelineDriver();
         //task.processPipeline(baseDir,traceDir,errorDir);
         try{
-        EndReadsWrapper ew = new EndReadsWrapper(traceDir,baseDir,errorDir, dr);
+        EndReadsWrapper ew = new EndReadsWrapper(traceDir,baseDir,errorDir, dr,dr_empty);
         ArrayList reads = ew.run();
         System.out.println("Total read object: "+reads.size());
         
