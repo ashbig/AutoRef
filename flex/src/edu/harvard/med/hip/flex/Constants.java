@@ -21,6 +21,7 @@ public class Constants {
     
     //constant for external user group
     public static final String EXTERNAL_GROUP = "external";
+  
     
     /*
      * Keys used in the session/request
@@ -58,6 +59,9 @@ public class Constants {
     
     // key to use to find the number of requests processed
     public static final String PROCESSED_SEQ_NUM_KEY = "PROCESESSED_SEQ_NUM";
+    
+    // key used to find the id of a plate
+    public static final String PLATE_ID_KEY = "PLATE_ID";
     
     /** Creates new Constants */
     private Constants() {
