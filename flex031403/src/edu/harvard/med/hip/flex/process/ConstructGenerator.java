@@ -47,7 +47,7 @@ public class ConstructGenerator {
         this.conn = c;
         this.oligoPatternList = new LinkedList();
         this.constructList = new LinkedList();
-        m_protocol = new Protocol("design constructs");
+        m_protocol = new Protocol(Protocol.DESIGN_CONSTRUCTS);
     }
     
     /**
