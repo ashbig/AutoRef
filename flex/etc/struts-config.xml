@@ -170,7 +170,13 @@
     <!-- Form used to do the sequence query -->
     <form-bean      name="sequenceQueryEntryForm"
                     type="edu.harvard.med.hip.flex.form.SequenceQueryEntryForm"/>
+
+ <!-- Form used to do rearray -->
+    <form-bean      name="rearrayForm"
+                    type="edu.harvard.med.hip.flex.form.RearrayForm"/>
+
   
+ 
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -198,6 +204,9 @@
     <forward    name="displayMGCRequest" path="/DisplayMGCRequest.jsp"/>    
     <forward    name="specialOligoOrder" path="/GetProjects.do?forwardName=SPECIAL_OLIGO_ORDER"/>
     <forward    name="geneQuery" path="/SequenceQueryEntry.jsp"/>   
+    
+
+
   </global-forwards>
   
 
@@ -257,6 +266,8 @@
                 type="edu.harvard.med.hip.flex.action.GetProjectsAction">
         <forward    name="success"   path="/SelectProject.jsp"/>
         <forward    name="success_import_sequence"   path="/ImportSequence.jsp"/>
+
+
     </action>
 
     <!-- Process user's selection of a project -->
@@ -277,6 +288,9 @@
             <forward name="success_special_oligo_order" path="/SpecialOligoOrder.jsp"/>
             <forward name="success_result_entry" path="/PickResultType.jsp"/>
             <forward    name="success"   path="/SelectProject.jsp"/>
+     
+    
+    
     </action>
 
     <!-- Process a customer request -->
@@ -420,6 +434,8 @@
       <forward  name="success_enter_result"   path="/EnterProcessResults.jsp"/>
       <forward  name="success_mgc_process_duplicate_plates" path="/MgcProcessDuplicateSequences.jsp" />
       <forward  name="success_mgc_process_full_plates" path="/MgcProcessFullPlates.jsp" />
+    <forward  name="success_recieve_plates" path="/ReceiveSequencingPlates.jsp" />
+    <forward  name="success_rearray" path="/RearrayPlates.jsp" />
     </action> 
 
     <!-- Process the source plate input -->
@@ -582,14 +598,7 @@
       <forward  name="success"   path="/ReceiveOligoOrders.jsp"/>
     </action>
 
-    <!-- Process the receiving of new oligo plates -->
-    <action    path="/ReceiveOligoPlates"
-               type="edu.harvard.med.hip.flex.action.ReceiveOligoPlatesAction"
-               name="ReceiveOligoOrdersForm"
-               scope="request"
-               input="/ReceiveOligoOrders.jsp">
-      <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
-    </action>
+  
      
     
     <!-- Process the receiving of new oligo plates -->
@@ -875,6 +884,42 @@
       <forward  name="success_queryGenes"   path="/SequenceQuery.jsp"/>
     </action> 
     
+  <!-- Process the receiving of new oligo plates -->
+    <action    path="/ReceiveOligoPlates"
+               type="edu.harvard.med.hip.flex.action.ReceiveOligoPlatesAction"
+               name="ReceiveOligoOrdersForm"
+               scope="request"
+               input="/ReceiveOligoOrders.jsp">
+      <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
+    </action>
+
+
+<!-- Process the receiving of new sequencing plates -->
+    <action    path="/ReceiveOligoPlates"
+               type="edu.harvard.med.hip.flex.action.ReceiveOligoPlatesAction"
+               name="ReceiveOligoOrdersForm"
+               scope="request"
+               input="/ReceiveSequencingPlates.jsp">
+        <forward  name="success"   path="/EnterOligoPlateLocation.jsp"/>
+        <forward  name="success_receive_sequencing_results"   path="/MgcGetLocation.jsp"/>
+    </action>
+
+
+<!-- Process of rearraying plates -->
+<action    path="/RearrayPlates"
+               type="edu.harvard.med.hip.flex.action.RearrayPlatesAction"
+               name="rearrayForm"
+               scope="request"
+               input="/RearrayPlates.jsp">
+      <forward  name="success"   path="/MgcGetLocation.jsp"/>
+    </action>
+
+    
+ 
+
+
+
+
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
