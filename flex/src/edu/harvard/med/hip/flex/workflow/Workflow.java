@@ -56,6 +56,7 @@ public class Workflow {
     public static final int EXPRESSION_WORKFLOW = 30;
     
     public static final int IMPORT_EXTERNAL_CLONE = 31;
+    public static final int MGC_GATEWAY_CLOSED = 32;
     
     /** Creates new Workflow */
     public Workflow() {
