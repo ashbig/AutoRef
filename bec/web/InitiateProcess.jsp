@@ -111,8 +111,14 @@ Spec spec = null;
 	
     </tr>
 <%}}%>
-
+<tr><td colspan='2'>
+<% if ( ((Integer)forwardName).intValue() == Constants.PROCESS_RUN_PRIMER3)
+{
+%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name='isTryMode' checked value=1><b>Run in try mode?</b>
+<%}%>
+</td></tr>
 </table>
+
 <div align="center"> 
   <p> 
     <input type="submit" value="Submit" >
