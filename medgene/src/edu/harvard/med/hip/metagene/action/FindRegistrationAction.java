@@ -135,7 +135,7 @@ public class FindRegistrationAction extends Action {
                 return (mapping.findForward("failure"));
             }
         }catch (Throwable th) {
-            //System.out.println(th);
+            System.out.println(th);
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error",th));
             return (mapping.findForward("error"));

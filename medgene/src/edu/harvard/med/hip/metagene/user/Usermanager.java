@@ -12,14 +12,14 @@ import java.sql.*;
 /**
  *
  * @author  dzuo
- * @version 
+ * @version
  */
 public class Usermanager {
-
+    
     /** Creates new Usermanager */
     public Usermanager() {
     }
-
+    
     public boolean authenticate(String username, String password) {
         DatabaseManager manager = new DatabaseManager();
         Connection conn = manager.connect();
@@ -27,21 +27,21 @@ public class Usermanager {
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return false;
-        }        
+        }
         
         String sql = "select * from userprofile where userid = '"+username+
-                    "' and userpassword = '"+password+"'";
+        "' and userpassword = '"+password+"'";
         Statement stmt = null;
         boolean rt = false;
         
         try {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-        
+            
             if(rs.next()) {
                 rt = true;
             }
-
+            
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -50,8 +50,8 @@ public class Usermanager {
         }
         
         return rt;
-    } 
-
+    }
+    
     public boolean userExist(String userid) {
         DatabaseManager manager = new DatabaseManager();
         Connection conn = manager.connect();
@@ -59,7 +59,7 @@ public class Usermanager {
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return false;
-        }        
+        }
         
         String sql = "select * from userprofile where userid = '"+userid+"'";
         Statement stmt = null;
@@ -68,11 +68,11 @@ public class Usermanager {
         try {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-        
+            
             if(rs.next()) {
                 rt = true;
             }
-
+            
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -80,7 +80,7 @@ public class Usermanager {
             manager.disconnect();
         }
         
-        return rt;        
+        return rt;
     }
     
     public boolean reminderUnique(String text) {
@@ -90,20 +90,21 @@ public class Usermanager {
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return false;
-        }        
+        }
         
-        String sql = "select * from userprofile where remindtext = '"+text+"'";
+        String sql = "select count (*) from userprofile where remindtext = '"+text+"'";
         Statement stmt = null;
         boolean rt = true;
+        int count = 0;
         
         try {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-        
+            
             if(rs.next()) {
-                rt = false;
+                count = rs.getInt(1);
             }
-
+            
             stmt.close();
         } catch (SQLException ex) {
             rt = true;
@@ -112,26 +113,26 @@ public class Usermanager {
             manager.disconnect();
         }
         
-        return rt;             
+        return (count<=1);
     }
-  
+    
     public boolean addUser(String userid, String email, String password,
-                           String organization, String reminder, 
-                           String firstname, String lastname, String phone) {
+    String organization, String reminder,
+    String firstname, String lastname, String phone) {
         DatabaseManager manager = new DatabaseManager();
         Connection conn = manager.connect();
         
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return false;
-        }        
+        }
         
         String sql = "insert into userprofile"+
-                    " (userid, userpassword, remindtext, firstname, lastname,"+
-                    " workphone, useremail, userinstitute)"+
-                    " values('"+userid+"','"+password+"','"+reminder+
-                    "','"+firstname+"','"+lastname+"','"+phone+
-                    "','"+email+"','"+organization+"')";
+        " (userid, userpassword, remindtext, firstname, lastname,"+
+        " workphone, useremail, userinstitute)"+
+        " values('"+userid+"','"+password+"','"+reminder+
+        "','"+firstname+"','"+lastname+"','"+phone+
+        "','"+email+"','"+organization+"')";
         
         Statement stmt = null;
         boolean rt = false;
@@ -148,9 +149,9 @@ public class Usermanager {
             manager.disconnect();
         }
         
-        return rt;                                        
+        return rt;
     }
-
+    
     public User getUser(String userid) {
         DatabaseManager manager = new DatabaseManager();
         Connection conn = manager.connect();
@@ -158,7 +159,7 @@ public class Usermanager {
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
-        }        
+        }
         
         String sql = "select * from userprofile where userid = '"+userid+"'";
         Statement stmt = null;
@@ -167,7 +168,7 @@ public class Usermanager {
         try {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-        
+            
             if(rs.next()) {
                 String id = rs.getString(1);
                 String userpassword = rs.getString(2);
@@ -179,7 +180,7 @@ public class Usermanager {
                 String institute = rs.getString(8);
                 user = new User(id, userpassword, text, firstname, lastname, phone, email, institute);
             }
-
+            
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -187,9 +188,9 @@ public class Usermanager {
             manager.disconnect();
         }
         
-        return user;             
+        return user;
     }
- 
+    
     public User findUser(String reminder) {
         DatabaseManager manager = new DatabaseManager();
         Connection conn = manager.connect();
@@ -197,7 +198,7 @@ public class Usermanager {
         if (conn == null) {
             System.out.println("Cannot connect to the database.");
             return null;
-        }        
+        }
         
         String sql = "select * from userprofile where remindtext = '"+reminder+"'";
         Statement stmt = null;
@@ -206,7 +207,7 @@ public class Usermanager {
         try {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-        
+            
             if(rs.next()) {
                 String userid = rs.getString(1);
                 String userpassword = rs.getString(2);
@@ -218,7 +219,7 @@ public class Usermanager {
                 String institute = rs.getString(8);
                 user = new User(userid, userpassword, text, firstname, lastname, phone, email, institute);
             }
-
+            
             stmt.close();
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -226,7 +227,7 @@ public class Usermanager {
             manager.disconnect();
         }
         
-        return user;             
+        return user;
     }
     
     public static void main(String [] args) {
