@@ -1,5 +1,5 @@
 /**
- * $Id: Protocol.java,v 1.8 2001-06-19 13:04:42 dongmei_zuo Exp $
+ * $Id: Protocol.java,v 1.9 2001-06-21 14:42:27 dongmei_zuo Exp $
  *
  * File     : FlexProcessException.java
  * Date     : 04162001
@@ -131,9 +131,7 @@ public class Protocol {
             populateSubProtocols();
         } else {
             throw new FlexDatabaseException("No database record found for " + processname);
-        }
-        
-        
+        }                
     }
     
     
