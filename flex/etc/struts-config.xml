@@ -84,7 +84,7 @@
                type="edu.harvard.med.hip.flex.action.CustomerRegistrationAction"
                name="customerRegistrationForm"
               input="/CustomerRegistration.jsp">
-      <forward  name="success"   path="/MainMenu.jsp"/>
+      <forward  name="success"   path="/login.jsp"/>
       <forward  name="failure"  path="/CustomerRegistration.jsp"/>
     </action>
     
