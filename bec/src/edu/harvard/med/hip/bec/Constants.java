@@ -174,7 +174,7 @@ public class Constants {
     public static final String LINKER_ID_KEY = "LINKERID";
     public static final String VECTOR_COL_KEY = "COL_VECTOR";
     public static final String LINKER_COL_KEY = "COL_LINKER";
-    public static final String PLATES_COL_KEY = "COL_PLATES";
+    //public static final String PLATES_COL_KEY = "COL_PLATES";
     
         //submit data from file
     public static final String FILE_DESCRIPTION = "file_description";
@@ -184,21 +184,24 @@ public class Constants {
     //jsp tags
     public static final String ADDITIONAL_JSP = "additional_jsp";
      public static final String JSP_TITLE = "title";
-   
+      public static final String SPEC_COLLECTION = "spec_collection";
+     public static final String SPEC_TITLE_COLLECTION = "spec_title_collection";
+     public static final String SPEC_CONTROL_NAME_COLLECTION = "spec_control_name_collection";
+     public static final String PLATE_NAMES_COLLECTION = "plate_collection";
     
     //for  display; definition of items to display
     //processes 40 - 150 
     public static final int PROCESS_UPLOAD_PLATES =  40;//upload plates
      public static final int PROCESS_SELECT_VECTOR_FOR_END_READS =41;//run sequencing for end reads
-     public static final int PROCESS_SELECT_PLATES_FOR_END_READS =41; 
+     public static final int PROCESS_SELECT_PLATES_FOR_END_READS =44; 
      public static final int PROCESS_RUN_END_READS = 42;//run sequencing for end reads
      public static final int PROCESS_RUN_END_READS_WRAPPER = 43;//run end reads wrapper
      public static final int PROCESS_RUN_ASSEMBLER_FOR_END_READS = 45;//run assembly wrapper
       public static final int PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY =46;
      public static final int PROCESS_CHECK_READS_AVAILABILITY =62;//check reads
      
-     public static final int PROCESS_SELECT_PLATES_FOR_ISOLATE_RUNKER =47; 
-     public static final int PROCESS_RUN_ISOLATE_RUNKER = 48;//run isolate runker
+    // public static final int PROCESS_SELECT_PLATES_FOR_ISOLATE_RUNKER =; 
+     public static final int PROCESS_RUN_ISOLATE_RUNKER = 47;//run isolate runker
       public static final int PROCESS_APROVE_ISOLATE_RANKER = 48;//approve isolate ranker
     
       public static final int PROCESS_ADD_NEW_INTERNAL_PRIMER = 49; // add new internal primer
@@ -238,7 +241,7 @@ public class Constants {
     public static final int READ_REPORT_INT = 16;
      public static final int AVAILABLE_VECTORS_DEFINITION_INT = 17;
       public static final int AVAILABLE_LINKERS_DEFINITION_INT = 18;
-      
+       public static final int CONSTRUCT_DEFINITION_REPORT = 19;
        
    
     

@@ -8,6 +8,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.endreads.*" %>
 <html>
 
 
@@ -56,15 +57,15 @@
 
 <strong>Upload plate information: </strong><p></p></td>
 <td>
- <textarea property="plate_names" rows="10">
+ <textarea name="plate_names" id="plate_names" rows="10">
  </textarea>
   </td>
   </tr>
   <tr>
 <td><strong>Next step</strong> </td><td>
   <select name="nextstep">
-    <option selected value=1>Run end reads</option>
-    <option value=2>Run clone evaluation</option>
+      <option selected value="<%= IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER%>" >Run end reads</option>
+    <option value="<%= IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_SEQUENCE_ANALYSIS %>">Run clone evaluation</option>
   </select>
   </strong> </td> </tr>
   <tr><td>&nbsp;</td></tr>
@@ -78,7 +79,7 @@
     <td  bgcolor="#e4e9f8" width="50%"> <b>Vector </b> 
     </td>
     <TD bgcolor="#e4e9f8" > 
-     <SELECT NAME="vectorid">
+     <SELECT NAME=<%=Constants.VECTOR_ID_KEY %> ID=<%= Constants.VECTOR_ID_KEY %>>
         <% 
         	
         	for (int count = 0; count < vectors.size(); count++)
@@ -96,7 +97,7 @@
   <tr> 
     <td  bgColor="#b8c6ed"><b>5' clone linker seqment</b></td>
     <TD bgColor="#b8c6ed"> 
-    <SELECT NAME="5linkerid">
+    <SELECT NAME="5LINKERID">
     <% 
     	
     	for (int count = 0; count < linkers.size(); count++)
@@ -113,7 +114,7 @@
   <tr> 
     <td  bgcolor="#e4e9f8"> <b>3' clone tail seqment</b></td>
     <TD bgcolor="#e4e9f8">
-        <SELECT NAME="3linkerid">
+        <SELECT NAME="3LINKERID">
           <% 
           	
           	for (int count = 0; count < linkers.size(); count++)

@@ -12,7 +12,7 @@
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.mapping.*" %>
 <%@ page import="edu.harvard.med.hip.bec.sampletracking.objects.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
-
+<%@ page import="edu.harvard.med.hip.bec.coreobjects.oligo.*" %>
 <html>
 
 <body>
@@ -22,7 +22,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         <td >
-    <font color="#008000" size="5"><b> select Plates and Configuration for the Process  </font>
+    <font color="#008000" size="5"><b> select Plates and Configuration for the Process:  '<%= request.getAttribute("process_name") %>'  </font>
     <hr>
     
     <p>
@@ -42,17 +42,17 @@
 </div>
 <p></p>
 
+<html:form action="/RunProcess.do" >  
+<input name="forwardName" type="hidden" value="<%= request.getAttribute("forwardName") %>" > 
+
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
+  
   <tr> 
-    <td width="19%"><strong>Process Name:</strong></td>
-    <td width="81%"> 
-      <%= request.getAttribute("process_name") %>
-    </td>
-  </tr>
-  <tr> 
-    <td colspan =2><strong>Configuration:</strong></td>
+    <td ><strong>Configuration:</strong></td>
     
   </tr>
+<tr>
+<td > <table border=0 >
 <% 
 
 
@@ -61,34 +61,41 @@ ArrayList specs = (ArrayList)request.getAttribute(Constants.SPEC_COLLECTION);
 ArrayList control_names  = (ArrayList)  request.getAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION);
 String control_name = null; String spec_name = null; ArrayList specs_arr = null; 
 Spec spec = null;
-
+Oligo oligo = null;
 for (int count = 0; count <specs.size(); count ++)
 {
     control_name = (String) control_names.get(count);
     spec_name= (String) names.get(count);
     specs_arr = (ArrayList)specs.get(count);
-System.out.println("-----"); 
+
 %>
    <tr> 
-    <td><strong><%= spec_name %></strong></td>
-    <td>  
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><%= spec_name %></strong></td>
+    <td> 
         <SELECT NAME="<%= control_name %>" id="<%= control_name %>">
         <% 
         	
         	for (int count_spec = 0; count_spec < specs_arr.size(); count_spec++)
         	
         	{
-        		spec = (Spec)specs_arr.get(count_spec);
-                         System.out.println("A"+spec.getName());  	%>
+                    if (specs_arr.get(count_spec) instanceof Spec)
+                    {   
+        		spec = (Spec)specs_arr.get(count_spec);	%>
         		<OPTION VALUE="<%= spec.getId() %>"><%= spec.getName() %>
-        	<%
+                   <% }
+                    else if (specs_arr.get(count_spec) instanceof  Oligo)
+                    {   
+                         oligo = (Oligo)specs_arr.get(count_spec);	%>
+        		<OPTION VALUE="<%= oligo.getId() %>"><%= oligo.getName() %>
+                   <% }    	
         	}%>
     	</SELECT>
    </td>
   </tr>
   <%}%>
-  
-<br>
+  </table></td></tr>
+<tr><td ><hr><hr></td></tr>
+<tr><td >
 <P><P>
 <% 
 
@@ -102,13 +109,17 @@ if ( plate_labels.size()> 0)
 for (int plate_count =0; plate_count < plate_labels.size(); plate_count++)
 {
     label = (String)plate_labels.get(plate_count); 
-    if (plate_count != 0 &&  plate_count % 3 == 0){%>   </tr> <%}
-    if ( plate_count % 3 == 0){%>   <tr> <%}%>
+    if (plate_count != 0 &&  plate_count % 4 == 0){%>   </tr> <%}
+    if ( plate_count % 4 == 0){%>   <tr> <%}%>
 <td> <input type="checkbox" name="chkLabel" value='<%= label%>'> <%= label %></td>
 
 <%}%>
 </tr></table>
 <%}%>
+</td></tr>
+<tr><td align=center>
 <html:submit property="submit" value="Run"/>
+</html:form> 
+</td></tr></table>
 </body>
 </html>

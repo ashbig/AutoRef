@@ -75,7 +75,7 @@
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input type="radio" name="forwardName" value=<%= Constants.PROCESS_RUN_END_READS_WRAPPER  %> >
-      Run end reads wrapper (settings required)</font></td>
+      Run end reads wrapper </font></td>
   </tr>
  <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 

@@ -50,7 +50,7 @@ public class IsolateTrackingEngine
     public static final int            PROCESS_STATUS_ER_ANALYZED_NO_MATCH = 19;
     public static final int            PROCESS_STATUS_ER_NO_READS = 18;
     public static final int            PROCESS_STATUS_ER_NO_LONG_READS = 21;
-    public static final int            PROCESS_STATUS_ER_CONFIRMED = 5;
+    public static final int            PROCESS_STATUS_ER_ISOLATERANKING_RESULTS_CONFIRMED = 5;
     
     public static final int            PROCESS_STATUS_READY_FOR_ASSEMBLY = 6;
     public static final int            PROCESS_STATUS_READY_FOR_INTERNAL_READS = 7;
@@ -175,9 +175,14 @@ public class IsolateTrackingEngine
        
         return m_score;
     }
-    public String getStatusAsString()
+     public  String getStatusAsString()
     {
-        switch(m_status)
+        return getStatusAsString(m_status);
+        
+     }
+    public static String getStatusAsString(int status)
+    {
+        switch(status)
         {
             
              case PROCESS_STATUS_DOES_NOT_MATCH_REQUEST :return "No match";
@@ -194,7 +199,7 @@ public class IsolateTrackingEngine
             case PROCESS_STATUS_ER_ANALYZED_NO_MATCH : return "No match";
             case PROCESS_STATUS_ER_NO_READS : return "No end reads";
             case PROCESS_STATUS_ER_NO_LONG_READS: return "No long Reads";
-            case PROCESS_STATUS_ER_CONFIRMED : return "End reads confirmed";
+            case PROCESS_STATUS_ER_ISOLATERANKING_RESULTS_CONFIRMED : return "End reads confirmed";
             case PROCESS_STATUS_ER_ASSEMBLY_FINISHED: return "Assembly based on End Reads Finished";
       
     
@@ -275,7 +280,12 @@ public class IsolateTrackingEngine
         
         DatabaseTransaction.executeUpdate(sql, conn);
     }
-    
+    public static void updateRankUserChangerId(int rank,  int userid,int isolatetrackingid, Connection conn )throws BecDatabaseException
+    {
+         String sql = "update isolatetracking set rank="+rank+ " ,changerrankid ="+userid+" where isolatetrackingid="+ isolatetrackingid;
+        
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
     public static void updateAssemblyStatus(int asstatus, int isolatetrackingid, Connection conn )throws BecDatabaseException
     {
          String sql = "update isolatetracking set ASSEMBLY_STATUS="+asstatus +" where isolatetrackingid="+ isolatetrackingid;
@@ -337,12 +347,16 @@ public class IsolateTrackingEngine
     public void setBlackRank(FullSeqSpec cutoff_spec, EndReadsSpec spec, int refsequence_length) throws BecDatabaseException
     {
         //if no match exit or no good reads are available for the isolate
-        if (m_status == PROCESS_STATUS_SUBMITTED_EMPTY ||
-                      m_status == PROCESS_STATUS_ER_NO_READS ||
+        if (  m_status == PROCESS_STATUS_ER_NO_READS ||
                       m_status ==  PROCESS_STATUS_ER_ANALYZED_NO_MATCH ||
                       m_status == PROCESS_STATUS_ER_NO_LONG_READS)
         { 
             m_rank = RANK_BLACK;
+            m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+            return;
+        }
+        if (m_status == PROCESS_STATUS_SUBMITTED_EMPTY )
+        { 
             m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
             return;
         }

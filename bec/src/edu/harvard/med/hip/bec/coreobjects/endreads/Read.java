@@ -635,7 +635,15 @@ public class Read
             //  System.out.println(r.getTrimmedScores());
                
    
- Read read =  Read.getReadByReadSequenceId(3003);
+ Read read =  Read.getReadById(5088);
+ ScoredSequence c = read.getSequence();
+ char[] a = c.getText().toCharArray();
+ int[] b = c.getScoresAsArray();
+ for (int count =0; count < c.getText().length();count++)
+ {
+     System.out.println(count+" "+a[count]+" "+b[count]);
+ }
+ /*
    int containerid = BaseSequence.getContainerId(3003, BaseSequence.READ_SEQUENCE);
    edu.harvard.med.hip.bec.coreobjects.oligo.Oligo[] oligos = Container.findEndReadsOligos(containerid);
    boolean  isCompliment = false;
@@ -658,7 +666,7 @@ public class Read
 //r = Read.getReadById(19858);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
 //r = Read.getReadById(19862);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
 //r = Read.getReadById(20030);System.out.println(r.getId()+" "+r.getTrimmedSequence());System.out.println(r.getId()+" "+r.getTrimmedScores());
-
+*/
         }
         catch(Exception e){}
          System.exit(0);

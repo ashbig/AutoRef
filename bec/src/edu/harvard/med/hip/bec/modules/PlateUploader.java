@@ -429,7 +429,6 @@ public class PlateUploader
                 {
                     istr.setStatus(IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY);
                     istr.setRank(IsolateTrackingEngine.RANK_NOT_APPLICABLE);
-                    
                 }
                 else
                 {
@@ -671,7 +670,7 @@ public class PlateUploader
     {
         String sql = "select * from containerheader where label ='"+platename+"'";
      
-        ResultSet rs = rs = DatabaseTransaction.executeQuery(sql,bec_connection);
+        ResultSet rs  = DatabaseTransaction.executeQuery(sql,bec_connection);
         try
         {
             if (rs.next())

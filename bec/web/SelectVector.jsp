@@ -66,16 +66,16 @@ function fnShowVectorDetails()
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr > 
-<td ><strong>Select vector: </strong><p></p></td>
+<td bgcolor="#e4e9f8"><strong>Select vector: </strong><p></p></td>
 <TD bgcolor="#e4e9f8" > 
-     <SELECT NAME="vectorid" id="vectorid">
+     <SELECT NAME=<%= Constants.VECTOR_ID_KEY %> id=<%= Constants.VECTOR_ID_KEY %>>
         <% 
         	
         	for (int count = 0; count < vectors.size(); count++)
         	
         	{
         		BioVector vector = (BioVector)vectors.get(count);
-                        (int count == 0) vectorid_value = vector.getId();
+                        if( count == 0) vectorid_value = vector.getId();
         	%>
         		<OPTION VALUE=<%= vector.getId() %>><%= vector.getName() %>
         	<%
@@ -84,7 +84,7 @@ function fnShowVectorDetails()
        
       </div>
 </td>
-<td>
+<td bgcolor="#e4e9f8">
 <input type=BUTTON value="Vector Details" 
  onClick="fnShowVectorDetails()">
 </td>

@@ -235,7 +235,7 @@ public class BioVector
       public static void main(String [] args) {
           ArrayList r = null;
           try{
-              r=BioLinker.getAllLinkers();
+              r = BioVector.getVectorPrimers(5);
           }
           catch(Exception e){}
           System.exit(0);

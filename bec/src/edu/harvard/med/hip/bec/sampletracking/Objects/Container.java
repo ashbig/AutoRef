@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.14 2003-08-29 21:21:13 Elena Exp $
+ * $Id: Container.java,v 1.15 2003-09-03 19:37:35 Elena Exp $
  *
  * File     	: Container.java
 
@@ -170,18 +170,7 @@ public class Container
     {
         
         ArrayList containerList = new ArrayList();
-        /*
-        String sql = "select c.containerid as containerid, "+
-        "c.containertype as containertype, "+
-        "c.label as label, "+
-        "c.locationid as locationid, "+
-        "c.threadid as threadid, "+
-        "l.locationtype as locationtype, "+
-        "l.locationdescription as description\n"+
-        "from containerheader c, containerlocation l\n"+
-        "where c.locationid = l.locationid\n"+
-        "and c.label = '"+ label+"'";
-         **/
+       
         String sql = "select  containerid, containertype,  label, status "+
         "from containerheader where label = '"+ label+"'";
         ResultSet rs = null;
@@ -213,6 +202,49 @@ public class Container
             DatabaseTransaction.closeResultSet(rs);
         }
         return containerList;
+    }
+    
+     /**
+     * Finds all container ids with the specified label/s.
+     *
+     * @param labels The array of container labels.
+     *
+     * @return A list of Container object with the given label.
+     * @exception BecUtilException, BecDatabaseException.
+     */
+    public static ArrayList findContainerIdsFromLabel(ArrayList labels) throws BecUtilException,
+    BecDatabaseException
+    {
+        
+        ArrayList containerIds = new ArrayList();
+        if (labels == null || labels.size() < 1) return containerIds;
+        String container_label = "";
+        for (int count =0; count < labels.size(); count ++)
+        {
+            container_label += "'" + (String)labels.get(count) + "',";
+        }
+        container_label = container_label.substring(0, container_label.length() - 1);
+        String sql = "select  containerid from containerheader where label in ("+ container_label+")";
+        ResultSet rs = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                containerIds.add( new Integer(rs.getInt("CONTAINERID")));
+              
+            }
+            return containerIds;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while getting container ids from labels: "+container_label+"\n: "+sqlE.getMessage());
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+      
     }
     
     
@@ -252,23 +284,28 @@ public class Container
        
     }
     
-     public static ArrayList findContainerLabelsForProcess(int process_code) throws    BecDatabaseException
+     public static ArrayList findContainerLabelsForProcess(int process_code, int param_id) throws    BecDatabaseException
     {
         //define isolatetracking id statuses for the process
         String istr_status = null;
         String sql = null;
+        String sqlCheckVector = null;
         switch (process_code)
         {
             case Constants.PROCESS_SELECT_PLATES_FOR_END_READS:
             {
-                sql = "select distinct label from containerheader where containerid in "
+                sql = "select distinct label,containerid from containerheader where containerid in "
                 + " (select containerid from sample where sampleid in "
                 + " (select sampleid from isolatetracking where status in ("+IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_FOR_ER+")))";
+                sqlCheckVector = "select vectorid from cloningstrategy where strategyid =("
+        +" select configid from processconfig where configtype="+ Spec.CLONINGSTRATEGY_SPEC_INT +" and processid = "
++" (select processid from process_object where objecttype="+ Constants.PROCESS_OBJECT_TYPE_CONTAINER +"  and objectid=";
                 break;
             }
             case Constants.PROCESS_RUN_ISOLATE_RUNKER:
             {
-                 sql = "select distinct label from containerheader where containerid in "
+                
+                 sql = "select distinct label,containerid from containerheader where containerid in "
                 + " (select containerid from sample where sampleid in "
                 + " (select sampleid from isolatetracking where status in ("+IsolateTrackingEngine.PROCESS_STATUS_ER_ASSEMBLY_FINISHED+
                 ","+IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED +","+ IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH + ")))";
@@ -278,8 +315,8 @@ public class Container
         if (sql == null) return null;
         ArrayList container_labels = new ArrayList();
         
-        
-        ResultSet rs = null;
+        String label = null;
+        ResultSet rs = null;ResultSet rsCheckParam = null;
         Container container = null;
         try
         {
@@ -288,7 +325,17 @@ public class Container
             
             while(rs.next())
             {
-                container_labels.add(      rs.getString("label"));
+                label =  rs.getString("label");
+                if (process_code ==  Constants.PROCESS_SELECT_PLATES_FOR_END_READS)
+                {
+                    sqlCheckVector += rs.getInt("containerid") + "))";
+                    rsCheckParam = t.executeQuery(sqlCheckVector);
+                    if ( rsCheckParam.next() )
+                    {
+                        if (param_id != rsCheckParam.getInt("vectorid") ) break;
+                    }
+                }
+                container_labels.add(   label  );
             }
             return container_labels;
         } catch (Exception sqlE)
@@ -297,6 +344,7 @@ public class Container
         } finally
         {
             DatabaseTransaction.closeResultSet(rs);
+            if ( rsCheckParam != null) DatabaseTransaction.closeResultSet(rsCheckParam);
         }
        
     }
@@ -1651,13 +1699,14 @@ public class Container
     public static void main(String args[]) throws Exception
     {
        ArrayList c  = null;Container container =null;
+       ArrayList b = new ArrayList();
+       
+       b.add("PGS000121-8");b.add("PGS000121-1");b.add("YGS000357-1");b.add("YGS000357-1-2");b.add("YGS000357-4");
         try
         {
-              container = Container.findContainerDescriptionFromLabel("PGS000121-1");
-           
-             container.restoreSampleIsolate(false,true);
+              c = Container.findContainerLabelsForProcess(Constants.PROCESS_SELECT_PLATES_FOR_END_READS, 5);
+           System.out.println(c.size());
              
-             int i=container.getCloningStrategyId();
              
         }
         catch(Exception e)

@@ -157,11 +157,12 @@ public class IsolateRanker
             //prepare refsequence
             BaseSequence refsequence = construct.getRefSequenceForAnalysis();
             refsequence.setId( construct.getRefSeqId());
-            String refsequence_text = refsequence.getText();
-            refsequence.setText(m_linker5.getSequence() + refsequence.getText() +m_linker3.getSequence() );
+            
             int cdsstart = m_linker5.getSequence().length() ;
             int cdsstop = m_linker5.getSequence().length() + refsequence.getText().length() ;
            
+            refsequence.setText(m_linker5.getSequence() + refsequence.getText() +m_linker3.getSequence() );
+            
             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
                 //we process only not yet analized isolates
@@ -209,7 +210,7 @@ public class IsolateRanker
              }
             construct.updateCurrentIndex( construct.getCurrentIsolateId(),conn);
             
-            conn.commit();
+           conn.commit();
             m_finished_constructs.add(new Integer( construct.getId()));
         }
         catch(Exception ex)
@@ -361,6 +362,7 @@ public class IsolateRanker
             //update read type
             read.setType(Read.TYPE_ENDREAD_FORWARD_SHORT);
             read.updateType(conn);
+             System.out.println(read.getId() +" "+read.getType());
             return false;
         }
         if ( read.getType() == Read.TYPE_ENDREAD_REVERSE && (read.getTrimEnd() - read.getTrimStart()) < m_3p_min_read_length)
@@ -368,6 +370,7 @@ public class IsolateRanker
             //update read type
             read.setType(Read.TYPE_ENDREAD_REVERSE_SHORT);
             read.updateType(conn);
+            System.out.println(read.getId() +" "+read.getType());
             return false;
         }
         return true;

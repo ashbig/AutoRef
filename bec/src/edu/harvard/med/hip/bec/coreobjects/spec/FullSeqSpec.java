@@ -228,8 +228,13 @@ public class FullSeqSpec extends Spec
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             c = t.requestConnection();
-             specs =  FullSeqSpec.getAllSpecsBySubmitter(1);
+             specs =  FullSeqSpec.getAllSpecs();
+             
             System.out.print(specs.size());
+            specs =  FullSeqSpec.getAllSpecNames();
+            System.out.print(specs.size());
+            specs =  FullSeqSpec.getAllSpecsBySubmitter(1);
+             System.out.print(specs.size());
         }
         catch(Exception e){ System.out.print(specs.size());}
         System.exit(0);

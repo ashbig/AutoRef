@@ -52,7 +52,7 @@ public class Construct
     {
        
      //   String sql ="select REFSEQUENCEID  ,FORMAT,VECTORID,LINKER3ID,LINKER5ID,constructID  from sequencingCONSTRUCT ";
-        String sql ="select REFSEQUENCEID  ,FORMAT,cloningstrategyid,constructID , currentindex from sequencingCONSTRUCT ";
+        String sql ="select REFSEQUENCEID  ,FORMAT,cloningstrategyid,constructID , currentindex from sequencingCONSTRUCT where constructid = "+id;
         ResultSet rs = null;
         try
         {
@@ -142,6 +142,15 @@ public class Construct
     }
    
     public int                  getFormat(){ return  m_format;}//sequence format
+    public String               getFormatAsString()
+    {
+        if (m_format ==   FORMAT_OPEN )
+            return "Fusion";
+        else
+            return "Closed";
+    }
+   
+    
     public int                  getCloningStrategyId(){ return m_cloning_strategy_id;}
     public CloningStrategy      getCloningStrategy()throws BecDatabaseException
     { 
@@ -340,12 +349,42 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
         DatabaseTransaction.executeUpdate(sql, conn);
     }
     
-    /*
-    public static ArrayList getConstructsForIsolateStatus(int isolate_status)throws BecDatabaseException
+    //function used for UI of construct report
+    // change isolate ranking
+    public static ArrayList getClonesData(int construct_id)throws BecDatabaseException
     {
-        return null;
+        ArrayList clones_data = new ArrayList();
+        ArrayList clone_data = null;
+         String sql = "select label, position, iso.status as status,rank,isolatetrackingid  "
++" from isolatetracking iso,  sample s, containerheader c "
++" where  s.sampleid=iso.sampleid and s.containerid=c.containerid and constructid="+construct_id+" order by position";
+        RowSet rs = null;
+       
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                clone_data = new ArrayList();
+                clone_data.add(rs.getString("label"));
+                clone_data.add( new Integer(rs.getInt("position")));
+                clone_data.add(new Integer(rs.getInt("rank")));
+                clone_data.add(new Integer(rs.getInt("status")));
+                clone_data.add(new Integer(rs.getInt("isolatetrackingid")));
+                clones_data.add(clone_data);
+            }
+            return clones_data;
+        } catch (Exception e)
+        {
+            throw new BecDatabaseException("Error occured while getting clones data for construct with id:\n"+construct_id+"\nSQL: "+e.getMessage());
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
     }
-    */
+    
     
     //function gets all constructs that corespond to set of plates
     //with at least one isolate with status isolate_status

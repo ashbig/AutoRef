@@ -21,6 +21,7 @@ public abstract class Spec
     public static final String END_READS_SPEC = "END_READS_SPEC";
     public static final String FULL_SEQ_SPEC = "FULL_SEQ_SPEC";
     public static final String POLYMORPHISM_SPEC = "POLYMORPHISM_SPEC";
+    public static final String NONE_SPEC = "None";
     
     public static final int PRIMER3_SPEC_INT = 3;
     public static final int END_READS_SPEC_INT = 1;
@@ -34,7 +35,7 @@ public abstract class Spec
     public static final int SPEC_SHOW_USER_ONLY_SPECS = 10;
     public static final int SPEC_SHOW_SPEC = 1000;
     
-    private int m_id = -1;
+    private int m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     
     protected int m_type = -1;
     protected Hashtable m_params = null;
