@@ -68,7 +68,7 @@
     </tr>
 
     <tr>
-    <td class="label">Open PCR plate barcode:</td>
+    <td class="label">Fusion PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrOpen" property="label"/></td>
     <td class="prompt">Location:</td>
     <td><html:select property="pcrOpenLocation">
@@ -81,10 +81,10 @@
     </tr>
 
     <tr>
-    <td class="label">Open PCR plate barcode:</td>
+    <td class="label">Closed PCR plate barcode:</td>
     <td><bean:write name="EnterOligoPlateAction.pcrClosed" property="label"/></td>
-    <td>Location:</td>
-    <td class="prompt"><html:select property="pcrClosedLocation">
+    <td class="prompt">Location:</td>
+    <td><html:select property="pcrClosedLocation">
         <html:options
         collection="EnterOligoPlateAction.locations"
         property="id"
