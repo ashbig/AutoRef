@@ -83,8 +83,8 @@ public class SequenceImporter {
                     results.addElement(logger);
                     successCount++;
                 } catch (FlexDatabaseException ex) {
-                   // SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, "Cannot insert sequence into database");
-                    SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, ex.getMessage());
+                    SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, "Cannot insert sequence into database");
+//                    SequenceImporterLogger logger = new SequenceImporterLogger(k, seq.getId(), false, ex.getMessage());
                     results.addElement(logger);
                     failCount++;
                 }
