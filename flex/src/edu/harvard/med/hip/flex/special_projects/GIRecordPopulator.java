@@ -4,13 +4,9 @@
  * Created on July 22, 2003, 3:49 PM
  */
 
-package edu.harvard.med.hip.flex.special_projects;
-
 import java.io.*;
 import java.util.*;
 import java.sql.*;
-import edu.harvard.med.hip.flex.query.core.*;
-import edu.harvard.med.hip.flex.database.*;
 
 /**
  *
@@ -51,67 +47,90 @@ public class GIRecordPopulator {
         DatabaseTransaction.closeStatement(stmt);
     }
     
+    public void parseFile(String file, Connection conn) throws Exception {
+        List records = new ArrayList();
+        
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        String line = null;
+        StringBuffer sb = new StringBuffer();
+        int gi = 0;
+        String filename = null;
+        
+        int count = 0;
+        while((line = in.readLine()) != null) {
+            System.out.println(line);
+            if(line.trim().equals("")) {
+                filename = writeFile(gi, sb);
+                sb = new StringBuffer();
+                GiRecord gr = new GiRecord(gi, filename);
+                records.add(gr);
+                count++;
+                
+                if(count == 200) {
+                    insertDB(records, conn);
+                    DatabaseTransaction.commit(conn);
+                    records = new ArrayList();
+                    count = 0;
+                }
+                
+                continue;
+            }
+            
+            sb.append(line+"\n");
+            
+            if(line.indexOf(">") == 0) {
+                StringTokenizer st = new StringTokenizer(line);
+                String skip = st.nextToken("|");
+                gi = Integer.parseInt(st.nextToken("|"));
+            }
+        }
+        
+        filename = writeFile(gi, sb);
+        GiRecord gr = new GiRecord(gi, filename);
+        records.add(gr);
+        count++;
+        insertDB(records, conn);
+        DatabaseTransaction.commit(conn);
+        
+        in.close();
+    }
+    
     public static void main(String args []) {
-        String file = "G:\\locus_gi_fasta_1.txt";
+        String file = "locus_gi_fasta";
         
         DatabaseTransaction t = null;
         Connection conn = null;
-        BufferedReader in = null;
         
         GIRecordPopulator parser = new GIRecordPopulator();
-        List records = new ArrayList();
         
         try {
-            in = new BufferedReader(new FileReader(file));
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            String line = null;
-            StringBuffer sb = new StringBuffer();
-            int gi = 0;
-            String filename = null;
-            
-            int count = 0;
-            while((line = in.readLine()) != null) {
-                System.out.println(line);
-                if(line.trim().equals("")) {
-                    filename = parser.writeFile(gi, sb);
-                    sb = new StringBuffer();
-                    GiRecord gr = new GiRecord(gi, filename);
-                    records.add(gr);
-                    count++;
-                    
-                    if(count == 200) {
-                        parser.insertDB(records, conn);
-                        DatabaseTransaction.commit(conn);
-                        records = new ArrayList();
-                        count = 0;
-                    }
-                    
-                    continue;
-                }
-                
-                sb.append(line);
-                
-                if(line.indexOf(">") == 0) {
-                    StringTokenizer st = new StringTokenizer(line);
-                    String skip = st.nextToken("|");
-                    gi = Integer.parseInt(st.nextToken("|"));
-                }
-            }
-            
-            filename = parser.writeFile(gi, sb);
-            GiRecord gr = new GiRecord(gi, filename);
-            records.add(gr);
-            count++;
-            parser.insertDB(records, conn);
-            DatabaseTransaction.commit(conn);
-            
-            in.close();
+            parser.parseFile(file, conn);
         } catch (Exception ex) {
             DatabaseTransaction.rollback(conn);
             System.out.println(ex);
         } finally {
             DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public class GiRecord {
+        protected int gi;
+        protected String sequenceFile;
+        
+        /** Creates a new instance of GiRecord */
+        public GiRecord(int gi, String sequenceFile) {
+            this.gi = gi;
+            this.sequenceFile = sequenceFile;
+        }
+        
+        public int getGi() {
+            return gi;
+        }
+        
+        public String getSequenceFile() {
+            return sequenceFile;
         }
     }
 }
