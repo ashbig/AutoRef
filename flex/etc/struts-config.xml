@@ -361,7 +361,6 @@
     <!-- Process the receiving of new oligo plates -->
     <action    path="/SetReceiveDate"
                type="edu.harvard.med.hip.flex.action.SetReceiveDateAction"
-               name="ReceiveOligoOrdersForm"
                scope="request">
       <forward  name="success"   path="/ReceiveOligoOrders.jsp"/>
     </action>
