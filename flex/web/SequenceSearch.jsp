@@ -43,6 +43,8 @@
 </html:form>
 
 <p>
+This search form is fully compatible with GenBank's search engine.
+Please follow the following hint.
 <dl>
 <dt><i>Search hint:</i>
 <dd>1. Multiple Genbank Accession numbers separated by comma (,)

@@ -14,6 +14,9 @@
 <h2><bean:message key="flex.name"/> : Cloning Request : Sequence Selection</h2>
 <hr>
 <html:errors/>
+<p><b>
+We have found the following sequences. Please make your selection and we'll search
+FLEXGene database for similar sequences.</b>
 <p>
 <html:form action="/SequenceSelection.do">
 <table>
