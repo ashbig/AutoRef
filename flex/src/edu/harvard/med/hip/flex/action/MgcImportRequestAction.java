@@ -29,7 +29,7 @@ import edu.harvard.med.hip.flex.Constants;
  * @author  htaycher
  * @version
  */
-public class MgcImportRequestAction extends AdminAction
+public class MgcImportRequestAction extends ResearcherAction
 {
     /**
      * Does the real work for the perform method which must be overriden by the
@@ -50,6 +50,7 @@ public class MgcImportRequestAction extends AdminAction
         FormFile mgcRequestFile = ((MgcImportRequestForm)form).getMgcRequestFile();
         int      workflowid = ((MgcImportRequestForm)form).getWorkflowid();
         int      projectid      = ((MgcImportRequestForm)form).getProjectid();
+       
         Project project = null;
         Workflow workflow = null;
         InputStream input = null;
@@ -117,7 +118,7 @@ public class MgcImportRequestAction extends AdminAction
             ArrayList containers = new ArrayList();
             DatabaseTransaction t = null;
             Connection conn = null;
-            
+          
             MgcRequestImporter importer = new MgcRequestImporter( m_project,  m_workflow, m_username);
             try
             {
@@ -126,59 +127,6 @@ public class MgcImportRequestAction extends AdminAction
                 //read request file, get all sequences for request, insert request
                 // return all sequences from request
                 importer.performImport(m_Input, conn) ;
-                //get all containers for the request
-                /*
-                Rearrayer r = new Rearrayer();
-                r.findMgcContainers( sequences);
-                containers = r.getContainers();
-                
-                //get next protocol 
-                
-                Workflow wf = new Workflow(m_workflowid);
-                Protocol current_protocol = new Protocol(Protocol.IMPORT_MGC_REQUEST);
-                Vector protocols = wf.getNextProtocol(current_protocol);
-                Protocol next_protocol = null;
-                
-                
-                //put containers on queue
-                ArrayList containers_items = new ArrayList();
-                
-                for (int count = 0; count < containers.size(); count++)
-                {
-                    for (int count_protocol = 0; count_protocol < protocols.size(); count_protocol++)
-                    {
-                        next_protocol = (Protocol) protocols.get(count_protocol);
-                        String next_protocol_name = next_protocol.getProcessname();
-                        if ( next_protocol_name != null && next_protocol_name.equals(Protocol.CREATE_CULTURE_FROM_MGC) )
-                        {//
-                            QueueItem q_i = new  QueueItem(containers.get(count), next_protocol, m_project, wf);
-                            containers_items.add(q_i);
-                        }
-                    }
-                }
-                ContainerProcessQueue cont_q = new ContainerProcessQueue();
-                cont_q.addQueueItems( containers_items, conn);
-                
-                
-                //put sequences on queue
-                ArrayList sequences_items = new ArrayList();
-                for (int count_sequences = 0; count_sequences < sequences.size(); count_sequences++)
-                {
-                    for (int count_protocol = 0; count_protocol < protocols.size(); count_protocol++)
-                    {
-                        next_protocol = (Protocol) protocols.get(count_protocol);
-                        String next_protocol_name = next_protocol.getProcessname();
-                        if ( next_protocol_name != null && next_protocol_name.equals(Protocol.DESIGN_CONSTRUCTS) )
-                        {//
-                            QueueItem q_i = new  QueueItem(sequences.get(count_sequences), next_protocol, m_project, wf);
-                             sequences_items.add(q_i);
-                        }
-                    }
-                }
-                SequenceProcessQueue sequences_q = new SequenceProcessQueue();
-                sequences_q.addQueueItems( sequences_items, conn);
-                 */
-                
             }
             catch (Exception e){}
          
