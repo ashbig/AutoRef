@@ -146,6 +146,9 @@ public class Constants {
     
     //forward name used for create process plates after select the workflow.
     public static final String CREATE_PROCESS_PLATES = "CREATE_PROCESS_PLATES";
+
+    //forward name used for import sequences after select the workflow.
+    public static final String IMPORT_SEQUENCES = "IMPORT_SEQUENCES";
     
     /** Creates new Constants */
     private Constants() {
