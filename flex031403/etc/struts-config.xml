@@ -541,6 +541,11 @@
       <forward name="enterProcessResults" path="/EnterProcessResults.jsp"/>
     </action>
 
+    <!-- Action that will be used to export all the sequences to FASTA file -->
+    <action path="/ExportFLEXtoFASTA"
+            type="edu.harvard.med.hip.flex.action.ExportFLEXtoFASTAAction">
+    </action>
+
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
