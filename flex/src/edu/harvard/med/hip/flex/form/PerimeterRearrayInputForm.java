@@ -25,6 +25,7 @@ public class PerimeterRearrayInputForm extends ProjectWorkflowForm {
     protected String destPlateType;
     protected int volumn = 5;
     protected String labels;
+    protected String emails;
     protected int [] sourceLocations;
     protected int [] destLocations;
     
@@ -32,11 +33,13 @@ public class PerimeterRearrayInputForm extends ProjectWorkflowForm {
     public String getDestPlateType() {return destPlateType;}
     public int getVolumn() {return volumn;}
     public String getLabels() {return labels;}
+    public String getEmails() {return emails;}
     
     public void setSourcePlateType(String s) {this.sourcePlateType=s;}
     public void setDestPlateType(String s) {this.destPlateType=s;}
     public void setVolumn(int i) {this.volumn=i;}
     public void setLabels(String s) {this.labels=s;}
+    public void setEmails(String s) {this.emails = s;}
     
     /**
      * Set the source locations.
@@ -93,7 +96,7 @@ public class PerimeterRearrayInputForm extends ProjectWorkflowForm {
         
         ActionErrors errors = new ActionErrors();
         
-        if(volumn == 0) {
+        if(volumn <= 0) {
             errors.add("volumn", new ActionError("error.researcher.volumn.invalid"));
         }
         

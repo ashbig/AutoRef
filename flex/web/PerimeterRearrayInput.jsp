@@ -18,16 +18,10 @@
 
 <p>
 <html:form action="/PerimeterRearrayInput.do">
-<logic:present name="projectid">
-    <input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
-</logic:present>
-<logic:present name="workflowid">
-    <input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
-</logic:present>
+<input type="hidden" name="projectid" value="<bean:write name="projectid"/>">
+<input type="hidden" name="workflowid" value="<bean:write name="workflowid"/>">
 <input type="hidden" name="projectname" value="<bean:write name="projectname"/>">
-<logic:present name="workflowname">
-    <input type="hidden" name="workflowname" value="<bean:write name="workflowname"/>">
-</logic:present>
+<input type="hidden" name="workflowname" value="<bean:write name="workflowname"/>">
 
 <table>
     <tr>
@@ -65,13 +59,21 @@
     </tr>
 
     <tr>
-    <td class="prompt">Volumn:</td>
+    <td class="prompt">Volumn (in microliter):</td>
     <td><html:text property="volumn"/></td>
     </tr>
 
     <tr>
-    <td class="prompt">Please enter all the plate labels (enter each label per line):</td>
-    <td><html:textarea property="labels"/></td>
+    <td class="prompt">Please enter all the plate labels (one label per line):</td>
+    <td><html:textarea rows="5" cols="30" property="labels"/></td>
+    </tr>
+
+    <tr>
+    <td colspan="2" class="prompt">Please enter all the email addresses that you want the files to be sent to (one email per line):</td>
+    </tr>
+    <tr>
+    <td></td>
+    <td><html:textarea rows="5" cols="30" property="emails"/></td>
     </tr>
 
     <tr>

@@ -234,6 +234,12 @@ public class GetResearcherAction extends ResearcherAction{
                 new Thread(handler).start();
             }
             
+            if(Protocol.PERIMETER_REARRAY.equals(protocol.getProcessname())) {
+                List fileCol = (ArrayList)request.getSession().getAttribute("PerimeterRearrayInputAction.files");
+                List emails = (ArrayList)request.getSession().getAttribute("PerimeterRearrayInputAction.emails");
+                Mailer.sendMessages("dzuo@hms.harvard.edu","dzuo@hms.harvard.edu", emails, "Cell Culture Perimeter Rearray", "Attached are your rearray file and worklist.", fileCol);
+            }
+            
             // Remove everything from the session.
             request.getSession().removeAttribute("SelectProtocolAction.queueItems");
             request.getSession().removeAttribute("SelectProtocolAction.protocol");
@@ -245,6 +251,8 @@ public class GetResearcherAction extends ResearcherAction{
             request.getSession().removeAttribute("EnterSourcePlateAction.subprotocol");
             request.getSession().removeAttribute("EnterSourcePlateAction.sls");
             request.getSession().removeAttribute("EnterSourcePlateAction.sls1");
+            request.getSession().removeAttribute("PerimeterRearrayInputAction.files");
+            request.getSession().removeAttribute("PerimeterRearrayInputAction.emails");
             
             return (mapping.findForward("success"));
         } catch (Exception ex) {
