@@ -56,7 +56,7 @@ public class CreateProcessPlateAction extends FlexAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        String sql = "select * from processprotocol where processname like 'generate % plates'";
+        String sql = "select * from processprotocol where processname like 'generate % plates' or processname like 'run%'";
         Vector protocol = new Vector();
         try {        
             DatabaseTransaction t = DatabaseTransaction.getInstance();

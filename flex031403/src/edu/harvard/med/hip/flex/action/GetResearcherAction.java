@@ -91,9 +91,15 @@ public class GetResearcherAction extends ResearcherAction{
             // Insert the new container and samples into database.
             newContainer.insert(conn);
             
-            // Create a process, process object and sample lineage record.
-            Process process = new Process(protocol, 
-            edu.harvard.med.hip.flex.process.Process.SUCCESS, researcher);
+            // Create a process, process object and sample lineage record. 
+            String executionStatus = null;
+            if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname())) {
+                executionStatus = edu.harvard.med.hip.flex.process.Process.INPROCESS;
+            } else {
+                executionStatus = edu.harvard.med.hip.flex.process.Process.SUCCESS;
+            }
+            
+            Process process = new Process(protocol, executionStatus, researcher);
             ContainerProcessObject inputContainer = 
                 new ContainerProcessObject(container.getId(), 
                 process.getExecutionid(), 
@@ -115,19 +121,26 @@ public class GetResearcherAction extends ResearcherAction{
             ContainerProcessQueue queue = new ContainerProcessQueue();
             queue.removeQueueItems(newItems, conn);
 
-            // Get the next protocols from the workflow.
-            Workflow wf = new Workflow();
-            Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
+            newItems.clear();
             
-            // Add the new container to the queue for each protocol.
-            for(int i=0; i<nextProtocols.size(); i++) {
-                newItems.clear();
-                newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));
-                queue.addQueueItems(newItems, conn);
+            // for "run PCR gel" protocol, we use the same protocol for queue.
+            if(Protocol.RUN_PCR_GEL.equals(protocol.getProcessname())) {
+                newItems.addLast(new QueueItem(newContainer, protocol));
+                queue.addQueueItems(newItems, conn); 
+            } else {            
+                // Get the next protocols from the workflow.
+                Workflow wf = new Workflow();
+                Vector nextProtocols = wf.getNextProtocol(protocol.getProcessname());
+
+                // Add the new container to the queue for each protocol.
+                for(int i=0; i<nextProtocols.size(); i++) {
+                    newItems.addLast(new QueueItem(newContainer, new Protocol((String)nextProtocols.elementAt(i))));
+                    queue.addQueueItems(newItems, conn);
+                }
             }
             
             // Commit the changes to the database.
-            DatabaseTransaction.rollback(conn);
+            DatabaseTransaction.commit(conn);
         
             // Print the barcode
             System.out.println("Printing barcode: "+newContainer.getLabel());

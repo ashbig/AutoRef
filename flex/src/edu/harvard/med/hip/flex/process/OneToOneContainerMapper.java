@@ -81,7 +81,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
      * @param processname The name of the processname.
      * @return The container type.
      */    
-    public String getContainerType(String processname) {
+    public String getContainerType(String processname) {        
         return (containerType.getProperty(processname));
     }
 
