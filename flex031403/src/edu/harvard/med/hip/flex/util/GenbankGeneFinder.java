@@ -1,5 +1,5 @@
 /**
- * $Id: GenbankGeneFinder.java,v 1.4 2001-07-12 21:31:38 dzuo Exp $
+ * $Id: GenbankGeneFinder.java,v 1.5 2001-07-23 20:49:06 dzuo Exp $
  *
  * File     	: GenbankGeneFinder.java
  * Date     	: 05052001
@@ -89,7 +89,7 @@ public class GenbankGeneFinder {
             int cdscount = 0;
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                if(inputLine.indexOf("/organism=") != -1) {
+                if(inputLine.trim().indexOf("/organism=") == 0) {
                     organism = inputLine.substring(inputLine.indexOf("\"")+1, inputLine.lastIndexOf("\""));
                 }
                 
@@ -116,7 +116,7 @@ public class GenbankGeneFinder {
                         String startStr = st.nextToken();
                         String newStart = startStr;
                         if(startStr.indexOf("&lt;")!=-1) {
-                            //							newStart = startStr.substring(startStr.indexOf(";")+1);
+                            //newStart = startStr.substring(startStr.indexOf(";")+1);
                             newStart = "-1";
                         }
                         
@@ -155,7 +155,8 @@ public class GenbankGeneFinder {
             h.put("sequencetext", sequencetext);
             
             return h;
-        } catch (Exception e) {
+        //} catch (Exception e) {
+        } catch (IOException e) {
             throw new FlexUtilException("Cannot do search for gi: "+gi+"\n"+e.getMessage());
         }
     }
@@ -176,7 +177,7 @@ public class GenbankGeneFinder {
                 System.out.println();
             }
             
-            Hashtable h = finder.searchDetail("13938452");
+            Hashtable h = finder.searchDetail("13016955");
             System.out.println(h);
         } catch (FlexUtilException e) {
             System.out.println(e);
