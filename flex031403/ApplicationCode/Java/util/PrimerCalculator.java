@@ -1,9 +1,15 @@
-// package flex.oligo
-
 /**
- *   Interface used for oligo primer calculation 
- *   @author Wendy Mar
+ *   Interface used for oligo primer calculation
+ *   Id: PrimerCalculator.java $
+ *
+ *   @File     	: PrimerCalculator.java 
+ *   @Date     	: 04162001 
+ *   @author	: Wendy Mar
  */
+ 
+package flex.ApplicationCode.Java.util;
+import flex.ApplicationCode.Java.core.*;
+ 
 public interface PrimerCalculator
 {
 	/**

@@ -1,9 +1,16 @@
-// package flex.oligo
-import java.math.*;
 /**
- *   Neariest Neighborhood algorithm is used for current oligo primer calculation
- *   @author Wendy Mar 
+ * $Id: NNPrimerCalculator.java,v 1.2 2001-05-22 14:28:09 wenhong_mar Exp $
+ * Neariest Neighborhood algorithm is used for current oligo primer calculation
+ *
+ * @File     	: NNPrimerCalculator.java 
+ * @Date     	: 04162001
+ * @author	: Wendy Mar 
  */
+ 
+package flex.ApplicationCode.Java.util;
+import flex.ApplicationCode.Java.core.*;
+import java.math.*;
+ 
 public class NNPrimerCalculator implements PrimerCalculator
 {
 	private static final double R = 1.9872;     // Gas Constant
