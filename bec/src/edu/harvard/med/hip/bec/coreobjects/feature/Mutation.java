@@ -371,7 +371,7 @@ public abstract class Mutation
         report.append("<tr >");
         report.append("<th width='13%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Number</font></strong></th>");
         report.append("<th width='31%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Description</font></strong></th>");
-        report.append("<th width='25%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Protain Description</font></strong></th>");
+        report.append("<th width='25%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Protein Description</font></strong></th>");
         report.append("<th width='17%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Polymorphism</font></strong></th>");
         report.append("<th width='14%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Confidence</font></strong></th>");
         report.append("</tr>");
@@ -435,18 +435,18 @@ public abstract class Mutation
         String res = "";
         
         res = "<tr><td>Discrepancy id: </td><td>"+m_id + "</td></tr>" +
-        "<tr><td>Position (Ref Sequence)</td><td>"  + m_position + "</td></tr>" +
+        "<tr><td>Position (RefSequence)</td><td>"  + m_position + "</td></tr>" +
         "<tr><td>Length</td><td>" +m_length + "</td></tr>" ;
         if ( m_exp_position > 0)
-            res += "<tr><td>Position (Exp Sequence)</td><td>"  + m_exp_position + "</td></tr>" ;
+            res += "<tr><td>Position (ExpSequence)</td><td>"  + m_exp_position + "</td></tr>" ;
         if (m_change_ori ==null)
-            res+="<tr><td>Ori Str</td><td>&nbsp;</td></tr>";
+            res+="<tr><td>Ori Str.</td><td>&nbsp;</td></tr>";
         else
-            res+="<tr><td>Ori Str</td><td>"+m_change_ori +"</td></tr>" ;
+            res+="<tr><td>Ori Str.</td><td>"+m_change_ori +"</td></tr>" ;
         if (m_change_mut ==null)
-            res+="<tr><td>Mutant Str</td><td>&nbsp;</td></tr>";
+            res+="<tr><td>Mutant Str.</td><td>&nbsp;</td></tr>";
         else
-            res+="<tr><td>Mutant Str</td><td>" +m_change_mut + "</td></tr>" ;
+            res+="<tr><td>Mutant Str.</td><td>" +m_change_mut + "</td></tr>" ;
         res+="<tr><td>Type</td><td>" + getMutationTypeAsString() + "</td></tr>" ;
         return res;
     }
