@@ -94,25 +94,46 @@ public class SelectProtocolAction extends FlexAction
                 SequenceOligoQueue seqQueue = new SequenceOligoQueue();
                 LinkedList seqList = seqQueue.getQueueItems(protocol, project, workflow);
                 int numOfSeqs = seqList.size();
+                
+                //  checks for duplicates on queue
+                LinkedList tmp =new LinkedList();
+                LinkedList duplicates = new LinkedList();
+                LinkedList seqNoDuplicates = new LinkedList();
+                for (int seq_count = 0; seq_count < seqList.size(); seq_count++)
+                {
+                    int id =  ((Sequence)seqList.get(seq_count)).getId()  ;
+                    if ( tmp.contains( new Integer(id) ) ) 
+                        duplicates.add (seqList.get(seq_count));
+                    else
+                    {
+                        tmp.add(new Integer(id));
+                        seqNoDuplicates.add(seqList.get(seq_count));
+                    }
+                }
+                
+                
+                                
+                if (duplicates.size() != 0)//there are duplicates
+                {
+                    request.setAttribute("duplicatedSequences", duplicates);
+                    request.setAttribute("number_of_duplicates",  new Integer(duplicates.size() ));
+                    request.setAttribute("sequences_count", new Integer(numOfSeqs));
+                    request.setAttribute("projectname", projectname);
+                    request.setAttribute("processname", processname);
+                    request.setAttribute("workflowname", workflow.getName());
+                    request.getSession().setAttribute("not_duplicated_sequences", seqNoDuplicates);
+                    return (mapping.findForward("success_mgc_process_duplicate_plates"));
+                }
+                
+                
                 ArrayList plates = new ArrayList();
-               
-                            //get total number of genes in queue
+                //get total number of genes in queue
                 if (numOfSeqs != 0)
                 {
                     try
                     {
-                        
-                        Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
-                        plates = ra.getPlates(false);
-                        for(int i=0; i<plates.size();i++)
-                        {
-                            PlateDescription plate = (PlateDescription)plates.get(i);
-                             for (int container_count =0; container_count < plate.getContainers().size(); container_count++)
-                            {
-                                ContainerDescription desc = (ContainerDescription)plate.getContainers().get(container_count);
-                            }
-                        }
-                                              
+                       Rearrayer ra = new Rearrayer(new ArrayList(seqList), 94);
+                        plates = ra.getPlates();
                     }
                     catch(Exception e)
                     {

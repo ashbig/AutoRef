@@ -25,7 +25,7 @@ import java.sql.*;
  * @author  htaycher
  *Action process oligo order for request
  */
-public class MgcOrderOligoAction extends AdminAction
+public class MgcOrderOligoAction extends ResearcherAction
 {
     
     
@@ -58,6 +58,9 @@ public class MgcOrderOligoAction extends AdminAction
         int projectid = requestForm.getProjectid();
         String processname = requestForm.getProcessname();
         boolean isFullPlatesOnly = requestForm.getIsFullPlate();
+        MgcOligoPlateManager om  = null;
+        
+        
         Connection conn = null;
         try
         {
@@ -65,9 +68,20 @@ public class MgcOrderOligoAction extends AdminAction
             Workflow workflow = new Workflow(workflowid);
             Protocol protocol  = new Protocol(Protocol.MGC_DESIGN_CONSTRUCTS);
             conn = DatabaseTransaction.getInstance().requestConnection();
-            
-            MgcOligoPlateManager om = new MgcOligoPlateManager(conn,project, workflow,
-            isFullPlatesOnly, protocol, username);
+            //check if attribute not_duplicated_sequences is set in session
+            //if yes queue has duplicates
+            if ( request.getSession().getAttribute("not_duplicated_sequences") != null)
+            {
+                 LinkedList seqList = (LinkedList)request.getSession().getAttribute("not_duplicated_sequences");
+                 om = new MgcOligoPlateManager(seqList, conn,project, workflow,
+                                                                isFullPlatesOnly, protocol, username);
+                 request.getSession().removeAttribute("not_duplicated_sequences")         ;                                      
+            }
+            else
+            {
+                om = new MgcOligoPlateManager(conn,project, workflow,
+                                                                isFullPlatesOnly, protocol, username);
+            }
             om.orderOligo();
             
             return mapping.findForward("success");
@@ -99,6 +113,9 @@ public class MgcOrderOligoAction extends AdminAction
         
         
     }
+    
+    
+  
     
 }
 
