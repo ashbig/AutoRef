@@ -236,6 +236,7 @@ import java.util.*;
             //PreparedStatement pst_get_flexsequenceid,PreparedStatement pst_get_flexsequence_length,
      private String getReportForStretchCollection(String clone_id, StretchCollection stretch_collection)throws Exception
     {
+        Mutation discr = null;
        // System.out.println("A"+oligo_calculation.getSequenceId());
         StringBuffer buf = new StringBuffer();
         buf.append(Constants.LINE_SEPARATOR );
@@ -250,6 +251,7 @@ import java.util.*;
         if ( m_process_type == Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE )
         {
                 clone_sequence = CloneSequence.getOneByCloneId(Integer.parseInt( clone_id) );
+                buf.append("Sequence Analysis status "+ BaseSequence.getSequenceAnalyzedStatusAsString(clone_sequence.getStatus())+Constants.LINE_SEPARATOR);
         }
         for (int index = 0; index < stretch_collection.getStretches().size();index ++)
         {
@@ -261,6 +263,18 @@ import java.util.*;
                 buf.append( "Cds Start " + ( stretch.getCdsStart()- clone_sequence.getCdsStart() ) );
                 buf.append("\tCds Stop " + ( stretch.getCdsStop() -  clone_sequence.getCdsStart() ) );
                 buf.append("\t Sequence Region "+stretch.getCdsStart() +" - "+ stretch.getCdsStop() );
+                //define discrepancies in the region
+                ArrayList lqr_discrepancies = clone_sequence.getDiscrepanciesInRegion( stretch.getCdsStart() , stretch.getCdsStop(), clone_sequence.getCdsStart() );
+                  if ( lqr_discrepancies == null || lqr_discrepancies.size() == 0 )
+                  {
+                      buf.append("\t No discrepancies found in the region ");
+                  }
+                  else
+                  {
+                       buf.append(Constants.LINE_SEPARATOR+" Discrepancies found in the region ");
+                       buf.append(Constants.LINE_SEPARATOR+ Mutation.toString(lqr_discrepancies));
+                  }
+                  
             }
             else
                 buf.append( stretch.toString() );

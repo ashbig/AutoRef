@@ -558,6 +558,59 @@ public abstract class Mutation
      **/
         return report.toString();
     }
+    
+    
+     public static String toString (ArrayList discrepancies)
+    {
+        StringBuffer report = new StringBuffer();
+        Mutation mut = null;
+        String tmp = null;
+	DiscrepancyDescription discr_definition = null;
+        ArrayList rna_discrepancies = null;
+	//convert to discrepancy definition
+        ArrayList discrepancy_definition = DiscrepancyDescription.assembleDiscrepancyDefinitions(discrepancies);
+        if ( discrepancy_definition == null || discrepancy_definition.size() == 0) return "";
+        for (int count = 0; count < discrepancy_definition.size(); count ++)
+	{
+        	discr_definition = (DiscrepancyDescription)discrepancy_definition.get(count);
+                if ( discr_definition.getDiscrepancyDefintionType() == DiscrepancyDescription.TYPE_AA)
+                {
+                        mut = discr_definition.getAADefinition();
+                }
+                else if ( discr_definition.getDiscrepancyDefintionType() != DiscrepancyDescription.TYPE_AA)
+                {
+                    mut = (Mutation)discr_definition.getRNADefinition();
+                 }
+                report.append("\nid: " +  mut.getId() + "\t position: "+mut.getPosition() );
+                tmp = ( mut.getQueryStr() == null) ? " " : mut.getQueryStr() ;
+                report.append("\tchange ori "+ tmp);
+                tmp = (mut.getSubjectStr() == null) ? " ": mut.getSubjectStr();
+                report.append("\tmut ori "+ tmp);
+                report.append("\ttype: "+ mut.getMutationTypeAsString() +"\tquality "+mut.getQualityAsString() );
+                    
+        }
+  
+        return report.toString();
+    }
+    public boolean isNotAmbiquousRNADiscrepancy()
+    {
+        if ( m_type != RNA) return false;
+        switch (m_change_type) 
+        {
+            case  TYPE_N_SUBSTITUTION_CDS :
+            case TYPE_N_SUBSTITUTION_LINKER5 :
+            case TYPE_N_SUBSTITUTION_LINKER3:
+            case TYPE_N_INSERTION_LINKER5 :
+            case TYPE_N_INSERTION_LINKER3 :
+            case TYPE_N_SUBSTITUTION_START_CODON :
+            case TYPE_N_SUBSTITUTION_STOP_CODON :
+            case TYPE_N_FRAMESHIFT_INSERTION :
+            case TYPE_N_INFRAME_INSERTION :
+                return true;
+            default:
+                return true;
+        }
+    }
      
     public String toHTMLString()
     {
