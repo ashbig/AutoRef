@@ -108,7 +108,7 @@ public class RearrayPlatesAction extends ResearcherAction
             rearrayer.isSmall(isSmall);
             rearrayer.isMeddium(isMeddium);
             rearrayer.isLarge(isLarge);
-            System.out.println(isPutOnQueue);
+            rearrayer.isFullPlates(isFullPlate);
             rearrayer.isPutOnQueue(isPutOnQueue);
 
             rearrayer.createNewPlates(0);

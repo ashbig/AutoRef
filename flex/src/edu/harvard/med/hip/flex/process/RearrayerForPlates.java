@@ -53,6 +53,7 @@ public class RearrayerForPlates
     private boolean         m_isLarge = false;
     private boolean         m_isConttrols = true;
     private boolean         m_isPutOnQueue = true;
+    private boolean         m_isFullPlate = true;
     private String          m_sample_type = "";
     
     /** Creates a new instance of RearrayerForPlates */
@@ -81,89 +82,67 @@ public class RearrayerForPlates
         
         ArrayList samples = readFile();
         Hashtable sample_by_sequenceid = new Hashtable();
-        
-        //create four samples
-        ArrayList samples1 = null;
-         ArrayList flex_sequences = null;
+        ArrayList flex_sequences = null;
         Hashtable org_containers = null;
-            ArrayList samples2 = null;
-            ArrayList samples3 = null;
-            ArrayList samples4 = null;
+    
+        ArrayList samples_arranged_by_format =new ArrayList();
         if (mode == 1)
         {
-             samples1 = new ArrayList();
-             samples2 = new ArrayList();
-             samples3 = new ArrayList();
-             samples4 = new ArrayList();
-            int seqId = 0;
-
-            for (int count = 0; count < samples.size(); count++)
-            {
-
-                samples1.add(samples.get(count++));
-                samples2.add(samples.get(count++));
-                samples3.add(samples.get(count++));
-                samples4.add(samples.get(count));
-            }
-              flex_sequences = getAllSequences(samples1);
-         org_containers = getAllContainers(samples1);
+             fourPlatesMode( samples);
         }
         else
         {
              flex_sequences = getAllSequences(samples);
              org_containers = getAllContainers(samples);
+             //separate samples by format
+             samples_arranged_by_format = arrangeSamplesByFormat(samples);
+            
         }
-         if (mode == 1)
-        {
-            createContainers( flex_sequences, org_containers, samples1);
-            createContainers( flex_sequences, org_containers, samples2);
-            createContainers( flex_sequences, org_containers, samples3);
-            createContainers( flex_sequences, org_containers, samples4);
-        }
-         else
-         {
-            if (m_isArrangeBySize)
-            {
-                ArrayList sequences =  new ArrayList();
-                if (m_isSmall)
+       for (int sample_format = 0; sample_format < samples_arranged_by_format.size(); sample_format++)
+             {
+                ArrayList current_samples = (ArrayList)samples_arranged_by_format.get(sample_format);
+                if (m_isArrangeBySize)
                 {
-                    sequences = getSequencesBySize(LIMITS[0],LIMITS[1], flex_sequences);
-                     createContainers(sequences, org_containers, samples);
-                    sequences = new ArrayList();
+                
+                    ArrayList sequences =  new ArrayList();
+                    if (m_isSmall)
+                    {
+                        sequences = getSequencesBySize(LIMITS[0],LIMITS[1], flex_sequences,current_samples);
+                        createContainers(sequences, org_containers, current_samples);
+                        sequences = new ArrayList();
+                    }
+                    else
+                    {
+                        sequences.addAll(getSequencesBySize(LIMITS[0],LIMITS[1], flex_sequences,current_samples));
+                    }
+                    if (m_isMeddium)
+                    {
+                        sequences = getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences,current_samples);
+                        createContainers(sequences, org_containers, current_samples);
+                        sequences = new ArrayList();
+                    }
+                    else
+                    {
+                        sequences.addAll(getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences,current_samples));
+                    }
+                    if (m_isLarge)
+                    {
+                        sequences = getSequencesBySize(LIMITS[2],LIMITS[3], flex_sequences,current_samples);
+                        createContainers(sequences, org_containers, current_samples);
+                        sequences = new ArrayList();
+                    }
+                    else
+                    {
+                        sequences.addAll(getSequencesBySize(LIMITS[2],LIMITS[3], flex_sequences,current_samples));
+                    }
+                    if (sequences.size() != 0)
+                    createContainers(sequences, org_containers, current_samples);
                 }
                 else
                 {
-                    sequences.addAll(getSequencesBySize(LIMITS[0],LIMITS[1], flex_sequences));
+                      createContainers( flex_sequences, org_containers, current_samples);
                 }
-                if (m_isMeddium)
-                {
-                    sequences = getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences);
-                    createContainers(sequences, org_containers, samples);
-                    sequences = new ArrayList();
-                }
-                else
-                {
-                    sequences.addAll(getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences));
-                }
-                if (m_isLarge)
-                {
-                    sequences = getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences);
-                    createContainers(sequences, org_containers, samples);
-                    sequences = new ArrayList();
-                }
-                else
-                {
-                    sequences.addAll(getSequencesBySize(LIMITS[1],LIMITS[2], flex_sequences));
-                }
-                if (sequences.size() != 0)
-                createContainers(sequences, org_containers, samples);
-            }
-            else
-            {
-
-                   createContainers( flex_sequences, org_containers, samples);
-              
-            }
+            
          }
           
         try{
@@ -191,6 +170,7 @@ public class RearrayerForPlates
     public void                 setSampleType(String s){ m_sample_type = s;}
     public void                 setSort(boolean b){ m_isSort = b;}
     public void                 isPutOnQueue(boolean b){m_isPutOnQueue=b;}
+    public void                 isFullPlates(boolean b){m_isFullPlate=b;}
     public void                 isControls(boolean b)
     { 
         m_isConttrols = b;
@@ -204,6 +184,36 @@ public class RearrayerForPlates
     public void                 isMeddium(boolean b){ m_isMeddium=b;}
     public void                 isLarge(boolean b){ m_isLarge =b;}
     //-----------------------------------------
+    
+    
+    //function works for mode ==1 where
+    //first sample from 4 put on one container
+    //second ffrom group on second and so on
+    private void fourPlatesMode(ArrayList samples) throws FlexDatabaseException
+    {
+         ArrayList samples1 = new ArrayList();
+         ArrayList flex_sequences = null;
+        Hashtable org_containers = null;
+        ArrayList samples2 = new ArrayList();
+        ArrayList samples3 =new ArrayList();
+        ArrayList samples4 =new ArrayList();
+        for (int count = 0; count < samples.size(); count++)
+        {
+
+            samples1.add(samples.get(count++));
+            samples2.add(samples.get(count++));
+            samples3.add(samples.get(count++));
+            samples4.add(samples.get(count));
+        }
+         flex_sequences = getAllSequences(samples1);
+        org_containers = getAllContainers(samples1);
+         createContainers( flex_sequences, org_containers, samples1);
+        createContainers( flex_sequences, org_containers, samples2);
+        createContainers( flex_sequences, org_containers, samples3);
+        createContainers( flex_sequences, org_containers, samples4);
+    }
+    
+    
     //read file with info for the rearray 
     //file should have the following structure
     //flexseqid - org plate id - well - status (+/+1)
@@ -281,6 +291,8 @@ public class RearrayerForPlates
     private Hashtable getAllContainers(ArrayList samples) throws FlexDatabaseException
     {
         Hashtable containers = new Hashtable();
+        Hashtable containers_type = new Hashtable();
+         String c_type = null;
         try
         {
             for (int count = 0; count < samples.size(); count++)
@@ -294,12 +306,23 @@ public class RearrayerForPlates
                     new_cont.restoreSample();
                     Sample s = new_cont.getSample(pls.getWellId());
                     pls.setSampleId( s.getId() );
+                    if (s.getConstructid() != -1)
+                    {
+                        Construct c = Construct.findConstruct( s.getConstructid());
+                        c_type = c.getType();
+                        containers_type.put(pls.getPlateIdName(), c_type);
+                        pls.setFormat(c_type);
+                    }
                 }
                 else
                 {
                     Container old_container = (Container)containers.get( pls.getPlateIdName());
                     Sample s = old_container.getSample(pls.getWellId());
                     pls.setSampleId( s.getId() );
+                    if ( containers_type.containsKey (pls.getPlateIdName() ) )
+                    {
+                        pls.setFormat( (String) containers_type.get(pls.getPlateIdName() ));
+                    }
                 }
                 
             }
@@ -314,13 +337,22 @@ public class RearrayerForPlates
     
     
     //functions returns all sequences of size between param1 and param2
-    private ArrayList getSequencesBySize(int from, int to, ArrayList flex_sequences)
+    //that belongs to the samples
+    private ArrayList getSequencesBySize(int from, int to, ArrayList flex_sequences, ArrayList samples)
     {
         ArrayList seq  = new ArrayList();
+        Hashtable seq_ids = new Hashtable();
+       
+        //create hash sequences
+        for (int count = 0 ; count < samples.size(); count++)
+        {
+            PlateSample s = (PlateSample)samples.get(count);
+            seq_ids.put(new Integer( s.getSequenceId() ),"");
+        }
         for (int count = 0 ; count < flex_sequences.size(); count++)
         {
             FlexSequence fl = (FlexSequence) flex_sequences.get(count);
-            if (fl.getCdslength() >= from && fl.getCdslength() < to)
+            if (fl.getCdslength() >= from && fl.getCdslength() < to && seq_ids.containsKey(new Integer(fl.getId())))
                 seq.add(fl);
         }
         
@@ -334,32 +366,39 @@ public class RearrayerForPlates
         ArrayList plate_sequences = new ArrayList();
         for (int count = 0 ; count < seq.size(); count++)
         {
+            
             plate_sequences.add(seq.get(count));
-            if (( count > 0 && (count + 1) % (m_wells_on_plate - m_number_of_controls) == 0) || count == samples.size() - 1)
+           
+            if (( count > 0 && (count + 1) % (m_wells_on_plate - m_number_of_controls) == 0)
+                        || count == ( seq.size() - 1) )
             {
-                //create new plate
-                if (m_isSort)
-                    Algorithms.rearangeSawToothPatternInFlexSequence(plate_sequences);
-                ArrayList file_entries = new ArrayList();
-                try
+                System.out.println(count);
+                if (m_isFullPlate && plate_sequences.size() == (m_wells_on_plate - m_number_of_controls) || !m_isFullPlate  )
                 {
-                    Container newcontainer = createContainer( plate_sequences, containers, samples, file_entries);
-                    if (newcontainer != null ) m_rearrayed_containers.add(newcontainer);
-                    plate_sequences = new ArrayList();
-                }catch(Exception e)
-                {
-                    System.out.println(e.getMessage());
-                    throw new FlexDatabaseException("Cannot create container.");
-                }
-                try
-                {
-                    File robot_file = createRearrayFile( file_entries);
-                    m_fileList.add( robot_file );
-                }
-                catch(Exception e)
-                {
-                    System.out.println(e.getMessage());
-                    throw new FlexDatabaseException("Cannot create file.");
+                    //create new plate
+                    if (m_isSort)
+                        Algorithms.rearangeSawToothPatternInFlexSequence(plate_sequences);
+                    ArrayList file_entries = new ArrayList();
+                    try
+                    {
+                        Container newcontainer = createContainer( plate_sequences, containers, samples, file_entries);
+                        if (newcontainer != null ) m_rearrayed_containers.add(newcontainer);
+                        plate_sequences = new ArrayList();
+                    }catch(Exception e)
+                    {
+                        System.out.println(e.getMessage());
+                        throw new FlexDatabaseException("Cannot create container.");
+                    }
+                    try
+                    {
+                        File robot_file = createRearrayFile( file_entries);
+                        m_fileList.add( robot_file );
+                    }
+                    catch(Exception e)
+                    {
+                        System.out.println(e.getMessage());
+                        throw new FlexDatabaseException("Cannot create file.");
+                    }
                 }
                 
             }
@@ -415,7 +454,11 @@ public class RearrayerForPlates
             FlexSequence fl = (FlexSequence) plate_sequences.get(count);
             //get sample we create it from
              PlateSample pl_sample = getPlateSampleForMapping( samples,  fl.getId() );
-              Container org_container = (Container)org_containers.get(pl_sample.getPlateIdName());
+             //reset label
+             if (count == 0)     cont.setLabel(cont.getLabel()+ pl_sample.getPlatePostfix() );
+             
+             
+            Container org_container = (Container)org_containers.get(pl_sample.getPlateIdName());
             if ( ! org_containers_for_this_container.contains(org_container))
             {
                 org_containers_for_this_container.add(org_container);
@@ -528,7 +571,35 @@ public class RearrayerForPlates
         fr.close();
         return fl;
     }
-    
+    //function arrange samples by format
+    private ArrayList arrangeSamplesByFormat(ArrayList samples)
+    {
+      //separate samples by format
+         ArrayList samples_closed = new ArrayList();
+         ArrayList samples_open = new ArrayList();
+         ArrayList samples_none =new ArrayList();
+         ArrayList samples_result =new ArrayList();
+         for (int count = 0; count < samples.size(); count++)
+         {
+             PlateSample s = (PlateSample) samples.get(count);
+             if (s.getFormat().equalsIgnoreCase( PlateSample.FORMAT_CLOSED ))
+             {
+                 samples_closed.add(s);
+             }
+             else if (s.getFormat().equalsIgnoreCase( PlateSample.FORMAT_OPEN))
+             {
+                 samples_open.add(s);
+             }
+             else if (s.getFormat().equalsIgnoreCase( PlateSample.FORMAT_NOT_KNOWN ))
+             {
+                 samples_none.add(s);
+             }
+         }
+         if (samples_closed.size() != 0) samples_result.add(samples_closed);
+         if (samples_open.size() != 0)samples_result.add(samples_open);
+         if (samples_none.size() != 0)samples_result.add(samples_none);
+         return samples_result;
+    }
     
     //send notification to the user
     public void sendRobotFiles(String username) throws Exception
@@ -547,26 +618,45 @@ public class RearrayerForPlates
     //inner class to hold plate sample from rearray file
     protected class PlateSample
     {
+       
+        public static final String FORMAT_CLOSED = "CLOSED";
+        public static final String FORMAT_OPEN = "FUSION";
+        
+        public static final String FORMAT_NOT_KNOWN = "NO";
+        
         private int i_seqid = -1;
         private int i_plateid = -1;
         private int i_wellid = -1;
         private int i_sampleid = -1;
+        private String i_format = FORMAT_NOT_KNOWN;//closed
         private String  i_seqid_str = null;
         private String  i_plateid_str = null;
         private boolean i_state_used_for_mapping = false;
        
-        public PlateSample(String seqid, String plateid, String wellid)
+        public PlateSample(String seqid, String plateid, String wellid )
         {
             i_seqid = Integer.parseInt(seqid);
             i_plateid = Integer.parseInt(plateid);
             i_wellid = Integer.parseInt(wellid);
             i_seqid_str = seqid;
             i_plateid_str = plateid;
+  
         }
         
         public void             setSampleId(int i){ i_sampleid = i;}
         public void             setState(boolean i ){ i_state_used_for_mapping = i;}
+        public void             setFormat(String i){  i_format = i;}
         
+        public String           getPlatePostfix()
+        {
+            if (i_format.equalsIgnoreCase( FORMAT_CLOSED ))
+                return "-C";
+            else if ( i_format.equalsIgnoreCase( FORMAT_OPEN))
+                return "-F";
+            else if  (i_format.equalsIgnoreCase( FORMAT_NOT_KNOWN ))
+               return "";
+            return "";
+        }
         public boolean          getState(){ return i_state_used_for_mapping;}
         public String           getSequenceidName(){ return i_seqid_str;}
         public int              getSampleId(){ return i_sampleid;}
@@ -574,6 +664,8 @@ public class RearrayerForPlates
         public int              getPlateId(){ return i_plateid;}
         public String           getPlateIdName(){ return i_plateid_str;}
         public int              getWellId(){ return i_wellid;}
+        public String              getFormat(){ return i_format;}
+        
     }
     
     
@@ -631,10 +723,11 @@ public class RearrayerForPlates
             rearrayer.isControls(false);
            // rearrayer.setSampleType(sampletype);
             rearrayer.setSort(true);
-            rearrayer.isSmall(true);
-            rearrayer.isMeddium(true);
-            rearrayer.isLarge(true);
-            rearrayer.isPutOnQueue(true);
+            rearrayer.isSmall(false);
+            rearrayer.isMeddium(false);
+            rearrayer.isLarge(false);
+            rearrayer.isFullPlates(false);
+            rearrayer.isPutOnQueue(false);
             rearrayer.createNewPlates(0);
             c.rollback();
            // c.commit();
