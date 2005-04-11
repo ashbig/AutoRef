@@ -437,9 +437,8 @@ public class PlateUploader
     
         //create samples and flex info and isolatetracking (optional)
         Hashtable bec_construct_ids = new Hashtable();
-         FlexInfo flex_info;
-         IsolateTrackingEngine istr = null;
-         Sample sample; SampleInfo sample_info; 
+         FlexInfo flex_info = null;  IsolateTrackingEngine istr = null;
+         Sample sample = null; SampleInfo sample_info = null; 
         for (int sample_count = 0; sample_count < samples.size(); sample_count++)
         {    
             sample_info = ( SampleInfo )samples.get(sample_count);

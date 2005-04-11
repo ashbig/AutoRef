@@ -115,7 +115,7 @@ public class GapMapper
                 return;
             }
             int linker5_length = m_cloning_startegy.getLinker5().getSequence().length();
-    int linker3_length = m_cloning_startegy.getLinker3().getSequence().length();
+            int linker3_length = m_cloning_startegy.getLinker3().getSequence().length();
     
             ReadInAssembly read = null;
             boolean isContigComplement = false;
