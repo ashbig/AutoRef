@@ -43,6 +43,7 @@ public class EndReadsSpec extends Spec
          return getAllSpecsByType(END_READS_SPEC_INT, true);
      }
     
+         
      
      public static ArrayList getAllSpecNames() throws BecDatabaseException
      {
@@ -538,6 +539,6 @@ h.put("forwardName","1");
         System.exit(0);
      }
    
-     
+    
      
 }

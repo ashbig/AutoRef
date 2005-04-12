@@ -245,12 +245,15 @@ public class Constants {
     public static final int         PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER  = 95;
     public static final int         PROCESS_ADD_NEW_COMMON_PRIMER  = 98;
     public static final int         PROCESS_ADD_NEW_CLONINGSTRATEGY   = 99;
+    public static final int         PROCESS_ADD_TRACE_FILE_NAME_FORMAT       = 100;
 
 // outside submission
     public static final int         PROCESS_SUBMIT_REFERENCE_SEQUENCES  = 96;
     public static final int         PROCESS_SUBMIT_CLONE_COLLECTION  = 97;
  
-       
+    
+    // max process 100
+
     //items for display 1-40
   
    

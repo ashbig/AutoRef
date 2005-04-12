@@ -92,32 +92,22 @@ public class SequenceManipulation
     public static String getCompliment(String old)
     {
         StringBuffer newStr = new StringBuffer();
-        char ch;
-        int i = old.length() - 1;
-        while ( i >= 0 )
+        char[] ch_array = old.toCharArray();
+        for(int count =0; count < ch_array.length; count++)
         {
-            ch = old.charAt(i);
-            switch(ch)
+            switch(ch_array[count])
             {
-                case 'a': case 'A':
-                {newStr.append( "T");break;}
-                case 't' : case 'T': case  'u': case 'U':
-                {newStr.append("A");break;}
-                case  'c' : case  'C':
-                {newStr.append("G");break;}
-                case  'g' : case  'G':
-                {newStr.append("C");break;}
-                case  'n' : case  'N':
-                {newStr.append("N");break;}
-                case '['  :
-                { newStr.append(']'); break;}
-                case ']':
-                { newStr.append('['); break;}
-                case '/' :
-                { newStr.append(ch); break;}
+                case 'a': case 'A':              {newStr.append( "T");break;}
+                case 't' : case 'T': case  'u': case 'U':                {newStr.append("A");break;}
+                case  'c' : case  'C':                {newStr.append("G");break;}
+                case  'g' : case  'G':                {newStr.append("C");break;}
+                case  'n' : case  'N':                {newStr.append("N");break;}
+                case '['  :                { newStr.append(']'); break;}
+                case ']':                { newStr.append('['); break;}
+                case '/' :                { newStr.append(ch_array[count]); break;}
                 
             }
-            i--;
+         
         }
         return newStr.toString();
     }
@@ -126,12 +116,10 @@ public class SequenceManipulation
     public static String getComplimentCaseSencetive(String old)
     {
         StringBuffer newStr = new StringBuffer();
-        char ch;
-        int i = old.length() - 1;
-        while ( i >= 0 )
+        char[] ch_array = old.toCharArray();
+        for ( int count = 0; count < ch_array.length;count++)
         {
-            ch = old.charAt(i);
-            switch(ch)
+             switch(ch_array[count])
             {
                 case 'a':{newStr.append( "t");break;}
                 case 'A':{newStr.append( "T");break;}
@@ -147,15 +135,32 @@ public class SequenceManipulation
                  case  'X':          {newStr.append("X");break;}
                 case '['  :                { newStr.append(']'); break;}
                 case ']':                { newStr.append('['); break;}
-                case '/' :
-                { newStr.append(ch); break;}
+                case '/' :            { newStr.append(ch_array[count]); break;}
                 
             }
-            i--;
-        }
+         }
         return newStr.toString();
     }
     
+    
+    public static boolean isValidDNASequence(String sequence)
+    {
+        char[] bases = sequence.toCharArray();
+        for( int count = 0; count < bases.length; count++)
+        {
+            switch(bases[count])
+            {
+                case 'a': case 'A':
+                case 't' : case  'u':  
+                case 'T': case 'U':   
+                case  'C':  case  'c' :   
+                case  'g' :    case  'G': 
+                { break;  }
+                default:{ return false;}
+            }
+        }
+       return true;
+    }
     
     
     
@@ -441,9 +446,9 @@ public class SequenceManipulation
     
     public static void main(String [] args)
     {
-        System.out.println( SequenceManipulation.isStartCodon("TGA"));
-        System.out.println( SequenceManipulation.isStartCodon("ATG"));
-        System.out.println( SequenceManipulation.isStartCodon("AUG"));
+        System.out.println( SequenceManipulation.isValidDNASequence("TacccgGGGTGA"));
+        System.out.println( SequenceManipulation.isValidDNASequence("AsTG"));
+        System.out.println( SequenceManipulation.isValidDNASequence("AUNG"));
        
     }
 }

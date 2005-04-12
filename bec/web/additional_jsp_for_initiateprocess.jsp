@@ -223,7 +223,17 @@ additional_jsp_buffer.append("<tr><td colspan = 2><table width='100%' border='0'
 additional_jsp_buffer.append("<input type='radio' name='"+ PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE+"' value='"+ OligoCalculation.TYPE_OF_OLIGO_CALCULATION_REFSEQUENCE+ "' checked>");
 additional_jsp_buffer.append("Display primers for Reference Sequence</strong> </td></tr><tr><td><strong>");
 additional_jsp_buffer.append("<input type='radio' name='"+PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE +"' value='"+ OligoCalculation.TYPE_OF_OLIGO_CALCULATION_STRETCH_COLLECTION +"'>");
-additional_jsp_buffer.append("Display primers for Stretch Collection</strong></td></tr><tr>");
+additional_jsp_buffer.append("Display primers for Stretch Collection</strong></td></tr>");
+if ( forwardName_int == Constants.PROCESS_VIEW_INTERNAL_PRIMERS)
+{
+additional_jsp_buffer.append("<tr><td>&nbsp&nbsp&nbsp&nbsp&nbsp<input type='radio' name='"+ PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_COLLECTIONS_TYPE+"' value='"+ Constants.STRETCH_COLLECTION_REPORT_INT + "' >");
+additional_jsp_buffer.append("primers for Latest stretch collection</strong> </td></tr>");
+additional_jsp_buffer.append("<tr><td>&nbsp&nbsp&nbsp&nbsp&nbsp<input type='radio' name='"+PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_COLLECTIONS_TYPE +"' value='"+ Constants.STRETCH_COLLECTION_REPORT_ALL_INT +"' checked>");
+additional_jsp_buffer.append("primers for All Available stretch collections</strong></td></tr>");
+  
+}
+
+
 additional_jsp = additional_jsp_buffer.toString();
 
  break;

@@ -55,7 +55,7 @@ dhtmlMenu.addItem(new NavBarMenuItem("Available Vectors Information", "<%= edu.h
 dhtmlMenu.addItem(new NavBarMenuItem("Available Linkers Information", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_LINKERS_DEFINITION_INT%>"));
 
 <% if ( user_level == 3){%>
-dhtmlMenu.addItem(new NavBarMenuItem("Database Configuration", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>/SelectDatabaseConfigurationOption.jsp"));
+dhtmlMenu.addItem(new NavBarMenuItem("ACE Configuration", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>/SelectDatabaseConfigurationOption.jsp"));
 <%}%>
 myNavBar1.addMenu(dhtmlMenu);
 

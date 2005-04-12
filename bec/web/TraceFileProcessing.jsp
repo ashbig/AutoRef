@@ -3,7 +3,7 @@
 <%@ page errorPage="ProcessError.do"%>
 
 
-
+<%@ page import="java.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.*" %>
 
 <%@ page import="edu.harvard.med.hip.bec.util.*" %>
@@ -147,12 +147,22 @@ else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFIL
 <tr><td><b>Please specify sequencing facility </td>
 <td>
 <table border='0'>
-<tr><td>
-<input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> >Broad Institute
+<!--<tr><td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> >Broad Institute
 </td></tr><tr><td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC%> checked>HTMBC
 </td></tr><tr><td><input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_AGENCORD%> >Agencourt 
 </td></tr><tr><td><input type=radio name=sequencing_facility value=<%= SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER%> >Kolodner 
-</td></tr></table>
+</td></tr>-->
+<% Hashtable formats =(Hashtable) DatabaseToApplicationDataLoader.getTraceFileFormats();
+String format_name = null;
+for (Enumeration en = formats.keys(); en.hasMoreElements(); )
+{
+    format_name = (String)en.nextElement();
+%>
+ <tr><td><input type=radio name=sequencing_facility value="<%= format_name%>" ><%= format_name%> 
+
+   <% }%>
+
+</table>
 <tr><td>&nbsp;</td></tr>
 </td></tr>
 <tr><td><b>Please specify the read type </td>

@@ -180,12 +180,14 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
         {    
             error_messages = null;
             collection = (CloneCollection) clone_collection.get(count);
-            collection. verify(  error_messages);
+            collection.verify(  error_messages);
             if ( error_messages != null && error_messages.size() > 0)
             {
                 m_error_messages.addAll(error_messages);
                 continue;
             }
+            if ( isCloneCollectionNameExists(collection, conn)) continue;//pst_check_cloneid_duplicates ) ) continue;
+           
             if ( isCloneDuplicationExists(collection, conn)) continue;//pst_check_cloneid_duplicates ) ) continue;
             // refsequence exists
             if ( !isReferenceSequencesExistsForCollection(collection,  conn)) continue;// , pst_check_refsequenceid)) continue;
@@ -380,7 +382,29 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
    }
 
 
-
+private boolean isCloneCollectionNameExists(CloneCollection collection, Connection conn)
+   {
+        try
+        {
+            String sql =  "select  *  from containerheader where label ="+ collection.getName();
+            CachedRowSet rs =  DatabaseTransaction.executeQuery(sql, conn);
+            if( rs.next() )       
+            {
+                  m_error_messages.add(" Clone collection (name "+ collection.getName() +" id "+ collection.getId() +
+                    " cannot be uploaded into ACE: clone collection with this name already exists. Please verify your data");
+         
+                   return false;
+            }
+            return true;
+        }
+        catch(Exception e)
+        {
+            m_error_messages.add(" Clone collection (name "+ collection.getName() +" id "+ collection.getId() +
+                    " cannot be uploaded into ACE: cannot verify collection name.");
+            return false;
+        }
+   }
+   
 
    private boolean              isCloningStrategyExistsForCollection(CloneCollection collection, Connection conn)
    {
@@ -411,7 +435,12 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
             {
                   db_count ++;
             }
-            if (   cloning_strategy_ids_count != db_count  ) return false;
+            if (   cloning_strategy_ids_count != db_count  )
+            {
+                 m_error_messages.add(" Clone collection (name "+ collection.getName() +" id "+ collection.getId() +
+                    " cannot be uploaded into ACE: problem with cloning strategy id. Please verify your data");
+                return false;
+            }
             return true;
         }
         catch(Exception e)

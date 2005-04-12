@@ -267,4 +267,6 @@ public class SlidingWindowTrimmingSpec extends Spec
         {
         }
      }
+  
+     
 }

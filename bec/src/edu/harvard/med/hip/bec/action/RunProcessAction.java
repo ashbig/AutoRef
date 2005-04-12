@@ -209,10 +209,14 @@ public class RunProcessAction extends ResearcherAction
                      ArrayList oligo_calculations_per_item = new ArrayList();
                    
                      int type_of_coverage = Integer.parseInt(request.getParameter(PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE)  );
-                     
+                     boolean isLatestStretchCollection = true;
+                     if ( forwardName == Constants.PROCESS_VIEW_INTERNAL_PRIMERS )
+                     {
+                         isLatestStretchCollection = ( Constants.STRETCH_COLLECTION_REPORT_INT == Integer.parseInt(request.getParameter(PrimerDesignerRunner.STRETCH_PRIMERS_APNAME_COLLECTIONS_TYPE)));
+                     }
                      for (int index = 0; index < items.size();index++)
                      {
-                          oligo_calculations_per_item = OligoCalculation.getOligoCalculations((String)items.get(index),item_type, type_of_coverage);
+                          oligo_calculations_per_item = OligoCalculation.getOligoCalculations((String)items.get(index),item_type, type_of_coverage, isLatestStretchCollection);
                          oligo_calculations.add( oligo_calculations_per_item);
                      }
                     String title="";

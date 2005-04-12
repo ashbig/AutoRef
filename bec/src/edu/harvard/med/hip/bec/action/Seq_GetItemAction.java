@@ -55,6 +55,8 @@ public class Seq_GetItemAction extends ResearcherAction
      
         ActionErrors errors = new ActionErrors();
         int forwardName = ((Seq_GetSpecForm)form).getForwardName();
+         request.setAttribute("forwardName", new Integer(forwardName));
+                   
         String label = null;int id = -1;Container container = null;
         String title = "";
         try
@@ -185,7 +187,6 @@ public class Seq_GetItemAction extends ResearcherAction
                 {
                     container.restoreSampleIsolateNoFlexInfo();
                     request.setAttribute("container",container);
-                    request.setAttribute("forwardName", new Integer(forwardName));
                     request.setAttribute("rows", new Integer(8));
                     request.setAttribute("cols", new Integer(12));
 
@@ -215,7 +216,6 @@ public class Seq_GetItemAction extends ResearcherAction
                         request.setAttribute("container",container);
                         request.setAttribute("rows", new Integer(8));
                         request.setAttribute("cols", new Integer(12));
-                        request.setAttribute("forwardName", new Integer(forwardName));
                         return (mapping.findForward("display_isolate_ranker_report"));
                     }
                     container.getCloningStrategyId();
@@ -443,28 +443,20 @@ public class Seq_GetItemAction extends ResearcherAction
                     
                     container.restoreSampleIsolate(false,true);
                     request.setAttribute("container",container);
-                    request.setAttribute("forwardName", new Integer(forwardName));
-                
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("show_activate_list"));
                 }
                 case Constants.AVAILABLE_LINKERS_DEFINITION_INT:
                 {
-                    
                     ArrayList linkers = BioLinker.getAllLinkers();
-                    
                     request.setAttribute("linkers", linkers);
-                    request.setAttribute("forwardName", new Integer(forwardName));
                     return (mapping.findForward("display_linker"));
                 }
                 case Constants.AVAILABLE_VECTORS_DEFINITION_INT:
                 {
-                    
-                    request.setAttribute("forwardName", new Integer(forwardName));
                     ArrayList vectors = BioVector.getAllVectors();
                     request.setAttribute("vectors", vectors);
                     return (mapping.findForward("display_vector"));
-                    
                 }    
                 case Constants.AVAILABLE_SPECIFICATION_INT:
                 {
@@ -473,9 +465,14 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("bioevaluation", Spec.getAllSpecsByType(Spec.FULL_SEQ_SPEC_INT, false));
                     request.setAttribute("polymerphism", Spec.getAllSpecsByType(Spec.POLYMORPHISM_SPEC_INT, false));
                     request.setAttribute("slidingwindow", Spec.getAllSpecsByType(Spec.TRIM_SLIDING_WINDOW_SPEC_INT, false));
-                    request.setAttribute("forwardName", new Integer(forwardName));
-                
+                    request.setAttribute(Constants.JSP_TITLE,"select Specification to view");
                     return (mapping.findForward("choose_spec"));
+                }
+                case Spec.PRIMER3_SPEC_INT * Spec.SPEC_DELETE_SPEC:
+                {
+                    request.setAttribute("primer3", Primer3Spec.getAllNotUsedSpecs( ));
+                    request.setAttribute(Constants.JSP_TITLE,"select Specification to delete");
+                     return (mapping.findForward("choose_spec"));
                 }
                 
                
@@ -501,52 +498,21 @@ public class Seq_GetItemAction extends ResearcherAction
                 }
                 case Constants.AVAILABLE_CONTAINERS_INT:
                 {
-                    title = "available Containers";
-                   ArrayList labels = Container.findAllContainerLabels();
-                     StringBuffer container_names= new StringBuffer();
-                    int cur_column=1;String cur_label = null;String prev_label = null;
-                    if (labels == null || labels.size() < 1)
+                    ArrayList labels = Container.findAllContainerLabels();
+                    //sort labels
+                    Collections.sort(labels, new Comparator()
                     {
-                        container_names.append( "No containers are available.");
-                    }
-                    else
-                    {
-                         container_names.append("<script language='JavaScript' src='"+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"scripts.js'></script> ");
-                       
-                        for (int index = 0; index < labels.size(); index ++)
+                        public int compare(Object o1, Object o2)
                         {
-                            cur_label = (String)labels.get(index);
-                          //  System.out.println(cur_label);
-                            if (index == 0) container_names.append("<tr>");
-                            if ( cur_column == 6)
-                            {
-                                container_names.append("</tr><tr>");
-                                cur_column =1;
-                            }
-                                
-                            if ( prev_label == null || ( prev_label != null &&  cur_label.charAt(0) != prev_label.charAt(0)))
-                            {
-                                if (index != 0)
-                                {
-                                     container_names.append("</table>");
-                                    container_names.append("</DIV>");
-                                    container_names.append("</tr><tr>");
-                                }
-                                 
-                                container_names.append("<tr><td><INPUT onclick='javascript:showhide(\""+cur_label.charAt(0) +"\", this.checked);' type=checkbox CHECKED value=1 name=show> "+ DatabaseToApplicationDataLoader.getProjectName(cur_label.charAt(0)));
-                                container_names.append("<DIV ID='"+cur_label.charAt(0) +"' STYLE='  position:relative;  clip:rect(0px 120px 120px 0px); '>");
-                                container_names.append("<p><table border = 0>");
-                                cur_column=1;
-                            }
-                            container_names.append( "<td><b>"+cur_label+"</b></td>");
-                            cur_column ++;
-                            prev_label = cur_label;
+                            return ((String) o1).compareTo( (String) o2);
                         }
-                        container_names.append("</table></table>");
-                    }
-                    request.setAttribute( Constants.ADDITIONAL_JSP, container_names.toString()) ;
-                    request.setAttribute(Constants.JSP_TITLE,title);
+                        public boolean equals(java.lang.Object obj)               {      return false;  }
+                    } );
+                    request.setAttribute("labels",labels);
+                     request.setAttribute( Constants.ADDITIONAL_JSP, "<script language='JavaScript' src='"+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"scripts.js'></script> ") ;
+                    request.setAttribute(Constants.JSP_TITLE,"available Containers");
                     return (mapping.findForward("display_info"));
+                     
                 }
                 case Constants.PROCESS_VIEW_OLIGO_PLATE:
                 {
@@ -572,7 +538,6 @@ public class Seq_GetItemAction extends ResearcherAction
  //  System.out.println(label+oligo_container.getId());
                     request.setAttribute(Constants.JSP_TITLE,title);
                     request.setAttribute("container",oligo_container);
-                    request.setAttribute("forwardName", new Integer(forwardName));
                     return (mapping.findForward("display_oligo_container"));
                 }
              

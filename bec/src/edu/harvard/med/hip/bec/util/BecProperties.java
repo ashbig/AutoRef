@@ -4,8 +4,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.4 $
- * $Date: 2005-01-20 19:14:01 $
+ * $Revision: 1.5 $
+ * $Date: 2005-04-12 19:33:50 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.4 $ $Date: 2005-01-20 19:14:01 $
+ * @version    $Revision: 1.5 $ $Date: 2005-04-12 19:33:50 $
  */
 
 public class BecProperties
@@ -46,6 +46,7 @@ public class BecProperties
     private Hashtable  m_vector_libraries = null;
     private boolean     m_isDebuggingMode = false;
     private boolean     m_isWindowsOS = false;
+    private boolean     m_isHipInternalVersion = true;
     /**
      * Protected constructor.
      *
@@ -111,10 +112,16 @@ public class BecProperties
             value =m_properties.getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");//=/F/Sequences for BEC/files_to_transfer
              if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for original trace files directory is not set properly");
            
-            value =m_properties.getProperty("IS_WINDOWS");//=/F/Sequences for BEC/files_to_transfer
-            if ( value == null  )   m_Error_messages.add("OS type not defined");
-            else if ( Integer.parseInt(value) == 1 )   m_isWindowsOS = true;
+            String os = System.getProperty("os.name");
+            boolean m_isWindowsOS = ( os.indexOf("Win") > -1);
+     
+            value =m_properties.getProperty("IS_HIP_VERSION");//=/F/Sequences for BEC/files_to_transfer
+            if ( value == null  )   m_Error_messages.add("HIP/External version not defined. Setting to work as HIP internal application.");
+            else if ( Integer.parseInt(value) == 0 )  m_isHipInternalVersion  = false;
             
+       //    value = m_properties.getProperty("TRACE_FILES_FORMAT_FILE");//=/c/blastnew/
+      //      if ( value == null || !isFileExsist(value ) )m_Error_messages.add("File with Trace File Formats not found");
+           
             
             value =m_properties.getProperty("PERL_PATH");//=/F/Sequences for BEC/files_to_transfer
             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for perl exe not set properly");
@@ -137,6 +144,7 @@ public class BecProperties
            }
            if (! m_properties.getProperty("IS_DEBUGING").equalsIgnoreCase( "1" ))
                     m_isDebuggingMode = true;
+            
      }
 
              
@@ -242,6 +250,7 @@ public class BecProperties
     public           Hashtable  getVectorLibraries(){ return m_vector_libraries ;}
     public           boolean    isInDebugMode(){ return  m_isDebuggingMode ;}
     public          boolean    isWindowsOS(){ return m_isWindowsOS;}
+    public          boolean    isInternalHipVersion(){ return m_isHipInternalVersion;}
     
     private  InputStream getInputStream(String name) {
         return (Thread.currentThread().getContextClassLoader().getResourceAsStream(name));

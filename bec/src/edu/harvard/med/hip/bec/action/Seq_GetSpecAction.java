@@ -62,7 +62,7 @@ public class Seq_GetSpecAction extends ResearcherAction
             User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
           
             String username = user.getUsername();
-        //    request.setAttribute("forwardName", new Integer(forwardName));
+            request.setAttribute("forwardName", new Integer(forwardName));
             
             //show spec by id
             if ( forwardName >= Spec.SPEC_SHOW_SPEC)
@@ -152,6 +152,34 @@ public class Seq_GetSpecAction extends ResearcherAction
                     request.setAttribute("specs", specs);
                     return (mapping.findForward("slidingwindow_spec"));
                 }
+ // delete spec                
+                case  Spec.SPEC_DELETE_SPEC:
+                {
+                    String title = "deleting Config";                   String additional_jsp = null;
+                     int specid = -1;
+                    String spec_id = (String)request.getParameter( "er_specid");
+                    if ( spec_id == null) spec_id = (String)request.getParameter( "be_specid");
+                    if ( spec_id == null) spec_id = (String) request.getParameter("primer_specid");
+                    if ( spec_id == null) spec_id = (String)request.getParameter("polym_specid"); 
+                    if ( spec_id == null) spec_id = (String) request.getParameter("sl_specid"); 
+                    if ( spec_id != null )    specid =  Integer.parseInt( spec_id);
+                    if ( specid > 0 )
+                    {
+                        Connection conn= DatabaseTransaction.getInstance().requestConnection();
+                        Spec.deleteSpecById( specid, conn );
+                        conn.commit();
+                        additional_jsp = "The configuration was deleted.";
+                    }
+                    else
+                    {
+                       additional_jsp="Please select configuration you would like to delete."; 
+                    }
+                    request.setAttribute( Constants.JSP_TITLE, title);
+                    request.setAttribute( Constants.ADDITIONAL_JSP, additional_jsp);
+                    return (mapping.findForward("processing"));
+                }
+                
+                
                   case Constants.AVAILABLE_SPECIFICATION_INT:
                 {
                     Spec spec = null;
@@ -205,15 +233,7 @@ public class Seq_GetSpecAction extends ResearcherAction
                     request.setAttribute("specs", specs);
                     return (mapping.findForward(mapping_forw));
                 }
-                /*
-               case OligoPair.UNIVERSAL_PAIR_INT:
-                {
-                    OligoPair op = null;
-                    ArrayList o_pairs = op.getOligoPairsByType(OligoPair.UNIVERSAL_PAIR);
-                    request.setAttribute("specs", o_pairs);
-                    return (mapping.findForward("universal_pair"));
-                }
-               **/
+             
             }
             
         } 
@@ -225,4 +245,5 @@ public class Seq_GetSpecAction extends ResearcherAction
         }
         return (mapping.findForward("error"));
     }
+    
 }

@@ -100,7 +100,10 @@ public class TraceFileProcessingAction extends ResearcherAction
                     String inputdir = (String)request.getParameter("inputdir");
                     runner.setInputDirectory(inputdir);
                     runner.setReadType((String)request.getParameter("read_type"));
-                    runner.setSequencingFacility(Integer.parseInt((String)request.getParameter("sequencing_facility")));
+                    String temp = (String)request.getParameter("sequencing_facility");
+                    runner.setFormatName( temp);
+    
+                    //runner.setSequencingFacility(Integer.parseInt(temp);
                     FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
                     InputStream input = null;
                     try

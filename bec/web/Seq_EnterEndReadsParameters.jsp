@@ -56,9 +56,11 @@
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
 
 <tr><td colspan =2><div align="right"><b>
-<a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> "> 
-        View Mine </a>&nbsp;&nbsp;<a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.END_READS_SPEC_INT%>"> 
-        View All </a></b> </div><P><P><P></P></P></P></td></tr>
+<a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.END_READS_SPEC_INT * Spec.SPEC_SHOW_USER_ONLY_SPECS %> "> View Mine </a>
+&nbsp;&nbsp;<a href="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetSpec.do?forwardName=<%=Spec.END_READS_SPEC_INT%>">  View All </a>
+
+
+</b> </div><P><P><P></P></P></P></td></tr>
 <TR><td colspan="2">
 
 <P> <font  size="4"> <b>Set Name</b></font> 

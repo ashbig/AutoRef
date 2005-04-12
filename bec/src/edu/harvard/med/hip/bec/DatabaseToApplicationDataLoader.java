@@ -12,7 +12,13 @@ import java.sql.*;
 import java.io.*;
 import java.util.*;
 
+import org.xml.sax.*;
+import org.xml.sax.helpers.DefaultHandler;
+import org.apache.xerces.parsers.SAXParser;
+
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
+import edu.harvard.med.hip.bec.sampletracking.mapping.*;
+import edu.harvard.med.hip.bec.programs.parsers.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
@@ -23,6 +29,7 @@ import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.util_objects.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
+import edu.harvard.med.hip.bec.file.*;
 
 
 
@@ -39,12 +46,67 @@ public class DatabaseToApplicationDataLoader
     private static Hashtable      m_project_definition = null;
     private static Hashtable      m_process_definition = null;
     private static Hashtable      m_species_definition = null;
+    private static Hashtable      m_trace_file_formats = null;
   
     public static void            loadDefinitionsFromDatabase()
     {
         loadProjectDefinition();
         loadBiologicalSpeciesNames();
         loadProcessDefinition();
+        loadTraceFileFormats();
+    }
+    
+    /*
+    public static void            loadNotDatabaseDefinitions() throws Exception
+    {
+        loadTraceFileFormatsFromXML();
+    }
+    
+     */
+    public static void            loadTraceFileFormats()
+    {
+      
+        ResultSet rs = null; 
+        TraceFileNameFormat format = null;
+        m_trace_file_formats = new Hashtable();
+        String sql = "select FORMATNAME,READING_DIRECTION,FORMATID ,PLATE_SEPARATOR,"
+                 +" PLATE_LABEL_COLUMN ,PLATE_LABEL_START  ,PLATE_LABEL_LENGTH ,"
+                 +" POSITION_COLUMN,POSITION_START  ,POSITION_LENGTH  ,DIRECTION_FORWARD "
+                 +" ,DIRECTION_REVERSE  ,DIRECTION_COLUMN,DIRECTION_LENGTH  ," 
+                 + "DIRECTION_START ,POSITION_SEPARATOR  ,DIRECTION_SEPARATOR  from TRACEFILEFORMAT ";
+       
+        try
+        {
+            rs = DatabaseTransaction.getInstance().executeQuery(sql);
+            while ( rs.next())
+            {
+                 format = new TraceFileNameFormat();
+                 format.setId(rs.getInt("FORMATID"));
+                 format.setFormatName (rs.getString("FORMATNAME"));  //FORMAT_NAME> 
+                format.setPlateSeparator (rs.getString("PLATE_SEPARATOR"));//</SEPARATOR>
+                format.setPositionSeparator (rs.getString("POSITION_SEPARATOR"));//</SEPARATOR>
+                format.setDirectionSeparator (rs.getString("DIRECTION_SEPARATOR"));//</SEPARATOR>
+                format.setPlateLabelColumn (rs.getInt("PLATE_LABEL_COLUMN")); //PLATE_LABEL_COLUMN>
+                format.setPlateLabelStart (rs.getInt("PLATE_LABEL_START"));  //PLATE_LABEL_START>
+                format.setPlateLabelLength (rs.getInt("PLATE_LABEL_LENGTH"));    //PLATE_LABEL_LENGTH>
+                format.setPositionColumn (rs.getInt("POSITION_COLUMN"));    //POSITION_COLUMN>
+                format.setPositionStart (rs.getInt("POSITION_START"));   //POSITION_START> 
+                format.setPositionLength (rs.getInt("POSITION_LENGTH"));   //POSITION_LENGTH>
+                format.setDirectionForward (rs.getString("DIRECTION_FORWARD"));   //DIRECTION_FORWARD>
+                format.setDirectionReverse (rs.getString("DIRECTION_REVERSE"));   //DIRECTION_REVERSE>
+                format.setDirectionColumn (rs.getInt("DIRECTION_COLUMN"));   //DIRECTION_COLUMN>
+                format.setDirectionLength (rs.getInt("DIRECTION_LENGTH"));  //DIRECTION_START>
+                format.setDirectionStart(rs.getInt("DIRECTION_START"));
+                format.setFileNameReadingDirection(rs.getInt("READING_DIRECTION"));
+                m_trace_file_formats.put(format.getFormatName (),format);
+                }
+           
+        }
+        catch(Exception e)
+        {
+            System.out.println( "Cannot load trace file formats definition");
+        }
+
     }
     /** Creates a new instance of DataLoad */
     private static void            loadProjectDefinition()
@@ -156,26 +218,69 @@ public class DatabaseToApplicationDataLoader
         else 
             return  sd.getIdName();
     }
-     public static String getProjectName(char project_code) 
+     public static String getProjectName( String project_code) 
     {
-        String project_code_str =  String.valueOf(project_code).toUpperCase();
-        String project_name = (String) m_project_definition.get( project_code_str );
+        String project_name = (String) m_project_definition.get( project_code );
         if ( m_project_definition == null || m_project_definition.size() == 0 || project_name == null)
             return "Not known project";
         else 
             return  project_name;
     }
     
+     
+     public static String getProjectCodeForLabel(String label) 
+    {
+        String code = null;
+        for ( Enumeration e = m_project_definition.keys(); e.hasMoreElements() ;)
+        {
+            code = (String)  e.nextElement();
+            if ( label.startsWith(code)) return code;
+        }
+       return  "";
+    }
+     
+     
+     
+     // deprecated
+     /*
+     public static void loadTraceFileFormatsFromXML()throws Exception
+     {
+            String xml_file =  edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_FORMAT_FILE") ;
+            if ( xml_file == null || !FileOperations.isFileExists(xml_file ) )
+            {
+                throw new BecDatabaseException("File with Trace File Formats not found");
+            }
+            TraceFileNameFormatParser SAXHandler = new TraceFileNameFormatParser();
+            SAXParser parser = new SAXParser();
+            parser.setContentHandler(SAXHandler);
+            parser.setErrorHandler(SAXHandler);
+            InputStream m_input_stream = new FileInputStream(xml_file);
+            parser.parse(new org.xml.sax.InputSource(m_input_stream));
+                       
+            ArrayList m_trace_file_formats= SAXHandler.getFormats();
+
+         
+     }
+      **/
+   public static Hashtable          getTraceFileFormats(){ return m_trace_file_formats;}
+   public static void               addTraceFileFormat(TraceFileNameFormat format){if ( m_trace_file_formats == null) m_trace_file_formats=new Hashtable(); if (format != null)m_trace_file_formats.put(format.getFormatName(),format);}
+   public static TraceFileNameFormat          getTraceFileFormat(String format_name)
+   { 
+       if ( m_trace_file_formats == null || m_trace_file_formats.size()==0) return null;
+       else return (TraceFileNameFormat)m_trace_file_formats.get(format_name);
+   }
+     
+     
+     
+     //00000000000000000000000000
       public static void main(String args[])
     {
-    DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-    int n = DatabaseToApplicationDataLoader.getSpeciesId("Homo sapiens");
-    SpeciesDefinition sd  = null;
-    for (Enumeration e = DatabaseToApplicationDataLoader.getSpecies().keys() ; e.hasMoreElements() ;)
-{
-	sd = (SpeciesDefinition) DatabaseToApplicationDataLoader.getSpecies().get(e.nextElement());
-	System.out.println( sd.getIdName() );
-}
+        TraceFileNameFormat format = null;
+    DatabaseToApplicationDataLoader.loadTraceFileFormats();
+   for(Enumeration e=  DatabaseToApplicationDataLoader.getTraceFileFormats().elements(); e.hasMoreElements();)
+   {
+        format = (TraceFileNameFormat)e.nextElement();
+   }
       }
 }
 

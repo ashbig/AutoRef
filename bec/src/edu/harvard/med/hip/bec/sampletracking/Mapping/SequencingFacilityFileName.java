@@ -32,6 +32,109 @@ public class SequencingFacilityFileName
     
     private String          m_additional_info = null;
     
+     public SequencingFacilityFileName(String file_name, TraceFileNameFormat format, boolean isEndReads)
+    {
+       if ( format == null ) return;
+       m_file_name = file_name;
+       m_extention = file_name.substring( file_name.lastIndexOf('.')+1);
+       
+       ArrayList items = null;
+       String file_name_without_extention = file_name.substring(0,  file_name.lastIndexOf('.'));
+       // extract plate
+       m_plate_name = setField(format.getPlateSeparator(), format.getPlateLabelColumn(), 
+                                format.getPlateLabelStart(), format.getPlateLabelLength(), 
+                                format.getFileNameReadingDirection(),    file_name_without_extention);
+       if ( m_plate_name == null )  return;
+       
+       //extract well
+       m_well_name = setField(format.getPositionSeparator(), format.getPositionColumn(),  
+                            format.getPositionStart(), format.getPositionLength(), 
+                            format.getFileNameReadingDirection(), file_name_without_extention);
+       if ( m_well_name == null ) return;
+     
+       try
+       {
+            m_well_number = Algorithms.convertWellFromA8_12toInt(m_well_name);
+            if ( m_well_number < 0 ){m_isProperName=false; return;}
+       }
+       catch(Exception e)
+       {
+           m_isProperName=false; return;
+       }
+       
+       if ( isEndReads )
+       {
+           //extract direction
+           m_orientation = setField(format.getDirectionSeparator(), format.getDirectionColumn(),
+                        format.getDirectionStart(), format.getDirectionLength(), 
+                        format.getFileNameReadingDirection(), file_name_without_extention);
+           if ( m_orientation == null ) return;
+           if (m_orientation.equalsIgnoreCase( format.getDirectionForward() ))m_orientation="F";
+           else if (m_orientation.equalsIgnoreCase( format.getDirectionReverse() ))m_orientation="R";
+       }
+       else
+           m_orientation="I";
+       //verify
+       if (m_plate_name == null || m_plate_name.trim().length()==0){m_isProperName=false; return;}
+       if ( m_well_number < 0){m_isProperName=false; return;}
+       if (isEndReads && !(m_orientation.equals("F") || m_orientation.equals("R") )) {m_isProperName=false; return;}
+       
+       m_isProperName=true; 
+       
+    }
+     
+            
+     private String setField(String separator, int column_number,
+                                int item_start, int item_length,
+                                int read_direction, String file_name)
+     {
+           ArrayList items = null;
+           String temp = null;
+           if ( separator != null && separator.length() > 0)
+           {
+               items = Algorithms.splitString(file_name, separator);
+               if (items != null && items.size()>0 && column_number > 0 && column_number - 1 < items.size() )
+               {
+                   temp = (String) items.get( column_number -1);
+                   //System.out.println(column_number +" "+ items.size());
+                   if ( item_length > 0)
+                   {
+                        if (read_direction == TraceFileNameFormat.READING_RIGHT_TO_LEFT)
+                            return temp.substring( temp.length() - 1 - item_length);
+                        else
+                            return temp.substring(0, item_length);
+                   }
+                   else
+                       return (String) items.get( column_number -1);
+               }
+               else{ return null;}
+           }
+           else
+           {
+                if ( file_name.length() < item_start + item_length ) return null;
+                 if (read_direction == TraceFileNameFormat.READING_RIGHT_TO_LEFT)
+                 {
+                     temp=""; int start = -1; int stop = -1;
+                     char[] name = file_name.toCharArray();
+                     if ( item_length  < 1 )
+                     {
+                         temp = file_name.substring(0,  file_name.length() - item_start +1);
+                     }
+                     else 
+                     {
+                         temp = file_name.substring(file_name.length() - item_start  - item_length +1, file_name.length() - item_start +1);
+                     }
+                 }
+                 else
+                 {
+                     if ( item_length < 1 ) temp =  file_name.substring(item_start - 1);
+                     else temp = file_name.substring(item_start - 1,item_start - 1+ item_length);
+                 }
+                if ( temp != null && temp.length() > 0) return temp;
+                else return null;
+           }
+           
+     }
     /** Creates a new instance of BroadFileName */
     public SequencingFacilityFileName(String file_name, int seq_facility_code)
     {
@@ -46,7 +149,7 @@ public class SequencingFacilityFileName
     }
     
     
-    
+   
     public String          getFileName (){ return m_file_name  ;}
     public String          getPlateName (){ return m_plate_name  ;}
     public String          getWellName (){ return m_well_name  ;}
@@ -79,6 +182,9 @@ public class SequencingFacilityFileName
         } );
         return file_names;
     }
+    
+   
+        
     
     
     ///D248P100FA1.T0.scf
@@ -120,7 +226,7 @@ public class SequencingFacilityFileName
      
      private  void htmbcFileName(String htmbc_file_name)
      {
-         // IP#_JasonWell_order_hipPlateName_HipWellName_F/R_number.ab1
+         // IP#_JasonWell_order_hipPlateName_HipWellNam`e_F/R_number.ab1
         ArrayList items = Algorithms.splitString(htmbc_file_name,"_");
          if ( items.size() != 7) return;
         m_file_name = htmbc_file_name;
@@ -208,12 +314,23 @@ public class SequencingFacilityFileName
       
       public static void main(String args[])
     {
-      SequencingFacilityFileName br= new SequencingFacilityFileName("YSG1438.379_A03.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
+        SequencingFacilityFileName br= null;
+              TraceFileNameFormat format = null;
+    edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
+       // br= new SequencingFacilityFileName("6356_h02_jlha_ksg001756_h02_i_002.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("test 2"), false);
+        br= new SequencingFacilityFileName("YSG01438A03F.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("RL1"), true);
+       br= new SequencingFacilityFileName("YSG01438A03F.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("RL"), true);
+       br= new SequencingFacilityFileName("YSG01438A3F1.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("RL2"), true);
+      
+        
+        //  br= new SequencingFacilityFileName("YSG01438.379_A03.ab1", edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat("Kolodner"), false);
+  
+       /* SequencingFacilityFileName br= new SequencingFacilityFileName("YSG1438.379_A03.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
         br= new SequencingFacilityFileName("YSG01438.379_A03.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
-      br= new SequencingFacilityFileName("YSG001438.379_A03.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
+        br= new SequencingFacilityFileName("YSG001438.379_A03.ab1", SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
      
       SequencingFacilityFileName br1= new SequencingFacilityFileName("D248P100FA1.T0.scf", SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD);
-      
+      */
         System.exit(0);
     }
 }

@@ -37,32 +37,21 @@ public class TraceFileProcessingRunner extends ProcessRunner
     private boolean            m_isDelete = false;
     private InputStream         m_input = null;
     private int                 m_sequencing_facility = -1;
-    
+    private String              m_format_name = null;
+    private TraceFileNameFormat m_format = null;
+    private boolean             isUseTraceFileNameFormat = true;
     
     private String              OUTPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR");
     private String              INPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");
-   /* {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-        {
-             INPUT_DIR = "F:\\Sequences for BEC\\files_to_transfer";
-             OUTPUT_DIR = "d:\\trace_files_dump";
-              if (ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
-             {
-                  OUTPUT_DIR = "d:\\eval_trace_files_dump";
-             }
-        }
-        else
-        {
-            OUTPUT_DIR = "C:\\bio\\original_files";
-        }
-    }*/
-    
+  
     public void setProcessType(int process_name){m_process_name=process_name;}
     public void setReadDirection(String read_direction)    { m_read_direction = read_direction;}
     public void setReadType(String read_type)    { m_read_type = read_type;    }//m_read_type= read_type;}
     public void setFileExtension(String ext){ m_file_extension = ext;}
     public void     setSequencingFacility(int v){m_sequencing_facility = v;}
-     public String getTitle()    { return "Request for trace files manipulation.";    }
+    public String getTitle()    { return "Request for trace files manipulation.";    }
+    public void     setFormatName(String v){  m_format_name = v; m_format = edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.getTraceFileFormat(m_format_name);}
+    public void     setTraceFileNameFormat( TraceFileNameFormat v){ m_format = v;}
     
      
     public void setInputDirectory(String inputdir)
@@ -225,7 +214,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 file_name = trace_files[i].getName();
                 try
                 {
-                    br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
+                    if ( isUseTraceFileNameFormat )
+                         br= new SequencingFacilityFileName(file_name, m_format,m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR) );
+                    else
+                        br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
                 }
                 catch(Exception e)
                 {
@@ -411,10 +403,21 @@ public class TraceFileProcessingRunner extends ProcessRunner
          {
              if (m_read_type.equals( Constants.READ_TYPE_INTERNAL_STR ))
              {
+                 if (BecProperties.getInstance().isInternalHipVersion()  )
+                 {
                   conn = DatabaseTransactionLocal.getInstance(DatabaseTransactionLocal.FLEX_url , DatabaseTransactionLocal.FLEX_username, DatabaseTransactionLocal.FLEX_password).requestConnection();
                   sql="select label, sequenceid as flexsequenceid, cloneid as flexcloneid,containerposition as position, "
                   +" sampletype, s.containerid as containerid from constructdesign d, sample s, containerheader c "
                   +" where label in ("+label+") and c.containerid=s.containerid and s.constructid=d.constructid(+)";
+                 }
+                 else
+                 {
+                     // if this is not hip version internal reads names are read from OPLATE
+                     conn = DatabaseTransaction.getInstance().requestConnection();
+                     sql="select label, flexsequenceid, cloneid as flexcloneid,  position, 'PRIMER', s.oligocontainerid as containerid "
+                     +" from oligosample s, oligocontainer c,  flexinfo f "
+                     +" where s.oligocontainerid = c.oligocontainerid and f.flexcloneid = s.cloneid and label in ("+label+")";
+                 }
              }
              else if (  m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR))
              {
@@ -514,23 +517,19 @@ public class TraceFileProcessingRunner extends ProcessRunner
          {
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
-     
+      edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadTraceFileFormats();
 TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
 runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
 runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
-runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
-runner.setInputDirectory("E:\\Sequences for BEC\\files_to_transfer");
+runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
+runner.setInputDirectory("C:\\bio\\plate_dump");
 runner.setOutputDirectory( "C:\\bio\\original_files");
-runner.setRenamingFile(new  FileInputStream("E:\\Sequences for BEC\\Kolodner\\mapping.txt"));
+runner.setRenamingFile(new  FileInputStream("C:\\bio\\plate_dump\\mapping.txt"));
+runner.setFormatName("Kolodner");
      runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
        runner.setDelete("YES");
            
-         //         runner.setReadDirection("F");
-             //       runner.setReadType("I");
-             //       String items="ysg000766";
-              //       runner.setItems(items );
-             //       runner.setItemsType(Constants.ITEM_TYPE_PLATE_LABELS);
-          //  runner.setFileExtension(".ab1");
+       
                 
           
             // runner.setInputDirectory("E:\\Sequences for BEC\\YEAST\\1b Internal Seq\\col16-30");

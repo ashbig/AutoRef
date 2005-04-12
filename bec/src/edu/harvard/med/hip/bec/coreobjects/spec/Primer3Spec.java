@@ -53,7 +53,10 @@ public class Primer3Spec extends Spec
      {
          return getAllSpecsByTypeAndSubmitter(Spec.PRIMER3_SPEC_INT, submitter_id);
      }
-     
+     public static ArrayList getAllNotUsedSpecs() throws BecDatabaseException 
+      { 
+          return getAllNotUsedSpecs(PRIMER3_SPEC_INT, false);
+      }  
      protected void cleanup_parameters()    
      {    
          try
@@ -132,6 +135,5 @@ h.put("P_UPSTREAM_DISTANCE","1");
          return true;
      }
      
-     
-     
+    
 }

@@ -147,6 +147,42 @@ page_html = st.toString();
 break;
         }
     
+    case -Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT:
+        {
+             StringBuffer st = new StringBuffer();
+st.append( "<tr><td colspan=4>  Please enter:</td></tr  >");
+
+st.append( "<tr><td bgColor='#b8c6ed' colspan=4>Format Name: <input type='text' name='FORMATNAME' size='50' value=''></td></tr>");
+st.append( "<tr><td bgColor='#b8c6ed' >Select file name reading direction:<td bgColor='#b8c6ed' colspan=3> <select name='READING_DIRECTION' ><option value='");
+st.append(TraceFileNameFormat.READING_LEFT_TO_RIGHT+"'>Left to right<option value='"+TraceFileNameFormat.READING_RIGHT_TO_LEFT+"'>Right to left</select></td></tr>");
+
+
+st.append( "<tr><td bgColor='#e4e9f8'>Plate Label Separator:</td><td bgColor='#e4e9f8'><input type='text' name='PLATE_SEPARATOR' size='10' value=''></td>");
+st.append( "<td bgColor='#b8c6ed'>Well Name Separator: </td><td bgColor='#b8c6ed'><input type='text' name='POSITION_SEPARATOR' size='10' value='' </td></tr>");
+
+st.append( "<tr><td  bgColor='#e4e9f8'  >Plate Label Column:</td><td  bgColor='#e4e9f8'  ><input type='text' name='PLATE_LABEL_COLUMN' size='10' value='-1'onBlur= \";checkNumeric(this,0,10,'','',''); \"> </td>");
+st.append( "<td bgColor='#b8c6ed'>Well Name Column:</td><td  bgColor='#b8c6ed'  ><input type='text' name='POSITION_COLUMN' size='10' value='-1'onBlur= \";checkNumeric(this,0,10,'','',''); \"></td></tr>");
+
+
+st.append( "<tr><td bgColor='#e4e9f8'>Plate Label Start:</td><td bgColor='#e4e9f8'><input type='text' name='PLATE_LABEL_START' size='10' value='-1'onBlur= \";checkNumeric(this,0,10,'','',''); \"></td>");
+st.append( "<td  bgColor='#b8c6ed'  >Well Name Start: </td><td bgColor='#b8c6ed'><input type='text' name='POSITION_START' size='10' value='-1'onBlur= \";checkNumeric(this,0,10,'','',''); \"> </td></tr>");
+
+st.append( "<tr><td  bgColor='#e4e9f8'  >Plate Label Length:</td><td  bgColor='#e4e9f8'  ><input type='text' name='PLATE_LABEL_LENGTH' size='10' value='-1'onBlur= \";checkNumeric(this,0,10,'','',''); \"> </td>");
+st.append( "<td bgColor='#b8c6ed'>Well Name Length:</td><td  bgColor='#b8c6ed'  ><input type='text' name='POSITION_LENGTH' size='10' value='-1'onBlur= \";checkNumeric(this,0,10,'','',''); \"></td></tr>");
+
+st.append( "<tr><td  bgColor='#CCCCFF'  >Direction Forward:</td><td bgColor='#CCCCFF'><input type='text' name='DIRECTION_FORWARD' size='10' value='F'> </td>");
+st.append( "<td bgColor='#CCCCFF'> Direction Reverse:</td><td bgColor='#CCCCFF'><input type='text' name='DIRECTION_REVERSE' size='10' value='R'></td></tr>");
+
+st.append( "<tr><td  bgColor='#CCCCFF'  >Direction Separator:</td><td  bgColor='#CCCCFF'  > <input   type='text' name='DIRECTION_SEPARATOR' size='10' value=''> </td>");
+st.append( "<td  bgColor='#CCCCFF'  >Direction Column:</td><td  bgColor='#CCCCFF'  ><input  type='text' name='DIRECTION_COLUMN' size='10' value='-1' onBlur= \";checkNumeric(this,0,10,'','',''); \"> </td></tr>");
+
+st.append( "<tr><td bgColor='#CCCCFF'>  Direction Length:</td><td bgColor='#CCCCFF'><input  type='text' name='DIRECTION_LENGTH' size='10' value='-1' onBlur= \";checkNumeric(this,0,10,'','',''); \"></td>");
+st.append( "<td  bgColor='#CCCCFF'  >Direction Start:  </td><td bgColor='#CCCCFF'><input type='text' name='DIRECTION_START' size='10' value='-1' onBlur= \";checkNumeric(this,0,10,'','',''); \"> </td></tr>");
+ 
+page_html = st.toString();
+break;
+            }
+    
     case -Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:
     {
           StringBuffer st = new StringBuffer();
@@ -236,7 +272,7 @@ break;}
 
 
  
-<table border="0" cellpadding="10" cellspacing="2" width="74%" align=center>
+<table border="0" cellpadding="5" cellspacing="1" width="74%" align=center>
   
   <%= page_html %>
  

@@ -36,7 +36,9 @@ public abstract class Spec
     
     
     public static final int SPEC_SHOW_USER_ONLY_SPECS = 10;
+    // this const should be bigger than any const for Seq_GetSpecAction processing
     public static final int SPEC_SHOW_SPEC = 1000;
+    public static final int SPEC_DELETE_SPEC = -100;
     
     private int m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     
@@ -349,9 +351,9 @@ public abstract class Spec
          }
      }
      
-     protected abstract boolean validateParameters();     
-    
-     
+    protected abstract boolean validateParameters();     
+    protected abstract String print_parameter_definitions(String param_separator) throws Exception ;
+  
      //function returns ids for all specs of these type
      public static ArrayList getAllSpecIdsByType(int spec_type) throws BecDatabaseException
      {
@@ -369,6 +371,21 @@ public abstract class Spec
         return getAllSpecIds( query,  spec_type) ;
      }     
      
+     public static ArrayList getAllNotUsedSpecs(int spec_type, boolean mode) throws BecDatabaseException
+     {
+  
+        String query = "select submitterid,configid,configname,configtype  from config where configtype = '" + spec_type + "'"  ;
+         switch ( spec_type)
+         {
+             case PRIMER3_SPEC_INT :{ query += " and  configid not in ( select primer3configid from oligo_calculation)"; break;}
+             case END_READS_SPEC_INT :
+             case FULL_SEQ_SPEC_INT:
+             case POLYMORPHISM_SPEC_INT :
+             case TRIM_SLIDING_WINDOW_SPEC_INT :
+         }
+        return getAllSpecs( query,  spec_type, mode) ;
+     }     
+     
      public String printSpecDefinition(String param_separator)throws Exception
     {
         StringBuffer sf = new StringBuffer();
@@ -377,8 +394,15 @@ public abstract class Spec
         sf.append(print_parameter_definitions(param_separator));
         return sf.toString();
     }
+     
+     //function does not confirm whether spec can be deleted, but thr. exception if not
+     public static void  deleteSpecById(int specid, Connection conn) throws Exception
+     {
+         DatabaseTransaction.executeUpdate("delete from config_parameters where configid = "+specid, conn);
+         DatabaseTransaction.executeUpdate("delete from config where configid =" + specid, conn);
+       
+     }
     //---------------------------
-     protected abstract String print_parameter_definitions(String param_separator) throws Exception ;
      
    
      

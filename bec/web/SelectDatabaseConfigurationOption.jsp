@@ -39,7 +39,7 @@
 
 
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Add Definitions Database</font></b></td></tr>  
+<tr><td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Add Definitions to Database</font></b></td></tr>  
  
 <tr><td bgcolor="#DCE8FC"> <font color="#000080">&nbsp; <input checked type="radio" name="forwardName" value="<%=  Constants.PROCESS_ADD_SPECIES_DEFINITION%>" ><strong> Add Species definition</strong><br></td></tr>
 <tr><td  bgcolor="#DCE8FC"> <font color="#000080">&nbsp;  <input type="radio" name="forwardName" value="<%= Constants.PROCESS_ADD_NAME_TYPE%>"> <strong> Add Name type</strong>  <br> </td></tr>
@@ -55,8 +55,9 @@
 <tr><td  bgcolor="#DCE8FC"> <font color="#000080">&nbsp; <input type="radio" name="forwardName" value="<%= Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER%>"> <strong> Associate Vector with common primer</strong>  <br></td></tr>
 <tr><td  bgcolor="#DCE8FC"> <font color="#000080">&nbsp; <input type="radio" name="forwardName" value="<%= Constants.PROCESS_ADD_NEW_LINKER%>"> <strong> Add Linker</strong>  <br></td></tr>
 <tr><td  bgcolor="#DCE8FC"> <font color="#000080">&nbsp; <input type="radio" name="forwardName" value="<%= Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY%>"> <strong> Add Clonning Strategy</strong>  <br></td></tr>
+<tr><td bgcolor="#DCE8FC">&nbsp;</td></tr>
 
-
+<tr><td  bgcolor="#DCE8FC"> <font color="#000080">&nbsp; <input type="radio" name="forwardName" value="<%= Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT%>"> <strong> Add Trace File Name Format</strong>  <br></td></tr>
 
 <tr><td width="100%" height="25" bgcolor="#1145A6"> <b><font color="#FFFFFF">Submit data into Database</font></b></td></tr>  
 
