@@ -131,7 +131,7 @@ public class Importer {
                     cimp.importCloneName(table);
                 }
                 if(table.getTableName().equalsIgnoreCase(ImportTable.CLONEINSERT)) {
-                    iimp.importCloneInsert(table);
+                    iimp.importCloneInsert(table, cimp.getIdmap());
                 }
                 if(table.getTableName().equalsIgnoreCase(ImportTable.REFSEQ)) {
                     rimp.importRefseq(table);
@@ -146,10 +146,10 @@ public class Importer {
                     rimp.importRefseqName(table);
                 }
                 if(table.getTableName().equalsIgnoreCase(ImportTable.CLONEAUTHOR)) {
-                    cimp.importRefseqName(table, aimp.getIdmap());
+                    cimp.importCloneAuthor(table, aimp.getIdmap());
                 }
                 if(table.getTableName().equalsIgnoreCase(ImportTable.CLONEPUBLICATION)) {
-                    cimp.importRefseqName(table, pimp.getIdmap());
+                    cimp.importClonePublication(table, pimp.getIdmap());
                 }
             } catch (Exception ex) {
                 setError("Error occured during import.");
