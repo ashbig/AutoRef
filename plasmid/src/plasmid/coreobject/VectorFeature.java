@@ -39,5 +39,10 @@ public class VectorFeature {
     public int getVectorid() {return vectorid;}
     public String getMaptype() {return maptype;}
     
+    public void setName(String name) {this.name = name;}
+    public void setDescription(String s) {this.description = s;}
+    public void setStart(int i) {this.start = i;}
+    public void setStop(int i) {this.stop = i;}
+    public void setMaptype(String s) {this.maptype=s;}
     public void setVectorid(int vectorid) {this.vectorid = vectorid;}
 }

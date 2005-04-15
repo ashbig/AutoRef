@@ -34,4 +34,6 @@ public class VectorAuthor {
     
     public void setVectorid(int vectorid) {this.vectorid = vectorid;}
     public void setAuthorid(int authorid) {this.authorid = authorid;}
+    public void setType(String s) {this.type = s;}
+    public void setDate(String s) {this.date = s;}
 }

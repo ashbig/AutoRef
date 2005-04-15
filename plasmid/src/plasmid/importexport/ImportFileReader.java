@@ -15,6 +15,7 @@ import java.util.*;
  */
 public class ImportFileReader {
     public static final String DILIM = "\t";
+    public static final String NA = "NA";
     private String errorMessage;
     private ImportTable table;
     
@@ -57,6 +58,9 @@ public class ImportFileReader {
                 try {
                     while(st.hasMoreTokens()) {
                         String text = st.nextToken();
+                        if(NA.equals(text))
+                            text = null;
+                        
                         rowInfo.add(text);
                     }
                     columnInfo.add(rowInfo);

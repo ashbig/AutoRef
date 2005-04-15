@@ -28,4 +28,8 @@ public class Publication {
     public int getPublicationid() {return publicationid;}
     public String getTitle() {return title;}
     public String getPmid() {return pmid;}
+    
+    public void setPublicationid(int id) {this.publicationid = id;}
+    public void setTitle(String s) {this.title=s;}
+    public void setPmid(String s) {this.pmid = s;}
 }

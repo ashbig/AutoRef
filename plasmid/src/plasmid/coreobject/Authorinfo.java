@@ -50,4 +50,15 @@ public class Authorinfo {
     public String getAddress() {return address;}
     public String getWww() {return www;}
     public String getDescription() {return description;}
+    
+    public void setAuthorid(int id) {this.authorid = id;}
+    public void setName(String s) {this.name = s;}
+    public void setLastname(String s) {this.lastname = s;}
+    public void setFirstname(String s) {this.firstname = s;}
+    public void setTel(String s) {this.tel = s;}
+    public void setFax(String s) {this.fax = s;}
+    public void setEmail(String s) {this.email = s;}
+    public void setAddress(String s) {this.address = s;}
+    public void setWww(String s) {this.www = s;}
+    public void setDescription(String s) {this.description = s;}
 }

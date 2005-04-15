@@ -31,4 +31,9 @@ public class VectorParent {
     public String getParentvectorname() {return parentvectorname;}
     public String getComments() {return comments;}
     public int getParentvectorid() {return parentvectorid;}
+    
+    public void setVectorid(int id) {this.vectorid = id;}
+    public void setParentvectorname(String s) {this.parentvectorname = s;}
+    public void setParentvectorid(int id) {this.parentvectorid = id;}
+    public void setComments(String s) {this.comments = s;}
 }

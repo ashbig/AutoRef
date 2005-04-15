@@ -31,4 +31,5 @@ public class CloneAuthor {
     
     public void setCloneid(int id) {this.cloneid = id;}
     public void setAuthorid(int id) {this.authorid = id;}
+    public void setAuthortype(String s) {this.authortype = s;}
 }

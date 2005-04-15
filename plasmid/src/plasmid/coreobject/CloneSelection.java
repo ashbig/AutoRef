@@ -30,4 +30,6 @@ public class CloneSelection {
     public String getMarker() {return marker;}
     
     public void setCloneid(int id) {this.cloneid = id;}
+    public void setHosttype(String s) {this.hosttype = s;}
+    public void setMarker(String s) {this.marker = s;}
 }

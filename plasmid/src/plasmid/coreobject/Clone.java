@@ -17,12 +17,12 @@ public class Clone {
     private int cloneid;
     private String name;
     private String type;
-    private String originalid;
     private String verified;
     private String vermethod;
     private String domain;
     private String subdomain;
     private String restriction;
+    private String comments;
     private int vectorid;
     private String vectorname;
     
@@ -32,22 +32,24 @@ public class Clone {
     private List selections;
     private List growths;
     private List names;
+    private List inserts;
     
     /** Creates a new instance of Clone */
     public Clone() {
     }
     
-    public Clone(int cloneid, String name, String type, String originalid, String verified,
-    String vermethod, String domain, String subdomain, String restriction, int vectorid, String vectorname) {
+    public Clone(int cloneid, String name, String type, String verified,
+    String vermethod, String domain, String subdomain, String restriction, 
+    String comments, int vectorid, String vectorname) {
         this.cloneid = cloneid;
         this.name = name;
         this.type = type;
-        this.originalid = originalid;
         this.verified = verified;
         this.vermethod = vermethod;
         this.domain = domain;
         this.subdomain = subdomain;
         this.restriction = restriction;
+        this.comments = comments;
         this.vectorid = vectorid;
         this.vectorname = vectorname;
     }
@@ -55,15 +57,25 @@ public class Clone {
     public int getCloneid() {return cloneid;}
     public String getName() {return name;}
     public String getType() {return type;}
-    public String getOriginalid() {return originalid;}
     public String getVerified() {return verified;}
     public String getVermethod() {return vermethod;}
     public String getDomain() {return domain;}
     public String getSubdomain() {return subdomain;}
     public String getRestriction() {return restriction;}
+    public String getComments() {return comments;}
     public int getVectorid() {return vectorid;}
     public String getVectorname() {return vectorname;}
     
+    public void setCloneid(int id) {this.cloneid = id;}
+    public void setName(String s) {this.name = s;}
+    public void setType(String s) {this.type = s;}
+    public void setVerified(String s) {this.verified = s;}
+    public void setVermethod(String s) {this.vermethod = s;}
+    public void setDomain(String s) {this.domain = s;}
+    public void setSubdomain(String s) {this.subdomain = s;}
+    public void setRestriction(String s) {this.restriction = s;}
+    public void setComments(String s) {this.comments = s;}
+    public void setVectorname(String s) {this.vectorname = s;}
     public void setVectorid(int id) {this.vectorid = id;}
     
     public List getSynonyms() {return synonyms;}
@@ -83,6 +95,9 @@ public class Clone {
     
     public List getNames() {return names;}
     public void setNames(List l) {this.names=l;}
+    
+    public List getInserts() {return inserts;}
+    public void setInserts(List l) {this.inserts = l;}
     
     public String getSynonymString() {
         StringConvertor sc = new StringConvertor();
