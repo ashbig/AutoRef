@@ -91,7 +91,8 @@ public class CreateProcessPlateAction extends FlexAction {
                 Protocol.ENTER_DNA_GEL_RESULTS.equals(p.getProcessname()) ||
                 Protocol.ENTER_CULTURE_RESULTS.equals(p.getProcessname()) ||
                 Protocol.ENTER_DNA_RESULT.equals(p.getProcessname()) ||
-                Protocol.ENTER_CULTURE_FILE.equals(p.getProcessname())) {
+                Protocol.ENTER_CULTURE_FILE.equals(p.getProcessname()) ||
+                Protocol.ENTER_EGEL.equals(p.getProcessname())) {
                     continue;
                 }
                 protocols.addElement(p);
