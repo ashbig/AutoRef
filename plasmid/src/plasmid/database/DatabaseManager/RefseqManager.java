@@ -46,6 +46,7 @@ public class RefseqManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into REFERENCESEQUENCE table");
             return false;
@@ -75,6 +76,7 @@ public class RefseqManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into INSERTREFSEQ table");
             return false;
@@ -101,6 +103,7 @@ public class RefseqManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into REFSEQNAMETYPE table");
             return false;
@@ -127,10 +130,42 @@ public class RefseqManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into REFSEQNAME table");
             return false;
         }
         return true;
     }   
+    
+    public List queryNameTypes(String species, String seqType, String use) {
+        String sql = "select distinct nametype"+
+                    " from refseqnametype"+
+                    " where genusspecies=?"+
+                    " and refseqtype=?"+
+                    " and use=?";
+        List types = new ArrayList();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, species);
+            stmt.setString(2, seqType);
+            stmt.setString(3, use);
+            
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                String type = rs.getString(1);
+                types.add(type);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while querying REFSEQNAMETYPE table.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return types;
+    }
 }

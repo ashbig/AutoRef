@@ -25,6 +25,7 @@ public class Clone {
     private String comments;
     private int vectorid;
     private String vectorname;
+    private String clonemap;
     
     private List synonyms;
     private List publications;
@@ -40,7 +41,7 @@ public class Clone {
     
     public Clone(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
-    String comments, int vectorid, String vectorname) {
+    String comments, int vectorid, String vectorname, String clonemap) {
         this.cloneid = cloneid;
         this.name = name;
         this.type = type;
@@ -52,6 +53,7 @@ public class Clone {
         this.comments = comments;
         this.vectorid = vectorid;
         this.vectorname = vectorname;
+        this.clonemap = clonemap;
     }
     
     public int getCloneid() {return cloneid;}
@@ -65,6 +67,7 @@ public class Clone {
     public String getComments() {return comments;}
     public int getVectorid() {return vectorid;}
     public String getVectorname() {return vectorname;}
+    public String getClonemap() {return clonemap;}
     
     public void setCloneid(int id) {this.cloneid = id;}
     public void setName(String s) {this.name = s;}
@@ -77,6 +80,7 @@ public class Clone {
     public void setComments(String s) {this.comments = s;}
     public void setVectorname(String s) {this.vectorname = s;}
     public void setVectorid(int id) {this.vectorid = id;}
+    public void setClonemap(String s) {this.clonemap = s;}
     
     public List getSynonyms() {return synonyms;}
     public void setSynonyms(List l) {this.synonyms = l;}

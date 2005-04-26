@@ -9,6 +9,8 @@ package plasmid.importexport;
 import plasmid.coreobject.*;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
+import plasmid.Constants;
+
 import java.util.*;
 import java.sql.*;
 
@@ -33,7 +35,6 @@ public class AuthorImporter {
         int id = m.getMaxNumber("authorinfo", "authorid", DatabaseTransaction.getInstance());
         if(id == -1) {
             throw new Exception("Cannot get authorid from authorinfo table.");
-            return;
         }
         
         List authors = new ArrayList();
@@ -41,6 +42,7 @@ public class AuthorImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             Authorinfo v = new Authorinfo();
+            v.setAuthorid(id); 
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
@@ -64,17 +66,17 @@ public class AuthorImporter {
                 if("www".equalsIgnoreCase(columnName))
                     v.setWww(columnInfo);
                 if("description".equalsIgnoreCase(columnName))
-                    v.setDescription(columnInfo);
-                
-                v.setAuthorid(id);                
+                    v.setDescription(columnInfo);                               
             }
             authors.add(v);
             id++;
         }
         
+        if(Constants.DEBUG)
+            System.out.println("Insert authors");
+        
         if(!manager.insertAuthors(authors)) {
             throw new Exception("Error occured while inserting into AUTHORINFO table.");
-            return;
         }
     }   
 }

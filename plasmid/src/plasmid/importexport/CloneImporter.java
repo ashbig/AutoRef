@@ -42,13 +42,13 @@ public class CloneImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             Clone c = new Clone();
+            c.setCloneid(id);
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
                 if("clonename".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
-                    c.setCloneid(id);
                     c.setName("HIP"+id);
                 }
                 if("clonetype".equalsIgnoreCase(columnName)) {
@@ -76,6 +76,9 @@ public class CloneImporter {
                     c.setVectorid(((Integer)vectoridmap.get(columnInfo)).intValue());
                     c.setVectorname(columnInfo);
                 }
+                if("clonemapfilename".equalsIgnoreCase(columnName)) {
+                    c.setClonemap(columnInfo);
+                }
             }
             clones.add(c);
             id++;
@@ -99,7 +102,7 @@ public class CloneImporter {
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
-                if("growthid".equalsIgnoreCase(columnName)) {
+                if("growthname".equalsIgnoreCase(columnName)) {
                     c.setGrowthid(((Integer)growthidmap.get(columnInfo)).intValue());
                 }
                 if("isrecommended".equalsIgnoreCase(columnName)) {

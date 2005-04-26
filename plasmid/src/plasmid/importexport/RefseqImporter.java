@@ -20,10 +20,12 @@ import java.sql.*;
 public class RefseqImporter {
     private Map idmap;
     private RefseqManager manager;
+    private DnasequenceManager manager2;
     
     /** Creates a new instance of RefseqImporter */
     public RefseqImporter(Connection conn) {
         manager = new RefseqManager(conn);
+        manager2 = new DnasequenceManager(conn);
     }
 
     public Map getIdmap() {return idmap;}
@@ -36,18 +38,31 @@ public class RefseqImporter {
             throw new Exception("Cannot get refseqid from referencesequence table.");
         }
         
+        int insertseqid = m.getMaxNumber("dnasequence", "sequenceid", DatabaseTransaction.getInstance());
+        if(insertseqid == -1) {
+            throw new Exception("Cannot get sequenceid from dnasequence table.");
+        }        
+                
         List seqs = new ArrayList();
+        List dnaseqs = new ArrayList();
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             Refseq c = new Refseq();
+            c.setRefseqid(id);
+            
+            Dnasequence seq = new Dnasequence();
+            seq.setSequenceid(insertseqid);
+            
+            id++;
+            insertseqid++;
+            
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
                 if("refseqid".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
-                    c.setRefseqid(id);
                 }
                 if("type".equalsIgnoreCase(columnName)) {
                     c.setType(columnInfo);
@@ -68,15 +83,23 @@ public class RefseqImporter {
                 }
                 if("species".equalsIgnoreCase(columnName)) {
                     c.setSpecies(columnInfo);
-                }             
+                }                   
+                if("sequence".equalsIgnoreCase(columnName)) {                   
+                    seq.setReferenceid(id);
+                    seq.setType(Dnasequence.REFERENCE);
+                    seq.setSequence(columnInfo);
+                }         
             }
             seqs.add(c);
-            id++;
+            dnaseqs.add(seq);
         }
         
         if(!manager.insertRefseqs(seqs)) {
             throw new Exception("Error occured while inserting into REFERENCESEQUENCE table.");
         }
+        if(!manager2.insertDnasequences(dnaseqs)) {
+            throw new Exception("Error occured while inserting into DNASEQUENCE and SEQTEXT table");
+        } 
     }
         
     public void importInsertRefseq(ImportTable table, Map insertidmap) throws Exception {

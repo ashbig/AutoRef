@@ -12,6 +12,7 @@ package plasmid;
  */
 public class Constants {
     public static boolean DEBUG = true;
+    public static final String USER_KEY = "USER";
     
     /** Creates a new instance of Constants */
     public Constants() {

@@ -43,6 +43,7 @@ public class PublicationManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into PUBLICATION table");
             return false;

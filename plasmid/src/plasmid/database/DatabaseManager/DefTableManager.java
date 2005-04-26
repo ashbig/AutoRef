@@ -9,7 +9,8 @@ package plasmid.database.DatabaseManager;
 import plasmid.Constants;
 import plasmid.database.*;
 
-import javax.sql.*;
+import java.sql.*;
+import java.util.*;
 
 /**
  *
@@ -24,7 +25,7 @@ public class DefTableManager extends TableManager {
     public int getMaxNumber(String table, String column, DatabaseTransaction dt) {
         String sql = "select max("+column+") from "+table;
                 
-        RowSet rs = null;
+        ResultSet rs = null;
         int id = -1;
         try {
             rs = dt.executeQuery(sql);
@@ -37,6 +38,29 @@ public class DefTableManager extends TableManager {
             dt.closeResultSet(rs);
         }
         
+        if(id == 0 )
+            id = 1;
+        
         return id;
+    }
+    
+    public List getVocabularies(String table, DatabaseTransaction dt) {
+        String sql = "select * from "+table;
+        
+        List l = new ArrayList();
+        ResultSet rs = null;
+        try {
+            rs = dt.executeQuery(sql);
+            while(rs.next()) {
+                String s = rs.getString(1);
+                l.add(s);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while querying "+table);
+        } finally {
+            dt.closeResultSet(rs);
+        }
+        
+        return l;
     }
 }

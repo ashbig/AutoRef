@@ -42,6 +42,8 @@ public class VectorImporter {
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             CloneVector v = new CloneVector();
+            v.setVectorid(id);
+                
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
@@ -56,7 +58,7 @@ public class VectorImporter {
                     v.setForm(columnInfo);
                 if("type".equalsIgnoreCase(columnName))
                     v.setType(columnInfo);
-                if("size".equalsIgnoreCase(columnName)) {
+                if("sizeinbp".equalsIgnoreCase(columnName)) {
                     if(columnInfo != null) 
                         v.setSize(Integer.parseInt(columnInfo));
                 }
@@ -66,8 +68,6 @@ public class VectorImporter {
                     v.setSeqfilename(columnInfo);
                 if("comments".equalsIgnoreCase(columnName))
                     v.setComments(columnInfo);
-                
-                v.setVectorid(id);
                 
                 if("synonyms".equalsIgnoreCase(columnName) && columnInfo != null) {
                     StringTokenizer st = new StringTokenizer(columnInfo, ",");
@@ -90,12 +90,20 @@ public class VectorImporter {
         }
     }
     
-    public void importVectorFeature(ImportTable table) throws Exception {
+    public void importVectorFeature(ImportTable table) throws Exception {        
+        DefTableManager m = new DefTableManager();
+        int id = m.getMaxNumber("vectorfeature", "featureid", DatabaseTransaction.getInstance());
+        if(id == -1) {
+            throw new Exception("Cannot get featureid from vectorfeature table.");
+        }
+
         List features = new ArrayList();
         List columns = table.getColumnNames();
         List contents = table.getColumnInfo();
         for(int n=0; n<contents.size(); n++) {
             VectorFeature v = new VectorFeature();
+            v.setFeatureid(id);
+            id++;
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
@@ -172,7 +180,8 @@ public class VectorImporter {
                     v.setVectorid(((Integer)idmap.get(columnInfo)).intValue());
                 }
                 if("parentvectorname".equalsIgnoreCase(columnName)) {
-                    v.setParentvectorid(((Integer)idmap.get(columnInfo)).intValue());
+                    if(columnInfo != null) 
+                        v.setParentvectorid(((Integer)idmap.get(columnInfo)).intValue());
                 }
             }
             parents.add(v);

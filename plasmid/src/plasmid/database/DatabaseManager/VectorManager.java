@@ -11,6 +11,7 @@ import java.util.*;
 
 import plasmid.coreobject.*;
 import plasmid.database.*;
+import plasmid.Constants;
 
 /**
  *
@@ -42,6 +43,7 @@ public class VectorManager extends TableManager {
             stmt.setString(9, vector.getComments());
             
             DatabaseTransaction.executeUpdate(stmt);
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTOR table");
             return false;
@@ -56,7 +58,7 @@ public class VectorManager extends TableManager {
         String sql = "insert into vector"+
         " (vectorid, name, description, form, type, sizeinbp,"+
         " mapfilename, sequencefilename, comments)"+
-        " values(?,?,?,?,?,?,?,?,?,?,?)";
+        " values(?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             
@@ -74,6 +76,7 @@ public class VectorManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTOR table");
             return false;
@@ -98,6 +101,7 @@ public class VectorManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORSYNONYM table");
             return false;
@@ -120,8 +124,13 @@ public class VectorManager extends TableManager {
                 stmt.setInt(1, vp.getVectorid());
                 stmt.setString(2, vp.getPropertyType());
                 
+                if(Constants.DEBUG) {
+                    System.out.println("inserting propertytype: "+vp.getPropertyType());
+                }
+                
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORPROPERTY table");
             return false;
@@ -133,33 +142,27 @@ public class VectorManager extends TableManager {
         if(features == null)
             return true;
         
-        String sql = "insert into featuremap"+
-                    " (vectorid, maptype)"+
-                    " values(?,?)";
         String sql2 = "insert into vectorfeature"+
-                    " (name, description, startpos, endpos, vectorid, maptype)"+
-                    " values(?,?,?,?,?,?)";
+                    " (name, description, startpos, endpos, vectorid, maptype, featureid)"+
+                    " values(?,?,?,?,?,?,?)";
         try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
             
             for(int i=0; i<features.size(); i++) {
                 VectorFeature v = (VectorFeature)features.get(i);
-                stmt.setInt(1, v.getVectorid());
-                stmt.setString(2, v.getMaptype());
-                
                 stmt2.setString(1, v.getName());
                 stmt2.setString(2, v.getDescription());
                 stmt2.setInt(3, v.getStart());
                 stmt2.setInt(4,  v.getStop());
                 stmt2.setInt(5, v.getVectorid());
                 stmt2.setString(6, v.getMaptype());
+                stmt2.setInt(7, v.getFeatureid());
                 
-                DatabaseTransaction.executeUpdate(stmt);
                 DatabaseTransaction.executeUpdate(stmt2);
             }
+            DatabaseTransaction.closeStatement(stmt2);
         } catch (Exception ex) {
-            handleError(ex, "Error occured while inserting into VECTORMAP and VECTORFEATURE tables");
+            handleError(ex, "Error occured while inserting into VECTORFEATURE table");
             return false;
         }
         return true;
@@ -179,11 +182,16 @@ public class VectorManager extends TableManager {
                 VectorParent vp = (VectorParent)parents.get(i);
                 stmt.setInt(1, vp.getVectorid());
                 stmt.setString(2, vp.getParentvectorname());
-                stmt.setInt(3, vp.getParentvectorid());
-                stmt.setString(4, vp.getComments());
                 
+                int parentvectorid = vp.getParentvectorid();
+                if(parentvectorid != 0)
+                    stmt.setInt(3, vp.getParentvectorid());
+                else 
+                    stmt.setString(3, null);
+                stmt.setString(4, vp.getComments());
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORPARENT table");
             return false;
@@ -210,6 +218,7 @@ public class VectorManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORAUTHOR table");
             return false;
@@ -234,6 +243,7 @@ public class VectorManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into VECTORPUBLICATIOIN table");
             return false;

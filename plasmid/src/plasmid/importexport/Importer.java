@@ -43,7 +43,7 @@ public class Importer {
             tables = new ArrayList();
             for(int i=0; i<files.length; i++) {
                 String file = files[i];
-                if(!reader.readFile(file)) {
+                if(!reader.readFile(filepath+file)) {
                     setError(reader.getErrorMessage());
                     return false;
                 }
@@ -88,67 +88,92 @@ public class Importer {
             ImportTable table = (ImportTable)tables.get(i);
             
             try {
-                if(table.getTableName().equalsIgnoreCase(ImportTable.VECTOR)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.VECTOR)) {
+                    System.out.println("Importing VECTOR.");
                     vimp.importVector(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.VECTORFEATURE)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.VECTORFEATURE)){
+                    System.out.println("Importing VECTORFEATURE.");
                     vimp.importVectorFeature(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.VECTORPROPERTY)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.VECTORPROPERTY)) {
+                    System.out.println("Importing VECTORPROPERTY.");
                     vimp.importVectorProperty(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.AUTHOR)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.VECTORPARENT)) {
+                    System.out.println("Importing VECTORPARENT.");
+                    vimp.importVectorParent(table);
+                }
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.AUTHOR)) {
+                    System.out.println("Importing AUTHOR.");
                     aimp.importAuthor(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.VECTORAUTHOR)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.VECTORAUTHOR)) {
+                    System.out.println("Importing VECTORAUTHOR.");
                     vimp.importVectorAuthor(table, aimp.getIdmap());
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.PUBLICATION)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.PUBLICATION)) {
+                    System.out.println("Importing PUBLICATION.");
                     pimp.importPublication(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.VECTORPUBLICATION)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.VECTORPUBLICATION)) {
+                    System.out.println("Importing VECTORPUBLICATION.");
                     vimp.importVectorPublication(table, pimp.getIdmap());
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONE)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONE)) {
+                    System.out.println("Importing CLONE.");
                     cimp.importClone(table, vimp.getIdmap());
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.GROWTHCONDITION)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.GROWTHCONDITION)) {
+                    System.out.println("Importing GROWTHCONDITION.");
                     gimp.importGrowthCondition(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONEGROWTH)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEGROWTH)) {
+                    System.out.println("Importing CLONEGROWTH.");
                     cimp.importCloneGrowth(table, gimp.getIdmap());
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONESELECTION)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONESELECTION)) {
+                    System.out.println("Importing CLONESELECTION.");
                     cimp.importCloneSelection(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONEHOST)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEHOST)) {
+                    System.out.println("Importing CLONEHOST.");
                     cimp.importCloneHost(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONENAMETYPE)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONENAMETYPE)) {
+                    System.out.println("Importing CLONENAMETYPE.");
                     cimp.importCloneNameType(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONENAME)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONENAME)) {
+                    System.out.println("Importing CLONENAME.");
                     cimp.importCloneName(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONEINSERT)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEINSERT)) {
+                    System.out.println("Importing CLONEINSERT.");
                     iimp.importCloneInsert(table, cimp.getIdmap());
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.REFSEQ)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.REFSEQ)) {
+                    System.out.println("Importing REFSEQ.");
                     rimp.importRefseq(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.INSERTREFSEQ)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.INSERTREFSEQ)) {
+                    System.out.println("Importing INSERTREFSEQ.");
                     rimp.importInsertRefseq(table, iimp.getIdmap());
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.REFSEQNAMETYPE)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.REFSEQNAMETYPE)) {
+                    System.out.println("Importing REFSEQNAMETYPE.");
                     rimp.importRefseqNameType(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.REFSEQNAME)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.REFSEQNAME)) {
+                    System.out.println("Importing REFSEQNAME.");
                     rimp.importRefseqName(table);
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONEAUTHOR)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEAUTHOR)) {
+                    System.out.println("Importing CLONEAUTHOR.");
                     cimp.importCloneAuthor(table, aimp.getIdmap());
                 }
-                if(table.getTableName().equalsIgnoreCase(ImportTable.CLONEPUBLICATION)) {
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEPUBLICATION)) {
+                    System.out.println("Importing CLONEPUBLICATION.");
                     cimp.importClonePublication(table, pimp.getIdmap());
                 }
             } catch (Exception ex) {
@@ -157,10 +182,29 @@ public class Importer {
                 if(Constants.DEBUG) {
                     System.out.println(getError()+"\n"+ex.getMessage());
                 }
+                DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
                 return false;
             }
         }
-
+        
+        DatabaseTransaction.commit(conn);
+        DatabaseTransaction.closeConnection(conn);
         return true;
+    }
+    
+    public static void main(String args[]) {
+        Importer imp = new Importer();
+        if(!imp.readAllFiles()) {
+            System.out.println(imp.getError());
+            System.exit(0);
+        }
+        if(imp.performImport()) {
+            System.out.println("Import successful.");
+        } else {
+            System.out.println(imp.getError());
+            System.out.println("Import failed.");
+        }
+        System.exit(0);
     }
 }

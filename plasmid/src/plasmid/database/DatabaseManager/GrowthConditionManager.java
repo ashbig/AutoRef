@@ -28,7 +28,7 @@ public class GrowthConditionManager extends TableManager {
         if(conditions == null)
             return true;
         
-        String sql = "inset into growthcondition"+
+        String sql = "insert into growthcondition"+
                     " (growthid,name,hosttype,antibioticselection,growthcondition,comments)"+
                     " values(?,?,?,?,?,?)";
         try {
@@ -45,6 +45,7 @@ public class GrowthConditionManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into GROWTHCONDITION table");
             return false;

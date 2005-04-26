@@ -11,6 +11,10 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class RefseqNameType {
+    public static String SEARCH = "Search";
+    public static String DISPLAY = "Display";
+    public static String BOTH = "Both";
+    
     private String species;
     private String refseqtype;
     private String nametype;
