@@ -21,6 +21,7 @@ public class InsertImporter {
     private Map idmap;
     private CloneManager manager;
     private DnasequenceManager manager2;
+    private int maxseqid = 1;
     
     /** Creates a new instance of InsertImporter */
     public InsertImporter(Connection conn) {
@@ -28,9 +29,11 @@ public class InsertImporter {
         manager2 = new DnasequenceManager(conn);
     }
     
+    public int getMaxseqid() {return maxseqid;}
+    
     public Map getIdmap() {return idmap;}
     
-    public void importCloneInsert(ImportTable table, Map cloneidmap) throws Exception {
+    public void importCloneInsert(ImportTable table, Map cloneidmap, int maxid) throws Exception {
         idmap = new HashMap();
         DefTableManager m = new DefTableManager();
         
@@ -42,7 +45,9 @@ public class InsertImporter {
         int insertseqid = m.getMaxNumber("dnasequence", "sequenceid", DatabaseTransaction.getInstance());
         if(insertseqid == -1) {
             throw new Exception("Cannot get sequenceid from dnasequence table.");
-        }        
+        }
+        if(maxid > insertseqid)
+            insertseqid = maxid;
         
         List inserts = new ArrayList();
         List dnaseqs = new ArrayList();
@@ -54,9 +59,6 @@ public class InsertImporter {
             
             Dnasequence seq = new Dnasequence();
             seq.setSequenceid(insertseqid);
-            
-            id++;
-            insertseqid++;
             
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
@@ -84,22 +86,37 @@ public class InsertImporter {
                 }
                 if("cloneid".equalsIgnoreCase(columnName)) {
                     c.setCloneid(((Integer)cloneidmap.get(columnInfo)).intValue());
-                }                
-                if("sequence".equalsIgnoreCase(columnName)) {                   
-                    seq.setReferenceid(id);
+                }
+                if("sequence".equalsIgnoreCase(columnName)) {
+                    seq.setInsertid(id);
                     seq.setType(Dnasequence.INSERT);
                     seq.setSequence(columnInfo);
+                }
+                if("geneid".equalsIgnoreCase(columnName)) {
+                    c.setGeneid(columnInfo);
+                }
+                if("name".equalsIgnoreCase(columnName)) {
+                    c.setName(columnInfo);
+                }
+                if("description".equalsIgnoreCase(columnName)) {
+                    c.setDescription(columnInfo);
+                }
+                if("targetseqid".equalsIgnoreCase(columnName)) {
+                    c.setTargetseqid(columnInfo);
                 }
             }
             inserts.add(c);
             dnaseqs.add(seq);
+            id++;
+            insertseqid++;
         }
         
+        maxseqid = insertseqid;
         if(!manager.insertCloneInserts(inserts)) {
             throw new Exception("Error occured while inserting into DNAINSERT table");
         }
         if(!manager2.insertDnasequences(dnaseqs)) {
             throw new Exception("Error occured while inserting into DNASEQUENCE and SEQTEXT table");
-        }     
+        }
     }
 }

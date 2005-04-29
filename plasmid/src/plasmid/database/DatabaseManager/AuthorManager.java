@@ -49,6 +49,7 @@ public class AuthorManager extends TableManager {
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
+            DatabaseTransaction.closeStatement(stmt);
         } catch (Exception ex) {
             handleError(ex, "Error occured while inserting into AUTHORINFO table");
             return false;

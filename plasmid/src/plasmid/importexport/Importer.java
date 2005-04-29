@@ -150,11 +150,11 @@ public class Importer {
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEINSERT)) {
                     System.out.println("Importing CLONEINSERT.");
-                    iimp.importCloneInsert(table, cimp.getIdmap());
+                    iimp.importCloneInsert(table, cimp.getIdmap(), rimp.getMaxseqid());
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.REFSEQ)) {
                     System.out.println("Importing REFSEQ.");
-                    rimp.importRefseq(table);
+                    rimp.importRefseq(table, iimp.getMaxseqid());
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.INSERTREFSEQ)) {
                     System.out.println("Importing INSERTREFSEQ.");

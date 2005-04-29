@@ -17,16 +17,18 @@ public class Dnasequence {
     private int sequenceid;
     private String type;
     private int referenceid;
+    private int insertid;
     private String sequence;
     
     /** Creates a new instance of Dnasequence */
     public Dnasequence() {
     }
     
-    public Dnasequence(int sequenceid, String type, int referenceid, String sequence) {
+    public Dnasequence(int sequenceid, String type, int referenceid, String sequence, int insertid) {
         this.sequenceid=sequenceid;
         this.type = type;
         this.referenceid = referenceid;
+        this.insertid = insertid;
         this.sequenceid = sequenceid;
     }
     
@@ -34,9 +36,11 @@ public class Dnasequence {
     public String getType() {return type;}
     public int getReferenceid() {return referenceid;}
     public String getSequence() {return sequence;}
+    public int getInsertid() {return insertid;}
     
     public void setSequenceid(int id) {this.sequenceid = id;}
     public void setType(String type) {this.type = type;}
     public void setReferenceid(int id) {this.referenceid = id;}
     public void setSequence(String s) {this.sequence = s;}
+    public void setInsertid(int id) {this.insertid = id;}
 }

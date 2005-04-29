@@ -11,6 +11,7 @@ import java.util.*;
 
 import plasmid.coreobject.*;
 import plasmid.database.*;
+import plasmid.Constants;
 
 /**
  *
@@ -28,7 +29,7 @@ public class RefseqManager extends TableManager {
         if(seqs == null)
             return true;
         
-        String sql = "inset into referencesequence"+
+        String sql = "insert into referencesequence"+
                     " (refseqid,type,name,description,cdsstart,cdsstop,species)"+
                     " values(?,?,?,?,?,?,?)";
         try {
@@ -58,7 +59,7 @@ public class RefseqManager extends TableManager {
         if(seqs == null)
             return true;
         
-        String sql = "inset into insertrefseq"+
+        String sql = "insert into insertrefseq"+
                     " (refseqid,insertid,startonrefseq,endonrefseq,hasdiscrepancy,discrepancy,comments)"+
                     " values(?,?,?,?,?,?,?)";
         try {
@@ -88,7 +89,7 @@ public class RefseqManager extends TableManager {
         if(types == null)
             return true;
         
-        String sql = "inset into refseqnametype"+
+        String sql = "insert into refseqnametype"+
                     " (refseqtype,genusspecies,nametype,use)"+
                     " values(?,?,?,?)";
         try {
@@ -115,7 +116,7 @@ public class RefseqManager extends TableManager {
         if(names == null)
             return true;
         
-        String sql = "inset into refseqname"+
+        String sql = "insert into refseqname"+
                     " (refid,nametype,namevalue,nameurl)"+
                     " values(?,?,?,?)";
         try {
@@ -143,7 +144,7 @@ public class RefseqManager extends TableManager {
                     " from refseqnametype"+
                     " where genusspecies=?"+
                     " and refseqtype=?"+
-                    " and use=?";
+                    " and use in (?,?)";
         List types = new ArrayList();
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -152,6 +153,7 @@ public class RefseqManager extends TableManager {
             stmt.setString(1, species);
             stmt.setString(2, seqType);
             stmt.setString(3, use);
+            stmt.setString(4, RefseqNameType.BOTH);
             
             rs = DatabaseTransaction.executeQuery(stmt);
             while(rs.next()) {

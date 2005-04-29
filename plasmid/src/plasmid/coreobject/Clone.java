@@ -105,7 +105,7 @@ public class Clone {
     
     public String getSynonymString() {
         StringConvertor sc = new StringConvertor();
-        return sc.converFromListToString(synonyms);
+        return sc.convertFromListToString(synonyms);
     }
     
     public Set getHosttypes() {        
@@ -146,7 +146,7 @@ public class Clone {
     public String getMarkerString(String hosttype) {
         List markers = getMarkers(hosttype);
         StringConvertor cs = new StringConvertor();
-        return cs.converFromListToString(markers);
+        return cs.convertFromListToString(markers);
     }   
        
     public List getNamesByType(String nametype) {
@@ -171,6 +171,6 @@ public class Clone {
     public String getNameString(String nametype) {
         List namesByType = getNamesByType(nametype);
         StringConvertor cs = new StringConvertor();
-        return cs.converFromListToString(namesByType);
+        return cs.convertFromListToString(namesByType);
     }
 }

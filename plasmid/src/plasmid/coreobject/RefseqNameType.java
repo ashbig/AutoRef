@@ -13,7 +13,11 @@ package plasmid.coreobject;
 public class RefseqNameType {
     public static String SEARCH = "Search";
     public static String DISPLAY = "Display";
-    public static String BOTH = "Both";
+    public static String BOTH = "both";
+    public static String GENBANK = "GenBank Accession";
+    public static String GI = "GI";
+    public static String GENEID = "Gene ID";
+    public static String SYMBOL = "Gene Symbol";
     
     private String species;
     private String refseqtype;

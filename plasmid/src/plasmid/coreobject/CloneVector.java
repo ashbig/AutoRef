@@ -104,12 +104,12 @@ public class CloneVector {
     
     public String getSynonymString() {
         StringConvertor sc = new StringConvertor();
-        return sc.converFromListToString(synonyms);
+        return sc.convertFromListToString(synonyms);
     }
     
     public String getPropertyString() {
         StringConvertor sc = new StringConvertor();
-        return sc.converFromListToString(property);
+        return sc.convertFromListToString(property);
     }
     
     public static void main(String args[]) {

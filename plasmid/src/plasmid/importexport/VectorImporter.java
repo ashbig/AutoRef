@@ -103,7 +103,6 @@ public class VectorImporter {
         for(int n=0; n<contents.size(); n++) {
             VectorFeature v = new VectorFeature();
             v.setFeatureid(id);
-            id++;
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
@@ -128,6 +127,7 @@ public class VectorImporter {
                 }
             }
             features.add(v);
+            id++;
         }
         
         if(!vm.insertVectorFeatures(features)) {

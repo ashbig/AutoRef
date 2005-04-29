@@ -9,6 +9,8 @@ package plasmid.util;
 import java.util.*;
 import java.lang.*;
 
+import plasmid.Constants;
+
 /**
  *
  * @author  DZuo
@@ -19,7 +21,7 @@ public class StringConvertor {
     public StringConvertor() {
     }
     
-    public String converFromListToString(List l) {
+    public String convertFromListToString(List l) {
         if(l == null)
             return "";
         
@@ -35,13 +37,34 @@ public class StringConvertor {
         return s;
     }
    
+    public List convertFromStringToList(String s, String delimiter) {
+        List l = new ArrayList();
+        
+        if(s == null)
+            return l;
+        
+        StringTokenizer tokenizer = new StringTokenizer(s, delimiter);
+        try {
+            while(tokenizer.hasMoreTokens()) {
+                String st = tokenizer.nextToken().trim();
+                l.add(st);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+        
+        return l;            
+    }
+    
     public static void main(String args[]) {
         StringConvertor sc = new StringConvertor();
         List l = new ArrayList();
         l.add("abc");
         l.add("def");
         l.add("mnh");
-        System.out.println(sc.converFromListToString(l));
+        System.out.println(sc.convertFromListToString(l));
         System.exit(0);
     }
 }
