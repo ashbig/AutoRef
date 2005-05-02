@@ -22,6 +22,7 @@ public class DnaInsert {
     private String name;
     private String description;
     private String targetseqid;
+    private String targetgenbank;
     
     /** Creates a new instance of DnaInsert */
     public DnaInsert() {
@@ -38,8 +39,8 @@ public class DnaInsert {
         this.cloneid=cloneid;
     }
         
-    public DnaInsert(int insertid, int order, int size, String species, String format, 
-    String source, int cloneid, String geneid, String name, String description, String targetseqid) {
+    public DnaInsert(int insertid, int order, int size, String species, String format, String source, 
+    int cloneid, String geneid, String name, String description, String targetseqid, String targetgenbank) {
         this.insertid=insertid;
         this.order=order;
         this.size=size;
@@ -51,6 +52,7 @@ public class DnaInsert {
         this.name = name;
         this.description = description;
         this.targetseqid = targetseqid;
+        this.targetgenbank = targetgenbank;
     }
     
     public int getInsertid() {return insertid;}
@@ -64,6 +66,7 @@ public class DnaInsert {
     public String getName() {return name;}
     public String getDescription() {return description;}
     public String getTargetseqid() {return targetseqid;}
+    public String getTargetgenbank() {return targetgenbank;}
     
     public void setInsertid(int id) {this.insertid = id;}
     public void setOrder(int order) {this.order = order;}
@@ -76,4 +79,5 @@ public class DnaInsert {
     public void setName(String s) {this.name = s;}
     public void setDescription(String s) {this.description = s;}
     public void setTargetseqid(String s) {this.targetseqid = s;}
+    public void setTargetgenbank(String s) {this.targetgenbank = s;}
 }

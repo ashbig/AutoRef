@@ -23,9 +23,11 @@
   <!-- ========== Form Bean Definitions =================================== -->
   <form-beans>
 
-    <!-- Logon form bean -->
     <form-bean      name="refseqSearchForm"
                     type="plasmid.form.RefseqSearchForm"/>
+                    
+    <form-bean      name="cloneDetailForm"
+                    type="plasmid.form.CloneDetailForm"/>
 
  </form-beans>
 
@@ -97,7 +99,15 @@
               input="/SetDisplay.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
     </action>
-    
+   
+    <action    path="/GetCloneDetail"
+               type="plasmid.action.GetCloneDetailAction"
+               name="cloneDetailForm"
+              scope="request"
+              input="/GetCloneDetailAction">
+      <forward  name="success"   path="/ViewCloneDetail.jsp"/>
+    </action>
+     
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->

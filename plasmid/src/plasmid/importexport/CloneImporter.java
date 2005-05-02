@@ -79,6 +79,9 @@ public class CloneImporter {
                 if("clonemapfilename".equalsIgnoreCase(columnName)) {
                     c.setClonemap(columnInfo);
                 }
+                if("status".equalsIgnoreCase(columnName)) {
+                    c.setStatus(columnInfo);
+                }
             }
             clones.add(c);
             id++;

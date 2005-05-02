@@ -104,6 +104,9 @@ public class InsertImporter {
                 if("targetseqid".equalsIgnoreCase(columnName)) {
                     c.setTargetseqid(columnInfo);
                 }
+                if("targetgenbank".equalsIgnoreCase(columnName)) {
+                    c.setTargetgenbank(columnInfo);
+                }
             }
             inserts.add(c);
             dnaseqs.add(seq);

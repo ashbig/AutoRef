@@ -11,6 +11,8 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class CloneGrowth {
+    public static final String YES = "Y";
+
     private int cloneid;
     private int growthid;
     private String isrecommended;

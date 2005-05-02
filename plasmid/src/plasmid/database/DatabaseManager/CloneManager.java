@@ -29,8 +29,8 @@ public class CloneManager extends TableManager {
             return true;
         
         String sql = "insert into clone"+
-        " (cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename)"+
-        " values(?,?,?,?,?,?,?,?,?,?,?,?)";
+        " (cloneid, clonename, clonetype, verified, vermethod, domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status)"+
+        " values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             
@@ -48,6 +48,7 @@ public class CloneManager extends TableManager {
                 stmt.setInt(10, c.getVectorid());
                 stmt.setString(11, c.getVectorname());
                 stmt.setString(12, c.getClonemap());
+                stmt.setString(13, c.getStatus());
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
@@ -196,8 +197,8 @@ public class CloneManager extends TableManager {
             return true;
         
         String sql = "insert into dnainsert"+
-        " (insertid,insertorder,sizeinbp,species,format,source,cloneid,geneid,name,description,targetseqid)"+
-        " values(?,?,?,?,?,?,?,?,?,?,?)";
+        " (insertid,insertorder,sizeinbp,species,format,source,cloneid,geneid,name,description,targetseqid,targetgenbank)"+
+        " values(?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             
@@ -214,6 +215,7 @@ public class CloneManager extends TableManager {
                 stmt.setString(9, c.getName());
                 stmt.setString(10, c.getDescription());
                 stmt.setString(11, c.getTargetseqid());
+                stmt.setString(12, c.getTargetgenbank());
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
@@ -282,9 +284,9 @@ public class CloneManager extends TableManager {
             return clones;
         
         String sql = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename"+
+        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status"+
         " from clone where cloneid=?";
-        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid"+
+        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank"+
         " from dnainsert d, clone c"+
         " where c.cloneid=d.cloneid and c.cloneid=?";
         String sql3 = "select hosttype, marker from cloneselection where cloneid=?";
@@ -320,7 +322,8 @@ public class CloneManager extends TableManager {
                     int vectorid = rs.getInt(9);
                     String vectorname = rs.getString(10);
                     String clonemap = rs.getString(11);
-                    Clone c = new Clone(Integer.parseInt(cloneid),clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap);
+                    String status = rs.getString(12);
+                    Clone c = new Clone(Integer.parseInt(cloneid),clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status);
                     
                     if(isInsert) {
                         List inserts = new ArrayList();
@@ -337,7 +340,8 @@ public class CloneManager extends TableManager {
                             String name = rs2.getString(8);
                             String description = rs2.getString(9);
                             String targetseqid = rs2.getString(10);
-                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid);
+                            String targetgenbank = rs2.getString(11);
+                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid,targetgenbank);
                             inserts.add(insert);
                         }
                         c.setInserts(inserts);
@@ -363,7 +367,7 @@ public class CloneManager extends TableManager {
                     handleError(null, "No clone record found for cloneid: "+cloneid.toString());
                     return null;
                 }
-                    DatabaseTransaction.closeResultSet(rs);
+                DatabaseTransaction.closeResultSet(rs);
             }
         } catch (Exception ex) {
             handleError(ex, "Error occured while query clones by cloneid: "+currentCloneid);
@@ -375,12 +379,16 @@ public class CloneManager extends TableManager {
         }
         return clones;
     }
-        /*
-    public Clone queryCloneByCloneid(int cloneid) {
+    
+    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection) {
+        Map clones = new HashMap();
+        if(cloneids == null || cloneids.size() == 0)
+            return clones;
+        
         String sql = "select clonename, clonetype, verified, vermethod,"+
-        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename"+
-        " from clone where cloneid=?";
-        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid"+
+        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status"+
+        " from clone where cloneid=? and status='"+Clone.AVAILABLE+"'";
+        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,targetgenbank"+
         " from dnainsert d, clone c"+
         " where c.cloneid=d.cloneid and c.cloneid=?";
         String sql3 = "select hosttype, marker from cloneselection where cloneid=?";
@@ -416,7 +424,8 @@ public class CloneManager extends TableManager {
                     int vectorid = rs.getInt(9);
                     String vectorname = rs.getString(10);
                     String clonemap = rs.getString(11);
-                    Clone c = new Clone(Integer.parseInt(cloneid),clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap);
+                    String status = rs.getString(12);
+                    Clone c = new Clone(Integer.parseInt(cloneid),clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status);
                     
                     if(isInsert) {
                         List inserts = new ArrayList();
@@ -433,7 +442,8 @@ public class CloneManager extends TableManager {
                             String name = rs2.getString(8);
                             String description = rs2.getString(9);
                             String targetseqid = rs2.getString(10);
-                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid);
+                            String targetgenbank = rs2.getString(11);
+                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid,targetgenbank);
                             inserts.add(insert);
                         }
                         c.setInserts(inserts);
@@ -459,7 +469,7 @@ public class CloneManager extends TableManager {
                     handleError(null, "No clone record found for cloneid: "+cloneid.toString());
                     return null;
                 }
-                    DatabaseTransaction.closeResultSet(rs);
+                DatabaseTransaction.closeResultSet(rs);
             }
         } catch (Exception ex) {
             handleError(ex, "Error occured while query clones by cloneid: "+currentCloneid);
@@ -469,20 +479,174 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt2);
             DatabaseTransaction.closeStatement(stmt3);
         }
-    return null;
+        return clones;
     }
-        */
+    
+    public Clone queryCloneByCloneid(int cloneid) {
+        String sql = "select clonename, clonetype, verified, vermethod,"+
+        " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status"+
+        " from clone where cloneid="+cloneid;
+        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank"+
+        " from dnainsert d, clone c"+
+        " where c.cloneid=d.cloneid and c.cloneid="+cloneid;
+        String sql3 = "select hosttype, marker from cloneselection where cloneid="+cloneid;
+        String sql4 = "select c.cloneid,c.authorid,a.authorname,c.authortype"+
+                    " from cloneauthor c, authorinfo a"+
+                    " where c.authorid=a.authorid"+
+                    " and c.cloneid="+cloneid;
+        String sql5 = "select g.growthid,name, hosttype,antibioticselection,growthcondition,comments"+
+                    " from clonegrowth c, growthcondition g"+
+                    " where c.growthid=g.growthid"+
+                    " and c.cloneid="+cloneid+
+                    " and c.isrecommended='"+CloneGrowth.YES+"'";
+        String sql6 = "select p.publicationid,p.title, p.pmid"+
+                    " from publication p, clonepublication c"+
+                    " where p.publicationid=c.publicationid"+
+                    " and c.cloneid = "+cloneid;
+        String sql7 = "select h.cloneid, h.hoststrain, h.isinuse, h.description"+
+                    " from host h where h.cloneid="+cloneid;
+        String sql8 = "select cloneid,nametype,namevalue,nameurl"+
+                    " from clonename where cloneid="+cloneid;
+        
+        Clone c = null;
+        
+        try {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            ResultSet rs = t.executeQuery(sql);
+            if(rs.next()) {
+                String clonename = rs.getString(1);
+                String clonetype = rs.getString(2);
+                String verified = rs.getString(3);
+                String vermethod = rs.getString(4);
+                String domain = rs.getString(5);
+                String subdomain = rs.getString(6);
+                String restriction = rs.getString(7);
+                String comments = rs.getString(8);
+                int vectorid = rs.getInt(9);
+                String vectorname = rs.getString(10);
+                String clonemap = rs.getString(11);
+                String status = rs.getString(12);
+                c = new Clone(cloneid,clonename,clonetype,verified,vermethod,domain,subdomain, restriction,comments,vectorid,vectorname,clonemap,status);
+                
+                List inserts = new ArrayList();
+                ResultSet rs2 = t.executeQuery(sql2);
+                while(rs2.next()) {
+                    int insertid = rs2.getInt(1);
+                    int insertorder = rs2.getInt(2);
+                    int size = rs2.getInt(3);
+                    String species = rs2.getString(4);
+                    String format = rs2.getString(5);
+                    String source = rs2.getString(6);
+                    String geneid = rs2.getString(7);
+                    String name = rs2.getString(8);
+                    String description = rs2.getString(9);
+                    String targetseqid = rs2.getString(10);
+                    String targetgenbank = rs2.getString(11);
+                    DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, cloneid,geneid,name,description,targetseqid,targetgenbank);
+                    inserts.add(insert);
+                }
+                c.setInserts(inserts);
+                DatabaseTransaction.closeResultSet(rs2);
+                
+                List selections = new ArrayList();
+                ResultSet rs3 = t.executeQuery(sql3);
+                while(rs3.next()) {
+                    String hosttype = rs3.getString(1);
+                    String marker = rs3.getString(2);
+                    CloneSelection selection = new CloneSelection(cloneid,hosttype,marker);
+                    selections.add(selection);
+                }
+                c.setSelections(selections);
+                DatabaseTransaction.closeResultSet(rs3);
+                
+                List authors = new ArrayList();
+                ResultSet rs4 = t.executeQuery(sql4);
+                while(rs4.next()) {
+                    int id = rs4.getInt(1);
+                    int authorid = rs4.getInt(2);
+                    String authorname = rs4.getString(3);
+                    String authortype = rs4.getString(4);
+                    CloneAuthor a = new CloneAuthor(id, authorid, authorname, authortype);
+                    authors.add(a);
+                }
+                c.setAuthors(authors);
+                DatabaseTransaction.closeResultSet(rs4);
+                
+                ResultSet rs5 = t.executeQuery(sql5);
+                if(rs5.next()) {
+                    int growthid = rs5.getInt(1);
+                    String growthname = rs5.getString(2);
+                    String hosttype = rs5.getString(3);
+                    String antibioticselection = rs5.getString(4);
+                    String condition = rs5.getString(5);
+                    String com = rs5.getString(6);
+                    GrowthCondition gc = new GrowthCondition(growthid,growthname,hosttype,antibioticselection,condition,com);
+                    c.setRecommendedGrowthCondition(gc);
+                }
+                DatabaseTransaction.closeResultSet(rs5);
+                
+                ResultSet rs6 = t.executeQuery(sql6);
+                List publications = new ArrayList();
+                while(rs6.next()) {
+                    int publicationid = rs6.getInt(1);
+                    String title = rs6.getString(2);
+                    String pmid = rs6.getString(3);
+                    Publication p = new Publication(publicationid,title,pmid);
+                    publications.add(p);
+                }
+                c.setPublications(publications);
+                DatabaseTransaction.closeResultSet(rs6);
+                
+                ResultSet rs7 = t.executeQuery(sql7);
+                List hosts = new ArrayList();
+                while(rs7.next()) {
+                    int id=rs7.getInt(1);
+                    String strain = rs7.getString(2);
+                    String isinuse = rs7.getString(3);
+                    String description = rs7.getString(4);
+                    CloneHost h = new CloneHost(id,strain,isinuse,description);
+                    hosts.add(h);
+                }
+                c.setHosts(hosts);
+                DatabaseTransaction.closeResultSet(rs7);
+                
+                ResultSet rs8 = t.executeQuery(sql8);
+                List names = new ArrayList();
+                while(rs8.next()) {
+                    int id = rs8.getInt(1);
+                    String nametype = rs8.getString(2);
+                    String namevalue = rs8.getString(3);
+                    String nameurl = rs8.getString(4);
+                    CloneName n = new CloneName(id, nametype, namevalue, nameurl);
+                    names.add(n);
+                }
+                c.setNames(names);
+                DatabaseTransaction.closeResultSet(rs8);
+            } else {
+                handleError(null, "No clone record found for cloneid: "+cloneid);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            handleError(ex, "Error occured while query clones by cloneid: "+cloneid);
+        }
+        return c;
+    }
+    
     public static void main(String args[]) {
-        Clone clone = new Clone(1,"54934", "cDNA", "Y","Sequence Verification", "Homo sapiens", null, "No restriction", null, 1, "vectorname", null);
-        List clones = new ArrayList();
-        clones.add(clone);
         DatabaseTransaction dt = null;
         Connection conn = null;
         try {
             dt = DatabaseTransaction.getInstance();
             conn = dt.requestConnection();
             CloneManager manager = new CloneManager(conn);
-            manager.insertClones(clones);
+            Clone c = manager.queryCloneByCloneid(5096);
+            List names = c.getNames();
+            List authors = c.getAuthors();
+            GrowthCondition growths = c.getRecommendedGrowthCondition();
+            System.out.println(names);
+            System.out.println(authors);
+            System.out.println(growths);
         } catch (Exception ex) {
             System.out.println(ex);
         } finally {

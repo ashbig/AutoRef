@@ -14,6 +14,8 @@ import plasmid.util.StringConvertor;
  * @author  DZuo
  */
 public class Clone {
+    public static final String AVAILABLE = "AVAILABLE";
+    
     private int cloneid;
     private String name;
     private String type;
@@ -26,6 +28,7 @@ public class Clone {
     private int vectorid;
     private String vectorname;
     private String clonemap;
+    private String status;
     
     private List synonyms;
     private List publications;
@@ -34,6 +37,9 @@ public class Clone {
     private List growths;
     private List names;
     private List inserts;
+    private List hosts;
+    
+    private GrowthCondition recommendedGrowthCondition;
     
     /** Creates a new instance of Clone */
     public Clone() {
@@ -41,7 +47,7 @@ public class Clone {
     
     public Clone(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
-    String comments, int vectorid, String vectorname, String clonemap) {
+    String comments, int vectorid, String vectorname, String clonemap, String status) {
         this.cloneid = cloneid;
         this.name = name;
         this.type = type;
@@ -54,6 +60,7 @@ public class Clone {
         this.vectorid = vectorid;
         this.vectorname = vectorname;
         this.clonemap = clonemap;
+        this.status = status;
     }
     
     public int getCloneid() {return cloneid;}
@@ -68,6 +75,8 @@ public class Clone {
     public int getVectorid() {return vectorid;}
     public String getVectorname() {return vectorname;}
     public String getClonemap() {return clonemap;}
+    public String getStatus() {return status;}
+    public GrowthCondition getRecommendedGrowthCondition() {return recommendedGrowthCondition;}
     
     public void setCloneid(int id) {this.cloneid = id;}
     public void setName(String s) {this.name = s;}
@@ -81,6 +90,8 @@ public class Clone {
     public void setVectorname(String s) {this.vectorname = s;}
     public void setVectorid(int id) {this.vectorid = id;}
     public void setClonemap(String s) {this.clonemap = s;}
+    public void setStatus(String s) {this.status = s;}
+    public void setRecommendedGrowthCondition(GrowthCondition g) {this.recommendedGrowthCondition = g;}
     
     public List getSynonyms() {return synonyms;}
     public void setSynonyms(List l) {this.synonyms = l;}
@@ -89,7 +100,7 @@ public class Clone {
     public void setPublications(List l) {this.publications = l;}
     
     public List getAuthors() {return authors;}
-    public void setAuthors(List l) {this.authors = authors;}
+    public void setAuthors(List l) {this.authors = l;}
     
     public List getSelections() {return selections;}
     public void setSelections(List l) {this.selections = l;}
@@ -102,6 +113,9 @@ public class Clone {
     
     public List getInserts() {return inserts;}
     public void setInserts(List l) {this.inserts = l;}
+    
+    public List getHosts() {return hosts;}
+    public void setHosts(List l) {this.hosts = l;}
     
     public String getSynonymString() {
         StringConvertor sc = new StringConvertor();

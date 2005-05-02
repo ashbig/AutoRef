@@ -35,7 +35,7 @@
     <td class="tableheader">Gene ID</td>
     <td class="tableheader">Gene Symbol</td>
     <td class="tableheader">Gene Name</td>
-    <td class="tableheader">Target GI</td>
+    <td class="tableheader">Target Genbank</td>
     <td class="tableheader">Insert Format</td>
     <td class="tableheader">Vector</td>
     <td class="tableheader">Selection Markers</td>
@@ -52,13 +52,13 @@
     <% if(n>1) %>
     <tr class="tableinfo"> 
     <% n++;%>
-    <td><bean:write name="clone" property="name"/></td>
+    <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:iterate name="clone" property="inserts" id="insert">
-    <td><bean:write name="insert" property="geneid"/></td>
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="description"/></td>
-    <td><bean:write name="insert" property="targetseqid"/></td>
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
     <td><bean:write name="clone" property="vectorname"/></td>

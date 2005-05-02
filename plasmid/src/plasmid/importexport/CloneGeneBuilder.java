@@ -255,18 +255,18 @@ public class CloneGeneBuilder {
         
         try {
             t = DatabaseTransaction.getInstance();
-            conn = t.requestConnection();/**
-             * System.out.println("Building DNAINSERT with genes");
-             * builder.buildDnainsertWithGene(conn);*/
-            builder.buildDnainsertWithRefseqSymbol(conn);/**
-             * System.out.println("Building DNAINSERT with reference sequences");
-             * builder.buildDnainsertWithRefseq(conn);
-             * System.out.println("Building CLONEGENBANK");
-             * builder.buildCloneGenbank(conn);
-             * System.out.println("Building CLONELOCUS");
-             * builder.buildCloneLocus(conn);
-             * System.out.println("Building CLONESYMBOL");
-             * builder.buildCloneSymbol(conn);*/
+            conn = t.requestConnection();
+            System.out.println("Building DNAINSERT with genes");
+            builder.buildDnainsertWithGene(conn);
+            builder.buildDnainsertWithRefseqSymbol(conn);
+            System.out.println("Building DNAINSERT with reference sequences");
+            builder.buildDnainsertWithRefseq(conn);
+            System.out.println("Building CLONEGENBANK");
+            builder.buildCloneGenbank(conn);
+            System.out.println("Building CLONELOCUS");
+            builder.buildCloneLocus(conn);
+            System.out.println("Building CLONESYMBOL");
+            builder.buildCloneSymbol(conn);
             
             DatabaseTransaction.commit(conn);
         } catch (Exception ex) {

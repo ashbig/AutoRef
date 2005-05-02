@@ -29,7 +29,7 @@ public class GeneSymbolQueryHandler extends GeneQueryHandler {
     }
     
     public void doQuery() throws Exception {
-        String sql = "select distinct cloneid from clonesymbol where symbol = ?";
+        String sql = "select distinct cloneid from clonesymbol where upper(symbol) = upper(?)";
         executeQuery(sql);
     }   
 }

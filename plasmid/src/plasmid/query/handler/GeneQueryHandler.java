@@ -92,7 +92,7 @@ public abstract class GeneQueryHandler {
         DatabaseTransaction.closeStatement(stmt);
         
         CloneManager manager = new CloneManager(conn);
-        Map foundClones = manager.queryClonesByCloneid(new ArrayList(cloneids), true, true);
+        Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true);
         
         System.out.println("foundClones: ");
         Set ks = foundClones.keySet();

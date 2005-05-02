@@ -29,7 +29,7 @@ public class GenbankQueryHandler extends GeneQueryHandler {
     }
     
     public void doQuery() throws Exception {
-        String sql = "select distinct cloneid from clonegenbank where accession = ?";
+        String sql = "select distinct cloneid from clonegenbank where upper(accession) = upper(?)";
         executeQuery(sql);
     }
     
