@@ -30,7 +30,7 @@ public class Contig
     private int                 m_num_of_reads_in_contig = 0;
     private int                 m_number_of_bases = 0;
     private ArrayList           m_reads = null;
-     
+    private int                 m_orientation = Constants.ORIENTATION_FORWARD;
     private int                 m_cds_start = 0; //0 based indexes
     private int                 m_cds_stop = 0;
     /** Creates a new instance of CloneAssembly */
@@ -65,6 +65,7 @@ public class Contig
     }
     
     public String              getName(){ return m_name ;}
+    public int                  getOrientation(){ return m_orientation;}
     public int                 getNumberOfReadsInContig(){ return m_num_of_reads_in_contig;}
     public int                 getCdsStart(){ return  m_cds_start ;}
     public int                 getCdsStop(){ return m_cds_stop ;}
@@ -76,6 +77,7 @@ public class Contig
 
     public void                 setNumberOfReadsInContig(int v){  m_num_of_reads_in_contig = v;}
     public void              setName(String s){   m_name =s ;} 
+    public void             setOrientation(int v){ m_orientation = v;}
     public void              setSequence(String s){   m_sequence =s ;}
     public void              setScores(String s){ m_scores =s ;}
     public void             setReads(ArrayList v){ m_reads= v;}
@@ -100,7 +102,17 @@ public class Contig
          res_needle.recalculateIdentity();
         if (res_needle.getIdentity() < Constants.MIN_IDENTITY_CUTOFF)
         {
-            return IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_NO_MATCH;
+           // try again , if for some reson orientation is not defined properly
+            String sequence = SequenceManipulation.getComplimentCaseSencetive(m_sequence);
+             nw.setQuerySeq(sequence);
+       
+             res_needle =  nw.runNeedle();
+             res_needle.recalculateIdentity();
+             if (res_needle.getIdentity() < Constants.MIN_IDENTITY_CUTOFF)
+             {
+                 return IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_NO_MATCH;
+             }
+            
         }
         //no coverage
         if (res_needle.getQuery() == null || res_needle.getSubject() == null)
