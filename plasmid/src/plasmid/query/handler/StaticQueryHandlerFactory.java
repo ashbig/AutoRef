@@ -25,6 +25,12 @@ public class StaticQueryHandlerFactory {
             return new GeneidQueryHandler(terms);
         else if(GeneQueryHandler.SYMBOL.equals(type))
             return new GeneSymbolQueryHandler(terms);
+        else if(GeneQueryHandler.DIRECT_GENBANK.equals(type))
+            return new DirectGenbankQueryHandler(terms);
+        else if(GeneQueryHandler.GI.equals(type))
+            return new GiQueryHandler(terms);
+        else if(GeneQueryHandler.DIRECT_GI.equals(type))
+            return new DirectGiQueryHandler(terms);
         else
             return null;
     }

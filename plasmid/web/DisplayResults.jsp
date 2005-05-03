@@ -28,6 +28,31 @@
 
 <table width="100%" border="0">
   <tr>
+    <logic:equal name="display" value="genbank">
+    <td class="tablebody">Search terms found by direct match</td>
+    <td class="tablebody">Search terms found by indirect match</td>
+    </logic:equal>
+    <logic:equal name="display" value="symbol">
+    <td class="tablebody">Search terms found</td>
+    </logic:equal>
+    <td class="tablebody">Search terms not found</td>
+  </tr>  
+  <tr>
+    <logic:equal name="display" value="genbank">
+    <td class="tableinfo"><a href="SetDisplay.do?displayPage=direct"><bean:write name="numOfDirectFound"/></a></td>
+    <td class="tableinfo"><a href="SetDisplay.do?displayPage=indirect"><bean:write name="numOfFound"/></a></td>
+    </logic:equal>
+    <logic:equal name="display" value="symbol">
+    <td class="tableinfo"><a href="SetDisplay.do?displayPage=indirect"><bean:write name="numOfFound"/></a></td>
+    </logic:equal>
+    <td class="tableinfo"><a href="SetDisplay.do?displayPage=nofound"><bean:write name="numOfNoFounds"/></a></td>
+  </tr>
+</table>
+
+<logic:notEqual name="displayPage" value="nofound">
+<p class="mainbodytexthead">List of search terms found</p>
+<table width="100%" border="0">
+  <tr>
     <td class="tableheader">&nbsp;</td>
     <td class="tableheader">Search Term</td>
     <td class="tableheader">Clone ID</td>
@@ -41,6 +66,8 @@
     <td class="tableheader">Selection Markers</td>
     <td class="tableheader">Restriction</td>
   </tr>
+
+  <logic:equal name="displayPage" value="indirect">
   <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);%>
   <logic:iterate name="found" id="element">
   <bean:define name="element" id="term" property="key"/>
@@ -71,7 +98,57 @@
     </tr>
     </logic:iterate>
   </logic:iterate>
+  </logic:equal>
+
+  <logic:equal name="displayPage" value="direct">
+  <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);%>
+  <logic:iterate name="directFounds" id="element">
+  <bean:define name="element" id="term" property="key"/>
+  <tr class="tableinfo"> 
+    <td rowspan='<%=((Integer)((Map)request.getSession().getAttribute("directFoundCount")).get(term)).intValue()%>'><%=++i%></td>
+    <td rowspan='<%=((Integer)((Map)request.getSession().getAttribute("directFoundCount")).get(term)).intValue()%>'><bean:write name="element" property="key"/></td>
+    <% int n=1;%>
+    <logic:iterate name="element" property="value" id="clone">
+    <% if(n>1) %>
+    <tr class="tableinfo"> 
+    <% n++;%>
+    <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
+    <td><bean:write name="clone" property="type"/></td>
+    <logic:iterate name="clone" property="inserts" id="insert">
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    <td><bean:write name="insert" property="name"/></td>
+    <td><bean:write name="insert" property="description"/></td>
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+    <td><bean:write name="insert" property="format"/></td>
+    </logic:iterate>
+    <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
+    <td>
+    <logic:iterate name="clone" property="selections" id="selection">
+        <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
+    </logic:iterate>
+    </td>
+    <td><bean:write name="clone" property="restriction"/></td>
+    </tr>
+    </logic:iterate>
+  </logic:iterate>
+  </logic:equal>
 </table>
+</logic:notEqual>
+
+<logic:equal name="displayPage" value="nofound">
+<p class="mainbodytexthead">List of search terms not found</p>
+<table width="50%" border="0">
+  <tr>
+    <td class="tableheader">Search Term</td>
+  </tr>
+  <logic:iterate name="nofound" id="nf">
+  <tr class="tableinfo"> 
+    <td><bean:write name="nf"/></td>
+  </tr>
+  </logic:iterate>
+</table>
+</logic:equal>
+
       </html:form></td>
   </tr>
 </table>

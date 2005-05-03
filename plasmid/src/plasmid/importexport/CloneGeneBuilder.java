@@ -197,6 +197,48 @@ public class CloneGeneBuilder {
         DatabaseTransaction.closeStatement(stmt2);
         DatabaseTransaction.closeStatement(stmt3);
     }
+        
+    public void buildCloneGi(Connection conn) throws Exception {
+        String sql = "insert into clonegi(cloneid, gi)"+
+        " select distinct c.cloneid, s.gi"+
+        " from clone c, dnainsert d, sequencerecord s"+
+        " where c.cloneid=d.cloneid"+
+        " and d.geneid=s.geneid";
+        DatabaseTransaction.executeUpdate(sql, conn);
+        
+        sql = "select c.cloneid, n.namevalue"+
+        " from clone c, dnainsert d, insertrefseq i, referencesequence r, refseqname n"+
+        " where c.cloneid=d.cloneid"+
+        " and d.insertid=i.insertid"+
+        " and i.refseqid=r.refseqid"+
+        " and r.refseqid=n.refid"+
+        " and n.nametype='"+RefseqNameType.GI+"'";
+        String sql2 = "select * from clonegi where cloneid=? and gi=?";
+        String sql3 = "insert into clonegi(cloneid, gi) values(?,?)";
+        
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        PreparedStatement stmt2 = conn.prepareStatement(sql2);
+        PreparedStatement stmt3 = conn.prepareStatement(sql3);
+        ResultSet rs = t.executeQuery(sql);
+        while(rs.next()) {
+            int cloneid = rs.getInt(1);
+            String gi = rs.getString(2);
+            
+            stmt2.setInt(1, cloneid);
+            stmt2.setString(2, gi);
+            ResultSet rs2 = DatabaseTransaction.executeQuery(stmt2);
+            if(!rs2.next()) {
+                stmt3.setInt(1, cloneid);
+                stmt3.setString(2, gi);
+                DatabaseTransaction.executeUpdate(stmt3);
+            }
+            
+            DatabaseTransaction.closeResultSet(rs2);
+        }
+        DatabaseTransaction.closeResultSet(rs);
+        DatabaseTransaction.closeStatement(stmt2);
+        DatabaseTransaction.closeStatement(stmt3);
+    }
     
     public void buildCloneSymbol(Connection conn) throws Exception {
         String sql = "insert into clonesymbol(cloneid, symbol)"+
@@ -256,7 +298,7 @@ public class CloneGeneBuilder {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            System.out.println("Building DNAINSERT with genes");
+  /**          System.out.println("Building DNAINSERT with genes");
             builder.buildDnainsertWithGene(conn);
             builder.buildDnainsertWithRefseqSymbol(conn);
             System.out.println("Building DNAINSERT with reference sequences");
@@ -266,7 +308,9 @@ public class CloneGeneBuilder {
             System.out.println("Building CLONELOCUS");
             builder.buildCloneLocus(conn);
             System.out.println("Building CLONESYMBOL");
-            builder.buildCloneSymbol(conn);
+            builder.buildCloneSymbol(conn);*/
+            System.out.println("Building CLONEGI");
+            builder.buildCloneGi(conn);
             
             DatabaseTransaction.commit(conn);
         } catch (Exception ex) {

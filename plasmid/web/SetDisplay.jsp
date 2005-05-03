@@ -22,9 +22,11 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
       <html:form action="SetDisplay.do" enctype="multipart/form-data">
+<input type="hidden" name="displayPage" value="<bean:write name="displayPage"/>">
+
 <table width="100%" height="58" border="0" align="center">
 <tr>
-    <td class="alertheader">We found <bean:write name="numOfFound"/> clones for your search. You can limit your 
+    <td class="alertheader">We found <bean:write name="totalCount"/> clones for your search. You can limit your 
       search by choosing the following criteria or view all of them by pressing 
       the button.</td>
   </tr>

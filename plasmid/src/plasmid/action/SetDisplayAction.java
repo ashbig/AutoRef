@@ -73,11 +73,11 @@ public class SetDisplayAction extends Action {
         String pgex2tk = ((RefseqSearchForm)form).getPgex2tk();
         int pagesize = ((RefseqSearchForm)form).getPagesize();
         int page = ((RefseqSearchForm)form).getPage();
+        String displayPage = ((RefseqSearchForm)form).getDisplayPage();
         
-        Map founds = (Map)request.getSession().getAttribute("found");
-        List nofounds = (List)request.getSession().getAttribute("nofound");
         request.setAttribute("pagesize", new Integer(pagesize));        
         request.setAttribute("page",  new Integer(page));
+        request.setAttribute("displayPage", displayPage);
         return (mapping.findForward("success"));        
     }
 }

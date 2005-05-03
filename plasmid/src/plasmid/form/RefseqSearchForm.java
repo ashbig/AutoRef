@@ -36,6 +36,7 @@ public class RefseqSearchForm extends ActionForm {
     private String pgex2tk = "on";
     private int pagesize = 25;
     private int page = 1;
+    private String displayPage;
     
     public String getSpecies() {return species;}
     public String getRefseqType() {return refseqType;}
@@ -54,6 +55,7 @@ public class RefseqSearchForm extends ActionForm {
     public String getPgex2tk() {return pgex2tk;}
     public int getPagesize() {return pagesize;}
     public int getPage() {return page;}
+    public String getDisplayPage() {return displayPage;}
     
     public void setSpecies(String s) {this.species = s;}
     public void setRefseqType(String s) {this.refseqType = s;}
@@ -72,6 +74,7 @@ public class RefseqSearchForm extends ActionForm {
     public void setPgex2tk(String s) {this.pgex2tk=s;}
     public void setPagesize(int i) {this.pagesize = i;}
     public void setPage(int i) {this.page = i;}
+    public void setDisplayPage(String s) {this.displayPage = s;}
     
     /**
      * Reset all properties to their default values.

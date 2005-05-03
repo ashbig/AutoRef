@@ -23,11 +23,14 @@ public abstract class GeneQueryHandler {
     public static final String GI = RefseqNameType.GI;
     public static final String GENEID = RefseqNameType.GENEID;
     public static final String SYMBOL = RefseqNameType.SYMBOL;
+    public static final String DIRECT_GENBANK = "Direct Genbank";
+    public static final String DIRECT_GI = "Direct GI";
     
     protected Map found;
     protected List nofound;
     protected List terms;
     protected Map foundCounts;
+    protected int foundCloneCount;
     
     /** Creates a new instance of GeneQueryHandler */
     public GeneQueryHandler() {
@@ -44,6 +47,7 @@ public abstract class GeneQueryHandler {
     public List getNofound() {return nofound;}
     public List getTerms() {return terms;}
     public Map getFoundCounts() {return foundCounts;}
+    public int getFoundCloneCount() {return foundCloneCount;}
     
     public int getNumOfClones(String term) {
         int n = 0;
@@ -68,6 +72,7 @@ public abstract class GeneQueryHandler {
         if(terms == null || terms.size() == 0)
             return;
         
+        foundCloneCount = 0;
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         Connection conn = t.requestConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -94,14 +99,12 @@ public abstract class GeneQueryHandler {
         CloneManager manager = new CloneManager(conn);
         Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true);
         
-        System.out.println("foundClones: ");
         Set ks = foundClones.keySet();
         Iterator it = ks.iterator();
         while(it.hasNext()) {
             String s = (String)it.next();
             System.out.println("cloneid: "+s);
             Clone c = (Clone)foundClones.get(s);
-            System.out.println("found cloneid: "+c.getCloneid());
         }
         
         Set keys = found.keySet();
@@ -118,6 +121,7 @@ public abstract class GeneQueryHandler {
             }
             newFound.put(k, newClones);
             foundCounts.put(k, new Integer(newClones.size()));
+            foundCloneCount += newClones.size();
         }
         
         found = newFound;
