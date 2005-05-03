@@ -28,7 +28,7 @@ public class CloneVector {
     
     private List synonyms;
     private List property;
-    private Map vectorfeatures;
+    private List vectorfeatures;
     private List vectorparents;
     private List publications;
     private List authors;
@@ -75,23 +75,8 @@ public class CloneVector {
     public List getProperty() {return property;}
     public void setProperty(List l) {this.property = l;}
     
-    public Map getVectorfeatures() {return vectorfeatures;}
-    public void setVectorfeatures(Map l) {this.vectorfeatures = l;}
-    
-    public List getVectorfeaturesByType(String type) {
-        List l = new ArrayList();
-        if(type == null || vectorfeatures == null)
-            return l;
-        
-        return (List)vectorfeatures.get(type);
-    }
-    
-    public void addVectorfeatures(String type, List l) {
-        if(l == null || l.size() == 0 || type == null)
-            return;
-        
-        vectorfeatures.put(type, l);
-    }
+    public List getVectorfeatures() {return vectorfeatures;}
+    public void setVectorfeatures(List l) {this.vectorfeatures = l;}
     
     public List getVectorparents() {return vectorparents;}
     public void setVectorparents(List l) {this.vectorparents = l;}

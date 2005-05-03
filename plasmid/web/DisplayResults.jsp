@@ -61,7 +61,7 @@
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
-    <td><bean:write name="clone" property="vectorname"/></td>
+    <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
     <td>
     <logic:iterate name="clone" property="selections" id="selection">
         <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>

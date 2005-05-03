@@ -14,7 +14,7 @@
 
 <body>
 <p>Clone: <bean:write name="clone" property="name"/></p>
-<table width="100%" border="0">
+<table width="700" border="0">
   <tr> 
     <td width="15%" class="tablebody">Clone ID:</td>
     <td width="27%" class="mainbodytext"><bean:write name="clone" property="name"/></td>
@@ -50,7 +50,7 @@
 </table>
 <logic:present name="clone" property="names">
 <p>Related Identifiers:</p>
-<table width="100%" border="0">
+<table width="700" border="0">
 <logic:iterate id="clonename" name="clone" property="names">
   <tr>
     <td width="201" class="tablebody"><bean:write name="clonename" property="type"/></td>
@@ -61,7 +61,7 @@
 </logic:present>
 <logic:present name="clone" property="inserts">
 <p>Insert Information:</p>
-<table width="100%" border="0">
+<table width="700" border="0">
   <tr> 
     <td width="5%" class="tablebody">Insert</td>
     <td width="8%" class="tablebody">Size (bp)</td>
@@ -90,7 +90,7 @@
 </logic:present>
 <logic:present name="clone" property="hosts">
 <p>Host Information:</p>
-<table width="100%" border="0">
+<table width="700" border="0">
   <tr>
     <td width="11%" class="tablebody">Host Strain</td>
     <td width="19%" class="tablebody">Is Used In Our Lab</td>
@@ -107,7 +107,7 @@
 </logic:present>
 <logic:present name="clone" property="recommendedGrowthCondition">
 <p>Recommended Growth Condition:</p>
-<table width="100%" border="0">
+<table width="700" border="0">
   <tr>
     <td width="15%" class="tablebody">Name</td>
     <td width="12%" class="tablebody">Host Type</td>
@@ -126,7 +126,7 @@
 </logic:present>
 <logic:present name="clone" property="selections">
 <p>Antibiotic Selections:</p>
-<table width="100%" border="0">
+<table width="700" border="0">
   <tr>
     <td width="24%" class="tablebody">Host Type</td>
     <td width="76%" class="tablebody">Marker</td>
@@ -141,7 +141,7 @@
 </logic:present>
 <logic:present name="clone" property="authors">
 <p>Authors:</p>
-<table width="100%" border="0">
+<table width="700" border="0">
   <tr>
     <td class="tablebody">Author Name</td>
     <td class="tablebody">Author Type</td>
@@ -155,13 +155,13 @@
 </table>
 </logic:present>
 <logic:present name="clone" property="publications">
-<logic:iterate id="publication" name="clone" property="publications">
 <p>Publications:</p>
-<table width="100%" border="0">
+<table width="700" border="0">
   <tr>
     <td width="11%" class="tablebody">PMID</td>
     <td width="89%" class="tablebody">Title</td>
   </tr>
+<logic:iterate id="publication" name="clone" property="publications">
   <tr>
     <td class="tableinfo"><bean:write name="publication" property="pmid"/></td>
     <td class="tableinfo"><bean:write name="publication" property="title"/></td>
