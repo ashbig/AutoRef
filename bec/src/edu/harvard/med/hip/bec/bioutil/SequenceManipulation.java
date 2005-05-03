@@ -93,7 +93,7 @@ public class SequenceManipulation
     {
         StringBuffer newStr = new StringBuffer();
         char[] ch_array = old.toCharArray();
-        for(int count =0; count < ch_array.length; count++)
+        for(int count =  ch_array.length -1 ; count >=0; count--)
         {
             switch(ch_array[count])
             {
@@ -117,7 +117,7 @@ public class SequenceManipulation
     {
         StringBuffer newStr = new StringBuffer();
         char[] ch_array = old.toCharArray();
-        for ( int count = 0; count < ch_array.length;count++)
+        for ( int count =  ch_array.length - 1; count >= 0;count--)
         {
              switch(ch_array[count])
             {
@@ -142,8 +142,26 @@ public class SequenceManipulation
         return newStr.toString();
     }
     
-    
-    public static boolean isValidDNASequence(String sequence)
+    public static boolean       isBaseAllowedByAmbiguity(char s_allel, char q_allel)
+    {
+        switch ( s_allel )
+        {
+            case 'B': if (q_allel == 'C' || q_allel=='G' || q_allel == 'T') return true; else return false;
+            case 'D': if (q_allel == 'A' || q_allel=='G' || q_allel == 'T') return true;else return false;//=a, g, t
+            case 'H': if (q_allel == 'A' || q_allel=='C' || q_allel == 'T') return true;else return false;//=a, c, t
+            case 'K': if ( q_allel=='G' || q_allel == 'T') return true;else return false;//=g, t
+            case 'M': if (q_allel == 'C' || q_allel=='A' ) return true;else return false;//=a, c
+            case 'R': if (q_allel == 'A' || q_allel=='G' ) return true;else return false;//=a, g
+            case 'S': if (q_allel == 'C' || q_allel=='G' ) return true;else return false;//=c, g
+            case 'V': if (q_allel == 'C' || q_allel=='G' || q_allel == 'A') return true;else return false;//=a, c, g
+            case 'W': if (q_allel == 'A' || q_allel == 'T') return true;else return false;//=a, t
+            case 'Y': if (q_allel == 'C' ||  q_allel == 'T') return true;else return false;//=c, t
+            default: return false;
+
+
+        }
+    }
+    public static boolean       isValidDNASequence(String sequence)
     {
         char[] bases = sequence.toCharArray();
         for( int count = 0; count < bases.length; count++)
@@ -155,6 +173,7 @@ public class SequenceManipulation
                 case 'T': case 'U':   
                 case  'C':  case  'c' :   
                 case  'g' :    case  'G': 
+                case 'n':case 'N':
                 { break;  }
                 default:{ return false;}
             }
@@ -446,9 +465,10 @@ public class SequenceManipulation
     
     public static void main(String [] args)
     {
-        System.out.println( SequenceManipulation.isValidDNASequence("TacccgGGGTGA"));
-        System.out.println( SequenceManipulation.isValidDNASequence("AsTG"));
-        System.out.println( SequenceManipulation.isValidDNASequence("AUNG"));
-       
+        String s = "GTACAAGAAAGCTGGGTCCTACGGTTCCAGTTCGACATAAAGATGCAAGCGCGGTACCAGCAAACGTAGCGGTTTCGCATCAGGCTTATATTTATGCTTGATATGCTTCACATCATAATCGGTCAACTCGCCTAATTTCGGTAGCTCGGCCCCTAACTGATGCTGACAGAACGCAATCAGGGGCATGGGGCAGGGGTGTTGTACCTGTTTTTGTTGTTCTTGATACCATACTCTTGCGATGGGCTGCACTTTTACGGGCCTTTTAATTTTCAGCCGTGTCTTTTCTGGCAAACGCTGCACATCATTTATTTCCAAGCTAATCAGTTCCCTCCATTGCTCACGCGTAAATGGAGGAACAGCTCGGCCAGCATTCAGGCTTTTTTCTAGCTGTAGCAATATATCTTCGCGAGTCACATTTTTAATAATGTGTTTGTTGGCCCAGCCAAAGCGCACTGAACTGGGGTTGATTAATGGGGTAATGGTGCGGTAGGTATTCAGGGTTATCAGGCCATGTAAGTGTGTGTGAACAAATTCAAAGCGTTGTTCGCTGGGTAAGCCTGATTCCACAGTAATAATATGTTCTAACTCAGCTTTTAACTGATTGGTTTTTTTTATTATATCTTGGCATTCAATGAGTTCTTTGTCGGTCACGGAGAAGCAGAGCACGCCAGGTAAGCGTAGTGCTGCTTTACTGCTAACATGCTGCCCTTGGTGATGAAGAAACAATCGTTGGAAATGTTGTAACCCCAACTTTTTGGCGTGTTCACCCTCGGTTATATTGACGGTAATTTGCTCAATGGGTTGATGCTCAGTGCCTTTTTCTATTTCAGGGAGAGAAAATACTCTGGCAGCAATTAGAGGTAAATCGTCCAATTGCTGGTGGAGTTGATGAAGTGTTACTTCTAACTCAGCAAAGCGAGTATTCATTCGTTCTATCAAATCATACTTGTTCATATTCTTTTCTAAATAAGGCGGCTTAGTTACAACATACGGTGGAGCCTGCTTTTTTGTAC";
+        System.out.println(s);
+        System.out.println( SequenceManipulation.getCompliment(s)        );
+        System.out.println( SequenceManipulation.getComplimentCaseSencetive(s)        );
+         
     }
 }
