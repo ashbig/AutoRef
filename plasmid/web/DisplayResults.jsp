@@ -35,7 +35,7 @@
     <logic:equal name="display" value="symbol">
     <td class="tablebody">Clones found</td>
     </logic:equal>
-    <td class="tablebody">Clones not found</td>
+    <td class="tablebody">Search terms not found</td>
   </tr>  
   <tr>
     <logic:equal name="display" value="genbank">

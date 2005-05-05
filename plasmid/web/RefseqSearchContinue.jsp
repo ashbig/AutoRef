@@ -27,7 +27,7 @@
       <table width="100%" height="118" border="0" align="center">
         <tr> 
           <td height="10" colspan="6" class="tableheader"><strong>Select search 
-            criteria</strong></td>
+            type</strong></td>
         </tr>
         <tr> 
           <td width="3%" height="26">&nbsp;</td>
@@ -41,7 +41,7 @@
         </tr>
         <tr> 
           <td height="10" colspan="6" class="tableheader"><strong>Enter space 
-            or new line separated text to search (maximum of 100)</strong></td>
+            or new line separated term to search (maximum of 100)</strong></td>
         </tr>
         <tr> 
           <td height="100">&nbsp; </td>
