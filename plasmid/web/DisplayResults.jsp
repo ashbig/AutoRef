@@ -22,20 +22,20 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
-      <html:form action="RefseqSearch.do" enctype="multipart/form-data">
+      <html:form action="SetDisplay.do" enctype="multipart/form-data">
 <html:hidden property="pagesize"/>
 <html:hidden property="page"/>
 
 <table width="100%" border="0">
   <tr>
     <logic:equal name="display" value="genbank">
-    <td class="tablebody">Search terms found by direct match</td>
-    <td class="tablebody">Search terms found by indirect match</td>
+    <td class="tablebody">Clones found by direct match</td>
+    <td class="tablebody">Clones found by indirect match</td>
     </logic:equal>
     <logic:equal name="display" value="symbol">
-    <td class="tablebody">Search terms found</td>
+    <td class="tablebody">Clones found</td>
     </logic:equal>
-    <td class="tablebody">Search terms not found</td>
+    <td class="tablebody">Clones not found</td>
   </tr>  
   <tr>
     <logic:equal name="display" value="genbank">
@@ -54,31 +54,25 @@
 <table width="100%" border="0">
   <tr>
     <td class="tableheader">&nbsp;</td>
-    <td class="tableheader">Search Term</td>
-    <td class="tableheader">Clone ID</td>
-    <td class="tableheader">Clone Type</td>
-    <td class="tableheader">Gene ID</td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=searchterm&displayPage=<bean:write name="displayPage"/>">Search Term</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=cloneid&displayPage=<bean:write name="displayPage"/>">Clone ID</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=clonetype&displayPage=<bean:write name="displayPage"/>">Clone Type</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=geneid&displayPage=<bean:write name="displayPage"/>">Gene ID</a></td>
     <td class="tableheader">Gene Symbol</td>
     <td class="tableheader">Gene Name</td>
-    <td class="tableheader">Target Genbank</td>
-    <td class="tableheader">Insert Format</td>
-    <td class="tableheader">Vector</td>
-    <td class="tableheader">Selection Markers</td>
-    <td class="tableheader">Restriction</td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq&displayPage=<bean:write name="displayPage"/>">Reference Sequence</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat&displayPage=<bean:write name="displayPage"/>">Insert Format</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname&displayPage=<bean:write name="displayPage"/>">Vector</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection&displayPage=<bean:write name="displayPage"/>">Selection Markers</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=restriction&displayPage=<bean:write name="displayPage"/>">Use Restriction</a></td>
   </tr>
 
   <logic:equal name="displayPage" value="indirect">
   <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);%>
-  <logic:iterate name="found" id="element">
-  <bean:define name="element" id="term" property="key"/>
+  <logic:iterate name="found" id="clone">
   <tr class="tableinfo"> 
-    <td rowspan='<%=((Integer)((Map)request.getSession().getAttribute("foundCounts")).get(term)).intValue()%>'><%=++i%></td>
-    <td rowspan='<%=((Integer)((Map)request.getSession().getAttribute("foundCounts")).get(term)).intValue()%>'><bean:write name="element" property="key"/></td>
-    <% int n=1;%>
-    <logic:iterate name="element" property="value" id="clone">
-    <% if(n>1) %>
-    <tr class="tableinfo"> 
-    <% n++;%>
+    <td><%=++i%></td>
+    <td><bean:write name="clone" property="term"/></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:iterate name="clone" property="inserts" id="insert">
@@ -96,22 +90,15 @@
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
     </tr>
-    </logic:iterate>
   </logic:iterate>
   </logic:equal>
 
   <logic:equal name="displayPage" value="direct">
   <% int i=((Integer)request.getAttribute("pagesize")).intValue()*(((Integer)request.getAttribute("page")).intValue()-1);%>
-  <logic:iterate name="directFounds" id="element">
-  <bean:define name="element" id="term" property="key"/>
+  <logic:iterate name="directFounds" id="clone">
   <tr class="tableinfo"> 
-    <td rowspan='<%=((Integer)((Map)request.getSession().getAttribute("directFoundCount")).get(term)).intValue()%>'><%=++i%></td>
-    <td rowspan='<%=((Integer)((Map)request.getSession().getAttribute("directFoundCount")).get(term)).intValue()%>'><bean:write name="element" property="key"/></td>
-    <% int n=1;%>
-    <logic:iterate name="element" property="value" id="clone">
-    <% if(n>1) %>
-    <tr class="tableinfo"> 
-    <% n++;%>
+    <td><%=++i%></td>
+    <td><bean:write name="clone" property="term"/></td>
     <td><a target="_blank" href="GetCloneDetail.do?cloneid=<bean:write name="clone" property="cloneid"/>"><bean:write name="clone" property="name"/></a></td>
     <td><bean:write name="clone" property="type"/></td>
     <logic:iterate name="clone" property="inserts" id="insert">
@@ -129,7 +116,6 @@
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
     </tr>
-    </logic:iterate>
   </logic:iterate>
   </logic:equal>
 </table>

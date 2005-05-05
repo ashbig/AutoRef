@@ -54,38 +54,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
-  <tr> 
-    <td colspan="6" class="tableheader">Choose insert format</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td class="underbullet"><html:checkbox property="fusion"/>
-      Fusion </td>
-    <td class="underbullet"><html:checkbox property="closed"/>
-      Closed </td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td colspan="3">&nbsp;</td>
-  </tr>
-  <tr> 
-    <td colspan="6" class="tableheader">Choose selectable marker</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td><html:select property="marker">
-            <html:options name="markers"/>
-        </html:select></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
+
   <tr> 
     <td>&nbsp;</td>
     <td>&nbsp;</td>

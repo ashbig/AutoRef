@@ -37,6 +37,7 @@ public class RefseqSearchForm extends ActionForm {
     private int pagesize = 25;
     private int page = 1;
     private String displayPage;
+    private String sortby;
     
     public String getSpecies() {return species;}
     public String getRefseqType() {return refseqType;}
@@ -56,6 +57,7 @@ public class RefseqSearchForm extends ActionForm {
     public int getPagesize() {return pagesize;}
     public int getPage() {return page;}
     public String getDisplayPage() {return displayPage;}
+    public String getSortby() {return sortby;}
     
     public void setSpecies(String s) {this.species = s;}
     public void setRefseqType(String s) {this.refseqType = s;}
@@ -75,6 +77,7 @@ public class RefseqSearchForm extends ActionForm {
     public void setPagesize(int i) {this.pagesize = i;}
     public void setPage(int i) {this.page = i;}
     public void setDisplayPage(String s) {this.displayPage = s;}
+    public void setSortby(String s) {this.sortby = s;}
     
     /**
      * Reset all properties to their default values.

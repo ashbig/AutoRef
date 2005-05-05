@@ -54,7 +54,13 @@
 <logic:iterate id="clonename" name="clone" property="names">
   <tr>
     <td width="201" class="tablebody"><bean:write name="clonename" property="type"/></td>
+    <logic:present name="clonename" property="url">
+    <a target="_blank" href="<bean:write name="clonename" property="url"/>">
+    </logic:present>
     <td width="566" class="tableinfo"><bean:write name="clonename" property="value"/></td>
+    <logic:present name="clonename" property="url">
+    </a>
+    </logic:present>
   </tr>
 </logic:iterate>
 </table>
@@ -88,13 +94,48 @@
 </logic:iterate>
 </table>
 </logic:present>
+
+<logic:present name="clone" property="vector">
+<p>Vector Information:</p>
+<table width="700" border="0">
+  <tr> 
+    <td width="15%" class="tablebody">Vector Name:</td>
+    <td width="27%" class="mainbodytext"><a href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vector.vectorid"/>"><bean:write name="clone" property="vector.name"/></a></td>
+    <td width="18%" class="tablebody">Size (bp):</td>
+    <td width="40%" class="mainbodytext"><bean:write name="clone" property="vector.size"/></td>
+  </tr>
+  <tr> 
+    <td class="tablebody">Type:</td>
+    <td class="mainbodytext"><bean:write name="clone" property="vector.type"/></td>
+    <td class="tablebody">Form:</td>
+    <td class="mainbodytext"><bean:write name="clone" property="vector.form"/></td>
+  </tr>
+  <tr> 
+    <td class="tablebody">Description:</td>
+    <td colspan="3" class="mainbodytext"><bean:write name="clone" property="vector.description"/></td>
+  </tr>
+  <tr> 
+    <td class="tablebody">Properties:</td>
+    <td colspan="3" class="mainbodytext"><bean:write name="clone" property="vector.propertyString"/></td>
+  </tr>
+  <tr> 
+    <td class="tablebody">Comments:</td>
+    <td colspan="3" class="mainbodytext"><bean:write name="clone" property="vector.comments"/></td>
+  </tr>
+  <tr> 
+    <td class="tablebody">Map:</td>
+    <td colspan="3" class="mainbodytext"><bean:write name="clone" property="vector.mapfilename"/></td>
+  </tr>
+</table>
+</logic:present>
+
 <logic:present name="clone" property="hosts">
 <p>Host Information:</p>
 <table width="700" border="0">
   <tr>
-    <td width="11%" class="tablebody">Host Strain</td>
-    <td width="19%" class="tablebody">Is Used In Our Lab</td>
-    <td width="70%" class="tablebody">Description</td>
+    <td width="31%" class="tablebody">Host Strain</td>
+    <td width="19%" class="tablebody">Is Used In Distribution</td>
+    <td width="50%" class="tablebody">Description</td>
   </tr>
 <logic:iterate id="host" name="clone" property="hosts">
   <tr>
@@ -105,25 +146,7 @@
 </logic:iterate>
 </table>
 </logic:present>
-<logic:present name="clone" property="recommendedGrowthCondition">
-<p>Recommended Growth Condition:</p>
-<table width="700" border="0">
-  <tr>
-    <td width="15%" class="tablebody">Name</td>
-    <td width="12%" class="tablebody">Host Type</td>
-    <td width="20%" class="tablebody">Antibiotic Selection</td>
-    <td width="25%" class="tablebody">Growth Condition</td>
-    <td width="28%" class="tablebody">Comments</td>
-  </tr>
-  <tr>
-    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.name"/></td>
-    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.hosttype"/></td>
-    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.selection"/></td>
-    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.condition"/></td>
-    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.comments"/></td>
-  </tr>
-</table>
-</logic:present>
+
 <logic:present name="clone" property="selections">
 <p>Antibiotic Selections:</p>
 <table width="700" border="0">
@@ -139,6 +162,25 @@
 </logic:iterate>
 </table>
 </logic:present>
+
+<logic:present name="clone" property="recommendedGrowthCondition">
+<p>Recommended Growth Condition:</p>
+<table width="700" border="0">
+  <tr>
+    <td width="12%" class="tablebody">Host Type</td>
+    <td width="20%" class="tablebody">Selection Condition</td>
+    <td width="25%" class="tablebody">Growth Condition</td>
+    <td width="28%" class="tablebody">Comments</td>
+  </tr>
+  <tr>
+    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.hosttype"/></td>
+    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.selection"/></td>
+    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.condition"/></td>
+    <td class="tableinfo"><bean:write name="clone" property="recommendedGrowthCondition.comments"/></td>
+  </tr>
+</table>
+</logic:present>
+
 <logic:present name="clone" property="authors">
 <p>Authors:</p>
 <table width="700" border="0">

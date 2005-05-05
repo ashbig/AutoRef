@@ -28,7 +28,7 @@ import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.form.RefseqSearchForm;
 import plasmid.coreobject.RefseqNameType;
-import plasmid.util.StringConvertor;
+import plasmid.util.*;
 import plasmid.query.handler.*;
 
 /**
@@ -56,7 +56,6 @@ public class SetDisplayAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
@@ -71,9 +70,43 @@ public class SetDisplayAction extends Action {
         String plk = ((RefseqSearchForm)form).getPlk();
         String pby011 = ((RefseqSearchForm)form).getPby011();
         String pgex2tk = ((RefseqSearchForm)form).getPgex2tk();
+        
         int pagesize = ((RefseqSearchForm)form).getPagesize();
         int page = ((RefseqSearchForm)form).getPage();
         String displayPage = ((RefseqSearchForm)form).getDisplayPage();
+        String sortby = ((RefseqSearchForm)form).getSortby();
+        
+        List clones = null;
+        if(displayPage.equals("indirect")) {
+            clones = (List)request.getSession().getAttribute("found");
+        } else {
+            clones = (List)request.getSession().getAttribute("directFounds");
+        }
+        
+        if("searchterm".equals(sortby)) 
+            Collections.sort(clones, new CloneSearchTermComparator());
+        if("cloneid".equals(sortby)) 
+            Collections.sort(clones, new ClonenameComparator());
+        if("clonetype".equals(sortby))
+            Collections.sort(clones, new ClonetypeComparator());
+        if("geneid".equals(sortby))
+            Collections.sort(clones, new GeneidComparator());
+        if("targetseq".equals(sortby))
+            Collections.sort(clones, new TargetSeqidComparator());
+        if("insertformat".equals(sortby))
+            Collections.sort(clones, new InsertFormatComparator());
+        if("vectorname".equals(sortby))
+            Collections.sort(clones, new VectorNameComparator());
+        if("selection".equals(sortby))
+            Collections.sort(clones, new SelectionMarkerComparator());
+        if("restriction".equals(sortby))
+            Collections.sort(clones, new CloneRestrictionComparator());
+            
+        if(displayPage.equals("indirect")) {
+            request.getSession().setAttribute("found", clones);
+        } else {
+            request.getSession().setAttribute("directFounds", clones);
+        }
         
         request.setAttribute("pagesize", new Integer(pagesize));        
         request.setAttribute("page",  new Integer(page));

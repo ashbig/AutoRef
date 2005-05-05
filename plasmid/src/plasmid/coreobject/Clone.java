@@ -16,30 +16,31 @@ import plasmid.util.StringConvertor;
 public class Clone {
     public static final String AVAILABLE = "AVAILABLE";
     
-    private int cloneid;
-    private String name;
-    private String type;
-    private String verified;
-    private String vermethod;
-    private String domain;
-    private String subdomain;
-    private String restriction;
-    private String comments;
-    private int vectorid;
-    private String vectorname;
-    private String clonemap;
-    private String status;
+    protected int cloneid;
+    protected String name;
+    protected String type;
+    protected String verified;
+    protected String vermethod;
+    protected String domain;
+    protected String subdomain;
+    protected String restriction;
+    protected String comments;
+    protected int vectorid;
+    protected String vectorname;
+    protected String clonemap;
+    protected String status;
     
-    private List synonyms;
-    private List publications;
-    private List authors;
-    private List selections;
-    private List growths;
-    private List names;
-    private List inserts;
-    private List hosts;
+    protected List synonyms;
+    protected List publications;
+    protected List authors;
+    protected List selections;
+    protected List growths;
+    protected List names;
+    protected List inserts;
+    protected List hosts;
     
-    private GrowthCondition recommendedGrowthCondition;
+    protected GrowthCondition recommendedGrowthCondition;
+    protected CloneVector vector;
     
     /** Creates a new instance of Clone */
     public Clone() {
@@ -77,6 +78,7 @@ public class Clone {
     public String getClonemap() {return clonemap;}
     public String getStatus() {return status;}
     public GrowthCondition getRecommendedGrowthCondition() {return recommendedGrowthCondition;}
+    public CloneVector getVector() {return vector;}
     
     public void setCloneid(int id) {this.cloneid = id;}
     public void setName(String s) {this.name = s;}
@@ -92,6 +94,7 @@ public class Clone {
     public void setClonemap(String s) {this.clonemap = s;}
     public void setStatus(String s) {this.status = s;}
     public void setRecommendedGrowthCondition(GrowthCondition g) {this.recommendedGrowthCondition = g;}
+    public void setVector(CloneVector v) {this.vector = v;}
     
     public List getSynonyms() {return synonyms;}
     public void setSynonyms(List l) {this.synonyms = l;}

@@ -507,6 +507,9 @@ public class CloneManager extends TableManager {
                     " from host h where h.cloneid="+cloneid;
         String sql8 = "select cloneid,nametype,namevalue,nameurl"+
                     " from clonename where cloneid="+cloneid;
+        String sql9 = "select vectorid,name,description,form,type,sizeinbp,mapfilename,sequencefilename,comments"+
+                    " from vector where vectorid=?";
+        String sql10 = "select propertytype from vectorproperty where vectorid=?";
         
         Clone c = null;
         
@@ -622,6 +625,38 @@ public class CloneManager extends TableManager {
                 }
                 c.setNames(names);
                 DatabaseTransaction.closeResultSet(rs8);
+                
+                PreparedStatement stmt = conn.prepareStatement(sql9);
+                stmt.setInt(1, c.getVectorid());
+                ResultSet rs9 = DatabaseTransaction.executeQuery(stmt);
+                if(rs9.next()) {
+                    int vid = rs9.getInt(1);
+                    String vname = rs9.getString(2);
+                    String desc = rs9.getString(3);
+                    String form = rs9.getString(4);
+                    String type = rs9.getString(5);
+                    int size = rs9.getInt(6);
+                    String mapfile = rs9.getString(7);
+                    String seqfile = rs9.getString(8);
+                    String vcomments = rs9.getString(9);
+                    CloneVector v = new CloneVector(vid, vname,desc,form,type,size,mapfile,seqfile,vcomments);
+                    
+                    PreparedStatement stmt1 = conn.prepareStatement(sql10);
+                    stmt1.setInt(1, vid);
+                    ResultSet rs10 = DatabaseTransaction.executeQuery(stmt1);
+                    List properties = new ArrayList();
+                    while(rs10.next()) {
+                        String p = rs10.getString(1);
+                        properties.add(p);
+                    }
+                    v.setProperty(properties);
+                    c.setVector(v);
+                    
+                    DatabaseTransaction.closeResultSet(rs10);
+                    DatabaseTransaction.closeStatement(stmt1);
+                }
+                DatabaseTransaction.closeResultSet(rs9);
+                DatabaseTransaction.closeStatement(stmt);
             } else {
                 handleError(null, "No clone record found for cloneid: "+cloneid);
             }

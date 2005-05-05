@@ -61,7 +61,6 @@ public class RefseqSearchContinueAction extends Action {
         ActionErrors errors = new ActionErrors();
         
         request.getSession().removeAttribute("directFounds");
-        request.getSession().removeAttribute("directFoundCount");
         request.getSession().removeAttribute("numOfDirectFound");
         request.getSession().setAttribute("display", "symbol");
         
@@ -85,8 +84,7 @@ public class RefseqSearchContinueAction extends Action {
         
         int totalCount = 0;
         GeneQueryHandler handler = null;
-        Map directFounds = null;
-        Map directFoundCount = null;
+        List directFoundList = null;
         if(GeneQueryHandler.GENBANK.equals(searchType) || GeneQueryHandler.GI.equals(searchType)) {
             request.getSession().setAttribute("display", "genbank");        
             request.setAttribute("displayPage", "direct");
@@ -104,14 +102,12 @@ public class RefseqSearchContinueAction extends Action {
             
             try {
                 handler.doQuery();
-                directFounds = handler.getFound();
-                directFoundCount = handler.getFoundCounts();
+                directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
                 totalCount = totalCount+handler.getFoundCloneCount();
                 
-                request.getSession().setAttribute("directFounds", directFounds);
-                request.getSession().setAttribute("directFoundCount", directFoundCount);
-                request.getSession().setAttribute("numOfDirectFound", new Integer(handler.getNumOfFoundClones()));
+                request.getSession().setAttribute("directFounds", directFoundList);
+                request.getSession().setAttribute("numOfDirectFound", new Integer(handler.getFoundCloneCount()));
             } catch (Exception ex) {
                 if(Constants.DEBUG)
                     System.out.println(ex);
@@ -133,22 +129,17 @@ public class RefseqSearchContinueAction extends Action {
             handler.doQuery();
             DatabaseTransaction t = DatabaseTransaction.getInstance();
             DefTableManager m = new DefTableManager();
-            List markers = m.getVocabularies("marker", t);
-            markers.add("All");
             
-            Map founds = handler.getFound();
+            List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();
-            Map foundCounts = handler.getFoundCounts();
             totalCount = totalCount+handler.getFoundCloneCount();
-            int numOfFounds = handler.getNumOfFoundClones();
+            int numOfFounds = handler.getFoundCloneCount();
             int numOfNoFounds = handler.getNumOfNoFoundClones();
             request.setAttribute("totalCount", new Integer(totalCount));
             request.getSession().setAttribute("numOfFound", new Integer(numOfFounds));
             request.getSession().setAttribute("numOfNoFounds", new Integer(numOfNoFounds));
-            request.getSession().setAttribute("foundCounts", foundCounts);
             request.getSession().setAttribute("found", founds);
             request.getSession().setAttribute("nofound", nofounds);
-            request.setAttribute("markers", markers);
             return (mapping.findForward("success"));
         } catch (Exception ex) {
             if(Constants.DEBUG)

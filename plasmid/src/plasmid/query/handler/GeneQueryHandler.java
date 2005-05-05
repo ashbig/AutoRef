@@ -13,6 +13,7 @@ import javax.sql.*;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.coreobject.*;
+import plasmid.query.coreobject.CloneInfo;
 
 /**
  *
@@ -126,5 +127,26 @@ public abstract class GeneQueryHandler {
         
         found = newFound;
         DatabaseTransaction.closeConnection(conn);
+    }
+    
+    public List convertFoundToCloneinfo() {
+        if(found == null)
+            return null;
+        
+        List cloneinfos = new ArrayList();
+        
+        Set keys = found.keySet();
+        Iterator iter = keys.iterator();
+        while(iter.hasNext()) {
+            String term = (String)iter.next();
+            List clones = (List)found.get(term);
+            for(int i=0; i<clones.size(); i++) {
+                Clone c = (Clone)clones.get(i);
+                CloneInfo ci = new CloneInfo(term, c);
+                cloneinfos.add(ci);
+            }
+        }
+        
+        return cloneinfos;
     }
 }
