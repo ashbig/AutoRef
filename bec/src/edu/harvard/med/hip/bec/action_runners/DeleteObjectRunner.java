@@ -508,7 +508,7 @@ sql = "update  result set resultvalueid = null, resulttype = "+Result.RESULT_TYP
             in.write(title);
             for (int count =0; count < sql_statements.size(); count++)
             {
-                  in.write( (String) sql_statements.get(count)+";\n");
+                  in.write( (String) sql_statements.get(count)+ Constants.LINE_SEPARATOR);
             }
             in.flush();
             in.close();
