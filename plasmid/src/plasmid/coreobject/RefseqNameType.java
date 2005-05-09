@@ -18,6 +18,9 @@ public class RefseqNameType {
     public static String GI = "GI";
     public static String GENEID = "Gene ID";
     public static String SYMBOL = "Gene Symbol";
+    public static String PA = "PA Number";
+    public static String PRO_GENBANK = "Protein GenBank Accession";
+    public static String PRO_GI = "Protein GI";
     
     private String species;
     private String refseqtype;

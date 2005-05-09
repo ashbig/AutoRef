@@ -11,17 +11,17 @@ import java.util.*;
 
 import plasmid.coreobject.*;
 import plasmid.database.*;
+import plasmid.Constants;
 
 /**
  *
  * @author  DZuo
  */
 public class AuthorManager extends TableManager {
-    private Connection conn;
     
     /** Creates a new instance of AuthorManager */
     public AuthorManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
     
     public boolean insertAuthors(List authors) {
@@ -55,5 +55,26 @@ public class AuthorManager extends TableManager {
             return false;
         }
         return true;
-    }    
+    }
+    
+    public int getAuthorid(String name) {
+        String sql = "select authorid from authorinfo where authorname=?";
+        int id = 0;
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                id = rs.getInt(1);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+        
+        return id;
+    }
 }

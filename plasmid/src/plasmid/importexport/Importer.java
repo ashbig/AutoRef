@@ -17,7 +17,7 @@ import plasmid.database.*;
  * @author  DZuo
  */
 public class Importer {
-    public static final String filepath = "G:\\plasmid\\";
+    public static final String filepath = "G:\\plasmid\\HIP_PA\\";
     
     private List tables;
     private String error;

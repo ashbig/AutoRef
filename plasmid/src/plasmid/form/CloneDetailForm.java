@@ -18,6 +18,7 @@ import org.apache.struts.action.ActionMapping;
  */
 public class CloneDetailForm extends ActionForm {
     private int cloneid;
+    private String species;
     
     /** Creates a new instance of CloneDetailForm */
     public CloneDetailForm() {
@@ -25,4 +26,6 @@ public class CloneDetailForm extends ActionForm {
     
     public int getCloneid() {return cloneid;}
     public void setCloneid(int id) {this.cloneid = id;}
+    public String getSpecies() {return species;}
+    public void setSpecies(String s) {this.species = s;}
 }

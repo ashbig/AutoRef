@@ -18,11 +18,9 @@ import plasmid.database.*;
  */
 public class PublicationManager extends TableManager {
     
-    private Connection conn;
-    
     /** Creates a new instance of PublicationManager */
     public PublicationManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
     
     public boolean insertPublications(List publications) {

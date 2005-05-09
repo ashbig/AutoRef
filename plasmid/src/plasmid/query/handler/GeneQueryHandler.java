@@ -26,6 +26,9 @@ public abstract class GeneQueryHandler {
     public static final String SYMBOL = RefseqNameType.SYMBOL;
     public static final String DIRECT_GENBANK = "Direct Genbank";
     public static final String DIRECT_GI = "Direct GI";
+    public static final String PA = RefseqNameType.PA;
+    public static final String PRO_GENBANK = RefseqNameType.PRO_GENBANK;
+    public static final String PRO_GI = RefseqNameType.PRO_GI;
     
     protected Map found;
     protected List nofound;

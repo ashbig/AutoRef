@@ -73,7 +73,18 @@ public class CloneImporter {
                     c.setComments(columnInfo);
                 }
                 if("vectorname".equalsIgnoreCase(columnName)) {
-                    c.setVectorid(((Integer)vectoridmap.get(columnInfo)).intValue());
+                    int vectorid = 0;
+                    if(vectoridmap == null) {
+                        VectorManager man = new VectorManager(manager.getConnection());
+                        vectorid = man.getVectorid(columnInfo);
+                    } else {
+                        vectorid = ((Integer)vectoridmap.get(columnInfo)).intValue();
+                    }
+                    
+                    if(vectorid <= 0) {
+                        throw new Exception("Cannot get vectorid with vectorname: "+columnInfo);
+                    }
+                    c.setVectorid(vectorid);
                     c.setVectorname(columnInfo);
                 }
                 if("clonemapfilename".equalsIgnoreCase(columnName)) {
@@ -106,7 +117,18 @@ public class CloneImporter {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
                 if("growthname".equalsIgnoreCase(columnName)) {
-                    c.setGrowthid(((Integer)growthidmap.get(columnInfo)).intValue());
+                    int growthid = 0;
+                    if(growthidmap == null) {
+                        GrowthConditionManager man = new GrowthConditionManager(manager.getConnection());
+                        growthid = man.getGrowthid(columnInfo);
+                    } else {
+                        growthid = ((Integer)growthidmap.get(columnInfo)).intValue();
+                    }
+                    
+                    if(growthid <= 0) {
+                        throw new Exception("Cannot get growthid from growthname: "+columnInfo);
+                    }
+                    c.setGrowthid(growthid);
                 }
                 if("isrecommended".equalsIgnoreCase(columnName)) {
                     c.setIsrecommended(columnInfo);
@@ -252,7 +274,18 @@ public class CloneImporter {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
                 if("authorname".equalsIgnoreCase(columnName)) {
-                    c.setAuthorid(((Integer)authoridmap.get(columnInfo)).intValue());
+                    int authorid = 0;
+                    if(authoridmap == null) {
+                        AuthorManager man = new AuthorManager(manager.getConnection());
+                        authorid = man.getAuthorid(columnInfo);
+                    } else {
+                        authorid = ((Integer)authoridmap.get(columnInfo)).intValue();
+                    }
+                    
+                    if(authorid <= 0) {
+                        throw new Exception("Cannot get authorid from authorname: "+columnInfo);
+                    }
+                    c.setAuthorid(authorid);
                 }
                 if("authortype".equalsIgnoreCase(columnName)) {
                     c.setAuthortype(columnInfo);
@@ -280,7 +313,17 @@ public class CloneImporter {
                     c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
                 }
                 if("publicationid".equalsIgnoreCase(columnName)) {
-                    c.setPublicationid(((Integer)pubidmap.get(columnInfo)).intValue());
+                    int pubid = 0;
+                    if(pubidmap == null) {
+                        pubid = Integer.parseInt(columnInfo);
+                    } else {
+                        pubid = ((Integer)pubidmap.get(columnInfo)).intValue();
+                    }
+                    
+                    if(pubid <= 0) {
+                        throw new Exception("Cannot get publicationid from publication: "+columnInfo);
+                    }
+                    c.setPublicationid(pubid);
                 }
             }
             pubs.add(c);

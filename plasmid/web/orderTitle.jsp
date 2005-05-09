@@ -13,7 +13,7 @@
     <td width="47%" rowspan="2" align="left" valign="middle" class="title"> <p><strong><font color="#333333" size="5">Welcome 
         To PlasmID Database</font></strong></p></td>
     <td width="35%" height="54" align="right" valign="bottom" class="countrytext"> 
-      <p><img src="shoppingcart2.gif" width="105" height="18"></p></td>
+      <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"></a></p></td>
   </tr>
   <tr> 
     <td height="26" valign="baseline" class="countrytext"><a href="" class="countrytext">Sign 

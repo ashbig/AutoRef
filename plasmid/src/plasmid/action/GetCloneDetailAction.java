@@ -59,6 +59,7 @@ public class GetCloneDetailAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         int cloneid = ((CloneDetailForm)form).getCloneid();
+        String species = ((CloneDetailForm)form).getSpecies();
         DatabaseTransaction dt = null;
         Connection conn = null;
         try {
@@ -72,6 +73,7 @@ public class GetCloneDetailAction extends Action {
                 return (mapping.findForward("error")); 
             }
             request.setAttribute("clone", clone);
+            request.setAttribute("species", species);
             return mapping.findForward("success");
         } catch (Throwable th) {
             if(Constants.DEBUG)

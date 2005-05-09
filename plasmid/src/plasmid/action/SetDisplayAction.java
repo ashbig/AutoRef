@@ -74,7 +74,44 @@ public class SetDisplayAction extends Action {
         int pagesize = ((RefseqSearchForm)form).getPagesize();
         int page = ((RefseqSearchForm)form).getPage();
         String displayPage = ((RefseqSearchForm)form).getDisplayPage();
-        String sortby = ((RefseqSearchForm)form).getSortby();
+        String species = ((RefseqSearchForm)form).getSpecies();
+        String refseqType = ((RefseqSearchForm)form).getRefseqType();
+        
+        request.setAttribute("pagesize", new Integer(pagesize));
+        request.setAttribute("page",  new Integer(page));
+        request.setAttribute("displayPage", displayPage);
+        request.setAttribute("species", species);
+        request.setAttribute("refseqType", refseqType);
+        
+        String button = ((RefseqSearchForm)form).getButton();
+        
+        if(button != null && button.equals("Add To Cart")) {
+            String cloneid = ((RefseqSearchForm)form).getCloneid();
+            System.out.println("Add to cart: "+cloneid);
+            if(Integer.parseInt(cloneid) <= 0) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database.error","Invalid clone ID."));
+                return (mapping.findForward("error"));
+            }
+            
+            Map shoppingcart = (Map)request.getSession().getAttribute(Constants.CART);
+            if(shoppingcart == null) {
+                shoppingcart = new HashMap();
+                shoppingcart.put(cloneid, "1");
+            } else {
+                String count = (String)shoppingcart.get(cloneid);
+                if(count == null) {
+                    shoppingcart.put(cloneid, "1");
+                } else {
+                    int n = Integer.parseInt(count) + 1;
+                    shoppingcart.put(cloneid, (new Integer(n)).toString());
+                }
+            }
+            
+            request.getSession().setAttribute(Constants.CART, shoppingcart);
+            
+            return (mapping.findForward("success"));
+        }
         
         List clones = null;
         if(displayPage.equals("indirect")) {
@@ -83,9 +120,10 @@ public class SetDisplayAction extends Action {
             clones = (List)request.getSession().getAttribute("directFounds");
         }
         
-        if("searchterm".equals(sortby)) 
+        String sortby = ((RefseqSearchForm)form).getSortby();
+        if("searchterm".equals(sortby))
             Collections.sort(clones, new CloneSearchTermComparator());
-        if("cloneid".equals(sortby)) 
+        if("cloneid".equals(sortby))
             Collections.sort(clones, new ClonenameComparator());
         if("clonetype".equals(sortby))
             Collections.sort(clones, new ClonetypeComparator());
@@ -101,17 +139,14 @@ public class SetDisplayAction extends Action {
             Collections.sort(clones, new SelectionMarkerComparator());
         if("restriction".equals(sortby))
             Collections.sort(clones, new CloneRestrictionComparator());
-            
+        
         if(displayPage.equals("indirect")) {
             request.getSession().setAttribute("found", clones);
         } else {
             request.getSession().setAttribute("directFounds", clones);
         }
         
-        request.setAttribute("pagesize", new Integer(pagesize));        
-        request.setAttribute("page",  new Integer(page));
-        request.setAttribute("displayPage", displayPage);
-        return (mapping.findForward("success"));        
+        return (mapping.findForward("success"));
     }
 }
 

@@ -18,11 +18,10 @@ import plasmid.Constants;
  * @author  DZuo
  */
 public class RefseqManager extends TableManager {
-    private Connection conn;
     
     /** Creates a new instance of RefseqManager */
     public RefseqManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
     
     public boolean insertRefseqs(List seqs) {

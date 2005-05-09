@@ -17,11 +17,10 @@ import plasmid.database.*;
  * @author  DZuo
  */
 public class CloneManager extends TableManager {
-    private Connection conn;
     
     /** Creates a new instance of CloneManager */
-    public CloneManager(Connection conn) {
-        this.conn = conn;
+    public CloneManager(Connection conn) {        
+       super(conn);
     }
     
     public boolean insertClones(List clones) {
@@ -278,6 +277,14 @@ public class CloneManager extends TableManager {
         return true;
     }
     
+    /**
+     * Query the database to get a list of Clone objects for given list of cloneid.
+     * @param cloneids A list of cloneid as String.
+     * @param isInsert Insert will be queried if it is true.
+     * @param isSelection Selection will be queried if it is true.
+     * @return A map with cloneid as the key and Clone object as the value. Return null if
+     *  error occured.
+     */
     public Map queryClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection) {
         Map clones = new HashMap();
         if(cloneids == null || cloneids.size() == 0)

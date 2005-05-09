@@ -55,11 +55,15 @@
   <tr>
     <td width="201" class="tablebody"><bean:write name="clonename" property="type"/></td>
     <logic:present name="clonename" property="url">
+    <logic:notEqual name="clonename" property="url" value="null">
     <a target="_blank" href="<bean:write name="clonename" property="url"/>">
+    </logic:notEqual>
     </logic:present>
     <td width="566" class="tableinfo"><bean:write name="clonename" property="value"/></td>
     <logic:present name="clonename" property="url">
+    <logic:notEqual name="clonename" property="url" value="null">
     </a>
+    </logic:notEqual>
     </logic:present>
   </tr>
 </logic:iterate>
@@ -74,7 +78,15 @@
     <td width="10%" class="tablebody">Species</td>
     <td width="6%" class="tablebody">Format</td>
     <td width="13%" class="tablebody">Tissue Source</td>
+    <logic:equal name="species" value="Homo sapiens">
     <td width="7%" class="tablebody">Gene ID</td>
+    </logic:equal>
+    <logic:equal name="species" value="Saccharomyces cerevisiae">
+    <td width="7%" class="tablebody">SGD</td>
+    </logic:equal>
+    <logic:equal name="species" value="Pseudomonas aeruginosa">
+    <td width="7%" class="tablebody">PA Number</td>
+    </logic:equal>
     <td width="8%" class="tablebody">Gene Symbol</td>
     <td width="29%" class="tablebody">Gene Name</td>
     <td width="14%" class="tablebody">Target Genbank</td>
@@ -86,7 +98,15 @@
     <td class="tableinfo"><bean:write name="insert" property="species"/></td>
     <td class="tableinfo"><bean:write name="insert" property="format"/></td>
     <td class="tableinfo"><bean:write name="insert" property="source"/></td>
+    <logic:equal name="species" value="Homo sapiens">
     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
+    <logic:equal name="species" value="Pseudomonas aeruginosa">
+    <td class="tableinfo"><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
+    <logic:equal name="species" value="Saccharomyces cerevisiae">
+    <td class="tableinfo"><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
+    </logic:equal>
     <td class="tableinfo"><bean:write name="insert" property="name"/></td>
     <td class="tableinfo"><bean:write name="insert" property="description"/></td>
     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>

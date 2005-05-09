@@ -56,7 +56,6 @@ public class InsertImporter {
         for(int n=0; n<contents.size(); n++) {
             DnaInsert c = new DnaInsert();
             c.setInsertid(id);
-            
             Dnasequence seq = new Dnasequence();
             seq.setSequenceid(insertseqid);
             

@@ -22,6 +22,9 @@ public class DefTableManager extends TableManager {
     public DefTableManager() {
     }
     
+    /**
+     * Return the next ID number.
+     */
     public int getMaxNumber(String table, String column, DatabaseTransaction dt) {
         String sql = "select max("+column+") from "+table;
                 
@@ -36,12 +39,9 @@ public class DefTableManager extends TableManager {
             handleError(ex, "Error occured while querying "+table);
         } finally {
             dt.closeResultSet(rs);
-        }
+        }        
         
-        if(id == 0 )
-            id = 1;
-        
-        return id;
+        return ++id;
     }
     
     public List getVocabularies(String table, DatabaseTransaction dt) {

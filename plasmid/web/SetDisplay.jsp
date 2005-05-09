@@ -23,6 +23,8 @@
 	<jsp:include page="searchByRefseqTitle.jsp" />
       <html:form action="SetDisplay.do" enctype="multipart/form-data">
 <input type="hidden" name="displayPage" value="<bean:write name="displayPage"/>">
+        <html:hidden property="species"/>
+        <html:hidden property="refseqType"/>
 
 <table width="100%" height="58" border="0" align="center">
 <tr>

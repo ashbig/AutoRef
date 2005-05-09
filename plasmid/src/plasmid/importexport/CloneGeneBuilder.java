@@ -298,7 +298,7 @@ public class CloneGeneBuilder {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-  /**          System.out.println("Building DNAINSERT with genes");
+            System.out.println("Building DNAINSERT with genes");
             builder.buildDnainsertWithGene(conn);
             builder.buildDnainsertWithRefseqSymbol(conn);
             System.out.println("Building DNAINSERT with reference sequences");
@@ -308,7 +308,7 @@ public class CloneGeneBuilder {
             System.out.println("Building CLONELOCUS");
             builder.buildCloneLocus(conn);
             System.out.println("Building CLONESYMBOL");
-            builder.buildCloneSymbol(conn);*/
+            builder.buildCloneSymbol(conn);
             System.out.println("Building CLONEGI");
             builder.buildCloneGi(conn);
             

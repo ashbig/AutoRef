@@ -18,11 +18,10 @@ import plasmid.Constants;
  * @author  DZuo
  */
 public class VectorManager extends TableManager {
-    private Connection conn;
     
     /** Creates a new instance of VectorManager */
     public VectorManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
     
     public boolean insertVector(CloneVector vector) {
@@ -143,8 +142,8 @@ public class VectorManager extends TableManager {
             return true;
         
         String sql2 = "insert into vectorfeature"+
-                    " (name, description, startpos, endpos, vectorid, maptype, featureid)"+
-                    " values(?,?,?,?,?,?,?)";
+        " (name, description, startpos, endpos, vectorid, maptype, featureid)"+
+        " values(?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
             
@@ -186,7 +185,7 @@ public class VectorManager extends TableManager {
                 int parentvectorid = vp.getParentvectorid();
                 if(parentvectorid != 0)
                     stmt.setInt(3, vp.getParentvectorid());
-                else 
+                else
                     stmt.setString(3, null);
                 stmt.setString(4, vp.getComments());
                 DatabaseTransaction.executeUpdate(stmt);
@@ -198,7 +197,7 @@ public class VectorManager extends TableManager {
         }
         return true;
     }
-        
+    
     public boolean insertVectorAuthors(List authors) {
         if(authors == null)
             return true;
@@ -225,7 +224,7 @@ public class VectorManager extends TableManager {
         }
         return true;
     }
-        
+    
     public boolean insertVectorPublications(List publications) {
         if(publications == null)
             return true;
@@ -249,25 +248,25 @@ public class VectorManager extends TableManager {
             return false;
         }
         return true;
-    }      
+    }
     
     public CloneVector queryCloneVector(int vectorid) {
         CloneVector v = null;
         
         String sql="select name,description,form,type,sizeinbp,mapfilename,sequencefilename,comments"+
-                  " from vector where vectorid="+vectorid;
+        " from vector where vectorid="+vectorid;
         String sql2="select featureid,maptype,name,description,startpos,endpos"+
-                    " from vectorfeature where vectorid="+vectorid+" order by maptype";
+        " from vectorfeature where vectorid="+vectorid+" order by maptype";
         String sql3 = "select propertytype from vectorproperty where vectorid="+vectorid;
         String sql4 = "select vsynonym from vectorsynonym where vectorid="+vectorid;
         String sql5 = "select v.authorid,v.authortype,v.creationdate,a.authorname"+
-                    " from vectorauthor v, authorinfo a"+
-                    " where v.authorid=a.authorid and v.vectorid="+vectorid;
+        " from vectorauthor v, authorinfo a"+
+        " where v.authorid=a.authorid and v.vectorid="+vectorid;
         String sql6 = "select p.publicationid,p.title,p.pmid"+
-                    " from publication p, vectorpublication v"+
-                    " where p.publicationid=v.publicationid and v.vectorid="+vectorid;
+        " from publication p, vectorpublication v"+
+        " where p.publicationid=v.publicationid and v.vectorid="+vectorid;
         String sql7 = "select parentvectorname,parentvectorid,comments"+
-                    " from vectorparent where vectorid="+vectorid;
+        " from vectorparent where vectorid="+vectorid;
         
         try {
             DatabaseTransaction t = DatabaseTransaction.getInstance();
@@ -283,7 +282,7 @@ public class VectorManager extends TableManager {
                 String seqfilename = rs.getString(7);
                 String comments = rs.getString(8);
                 v = new CloneVector(vectorid, name, description, form, type, size, mapfilename, seqfilename, comments);
-           
+                
                 ResultSet rs2 = t.executeQuery(sql2);
                 List features = new ArrayList();
                 while(rs2.next()) {
@@ -427,5 +426,26 @@ public class VectorManager extends TableManager {
             DatabaseTransaction.closeConnection(conn);
             System.exit(0);
         }
+    }
+    
+    public int getVectorid(String name) {
+        String sql = "select vectorid from vector where name=?";
+        int id = 0;
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                id = rs.getInt(1);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+        
+        return id;
     }
 }

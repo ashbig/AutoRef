@@ -11,26 +11,26 @@ import java.util.*;
 
 import plasmid.coreobject.*;
 import plasmid.database.*;
+import plasmid.Constants;
 
 /**
  *
  * @author  DZuo
  */
 public class GrowthConditionManager extends TableManager {
-    private Connection conn;
     
     /** Creates a new instance of GrowthConditionManager */
     public GrowthConditionManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
-        
+    
     public boolean insertGrowthConditions(List conditions) {
         if(conditions == null)
             return true;
         
         String sql = "insert into growthcondition"+
-                    " (growthid,name,hosttype,antibioticselection,growthcondition,comments)"+
-                    " values(?,?,?,?,?,?)";
+        " (growthid,name,hosttype,antibioticselection,growthcondition,comments)"+
+        " values(?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             
@@ -51,5 +51,26 @@ public class GrowthConditionManager extends TableManager {
             return false;
         }
         return true;
-    }    
+    }
+    
+    public int getGrowthid(String name) {
+        String sql = "select growthid from growthcondition where name=?";
+        int id = 0;
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                id = rs.getInt(1);
+            }
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        }
+        
+        return id;
+    }
 }

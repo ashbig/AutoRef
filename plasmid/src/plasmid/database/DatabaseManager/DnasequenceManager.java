@@ -18,14 +18,13 @@ import plasmid.Constants;
  * @author  DZuo
  */
 public class DnasequenceManager extends TableManager {
-    private Connection conn;
     
     /** Creates a new instance of DnasequenceManager */
     public DnasequenceManager() {
     }
     
     public DnasequenceManager(Connection conn) {
-        this.conn = conn;
+       super(conn);
     }
     
     public boolean insertDnasequences(List sequences) {

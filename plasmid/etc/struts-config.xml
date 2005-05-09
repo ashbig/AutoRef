@@ -31,6 +31,9 @@
 
     <form-bean      name="vectorDetailForm"
                     type="plasmid.form.VectorDetailForm"/>
+
+    <form-bean      name="viewCartForm"
+                    type="plasmid.form.ViewCartForm"/>
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -117,7 +120,16 @@
               input="/GetVectorDetailAction">
       <forward  name="success"   path="/ViewVectorDetail.jsp"/>
     </action>
-     
+    
+    <action    path="/ViewCart"
+               type="plasmid.action.ViewCartAction"
+               name="viewCartForm"
+              scope="request"
+              input="/ViewCart.do">
+      <forward  name="success"   path="/DisplayCart.jsp"/>
+      <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
+    </action>
+
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->
