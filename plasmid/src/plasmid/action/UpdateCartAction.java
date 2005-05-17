@@ -1,7 +1,7 @@
 /*
- * ViewCartAction.java
+ * UpdateCartAction.java
  *
- * Created on May 6, 2005, 12:33 PM
+ * Created on May 10, 2005, 12:43 PM
  */
 
 package plasmid.action;
@@ -34,7 +34,7 @@ import plasmid.form.ViewCartForm;
  *
  * @author  DZuo
  */
-public class ViewCartAction extends Action {
+public class UpdateCartAction extends Action {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -59,12 +59,15 @@ public class ViewCartAction extends Action {
         ActionErrors errors = new ActionErrors();
         
         Map shoppingcart = (Map)request.getSession().getAttribute(Constants.CART);
-        if(shoppingcart == null || shoppingcart.size() == 0) {
+        List cloneCountList = ((ViewCartForm)form).getCloneCountList();
+        
+        if(shoppingcart == null || shoppingcart.size() == 0 || cloneCountList.size() == 0) {
             shoppingcart = new HashMap();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             return (mapping.findForward("success_empty"));
         } else {
-            Set clones = shoppingcart.keySet();
+            Map shoppingcartcopy = new HashMap(shoppingcart);
+            Set clones = shoppingcartcopy.keySet();
             List c = new ArrayList(clones);
             
             DatabaseTransaction t = null;
@@ -77,19 +80,31 @@ public class ViewCartAction extends Action {
                 List newShoppingcart = new ArrayList();
                 
                 Iterator iter = clones.iterator();
+                int i=0;
                 while(iter.hasNext()) {
                     String cloneid =(String)iter.next();
-                    Clone clone = (Clone)found.get(cloneid);
-                    String quantity = (String)shoppingcart.get(cloneid);
-                    CloneInfo cloneInfo = new CloneInfo(clone);
-                    cloneInfo.setQuantity(Integer.parseInt(quantity));
-                    
-                    newShoppingcart.add(cloneInfo);
+                    String count = (String)cloneCountList.get(i);
+                    if(Integer.parseInt(count) == 0) {
+                        shoppingcart.remove(cloneid);
+                    } else {
+                        Clone clone = (Clone)found.get(cloneid);
+                        CloneInfo cloneInfo = new CloneInfo(clone);
+                        cloneInfo.setQuantity(Integer.parseInt(count));
+                        shoppingcart.put(cloneid, count);
+                        newShoppingcart.add(cloneInfo);
+                    }
+                    i++;
                 }
                 
                 ((ViewCartForm)form).setCloneCountList(newShoppingcart);
-                
                 request.setAttribute("cart", newShoppingcart);
+                request.getSession().setAttribute(Constants.CART, shoppingcart);
+                
+                String ret = ((ViewCartForm)form).getSubmitButton();
+                if("Check Out".equals(ret)) {
+                    return (mapping.findForward("success_checkout"));
+                }
+                
                 return (mapping.findForward("success"));
             } catch (Exception ex) {
                 if(Constants.DEBUG)
@@ -104,4 +119,3 @@ public class ViewCartAction extends Action {
         }
     }
 }
-

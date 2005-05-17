@@ -18,6 +18,7 @@ import plasmid.database.*;
  */
 public class Importer {
     public static final String filepath = "G:\\plasmid\\HIP_PA\\";
+    //public static final String filepath = "G:\\plasmid\\HIP_Human\\";
     
     private List tables;
     private String error;
@@ -150,16 +151,18 @@ public class Importer {
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEINSERT)) {
                     System.out.println("Importing CLONEINSERT.");
-                    iimp.importCloneInsert(table, cimp.getIdmap(), rimp.getMaxseqid());
+                    iimp.importCloneInsert(table, cimp.getIdmap(), rimp.getIdmap(), rimp.getMaxseqid());
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.REFSEQ)) {
                     System.out.println("Importing REFSEQ.");
                     rimp.importRefseq(table, iimp.getMaxseqid());
                 }
+                /**
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.INSERTREFSEQ)) {
                     System.out.println("Importing INSERTREFSEQ.");
                     rimp.importInsertRefseq(table, iimp.getIdmap());
                 }
+                 **/
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.REFSEQNAMETYPE)) {
                     System.out.println("Importing REFSEQNAMETYPE.");
                     rimp.importRefseqNameType(table);
@@ -175,6 +178,18 @@ public class Importer {
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEPUBLICATION)) {
                     System.out.println("Importing CLONEPUBLICATION.");
                     cimp.importClonePublication(table, pimp.getIdmap());
+                }
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONEPROPERTY)) {
+                    System.out.println("Importing CLONEPROPERTY.");
+                    cimp.importCloneProperty(table);
+                }
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.CLONECOLLECTION)) {
+                    System.out.println("Importing CLONECOLLECTION.");
+                    cimp.importCloneCollection(table);
+                }
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.INSERTPROPERTY)) {
+                    System.out.println("Importing INSERTPROPERTY.");
+                    iimp.importInsertProperty(table);
                 }
             } catch (Exception ex) {
                 setError("Error occured during import.");

@@ -26,10 +26,9 @@ public class CloneGeneBuilder {
     public void buildDnainsertWithGene(Connection conn) throws Exception {
         String sqlUpdate = "update dnainsert set geneid=?,name=?,description=? where insertid=?";
         String sql = "select distinct d.insertid, g.geneid, g.genesymbol, g.genename"+
-        " from dnainsert d, insertrefseq i, referencesequence r, refseqname n,"+
+        " from dnainsert d, referencesequence r, refseqname n,"+
         " sequencerecord s, gene g"+
-        " where d.insertid=i.insertid"+
-        " and i.refseqid=r.refseqid"+
+        " where d.refseqid=r.refseqid"+
         " and r.refseqid=n.refid"+
         " and n.nametype='"+RefseqNameType.GENBANK+"'"+
         " and n.namevalue=s.accession"+
@@ -61,9 +60,8 @@ public class CloneGeneBuilder {
     public void buildDnainsertWithRefseqSymbol(Connection conn) throws Exception {
         String sql = "select insertid from dnainsert where geneid is null";
         String sql2 = "select r.name"+
-        " from dnainsert d, insertrefseq i, referencesequence r"+
-        " where d.insertid=i.insertid"+
-        " and i.refseqid=r.refseqid"+
+        " from dnainsert d, referencesequence r"+
+        " where d.refseqid=r.refseqid"+
         " and d.insertid=?";
         String sql3 = "select g.geneid, g.genesymbol, g.genename"+
         " from gene g, genesymbol s"+
@@ -115,9 +113,8 @@ public class CloneGeneBuilder {
     public void buildDnainsertWithRefseq(Connection conn) throws Exception {
         String sql = "select insertid from dnainsert where geneid is null";
         String sql2 = "select r.name, r.description"+
-        " from dnainsert d, insertrefseq i, referencesequence r"+
-        " where d.insertid=i.insertid"+
-        " and i.refseqid=r.refseqid"+
+        " from dnainsert d, referencesequence r"+
+        " where d.refseqid=r.refseqid"+
         " and d.insertid=?";
         String sql3 = "update dnainsert set name=?,description=? where insertid=?";
         
@@ -165,10 +162,9 @@ public class CloneGeneBuilder {
         DatabaseTransaction.executeUpdate(sql, conn);
         
         sql = "select c.cloneid, n.namevalue"+
-        " from clone c, dnainsert d, insertrefseq i, referencesequence r, refseqname n"+
+        " from clone c, dnainsert d, referencesequence r, refseqname n"+
         " where c.cloneid=d.cloneid"+
-        " and d.insertid=i.insertid"+
-        " and i.refseqid=r.refseqid"+
+        " and d.refseqid=r.refseqid"+
         " and r.refseqid=n.refid"+
         " and n.nametype='"+RefseqNameType.GENBANK+"'";
         String sql2 = "select * from clonegenbank where cloneid=? and accession=?";
@@ -207,10 +203,9 @@ public class CloneGeneBuilder {
         DatabaseTransaction.executeUpdate(sql, conn);
         
         sql = "select c.cloneid, n.namevalue"+
-        " from clone c, dnainsert d, insertrefseq i, referencesequence r, refseqname n"+
+        " from clone c, dnainsert d, referencesequence r, refseqname n"+
         " where c.cloneid=d.cloneid"+
-        " and d.insertid=i.insertid"+
-        " and i.refseqid=r.refseqid"+
+        " and d.refseqid=r.refseqid"+
         " and r.refseqid=n.refid"+
         " and n.nametype='"+RefseqNameType.GI+"'";
         String sql2 = "select * from clonegi where cloneid=? and gi=?";
@@ -249,10 +244,9 @@ public class CloneGeneBuilder {
         DatabaseTransaction.executeUpdate(sql, conn);
         
         sql = "select c.cloneid, r.name"+
-        " from clone c, dnainsert d, insertrefseq i, referencesequence r"+
+        " from clone c, dnainsert d, referencesequence r"+
         " where c.cloneid=d.cloneid"+
-        " and d.insertid=i.insertid"+
-        " and i.refseqid=r.refseqid"+
+        " and d.refseqid=r.refseqid"+
         " and r.name is not null";
         String sql2 = "select * from clonesymbol where cloneid=? and symbol=?";
         String sql3 = "insert into clonesymbol(cloneid, symbol) values(?,?)";

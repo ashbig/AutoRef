@@ -11,6 +11,7 @@ import java.util.*;
 
 import plasmid.coreobject.*;
 import plasmid.database.*;
+import plasmid.Constants;
 
 /**
  *
@@ -19,8 +20,8 @@ import plasmid.database.*;
 public class CloneManager extends TableManager {
     
     /** Creates a new instance of CloneManager */
-    public CloneManager(Connection conn) {        
-       super(conn);
+    public CloneManager(Connection conn) {
+        super(conn);
     }
     
     public boolean insertClones(List clones) {
@@ -196,8 +197,8 @@ public class CloneManager extends TableManager {
             return true;
         
         String sql = "insert into dnainsert"+
-        " (insertid,insertorder,sizeinbp,species,format,source,cloneid,geneid,name,description,targetseqid,targetgenbank)"+
-        " values(?,?,?,?,?,?,?,?,?,?,?,?)";
+        " (insertid,insertorder,sizeinbp,species,format,source,cloneid,geneid,name,description,targetseqid,targetgenbank,hasdiscrepancy,hasmutation,refseqid)"+
+        " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             
@@ -215,6 +216,9 @@ public class CloneManager extends TableManager {
                 stmt.setString(10, c.getDescription());
                 stmt.setString(11, c.getTargetseqid());
                 stmt.setString(12, c.getTargetgenbank());
+                stmt.setString(13, c.getHasdiscrepancy());
+                stmt.setString(14, c.getHasmutation());
+                stmt.setInt(15, c.getRefseqid());
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
@@ -277,6 +281,85 @@ public class CloneManager extends TableManager {
         return true;
     }
     
+    public boolean insertCloneProperties(List properties) {
+        if(properties == null)
+            return true;
+        
+        String sql = "insert into cloneproperty"+
+        " (cloneid, propertytype,propertyvalue,extrainfo)"+
+        " values(?,?,?,?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            
+            for(int i=0; i<properties.size(); i++) {
+                CloneProperty c = (CloneProperty)properties.get(i);
+                stmt.setInt(1, c.getCloneid());
+                stmt.setString(2, c.getType());
+                stmt.setString(3, c.getValue());
+                stmt.setString(4, c.getExtrainfo());
+                
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into CLONEPROPERTY table");
+            return false;
+        }
+        return true;
+    }
+        
+    public boolean insertCloneCollections(List collections) {
+        if(collections == null)
+            return true;
+        
+        String sql = "insert into clonecollection"+
+        " (cloneid, name)"+
+        " values(?,?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            
+            for(int i=0; i<collections.size(); i++) {
+                CloneCollection c = (CloneCollection)collections.get(i);
+                stmt.setInt(1, c.getCloneid());
+                stmt.setString(2, c.getName());
+                
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into CLONECOLLECTION table");
+            return false;
+        }
+        return true;
+    }
+        
+    public boolean insertInsertProperties(List properties) {
+        if(properties == null)
+            return true;
+        
+        String sql = "insert into insertproperty"+
+        " (insertid, propertytype,propertyvalue,extrainfo)"+
+        " values(?,?,?,?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            
+            for(int i=0; i<properties.size(); i++) {
+                InsertProperty c = (InsertProperty)properties.get(i);
+                stmt.setInt(1, c.getInsertid());
+                stmt.setString(2, c.getType());
+                stmt.setString(3, c.getValue());
+                stmt.setString(4, c.getExtrainfo());
+                
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+            DatabaseTransaction.closeStatement(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while inserting into INSERTPROPERTY table");
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * Query the database to get a list of Clone objects for given list of cloneid.
      * @param cloneids A list of cloneid as String.
@@ -293,7 +376,7 @@ public class CloneManager extends TableManager {
         String sql = "select clonename, clonetype, verified, vermethod,"+
         " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status"+
         " from clone where cloneid=?";
-        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank"+
+        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,d.hasdiscrepancy,d.hasmutation,d.refseqid"+
         " from dnainsert d, clone c"+
         " where c.cloneid=d.cloneid and c.cloneid=?";
         String sql3 = "select hosttype, marker from cloneselection where cloneid=?";
@@ -348,7 +431,10 @@ public class CloneManager extends TableManager {
                             String description = rs2.getString(9);
                             String targetseqid = rs2.getString(10);
                             String targetgenbank = rs2.getString(11);
-                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid,targetgenbank);
+                            String hasdiscrepancy = rs2.getString(12);
+                            String hasmutation = rs2.getString(13);
+                            int refseqid = rs2.getInt(14);
+                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid,targetgenbank,hasdiscrepancy,hasmutation,refseqid);
                             inserts.add(insert);
                         }
                         c.setInserts(inserts);
@@ -395,7 +481,7 @@ public class CloneManager extends TableManager {
         String sql = "select clonename, clonetype, verified, vermethod,"+
         " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status"+
         " from clone where cloneid=? and status='"+Clone.AVAILABLE+"'";
-        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,targetgenbank"+
+        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,d.hasdiscrepancy,d.hasmutation,d.refseqid"+
         " from dnainsert d, clone c"+
         " where c.cloneid=d.cloneid and c.cloneid=?";
         String sql3 = "select hosttype, marker from cloneselection where cloneid=?";
@@ -450,7 +536,10 @@ public class CloneManager extends TableManager {
                             String description = rs2.getString(9);
                             String targetseqid = rs2.getString(10);
                             String targetgenbank = rs2.getString(11);
-                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid,targetgenbank);
+                            String hasdiscrepancy = rs2.getString(12);
+                            String hasmutation = rs2.getString(13);
+                            int refseqid = rs2.getInt(14);
+                            DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, Integer.parseInt(cloneid),geneid,name,description,targetseqid,targetgenbank,hasdiscrepancy,hasmutation,refseqid);
                             inserts.add(insert);
                         }
                         c.setInserts(inserts);
@@ -493,30 +582,32 @@ public class CloneManager extends TableManager {
         String sql = "select clonename, clonetype, verified, vermethod,"+
         " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename, status"+
         " from clone where cloneid="+cloneid;
-        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank"+
+        String sql2 = "select d.insertid, d.insertorder, d.sizeinbp, d.species, d.format, d.source,d.geneid,d.name,d.description,d.targetseqid,d.targetgenbank,d.hasdiscrepancy,d.hasmutation,d.refseqid"+
         " from dnainsert d, clone c"+
         " where c.cloneid=d.cloneid and c.cloneid="+cloneid;
         String sql3 = "select hosttype, marker from cloneselection where cloneid="+cloneid;
         String sql4 = "select c.cloneid,c.authorid,a.authorname,c.authortype"+
-                    " from cloneauthor c, authorinfo a"+
-                    " where c.authorid=a.authorid"+
-                    " and c.cloneid="+cloneid;
+        " from cloneauthor c, authorinfo a"+
+        " where c.authorid=a.authorid"+
+        " and c.cloneid="+cloneid;
         String sql5 = "select g.growthid,name, hosttype,antibioticselection,growthcondition,comments"+
-                    " from clonegrowth c, growthcondition g"+
-                    " where c.growthid=g.growthid"+
-                    " and c.cloneid="+cloneid+
-                    " and c.isrecommended='"+CloneGrowth.YES+"'";
+        " from clonegrowth c, growthcondition g"+
+        " where c.growthid=g.growthid"+
+        " and c.cloneid="+cloneid+
+        " and c.isrecommended='"+CloneGrowth.YES+"'";
         String sql6 = "select p.publicationid,p.title, p.pmid"+
-                    " from publication p, clonepublication c"+
-                    " where p.publicationid=c.publicationid"+
-                    " and c.cloneid = "+cloneid;
+        " from publication p, clonepublication c"+
+        " where p.publicationid=c.publicationid"+
+        " and c.cloneid = "+cloneid;
         String sql7 = "select h.cloneid, h.hoststrain, h.isinuse, h.description"+
-                    " from host h where h.cloneid="+cloneid;
+        " from host h where h.cloneid="+cloneid;
         String sql8 = "select cloneid,nametype,namevalue,nameurl"+
-                    " from clonename where cloneid="+cloneid;
+        " from clonename where cloneid="+cloneid;
         String sql9 = "select vectorid,name,description,form,type,sizeinbp,mapfilename,sequencefilename,comments"+
-                    " from vector where vectorid=?";
+        " from vector where vectorid=?";
         String sql10 = "select propertytype from vectorproperty where vectorid=?";
+        String sql11 = "select propertytype,propertyvalue,extrainfo from cloneproperty where cloneid="+cloneid;
+        String sql12 = "select propertytype,propertyvalue,extrainfo from insertproperty where insertid=?";
         
         Clone c = null;
         
@@ -552,7 +643,26 @@ public class CloneManager extends TableManager {
                     String description = rs2.getString(9);
                     String targetseqid = rs2.getString(10);
                     String targetgenbank = rs2.getString(11);
-                    DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, cloneid,geneid,name,description,targetseqid,targetgenbank);
+                    String hasdiscrepancy = rs2.getString(12);
+                    String hasmutation = rs2.getString(13);
+                    int refseqid = rs2.getInt(14);
+                    DnaInsert insert = new DnaInsert(insertid,insertorder, size, species, format, source, cloneid,geneid,name,description,targetseqid,targetgenbank,hasdiscrepancy,hasmutation,refseqid);
+                    
+                    PreparedStatement stmt1 = conn.prepareStatement(sql12);
+                    stmt1.setInt(1, insertid);
+                    ResultSet rs12 = DatabaseTransaction.executeQuery(stmt1);
+                    List properties = new ArrayList();
+                    while(rs12.next()) {
+                        String type = rs12.getString(1);
+                        String value = rs12.getString(2);
+                        String extrainfo = rs12.getString(3);
+                        InsertProperty p = new InsertProperty(insertid, type, value, extrainfo);
+                        properties.add(p);
+                    }                 
+                    DatabaseTransaction.closeResultSet(rs12);
+                    DatabaseTransaction.closeStatement(stmt1);
+                    
+                    insert.setProperties(properties);   
                     inserts.add(insert);
                 }
                 c.setInserts(inserts);
@@ -664,6 +774,18 @@ public class CloneManager extends TableManager {
                 }
                 DatabaseTransaction.closeResultSet(rs9);
                 DatabaseTransaction.closeStatement(stmt);
+                
+                ResultSet rs11 = t.executeQuery(sql11);
+                List cloneproperties = new ArrayList();
+                while(rs11.next()) {
+                    String type = rs11.getString(1);
+                    String value = rs11.getString(2);
+                    String extrainfo = rs11.getString(3);
+                    CloneProperty n = new CloneProperty(cloneid, type, value, extrainfo);
+                    cloneproperties.add(n);
+                }
+                c.setProperties(cloneproperties);
+                DatabaseTransaction.closeResultSet(rs11);
             } else {
                 handleError(null, "No clone record found for cloneid: "+cloneid);
             }

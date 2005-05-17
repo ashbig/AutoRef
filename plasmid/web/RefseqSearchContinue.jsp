@@ -23,7 +23,6 @@
 	<jsp:include page="searchByRefseqTitle.jsp" />
       <html:form action="RefseqSearchContinue.do" enctype="multipart/form-data">
         <html:hidden property="species"/>
-        <html:hidden property="refseqType"/>
       <table width="100%" height="118" border="0" align="center">
         <tr> 
           <td height="10" colspan="6" class="tableheader"><strong>Select search 

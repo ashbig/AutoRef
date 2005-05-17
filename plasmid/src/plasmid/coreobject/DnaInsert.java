@@ -6,6 +6,8 @@
 
 package plasmid.coreobject;
 
+import java.util.*;
+
 /**
  *
  * @author  DZuo
@@ -23,6 +25,10 @@ public class DnaInsert {
     private String description;
     private String targetseqid;
     private String targetgenbank;
+    private String hasdiscrepancy;
+    private String hasmutation;
+    private int refseqid;
+    private List properties;
     
     /** Creates a new instance of DnaInsert */
     public DnaInsert() {
@@ -40,7 +46,8 @@ public class DnaInsert {
     }
         
     public DnaInsert(int insertid, int order, int size, String species, String format, String source, 
-    int cloneid, String geneid, String name, String description, String targetseqid, String targetgenbank) {
+    int cloneid, String geneid, String name, String description, String targetseqid, String targetgenbank,
+    String hasdiscrepancy, String hasmutation, int refseqid) {
         this.insertid=insertid;
         this.order=order;
         this.size=size;
@@ -53,6 +60,9 @@ public class DnaInsert {
         this.description = description;
         this.targetseqid = targetseqid;
         this.targetgenbank = targetgenbank;
+        this.hasdiscrepancy = hasdiscrepancy;
+        this.hasmutation = hasmutation;
+        this.refseqid = refseqid;
     }
     
     public int getInsertid() {return insertid;}
@@ -67,6 +77,10 @@ public class DnaInsert {
     public String getDescription() {return description;}
     public String getTargetseqid() {return targetseqid;}
     public String getTargetgenbank() {return targetgenbank;}
+    public String getHasdiscrepancy() {return hasdiscrepancy;}
+    public String getHasmutation() {return hasmutation;}
+    public int getRefseqid() {return refseqid;}
+    public List getProperties() {return properties;}
     
     public void setInsertid(int id) {this.insertid = id;}
     public void setOrder(int order) {this.order = order;}
@@ -80,4 +94,8 @@ public class DnaInsert {
     public void setDescription(String s) {this.description = s;}
     public void setTargetseqid(String s) {this.targetseqid = s;}
     public void setTargetgenbank(String s) {this.targetgenbank = s;}
+    public void setHasdiscrepancy(String s) {this.hasdiscrepancy = s;}
+    public void setHasmutation(String s) {this.hasmutation = s;}
+    public void setRefseqid(int id) {this.refseqid = id;}
+    public void setProperties(List s) {this.properties = s;}
 }

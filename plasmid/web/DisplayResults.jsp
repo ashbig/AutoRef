@@ -70,6 +70,8 @@
     <td class="tableheader">Gene Symbol</td>
     <td class="tableheader">Gene Name</td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=targetseq&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Reference Sequence</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertmutation&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Mutation</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertdiscrepancy&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Discrepancy</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Insert Format</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Vector</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Selection Markers</a></td>
@@ -98,6 +100,8 @@
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+    <td><bean:write name="insert" property="hasmutation"/></td>
+    <td><bean:write name="insert" property="hasdiscrepancy"/></td>
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
@@ -143,6 +147,8 @@
     <td><bean:write name="insert" property="name"/></td>
     <td><bean:write name="insert" property="description"/></td>
     <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=<bean:write name="insert" property="targetseqid"/>"><bean:write name="insert" property="targetgenbank"/></a></td>
+    <td><bean:write name="insert" property="hasmutation"/></td>
+    <td><bean:write name="insert" property="hasdiscrepancy"/></td>    
     <td><bean:write name="insert" property="format"/></td>
     </logic:iterate>
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>

@@ -333,4 +333,60 @@ public class CloneImporter {
             throw new Exception("Error occured while inserting into CLONEPUBLICATION table");
         }
     } 
+        
+    public void importCloneProperty(ImportTable table) throws Exception {
+        List names = new ArrayList();
+        List columns = table.getColumnNames();
+        List contents = table.getColumnInfo();
+        for(int n=0; n<contents.size(); n++) {
+            CloneProperty c = new CloneProperty();
+            List row = (List)contents.get(n);
+            for(int i=0; i<columns.size(); i++) {
+                String columnName = (String)columns.get(i);
+                String columnInfo = (String)row.get(i);
+                if("cloneid".equalsIgnoreCase(columnName)) {
+                    c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
+                }
+                if("propertytype".equalsIgnoreCase(columnName)) {
+                    c.setType(columnInfo);
+                }
+                if("propertyvalue".equalsIgnoreCase(columnName)) {
+                    c.setValue(columnInfo);
+                }
+                if("extrainfo".equalsIgnoreCase(columnName)) {
+                    c.setExtrainfo(columnInfo);
+                }
+            }
+            names.add(c);
+        }
+        
+        if(!manager.insertCloneProperties(names)) {
+            throw new Exception("Error occured while inserting into CLONEPROPERTY table");
+        }
+    } 
+
+    public void importCloneCollection(ImportTable table) throws Exception {
+        List cs = new ArrayList();
+        List columns = table.getColumnNames();
+        List contents = table.getColumnInfo();
+        for(int n=0; n<contents.size(); n++) {
+            CloneCollection c = new CloneCollection();
+            List row = (List)contents.get(n);
+            for(int i=0; i<columns.size(); i++) {
+                String columnName = (String)columns.get(i);
+                String columnInfo = (String)row.get(i);
+                if("cloneid".equalsIgnoreCase(columnName)) {
+                    c.setCloneid(((Integer)idmap.get(columnInfo)).intValue());
+                }
+                if("collectionname".equalsIgnoreCase(columnName)) {
+                    c.setName(columnInfo);
+                }
+            }
+            cs.add(c);
+        }
+        
+        if(!manager.insertCloneCollections(cs)) {
+            throw new Exception("Error occured while inserting into CLONECOLLECTION table");
+        }
+    } 
 }

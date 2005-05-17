@@ -34,12 +34,18 @@
 
     <form-bean      name="viewCartForm"
                     type="plasmid.form.ViewCartForm"/>
+
+    <form-bean      name="logonForm"
+                    type="plasmid.form.LogonForm"/>
+                    
+    <form-bean      name="registrationForm"
+                    type="plasmid.form.RegistrationForm"/>
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
   <global-forwards>
     <forward    name="help"         path="/Help.jsp"/>
-    <forward    name="login"        path="/welcome.jsp"/>
+    <forward    name="login"        path="/Login.jsp"/>
     <forward    name="logout"       path="/Logout.do"/>
     <forward    name="home"         path="/overview.jsp"/>
     <forward    name="register"     path="/CustomerRegistration.jsp"/>
@@ -51,15 +57,29 @@
   <!-- ========== Action Mapping Definitions ============================== -->
   <action-mappings type="org.apache.struts.action.ActionMapping">
 
-    
+  
+    <action    path="/PrepareRegistration"
+               type="plasmid.action.PrepareRegistrationAction"
+              input="/PrepareRegistration.do">
+      <forward  name="success"   path="/HomeRegistration.jsp"/>
+    </action>
+      
+    <action    path="/Registration"
+               type="plasmid.action.RegistrationAction"
+               name="registrationForm"
+              input="/PrepareRegistration.do">
+      <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
+      <forward  name="success"   path="/Login.jsp"/>
+    </action>
+
     <!-- Process a user logon -->
-    <action    path="/logon"
-               type="edu.harvard.med.hip.flex.action.LogonAction"
+    <action    path="/Logon"
+               type="plasmid.LogonAction"
                name="logonForm"
               scope="request"
-              input="/welcome.jsp">
+              input="/Login.jsp">
       <forward  name="success"   path="/main.jsp"/>
-      <forward  name="failure"  path="/welcome.jsp"/>
+      <forward  name="failure"  path="/Login.jsp"/>
     </action>
 
     <!-- process a user logout -->
@@ -124,12 +144,20 @@
     <action    path="/ViewCart"
                type="plasmid.action.ViewCartAction"
                name="viewCartForm"
-              scope="request"
               input="/ViewCart.do">
       <forward  name="success"   path="/DisplayCart.jsp"/>
       <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
     </action>
 
+    <action    path="/UpdateCart"
+               type="plasmid.action.UpdateCartAction"
+               name="viewCartForm"
+              input="/DisplayCart.jsp">
+      <forward  name="success"   path="/DisplayCart.jsp"/>
+      <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
+      <forward  name="success_checkout"   path="/Checkout.do"/>
+    </action>
+    
     <!-- The standard administrative actions available with Struts -->
     <!-- These would be either omitted or protected by security -->
     <!-- in a real application deployment -->

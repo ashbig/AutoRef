@@ -24,7 +24,7 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="viewShoppingCartTitle.jsp" />
 
-      <html:form action="ViewCart.do">
+      <html:form action="UpdateCart.do">
 <p>
 <table width="100%" border="0">
   <tr>
@@ -62,12 +62,13 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
-    <td><input size="3" class="tableinfo" type="text" name="quantity" value="<bean:write name="clone" property="quantity"/>"/></td>
+    <td><html:text size="3" styleClass="tableinfo" property='<%="cloneCount["+(i-1)+"]"%>'/></td>
         <!--<input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
     --></tr>
   </logic:iterate>
 </table>
-    <html:submit value="Update"/>
+    <html:submit property="submitButton" value="Update Cart"/>
+    <html:submit property="submitButton" value="Check Out"/>
     </html:form>
 
     </td>

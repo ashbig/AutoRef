@@ -15,15 +15,15 @@
 </table>
 <table width="97%" height="115" border="1" bordercolor="#0099FF">
   <tr> 
-    <td height="25"><a href="#" class="leftnavtext">Overview</a></td>
+    <td height="25"><a href="OrderOverview.jsp" class="leftnavtext">Overview</a></td>
   </tr>
   <tr> 
     <td height=45" valign="middle"> <table width="100%" border="0">
         <tr> 
-          <td height="15"><a href="#" class="leftnavtext">Search Plasmids</a></td>
+          <td height="15" class="mainbodytext">Search Plasmids</td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt">- <a href="#" class="leftsubnavtext">by 
+          <td height="15" class="lftsubtxt">- <a href="GetDataForRefseqSearch.do" class="leftsubnavtext">by 
             reference sequence</a></td>
         </tr>
         <tr> 

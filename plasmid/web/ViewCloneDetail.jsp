@@ -48,6 +48,7 @@
     <td colspan="3" class="mainbodytext"><bean:write name="clone" property="clonemap"/></td>
   </tr>
 </table>
+
 <logic:present name="clone" property="names">
 <p>Related Identifiers:</p>
 <table width="700" border="0">
@@ -55,29 +56,41 @@
   <tr>
     <td width="201" class="tablebody"><bean:write name="clonename" property="type"/></td>
     <logic:present name="clonename" property="url">
-    <logic:notEqual name="clonename" property="url" value="null">
     <a target="_blank" href="<bean:write name="clonename" property="url"/>">
-    </logic:notEqual>
     </logic:present>
     <td width="566" class="tableinfo"><bean:write name="clonename" property="value"/></td>
     <logic:present name="clonename" property="url">
-    <logic:notEqual name="clonename" property="url" value="null">
     </a>
-    </logic:notEqual>
     </logic:present>
   </tr>
 </logic:iterate>
 </table>
 </logic:present>
+
+<logic:present name="clone" property="properties">
+<p>Property:</p>
+<table width="700" border="0">
+<logic:iterate id="p" name="clone" property="properties">
+  <tr>
+    <td class="tablebody"><bean:write name="p" property="type"/></td>
+    <td class="tableinfo"><bean:write name="p" property="value"/></td>
+    <td class="tableinfo"><bean:write name="p" property="extrainfo"/></td>
+  </tr>
+</logic:iterate>
+</table>
+</logic:present>
+
 <logic:present name="clone" property="inserts">
 <p>Insert Information:</p>
 <table width="700" border="0">
   <tr> 
     <td width="5%" class="tablebody">Insert</td>
-    <td width="8%" class="tablebody">Size (bp)</td>
-    <td width="10%" class="tablebody">Species</td>
+    <td width="6%" class="tablebody">Size (bp)</td>
+    <td width="8%" class="tablebody">Species</td>
+    <td width="6%" class="tablebody">Mutation</td>
+    <td width="6%" class="tablebody">Discrepancy</td>
     <td width="6%" class="tablebody">Format</td>
-    <td width="13%" class="tablebody">Tissue Source</td>
+    <td width="10%" class="tablebody">Tissue Source</td>
     <logic:equal name="species" value="Homo sapiens">
     <td width="7%" class="tablebody">Gene ID</td>
     </logic:equal>
@@ -88,14 +101,16 @@
     <td width="7%" class="tablebody">PA Number</td>
     </logic:equal>
     <td width="8%" class="tablebody">Gene Symbol</td>
-    <td width="29%" class="tablebody">Gene Name</td>
-    <td width="14%" class="tablebody">Target Genbank</td>
+    <td width="26%" class="tablebody">Gene Name</td>
+    <td width="12%" class="tablebody">Target Genbank</td>
   </tr>
 <logic:iterate id="insert" name="clone" property="inserts">
   <tr> 
     <td class="tableinfo"><bean:write name="insert" property="order"/></td>
     <td class="tableinfo"><bean:write name="insert" property="size"/></td>
     <td class="tableinfo"><bean:write name="insert" property="species"/></td>
+    <td class="tableinfo"><bean:write name="insert" property="hasmutation"/></td>
+    <td class="tableinfo"><bean:write name="insert" property="hasdiscrepancy"/></td>
     <td class="tableinfo"><bean:write name="insert" property="format"/></td>
     <td class="tableinfo"><bean:write name="insert" property="source"/></td>
     <logic:equal name="species" value="Homo sapiens">
@@ -113,6 +128,26 @@
   </tr>
 </logic:iterate>
 </table>
+
+<logic:iterate id="insert" name="clone" property="inserts">
+<logic:present name="insert" property="properties">
+<p>Insert Property: Insert <bean:write name="insert" property="order"/></p>
+<table width="700" border="0">
+  <tr> 
+    <td class="tablebody">Type</td>
+    <td class="tablebody">Value</td>
+    <td class="tablebody">Extra Information</td>
+  </tr>
+<logic:iterate id="p" name="insert" property="properties">
+  <tr> 
+    <td class="tableinfo"><bean:write name="p" property="type"/></td>
+    <td class="tableinfo"><bean:write name="p" property="value"/></td>
+    <td class="tableinfo"><bean:write name="p" property="extrainfo"/></td>
+  </tr>
+</logic:iterate>
+</table>
+</logic:present>
+</logic:iterate>
 </logic:present>
 
 <logic:present name="clone" property="vector">

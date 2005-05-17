@@ -169,4 +169,34 @@ public class RefseqManager extends TableManager {
         
         return types;
     }
+        
+    public List queryNameTypes(String species, String use) {
+        String sql = "select distinct nametype"+
+                    " from refseqnametype"+
+                    " where genusspecies=?"+
+                    " and use in (?,?)";
+        List types = new ArrayList();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, species);
+            stmt.setString(2, use);
+            stmt.setString(3, RefseqNameType.BOTH);
+            
+            rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                String type = rs.getString(1);
+                types.add(type);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Error occured while querying REFSEQNAMETYPE table.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return types;
+    }
 }

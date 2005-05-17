@@ -44,8 +44,8 @@ public class DefTableManager extends TableManager {
         return ++id;
     }
     
-    public List getVocabularies(String table, DatabaseTransaction dt) {
-        String sql = "select * from "+table;
+    public List getVocabularies(String table, String column, DatabaseTransaction dt) {
+        String sql = "select "+column+" from "+table;
         
         List l = new ArrayList();
         ResultSet rs = null;

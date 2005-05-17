@@ -1,7 +1,7 @@
 /*
- * RefseqSearchAction.java
+ * PrepareRegistrationAction.java
  *
- * Created on April 22, 2005, 4:13 PM
+ * Created on May 13, 2005, 2:46 PM
  */
 
 package plasmid.action;
@@ -23,18 +23,16 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import plasmid.database.*;
-import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
-import plasmid.form.RefseqSearchForm;
-import plasmid.coreobject.RefseqNameType;
+import plasmid.database.DatabaseManager.DefTableManager;
+import plasmid.database.*;
 
 /**
  *
  * @author  DZuo
  */
-public class RefseqSearchAction extends Action {
-
+public class PrepareRegistrationAction extends Action {
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -54,34 +52,33 @@ public class RefseqSearchAction extends Action {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws ServletException, IOException { 
-        
-        // get the parameters specified by the customer
+    throws ServletException, IOException {
+        // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        DatabaseTransaction dt = null;
-        Connection conn = null;
+        
+        DatabaseTransaction t = null;
         try {
-            dt = DatabaseTransaction.getInstance();
-            conn = dt.requestConnection();
-            
-            String species = ((RefseqSearchForm)form).getSpecies();
-           // String refseqType = ((RefseqSearchForm)form).getRefseqType();
-            RefseqManager manager = new RefseqManager(conn);
-            List nameTypes = manager.queryNameTypes(species, RefseqNameType.SEARCH);
-            
-            request.setAttribute("species", species);
-            //request.setAttribute("refseqType", refseqType);
-            request.setAttribute("nameTypes", nameTypes);
-            return (mapping.findForward("success"));
-        } catch (Throwable th) {
-            if(Constants.DEBUG)
-                System.out.println(th);
+            t = DatabaseTransaction.getInstance();
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
             
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.database.error","Database error occured."));
-            return (mapping.findForward("error")); 
-        } finally {
-            DatabaseTransaction.closeConnection(conn);
+                new ActionError("error.database"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
         }
-    }       
+        
+        DefTableManager manager = new DefTableManager();
+        List groups = manager.getVocabularies("usergroup", "usergroup", t);
+        List pis = manager.getVocabularies("pi", "name", t);
+        pis.add(0, "");
+        
+        request.setAttribute("groups", groups);
+        request.setAttribute("pis", pis);
+
+        return (mapping.findForward("success"));        
+    }    
 }
+

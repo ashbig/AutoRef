@@ -40,6 +40,9 @@ public class ImportTable {
     public static final String CLONEAUTHOR = "Clone Author";
     public static final String CLONEPUBLICATION = "Clone Publication";
     public static final String PLATE = "Plate";
+    public static final String CLONEPROPERTY = "Clone Property";
+    public static final String INSERTPROPERTY = "Insert Property";
+    public static final String CLONECOLLECTION = "Clone Collection";
     
     private String tableName;
     private ArrayList columnNames;

@@ -33,7 +33,7 @@ public class InsertImporter {
     
     public Map getIdmap() {return idmap;}
     
-    public void importCloneInsert(ImportTable table, Map cloneidmap, int maxid) throws Exception {
+    public void importCloneInsert(ImportTable table, Map cloneidmap, Map refseqidmap, int maxid) throws Exception {
         idmap = new HashMap();
         DefTableManager m = new DefTableManager();
         
@@ -63,6 +63,7 @@ public class InsertImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                //System.out.println(i+": "+columnInfo);
                 if("insertid".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
                 }
@@ -106,6 +107,15 @@ public class InsertImporter {
                 if("targetgenbank".equalsIgnoreCase(columnName)) {
                     c.setTargetgenbank(columnInfo);
                 }
+                if("hasdiscrepancy".equalsIgnoreCase(columnName)) {
+                    c.setHasdiscrepancy(columnInfo);
+                }
+                if("hasmutation".equalsIgnoreCase(columnName)) {
+                    c.setHasmutation(columnInfo);
+                }
+                if("refseqid".equalsIgnoreCase(columnName)) {
+                    c.setRefseqid(((Integer)refseqidmap.get(columnInfo)).intValue());
+                }
             }
             inserts.add(c);
             dnaseqs.add(seq);
@@ -121,4 +131,35 @@ public class InsertImporter {
             throw new Exception("Error occured while inserting into DNASEQUENCE and SEQTEXT table");
         }
     }
+        
+    public void importInsertProperty(ImportTable table) throws Exception {
+        List names = new ArrayList();
+        List columns = table.getColumnNames();
+        List contents = table.getColumnInfo();
+        for(int n=0; n<contents.size(); n++) {
+            InsertProperty c = new InsertProperty();
+            List row = (List)contents.get(n);
+            for(int i=0; i<columns.size(); i++) {
+                String columnName = (String)columns.get(i);
+                String columnInfo = (String)row.get(i);
+                if("insertid".equalsIgnoreCase(columnName)) {
+                    c.setInsertid(((Integer)idmap.get(columnInfo)).intValue());
+                }
+                if("propertytype".equalsIgnoreCase(columnName)) {
+                    c.setType(columnInfo);
+                }
+                if("propertyvalue".equalsIgnoreCase(columnName)) {
+                    c.setValue(columnInfo);
+                }
+                if("extrainfo".equalsIgnoreCase(columnName)) {
+                    c.setExtrainfo(columnInfo);
+                }
+            }
+            names.add(c);
+        }
+        
+        if(!manager.insertInsertProperties(names)) {
+            throw new Exception("Error occured while inserting into INSERTPROPERTY table");
+        }
+    } 
 }

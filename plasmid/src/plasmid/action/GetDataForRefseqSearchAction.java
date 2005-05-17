@@ -59,19 +59,20 @@ public class GetDataForRefseqSearchAction extends Action {
         try {
             dt = DatabaseTransaction.getInstance();
             DefTableManager defTableManager = new DefTableManager();
-            List species = defTableManager.getVocabularies("Species", dt);
-            List refseqTypes = defTableManager.getVocabularies("refseqtype", dt);
+            List species = defTableManager.getVocabularies("Species", "genusspecies", dt);
+           // List refseqTypes = defTableManager.getVocabularies("refseqtype", "refseqtype", dt);
             
             if(species == null) {
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.database.error", "Cannot get species from database"));
                 return (mapping.findForward("error"));
             }
+            /**
             if(refseqTypes == null) {
                 errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.database.error", "Cannot get reference sequence type from database"));
                 return (mapping.findForward("error"));
-            }  
+            }  */
             request.setAttribute("allSpecies", species);
-            request.setAttribute("refseqTypes", refseqTypes);
+            //request.setAttribute("refseqTypes", refseqTypes);
             return (mapping.findForward("success"));
         } catch (Throwable th) {
             if(Constants.DEBUG)

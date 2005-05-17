@@ -38,6 +38,7 @@ public class Clone {
     protected List names;
     protected List inserts;
     protected List hosts;
+    protected List properties;
     
     protected GrowthCondition recommendedGrowthCondition;
     protected CloneVector vector;
@@ -79,6 +80,7 @@ public class Clone {
     public String getStatus() {return status;}
     public GrowthCondition getRecommendedGrowthCondition() {return recommendedGrowthCondition;}
     public CloneVector getVector() {return vector;}
+    public List getProperties() {return properties;}
     
     public void setCloneid(int id) {this.cloneid = id;}
     public void setName(String s) {this.name = s;}
@@ -95,6 +97,7 @@ public class Clone {
     public void setStatus(String s) {this.status = s;}
     public void setRecommendedGrowthCondition(GrowthCondition g) {this.recommendedGrowthCondition = g;}
     public void setVector(CloneVector v) {this.vector = v;}
+    public void setProperties(List l) {this.properties = l;}
     
     public List getSynonyms() {return synonyms;}
     public void setSynonyms(List l) {this.synonyms = l;}

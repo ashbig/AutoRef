@@ -131,6 +131,10 @@ public class SetDisplayAction extends Action {
             Collections.sort(clones, new GeneidComparator());
         if("targetseq".equals(sortby))
             Collections.sort(clones, new TargetSeqidComparator());
+        if("insertmutation".equals(sortby))
+            Collections.sort(clones, new InsertMutationComparator());
+        if("insertdiscrepancy".equals(sortby))
+            Collections.sort(clones, new InsertDiscrepancyComparator());
         if("insertformat".equals(sortby))
             Collections.sort(clones, new InsertFormatComparator());
         if("vectorname".equals(sortby))
