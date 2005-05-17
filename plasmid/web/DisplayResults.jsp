@@ -89,7 +89,7 @@
     <td><bean:write name="clone" property="type"/></td>
     <logic:iterate name="clone" property="inserts" id="insert">
     <logic:equal name="species" value="Homo sapiens">
-    <td><a target=_blank href=http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>><bean:write name="insert" property="geneid"/></a></td>
+    <td><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
     <logic:equal name="species" value="Pseudomonas aeruginosa">
     <td><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
