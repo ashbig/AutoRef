@@ -37,6 +37,7 @@
           <tr bgcolor="#FFFFFF"> 
             <td height="10" colspan="3" class="homeMainText"> <p>&nbsp;</p></td>
           </tr>
+
           <tr> 
             <td height="10" colspan="3" valign="middle" class="tableheader"><strong>Select 
               reference sequence type</strong></td>
@@ -48,6 +49,7 @@
                 /> </html:select> </td>
             <td height="26">&nbsp;</td>
           </tr>
+
           <tr bgcolor="#FFFFFF"> 
             <td height="4" colspan="3" class="homeMainText">&nbsp;</td>
           </tr>
