@@ -97,7 +97,7 @@ public class SetDisplayAction extends Action {
             ShoppingCartItem item = new ShoppingCartItem(0, Integer.parseInt(cloneid), 1);
             ShoppingCartItem.addToCart(shoppingcart, item);
             request.getSession().setAttribute(Constants.CART, shoppingcart);
-            
+            request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
             return (mapping.findForward("success"));
         }
         

@@ -104,7 +104,24 @@ public class UpdateCartAction extends Action {
                 if("Check Out".equals(ret)) {
                     return (mapping.findForward("success_checkout"));
                 }
+                if("Save Cart".equals(ret)) {
+                    UserManager man = new UserManager(conn);
+                    User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+                    if(!man.addShoppingCart(user.getUserid(), shoppingcartCopy)) {
+                        DatabaseTransaction.rollback(conn);
+                        if(Constants.DEBUG)
+                            System.out.println("Cannot save shopping cart");
+                        
+                        errors.add(ActionErrors.GLOBAL_ERROR,
+                        new ActionError("error.database.error","Database error occured."));
+                        return (mapping.findForward("error"));
+                    }
+                    DatabaseTransaction.commit(conn);
+                    request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
+                    return (mapping.findForward("success_save"));
+                }
                 
+                request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
                 return (mapping.findForward("success"));
             } catch (Exception ex) {
                 if(Constants.DEBUG)

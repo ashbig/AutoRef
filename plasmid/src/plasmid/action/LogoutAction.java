@@ -37,7 +37,7 @@ public class LogoutAction extends Action {
     ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         List cart = (List)request.getSession().getAttribute(Constants.CART);
-        if(cart == null || cart.size() == 0) {
+        if(cart == null || cart.size() == 0 || Constants.CART_STATUS.equals(Constants.SAVED)) {
             request.getSession().invalidate();
             return mapping.findForward("success");
         } else {

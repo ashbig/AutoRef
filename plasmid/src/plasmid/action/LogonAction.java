@@ -125,6 +125,7 @@ public final class LogonAction extends Action {
             return mapping.findForward("confirm");
         }             
          
+        request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
         return (mapping.findForward("success"));        
     }    
 }

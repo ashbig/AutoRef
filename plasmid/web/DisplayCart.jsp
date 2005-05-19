@@ -68,6 +68,9 @@
   </logic:iterate>
 </table>
     <html:submit property="submitButton" value="Update Cart"/>
+<logic:present name="<%=Constants.USER_KEY%>" scope="session">
+    <html:submit property="submitButton" value="Save Cart"/>
+</logic:present>
     <html:submit property="submitButton" value="Check Out"/>
     </html:form>
 

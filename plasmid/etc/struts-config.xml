@@ -168,6 +168,7 @@
               input="/DisplayCart.jsp">
       <forward  name="success"   path="/DisplayCart.jsp"/>
       <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
+      <forward  name="success_save"   path="/Account.jsp"/>
       <forward  name="success_checkout"   path="/Checkout.do"/>
     </action>
     
