@@ -25,6 +25,9 @@ import org.apache.struts.util.MessageResources;
 
 import plasmid.Constants;
 import plasmid.form.LogonForm;
+import plasmid.coreobject.*;
+import plasmid.database.*;
+import plasmid.database.DatabaseManager.UserManager;
 
 /**
  *
@@ -52,36 +55,32 @@ public final class LogonAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-  /**      // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        String useremail = ((LogonForm) form).getUseremail();
+        String email = ((LogonForm) form).getEmail();
         String password = ((LogonForm) form).getPassword();
         
-        
-        RegisteredUser user = new RegisteredUser(useremail,password);
-        
-        
-        // get the access manager to verify they usernam/password combo.
-        AccessManager accessManager = AccessManager.getInstance();
-        
-        
+        DatabaseTransaction t = null;
+        Connection conn = null;
         try {
-            // ask accessManager if the username and password are valid
-            if(!accessManager.authenticate(useremail,password)) {
-                
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.password.mismatch"));
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
             }
-        } catch (Throwable th) {
-            request.setAttribute(Action.EXCEPTION_KEY, th);
+            
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.database"));
+            saveErrors(request, errors);
             return mapping.findForward("error");
         }
         
-        // Report any errors we have discovered back to the original form
-        if (!errors.empty()) {
-            
+        UserManager manager = new UserManager(conn);
+        User user = manager.authenticate(email, password);
+        if(user == null) {            
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.login.incorrect"));
             saveErrors(request, errors);
-            
             return (new ActionForward(mapping.getInput()));
         }
         
@@ -92,20 +91,41 @@ public final class LogonAction extends Action {
             servlet.log("LogonAction: User '" + user.getEmail() +
             "' logged on in session " + session.getId());
         
+        /**
+         * Get shopping cart from database and session. If shopping cart in database is empty,
+         * add shopping cart in session to database shopping cart and forward to account page;
+         * otherwise, forward to confirm page to ask user whether they want to merge two shopping
+         * carts.
+         **/
+        List cart = manager.queryShoppingCart(user.getUserid());
+        if(cart == null) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot retrieve shopping cart from database.");
+            }
+            
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.database.shoppingcart"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        }  
+        
         // Remove the obsolete form bean
         if (mapping.getAttribute() != null) {
             if ("request".equals(mapping.getScope()))
                 request.removeAttribute(mapping.getAttribute());
             else
                 session.removeAttribute(mapping.getAttribute());
-        }        
-            
-        // Forward control to the specified success URI
-        */
-        return (mapping.findForward("success"));
+        }
         
-    }
-    
-    
+        List currentCart = (List)request.getSession().getAttribute(Constants.CART); 
+        if(currentCart == null || currentCart.size() == 0) {
+            request.getSession().setAttribute(Constants.CART, cart);
+        } else if(cart.size() > 0) {
+            request.getSession().setAttribute("databaseCart", cart);
+            return mapping.findForward("confirm");
+        }             
+         
+        return (mapping.findForward("success"));        
+    }    
 }
 

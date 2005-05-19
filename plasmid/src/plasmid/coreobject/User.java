@@ -30,6 +30,9 @@ public class User {
     private String pi;
     private String group;
     private String password;
+    private String dateadded;
+    private String datemod;
+    private String modifier;
     
     private List addresses;
     private List orders;
@@ -51,6 +54,30 @@ public class User {
         this.ponumber = ponumber;
         this.pi = pi;
         this.group = group;
+        this.password = password;
+    }
+    
+    public User(int userid,String firstname,String lastname,String email,String phone,
+    String ponumber,String institution,String department,String dateadded, String datemod,
+    String modifier,String pi, String usergroup, String password) {
+        this.userid = userid;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.phone = phone;
+        this.ponumber = ponumber;
+        this.institution = institution;
+        this.department = department;
+        this.dateadded = dateadded;
+        this.datemod = datemod;
+        this.modifier = modifier;
+        this.pi = pi;
+        this.group = usergroup;
+        this.password = password;
+    }
+    
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
     }
     

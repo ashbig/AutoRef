@@ -27,7 +27,7 @@ import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.form.RefseqSearchForm;
-import plasmid.coreobject.RefseqNameType;
+import plasmid.coreobject.*;
 import plasmid.util.*;
 import plasmid.query.handler.*;
 
@@ -87,27 +87,15 @@ public class SetDisplayAction extends Action {
         
         if(button != null && button.equals("Add To Cart")) {
             String cloneid = ((RefseqSearchForm)form).getCloneid();
-            System.out.println("Add to cart: "+cloneid);
             if(Integer.parseInt(cloneid) <= 0) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.database.error","Invalid clone ID."));
                 return (mapping.findForward("error"));
             }
             
-            Map shoppingcart = (Map)request.getSession().getAttribute(Constants.CART);
-            if(shoppingcart == null) {
-                shoppingcart = new HashMap();
-                shoppingcart.put(cloneid, "1");
-            } else {
-                String count = (String)shoppingcart.get(cloneid);
-                if(count == null) {
-                    shoppingcart.put(cloneid, "1");
-                } else {
-                    int n = Integer.parseInt(count) + 1;
-                    shoppingcart.put(cloneid, (new Integer(n)).toString());
-                }
-            }
-            
+            List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
+            ShoppingCartItem item = new ShoppingCartItem(0, Integer.parseInt(cloneid), 1);
+            ShoppingCartItem.addToCart(shoppingcart, item);
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             
             return (mapping.findForward("success"));

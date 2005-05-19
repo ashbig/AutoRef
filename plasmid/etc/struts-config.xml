@@ -37,7 +37,10 @@
 
     <form-bean      name="logonForm"
                     type="plasmid.form.LogonForm"/>
-                    
+      
+    <form-bean      name="logoutForm"
+                    type="plasmid.form.LogoutForm"/>
+                                  
     <form-bean      name="registrationForm"
                     type="plasmid.form.RegistrationForm"/>
  </form-beans>
@@ -74,18 +77,28 @@
 
     <!-- Process a user logon -->
     <action    path="/Logon"
-               type="plasmid.LogonAction"
+               type="plasmid.action.LogonAction"
                name="logonForm"
               scope="request"
               input="/Login.jsp">
-      <forward  name="success"   path="/main.jsp"/>
+      <forward  name="success"   path="/Account.jsp"/>
+      <forward  name="confirm"   path="/MergeCart.jsp"/>
       <forward  name="failure"  path="/Login.jsp"/>
     </action>
 
     <!-- process a user logout -->
     <action     path="/Logout"
-                type="edu.harvard.med.hip.flex.action.LogoutAction">
-      <forward  name="success"  path="/welcome.jsp"/>
+                type="plasmid.action.LogoutAction">
+      <forward  name="success"  path="/Home.jsp"/>
+      <forward  name="confirm"  path="/ConfirmLogout.jsp"/>
+    </action>
+    
+    <action     path="/ConfirmLogout"
+                type="plasmid.action.ConfirmLogoutAction"
+               name="logoutForm"
+              scope="request"
+              input="/Logout.do">
+      <forward  name="success"  path="/Home.jsp"/>
     </action>
        
     <action     path="/ProcessError"

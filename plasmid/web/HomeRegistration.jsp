@@ -119,14 +119,14 @@
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Please enter a password:</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="password" size="30" styleClass="text"/>
+        <html:password property="password" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 
     <td width="22%" align="left" valign="baseline">*Please enter the password 
       again</td>
     <td width="78%" align="left" valign="baseline"> 
-        <html:text property="password2" size="30" styleClass="text"/>
+        <html:password property="password2" size="30" styleClass="text"/>
     </td>
   </tr>
   <tr class="formlabel"> 

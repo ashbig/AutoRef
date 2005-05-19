@@ -26,7 +26,7 @@ import org.apache.struts.util.MessageResources;
 import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
-import plasmid.coreobject.Clone;
+import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.ViewCartForm;
 
@@ -58,14 +58,17 @@ public class ViewCartAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
-        Map shoppingcart = (Map)request.getSession().getAttribute(Constants.CART);
+        List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
         if(shoppingcart == null || shoppingcart.size() == 0) {
-            shoppingcart = new HashMap();
+            shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             return (mapping.findForward("success_empty"));
         } else {
-            Set clones = shoppingcart.keySet();
-            List c = new ArrayList(clones);
+            List c = new ArrayList();
+            for(int i=0; i<shoppingcart.size(); i++) {
+                ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
+                c.add((new Integer(item.getCloneid())).toString());
+            }
             
             DatabaseTransaction t = null;
             Connection conn = null;
@@ -76,13 +79,13 @@ public class ViewCartAction extends Action {
                 Map found = manager.queryClonesByCloneid(c, true, true);
                 List newShoppingcart = new ArrayList();
                 
-                Iterator iter = clones.iterator();
-                while(iter.hasNext()) {
-                    String cloneid =(String)iter.next();
+                for(int i=0; i<shoppingcart.size(); i++) {
+                    ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
+                    String cloneid =(new Integer(item.getCloneid())).toString();
                     Clone clone = (Clone)found.get(cloneid);
-                    String quantity = (String)shoppingcart.get(cloneid);
+                    int quantity = item.getQuantity();
                     CloneInfo cloneInfo = new CloneInfo(clone);
-                    cloneInfo.setQuantity(Integer.parseInt(quantity));
+                    cloneInfo.setQuantity(quantity);
                     
                     newShoppingcart.add(cloneInfo);
                 }

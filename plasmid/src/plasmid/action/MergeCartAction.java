@@ -1,7 +1,7 @@
 /*
- * PrepareRegistrationAction.java
+ * MergeCartAction.java
  *
- * Created on May 13, 2005, 2:46 PM
+ * Created on May 18, 2005, 12:18 PM
  */
 
 package plasmid.action;
@@ -23,15 +23,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
+import plasmid.form.MergeCartForm;
 import plasmid.Constants;
-import plasmid.database.DatabaseManager.DefTableManager;
-import plasmid.database.*;
+import plasmid.coreobject.ShoppingCartItem;
 
 /**
  *
  * @author  DZuo
  */
-public class PrepareRegistrationAction extends Action {
+public class MergeCartAction extends Action {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -53,33 +53,22 @@ public class PrepareRegistrationAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException {
-        // Validate the request parameters specified by the user
         ActionErrors errors = new ActionErrors();
-        
-        //request.getSession().removeAttribute("registrationForm");
-        
-        DatabaseTransaction t = null;
-        try {
-            t = DatabaseTransaction.getInstance();
-        } catch (Exception ex) {
-            if(Constants.DEBUG) {
-                System.out.println(ex);
-            }
-            
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database"));
-            saveErrors(request, errors);
-            return mapping.findForward("error");
-        }
-        
-        DefTableManager manager = new DefTableManager();
-        List groups = manager.getVocabularies("usergroup", "usergroup", t);
-        List pis = manager.getVocabularies("pi", "name", t);
-        
-        request.setAttribute("groups", groups);
-        request.setAttribute("pis", pis);
 
+        String merge = ((MergeCartForm)form).getMerge();
+        List currentCart = (List)request.getSession().getAttribute(Constants.CART);
+        List saveCart = (List)request.getSession().getAttribute("databaseCart");
+        request.getSession().removeAttribute("databaseCart");
+        
+        if(merge.equals("discartCurrentCart")) {
+            request.getSession().setAttribute(Constants.CART, saveCart);
+        } else if(merge.equals("merge")) {
+            List newCart = ShoppingCartItem.mergeCart(currentCart, saveCart);
+            request.getSession().setAttribute(Constants.CART, newCart);
+        } 
+                    
         return (mapping.findForward("success"));        
     }    
 }
+
 

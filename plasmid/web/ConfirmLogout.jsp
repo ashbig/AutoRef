@@ -13,18 +13,24 @@
 </head>
 
 <body>
-<jsp:include page="orderTitle.jsp" />
+<jsp:include page="homeTitle.jsp" />
 <table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-      <jsp:include page="menu.jsp" />
+      <jsp:include page="menuHome.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="orderoverviewTitle.jsp" />
-
-<p>Under construction.
-
-    </td>
+        <jsp:include page="logoutTitle.jsp" />
+      <html:form action="ConfirmLogout.do">
+<p>
+Would you like to save the current shopping cart into your account?
+<table width="100%" border="0">
+    <tr>
+        <td><html:submit property="confirm" value="Yes"/></td>
+        <td><html:submit property="confirm" value="No"/></td>
+    </tr>
+</table>
+      </html:form></td>
   </tr>
 </table>
 <jsp:include page="footer.jsp" /></body>

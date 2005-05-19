@@ -21,25 +21,27 @@
 	</td>
     <td width="83%" align="left" valign="top">
         <jsp:include page="loginTitle.jsp" />
-      <html:form action="Logon.do">
-<logic:present name="registrationSuccessful">
-<bean:message key="registration.successful"/>
-</logic:present>
-<p>
+      <html:form action="MergeCart.do">
+<p>You have a saved shopping cart with items in your account. Please choose from the following:
 <table width="100%" border="0">
   <tr> 
-    <td width="12%" valign="baseline" class="formlabel">Email:</td>
-    <td colspan="2">
-        <html:text property="email" styleClass="text" size="30"/>
-    </td>
+    <td height="21" colspan="2" class="itemtext"> 
+    <html:radio property="merge" value="merge"/>
+      Add existing shopping cart items to the save shopping cart</td>
   </tr>
   <tr> 
-    <td valign="baseline" class="formlabel">Password:</td>
-    <td width="28%">
-        <html:password property="password" styleClass="text" size="30" maxlength="20"/>
-        <html:submit styleClass="text" value="Login"/>
-    </td>
-    <td width="60%" class="text">Find Password</td>
+    <td height="24" colspan="2" class="itemtext"> 
+    <html:radio property="merge" value="discartSavedCart"/>
+      Discart saved shopping cart items</td>
+  </tr>
+  <tr> 
+    <td height="21" colspan="2" class="itemtext"> 
+    <html:radio property="merge" value="discartCurrentCart"/>
+      Discart current shopping cart items</td>
+  </tr>
+  <tr> 
+    <td width="8%" height="41">&nbsp; </td>
+    <td width="92%"><html:submit styleClass="itemtext" value="Continue"/></td>
   </tr>
 </table>
       </html:form></td>

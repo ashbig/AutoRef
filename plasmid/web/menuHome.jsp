@@ -19,10 +19,10 @@
   <tr> 
     <td height=45" valign="middle"> <table width="100%" border="0">
         <tr> 
-          <td height="15"><a href="#" class="leftnavtext">User Registration</a></td>
+          <td height="15"><a href="PrepareRegistration.do" class="leftnavtext">User Registration</a></td>
         </tr>
         <tr> 
-          <td height="15" valign="middle"><a href="#" class="leftnavtext">User Sign In</a></td>
+          <td height="15" valign="middle"><a href="Login.jsp" class="leftnavtext">User Sign In</a></td>
         </tr>
       </table></td>
   </tr>
