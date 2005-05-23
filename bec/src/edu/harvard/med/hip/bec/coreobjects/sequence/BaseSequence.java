@@ -206,7 +206,7 @@ public  class BaseSequence
      }
     
     
-    
+  /*  
       //get not amb read
     public static boolean isPassAmbiquoutyTest(FullSeqSpec cutoff_spec, String sequence) throws BecDatabaseException
     {
@@ -225,7 +225,7 @@ public  class BaseSequence
        return false;
     }
     
-    
+    */
     public static ArrayList getAllSequencesWithStatus(int status, int seqtype) throws BecDatabaseException
     {
        
