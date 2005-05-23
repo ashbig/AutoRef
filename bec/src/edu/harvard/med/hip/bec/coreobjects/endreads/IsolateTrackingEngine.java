@@ -868,7 +868,9 @@ public class IsolateTrackingEngine
      *
      *
      **/
+    
     //get not amb read
+    // get all reads that meet criteria without testing for amb 4/21/05
     private ArrayList getReadPassedAmbiquoutyTest(FullSeqSpec cutoff_spec) throws BecDatabaseException
     {
         try
@@ -885,10 +887,10 @@ public class IsolateTrackingEngine
                         cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH ||
                         cur_read.getType() == Read.TYPE_ENDREAD_FORWARD_FAIL )
                     continue;
-               if (cur_read.isPassAmbiquoutyTest(cutoff_spec) )
-               {
-                   reads.add(cur_read);
-               }
+              // if (cur_read.isPassAmbiquoutyTest(cutoff_spec) )
+               //{
+                reads.add(cur_read);
+               //}
             }
             return reads;
         }
@@ -1012,6 +1014,7 @@ public class IsolateTrackingEngine
     //it's calculates isolta score as well
     private void setBlackRankBasedOnCloneSequence(FullSeqSpec cutoff_spec, EndReadsSpec spec, int refsequence_length) throws BecDatabaseException
     {
+        /*
        //check for ambiquouty condition
        if (!BaseSequence.isPassAmbiquoutyTest(cutoff_spec,m_clone_sequence.getText() ))
        {
@@ -1019,7 +1022,7 @@ public class IsolateTrackingEngine
            m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
            return;
        }
-       
+       */
         int sequence_penalty = 0;
         ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( m_clone_sequence.getDiscrepancies());
      
@@ -1117,6 +1120,7 @@ public class IsolateTrackingEngine
         //check for ambiquouty condition
         try
         {
+            /*
             //check for ambiquouty condition
             for (int contig_count = 0; contig_count < m_contigs.size(); contig_count ++)
             {
@@ -1128,7 +1132,7 @@ public class IsolateTrackingEngine
                }
             }
 
-
+*/
             ArrayList discrepancies_pairs = new ArrayList();
             ArrayList discrepancies_descriptions = null;
        //check wherther reads are overlap
