@@ -122,7 +122,7 @@ public class Seq_GetItemAction extends ResearcherAction
                          }
                     }
                     ArrayList items = new ArrayList(); items.add(String.valueOf(clone_id));
-                    request.setAttribute(Constants.JSP_TITLE,"view Gaps and Contigs");
+                    request.setAttribute(Constants.JSP_TITLE,"View Gaps and Contigs");
                     request.setAttribute("stretch_collections",stretch_collections);
                     request.setAttribute("items", items);
                     request.setAttribute("caller", Constants.NO_MENU_TO_SHOW);
@@ -433,12 +433,12 @@ public class Seq_GetItemAction extends ResearcherAction
                     if ( forwardName == Constants.PROCESS_PUT_CLONES_ON_HOLD )
                     {
                         
-                        title =  "put Active Clones on Hold";
+                        title =  "Put Active Clones on Hold";
                     }
                     else if( forwardName == Constants.PROCESS_ACTIVATE_CLONES )
                     {
                         
-                        title =  "activate Clones";
+                        title =  "Activate Clones";
                     }
                     
                     container.restoreSampleIsolate(false,true);
@@ -465,13 +465,13 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("bioevaluation", Spec.getAllSpecsByType(Spec.FULL_SEQ_SPEC_INT, false));
                     request.setAttribute("polymerphism", Spec.getAllSpecsByType(Spec.POLYMORPHISM_SPEC_INT, false));
                     request.setAttribute("slidingwindow", Spec.getAllSpecsByType(Spec.TRIM_SLIDING_WINDOW_SPEC_INT, false));
-                    request.setAttribute(Constants.JSP_TITLE,"select Specification to view");
+                    request.setAttribute(Constants.JSP_TITLE,"Select Specification to view");
                     return (mapping.findForward("choose_spec"));
                 }
                 case Spec.PRIMER3_SPEC_INT * Spec.SPEC_DELETE_SPEC:
                 {
                     request.setAttribute("primer3", Primer3Spec.getAllNotUsedSpecs( ));
-                    request.setAttribute(Constants.JSP_TITLE,"select Specification to delete");
+                    request.setAttribute(Constants.JSP_TITLE,"Select Specification to delete");
                      return (mapping.findForward("choose_spec"));
                 }
                 
@@ -492,7 +492,7 @@ public class Seq_GetItemAction extends ResearcherAction
 
                     }
                      request.setAttribute("container",container);
-                     title = "clone Data for container " + label;
+                     title = "Clone Data for container " + label;
                     request.setAttribute(Constants.JSP_TITLE,title);
                     return (mapping.findForward("show_clone_status_list"));
                 }
@@ -510,7 +510,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     } );
                     request.setAttribute("labels",labels);
                      request.setAttribute( Constants.ADDITIONAL_JSP, "<script language='JavaScript' src='"+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") +"scripts.js'></script> ") ;
-                    request.setAttribute(Constants.JSP_TITLE,"available Containers");
+                    request.setAttribute(Constants.JSP_TITLE,"Available Containers");
                     return (mapping.findForward("display_info"));
                      
                 }
@@ -534,7 +534,7 @@ public class Seq_GetItemAction extends ResearcherAction
                          oligo_container.restoreSamples();
                      }
                      //set title
-                     title="view Oligo Plate";
+                     title="View Oligo Plate";
  //  System.out.println(label+oligo_container.getId());
                     request.setAttribute(Constants.JSP_TITLE,title);
                     request.setAttribute("container",oligo_container);

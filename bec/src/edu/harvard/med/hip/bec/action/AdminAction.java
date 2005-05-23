@@ -43,7 +43,9 @@ public abstract class  AdminAction extends BecAction {
     HttpServletResponse response)
     throws ServletException, IOException {
         // place to store errors
-        ActionErrors errors = new ActionErrors();
+        
+        
+          ActionErrors errors = new ActionErrors();
         ActionForward retForward = null;
         HttpSession session = request.getSession();
         if(! isUserLoggedIn(session)){

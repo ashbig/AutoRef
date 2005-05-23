@@ -133,13 +133,13 @@ public class SelectProcessAction extends ResearcherAction
                 case Constants.PROCESS_SELECT_PLATES_TO_CHECK_READS_AVAILABILITY:
                 {
                      request.setAttribute("forwardName", new Integer(Constants.PROCESS_CHECK_READS_AVAILABILITY));
-                    request.setAttribute(Constants.JSP_TITLE,"select Plate to Check Clone Status");
+                    request.setAttribute(Constants.JSP_TITLE,"Select Plate to Check Clone Status");
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_VIEW_OLIGO_PLATE:
                 {
                      request.setAttribute("forwardName", new Integer(forwardName));
-                    request.setAttribute(Constants.JSP_TITLE,"select Oligo Plate");
+                    request.setAttribute(Constants.JSP_TITLE,"Select Oligo Plate");
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_RUN_ISOLATE_RUNKER://run isolate runker
@@ -174,7 +174,7 @@ public class SelectProcessAction extends ResearcherAction
                  case Constants.PROCESS_APROVE_ISOLATE_RANKER:
                 {
                     
-                    request.setAttribute(Constants.JSP_TITLE,"select Plate to Approve Isolate Ranker Results");
+                    request.setAttribute(Constants.JSP_TITLE,"Select Plate to Approve Isolate Ranker Results");
                      return (mapping.findForward("scan_label"));
                 }
                 case Constants.PROCESS_SUBMIT_ASSEMBLED_SEQUENCE:
@@ -191,7 +191,7 @@ public class SelectProcessAction extends ResearcherAction
                             file_description = "<I>You are about to submit sequence data to BEC. The <B>requested file format</b> is: <p> <i> ></i>FLEX SAMPLE ID <P> sequence in fasta format."
                             +"The process will take some time. The e-mail report will be sent to you upon completion."; 
                             file_title =  "Please select the sequence information file:";
-                            title="submit Sequence data for set of clones";
+                            title="Submit Sequence data for set of clones";
                             break;
                         }
                         case  Constants.PROCESS_DELETE_TRACE_FILES :
@@ -199,7 +199,7 @@ public class SelectProcessAction extends ResearcherAction
                             file_description = "<I>You are about to delete trace files from clone directories. The <B>requested file format</b> is: <p> <i> absolute file name (file path information included - c:/dirname)</i>."
                             +" The process will take some time. E-mail report will be sent to you upon completion."; 
                             file_title =  "Please select the file with trace files' information:";
-                            title="submit List of trace files to delete";
+                            title="Submit list of trace files to delete";
                             break;
                         }
                         case  Constants.PROCESS_MOVE_TRACE_FILES:
@@ -207,7 +207,7 @@ public class SelectProcessAction extends ResearcherAction
                             file_description = "<I>You are about to move trace files from clone directories into common directory. The <B>requested file format</b> is: <p> <i> absolute file name (file path information included - c:/dirname)</i>."
                             +" The process will take some time. E-mail report will be sent to you upon completion."; 
                             file_title =  "Please select the file with trace files' information:";
-                            title="submit List of trace files to move";;
+                            title="Submit list of trace files to move";;
                             break;
                         }
                     }
@@ -257,27 +257,27 @@ public class SelectProcessAction extends ResearcherAction
                     String title = null;
                     switch( forwardName)
                     {
-                        case Constants.PROCESS_DELETE_PLATE :  {title="delete Plates";break; }
-                        case Constants.PROCESS_DELETE_CLONE_READS : {title="delete Clone End Reads (forward and reverse";break; }
-                        case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : {title="delete Clone forward End Reads";break; }
-                        case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : {title="delete Clone reverse End Reads";break; }
-                        case Constants.PROCESS_DELETE_CLONE_SEQUENCE : {title="delete Clone sequences";break; }
-                        case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title="get Trace Files' names";break; }
-                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  {title="get Order List for resequencing of End Reads";break; }
-                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : {title="get Order List for resequencing of Internal Reads";break; }
-                         case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY: {title="create Trace Files Quality Report";break; }
+                        case Constants.PROCESS_DELETE_PLATE :  {title="Delete Plates";break; }
+                        case Constants.PROCESS_DELETE_CLONE_READS : {title="Delete Clone End Reads (forward and reverse";break; }
+                        case Constants.PROCESS_DELETE_CLONE_FORWARD_READ : {title="Delete Clone forward End Reads";break; }
+                        case Constants.PROCESS_DELETE_CLONE_REVERSE_READ : {title="Delete Clone reverse End Reads";break; }
+                        case Constants.PROCESS_DELETE_CLONE_SEQUENCE : {title="Delete Clone sequences";break; }
+                        case  Constants.PROCESS_GET_TRACE_FILE_NAMES :{title="Det Trace Files' names";break; }
+                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :  {title="Get Order List for resequencing of End Reads";break; }
+                        case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  : {title="Get Order List for resequencing of Internal Reads";break; }
+                         case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY: {title="Create Trace Files Quality Report";break; }
                
-                        case Constants.PROCESS_RUN_END_READS_WRAPPER: {title="run End Reads Wrapper";break; }
-                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: {title="run Assembler for End Reads";break; }
-                        case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{title="add new Internal Primer";break; }
-                        case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:{title="view Gene Specific Oligos ordered for Clone";break; }
-                        case Constants.PROCESS_PROCESS_OLIGO_PLATE:{title = "update Oligo Plates status"; break;}
+                        case Constants.PROCESS_RUN_END_READS_WRAPPER: {title="Run End Reads Wrapper";break; }
+                        case Constants.PROCESS_RUN_ASSEMBLER_FOR_END_READS: {title="Run Assembler for End Reads";break; }
+                        case Constants.PROCESS_ADD_NEW_INTERNAL_PRIMER :{title="Add new Internal Primer";break; }
+                        case Constants.PROCESS_VIEW_OLIGO_ORDER_BY_CLONEID:{title="View Gene Specific Oligos ordered for Clone";break; }
+                        case Constants.PROCESS_PROCESS_OLIGO_PLATE:{title = "Update Oligo Plates status"; break;}
                         case Constants.PROCESS_RUN_PRIMER3:
                         {
                             spec_collection.add( Primer3Spec.getAllSpecNames() );
                             spec_names.add("Primer3 ");
                             control_names.add(Spec.PRIMER3_SPEC);
-                            title = "run Primer Designer for the set of clones";break;
+                            title = "Run Primer Designer for the set of clones";break;
                          }
                         case Constants.PROCESS_RUN_DECISION_TOOL:
                         case Constants.PROCESS_RUN_DECISION_TOOL_NEW:
@@ -285,22 +285,22 @@ public class SelectProcessAction extends ResearcherAction
                             spec_collection.add( FullSeqSpec.getAllSpecNames()  );
                             spec_names.add("Bio Evaluation of Clones: ");
                             control_names.add(Spec.FULL_SEQ_SPEC);
-                            title = "run Desicion Tool";break;
+                            title = "Run Desicion Tool";break;
                          }
                         case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:
                          {
                             spec_collection.add( PolymorphismSpec.getAllSpecNames());
                             spec_names.add("Polymorphism Finder");
                             control_names.add(Spec.POLYMORPHISM_SPEC);
-                            title = "run Polymorphism Finder for the set of clones";break;
+                            title = "Run Polymorphism Finder for the set of clones";break;
                          }
-                        case Constants.PROCESS_RUN_DISCREPANCY_FINDER:   {  title = "run Discrepancy Finder for the set of clones";break;         }
-                        case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:{title="approve Internal Primers";break; }
-                        case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:     {  title="view Internal Primers";break; }
-                        case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:  {title="order Internal Primers";break; }
+                        case Constants.PROCESS_RUN_DISCREPANCY_FINDER:   {  title = "Run Discrepancy Finder for the set of clones";break;         }
+                        case Constants.PROCESS_APPROVE_INTERNAL_PRIMERS:{title="Approve Internal Primers";break; }
+                        case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:     {  title="View Internal Primers";break; }
+                        case Constants.PROCESS_ORDER_INTERNAL_PRIMERS:  {title="Order Internal Primers";break; }
                         case Constants.PROCESS_RUN_ASSEMBLER_FOR_ALL_READS:
                         {
-                            title="assemble Clone Sequences";
+                            title="Assemble Clone Sequences";
                             /*
                             ArrayList vectors = BioVector.getAllVectors();
                             if ( vectors != null)
@@ -322,9 +322,9 @@ public class SelectProcessAction extends ResearcherAction
                         }
                         case Constants.STRETCH_COLLECTION_REPORT_INT:
                         case Constants.STRETCH_COLLECTION_REPORT_ALL_INT:
-                        { title="view Contigs for Clone";break; } 
+                        { title="View Contigs for Clone";break; } 
                         
-                        case Constants.LQR_COLLECTION_REPORT_INT:    { title="view Low Quality Regions for clone sequences";break; } 
+                        case Constants.LQR_COLLECTION_REPORT_INT:    { title="View Low Quality Regions for clone sequences";break; } 
                          case Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE:
                          case Constants.PROCESS_FIND_GAPS:
                          {
@@ -333,18 +333,18 @@ public class SelectProcessAction extends ResearcherAction
                              control_names.add(Spec.TRIM_SLIDING_WINDOW_SPEC);
                              if ( forwardName ==  Constants.PROCESS_FIND_LQR_FOR_CLONE_SEQUENCE)
                              {
-                                 title="run Low Quality Regions Findeer for clone sequences";
+                                 title="Run Low Quality Regions Findeer for clone sequences";
                              }
                              else if (forwardName ==  Constants.PROCESS_FIND_GAPS)
                              {
-                                title="run Gap Mapper";
+                                title="Run Gap Mapper";
                              }
                              
                              break;
                          }
  
                         case Constants.PROCESS_NOMATCH_REPORT:
-                        {   title="run 'NO MATCH' report";break; }
+                        {   title="Run 'NO MATCH' report";break; }
                        
                     }
                     if ( spec_names != null )
@@ -365,7 +365,7 @@ public class SelectProcessAction extends ResearcherAction
                     +"The process will take some time. The e-mail report will be sent to you upon completion."; 
                     String file_title = "Please select the sequence information file:";
                     String additional_jsp = "<INPUT TYPE=CHECKBOX NAME='send_needle_results' value=0>Attach needle aligment files.";
-                    request.setAttribute(Constants.JSP_TITLE, "run Discrepancy Finder for set of sequences");
+                    request.setAttribute(Constants.JSP_TITLE, "Run Discrepancy Finder for set of sequences");
                     request.setAttribute(Constants.FILE_DESCRIPTION, file_description);
                     request.setAttribute(Constants.FILE_TITLE, file_title);
                     request.setAttribute(Constants.FILE_NAME,Constants.FILE_NAME);
@@ -376,13 +376,13 @@ public class SelectProcessAction extends ResearcherAction
             case   Constants.PROCESS_PUT_CLONES_ON_HOLD :
             {
              //show label scan form  
-                request.setAttribute(Constants.JSP_TITLE, "put Active Clones on Hold");
+                request.setAttribute(Constants.JSP_TITLE, "Put Active Clones on Hold");
                 return (mapping.findForward("scan_label"));
             }
             case Constants.PROCESS_ACTIVATE_CLONES:
             {
               //show label scan form  
-                request.setAttribute(Constants.JSP_TITLE, "activate Clones");
+                request.setAttribute(Constants.JSP_TITLE, "Activate Clones");
                 return (mapping.findForward("scan_label"));
             }
             

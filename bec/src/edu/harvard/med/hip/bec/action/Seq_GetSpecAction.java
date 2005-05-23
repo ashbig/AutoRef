@@ -155,7 +155,7 @@ public class Seq_GetSpecAction extends ResearcherAction
  // delete spec                
                 case  Spec.SPEC_DELETE_SPEC:
                 {
-                    String title = "deleting Config";                   String additional_jsp = null;
+                    String title = "Delete Config";                   String additional_jsp = null;
                      int specid = -1;
                     String spec_id = (String)request.getParameter( "er_specid");
                     if ( spec_id == null) spec_id = (String)request.getParameter( "be_specid");

@@ -81,20 +81,23 @@ public class DirectDatabaseCommunicationsAction extends ResearcherAction
                 case Constants.PROCESS_ADD_NEW_COMMON_PRIMER :
                 case Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:
                  case Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT:
+                      case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
+              
               {
                     switch(forwardName)
                     {
-                        case Constants.PROCESS_ADD_NEW_LINKER  : {title="add  Linker"; jsp_name ="selecting_process"; prepareDisplayItems( forwardName,  request);break;}
-                        case Constants.PROCESS_ADD_NAME_TYPE  : {title="add  Name Type"; jsp_name ="selecting_process"; prepareDisplayItems( forwardName,  request);break;}
-                        case Constants.PROCESS_ADD_SPECIES_DEFINITION  : {title="add  Species Definition"; jsp_name ="selecting_process";prepareDisplayItems( forwardName,  request); break;}
-                        case Constants.PROCESS_ADD_PROJECT_DEFINITION  : {title="add  Project Definition"; jsp_name ="selecting_process";prepareDisplayItems( forwardName,  request); break;}
-                        case Constants.PROCESS_ADD_NEW_VECTOR  : {title="add  Vector"; jsp_name ="selecting_process"; prepareDisplayItems( forwardName,  request); break;}
-                        case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :{title="submit Reference Sequence Information"; jsp_name ="selecting_process"; break;}
-                        case Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : {title="submit Clone Collection"; jsp_name ="selecting_process"; break;}
-                        case Constants.PROCESS_ADD_NEW_COMMON_PRIMER :{title="add Common Primer"; jsp_name ="selecting_process";prepareDisplayItems( forwardName,  request); break;}
+                        case Constants.PROCESS_ADD_NEW_LINKER  : {title="Add  Linker"; jsp_name ="selecting_process"; prepareDisplayItems( forwardName,  request);break;}
+                        case Constants.PROCESS_ADD_NAME_TYPE  : {title="Add  Name Type"; jsp_name ="selecting_process"; prepareDisplayItems( forwardName,  request);break;}
+                        case Constants.PROCESS_ADD_SPECIES_DEFINITION  : {title="Add  Species Definition"; jsp_name ="selecting_process";prepareDisplayItems( forwardName,  request); break;}
+                        case Constants.PROCESS_ADD_PROJECT_DEFINITION  : {title="Add  Project Definition"; jsp_name ="selecting_process";prepareDisplayItems( forwardName,  request); break;}
+                        case Constants.PROCESS_ADD_NEW_VECTOR  : {title="Add  Vector"; jsp_name ="selecting_process"; prepareDisplayItems( forwardName,  request); break;}
+                        case Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :{title="Submit Reference Sequence Information"; jsp_name ="selecting_process"; break;}
+                        case Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:{title="Submit Clone Sequence"; jsp_name ="selecting_process"; break;}
+                        case Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : {title="Submit Clone Collection"; jsp_name ="selecting_process"; break;}
+                        case Constants.PROCESS_ADD_NEW_COMMON_PRIMER :{title="Add Common Primer"; jsp_name ="selecting_process";prepareDisplayItems( forwardName,  request); break;}
                         case Constants.PROCESS_ADD_NEW_CLONINGSTRATEGY:
                         {
-                            title="add Cloning Strategy"; 
+                            title="Add Cloning Strategy"; 
                             jsp_name ="selecting_process";
                             prepareDisplayItems( forwardName,  request); 
                             ArrayList biolinkers = BioLinker.getAllLinkers();
@@ -105,7 +108,7 @@ public class DirectDatabaseCommunicationsAction extends ResearcherAction
                         }
                         case Constants.PROCESS_ADD_NEW_CONNECTION_VECTOR_LINKER:
                         {
-                            title="associate Vector with Common Primer";
+                            title="Associate Vector with Common Primer";
                             jsp_name ="selecting_process";
                             prepareDisplayItems( forwardName,  request);
                             ArrayList vectors = BioVector.getAllVectors();
@@ -116,7 +119,7 @@ public class DirectDatabaseCommunicationsAction extends ResearcherAction
                         }
                          case Constants.PROCESS_ADD_TRACE_FILE_NAME_FORMAT:
                          {
-                             title="add Trace File Name Format";
+                             title="Add Trace File Name Format";
                             jsp_name ="selecting_process";
                             prepareDisplayItems( forwardName,  request);
                                break;
@@ -146,6 +149,7 @@ public class DirectDatabaseCommunicationsAction extends ResearcherAction
                }
                case -Constants.PROCESS_ADD_NEW_VECTOR  : 
                case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
+               case - Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
                case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
                {
                     FormFile requestFile = ((SubmitDataFileForm)form).getFileName();
@@ -375,19 +379,25 @@ sql += " from cloningstrategy s, vector v where v.vectorid=s.vectorid order by s
             case -Constants.PROCESS_ADD_NEW_VECTOR  :
             {
                request.setAttribute(Constants.JSP_TITLE,"Request for new vector submission");
-               request.setAttribute(Constants.ADDITIONAL_JSP,"" );
+               request.setAttribute(Constants.ADDITIONAL_JSP,"Report will be send to you by e-mail." );
                break;
             }
            case -Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES  :
            {
                request.setAttribute(Constants.JSP_TITLE,"Request for reference sequence submission");
-               request.setAttribute(Constants.ADDITIONAL_JSP,"" );
+               request.setAttribute(Constants.ADDITIONAL_JSP,"Report will be send to you by e-mail." );
+               break;
+           }
+           case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
+           {
+               request.setAttribute(Constants.JSP_TITLE,"Request for clone sequence submission");
+               request.setAttribute(Constants.ADDITIONAL_JSP,"Report will be send to you by e-mail." );
                break;
            }
            case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
            {
                request.setAttribute(Constants.JSP_TITLE,"Request for clone collection submission");
-               request.setAttribute(Constants.ADDITIONAL_JSP,"" );
+               request.setAttribute(Constants.ADDITIONAL_JSP,"Report will be send to you by e-mail." );
               break;
            }
             

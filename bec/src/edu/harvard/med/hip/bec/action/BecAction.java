@@ -4,7 +4,7 @@
  *
  * Description :
  *
- *    All <code>Actions</clode> in the FLEX application should extend
+ *    All <code>Actions</clode> in the  application should extend
  *    so that a user logon is checked in the session.  Each derived class should
  *    call super.perform() from its perform method.  If the return value is null
  *    then normal processessing should occur, otherwise the returned
@@ -17,8 +17,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.1 $
- * $Date: 2003-03-14 21:14:53 $
+ * $Revision: 1.2 $
+ * $Date: 2005-05-23 17:47:09 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -60,7 +60,7 @@ import edu.harvard.med.hip.bec.user.*;
  *    be returned.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.1 $ $Date: 2003-03-14 21:14:53 $
+ * @version    $Revision: 1.2 $ $Date: 2005-05-23 17:47:09 $
  */
 public abstract class BecAction extends org.apache.struts.action.Action {
     
@@ -86,7 +86,7 @@ public abstract class BecAction extends org.apache.struts.action.Action {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
-        
+        System.out.println("  \n\n\n    check application setting\n\n\n ");
         if(isUserLoggedIn(session)) {
             return becPerform(mapping,form,request,response);
         } else {

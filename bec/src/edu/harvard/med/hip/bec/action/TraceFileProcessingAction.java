@@ -57,7 +57,7 @@ public class TraceFileProcessingAction extends ResearcherAction
                 case Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER:
                 {
                      String items = (String)request.getParameter("items");
-                    request.setAttribute(Constants.JSP_TITLE,"processing Request for Plates Upload");
+                    request.setAttribute(Constants.JSP_TITLE,"Processing Request for Plates Upload");
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates:\n"+items.toUpperCase().trim() +". Files will be send to you by e-mail.");
                     runner.setReadDirection((String)request.getParameter("read_direction"));
                     runner.setReadType((String)request.getParameter("read_type"));
@@ -68,7 +68,7 @@ public class TraceFileProcessingAction extends ResearcherAction
                 }
                 case Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER:
                 {
-                    request.setAttribute(Constants.JSP_TITLE,"processing Request for Trace Files Transfer");
+                    request.setAttribute(Constants.JSP_TITLE,"Processing Request for Trace Files Transfer");
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Report will be send to you by e-mail.");
              
                     String inputdir = (String)request.getParameter("inputdir");
@@ -95,7 +95,7 @@ public class TraceFileProcessingAction extends ResearcherAction
                 }
                 case Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER:
                 {
-                    request.setAttribute(Constants.JSP_TITLE,"processing Request for Creating Renaming File for Trace Files");
+                    request.setAttribute(Constants.JSP_TITLE,"Processing Request for Creating Renaming File for Trace Files");
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Application will put renaming file into input directory. Report will be send to you by e-mail.");
                     String inputdir = (String)request.getParameter("inputdir");
                     runner.setInputDirectory(inputdir);
