@@ -258,18 +258,14 @@ public class PhredPhrapParser
     //CO line format: CO <contig name> <# of bases> <# of reads in contig> <# of base segments in contig> <U or C> 
     private Contig parseContigInfo(String CO_line)
     {
+        //CO(0) Contig1(1) 2591 6(3) 378 U(5)
 	Contig result = null;
-       StringTokenizer tokenizer = new StringTokenizer(CO_line);
-        tokenizer.nextToken();
-        String contigName = tokenizer.nextToken();
-        tokenizer.nextToken();
-	int numOfReads = Integer.parseInt(tokenizer.nextToken());
-
-	result = new Contig();
-        result.setNumberOfReadsInContig(numOfReads);
-        result.setName(contigName);
-
-	return result;
+        ArrayList items = Algorithms.splitString(CO_line, " ");
+    	result = new Contig();
+        result.setNumberOfReadsInContig( Integer.parseInt((String) items.get(3)));
+        result.setName( (String) items.get(1) );
+        result.setOrientation( convertOrientation ( (String) items.get(5)));
+        return result;
     }
     
     
