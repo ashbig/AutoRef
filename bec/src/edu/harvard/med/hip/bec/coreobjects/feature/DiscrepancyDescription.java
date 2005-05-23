@@ -32,7 +32,8 @@ public class DiscrepancyDescription
     public static final int      TYPE_AA = 0;
     public static final int      TYPE_NOT_AA_LINKER = 1;
     public static final int      TYPE_NOT_AA_AMBIQUOUS = 2;
-    
+     public static final int      TYPE_NOT_AA_REFSEQUENCE_AMB = 3;
+   
     public static final int      TYPE_NOT_DEFINED = -1;
     
     /** Creates a new instance of DiscrepancyDefinition */
@@ -72,6 +73,7 @@ public class DiscrepancyDescription
             {
                
                 rna_discr.add( (RNAMutation)discrepancies.get(count));
+                
             }
             else if (discrepancies.get(count) instanceof AAMutation)
             {
@@ -89,12 +91,16 @@ public class DiscrepancyDescription
          if (  discrepancies.size()==1 && m_discrepancydefinition_type == TYPE_NOT_DEFINED
                 && ((RNAMutation)rna_discr.get(0)).getCodonMut().indexOf("N") != -1)
                         m_discrepancydefinition_type = TYPE_NOT_AA_AMBIQUOUS;
+        if (discrepancies.size()==1 && m_discrepancydefinition_type == TYPE_NOT_DEFINED
+                && ((RNAMutation)rna_discr.get(0)).getChangeType() == Mutation.TYPE_RNA_REFSEQUENCE_AMB)
+                        m_discrepancydefinition_type = TYPE_NOT_AA_REFSEQUENCE_AMB;
         if (m_discrepancydefinition_type == TYPE_AA)
         { 
             rna_discr = Mutation.sortDiscrepanciesByPosition(rna_discr);
             m_rna_describes_aa.addAll(rna_discr);
         }
-        else if (m_discrepancydefinition_type == TYPE_NOT_AA_AMBIQUOUS &&  rna_discr.size()==1)
+        else if ( (m_discrepancydefinition_type == TYPE_NOT_AA_AMBIQUOUS ||
+         m_discrepancydefinition_type == TYPE_NOT_AA_REFSEQUENCE_AMB) &&  rna_discr.size()==1)
         {
             m_rna_without_aa = (RNAMutation)rna_discr.get(0);
         }
@@ -119,6 +125,7 @@ public class DiscrepancyDescription
                 break;
             }
             case TYPE_NOT_AA_AMBIQUOUS:
+            case TYPE_NOT_AA_REFSEQUENCE_AMB:
             {
                 all_discr.add(m_rna_without_aa);
                 break;
@@ -133,7 +140,8 @@ public class DiscrepancyDescription
     public int              getDiscrepancyDefintionType(){ return m_discrepancydefinition_type ;}
     public Mutation         getRNADefinition()
     {
-        if ( m_discrepancydefinition_type == DiscrepancyDescription.TYPE_NOT_AA_AMBIQUOUS)
+        if ( m_discrepancydefinition_type == DiscrepancyDescription.TYPE_NOT_AA_AMBIQUOUS ||
+            m_discrepancydefinition_type == DiscrepancyDescription.TYPE_NOT_AA_REFSEQUENCE_AMB)
         {
             return m_rna_without_aa;
         }
@@ -159,6 +167,7 @@ public class DiscrepancyDescription
                 return  m_linker.getQuality();
             }
             case TYPE_NOT_AA_AMBIQUOUS:
+            case TYPE_NOT_AA_REFSEQUENCE_AMB:
             {
                 return m_rna_without_aa.getQuality();
             }
@@ -183,6 +192,7 @@ public class DiscrepancyDescription
             }
             case TYPE_NOT_AA_LINKER:
             case TYPE_NOT_AA_AMBIQUOUS:
+            case TYPE_NOT_AA_REFSEQUENCE_AMB:
             {
                return false;
             }
@@ -330,6 +340,8 @@ public class DiscrepancyDescription
         DiscrepancyDescription discr_definition = null;
         int[] total_discrepancy_numbers_pass_high_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
         int[] total_discrepancy_numbers_pass_low_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
+        boolean isProcessAsMissense = ( cutoff_spec.getParameterByName("FS_C_PASS_H") == null ) ;
+        
         for (int count = 0; count < discrepancy_descriptions.size(); count++)
         {
             global_change_type = Mutation.TYPE_NOT_DEFINE;
@@ -338,7 +350,7 @@ public class DiscrepancyDescription
             if ( discr_definition.getAADefinition() != null)
             {
                 quality = discr_definition.getAADefinition().getQuality();
-                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType());
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType(),isProcessAsMissense);
             //penalize for amb inside aa
                 if ( discr_definition.getRNACollection() != null)
                 {
@@ -352,7 +364,7 @@ public class DiscrepancyDescription
                             || mut.getChangeType() ==   Mutation.TYPE_N_INFRAME_INSERTION   )
                         {
                              int amb_quality = mut.getQuality();
-                             int amb_global_change_type = Mutation.getMacroChangeType(mut.getChangeType());
+                             int amb_global_change_type = Mutation.getMacroChangeType(mut.getChangeType(),isProcessAsMissense);
                               if (amb_global_change_type != Mutation.TYPE_NOT_DEFINE)
                                 {
                                     if ( amb_quality == Mutation.QUALITY_LOW)
@@ -367,7 +379,7 @@ public class DiscrepancyDescription
             else if(discr_definition.getAADefinition() == null && discr_definition.getRNADefinition() != null)
             {
                 quality = discr_definition.getRNADefinition().getQuality();
-                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType());
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType(),isProcessAsMissense);
             }
             if (global_change_type != Mutation.TYPE_NOT_DEFINE)
             {
@@ -385,10 +397,14 @@ public class DiscrepancyDescription
             
         }
         //check if limit reached
+        int cut_off_hq =  0; int cut_off_lq = 0;
         for (int count = 1; count <= Mutation.MACRO_SPECTYPES_COUNT; count++)
         {
-            int cut_off_hq = cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_HIGH,-count , FullSeqSpec.MODE_PASS);
-            int cut_off_lq = cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_LOW,-count , FullSeqSpec.MODE_PASS);
+           if ( total_discrepancy_numbers_pass_high_quality[count] ==  0 && 
+                    total_discrepancy_numbers_pass_low_quality[count] == 0 ) continue;
+     
+            cut_off_hq = cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_HIGH,-count , FullSeqSpec.MODE_PASS);
+            cut_off_lq = cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_LOW,-count , FullSeqSpec.MODE_PASS);
             
             if ( cut_off_hq != FullSeqSpec.CUT_OFF_VALUE_NOT_FOUND && total_discrepancy_numbers_pass_high_quality[count] > cut_off_hq )
             {
@@ -419,6 +435,8 @@ public class DiscrepancyDescription
         DiscrepancyDescription discr_definition = null;
         int[] total_discrepancy_numbers_pass_high_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
         int[] total_discrepancy_numbers_pass_low_quality = new int[Mutation.MACRO_SPECTYPES_COUNT + 1];
+         boolean isProcessAsMissense = ( cutoff_spec.getParameterByName("FS_C_PASS_H") == null ) ;
+       
         for (int count = 0; count < discrepancy_descriptions.size(); count++)
         {
             global_change_type = Mutation.TYPE_NOT_DEFINE;
@@ -427,7 +445,7 @@ public class DiscrepancyDescription
             if ( discr_definition.getAADefinition() != null)
             {
                 quality = discr_definition.getAADefinition().getQuality();
-                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType());
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType(),isProcessAsMissense);
             //penalize for amb inside aa
                 if ( discr_definition.getRNACollection() != null)
                 {
@@ -441,7 +459,7 @@ public class DiscrepancyDescription
                             || mut.getChangeType() ==   Mutation.TYPE_N_INFRAME_INSERTION   )
                         {
                              int amb_quality = mut.getQuality();
-                             int amb_global_change_type = Mutation.getMacroChangeType(mut.getChangeType());
+                             int amb_global_change_type = Mutation.getMacroChangeType(mut.getChangeType(),isProcessAsMissense);
                               if (amb_global_change_type != Mutation.TYPE_NOT_DEFINE)
                                 {
                                     if ( amb_quality == Mutation.QUALITY_LOW)
@@ -456,7 +474,7 @@ public class DiscrepancyDescription
             else if(discr_definition.getAADefinition() == null &&   discr_definition.getRNADefinition() != null)
             {
                 quality = discr_definition.getRNADefinition().getQuality();
-                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType());
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType(),isProcessAsMissense);
             }
             if (global_change_type != Mutation.TYPE_NOT_DEFINE)
             {
@@ -481,6 +499,10 @@ public class DiscrepancyDescription
         int disc_high_fail =0;
         for (int count = 1; count <= Mutation.MACRO_SPECTYPES_COUNT; count++)
         {
+            // no discrepancy in the type
+            if ( total_discrepancy_numbers_pass_high_quality[count] ==  0 && 
+                    total_discrepancy_numbers_pass_low_quality[count] == 0 ) continue;
+            
             disc_low_pass =  cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_LOW,-count , FullSeqSpec.MODE_PASS);
             disc_high_pass = cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_HIGH,-count , FullSeqSpec.MODE_PASS);
             disc_low_fail =  cutoff_spec.getDiscrepancyNumberByType(Mutation.QUALITY_LOW,-count , FullSeqSpec.MODE_FAIL);
@@ -488,20 +510,20 @@ public class DiscrepancyDescription
 
     
             if ( (total_discrepancy_numbers_pass_high_quality[count] !=  0 && 
-                    total_discrepancy_numbers_pass_high_quality[count] >  disc_high_fail) 
+                    total_discrepancy_numbers_pass_high_quality[count] >=  disc_high_fail) 
             ||
             ( total_discrepancy_numbers_pass_low_quality[count] != 0 && 
-                    total_discrepancy_numbers_pass_low_quality[count] > disc_low_fail))
+                    total_discrepancy_numbers_pass_low_quality[count] >= disc_low_fail))
             {
                 return BaseSequence.QUALITY_BAD;
             }
             if ( (total_discrepancy_numbers_pass_high_quality[count] != 0
             && total_discrepancy_numbers_pass_high_quality[count] >  disc_high_pass 
-            && total_discrepancy_numbers_pass_high_quality[count] <= disc_high_fail)
+            && total_discrepancy_numbers_pass_high_quality[count] < disc_high_fail)
             || 
             (  total_discrepancy_numbers_pass_low_quality[count] != 0
             && total_discrepancy_numbers_pass_low_quality[count] >  disc_low_pass 
-            && total_discrepancy_numbers_pass_low_quality[count] <= disc_low_fail))
+            && total_discrepancy_numbers_pass_low_quality[count] < disc_low_fail))
             {
                 return BaseSequence.QUALITY_REVIEW;
             }
@@ -522,13 +544,14 @@ public class DiscrepancyDescription
          int penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
          DiscrepancyDescription discr_definition = null; int score = 0;
          int global_change_type = Mutation.TYPE_NOT_DEFINE;
+         boolean isProcessAsMissense = ( spec.getParameterByName("ER_C_H") == null);
         for (int count = 0; count< discrepancy_descriptions.size(); count++)
         {
             penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
             discr_definition = (DiscrepancyDescription)discrepancy_descriptions.get(count);
             if ( discr_definition.getAADefinition() != null)
             {
-                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType());
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getAADefinition().getChangeType(),isProcessAsMissense);
                 if ( global_change_type != Mutation.TYPE_NOT_DEFINE)
                 {
                     penalty = spec.getPenalty(discr_definition.getAADefinition().getQuality(),    global_change_type);// by aa mutation
@@ -544,7 +567,7 @@ public class DiscrepancyDescription
                             ||    mut.getChangeType() ==  Mutation.TYPE_N_FRAMESHIFT_INSERTION 
                             || mut.getChangeType() ==   Mutation.TYPE_N_INFRAME_INSERTION   )
                         {
-                           int amb_global_change_type = Mutation.getMacroChangeType(mut.getChangeType());
+                           int amb_global_change_type = Mutation.getMacroChangeType(mut.getChangeType(),isProcessAsMissense);
                            if ( amb_global_change_type != Mutation.TYPE_NOT_DEFINE)
                             {
                                 int amb_penalty = spec.getPenalty(mut.getQuality(),    amb_global_change_type);// by aa mutation
@@ -556,7 +579,7 @@ public class DiscrepancyDescription
             }
             else if ( discr_definition.getAADefinition() == null && discr_definition.getRNADefinition() != null)
             {
-                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType());
+                global_change_type = Mutation.getMacroChangeType(discr_definition.getRNADefinition().getChangeType(),isProcessAsMissense);
                 penalty = spec.getPenalty(discr_definition.getRNADefinition().getQuality(),global_change_type);// by rna mutation
             }
             total_penalty += penalty ;
@@ -622,7 +645,8 @@ public class DiscrepancyDescription
     
      //function counts number of discrepancies of each type
     public static int[][] getDiscrepanciesSeparatedByType(ArrayList discr_definitions,
-                                                          boolean isSeparateByQuality)
+                                                          boolean isSeparateByQuality,
+                                                          boolean isProcessAsMissense)
     {
         if (discr_definitions == null || discr_definitions.size() == 0) return null;
         
@@ -632,21 +656,23 @@ public class DiscrepancyDescription
         int res[][] = new int[Mutation.MACRO_SPECTYPES_COUNT][2] ;
         for (int count = 0; count < discr_definitions.size(); count++)
         {
+            try
+            {
             dd = (DiscrepancyDescription) discr_definitions.get(count);
             if( dd.getDiscrepancyDefintionType() == DiscrepancyDescription.TYPE_AA )
             { 
                discr = (Mutation)dd.getAADefinition() ;
-               change_type = Mutation.getMacroChangeType( discr.getChangeType() );
+               change_type = Mutation.getMacroChangeType( discr.getChangeType() ,isProcessAsMissense);
                if ( change_type == Mutation.TYPE_NOT_DEFINE)
                {
-                   change_type = Mutation.getMacroChangeType( ((Mutation)dd.getRNACollection().get(0)).getChangeType() );
+                   change_type = Mutation.getMacroChangeType( ((Mutation)dd.getRNACollection().get(0)).getChangeType() ,isProcessAsMissense);
                }
             }
             else   if( dd.getDiscrepancyDefintionType() ==  DiscrepancyDescription.TYPE_NOT_AA_LINKER
                 || dd.getDiscrepancyDefintionType() ==  DiscrepancyDescription.TYPE_NOT_AA_AMBIQUOUS )
             {
                 discr = dd.getRNADefinition();
-                change_type = Mutation.getMacroChangeType( discr.getChangeType() );
+                change_type = Mutation.getMacroChangeType( discr.getChangeType(),isProcessAsMissense );
             }
             if (isSeparateByQuality)
             {
@@ -661,7 +687,11 @@ public class DiscrepancyDescription
             }
             else quality = 0;
             res[-change_type ][ quality]++;
-                
+            }
+            catch(Exception tt)
+            {
+                System.out.println(count);
+            }
         }
            
         return res;
@@ -688,7 +718,8 @@ public class DiscrepancyDescription
                                                         int discrepancy_region_type,
                                                         boolean isHighQuality,
                                                         boolean isHTML,
-                                                        boolean isSeparateByQuality)
+                                                        boolean isSeparateByQuality,
+                                                       boolean isProcessAsMissense)
     {
          StringBuffer report = new StringBuffer();
         try
@@ -699,7 +730,8 @@ public class DiscrepancyDescription
             //int res[][] = new int[Mutation.MACRO_SPECTYPES_COUNT][2] ;
             int[][] discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(
                                                                 discr_definitions,
-                                                                isSeparateByQuality);
+                                                                isSeparateByQuality,
+                                                                isProcessAsMissense);
             
             int quality = ( isHighQuality )? 0: 1;
             //take into account that change type negative !!!!!!!!!!!!!!!
@@ -867,6 +899,19 @@ public class DiscrepancyDescription
                         || ( discr.getQueryStr() == null || discr.getQueryStr().trim().length() == 0 ))
                         {
                             temp = "amb";
+                        }
+        
+                        discrepancy_reports_cds.add(temp+ Mutation.getDescription(discr).toLowerCase() +";");
+                        break;
+                    }
+                    case TYPE_NOT_AA_REFSEQUENCE_AMB:
+                    {
+                        discr= dd.getRNADefinition();
+                        String temp = "";
+                        if ( ( discr.getSubjectStr() == null || discr.getSubjectStr().trim().length() == 0 )
+                        || ( discr.getQueryStr() == null || discr.getQueryStr().trim().length() == 0 ))
+                        {
+                            temp = "refseq_amb";
                         }
         
                         discrepancy_reports_cds.add(temp+ Mutation.getDescription(discr).toLowerCase() +";");

@@ -107,8 +107,10 @@ public abstract class Mutation
         public static final int TYPE_N_SUBSTITUTION_STOP_CODON = 56;//N substitution stop codon
         public static final int TYPE_N_FRAMESHIFT_INSERTION = 58;// N frameshift (introduced only by N)
         public static final int TYPE_N_INFRAME_INSERTION = 60;
-     //update
-         public static final int MAXIMUM_CHANGE_TYPE = 61;
+        public static final int TYPE_RNA_REFSEQUENCE_AMB = 61;
+    
+        //update
+         public static final int MAXIMUM_CHANGE_TYPE = 62;
    
    // global mutation types used for spec query
     public static final int MACRO_SPECTYPE_SILENT = -1;
@@ -135,8 +137,9 @@ public abstract class Mutation
     public static final int MACRO_SPECTYPE_N_SUBSTITUTION_STOP_CODON = -20;//N substitution stop codon
     public static final int MACRO_SPECTYPE_N_FRAMESHIFT_INSERTION = -21;// N frameshift (introduced only by N)
     public static final int MACRO_SPECTYPE_N_INFRAME_INSERTION = -22;
-    
-    public static final int MACRO_SPECTYPES_COUNT = 22;//22
+       public static final int MACRO_SPECTYPE_MISSENSE = -23;
+ 
+    public static final int MACRO_SPECTYPES_COUNT = 24;//22
 	                 
     protected int         m_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
     protected int         m_position =-1;// start of mutation (on ref sequence)
@@ -356,7 +359,7 @@ public abstract class Mutation
             case TYPE_N_SUBSTITUTION_STOP_CODON : return "Amb. stop codon substitution";//N substitution stop codon
             case TYPE_N_FRAMESHIFT_INSERTION : return "Amb. frameshift insertion";// N frameshift (introduced only by N)
             case TYPE_N_INFRAME_INSERTION : return "Amb. inframe insertion";
-           
+            case TYPE_RNA_REFSEQUENCE_AMB: return "Amb. in Reference Sequence";
             default  : return "Not known";        }
         
         
@@ -369,6 +372,7 @@ public abstract class Mutation
          {
              case Mutation.MACRO_SPECTYPE_SILENT   : return    "Silent Substitution";
             case Mutation.MACRO_SPECTYPE_INFRAME  : return   "Inframe" ;
+             case Mutation.MACRO_SPECTYPE_MISSENSE: return "Missense Substitution";
             case Mutation.MACRO_SPECTYPE_CONSERVATIVE   : return  "Conservative Substitution"  ;
             case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE   : return   "Nonconservative Substitution" ;
             case Mutation.MACRO_SPECTYPE_FRAMESHIFT   : return  "Frameshift"  ;
@@ -402,7 +406,8 @@ public abstract class Mutation
          {
              case Mutation.MACRO_SPECTYPE_SILENT   :            case Mutation.MACRO_SPECTYPE_INFRAME  : 
             case Mutation.MACRO_SPECTYPE_CONSERVATIVE   :             case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE   : 
-            case Mutation.MACRO_SPECTYPE_FRAMESHIFT   :             case Mutation.MACRO_SPECTYPE_INFRAME_DELETION  : 
+             case Mutation.MACRO_SPECTYPE_MISSENSE:
+             case Mutation.MACRO_SPECTYPE_FRAMESHIFT   :             case Mutation.MACRO_SPECTYPE_INFRAME_DELETION  : 
              case Mutation.MACRO_SPECTYPE_TRANCATION   :            case Mutation.MACRO_SPECTYPE_NO_TRANSLATION  :
             case Mutation.MACRO_SPECTYPE_POST_ELONGATION   :             case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_CDS   : 
              case Mutation.MACRO_SPECTYPE_N_SUBSTITUTION_START_CODON   : 
@@ -436,7 +441,7 @@ public abstract class Mutation
     public String toString()
     {
         String res= "\n\n\t\t\tMutation desc.\n id: " +  m_id +
-        "\t position: "+m_position +" length: "+ m_length+"\t type: "+getTypeAsString()
+        "\t position: "+m_position +"\t exp position: "+m_exp_position +" length: "+ m_length+"\t type: "+getTypeAsString()
         +"\t mut ori: "+ m_change_mut
         +" \t ori: "+m_change_ori
         +"\t sequence id: "+ m_sequenceid
@@ -762,7 +767,7 @@ public abstract class Mutation
    
    
     //function returns macro change type for discrepancy, used for  spec query
-    public static int       getMacroChangeType(int change_type)
+    public static int       getMacroChangeType(int change_type, boolean isProcessAsMissense)
     {
           switch (change_type)
           {
@@ -778,9 +783,22 @@ public abstract class Mutation
            // case Mutation.TYPE_RNA_MISSENSE : 
              case Mutation.TYPE_AA_SUBSTITUTION:
              case Mutation.TYPE_AA_CONSERVATIVE:
-                   return Mutation.MACRO_SPECTYPE_CONSERVATIVE;
+             {
+                 if ( isProcessAsMissense )
+                 {
+                     return Mutation.MACRO_SPECTYPE_MISSENSE;
+                 }  
+                 else return Mutation.MACRO_SPECTYPE_CONSERVATIVE;
+             }
              case Mutation.TYPE_AA_NONCONSERVATIVE :
+             {
+                  if ( isProcessAsMissense )
+                 {
+                     return Mutation.MACRO_SPECTYPE_MISSENSE;
+                 }  
+                 else 
                     return Mutation.MACRO_SPECTYPE_NONCONSERVATIVE;
+             }
              case  Mutation.TYPE_RNA_FRAMESHIFT : 
              case Mutation.TYPE_RNA_FRAMESHIFT_DELETION :
              case Mutation.TYPE_RNA_FRAMESHIFT_INSERTION :
