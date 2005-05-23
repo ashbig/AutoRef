@@ -86,9 +86,9 @@ public class IsolateRanker
             i_discrepancy_finder = new DiscrepancyFinder();
             i_discrepancy_finder.setNeedleGapOpen(10.0);
             i_discrepancy_finder.setNeedleGapExt(0.05);
-            i_discrepancy_finder.setQualityCutOff(m_cutoff_score);
+            i_discrepancy_finder.setQualityCutOff( m_cutoff_score );
             i_discrepancy_finder.setIdentityCutoff(60.0);
-            i_discrepancy_finder.setMaxNumberOfDiscrepancies(20);
+            i_discrepancy_finder.setMaxNumberOfDiscrepancies(30);
             i_discrepancy_finder.setInputType(true);
           
     }
@@ -131,7 +131,7 @@ public class IsolateRanker
      //main calling function : call action per construct
     public void run(Connection conn) throws BecDatabaseException//,BecUtilException, ParseException
     {
-        m_cutoff_score = m_penalty_spec.getParameterByNameInt("ER_PHRED_CUT_OFF");
+        m_cutoff_score = m_cutoff_spec.getParameterByNameInt("FS_PHRED_CUT_OFF");
         if (m_constructs != null)
         {
             for (int count = 0; count < m_constructs.size(); count++)
