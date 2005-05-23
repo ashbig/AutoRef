@@ -20,7 +20,10 @@ public class EndReadsSpec extends Spec
 {
     
    public static final int PENALTY_NOT_DEFINED = 0;
-    
+   
+   public static final int MISSENSE_SUBSTITUTION_PENALTIES = 0;
+   public static final int CONSERVATIVE_SUBSTITUTION_PENALTIES = 1;
+   
     /** Creates a new instance of EndReadsSpec */
    
     public EndReadsSpec(Hashtable p, String na, int submitter_id) 
@@ -67,6 +70,8 @@ public class EndReadsSpec extends Spec
      
      public int getPenalty(int quality, int changetype) throws BecDatabaseException 
      {
+         try
+         {
          switch (changetype)
          {
              case Mutation.MACRO_SPECTYPE_SILENT:
@@ -96,6 +101,16 @@ public class EndReadsSpec extends Spec
                  }
                  else 
                      return this.getParameterByNameInt("ER_C_L");
+             }
+               case Mutation.MACRO_SPECTYPE_MISSENSE:
+                 
+             {
+                 if  (quality == Mutation.QUALITY_NOTKNOWN || quality == Mutation.QUALITY_HIGH) 
+                 {
+                     return  this.getParameterByNameInt("ER_MISS_H");
+                 }
+                 else 
+                     return this.getParameterByNameInt("ER_MISS_L");
              }
              
              case Mutation.MACRO_SPECTYPE_NONCONSERVATIVE :
@@ -271,8 +286,13 @@ public class EndReadsSpec extends Spec
                          return this.getParameterByNameInt("ER_NINFRAME_PASS_L");
                  }
              default: return PENALTY_NOT_DEFINED;
+             
          }
-        
+         }catch(Exception e)
+         {
+             System.out.println(e.getMessage() +"getPenalty()  quality "+ quality+" change type "+ changetype);
+         return PENALTY_NOT_DEFINED;
+         }
      }
      /*
      protected void cleanup_parameters()
@@ -417,24 +437,21 @@ public class EndReadsSpec extends Spec
          
              try
              {
-                cleanup_parameters("ER_");
-             
-                //analysis
-               /* if ( m_params.get("E_isLowScore").equals("0"))
+                if ( ((String) m_params.get("ISMISSENSE")).equals("1"))
                 {
-                    
-                        m_params.remove("E_ER_HQ_SILENT");
-                        m_params.remove("E_ER_LQ_SILENT");
-                        m_params.remove("E_ER_HQ_CONSERVATIVE");
-                        m_params.remove("E_ER_LQ_CONSERVATIVE");
-                        m_params.remove("E_ER_HQ_NON_CONSERVATIVE" );
-                        m_params.remove("E_ER_LQ_NON_CONSERVATIVE");
-                        m_params.remove("E_ER_HQ_FRAMESHIFT");
-                        m_params.remove("E_ER_LQ_FRAMESHIFT" );
-                        m_params.remove("E_ER_HQ_STOP");
-                        m_params.remove("E_ER_LQ_STOP");
+                    m_params.remove("ER_C_H");
+                    m_params.remove("ER_C_L");
+                    m_params.remove("ER_NC_H");
+                    m_params.remove("ER_NC_L"); 
                 }
-                **/
+                else
+                { 
+                    m_params.remove("ER_MISS_H");m_params.remove("ER_C_L");
+                }
+                cleanup_parameters("ER_");
+            //  
+               
+                /*
                if ( m_params.get("E_isLowScore").equals("0"))
               {
                     m_params.remove("E_ER_HIGH_QUAL");
@@ -454,7 +471,7 @@ public class EndReadsSpec extends Spec
                         m_params.remove("E_ER_PHRED_TRIM_PR");
                   }
               }
-          
+          */
             
          }
          catch(Exception e1)
@@ -511,6 +528,7 @@ h.put("ER_HQ_STOP","100");
 h.put("isPhredTrimMode","1");
 h.put("ER_HQ_FRAMESHIFT","100");
 h.put("forwardName","1");
+h.put("isMissense","1");
 //check for name unique, if not add _1 to user selected name
             String spec_name_suffix = "";
             spec_name_suffix = Spec.getNameSuffix("default", Spec.END_READS_SPEC_INT) ;
