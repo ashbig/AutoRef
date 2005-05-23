@@ -154,27 +154,46 @@ public class CloneDescription
         public void                  setIsForwardERNeeded(boolean v){  m_is_forwardER_needed = v;}
         public void                  setIsReverseERNeeded(boolean v){  m_is_reverseER_needed = v ;}
        
-        
-        
         public static ArrayList getClonesDescription( ArrayList clones_to_process)throws BecDatabaseException
         {
-             ArrayList res = new ArrayList();
-               ResultSet rs = null;
-               ResultSet rs_ref = null;
-               String sql_sample = null;
-              CloneDescription seq_desc = null;
-              String cloneids_as_string =Algorithms.convertStringArrayToString(clones_to_process,"," );
+            String cloneids_as_string =Algorithms.convertStringArrayToString(clones_to_process,"," );
+            return  getClonesDescription(  cloneids_as_string );
+        }
+        
+        public static ArrayList getClonesDescription( String clones_to_process)throws BecDatabaseException
+        {
             String sql =  "select flexcloneid, iso.status as status, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
-+" and f.flexcloneid in ("+cloneids_as_string+")   order by containerid ,refsequenceid";
-                
-       
++" and f.flexcloneid in ("+clones_to_process+")   order by containerid ,refsequenceid";
+        
         try
         {
              EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
             String trace_files_path = erw.getOuputBaseDir();
            // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
+             return getClonesDescriptions(  sql,  trace_files_path,
+                       true, true, true,true, false);
+          
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while getting inforamation for "+clones_to_process+"\nSQL: "+sql);
+        } 
+    }
+    
+        
+        
+        public static ArrayList getClonesDescriptions( String sql, String trace_files_path,
+                       boolean isContainerid, boolean isSampleid, boolean isFlexsequenceid,
+                       boolean isStatus, boolean isCloningStrategyId)throws BecDatabaseException
+        {
+             ArrayList res = new ArrayList();
+               ResultSet rs = null;
+              CloneDescription seq_desc = null;
+        
+        try
+        {
+              // DatabaseTransactionLocal t = DatabaseTransactionLocal.getInstance();
             rs = DatabaseTransaction.getInstance().executeQuery(sql);
 
             while(rs.next())
@@ -183,19 +202,22 @@ public class CloneDescription
 
                 seq_desc.setBecRefSequenceId(rs.getInt("refsequenceID"));
                 seq_desc.setIsolateTrackingId( rs.getInt("isolatetrackingid"));
-                seq_desc.setContainerId(rs.getInt("containerid"));
-                seq_desc.setSampleId(rs.getInt("sampleid"));
-                seq_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
-                seq_desc.setCloneId(  rs.getInt("flexcloneid"));
-                seq_desc.setCloneStatus( rs.getInt("Status"));
-                seq_desc.setReadFilePath(trace_files_path +File.separator +seq_desc.getFlexSequenceId() + File.separator + seq_desc.getCloneId() );
+                 seq_desc.setCloneId(  rs.getInt("flexcloneid"));
+               
+                 if ( isCloningStrategyId ) seq_desc.setCloningStrategyId(rs.getInt("cloningstrategyid"));
+                if ( isContainerid) seq_desc.setContainerId(rs.getInt("containerid"));
+                if ( isSampleid) seq_desc.setSampleId(rs.getInt("sampleid"));
+                if ( isFlexsequenceid) seq_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
+                if ( isStatus) seq_desc.setCloneStatus( rs.getInt("Status"));
+                if ( trace_files_path != null)
+                    seq_desc.setReadFilePath(trace_files_path +File.separator +seq_desc.getFlexSequenceId() + File.separator + seq_desc.getCloneId() );
                 res.add( seq_desc );
                 
             }
             return res;
         } catch (Exception sqlE)
         {
-            throw new BecDatabaseException("Error occured while getting inforamation for "+cloneids_as_string+"\nSQL: "+sql);
+            throw new BecDatabaseException("Error occured while getting inforamation for SQL: "+sql);
         } finally
         {
             DatabaseTransactionLocal.closeResultSet(rs);
@@ -205,8 +227,6 @@ public class CloneDescription
         
      public static CloneDescription getCloneDescription( int clone_id)throws BecDatabaseException
     {
-          ResultSet rs = null;
-           CloneDescription clone_desc = null;
             String sql =  "select flexcloneid, flexsequenceid, iso.status as status, refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
 +" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
@@ -217,28 +237,14 @@ public class CloneDescription
         {
              EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
             String trace_files_path = erw.getOuputBaseDir();
-            rs = DatabaseTransaction.getInstance().executeQuery(sql);
-            while(rs.next())
-            {
-                clone_desc = new CloneDescription();
-                clone_desc.setBecRefSequenceId(rs.getInt("refsequenceID"));
-                clone_desc.setIsolateTrackingId( rs.getInt("isolatetrackingid"));
-                clone_desc.setContainerId(rs.getInt("containerid"));
-                clone_desc.setSampleId(rs.getInt("sampleid"));
-                clone_desc.setFlexSequenceId(rs.getInt( "flexsequenceid"));
-                clone_desc.setCloneId(  rs.getInt("flexcloneid"));
-                clone_desc.setCloneStatus( rs.getInt("Status"));
-                
-                clone_desc.setReadFilePath(trace_files_path +File.separator +clone_desc.getFlexSequenceId() + File.separator + clone_desc.getCloneId() );
-            }
-            return clone_desc;
+            ArrayList result = getClonesDescriptions(  sql,  trace_files_path,
+                       true, true, true,true, false);
+            if ( result != null & result.size() > 0 ) return (CloneDescription)result.get(0);
+            return null;
         } catch (Exception sqlE)
         {
             throw new BecDatabaseException("Error occured while getting inforamation for "+clone_id+"\nSQL: "+sql);
-        } finally
-        {
-            DatabaseTransactionLocal.closeResultSet(rs);
-        }
+        } 
     }
     
         

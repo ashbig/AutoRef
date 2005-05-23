@@ -27,7 +27,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         
-    <td > <font color="#008000" size="5"><b> create new set of parameter for Clone 
+    <td > <font color="#008000" size="5"><b> Create new set of parameter for Clone 
       Scoring</font> 
       <hr>
     
@@ -67,8 +67,7 @@
   <input type="text" name="SET_NAME" size="53" value="">
 <P>
 </td></tr>
-<tr><td>
-
+<!-- <tr><td>
   <tr> 
     <td  bgColor="#e4e9f8" width="60%"><b><font color="#000080">Phred base score 
       (high quality cut-off) </font></td>
@@ -81,31 +80,39 @@
      <td bgColor="#b8c6ed"> <input name="ER_PHRED_LOW_CUT_OFF" type="text" id="ER_PHRED_LOW_CUT_OFF" value="10" size="10" onBlur="checkNumeric(this,1,60,'','','');">
       </td>
   </tr>
-  <tr> 
-    <td >&nbsp; </td>
-  </tr>
- 
-  </td></tr>
+  <tr>     <td >&nbsp; </td>  </tr>    </td></tr> -->
   <tr> 
     <td colspan=2 ><p><b>Penalty for mutation in the gene region</b> </p> 
-     
+     <input type='radio' name='isMissense' value='1' checked>Process conservative & non-conservative substitutions together (set penalties for Missense substitution, penalties for conservative & non-conservative substitutions will not be taken into account)
+ <P><input type='radio' name='isMissense' value='0'>Process conservative & non-conservative substitutions separately (set penalties for Conservative and Non-conservative substitution, penalties for Missense substitution will not be taken into account)
       <table width="85%" border="0" align="center">
         <tr> 
-          <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base Confidence</font></strong></div></td>
+	 <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base Confidence</font></strong></div></td>
           <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High </font></strong></div></td>
           <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low </font></strong></div></td>
         </tr>
-        <tr> 
-          <td width="44%" bgColor="#e4e9f8" ><strong><font color="#000080">Silent mutation</font></strong></td>
-          <td width="16%" bgColor="#e4e9f8"><div align="center"> 
+        <tr>
+          <td width="44%" bgColor="#b8c6ed" ><strong><font color="#000080">Silent substitution</font></strong></td>
+          <td width="16%" bgColor="#b8c6ed"><div align="center"> 
               <input name="ER_S_H" type="input" id="ER_S_H" value="3" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
-          <td width="14%" bgColor="#e4e9f8"><div align="center"> 
+          <td width="14%" bgColor="#b8c6ed"><div align="center"> 
               <input name="ER_S_L" type="input" id="ER_S_L" value="1" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
         </tr>
+	<tr> 
+		  
+          <td bgColor="#e4e9f8"><strong><font color="#000080">Missense substitution</font></strong></td>
+          <td bgColor="#e4e9f8"><div align="center"> 
+              <input name="ER_MISS_H" type="input" id="ER_MISS_H" value="20" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+            </div></td>
+          <td bgColor="#e4e9f8"><div align="center"> 
+              <input name="ER_MISS_L" type="input" id="ER_MISS_L" value="10" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
+            </div></td>
+        </tr>
+    
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Conservative substitution</font></strong></td>
+	     <td bgColor="#b8c6ed"><strong><font color="#000080">Conservative substitution</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> 
               <input name="ER_C_H" type="input" id="ER_C_H" value="20" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
@@ -114,6 +121,7 @@
             </div></td>
         </tr>
         <tr> 
+        
           <td bgColor="#e4e9f8"><strong><font color="#000080">Non-conservative substitution</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> 
               <input name="ER_NC_H" type="input" id="ER_NC_H" value="50" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
@@ -122,7 +130,7 @@
               <input name="ER_NC_L" type="input" id="ER_NC_L" value="30" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
         </tr>
-        <tr> 
+        <tr>  
           <td bgColor="#b8c6ed"><strong><font color="#000080">Frameshift</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> 
               <input name="ER_FR_H" type="input" id="ER_FR_H" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
@@ -131,7 +139,7 @@
               <input name="ER_FR_L" type="input" id="ER_FR_L" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
         </tr>
-        <tr> 
+          
           <td bgColor="#e4e9f8"><strong><font color="#000080">In-frame deletion</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> 
               <input name="ER_IDEL_H" type="input" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
@@ -140,7 +148,6 @@
               <input name="ER_IDEL_L" type="input" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
         </tr>
-        <tr> 
           <td bgColor="#b8c6ed"><strong><font color="#000080">In-frame insertion</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> 
               <input name="ER_IINS_H" type="input" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
@@ -149,8 +156,7 @@
               <input name="ER_IINS_L" type="input" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
         </tr>
-        <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Truncation</font></strong></td>
+        <tr>  <td bgColor="#e4e9f8"><strong><font color="#000080">Truncation</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> 
               <input name="ER_TRANC_H" type="input" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
@@ -158,7 +164,7 @@
               <input name="ER_TRANC_L" type="input" id="ER_TRANC_L" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
         </tr>
-        <tr> 
+        <tr>  
           <td bgColor="#b8c6ed"><strong><font color="#000080">No translation (no ATG)</font></strong></td>
           <td bgColor="#b8c6ed"><div align="center"> 
               <input name="ER_NOTRANSLATION_H" type="input" id="ER_NOTRANSLATION_H" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
@@ -167,8 +173,8 @@
               <input name="ER_NOTRANSLATION_L" type="input" id="ER_NOTRANSLATION_L" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
         </tr>
-        <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Post-elongation (no stop codon)</font></strong></td>
+        <tr>
+<td bgColor="#e4e9f8"><strong><font color="#000080">Post-elongation (no stop codon)</font></strong></td>
           <td bgColor="#e4e9f8"><div align="center"> 
               <input name="ER_PLONG_H" type="input" id="ER_PLONG_H" value="1000" size="10" onBlur="checkNumeric(this,0,1000,'','','');">
             </div></td>
@@ -178,7 +184,7 @@
         </tr>
       </table></td>
   </tr>
-  <td colspan=2 ><p><b>Penalty for mutation in the linker region</b> </p> 
+  <tr><td colspan="2"> &nbsp;</td></tr><td colspan=2 ><p><b>Penalty for mutation in the linker region</b> </p> 
      
       <table width="85%" border="0" align="center">
         <tr> 
@@ -223,7 +229,7 @@
             </div></td>
       </table></td>
   </tr>
-  <tr><td colspan="2">
+<tr><td colspan="2"> &nbsp;</td></tr>  <tr><td colspan="2">
       <p><b>Penalty for mutation introduced by ambiguous bases
 </b> <P><input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show </p>

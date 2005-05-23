@@ -25,7 +25,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         
-    <td > <font color="#008000" size="5"><b> available sets of parameters Clone 
+    <td > <font color="#008000" size="5"><b> Available sets of parameters for Clone 
       Scoring</font> 
       <hr>
     
@@ -48,6 +48,7 @@
 
 
 <% ArrayList specs = (ArrayList)request.getAttribute("specs");
+String[] row_color = {"e4e9f8","b8c6ed"} ; int row_count = 0;
  if (specs.size()==0)
 {%>
 <p><b>No sets are available</b>
@@ -64,7 +65,7 @@ else if (specs.size() > 0 )
 
 <P> <font  size="4"> <b>Set Name</b></font> <%= spec.getName() %> 
       <P>&nbsp;</td></tr>
-<tr> 
+<!-- <tr> 
     <td  bgColor="#e4e9f8" width="60%"><font color="#000080"><b>Phred base score 
       (high quality cut-off)</font></td>
  <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("ER_PHRED_CUT_OFF") %>  </td>    </tr>
@@ -73,10 +74,7 @@ else if (specs.size() > 0 )
  <td bgColor="#b8c6ed">  <%= spec.getParameterByNameString("ER_PHRED_LOW_CUT_OFF") %></td>   </tr>
  
 	<tr> 
-    <td >&nbsp; </td>
-  </tr>
- 
-  </td></tr>
+    <td >&nbsp; </td>  </tr></td></tr> -->
   <tr> 
     <td colspan=2 ><p><b>Penalties for mutation in gene regions</b> </p> 
      
@@ -86,60 +84,70 @@ else if (specs.size() > 0 )
           <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High </font></strong></div></td>
           <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low </font></strong></div></td>
         </tr>
+        
         <tr> 
-          <td width="44%" bgColor="#e4e9f8" ><strong><font color="#000080">Silent mutation</font></strong></td>
+          <td width="44%" bgColor="<%= row_color[row_count % 2] %>" ><strong><font color="#000080">Silent mutation</font></strong></td>
       
-          <td width="16%" bgColor="#e4e9f8"><div align="center"><%= spec.getParameterByNameString("ER_S_H")%></div></td>
-          <td width="14%" bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_S_L")%></div></td>
+          <td width="16%" bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_S_H")%></div></td>
+          <td width="14%" bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_S_L")%></div></td>
+        </tr>
+        <%if ( spec.getParameterByNameString("ER_C_H") == null || !((String)spec.getParameterByNameString("ER_C_H")).equalsIgnoreCase("not set") )
+        {%>
+        <tr> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Conservative substitution</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_C_H")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_C_L")%></div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Conservative substitution</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"><%= spec.getParameterByNameString("ER_C_H")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"><%= spec.getParameterByNameString("ER_C_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Non-conservative    substitution</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_NC_H")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_NC_L")%></div></td>
+        </tr>
+        <%}
+        else 
+        {        %>
+           <tr> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Missense    substitution</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_MISS_H")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_MISS_L")%></div></td>
+        </tr>
+        <%}%>
+        <tr> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Frameshift</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_FR_H")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_FR_L")%></div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Non-conservative 
-            substitution</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"><%= spec.getParameterByNameString("ER_NC_H")%></div></td>
-          <td bgColor="#e4e9f8"><div align="center"><%= spec.getParameterByNameString("ER_NC_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><font color="#000080"><strong>In-frame deletion</strong></font></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_IDEL_H")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_IDEL_L")%></div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Frameshift</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"><%= spec.getParameterByNameString("ER_FR_H")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"><%= spec.getParameterByNameString("ER_FR_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">In-frame insertion</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_IINS_H")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_IINS_L")%></div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><font color="#000080"><strong>In-frame deletion</strong></font></td>
-          <td bgColor="#e4e9f8"><div align="center"><%= spec.getParameterByNameString("ER_IDEL_H")%></div></td>
-          <td bgColor="#e4e9f8"><div align="center"><%= spec.getParameterByNameString("ER_IDEL_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Truncation</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_TRANC_H")%>    </div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_TRANC_L")%></div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">In-frame insertion</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("ER_IINS_H")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"><%= spec.getParameterByNameString("ER_IINS_L")%></div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Truncation</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_TRANC_H")%>    </div></td>
-          <td bgColor="#e4e9f8"><div align="center"><%= spec.getParameterByNameString("ER_TRANC_L")%></div></td>
-        </tr>
-        <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">No translation( 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">No translation( 
             no ATG)</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("ER_NOTRANSLATION_H")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("ER_NOTRANSLATION_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_NOTRANSLATION_H")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_NOTRANSLATION_L")%></div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Post-elongation 
-            ( no stop codon)</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"><%= spec.getParameterByNameString("ER_PLONG_H")%></div></td>
-          <td bgColor="#e4e9f8"><div align="center"><%= spec.getParameterByNameString("ER_PLONG_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Post-elongation           ( no stop codon)</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_PLONG_H")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_PLONG_L")%></div></td>
         </tr>
       </table></td>
   </tr>
 
     </tr>
-	 <td colspan=2 ><p><b>Penalties for mutation in linker region</b> </p> 
+	<tr><td colspan="2"> &nbsp;</td></tr> <td colspan=2 ><p><b>Penalties for mutation in linker region</b> </p> 
      
       <table width="85%" border="0" align="center">
         <tr> 
@@ -169,7 +177,7 @@ else if (specs.size() > 0 )
        	<td bgColor="#b8c6ed"><div align="center">               <%= spec.getParameterByNameString("ER_3DI_L")%>            </div></td>
       </table></td>
   </tr>
-
+<tr><td colspan="2"> &nbsp;</td></tr>
   <tr><td colspan="2">
   <p><b>Penalties for mutation introdues by ambiguous bases</b><p>
 		<input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">

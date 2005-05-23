@@ -144,7 +144,7 @@ else if ( forwardName_int == Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFIL
 
 <tr><td><b>Please specify directory where trace files are located</td><td><input type="text" name="inputdir" id="inputdir" value="">		</td></tr>
 <%}%>
-<tr><td><b>Please specify sequencing facility </td>
+<tr><td><b>Please specify trace files' naming format </td>
 <td>
 <table border='0'>
 <!--<tr><td><input type=radio name=sequencing_facility value=<%=SequencingFacilityFileName.SEQUENCING_FACILITY_BROAD%> >Broad Institute

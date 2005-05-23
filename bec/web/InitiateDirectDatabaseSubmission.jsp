@@ -233,6 +233,19 @@ st.append("     [<a href='Help_SequenceSampleFile.jsp'>sample file</a>]</td></tr
 	
             break;
    }
+   case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:  
+   {
+            StringBuffer st = new StringBuffer();
+st.append("<tr><td>This page allows you to upload the<i> clones sequence information </i>from FASTA format file. ");
+st.append("The <b>sequence ID MUST be </b>");
+st.append("clone ID. You can submit several sequences for the clone, however, only last one will be analized by software.");
+st.append("</td></tr> <tr>   <td  bgColor='#b8c6ed'>Please select the sequence file:");
+st.append(" <input type='file' name='fileName' id='fileName' value=''>");
+st.append("     [<a href='Help_SequenceCloneFile.jsp'>sample file</a>]</td></tr></table>");
+    page_html = st.toString();	
+	
+            break;
+   }
    case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
        {
           StringBuffer st = new StringBuffer();

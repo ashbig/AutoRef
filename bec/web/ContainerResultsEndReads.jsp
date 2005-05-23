@@ -22,7 +22,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         
-    <td > <font color="#008000" size="5"><b> container End Reads Results</font> 
+    <td > <font color="#008000" size="5"><b> Container End Reads Results</font> 
       <hr>
     
     <p>

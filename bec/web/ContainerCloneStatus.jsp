@@ -22,7 +22,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         <td >
-    <font color="#008000" size="5"><b> container Check End Reads Availability  </font>
+    <font color="#008000" size="5"><b> Container Check End Reads Availability  </font>
     <hr>
     
     <p>

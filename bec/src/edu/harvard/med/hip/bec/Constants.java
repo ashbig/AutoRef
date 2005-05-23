@@ -250,9 +250,10 @@ public class Constants {
 // outside submission
     public static final int         PROCESS_SUBMIT_REFERENCE_SEQUENCES  = 96;
     public static final int         PROCESS_SUBMIT_CLONE_COLLECTION  = 97;
+   public static final int         PROCESS_SUBMIT_CLONE_SEQUENCES  = 101;
  
     
-    // max process 100
+    // max process 101
 
     //items for display 1-40
   

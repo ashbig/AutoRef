@@ -35,7 +35,7 @@ int border_line_color_counter = 0;
 <jsp:include page="NavigatorBar_Administrator.jsp" /> 
 <p><P><br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-<tr><td > <font color="#008000" size="5"><b> container Quality Report</font><hr>
+<tr><td > <font color="#008000" size="5"><b> Container Quality Report</font><hr>
 <p></td> </tr></table>
 
 <div align="center">

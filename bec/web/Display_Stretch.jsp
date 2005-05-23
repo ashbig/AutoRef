@@ -12,7 +12,7 @@
 <p><P><br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
-        <td >    <font color="#008000" size="5"><b> 	stretch Details    <hr>     <p>    </td>
+        <td >    <font color="#008000" size="5"><b> 	Stretch Details    <hr>     <p>    </td>
     </tr>
 </table>
 

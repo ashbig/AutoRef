@@ -21,7 +21,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         
-    <td > <font color="#008000" size="5"><b> clone Sequence Report</font>
+    <td > <font color="#008000" size="5"><b> Clone Sequence Report</font>
 <hr>
     
     <p>

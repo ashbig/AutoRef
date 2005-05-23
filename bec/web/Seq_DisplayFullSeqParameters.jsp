@@ -26,7 +26,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         <td >
-    <font color="#008000" size="5"><b> available sets of parameters for Biological Evaluation of Clones</font>
+    <font color="#008000" size="5"><b> Available sets of parameters for Biological Evaluation of Clones</font>
     <hr>
     
     <p>
@@ -54,6 +54,7 @@
 
 
 <% ArrayList sets = (ArrayList)request.getAttribute("specs");
+String[] row_color = {"e4e9f8","b8c6ed"} ; int row_count = 0;
  if (sets.size()==0)
 {%>
 <p><b>No sets are available</b>
@@ -71,30 +72,17 @@ else if (sets.size() > 0 )
  <P>
  
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-  <tr> 
-    <td colspan="2"> <p> <font  size="4"> <b>Set Name &nbsp;&nbsp;</b></font><%= spec.getName() %> 
-      <p> </td>
-  </tr>
-  <tr> 
-    <td> 
-  <tr> 
-    <td  bgcolor="#e4e9f8" width="64%"><font color="#000080"><b>Phred base score 
+  <tr>  <td colspan="2"> <p> <font  size="4"> <b>Set Name &nbsp;&nbsp;</b></font><%= spec.getName() %>      <p> </td>  </tr>
+  <tr>     <td  bgcolor="#e4e9f8" width="64%"><font color="#000080"><b>Phred base score 
       (high quality cut-off) </b></font></td>
-    <td bgcolor="#e4e9f8"><%= spec.getParameterByNameString("FS_PHRED_CUT_OFF")%> 
-    </td>
-  </tr>
-  <tr> 
+    <td bgcolor="#e4e9f8"><%= spec.getParameterByNameString("FS_PHRED_CUT_OFF")%>     </td>  </tr>
+  <!--<tr> 
     <td bgcolor="#b8c6ed"> <font color="#000080"><b>Phred base score (low quality 
       cut-off) </b></font></td>
     <td bgcolor="#b8c6ed"><%= spec.getParameterByNameString("FS_PHRED_LOW_CUT_OFF")%></td>
-  </tr>
-  <tr> 
-    <td >&nbsp; </td>
-  </tr>
-  <tr> 
-    <td colspan=2><b>Maximum acceptable number of discrepancies (gene region):</b> 
-      
-      <p></p>
+  </tr>-->
+  <tr>     <td colspan=2>&nbsp; </td>  </tr>
+  <tr>     <td colspan=2><b>Maximum acceptable number of discrepancies (gene region):</b>  <p></p>
       
       <table width="85%" border="0" align="center">
         <tr> 
@@ -122,12 +110,12 @@ else if (sets.size() > 0 )
         <tr> 
           <td width="44%" bgcolor="#e4e9f8" ><strong><font color="#000080">Silent 
             mutation</font></strong></td>
-          <td width="16%" bgcolor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_S_PASS_H")%></div></td>
-          <td width="14%"bgcolor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_S_PASS_L")%></div></td>
-          <td width="13%"bgcolor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_S_FAIL_H")%></div></td>
-          <td width="13%"bgcolor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_S_FAIL_L")%> 
+          <td width="16%" bgcolor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_S_PASS_H")%></div></td>
+          <td width="14%"bgcolor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_S_PASS_L")%></div></td>
+          <td width="13%"bgcolor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_S_FAIL_H")%></div></td>
+          <td width="13%"bgcolor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_S_FAIL_L")%> 
             </div></td>
-          <td width="13%"bgColor="#e4e9f8"> <div align="center"> 
+          <td width="13%"bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
               <input type="checkbox"  disabled
             <% if (spec.getParameterByName("FS_S_POLM") != null                ) 
           {%>
@@ -136,14 +124,16 @@ else if (sets.size() > 0 )
           >
             </div></td>
         </tr>
+        <% if ( spec.getParameterByNameString("FS_C_PASS_H") == null || !((String)spec.getParameterByNameString("FS_C_PASS_H")).equalsIgnoreCase("not set"))
+            {%>
         <tr> 
           <td bgColor="#b8c6ed"><b><strong><font color="#000080">Conservative 
             substitution</font></strong></b></td>
-          <td bgColor="#b8c6ed"><div align="center">          <%= spec.getParameterByNameString("FS_C_PASS_H")%> </div></td>
-          <td bgColor="#b8c6ed"><div align="center">               <%= spec.getParameterByNameString("FS_C_PASS_L")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center">              <%= spec.getParameterByNameString("FS_C_FAIL_H")%> </div></td>
-          <td bgColor="#b8c6ed"><div align="center">              <%= spec.getParameterByNameString("FS_C_FAIL_L")%> </div></td>
-          <td bgColor="#b8c6ed"> <div align="center">      <input type="checkbox"  disabled
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center">          <%= spec.getParameterByNameString("FS_C_PASS_H")%> </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center">               <%= spec.getParameterByNameString("FS_C_PASS_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center">              <%= spec.getParameterByNameString("FS_C_FAIL_H")%> </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center">              <%= spec.getParameterByNameString("FS_C_FAIL_L")%> </div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center">      <input type="checkbox"  disabled
 	           
 	           <% if (spec.getParameterByName("FS_C_POLM") != null) 
 	           {%>
@@ -153,17 +143,14 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Non-conservative 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Non-conservative 
             substitution</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_NC_PASS_H")%> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_NC_PASS_H")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_NC_PASS_L")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_NC_FAIL_H")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_NC_FAIL_L")%> 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_NC_PASS_L")%> 
-            </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_NC_FAIL_H")%> 
-            </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_NC_FAIL_L")%> 
-            </div></td>
-          <td bgColor="#e4e9f8"> <div align="center"> 
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
               <input type="checkbox"  disabled
             <% if (spec.getParameterByName("FS_NC_POLM") != null) 
             {%>
@@ -172,33 +159,38 @@ else if (sets.size() > 0 )
              >
             </div></td>
         </tr>
+        <% } else {%>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">Frameshift</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_FR_PASS_H")%> 
-            </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_FR_PASS_L")%> 
-            </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_FR_FAIL_H")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_FR_FAIL_L")%> 
-            </div></td>
-          <td bgColor="#b8c6ed"> <div align="center"> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Missense             substitution</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_MISS_PASS_H")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_MISS_PASS_L")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_MISS_FAIL_H")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_MISS_FAIL_L")%>             </div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
+              <input type="checkbox"  disabled
+            <% if (spec.getParameterByName("FS_MISS_POLM") != null) 
+            {%>                checked            <%}%>              >            </div></td>
+        </tr>
+        <%}%>
+        <tr> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Frameshift</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_FR_PASS_H")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_FR_PASS_L")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_FR_FAIL_H")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_FR_FAIL_L")%>             </div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
               <input type="checkbox" disabled 
 
             <% if (spec.getParameterByName("FS_FR_POLM") != null) 
-            {%>
-                checked
-            <%}%> 
-            >
-            </div></td>
+            {%>                checked            <%}%>             >            </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">In-frame deletion</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_PASS_H")%></div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_PASS_L")%></div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_FAIL_H")%> 
-            </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_FAIL_L")%></div></td>
-          <td bgColor="#e4e9f8"> <div align="center"> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">In-frame deletion</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_PASS_H")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_PASS_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_FAIL_H")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_IDEL_FAIL_L")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
               <input type="checkbox"  disabled
 	            
 	            <% if (spec.getParameterByName("FS_IDEL_POLM") != null) 
@@ -209,48 +201,37 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">In-frame insertion</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_PASS_H")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_PASS_L")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_FAIL_H")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_FAIL_L")%> 
-            </div></td>
-          <td bgColor="#b8c6ed"> <div align="center"> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">In-frame insertion</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_PASS_H")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_PASS_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_FAIL_H")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_IINS_FAIL_L")%>             </div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
               <input type="checkbox"  disabled
           
           <% if (spec.getParameterByName("FS_IINS_POLM") != null) 
-          {%>
-          	checked
-          <%}%> 
-          >
-            </div></td>
+          {%>          	checked          <%}%>           >            </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Truncation</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_TRANC_PASS_H")%></div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_TRANC_PASS_L")%> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Truncation</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_TRANC_PASS_H")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_TRANC_PASS_L")%> 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_TRANC_FAIL_H")%></div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_TRANC_FAIL_L")%></div></td>
-          <td bgColor="#e4e9f8"> <div align="center"> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_TRANC_FAIL_H")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_TRANC_FAIL_L")%></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
               <input type="checkbox"  
 	            
 	            <% if (spec.getParameterByName("FS_TRANC_POLM") != null) 
-	            {%>
-	            	checked
-	            <%}%> 
-	            
-	            disabled>
-            </div></td>
+	            {%>	            	checked	            <%}%>  disabled>            </div></td>
         </tr>
         <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">No translation (no ATG)</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_PASS_H")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_PASS_L")%></div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_FAIL_H")%> 
-            </div></td>
-          <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_FAIL_L") %></div></td>
-          <td bgColor="#b8c6ed"> <div align="center"> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">No translation (no ATG)</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_PASS_H")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_PASS_L")%></div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_FAIL_H")%>             </div></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_NOTRANSLATION_FAIL_L") %></div></td>
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
               <input type="checkbox" disabled  
 	           
 	           <% if (spec.getParameterByName("FS_NOTRANSLATION_POLM") != null) 
@@ -262,16 +243,16 @@ else if (sets.size() > 0 )
             </div></td>
         </tr>
         <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">Post-elongation (no stop codon)</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_PASS_H")%> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Post-elongation (no stop codon)</font></strong></td>
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_PASS_H")%> 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_PASS_L")%> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_PASS_L")%> 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_FAIL_H")%> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_FAIL_H")%> 
             </div></td>
-          <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_FAIL_L")%> 
+          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("FS_PELONG_FAIL_L")%> 
             </div></td>
-          <td bgColor="#e4e9f8"> <div align="center"> 
+          <td bgColor="<%= row_color[row_count++ % 2] %>"> <div align="center"> 
               <input type="checkbox" disabled   
 	            
 	            <% if (spec.getParameterByName("FS_PELONG_POLM") != null) 
@@ -283,10 +264,8 @@ else if (sets.size() > 0 )
         </tr>
       </table></td>
   </tr>
-  <tr>
-  <td colspan=2><b>Maximum acceptable number of discrepancies (linker region):</b> 
-     
-      <p></p>
+ <tr><td colspan="2"> &nbsp;</td></tr> 
+<tr>  <td colspan=2><b>Maximum acceptable number of discrepancies (linker region):</b> <p></p>
       <table width="85%" border="0" align="center">
         <tr> 
           <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">&nbsp;</font></strong></div></td>
@@ -360,10 +339,8 @@ else if (sets.size() > 0 )
         </tr>
       </table>
 	  </td></tr>
-  <tr> 
-    <td colspan=2> 
-     
-      <p><b>Maximum acceptable number of discrepancies introduced by ambiquous 
+  <tr> <td colspan="2"> &nbsp;</td></tr> 
+ <tr> <td colspan=2> <b>Maximum acceptable number of discrepancies introduced by ambiquous 
         bases:</b>
 		<input type="checkbox" name="show" value="1" checked onclick="javascript:showhide('divShowHide', this.checked);">
 		Show </p>
@@ -495,7 +472,7 @@ else if (sets.size() > 0 )
         
       </table></div></td>
   </tr>
-  <tr><td colspan="2">&nbsp;</td></tr>
+ <!-- <tr><td colspan="2">&nbsp;</td></tr>
   <tr> 
     <td  nowrap bgColor="#b8c6ed"><strong><font color="#000080">Maximum number 
       of ambiguous bases per 100 bases:</font></strong></td>
@@ -505,9 +482,9 @@ else if (sets.size() > 0 )
     <td width="64%"  nowrap bgColor="#e4e9f8"> <strong><font color="#000080">Maximum 
       number of consecutive ambiguous bases :</font></strong></td>
     <td width="26%"  align="left" nowrap bgColor="#e4e9f8"><%= spec.getParameterByNameString("FS_N_ROW")%></td>
-  </tr></tr>
+  </tr></tr>-->
 </table>
-
+<hR>
 
 <%}}%>
 </body>

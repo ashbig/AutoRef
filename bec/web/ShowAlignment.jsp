@@ -21,7 +21,7 @@
     <tr>
         <td >
     <font color="#008000" size="5"><b> 
-	sequence Alignment
+	Sequence Alignment
 	
     <hr>
     

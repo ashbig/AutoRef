@@ -16,7 +16,7 @@
 <br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
-        <td > <font color="#008000" size="5"><b> select Report Type</font>    <hr>    <p>    </td>
+        <td > <font color="#008000" size="5"><b> Select Report Type</font>    <hr>    <p>    </td>
     </tr>
 </table>
 

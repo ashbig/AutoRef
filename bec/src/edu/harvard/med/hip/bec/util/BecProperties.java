@@ -4,8 +4,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.5 $
- * $Date: 2005-04-12 19:33:50 $
+ * $Revision: 1.6 $
+ * $Date: 2005-05-23 17:50:15 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.5 $ $Date: 2005-04-12 19:33:50 $
+ * @version    $Revision: 1.6 $ $Date: 2005-05-23 17:50:15 $
  */
 
 public class BecProperties
@@ -45,8 +45,8 @@ public class BecProperties
     private Hashtable  m_blastable_db = null;
     private Hashtable  m_vector_libraries = null;
     private boolean     m_isDebuggingMode = false;
-    private boolean     m_isWindowsOS = false;
-    private boolean     m_isHipInternalVersion = true;
+    private int          m_isWindowsOS = 0;
+    private boolean     m_isHipInternalVersion = false;
     /**
      * Protected constructor.
      *
@@ -112,12 +112,10 @@ public class BecProperties
             value =m_properties.getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");//=/F/Sequences for BEC/files_to_transfer
              if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for original trace files directory is not set properly");
            
-            String os = System.getProperty("os.name");
-            boolean m_isWindowsOS = ( os.indexOf("Win") > -1);
-     
+        
             value =m_properties.getProperty("IS_HIP_VERSION");//=/F/Sequences for BEC/files_to_transfer
             if ( value == null  )   m_Error_messages.add("HIP/External version not defined. Setting to work as HIP internal application.");
-            else if ( Integer.parseInt(value) == 0 )  m_isHipInternalVersion  = false;
+            else if ( Integer.parseInt(value) != 0 )  m_isHipInternalVersion  = true;
             
        //    value = m_properties.getProperty("TRACE_FILES_FORMAT_FILE");//=/c/blastnew/
       //      if ( value == null || !isFileExsist(value ) )m_Error_messages.add("File with Trace File Formats not found");
@@ -142,7 +140,7 @@ public class BecProperties
      
                 }
            }
-           if (! m_properties.getProperty("IS_DEBUGING").equalsIgnoreCase( "1" ))
+           if ( !m_properties.getProperty("IS_DEBUGING").equalsIgnoreCase( "0" ))
                     m_isDebuggingMode = true;
             
      }
@@ -249,8 +247,20 @@ public class BecProperties
     public           Hashtable  getBlastableDatabases(){ return m_blastable_db ;}
     public           Hashtable  getVectorLibraries(){ return m_vector_libraries ;}
     public           boolean    isInDebugMode(){ return  m_isDebuggingMode ;}
-    public          boolean    isWindowsOS(){ return m_isWindowsOS;}
-    public          boolean    isInternalHipVersion(){ return m_isHipInternalVersion;}
+    public           boolean    isWindowsOS()
+    {
+        if (m_isWindowsOS == 0)
+        {
+           String os = System.getProperty("os.name");
+           m_isWindowsOS = ( os.indexOf("Win") > -1) ? 1:-1;
+        }
+        return m_isWindowsOS == 1;
+    }
+    public          boolean    isInternalHipVersion()
+    { 
+       return  m_isHipInternalVersion ;
+            
+    }
     
     private  InputStream getInputStream(String name) {
         return (Thread.currentThread().getContextClassLoader().getResourceAsStream(name));
@@ -262,8 +272,11 @@ public class BecProperties
         {
         BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
-          System.out.println("database " +  BecProperties.getInstance().getProperty("IS_EVALUATION_VERSION"));
-          System.out.println("database " +  BecProperties.getInstance().isSettingsVerified());
+             System.out.println("hip ver " +  BecProperties.getInstance().isInternalHipVersion());
+         System.out.println("hip ver " +  BecProperties.getInstance().isInternalHipVersion());
+     
+          System.out.println("hip ver " +  BecProperties.getInstance().isInternalHipVersion());
+      System.out.println("database " +  BecProperties.getInstance().isInDebugMode());
       
          }catch(Exception e){}
        

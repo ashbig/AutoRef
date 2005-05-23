@@ -16,7 +16,7 @@
 <br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
-        <td > <font color="#008000" size="5"><b> create / change Database settings </font>    <hr>    <p>    </td>
+        <td > <font color="#008000" size="5"><b> Create / change Database settings </font>    <hr>    <p>    </td>
     </tr>
 </table>
 
@@ -63,6 +63,7 @@
 
 <tr><td  bgcolor="#DCE8FC"> <font color="#000080">&nbsp; <input type="radio" name="forwardName" value="<%= Constants.PROCESS_SUBMIT_REFERENCE_SEQUENCES%>"> <strong> Submit reference sequence information from file</strong>  <br></td></tr>
 <tr><td bgcolor="#DCE8FC"> <font color="#000080">&nbsp; <input type="radio" name="forwardName" value="<%= Constants.PROCESS_SUBMIT_CLONE_COLLECTION%>"> <strong> Submit clone collection from file</strong>  <br></td></tr>
+<tr><td bgcolor="#DCE8FC"> <font color="#000080">&nbsp; <input type="radio" name="forwardName" value="<%= Constants.PROCESS_SUBMIT_CLONE_SEQUENCES%>"> <strong> Submit clones sequence from file</strong>  <br></td></tr>
 
 </table>
   

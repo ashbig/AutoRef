@@ -22,7 +22,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         <td >
-    <font color="#008000" size="5"><b> select Plates and Configuration for the Process:  '<%= request.getAttribute("process_name") %>'  </font>
+    <font color="#008000" size="5"><b> Select Plates and Configuration for the Process:  '<%= request.getAttribute("process_name") %>'  </font>
     <hr>
     
     <p>

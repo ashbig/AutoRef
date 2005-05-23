@@ -71,8 +71,8 @@ myNavBar1.addMenu(dhtmlMenu);
 {%>      dhtmlMenu = new NavBarMenu(100, 200);
 	dhtmlMenu.addItem(new NavBarMenuItem("Trace Files", ""));
        <!-- dhtmlMenu.addItem(new NavBarMenuItem ("Create File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create file for sequencing facility"));-->
-        dhtmlMenu.addItem(new NavBarMenuItem("Create Renaming File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=create renaming file for trace files"));
-        dhtmlMenu.addItem(new NavBarMenuItem("Upload Trace Files", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=upload trace files"));
+        dhtmlMenu.addItem(new NavBarMenuItem("Create Renaming File", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=Create renaming file for trace files"));
+        dhtmlMenu.addItem(new NavBarMenuItem("Upload Trace Files", "TraceFileProcessing.jsp?forwardName=<%=Constants.PROCESS_INITIATE_TRACEFILES_TRANSFER%>&amp;<%=Constants.JSP_TITLE%>=Upload trace files"));
 		
 myNavBar1.addMenu(dhtmlMenu);
 <%}%>
@@ -80,10 +80,10 @@ myNavBar1.addMenu(dhtmlMenu);
 {%>
 dhtmlMenu = new NavBarMenu(100, 220);
 dhtmlMenu.addItem(new NavBarMenuItem("Search", ""));
-dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=container Process History"));
-dhtmlMenu.addItem(new NavBarMenuItem("Container Description", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_TITLE%>=container Description"));
-dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_TITLE%>=container Results"));
-dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "InitiateProcess.jsp?forwardName=<%=Constants.PROCESS_SHOW_CLONE_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=clone History"));
+dhtmlMenu.addItem(new NavBarMenuItem ("Container History", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_PROCESS_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=Container Process History"));
+dhtmlMenu.addItem(new NavBarMenuItem("Container Description", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_DEFINITION_INT%>&amp;<%=Constants.JSP_TITLE%>=Container Description"));
+dhtmlMenu.addItem(new NavBarMenuItem("Container Results", "ContainerScan.jsp?forwardName=<%=Constants.CONTAINER_RESULTS_VIEW%>&amp;<%=Constants.JSP_TITLE%>=Container Results"));
+dhtmlMenu.addItem(new NavBarMenuItem("Clone History", "InitiateProcess.jsp?forwardName=<%=Constants.PROCESS_SHOW_CLONE_HISTORY%>&amp;<%=Constants.JSP_TITLE%>=Clone History"));
 <% if (user_level > 1){%>
 dhtmlMenu.addItem(new NavBarMenuItem("System Configuration", "<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.AVAILABLE_SPECIFICATION_INT%>"));
 <%}%>

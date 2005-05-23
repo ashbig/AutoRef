@@ -81,7 +81,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         <td >
-    <font color="#008000" size="5"><b> create new set of parameters for Primer Designer</font>
+    <font color="#008000" size="5"><b> Create new set of parameters for Primer Designer</font>
     <hr>
     
     <p>

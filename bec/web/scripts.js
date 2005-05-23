@@ -1,3 +1,11 @@
+function IsEmpty(aTextField) {
+   if ((aTextField.value.length==0) ||
+   (aTextField.value==null)) {
+      return true;
+   }
+   else { return false; }
+}	
+
 
 // Show/Hide functions for non-pointer layer/objects
 function showhide(divName, show_spec)
@@ -139,4 +147,9 @@ return (false);
 }
 }
 
+
+
+
+
+   
 

@@ -16,7 +16,7 @@
 <br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
-        <td > <font color="#008000" size="5"><b> create Report </font>    <hr>    <p>    </td>
+        <td > <font color="#008000" size="5"><b> Create Report </font>    <hr>    <p>    </td>
     </tr>
 </table>
 
@@ -84,7 +84,7 @@
   <tr> 
     <td bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Reference 
         Sequence Information</strong></font></div></td>
-    <td bgColor="#e4e9f8"><div align="center" ><font color="000080"><strong>BEC Clone 
+    <td bgColor="#e4e9f8"><div align="center" ><font color="000080"><strong>ACE Clone 
         Sequence Information</strong></font></div></td>
   </tr>
   <tr> 

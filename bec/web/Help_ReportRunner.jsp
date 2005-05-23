@@ -49,11 +49,11 @@
   </tr>
   <tr> 
     <td><strong> Clone Id</strong></td>
-    <td ><strong>Clone ID is a unique clone identiver shared by BEC and FLEX</strong></td>
+    <td ><strong>Clone ID is a unique clone identiver shared by ACE and FLEX</strong></td>
   </tr>
   <tr> 
     <td><strong>Sample Id</strong></td>
-    <td ><strong>BEC sample Id</strong></td>
+    <td ><strong>ACE sample Id</strong></td>
   </tr>
   <tr> 
     <td><strong>Plate Label</strong></td>
@@ -105,7 +105,7 @@
   </tr>
   <tr> 
     <td><strong>Sequence ID </strong></td>
-    <td><strong>BEC/Flex sequence Id, both values specified</strong></td>
+    <td><strong>ACE/Flex sequence Id, both values specified</strong></td>
   </tr>
   <tr> 
     <td><strong>CDS Start</strong></td>

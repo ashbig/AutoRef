@@ -22,7 +22,7 @@
     <tr>
         <td >
     <font color="#008000" size="5"><b> 
-	read Details 
+	Read Details 
 	
     <hr>
     

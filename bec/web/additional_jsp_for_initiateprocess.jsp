@@ -149,7 +149,14 @@ break;
 
 
 case Constants.PROCESS_RUNPOLYMORPHISM_FINDER:{ break;}
-case Constants.PROCESS_RUN_DISCREPANCY_FINDER:{ break;}
+case Constants.PROCESS_RUN_DISCREPANCY_FINDER:
+{ 
+    
+  additional_jsp="   <tr>   <td  bgcolor='#e4e9f8' width='64%'><b>Phred base score (high quality cut-off)</b></td>"
+  +"  <td bgcolor='#e4e9f8'> <input name='FS_PHRED_CUT_OFF' type='text'  value='25' size='10' > </td>  </tr>";
+   
+break;
+}
 
 case Constants.PROCESS_NOMATCH_REPORT:
 {

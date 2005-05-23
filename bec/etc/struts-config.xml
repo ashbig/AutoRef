@@ -131,7 +131,9 @@
              <forward name="polymorphism_spec" path="/Seq_DisplayPolymorphismParameters.jsp"/>
             <forward name="slidingwindow_spec" path="/Seq_DisplaySlidingWindowParameters.jsp"/>
             <forward name="universal_pair" path="/Seq_DisplayUniversalPrimerParameters.jsp"/>
-    </action>
+   <forward name="processing" path="/ConfirmProcess.jsp"/>
+           
+ </action>
 
  <!-- Process display item -->
     <action     path="/Seq_GetItem"

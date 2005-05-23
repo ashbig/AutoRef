@@ -24,7 +24,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
     <tr>
         <td >
-    <font color="#008000" size="5"><b> available sets of parameters for End Rewads Evaluation </font>
+    <font color="#008000" size="5"><b> Available sets of parameters for End Rewads Evaluation </font>
     <hr>
     
     <p>

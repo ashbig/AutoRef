@@ -11,7 +11,7 @@
     <hr>
     <html:errors/>
     <p>
-    <h3>You have successfully registered to BEC.</h3>
+    <h3>You have successfully registered to ACE.</h3>
 <a href="login.jsp">Login to <bean:message key="bec.name"/></a>
 </body>
 </html>
