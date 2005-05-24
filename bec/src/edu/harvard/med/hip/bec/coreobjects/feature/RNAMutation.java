@@ -252,7 +252,7 @@ public class RNAMutation extends Mutation {
          String[] codons_for_processing = {m_codon_ori,m_codon_mut};
           
          //process ambiquoaty: this function can change mut_codon_for_processing
-         boolean isAmbiquousBase = processForAmbiquoty(o, m , codons_for_processing);
+         boolean isAmbiquousBase = processForAmbiguity(o, m , codons_for_processing);
         
         //point substitution in codon , no deletion/insertion in codon
      if (o!= null && m!=null && o.length()==1 &&m.length()==1 && 
@@ -387,7 +387,7 @@ public class RNAMutation extends Mutation {
     
     //returns true - if ambiquoty exists; false otherwise
     // substitute N by write base in the case of multipal, not only N substitutions in codon
-    public static boolean processForAmbiquoty(String change_ori, String change_mut, 
+    public static boolean processForAmbiguity(String change_ori, String change_mut, 
             String[] codons_for_processing)
     {
         boolean isAmbiquousBase = false;

@@ -29,7 +29,7 @@ import edu.harvard.med.hip.utility.*;
 
 public class DiscrepancyFinder
 {
-   
+   public static final  int    DISCREPANCY_QUALITY_CUTT_OFF = 25;
     //store input & output blast files: do not allow to change
     private  String INPUT = Constants.getTemporaryFilesPath();
     public  String OUTPUT = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("NEEDLE_OUTPUT_PATH") + java.io.File.separator;
@@ -77,8 +77,8 @@ public class DiscrepancyFinder
      private boolean  m_endreads_analysis = false;
 
      //quality definition
-     private int      m_max_number_of_mutations_to_detect = 20;
-     private int      m_quality_cutoff = 20;
+     private int      m_max_number_of_mutations_to_detect = 30;
+     private int      m_quality_cutoff = DISCREPANCY_QUALITY_CUTT_OFF;
      private boolean      m_isDefineQuality  = false;
 
      //needle parameters
@@ -104,11 +104,10 @@ public class DiscrepancyFinder
      public DiscrepancyFinder()    {    }
 
 
-
-    public String      getInputDirectory(){ return m_input;}
-    public String      getOutputDirectory(){ return m_output;}
-    public ArrayList   getAligmentFileNames(){ return m_aligmentFiles;}
-     public void      setInputDirectory(String v){  m_input = v;}
+    public              String      getInputDirectory(){ return m_input;}
+    public              String      getOutputDirectory(){ return m_output;}
+    public              ArrayList   getAligmentFileNames(){ return m_aligmentFiles;}
+     public             void      setInputDirectory(String v){  m_input = v;}
   //  public void      setOutputDirectory(String v){  m_output = v;}
 
     public void addSequencePair(SequencePair pair)    {        m_seqpairs.add(  pair);    }
@@ -634,6 +633,26 @@ public class DiscrepancyFinder
         String str_mut = null;
         String str_ori = null;
         int mutation_number = discrepancy_descriptions.size();
+        
+        
+        // amb in reference sequence, substitution, not ins/del , substitution not stop codon
+        boolean isReferenceSequenceAmbiquoty = ! edu.harvard.med.hip.bec.bioutil.SequenceManipulation.isValidDNASequence(s_allel);
+        boolean isFrameshift = (q_allel == null || q_allel.equalsIgnoreCase("") || s_allel == null || s_allel.equalsIgnoreCase(""));
+        if ( isReferenceSequenceAmbiquoty && !isFrameshift)
+        {
+            discr_description = createRefSequenceAmbiguityDiscrepancyDescription( elements, 
+                                                        discr_end_pointer,
+                                                        mutation_number, 
+                                                        discr_start_pointer,
+                                                        refsequence_cds_start, 
+                                                        exper_sequence_id,
+                                                        q_allel,
+                                                        s_allel,
+                                                        quality);
+             if ( discr_description != null)   discrepancy_descriptions.add(discr_description);                                        
+             return ; 
+        }
+        
         //create rna discrepancy
         RNAMutation rna = createRNADiscrepancy( elements, 
                                                 discr_end_pointer,
@@ -660,23 +679,95 @@ public class DiscrepancyFinder
         {
            //if amb case where creation of aa not requered - skip it
           String[] codons_for_processing = {rna.getCodonOri(),rna.getCodonMut()};
-          boolean isAmbiquousBase = RNAMutation.processForAmbiquoty(rna.getSubjectStr(), rna.getQueryStr() , codons_for_processing); 
+          boolean isAmbiquousBase = RNAMutation.processForAmbiguity(rna.getSubjectStr(), rna.getQueryStr() , codons_for_processing); 
           if ( (isAmbiquousBase && !codons_for_processing[1].equalsIgnoreCase( rna.getCodonMut()))
                 || !isAmbiquousBase)
             {
-                AAMutation aa = createAADiscrepancy( codons_for_processing[1], rna.getCodonOri(),  
-                                                q_allel, s_allel,
-                                                elements[discr_start_pointer].getSubjectIndex(),
-                                                 quality ,   
-                                                 mutation_number,   
-                                                 exper_sequence_id);
-                discrepancies.add( aa );
+                //check that no discrepancy is due to reference sequence ambiquty
+                // update all RNA discrepancies in codon to be refseq ambiguity
+                // so they will not be excluded from analysis
+                if ( SequenceManipulation.isValidDNASequence( rna.getCodonOri()) || isFrameshift) 
+                {
+                
+                    AAMutation aa = createAADiscrepancy( codons_for_processing[1], rna.getCodonOri(),  
+                                                    q_allel, s_allel,
+                                                    elements[discr_start_pointer].getSubjectIndex(),
+                                                     quality ,   
+                                                     mutation_number,   
+                                                     exper_sequence_id
+                                                     );
+                    discrepancies.add( aa );
+               }
+                else
+                {
+                    rna.setChangeType(Mutation.TYPE_RNA_REFSEQUENCE_AMB );
+                }
             }
             discrepancies.add( rna);
             discr_description.setDiscrepancies(discrepancies);
             discrepancy_descriptions.add(discr_description);
         }
         
+    }
+
+   
+     private DiscrepancyDescription createRefSequenceAmbiguityDiscrepancyDescription( 
+                    SequenceElement[] elements, int discr_end_pointer,
+                    int mutation_number,  int discr_start_pointer, 
+                    int refsequence_cds_start, int exper_sequence_id,
+                    String q_allel,String s_allel,int quality)
+    {
+        DiscrepancyDescription discr_description =  new DiscrepancyDescription();
+        String cor_mut = null;
+        String cor_ori = null;
+        ArrayList discrepancies = new ArrayList();
+        String str_mut = null;
+        String str_ori = null;
+        boolean isReferenceSequenceSubmittedWithoutAmbiquoty = true;
+        
+        if ( s_allel.length()> 1 || q_allel.length() > 1 )return null;
+           //create clone codon 
+           //create rna discrepancy
+      RNAMutation rna = createRNADiscrepancy( elements, 
+                                                discr_end_pointer,
+                                                mutation_number, 
+                                                discr_start_pointer,
+                                                refsequence_cds_start, 
+                                                exper_sequence_id,
+                                                q_allel,
+                                                s_allel,
+                                                quality);
+
+       // create trancation
+        if ( edu.harvard.med.hip.bec.bioutil.SequenceManipulation.isStopCodon( rna.getCodonMut() ))
+        {
+               
+            AAMutation cur_aa_mutation =  new AAMutation();
+            cur_aa_mutation.setChangeType ( Mutation.TYPE_AA_TRUNCATION ) ;
+            cur_aa_mutation.setPosition ( ((int) (elements[discr_start_pointer].getSubjectIndex() - m_refsequence_cds_start -1)/ 3) + 1 );// start of mutation (on object sequence)
+            cur_aa_mutation.setLength ( (int) Math.ceil(rna.getCodonOri().length() / 3) );
+            cur_aa_mutation.setChangeMut ( "N/A");
+            cur_aa_mutation.setChangeOri ( "*");
+            cur_aa_mutation.setSequenceId ( exper_sequence_id) ;
+            cur_aa_mutation.setNumber ( mutation_number);
+
+            discrepancies.add( cur_aa_mutation );
+            discrepancies.add( rna);
+            discr_description.setDiscrepancies(discrepancies);
+            return discr_description;
+        }
+        else
+       {
+            isReferenceSequenceSubmittedWithoutAmbiquoty =  edu.harvard.med.hip.bec.bioutil.SequenceManipulation.isBaseAllowedByAmbiguity(s_allel.toUpperCase().charAt(0), q_allel.toUpperCase().charAt(0));
+            if ( isReferenceSequenceSubmittedWithoutAmbiquoty ) return null;
+     
+           //create new ref sequence discrepancy discription
+           rna.setChangeType( Mutation.TYPE_RNA_REFSEQUENCE_AMB );
+            discrepancies.add( rna);
+            discr_description.setDiscrepancies(discrepancies);
+            return discr_description;
+       }
+       
     }
     
     //checks by position if the AA discrepancy we are going to create was already created 
@@ -891,21 +982,20 @@ public class DiscrepancyFinder
     {
 
         AAMutation cur_aa_mutation = null;
-        
+        String atr = null;String am =  null;
          // for multibase substitution where one of the bases is N
             //resign it to be write base
-        
-        String atr =  SequenceManipulation.getTranslation( cor_mut, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
-        String am =  SequenceManipulation.getTranslation(cor_ori, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
-        cur_aa_mutation =  new AAMutation();
+        atr =  SequenceManipulation.getTranslation( cor_mut, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
+        am =  SequenceManipulation.getTranslation(cor_ori, SequenceManipulation.ONE_LETTER_TRANSLATION_NO_SPACE);
+         cur_aa_mutation =  new AAMutation();
         cur_aa_mutation.setPosition ( ((int) (subjectIndex - m_refsequence_cds_start -1)/ 3) + 1 );// start of mutation (on object sequence)
         cur_aa_mutation.setLength ( (int) Math.ceil(cor_ori.length() / 3) );
         cur_aa_mutation.setChangeMut ( atr);
         cur_aa_mutation.setChangeOri ( am);
         cur_aa_mutation.setSequenceId ( sequence_id) ;
         cur_aa_mutation.setNumber ( mutation_number) ;
-        cur_aa_mutation.getChangeType ( q_allel, s_allel ) ;
         cur_aa_mutation.setQuality( quality );
+        cur_aa_mutation.getChangeType ( q_allel, s_allel ) ;
       //  System.out.println(cur_aa_mutation.toString());
         return cur_aa_mutation;
     }
@@ -928,595 +1018,23 @@ public class DiscrepancyFinder
                 BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
-       
-           /*
-            NeedleResult res = new NeedleResult();
-
-            ArrayList files = new ArrayList();
-            BufferedReader reader = new BufferedReader(new FileReader("c:\\kinez-test.txt"));
-
-            while((line = reader.readLine()) != null)
-            {
-                StringTokenizer st = new StringTokenizer(line, "\t");
-                String [] info = new String[3];
-                int i = 0;
-
-                while(st.hasMoreTokens())
-                {
-                    info[i] = st.nextToken();
-                    i++;
-                }
-                cloneseq = info[1];
-                if (cloneseq.startsWith("'") )cloneseq.substring(1);
-
-                refseq=info[2];
-                refseq = refseq.substring(0, refseq.length()-3);
-                refseqid = Integer.parseInt(info[0]);
-                clonesequence = new AnalyzedScoredSequence(cloneseq,   refseqid);
-                clonesequence.setId(-refseqid);
-                refsequence = new BaseSequence(refseq,BaseSequence.BASE_SEQUENCE);
-                refsequence.setId(refseqid);
-                pair = new SequencePair(clonesequence ,  refsequence );
-                pairs.add(pair);
-                 DiscrepancyFinder d =new DiscrepancyFinder(pair);
-                   d.setInputDirectory("/tmp/");
-
-                 d.run();
-                   files.add( d.getAligmentFileNames() );
-                   File n = new File( (String)files.get(0));
-                  if ( clonesequence.getDiscrepancies() == null ||
-                                clonesequence.getDiscrepancies().size() == 0)
-                 {
-                     System.out.println("\t\t No discrepancies have been detected\n\n");
-                 }
-                 else
-                 {
-                           //write down mutations
-                    int discrepancy_number = 1;Mutation discr=null;
-                     for (int count = 0; count < clonesequence.getDiscrepancies().size(); count++)
-                     {
-                         discr = (Mutation) clonesequence.getDiscrepancies().get(count);
-                         if ( discrepancy_number != discr.getNumber())
-                         {
-                            System.out.println("\n\t\t New Discrepancy ");
-                            discrepancy_number = discr.getNumber();
-                         }
-                        System.out.println( discr.toString() );
-
-                     }
-                 }
-
-            }
-
-            reader.close();
-
-            
-
+           String queryFile ="C:\\BEC\\needle_exm.out";
            NeedleResult res = new NeedleResult();
-          String queryFile ="c:\\alt.txt";
-            //  String queryFile = "c:\\needleATG.out";
-             NeedleParser.parse(queryFile,res);
-
-            // edu.harvard.med.hip.bec.coreobjects.endreads.Read read =  edu.harvard.med.hip.bec.coreobjects.endreads.Read.getReadById(1154);
-            // int[] trimmed_scores = read.getTrimmedScoresAsArray();
+            NeedleParser.parse(queryFile,res);
              DiscrepancyFinder d =new DiscrepancyFinder(new ArrayList());
-             
-             String l5 = "caaattgatgagcaatgcttttttataatgccaactttgtacaaaaaagcaggcttccagctgaccaacc";
-        //     String l3 = "CATGGCTATTCGGGG";
-            String seqr="ATGCCCGCAATAAAAGAAGCAAAGCAATGAAAGGAACCAAAGAAGAGGACCACCAGGAGAAAGAAGGATCCTAACGCCCCTAAGAGGGGCTTGTCAGCTTATATGTTCTTTGCTAATGAAAACAGAGACATTGTCCGTTCCGAGAATCCTGACGTAACTTTTGGCCAAGTAGGCAGAATATTGGGTGAGAGGTGGAAGGCCTTAACTGCTGAAGAAAAGCAACCCTATGAATCTAAGGCTCAAGCAGACAAGAAGAGATACGAATCTGAAAAGGAATTGTACAATGCTACACGTGCTTGA";
-
+              String l5 = "gcggccgcataacttcgtatagcatacattatacgaagttatcagtcgacacc";
+             String l3 = "ggaagctttctagaccattcgtttggcgcgcgggccc";
+             String seqr= "ATGGGGGCCCGGGGCGCTCCTTCACGCCGTAGGCAAGCGGGGCGGCGGCTGCGGTACCTGCCCACCGGGAGCTTTCCCTTCCTTCTCCTGCTGCTGCTGCTCTGCATCCAGCTCGGGGGAGGACAGAAGAAAAAGGAGAATCTTTTAGCTGAAAAAGTAGAGCAGCTGATGGAATGGAGTTCCAGACGCTCAATCTTCCGAATGAATGGTGATAAATTCCGAAAATTTATAAAGGCACCACCTCGAAACTATTCCATGATTGTTATGTTCACTGCTCTTCAGCCTCAGCGGCAGTGTACTATTCCATGATTGTTATGTTCACTGCTCTTCAGCCTCAGCGGCAGTGTTCTGTGTGCAGGCAAGCTAATGAAGAATATCAAATACTGGCGAACTCCTGGCGCTATTCATCTGCTTTTTGTAACAAGCTCTTCTTCAGTATGGTGGACTATGATGAGGGGACAGACGTTTTTCAGCAGCTCAACATGAACTCTGCTCCTACATTCAYGCATTTWCCTCCAAAAGGCAGACCTAAGAGAGCTGATACTTTTGACCTCCAAAGAATTGGATTTGCAGCTGAGCAACTAGCAAAGTGGATTGCTGACAGAACGGATGTTCATATTCGGGTTTTCAGACCACCCAACTACTCTGGTACCATTGCTTTGGCCCTGTTAGTGTCGCTTGTTGGAGGTTTGCTTTATTNGAGAAGGAACAACTTGGAGTTCATCTATAACAAGACTGGTTGGGCCATGGTGTCTCTGTGTATAGTCTTTGCTATGACTTCTGGCCAGATGTGGAACCATATCCGTGGACCTCCATATGCTCATAAGAACCCACACAATGGACAAGTGAGCTACATTCATGGGAGCAGCCAGGCTCAGTTTGTGGCAGAATCACACATTATTCTGGTACTGAATGCCGCTATCACCATGGGGATGGTTCTTCTAAATGAAGCAGCAACTTCGAAAGGCGATGTTGGAAAAAGACGGATAATTTGCCTAGTGGGATTGGGCCTGGTGGTCTTCTTCTTCAGTTTTCTACTTTCAATATTTCGTTCCAAGTACCACGGCTATCCTTATAGTGATCTGGACTTTGAGTTG";
              d.setRefSequenceCdsStart(l5.length());
-             d.setRefSequenceCdsStop(l5.length() +seqr.length());
-             
-         //    int[]scores=null;//{10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,10,10,30,30,30,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,10,12,13,24,56,43,45,10,24,56,43,45,10,10,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,20,20,20,24,56,43,45,10,10,10,20,20,20,20,20,20,24,56,43,45,10,10,10,30,30,30,30,30,34,34,24,56,43,45,10,10,10,23,30,30,34,34,24,56,43,45,10,10,10,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,40,40,50,30,30,10,12,13,24,56,43,45,34,34,23,10,21,10,10,21,30,40,40,50,30,30};
-         d.setMaxNumberOfDiscrepancies(20);
-       // String p5="caaattgatgagcaatgcttttttataatgccaactttgtacaaaaaagcaggcttccagctgaccacc";
-         //System.out.println(p5.length());
-       //  d.setRefSequenceCdsStart(   p5.length() );
-       
+             d.setRefSequenceCdsStop( l5.length() + seqr.length());
+            
              ArrayList   m = d.run_analysis( res,  null,1188, 1203,l5.length() +seqr.length()-2);
-         
-      System.out.println("-------------------------"+queryFile);
-        /*   queryFile ="C:\\BEC\\testdf.txt";
-            NeedleParser.parse(queryFile,res);
-               m = d.run_analysis( res,  null,1188, 1203,l5.length() +seqr.length()-2);
-         
-       System.out.println("-------------------------"+queryFile);*
-           queryFile ="C:\\BEC\\testdf1.txt";
-            NeedleParser.parse(queryFile,res);
-               m = d.run_analysis( res,  null,1188, 1203,l5.length() +seqr.length()-2);
-               m = DiscrepancyDescription.assembleDiscrepancyDefinitions(m);
-       System.out.println("-------------------------"+queryFile);
-          queryFile ="C:\\BEC\\testdf2.txt";
-            NeedleParser.parse(queryFile,res);
-               m = d.run_analysis( res,  null,1188, 1203,l5.length() +seqr.length()-2);
-                m = DiscrepancyDescription.assembleDiscrepancyDefinitions(m);
-       System.out.println("-------------------------"+queryFile);
-       /*
-           queryFile ="C:\\BEC\\testdf3.txt";
-            NeedleParser.parse(queryFile,res);
-               m = d.run_analysis( res,  null,1188, 1203,l5.length() +seqr.length()-2);
-       System.out.println("-------------------------"+queryFile);
-           queryFile ="C:\\BEC\\testdf4.txt";
-            NeedleParser.parse(queryFile,res);
-               m = d.run_analysis( res,  null,1188, 1203,l5.length() +seqr.length()-2);
-       System.out.println("-------------------------"+queryFile);
-           queryFile ="C:\\BEC\\testdf5.txt";
-            NeedleParser.parse(queryFile,res);
-               m = d.run_analysis( res,  null,1188, 1203,l5.length() +seqr.length()-2);
-       System.out.println("-------------------------"+queryFile);
-           queryFile ="C:\\BEC\\testdf6.txt";
-            NeedleParser.parse(queryFile,res);
-               m = d.run_analysis( res,  null,1188, 1203,l5.length() +seqr.length()-2);
-       System.out.println("-------------------------"+queryFile);*/
-         DiscrepancyFinder df = new DiscrepancyFinder();
-        df.setNeedleGapOpen(20.0);
-        df.setNeedleGapExt(0.05);
-        df.setIdentityCutoff(60.0);
-        df.setMaxNumberOfDiscrepancies(20);
-        df.setInputType(true);     
+             for(int dd=0;dd<m.size();dd++)
+	{
+	    Mutation mut = (Mutation)m.get(dd);
+	    System.out.println(mut.toStringSeparateType() );
+}
         
-       
-        String linker5_seq = "caaattgatgagcaatgcttttttataatgccaactttgtacaaaaaagcaggcttccagctgaccacc";
-        String linker3_seq ="catggcaattcccggggatacccagctttcttgtacaaagttggcattataagaaagcattgcttatcaatttgttgc";
-      Construct construct=new Construct(1480);
-        BaseSequence construct_refseqence = construct.getRefSequenceForAnalysis( 
-                                           "ATG","GGA", "TAA");
-            
-            
-            
-            int cdsstart = linker5_seq.length() ;
-            int cdsstop =  linker5_seq.length() + construct_refseqence.getText().length() ;
-           //create refsequence for analysis
-              df.setRefSequenceCdsStart( cdsstart);
-        df.setRefSequenceCdsStop( cdsstop );
-            BaseSequence refsequence = new BaseSequence();
-            refsequence.setId( construct.getRefSeqId());
-           
-            refsequence.setText( linker5_seq.toLowerCase()+ construct_refseqence.getText().toUpperCase() + linker3_seq.toLowerCase() );
-     
-        CloneSequence clonesequence = new CloneSequence(15295);
-        df.setSequencePair(new SequencePair(clonesequence ,  refsequence));
-        df.run();
-
-     
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }    
-
-            
-            /*
-        DiscrepancyFinder df = new DiscrepancyFinder();
-        df.setNeedleGapOpen(20.0);
-        df.setNeedleGapExt(0.05);
-        df.setIdentityCutoff(60.0);
-        df.setMaxNumberOfDiscrepancies(20);
-        df.setInputType(true);     
-        
-       
-        String linker5_seq = "CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACC";
-        String linker3_seq ="GACCCAGCTTTCTTGTACAAAGTTGG";
-          df.setRefSequenceCdsStart( linker5_seq.length());
-        df.setRefSequenceCdsStop(  linker5_seq.length()+str.length() );
-        str=linker5_seq.toLowerCase()+ str.toUpperCase() + linker3_seq.toLowerCase() ;
-        BaseSequence refseq = new BaseSequence(123);
-        CloneSequence clonesequence = new CloneSequence(1 );
-        
-        df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-
-     
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-/*         
-clstr="CCAACTTTGTNCAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAANACCCAGCTTTCTTGTACNAAGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(124);
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-
-System.out.println("5 / 3 linker n subst" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-        
-        
-        
-clstr="CCAACTTNTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGNCCCAGCTNTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(124);
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-
-System.out.println("5 /3 insertion" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-        
-        
-        
-
-clstr="CCNNCTTTGTACAAANNNAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAANACCCAGCNNTTTCTTGTACAAANNNGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(124);
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-
-System.out.println("5/3 multipal ins and subst" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-        
-      
-        
-
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCNTGAAANTTCNTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGNNAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(124);
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-
-System.out.println("Gene start / stop / gene n subst simple" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-
-   
-
-
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCNCGAAANTTCNCCACNNGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGANAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(124);
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-
-System.out.println("Gene start / stop / gene n subst doubl" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-
-
- clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATNGAAACTTCGTCACCTGCCCCTCNNNATCGCTGCCATCGGNCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGNGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTNAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(124);
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-
-System.out.println("Gene start / stop / gene n subst doubl and insert" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-        
-        //5' & 3' substitutions
-clstr="CCAACCTTGTACACCAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGGTTTCTTCCACAAAGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(124);
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-        System.out.println("5' & 3' substitutions" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-      
-
-//5' & 3' deletions insertions
-
-clstr="CCAACTTTGTACAAAAGCAGGCAATCCGAAGGAATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACAGCTTTCTGTACAAAGTTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-        System.out.println("5' & 3' delet" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-
-//5' into dene deletion
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACTGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-        System.out.println("5' into gene" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-
-//discr in last base
-
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACTATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-        System.out.println("last base" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-
-
-//deletion from stop codon into linker
-
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-        System.out.println("stop into linker" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-
-//deletion across n last codons and int linker
-
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCCCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-        System.out.println("n last codons" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-
-//discrepancy in the first base of st 3' linker
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAAACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-        df.run();
-        System.out.println("first 3'" );
-        for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-        {
-            Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-            System.out.println(mut.toStringSeparateType() );
-        }
-      System.out.println("1	Start codon substitution");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCAAGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("2	Start codon deletion");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCAGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("3	Start codon + deletion");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("4	Start codon insertion");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATAGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(111);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-System.out.println("4	Start codon deletion");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCAGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-clonesequence.setId(111);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("5	Stop codon substitution into different stop codon");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTGAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-
-System.out.println("6	Stop codon deletion");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("7	Stop codon substitution into not stop codon");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTCAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("8	Stop codon insertion");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("9	Substitution");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGCAAGTGCGTCACAAAACCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("10	Inframe insertion (first codon base start)");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACAAATTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("11	Inframe deletion(first codon base start)");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("12	Inframe insertion (second codon base start)");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTAAAAAATCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-/*
-System.out.println("13	Inframe deletion (second codon base start)");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("14	Frameshift insertion (1 base)");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAAGCTTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
- 
-System.out.println("15	Frameshift insertion (n base)");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCTGCCCAAAACTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("16	Frameshift deletion (1 base)");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-System.out.println("17	Frameshift deletion (n base)");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTTCGTCACCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("18	Substitution and deletion in one codon");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAAGTCGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}
-
-System.out.println("19	Substitution and insertion in one codon");
-clstr="CCAACTTTGTACAAAAAAGCAGGCTCCGAAGGAGATACCATGAAACTAGAAAACGTCACCTGCCCCTCATCGCTGCCATCGGCCTGTTCTCCACCGTCACCCTGGCCGCCGGCTATACCGGCCCGGGCGCTACCCCGACCACCACCACGGTGAAGGCCGCGCTGGAAGCCGCCGACGACACCCCGGTGGTCCTCCAGGGCACCATCGTCAAGCGCATCAAGGGCGACATCTACGAGTTCCGCGATGCCACCGGCAGCATGAAGGTGGAGATCGACGACGAAGACTTCCCGCCGATGGAAATCAACGACAAGACCCGGGTCAAGCTGACCGGCGAAGTCGACCGCGACCTGGTCGGCCGCGAGATCGACGTCGAGTTCGTCGAAGTGATCAAGTAAGACCCAGCTTTCTTGTACAAAGTTGG";
-clonesequence.setText(clstr);  
-df.setSequencePair(new SequencePair(clonesequence ,  refseq));
-df.run();
- for(int d=0;d<clonesequence.getDiscrepancies().size();d++)
-	{
-	    Mutation mut = (Mutation)clonesequence.getDiscrepancies().get(d);
-	    System.out.println(mut.toStringSeparateType() );
-}*/
 
         }catch(Exception e)
         {
