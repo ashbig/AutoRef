@@ -103,7 +103,7 @@ public class Contig
         if (res_needle.getIdentity() < Constants.MIN_IDENTITY_CUTOFF)
         {
            // try again , if for some reson orientation is not defined properly
-            String sequence = SequenceManipulation.getComplimentCaseSencetive(m_sequence);
+             String sequence = SequenceManipulation.getComplimentCaseSencetive(m_sequence);
              nw.setQuerySeq(sequence);
        
              res_needle =  nw.runNeedle();
@@ -112,6 +112,9 @@ public class Contig
              {
                  return IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_NO_MATCH;
              }
+             else
+                 m_sequence = sequence;
+                 
             
         }
         //no coverage
