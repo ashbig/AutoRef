@@ -519,7 +519,7 @@ public class Read
         return score;
     }
     
-    
+    /*
      //get not amb read
     public boolean isPassAmbiquoutyTest(FullSeqSpec cutoff_spec) throws BecDatabaseException
     {
@@ -528,7 +528,7 @@ public class Read
        return BaseSequence.isPassAmbiquoutyTest(cutoff_spec,read_sequence_text);
        
     }
-    
+    */
     //define length of refsequence covered by read
     public int refsequenceCoveredLength()
     {
