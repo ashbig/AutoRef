@@ -397,7 +397,7 @@ public class ReportRunner extends ProcessRunner
       UIRead read = null;
       RefSequence refsequence = null; 
        ArrayList discrepancies =  null;boolean isItemsAnalized = true;
-       
+       System.out.println(clone.getCloneId());
       if ( clone.getRefSequenceId()>0)
       {
          refsequence = (RefSequence)refsequences.get(new Integer(clone.getRefSequenceId()));
@@ -526,7 +526,7 @@ public class ReportRunner extends ProcessRunner
     if(  m_clone_discr_high || m_clone_disc_low )
     {     
         discrepancies = getCloneDiscrepancies(discrepancies ,clone);
-        discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(discrepancies,true);
+        discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(discrepancies,true, false);
     }
     if(  m_clone_discr_high )
     {
@@ -662,8 +662,8 @@ public class ReportRunner extends ProcessRunner
              
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             input = new ReportRunner();
-             input.setInputData(Constants.ITEM_TYPE_CLONEID,  "172126	172214	172308	172420	172448	172170	172178	172364	172460	");
-   
+             input.setInputData(Constants.ITEM_TYPE_CLONEID,  "140174 140248 120016 120017 119607 120012 140362 140264 141446 141549 141212 141487 141581 141708 120029 135403 140367 140368 140369 140175 140176 172372 172734 172468 172646 172742 172746 172559 172654 172750 172567 172762 172575 172670 172678 172774 172778 172502 172591 172686 172694 172786 172511 172702 172793 172519 172615 172801 172718 ");
+
              
              
              

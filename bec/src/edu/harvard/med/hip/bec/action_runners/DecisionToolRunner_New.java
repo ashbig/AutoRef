@@ -213,6 +213,8 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         try
         {
            m_spec = (FullSeqSpec)Spec.getSpecById(m_spec_id);
+           boolean isProcessAsMissense = ( m_spec.getParameterByName("FS_C_PASS_H") == null ) ;
+       
 //returns string array: 100 isolates in each
            isolate_trackingid_list = getListOfIsolateTrackingId();
 
@@ -235,7 +237,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
                    clones = analyzeClones(clones, trace_files_path, m_spec,  refsequences,linkers);
                     //print
                    printReport( total_report_file_name, time_stamp, clones, count,
-                             linkers,  refsequences);
+                             linkers,  refsequences, isProcessAsMissense);
                }
                catch(Exception e)
                {
@@ -905,7 +907,8 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
 
 
 
-    private String    writeItem( CloneDescription clone, Hashtable refsequences, Hashtable linkers)
+    private String    writeItem( CloneDescription clone, Hashtable refsequences,
+                        Hashtable linkers, boolean isProcessAsMissense)
     {
         StringBuffer cloneinfo= new StringBuffer();
        RefSequence refsequence = null;
@@ -996,7 +999,7 @@ int[][] discrepancy_count  = null;
 
 if(  m_is_clone_sequence_disc_high || m_is_clone_sequence_disc_low )
 {
-    discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(clone.getCloneDiscrepancies(),true);
+    discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(clone.getCloneDiscrepancies(),true,isProcessAsMissense);
 }
 if(  m_is_clone_sequence_disc_high )
 {
@@ -1153,8 +1156,8 @@ catch(Exception e)
       private void    printReport(String total_report_file_name,
                       String time_stamp,
                       CloneDescription[] clones, int write_cycle,
-                    Hashtable  linkers, Hashtable ref_sequences
-                    )throws Exception
+                    Hashtable  linkers, Hashtable ref_sequences,
+                    boolean isProcessAsMissense)throws Exception
       {
            FileWriter fr_total_report_file_name = null;
            FileWriter[] fr_array =null;
@@ -1171,7 +1174,7 @@ catch(Exception e)
                         clone= clones[count];
                         if ( clone == null  ) break;
                         if (  clone.getRank() < 0 || clone.getRank() > m_group_definitions.length-1) continue;
-                        item_report =  writeItem(  clone,  ref_sequences,  linkers );
+                        item_report =  writeItem(  clone,  ref_sequences,  linkers, isProcessAsMissense );
                          fr_array[clone.getRank()].write(item_report + Constants.LINE_SEPARATOR);
 
                         m_group_definitions[clone.getRank()].incrementCloneCount();
@@ -1194,11 +1197,11 @@ catch(Exception e)
                         if ( clone == null) break;
                         if (  clone.getRank() < 0 || clone.getRank() > m_group_definitions.length-1) continue;
                       
-                        item_report =  writeItem(  clone,  ref_sequences,  linkers ) ;
+                        item_report =  writeItem(  clone,  ref_sequences,  linkers,isProcessAsMissense ) ;
                         fr_total_report_file_name.write(item_report + Constants.LINE_SEPARATOR);
                          m_group_definitions[clone.getRank()].incrementCloneCount();
                     }
-                    fr_total_report_file_name.flush();
+                         fr_total_report_file_name.flush();
                     fr_total_report_file_name.close();
                 }
 
@@ -1426,14 +1429,14 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
       //runner.setInputData(Constants.ITEM_TYPE_CLONEID, "172259 141149 141150 172169 135152 119982 119983 141618 141619 141620 141630 141631 141632 172223 172224 172246 172247 172248 141117 141118 141119 141151 134468 134469 134472 134475 134476 134479 134480 140012 140013 140014 140042 140043 140044 135071 135142 135143 135144 172767 172768 172769 135150 135151 172624 172625 172626 135252 135253 135396 141686 141704 141744 172167 172168 172260 172226 172227 172228 172363 172362 172691 172693 141687 141705 ");
 
       
-     runner.setInputData(Constants.ITEM_TYPE_CLONEID, "    158673	");
+     runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "     ASA001215	");
 
       
 
             runner.setUser(user);
-            runner.setNumberOfOutputFiles(Constants.OUTPUT_TYPE_GROUP_PER_FILE);
+            runner.setNumberOfOutputFiles(Constants.OUTPUT_TYPE_ONE_FILE);
           //  runner.setSpecId(4);// for yp3
-                   runner.setSpecId(33);// for bec
+                   runner.setSpecId(73);// for bec
             runner.setUserComment(" test user comment");
             //runner.setNumberOfOutputFiles( );
              runner.setFields(

@@ -31,6 +31,8 @@ import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.programs.parsers.CloneCollectionElements.*;
 import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
+import  edu.harvard.med.hip.bec.util_objects.*;
+import edu.harvard.med.hip.bec.programs.assembler.*;
 /**
  *
  * @author  htaycher
@@ -61,6 +63,10 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
            case -Constants.PROCESS_SUBMIT_CLONE_COLLECTION  : 
            {
                return "Request for clone collection submission";
+           }
+           case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
+           {
+               return "Request for clones sequence submission";
            }
             default : return "";
          }
@@ -129,6 +135,12 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
                         uploadCloneCollections(conn);
                         break;
                    }
+                    case -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES:
+                    {
+                       uploadCloneSequences(conn);
+                        break;
+                    }
+         
                  }
          } 
         catch(Exception e)  
@@ -143,6 +155,182 @@ public class DatabaseCommunicationsRunner  extends ProcessRunner
     }
     
    //-------------------------------------------------------------------
+   private void uploadCloneSequences(Connection conn)
+   {
+       //parse FASTA file
+       ArrayList sequences =  readSequencesFile();// array of basesequences
+       if ( sequences == null || sequences.size() < 1 )return;
+       ArrayList clone_descriptions =   getCloneDescriptionsForSequenceSubmission( sequences);
+       if ( clone_descriptions == null || clone_descriptions.size() < 1  )return;
+       CloneDescription clone_description = null;
+       Hashtable clone_strategies = new Hashtable();
+       BaseSequence clone_sequence = null;
+       int sequences_count = 0; int description_count = 0;
+       for ( int clone_count = 0; clone_count < clone_descriptions.size(); clone_count++)
+       {
+          
+           clone_description = (CloneDescription)clone_descriptions.get(description_count);
+           clone_sequence = (BaseSequence) sequences.get(sequences_count);
+            int res = clone_description.getCloneId() - clone_sequence.getId();
+            if( res == 0)
+            {
+                sequences_count++; description_count++;
+            }
+            else if ( res > 0 )
+            {
+               sequences_count++; continue;
+            }
+           
+           
+           try
+           {
+                // check sequence quality: reject any sequence that containes not N sequence amb.
+               if ( !edu.harvard.med.hip.bec.bioutil.SequenceManipulation.isValidDNASequence (clone_sequence.getText()))
+               {
+                   m_error_messages.add( "Sequence for cloneid "+clone_description.getCloneId() +" is not valid cDNA sequence. Any ambiguity should be presented as 'N'.");
+                   continue;
+               }
+                processSequence( conn,  clone_sequence, clone_description, clone_strategies);
+           }
+           catch(Exception e)
+           {
+               m_error_messages.add( "Cannot submit sequence for cloneid "+clone_description.getCloneId());
+           }
+       }
+       
+   }
+   
+   private ArrayList                    getCloneDescriptionsForSequenceSubmission(ArrayList sequences)
+   {
+        StringBuffer clones_to_process = new StringBuffer();
+       ArrayList item = null;int cds_start = 0; int cds_end = 0;
+       BaseSequence sequence = null;
+       for ( int count = 0; count < sequences.size(); count ++)
+       {
+           sequence = (BaseSequence)sequences.get(count);
+           clones_to_process.append( sequence.getId() ) ;
+           if ( count < sequences.size() - 1)  clones_to_process.append(",");
+       }
+       String sql = "select flexcloneid, cloningstrategyid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid  "
+        + " from isolatetracking iso,  sequencingconstruct  constr , flexinfo f "
+        +" where constr.constructid = iso.constructid and f.isolatetrackingid=iso.isolatetrackingid "
+        +" and f.flexcloneid in ("+clones_to_process.toString() +")   order by flexcloneid";
+       ArrayList clone_descriptions = null;
+       try
+       {
+           clone_descriptions = CloneDescription.getClonesDescriptions(  sql, null,  false, false, false,false, true);
+       }
+       catch(Exception e)           {               m_error_messages.add(e.getMessage());           }
+      
+       return clone_descriptions;
+   }
+  
+   
+   
+   
+   private ArrayList                    readSequencesFile()
+   {
+        ArrayList sequences =  null;
+      
+       try
+       {
+         sequences = edu.harvard.med.hip.bec.bioutil.BioFormatsFile.readFASTAFile(m_input_stream);
+       }
+       catch(Exception e)
+       {
+           m_error_messages.add("Cannot parse FASTA file");
+           return sequences;
+       }
+       if ( sequences == null || sequences.size() < 0 ) return sequences;
+       // sort array of sequenses 
+       Collections.sort(sequences, new Comparator() 
+       {
+            public int compare(Object o1, Object o2) 
+            {
+                BaseSequence cl1 = (BaseSequence)o1;
+                BaseSequence cl2 = (BaseSequence)o2;
+                return cl1.getId() - cl2.getId();
+
+            }
+            public boolean equals(java.lang.Object obj)  {   return false;  }       } );
+      return sequences;
+   }
+    
+   
+    
+   
+   private  void                  processSequence(Connection conn,   BaseSequence sequence,
+                                    CloneDescription clone_description,
+                                    Hashtable clone_strategies)throws Exception
+    {
+        
+        // history 
+        CloningStrategy cloning_strategy = null;
+        cloning_strategy =(CloningStrategy) clone_strategies.get(new Integer(clone_description.getCloningStrategyId()));
+        if ( cloning_strategy == null )
+        {
+            cloning_strategy = CloningStrategy.getById( clone_description.getCloningStrategyId() );
+            if (cloning_strategy != null)
+             {
+                 cloning_strategy.setLinker3( BioLinker.getLinkerById( cloning_strategy.getLinker3Id() ));
+                 cloning_strategy.setLinker5( BioLinker.getLinkerById( cloning_strategy.getLinker5Id() ));
+                 clone_strategies.put(new Integer(clone_description.getCloningStrategyId() ),cloning_strategy);
+            }
+             
+        }
+
+        //get refsequence 
+       RefSequence refsequence = new RefSequence( clone_description.getBecRefSequenceId());
+       BioLinker linker5 = cloning_strategy.getLinker5();
+        BioLinker linker3 = cloning_strategy.getLinker3();
+       int cds_start = linker5.getSequence().length();
+        int cds_stop = linker5.getSequence().length() +  refsequence.getCodingSequence().length();
+        BaseSequence base_refsequence =  new BaseSequence(linker5.getSequence() + refsequence.getCodingSequence()+linker3.getSequence(), BaseSequence.BASE_SEQUENCE );
+        base_refsequence.setId(refsequence.getId());
+          
+           //check coverage
+          Contig contig = new Contig();
+          contig.setSequence(sequence.getText().toUpperCase());
+              
+       int result = contig.checkForCoverage(clone_description.getCloneId(), cds_start,  cds_stop,  base_refsequence);
+       submitSequence( conn,    sequence.getText(),  clone_description,  cds_start,  cds_stop,      result);  
+    }
+       
+        
+    private void            submitSequence(Connection conn,   String sequence,
+                                CloneDescription clone_description, int cds_start, int cds_end,
+                                int sequence_quality) throws Exception
+    {
+        try
+        {
+            CloneSequence cl_seq = new  CloneSequence( sequence, clone_description.getBecRefSequenceId());
+            cl_seq.setCloneSequenceType ( BaseSequence.CLONE_SEQUENCE_TYPE_FINAL); //final\conseq\final editied
+            cl_seq.setApprovedById ( m_user.getId() );//BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+            cl_seq.setIsolatetrackingId (clone_description.getIsolateTrackingId()); //BecIDGenerator.BEC_OBJECT_ID_NOTSET= v;}
+            cl_seq.setCloneSequenceStatus (BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED);
+            cl_seq.setCdsStart(cds_start);
+            cl_seq.setCdsStop(cds_end);
+            cl_seq.insert(conn);
+
+              //update isolatetracking 
+             IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_SUBMITED_FROM_OUTSIDE,
+                                                   clone_description.getIsolateTrackingId(),  conn );
+             IsolateTrackingEngine.updateAssemblyStatus(  sequence_quality,     clone_description.getIsolateTrackingId(),      conn);
+             conn.commit();
+        }
+        catch(Exception e)
+        {
+            throw new BecDatabaseException("Can not insert sequence fro clone "+ clone_description.getCloneId());
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    //--------------------------------------
    private void uploadCloneCollections(Connection conn)
    {
         ArrayList clone_collection= null;
@@ -630,10 +818,10 @@ private boolean isCloneCollectionNameExists(CloneCollection collection, Connecti
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
             DatabaseCommunicationsRunner runner = new DatabaseCommunicationsRunner();
             runner.setUser(user);
-            File f = new File("C:\\BEC\\bec\\docs\\ApplicationSetup\\CloneCollection.xml");
+            File f = new File("C:\\BEC\\submit_clone_sequence.txt");
             InputStream input = new FileInputStream(f);
             runner.setInputStream(input);
-            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_COLLECTION);
+            runner.setProcessType( -Constants.PROCESS_SUBMIT_CLONE_SEQUENCES);
             runner.run();
       
         }

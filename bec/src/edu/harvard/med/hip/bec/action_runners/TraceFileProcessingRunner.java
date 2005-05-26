@@ -521,12 +521,12 @@ public class TraceFileProcessingRunner extends ProcessRunner
 TraceFileProcessingRunner runner = new TraceFileProcessingRunner();
 runner.setProcessType(Constants.PROCESS_CREATE_RENAMING_FILE_FOR_TRACEFILES_TRANSFER);
 runner.setReadType(Constants.READ_TYPE_INTERNAL_STR);//m_read_type= read_type;}
-runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_HTMBC);
-runner.setInputDirectory("C:\\bio\\plate_dump");
-runner.setOutputDirectory( "C:\\bio\\original_files");
-runner.setRenamingFile(new  FileInputStream("C:\\bio\\plate_dump\\mapping.txt"));
+//runner.setSequencingFacility(SequencingFacilityFileName.SEQUENCING_FACILITY_KOLODNER);
+runner.setInputDirectory("E:\\Yersinia pestis KIM\\files_to_transfer");
+//runner.setOutputDirectory( "C:\\bio\\original_files");
+runner.setRenamingFile(new  FileInputStream("E:\\Yersinia pestis KIM\\files_to_transfer\\mapping.txt"));
 runner.setFormatName("Kolodner");
-     runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
+     runner.setUser( AccessManager.getInstance().getUser("tigr","tigr"));
        runner.setDelete("YES");
            
        

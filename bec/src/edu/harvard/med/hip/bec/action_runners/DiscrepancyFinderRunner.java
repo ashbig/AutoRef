@@ -34,7 +34,7 @@ import edu.harvard.med.hip.bec.ui_objects.*;
  */
 public class DiscrepancyFinderRunner extends ProcessRunner
 {
-    private int                 m_cutoff_score = 25;
+    private int                 m_cutoff_score = DiscrepancyFinder.DISCREPANCY_QUALITY_CUTT_OFF;
     private Hashtable           m_cloning_strategies = null;
     private DiscrepancyFinder       i_discrepancy_finder = null;//default:used by all functions
 
@@ -43,7 +43,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
     private static final int        MODE_GET_CONTIGS = 1;
 
      public String getTitle()     {  return "Request for discrepancy finder run.";           }
-
+     public void            setDiscrepancyQualityCutOff(int v){m_cutoff_score = v;}
 
     public void run()
     {
@@ -108,9 +108,9 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             i_discrepancy_finder = new DiscrepancyFinder();
             i_discrepancy_finder.setNeedleGapOpen(20.0);
             i_discrepancy_finder.setNeedleGapExt(0.05);
-            i_discrepancy_finder.setQualityCutOff(m_cutoff_score);
+            i_discrepancy_finder.setQualityCutOff( m_cutoff_score );
             i_discrepancy_finder.setIdentityCutoff(60.0);
-            i_discrepancy_finder.setMaxNumberOfDiscrepancies(20);
+            i_discrepancy_finder.setMaxNumberOfDiscrepancies(30);
             i_discrepancy_finder.setInputType(true);
     }
     private void            processStretchCollection(CloneDescription clone, Connection conn) throws Exception

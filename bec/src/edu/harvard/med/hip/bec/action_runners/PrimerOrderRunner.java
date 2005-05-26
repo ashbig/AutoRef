@@ -554,14 +554,13 @@ public class PrimerOrderRunner extends ProcessRunner
             
        //     input.setItemsType( Constants.ITEM_TYPE_CLONEID);
             input.setUser(user);
-            input.setInputData(Constants.ITEM_TYPE_CLONEID,"  173473     173477     173489     173607     173613     173619     173625     173630     173633     173642     173647     173649     173654     173662     173665     173669     173678     173682     173686     173689     173884     173888     173912     173932     173949  ");//157775     157799     157818     157826     157831     157839     158080     158096     158122     158142     158152     158159     158511     158551     158613 ");
-            
+            input.setInputData(Constants.ITEM_TYPE_CLONEID,"  141384	 172316	 172638	 172476	 172662	 172782	 172599	 172607	");
             
             
             //input.setPrimerNumber();
             input.setPrimerPlacementFormat(PrimerOrderRunner.PLACEMENT_FORMAT_ALL_TOGETHER );
             input.setNumberOfWellsOnPlate(96 );
-            input.setPrimersSelectionRule( PrimerOrderRunner.OLIGO_SELECTION_FORMAT_REFSEQ_ONLY);
+            input.setPrimersSelectionRule( PrimerOrderRunner.OLIGO_SELECTION_FORMAT_STRETCH_COOLECTION_ONLY);
             input.isFullPlatesOnly(false);
             input.setIsTryMode(true);
             input.setFirstWell(4);
