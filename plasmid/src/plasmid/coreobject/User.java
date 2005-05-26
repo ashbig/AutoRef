@@ -104,4 +104,8 @@ public class User {
     public void setPi(String s) {this.pi = s;}
     public void setGroup(String s) {this.group = s;}
     public void setPassword(String s) {this.password = s;}
+    
+    public String getUsername() {
+        return firstname+" "+lastname;
+    }
 }

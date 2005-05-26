@@ -17,8 +17,9 @@ import plasmid.database.*;
  * @author  DZuo
  */
 public class Importer {
-    public static final String filepath = "G:\\plasmid\\HIP_PA\\";
+    //public static final String filepath = "G:\\plasmid\\HIP_PA\\";
     //public static final String filepath = "G:\\plasmid\\HIP_Human\\";
+    public static final String filepath = "G:\\plasmid\\Other\\";
     
     private List tables;
     private String error;
@@ -85,6 +86,7 @@ public class Importer {
         GrowthConditionImporter gimp = new GrowthConditionImporter(conn);
         InsertImporter iimp = new InsertImporter(conn);
         RefseqImporter rimp = new RefseqImporter(conn);
+        PlateImporter plateImp = new PlateImporter(conn);
         for(int i=0; i<tables.size(); i++) {
             ImportTable table = (ImportTable)tables.get(i);
             
@@ -190,6 +192,10 @@ public class Importer {
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.INSERTPROPERTY)) {
                     System.out.println("Importing INSERTPROPERTY.");
                     iimp.importInsertProperty(table);
+                }
+                if(table.getTableName().trim().equalsIgnoreCase(ImportTable.PLATE)) {
+                    System.out.println("Importing PLATE");
+                    plateImp.importPlateAndSample(table);
                 }
             } catch (Exception ex) {
                 setError("Error occured during import.");

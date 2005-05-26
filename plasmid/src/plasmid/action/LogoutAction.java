@@ -19,7 +19,7 @@ import plasmid.Constants;
  *
  * @author  DZuo
  */
-public class LogoutAction extends Action {
+public class LogoutAction extends UserAction {
     
     /**
      * Does the real work for the perform method which must be overriden by the
@@ -33,7 +33,7 @@ public class LogoutAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward userPerform(ActionMapping mapping,
     ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         List cart = (List)request.getSession().getAttribute(Constants.CART);

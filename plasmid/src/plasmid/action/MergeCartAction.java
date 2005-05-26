@@ -31,7 +31,7 @@ import plasmid.coreobject.ShoppingCartItem;
  *
  * @author  DZuo
  */
-public class MergeCartAction extends Action {
+public class MergeCartAction extends UserAction {
     
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
@@ -48,7 +48,7 @@ public class MergeCartAction extends Action {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
-    public ActionForward perform(ActionMapping mapping,
+    public ActionForward userPerform(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)

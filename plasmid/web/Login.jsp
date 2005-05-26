@@ -26,6 +26,7 @@
 <bean:message key="registration.successful"/>
 </logic:present>
 <p>
+<html:errors/>
 <table width="100%" border="0">
   <tr> 
     <td width="12%" valign="baseline" class="formlabel">Email:</td>
