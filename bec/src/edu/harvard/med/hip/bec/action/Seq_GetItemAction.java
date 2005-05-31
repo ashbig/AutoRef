@@ -472,7 +472,9 @@ public class Seq_GetItemAction extends ResearcherAction
                 {
                     request.setAttribute("primer3", Primer3Spec.getAllNotUsedSpecs( ));
                     request.setAttribute(Constants.JSP_TITLE,"Select Specification to delete");
-                     return (mapping.findForward("choose_spec"));
+                    request.setAttribute("forwardName", new Integer(Spec.SPEC_DELETE_SPEC));
+                
+                    return (mapping.findForward("choose_spec"));
                 }
                 
                
