@@ -29,14 +29,23 @@ public class Renamer
         Renamer r = new Renamer();
         try
         {
-            //        moveReverseReads("11836\\39079 11846\\39087" , "C:\\bio\\plate_analysis\\clone_samples");
+              //        moveReverseReads("11836\\39079 11846\\39087" , "C:\\bio\\plate_analysis\\clone_samples");
             //printFileNames("E:\\Sequences for BEC\\files_to_transfer");
-            deleteFileDirectories("6815","C:\\bio\\plate_analysis\\clone_samples");
+           // deleteFileDirectories("6815","C:\\bio\\plate_analysis\\clone_samples");
             //printFileNames("E:\\Sequences for BEC\\Breast Cancer\\BSG001050_pDIDDY_rerun");
             //printFileNames("E:\\Sequences for BEC\\Breast Cancer\\BSG001050_T7_rerun");
             ///printFileNames("E:\\Sequences for BEC\\Yersinia pestis\\SAE000866_M13F");
             //printFileNames("E:\\Sequences for BEC\\Yersinia pestis\\SAE000866_M13R");
-            
+          //  compareTwoLists(
+          //  "c:\\all_tigr.txt", 
+          //  "c:\\tigr.txt",
+           // -1, "\n",
+           // "c:\\comp_tigr-1.txt");
+           // getNames("c:\\comp_tigr1.txt","c:\\all_tr.txt","c:\\not_processed.txt", "\n","c:\\processed.txt");
+     //   transferFile("c:\\not_processed.txt");
+            String directory_name = "c:\\try\\";
+            String file_name_with_file_names="";
+            copyAllFilesIntoDirectory( directory_name, file_name_with_file_names);
         }
         
         catch(Exception e)
@@ -70,6 +79,237 @@ public class Renamer
         }
     }
     
+    
+    // mode: 0 - return items common in both files;
+    // 1 return itemes found in one, but not in 2
+    // 2 return item not found in one, but found in 2
+    public static void compareTwoLists(String file_name_1, String file_name_2, 
+            int mode, String separator,
+            String result_file)
+    {
+        BufferedReader fin=null;
+        ArrayList ar_1 = new ArrayList();
+        ArrayList result = new ArrayList();
+        ArrayList ar_2 = new ArrayList();String line = null;
+         try
+        {
+            fin = new BufferedReader(new FileReader(file_name_1));
+            while ((line = fin.readLine()) != null)
+           {
+                ar_1.add(line);
+            }
+            fin = new BufferedReader(new FileReader(file_name_2));
+            while ((line = fin.readLine()) != null)
+            {
+                ar_2.add( line);
+            }
+            fin.close();
+            ar_1 = sortStringArrayList(ar_1);
+            ar_2 = sortStringArrayList(ar_2);
+        
+             int count_1 = 0; int count_2 = 0;
+            while(count_1 < ar_1.size() && count_2 < ar_2.size()) 
+               
+            {
+                int res = ((String)ar_1.get(count_1)).compareTo((String)ar_2.get(count_2));
+                if( res == 0)
+                {
+                    if ( mode == 0 )   result.add( ar_1.get(count_1));
+                    count_1++; count_2++;
+                }
+                else if ( res < 0 )
+                {
+                    if ( mode == 1 )  result.add( ar_1.get(count_1));
+                    count_1++;
+                }
+                else if ( res > 0 )
+                {
+                    if ( mode == -1 ) result.add( ar_2.get(count_2));
+                    count_2++;
+                }
+          }
+            
+          if ( mode == 1)
+            { 
+                for (int countn = count_1; countn < ar_1.size(); countn++)
+                {
+                    result. add( ar_1.get(countn));
+                }
+            }
+             if ( mode == - 1)
+            { 
+                for (int countn = count_2; countn < ar_2.size(); countn++)
+                {
+                    result. add( ar_2.get(countn));
+                }
+            }
+            BufferedWriter fout = new BufferedWriter(new FileWriter(result_file));
+            for ( int count = 0; count < result.size(); count++)
+            {
+                fout.write( (String)result.get(count) + separator);
+            }
+            fout.flush(); fout.close();
+                
+         }
+         
+         catch(Exception e)
+         {
+             System.out.println(e.getMessage());
+         }
+         
+        
+        
+        
+      
+    }
+    
+    
+    
+     public static void getNames(String file_name_1, String file_name_2, 
+            
+            String result_file, String separator, String contresult_file)
+    {
+        BufferedReader fin=null;
+        Hashtable ar_1 = new Hashtable();
+        ArrayList result = new ArrayList();
+        ArrayList ar_2 = new ArrayList();String line = null;
+         try
+        {
+            fin = new BufferedReader(new FileReader(file_name_1));
+             BufferedWriter fout = new BufferedWriter(new FileWriter(result_file));
+            BufferedWriter fout_cont = new BufferedWriter(new FileWriter(contresult_file));
+           int count=0;
+            while ((line = fin.readLine()) != null)
+            {
+                ar_1.put(line, "");
+            }
+            fin = new BufferedReader(new FileReader(file_name_2));
+            while ((line = fin.readLine()) != null)
+            {
+                ar_2 = Algorithms.splitString(line);
+                if ( ar_1.containsKey( (String) ar_2.get(2)))
+                {
+                    System.out.println("no match "+count);
+                    fout.write( line + separator);
+                    fout.flush();
+                }
+                else
+                {
+                    System.out.println("match "+count);
+                    fout_cont.write(line+ separator); fout_cont.flush();
+                }
+                count++;
+                
+            }
+            fin.close();
+          
+          fout_cont.close();
+          
+             fout.close();
+                
+         }
+         
+         catch(Exception e)
+         {
+             System.out.println(e.getMessage());
+         }
+   }
+    
+     
+     
+      public static void transferFile(String file_name_1)
+    {
+        BufferedReader fin=null;
+         ArrayList result = new ArrayList();
+        ArrayList ar_2 = new ArrayList();String line = null;
+         try
+        {
+            fin = new BufferedReader(new FileReader(file_name_1));
+            int count=0;
+            while ((line = fin.readLine()) != null)
+            {
+                result = Algorithms.splitString(line);
+                File f_start = new File( "E:\\Yersinia pestis KIM\\TIGR_ab1_files\\"+result.get(0)+File.separator+result.get(1));
+                FileOperations.copyFile(f_start, new File("E:\\Yersinia pestis KIM\\files_to_transfer\\"+result.get(1)) , true);
+            }
+        
+            fin.close();
+                      
+         }
+         
+         catch(Exception e)
+         {
+             System.out.println(e.getMessage());
+         }
+   }
+    
+      public static void copyAllFilesIntoDirectory( String directory_name, String file_name_with_file_names)
+    {
+        BufferedReader fin=null;String line =  null;
+        ArrayList result = new ArrayList();String file_name_base = null;
+        try
+        {
+            fin = new BufferedReader(new FileReader(file_name_with_file_names));
+             while ((line = fin.readLine()) != null)
+            {
+                copyFilesIntoDirectory(line,  directory_name)    ;
+             }
+        
+            fin.close();
+                      
+         }
+         
+         catch(Exception e)
+         {
+             System.out.println(e.getMessage());
+         }
+   }
+         
+      
+     public static void copyFilesIntoDirectory(String file_name, String directory_name)
+    {
+        BufferedReader fin=null;File f_start =  null;
+        ArrayList result = new ArrayList();String file_name_base = null;
+        try
+        {
+            f_start = new File( file_name );
+            file_name_base = f_start.getName();
+         
+            FileOperations.copyFile(f_start, new File(directory_name + file_name_base) , true);
+            System.out.println("Copied file " + file_name);
+                      
+         }
+         
+         catch(Exception e)
+         {
+             System.out.println(e.getMessage());
+         }
+   }
+         
+         
+     public static ArrayList sortStringArrayList(ArrayList arr)
+    {
+          //sort array by containerid and position
+            Collections.sort(arr, new Comparator() 
+            {
+                public int compare(Object o1, Object o2) 
+                {
+                    String cl1 = (String)o1;
+                    String cl2 = (String)o2;
+                    return cl1.compareTo( cl2);
+                     
+                }
+                /** Note: this comparator imposes orderings that are
+                 * inconsistent with equals. */
+                public boolean equals(java.lang.Object obj)
+                {      return false;  }
+                // compare
+            } );
+        
+        return arr;
+    }
+     
+     
     private static void     deleteFiles(File sourceDir )
     {
               
