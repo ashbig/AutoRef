@@ -522,7 +522,7 @@ public class RunProcessAction extends ResearcherAction
                                 ((AssemblyRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
                                ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
    
-                             title = "Request for end read wrapper invocation";
+                             title = "Request for assembly from end reads.";
                              break;
                         }
                          case Constants.PROCESS_RUN_PRIMER3: //run primer3
