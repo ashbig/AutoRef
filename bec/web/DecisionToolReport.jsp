@@ -121,7 +121,6 @@ if ( clone_info != null )
 	<%}}%>
     </table>
 <P><P>
-<!--<div align="center"> <input type="SUBMIT"/></DIV> 
-</html:form> -->
+
 </body>
 </html>
