@@ -57,12 +57,14 @@ else
         {
             project_code = DatabaseToApplicationDataLoader.getProjectCodeForLabel(cur_label);
    
-            if (index != 0)
-            {%></table></DIV></tr><tr><%}%>
-             <tr><td><INPUT onclick='javascript:showhide(\""+cur_label.charAt(0) +"\", this.checked);' type=checkbox CHECKED value=1 name=show> <%= DatabaseToApplicationDataLoader.getProjectName(project_code)%>
-             <DIV ID='"+cur_label.charAt(0) +"' STYLE='  position:relative;  clip:rect(0px 120px 120px 0px); '>
-              <p><table border = 0><%
-              cur_column=1;}%>
+            {%>        
+            </table></DIV></tr><tr><%}%>
+             <tr><td><INPUT onclick='javascript:showhide(<%= "\"" + cur_label.charAt(0) + "\"" %>, this.checked);' type=checkbox CHECKED value=1 name=show> <%= DatabaseToApplicationDataLoader.getProjectName(project_code)%>
+             <DIV ID='<%= cur_label.charAt(0) %>' STYLE='position:relative;  clip:rect(0px 120px 120px 0px);'>
+              <p><table border = 0>
+                <% cur_column=1;   }%>
+                
+                
               <td><b> <%= cur_label %> </b></td>
               <%  cur_column ++;prev_label = cur_label;}%>
               </table></table>  <%}}%>
