@@ -84,7 +84,6 @@ public class SetDisplayAction extends Action {
         request.setAttribute("refseqType", refseqType);
         
         String button = ((RefseqSearchForm)form).getButton();
-        
         if(button != null && button.equals("Add To Cart")) {
             String cloneid = ((RefseqSearchForm)form).getCloneid();
             if(Integer.parseInt(cloneid) <= 0) {
@@ -94,7 +93,10 @@ public class SetDisplayAction extends Action {
             }
             
             List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
-            ShoppingCartItem item = new ShoppingCartItem(0, Integer.parseInt(cloneid), 1);
+            if(shoppingcart == null) {
+                shoppingcart = new ArrayList();
+            }
+            ShoppingCartItem item = new ShoppingCartItem(0, cloneid, 1, ShoppingCartItem.CLONE);
             ShoppingCartItem.addToCart(shoppingcart, item);
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);

@@ -18,6 +18,7 @@ public class User {
     public static final String ACADEMIC = "Other academic";
     public static final String NONPROFIT = "Other non-profit organization";
     public static final String OTHER = "Other";
+    public static final String MEMBER[] = {DFHCC, HARVARD};
     
     private int userid;
     private String firstname;

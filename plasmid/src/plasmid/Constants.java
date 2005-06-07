@@ -19,6 +19,8 @@ public class Constants {
     public static final String CART_STATUS = "Cart Status";
     public static final String SAVED = "SAVED";
     public static final String UPDATED = "UPDATED";
+    public static final String ORDERID = "Order ID";  
+    public static final String CLONEORDER = "Clone Order";
     
     /** Creates a new instance of Constants */
     public Constants() {

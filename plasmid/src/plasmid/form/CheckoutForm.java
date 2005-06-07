@@ -17,9 +17,9 @@ import org.apache.struts.action.ActionMapping;
  * @author  DZuo
  */
 public class CheckoutForm extends ActionForm {
-    private String username;
-    private String email;
-    private String phone;
+    //private String username;
+    //private String email;
+    //private String phone;
     private String ponumber;
     private String shippingto;
     private String billingto;
@@ -37,14 +37,21 @@ public class CheckoutForm extends ActionForm {
     private String billingzipcode;
     private String country;
     private String billingcountry;
-        
+    private int numOfClones;
+    private int numOfCollections;
+    private double costOfClones;
+    private double costOfCollections;
+    private double totalPrice;
+    private double costForShipping;
+    private boolean saveInfo = false;
+    
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
     }
     
-    public String getUsername() {return username;}
-    public String getEmail() {return email;}
-    public String getPhone() {return phone;}
+    //public String getUsername() {return username;}
+    // public String getEmail() {return email;}
+    // public String getPhone() {return phone;}
     public String getPonumber() {return ponumber;}
     public String getShippingto() {return shippingto;}
     public String getBillingto() {return billingto;}
@@ -62,10 +69,17 @@ public class CheckoutForm extends ActionForm {
     public String getBillingzipcode() {return billingzipcode;}
     public String getCountry() { return country;}
     public String getBillingcountry() {return billingcountry;}
+    public int getNumOfClones() {return numOfClones;}
+    public int getNumOfCollections() {return numOfCollections;}
+    public double getCostOfClones() {return costOfClones;}
+    public double getCostOfCollections() {return costOfCollections;}
+    public double getTotalPrice() {return totalPrice;}
+    public double getCostForShipping() {return costForShipping;}
+    public boolean getSaveInfo() {return saveInfo;}
     
-    public void setUsername(String s) {this.username = s;}
-    public void setEmail(String s) {this.email = s;}
-    public void setPhone(String s) {this.phone = s;}
+    // public void setUsername(String s) {this.username = s;}
+    // public void setEmail(String s) {this.email = s;}
+    // public void setPhone(String s) {this.phone = s;}
     public void setPonumber(String s) {this.ponumber = s;}
     public void setShippingto(String s) {this.shippingto = s;}
     public void setBillingto(String s) {this.billingto = s;}
@@ -78,9 +92,70 @@ public class CheckoutForm extends ActionForm {
     public void setCity(String s) {this.city = s;}
     public void setBillingcity(String s) {this.billingcity = s;}
     public void setState(String s) {this.state = s;}
-    public void setBillingstates(String s) {this.billingstate = s;}
+    public void setBillingstate(String s) {this.billingstate = s;}
     public void setZipcode(String s) {this.zipcode = s;}
     public void setBillingzipcode(String s) {this.billingzipcode = s;}
     public void setCountry(String s) {this.country = s;}
     public void setBillingcountry(String s) {this.billingcountry = s;}
+    public void setNumOfClones(int n) {this.numOfClones=n;}
+    public void setNumOfCollections(int n) {this.numOfCollections=n;}
+    public void setCostOfClones(double d) {this.costOfClones=d;}
+    public void setCostOfCollections(double d) {this.costOfCollections=d;}
+    public void setTotalPrice(double d) {this.totalPrice=d;}
+    public void setCostForShipping(double d) {this.costForShipping=d;}
+    public void setSaveInfo(boolean b) {this.saveInfo = b;}
+    
+    /**
+     * Reset all properties to their default values.
+     *
+     * @param mapping The mapping used to select this instance
+     * @param request The servlet request we are processing
+     */
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        saveInfo = false;
+    }
+    
+    /**
+     * Validate the properties that have been set from this HTTP request,
+     * and return an <code>ActionErrors</code> object that encapsulates any
+     * validation errors that have been found.  If no errors are found, return
+     * <code>null</code> or an <code>ActionErrors</code> object with no
+     * recorded error messages.
+     *
+     * @param mapping The mapping used to select this instance
+     * @param request The servlet request we are processing
+     */
+ /**   public ActionErrors validate(ActionMapping mapping,
+    HttpServletRequest request) {
+        
+        ActionErrors errors = new ActionErrors();
+        if(ponumber == null || ponumber.trim().length()<1)
+            errors.add("ponumber", new ActionError("error.ponumber.required"));
+        if(shippingto == null || shippingto.trim().length()<1)
+            errors.add("shippingto", new ActionError("error.shippingto.required"));
+        if(billingto == null || billingto.trim().length()<1)
+            errors.add("billingto", new ActionError("error.billingto.required"));
+        if(addressline1 == null || addressline1.trim().length()<1)
+            errors.add("addressline1", new ActionError("error.addressline1.required"));
+        if(billingaddressline1 == null || billingaddressline1.trim().length()<1)
+            errors.add("billingaddressline1", new ActionError("error.billingaddressline1.required"));
+        if(city == null || city.trim().length()<1)
+            errors.add("city", new ActionError("error.city.required"));
+        if(billingcity == null || billingcity.trim().length()<1)
+            errors.add("billingcity", new ActionError("error.billingcity.required"));
+        if(state == null || state.trim().length()<1)
+            errors.add("state", new ActionError("error.state.required"));
+        if(billingstate == null || billingstate.trim().length()<1)
+            errors.add("billingstate", new ActionError("error.billingstate.required"));
+        if(zipcode == null || zipcode.trim().length()<1)
+            errors.add("zipcode", new ActionError("error.zipcode.required"));
+        if(billingzipcode == null || billingzipcode.trim().length()<1)
+            errors.add("billingzipcode", new ActionError("error.billingzipcode.required"));
+        if(country == null || country.trim().length()<1)
+            errors.add("country", new ActionError("error.country.required"));
+        if(billingcountry == null || billingcountry.trim().length()<1)
+            errors.add("billingcountry", new ActionError("error.billingcountry.required"));
+         
+        return errors;     
+    }*/
 }

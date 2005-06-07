@@ -28,7 +28,7 @@ import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
-import plasmid.form.ViewCartForm;
+import plasmid.form.CheckoutForm;
 import plasmid.process.OrderProcessManager;
 
 /**
@@ -59,8 +59,9 @@ public class CheckoutAction extends UserAction {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
         
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
-        List clones = (List)request.getAttribute("cart");
+        // List clones = (List)request.getAttribute("cart");
         
         if(shoppingcart == null || shoppingcart.size() == 0) {
             shoppingcart = new ArrayList();
@@ -69,51 +70,18 @@ public class CheckoutAction extends UserAction {
         }
         
         OrderProcessManager m = new OrderProcessManager();
-        List processedOrder = m.processOrder(shoppingcart);
-        int totalQuantity = m.getTotalQuantity(processedOrder);
-        double totalPrice = m.getTotalPrice(processedOrder);
-        request.setAttribute("items", processedOrder);
-        request.setAttribute("quantity", new Integer(totalQuantity));
-        request.setAttribute("price", new Double(totalPrice));       
+        m.processShoppingCartItems(shoppingcart);
+        int cloneQuantity = m.getTotalCloneQuantity();
+        //int collectionQuantity = m.getTotalCollectionQuantity();
+        double clonePrice = m.getTotalClonePrice(OrderProcessManager.PLATESIZE,user.getGroup());
+        int totalQuantity = m.getTotalQuantity();
+        double totalPrice = clonePrice;
         
-        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        DatabaseTransaction t = null;
-        Connection conn = null;
+        UserAddress shipping = null;
+        UserAddress billing = null;
         try {
-            t = DatabaseTransaction.getInstance();
-            conn = t.requestConnection();
-            UserManager manager = new UserManager(conn);
-            List addresses = manager.getUserAddresses(user.getUserid());
-            
-            if(addresses == null) {
-                if(Constants.DEBUG)
-                    System.out.println("Cannot get useraddress for user: "+user.getUserid());
-                
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database.error","Database error occured."));
-                return (mapping.findForward("error"));
-            }
-            
-            UserAddress shipping = null;
-            UserAddress billing = null;
-            for(int i=0; i<addresses.size(); i++) {
-                UserAddress a = (UserAddress)addresses.get(i);
-                if(UserAddress.SHIPPING.equals(a.getType()))
-                    shipping = a;
-                if(UserAddress.BILLING.equals(a.getType()))
-                    billing = a;
-            }
-            
-            if(shipping != null)
-                request.setAttribute("shipping", shipping);
-            if(billing != null)
-                request.setAttribute("billing", billing);
-            
-            Calender c = new Calendar();
-            String t = c.getTime().toString();
-            request.setAttribute("date", t);
-            
-            return (mapping.findForward("success"));
+            shipping = m.getShippingAddress(user);
+            billing = m.getBillingAddress(user);
         } catch (Exception ex) {
             if(Constants.DEBUG)
                 System.out.println(ex);
@@ -121,8 +89,43 @@ public class CheckoutAction extends UserAction {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.database.error","Database error occured."));
             return (mapping.findForward("error"));
-        } finally {
-            DatabaseTransaction.closeConnection(conn);
         }
+        
+        Calendar c = Calendar.getInstance();
+        String time = c.getTime().toString();
+        request.setAttribute("date", time);
+        
+        if(shipping != null) {
+            ((CheckoutForm)form).setAddressline1(shipping.getAddressline1());
+            ((CheckoutForm)form).setAddressline2(shipping.getAddressline2());
+            ((CheckoutForm)form).setCity(shipping.getCity());
+            ((CheckoutForm)form).setState(shipping.getState());
+            ((CheckoutForm)form).setCountry(shipping.getCountry());
+            ((CheckoutForm)form).setShippingto(shipping.getName());
+            ((CheckoutForm)form).setOrganization(shipping.getOrganization());
+            ((CheckoutForm)form).setZipcode(shipping.getZipcode());
+        }
+        if(billing != null) {
+            ((CheckoutForm)form).setBillingaddressline1(billing.getAddressline1());
+            ((CheckoutForm)form).setBillingaddressline2(billing.getAddressline2());
+            ((CheckoutForm)form).setBillingcity(billing.getCity());
+            ((CheckoutForm)form).setBillingstate(billing.getState());
+            ((CheckoutForm)form).setBillingcountry(billing.getCountry());
+            ((CheckoutForm)form).setBillingto(billing.getName());
+            ((CheckoutForm)form).setBillingorganization(billing.getOrganization());
+            ((CheckoutForm)form).setBillingzipcode(billing.getZipcode());
+        }
+        //((CheckoutForm)form).setPhone(user.getPhone());
+        ((CheckoutForm)form).setPonumber(user.getPonumber());
+        //((CheckoutForm)form).setEmail(user.getEmail());
+        ((CheckoutForm)form).setNumOfClones(cloneQuantity);
+        ((CheckoutForm)form).setCostOfClones(clonePrice);
+        ((CheckoutForm)form).setTotalPrice(totalPrice);
+        ((CheckoutForm)form).setNumOfCollections(0);
+        ((CheckoutForm)form).setCostOfCollections(0.0);
+        ((CheckoutForm)form).setCostForShipping(0.0);
+                
+        return (mapping.findForward("success"));
+        
     }
 }

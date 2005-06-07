@@ -74,8 +74,8 @@ public class PlateManager extends TableManager {
     
     public boolean insertSample(List samples) {
         String sql = "insert into sample(sampleid,sampletype,status_gb,cloneid,"+
-        " position,positionx,positiony,containerid,containerlabel)"+
-        " values(?,?,?,?,?,?,?,?,?)";
+        " position,positionx,positiony,containerid,containerlabel,result)"+
+        " values(?,?,?,?,?,?,?,?,?,?)";
         
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -96,6 +96,7 @@ public class PlateManager extends TableManager {
                 stmt.setString(7, s.getPositiony());       
                 stmt.setInt(8, s.getContainerid());
                 stmt.setString(9, s.getContainerlabel());
+                stmt.setString(10, s.getResult());
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
@@ -114,7 +115,7 @@ public class PlateManager extends TableManager {
         List containers = new ArrayList();              
         String sql = "select containerid,containertype,oricontainerid,location"+
         " from containerheader where label=?";
-        String sql2 = "select sampleid,sampletype,status_gb,cloneid,position,positionx,positiony,containerlabel"+
+        String sql2 = "select sampleid,sampletype,status_gb,cloneid,position,positionx,positiony,containerlabel,result"+
         " from sample where containerid=?";
         
         PreparedStatement stmt = null;
@@ -150,7 +151,9 @@ public class PlateManager extends TableManager {
                             String x = rs2.getString(6);
                             String y = rs2.getString(7);
                             String l = rs2.getString(8);
+                            String result = rs2.getString(9);
                             Sample s = new Sample(sampleid, sampletype, status, cloneid, position, x, y, containerid,l);
+                            s.setResult(result);
                             c.addSample(s);
                         }
                     }

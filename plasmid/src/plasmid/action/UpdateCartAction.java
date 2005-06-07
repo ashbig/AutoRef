@@ -29,6 +29,7 @@ import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.form.ViewCartForm;
+import plasmid.process.OrderProcessManager;
 
 /**
  *
@@ -70,69 +71,40 @@ public class UpdateCartAction extends Action {
             List c = new ArrayList();
             for(int i=0; i<shoppingcart.size(); i++) {
                 ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
-                c.add((new Integer(item.getCloneid())).toString());
+                c.add(item.getItemid());
             }
             
-            DatabaseTransaction t = null;
-            Connection conn = null;
-            try {
-                t = DatabaseTransaction.getInstance();
-                conn = t.requestConnection();
-                CloneManager manager = new CloneManager(conn);
-                Map found = manager.queryClonesByCloneid(c, true, true);
-                List newShoppingcart = new ArrayList();
-                
-                for(int i=0; i<shoppingcart.size(); i++) {
-                    ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
-                    String count = (String)cloneCountList.get(i);
-                    if(Integer.parseInt(count) > 0) {
-                        String cloneid =(new Integer(item.getCloneid())).toString();
-                        Clone clone = (Clone)found.get(cloneid);
-                        CloneInfo cloneInfo = new CloneInfo(clone);
-                        cloneInfo.setQuantity(Integer.parseInt(count));
-                        ShoppingCartItem s = new ShoppingCartItem(0, item.getCloneid(), Integer.parseInt(count));
-                        shoppingcartCopy.add(s);
-                        newShoppingcart.add(cloneInfo);
-                    }
-                }
-                
+            User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+            OrderProcessManager m = new OrderProcessManager();
+            
+            List newShoppingcart = m.updateShoppingCart(c, shoppingcart, cloneCountList, shoppingcartCopy);
+            if(newShoppingcart == null) {
+                errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database.error","Error occured while updating shopping cart."));
+                return (mapping.findForward("error"));
+            } else {
                 ((ViewCartForm)form).setCloneCountList(newShoppingcart);
                 request.setAttribute("cart", newShoppingcart);
                 request.getSession().setAttribute(Constants.CART, shoppingcartCopy);
-                
-                String ret = ((ViewCartForm)form).getSubmitButton();
-                if("Check Out".equals(ret)) {
-                    return (mapping.findForward("success_checkout"));
-                }
-                if("Save Cart".equals(ret)) {
-                    UserManager man = new UserManager(conn);
-                    User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-                    if(!man.addShoppingCart(user.getUserid(), shoppingcartCopy)) {
-                        DatabaseTransaction.rollback(conn);
-                        if(Constants.DEBUG)
-                            System.out.println("Cannot save shopping cart");
-                        
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("error.database.error","Database error occured."));
-                        return (mapping.findForward("error"));
-                    }
-                    DatabaseTransaction.commit(conn);
-                    request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
-                    return (mapping.findForward("success_save"));
-                }
-                
-                request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
-                return (mapping.findForward("success"));
-            } catch (Exception ex) {
-                if(Constants.DEBUG)
-                    System.out.println(ex);
-                
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.database.error","Database error occured."));
-                return (mapping.findForward("error"));
-            } finally {
-                DatabaseTransaction.closeConnection(conn);
             }
+            
+            String ret = ((ViewCartForm)form).getSubmitButton();
+            if("Check Out".equals(ret)) {
+                return (mapping.findForward("success_checkout"));
+            }
+            if("Save Cart".equals(ret)) {
+                if(!m.saveShoppingCart(user, shoppingcartCopy)) {
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.database.error","Error occured while saving shopping cart to the user account."));
+                    return (mapping.findForward("error"));
+                }
+                
+                request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
+                return (mapping.findForward("success_save"));
+            }
+            
+            request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
+            return (mapping.findForward("success"));            
         }
     }
 }

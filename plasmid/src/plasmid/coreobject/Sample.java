@@ -28,6 +28,7 @@ public class Sample {
     private String positiony;
     private int containerid;
     private String containerlabel;
+    private String result;
     
     /** Creates a new instance of Sample */
     public Sample() {
@@ -54,6 +55,7 @@ public class Sample {
     public String getPositiony() {return positiony; }
     public int getContainerid() {return containerid;}
     public String getContainerlabel() {return containerlabel;}
+    public String getResult() {return result;}
     
     public void setSampleid(int id) {this.sampleid = id;}
     public void setType(String s) {this.type = s;}
@@ -64,6 +66,7 @@ public class Sample {
     public void setPositiony(String s) {this.positiony = s;}
     public void setContainerid(int i) {this.containerid = i;}
     public void setContainerlabel(String s) {this.containerlabel = s;}
+    public void setResult(String s) {this.result = s;}
     
     public void setPositions(int p) {
         String st = PlatePositionConvertor.convertWellFromInttoA8_12(p);

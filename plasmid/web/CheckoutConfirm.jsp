@@ -23,9 +23,9 @@
     <td width="83%" align="left" valign="top">
 	<jsp:include page="checkoutTitle.jsp" />
 
-<p class="text">Please fill out the following information (* indicates required field):</P>
+<p class="text">Please confirm the following information (use back button to make changes):</P>
 <html:errors/>
-      <html:form action="CheckoutConfirm.do">
+      <html:form action="PlaceOrder.do">
 <table width="100%" border="0">
   <tr> 
     <td width="12%" class="formlabel">Name:</td>
@@ -40,9 +40,9 @@
   <tr> 
     <td width="12%" height="24" class="formlabel">Order Date:</td>
     <td width="40%" class="text"><bean:write name="date"/></td>
-    <td width="12%" class="formlabel">*PO Number:</td>
+    <td width="12%" class="formlabel">PO Number:</td>
     <td width="36%" class="text">
-        <html:text property="ponumber" size="40"/>
+        <bean:write name="checkoutForm" property="ponumber"/>
     </td>
   </tr>
 </table>
@@ -53,58 +53,56 @@
     <td colspan="2" class="featuretext">Billing Address:</td>
   </tr>
   <tr> 
-    <td width="17%" class="formlabel">*Name:</td>
-    <td><html:text styleClass="text" property="shippingto"/></td>
-    <td class="formlabel">*Name:</td>
-    <td><html:text styleClass="text" property="billingto"/></td>
+    <td width="17%" class="formlabel">Name:</td>
+    <td class="text"><bean:write name="checkoutForm" property="shippingto"/></td>
+    <td class="formlabel">Name:</td>
+    <td class="text"><bean:write name="checkoutForm" property="billingto"/></td>
   </tr>
   <tr> 
     <td class="formlabel">Organization:</td>
-    <td><html:text styleClass="text" property="organization"/></td>
+    <td class="text"><bean:write name="checkoutForm" property="organization"/></td>
     <td class="formlabel">Organization:</td>
-    <td><html:text styleClass="text" property="billingorganization"/></td>
+    <td class="text"><bean:write name="checkoutForm" property="billingorganization"/></td>
   </tr>
   <tr> 
-    <td class="formlabel">*Street:</td>
-    <td><html:text styleClass="text" property="addressline1"/></td>
-    <td class="formlabel">*Street:</td>
-    <td><html:text styleClass="text" property="billingaddressline1"/></td>
+    <td class="formlabel">Street:</td>
+    <td class="text"><bean:write name="checkoutForm" property="addressline1"/></td>
+    <td class="formlabel">Street:</td>
+    <td class="text"><bean:write name="checkoutForm" property="billingaddressline1"/></td>
   </tr>
   <tr> 
     <td class="formlabel">Street (continued):</td>
-    <td><html:text styleClass="text" property="addressline2"/></td>
+    <td class="text"><bean:write name="checkoutForm" property="addressline2"/></td>
     <td class="formlabel">Street (continued):</td>
-    <td><html:text styleClass="text" property="billingaddressline2"/></td>
+    <td class="text"><bean:write name="checkoutForm" property="billingaddressline2"/></td>
   </tr>
   <tr> 
-    <td class="formlabel">*City:</td>
-    <td><html:text styleClass="text" property="city"/></td>
-    <td class="formlabel">*City:</td>
-    <td><html:text styleClass="text" property="billingcity"/></td>
+    <td class="formlabel">City:</td>
+    <td class="text"><bean:write name="checkoutForm" property="city"/></td>
+    <td class="formlabel">City:</td>
+    <td class="text"><bean:write name="checkoutForm" property="billingcity"/></td>
   </tr>
   <tr> 
-    <td class="formlabel">*State:</td>
-    <td><html:text styleClass="text" property="state"/></td>
-    <td class="formlabel">*State:</td>
-    <td><html:text styleClass="text" property="billingstate"/></td>
+    <td class="formlabel">State:</td>
+    <td class="text"><bean:write name="checkoutForm" property="state"/></td>
+    <td class="formlabel">State:</td>
+    <td class="text"><bean:write name="checkoutForm" property="billingstate"/></td>
   </tr>
   <tr> 
-    <td class="formlabel">*Zip code:</td>
-    <td><html:text styleClass="text" property="zipcode"/></td>
-    <td class="formlabel">*Zip code:</td>
-    <td><html:text styleClass="text" property="billingzipcode"/></td>
+    <td class="formlabel">Zip code:</td>
+    <td class="text"><bean:write name="checkoutForm" property="zipcode"/></td>
+    <td class="formlabel">Zip code:</td>
+    <td class="text"><bean:write name="checkoutForm"  property="billingzipcode"/></td>
   </tr>
   <tr>
-    <td class="formlabel">*Country:</td>
-    <td><html:text styleClass="text" property="country"/></td>
-    <td class="formlabel">*Country:</td>
-    <td><html:text styleClass="text" property="billingcountry"/></td>
+    <td class="formlabel">Country:</td>
+    <td class="text"><bean:write name="checkoutForm" property="country"/></td>
+    <td class="formlabel">Country:</td>
+    <td class="text"><bean:write name="checkoutForm" property="billingcountry"/></td>
   </tr>
 </table>
 
-<p class="text"><input type=checkbox name="saveInfo">Save/Update user information.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i>(By checking this check box, all the addresses including PO number will be saved or updated to user account)
-</i></p>
+<p>&nbsp;</p>
 
 <p class="text">Order Information:</p>
 <table width="100%" border="0">
@@ -132,7 +130,8 @@
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
   </tr>
 </table>
-  <html:submit value="Continue"/>
+<html:hidden property="saveInfo"/>
+  <html:submit value="Place Order"/>
     </html:form>
 
     </td>

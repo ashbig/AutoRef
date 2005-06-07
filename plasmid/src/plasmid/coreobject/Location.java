@@ -12,6 +12,7 @@ package plasmid.coreobject;
  */
 public class Location {
     public static final String FREEZER = "FREEZER";
+    public static final String BIOBANK = "BioBank";
     
     /** Creates a new instance of Location */
     public Location() {

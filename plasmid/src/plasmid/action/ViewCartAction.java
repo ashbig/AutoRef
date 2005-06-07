@@ -59,6 +59,7 @@ public class ViewCartAction extends Action {
         ActionErrors errors = new ActionErrors();
         
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
+
         if(shoppingcart == null || shoppingcart.size() == 0) {
             shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
@@ -67,7 +68,7 @@ public class ViewCartAction extends Action {
             List c = new ArrayList();
             for(int i=0; i<shoppingcart.size(); i++) {
                 ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
-                c.add((new Integer(item.getCloneid())).toString());
+                c.add(item.getItemid());
             }
             
             DatabaseTransaction t = null;
@@ -81,7 +82,7 @@ public class ViewCartAction extends Action {
                 
                 for(int i=0; i<shoppingcart.size(); i++) {
                     ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
-                    String cloneid =(new Integer(item.getCloneid())).toString();
+                    String cloneid = item.getItemid();
                     Clone clone = (Clone)found.get(cloneid);
                     int quantity = item.getQuantity();
                     CloneInfo cloneInfo = new CloneInfo(clone);

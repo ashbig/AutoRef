@@ -165,9 +165,9 @@ public class UserManager extends TableManager {
         return user;
     }
     
-    public List queryShoppingCart(int userid) {
+    public List queryShoppingCartForClones(int userid) {
         String sql = "select cloneid, quantity from shoppingcartitem"+
-                    " where userid="+userid;
+                    " where collectionname is null and userid="+userid;
         ResultSet rs = null;
         DatabaseTransaction t = null;
         List items = new ArrayList();
@@ -177,7 +177,7 @@ public class UserManager extends TableManager {
             while(rs.next()) {
                 int cloneid = rs.getInt(1);
                 int quantity = rs.getInt(2);
-                ShoppingCartItem item = new ShoppingCartItem(userid, cloneid, quantity);
+                ShoppingCartItem item = new ShoppingCartItem(userid, (new Integer(cloneid)).toString(), quantity, ShoppingCartItem.CLONE);
                 items.add(item);
             }
         } catch (Exception ex) {
@@ -194,16 +194,25 @@ public class UserManager extends TableManager {
         if(cart == null || cart.size() == 0)
             return true;
         
-        String sql = "insert into shoppingcartitem(cloneid,userid,quantity)"+
-                    " values(?,?,?)";
+        String sql = "insert into shoppingcartitem(cloneid,collectionname,userid,quantity)"+
+                    " values(?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
             for(int i=0; i<cart.size(); i++) {
                 ShoppingCartItem item = (ShoppingCartItem)cart.get(i);
-                stmt.setInt(1, item.getCloneid());
-                stmt.setInt(2, userid);
-                stmt.setInt(3, item.getQuantity());
+                String type = item.getType();
+                
+                if(ShoppingCartItem.CLONE.equals(type)) {
+                    stmt.setInt(1, Integer.parseInt(item.getItemid()));
+                    stmt.setString(2, null);
+                } else {
+                    stmt.setString(1, null);
+                    stmt.setString(2, item.getItemid());
+                }
+                
+                stmt.setInt(3, userid);
+                stmt.setInt(4, item.getQuantity());
                 DatabaseTransaction.executeUpdate(stmt);
             }
         } catch (Exception ex) {
@@ -306,7 +315,7 @@ public class UserManager extends TableManager {
         return true;
     }  
 
-    public boolean updateUserAddresses(List addresses) {
+    public boolean updateUserAddresses(int userid, List addresses) {
         if(addresses == null || addresses.size() == 0)
             return true;
         
@@ -327,7 +336,7 @@ public class UserManager extends TableManager {
                 stmt.setString(6, a.getState());
                 stmt.setString(7, a.getZipcode());
                 stmt.setString(8, a.getCountry());
-                stmt.setInt(9, a.getUserid());
+                stmt.setInt(9, userid);
                 stmt.setString(10, a.getType());
                 
                 DatabaseTransaction.executeUpdate(stmt);
@@ -341,6 +350,24 @@ public class UserManager extends TableManager {
         
         return true;
     }  
+    
+    public boolean updatePonumber(String ponumber, int userid) {
+        String sql = "update userprofile set ponumber=? where userid=?";
+                
+        PreparedStatement stmt = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, ponumber);
+            stmt.setInt(2, userid);
+        } catch (Exception ex) {
+            handleError(ex, "Cannot update ponumber.");
+            return false;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return true;
+    } 
     
     public boolean updateUserProfile(User user) {
         if(user == null)

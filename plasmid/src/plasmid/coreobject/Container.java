@@ -15,6 +15,7 @@ import java.util.*;
 public class Container {
     public static final String PLATE_96 = "96 Well Plate";
     public static final String TUBE = "Tube";
+    public static final String TUBE_96 = "Tube 96 Well";
     
     private int containerid;
     private String type;
@@ -50,13 +51,20 @@ public class Container {
     
     public List getSamples() {return samples;}
     public void setSamples(List l) {this.samples = l;}
-    
+/**    
     public int getSize() {
         if(this.PLATE_96.equals(type))
             return 96;
         if(this.TUBE.equals(type))
             return 1;
         return 0;
+    }
+   */
+    
+    public int getSize() {
+        if(samples == null)
+            return 0;
+        return samples.size();
     }
     
     public void initiateSamples() {

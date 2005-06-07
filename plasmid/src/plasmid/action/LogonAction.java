@@ -97,7 +97,7 @@ public final class LogonAction extends Action {
          * otherwise, forward to confirm page to ask user whether they want to merge two shopping
          * carts.
          **/
-        List cart = manager.queryShoppingCart(user.getUserid());
+        List cart = manager.queryShoppingCartForClones(user.getUserid());
         if(cart == null) {
             if(Constants.DEBUG) {
                 System.out.println("Cannot retrieve shopping cart from database.");
