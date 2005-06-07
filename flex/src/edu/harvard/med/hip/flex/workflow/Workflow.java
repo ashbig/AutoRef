@@ -62,6 +62,8 @@ public class Workflow {
     public static final int TRANSFER_TO_EXP_JP1520 = 35;
     public static final int GATEWAY_WITH_EGEL = 36;
     public static final int GATEWAY_WITH_INFUSION = 37;
+    public static final int TRANSFER_TO_EXP_PLP_DS_3xFlag = 38;
+    public static final int TRANSFER_TO_EXP_PLP_DS_3xMyc = 39;
     
     /** Creates new Workflow */
     public Workflow() {
