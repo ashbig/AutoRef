@@ -259,16 +259,16 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input <%if ( user_level  < 3){%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_READS %>>
-      Delete clone end reads (forward and reverse)</font></td>
+      Delete clone forward and reverse end reads (no trace files will be deleted)</font></td>
 </tr>
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input <%if ( user_level  < 3){%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_FORWARD_READ  %>>
-      Delete clone forward end reads</font></td>
+      Delete clone forward end reads (no trace files will be deleted)</font></td>
 </tr><tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_REVERSE_READ  %>>
-      Delete clone reverse end reads</font></td>
+      Delete clone reverse end reads (no trace files will be deleted)</font></td>
 </tr><tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_SEQUENCE %>>
