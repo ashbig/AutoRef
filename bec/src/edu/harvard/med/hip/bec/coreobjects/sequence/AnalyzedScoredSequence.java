@@ -251,7 +251,7 @@ public class AnalyzedScoredSequence extends ScoredSequence
         RNAMutation rm = null;int position = 0;
         for (int count = 0; count < discrepancies.size(); count ++)
 	{
-            rm = (RNAMutation)discrepancies.get(0);
+            rm = (RNAMutation)discrepancies.get(count);
             position = rm.getExpPosition();
             if (  position >= region_start  &&  position <= region_end )
             {
