@@ -212,6 +212,7 @@ public class Trimming_java_script {
           for(count = first_base; count < last_base; ++count )
           {
             element = (ScoredElement) scored_elements.get(count);
+        System.out.println("first element "+ count+" "+element.getScore()+" "+element.getChar());
             probScore +=  min_pbd_val - (float)Math.pow( (double)10.0, (double)( -element.getScore() / 10.0 ) );
             qualScore += (float)element.getScore();
             if( probScore <= 0.0 )
