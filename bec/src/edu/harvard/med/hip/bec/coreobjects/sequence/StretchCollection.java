@@ -229,6 +229,7 @@ vi.	Type of definition (coverage low quality / no coverage )
       
          Stretch stretch = null;
          ArrayList boundaries = new ArrayList();
+          ArrayList lqr_discrepancies_contigs =  new ArrayList();
           ArrayList discrepancies = null;
          int[] element = null; 
          int stretch_start = 0;          int stretch_end =0;
@@ -286,6 +287,31 @@ vi.	Type of definition (coverage low quality / no coverage )
                         }
                          break;
                      }
+                     case PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY_LQDISCREPANCIES:
+                     {
+                         if ( stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY )
+                        {
+                             sequence = getSequenceForStretch( cloneid, sequence, stretch );
+                             discrepancies = getDiscrepanciesInRegion(stretch, sequence , cds_length, cloneid);
+                             if ( discrepancies != null && discrepancies.size() > 0)
+                             {
+                                  boundaries.add( constructBoundaryElementFromStretch( stretch,  cds_length) ); 
+                             }
+                              if (m_type == StretchCollection.TYPE_COLLECTION_OF_LQR )
+                              {
+                                   lqr_discrepancies_contigs.addAll( Mutation.getDiscrepanciesByQualityType(sequence.getDiscrepancies(),Mutation.RNA, Mutation.QUALITY_LOW)) ;
+                              }
+               
+                        }
+                         else if (stretch.getType() ==  Stretch.GAP_TYPE_CONTIG && m_type == StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS)
+                        {
+                             sequence = getSequenceForStretch( cloneid, sequence, stretch );
+                             lqr_discrepancies_contigs.addAll( Mutation.getDiscrepanciesByQualityType(sequence.getDiscrepancies(),Mutation.RNA, Mutation.QUALITY_LOW)) ;
+                             
+                         }
+                         break;
+                     }
+                     /*
                      case PrimerDesignerRunner.LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY:
                      {
                         if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG )
@@ -324,14 +350,62 @@ vi.	Type of definition (coverage low quality / no coverage )
                         }
                          break;
                      }
+                      **/
                  }
              }
          }
+         //process LQD in contigs
+         if ( type_of_lqr_coverage == PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY_LQDISCREPANCIES)
+         {
+             boundaries = addLQDiscrepancyToBoundaries( lqr_discrepancies_contigs,  boundaries,  cds_length);
+         }
+                
          return boundaries;
     }
  
          
-         
+       
+     private        ArrayList addLQDiscrepancyToBoundaries(
+                    ArrayList lqr_discrepancies_contigs,
+                    ArrayList boundaries,
+                    int cds_length)
+     {
+           Mutation mut = null; 
+              int region_start = 0;int region_end = 0;
+             if (  boundaries.size() < 1  && lqr_discrepancies_contigs.size() < 1 ) return boundaries;
+             if (  boundaries.size() >0  && lqr_discrepancies_contigs.size() < 1 ) return boundaries;
+            
+             ArrayList all_elements = new ArrayList();
+             int element_count = 0; ScoredElement point_element = null;
+             for (int count = 0; count < lqr_discrepancies_contigs.size(); count++)
+             {
+                 mut = (Mutation)lqr_discrepancies_contigs.get(count);
+                 point_element = new ScoredElement(mut.getPosition(), 0);
+                 all_elements.add( point_element);
+             }
+             for (int count = 0; count < boundaries.size(); count++)
+             {
+                 region_start = ((int[]) boundaries.get(count) )[0];
+                 region_end = ((int[]) boundaries.get(count) )[1];
+                 all_elements.add( new ScoredElement(region_start, -1));
+                 all_elements.add( new ScoredElement(region_end, 1));
+             } 
+              
+             ScoredElement.sortByIndex(all_elements);
+             boolean isInsideRegion = false;
+             for ( int count = 0; count < all_elements.size(); count++)
+             {
+                 point_element = (ScoredElement)all_elements.get(count);
+                 if ( point_element.getScore() == -1) {isInsideRegion = true; continue;}
+                 if ( point_element.getScore() == 1) {isInsideRegion = false; continue;} 
+                 if ( point_element.getScore() == 0 && !isInsideRegion ) 
+                 {
+                      boundaries.add( constructBoundaryElementFromStretch(
+                        point_element.getIndex(), point_element.getIndex()+1,  cds_length) );
+                 }
+             }
+             return boundaries;
+     }
      //function prepares str collection for LQR display
      public static  void prepareStretchCollectionForDisplay
                         (StretchCollection lqr_for_clone,

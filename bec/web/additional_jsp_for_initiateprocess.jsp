@@ -206,17 +206,21 @@ additional_jsp_buffer.append("<input type='text' width=20 value=50 name='minDist
 
 
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_NONE + "' checked>");
-additional_jsp_buffer.append("Is not to cover Low Quality Regions</td></tr>");
+additional_jsp_buffer.append("Cover gaps</td></tr>");
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+  PrimerDesignerRunner.LQR_COVERAGE_TYPE_ANY_LQR +"'>");
-additional_jsp_buffer.append("Is cover any Low Quality Regions</td></tr>");
+additional_jsp_buffer.append("Cover gaps and all low quality regions</td></tr>");
 additional_jsp_buffer.append("<tr><td ><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY +"'>");
-additional_jsp_buffer.append("Is cover only Low Quality Regions with discrepancies</td></tr>");
+additional_jsp_buffer.append("Cover gaps and all low quality regions with discrepancies</td></tr>");
+
 additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS+"' >");
-additional_jsp_buffer.append("Is cover only Regions with Discrepancies inside Low Quality Regions</td></tr>");
-additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY+"' >");
-additional_jsp_buffer.append("Is cover any Discrepancy inside Low Quality Regions</td></tr>");
-additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY+"' >");
-additional_jsp_buffer.append("Is cover only Low Quality Discrepancies inside Low Quality Regions</td></tr>");
+additional_jsp_buffer.append("Cover gaps and regions with discrepancies inside a low quality region</td></tr>");
+
+additional_jsp_buffer.append("<tr><td><input type='radio' name='typeLQRCoverage' value='"+ PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY_LQDISCREPANCIES+"' >");
+additional_jsp_buffer.append("Cover gaps, low quality regions with discreapcnies and any low quality discrepancy outside low quality regions</td></tr>");
+
+
+
+
 
 additional_jsp = additional_jsp_buffer.toString();
 isTryMode = true; break;}

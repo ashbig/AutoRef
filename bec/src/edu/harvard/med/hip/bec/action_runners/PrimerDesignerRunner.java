@@ -43,16 +43,17 @@ public class PrimerDesignerRunner extends ProcessRunner
      public  static final int        LQR_COVERAGE_TYPE_ANY_LQR = 1;
      public  static final int        LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY = 2;
      public  static final int        LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS = 3;
-     public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY = 4;
-     public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY = 5;
+   //  public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY = 4;
+   //  public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY = 5;
+   //  public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_LQDISCREPANCY = 6;
+    public  static final int        LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY_LQDISCREPANCIES = 7;
      
-     
-     //public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY_IN_LQR = 6;
-     //public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY_IN_LQR = 7;
+      //public  static final int        LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY_IN_LQR = 7;
     
  
     
-     
+     public  static final String    STRETCH_PRIMERS_APNAME_COLLECTIONS_TYPE = "typeCollectionType";
+    
      public  static final String    STRETCH_PRIMERS_APNAME_SEQUENCE_COVERAGE_TYPE = "typeSequenceCoverage";
      public  static final String    STRETCH_PRIMERS_APNAME_LQR_COVERAGE_TYPE = "typeLQRCoverage";
      public  static final String    STRETCH_PRIMERS_APNAME_MIN_DISTANCE_BETWEEN_STRETCHES = "minDistanceBetweenStretchesToBeCombined"; 
@@ -439,13 +440,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             return getOligoCalculationsForRefSequence( id,  pst_check_oligo_cloning,  primer3);
         else 
         {
-            /*if ( m_type_of_lqr_coverage == LQR_COVERAGE_TYPE_COVER_EACH_DISCREPANCY || 
-                    m_type_of_lqr_coverage == LQR_COVERAGE_TYPE_COVER_EACH_LOWQ_DISCREPANCY     )
-            {
-                //check if the clone sequence exists
-                
-            }
-             **/
+          
             return getOligoCalculationsForStretchCollection(  id,  pst_check_oligo_cloning_for_stretches,  primer3);
         }
     }
@@ -653,7 +648,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             }
                 
             
-            if (stretch_boundaries[1] < refsequence_length - m_number_of_bases_to_start_stop_requier_er) 
+            if (stretch_boundaries[1] > refsequence_length - m_number_of_bases_to_start_stop_requier_er) 
             {
                 if ( cloneid == 0) cloneid = StretchCollection.getCloneIdByStretchCollectionId(stretchcollectionid);
                 m_error_messages.add("Clone "+cloneid+" needs Reverse End read. Last stretch has boundaries "+stretch_boundaries[0] + " - "+ stretch_boundaries[1] );
@@ -803,13 +798,13 @@ public class PrimerDesignerRunner extends ProcessRunner
       input = new PrimerDesignerRunner();
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
           
-           input.setInputData( Constants.ITEM_TYPE_CLONEID,"  158969 158985 159001 159017 159081 159097 159161 158527 158583 158567 158693 158756 158772 158867 158883 160363 158977 ");
+           input.setInputData( Constants.ITEM_TYPE_CLONEID," 201099 201103 201193");
          //   input.setInputData( Constants.ITEM_TYPE_CLONEID,"145895");
             input.setUser(user);
-            input.setSpecId(75);
+            input.setSpecId(52);
             input.setIsTryMode(true);
             input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_GAP_LQR);
-            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY);
+            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY_LQDISCREPANCIES);
             input.setMinDistanceBetweenStretchesToBeCombined(50);
    
             input.run();
