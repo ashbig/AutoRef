@@ -331,7 +331,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         //define 'no trace files'
         String trace_dir =   trace_files_path +File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory
         //////*********************** for testing ***************************
-        trace_dir = "Z:\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
+     //   trace_dir = "Z:\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
 
         int numberOfFilesStatus = CloneAssembly.isAssemblerRunNeeded(trace_dir, 0);
         if ( numberOfFilesStatus ==  CloneAssembly.ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE
@@ -1418,7 +1418,7 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
         try
         {
 
-            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
+            user = AccessManager.getInstance().getUser("tigr","tigr");
              BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
@@ -1429,14 +1429,14 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
       //runner.setInputData(Constants.ITEM_TYPE_CLONEID, "172259 141149 141150 172169 135152 119982 119983 141618 141619 141620 141630 141631 141632 172223 172224 172246 172247 172248 141117 141118 141119 141151 134468 134469 134472 134475 134476 134479 134480 140012 140013 140014 140042 140043 140044 135071 135142 135143 135144 172767 172768 172769 135150 135151 172624 172625 172626 135252 135253 135396 141686 141704 141744 172167 172168 172260 172226 172227 172228 172363 172362 172691 172693 141687 141705 ");
 
       
-     runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "     ASA001215	");
+     runner.setInputData(Constants.ITEM_TYPE_CLONEID, "     134311 135637 135541 135625 	");
 
       
 
             runner.setUser(user);
             runner.setNumberOfOutputFiles(Constants.OUTPUT_TYPE_ONE_FILE);
           //  runner.setSpecId(4);// for yp3
-                   runner.setSpecId(73);// for bec
+                   runner.setSpecId(5);// for bec
             runner.setUserComment(" test user comment");
             //runner.setNumberOfOutputFiles( );
              runner.setFields(
