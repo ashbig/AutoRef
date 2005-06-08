@@ -433,7 +433,7 @@ sql += " from cloningstrategy s, vector v where v.vectorid=s.vectorid order by s
                name = (String) request.getParameter("primername");
                sequence = (String)request.getParameter("sequence") ;
                if ( name == null || name.trim().length()< 1 )  throw new BecDatabaseException ("Empty linker name") ;
-               if( sequence == null || sequence.trim().length()< 1)throw new BecDatabaseException ("Empty linker sequence") ;
+               if( sequence == null || sequence.trim().length()< 1) sequence="NNNN" ;
                name = name.trim(); sequence = sequence.trim().toUpperCase();
                if ( !isCommonPrimerExist( name))
                {
