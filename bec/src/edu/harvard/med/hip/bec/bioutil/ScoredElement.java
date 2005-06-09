@@ -26,7 +26,11 @@ public class ScoredElement
     /** Creates a new instance of ScoredElement */
     public ScoredElement()    {    }
     
-       
+     public ScoredElement( int index  ,int base_score)
+    {
+        m_index = index;
+        m_base_score = base_score;
+     }   
     public ScoredElement( int index  ,int base_score,char base)
     {
         m_index = index;
@@ -351,6 +355,22 @@ public class ScoredElement
         double result = 0.0D;
         result = (double)( 1.0D - Math.pow( (double)10.0D, (double)(-score/10.0D)));
         return result;
+    }
+    
+    
+    public static ArrayList sortByIndex(ArrayList elements)
+    {
+        ArrayList result = new ArrayList();
+        for (int i=0; i< elements.size();i++)
+            Collections.sort(elements, new Comparator()
+            {
+                public int compare(Object o1, Object o2)
+                {
+                    return ((ScoredElement) o1).getIndex() - ((ScoredElement) o2).getIndex();
+                }
+                public boolean equals(java.lang.Object obj)               {      return false;  }
+            } );
+            return elements;
     }
     
     

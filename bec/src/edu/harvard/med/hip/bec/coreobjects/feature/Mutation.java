@@ -937,6 +937,22 @@ public abstract class Mutation
             return discrepancies;
     }
     
+    
+    public static ArrayList sortDiscrepanciesById(ArrayList discrepancies)
+    {
+        ArrayList result = new ArrayList();
+        for (int i=0; i< discrepancies.size();i++)
+            Collections.sort(discrepancies, new Comparator()
+            {
+                public int compare(Object o1, Object o2)
+                {
+                    return ((Mutation) o1).getId() - ((Mutation) o2).getId();
+                }
+                public boolean equals(java.lang.Object obj)               {      return false;  }
+            } );
+            return discrepancies;
+    }
+    
      public static ArrayList sortDiscrepanciesByNumberAndType(ArrayList discrepancies)
     {
         ArrayList result = new ArrayList();
@@ -1106,6 +1122,25 @@ public abstract class Mutation
          return "";
      }
      
+     
+     
+     public static ArrayList getDiscrepanciesByQualityType(ArrayList discrepancies, int type, int quality)
+     {
+         if ( discrepancies == null || discrepancies.size() < 1) return null;
+         ArrayList result = new ArrayList();
+         Mutation mut = null;
+         for ( int count = 0; count < discrepancies.size(); count++)
+         {
+             mut = (Mutation) discrepancies.get(count);
+             if ( mut.getQuality() == quality && mut.getType() == type)
+             {
+                 result.add(mut);
+             }
+             
+         }
+         
+         return result;
+     }
     
   /* 
      public static ArrayList sortDiscrepanciesByChangeTypeAndQuality(ArrayList discrepancies)
