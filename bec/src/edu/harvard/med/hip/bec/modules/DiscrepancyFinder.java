@@ -858,7 +858,7 @@ public class DiscrepancyFinder
 
          StringBuffer up = new StringBuffer(); ; StringBuffer dn = new StringBuffer();
          int codon_position = 0;
-        //get downstream 
+        //get upstream 
        
         int element_count = discr_start_pointer - 1 ;
         int added_base_count = 0;
@@ -868,12 +868,12 @@ public class DiscrepancyFinder
             if ( elements[element_count].getQueryChar() != '\u0000' && ! isWrongChar(elements[element_count].getQueryChar()) )
             {
                 if ( elements[element_count].getQueryChar() == ' ') break;
-                 dn.append( elements[element_count].getQueryChar()) ;
+                 up.insert(0, elements[element_count].getQueryChar()) ;
                  added_base_count++;
             }
             element_count--;
         }
-        //get upstream
+        //get downstream
         element_count = discr_end_pointer + 1 ;        added_base_count = 0;
         while ( added_base_count < RNAMutation.RNA_STREAM_RANGE && element_count <  elements.length)
         {
