@@ -19,6 +19,8 @@ public class User {
     public static final String NONPROFIT = "Other non-profit organization";
     public static final String OTHER = "Other";
     public static final String MEMBER[] = {DFHCC, HARVARD};
+    public static final String INTERNAL = "Yes";
+    public static final String EXTERNAL = "No";
     
     private int userid;
     private String firstname;
@@ -34,6 +36,7 @@ public class User {
     private String dateadded;
     private String datemod;
     private String modifier;
+    private String isinternal;
     
     private List addresses;
     private List orders;
@@ -44,7 +47,7 @@ public class User {
     }
    
     public User(int userid, String firstname, String lastname, String email, String phone,
-    String institution, String department, String ponumber, String pi, String group, String password) {
+    String institution, String department, String ponumber, String pi, String group, String password, String isinternal) {
         this.userid = userid;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -56,11 +59,12 @@ public class User {
         this.pi = pi;
         this.group = group;
         this.password = password;
+        this.isinternal = isinternal;
     }
     
     public User(int userid,String firstname,String lastname,String email,String phone,
     String ponumber,String institution,String department,String dateadded, String datemod,
-    String modifier,String pi, String usergroup, String password) {
+    String modifier,String pi, String usergroup, String password, String isinternal) {
         this.userid = userid;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -75,6 +79,7 @@ public class User {
         this.pi = pi;
         this.group = usergroup;
         this.password = password;
+        this.isinternal = isinternal;
     }
     
     public User(String email, String password) {
@@ -93,6 +98,7 @@ public class User {
     public String getPi() {return pi;}
     public String getGroup() {return group;}
     public String getPassword() {return password;}
+    public String getIsinternal() {return isinternal;}
     
     public void setUserid(int userid) {this.userid = userid;}
     public void setFirstname(String s) {this.firstname = s;}
@@ -105,6 +111,7 @@ public class User {
     public void setPi(String s) {this.pi = s;}
     public void setGroup(String s) {this.group = s;}
     public void setPassword(String s) {this.password = s;}
+    public void setIsinternal(String s) {this.isinternal = s;}
     
     public String getUsername() {
         return firstname+" "+lastname;

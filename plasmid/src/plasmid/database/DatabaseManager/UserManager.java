@@ -23,8 +23,8 @@ public class UserManager extends TableManager {
     
     public boolean insertUser(User user) {
         String sql = "insert into userprofile(userid,firstname,lastname,phone,email,"+
-        " ponumber,institution,department,dateadded,piname,usergroup,password)"+
-        " values(?,?,?,?,?,?,?,?,sysdate,?,?,?)";
+        " ponumber,institution,department,dateadded,piname,usergroup,password,isinternal)"+
+        " values(?,?,?,?,?,?,?,?,sysdate,?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
@@ -39,6 +39,7 @@ public class UserManager extends TableManager {
             stmt.setString(9, user.getPi());
             stmt.setString(10, user.getGroup());
             stmt.setString(11, user.getPassword());
+            stmt.setString(12, User.EXTERNAL);
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot insert user into database.");
@@ -129,7 +130,7 @@ public class UserManager extends TableManager {
     public User authenticate(String email, String password) {
         String sql = "select userid,firstname,lastname,email,phone,"+
         " ponumber,institution,department,dateadded,datemod,modifier,"+
-        " piname,usergroup,password"+
+        " piname,usergroup,isinternal"+
         " from userprofile where email=?"+
         " and password=?";
         PreparedStatement stmt = null;
@@ -153,7 +154,9 @@ public class UserManager extends TableManager {
                 String modifier = rs.getString(11);
                 String pi = rs.getString(12);
                 String usergroup = rs.getString(13);
-                user = new User(userid,firstname,lastname,email,phone,ponumber, institution,department,dateadded,datemod,modifier, pi,usergroup, password);
+                String isinternal = rs.getString(14);
+               
+                user = new User(userid,firstname,lastname,email,phone,ponumber, institution,department,dateadded,datemod,modifier, pi,usergroup, password,isinternal);
             }
         } catch (Exception ex) {
             handleError(ex, "Database error occured.");

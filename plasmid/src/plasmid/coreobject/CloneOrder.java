@@ -38,7 +38,7 @@ public class CloneOrder {
     }
     
     public CloneOrder(int orderid,String orderDate, String status, String ponumber,String shippingTo,String billingTo,
-    String shippingAddress,String billingAddress,int numofclones,int numofcolleciton, double costforclones,
+    String shippingAddress,String billingAddress,int numofclones,int numofcollection, double costforclones,
     double costforcollection,double costforshipping, double price, int userid) {
         this.orderid = orderid;
         this.orderDate = orderDate;

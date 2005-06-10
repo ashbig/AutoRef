@@ -130,6 +130,7 @@ public class PlaceOrderAction extends UserAction {
         }
         order.setItems(clones);
         
+        user.setPonumber(ponumber);
         OrderProcessManager manager = new OrderProcessManager();
         int orderid = manager.processOrder(order, user, addresses);
         if(orderid < 0) {

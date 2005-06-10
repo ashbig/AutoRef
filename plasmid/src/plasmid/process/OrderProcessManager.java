@@ -126,6 +126,58 @@ public class OrderProcessManager {
         }
     }
     
+    public List getOrderClones(int orderid, User user) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager m = new CloneOrderManager(conn);
+            List clones = null;
+            if(User.INTERNAL.equals(user.getIsinternal())) {
+                clones = m.queryOrderClones(orderid, null);
+            } else {
+                clones = m.queryOrderClones(orderid, user);
+            }
+            
+            if(clones == null) {
+                if(Constants.DEBUG) {
+                    System.out.println(m.getErrorMessage());
+                }
+                return null;
+            }
+            
+            List items = new ArrayList();
+            for(int i=0; i<clones.size(); i++) {
+                OrderClones c = (OrderClones)clones.get(i);
+                items.add((new Integer(c.getCloneid())).toString());
+            }
+            
+            CloneManager manager = new CloneManager(conn);
+            Map found = manager.queryClonesByCloneid(items, true, true);;
+            
+            List orderClones = new ArrayList();
+            for(int i=0; i<clones.size(); i++) {
+                OrderClones item = (OrderClones)clones.get(i);
+                int quantity = item.getQuantity();
+                String cloneid = ((new Integer(item.getCloneid())).toString());
+                Clone clone = (Clone)found.get(cloneid);
+                CloneInfo cloneInfo = new CloneInfo(clone);
+                cloneInfo.setQuantity(quantity);
+                orderClones.add(cloneInfo);
+            }
+            
+            return orderClones;
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
     public boolean saveShoppingCart(User user, List items) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -228,6 +280,16 @@ public class OrderProcessManager {
             
             if(addresses != null) {
                 UserManager man = new UserManager(conn);
+                
+                if(!man.updatePonumber(user.getPonumber(), user.getUserid())) {
+                    DatabaseTransaction.rollback(conn);
+                    if(Constants.DEBUG) {
+                        System.out.println(man.getErrorMessage());
+                        System.out.println("cannot update ponumber.");
+                    }
+                    return -1;
+                }
+                
                 List a = man.getUserAddresses(user.getUserid());
                 if(a == null) {
                     DatabaseTransaction.rollback(conn);
@@ -270,5 +332,90 @@ public class OrderProcessManager {
         } finally {
             DatabaseTransaction.closeConnection(conn);
         }
+    }
+    
+    public List getAllOrders(User user, String status) {
+        if(user == null) {
+            if(Constants.DEBUG) {
+                System.out.println("user is null.");
+            }
+            return null;
+        }
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot get database connection.");
+                System.out.println(ex);
+            }
+            return null;
+        }
+        
+        CloneOrderManager manager = new CloneOrderManager(conn);
+        List orders = null;
+        
+        if(user.INTERNAL.equals(user.getIsinternal())) {
+            orders = manager.queryCloneOrders(null, status);
+        } else {
+            orders = manager.queryCloneOrders(user, status);
+        }
+        
+        DatabaseTransaction.closeConnection(conn);
+        return orders;
+    }
+    
+    public CloneOrder getCloneOrder(User user, int orderid) {
+        if(user == null) {
+            if(Constants.DEBUG) {
+                System.out.println("user is null.");
+            }
+            return null;
+        }
+        
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot get database connection.");
+                System.out.println(ex);
+            }
+            return null;
+        }
+        
+        CloneOrderManager manager = new CloneOrderManager(conn);
+        CloneOrder order = null;
+        if(user.INTERNAL.equals(user.getIsinternal())) {
+            try {
+                order = manager.queryCloneOrder(null, orderid);
+            } catch (Exception ex) {
+                if(Constants.DEBUG) {
+                    System.out.println(manager.getErrorMessage());
+                    System.out.println(ex);
+                }
+                return null;
+            }
+        } else {
+            try {
+                order = manager.queryCloneOrder(user, orderid);
+            } catch (Exception ex) {
+                if(Constants.DEBUG) {
+                    System.out.println(manager.getErrorMessage());
+                    System.out.println(ex);
+                }
+                return null;
+            }
+        }
+        
+        DatabaseTransaction.closeConnection(conn);
+        return order;
     }
 }

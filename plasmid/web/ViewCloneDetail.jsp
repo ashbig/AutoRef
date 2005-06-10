@@ -91,15 +91,7 @@
     <td width="6%" class="tablebody">Discrepancy</td>
     <td width="6%" class="tablebody">Format</td>
     <td width="10%" class="tablebody">Tissue Source</td>
-    <logic:equal name="species" value="Homo sapiens">
-    <td width="7%" class="tablebody">Gene ID</td>
-    </logic:equal>
-    <logic:equal name="species" value="Saccharomyces cerevisiae">
-    <td width="7%" class="tablebody">SGD</td>
-    </logic:equal>
-    <logic:equal name="species" value="Pseudomonas aeruginosa">
-    <td width="7%" class="tablebody">PA Number</td>
-    </logic:equal>
+    <td width="7%" class="tablebody">Species Specific ID</td>
     <td width="8%" class="tablebody">Gene Symbol</td>
     <td width="26%" class="tablebody">Gene Name</td>
     <td width="12%" class="tablebody">Target Genbank</td>
@@ -113,13 +105,13 @@
     <td class="tableinfo"><bean:write name="insert" property="hasdiscrepancy"/></td>
     <td class="tableinfo"><bean:write name="insert" property="format"/></td>
     <td class="tableinfo"><bean:write name="insert" property="source"/></td>
-    <logic:equal name="species" value="Homo sapiens">
+    <logic:equal name="insert" property="species" value="Homo sapiens">
     <td class="tableinfo"><a target="_blank" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=gene&cmd=Retrieve&dopt=Graphics&list_uids=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="species" value="Pseudomonas aeruginosa">
+    <logic:equal name="insert" property="species" value="Pseudomonas aeruginosa">
     <td class="tableinfo"><a target="_blank" href="http://www.pseudomonas.com/AnnotationByPAU.asp?PA=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
-    <logic:equal name="species" value="Saccharomyces cerevisiae">
+    <logic:equal name="insert" property="species" value="Saccharomyces cerevisiae">
     <td class="tableinfo"><a target="_blank" href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=<bean:write name="insert" property="geneid"/>"><bean:write name="insert" property="geneid"/></a></td>
     </logic:equal>
     <td class="tableinfo"><bean:write name="insert" property="name"/></td>

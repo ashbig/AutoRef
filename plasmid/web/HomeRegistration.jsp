@@ -9,6 +9,8 @@
 <head>
 <title>PlasmID Database</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
 <link href="plasmidstyle.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -142,5 +144,9 @@
   </tr>
 </table>
 <jsp:include page="footer.jsp" /></body>
+<HEAD>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+</HEAD>
 </html>
 

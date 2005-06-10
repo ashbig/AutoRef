@@ -146,7 +146,7 @@ public class RegistrationAction extends Action {
             }
         }
         
-        User user = new User(id,firstname,lastname,email,phone,institution,department,null,piname,group,password);
+        User user = new User(id,firstname,lastname,email,phone,institution,department,null,piname,group,password,User.EXTERNAL);
         if(!manager.insertUser(user)) {
             DatabaseTransaction.rollback(conn);
             errors.add(ActionErrors.GLOBAL_ERROR,

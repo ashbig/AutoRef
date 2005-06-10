@@ -4,6 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="plasmid.Constants" %> 
 
 <html>
 <head>
@@ -13,20 +14,19 @@
 </head>
 
 <body>
-<jsp:include page="homeTitle.jsp" />
+<jsp:include page="orderTitle.jsp" />
 <table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
-      <jsp:include page="menuHome.jsp" />
+      <jsp:include page="menu.jsp" />
 	</td>
     <td width="83%" align="left" valign="top">
-	<jsp:include page="accountTitle.jsp" />
-<p>
-        <li class="text"><a href="">Update Account: </a>Change account information</li>
-        <li class="text"><a href="ViewOrderHistory.do">View Orders: </a>View complete order list</li>
+	<jsp:include page="orderHistoryTitle.jsp" />
+
+<p class="text">You have no orders.</p>
+
     </td>
   </tr>
 </table>
 <jsp:include page="footer.jsp" /></body>
 </html>
-
