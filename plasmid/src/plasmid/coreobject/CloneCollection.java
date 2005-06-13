@@ -11,6 +11,8 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class CloneCollection {
+    public static final String KINASE_DIST_1 = "Kinase distribution 1";
+    
     private String name;
     private int cloneid;
     

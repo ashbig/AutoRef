@@ -14,12 +14,12 @@
 
 <body>
 <jsp:include page="orderTitle.jsp" />
-<table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <td width="136" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menu.jsp" />
 	</td>
-    <td width="664" align="left" valign="top">
+    <td align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
       <html:form action="SetDisplay.do" enctype="multipart/form-data">
 <html:hidden property="pagesize"/>

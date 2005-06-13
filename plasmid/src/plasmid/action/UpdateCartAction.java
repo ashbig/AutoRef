@@ -61,8 +61,10 @@ public class UpdateCartAction extends Action {
         
         List shoppingcart = (List)request.getSession().getAttribute(Constants.CART);
         List cloneCountList = ((ViewCartForm)form).getCloneCountList();
+        String ret = ((ViewCartForm)form).getSubmitButton();
+        request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
         
-        if(shoppingcart == null || shoppingcart.size() == 0 || cloneCountList.size() == 0) {
+        if(!("Save Cart".equals(ret)) && ((shoppingcart == null || shoppingcart.size() == 0 || cloneCountList.size() == 0))) {
             shoppingcart = new ArrayList();
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             return (mapping.findForward("success_empty"));
@@ -78,17 +80,20 @@ public class UpdateCartAction extends Action {
             OrderProcessManager m = new OrderProcessManager();
             
             List newShoppingcart = m.updateShoppingCart(c, shoppingcart, cloneCountList, shoppingcartCopy);
-            if(newShoppingcart == null) {
+            if(newShoppingcart == null && !("Save Cart".equals(ret))) {
                 errors.add(ActionErrors.GLOBAL_ERROR,
                 new ActionError("error.database.error","Error occured while updating shopping cart."));
                 return (mapping.findForward("error"));
+            } else if(newShoppingcart.size() == 0) {
+                shoppingcart = new ArrayList();
+                request.getSession().setAttribute(Constants.CART, shoppingcart);
+                return (mapping.findForward("success_empty"));
             } else {
                 ((ViewCartForm)form).setCloneCountList(newShoppingcart);
                 request.setAttribute("cart", newShoppingcart);
                 request.getSession().setAttribute(Constants.CART, shoppingcartCopy);
             }
             
-            String ret = ((ViewCartForm)form).getSubmitButton();
             if("Check Out".equals(ret)) {
                 return (mapping.findForward("success_checkout"));
             }
@@ -104,7 +109,7 @@ public class UpdateCartAction extends Action {
             }
             
             request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
-            return (mapping.findForward("success"));            
+            return (mapping.findForward("success"));
         }
     }
 }

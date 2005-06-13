@@ -14,7 +14,7 @@
 
 <body>
 <jsp:include page="homeTitle.jsp" />
-<table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
@@ -40,7 +40,7 @@
         <html:password property="password" styleClass="text" size="30" maxlength="20"/>
         <html:submit styleClass="text" value="Login"/>
     </td>
-    <td width="60%" class="text">Find Password</td>
+    <td valign="baseline" width="60%" class="text"><a href="#">Find Password</a></td>
   </tr>
 </table>
       </html:form></td>

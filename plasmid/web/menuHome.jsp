@@ -1,12 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title>Untitled Document</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="plasmidstyle.css" rel="stylesheet" type="text/css">
-</head>
-
-<body>
 <table width="100%" border="0">
   <tr> 
     <td height="31" align="center" valign="middle"><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Home</strong></font></td>
@@ -27,5 +18,3 @@
       </table></td>
   </tr>
 </table>
-</body>
-</html>

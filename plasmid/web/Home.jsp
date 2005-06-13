@@ -14,18 +14,18 @@
 
 <body>
 <jsp:include page="homeTitle.jsp" />
-<table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
 <TBODY>
     <TR> 
       <TD width="100%"><div align="center"> 
           <p><font color="#000000"><font size=4>Welcome to the Plasmid Information 
-            Database (plasmID)</font><br align="center">
+            Database (PlasmID)</font><br align="center">
             <font size=4>of the Dana Farber/Harvard Cancer Center DNA Resource 
             Core</font></font> </p>
-          <p align="left" class="homeMainText">The goal of plasmID is to allow 
+          <p align="left" class="homeMainText">The goal of PlasmID is to allow 
             researchers in academic and non-profit laboratories to search for 
             and order plasmid clones in the DF/HCC DNA Resource Core collection. 
-            In addition, plasmID is a source for supporting information about 
+            In addition, PlasmID is a source for supporting information about 
             the clones (vector maps, sequence files, growth conditions, etc.). 
           </p>
           <p align="left" class="homeMainText">Please click &quot;log in&quot; 

@@ -14,7 +14,7 @@
 
 <body>
 <jsp:include page="homeTitle.jsp" />
-<table width="800" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
+<table width="1000" height="406" border="0" align="center" bordercolor="#FFFFFF" bgcolor="#FFFFFF">
   <tr> 
     <td width="17%" height="202" align="left" valign="top" bgcolor="#CCCCCC" class="leftsectiontitle"> 
       <jsp:include page="menuHome.jsp" />
@@ -22,12 +22,12 @@
     <td width="83%" align="left" valign="top">
         <jsp:include page="logoutTitle.jsp" />
       <html:form action="ConfirmLogout.do">
-<p>
-Would you like to save the current shopping cart into your account?
+<p class="text">
+You have modified your shopping cart. Would you like to save the changes to your account?
 <table width="100%" border="0">
     <tr>
-        <td><html:submit property="confirm" value="Yes"/></td>
-        <td><html:submit property="confirm" value="No"/></td>
+        <td class="text"><html:submit property="confirm" value="Yes"/></td>
+        <td class="text"><html:submit property="confirm" value="No"/></td>
     </tr>
 </table>
       </html:form></td>

@@ -6,6 +6,8 @@
 
 package plasmid;
 
+import plasmid.coreobject.User;
+
 /**
  *
  * @author  DZuo
@@ -21,6 +23,8 @@ public class Constants {
     public static final String UPDATED = "UPDATED";
     public static final String ORDERID = "Order ID";  
     public static final String CLONEORDER = "Clone Order";
+    public static final String ORDERS = "Clone Orders";
+    public static final String ACADEMIC = User.ACADEMIC;
     
     /** Creates a new instance of Constants */
     public Constants() {

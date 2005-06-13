@@ -28,12 +28,6 @@
     <td class="mainbodytext"><bean:write name="clone" property="vermethod"/></td>
   </tr>
   <tr> 
-    <td class="tablebody">Domain:</td>
-    <td class="mainbodytext"><bean:write name="clone" property="domain"/></td>
-    <td class="tablebody">Subdomain:</td>
-    <td class="mainbodytext"><bean:write name="clone" property="subdomain"/></td>
-  </tr>
-  <tr> 
     <td class="tablebody">Status:</td>
     <td class="mainbodytext"><bean:write name="clone" property="status"/></td>
     <td class="tablebody">Restriction:</td>

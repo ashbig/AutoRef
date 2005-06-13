@@ -43,6 +43,22 @@
                                   
     <form-bean      name="registrationForm"
                     type="plasmid.form.RegistrationForm"/>
+                                  
+    <form-bean      name="checkoutForm"
+                    type="plasmid.form.CheckoutForm"/>
+                    
+    <form-bean      name="mergeCartForm"
+                    type="plasmid.form.MergeCartForm"/>
+                    
+    <form-bean      name="viewOrderHistoryForm"
+                    type="plasmid.form.ViewOrderHistoryForm"/>
+                    
+    <form-bean      name="viewOrderDetailForm"
+                    type="plasmid.form.ViewOrderDetailForm"/>
+                    
+    <form-bean      name="viewOrderClonesForm"
+                    type="plasmid.form.ViewOrderClonesForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -59,22 +75,53 @@
 
   <!-- ========== Action Mapping Definitions ============================== -->
   <action-mappings type="org.apache.struts.action.ActionMapping">
-
-  
-    <action    path="/PrepareRegistration"
-               type="plasmid.action.PrepareRegistrationAction"
-              input="/PrepareRegistration.do">
-      <forward  name="success"   path="/HomeRegistration.jsp"/>
+    
+    <action     path="/Checkout"
+                type="plasmid.action.CheckoutAction"
+               name="checkoutForm"
+              input="/UpdateCart.do">
+      <forward  name="success"  path="/Checkout.jsp"/>
     </action>
       
-    <action    path="/Registration"
-               type="plasmid.action.RegistrationAction"
-               name="registrationForm"
-              input="/PrepareRegistration.do">
-      <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
-      <forward  name="success"   path="/Login.jsp"/>
+    <action     path="/CheckoutConfirm"
+                type="plasmid.action.CheckoutConfirmAction"
+               name="checkoutForm"
+              input="/Checkout.jsp">
+      <forward  name="success"  path="/CheckoutConfirm.jsp"/>
     </action>
-
+    
+    <action     path="/ConfirmLogout"
+                type="plasmid.action.ConfirmLogoutAction"
+               name="logoutForm"
+              scope="request"
+              input="/Logout.do">
+      <forward  name="success"  path="/Home.jsp"/>
+    </action>
+         
+    <action    path="/GetCloneDetail"
+               type="plasmid.action.GetCloneDetailAction"
+               name="cloneDetailForm"
+              scope="request"
+              input="/GetCloneDetailAction">
+      <forward  name="success"   path="/ViewCloneDetail.jsp"/>
+    </action>
+     
+    <action    path="/GetDataForRefseqSearch"
+               type="plasmid.action.GetDataForRefseqSearchAction"
+               name="refseqSearchForm"
+              scope="request"
+              input="/GetDataForRefseqSearch.do">
+      <forward  name="success"   path="/RefseqSearch.jsp"/>
+    </action>
+     
+    <action    path="/GetVectorDetail"
+               type="plasmid.action.GetVectorDetailAction"
+               name="vectorDetailForm"
+              scope="request"
+              input="/GetVectorDetailAction">
+      <forward  name="success"   path="/ViewVectorDetail.jsp"/>
+    </action>
+    
     <!-- Process a user logon -->
     <action    path="/Logon"
                type="plasmid.action.LogonAction"
@@ -93,27 +140,32 @@
       <forward  name="confirm"  path="/ConfirmLogout.jsp"/>
     </action>
     
-    <action     path="/ConfirmLogout"
-                type="plasmid.action.ConfirmLogoutAction"
-               name="logoutForm"
+     <action    path="/MergeCart"
+               type="plasmid.action.MergeCartAction"
+               name="mergeCartForm"
               scope="request"
-              input="/Logout.do">
-      <forward  name="success"  path="/Home.jsp"/>
+              input="/Login.jsp">
+      <forward  name="success"   path="/ViewCart.do"/>
     </action>
-       
+            
+    <action     path="/PlaceOrder"
+                type="plasmid.action.PlaceOrderAction"
+               name="checkoutForm"
+              input="/CheckoutConfirm.jsp">
+      <forward  name="success"  path="/ViewOrderDetail.jsp"/>
+    </action>
+    
+    <action    path="/PrepareRegistration"
+               type="plasmid.action.PrepareRegistrationAction"
+              input="/PrepareRegistration.do">
+      <forward  name="success"   path="/HomeRegistration.jsp"/>
+    </action>
+      
     <action     path="/ProcessError"
                 type="edu.harvard.med.hip.flex.action.ProcessErrorAction">
        <forward name="displayError" path="/PlasmidError.jsp"/>
     </action>
-   
-    <action    path="/GetDataForRefseqSearch"
-               type="plasmid.action.GetDataForRefseqSearchAction"
-               name="refseqSearchForm"
-              scope="request"
-              input="/GetDataForRefseqSearch.do">
-      <forward  name="success"   path="/RefseqSearch.jsp"/>
-    </action>
-    
+
     <action    path="/RefseqSearch"
                type="plasmid.action.RefseqSearchAction"
                name="refseqSearchForm"
@@ -129,6 +181,14 @@
               input="/RefseqSearchContinue.jsp">
       <forward  name="success"   path="/SetDisplay.jsp"/>
     </action>
+      
+    <action    path="/Registration"
+               type="plasmid.action.RegistrationAction"
+               name="registrationForm"
+              input="/PrepareRegistration.do">
+      <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
+      <forward  name="success"   path="/Login.jsp"/>
+    </action>
          
     <action    path="/SetDisplay"
                type="plasmid.action.SetDisplayAction"
@@ -136,30 +196,6 @@
               scope="request"
               input="/SetDisplay.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
-    </action>
-   
-    <action    path="/GetCloneDetail"
-               type="plasmid.action.GetCloneDetailAction"
-               name="cloneDetailForm"
-              scope="request"
-              input="/GetCloneDetailAction">
-      <forward  name="success"   path="/ViewCloneDetail.jsp"/>
-    </action>
-     
-    <action    path="/GetVectorDetail"
-               type="plasmid.action.GetVectorDetailAction"
-               name="vectorDetailForm"
-              scope="request"
-              input="/GetVectorDetailAction">
-      <forward  name="success"   path="/ViewVectorDetail.jsp"/>
-    </action>
-    
-    <action    path="/ViewCart"
-               type="plasmid.action.ViewCartAction"
-               name="viewCartForm"
-              input="/ViewCart.do">
-      <forward  name="success"   path="/DisplayCart.jsp"/>
-      <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
     </action>
 
     <action    path="/UpdateCart"
@@ -170,6 +206,36 @@
       <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
       <forward  name="success_save"   path="/Account.jsp"/>
       <forward  name="success_checkout"   path="/Checkout.do"/>
+    </action>
+    
+    <action    path="/ViewCart"
+               type="plasmid.action.ViewCartAction"
+               name="viewCartForm"
+              input="/ViewCart.do">
+      <forward  name="success"   path="/DisplayCart.jsp"/>
+      <forward  name="success_empty"   path="/DisplayEmptyCart.jsp"/>
+    </action>
+        
+    <action    path="/ViewOrderClones"
+               type="plasmid.action.ViewOrderClonesAction"
+               name="viewOrderClonesForm"
+              input="/ViewOrderClones.do">
+      <forward  name="success"   path="/ViewOrderClones.jsp"/>
+    </action>
+    
+    <action    path="/ViewOrderDetail"
+               type="plasmid.action.ViewOrderDetailAction"
+               name="viewOrderDetailForm"
+              input="/ViewOrderDetail.do">
+      <forward  name="success"   path="/ViewOrderDetail.jsp"/>
+    </action>
+    
+    <action    path="/ViewOrderHistory"
+               type="plasmid.action.ViewOrderHistoryAction"
+               name="viewOrderHistoryForm"
+              input="/ViewOrderHistory.do">
+      <forward  name="success"   path="/OrderList.jsp"/>
+      <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
     </action>
     
     <!-- The standard administrative actions available with Struts -->

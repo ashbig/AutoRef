@@ -58,7 +58,7 @@ public class SetDisplayAction extends Action {
     throws ServletException, IOException {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
-        
+       
         String cdna = ((RefseqSearchForm)form).getCdna();
         String shrna = ((RefseqSearchForm)form).getShrna();
         String fusion = ((RefseqSearchForm)form).getFusion();
