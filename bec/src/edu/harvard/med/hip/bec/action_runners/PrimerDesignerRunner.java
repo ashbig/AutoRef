@@ -631,7 +631,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             {
                 if ( cloneid == 0) cloneid = StretchCollection.getCloneIdByStretchCollectionId(stretchcollectionid);
                 m_error_messages.add("Clone "+ cloneid +" needs Forward End read. First stretch has boundaries "+stretch_boundaries[0] + " - "+ stretch_boundaries[1] );
-                continue;
+               // continue;
             }
             else
             {
@@ -652,7 +652,7 @@ public class PrimerDesignerRunner extends ProcessRunner
             {
                 if ( cloneid == 0) cloneid = StretchCollection.getCloneIdByStretchCollectionId(stretchcollectionid);
                 m_error_messages.add("Clone "+cloneid+" needs Reverse End read. Last stretch has boundaries "+stretch_boundaries[0] + " - "+ stretch_boundaries[1] );
-                continue;
+              //  continue;
             }
             else
             {
@@ -798,13 +798,13 @@ public class PrimerDesignerRunner extends ProcessRunner
       input = new PrimerDesignerRunner();
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
           
-           input.setInputData( Constants.ITEM_TYPE_CLONEID," 201099 201103 201193");
+           input.setInputData( Constants.ITEM_TYPE_CLONEID,"158625 ");
          //   input.setInputData( Constants.ITEM_TYPE_CLONEID,"145895");
             input.setUser(user);
-            input.setSpecId(52);
+            input.setSpecId(105);
             input.setIsTryMode(true);
             input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_GAP_LQR);
-            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY_LQDISCREPANCIES);
+            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY);
             input.setMinDistanceBetweenStretchesToBeCombined(50);
    
             input.run();
