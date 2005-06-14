@@ -75,7 +75,7 @@
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=insertformat&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Insert Format</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=vectorname&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Vector</a></td>
     <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=selection&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Selection Markers</a></td>
-    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=restriction&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Use Restriction</a></td>
+    <td class="tableheader"><a href="SetDisplay.do?page=1&sortby=restriction&displayPage=<bean:write name="displayPage"/>&species=<bean:write name="species"/>">Distribution</a></td>
     <td class="tableheader">&nbsp;</td>
   </tr>
 

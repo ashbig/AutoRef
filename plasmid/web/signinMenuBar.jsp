@@ -5,7 +5,7 @@
   <tr> 
     <td colspan="3" rowspan="2">&nbsp;</td>
     <td width="52%" align="center" valign="bottom" class="title"> 
-      <p><strong><font color="#333333" size="5">Welcome To PlasmID Database</font></strong></p></td>
+      <p><strong><font color="#333333" size="5">Welcome To PlasmID</font></strong></p></td>
     <td width="30%" height="54" align="right" valign="bottom" class="countrytext"> 
       <p><a href="ViewCart.do" border="0"><img src="shoppingcart2.gif" width="105" height="18"></a></p></td>
   </tr>

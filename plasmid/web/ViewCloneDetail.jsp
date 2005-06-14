@@ -30,7 +30,7 @@
   <tr> 
     <td class="tablebody">Status:</td>
     <td class="mainbodytext"><bean:write name="clone" property="status"/></td>
-    <td class="tablebody">Restriction:</td>
+    <td class="tablebody">Distribution:</td>
     <td class="mainbodytext"><bean:write name="clone" property="restriction"/></td>
   </tr>
   <tr> 

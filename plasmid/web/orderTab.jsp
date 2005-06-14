@@ -7,7 +7,7 @@
                 <td width="10%" align="center" bgcolor="#6699CC"><strong><a href="Home.jsp" STYLE="text-decoration:none"><font face="Verdana, Arial, Helvetica, sans-serif">Home</font></a></strong></td>
                 <td width="16%" align="center" bgcolor="#6699CC"><a href="#" STYLE="text-decoration:none"><font face="Verdana, Arial, Helvetica, sans-serif"><strong>About 
                   Us </strong></font></a></td>
-                <td width="24%" align="center" bgcolor="#6699CC"><a href="#" STYLE="text-decoration:none"><font face="Verdana, Arial, Helvetica, sans-serif"><strong>Plasmid 
+                <td width="24%" align="center" bgcolor="#6699CC"><a href="Submission.jsp" STYLE="text-decoration:none"><font face="Verdana, Arial, Helvetica, sans-serif"><strong>Plasmid 
                   Submission </strong></font></a></td>
                 <td width="33%" align="center" bgcolor="#6699CC"><font color="#CCCCCC">
                     <strong>Plasmid Search & Order </strong></font></td>

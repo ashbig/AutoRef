@@ -26,7 +26,7 @@
 
 <p class="mainbodytexthead">There are no clones in your cart.</p>
 
-
+<p class="mainbodytexthead">If you have the saved cart in your account and you didn't sign in, please sign in to view your shopping cart items.</p>
     </td>
   </tr>
 </table>
