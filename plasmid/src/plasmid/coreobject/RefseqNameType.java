@@ -21,6 +21,7 @@ public class RefseqNameType {
     public static String PA = "PA Number";
     public static String PRO_GENBANK = "Protein GenBank Accession";
     public static String PRO_GI = "Protein GI";
+    public static String SGD = "SGD Number";
     
     private String species;
     private String refseqtype;

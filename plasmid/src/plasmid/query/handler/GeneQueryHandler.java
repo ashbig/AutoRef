@@ -29,6 +29,7 @@ public abstract class GeneQueryHandler {
     public static final String PA = RefseqNameType.PA;
     public static final String PRO_GENBANK = RefseqNameType.PRO_GENBANK;
     public static final String PRO_GI = RefseqNameType.PRO_GI;
+    public static final String SGD = RefseqNameType.SGD;
     
     protected Map found;
     protected List nofound;
