@@ -110,6 +110,53 @@ CCAAGAAGAAGAAG*/
         }
     }
     
+    public static void buildIndexForFASTAFile(String file_name, String index_file_name)
+    {
+        BufferedReader  fin = null;
+        FileOutputStream fout = null;  
+        DataOutputStream dout = null;
+        String line = null; 
+        String id  = null;
+        long current_pos = 0;
+        boolean new_seq = false; long start =- 1; long end =-1;
+        try
+        {
+            File dbfile = new File(db_pass);
+            int separator  = dbfile.separator.length();
+           
+            dout = new DataOutputStream( new FileOutputStream(index_file_name));
+            fin = new BufferedReader(new FileReader(file_name));
+            while ( (line = fin.readLine()) != null)
+            {
+                
+                if (line.startsWith(">"))
+                {
+                    if (start != -1)//skip first entry
+                    {
+                        end = current_pos - separator;// -LINE_DELIMITER_LENGTH;
+                        writeIndexData(id, start,end,dout);
+                    }
+                    id = line.substring(1);
+                    start = current_pos + line.length() + separator;//LINE_DELIMITER_LENGTH;
+                }             
+                current_pos += line.length() + separator;//LINE_DELIMITER_LENGTH;
+                
+            }
+            //last record
+            end = current_pos -1;
+            writeIndexData(id, start,end,dout);
+            fin.close();dout.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Cannot build index file");
+            try
+            {fin.close();dout.close();} catch(Exception e1)
+            {}
+        }
+    }
+    
+    
     
     
     private static void writeIndexData(long gi, long start,long end,DataOutputStream dout_gi) throws Exception
