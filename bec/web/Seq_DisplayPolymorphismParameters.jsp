@@ -6,7 +6,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
-
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <html>
 
 <head>
@@ -66,32 +66,49 @@ else if (sets.size() > 0 )
 
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
   <tr> 
-    <td colspan =2><div align="right"><b>Set Name</b><%= spec.getName() %>
+    <td colspan =2><b>Set Name&nbsp;&nbsp;&nbsp;</b><%= spec.getName() %> 
       <P></P></td>
   </tr>
-  <tr > 
-    <td width="70%" bgColor="#e4e9f8" ><font color="#000080"><strong>Species:</strong> 
-      </font></td>
-    <td bgColor="#e4e9f8"> <%= spec.getParameterByNameString("PL_SPECIES") %></td>
   <tr> 
-    <td bgcolor="#b8c6ed"><font color="#000080"><strong>Database:</strong></font></td>
-    <td bgcolor="#b8c6ed"> <%= spec.getParameterByNameString("PL_DATABASE") %> 
+    <td bgcolor="#b8c6ed" width='50%'><strong><font color="#000080">Please select GenBank 
+      database to search in:</font></strong></td>
+    <td bgcolor="#b8c6ed" align='left'>
+   <table border='0'>
+    <% ArrayList values = Algorithms.splitString( (String)spec.getParameterByNameString("PL_DATABASE")," ");
+    for (int count_db = 0; count_db < values.size(); count_db++)
+    {%>      <tr><td>  <%= values.get(count_db) %> </td></tr>  <% } %>
+</table>
     </td>
   </tr>
-  <tr > 
-    <td colspan="2"><font color="#000080">&nbsp;</font> </td>
+  <tr >
+    <td colspan="2">&nbsp; </td>
   </tr>
   <tr> 
-    <td bgColor="#e4e9f8"><font color="#000080"><b>Number of bases in flanking 
-      sequence:</b> </font></td>
-    <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("PL_BASES") %></td>
+    <td bgColor="#e4e9f8"><b><font color="#000080">Number of flanking bases to 
+      append on both sides of discrepancy for search: </font></b> </td>
+	
+    <td bgColor="#e4e9f8"><%= spec.getParameterByNameString("PL_BASES")%></td>
   </tr>
+  <tr><td colspan=2 >&nbsp;</td></tr>
   <tr> 
-    <td bgcolor="#b8c6ed"><font color="#000080"><b>Output format <i>(optional)</i>:</b> 
-      </font></td>
-    <td bgcolor="#b8c6ed"><%= spec.getParameterByNameString("PL_FORMAT") %> </td>
+    <td bgcolor="#b8c6ed" colspan = 2> <b><font color="#000080">Parameters to confirm similarity 
+      between the query and any database hits to confirm they are the same gene: 
+      </font></b></td>
+   
   </tr>
-</table>
+  <tr>
+    <td bgColor="#e4e9f8"><div align="right"><font color="#000080">minimum match 
+        length:&nbsp;&nbsp;&nbsp;</font></div></td>
+	<td bgColor="#e4e9f8"><font color="#000080"><%= spec.getParameterByNameString("PL_MATCH_LENGTH") %></font></td>
+  </tr>
+  <tr>
+    <td bgColor="#e4e9f8"><div align="right"><font color="#000080">requered percent 
+        identity:&nbsp;&nbsp;&nbsp;</font></div></td>
+	<td bgColor="#e4e9f8"><font color="#000080">
+      <%= spec.getParameterByNameString("PL_MATCH_IDENTITY") %> </font></td>
+  </tr>
+
+  </table>
 
 <%}}%>
 </body>
