@@ -64,7 +64,7 @@ public class NonInterleavedColonyPicking extends GridPlateToCultureMapper {
                     threadId = c.getLabel().substring(3);
                 else
                     threadId = c.getLabel().substring(3, l);
-                String newBarcode = projectCode+protocol.getProcesscode()+threadId+"-"+subthread;
+                String newBarcode = projectCode+protocol.getProcesscode()+threadId+subthread;
                 Container newContainer = new Container(newContainerType, null, newBarcode, c.getThreadid());
                 mappingSamples(c, newContainer, protocol, 1, index);
                 newContainers.addElement(newContainer);
