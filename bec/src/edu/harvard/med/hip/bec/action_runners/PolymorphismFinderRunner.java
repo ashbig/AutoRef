@@ -8,26 +8,18 @@ package edu.harvard.med.hip.bec.action_runners;
 
 import java.sql.*;
 import java.io.*;
-
+ import java.util.*;
 
 import edu.harvard.med.hip.bec.coreobjects.spec.*;
 import edu.harvard.med.hip.bec.util.*;
-import edu.harvard.med.hip.bec.programs.needle.*;
-import edu.harvard.med.hip.bec.coreobjects.sequence.*;
-import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import edu.harvard.med.hip.bec.database.*;
-import edu.harvard.med.hip.bec.form.*;
 import edu.harvard.med.hip.bec.user.*;
-import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.Constants;
-import edu.harvard.med.hip.bec.sampletracking.mapping.*;
-import edu.harvard.med.hip.bec.sampletracking.objects.*;
-import edu.harvard.med.hip.bec.programs.assembler.*;
+import edu.harvard.med.hip.bec.programs.polymorphism_finder.*;
+import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.util_objects.*;
-import edu.harvard.med.hip.bec.ui_objects.*;
-  import java.util.*;
-  import edu.harvard.med.hip.utility.*;
+ 
  
 /**
  *
@@ -38,7 +30,10 @@ public class PolymorphismFinderRunner extends ProcessRunner
     
     
     private final static   String FILE_NAME_INPUT_DATA_FILE = "pl_input_data.txt";
-    
+    private final static   String FILE_NAME_ORFSEQUENCES_DATA_FILE = "pl_orf_sequences_input_data.txt";
+   private final static   String  FILE_NAME_ORFSEQUENCES_INDEX_FILE= "pl_orf_sequences_input_index.txt";
+   
+   
     private int                     m_spec_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;    
     private PolymorphismSpec             m_spec = null;
     private String                  m_blastabledb_names = null;
@@ -52,9 +47,11 @@ public class PolymorphismFinderRunner extends ProcessRunner
     {
         //create job_order file
         int process_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
-        String sql = null;
+        String sql = null; String sql_where = null;
         ArrayList  discrepancy_descriptions = new ArrayList();
         ArrayList  sql_groups_of_items = new ArrayList();
+        Hashtable sequenceid_isolatetrackingid = new Hashtable();
+        ArrayList   not_processed_ids= new ArrayList();
         if ( ! getPolymorphismFinderSpec()) return ;
         ArrayList blastable_dbs = Algorithms.splitString(m_blastabledb_names);
         if ( blastable_dbs == null || blastable_dbs.size() < 1)
@@ -69,11 +66,22 @@ public class PolymorphismFinderRunner extends ProcessRunner
             if ( sql_groups_of_items.size() < 1 )return;
             for (int count = 0; count < sql_groups_of_items.size(); count++)
             {
-                sql = getQueryString( (String)sql_groups_of_items.get(count) );
+                sql_where = getWhereClause( (String)sql_groups_of_items.get(count) );
+                sql = getSequenceIds( sql_where, sequenceid_isolatetrackingid );
                 if ( sql != null && sql.length() > 0)
                     discrepancy_descriptions = getDiscrepancyDescriptions(sql, blastable_dbs);
+   
+                
                 if ( discrepancy_descriptions != null && discrepancy_descriptions.size() > 0 ) 
+                {
+                    Hashtable istr_refseqid = writeORFSequences(sequenceid_isolatetrackingid,discrepancy_descriptions);
+                    updateDiscrepancyDescriptions( discrepancy_descriptions,
+                             sequenceid_isolatetrackingid, istr_refseqid);
                     writeDiscrepancyDiscriptions(discrepancy_descriptions);
+                    //index ORF file
+                    edu.harvard.med.hip.bec.export.IndexerForBlastDB.buildIndexForFASTAFile(  edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_ORFSEQUENCES_DATA_FILE ,
+                    edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_ORFSEQUENCES_INDEX_FILE  );
+                }
             }
 
         }
@@ -89,7 +97,131 @@ public class PolymorphismFinderRunner extends ProcessRunner
     
     
     
+     private Hashtable writeORFSequences(Hashtable sequenceid_isolatetrackingid,
+                                        ArrayList discrepancy_descriptions)throws Exception
+     {
+         //collect isolatetrackingids to get ORFS
+         StringBuffer istr = new StringBuffer();
+         String cur_istr = null;
+         String prev_sequenceid = null;
+         String current_sequenceid = null;
+         for (int count = 0 ; count < discrepancy_descriptions.size(); count++)
+         {
+             current_sequenceid = ((String[])discrepancy_descriptions.get(count))[0];
+             if ( count == 0 || !prev_sequenceid.equalsIgnoreCase(current_sequenceid))
+             {
+                 cur_istr = (String) sequenceid_isolatetrackingid.get(current_sequenceid);
+                 if ( cur_istr == null)
+                 {
+                     m_error_messages.add("Cannot extract isolatetracking id for discrepancy "+((String[])discrepancy_descriptions.get(count))[1]);
+                     throw new Exception();
+                 }
+                 istr.append( sequenceid_isolatetrackingid.get(current_sequenceid)+",");
+             }
+             prev_sequenceid = current_sequenceid;
+             
+         }
+         String result = istr.toString().substring(0, istr.length()-1);
+         return writeORFSequences( result);
+            
+     }
+     
+     private Hashtable      writeORFSequences(String sql)throws Exception
+     {
+        sql = " select distinct isolatetrackingid, refsequenceid, infotext "
+        +" from  isolatetracking i, sequencingconstruct c, sequenceinfo s "
+        +" where c.constructid =i.constructid and c.refsequenceid=s.sequenceid "
+        +" and s.infotype="+BaseSequence.SEQUENCE_INFO_TEXT+" and i.isolatetrackingid in ("+sql+") order by isolatetrackingid DESC";
+        Hashtable istrid_ORFid = new Hashtable();
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        StringBuffer sequence_text = new StringBuffer();
+        int prev_istrid = 0; int prev_refsequenceid = 0;
+        try
+        {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next())
+            {
+                if ( prev_istrid == 0 || prev_istrid != rs.getInt("isolatetrackingid") )
+                {
+                    if (prev_istrid != 0 && !istrid_ORFid.containsValue( String.valueOf( prev_refsequenceid)))
+                        writeORFSequence(prev_refsequenceid, sequence_text.toString());
+                    istrid_ORFid.put( String.valueOf( prev_istrid), String.valueOf(prev_refsequenceid));
+                    sequence_text = new StringBuffer();
+                }
+                prev_istrid = rs.getInt("isolatetrackingid");
+                prev_refsequenceid = rs.getInt("refsequenceid");
+                sequence_text.append( rs.getString("infotext"));
+            }
+            //write last one
+            if (  istrid_ORFid.get( String.valueOf( prev_istrid)) == null )
+            {
+                if (!istrid_ORFid.containsValue( String.valueOf( prev_refsequenceid)))
+                    writeORFSequence(prev_refsequenceid, sequence_text.toString());
+                istrid_ORFid.put( String.valueOf( prev_istrid), String.valueOf(prev_refsequenceid));
+            }
+            return istrid_ORFid;
+         
+        }
+        catch (Exception E)
+        {
+            m_error_messages.add("Error occured while trying to get descriptions for descrepancy. "+E+"\nSQL: "+sql);
+            throw new Exception();
+        }
+        finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+     }
+     
+     
+     private void       writeORFSequence(int refsequenceid, String sequence_text)throws BecUtilException
+                    
+     {
+         FileWriter fr = null;
+         String file_name = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_ORFSEQUENCES_DATA_FILE;
+       
+         try
+         {
+            fr =  new FileWriter(file_name, true);
+            fr.write(">"+refsequenceid +Constants.LINE_SEPARATOR + sequence_text + Constants.LINE_SEPARATOR);
+            fr.flush();
+            fr.close();
+         }
+         catch(Exception e )
+         {
+             throw new BecUtilException("Can not write reference sequence\n"+ e.getMessage());
+         }
     
+     }
+    private void  updateDiscrepancyDescriptions(ArrayList discrepancy_descriptions,
+                            Hashtable sequenceid_isolatetrackingid, Hashtable istr_refseqid)
+                            throws Exception
+    {
+          String sequenceid = null; String istr_id = null;
+          String ORF_id = null;
+          for (int count = 0; count < discrepancy_descriptions.size(); count++)
+          {
+              sequenceid = ((String[])discrepancy_descriptions.get(count))[0];
+              istr_id =    (String)sequenceid_isolatetrackingid.get(sequenceid);
+              if ( istr_id == null) 
+              {
+                  m_error_messages.add("Cannot get isolatetracking id for discrepancy "+((String[])discrepancy_descriptions.get(count))[1]);
+                  throw new Exception();
+              }
+              ORF_id =   (String) istr_refseqid.get(istr_id);
+               if ( ORF_id == null) 
+              {
+                  m_error_messages.add("Cannot get reference sequence id for discrepancy "+((String[])discrepancy_descriptions.get(count))[1]);
+                  throw new Exception();
+              }
+               ((String[])discrepancy_descriptions.get(count))[0] = ORF_id;
+          }
+    
+    }
+         
      private boolean getPolymorphismFinderSpec()
     {  //get primer spec
         try
@@ -105,45 +237,50 @@ public class PolymorphismFinderRunner extends ProcessRunner
         }
     }
  
-     private String getQueryString( String sql_items )
+     
+    private String getWhereString( String sql_items )
     {
         
         // get isolatetrackingid
-        String isolatetrackingids = null;
          switch ( m_items_type)
         {
             case  Constants.ITEM_TYPE_CLONEID :
             {
-                 isolatetrackingids ="  (select isolatetrackingid from flexinfo where flexcloneid in ("+sql_items+"))";
-                 break;
-            }
+                 return "  (select isolatetrackingid from flexinfo where flexcloneid in ("+sql_items+"))";
+                     }
             case  Constants.ITEM_TYPE_PLATE_LABELS :
             {
-                 isolatetrackingids ="  (select isolatetrackingid from isolatetracking where sampleid in   "
+                return"  (select isolatetrackingid from isolatetracking where sampleid in   "
                  +" (select sampleid from sample where containerid in "
                  +" (select containerid from  containerheader where label in ("+sql_items+"))))";
-                break;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
-            default : isolatetrackingids = null;
+            default : return null;
          }
+      }
+     private String getSequenceIds( String isolatetrackingids , Hashtable sequenceid_isolatetrackingid)
+    {
          ArrayList remaining_istrids = new ArrayList();
-         ArrayList sequence_ids = getCloneSequenceIds( isolatetrackingids , remaining_istrids);
+         String sequence_ids = getCloneSequenceIds( isolatetrackingids , remaining_istrids, sequenceid_isolatetrackingid);
          if ( remaining_istrids.size() > 0)  
          {
-             sequence_ids.addAll(  getContigSequenceIds(  Algorithms.convertStringArrayToString(remaining_istrids, ","), new ArrayList())  );
+             sequence_ids +=  getContigSequenceIds(  
+                             Algorithms.convertStringArrayToString(remaining_istrids, ","),
+                             new ArrayList()  , 
+                             sequenceid_isolatetrackingid);
          }
-             
-        return "select discrepancyid, upstream, changemut, downstream from discrepancy where type = "+Mutation.RNA +" and  sequenceid in ("
-        + Algorithms.convertStringArrayToString(sequence_ids, ",") +")";
+        if ( sequence_ids.lastIndexOf(',') == sequence_ids.length()-1) 
+            sequence_ids=sequence_ids.substring(0, sequence_ids.length()-1);   
+        return sequence_ids;
            
     }
      
-     private ArrayList   getCloneSequenceIds(String isolatetrackingids, ArrayList remaining_istrids)
+     private String   getCloneSequenceIds(String isolatetrackingids, 
+                    ArrayList remaining_istrids,
+                    Hashtable sequenceid_isolatetrackingid)
      {
         String sql = " select f.isolatetrackingid as isolatetrackingid, sequenceid from assembledsequence a, isolatetracking f "
         +" where a.isolatetrackingid(+)=f.isolatetrackingid and f.isolatetrackingid in "+isolatetrackingids+" order by f.isolatetrackingid, sequenceid DESC";
-        
-        
+        String result = "";
         ArrayList sequenceids = new ArrayList();   DatabaseTransaction t = null;
         int current_istr =  0;
         ResultSet rs = null;
@@ -159,11 +296,14 @@ public class PolymorphismFinderRunner extends ProcessRunner
                 }
                 current_istr = rs.getInt("isolatetrackingid");
                 if ( rs.getInt("sequenceid") != 0 ) 
-                    sequenceids.add( String.valueOf( rs.getInt("sequenceid")) );
+                {
+                    result += rs.getInt("sequenceid")+",";
+                    sequenceid_isolatetrackingid.put( Integer.toString(rs.getInt("sequenceid")),  Integer.toString(current_istr));
+                }
                 else
                     remaining_istrids.add( String.valueOf( current_istr ));
             }
-            return sequenceids;
+            return result;
         }
         catch (Exception E)
         {
@@ -177,14 +317,18 @@ public class PolymorphismFinderRunner extends ProcessRunner
         return null;
      }
     
-      private ArrayList   getContigSequenceIds(String isolatetrackingids, ArrayList remaining_istrids)
+      private String   getContigSequenceIds(String isolatetrackingids,
+                    ArrayList remaining_istrids,
+                    Hashtable sequenceid_isolatetrackingid)
      {
         String sql = " select f.isolatetrackingid as isolatetrackingid, sequenceid, s.collectionid as collectionid from stretch_collection c, stretch s, isolatetracking f "
         +" where c.isolatetrackingid(+)=f.isolatetrackingid and s.collectionid=c.collectionid and c.type =" + StretchCollection.TYPE_COLLECTION_OF_GAPS_AND_CONTIGS +" and " 
         +" s.type = " +Stretch.GAP_TYPE_CONTIG +  " and f.isolatetrackingid in ("+isolatetrackingids+") order by isolatetrackingid, c.collectionid DESC";
+        String result ="";
         ArrayList sequenceids = new ArrayList();   DatabaseTransaction t = null;
         boolean isNewClone = true; int current_istr= 0 ; 
         boolean isNewCollection = true; int current_collection_id = 0;
+        int [] istrid_seqid = new int[3];
         ResultSet rs = null;
         try
         {
@@ -204,10 +348,11 @@ public class PolymorphismFinderRunner extends ProcessRunner
                 }
                 if ( current_collection_id == rs.getInt("collectionid")  )
                 {
-                    sequenceids.add( String.valueOf( rs.getInt("sequenceid")));
+                    result += rs.getInt("sequenceid") +",";
+                     sequenceid_isolatetrackingid.put(Integer.toString(rs.getInt("sequenceid")), Integer.toString(rs.getInt("isolatetrackingid")));
                 }
             }
-            return sequenceids;            
+            return result;            
               
         }
         catch (Exception E)
@@ -222,13 +367,51 @@ public class PolymorphismFinderRunner extends ProcessRunner
         return null;
      }
     
-    private ArrayList getDiscrepancyDescriptions(String sql, ArrayList blastable_dbs)
+    
+    
+    private String getWhereClause( String sql_items )
     {
+        
+        // get isolatetrackingid
+        String isolatetrackingids = null;
+         switch ( m_items_type)
+        {
+            case  Constants.ITEM_TYPE_CLONEID :
+            {
+                 return "  (select isolatetrackingid from flexinfo where flexcloneid in ("+sql_items+"))";
+            }
+            case  Constants.ITEM_TYPE_PLATE_LABELS :
+            {
+                return "  (select isolatetrackingid from isolatetracking where sampleid in   "
+                 +" (select sampleid from sample where containerid in "
+                 +" (select containerid from  containerheader where label in ("+sql_items+"))))";
+            }
+            default : return  null;
+         }
+       
+    }
+     
+    
+    /*
+     *verification.
+Format for the job_order file:
+>ORFID discrepancyid  sequence  database – the same discrepancy can be checked on several databases; 
+     a lot of discrepancies can correspond to the same ORF, clone is irrelevant
+*/
+    private ArrayList getDiscrepancyDescriptions(String sql, 
+            ArrayList blastable_dbs)
+     {
         ArrayList discrepancy_descriptions = new ArrayList();
+        String discrepancy_sequence = null;
         String discrepancy_description = null;
         DatabaseTransaction t = null;
         String seq = null; String upstream = null; String downstream = null;
         int length = 0;
+        String[] discr_description = null;
+        String verification_parameters = m_spec.getParameterByName("PL_MATCH_LENGTH")+" "+ m_spec.getParameterByName("PL_MATCH_IDENTITY");
+        sql = "select sequenceid, discrepancyid, upstream, changemut, downstream from discrepancy where type = "+Mutation.RNA +"and polymflag = "+Mutation.FLAG_POLYM_NOKNOWN+" and  sequenceid in ("
+        + sql +") order by sequenceid";
+        
         ResultSet rs = null;
         try
         {
@@ -236,7 +419,6 @@ public class PolymorphismFinderRunner extends ProcessRunner
             rs = t.executeQuery(sql);
             while(rs.next())
             {
-                discrepancy_description = ">"+rs.getInt("discrepancyid");
                 seq = rs.getString("changemut");
                 if ( seq == null ) seq="";
                 upstream = rs.getString("upstream");
@@ -256,10 +438,14 @@ public class PolymorphismFinderRunner extends ProcessRunner
                     length = ( downstream.length() >= m_spec.getParameterByNameInt("PL_BASES")) ? m_spec.getParameterByNameInt("PL_BASES") : downstream.length() ;
                     downstream = downstream.substring(0, length);
                 }
-                discrepancy_description += " "+ upstream + seq+ downstream;
+                discrepancy_sequence = upstream + seq+ downstream;
+                 
                 for ( int count = 0; count < blastable_dbs.size(); count++)
                 {
-                    discrepancy_descriptions.add(discrepancy_description + " " +(String)blastable_dbs.get(count));
+                    discr_description = new String[2];
+                    discr_description[0]=""+rs.getInt("sequenceid");
+                    discr_description[1] = ""+rs.getInt("discrepancyid")+" " +discrepancy_sequence+" " +(String)blastable_dbs.get(count)+" "+ verification_parameters;
+                    discrepancy_descriptions.add(discr_description );
                 }
                
             }
@@ -280,17 +466,26 @@ public class PolymorphismFinderRunner extends ProcessRunner
     private void writeDiscrepancyDiscriptions(ArrayList discrepancy_descriptions)
     {
         String job_filename = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_INPUT_DATA_FILE;
-        File job_file = new File(job_filename);
-        boolean isAppend = job_file.exists();
-            
-        try
-        {
-            Algorithms.writeArrayIntoFile(discrepancy_descriptions,isAppend,job_filename,true);
-        }
-        catch(Exception e)
-        {
-            m_error_messages.add("Cannot write job file for Polymorphism Finder");
-        }
+        FileWriter fr = null;
+        String[] ar = null;
+         try
+         {
+            fr =  new FileWriter(job_filename, true);
+            for (int count = 0; count < discrepancy_descriptions.size(); count++)
+            {
+                ar = (String[]) discrepancy_descriptions.get(count);
+                    fr.write( ar[0] +" "+ ar[1]);
+                    fr.write( Constants.LINE_SEPARATOR);
+            }
+            fr.flush();
+            fr.close();
+         }
+         catch(Exception e )
+         {
+              m_error_messages.add("Cannot write job file for Polymorphism Finder");
+         }
+        
+        
     }
 
      public static void main(String args[])
