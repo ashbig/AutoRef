@@ -155,13 +155,13 @@ public class SelectProcessAction extends ResearcherAction
                     spec_collection.add(  EndReadsSpec.getAllSpecNames());
                      spec_names.add("End reads Evaluation");
                      control_names.add(Spec.END_READS_SPEC);
-                    specs =  PolymorphismSpec.getAllSpecNames();
-                    Spec spec = new PolymorphismSpec(null,Spec.NONE_SPEC , BecIDGenerator.BEC_OBJECT_ID_NOTSET,BecIDGenerator.BEC_OBJECT_ID_NOTSET) ;
-                    specs.add(spec);
+                 //   specs =  PolymorphismSpec.getAllSpecNames();
+                 //   Spec spec = new PolymorphismSpec(null,Spec.NONE_SPEC , BecIDGenerator.BEC_OBJECT_ID_NOTSET,BecIDGenerator.BEC_OBJECT_ID_NOTSET) ;
+                 //   specs.add(spec);
                     
-                    spec_collection.add( specs);
-                     spec_names.add("Polymorphism Finder");
-                     control_names.add(Spec.POLYMORPHISM_SPEC);
+                 //   spec_collection.add( specs);
+                 //    spec_names.add("Polymorphism Finder");
+                //     control_names.add(Spec.POLYMORPHISM_SPEC);
                     request.setAttribute(Constants.SPEC_COLLECTION, spec_collection);
                     request.setAttribute(Constants.SPEC_TITLE_COLLECTION, spec_names);
                      request.setAttribute(Constants.SPEC_CONTROL_NAME_COLLECTION,control_names);

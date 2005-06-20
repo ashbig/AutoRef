@@ -595,7 +595,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                          {
                               runner = new PolymorphismFinderRunner();
                                title = "Request for Polymorphism Finder";
-                              ((PolymorphismFinderRunner)runner).setSpecId(Integer.parseInt( (String)request.getParameter("POLYMORPHISM_SPEC")));
+                               ((PolymorphismFinderRunner)runner).setSpecId(Integer.parseInt( (String)request.getParameter("POLYMORPHISM_SPEC")));
                               break;
                         }//run polymorphism finder
                         case Constants.PROCESS_RUN_DISCREPANCY_FINDER:
