@@ -36,11 +36,9 @@ public class PolymorphismFinderRunner extends ProcessRunner
    
     private int                     m_spec_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;    
     private PolymorphismSpec             m_spec = null;
-    private String                  m_blastabledb_names = null;
-   
+    
     /** Creates a new instance of PolymorphismFinderRunner */
     public void         setSpecId(int v){m_spec_id = v;}
-    public void         setBlastableDBNames(String v) { m_blastabledb_names = v;}
     public String getTitle()    {return "Request for polymorphism finder run.";    }
     
     public void run()
@@ -53,7 +51,7 @@ public class PolymorphismFinderRunner extends ProcessRunner
         Hashtable sequenceid_isolatetrackingid = new Hashtable();
         ArrayList   not_processed_ids= new ArrayList();
         if ( ! getPolymorphismFinderSpec()) return ;
-        ArrayList blastable_dbs = Algorithms.splitString(m_blastabledb_names);
+        ArrayList blastable_dbs = Algorithms.splitString(m_spec.getParameterByName("PL_DATABASE"));
         if ( blastable_dbs == null || blastable_dbs.size() < 1)
         {
             m_error_messages.add("No blastable DB set.");
@@ -505,7 +503,7 @@ Format for the job_order file:
             runner = new PolymorphismFinderRunner();
             runner.setInputData(Constants.ITEM_TYPE_CLONEID, "  201483    201485    201487    201489    201491    201493    201495    201497    201499    201501    201503   158965   200668    200669    200690    200693    200695    200702    200704    200706    200709    200717    200719	");
             runner.setUser(user);
-            runner.setBlastableDBNames("db1 db2");
+        //    runner.setBlastableDBNames("db1 db2");
             runner.setSpecId(104);// for bec
          
 
