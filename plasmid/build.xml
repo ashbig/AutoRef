@@ -21,6 +21,9 @@
   <property name="dist.src" value="${app.name}.jar"/>
   <property name="dist.war" value="${app.name}.war"/>
   <property name="javadoc.home" value="${deploy.home}/javadoc"/>
+  <property name="file.home" value="${deploy.home}/file"/>
+  <property name="map.home" value="${file.home}/map"/>
+  <property name="sequence.home" value="${file.home}/sequence"/>
   
 
 <!-- The "prepare" target is used to construct the deployment home                  directory structure (if necessary), and to copy in static files                  as required.  In the example below, Ant is instructed to create                  the deployment directory, copy the contents of the "web/" source                   hierarchy, and set up the WEB-INF subdirectory appropriately. -->
@@ -41,6 +44,15 @@
     <mkdir dir="${deploy.home}/WEB-INF/lib"/>
     <copy todir="${deploy.home}/WEB-INF/lib">
       <fileset dir="lib" includes="*.jar,*.zip"/>
+    </copy>
+    <mkdir dir="${file.home}"/>
+    <mkdir dir="${map.home}"/>
+    <mkdir dir="${sequence.home}"/>
+    <copy todir="${map.home}">
+      <fileset dir="map"/>
+    </copy>
+    <copy todir="${sequence.home}">
+      <fileset dir="sequence"/>
     </copy>
 
     <!--
