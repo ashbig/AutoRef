@@ -218,7 +218,13 @@ public class CloneManager extends TableManager {
                 stmt.setString(12, c.getTargetgenbank());
                 stmt.setString(13, c.getHasdiscrepancy());
                 stmt.setString(14, c.getHasmutation());
-                stmt.setInt(15, c.getRefseqid());
+                
+                int refseqid = c.getRefseqid();
+                if(refseqid > 0) {
+                    stmt.setInt(15, refseqid);
+                } else {
+                    stmt.setString(15, null);
+                }
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }

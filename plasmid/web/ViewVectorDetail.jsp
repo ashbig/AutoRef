@@ -46,11 +46,11 @@
   </tr>
   <tr> 
     <td class="mainbodytexthead">Vector Map:</td>
-    <td class="mainbodytext"><bean:write name="vector" property="mapfilename"/></td>
+    <td class="mainbodytext"><a target="blank" href="file/map/<bean:write name="vector" property="mapfilename"/>"><bean:write name="vector" property="mapfilename"/></a></td>
   </tr>
   <tr> 
     <td class="mainbodytexthead">Vector Sequence:</td>
-    <td class="mainbodytext"><bean:write name="vector" property="seqfilename"/></td>
+    <td class="mainbodytext"><a target="blank" href="file/sequence/<bean:write name="vector" property="seqfilename"/>"><bean:write name="vector" property="seqfilename"/></a></td>
   </tr>
   <tr> 
     <td class="mainbodytexthead">Comments:</td>

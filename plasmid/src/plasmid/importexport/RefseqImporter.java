@@ -63,6 +63,7 @@ public class RefseqImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
+                //System.out.println(columnInfo);
                 if("refseqid".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
                 }

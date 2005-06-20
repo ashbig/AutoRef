@@ -64,18 +64,20 @@ public class VectorImporter {
                 }
                 if("mapfilename".equalsIgnoreCase(columnName))
                     v.setMapfilename(columnInfo);
-                if("seqfilename".equalsIgnoreCase(columnName))
+                if("sequencefilename".equalsIgnoreCase(columnName))
                     v.setSeqfilename(columnInfo);
                 if("comments".equalsIgnoreCase(columnName))
                     v.setComments(columnInfo);
                 
                 if("synonyms".equalsIgnoreCase(columnName) && columnInfo != null) {
                     StringTokenizer st = new StringTokenizer(columnInfo, ",");
+                    List l = new ArrayList();
                     while(st.hasMoreTokens()) {
                         String s = st.nextToken();
                         VectorSynonym synonym = new VectorSynonym(id, s);
+                        l.add(synonym);
                     }
-                    synonyms.add(synonyms);
+                    synonyms.addAll(l);
                 }
             }
             vectors.add(v);

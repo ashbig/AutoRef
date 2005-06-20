@@ -24,7 +24,7 @@ public class CloneGeneBuilder {
     }
     
     public void buildDnainsertWithGene(Connection conn) throws Exception {
-        String sqlUpdate = "update dnainsert set geneid=?,name=?,description=? where insertid=?";
+        String sqlUpdate = "update dnainsert set geneid=?,name=?,description=? where insertid=? and geneid is null";
         String sql = "select distinct d.insertid, g.geneid, g.genesymbol, g.genename"+
         " from dnainsert d, referencesequence r, refseqname n,"+
         " sequencerecord s, gene g"+

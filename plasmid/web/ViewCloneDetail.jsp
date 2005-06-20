@@ -165,7 +165,11 @@
   </tr>
   <tr> 
     <td class="tablebody">Map:</td>
-    <td colspan="3" class="mainbodytext"><bean:write name="clone" property="vector.mapfilename"/></td>
+    <td colspan="3" class="mainbodytext"><a target="blank" href="file/map/<bean:write name="clone" property="vector.mapfilename"/>"><bean:write name="clone" property="vector.mapfilename"/></a></td>
+  </tr>
+  <tr> 
+    <td class="tablebody">Sequence:</td>
+    <td colspan="3" class="mainbodytext"><a target="blank" href="file/sequence/<bean:write name="clone" property="vector.seqfilename"/>"><bean:write name="clone" property="vector.seqfilename"/></a></td>
   </tr>
 </table>
 </logic:present>

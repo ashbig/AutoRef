@@ -63,7 +63,7 @@ public class InsertImporter {
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
-                //System.out.println(i+": "+columnInfo);
+                System.out.println(i+": "+columnInfo);
                 if("insertid".equalsIgnoreCase(columnName)) {
                     idmap.put(columnInfo, new Integer(id));
                 }
@@ -114,7 +114,11 @@ public class InsertImporter {
                     c.setHasmutation(columnInfo);
                 }
                 if("refseqid".equalsIgnoreCase(columnName)) {
-                    c.setRefseqid(((Integer)refseqidmap.get(columnInfo)).intValue());
+                    Integer refseqid = (Integer)refseqidmap.get(columnInfo);
+                    
+                    if(refseqid != null) {
+                        c.setRefseqid(((Integer)refseqid).intValue());
+                    }
                 }
             }
             inserts.add(c);
@@ -131,7 +135,7 @@ public class InsertImporter {
             throw new Exception("Error occured while inserting into DNASEQUENCE and SEQTEXT table");
         }
     }
-        
+    
     public void importInsertProperty(ImportTable table) throws Exception {
         List names = new ArrayList();
         List columns = table.getColumnNames();
@@ -161,5 +165,5 @@ public class InsertImporter {
         if(!manager.insertInsertProperties(names)) {
             throw new Exception("Error occured while inserting into INSERTPROPERTY table");
         }
-    } 
+    }
 }
