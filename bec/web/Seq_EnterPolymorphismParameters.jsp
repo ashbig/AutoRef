@@ -8,6 +8,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="java.util.*" %>
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
+<%@ page import="edu.harvard.med.hip.bec.util.*" %>
 <html>
 
 <head>
@@ -65,40 +66,48 @@
       <p> </td>
   </tr>
 
-  <tr > 
-    <td bgColor="#e4e9f8" ><strong><font color="#000080">Please select species:</font></strong> 
-    </td>
-    <td bgColor="#e4e9f8"> <select name="PL_SPECIES" id="PL_SPECIES" width="70" disabledd>
-        <option  value="GI">Human</option>
-		<option  value="GI">Yeast</option>
-		<option  value="GI">Pseudomonas</option>
-        
-      </select> </td>
   <tr> 
-    <td bgcolor="#b8c6ed"><strong><font color="#000080">Please select Database:</font></strong></td>
-    <td bgcolor="#b8c6ed"> <select name="PL_DATABASE" id="PL_DATABASE"  disabled>
-        <option value="nr" selected>nr</option>
-        <option  value="nr">a aaaaaaaaa</option>
-      </select> </td>
+    <td bgcolor="#b8c6ed"><strong><font color="#000080">Please select GenBank 
+      database to search in:</font></strong></td>
+    <td bgcolor="#b8c6ed">
+ <select name="PL_DATABASE" id="PL_DATABASE"  MULTIPLE size=2>
+ getPolymFinderBlastableDatabases
+ <%String dbpath = null;String dbname = null;
+for (Enumeration e = BecProperties.getInstance().getPolymFinderBlastableDatabases().keys() ; e.hasMoreElements() ;)
+{
+	dbname = (String) e.nextElement();
+	dbpath = (String)BecProperties.getInstance().getBlastableDatabases().get(dbname);
+	%> <OPTION VALUE=' <%= dbpath %> '> <%= dbname %>
+<%}%>
+</select> </td>
   </tr>
   <tr >
     <td colspan="2">&nbsp; </td>
   </tr>
   <tr> 
-    <td bgColor="#e4e9f8"><b><font color="#000080">Please specify number of bases 
-      in flanking sequence:</font></b> </td>
+    <td bgColor="#e4e9f8"><b><font color="#000080">Number of flanking bases to 
+      append on both sides of discrepancy for search: </font></b> </td>
+	
     <td bgColor="#e4e9f8"><input name="PL_BASES" type="text" id="PL_BASES" value="20" width="120" ></td>
   </tr>
+  <tr><td colspan=2 >&nbsp;</td></tr>
   <tr> 
-    <td bgcolor="#b8c6ed"> <b><font color="#000080">Please select output format 
-      <i>(optional)</i>:</font></b> </td>
-    <td bgcolor="#b8c6ed"> <select name="PL_FORMAT" id="PL_FORMAT" disabled>
-        <option selected value="XML">XML</option>
-        <option  value="FLatFile">Flat File</option>
-      </select> </p> </td>
+    <td bgcolor="#b8c6ed" colspan = 2> <b><font color="#000080">Parameters to confirm similarity 
+      between the query and any database hits to confirm they are the same gene: 
+      </font></b></td>
+   
   </tr>
   <tr>
-    <td colspan="2">&nbsp;</td>
+    <td bgColor="#e4e9f8"><div align="right"><font color="#000080">minimum match 
+        length:&nbsp;&nbsp;&nbsp;</font></div></td>
+	<td bgColor="#e4e9f8"><font color="#000080"><input name="PL_MATCH_LENGTH" type="text" value="100"  width="120">&nbsp;</font></td>
+  </tr>
+  <tr>
+    <td bgColor="#e4e9f8"><div align="right"><font color="#000080">requered percent 
+        identity:&nbsp;&nbsp;&nbsp;</font></div></td>
+	<td bgColor="#e4e9f8"><font color="#000080">
+      <input name="PL_MATCH_IDENTITY" type="text" value="95"  width="120">
+      &nbsp;</font></td>
   </tr>
   <!-- <tr > 
     <td width="75%" nowrap background="barbkgde.gif"> <table border="0" width="100%">
