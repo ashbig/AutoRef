@@ -39,7 +39,7 @@
   </tr>
   <tr> 
     <td class="tablebody">Map:</td>
-    <td colspan="3" class="mainbodytext"><bean:write name="clone" property="clonemap"/></td>
+    <td colspan="3" class="mainbodytext"><a target="blank" href="file/map/<bean:write name="clone" property="clonemap"/>"><bean:write name="clone" property="clonemap"/></a></td>
   </tr>
 </table>
 
