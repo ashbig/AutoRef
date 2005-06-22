@@ -15,33 +15,38 @@ import java.sql.*;
  */
 public class PolymorphismFinderJobDistributor
 {
+    private int         m_number_of_discrepancies_in_one_job = 500;
    
+    public PolymorphismFinderJobDistributor(){}
+    public void         setNumberOfDiscrepanciesInJob(int i){ m_number_of_discrepancies_in_one_job=i;}
+    
+    
     
     
     /** Creates a new instance of PolymorphismFinder */
-    public   void    readInputFileAndStartJobs(String file_name, int number_of_discrepancies_in_one_job)
+    public   void    readInputFileAndStartJobs()
     {
         BufferedReader input = null;
         ArrayList error_messages = new ArrayList();
-        String[] discrepancies_per_job = new String[number_of_discrepancies_in_one_job];
+        String[] discrepancies_per_job = new String[m_number_of_discrepancies_in_one_job];
         String line = null; int count = 0;
         PolymorphismFinderJob job = null;
         try
         {
-           File job_file = new File(file_name);
-           if ( ! job_file.exists() ) return;
-           input = new BufferedReader(new FileReader(file_name));
+           input = new BufferedReader(new FileReader(Utils.getSystemProperty("INPUT_DISCREPANCY_DTATA")));
            while ((line = input.readLine()) != null)
            {
                
                discrepancies_per_job[count] = line;
                count++;
-               if ( count == number_of_discrepancies_in_one_job - 1)
+               if ( count == m_number_of_discrepancies_in_one_job - 1)
                {
                    // create new job
                    count = 0;
-   ////@@@@@@@@@@@@@@@???????????????   start new bk job                
-                //   job = new PolymorphismFinderJob(discrepancies_per_job);
+   ////@@@@@@@@@@@@@@@???????????????   start new bk job        how        
+                   job = new PolymorphismFinderJob();
+                   job.run_job(discrepancies_per_job);
+                  
                }
                   
            }
@@ -69,10 +74,24 @@ public class PolymorphismFinderJobDistributor
         else 
         {
             int number_of_discrepancies_in_one_job = 500;
+              File check_file = new File( args[1]);     if ( ! check_file.exists() ) return;
+            check_file = new File( args[2]);     if ( ! check_file.exists() ) return;
+            check_file = new File( args[3]);     if ( ! check_file.exists() ) return;
+            check_file = new File( args[4]);     if ( ! check_file.exists() ) return;
+            
+            
+            PolymorphismFinderJobDistributor job_distributor =new   PolymorphismFinderJobDistributor();
+          
+            try
+            {
+                Utils.getSystemProperties(args[0]);
+            }
+            catch(Exception e){}
             if ( args.length == 2)
             {
-                number_of_discrepancies_in_one_job = Integer.parseInt(args[1]);
+                job_distributor.setNumberOfDiscrepanciesInJob( Integer.parseInt(args[1]));
             }
+            job_distributor.readInputFileAndStartJobs();
         }
     }
     
