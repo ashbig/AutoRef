@@ -510,7 +510,7 @@ vi.	Type of definition (coverage low quality / no coverage )
     {
          int[] element = new int[2];
          element[0] =  (start < 0 ) ? 0 :start;
-         element[1] = ( end > cds_length ) ? cds_length  : end ;
+         element[1] = ( end > cds_length || end < 0 ) ? cds_length  : end ;
          return element;
     }    
     private ArrayList getBySequenceIdType(int  sequence_id , int stretch_type ) 
