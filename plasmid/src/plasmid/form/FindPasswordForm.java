@@ -1,7 +1,7 @@
 /*
- * ViewOrderHistoryForm.java
+ * FindPasswordForm.java
  *
- * Created on June 8, 2005, 11:18 AM
+ * Created on June 22, 2005, 9:47 AM
  */
 
 package plasmid.form;
@@ -11,22 +11,40 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
-import plasmid.coreobject.CloneOrder;
 
 /**
  *
  * @author  DZuo
  */
-public class ViewOrderHistoryForm extends ActionForm {
-    private String status = CloneOrder.ALL;
-    
-    /** Creates a new instance of ViewOrderHistoryForm */
-    public ViewOrderHistoryForm() {
+public class FindPasswordForm extends ActionForm {
+    /**
+     * The useremail.
+     */
+    private String email = null;
+
+    /**
+     * Return the email.
+     *
+     * @return email
+     */
+    public String getEmail() {
+
+	return (this.email);
+
     }
-      
-    public String getStatus() {return status;}
-    public void setStatus(String s) {this.status = s;}
-    
+
+
+    /**
+     * Set the email.
+     *
+     * @param email The new email
+     */
+    public void setEmail(String email) {
+
+        this.email = email;
+
+    }
+
     /**
      * Reset all properties to their default values.
      *
@@ -34,9 +52,10 @@ public class ViewOrderHistoryForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
-        status = CloneOrder.ALL;
-    } 
-        
+        this.email = null;
+    }
+
+
     /**
      * Validate the properties that have been set from this HTTP request,
      * and return an <code>ActionErrors</code> object that encapsulates any
@@ -48,12 +67,15 @@ public class ViewOrderHistoryForm extends ActionForm {
      * @param request The servlet request we are processing
      */
     public ActionErrors validate(ActionMapping mapping,
-    HttpServletRequest request) {
-        
-        ActionErrors errors = new ActionErrors();
-        //if(ponumber == null || ponumber.trim().length()<1)
-        //    errors.add("ponumber", new ActionError("error.ponumber.required"));
+                                 HttpServletRequest request) {
 
-        return errors;     
+        ActionErrors errors = new ActionErrors();
+        if ((email == null) || (email.length() < 1))
+            errors.add("email", new ActionError("error.email.required"));
+
+        return errors;
+
     }
+
+
 }

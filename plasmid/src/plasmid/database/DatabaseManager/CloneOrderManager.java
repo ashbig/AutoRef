@@ -185,23 +185,23 @@ public class CloneOrderManager extends TableManager {
      * @return A list of CloneOrder objects. Return null if error occured.
      */
     public List queryCloneOrders(User user, String status) {
-        String sql = "select orderid,orderdate,orderstatus,ponumber,shippingto,billingto,"+
-        " shippingaddress,billingaddress,numofclones,numofcollection,costforclones,"+
-        " costforcollection,costforshipping,totalprice,userid"+
-        " from cloneorder";
+        String sql = "select c.orderid,c.orderdate,c.orderstatus,c.ponumber,c.shippingto,c.billingto,"+
+        " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"+
+        " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname"+
+        " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(user != null) {
-            sql = sql+" where userid="+user.getUserid();
+            sql = sql+" and c.userid="+user.getUserid();
             if(status != null && status.trim().length()>0) {
-                sql = sql + " and orderstatus=?";
+                sql = sql + " and c.orderstatus=?";
             }
         } else {
             if(status != null && status.trim().length()>0) {
-                sql = sql + " where orderstatus=?";
+                sql = sql + " and c.orderstatus=?";
             }
         }
         
-        sql = sql + " order by orderid";
+        sql = sql + " order by c.orderid desc";
         
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -229,8 +229,12 @@ public class CloneOrderManager extends TableManager {
                 double costforshipping = rs.getDouble(13);
                 double total = rs.getDouble(14);
                 int userid = rs.getInt(15);
+                String firstname = rs.getString(16);
+                String lastname = rs.getString(17);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
+                order.setFirstname(firstname);
+                order.setLastname(lastname);
                 orders.add(order);
             }
             return orders;

@@ -403,4 +403,28 @@ public class UserManager extends TableManager {
         
         return true;
     } 
+    
+    public String findPassword(String email) {
+        String sql = "select password from userprofile where email=?";
+       
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String password = null;
+        
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                password = rs.getString(1);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Cannot find password for email: "+email);
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return password;
+    }
 }

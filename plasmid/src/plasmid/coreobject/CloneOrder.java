@@ -13,6 +13,7 @@ import java.util.*;
  * @author  DZuo
  */
 public class CloneOrder {
+    public static final String ALL = "All";
     public static final String PENDING = "Pending";
     
     private int orderid;
@@ -30,6 +31,9 @@ public class CloneOrder {
     private double costforclones;
     private double costforcollection;
     private double costforshipping;
+    
+    private String firstname;
+    private String lastname;
     
     private List items;
     
@@ -72,6 +76,7 @@ public class CloneOrder {
     public double getCostforcollection() {return costforcollection;}
     public double getCostforshipping() {return costforshipping;}
     public double getPrice() {return price;}
+    public String getName() {return lastname+", "+firstname;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -88,6 +93,8 @@ public class CloneOrder {
     public void setCostforcollection(double d) {this.costforcollection = d;}
     public void setCostforshipping(double d) {this.costforshipping = d;}
     public void setPrice(double d) {this.price = d;}
+    public void setFirstname(String s) {this.firstname = s;}
+    public void setLastname(String s) {this.lastname = s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}
