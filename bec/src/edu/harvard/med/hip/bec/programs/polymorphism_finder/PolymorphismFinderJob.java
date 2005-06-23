@@ -17,13 +17,7 @@ public class PolymorphismFinderJob
 {
     private ArrayList           m_discrepancies_data = null;
     private ArrayList           m_error_messages = null;
-    private String      m_output_file_name = null;
-    private String      m_intput_orf_data_file_name = null;
-    private String      m_output_orf_index_file_name = null;
-  
-    public void         setOutputFN( String    v){  m_output_file_name = v;}
-    public void         setInputORFDataFN( String    v){ m_intput_orf_data_file_name = v;}
-    public void         setInputORFIndexFN( String    v){ m_output_orf_index_file_name = v;}
+    
    
     // Creates a new instance of PolymorphismFinderJob 
     public PolymorphismFinderJob()
@@ -31,7 +25,7 @@ public class PolymorphismFinderJob
         m_error_messages = new ArrayList();
     }
     
-    public void        run_job(String[] discrepancies_data)
+    public void        run_job(String[] discrepancies_data, Hashtable orf_index)
     {
         ArrayList discr_data = null;
         ArrayList hits = null;
@@ -47,9 +41,9 @@ public class PolymorphismFinderJob
                 hits = findDiscrepancyHits( (String)discr_data.get(2),(String)discr_data.get(3) );
                  // get clone sequence
                 if ( prev_orf_id != null && prev_orf_id.equalsIgnoreCase( (String)discr_data.get(0)))
-                    clone_sequence = getCloneSequence((String)discr_data.get(0));
+                    clone_sequence = getCloneSequence((String)discr_data.get(0), orf_index);
                 hits = verifyHits(hits,  clone_sequence, (String)discr_data.get(4),(String)discr_data.get(5) );
-                writeHits(hits, (String)discr_data.get(1),  m_output_file_name);
+                writeHits(hits, (String)discr_data.get(1),  Utils.getSystemProperty("OUTPUT_DISCREPANCY_DATA_FILE_NAME"));
                 prev_orf_id = (String)discr_data.get(0);
             }
             catch(Exception e1)
@@ -187,17 +181,17 @@ public class PolymorphismFinderJob
     
   
     
-    private String getCloneSequence(String id) throws Exception
+    private String getCloneSequence(String id, Hashtable orf_index) throws Exception
     {
         
         ///@@@@@@@@@@@@@@@@@@@@@@@@  get hash in memory or read each time index file
-        long[] coordinates = getSequencePosition( id );
+        long[] coordinates = (long[])orf_index.get(id);
         if (coordinates[0]==0 || coordinates[1] ==0 || coordinates[0] == coordinates[1]) return null;
         try
         {
             // Create the byte array to hold the data
             byte[] bytes = new byte[(int)(coordinates[1] -  coordinates[0])];
-            File f = new File(m_intput_orf_data_file_name);
+            File f = new File(Utils.getSystemProperty("INPUT_ORF_DATA_FILENAME"));
             RandomAccessFile raf = new RandomAccessFile(f, "r");
             boolean existing = f.exists();
             if (existing)
@@ -218,12 +212,7 @@ public class PolymorphismFinderJob
     }
     
     
-    private long[]  getSequencePosition(String id )
-    {
-        return null;
-    }
-   
-     
+       
     
     
    

@@ -116,7 +116,7 @@ CCAAGAAGAAGAAG*/
         FileOutputStream fout = null;  
         DataOutputStream dout = null;
         String line = null; 
-        String id  = null;
+        int id  = 0;
         long current_pos = 0;
         boolean new_seq = false; long start =- 1; long end =-1;
         try
@@ -136,7 +136,7 @@ CCAAGAAGAAGAAG*/
                         end = current_pos - separator;// -LINE_DELIMITER_LENGTH;
                         writeIndexData(id, start,end,dout);
                     }
-                    id = line.substring(1);
+                    id = Integer.parseInt( line.substring(1));
                     start = current_pos + line.length() + separator;//LINE_DELIMITER_LENGTH;
                 }             
                 current_pos += line.length() + separator;//LINE_DELIMITER_LENGTH;
@@ -165,6 +165,13 @@ CCAAGAAGAAGAAG*/
         dout_gi.writeLong(start);
         dout_gi.writeLong(end);
         dout_gi.writeChar(LINE_DELIMITER);
+    }
+     private static void writeIndexData(int id, long start,long end,DataOutputStream dout) throws Exception
+    {
+        dout.writeInt(id);
+        dout.writeLong(start);
+        dout.writeLong(end);
+        dout.writeChar(LINE_DELIMITER);
     }
     
     private static void writeIndexData(String ac, long start,long end,DataOutputStream dout_ac) throws Exception

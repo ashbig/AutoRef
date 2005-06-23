@@ -15,26 +15,25 @@ import java.io.*;
 public class Utils 
 {
     
-     private static Properties  m_properties = null;
+    private static Properties  m_properties = null;
 
     public static void         getSystemProperties(String properties_file_name) throws Exception
     {
          //try to get the properties file from the class path
         if ( m_properties == null)
         {
-            InputStream iStream = null;
-            Properties prop = null;
+            Properties prop = null;FileInputStream pin = null;
             try 
             {
-                iStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(properties_file_name);
+                 pin = new java.io.FileInputStream(properties_file_name);
                 if (m_properties == null) m_properties = new Properties();
-                 m_properties.load(iStream);
+                m_properties.load(pin);
                  m_properties.setProperty("LINE_SEPARATOR", System.getProperty("line.separator"));
             } 
             catch (Exception ioE) 
             {
              //   System.err.println("Unable to load properites file"+ ioE.getMessage());
-                try {  iStream.close();   } catch(Throwable th){}
+                try {  pin.close();   } catch(Throwable th){}
                 throw new Exception ( "Unable to load property file "+properties_file_name );
             }
         }
