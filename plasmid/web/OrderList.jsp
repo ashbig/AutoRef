@@ -36,6 +36,7 @@
         <html:select styleClass="formlabel" property="status">
             <html:option value="<%=CloneOrder.ALL%>"/>
             <html:option value="<%=CloneOrder.PENDING%>"/>
+            <html:option value="<%=CloneOrder.INPROCESS%>"/>
         </html:select>
     </td>
     <td width="73%">
@@ -46,6 +47,7 @@
 </html:form>
 </logic:equal>
 
+<html:form action="ChangeOrderStatus.do">
 <table width="100%" border="0">
   <tr>
     <td width="9%" class="tableheader">Order ID</td>
@@ -59,21 +61,57 @@
     <td class="tableheader">User</td>
     </logic:equal>
   </tr>
+
+  <% int i=0; %>
   <logic:iterate id="order" name="<%=Constants.ORDERS%>"> 
   <tr>
     <td class="tableinfo"><a href="ViewOrderDetail.do?orderid=<bean:write name="order" property="orderid"/>"><bean:write name="order" property="orderid"/></a></td>
     <td class="tableinfo"><bean:write name="order" property="orderDate"/></td>
+    <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+    <logic:equal name="order" property="status" value="<%=CloneOrder.PENDING%>">
+    <td class="tableinfo">
+        <select name='<%="status["+(i)+"]"%>' value="<bean:write name="order" property="status"/>">
+            <logic:equal name="order" property="status" value="<%=CloneOrder.PENDING%>">
+            <option value="<%=CloneOrder.PENDING%>" selected/><%=CloneOrder.PENDING%>
+            </logic:equal>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING%>">
+            <option value="<%=CloneOrder.PENDING%>"/><%=CloneOrder.PENDING%>
+            </logic:notEqual>
+            <logic:equal name="order" property="status" value="<%=CloneOrder.INPROCESS%>">
+            <option value="<%=CloneOrder.INPROCESS%>" selected/><%=CloneOrder.INPROCESS%>
+            </logic:equal>
+            <logic:notEqual name="order" property="status" value="<%=CloneOrder.INPROCESS%>">
+            <option value="<%=CloneOrder.INPROCESS%>" /><%=CloneOrder.INPROCESS%>
+            </logic:notEqual>
+        </select>
+    </td>
+    </logic:equal>
+    <logic:notEqual name="order" property="status" value="<%=CloneOrder.PENDING%>">
+        <td class="tableinfo"><bean:write name="order" property="status"/></td>
+    </logic:notEqual>
+    <input type="hidden" name='<%="orderid["+(i)+"]"%>' value="<bean:write name="order" property="orderid"/>">
+    </logic:equal>
+    <logic:notEqual name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
     <td class="tableinfo"><bean:write name="order" property="status"/></td>
+    </logic:notEqual>
     <td class="tableinfo"><bean:write name="order" property="numofclones"/></td>
     <td class="tableinfo"><bean:write name="order" property="numofcollection"/></td>
-    <td class="tableinfo"><bean:write name="order" property="price"/></td>
+    <td class="tableinfo"><bean:write name="order" property="totalPriceString"/></td>
 
     <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
     <td class="tableinfo"><bean:write name="order" property="name"/></td>
     </logic:equal>
   </tr>
-  </logic:iterate>
+  <% i++; %>
+  </logic:iterate>    
+    
+    <logic:equal name="<%=Constants.USER_KEY%>" property="isinternal" value="<%=User.INTERNAL%>">
+  <tr>
+    <td colspan="6"><html:submit styleClass="formlabel" value="Process Orders"/></td>
+  </tr>
+  </logic:equal>
 </table>
+</html:form>
 
     </td>
   </tr>

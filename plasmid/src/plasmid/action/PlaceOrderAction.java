@@ -79,6 +79,8 @@ public class PlaceOrderAction extends UserAction {
         String billingzipcode = ((CheckoutForm)form).getBillingzipcode();
         String country = ((CheckoutForm)form).getCountry();
         String billingcountry = ((CheckoutForm)form).getBillingcountry();
+        String shippingMethod = ((CheckoutForm)form).getShippingMethod();
+        String accountNumber = ((CheckoutForm)form).getAccountNumber();
         boolean saveInfo = ((CheckoutForm)form).getSaveInfo();
         
         String shippingAddress = "";
@@ -117,6 +119,8 @@ public class PlaceOrderAction extends UserAction {
         String time = c.getTime().toString();
         
         CloneOrder order = new CloneOrder(0, time, CloneOrder.PENDING, ponumber, shippingto,billingto, shippingAddress, billingAddress, numOfClones, numOfCollections, costOfClones, costOfCollections, shippingCost, totalCost, user.getUserid());
+        order.setShippingmethod(shippingMethod);
+        order.setShippingaccount(accountNumber);
         List clones = new ArrayList();
         for(int i=0; i<items.size(); i++) {
             ShoppingCartItem item = (ShoppingCartItem)items.get(i);

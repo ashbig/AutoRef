@@ -23,17 +23,17 @@ public class RefseqSearchForm extends ActionForm {
     private String refseqType;
     private String searchType;
     private String searchString;
-    private String cdna = "on";
-    private String shrna = "on";
-    private String fusion = "on";
-    private String closed="on";
-    private String marker = "All";
-    private String pdonr201 = "on";
-    private String pdonr221 = "on";
-    private String pdnrdual = "on";
-    private String plk = "on";
-    private String pby011 = "on";
-    private String pgex2tk = "on";
+    private boolean cdna;
+    private boolean shrna;
+    private boolean fusion;
+    private boolean closed;
+    private String marker;
+    private boolean pdonr201;
+    private boolean pdonr221;
+    private boolean pdnrdual;
+    private boolean plk;
+    private boolean pby011;
+    private boolean pgex2tk;
     private int pagesize = 25;
     private int page = 1;
     private String displayPage;
@@ -45,17 +45,17 @@ public class RefseqSearchForm extends ActionForm {
     public String getRefseqType() {return refseqType;}
     public String getSearchType() {return searchType;}
     public String getSearchString() {return searchString;}
-    public String getCdna() {return cdna;}
-    public String getShrna() {return shrna;}
-    public String getFusion() {return fusion;}
-    public String getClosed() {return closed;}
+    public boolean getCdna() {return cdna;}
+    public boolean getShrna() {return shrna;}
+    public boolean getFusion() {return fusion;}
+    public boolean getClosed() {return closed;}
     public String getMarker() {return marker;}
-    public String getPdonr201() {return pdonr201;}
-    public String getPdonr221() {return pdonr221;}
-    public String getPdnrdual() {return pdnrdual;}
-    public String getPlk() {return plk;}
-    public String getPby011() {return pby011;}
-    public String getPgex2tk() {return pgex2tk;}
+    public boolean getPdonr201() {return pdonr201;}
+    public boolean getPdonr221() {return pdonr221;}
+    public boolean getPdnrdual() {return pdnrdual;}
+    public boolean getPlk() {return plk;}
+    public boolean getPby011() {return pby011;}
+    public boolean getPgex2tk() {return pgex2tk;}
     public int getPagesize() {return pagesize;}
     public int getPage() {return page;}
     public String getDisplayPage() {return displayPage;}
@@ -67,17 +67,17 @@ public class RefseqSearchForm extends ActionForm {
     public void setRefseqType(String s) {this.refseqType = s;}
     public void setSearchType(String s) {this.searchType = s;}
     public void setSearchString(String s) {this.searchString = s;}
-    public void setCdna(String s) {this.cdna = s;}
-    public void setShrna(String s) {this.shrna = s;}
-    public void setFusion(String s) {this.fusion = s;}
-    public void setClosed(String s) {this.closed = s;}
+    public void setCdna(boolean s) {this.cdna = s;}
+    public void setShrna(boolean s) {this.shrna = s;}
+    public void setFusion(boolean s) {this.fusion = s;}
+    public void setClosed(boolean s) {this.closed = s;}
     public void setMarker(String s) {this.marker = s;}
-    public void setPdonr201(String s) {this.pdonr201=s;}
-    public void setPdonr221(String s) {this.pdonr221=s;}
-    public void setPdnrdual(String s) {this.pdnrdual=s;}
-    public void setPlk(String s) {this.plk=s;}
-    public void setPby011(String s) {this.pby011=s;}
-    public void setPgex2tk(String s) {this.pgex2tk=s;}
+    public void setPdonr201(boolean s) {this.pdonr201=s;}
+    public void setPdonr221(boolean s) {this.pdonr221=s;}
+    public void setPdnrdual(boolean s) {this.pdnrdual=s;}
+    public void setPlk(boolean s) {this.plk=s;}
+    public void setPby011(boolean s) {this.pby011=s;}
+    public void setPgex2tk(boolean s) {this.pgex2tk=s;}
     public void setPagesize(int i) {this.pagesize = i;}
     public void setPage(int i) {this.page = i;}
     public void setDisplayPage(String s) {this.displayPage = s;}
@@ -96,17 +96,17 @@ public class RefseqSearchForm extends ActionForm {
         refseqType = null;
         searchType = null;
         searchString = null;
-        cdna = "on";
-        shrna = "on";
-        fusion = "on";
-        closed="on";
+        cdna = false;
+        shrna = false;
+        fusion = false;
+        closed=false;
         marker = "All";
-        pdonr201 = "on";
-        pdonr221 = "on";
-        pdnrdual = "on";
-        plk = "on";
-        pby011 = "on";
-        pgex2tk = "on";
+        pdonr201 = false;
+        pdonr221 = false;
+        pdnrdual = false;
+        plk = false;
+        pby011 = false;
+        pgex2tk = false;
         pagesize = 25;
     }
 }

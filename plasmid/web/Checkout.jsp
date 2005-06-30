@@ -123,12 +123,8 @@
     <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
   </tr> 
-   <tr> 
-    <td class="tablebody">Shipping and handling:</td>
-    <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
-  </tr> 
   <tr> 
-    <td class="tableheader">Total price:</td>
+    <td class="tableheader">Total price (without shipping charge):</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
   </tr>
 </table>

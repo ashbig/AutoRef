@@ -56,7 +56,7 @@
     <td><a target="_blank" href="GetVectorDetail.do?vectorid=<bean:write name="clone" property="vectorid"/>"><bean:write name="clone" property="vectorname"/></a></td>
     <td>
     <logic:iterate name="clone" property="selections" id="selection">
-        <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>
+        <bean:write name="selection" property="hosttype"/>: <bean:write name="selection" property="marker"/>;
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
@@ -64,6 +64,19 @@
     </tr>
   </logic:iterate>
 </table>
+
+<html:form action="DownloadClones.do">
+<input type="hidden" name="type" value="clone">
+<input type="hidden" name="orderid" value="<bean:write name="orderid"/>">
+<table width="100%" border="0">
+  <tr>
+    <td width="77%">&nbsp;</td>
+    <td width="23%">
+        <html:submit styleClass="text" value="Download Clone List"/>
+    </td>
+  </tr>
+</table>
+</html:form>
 
     </td>
   </tr>

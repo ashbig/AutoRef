@@ -21,8 +21,9 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
-      <html:form action="RefseqSearchContinue.do" enctype="multipart/form-data">
+      <html:form action="RefseqSearchContinue.do">
         <html:hidden property="species"/>
+        <html:hidden property="refseqType"/>
       <table width="100%" height="118" border="0" align="center">
         <tr> 
           <td height="10" colspan="6" class="tableheader"><strong>Select search 
@@ -48,16 +49,31 @@
           </td>
           <td height="100">&nbsp;</td>
         </tr>
+    </table>
+        
+    <table width="100%" border="0">
+        <tr> 
+            <td colspan="6" class="tableheader">Choose clone type</td>
+        </tr>
+        <tr> 
+            <td width="3%">&nbsp;</td>
+            <td width="19%" class="underbullet"><html:checkbox property="cdna"/>
+                cDNA </td>
+            <td width="18%" class="underbullet"><html:checkbox property="shrna"/>
+            shRNA </td>
+            <td width="19%" class="underbullet"></td>
+            <td width="21%" class="underbullet"></td>
+            <td width="20%" class="underbullet"></td>
+        </tr>
         <tr> 
           <td height="9" colspan="6">&nbsp;</td>
         </tr>
-	<tr>
-          <td width="3%" height="26">&nbsp;</td>
-	</tr>
+    </table>
+    <table>
 	<tr>
           <td width="3%" height="26">&nbsp;</td>
 		  <td align="center">
-              <input type="submit" name="Submit" value="Search">
+              <html:submit value="Search"/>
            </td>
 	</tr>
       </table>

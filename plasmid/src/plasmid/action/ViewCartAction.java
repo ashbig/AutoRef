@@ -77,15 +77,14 @@ public class ViewCartAction extends Action {
                 t = DatabaseTransaction.getInstance();
                 conn = t.requestConnection();
                 CloneManager manager = new CloneManager(conn);
-                Map found = manager.queryClonesByCloneid(c, true, true);
+                Map found = manager.queryClonesByCloneid(c, true, true, false);
                 List newShoppingcart = new ArrayList();
                 
                 for(int i=0; i<shoppingcart.size(); i++) {
                     ShoppingCartItem item = (ShoppingCartItem)shoppingcart.get(i);
                     String cloneid = item.getItemid();
-                    Clone clone = (Clone)found.get(cloneid);
                     int quantity = item.getQuantity();
-                    CloneInfo cloneInfo = new CloneInfo(clone);
+                    CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
                     cloneInfo.setQuantity(quantity);
                     
                     newShoppingcart.add(cloneInfo);

@@ -45,6 +45,14 @@
         <bean:write name="checkoutForm" property="ponumber"/>
     </td>
   </tr>
+  <tr> 
+    <td width="12%" height="24" class="formlabel">Shipping Method:</td>
+    <td width="40%" class="text"><bean:write name="checkoutForm" property="shippingMethod"/></td>
+    <td width="12%" class="formlabel">Shipping Account Number:</td>
+    <td width="36%" class="text">
+        <bean:write name="checkoutForm" property="accountNumber"/>
+    </td>
+  </tr>
 </table>
 <p>&nbsp;</p>
 <table width="100%" border="0">
@@ -121,12 +129,8 @@
     <td class="tablebody"><bean:write name="checkoutForm" property="numOfCollections"/></td>
     <td align="right" class="tablebody">$<bean:write name="checkoutForm" property="costOfCollections"/></td>
   </tr> 
-   <tr> 
-    <td class="tablebody">Shipping and handling:</td>
-    <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="costForShipping"/></td>
-  </tr> 
   <tr> 
-    <td class="tableheader">Total price:</td>
+    <td class="tableheader">Total price (without shipping charge):</td>
     <td align="right" colspan="2" class="tablebody">$<bean:write name="checkoutForm" property="totalPrice"/></td>
   </tr>
 </table>

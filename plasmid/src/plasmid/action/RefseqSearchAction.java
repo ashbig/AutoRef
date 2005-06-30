@@ -58,6 +58,9 @@ public class RefseqSearchAction extends Action {
         
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
+        ((RefseqSearchForm)form).setCdna(true);
+        ((RefseqSearchForm)form).setShrna(true);
+        
         DatabaseTransaction dt = null;
         Connection conn = null;
         try {

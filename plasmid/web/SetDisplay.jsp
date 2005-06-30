@@ -21,7 +21,7 @@
 	</td>
     <td width="83%" align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
-      <html:form action="SetDisplay.do" enctype="multipart/form-data">
+      <html:form action="SetDisplay.do">
 <input type="hidden" name="displayPage" value="<bean:write name="displayPage"/>">
         <html:hidden property="species"/>
         <html:hidden property="refseqType"/>
@@ -65,6 +65,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
+<!--
   <tr> 
     <td colspan="6" class="tableheader">Choose vector</td>
   </tr>
@@ -117,6 +118,7 @@
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
+-->
   <tr> 
     <td>&nbsp;</td>
     <td><form name="form4" method="post" action="">

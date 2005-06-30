@@ -59,17 +59,17 @@ public class SetDisplayAction extends Action {
         // get the parameters specified by the customer
         ActionErrors errors = new ActionErrors();
        
-        String cdna = ((RefseqSearchForm)form).getCdna();
-        String shrna = ((RefseqSearchForm)form).getShrna();
-        String fusion = ((RefseqSearchForm)form).getFusion();
-        String closed = ((RefseqSearchForm)form).getClosed();
-        String marker = ((RefseqSearchForm)form).getMarker();
-        String pdonr201 = ((RefseqSearchForm)form).getPdonr201();
-        String pdonr221 = ((RefseqSearchForm)form).getPdonr221();
-        String pdnrdual = ((RefseqSearchForm)form).getPdnrdual();
-        String plk = ((RefseqSearchForm)form).getPlk();
-        String pby011 = ((RefseqSearchForm)form).getPby011();
-        String pgex2tk = ((RefseqSearchForm)form).getPgex2tk();
+        //String cdna = ((RefseqSearchForm)form).getCdna();
+        //String shrna = ((RefseqSearchForm)form).getShrna();
+        //String fusion = ((RefseqSearchForm)form).getFusion();
+        //String closed = ((RefseqSearchForm)form).getClosed();
+        //String marker = ((RefseqSearchForm)form).getMarker();
+        //String pdonr201 = ((RefseqSearchForm)form).getPdonr201();
+        //String pdonr221 = ((RefseqSearchForm)form).getPdonr221();
+        //String pdnrdual = ((RefseqSearchForm)form).getPdnrdual();
+        //String plk = ((RefseqSearchForm)form).getPlk();
+        //String pby011 = ((RefseqSearchForm)form).getPby011();
+        //String pgex2tk = ((RefseqSearchForm)form).getPgex2tk();
         
         int pagesize = ((RefseqSearchForm)form).getPagesize();
         int page = ((RefseqSearchForm)form).getPage();

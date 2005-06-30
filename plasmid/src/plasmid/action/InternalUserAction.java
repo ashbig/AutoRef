@@ -1,7 +1,7 @@
 /*
- * ViewOrderClonesAction.java
+ * InternalUserAction.java
  *
- * Created on June 9, 2005, 3:52 PM
+ * Created on June 28, 2005, 7:31 AM
  */
 
 package plasmid.action;
@@ -23,21 +23,14 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
-import plasmid.coreobject.*;
-import plasmid.process.*;
-import plasmid.form.ViewOrderClonesForm;
 import plasmid.Constants;
+import plasmid.coreobject.User;
 
 /**
  *
  * @author  DZuo
  */
-public class ViewOrderClonesAction extends UserAction {
-    
-    /** Creates a new instance of ViewOrderClonesAction */
-    public ViewOrderClonesAction() {
-    }
-    
+public abstract class InternalUserAction extends UserAction {
     /** Does the real work for the perform method which must be overriden by the
      * Child classes.
      *
@@ -52,23 +45,21 @@ public class ViewOrderClonesAction extends UserAction {
      */
     public ActionForward userPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
-        
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        int orderid = ((ViewOrderClonesForm)form).getOrderid();
-        OrderProcessManager manager = new OrderProcessManager();
-        List clones = manager.getOrderClones(orderid, user, false);
         
-        if(clones == null) {
-            if(Constants.DEBUG)
-                System.out.println("Cannot get order clones from database.");
-            
+        if(User.INTERNAL.equals(user.getIsinternal())) {
+            return internalUserPerform(mapping,form,request,response);
+        } else {
             errors.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("error.general","Cannot get order clones from database."));
-            return (mapping.findForward("error"));
+            new ActionError("error.user.nopreveliege"));
+            saveErrors(request,errors);
+            return mapping.findForward("login");
         }
-        
-        request.setAttribute("orderid", new Integer(orderid));
-        request.setAttribute("orderClones", clones);
-        return mapping.findForward("success");
     }
+        
+    public abstract ActionForward internalUserPerform(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws ServletException, IOException;
 }

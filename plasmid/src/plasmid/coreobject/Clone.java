@@ -15,6 +15,8 @@ import plasmid.util.StringConvertor;
  */
 public class Clone {
     public static final String AVAILABLE = "AVAILABLE";
+    public static final String CDNA = "cDNA";
+    public static final String SHRNA = "shRNA";
     
     protected int cloneid;
     protected String name;

@@ -8,6 +8,7 @@ package plasmid.process;
 
 import java.util.*;
 import java.sql.*;
+import java.io.*;
 
 import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
@@ -98,7 +99,7 @@ public class OrderProcessManager {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             CloneManager manager = new CloneManager(conn);
-            Map found = manager.queryClonesByCloneid(items, true, true);
+            Map found = manager.queryClonesByCloneid(items, true, true, false);
             List newShoppingcart = new ArrayList();
             
             for(int i=0; i<shoppingcart.size(); i++) {
@@ -106,8 +107,7 @@ public class OrderProcessManager {
                 String count = (String)cloneCountList.get(i);
                 if(Integer.parseInt(count) > 0) {
                     String cloneid = item.getItemid();
-                    Clone clone = (Clone)found.get(cloneid);
-                    CloneInfo cloneInfo = new CloneInfo(clone);
+                    CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
                     cloneInfo.setQuantity(Integer.parseInt(count));
                     ShoppingCartItem s = new ShoppingCartItem(0, item.getItemid(), Integer.parseInt(count), item.getType());
                     shoppingcartCopy.add(s);
@@ -126,7 +126,7 @@ public class OrderProcessManager {
         }
     }
     
-    public List getOrderClones(int orderid, User user) {
+    public List getOrderClones(int orderid, User user, boolean isWorkingStorage) {
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -154,15 +154,14 @@ public class OrderProcessManager {
             }
             
             CloneManager manager = new CloneManager(conn);
-            Map found = manager.queryClonesByCloneid(items, true, true);;
+            Map found = manager.queryClonesByCloneid(items, true, true, isWorkingStorage);;
             
             List orderClones = new ArrayList();
             for(int i=0; i<clones.size(); i++) {
                 OrderClones item = (OrderClones)clones.get(i);
                 int quantity = item.getQuantity();
                 String cloneid = ((new Integer(item.getCloneid())).toString());
-                Clone clone = (Clone)found.get(cloneid);
-                CloneInfo cloneInfo = new CloneInfo(clone);
+                CloneInfo cloneInfo = (CloneInfo)found.get(cloneid);
                 cloneInfo.setQuantity(quantity);
                 orderClones.add(cloneInfo);
             }
@@ -417,5 +416,86 @@ public class OrderProcessManager {
         
         DatabaseTransaction.closeConnection(conn);
         return order;
+    }
+    
+    public void writeCloneList(List clones, PrintWriter out, boolean isWorkingStorage) {
+        if(isWorkingStorage) {
+            out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity\tContainer\tWell\tPosition");
+        } else {
+            out.println("Clone ID\tClone Type\tGene ID\tGene Symbol\tGene Name\tReference Sequence Genbank Accession\tReference Sequence GI\tInsert Format\tVector\tSelection Markers\tUse Restriction\tQuantity");
+        }
+        
+        for(int i=0; i<clones.size(); i++) {
+            CloneInfo c = (CloneInfo)clones.get(i);
+            List inserts = c.getInserts();
+            for(int j=0; j<inserts.size(); j++) {
+                DnaInsert insert = (DnaInsert)inserts.get(j);
+                out.print(c.getName()+"\t"+c.getType()+"\t"+insert.getGeneid()+"\t"+insert.getName()+"\t"+insert.getDescription()+"\t"+insert.getTargetgenbank()+"\t"+insert.getTargetseqid()+"\t"+insert.getFormat()+"\t"+c.getVectorname()+"\t");
+                
+                List selections = c.getSelections();
+                for(int n=0; n<selections.size(); n++) {
+                    CloneSelection cs = (CloneSelection)selections.get(n);
+                    out.print(cs.getHosttype()+": "+cs.getMarker()+";");
+                }
+                
+                if(isWorkingStorage) {
+                    out.println("\t"+c.getRestriction()+"\t"+c.getQuantity()+"\t"+c.getPlate()+"\t"+c.getWell()+"\t"+c.getPosition());
+                } else {
+                    out.println("\t"+c.getRestriction()+"\t"+c.getQuantity());
+                }
+            }
+        }
+    }
+    
+    public boolean updateOrderStatus(int orderid, String status) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            if(manager.updateOrderStatus(orderid, status)) {
+                DatabaseTransaction.commit(conn);
+                return true;
+            } else {
+                DatabaseTransaction.rollback(conn);
+                return false;
+            }
+        } catch(Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return false;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+    }
+    
+    public boolean updateAllOrderStatus(List orders) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneOrderManager manager = new CloneOrderManager(conn);
+            if(manager.updateAllOrderStatus(orders)) {
+                DatabaseTransaction.commit(conn);
+                return true;
+            } else {
+                DatabaseTransaction.rollback(conn);
+                return false;
+            }
+        } catch(Exception ex) {
+            DatabaseTransaction.rollback(conn);
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return false;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
     }
 }

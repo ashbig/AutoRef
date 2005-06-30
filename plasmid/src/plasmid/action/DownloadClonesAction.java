@@ -1,7 +1,7 @@
 /*
- * ViewOrderClonesAction.java
+ * DownloadClonesAction.java
  *
- * Created on June 9, 2005, 3:52 PM
+ * Created on June 23, 2005, 4:10 PM
  */
 
 package plasmid.action;
@@ -25,18 +25,15 @@ import org.apache.struts.util.MessageResources;
 
 import plasmid.coreobject.*;
 import plasmid.process.*;
-import plasmid.form.ViewOrderClonesForm;
+import plasmid.form.DownloadClonesForm;
 import plasmid.Constants;
+import plasmid.query.coreobject.CloneInfo;
 
 /**
  *
  * @author  DZuo
  */
-public class ViewOrderClonesAction extends UserAction {
-    
-    /** Creates a new instance of ViewOrderClonesAction */
-    public ViewOrderClonesAction() {
-    }
+public class DownloadClonesAction extends UserAction {
     
     /** Does the real work for the perform method which must be overriden by the
      * Child classes.
@@ -54,9 +51,16 @@ public class ViewOrderClonesAction extends UserAction {
         ActionErrors errors = new ActionErrors();
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
-        int orderid = ((ViewOrderClonesForm)form).getOrderid();
+        
+        boolean isWorkingStorage = false;
+        if(User.INTERNAL.equals(user.getIsinternal())) {
+            isWorkingStorage = true;
+        }
+        
+        int orderid = ((DownloadClonesForm)form).getOrderid();
+        String type = ((DownloadClonesForm)form).getType();
         OrderProcessManager manager = new OrderProcessManager();
-        List clones = manager.getOrderClones(orderid, user, false);
+        List clones = manager.getOrderClones(orderid, user, isWorkingStorage);
         
         if(clones == null) {
             if(Constants.DEBUG)
@@ -67,8 +71,11 @@ public class ViewOrderClonesAction extends UserAction {
             return (mapping.findForward("error"));
         }
         
-        request.setAttribute("orderid", new Integer(orderid));
-        request.setAttribute("orderClones", clones);
-        return mapping.findForward("success");
+        response.setContentType("application/x-msexcel");
+        response.setHeader("Content-Disposition", "attachment;filename=Clones.xls");
+        PrintWriter out = response.getWriter();
+        manager.writeCloneList(clones, out, isWorkingStorage);
+        return null;
     }
 }
+

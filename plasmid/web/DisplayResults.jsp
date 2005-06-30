@@ -21,7 +21,7 @@
 	</td>
     <td align="left" valign="top">
 	<jsp:include page="searchByRefseqTitle.jsp" />
-      <html:form action="SetDisplay.do" enctype="multipart/form-data">
+      <html:form action="SetDisplay.do">
 <html:hidden property="pagesize"/>
 <html:hidden property="page"/>
         <html:hidden property="species"/>

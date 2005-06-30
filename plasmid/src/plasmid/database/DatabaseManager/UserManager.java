@@ -362,6 +362,7 @@ public class UserManager extends TableManager {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, ponumber);
             stmt.setInt(2, userid);
+            DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot update ponumber.");
             return false;

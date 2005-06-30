@@ -15,6 +15,9 @@ import plasmid.coreobject.Clone;
 public class CloneInfo extends Clone {
     protected String term;     
     protected int quantity;
+    protected String plate;
+    protected String well;
+    protected int position;
     
     public CloneInfo(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
@@ -47,7 +50,14 @@ public class CloneInfo extends Clone {
         
     public String getTerm() {return term;}
     public int getQuantity() {return quantity;}
+    public String getPlate() {return plate;}
+    public String getWell() {return well;}
+    public int getPosition() {return position;}
     
     public void setTerm(String term) {this.term = term;}
     public void setQuantity(int i) {this.quantity = i;}
+    public void setPlate(String s) {this.plate = s;}
+    public void setWell(String s) {this.well = s;}
+    public void setWell(String x, String y) {this.well = x+y;}
+    public void setPosition(int i) {this.position = i;}
 }

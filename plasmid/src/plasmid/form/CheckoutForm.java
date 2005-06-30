@@ -44,6 +44,8 @@ public class CheckoutForm extends ActionForm {
     private double totalPrice;
     private double costForShipping;
     private boolean saveInfo = false;
+    private String shippingMethod;
+    private String accountNumber;
     
     /** Creates a new instance of CheckoutForm */
     public CheckoutForm() {
@@ -76,6 +78,8 @@ public class CheckoutForm extends ActionForm {
     public double getTotalPrice() {return totalPrice;}
     public double getCostForShipping() {return costForShipping;}
     public boolean getSaveInfo() {return saveInfo;}
+    public String getShippingMethod() {return shippingMethod;}
+    public String getAccountNumber() {return accountNumber;}
     
     // public void setUsername(String s) {this.username = s;}
     // public void setEmail(String s) {this.email = s;}
@@ -104,6 +108,8 @@ public class CheckoutForm extends ActionForm {
     public void setTotalPrice(double d) {this.totalPrice=d;}
     public void setCostForShipping(double d) {this.costForShipping=d;}
     public void setSaveInfo(boolean b) {this.saveInfo = b;}
+    public void setShippingMethod(String s) {this.shippingMethod = s;}
+    public void setAccountNumber(String s) {this.accountNumber = s;}
     
     /**
      * Reset all properties to their default values.

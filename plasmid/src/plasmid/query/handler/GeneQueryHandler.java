@@ -102,13 +102,12 @@ public abstract class GeneQueryHandler {
         DatabaseTransaction.closeStatement(stmt);
         
         CloneManager manager = new CloneManager(conn);
-        Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true);
+        Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true, false);
         
         Set ks = foundClones.keySet();
         Iterator it = ks.iterator();
         while(it.hasNext()) {
             String s = (String)it.next();
-            System.out.println("cloneid: "+s);
             Clone c = (Clone)foundClones.get(s);
         }
         
@@ -132,6 +131,36 @@ public abstract class GeneQueryHandler {
         found = newFound;
         DatabaseTransaction.closeConnection(conn);
     }
+    
+    public void filterFoundByClonetype(List clonetypes) {
+        Set keys = found.keySet();
+        Iterator iter = keys.iterator();
+        Map newFound = new HashMap();
+        foundCounts = new HashMap();
+        foundCloneCount = 0;
+        while(iter.hasNext()) {
+            String k = (String)iter.next();
+            List clones = (ArrayList)found.get(k);
+            List newClones = new ArrayList();
+            for(int i=0; i<clones.size(); i++) {
+                Clone c = (Clone)clones.get(i);
+                String clonetype = c.getType();
+                if(clonetypes.contains(clonetype)) {
+                    newClones.add(c);
+                } 
+            }
+            
+            if(newClones.size()>0) {
+                newFound.put(k, newClones);
+                foundCounts.put(k, new Integer(newClones.size()));
+                foundCloneCount += newClones.size();
+            } else {
+                nofound.add(k);
+            }
+        }
+        
+        found = newFound;
+   }
     
     public List convertFoundToCloneinfo() {
         if(found == null)

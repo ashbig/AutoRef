@@ -15,6 +15,9 @@ import java.util.*;
 public class CloneOrder {
     public static final String ALL = "All";
     public static final String PENDING = "Pending";
+    public static final String INPROCESS = "In Process";
+    public static final String SHIPPED = "Shipped";
+    public static final String TBD = "To Be Determined";
     
     private int orderid;
     private String orderDate;
@@ -31,6 +34,15 @@ public class CloneOrder {
     private double costforclones;
     private double costforcollection;
     private double costforshipping;
+    
+    private String shippingdate;
+    private String whoshipped;
+    private String shippingmethod;
+    private String shippingaccount;
+    private String trackingnumber;
+    private String receiveconfirmationdate;
+    private String whoconfirmed;
+    private String whoreceivedconfirmation;
     
     private String firstname;
     private String lastname;
@@ -77,6 +89,14 @@ public class CloneOrder {
     public double getCostforshipping() {return costforshipping;}
     public double getPrice() {return price;}
     public String getName() {return lastname+", "+firstname;}
+    public String getShippingdate() {return shippingdate;}
+    public String getWhoshipped() {return whoshipped;}
+    public String getShippingmethod() {return shippingmethod;}
+    public String getShippingaccount() {return shippingaccount;}
+    public String getTrackingnumber() {return trackingnumber;}
+    public String getReceiveconfirmationdate() {return receiveconfirmationdate;}
+    public String getWhoconfirmed() {return whoconfirmed;}
+    public String getWhoreceivedconfirmation() {return whoreceivedconfirmation;}
     
     public void setOrderid(int i) {this.orderid = i;}
     public void setOrderDate(String s) {this.orderDate = s;}
@@ -95,7 +115,31 @@ public class CloneOrder {
     public void setPrice(double d) {this.price = d;}
     public void setFirstname(String s) {this.firstname = s;}
     public void setLastname(String s) {this.lastname = s;}
+    public void setShippingdate(String s) {this.shippingdate=s;}
+    public void setWhoshipped(String s) {this.whoshipped=s;}
+    public void setShippingmethod(String s) {this.shippingmethod=s;}
+    public void setShippingaccount(String s) {this.shippingaccount=s;}
+    public void setTrackingnumber(String s) {this.trackingnumber=s;}
+    public void setReceiveconfirmationdate(String s) {this.receiveconfirmationdate=s;}
+    public void setWhoconfirmed(String s) {this.whoconfirmed=s;}
+    public void setWhoreceivedconfirmation(String s) {this.whoreceivedconfirmation=s;}
     
     public List getItems() {return items;}
     public void setItems(List l) {this.items = l;}
+    
+    public String getShipping() {
+        if(this.shippingaccount == null || this.shippingaccount.length() == 0) {
+            return this.TBD;
+        } else {
+            return (new Double(this.costforshipping)).toString();
+        }
+    }
+    
+    public String getTotalPriceString() {
+        if(this.shippingaccount == null || this.shippingaccount.length() == 0) {
+            return this.price + " Plus Shipping Charge";
+        } else {
+            return (new Double(this.price)).toString();
+        }
+    }
 }

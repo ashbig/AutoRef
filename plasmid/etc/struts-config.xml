@@ -59,6 +59,15 @@
     <form-bean      name="viewOrderClonesForm"
                     type="plasmid.form.ViewOrderClonesForm"/>
                     
+    <form-bean      name="findPasswordForm"
+                    type="plasmid.form.FindPasswordForm"/>
+                    
+    <form-bean      name="downloadClonesForm"
+                    type="plasmid.form.DownloadClonesForm"/>
+                    
+    <form-bean      name="changeOrderStatusForm"
+                    type="plasmid.form.ChangeOrderStatusForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -76,11 +85,18 @@
   <!-- ========== Action Mapping Definitions ============================== -->
   <action-mappings type="org.apache.struts.action.ActionMapping">
     
+    <action     path="/ChangeOrderStatus"
+                type="plasmid.action.ChangeOrderStatusAction"
+               name="changeOrderStatusForm"
+              input="/OrderList.jsp">
+      <forward  name="success"  path="/ChangeOrderStatusSuccess.jsp"/>
+    </action>
+    
     <action     path="/Checkout"
                 type="plasmid.action.CheckoutAction"
                name="checkoutForm"
               input="/UpdateCart.do">
-      <forward  name="success"  path="/Checkout.jsp"/>
+      <forward  name="success"  path="/ChooseShipping.jsp"/>
     </action>
       
     <action     path="/CheckoutConfirm"
@@ -96,6 +112,27 @@
               scope="request"
               input="/Logout.do">
       <forward  name="success"  path="/Home.jsp"/>
+    </action>
+    
+    <action    path="/DownloadClones"
+               type="plasmid.action.DownloadClonesAction"
+               name="downloadClonesForm"
+              input="/ViewOrderClones.jsp">
+    </action>
+    
+    <action     path="/EnterAddress"
+                type="plasmid.action.EnterAddressAction"
+               name="checkoutForm"
+              input="/ChooseShipping.jsp">
+      <forward  name="success"  path="/Checkout.jsp"/>
+    </action>
+         
+    <action    path="/FindPassword"
+               type="plasmid.action.FindPasswordAction"
+               name="findPasswordForm"
+              scope="request"
+              input="/FindPassword.jsp">
+      <forward  name="success"   path="/FindPasswordSuccessful.jsp"/>
     </action>
          
     <action    path="/GetCloneDetail"
@@ -179,7 +216,7 @@
                name="refseqSearchForm"
               scope="request"
               input="/RefseqSearchContinue.jsp">
-      <forward  name="success"   path="/SetDisplay.jsp"/>
+      <forward  name="success"   path="/DisplayResults.jsp"/>
     </action>
       
     <action    path="/Registration"
@@ -194,7 +231,7 @@
                type="plasmid.action.SetDisplayAction"
                name="refseqSearchForm"
               scope="request"
-              input="/SetDisplay.jsp">
+              input="/RefseqSearchContinue.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
     </action>
 

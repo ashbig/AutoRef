@@ -27,6 +27,7 @@ import plasmid.Constants;
 import plasmid.coreobject.*;
 import plasmid.process.*;
 import plasmid.form.ViewOrderHistoryForm;
+import plasmid.form.ChangeOrderStatusForm;
 
 /**
  *
@@ -80,6 +81,9 @@ public class ViewOrderHistoryAction extends UserAction {
             return mapping.findForward("success_empty");
         }
         
+        ChangeOrderStatusForm f = new ChangeOrderStatusForm();
+        f.initiateLists(orders);
+        request.getSession().setAttribute("changeOrderStatusForm", f);
         request.setAttribute(Constants.ORDERS, orders);
         return mapping.findForward("success");
     }

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link href="file:///G|/dev/plasmid/web/plasmidstyle.css" rel="stylesheet" type="text/css">
+<%@ page import="plasmid.Constants" %> 
 
 <table width="1000" height="86" border="0" align="center">
   <tr> 
@@ -12,8 +12,8 @@
   <tr>
     <td width="52%" align="center" valign="top" class="homepageLink"><a href="http://dnaseq.med.harvard.edu" target="_blank">DF/HCC 
       DNA Resource Core</a></td>
-    <td height="26" valign="baseline" class="countrytext"> <logic:present name="USER" scope="session"> 
-      <a href="Logout.do" class="countrytext">Sign Out </a> </logic:present> <logic:notPresent name="USER" scope="session"> 
+    <td height="26" valign="baseline" class="countrytext"> <logic:present name="<%=Constants.USER_KEY%>" scope="session"> 
+      <a href="Logout.do" class="countrytext">Sign Out </a> </logic:present> <logic:notPresent name="<%=Constants.USER_KEY%>" scope="session"> 
       <a href="Login.jsp" class="countrytext">Sign In </a> </logic:notPresent> 
       | <a href="PrepareRegistration.do" class="countrytext">Registration</a> 
       | <a href="Account.jsp" class="countrytext">My Account</a> | <a href="#" class="countrytext">Check 

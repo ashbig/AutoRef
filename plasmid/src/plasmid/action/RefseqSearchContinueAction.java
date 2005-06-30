@@ -27,7 +27,7 @@ import plasmid.database.*;
 import plasmid.database.DatabaseManager.*;
 import plasmid.Constants;
 import plasmid.form.RefseqSearchForm;
-import plasmid.coreobject.RefseqNameType;
+import plasmid.coreobject.*;
 import plasmid.util.StringConvertor;
 import plasmid.query.handler.*;
 
@@ -68,14 +68,26 @@ public class RefseqSearchContinueAction extends Action {
         String refseqType = ((RefseqSearchForm)form).getRefseqType();
         String searchType = ((RefseqSearchForm)form).getSearchType();
         String searchString = ((RefseqSearchForm)form).getSearchString();
+        boolean cdna = ((RefseqSearchForm)form).getCdna();
+        boolean shrna = ((RefseqSearchForm)form).getShrna(); 
+        int pagesize = ((RefseqSearchForm)form).getPagesize();
+        int page = ((RefseqSearchForm)form).getPage();
+
+        List clonetypes = new ArrayList();
+        if(cdna)
+            clonetypes.add(Clone.CDNA);
+        if(shrna)
+            clonetypes.add(Clone.SHRNA);
         
         request.setAttribute("species", species);
         request.setAttribute("refseqType", refseqType);
         request.setAttribute("displayPage", "indirect");
+        request.setAttribute("pagesize", new Integer(pagesize));
+        request.setAttribute("page",  new Integer(page));
         
         StringConvertor sc = new StringConvertor();
         List searchList = sc.convertFromStringToList(searchString, " \t\n\r\f");
-        System.out.println("searchList: "+searchList);
+
         if(searchList.size() == 0) {
             errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.searchstring.invalid"));
             saveErrors(request, errors);
@@ -86,7 +98,7 @@ public class RefseqSearchContinueAction extends Action {
         GeneQueryHandler handler = null;
         List directFoundList = null;
         if(GeneQueryHandler.GENBANK.equals(searchType) || GeneQueryHandler.GI.equals(searchType)) {
-            request.getSession().setAttribute("display", "genbank");        
+            request.getSession().setAttribute("display", "genbank");
             request.setAttribute("displayPage", "direct");
             
             if(GeneQueryHandler.GENBANK.equals(searchType))
@@ -102,6 +114,7 @@ public class RefseqSearchContinueAction extends Action {
             
             try {
                 handler.doQuery();
+                handler.filterFoundByClonetype(clonetypes);
                 directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
                 totalCount = totalCount+handler.getFoundCloneCount();
@@ -127,8 +140,7 @@ public class RefseqSearchContinueAction extends Action {
         
         try {
             handler.doQuery();
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            DefTableManager m = new DefTableManager();
+            handler.filterFoundByClonetype(clonetypes);
             
             List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();

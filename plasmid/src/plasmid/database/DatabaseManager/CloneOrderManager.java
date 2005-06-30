@@ -38,8 +38,9 @@ public class CloneOrderManager extends TableManager {
         String sql = "insert into cloneorder"+
         " (orderdate,orderstatus,ponumber,shippingto,billingto,"+
         " shippingaddress,billingaddress,numofclones,numofcollection,"+
-        " costforclones,costforcollection,costforshipping,totalprice,userid,orderid)"+
-        " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        " costforclones,costforcollection,costforshipping,totalprice,userid,orderid,"+
+        " shippingmethod,shippingaccount,trackingnumber)"+
+        " values(sysdate,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         String sql2 = "insert into orderclones(orderid,cloneid,collectionname,quantity)"+
         " values(?,?,?,?)";
@@ -62,6 +63,9 @@ public class CloneOrderManager extends TableManager {
             stmt.setDouble(12, order.getPrice());
             stmt.setInt(13, user.getUserid());
             stmt.setInt(14, orderid);
+            stmt.setString(15, order.getShippingmethod());
+            stmt.setString(16, order.getShippingaccount());
+            stmt.setString(17, order.getTrackingnumber());
             DatabaseTransaction.executeUpdate(stmt);
             
             stmt2 = conn.prepareStatement(sql2);
@@ -137,7 +141,9 @@ public class CloneOrderManager extends TableManager {
     public CloneOrder queryCloneOrder(User user, int orderid) throws Exception {
         String sql = "select orderid,orderdate,orderstatus,ponumber,shippingto,billingto,"+
         " shippingaddress,billingaddress,numofclones,numofcollection,costforclones,"+
-        " costforcollection,costforshipping,totalprice,userid"+
+        " costforcollection,costforshipping,totalprice,userid,shippingdate,whoshipped,"+
+        " shippingmethod,shippingaccount,trackingnumber,receiveconfirmationdate,"+
+        " whoconfirmed,whoreceivedconfirmation"+
         " from cloneorder where orderid="+orderid;
         
         if(user != null) {
@@ -165,8 +171,30 @@ public class CloneOrderManager extends TableManager {
                 double costforshipping = rs.getDouble(13);
                 double total = rs.getDouble(14);
                 int userid = rs.getInt(15);
+                String shippingdate = null;
+                java.sql.Date d = rs.getDate(16);
+                if(d != null)
+                    shippingdate = d.toString();
+                String whoshipped = rs.getString(17);
+                String shippingmethod = rs.getString(18);
+                String shippingaccount = rs.getString(19);
+                String trackingnumber = rs.getString(20);
+                String receiveconfirmationdate = null;
+                java.sql.Date d1 = rs.getDate(21);
+                if(d1 != null)
+                    receiveconfirmationdate = d1.toString();
+                String whoconfirmed = rs.getString(22);
+                String whoreceivedconfirmation = rs.getString(23);
                 
                 order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
+                order.setShippingdate(shippingdate);
+                order.setWhoshipped(whoshipped);
+                order.setShippingmethod(shippingmethod);
+                order.setShippingaccount(shippingaccount);
+                order.setTrackingnumber(trackingnumber);
+                order.setReceiveconfirmationdate(receiveconfirmationdate);
+                order.setWhoconfirmed(whoconfirmed);
+                order.setWhoreceivedconfirmation(whoreceivedconfirmation);
             }
         } catch (Exception ex) {
             handleError(ex, "Cannot query cloneorder.");
@@ -187,7 +215,9 @@ public class CloneOrderManager extends TableManager {
     public List queryCloneOrders(User user, String status) {
         String sql = "select c.orderid,c.orderdate,c.orderstatus,c.ponumber,c.shippingto,c.billingto,"+
         " c.shippingaddress,c.billingaddress,c.numofclones,c.numofcollection,c.costforclones,"+
-        " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname"+
+        " c.costforcollection,c.costforshipping,c.totalprice,c.userid,u.firstname,u.lastname,"+
+        " c.shippingdate, c.whoshipped, c.shippingmethod,c.shippingaccount,c.trackingnumber,"+
+        " c.receiveconfirmationdate, c.whoconfirmed,c.whoreceivedconfirmation"+
         " from cloneorder c, userprofile u where c.userid=u.userid";
         
         if(user != null) {
@@ -231,10 +261,32 @@ public class CloneOrderManager extends TableManager {
                 int userid = rs.getInt(15);
                 String firstname = rs.getString(16);
                 String lastname = rs.getString(17);
+                String shippingdate = null;
+                java.sql.Date d = rs.getDate(18);
+                if(d != null)
+                    shippingdate = d.toString(); 
+                String whoshipped = rs.getString(19);
+                String shippingmethod = rs.getString(20);
+                String shippingaccount = rs.getString(21);
+                String trackingnumber = rs.getString(22);
+                String receiveconfirmationdate = null;
+                java.sql.Date d1 = rs.getDate(23);
+                if(d1 != null)
+                    receiveconfirmationdate = d1.toString();
+                String whoconfirmed = rs.getString(24);
+                String whoreceivedconfirmation = rs.getString(25);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
                 order.setFirstname(firstname);
                 order.setLastname(lastname);
+                order.setShippingdate(shippingdate);
+                order.setWhoshipped(whoshipped);
+                order.setShippingmethod(shippingmethod);
+                order.setShippingaccount(shippingaccount);
+                order.setTrackingnumber(trackingnumber);
+                order.setReceiveconfirmationdate(receiveconfirmationdate);
+                order.setWhoconfirmed(whoconfirmed);
+                order.setWhoreceivedconfirmation(whoreceivedconfirmation);
                 orders.add(order);
             }
             return orders;
@@ -245,5 +297,52 @@ public class CloneOrderManager extends TableManager {
             DatabaseTransaction.closeResultSet(rs);
             DatabaseTransaction.closeStatement(stmt);
         }
+    }
+    
+    public boolean updateOrderStatus(int orderid, String status) {
+        String sql = "update cloneorder set orderstatus=? where orderid=?";
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, orderid);
+            DatabaseTransaction.executeUpdate(stmt);
+        } catch (Exception ex) {
+            handleError(ex, "Cannot update order status for orderid: "+orderid);
+            return false;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return true;
+    }
+    
+    public boolean updateAllOrderStatus(List orders) {
+        if(orders == null)
+            return true;
+        
+        String sql = "update cloneorder set orderstatus=? where orderid=?";
+        PreparedStatement stmt = null;
+        
+        int orderid = 0;
+        try {
+            stmt = conn.prepareStatement(sql);
+            
+            for(int i=0; i<orders.size(); i++) {
+                CloneOrder order = (CloneOrder)orders.get(i);
+                orderid = order.getOrderid();
+                stmt.setString(1, order.getStatus());
+                stmt.setInt(2, orderid);
+                DatabaseTransaction.executeUpdate(stmt);
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Cannot update order status for orderid: "+orderid);
+            return false;
+        } finally {
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return true;
     }
 }
