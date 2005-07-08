@@ -99,7 +99,32 @@ public class SummaryTablePopulator {
         
         return samples;
     }
-    
+   
+    public List getNonIsolateSamples(List containers) throws FlexDatabaseException, SQLException {
+        String sql = "select sampleid from sample where containerid=? and sampletype<>'ISOLATE'";
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        Connection conn = t.requestConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        List samples = new ArrayList();
+        
+        for(int i=0; i<containers.size(); i++) {
+            Integer container = (Integer)containers.get(i);
+            int containerid = container.intValue();
+            stmt.setInt(1, containerid);
+            ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+            while(rs.next()) {
+                int sampleid = rs.getInt(1);
+                samples.add(new Integer(sampleid));
+            }
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        DatabaseTransaction.closeStatement(stmt);
+        DatabaseTransaction.closeConnection(conn);
+        
+        return samples;
+    }
+     
     public int populateCloningprogressTable(List samples, Connection conn) throws FlexDatabaseException, SQLException {
         String sqlQuery = "select statusid, constructid from cloningprogress"+
         " where constructid in"+
@@ -221,30 +246,52 @@ public class SummaryTablePopulator {
     
     public int populateExpressionClones(List samples, int cloningStrategy, Connection conn) throws FlexDatabaseException, SQLException {
         String sql = "insert into clones"+
-        " select clonesid.nextval, null, ?, cl.mastercloneid,"+
+        " select ?, null, ?, cl.mastercloneid,"+
         " c.sequenceid, ?, null, 'UNSEQUENCED', c.constructid"+
         " from constructdesign c, sample s, clones cl"+
         " where s.constructid=c.constructid"+
         " and s.cloneid=cl.cloneid"+
         " and s.sampleid=?";
+        String sql2 = "update sample set cloneid=? where sampleid=?";
+        
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, CloneInfo.EXPRESSION_CLONE);
-        stmt.setInt(2, cloningStrategy);
+        PreparedStatement stmt2 = conn.prepareStatement(sql2);
+        stmt.setString(2, CloneInfo.EXPRESSION_CLONE);
+        stmt.setInt(3, cloningStrategy);
         int ret = 0;
         
         for(int i=0; i<samples.size(); i++) {
+            int cloneid = FlexIDGenerator.getID("clonesid");
             Integer sample = (Integer)samples.get(i);
             int sampleid = sample.intValue();
-            stmt.setInt(3, sampleid);
+            stmt.setInt(1, cloneid);
+            stmt.setInt(4, sampleid);
             int num = DatabaseTransaction.executeUpdate(stmt);
             ret += num;
+            
+            stmt2.setInt(1, cloneid);
+            stmt2.setInt(2, sampleid);
+            DatabaseTransaction.executeUpdate(stmt2);
         }
         
         DatabaseTransaction.closeStatement(stmt);
+        DatabaseTransaction.closeStatement(stmt2);
         
         return ret;
     }
     
+    public void resetExpressSampleCloneids(List samples, Connection conn) throws Exception {
+        String sql = "update sample set cloneid=null where sampleid=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+       for(int i=0; i<samples.size(); i++) {
+            Integer sample = (Integer)samples.get(i);
+            int sampleid = sample.intValue();
+            stmt.setInt(1, sampleid);
+            DatabaseTransaction.executeUpdate(stmt);
+        }
+        DatabaseTransaction.closeStatement(stmt);
+    }
+        
     public boolean populateExpressionClonesWithContainers(List containers, int strategyid) {
         DatabaseTransaction t = null;
         Connection conn = null;
@@ -253,9 +300,10 @@ public class SummaryTablePopulator {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
             List samples = getSamples(containers);
+            List nonIsolateSamples = getNonIsolateSamples(containers);
             numClones = populateExpressionClones(samples, strategyid, conn);  
+            resetExpressSampleCloneids(nonIsolateSamples,conn);
             numClonestorage = populateClonestorageTableWithContainerids(containers, StorageType.WORKING, StorageForm.GLYCEROL, conn);
-            numSamples = updateSampleTable(samples, conn);
             DatabaseTransaction.commit(conn);
             
             return true;
@@ -518,28 +566,16 @@ public class SummaryTablePopulator {
         //containers.add(new Integer(11516));
         //containers.add(new Integer(11517));
         //containers.add(new Integer(11518));
-        containers.add(new Integer(12766));
-        containers.add(new Integer(12767));
-        containers.add(new Integer(12768));
-        containers.add(new Integer(12769));
-        containers.add(new Integer(12770));
-        containers.add(new Integer(12771));
-        containers.add(new Integer(12772));
-        containers.add(new Integer(12765));
+        //containers.add(new Integer(12773));
+        //containers.add(new Integer(12774));
 
-        /**
+        
         List samples = new ArrayList();
-        samples.add(new Integer(100271));
-        samples.add(new Integer(100276));
-        samples.add(new Integer(105872));
-        samples.add(new Integer(105867));
-        samples.add(new Integer(105805));
-        samples.add(new Integer(105878));
-        samples.add(new Integer(123236));
-        samples.add(new Integer(123262));
-        samples.add(new Integer(123371));
-        samples.add(new Integer(123316));
-         */
+        samples.add(new Integer(1240797));
+        samples.add(new Integer(1240798));
+        samples.add(new Integer(1240799));
+        samples.add(new Integer(1240800));
+        
         /**
          * List samples = getSamples();
          *
@@ -555,8 +591,8 @@ public class SummaryTablePopulator {
         
         SummaryTablePopulator populator = new SummaryTablePopulator();
         
-        if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
-            //if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {
+        //if(populator.populateObtainedMasterClonesWithContainers(containers, cloningStrategyid, cloneType))  {
+        if(populator.populateObtainedMasterClonesWithSamples(samples, cloningStrategyid, cloneType))  {
             populator.sendEmail(true, containers);
         } else {
             populator.sendEmail(false, containers);

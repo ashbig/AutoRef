@@ -1,5 +1,5 @@
 /**
- * $Id: NNPrimerCalculator.java,v 1.20 2003-08-12 15:14:41 dzuo Exp $
+ * $Id: NNPrimerCalculator.java,v 1.21 2005-07-08 14:22:32 dzuo Exp $
  * Neariest Neighborhood algorithm is used for current oligo primer calculation
  *
  * modified 12/13/01 All of the stop (close) oligos now use the universal stop
@@ -184,8 +184,8 @@ public class NNPrimerCalculator implements PrimerCalculator
         while (Tm < DesiredTM)
         {
        
-            //System.out.println("TM is: "+Tm);
-            //System.out.println("position is: "+pos);
+            System.out.println("TM is: "+Tm);
+            System.out.println("position is: "+pos);
             if (  (pos + 2 ) >= subSeq.length() )
             {
                 pos = subSeq.length() -1 ;
@@ -307,13 +307,13 @@ public class NNPrimerCalculator implements PrimerCalculator
         int Stop = 563;
         Sequence testSeq = new Sequence(seqID, Start, Stop);
          **/
-        FlexSequence Seq = new FlexSequence(34166);
+        FlexSequence Seq = new FlexSequence(44557);
         String seqText = Seq.getSequencetext();
-        Sequence testSeq = new Sequence(34166,Seq.getCdsstart(),Seq.getCdsstop());
+        Sequence testSeq = new Sequence(44557,Seq.getCdsstart(),Seq.getCdsstop());
         
         try
         {
-              System.out.println("The : " + testSeq.getSeqText(38223) );
+              System.out.println("The : " + testSeq.getSeqText(44557) );
             System.out.println("Calculating fivep oligo...");
             Oligo result = calculateFivepOligo(testSeq);
             System.out.println(result.getSequence());

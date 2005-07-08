@@ -92,8 +92,15 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 if(workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520) {
                     newBarcode = newBarcode+".006";
                 }
+                if(workflow.getId() == Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag) {
+                    newBarcode = newBarcode+".010";
+                }
+                if(workflow.getId() == Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc) {
+                    newBarcode = newBarcode+".011";
+                }
+                
             } else if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname()) &&
-            workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520) {
+            (workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520 || workflow.getId()==Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag ||workflow.getId()==Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc)) {
                 String labelPrefix = null;
                 if(project.getId()==Project.HUMAN) {
                     labelPrefix = "HsxXG";
@@ -180,6 +187,12 @@ public class OneToOneContainerMapper implements ContainerMapper {
                 if(type == null) {
                     type = Sample.getType(protocol.getProcessname());
                 }
+            } else if(Sample.DNA.equals(s.getType())) {
+                type = getDNASampleType(container, s, protocol);
+                
+                if(type == null) {
+                    type = Sample.getType(protocol.getProcessname());
+                }
             } else if(Protocol.DILUTE_OLIGO_PLATE.equals(protocol.getProcessname())) {
                 type = s.getType();
             } else {
@@ -187,9 +200,9 @@ public class OneToOneContainerMapper implements ContainerMapper {
             }
             
             Sample newSample = new Sample(type, s.getPosition(), newContainer.getId(), s.getConstructid(), s.getOligoid(), Sample.GOOD);
-            if (!Protocol.GENERATE_CRE_PLATE.equals(protocol.getProcessname())) {
-                newSample.setCloneid(s.getCloneid());
-            }
+            //if (!Protocol.GENERATE_CRE_PLATE.equals(protocol.getProcessname())) {
+            newSample.setCloneid(s.getCloneid());
+            //}
             newContainer.addSample(newSample);
             sampleLineageSet.addElement(new SampleLineage(s.getId(), newSample.getId()));
         }
@@ -228,6 +241,26 @@ public class OneToOneContainerMapper implements ContainerMapper {
         
         Result result = Result.findResult(s, p);
         if(Result.GROW.equals(result.getValue())) {
+            type = Sample.getType(newProtocol.getProcessname());
+        } else {
+            type = Sample.EMPTY;
+        }
+        
+        return type;
+    }
+    
+    protected String getDNASampleType(Container container, Sample s, Protocol newProtocol) throws FlexDatabaseException {
+        Protocol protocol = new Protocol(Protocol.ENTER_DNA_RESULT);
+        String type = null;
+        edu.harvard.med.hip.flex.process.Process p =
+        edu.harvard.med.hip.flex.process.Process.findCompleteProcess(container, protocol);
+        
+        if(p == null) {
+            return null;
+        }
+        
+        Result result = Result.findResult(s, p);
+        if(Double.parseDouble(result.getValue())>5.0) {
             type = Sample.getType(newProtocol.getProcessname());
         } else {
             type = Sample.EMPTY;

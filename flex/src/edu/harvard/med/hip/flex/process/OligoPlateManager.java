@@ -161,7 +161,7 @@ public class OligoPlateManager {
     protected void setIsReorder(boolean isReorder) {m_isReorderSequences = isReorder;}
     
     protected void setOpenClose(Project project, Workflow workflow) {
-        if(project.getId() == Project.PSEUDOMONAS || project.getId() == Project.KINASE || project.getId() == Project.VC || project.getId() == Project.KINASE_MUT) {
+        if(project.getId() == Project.PSEUDOMONAS || project.getId() == Project.KINASE || project.getId() == Project.VC || project.getId() == Project.KINASE_MUT || project.getId() == Project.Bacillus_anthracis) {
             setIsOpenOnly(true);
             setIsSetOpenClose(true);
         } else if(project.getId() == Project.YEAST 

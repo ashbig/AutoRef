@@ -34,6 +34,7 @@ public class Project {
     public final static int AVENTIS = 15;
     public final static int VC = 16;
     public final static int KINASE_MUT = 17;
+    public final static int Bacillus_anthracis = 18;
     
     public final static String HUMANSTRING = "Human";
     public final static String YEASTSTRING = "Yeast";

@@ -26,8 +26,8 @@ public class CloningStrategy {
     public static final int YP_GATEWAY = 8;
     public static final int CREATOR_EXPRESSION_JP1520 = 10;
     public static final int GATEWAY_PGW = 14;
-    public static final int CREATOR_EXPRESSION_PLP_DS_3xFlag = 14;
-    public static final int CREATOR_EXPRESSION_PLP_DS_3xMyc = 15;
+    public static final int CREATOR_EXPRESSION_PLP_DS_3xFlag = 15;
+    public static final int CREATOR_EXPRESSION_PLP_DS_3xMyc = 16;
     
     protected int id;
     protected String name;

@@ -211,6 +211,7 @@ public class GetResearcherAction extends ResearcherAction{
             DatabaseTransaction.commit(conn);
             //DatabaseTransaction.rollback(conn);
             
+            int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());            
             //insert into summary table if it is the glycerol stock plate.
             if(Protocol.GENERATE_GLYCEROL_PLATES.equals(protocol.getProcessname())) {
                 List containerids = new ArrayList();
@@ -223,14 +224,14 @@ public class GetResearcherAction extends ResearcherAction{
                         seqContainers.add(newContainer);
                     }
                 }
-                int strategyid = CloningStrategy.getStrategyid(project.getId(), workflow.getId());
+                
                 String isMappingFile = ((GetResearcherBarcodeForm)form).getIsMappingFile();
                 boolean b = false;
                 if("Yes".equals(isMappingFile)) {
                     b = true;
                 }
                 
-                if(workflowid == Workflow.TRANSFER_TO_EXP_JP1520) {
+                if(workflowid == Workflow.TRANSFER_TO_EXP_JP1520 || workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xFlag || workflowid == Workflow.TRANSFER_TO_EXP_PLP_DS_3xMyc) {
                     List newContainerids = new ArrayList();
                     for(int i=0; i<newContainers.size(); i++) {
                         Container newContainer = (Container)newContainers.elementAt(i);

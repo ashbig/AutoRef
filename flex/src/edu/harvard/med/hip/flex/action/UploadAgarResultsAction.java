@@ -57,7 +57,7 @@ public class UploadAgarResultsAction extends ResearcherAction {
         LinkedList queueItems =
         (LinkedList)(request.getSession().getAttribute("SelectProtocolAction.queueItems"));
         String protocolName = (String)(request.getSession().getAttribute(Constants.PROTOCOL_NAME_KEY));
-       
+        
         // make sure we can continue
         if(protocolName == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
@@ -130,7 +130,7 @@ public class UploadAgarResultsAction extends ResearcherAction {
             saveErrors(request, errors);
             return new ActionForward(mapping.getInput());
         }
-               
+        
         Enumeration enum = info.keys();
         Vector processedContainers = new Vector();
         
@@ -158,7 +158,7 @@ public class UploadAgarResultsAction extends ResearcherAction {
                 saveErrors(request, errors);
                 return new ActionForward(mapping.getInput());
             }
-           
+            
             // get the linages
             Vector lineages = this.getSampleLineages(container);
             
@@ -198,7 +198,7 @@ public class UploadAgarResultsAction extends ResearcherAction {
             for(i=0; i<plateInfo.size(); i++) {
                 ColonyCountInfo count = (ColonyCountInfo)(plateInfo.elementAt(i));
                 int well = count.getWell();
-                                
+                
                 if(well > 48)
                     well = well - 48;
                 
@@ -217,20 +217,20 @@ public class UploadAgarResultsAction extends ResearcherAction {
                     return new ActionForward(mapping.getInput());
                 }
                 
-                if(sample.getType().toUpperCase().indexOf("EMPTY") == -1) {
-                    // create a new result
-                    Result result =
-                    new Result(process,sample,Result.AGAR_PLATE_TYPE,(new Integer(found)).toString());
-                    try {
-                        result.insert(conn);
-                    } catch (FlexDatabaseException ex) {
-                        errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.database.error", ex.getMessage()));
-                        saveErrors(request, errors);
-                        DatabaseTransaction.rollback(conn);
-                        DatabaseTransaction.closeConnection(conn);
-                        return new ActionForward(mapping.getInput());
-                    }
+                // if(sample.getType().toUpperCase().indexOf("EMPTY") == -1) {
+                // create a new result
+                Result result =
+                new Result(process,sample,Result.AGAR_PLATE_TYPE,(new Integer(found)).toString());
+                try {
+                    result.insert(conn);
+                } catch (FlexDatabaseException ex) {
+                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.database.error", ex.getMessage()));
+                    saveErrors(request, errors);
+                    DatabaseTransaction.rollback(conn);
+                    DatabaseTransaction.closeConnection(conn);
+                    return new ActionForward(mapping.getInput());
                 }
+                //  }
             }
             
             /*
@@ -255,10 +255,10 @@ public class UploadAgarResultsAction extends ResearcherAction {
         DatabaseTransaction.commit(conn);
         DatabaseTransaction.closeConnection(conn);
         
-        request.setAttribute("processedContainers", processedContainers);        
+        request.setAttribute("processedContainers", processedContainers);
         request.getSession().removeAttribute("SelectProtocolAction.queueItems");
         request.getSession().removeAttribute(Constants.PROTOCOL_NAME_KEY);
-         
+        
         return mapping.findForward("success");
     }
     
