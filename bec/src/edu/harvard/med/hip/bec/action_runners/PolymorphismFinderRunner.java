@@ -29,11 +29,7 @@ public class PolymorphismFinderRunner extends ProcessRunner
 {
     
     
-    private final static   String FILE_NAME_INPUT_DATA_FILE = "pl_input_data.txt";
-    private final static   String FILE_NAME_ORFSEQUENCES_DATA_FILE = "pl_orf_sequences_input_data.txt";
-   private final static   String  FILE_NAME_ORFSEQUENCES_INDEX_FILE= "pl_orf_sequences_input_index.txt";
-   
-   
+    
     private int                     m_spec_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;    
     private PolymorphismSpec             m_spec = null;
     
@@ -72,13 +68,13 @@ public class PolymorphismFinderRunner extends ProcessRunner
                 
                 if ( discrepancy_descriptions != null && discrepancy_descriptions.size() > 0 ) 
                 {
-                    Hashtable istr_refseqid = writeORFSequences(sequenceid_isolatetrackingid,discrepancy_descriptions);
+                    Hashtable istr_refseqid = getIsolateTrackingIdORFSequencesIdMap(sequenceid_isolatetrackingid,discrepancy_descriptions);
                     updateDiscrepancyDescriptions( discrepancy_descriptions,
                              sequenceid_isolatetrackingid, istr_refseqid);
                     writeDiscrepancyDiscriptions(discrepancy_descriptions);
                     //index ORF file
-                    edu.harvard.med.hip.bec.export.IndexerForBlastDB.buildIndexForFASTAFile(  edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_ORFSEQUENCES_DATA_FILE ,
-                    edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_ORFSEQUENCES_INDEX_FILE  );
+                   // edu.harvard.med.hip.bec.export.IndexerForBlastDB.buildIndexForFASTAFile(  edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_ORFSEQUENCES_DATA_FILE ,
+                   // edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_ORFSEQUENCES_INDEX_FILE  );
                 }
             }
 
@@ -95,7 +91,7 @@ public class PolymorphismFinderRunner extends ProcessRunner
     
     
     
-     private Hashtable writeORFSequences(Hashtable sequenceid_isolatetrackingid,
+     private Hashtable getIsolateTrackingIdORFSequencesIdMap(Hashtable sequenceid_isolatetrackingid,
                                         ArrayList discrepancy_descriptions)throws Exception
      {
          //collect isolatetrackingids to get ORFS
@@ -120,16 +116,15 @@ public class PolymorphismFinderRunner extends ProcessRunner
              
          }
          String result = istr.toString().substring(0, istr.length()-1);
-         return writeORFSequences( result);
+         return getIsolateTrackingIdORFSequencesIdMap( result);
             
      }
      
-     private Hashtable      writeORFSequences(String sql)throws Exception
+     private Hashtable      getIsolateTrackingIdORFSequencesIdMap(String sql)throws Exception
      {
-        sql = " select distinct isolatetrackingid, refsequenceid, infotext "
-        +" from  isolatetracking i, sequencingconstruct c, sequenceinfo s "
-        +" where c.constructid =i.constructid and c.refsequenceid=s.sequenceid "
-        +" and s.infotype="+BaseSequence.SEQUENCE_INFO_TEXT+" and i.isolatetrackingid in ("+sql+") order by isolatetrackingid DESC";
+        sql = " select distinct isolatetrackingid, refsequenceid  "
+        +" from  isolatetracking i, sequencingconstruct c "
+        +" where c.constructid =i.constructid and  i.isolatetrackingid in ("+sql+") order by isolatetrackingid DESC";
         Hashtable istrid_ORFid = new Hashtable();
         DatabaseTransaction t = null;
         ResultSet rs = null;
@@ -143,21 +138,16 @@ public class PolymorphismFinderRunner extends ProcessRunner
             {
                 if ( prev_istrid == 0 || prev_istrid != rs.getInt("isolatetrackingid") )
                 {
-                    if (prev_istrid != 0 && !istrid_ORFid.containsValue( String.valueOf( prev_refsequenceid)))
-                        writeORFSequence(prev_refsequenceid, sequence_text.toString());
                     istrid_ORFid.put( String.valueOf( prev_istrid), String.valueOf(prev_refsequenceid));
                     sequence_text = new StringBuffer();
                 }
                 prev_istrid = rs.getInt("isolatetrackingid");
                 prev_refsequenceid = rs.getInt("refsequenceid");
-                sequence_text.append( rs.getString("infotext"));
             }
             //write last one
             if (  istrid_ORFid.get( String.valueOf( prev_istrid)) == null )
             {
-                if (!istrid_ORFid.containsValue( String.valueOf( prev_refsequenceid)))
-                    writeORFSequence(prev_refsequenceid, sequence_text.toString());
-                istrid_ORFid.put( String.valueOf( prev_istrid), String.valueOf(prev_refsequenceid));
+                 istrid_ORFid.put( String.valueOf( prev_istrid), String.valueOf(prev_refsequenceid));
             }
             return istrid_ORFid;
          
@@ -175,25 +165,7 @@ public class PolymorphismFinderRunner extends ProcessRunner
      }
      
      
-     private void       writeORFSequence(int refsequenceid, String sequence_text)throws BecUtilException
-                    
-     {
-         FileWriter fr = null;
-         String file_name = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_ORFSEQUENCES_DATA_FILE;
-       
-         try
-         {
-            fr =  new FileWriter(file_name, true);
-            fr.write(">"+refsequenceid +Constants.LINE_SEPARATOR + sequence_text + Constants.LINE_SEPARATOR);
-            fr.flush();
-            fr.close();
-         }
-         catch(Exception e )
-         {
-             throw new BecUtilException("Can not write reference sequence\n"+ e.getMessage());
-         }
-    
-     }
+     
     private void  updateDiscrepancyDescriptions(ArrayList discrepancy_descriptions,
                             Hashtable sequenceid_isolatetrackingid, Hashtable istr_refseqid)
                             throws Exception
@@ -463,7 +435,7 @@ Format for the job_order file:
                
     private void writeDiscrepancyDiscriptions(ArrayList discrepancy_descriptions)
     {
-        String job_filename = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_INPUT_DATA_FILE;
+        String job_filename = BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + BecProperties.getInstance().getProperty("FILE_NAME_INPUT_DATA_FILE");
         FileWriter fr = null;
         String[] ar = null;
          try
