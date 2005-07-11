@@ -92,11 +92,18 @@ public class FileOperations
              throw new IOException("File with this name already exist.");
        InputStream in = null;
        OutputStream out = null;
+        byte[] buf = new byte[1024];
+       int i = 0;
        try
        {
             in = new FileInputStream(source_file);
             out = new FileOutputStream(destination_file);
-            copy(in, out);
+           
+            while((i=in.read(buf))!=-1) 
+            {
+              out.write(buf, 0, i);
+            }
+
             out.flush();    
             in.close();            in = null;
             out.close();       out = null;

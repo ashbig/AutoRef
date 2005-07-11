@@ -152,6 +152,76 @@ public class Utils
          }
     } 
      
+    /*
+     *>gi|68293809|emb|CR999924.1| CR999924 RZPD no.9016 Homo sapiens cDNA clone RZPDp9016H213 5',
+           mRNA sequence
+          Length = 662
+
+ Score = 60.0 bits (30), Expect = 4e-010
+ Identities = 33/34 (97%)
+ Strand = Plus / Plus
+
+                              
+     **/
+    
+      public static ArrayList parseBlastStandardFormat(String foutput_name,
+                        int requered_identity, 
+                        int requered_aligment_length) throws Exception
+    {
+        return   parseBlastStandardFormat( foutput_name, requered_identity, 
+                         requered_aligment_length,      1) ;
+    
+      }
+    
+      public static ArrayList parseBlastStandardFormat(String foutput_name,
+                        int requered_identity, 
+                        int requered_aligment_length,
+                        int number_of_hits_per_id_to_check) throws Exception
+    {
+        String line = null;
+        ArrayList hits = new ArrayList();
+        ArrayList temp = null;
+        BufferedReader  fin = null;
+        String hit_id = null;
+        int number_of_hits_per_id_to_checked = 0;
+        try
+        {
+            fin = new BufferedReader(new FileReader(foutput_name));
+            while ( (line = fin.readLine()) != null)
+            {
+                if (line.indexOf(">gi") != -1)
+                {//extract gi
+                    hit_id = null;
+                    temp = Utils.splitString(line, "|");
+                    if ( temp == null || temp.size() < 2)throw new Exception("Cannot parse blast output");
+                    if ( ((String)temp.get(0)).indexOf("gi") != -1)
+                        hit_id = (String)temp.get(1);
+                }
+                if ( line.indexOf("Identities") != -1 && hit_id != null )
+                {
+                    if ( hit_id == null || (number_of_hits_per_id_to_checked >= number_of_hits_per_id_to_check && 
+                         hit_id.equalsIgnoreCase( (String) hits.get(hits.size() - 1))))
+                        continue;
+                     temp = Utils.splitString(line, " ");
+                     temp = Utils.splitString( (String)temp.get(2), "/");
+                    int hit_bases = Integer.parseInt(  (String)temp.get(0));
+                    int subject_bases = Integer.parseInt(  (String)temp.get(1));
+                    number_of_hits_per_id_to_checked++;
+                    if( hit_id != null && hit_bases >=  requered_aligment_length  && ( hit_bases * 100 / subject_bases)  >= requered_identity)
+                           hits.add(hit_id);
+                }
+            }
+            
+            fin.close();
+            return hits;
+        }
+        catch(Exception e)
+         {
+             try{fin.close();}catch(Exception c){}
+             throw new  Exception("Cannot parse blast output");
+         }
+    } 
+     
     public static boolean runProgram(String cmd)
                     throws Exception
     {
@@ -159,7 +229,7 @@ public class Utils
         {
             Runtime r = Runtime.getRuntime();
             r.traceMethodCalls(true);
-            Process p = r.exec(cmd);
+             Process p = r.exec(cmd);
              BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
             BufferedInputStream binput = new BufferedInputStream(p.getInputStream());
             int x = 0;int y = 0;
@@ -192,20 +262,97 @@ public class Utils
                 {
                     berr.read(buff, 0, Math.min(255, berr.available()));
                     binput.read(buff, 0, Math.min(255, binput.available()));
-                }
+                   }
             }
-           
             p.waitFor();
             if (p.exitValue() != 0)
             {
-               // System.err.println("program call failed" + p.exitValue());
-                return false;
+                 return false;
             }
         }
         catch (Exception e)
         {
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
             throw new  Exception("Cannot run program");
         } 
         return true;
+    }
+    
+    
+     public static boolean runProgram(String cmd, String file_name)
+                    throws Exception
+    {
+        try
+        {
+            Runtime r = Runtime.getRuntime();
+            r.traceMethodCalls(true);
+             Process p = r.exec(cmd);
+             BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
+            BufferedInputStream binput = new BufferedInputStream(p.getInputStream());
+            FileOutputStream bo = new FileOutputStream(file_name);
+            int x = 0;int y = 0;
+            
+            boolean    isFinished = false;
+            boolean    isErrDone = false;
+            boolean    isOutDone = false;
+            byte[]      buff = new byte[255];
+            
+            while (!isFinished)
+            {
+                if (berr.available() == 0 && binput.available() == 0)
+                {
+                    try
+                    {
+                        p.exitValue();
+                        isFinished = true;
+                        break;
+                    }
+                    catch (IllegalThreadStateException e)
+                    {
+                        Thread.currentThread().sleep(100);
+                    }
+                    catch(Exception e)
+                    {
+                        throw new Exception("Cannot run program");
+                    }
+                }
+                else
+                {
+                    berr.read(buff, 0, Math.min(255, berr.available()));
+                    binput.read(buff, 0, Math.min(255, binput.available()));
+                    bo.write(buff);bo.flush();
+                }
+            }
+           bo.close();
+            p.waitFor();
+            if (p.exitValue() != 0)
+            {
+                   return false;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+            throw new  Exception("Cannot run program");
+        } 
+        return true;
+    }
+
+     
+    public static String convertWindowsFileNameIntoUnix(String filename)
+    {
+        String res = null;
+        char[] arr = filename.toCharArray();
+        StringBuffer converted_file_name = new StringBuffer();
+        for (int count = 0; count < arr.length; count++)
+        {
+            if ( count == 0 && arr[count] != '/')converted_file_name.append('/');
+            if ( arr[count] == ':') continue;
+            if ( arr[count] == File.separatorChar ) { converted_file_name.append('/'); continue;}
+            converted_file_name.append(arr[count]);
+        }
+           return converted_file_name.toString();
     }
 }

@@ -86,7 +86,8 @@ public class PolymorphismFinderJobDistributor
         DataInputStream dis = null;
         try
         {
-            fis = new FileInputStream( Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
+            File fn = new File(Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
+            fis = new FileInputStream( fn);
             dis = new DataInputStream( fis );
             while ( true )
             {
@@ -98,10 +99,9 @@ public class PolymorphismFinderJobDistributor
             }
             
         }
-        catch (EOFException eof)
+        catch (Exception eof)
         {  }
-        catch (IOException ioe)
-        { }
+        
         return ORF_index;
      }
     

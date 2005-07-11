@@ -38,11 +38,12 @@ public class PolymorphismFinderJob
                 //ORFID discrepancyid  sequence  database1 identity_ver_length identity_ver_%
                 // 0        1               2       3           4                   5
                 discr_data = Utils.splitString( discrepancies_data[count], null);
-                hits = findDiscrepancyHits( (String)discr_data.get(2),(String)discr_data.get(3) );
+                String search_database = (String)discr_data.get(3);
+                hits = findDiscrepancyHits( (String)discr_data.get(2), search_database);
                  // get clone sequence
-                if ( prev_orf_id != null && prev_orf_id.equalsIgnoreCase( (String)discr_data.get(0)))
+                if ( prev_orf_id == null || !prev_orf_id.equalsIgnoreCase( (String)discr_data.get(0)))
                     clone_sequence = getCloneSequence((String)discr_data.get(0), orf_index);
-                hits = verifyHits(hits,  clone_sequence, (String)discr_data.get(4),(String)discr_data.get(5) );
+                hits = verifyHits(hits,  clone_sequence, (String)discr_data.get(4),(String)discr_data.get(5), search_database );
                 writeHits(hits, (String)discr_data.get(1),  Utils.getSystemProperty("OUTPUT_DISCREPANCY_DATA_FILE_NAME"));
                 prev_orf_id = (String)discr_data.get(0);
             }
@@ -74,16 +75,27 @@ public class PolymorphismFinderJob
 
         String  output_file_name = Utils.getSystemProperty("TEMP_DIRECTORY") + File.separator +"blast_output.txt";
  //@@@@@@@@@@@@@@@@@@@@@@@@  run blast_outputlast
+        
+        /*
         String cmd = Utils.getSystemProperty("BLAST_PATH")+File.separator 
-        +" blastall -d "+ search_database +" -p blastn -i "+queryFile_name +" -e 10.0 -o "+output_file_name
-        +" -F F -G 0 -E 0 -X 0 -q -3 -r 1 -g T -M "+matrix+" -W 0 -T F -K 100 -f 0 -b 5 -v 500 -m 8 -I T";
-        boolean res = Utils.runProgram(cmd);
-         
-       return Utils.parseBlastTabularFormat(output_file_name,100,discr_sequence.length());
-      }
+        +"blastall.exe -d "+ search_database +" -p blastn -i "+queryFile_name +" -e 10.0 -o "+output_file_name
+        +" -F F -G 0 -E 0 -X 0 -q -3 -r 1 -g T -M "+matrix+" -W 0 -T F -K 100 -f 0 -b 5 -v 500 -m 8 -IT";
+      return Utils.parseBlastTabularFormat(output_file_name,100,discr_sequence.length());
+      
+         */
+        // -m8 was eliminated, no clear description of output format can be found for the latest version
+        // going back to the standard 
+                String cmd = Utils.getSystemProperty("BLAST_PATH")+File.separator 
+        +"blastall.exe -d "+ search_database +" -p blastn -i "+queryFile_name +" -e 10.0 -o "+output_file_name
+        +" -F F -G 0 -E 0 -X 0 -q -3 -r 1 -g T -M "+matrix+" -W 0 -T F -K 100 -f 0 -b 5 -v 500  -IT";
+                boolean res = Utils.runProgram(cmd);
+         return Utils.parseBlastStandardFormat(output_file_name,100,discr_sequence.length());
+      
+       }
       
       private ArrayList        verifyHits(ArrayList hits,  String orf_sequence,
-                        String discr_identity_length, String discr_identity_persent )
+                        String discr_identity_length, String discr_identity_persent ,
+                        String search_database)
                         throws Exception
       {
           ArrayList result = new ArrayList();
@@ -97,8 +109,8 @@ public class PolymorphismFinderJob
               boolean isHitVerified = false;
               for (int count = 0; count < hits.size(); count++)
               {
-                  isHitVerified = verifyHit( orfFile_name,(String)hits.get(count),  discr_identity_length_int,  discr_identity_persent_int );
-                  if ( isHitVerified) result.add(hits.get(count));
+                  isHitVerified = verifyHit( search_database, orfFile_name,(String)hits.get(count),  discr_identity_length_int,  discr_identity_persent_int );
+                  if ( isHitVerified) result.add(" GI "+hits.get(count));
               }
               //@@@@@@@@@@@@@@@@@@@@@@   delete ORF file
               // File float = new File(orfFile_name); fl.delete();
@@ -111,7 +123,7 @@ public class PolymorphismFinderJob
           }
       }
       
-      private boolean   verifyHit(String orfFile_name, String hit_data, 
+      private boolean   verifyHit(String search_database, String orfFile_name, String hit_data, 
                     int discr_identity_length, int discr_identity_persent )
                     throws Exception
       {
@@ -119,38 +131,35 @@ public class PolymorphismFinderJob
  //@@@@@@@@@@@@@@@@@@@@@@@@ how to get sequence
            String hit_sequence = null; ////@@@@@@@@@@@@@@@@@@@@@@@@@@
            boolean isHitVerified = false;
-           String  hitFile_name =  Utils.getSystemProperty("TEMP_DIRECTORY")+File.separator + "Hit.in";
-           Utils.makeQueryFileInFASTAFormat(hitFile_name, hit_sequence.toUpperCase(), "HIT" );
-         
-           String  output_file_name = Utils.getSystemProperty("TEMP_DIRECTORY") + File.separator +"needle_output.txt";
- //@@@@@@@@@@@@@@@@@@@@@@@@  run needle
-            String cmd = Utils.getSystemProperty("NEEDLE_PATH")+" "+hitFile_name+ " "+orfFile_name + " -gapopen 10 -gapextend 0.5 -outfile " + output_file_name;
-            boolean res = Utils.runProgram(cmd);
-            if (res)
-            {
-                NeedleResult m_needle = new NeedleResult();
-                NeedleParser.parse(output_file_name, m_needle);
-                               //check for identity
-                char[] query_arr = null;//blaligment.getQSequence().toCharArray();
-                char[] subject_arr =  null;//  blaligment.getSSequence().toCharArray();
-                int matchcount = 0; int allcount=0;
-
-                for (int ind = 0; ind < query_arr.length; ind ++)
-                {
-                    switch (query_arr[ind])
-                    {
-                        case 'a': case 'A': case 'g': case 'G': case 't': case 'T': case 'c':case 'C':
-                        {
-                            if (query_arr[ind]==subject_arr[ind])  matchcount++;
-                            allcount++;
-                        }
-                    }
-                }
-                isHitVerified = (matchcount > discr_identity_length && ( matchcount * 100 )/allcount >= discr_identity_persent)? true: false;
-
-            }
-             File fl = new File(hitFile_name); fl.delete();
-             return isHitVerified;
+           String  hitFile_name =  null;
+           String  output_file_name = null;
+          
+           try
+           {
+                hitFile_name =  Utils.getSystemProperty("TEMP_DIRECTORY")+File.separator + "Hit.in";
+                if ( !getHitSequence( search_database, hit_data, hitFile_name))
+                    throw new Exception("Cannot verify blast hit "+hit_data +". Problem extracting hit sequence");
+                output_file_name = Utils.getSystemProperty("TEMP_DIRECTORY") + File.separator +"needle_output.txt";
+ 
+                String cmd = Utils.getSystemProperty("BLAST_PATH")+File.separator 
+                +"bl2seq.exe  -p blastn -i "+orfFile_name +" -e 10.0 -o "+output_file_name
+                +" -j "+ hitFile_name
+                +" -F F -G 0 -E 0 -X 0 -q -3 -r 1 -g T  -W 0 -T F ";
+                if (! Utils.runProgram(cmd))
+                    throw new Exception("Cannot verify blast hit "+hit_data +". Problem runing ORF to  hit verification");
+            
+                ArrayList hits = Utils.parseBlastStandardFormat   (output_file_name,discr_identity_persent,discr_identity_length);
+                isHitVerified = hits.size()> 0;
+                
+                 File fl = new File(hitFile_name); 
+                 fl.delete();
+                 return isHitVerified;
+           }
+           catch(Exception e)
+           {
+               System.out.println(e.getMessage());
+               throw new Exception("Cannot verify hit");
+           }
        }
   
       
@@ -165,7 +174,7 @@ public class PolymorphismFinderJob
             fr =  new FileWriter(file_name, true);
             for (int hit_count =0; hit_count < hits.size(); hit_count++)
             {
-                  fr.write(discr_id +" "+ (String) hits.get(hit_count)+"\n" );
+                  fr.write(discr_id + (String) hits.get(hit_count)+"\n" );
             }
             if ( hits == null || hits.size() == 0)
                 fr.write(discr_id +" NODATA\n");
@@ -179,7 +188,29 @@ public class PolymorphismFinderJob
          }
      }
     
-  
+   private boolean   getHitSequence(String search_database, String hit_id, String hitFile_name)throws Exception
+   {
+        
+        String cmd = Utils.getSystemProperty("BLAST_PATH")+File.separator 
+        +"fastacmd.exe -d "+ search_database +" -s "+hit_id ;
+         return Utils.runProgram(cmd, hitFile_name);
+     
+   }
+    
+   private boolean   runNeedle(String hitFile_name, String orfFile_name, String output_file_name )throws Exception
+   {
+        String cmd = null;
+        if ( System.getProperty("os.name").toLowerCase().indexOf("win") > -1) 
+        {
+            cmd = Utils.getSystemProperty("NEEDLE_PATH")+" "+Utils.convertWindowsFileNameIntoUnix(hitFile_name)
+            + " "+Utils.convertWindowsFileNameIntoUnix(orfFile_name)
+             + " -gapopen 10 -gapextend 0.5 -outfile "
+             + Utils.convertWindowsFileNameIntoUnix(output_file_name);
+        }
+        else
+           cmd = Utils.getSystemProperty("NEEDLE_PATH")+" "+hitFile_name+ " "+orfFile_name + " -gapopen 10 -gapextend 0.5 -outfile " + output_file_name;
+        return Utils.runProgram(cmd);
+    }
     
     private String getCloneSequence(String id, Hashtable orf_index) throws Exception
     {
