@@ -86,7 +86,7 @@ public class OneToOneContainerMapper implements ContainerMapper {
             Protocol.CREATE_GLYCEROL_FROM_CULTURE.equals(protocol.getProcessname()) ||
             Protocol.CREATE_DNA_FROM_MGC_CULTURE.equals(protocol.getProcessname())) {
                 newBarcode = projectCode+protocol.getProcesscode()+container.getLabel().substring(3);
-            } else if (Protocol.GENERATE_CRE_PLATE.equals(protocol.getProcessname())) {
+            } else if (Protocol.GENERATE_DNA_PLATES.equals(protocol.getProcessname())) {
                 newBarcode = Container.getLabel(projectCode, protocol.getProcesscode(), container.getThreadid(), getSubThread(container));
                 
                 if(workflow.getId()==Workflow.TRANSFER_TO_EXP_JP1520) {
