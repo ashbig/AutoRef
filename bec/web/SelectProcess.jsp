@@ -168,7 +168,7 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input  <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %> >
+      <input  disabled <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %> >
       Run polymorphism finder (settings required)</font> </td>
   </tr>
   <tr> 
@@ -253,6 +253,10 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
 
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+     Database operations</font></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_PLATE %>>
       Delete plate</font></td>
 </tr>
@@ -273,6 +277,10 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
       <input <%if ( user_level  < 3) {%>disabled <%}%> type="radio" name="forwardName" value=<%= Constants.PROCESS_DELETE_CLONE_SEQUENCE %>>
       Delete clone sequence</font><P></td>
+</tr>
+<tr> 
+    <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
+     Hard drive operations</font></td>
 </tr>
 <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
