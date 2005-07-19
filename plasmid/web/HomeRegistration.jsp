@@ -67,11 +67,13 @@
     </td>
   </tr>
   <tr class="formlabel"> 
-    <td width="22%" align="left" valign="baseline">Please choose your PI:</td>
+    <td width="22%" align="left" valign="baseline">Please choose your PI:<br>
+        (*PI is required for HIP member, DF/HCC member, Harvard affiliate and Other academic groups)
+    </td>
     <td width="78%" align="left" valign="baseline"> 
         <html:select property="piname" styleClass="text">
             <html:option value=""/>
-            <html:options name="pis"/>
+            <html:options collection="pis" property="nameEmail"/>
         </html:select>
     </td>
   </tr>
@@ -89,6 +91,12 @@
           <td class="formlabel"> *Last Name:</td>
           <td>
              <html:text property="pilastname" size="30" styleClass="text"/>
+          </td>
+        </tr>
+        <tr> 
+          <td class="formlabel"> *Email:</td>
+          <td>
+             <html:text property="piemail" size="30" styleClass="text"/>
           </td>
         </tr>
         <tr> 

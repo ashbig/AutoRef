@@ -4,9 +4,9 @@
     <td height="54"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr align="center"> 
           <td height="52"> <p class="footertext"><a href="Home.jsp" class="footertext">Home</a> 
-              &#149; <a href="#" class="footertext">About Us</a> &#149; <a href="Submission.jsp" class="footertext">Plasmid 
+              &#149; <a href="Submission.jsp" class="footertext">Plasmid 
               Submission</a> &#149; <a href="OrderOverview.jsp" class="footertext">Plasmid Search & Order</a> 
-              &#149; <a href="#" class="footertext">Contact Us</a></p>
+              &#149; <a href="Contactus.jsp" class="footertext">Contact Us</a></p>
             <p class="footertext">©2004 Harvard Institute of Proteomics</p></td>
         </tr>
       </table></td>

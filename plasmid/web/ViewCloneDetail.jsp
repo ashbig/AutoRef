@@ -115,6 +115,13 @@
 </logic:iterate>
 </table>
 
+<p>Insert Sequence:</p>
+<logic:iterate id="insert" name="clone" property="inserts">
+<p>Insert: <bean:write name="insert" property="order"/></p>
+<p><pre><bean:write name="insert" property="fastaSequence"/></pre></P>
+</logic:iterate>
+</table>
+
 <logic:iterate id="insert" name="clone" property="inserts">
 <logic:present name="insert" property="properties">
 <p>Insert Property: Insert <bean:write name="insert" property="order"/></p>
