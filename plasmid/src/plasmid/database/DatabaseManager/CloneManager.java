@@ -446,6 +446,7 @@ public class CloneManager extends TableManager {
         String sql10 = "select propertytype from vectorproperty where vectorid=?";
         String sql11 = "select propertytype,propertyvalue,extrainfo from cloneproperty where cloneid="+cloneid;
         String sql12 = "select propertytype,propertyvalue,extrainfo from insertproperty where insertid=?";
+        String sql13 = "select seqorder,seqtext from seqtext t, dnasequence d where t.sequenceid=d.sequenceid and d.insertid=? order by seqorder";
         
         Clone c = null;
         
@@ -500,7 +501,20 @@ public class CloneManager extends TableManager {
                     DatabaseTransaction.closeResultSet(rs12);
                     DatabaseTransaction.closeStatement(stmt1);
                     
+                    PreparedStatement stmt2 = conn.prepareStatement(sql13);
+                    stmt2.setInt(1, insertid);
+                    ResultSet rs13 = DatabaseTransaction.executeQuery(stmt2);
+                    String seq = "";
+                    while(rs13.next()) {
+                        int seqorder = rs13.getInt(1);
+                        String seqtext = rs13.getString(2);
+                        seq += seqtext;
+                    }
+                    DatabaseTransaction.closeResultSet(rs13);
+                    DatabaseTransaction.closeStatement(stmt2);
+                    
                     insert.setProperties(properties);
+                    insert.setSequence(seq);
                     inserts.add(insert);
                 }
                 c.setInserts(inserts);

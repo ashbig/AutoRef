@@ -13,6 +13,7 @@ import java.util.*;
  * @author  DZuo
  */
 public class User {
+    public static final String HIP = "HIP member";
     public static final String DFHCC = "DF/HCC member";
     public static final String HARVARD = "Harvard affiliate";
     public static final String ACADEMIC = "Other academic";
@@ -30,7 +31,8 @@ public class User {
     private String institution;
     private String department;
     private String ponumber;
-    private String pi;
+    private String piname;
+    private String piemail;
     private String group;
     private String password;
     private String dateadded;
@@ -47,7 +49,8 @@ public class User {
     }
    
     public User(int userid, String firstname, String lastname, String email, String phone,
-    String institution, String department, String ponumber, String pi, String group, String password, String isinternal) {
+    String institution, String department, String ponumber, String pi, String group, 
+    String password, String isinternal, String piemail) {
         this.userid = userid;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -56,15 +59,16 @@ public class User {
         this.institution = institution;
         this.department = department;
         this.ponumber = ponumber;
-        this.pi = pi;
+        this.piname = pi;
         this.group = group;
         this.password = password;
         this.isinternal = isinternal;
+        this.piemail = piemail;
     }
     
     public User(int userid,String firstname,String lastname,String email,String phone,
     String ponumber,String institution,String department,String dateadded, String datemod,
-    String modifier,String pi, String usergroup, String password, String isinternal) {
+    String modifier,String pi, String usergroup, String password, String isinternal, String piemail) {
         this.userid = userid;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -76,10 +80,11 @@ public class User {
         this.dateadded = dateadded;
         this.datemod = datemod;
         this.modifier = modifier;
-        this.pi = pi;
+        this.piname = pi;
         this.group = usergroup;
         this.password = password;
         this.isinternal = isinternal;
+        this.piemail = piemail;
     }
     
     public User(String email, String password) {
@@ -95,7 +100,8 @@ public class User {
     public String getInstitution() {return institution;}
     public String getDepartment() {return department;}
     public String getPonumber() {return ponumber;}
-    public String getPi() {return pi;}
+    public String getPiname() {return piname;}
+    public String getPiemail() {return piemail;}
     public String getGroup() {return group;}
     public String getPassword() {return password;}
     public String getIsinternal() {return isinternal;}
@@ -108,10 +114,11 @@ public class User {
     public void setInstitution(String s) {this.institution = s;}
     public void setDepartment(String s) {this.department = s;}
     public void setPonumber(String s) {this.ponumber = s;}
-    public void setPi(String s) {this.pi = s;}
+    public void setPiname(String s) {this.piname = s;}
     public void setGroup(String s) {this.group = s;}
     public void setPassword(String s) {this.password = s;}
     public void setIsinternal(String s) {this.isinternal = s;}
+    public void setPiemail(String s) {this.piemail = s;}
     
     public String getUsername() {
         return firstname+" "+lastname;

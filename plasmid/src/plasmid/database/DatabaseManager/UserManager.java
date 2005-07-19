@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.*;
 import plasmid.database.*;
 import plasmid.coreobject.*;
+import plasmid.Constants;
 
 /**
  *
@@ -23,8 +24,8 @@ public class UserManager extends TableManager {
     
     public boolean insertUser(User user) {
         String sql = "insert into userprofile(userid,firstname,lastname,phone,email,"+
-        " ponumber,institution,department,dateadded,piname,usergroup,password,isinternal)"+
-        " values(?,?,?,?,?,?,?,?,sysdate,?,?,?,?)";
+        " ponumber,institution,department,dateadded,piname,usergroup,password,isinternal,piemail)"+
+        " values(?,?,?,?,?,?,?,?,sysdate,?,?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
@@ -36,10 +37,11 @@ public class UserManager extends TableManager {
             stmt.setString(6, user.getPonumber());
             stmt.setString(7, user.getInstitution());
             stmt.setString(8, user.getDepartment());
-            stmt.setString(9, user.getPi());
+            stmt.setString(9, user.getPiname());
             stmt.setString(10, user.getGroup());
             stmt.setString(11, user.getPassword());
             stmt.setString(12, User.EXTERNAL);
+            stmt.setString(13, user.getPiemail());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot insert user into database.");
@@ -51,8 +53,8 @@ public class UserManager extends TableManager {
     }
     
     public boolean insertPI(PI pi) {
-        String sql = "insert into pi(name,firstname,lastname,institution,department)"+
-        " values(?,?,?,?,?)";
+        String sql = "insert into pi(name,firstname,lastname,institution,department,email)"+
+        " values(?,?,?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
@@ -61,6 +63,7 @@ public class UserManager extends TableManager {
             stmt.setString(3, pi.getLastname());
             stmt.setString(4, pi.getInstitution());
             stmt.setString(5, pi.getDepartment());
+            stmt.setString(6, pi.getEmail());
             DatabaseTransaction.executeUpdate(stmt);
         } catch (Exception ex) {
             handleError(ex, "Cannot insert PI into database.");
@@ -94,26 +97,27 @@ public class UserManager extends TableManager {
         }
         return rt;
     }
-         
-    public boolean piExist(String firstname, String lastname) {
-        if(lastname == null)
+    
+    public boolean piExist(String firstname, String lastname, String email) {
+        if(lastname == null || email == null)
             return false;
         
         String piname = lastname.toUpperCase()+", "+firstname;
-        return piExist(piname);
+        return piExist(piname, email);
     }
     
-    public boolean piExist(String piname) {
-        if(piname == null)
+    public boolean piExist(String piname, String email) {
+        if(piname == null || email == null)
             return false;
         
-        String sql = "select * from pi where upper(name)=upper(?)";
+        String sql = "select * from pi where upper(name)=upper(?) and upper(email)=upper(?)";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         boolean rt = false;
         try {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, piname);
+            stmt.setString(2, email);
             rs = DatabaseTransaction.executeQuery(stmt);
             if(rs.next())
                 rt = true;
@@ -130,7 +134,7 @@ public class UserManager extends TableManager {
     public User authenticate(String email, String password) {
         String sql = "select userid,firstname,lastname,email,phone,"+
         " ponumber,institution,department,dateadded,datemod,modifier,"+
-        " piname,usergroup,isinternal"+
+        " piname,usergroup,isinternal,piemail"+
         " from userprofile where email=?"+
         " and password=?";
         PreparedStatement stmt = null;
@@ -155,8 +159,9 @@ public class UserManager extends TableManager {
                 String pi = rs.getString(12);
                 String usergroup = rs.getString(13);
                 String isinternal = rs.getString(14);
-               
-                user = new User(userid,firstname,lastname,email,phone,ponumber, institution,department,dateadded,datemod,modifier, pi,usergroup, password,isinternal);
+                String piemail = rs.getString(15);
+                
+                user = new User(userid,firstname,lastname,email,phone,ponumber, institution,department,dateadded,datemod,modifier, pi,usergroup, password,isinternal,piemail);
             }
         } catch (Exception ex) {
             handleError(ex, "Database error occured.");
@@ -168,9 +173,45 @@ public class UserManager extends TableManager {
         return user;
     }
     
+    /**
+     * Query the database to find all the PIs.
+     *
+     * @return A list of PI objects. Return null if error occured.
+     */
+    public static List getAllPis() {
+        String sql = "select name,firstname,lastname,institution,department,email from pi";
+        DatabaseTransaction t = null;
+        List pis = new ArrayList();
+        ResultSet rs = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String name = rs.getString(1);
+                String firstname = rs.getString(2);
+                String lastname = rs.getString(3);
+                String institution = rs.getString(4);
+                String department = rs.getString(5);
+                String email = rs.getString(6);
+                PI pi = new PI(name,firstname,lastname,institution,department,email);
+                pis.add(pi);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return pis;
+    }
+    
     public List queryShoppingCartForClones(int userid) {
         String sql = "select cloneid, quantity from shoppingcartitem"+
-                    " where collectionname is null and userid="+userid;
+        " where collectionname is null and userid="+userid;
         ResultSet rs = null;
         DatabaseTransaction t = null;
         List items = new ArrayList();
@@ -191,14 +232,14 @@ public class UserManager extends TableManager {
         }
         
         return items;
-    }    
+    }
     
     public boolean addShoppingCart(int userid, List cart) {
         if(cart == null || cart.size() == 0)
             return true;
         
         String sql = "insert into shoppingcartitem(cloneid,collectionname,userid,quantity)"+
-                    " values(?,?,?,?)";
+        " values(?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
@@ -230,8 +271,8 @@ public class UserManager extends TableManager {
     
     public boolean removeShoppingCart(int userid) {
         String sql = "delete from shoppingcartitem"+
-                    " where userid="+userid;
-       
+        " where userid="+userid;
+        
         try {
             DatabaseTransaction.executeUpdate(sql, conn);
         } catch (Exception ex) {
@@ -253,7 +294,7 @@ public class UserManager extends TableManager {
         String sql = "select addresstype,name,organization,addressline1,"+
         " addressline2,city,state,zipcode,country"+
         " from useraddress where userid="+userid;
-                
+        
         ResultSet rs = null;
         DatabaseTransaction t = null;
         List items = new ArrayList();
@@ -281,7 +322,7 @@ public class UserManager extends TableManager {
         }
         
         return addresses;
-    }    
+    }
     
     public boolean addUserAddresses(int userid, List addresses) {
         if(addresses == null || addresses.size() == 0)
@@ -316,8 +357,8 @@ public class UserManager extends TableManager {
         }
         
         return true;
-    }  
-
+    }
+    
     public boolean updateUserAddresses(int userid, List addresses) {
         if(addresses == null || addresses.size() == 0)
             return true;
@@ -352,11 +393,11 @@ public class UserManager extends TableManager {
         }
         
         return true;
-    }  
+    }
     
     public boolean updatePonumber(String ponumber, int userid) {
         String sql = "update userprofile set ponumber=? where userid=?";
-                
+        
         PreparedStatement stmt = null;
         try {
             stmt = conn.prepareStatement(sql);
@@ -371,7 +412,7 @@ public class UserManager extends TableManager {
         }
         
         return true;
-    } 
+    }
     
     public boolean updateUserProfile(User user) {
         if(user == null)
@@ -379,7 +420,7 @@ public class UserManager extends TableManager {
         
         String sql = "update userprofile"+
         " set firstname=?,lastname=?,email=?,phone=?,ponumber=?,institution=?,department=?,"+
-        " datemod=sysdate,piname=?,usergroup=?"+
+        " datemod=sysdate,piname=?,usergroup=?,piemail=?"+
         " where userid=?";
         
         PreparedStatement stmt = null;
@@ -392,9 +433,10 @@ public class UserManager extends TableManager {
             stmt.setString(5, user.getPonumber());
             stmt.setString(6, user.getInstitution());
             stmt.setString(7, user.getDepartment());
-            stmt.setString(8, user.getPi());
+            stmt.setString(8, user.getPiname());
             stmt.setString(9, user.getGroup());
-            stmt.setInt(10, user.getUserid());
+            stmt.setString(10, user.getPiemail());
+            stmt.setInt(11, user.getUserid());
         } catch (Exception ex) {
             handleError(ex, "Cannot update userprofile.");
             return false;
@@ -403,11 +445,11 @@ public class UserManager extends TableManager {
         }
         
         return true;
-    } 
+    }
     
     public String findPassword(String email) {
         String sql = "select password from userprofile where email=?";
-       
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
         String password = null;

@@ -30,6 +30,8 @@ public class DnaInsert {
     private int refseqid;
     private List properties;
     
+    private String sequence;
+    
     /** Creates a new instance of DnaInsert */
     public DnaInsert() {
     }
@@ -81,6 +83,7 @@ public class DnaInsert {
     public String getHasmutation() {return hasmutation;}
     public int getRefseqid() {return refseqid;}
     public List getProperties() {return properties;}
+    public String getSequence() {return sequence;}
     
     public void setInsertid(int id) {this.insertid = id;}
     public void setOrder(int order) {this.order = order;}
@@ -98,4 +101,9 @@ public class DnaInsert {
     public void setHasmutation(String s) {this.hasmutation = s;}
     public void setRefseqid(int id) {this.refseqid = id;}
     public void setProperties(List s) {this.properties = s;}
+    public void setSequence(String s) {this.sequence = s;}
+    
+    public String getFastaSequence() {
+        return Dnasequence.convertToFasta(sequence);
+    }
 }

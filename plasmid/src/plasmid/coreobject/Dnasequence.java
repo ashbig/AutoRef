@@ -11,6 +11,7 @@ package plasmid.coreobject;
  * @author  DZuo
  */
 public class Dnasequence {
+    public final static int FASTALENGTH = 60;
     public final static String INSERT = "Insert Sequence";
     public final static String REFERENCE = "Reference Sequence";
     
@@ -43,4 +44,18 @@ public class Dnasequence {
     public void setReferenceid(int id) {this.referenceid = id;}
     public void setSequence(String s) {this.sequence = s;}
     public void setInsertid(int id) {this.insertid = id;}
+    
+    public static String convertToFasta(String sequenceString) {        
+        StringBuffer seqBuff = new StringBuffer();
+        
+        for (int i=0; i < sequenceString.length(); i++){
+            if(i%FASTALENGTH == 0) {
+                seqBuff.append("\n");
+            }
+            
+            seqBuff.append(sequenceString.charAt(i));
+        }
+        
+        return seqBuff.toString();
+    }           
 }

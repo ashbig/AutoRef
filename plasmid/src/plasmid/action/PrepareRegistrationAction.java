@@ -24,7 +24,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 
 import plasmid.Constants;
-import plasmid.database.DatabaseManager.DefTableManager;
+import plasmid.database.DatabaseManager.*;
 import plasmid.database.*;
 
 /**
@@ -74,7 +74,14 @@ public class PrepareRegistrationAction extends Action {
         
         DefTableManager manager = new DefTableManager();
         List groups = manager.getVocabularies("usergroup", "usergroup", t);
-        List pis = manager.getVocabularies("pi", "name", t);
+        List pis = UserManager.getAllPis();
+        
+        if(pis == null) {
+            errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("error.database"));
+            saveErrors(request, errors);
+            return mapping.findForward("error");
+        }
         
         request.setAttribute("groups", groups);
         request.setAttribute("pis", pis);

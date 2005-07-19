@@ -28,6 +28,7 @@ public class RegistrationForm extends ActionForm {
     private String piname;
     private String pifirstname;
     private String pilastname;
+    private String piemail;
     private String piinstitution;
     private String pidepartment;
     private String group;
@@ -48,6 +49,7 @@ public class RegistrationForm extends ActionForm {
     public String getPiname() {return piname;}
     public String getPifirstname() {return pifirstname;}
     public String getPilastname() {return pilastname;}
+    public String getPiemail() {return piemail;}
     public String getPiinstitution() {return piinstitution;}
     public String getPidepartment() {return pidepartment;}
     public String getGroup() {return group;}
@@ -62,6 +64,7 @@ public class RegistrationForm extends ActionForm {
     public void setInstitution(String s) {this.institution = s;}
     public void setDepartment(String s) {this.department = s;}
     public void setPiname(String s) {this.piname = s;}
+    public void setPiemail(String s) {this.piemail = s;}
     public void setPifirstname(String s) {this.pifirstname=s;}
     public void setPilastname(String s) {this.pilastname = s;}
     public void setPiinstitution(String s) {this.piinstitution = s;}
@@ -81,6 +84,7 @@ public class RegistrationForm extends ActionForm {
         piname = null;
         pifirstname = null;
         pilastname = null;
+        piemail = null;
         piinstitution = null;
         pidepartment = null;
         group = null;
@@ -90,29 +94,31 @@ public class RegistrationForm extends ActionForm {
    
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
-        if ((firstname == null) || (firstname.length() < 1))
+        if ((firstname == null) || (firstname.trim().length() < 1))
             errors.add("firstname", new ActionError("error.firstname.required"));
-        if(lastname == null || lastname.length() < 1)
+        if(lastname == null || lastname.trim().length() < 1)
             errors.add("lastname", new ActionError("error.lastname.required"));
-        if(email == null || email.length() < 1 || email.indexOf("@") < 0)
+        if(email == null || email.trim().length() < 1 || email.indexOf("@") < 0)
             errors.add("email", new ActionError("error.email.required"));
-        if(phone == null || phone.length() < 1)
+        if(phone == null || phone.trim().length() < 1)
             errors.add("phone", new ActionError("error.phone.required"));
-        if(password == null || password.length() < 1)
+        if(password == null || password.trim().length() < 1)
             errors.add("password", new ActionError("error.password.required"));
-        if(password2 == null || password2.length() < 1)
+        if(password2 == null || password2.trim().length() < 1)
             errors.add("password2", new ActionError("error.password2.required"));
-        if(group == null || group.length() < 1)
+        if(group == null || group.trim().length() < 1)
             errors.add("group", new ActionError("error.group.required"));
-        else if(group.equals(User.DFHCC)) {
-            if(piname == null || piname.length() < 1) {
-                if(pifirstname == null || pifirstname.length() < 1) 
+        else if(group.equals(User.DFHCC) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
+            if(piname == null || piname.trim().length() < 1) {
+                if(pifirstname == null || pifirstname.trim().length() < 1) 
                     errors.add("pifirstname", new ActionError("error.pifirstname.required"));
-                if(pilastname == null || pilastname.length() < 1) 
+                if(pilastname == null || pilastname.trim().length() < 1) 
                     errors.add("pilastname", new ActionError("error.pilastname.required"));
-                if(piinstitution == null || piinstitution.length() < 1) 
+                if(piemail == null || piemail.trim().length() < 1) 
+                    errors.add("piemail", new ActionError("error.piemail.required"));
+                if(piinstitution == null || piinstitution.trim().length() < 1) 
                     errors.add("piinstitution", new ActionError("error.piinstitution.required"));
-                if(pidepartment == null || pidepartment.length() < 1) 
+                if(pidepartment == null || pidepartment.trim().length() < 1) 
                     errors.add("pidepartment", new ActionError("error.pidepartment.required"));
             }
         }

@@ -199,4 +199,32 @@ public class RefseqManager extends TableManager {
         
         return types;
     }
+    
+    /**
+     * Find the reference sequenceid from the database for a given nametype and namevalue.
+     *
+     * @param nametype For human gene, nametype is GI.
+     * @param namevalue For human gene, namevalue is GI number.
+     *
+     * @return Return the reference sequence ID (primary key). Return 0 if no reference sequence found.
+     * @throws Exception
+     */
+    public static int findRefseq(String nametype, String namevalue) throws Exception {
+        DatabaseTransaction t = DatabaseTransaction.getInstance();
+        Connection conn = t.requestConnection();
+        String sql = "select refid from refseqname where nametype=? and namevalue=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, nametype);
+        stmt.setString(2, namevalue);
+        ResultSet rs = DatabaseTransaction.executeQuery(stmt);
+        int refseqid = 0;
+        if(rs.next()) {
+            refseqid = rs.getInt(1);
+        }
+        DatabaseTransaction.closeResultSet(rs);
+        DatabaseTransaction.closeStatement(stmt);
+        DatabaseTransaction.closeConnection(conn);
+        
+        return refseqid;
+    }
 }

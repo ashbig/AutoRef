@@ -222,6 +222,7 @@
     <action    path="/Registration"
                type="plasmid.action.RegistrationAction"
                name="registrationForm"
+               validate="true"
               input="/PrepareRegistration.do">
       <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
       <forward  name="success"   path="/Login.jsp"/>

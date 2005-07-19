@@ -18,7 +18,11 @@ import java.sql.*;
  * @author  DZuo
  */
 public class RefseqImporter {
+    public static final String NEW = "NEW";
+    public static final String OLD = "OLD";
+    
     private Map idmap;
+    private Map isNewMap;
     private RefseqManager manager;
     private DnasequenceManager manager2;
     private int maxseqid = 1;
@@ -33,8 +37,11 @@ public class RefseqImporter {
     
     public Map getIdmap() {return idmap;}
     
+    public Map getIsNewMap() {return isNewMap;}
+    
     public void importRefseq(ImportTable table, int maxid) throws Exception {
         idmap = new HashMap();
+        isNewMap = new HashMap();
         DefTableManager m = new DefTableManager();
         int id = m.getMaxNumber("referencesequence", "refseqid", DatabaseTransaction.getInstance());
         if(id == -1) {
@@ -59,13 +66,29 @@ public class RefseqImporter {
             Dnasequence seq = new Dnasequence();
             seq.setSequenceid(insertseqid);
             
+            String isNew = null;
             List row = (List)contents.get(n);
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
                 //System.out.println(columnInfo);
                 if("refseqid".equalsIgnoreCase(columnName)) {
-                    idmap.put(columnInfo, new Integer(id));
+                    int seqid = 0;
+                    try {
+                        seqid = RefseqManager.findRefseq(RefseqNameType.GI, columnInfo);
+                    } catch (Exception ex) {
+                        throw new Exception("Error occured while trying to find matching reference sequence: "+columnInfo+" from database.");
+                    }
+                    
+                    if(seqid > 0) {
+                        idmap.put(columnInfo, new Integer(seqid));
+                        isNew = OLD;
+                        break;
+                    } else {
+                        idmap.put(columnInfo, new Integer(id));
+                        isNew = NEW;
+                    }
+                    isNewMap.put(columnInfo, isNew);
                 }
                 if("type".equalsIgnoreCase(columnName)) {
                     c.setType(columnInfo);
@@ -93,10 +116,12 @@ public class RefseqImporter {
                     seq.setSequence(columnInfo);
                 }
             }
-            seqs.add(c);
-            dnaseqs.add(seq);
-            id++;
-            insertseqid++;
+            if(isNew.equals(NEW)) {
+                seqs.add(c);
+                dnaseqs.add(seq);
+                id++;
+                insertseqid++;
+            }
         }
         
         maxseqid = insertseqid;
@@ -108,6 +133,7 @@ public class RefseqImporter {
         }
     }
     
+    /**
     public void importInsertRefseq(ImportTable table, Map insertidmap) throws Exception {
         List seqs = new ArrayList();
         List columns = table.getColumnNames();
@@ -149,6 +175,7 @@ public class RefseqImporter {
             throw new Exception("Error occured while inserting into INSERTREFSEQ table.");
         }
     }
+    */
     
     public void importRefseqNameType(ImportTable table) throws Exception {
         List types = new ArrayList();
@@ -188,11 +215,17 @@ public class RefseqImporter {
         for(int n=0; n<contents.size(); n++) {
             RefseqName c = new RefseqName();
             List row = (List)contents.get(n);
+            String isNew = null;
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
                 if("refid".equalsIgnoreCase(columnName)) {
-                    c.setRefseqid(((Integer)idmap.get(columnInfo)).intValue());
+                    isNew = (String)isNewMap.get(columnInfo);
+                    if(isNew.equals(NEW)) {
+                        c.setRefseqid(((Integer)idmap.get(columnInfo)).intValue());
+                    } else {
+                        break;
+                    }
                 }
                 if("nametype".equalsIgnoreCase(columnName)) {
                     c.setNametype(columnInfo);
@@ -204,7 +237,9 @@ public class RefseqImporter {
                     c.setNameurl(columnInfo);
                 }
             }
-            names.add(c);
+            if(isNew.equals(NEW)) {
+                names.add(c);
+            }
         }
         
         if(!manager.insertRefseqNames(names)) {
