@@ -62,8 +62,8 @@ additional_jsp_buffer.append("\n <tr> <td><strong> Primer Sequence</strong></td>
 
    additional_jsp_buffer.append("\n <tr> <td><strong> Primer Name (Sample Id)</strong></td><td><input type='text' size='2' name='primer_name' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"> </td></tr>");
 
-additional_jsp_buffer.append("\n <tr> <td><strong>Primer Column</strong> </td><td><input type='text' size='2' name='primer_column' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"> </td></tr>");
-additional_jsp_buffer.append("\n <tr> <td><strong>Primer Row</strong></td><td> <input type='text' size='2' name='primer_row' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"> </td></tr>");
+additional_jsp_buffer.append("\n <tr> <td><strong>Primer Row</strong> </td><td><input type='text' size='2' name='primer_column' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"> </td></tr>");
+additional_jsp_buffer.append("\n <tr> <td><strong>Primer Column</strong></td><td> <input type='text' size='2' name='primer_row' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"> </td></tr>");
 additional_jsp_buffer.append(" \n<tr> <td><strong>Plate Name</strong> </td><td> <input type='text' size='2' name='plate_name' value=0 onBlur=\"checkNumeric(this,0,30,'','','');\"></td></tr>");
 additional_jsp_buffer.append(" \n<tr><td colspan=2 align='center' bgColor='#e4e9f8'><strong>Empty Well Presentation</strong></td><tr>");
 additional_jsp_buffer.append("\n<tr> <td><strong>No primer Sequence presentation</strong></td><td><input type='text' size='5' name='empty_sequence' value='.'> </td></tr>");
