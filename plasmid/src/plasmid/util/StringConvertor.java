@@ -57,6 +57,22 @@ public class StringConvertor {
         
         return l;            
     }
+       
+    public static String convertFromListToSqlString(List l) {
+        if(l == null)
+            return "''";
+        
+        String s = "";
+        for(int i=0; i<l.size(); i++) {
+            s = s + "'"+l.get(i)+"', ";
+        }
+        
+        int index = s.lastIndexOf(",");
+        if(index > 0)
+            s = s.substring(0, index);
+        
+        return s;
+    }
     
     public static void main(String args[]) {
         StringConvertor sc = new StringConvertor();

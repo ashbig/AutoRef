@@ -79,6 +79,14 @@ public class RefseqSearchContinueAction extends Action {
         if(shrna)
             clonetypes.add(Clone.SHRNA);
         
+        User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
+        List restrictions = new ArrayList();
+        restrictions.add(Clone.NO_RESTRICTION);
+        if(user != null) {
+            List ress = UserManager.getUserRestrictions(user);
+            restrictions.addAll(ress);
+        } 
+        
         request.setAttribute("species", species);
         request.setAttribute("refseqType", refseqType);
         request.setAttribute("displayPage", "indirect");
@@ -113,8 +121,7 @@ public class RefseqSearchContinueAction extends Action {
             }
             
             try {
-                handler.doQuery();
-                handler.filterFoundByClonetype(clonetypes);
+                handler.doQuery(restrictions, clonetypes);
                 directFoundList = handler.convertFoundToCloneinfo();
                 searchList = handler.getNofound();
                 totalCount = totalCount+handler.getFoundCloneCount();
@@ -139,8 +146,7 @@ public class RefseqSearchContinueAction extends Action {
         }
         
         try {
-            handler.doQuery();
-            handler.filterFoundByClonetype(clonetypes);
+            handler.doQuery(restrictions, clonetypes);
             
             List founds = handler.convertFoundToCloneinfo();
             List nofounds = handler.getNofound();

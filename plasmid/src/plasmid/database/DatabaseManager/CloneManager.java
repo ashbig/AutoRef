@@ -13,6 +13,7 @@ import plasmid.coreobject.*;
 import plasmid.query.coreobject.CloneInfo;
 import plasmid.database.*;
 import plasmid.Constants;
+import plasmid.util.StringConvertor;
 
 /**
  *
@@ -392,26 +393,20 @@ public class CloneManager extends TableManager {
         return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
     }
     
-    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, String restriction, List clonetypes) {
+    public Map queryAvailableClonesByCloneid(List cloneids, boolean isInsert, boolean isSelection, boolean isWorkingStorage, List restrictions, List clonetypes) {
         String sql = "select clonename, clonetype, verified, vermethod,"+
         " domain, subdomain, restriction, comments, vectorid, vectorname, clonemapfilename,status"+
         " from clone where cloneid=? and status='"+Clone.AVAILABLE+"'";
         
         if(clonetypes != null && clonetypes.size()>0) {
-            String s = null;
-            for(int i=0; i<clonetypes.size(); i++) {
-                String t = (String)clonetypes.get(i);
-                if(s == null)
-                    s = "'"+t+"'";
-                else
-                    s = s+",'"+t+"'";
-            }
-            
+            String s = StringConvertor.convertFromListToSqlString(clonetypes);
             sql = sql+" and clonetype in ("+s+")";
         }
         
-        if(restriction != null)
-            sql = sql+" and restriction like '%"+restriction+"%'";
+        if(restrictions != null && restrictions.size()>0) {
+            String s = StringConvertor.convertFromListToSqlString(restrictions);
+            sql = sql+" and restriction in ("+s+")";
+        }
         
         return performQueryClones(cloneids, isInsert, isSelection, isWorkingStorage, sql);
     }
@@ -758,8 +753,7 @@ public class CloneManager extends TableManager {
                     
                     clones.put(cloneid, c);
                 } else {
-                    handleError(null, "No clone record found for cloneid: "+cloneid.toString());
-                    return null;
+                    clones.put(cloneid, null);
                 }
                 DatabaseTransaction.closeResultSet(rs);
             }
@@ -772,6 +766,47 @@ public class CloneManager extends TableManager {
             DatabaseTransaction.closeStatement(stmt3);
         }
         return clones;
+    }
+    
+    public List findRestrictedClones(List cloneidStrings, List restrictions) {
+        String sql = "select clonename, restriction from clone where cloneid=?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List restrictedClones = new ArrayList();
+        try {
+            stmt = conn.prepareStatement(sql);
+            for(int i=0; i<cloneidStrings.size(); i++) {
+                String cloneid = (String)cloneidStrings.get(i);
+                stmt.setInt(1, Integer.parseInt(cloneid));
+                rs = DatabaseTransaction.executeQuery(stmt);
+                if(rs.next()) {
+                    String clonename = rs.getString(1);
+                    String restriction = rs.getString(2);
+                    
+                    boolean match = false;
+                    for(int k=0; k<restrictions.size(); k++) {
+                        String res = (String)restrictions.get(k);
+                        if(restriction.equals(res))
+                            match = true;
+                    }
+                    
+                    if(!match) {
+                        restrictedClones.add(clonename);
+                    }
+                } else {
+                    handleError(null, "Cannot find clone for cloneid: "+cloneid);
+                    return null;
+                }
+            }
+        } catch (Exception ex) {
+            handleError(ex, "Database error occured.");
+            return null;
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return restrictedClones;
     }
     
     public static void main(String args[]) {

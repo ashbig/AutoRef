@@ -149,7 +149,8 @@ public class PlaceOrderAction extends UserAction {
         order.setOrderid(orderid);
         request.setAttribute(Constants.CLONEORDER, order);
         request.setAttribute("ordermessage", "You order has been placed successfully.");
-        request.getSession().removeAttribute(Constants.CART);
+        request.getSession().removeAttribute(Constants.CART);        
+        request.getSession().setAttribute(Constants.CART_STATUS, Constants.SAVED);
         
         if(errors.empty()) {
             return (mapping.findForward("success"));

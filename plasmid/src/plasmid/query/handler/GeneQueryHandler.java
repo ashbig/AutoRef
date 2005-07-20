@@ -65,6 +65,8 @@ public abstract class GeneQueryHandler {
     
     public abstract void doQuery() throws Exception;
     
+    public abstract void doQuery(List restrictions, List clonetypes) throws Exception;
+    
     public int getNumOfFoundClones() {
         return found.size();
     }
@@ -74,6 +76,10 @@ public abstract class GeneQueryHandler {
     }
     
     protected void executeQuery(String sql) throws Exception {
+        executeQuery(sql, null, null);
+    }
+    
+    protected void executeQuery(String sql, List restrictions, List clonetypes) throws Exception {
         if(terms == null || terms.size() == 0)
             return;
         
@@ -102,7 +108,7 @@ public abstract class GeneQueryHandler {
         DatabaseTransaction.closeStatement(stmt);
         
         CloneManager manager = new CloneManager(conn);
-        Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true, false);
+        Map foundClones = manager.queryAvailableClonesByCloneid(new ArrayList(cloneids), true, true, false,restrictions,clonetypes);
         
         Set ks = foundClones.keySet();
         Iterator it = ks.iterator();
@@ -121,17 +127,22 @@ public abstract class GeneQueryHandler {
             for(int i=0; i<clones.size(); i++) {
                 String cid = (String)clones.get(i);
                 Clone c = (Clone)foundClones.get(cid);
-                newClones.add(c);
+                if(c != null)
+                    newClones.add(c);
             }
-            newFound.put(k, newClones);
-            foundCounts.put(k, new Integer(newClones.size()));
-            foundCloneCount += newClones.size();
+            if(newClones.size()>0) {
+                newFound.put(k, newClones);
+                foundCounts.put(k, new Integer(newClones.size()));
+                foundCloneCount += newClones.size();
+            } else {
+                nofound.add(k);
+            }
         }
         
         found = newFound;
         DatabaseTransaction.closeConnection(conn);
     }
-    
+        
     public void filterFoundByClonetype(List clonetypes) {
         Set keys = found.keySet();
         Iterator iter = keys.iterator();

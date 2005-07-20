@@ -70,6 +70,29 @@ public class CheckoutAction extends UserAction {
         }
         
         OrderProcessManager m = new OrderProcessManager();
+        List restrictedClones = m.checkDistribition(user, shoppingcart);
+        
+        if(restrictedClones == null) {
+            if(Constants.DEBUG)
+                System.out.println("Database error occured.");
+            
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.database.error","Database error occured."));
+            return (mapping.findForward("error"));
+        }
+        
+        if(restrictedClones.size()>0) {
+            String error = "<br>The following clones are restricted and cannot be distributed to you based on your group:<br>";
+            for(int i=0; i<restrictedClones.size(); i++) {
+                String id = (String)restrictedClones.get(i);
+                error += id+"<br>";
+            }
+            errors.add(ActionErrors.GLOBAL_ERROR,
+            new ActionError("error.general", error));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
+        }
+        
         m.processShoppingCartItems(shoppingcart);
         int cloneQuantity = m.getTotalCloneQuantity();
         //int collectionQuantity = m.getTotalCollectionQuantity();

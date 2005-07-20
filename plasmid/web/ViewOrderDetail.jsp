@@ -92,9 +92,9 @@
   </tr>
   <tr> 
     <td class="formlabel">Address:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="shippingAddress"/></td>
+    <td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="shippingAddress"/></pre></td>
     <td class="formlabel">Address:</td>
-    <td class="text"><bean:write name="<%=Constants.CLONEORDER%>" property="billingAddress"/></td>
+    <td class="text"><pre><bean:write name="<%=Constants.CLONEORDER%>" property="billingAddress"/></pre></td>
   </tr>
 </table>
 

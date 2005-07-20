@@ -33,6 +33,44 @@ public class OrderProcessManager {
     public List getClones() {return clones;}
     public List getCollections() {return collections;}
     
+    public List checkDistribition(User user, List items) {
+        if(items == null || items.size() == 0)
+            return new ArrayList();
+        
+        List cloneids = new ArrayList();
+        for(int i=0; i<items.size(); i++) {
+            ShoppingCartItem s = (ShoppingCartItem)items.get(i);
+            if(s.getType().equals(ShoppingCartItem.CLONE)) {
+                cloneids.add(s.getItemid());
+            }
+        }
+      
+        List restrictions = UserManager.getUserRestrictions(user);
+        if(restrictions == null) {
+            restrictions = new ArrayList();
+        }
+        restrictions.add(Clone.NO_RESTRICTION);
+       
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        List restrictedClones = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            CloneManager manager = new CloneManager(conn);
+            restrictedClones = manager.findRestrictedClones(cloneids, restrictions);
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+            return null;
+        } finally {
+            DatabaseTransaction.closeConnection(conn);
+        }
+        
+        return restrictedClones;
+    }
+    
     public void processShoppingCartItems(List items) {
         clones = new ArrayList();
         collections = new ArrayList();
@@ -279,7 +317,7 @@ public class OrderProcessManager {
             
             if(addresses != null) {
                 UserManager man = new UserManager(conn);
-                
+                /**
                 if(!man.updatePonumber(user.getPonumber(), user.getUserid())) {
                     DatabaseTransaction.rollback(conn);
                     if(Constants.DEBUG) {
@@ -287,7 +325,7 @@ public class OrderProcessManager {
                         System.out.println("cannot update ponumber.");
                     }
                     return -1;
-                }
+                }*/
                 
                 List a = man.getUserAddresses(user.getUserid());
                 if(a == null) {

@@ -470,4 +470,28 @@ public class UserManager extends TableManager {
         
         return password;
     }
+    
+    public static List getUserRestrictions(User user) {
+        String sql = "select distinct restriction from grouprestriction g, userprofile u"+
+        " where g.usergroup=u.usergroup and u.userid="+user.getUserid();
+        DatabaseTransaction t = null;
+        ResultSet rs = null;
+        List restrictions = new ArrayList();
+        try {
+            t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            while(rs.next()) {
+                String res = rs.getString(1);
+                restrictions.add(res);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+        
+        return restrictions;
+    }            
 }

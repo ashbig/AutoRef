@@ -75,7 +75,7 @@ public class RegistrationAction extends Action {
         String password = ((RegistrationForm)form).getPassword();
         String password2 = ((RegistrationForm)form).getPassword2();
         String forward = ((RegistrationForm)form).getForward();
-       
+        
         DatabaseTransaction t = null;
         Connection conn = null;
         try {
@@ -116,22 +116,24 @@ public class RegistrationAction extends Action {
         String pname = null;
         String pemail = null;
         if(pi == null || pi.trim().length() < 1) {
-            if(manager.piExist(pifirstname,pilastname,piemail)) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("error.pi.exist"));
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
-            }
-            
-            pname = pilastname.toUpperCase()+", "+pifirstname;
-            pemail = piemail;
-            PI p = new PI(pname, pifirstname, pilastname, piinstitution, pidepartment,pemail);
-            if(!manager.insertPI(p)) {
-                DatabaseTransaction.rollback(conn);
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError(manager.getErrorMessage()));
-                saveErrors(request, errors);
-                return mapping.findForward("error");
+            if(group.equals(User.HIP) || group.equals(User.DFHCC) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
+                if(manager.piExist(pifirstname,pilastname,piemail)) {
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError("error.pi.exist"));
+                    saveErrors(request, errors);
+                    return (new ActionForward(mapping.getInput()));
+                }
+                
+                pname = pilastname.toUpperCase()+", "+pifirstname;
+                pemail = piemail;
+                PI p = new PI(pname, pifirstname, pilastname, piinstitution, pidepartment,pemail);
+                if(!manager.insertPI(p)) {
+                    DatabaseTransaction.rollback(conn);
+                    errors.add(ActionErrors.GLOBAL_ERROR,
+                    new ActionError(manager.getErrorMessage()));
+                    saveErrors(request, errors);
+                    return mapping.findForward("error");
+                }
             }
         } else {
             int indexLeft = pi.indexOf("(");

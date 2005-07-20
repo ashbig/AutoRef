@@ -108,7 +108,7 @@ public class RegistrationForm extends ActionForm {
             errors.add("password2", new ActionError("error.password2.required"));
         if(group == null || group.trim().length() < 1)
             errors.add("group", new ActionError("error.group.required"));
-        else if(group.equals(User.DFHCC) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
+        else if(group.equals(User.HIP) || group.equals(User.DFHCC) || group.equals(User.HARVARD) || group.equals(User.ACADEMIC)) {
             if(piname == null || piname.trim().length() < 1) {
                 if(pifirstname == null || pifirstname.trim().length() < 1) 
                     errors.add("pifirstname", new ActionError("error.pifirstname.required"));

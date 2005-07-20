@@ -96,14 +96,20 @@
   </tr>
   <tr>
     <td class="formlabel">*Country:</td>
-    <td><html:text styleClass="text" property="country"/></td>
+    <td><html:select styleClass="text" property="country">
+        <html:option value="USA"/>
+        </html:select>
+    </td>
     <td class="formlabel">*Country:</td>
-    <td><html:text styleClass="text" property="billingcountry"/></td>
+    <td><html:select styleClass="text" property="billingcountry">
+        <html:option value="USA"/>
+        </html:select>
+    </td>
   </tr>
 </table>
 
 <p class="text"><input type=checkbox name="saveInfo">Save/Update user information.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<i>(By checking this check box, all the addresses including PO number will be saved or updated to user account)
+&nbsp;&nbsp;&nbsp;&nbsp;<i>(By checking this check box, all the addresses will be saved or updated to user account)
 </i></p>
 
 <p class="text">Order Information:</p>
