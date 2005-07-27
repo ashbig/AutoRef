@@ -46,7 +46,10 @@ public class GiRecordPopulator {
             //System.out.println("Sequence file: "+giRecord.getSequenceFile());
             //System.out.println("sequence: "+giRecord.getSequenceText());
             try {
-                String file = writeFile(giRecord.getGi(), new StringBuffer(giRecord.getSequenceText()));
+                StringBuffer sf = new StringBuffer();
+                sf.append(">"+giRecord.getGi()+"\n");
+                sf.append(giRecord.getSequenceText());
+                String file = writeFile(giRecord.getGi(), sf);
                 giRecord.setSequenceFile(file);
                 insertList.add(giRecord);
             } catch (Exception ex) {
