@@ -23,23 +23,29 @@ public class ResultParser
 {
     
     
-      private final static   String FILE_NAME_OUTPUT_DATA_FILE = "pl_output_data.txt";
-  
+    
     /** Creates a new instance of ResultParser */
     public ResultParser() 
     {
     }
     
     
-    public static void    parseResultFileAndSubmitInformation()
+    public static void    parseResultFileAndSubmitInformation(String job_filename_dir)
     {
         Hashtable   results = null;
         ArrayList error_messages = new ArrayList();
        try
        {
-            results = parseResultFile(error_messages);
-            if ( results.size() > 0)
-                submitPolymorphismInformation(results, error_messages);
+            File output_dir = new File(job_filename_dir);
+            File[] output_files = output_dir.listFiles();
+            for (int count = 0; count < output_files.length; count++)
+            {
+                results = parseResultFile(error_messages, output_files[count].getAbsolutePath());
+
+                if ( results.size() > 0)
+                    submitPolymorphismInformation(results, error_messages);
+            }
+         
        }
        catch(Exception e)
        {
@@ -81,39 +87,39 @@ public class ResultParser
      }
      
      
-    private static Hashtable   parseResultFile(ArrayList error_messages) throws BecUtilException
+    private static Hashtable   parseResultFile(ArrayList error_messages,  String job_filename ) throws BecUtilException
     {
         Hashtable info = new Hashtable();
          BufferedReader input = null; String line = null;
         ArrayList discr_data = null;
        String current_value = null;
-        String job_filename = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") + java.io.File.separator + FILE_NAME_OUTPUT_DATA_FILE;
        try
        {
-           File job_file = new File(job_filename);
-           if ( ! job_file.exists() ) throw new BecUtilException("No file with Polymorphism information was detected.");
-           input = new BufferedReader(new FileReader(job_filename));
+            input = new BufferedReader(new FileReader(job_filename));
            // discrepancyId Id_type Id_value
            //discrepancyId “NODATA”
-
+           String discr_hit = null;
 
            while ((line = input.readLine()) != null)
             {
                 discr_data = Algorithms.splitString(line, " ");
-                if (discr_data.size() == 2 && ((String)discr_data.get(1)).equalsIgnoreCase("NODATA"))
+                current_value = (String)info.get(  discr_data.get(0));
+              
+                if (discr_data.size() == 3)
                 {
-                    info.put( (String) discr_data.get(0),"NODATA" );
-                    continue;
+                    discr_hit = (String) discr_data.get(1) + " "+ discr_data.get(2) +"|";
                 }
-                if ( discr_data.size() != 3) continue;
-                current_value = (String)info.get     (  discr_data.get(0));
+                else if ( discr_data.size() == 2 && ((String)discr_data.get(1)).equalsIgnoreCase("NODATA"))
+                {
+                    discr_hit =  (String)discr_data.get(1)  ;
+                }
+                 
                 if ( current_value == null)
-                    info.put( (String) discr_data.get(0), discr_data.get(1) + " "+ discr_data.get(2) +"|" );
+                    info.put( (String) discr_data.get(0), discr_hit );
                 else
                 {
-                    current_value +=discr_data.get(1) + " "+ discr_data.get(2) +"|";
+                    current_value += discr_hit;
                     info.put( (String) discr_data.get(0),current_value );
-         
                 }
              }
             input.close();
@@ -147,9 +153,11 @@ public class ResultParser
                 {
                      discr_id = (String) e.nextElement();
                      discr_data = (String) discr_info.get(discr_id);
-                       try
+                     discr_data = Algorithms.replaceString(discr_data, "NODATA", "");
+                            
+                     try
                      {
-                         if ( discr_data.equalsIgnoreCase("NODATA"))
+                         if ( discr_data.equalsIgnoreCase(""))
                          {
                              pst_update_discrepancy_no_polym.setInt(1, Mutation.FLAG_POLYM_NO);
                              pst_update_discrepancy_no_polym.setInt(2,  Integer.parseInt( discr_id));
@@ -158,7 +166,7 @@ public class ResultParser
                          }
                          else
                          {
-                             pst_update_discrepancy_polym.setInt(3, Integer.parseInt( discr_id));
+                              pst_update_discrepancy_polym.setInt(3, Integer.parseInt( discr_id));
                               pst_update_discrepancy_polym.setInt(1, Mutation.FLAG_POLYM_YES);
                               pst_update_discrepancy_polym.setString(2, discr_data);
                               DatabaseTransaction.executeUpdate(pst_update_discrepancy_polym);
@@ -192,11 +200,15 @@ public class ResultParser
      */
     public static void main(String[] args)
     {
-            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
-            sysProps.verifyApplicationSettings();
-            DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+            //BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+            //sysProps.verifyApplicationSettings();
+            //DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+String output_dir = null;
 
-        ResultParser.parseResultFileAndSubmitInformation();
+if (args.length > 0 ) output_dir = args[0];
+else output_dir = "C:\\bio\\polymorphismfinder\\output_data";
+
+        ResultParser.parseResultFileAndSubmitInformation(output_dir);
         // TODO code application logic here
     }
     

@@ -66,6 +66,7 @@ public class Utils
         {
             PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
             pr.print( ">"+id);
+	
             pr.println(convertToFasta(text));
             pr.close();
         }catch (IOException e)
@@ -84,7 +85,7 @@ public class Utils
         {
             if(i% 60 == 0)
             {
-                seqBuff.append( Utils.getSystemProperty("LINE_SEPARATOR"));
+                seqBuff.append( "\n");//Utils.getSystemProperty("LINE_SEPARATOR"));
             }
 
             seqBuff.append(sequenceString.charAt(i));
@@ -111,47 +112,7 @@ public class Utils
         return res;
     }
 
-     //Fields:
- // 0 - Query id     1 - Subject id   2 - % identity  3-alignment_length  4 - mismatches,
-   //   5 - gap openings  6 - q. start 7 - q. end  8 - s. start   9 - s. end   10 - e-value,
-   //   11 - bit score
-//	gi|28363213|gb|CB241569.1|CB241569	99.21	253	0	1	1	251	1	253	6e-136	480.2
-
-    public static ArrayList parseBlastTabularFormat(String foutput_name,
-                        int requered_identity,
-                        int requered_aligment_length) throws Exception
-    {
-        String line = null;
-        ArrayList hits = new ArrayList();
-        ArrayList temp = null;
-        BufferedReader  fin = null;
-        try
-        {
-            fin = new BufferedReader(new FileReader(foutput_name));
-            while ( (line = fin.readLine()) != null)
-            {
-                temp = splitString(line,"\t");
-                if (temp == null || temp.size() < 9 || temp.size() > 10) // skip description for 9
-                {
-                    double hit_identity =  Double.parseDouble(  (String)temp.get(2) ) ;
-                    int hit_stop = Integer.parseInt(  (String)temp.get(7));
-                    int hit_start = Integer.parseInt(  (String)temp.get(6));
-                    String hit_id = (String)temp.get(1);
-                    if( hit_identity == 100.0 && (hit_stop - hit_start + 1)== requered_aligment_length)
-                           hits.add(hit_id);
-                }
-            }
-
-            fin.close();
-            return hits;
-        }
-        catch(Exception e)
-         {
-             try{fin.close();}catch(Exception c){}
-             throw new  Exception("Cannot parse blast output");
-         }
-    }
-
+    
     /*
      *>gi|68293809|emb|CR999924.1| CR999924 RZPD no.9016 Homo sapiens cDNA clone RZPDp9016H213 5',
            mRNA sequence
@@ -164,19 +125,19 @@ public class Utils
 
      **/
 
-      public static ArrayList parseBlastStandardFormat(String foutput_name,
+     public static ArrayList parseBlastStandardFormat(String foutput_name,
                         int requered_identity,
-                        int requered_aligment_length) throws Exception
-    {
-        return   parseBlastStandardFormat( foutput_name, requered_identity,
-                         requered_aligment_length,      1) ;
-
-      }
+                        int requered_aligment_length
+                        ) throws Exception
+     {
+        return parseBlastStandardFormat( foutput_name,
+                         requered_identity,requered_aligment_length,false);
+     }
 
       public static ArrayList parseBlastStandardFormat(String foutput_name,
                         int requered_identity,
                         int requered_aligment_length,
-                        int number_of_hits_per_id_to_check) throws Exception
+                        boolean mode_exit_after_first_identity_reading) throws Exception
     {
         String line = null;
         ArrayList hits = new ArrayList();
@@ -184,35 +145,48 @@ public class Utils
         BufferedReader  fin = null;
         String hit_id = null;
         int number_of_hits_per_id_to_checked = 0;
+        boolean isFistHitForId = false;
         try
         {
+ System.out.println("parsing blast output " + foutput_name);
             fin = new BufferedReader(new FileReader(foutput_name));
             while ( (line = fin.readLine()) != null)
             {
+				
                 if (line.indexOf(">gi") != -1)
                 {//extract gi
                     hit_id = null;
                     temp = Utils.splitString(line, "|");
                     if ( temp == null || temp.size() < 2)throw new Exception("Cannot parse blast output");
                     if ( ((String)temp.get(0)).indexOf("gi") != -1)
+                    {
                         hit_id = (String)temp.get(1);
+                        isFistHitForId = true;
+                    }
                 }
+                //take the best hit fo rthe id
                 if ( line.indexOf("Identities") != -1 && hit_id != null )
                 {
-                    if ( hit_id == null || (number_of_hits_per_id_to_checked >= number_of_hits_per_id_to_check &&
-                         hit_id.equalsIgnoreCase( (String) hits.get(hits.size() - 1))))
+System.out.println(hit_id);
+                    if ( hit_id == null && !isFistHitForId)
                         continue;
+
                      temp = Utils.splitString(line, " ");
+                     if ( temp == null || temp .size() < 3) continue;
+                  
                      temp = Utils.splitString( (String)temp.get(2), "/");
                     int hit_bases = Integer.parseInt(  (String)temp.get(0));
                     int subject_bases = Integer.parseInt(  (String)temp.get(1));
                     number_of_hits_per_id_to_checked++;
                     if( hit_id != null && hit_bases >=  requered_aligment_length  && ( hit_bases * 100 / subject_bases)  >= requered_identity)
                            hits.add(hit_id);
+                    if ( mode_exit_after_first_identity_reading ){ fin.close(); return hits;}
+                    isFistHitForId = false;
                 }
             }
 
             fin.close();
+System.out.println("result "+hits.size());
             return hits;
         }
         catch(Exception e)
@@ -223,120 +197,47 @@ public class Utils
     }
 
     public static boolean runProgram(String cmd)
-                    throws Exception
     {
-        try
-        {
-            Runtime r = Runtime.getRuntime();
-            r.traceMethodCalls(true);
-             Process p = r.exec(cmd);
-             BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
-            BufferedInputStream binput = new BufferedInputStream(p.getInputStream());
-            int x = 0;int y = 0;
-
-            boolean    isFinished = false;
-            boolean    isErrDone = false;
-            boolean    isOutDone = false;
-            byte[]      buff = new byte[255];
-
-            while (!isFinished)
-            {
-                if (berr.available() == 0 && binput.available() == 0)
-                {
-                    try
-                    {
-                        p.exitValue();
-                        isFinished = true;
-                        break;
-                    }
-                    catch (IllegalThreadStateException e)
-                    {
-                        Thread.currentThread().sleep(100);
-                    }
-                    catch(Exception e)
-                    {
-                        throw new Exception("Cannot run program");
-                    }
-                }
-                else
-                {
-                    berr.read(buff, 0, Math.min(255, berr.available()));
-                    binput.read(buff, 0, Math.min(255, binput.available()));
-                   }
-            }
-            p.waitFor();
-            if (p.exitValue() != 0)
-            {
-                 return false;
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
-            throw new  Exception("Cannot run program");
-        }
-        return true;
+        return runProgram( cmd, 1);
     }
 
 
-     public static boolean runProgram(String cmd, String file_name)
-                    throws Exception
+     public static boolean runProgram(String cmd, int mode)
     {
         try
         {
+            Process p = null;
+System.out.println("start process " + cmd);
+
             Runtime r = Runtime.getRuntime();
-            r.traceMethodCalls(true);
-             Process p = r.exec(cmd);
-             BufferedInputStream berr = new BufferedInputStream(p.getErrorStream());
-            BufferedInputStream binput = new BufferedInputStream(p.getInputStream());
-            FileOutputStream bo = new FileOutputStream(file_name);
-            int x = 0;int y = 0;
-
-            boolean    isFinished = false;
-            boolean    isErrDone = false;
-            boolean    isOutDone = false;
-            byte[]      buff = new byte[255];
-
-            while (!isFinished)
+          //  r.traceMethodCalls(true);
+            if ( mode == 0 )
             {
-                if (berr.available() == 0 && binput.available() == 0)
-                {
-                    try
-                    {
-                        p.exitValue();
-                        isFinished = true;
-                        break;
-                    }
-                    catch (IllegalThreadStateException e)
-                    {
-                        Thread.currentThread().sleep(100);
-                    }
-                    catch(Exception e)
-                    {
-                        throw new Exception("Cannot run program");
-                    }
-                }
-                else
-                {
-                    berr.read(buff, 0, Math.min(255, berr.available()));
-                    binput.read(buff, 0, Math.min(255, binput.available()));
-                    bo.write(buff);bo.flush();
-                }
+                String[] command = { "/bin/csh", "-c", cmd };
+                p = r.exec(command );
             }
-           bo.close();
+            else if (mode == 1)
+            {
+                    p = r.exec(cmd);
+            }
+            
+            BufferedInputStream bin = new BufferedInputStream(p.getErrorStream());
+            int x;
+            while ((x = bin.read()) != -1)   {  ;   }
             p.waitFor();
             if (p.exitValue() != 0)
             {
-                   return false;
+                System.err.println(" call failed");
+                return false;
             }
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
             System.out.println(e.getStackTrace());
-            throw new  Exception("Cannot run program");
-        }
+            return false;
+          //  throw new  Exception("Cannot run program");
+        }       
         return true;
     }
 

@@ -33,6 +33,8 @@ $total_count++;
         close(DAT);
         @discr_description_for_job = ();
         #system ("bsub \"java PolymFinderJob $setting_file $new_job_data\" ");
+# bsub "java -cp ./polymorphismfinder/ src.PolymorphismFinderJob ./polymorphismfinder/src/ModuleSettings.properties ./polymorphismfinder/data/pl_input_data.txt"
+
     }
     
     $discr_count++;

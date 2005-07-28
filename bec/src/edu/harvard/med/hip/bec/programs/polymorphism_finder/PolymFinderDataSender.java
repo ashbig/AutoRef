@@ -212,8 +212,62 @@ public class PolymFinderDataSender
          }
     
      }
+     public static void buildIndex(String data_file_name, String index_file_name)
+    {
+        BufferedReader  fin = null;
+          DataOutputStream dout = null; 
+        String line = null; int id = -1; 
+        ArrayList data = null;
+        long current_pos = 0;
+        boolean new_seq = false; long start =- 1; long end =-1;
+        try
+        {
+            dout = new DataOutputStream( new FileOutputStream(index_file_name));
+          
+            File dbfile = new File(data_file_name);
+            int separator  = dbfile.separator.length();
+           
+            fin = new BufferedReader(new FileReader(dbfile));
+            while ( (line = fin.readLine()) != null)
+            {
+                
+                if (line.startsWith(">"))
+                {
+                    if (start != -1)//skip first entry
+                    {
+                        end = current_pos - separator;// -LINE_DELIMITER_LENGTH;
+                        writeIndexData(id, start,end,dout);
+                      }
+                    
+                    data = Algorithms.splitString(line,"|");
+                    id = Integer.parseInt( line.substring(1));
+                    start = current_pos + line.length() +separator;//LINE_DELIMITER_LENGTH;
+                }             
+                
+                current_pos += line.length() + separator;//LINE_DELIMITER_LENGTH;
+                
+            }
+            //last record
+            end = current_pos -1;
+            writeIndexData(id, start,end,dout);
+            fin.close();dout.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Cannot build index file");
+            try
+            {fin.close();dout.close();} catch(Exception e1)
+            {}
+        }
+    }
     
-    
+   private static void   writeIndexData(int id, long start,long end,DataOutputStream dout) throws Exception
+   {
+        dout.writeInt(id);
+        dout.writeLong(start);
+        dout.writeLong(end);
+    //    dout.writeChar('\n');
+}
     public static void main(String[] args)
     {
           BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
@@ -237,7 +291,7 @@ public class PolymFinderDataSender
               if (! flc.exists()) return;
               PolymFinderDataSender.cleanUpPolymorphismFinderDiscrepancyFile( file_dir,  file_name, cygwin_pass);
               writeORFFile();
-              edu.harvard.med.hip.bec.export.IndexerForBlastDB.buildIndexForFASTAFile(
+              PolymFinderDataSender.buildIndex(
                     file_dir + java.io.File.separator + BecProperties.getInstance().getProperty("FILE_NAME_ORFSEQUENCES_DATA_FILE") ,
                     file_dir + java.io.File.separator + BecProperties.getInstance().getProperty("FILE_NAME_ORFSEQUENCES_INDEX_FILE")  );
             }
