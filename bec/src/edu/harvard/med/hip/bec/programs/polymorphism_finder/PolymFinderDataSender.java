@@ -26,6 +26,32 @@ public class PolymFinderDataSender
       public static String       LINE_SEPARATOR = System.getProperty("line.separator") ;
  
     
+      public static void generateSequencingDataFiles(String cygwin_pass )
+      {
+          File flc =  null;
+          try
+          {
+           
+             String file_dir  = BecProperties.getInstance().getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY") ;
+             String file_name = BecProperties.getInstance().getProperty("FILE_NAME_INPUT_DATA_FILE");
+
+             //check if file exists
+              flc = new File(file_dir + java.io.File.separator + file_name); 
+              if (! flc.exists()) return;
+              cleanUpPolymorphismFinderDiscrepancyFile( file_dir,  file_name, cygwin_pass);
+               writeORFFile();
+             buildIndex(
+                    file_dir + java.io.File.separator + BecProperties.getInstance().getProperty("FILE_NAME_ORFSEQUENCES_DATA_FILE") ,
+                    file_dir + java.io.File.separator + BecProperties.getInstance().getProperty("FILE_NAME_ORFSEQUENCES_INDEX_FILE")  );
+            }
+          catch(Exception e)
+          {
+    
+             try{Mailer.sendMessage      (  "hip_informatics@hms.harvard.edu", "hip_informatics@hms.harvard.edu",  null, "Polymorphism Finder Cron job report", "Cannot create ORF files "+ e.getMessage());
+              }catch(Exception e1){}
+      
+          }
+      }
     /**
      * @param args the command line arguments
      */
@@ -70,7 +96,7 @@ public class PolymFinderDataSender
      
   
     
-    public static void cleanUpWin(String tmpfile_name, String file_name)
+    private static void cleanUpWin(String tmpfile_name, String file_name)
                          throws Exception
     {
         BufferedReader input = null;
@@ -290,7 +316,7 @@ public class PolymFinderDataSender
               flc = new File(file_dir + java.io.File.separator + file_name); 
               if (! flc.exists()) return;
               PolymFinderDataSender.cleanUpPolymorphismFinderDiscrepancyFile( file_dir,  file_name, cygwin_pass);
-              writeORFFile();
+              PolymFinderDataSender.writeORFFile();
               PolymFinderDataSender.buildIndex(
                     file_dir + java.io.File.separator + BecProperties.getInstance().getProperty("FILE_NAME_ORFSEQUENCES_DATA_FILE") ,
                     file_dir + java.io.File.separator + BecProperties.getInstance().getProperty("FILE_NAME_ORFSEQUENCES_INDEX_FILE")  );
