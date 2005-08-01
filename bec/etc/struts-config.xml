@@ -249,6 +249,11 @@ input ="/SelectDatabaseConfigurationOption.jsp"
           
 </action>
 
+   <!-- Action that will be used to export needed the sequences to FASTA file for Polymorphism finder-->
+    <action path="/ExportDataForPolymorphismFinder"
+            type="edu.harvard.med.hip.bec.action.ExportDataForPolymorphismFinderAction">
+    </action>
+
 
 
     <!-- The standard administrative actions available with Struts -->
