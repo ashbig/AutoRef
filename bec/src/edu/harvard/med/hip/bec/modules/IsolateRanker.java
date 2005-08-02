@@ -216,8 +216,15 @@ public class IsolateRanker
                         }
                         case 2:
                         {
-                            processContigs(it.getContigs(),refsequence,cdsstart,cdsstop,conn);
-                            it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                            int res = processContigs(it.getContigs(),refsequence,cdsstart,cdsstop,conn);
+                            if ( res == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+                            {
+                                it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
+                            }
+                            else
+                            {
+                                it.setStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
+                            } 
                             break;
                         }
                         case 3:
@@ -487,7 +494,7 @@ public class IsolateRanker
      
     }
       //function runs analysis of one read
-    private void  processContigs( ArrayList contigs, BaseSequence refsequence, 
+    private int processContigs( ArrayList contigs, BaseSequence refsequence, 
             int cdststart, int cdsstop, Connection conn)
             throws Exception
     {
@@ -511,7 +518,7 @@ public class IsolateRanker
          
                     if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
                     {
-                        return ;
+                        return BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH;
                     }
                     else
                     {
@@ -536,6 +543,7 @@ public class IsolateRanker
                 }
 
             }
+            return -BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH;
     }
 
 }
