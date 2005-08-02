@@ -167,7 +167,8 @@ public class OligoPlateManager {
         } else if(project.getId() == Project.YEAST 
             || project.getId() == Project.YP 
             || project.getId() == Project.FT
-            || workflow.getId() == Workflow.MGC_GATEWAY_CLOSED) {
+            || workflow.getId() == Workflow.MGC_GATEWAY_CLOSED
+            || project.getId() == Project.Yersinia_pseudotuberculosis) {
             setIsCloseOnly(true);
             setIsSetOpenClose(true);
         }

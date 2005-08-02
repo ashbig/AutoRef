@@ -89,11 +89,11 @@ public class GiBlastQueryHandler extends QueryHandler {
     
     public static void main(String args[]) {
         List searchTerms = new ArrayList();
-        searchTerms.add("33469916");
-        searchTerms.add("21961206");
-        searchTerms.add("33469967");
-        searchTerms.add("1234");
-        searchTerms.add("345");
+        searchTerms.add("2407315");
+        //searchTerms.add("21961206");
+        //searchTerms.add("33469967");
+        //searchTerms.add("1234");
+        //searchTerms.add("345");
         
         List params = new ArrayList();
         params.add(new Param(Param.BLASTPID, "0.9"));

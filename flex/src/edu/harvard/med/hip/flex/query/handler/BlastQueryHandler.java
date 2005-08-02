@@ -10,10 +10,10 @@ import edu.harvard.med.hip.flex.util.FlexSeqAnalyzer;
 import edu.harvard.med.hip.flex.blast.*;
 import edu.harvard.med.hip.flex.query.core.*;
 import edu.harvard.med.hip.flex.query.bean.*;
-import edu.harvard.med.hip.flex.query.QueryException;
+
 import edu.harvard.med.hip.flex.infoimport.locuslinkdb.ThreadedGiRecordPopulator;
 import edu.harvard.med.hip.flex.Constants;
-
+import edu.harvard.med.hip.flex.query.*;
 import java.util.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -241,21 +241,10 @@ public class BlastQueryHandler extends QueryHandler {
             }
         }
     }
-    
-    public static void main(String args[]) {
+    public static void main (String args[])
+    {
         List giList = new ArrayList();
-        giList.add("345");
-        giList.add("32450632");
-        giList.add("21961206");
-        giList.add("33869456");
-        giList.add("33469967");
-        giList.add("33469918");
-        giList.add("33469916");
-        giList.add("16936529");
-        giList.add("37550355");
-        giList.add("16923985");
-        giList.add("34851998");
-        giList.add("16550723");
+        giList.add("2407315");
         
         List params = new ArrayList();
         params.add(new Param(Param.BLASTLENGTH, "100"));

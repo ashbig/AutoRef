@@ -34,11 +34,13 @@
     <logic:notEqual name="projectid" value="2">
     <logic:notEqual name="projectid" value="11">
     <logic:notEqual name="projectid" value="14">
+    <logic:notEqual name="projectid" value="19">
     <logic:notEqual name="workflowid" value="32">
     <tr>
     <td class="prompt">Enter 3P Fusion oligo plate barcode:</td>
     <td><html:text property="threepOpenPlate" size="40"/></td>
     </tr>
+     </logic:notEqual>
      </logic:notEqual>
      </logic:notEqual>
      </logic:notEqual>

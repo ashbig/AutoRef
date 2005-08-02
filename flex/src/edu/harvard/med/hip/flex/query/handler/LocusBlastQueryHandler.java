@@ -129,11 +129,10 @@ public class LocusBlastQueryHandler extends QueryHandler {
    
     public static void main(String args[]) {
         List locusList = new ArrayList();
-        locusList.add("1012");
-        //locusList.add("1");
-        //locusList.add("10");
-        //locusList.add("abc");
-        
+        locusList.add("5925");
+        locusList.add("5933");
+        locusList.add("5934");
+        locusList.add("4088");
         List params = new ArrayList();
         
         QueryHandler handler = new LocusBlastQueryHandler(params);

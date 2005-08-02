@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.12 2005-03-23 17:11:34 dzuo Exp $
+ * $Id: Oligo.java,v 1.13 2005-08-02 12:50:25 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -25,7 +25,7 @@ public class Oligo {
     private static final String CLONETECH_3p_FUSION = "ATGGTCTAGAAAGCTTCCCAA";
     public static final String PSEUDOMONAS_5p = "AAAGCAGGCTCCGAAGGAGATACC";
     public static final String PSEUDOMONAS_3p_FUSION = "AGAAAGCTGGGTCTCC";
-     private static final String YEAST_REV_3p_CLOSE = "GTATCCCCGGGAATTGCCATG";
+    private static final String YEAST_REV_3p_CLOSE = "GTATCCCCGGGAATTGCCATG";
     private static final String YEAST_REV_3p_FUSION = "";
     private static final String YEAST_REV_5p = "CAGGCTTCCAGCTGACCACC";
     private static final String GATEWAY_YP_5p = "TACAAAAAAGCAGGCTCCACC";
@@ -38,8 +38,8 @@ public class Oligo {
     private static final String VC_3p_FUSION = GATEWAY_YP_3p_FUSION;
     private static final String VC_3p_CLOSE =  GATEWAY_YP_3p;
     
-  //  private Project project;
-  //  private Workflow workflow;
+    //  private Project project;
+    //  private Workflow workflow;
     private int id;
     private String type;
     private String sequence;
@@ -91,7 +91,7 @@ public class Oligo {
         String sql = "select o.oligoid, o.oligosequence, "+
         "o.tm, o.gatewaysequence\n"+
         "from oligo o\n"+
-        "where o.oligoid = "+id; 
+        "where o.oligoid = "+id;
         
         ResultSet rs = null;
         try {
@@ -120,19 +120,19 @@ public class Oligo {
             //breast cancer project
             tagSequence = GATEWAYTAG_5p + sequence;
         }
-        */
+         */
         /**
          * The tag sequences should be attached to workflow rather than the project.
          * - dzuo 7/10/02
-         if (projectId == Project.CLONTECH) {
-            //clonetech project
-            tagSequence = CLONETECH_5p + sequence;
-        } else if (projectId == Project.PSEUDOMONAS) {
-            tagSequence = PSEUDOMONAS_5p + sequence;
-        } else{
-            //all other projects
-            tagSequence = GATEWAYTAG_5p + sequence;
-        }  
+         * if (projectId == Project.CLONTECH) {
+         * //clonetech project
+         * tagSequence = CLONETECH_5p + sequence;
+         * } else if (projectId == Project.PSEUDOMONAS) {
+         * tagSequence = PSEUDOMONAS_5p + sequence;
+         * } else{
+         * //all other projects
+         * tagSequence = GATEWAYTAG_5p + sequence;
+         * }
          */
         int workflowid = workflow.getId();
         
@@ -153,6 +153,9 @@ public class Oligo {
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_5p + sequence;
         } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+            if(projectId == Project.Yersinia_pseudotuberculosis) {
+                tagSequence = GATEWAY_YP_5p + sequence;
+            }
             tagSequence = INGA_5p + sequence;
         } else {
             tagSequence = CLONETECH_5p + sequence;
@@ -171,20 +174,20 @@ public class Oligo {
             tagSequence = GATEWAYTAG_3p_CLOSE + sequence;
         }
          */
-         /**
-        if (projectId == Project.CLONTECH) {
-            //clonetech project
-            tagSequence = CLONETECH_3p_CLOSE + sequence;
-        } else {
-            if (projectId == Project.PSEUDOMONAS) {
-            //pseudomonas project
-            tagSequence = GATEWAYTAG_3p_CLOSE_PA + sequence;
-            } else {
-                //breast cancer project and other human projects
-                tagSequence = GATEWAYTAG_3p_CLOSE + sequence;
-            } //inner if
-        } //outter if
-          */
+        /**
+         * if (projectId == Project.CLONTECH) {
+         * //clonetech project
+         * tagSequence = CLONETECH_3p_CLOSE + sequence;
+         * } else {
+         * if (projectId == Project.PSEUDOMONAS) {
+         * //pseudomonas project
+         * tagSequence = GATEWAYTAG_3p_CLOSE_PA + sequence;
+         * } else {
+         * //breast cancer project and other human projects
+         * tagSequence = GATEWAYTAG_3p_CLOSE + sequence;
+         * } //inner if
+         * } //outter if
+         */
         
         /**
          * Changed the tag sequence to attached to workflow rather than project. - dzuo 7/10/02
@@ -196,7 +199,7 @@ public class Oligo {
         } else if(workflowid == Workflow.PSEUDOMONAS_WORKFLOW) {
             tagSequence = GATEWAYTAG_3p_CLOSE_PA + sequence;
         } else if (workflowid == Workflow.MGC_GATEWAY_WORKFLOW || workflowid == Workflow.STANDARD_WORKFLOW) {
-            tagSequence = GATEWAYTAG_3p_CLOSE + sequence; 
+            tagSequence = GATEWAYTAG_3p_CLOSE + sequence;
         } else if(workflowid == Workflow.GATEWAY_WORKFLOW || workflowid == Workflow.MGC_GATEWAY_CLOSED) {
             if(projectId == Project.YP || projectId == Project.YEAST || projectId == Project.FT || projectId == Project.AVENTIS) {
                 tagSequence = GATEWAY_YP_3p + sequence;
@@ -211,28 +214,28 @@ public class Oligo {
             tagSequence = GATEWAY_YP_3p + sequence;
         } else {
             tagSequence = CLONETECH_3p_CLOSE + sequence;
-        }        
+        }
     }
     
     /**
      * Add the 3p open tag to 3op oligo corresponding to the project and workflow
-     * 
+     *
      */
     public void setTagSequence_3p_Fusion(Project project, Workflow workflow) {
         int projectId = project.getId();
         /**
-        if (projectId == Project.CLONTECH) {
-            //clonetech project
-            tagSequence = CLONETECH_3p_FUSION + sequence;
-        } else {
-            if (projectId == Project.PSEUDOMONAS) {
-            //pseudomonas project
-            tagSequence = PSEUDOMONAS_3p_FUSION + sequence;
-            } else {
-                //breast cancer project and other human projects
-                tagSequence = GATEWAYTAG_3p_FUSION + sequence;
-            } //inner if
-        } //outter if
+         * if (projectId == Project.CLONTECH) {
+         * //clonetech project
+         * tagSequence = CLONETECH_3p_FUSION + sequence;
+         * } else {
+         * if (projectId == Project.PSEUDOMONAS) {
+         * //pseudomonas project
+         * tagSequence = PSEUDOMONAS_3p_FUSION + sequence;
+         * } else {
+         * //breast cancer project and other human projects
+         * tagSequence = GATEWAYTAG_3p_FUSION + sequence;
+         * } //inner if
+         * } //outter if
          */
         
         /**
@@ -254,11 +257,11 @@ public class Oligo {
             }
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_3p_FUSION + sequence;
-        } else if (workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
+        } else if (workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {       
             tagSequence = GATEWAY_YP_3p_FUSION + sequence;
         } else {
             tagSequence = CLONETECH_3p_FUSION + sequence;
-        }                
+        }
     }
     
     /**
@@ -276,8 +279,8 @@ public class Oligo {
      */
     public String getTagOligoSequence() {
         
-            return tagSequence;
-     
+        return tagSequence;
+        
     }
     
     /**
@@ -321,13 +324,13 @@ public class Oligo {
      *
      */
     public void insert(Connection conn) throws FlexDatabaseException {
-       // String tagSequence = this.getGatewayOligoSequence(OligoType);
+        // String tagSequence = this.getGatewayOligoSequence(OligoType);
         Statement stmt = null;
         
         String sql = "INSERT INTO oligo\n" +
         "(oligoid, oligosequence, tm, gatewaysequence)\n" +
         " VALUES(" +id+ ",'" + sequence + "',"
-         + Tm + ", '" + tagSequence + "')";
+        + Tm + ", '" + tagSequence + "')";
         
         try {
             stmt = conn.createStatement();
@@ -336,7 +339,7 @@ public class Oligo {
             throw new FlexDatabaseException(sqlE+"\nSQL: "+sql);
         } finally {
             DatabaseTransaction.closeStatement(stmt);
-        }        
+        }
     } //insertOligo
     
     public static void main(String [] args) {
@@ -354,7 +357,7 @@ public class Oligo {
             
         }
         catch (FlexDatabaseException exception) {
-            System.out.println(exception.getMessage());        
+            System.out.println(exception.getMessage());
         }finally {
             DatabaseTransaction.closeConnection(c);
         }
