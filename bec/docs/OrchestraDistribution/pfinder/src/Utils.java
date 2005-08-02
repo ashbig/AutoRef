@@ -242,7 +242,7 @@ System.out.println("start process " + cmd);
     }
 
 
-    public static String convertWindowsFileNameIntoUnix(String filename)
+    /*public static String convertWindowsFileNameIntoUnix(String filename)
     {
         String res = null;
         char[] arr = filename.toCharArray();
@@ -256,7 +256,7 @@ System.out.println("start process " + cmd);
         }
            return converted_file_name.toString();
     }
-
+*/
 
     public static void main(String[] args)
 	    {

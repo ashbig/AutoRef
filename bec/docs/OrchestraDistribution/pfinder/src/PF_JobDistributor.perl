@@ -25,16 +25,22 @@ $total_count++;
     {
        $random = int(rand( $2000000-1000 ) ) + 1000; 
   
-        $new_job_data = $temp_dir ."input_job_data".$random.".txt";
+        $new_job_data = "./polymorphismfinder/data/input_job_data".$random.".txt";
         $discr_count = 0;
         #write into new file
         open(DAT,">$new_job_data") || die("Cannot Open File");
-        print DAT @discr_description_for_job; 
+       # print DAT @discr_description_for_job; 
+        $ending_value = scalar(@discr_description_for_job) ;
+
+        for($counter=0 ; $counter < $ending_value ; $counter++)
+        {
+            print DAT "$discr_description_for_job[$counter]\n" ;
+        }
+
+
         close(DAT);
         @discr_description_for_job = ();
-        #system ("bsub \"java PolymFinderJob $setting_file $new_job_data\" ");
-# bsub "java -cp ./polymorphismfinder/ src.PolymorphismFinderJob ./polymorphismfinder/src/ModuleSettings.properties ./polymorphismfinder/data/pl_input_data.txt"
-
+        system ("bsub \"java -cp ./polymorphismfinder/ src.PolymorphismFinderJob ./polymorphismfinder/src/ModuleSettings.properties $new_job_data\"");
     }
     
     $discr_count++;
