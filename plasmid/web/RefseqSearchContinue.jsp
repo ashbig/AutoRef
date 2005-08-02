@@ -61,7 +61,8 @@
                 cDNA </td>
             <td width="18%" class="underbullet"><html:checkbox property="shrna"/>
             shRNA </td>
-            <td width="19%" class="underbullet"></td>
+            <td width="19%" class="underbullet"><html:checkbox property="genomicfragment"/>
+            genomic fragment </td>
             <td width="21%" class="underbullet"></td>
             <td width="20%" class="underbullet"></td>
         </tr>

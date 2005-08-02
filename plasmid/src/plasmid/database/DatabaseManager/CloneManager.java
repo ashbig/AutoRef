@@ -208,7 +208,13 @@ public class CloneManager extends TableManager {
                 DnaInsert c = (DnaInsert)inserts.get(i);
                 stmt.setInt(1, c.getInsertid());
                 stmt.setInt(2, c.getOrder());
-                stmt.setInt(3, c.getSize());
+                
+                int size = c.getSize();
+                if(size>0)
+                    stmt.setInt(3, size);
+                else
+                    stmt.setString(3, null);
+                
                 stmt.setString(4, c.getSpecies());
                 stmt.setString(5, c.getFormat());
                 stmt.setString(6, c.getSource());

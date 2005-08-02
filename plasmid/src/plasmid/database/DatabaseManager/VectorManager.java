@@ -149,6 +149,7 @@ public class VectorManager extends TableManager {
             
             for(int i=0; i<features.size(); i++) {
                 VectorFeature v = (VectorFeature)features.get(i);
+                System.out.println(v.getName());
                 stmt2.setString(1, v.getName());
                 stmt2.setString(2, v.getDescription());
                 stmt2.setInt(3, v.getStart());

@@ -60,6 +60,7 @@ public class RefseqSearchAction extends Action {
         ActionErrors errors = new ActionErrors();
         ((RefseqSearchForm)form).setCdna(true);
         ((RefseqSearchForm)form).setShrna(true);
+        ((RefseqSearchForm)form).setGenomicfragment(true);
         
         DatabaseTransaction dt = null;
         Connection conn = null;

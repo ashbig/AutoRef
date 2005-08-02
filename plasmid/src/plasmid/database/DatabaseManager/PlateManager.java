@@ -27,13 +27,14 @@ public class PlateManager extends TableManager {
     public boolean insertPlateAndSample(List plates) {
         List s = new ArrayList();
         if(insertPlate(plates)) {
-            System.out.println("insert plates");
             for(int i=0; i<plates.size(); i++) {
                 Container c = (Container)plates.get(i);
-                s.addAll(c.getSamples());
+                List samples = c.getSamples();
+                if(samples != null && samples.size()>0) {
+                    s.addAll(samples);
+                }
             }
             if(insertSample(s)) {
-                System.out.println("insert samples");
                 return true;
             } else {
                 return false;
@@ -44,12 +45,12 @@ public class PlateManager extends TableManager {
     }
     
     public boolean insertPlate(List plates) {
-        if(plates == null)
+        if(plates == null || plates.size() == 0)
             return true;
         
         String sql = "insert into containerheader(containerid,containertype,"+
-        " label,oricontainerid,location)"+
-        " values(?,?,?,?,?)";
+        " label,oricontainerid,location,capacity,status)"+
+        " values(?,?,?,?,?,?,?)";
         
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -61,6 +62,8 @@ public class PlateManager extends TableManager {
                 stmt.setString(3, c.getLabel());
                 stmt.setString(4, c.getOricontainerid());
                 stmt.setString(5, c.getLocation());
+                stmt.setInt(6, c.getCapacity());
+                stmt.setString(7, c.getStatus());
                 
                 DatabaseTransaction.executeUpdate(stmt);
             }
@@ -73,6 +76,9 @@ public class PlateManager extends TableManager {
     }
     
     public boolean insertSample(List samples) {
+        if(samples == null || samples.size() == 0)
+            return true;
+        
         String sql = "insert into sample(sampleid,sampletype,status_gb,cloneid,"+
         " position,positionx,positiony,containerid,containerlabel,result)"+
         " values(?,?,?,?,?,?,?,?,?,?)";
@@ -113,7 +119,7 @@ public class PlateManager extends TableManager {
             return null;
 
         List containers = new ArrayList();              
-        String sql = "select containerid,containertype,oricontainerid,location"+
+        String sql = "select containerid,containertype,oricontainerid,location,capacity,status"+
         " from containerheader where label=?";
         String sql2 = "select sampleid,sampletype,status_gb,cloneid,position,positionx,positiony,containerlabel,result"+
         " from sample where containerid=?";
@@ -135,7 +141,9 @@ public class PlateManager extends TableManager {
                     String type = rs.getString(2);
                     String oricontainerid = rs.getString(3);
                     String location = rs.getString(4);
-                    Container c = new Container(containerid, type, label,oricontainerid,location);
+                    int capacity = rs.getInt(5);
+                    String st = rs.getString(6);
+                    Container c = new Container(containerid, type, label,oricontainerid,location,capacity,st);
                     containers.add(c);
                     
                     if(isSampleRestore) {

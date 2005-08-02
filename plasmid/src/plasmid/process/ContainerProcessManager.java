@@ -121,8 +121,8 @@ public class ContainerProcessManager {
         TubeMap m = null;
         try {
             in = new BufferedReader(new FileReader(filename));
-            String barcode = in.readLine();  
-            if(barcode == null) 
+            String barcode = in.readLine();
+            if(barcode == null)
                 throw new Exception("No barcode was specified.");
             
             String line = null;
@@ -158,6 +158,31 @@ public class ContainerProcessManager {
         }
         
         return m;
+    }
+    
+    public boolean setContaineridAndLabels(List containers, String suffix) {
+        if(containers == null || containers.size() == 0)
+            return true;
+        
+        if(setContainerids(containers)) {
+            for(int i=0; i<containers.size(); i++) {
+                Container c = (Container)containers.get(i);
+                int id = c.getContainerid();
+                java.text.NumberFormat fmt = java.text.NumberFormat.getInstance();
+                fmt.setMaximumIntegerDigits(8);
+                fmt.setMinimumIntegerDigits(8);
+                fmt.setGroupingUsed(false);
+                String label = fmt.format(id);
+                if(suffix != null && suffix.trim().length()>0) {
+                    label = label + "-" + suffix.trim();
+                }
+                c.setLabel(label);
+            }
+            
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public boolean setContainerids(List containers) {
@@ -219,6 +244,7 @@ public class ContainerProcessManager {
         
         try {
             t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
         } catch (Exception ex) {
             if(Constants.DEBUG) {
                 System.out.println("Cannot get database connection.");
@@ -238,15 +264,17 @@ public class ContainerProcessManager {
             return false;
         }
         
-        ProcessManager m = new ProcessManager(conn);
-        if(!m.insertProcess(process)) {
-            if(Constants.DEBUG) {
-                System.out.println("Cannot insert process.");
-                System.out.println(m.getErrorMessage());
+        if(process != null) {
+            ProcessManager m = new ProcessManager(conn);
+            if(!m.insertProcess(process)) {
+                if(Constants.DEBUG) {
+                    System.out.println("Cannot insert process.");
+                    System.out.println(m.getErrorMessage());
+                }
+                DatabaseTransaction.rollback(conn);
+                DatabaseTransaction.closeConnection(conn);
+                return false;
             }
-            DatabaseTransaction.rollback(conn);
-            DatabaseTransaction.closeConnection(conn);
-            return false;
         }
         
         DatabaseTransaction.commit(conn);
@@ -298,9 +326,9 @@ public class ContainerProcessManager {
                 List samples = new ArrayList();
                 List tubes = new ArrayList();
                 for(int i=0; i<destContainers.size(); i++) {
-                    Container c = (Container)destContainers.get(i);                   
+                    Container c = (Container)destContainers.get(i);
                     TubeMap tm = manager.readTubeMappingFile(FILEPATH+c.getLabel());
-               
+                    
                     List l = mapper.convertToTubes(c, tm.getMapping());
                     for(int n=0; n<l.size(); n++) {
                         Container c1 = (Container)l.get(n);

@@ -17,6 +17,11 @@ public class Clone {
     public static final String AVAILABLE = "AVAILABLE";
     public static final String CDNA = "cDNA";
     public static final String SHRNA = "shRNA";
+    public static final String GENOMIC_FRAGMENT = "genomic fragment";
+    public static final String PROMOTER = "promoter";
+    public static final String TRANSPOSON = "transposon";
+    public static final String GENE = "gene";
+    public static final String NOINSERT = "No insert";
     public static final String NO_RESTRICTION = "No restriction";
     public static final String NON_PROFIT = "Academic and non-profit labs";
     

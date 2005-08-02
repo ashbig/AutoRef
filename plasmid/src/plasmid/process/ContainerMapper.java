@@ -97,7 +97,7 @@ public class ContainerMapper {
             if(barcode == null) {
                 throw new Exception("Cannot find 2D tube barcode at position: "+position);
             }
-            Container c = new Container(0, Container.TUBE, barcode, null, Location.BIOBANK);
+            Container c = new Container(0, Container.TUBE, barcode, null, Location.BIOBANK, Container.getCapacity(Container.TUBE), Container.FILLED);
             s.setContainerlabel(barcode);
             s.setPositions(1);
             c.addSample(s);

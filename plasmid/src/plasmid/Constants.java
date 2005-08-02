@@ -25,6 +25,8 @@ public class Constants {
     public static final String CLONEORDER = "Clone Order";
     public static final String ORDERS = "Clone Orders";
     public static final String ACADEMIC = User.ACADEMIC;
+    public static final String LABELS = "labels";
+    public static final String PRINT_LABEL_MESSAGE = "PRINT_LABEL_MESSAGE";
     
     /** Creates a new instance of Constants */
     public Constants() {

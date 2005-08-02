@@ -21,7 +21,9 @@ public class Importer {
     //public static final String filepath = "G:\\plasmid\\HIP_Human\\";
     //public static final String filepath = "G:\\plasmid\\Other\\";
     //public static final String filepath = "G:\\plasmid\\Yeast\\";
-    public static final String filepath = "G:\\plasmid\\Howley\\";
+    //public static final String filepath = "G:\\plasmid\\Howley\\";
+    //public static final String filepath = "G:\\plasmid\\Howley_05_7_20\\";
+    public static final String filepath = "G:\\plasmid\\NEEL_05_7_20\\";    
     
     private List tables;
     private String error;
@@ -161,7 +163,7 @@ public class Importer {
                     System.out.println("Importing REFSEQ.");
                     rimp.importRefseq(table, iimp.getMaxseqid());
                 }
-                /**
+                /*
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.INSERTREFSEQ)) {
                     System.out.println("Importing INSERTREFSEQ.");
                     rimp.importInsertRefseq(table, iimp.getIdmap());

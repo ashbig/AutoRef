@@ -148,6 +148,36 @@ public class DefTableManager extends TableManager {
         return l;
     }
     
+    public static String getVocabulary(String table, String columnKnown, String columnUnknown, String column) {
+        String sql = "select "+columnUnknown+" from "+table+" where "+columnKnown+"=?";
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String rt = null;
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, column);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                rt = rs.getString(1);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Error occured while querying "+table);
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+            DatabaseTransaction.closeConnection(conn);
+        }
+        
+        return rt;
+    }
+    
     public static void main(String args[]) {
         try {
             DefTableManager manager = new DefTableManager();

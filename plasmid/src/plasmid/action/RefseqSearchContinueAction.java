@@ -70,6 +70,7 @@ public class RefseqSearchContinueAction extends Action {
         String searchString = ((RefseqSearchForm)form).getSearchString();
         boolean cdna = ((RefseqSearchForm)form).getCdna();
         boolean shrna = ((RefseqSearchForm)form).getShrna(); 
+        boolean genomicfragment = ((RefseqSearchForm)form).getGenomicfragment();  
         int pagesize = ((RefseqSearchForm)form).getPagesize();
         int page = ((RefseqSearchForm)form).getPage();
 
@@ -78,6 +79,8 @@ public class RefseqSearchContinueAction extends Action {
             clonetypes.add(Clone.CDNA);
         if(shrna)
             clonetypes.add(Clone.SHRNA);
+        if(genomicfragment)
+            clonetypes.add(Clone.GENOMIC_FRAGMENT);
         
         User user = (User)request.getSession().getAttribute(Constants.USER_KEY);
         List restrictions = new ArrayList();
@@ -105,6 +108,7 @@ public class RefseqSearchContinueAction extends Action {
         int totalCount = 0;
         GeneQueryHandler handler = null;
         List directFoundList = null;
+       
         if(GeneQueryHandler.GENBANK.equals(searchType) || GeneQueryHandler.GI.equals(searchType)) {
             request.getSession().setAttribute("display", "genbank");
             request.setAttribute("displayPage", "direct");

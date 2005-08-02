@@ -16,12 +16,26 @@ public class Container {
     public static final String PLATE_96 = "96 Well Plate";
     public static final String TUBE = "Tube";
     public static final String TUBE_96 = "Tube 96 Well";
+    public static final String COSTAR_FLT = "Costar flt bttm/MP16-24";
+    public static final String COSTAR_RD = "Costar rd bttm/MP16-24";
+    public static final String GREINER = "GreinerVbttmPPonMP16";
+    public static final String PCR_ON_MP16 = "PCR on MP16 landscape";
+    public static final String RESERVOIR_MP16 = "Reservoir on MP16";
+    public static final String RESERVOIR_PYR = "Reservoir Pyr bttm";
+    public static final String RK_RIPLATE_DW = "RK riplate dw/MP16-24";
+    
+    public static final String EMPTY = "EMPTY";
+    public static final String FILLED = "FILLED";
+    
+    public static final String UNAVAILABLE = "UNAVAILABLE";
     
     private int containerid;
     private String type;
     private String label;
     private String oricontainerid;
     private String location;
+    private int capacity;
+    private String status;
     
     private List samples;
     
@@ -29,12 +43,14 @@ public class Container {
     public Container() {
     }
     
-    public Container(int containerid, String type, String label, String oricontainerid, String location) {
+    public Container(int containerid, String type, String label, String oricontainerid, String location, int capacity, String status) {
         this.containerid = containerid;
         this.type = type;
         this.label = label;
         this.oricontainerid = oricontainerid;
         this.location = location;
+        this.capacity = capacity;
+        this.status = status;
     }
     
     public int getContainerid() {return containerid;}
@@ -42,24 +58,38 @@ public class Container {
     public String getLabel() {return label;}
     public String getOricontainerid() {return oricontainerid;}
     public String getLocation() {return location;}
+    public int getCapacity() {return capacity;}
+    public String getStatus() {return status;}
     
     public void setContainerid(int id) {this.containerid = id;}
     public void setType(String s) {this.type = s;}
     public void setLabel(String s) {this.label = s;}
     public void setOricontainerid(String s) {this.oricontainerid = s;}
     public void setLocation(String s) {this.location = s;}
+    public void setCapacity(int i) {this.capacity = i;}
+    public void setStatus(String s) {this.status = s;}
     
     public List getSamples() {return samples;}
     public void setSamples(List l) {this.samples = l;}
-/**    
-    public int getSize() {
-        if(this.PLATE_96.equals(type))
+    
+    public static int getCapacity(String type) {
+        if(COSTAR_FLT.equals(type))
             return 96;
-        if(this.TUBE.equals(type))
+        if(COSTAR_RD.equals(type))
+            return 96;
+        if(GREINER.equals(type))
+            return 96;
+        if(PCR_ON_MP16.equals(type))
+            return 96;
+        if(RESERVOIR_MP16.equals(type))
             return 1;
+        if(RESERVOIR_PYR.equals(type))
+            return 96;
+        if(RK_RIPLATE_DW.equals(type))
+            return 96;
+        
         return 0;
     }
-   */
     
     public int getSize() {
         if(samples == null)
@@ -72,7 +102,7 @@ public class Container {
     }
     
     public void addSample(Sample s) {
-        if(samples == null) 
+        if(samples == null)
             samples = new ArrayList(this.getSize());
         
         samples.add(s.getPosition()-1, s);

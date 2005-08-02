@@ -25,6 +25,7 @@ public class RefseqSearchForm extends ActionForm {
     private String searchString;
     private boolean cdna;
     private boolean shrna;
+    private boolean genomicfragment;
     private boolean fusion;
     private boolean closed;
     private String marker;
@@ -47,6 +48,7 @@ public class RefseqSearchForm extends ActionForm {
     public String getSearchString() {return searchString;}
     public boolean getCdna() {return cdna;}
     public boolean getShrna() {return shrna;}
+    public boolean getGenomicfragment() {return genomicfragment;}
     public boolean getFusion() {return fusion;}
     public boolean getClosed() {return closed;}
     public String getMarker() {return marker;}
@@ -84,6 +86,7 @@ public class RefseqSearchForm extends ActionForm {
     public void setSortby(String s) {this.sortby = s;}
     public void setCloneid(String id) {this.cloneid = id;}
     public void setButton(String s) {this.button = s;}
+    public void setGenomicfragment(boolean b) {this.genomicfragment = b;}
     
     /**
      * Reset all properties to their default values.
@@ -98,6 +101,7 @@ public class RefseqSearchForm extends ActionForm {
         searchString = null;
         cdna = false;
         shrna = false;
+        genomicfragment = false;
         fusion = false;
         closed=false;
         marker = "All";
