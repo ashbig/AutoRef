@@ -78,7 +78,7 @@ public class PlateUploadRunner implements Runnable
         Connection conn = null;
         ArrayList master_plates = new ArrayList();
         m_error_messages = new ArrayList();
-        String requested_plates = Algorithms.convertStringArrayToString(m_master_container_labels,",");
+         String requested_plates = Algorithms.convertStringArrayToString(m_master_container_labels,",");
         PlateUploader pb = null;
         try
         {
@@ -183,4 +183,29 @@ public class PlateUploadRunner implements Runnable
 
     }
 
+    
+    
+    public static void main(String args[]) 
+{
+    PlateUploadRunner runner = new PlateUploadRunner();
+      try
+    {
+            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        sysProps.verifyApplicationSettings();
+       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+    ArrayList arr = new ArrayList(); arr.add("SAE000946");
+         runner.setUser( AccessManager.getInstance().getUser("tigr","tigr"));
+                 runner.setContainerLabels(arr );
+                    runner.setVectorId(3 );
+                    runner.setLinker3Id(2);
+                    runner.setLinker5Id(1);
+                    runner.setStartCodon("ATG");
+                    runner.setFusionStopCodon("TAA");
+                    runner.setClosedStopCodon("TAG");
+                    runner.setPlateInfoType(PlateUploader.PLATE_NAMES);
+                    runner.run();
+              
+    }
+      catch(Exception e){}
+    }
  }
