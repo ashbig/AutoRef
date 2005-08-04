@@ -40,10 +40,13 @@ public class ResultParser
             File[] output_files = output_dir.listFiles();
             for (int count = 0; count < output_files.length; count++)
             {
+                System.out.println("Start "+output_files[count].getAbsolutePath());
                 results = parseResultFile(error_messages, output_files[count].getAbsolutePath());
 
                 if ( results.size() > 0)
                     submitPolymorphismInformation(results, error_messages);
+                 System.out.println("finished "+output_files[count].getAbsolutePath());
+               
             }
          
        }
@@ -102,7 +105,7 @@ public class ResultParser
 
            while ((line = input.readLine()) != null)
             {
-                discr_data = Algorithms.splitString(line, " ");
+                discr_data = Algorithms.splitString(line);
                 current_value = (String)info.get(  discr_data.get(0));
               
                 if (discr_data.size() == 3)
@@ -127,7 +130,7 @@ public class ResultParser
        }
        catch(Exception e)
        {
-           error_messages.add("Cannot parse polymorphism info file");
+           error_messages.add("Cannot parse polymorphism info file "+job_filename);
            throw new BecUtilException ("Cannot parse polymorphism info file");
        }
      }
@@ -161,6 +164,7 @@ public class ResultParser
                          {
                              pst_update_discrepancy_no_polym.setInt(1, Mutation.FLAG_POLYM_NO);
                              pst_update_discrepancy_no_polym.setInt(2,  Integer.parseInt( discr_id));
+                             System.out.println(discr_id +" NO DATA ");
                              DatabaseTransaction.executeUpdate(pst_update_discrepancy_no_polym);
                          
                          }
@@ -169,6 +173,7 @@ public class ResultParser
                               pst_update_discrepancy_polym.setInt(3, Integer.parseInt( discr_id));
                               pst_update_discrepancy_polym.setInt(1, Mutation.FLAG_POLYM_YES);
                               pst_update_discrepancy_polym.setString(2, discr_data);
+                              System.out.println(discr_id +" "+discr_data);
                               DatabaseTransaction.executeUpdate(pst_update_discrepancy_polym);
                          
                          }
