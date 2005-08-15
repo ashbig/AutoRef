@@ -28,19 +28,60 @@ public class GenbankInfoManager {
     
     public void printGenbankInfo(List infos, String filename) throws Exception {
         OutputStreamWriter f = new FileWriter(filename);
-        f.write("Sequence ID\tAccession\tGI\tOrganism\tGene ID\tSymbol\tDescription\tCDS Start\tCDS Stop\tSequence\n");
+        f.write("Sequence ID\tAccession\tAccession Version\tGI\tOrganism\tGene ID\tSymbol\tDescription\tCDS Start\tCDS Stop\tSequence\n");
         for(int i=0; i<infos.size(); i++) {
             GenbankInfo info = (GenbankInfo)infos.get(i);
-            f.write(info.getGi()+"\t");
-            f.write(info.getAccession()+"\t");
-            f.write(info.getGi()+"\t");
-            f.write(info.getOrganism()+"\t");
-            f.write(info.getGeneid()+"\t");
-            f.write(info.getGenesymbol()+"\t");
-            f.write(info.getDefinition()+"\t");
-            f.write(info.getCdsstart()+"\t");
-            f.write(info.getCdsstop()+"\t");
-            f.write(info.getSequencetext()+"\n");
+            f.write(info.getTerm()+"\t");
+            
+            if(info.getAccession() == "")
+                f.write(NA+"\t");
+            else
+                f.write(info.getAccession()+"\t");
+            
+            if(info.getAccessionVersion() == "")
+                f.write(NA+"\t");
+            else
+                f.write(info.getAccessionVersion()+"\t");
+            
+            if(info.getGi() == "")
+                f.write(NA+"\t");
+            else
+                f.write(info.getGi()+"\t");
+            
+            if(info.getOrganism() == "")
+                f.write(NA+"\t");
+            else
+                f.write(info.getOrganism()+"\t");
+            
+            if(info.getGeneid() == "")
+                f.write(NA+"\t");
+            else
+                f.write(info.getGeneid()+"\t");
+            
+            if(info.getGenesymbol() == "")
+                f.write(NA+"\t");
+            else
+                f.write(info.getGenesymbol()+"\t");
+            
+            if(info.getDefinition() == "")
+                f.write(NA+"\t");
+            else
+                f.write(info.getDefinition()+"\t");
+            
+            if(info.getCdsstart() == -1)
+                f.write(NA+"\t");
+            else
+                f.write(info.getCdsstart()+"\t");
+            
+            if(info.getCdsstop() == -1)
+                f.write(NA+"\t");
+            else
+                f.write(info.getCdsstop()+"\t");
+            
+            if(info.getSequencetext() == "")
+                f.write(NA+"\n");
+            else
+                f.write(info.getSequencetext()+"\n");
         }
         f.close();
     }
@@ -52,37 +93,45 @@ public class GenbankInfoManager {
         //print Genbank Accession
         for(int i=0; i<infos.size(); i++) {
             GenbankInfo info = (GenbankInfo)infos.get(i);
-            f.write(info.getGi()+"\t");
-            f.write(GENBANK_ACC+"\t");
-            f.write(info.getAccession()+"\t");
-            f.write(GENBANK_URL+info.getGi()+"\n");
+            if(info.getAccession() != null && info.getAccession().trim().length()>0) {
+                f.write(info.getTerm()+"\t");
+                f.write(GENBANK_ACC+"\t");
+                f.write(info.getAccession()+"\t");
+                f.write(GENBANK_URL+info.getGi()+"\n");
+            }
         }
         
         //print GI
         for(int i=0; i<infos.size(); i++) {
             GenbankInfo info = (GenbankInfo)infos.get(i);
-            f.write(info.getGi()+"\t");
-            f.write(GI+"\t");
-            f.write(info.getGi()+"\t");
-            f.write(NA+"\n");
+            if(info.getGi() != null && info.getGi().trim().length()>0) {
+                f.write(info.getTerm()+"\t");
+                f.write(GI+"\t");
+                f.write(info.getGi()+"\t");
+                f.write(NA+"\n");
+            }
         }
         
         //print Gene ID
         for(int i=0; i<infos.size(); i++) {
             GenbankInfo info = (GenbankInfo)infos.get(i);
-            f.write(info.getGi()+"\t");
-            f.write(GENEID+"\t");
-            f.write(info.getGeneid()+"\t");
-            f.write(GENEID_URL+info.getGeneid()+"\n");
+            if(info.getGeneid() != null && info.getGeneid().trim().length()>0) {
+                f.write(info.getTerm()+"\t");
+                f.write(GENEID+"\t");
+                f.write(info.getGeneid()+"\t");
+                f.write(GENEID_URL+info.getGeneid()+"\n");
+            }
         }
         
         //print Gene Symbol
         for(int i=0; i<infos.size(); i++) {
             GenbankInfo info = (GenbankInfo)infos.get(i);
-            f.write(info.getGi()+"\t");
-            f.write(SYMBOL+"\t");
-            f.write(info.getGenesymbol()+"\t");
-            f.write(NA+"\n");
+            if(info.getGenesymbol() != null && info.getGenesymbol().trim().length()>0) {
+                f.write(info.getTerm()+"\t");
+                f.write(SYMBOL+"\t");
+                f.write(info.getGenesymbol()+"\t");
+                f.write(NA+"\n");
+            }
         }
         
         f.close();
@@ -96,7 +145,7 @@ public class GenbankInfoManager {
         }
         f.close();
     }
-        
+    
     public List readGenbank(String filename) throws Exception {
         List genbanks = new ArrayList();
         BufferedReader in = new BufferedReader(new FileReader(filename));
@@ -116,6 +165,7 @@ public class GenbankInfoManager {
         String referenceFile = "G:\\plasmid\\Reference\\reference.txt";
         String referenceNameFile = "G:\\plasmid\\Reference\\referenceName.txt";
         String referenceInput = "G:\\plasmid\\Reference\\input.txt";
+        //String referenceInput="G:\\tmp.txt";
         String error = "G:\\plasmid\\Reference\\error.txt";
         
         GenbankInfoManager manager = new GenbankInfoManager();

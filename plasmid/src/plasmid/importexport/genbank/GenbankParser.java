@@ -29,6 +29,7 @@ public class GenbankParser {
         
         String definition = "";
         String accession = "";
+        String accessionVersion = "";
         String gi = "";
         String organism = "";
         String geneid = "";
@@ -56,6 +57,10 @@ public class GenbankParser {
                 }
             }
             //VERSION     NM_026689.3  GI:40548428
+            if(inputLine.indexOf("VERSION") != -1 && accessionVersion.equals("") ) {
+                String tmp = inputLine.substring(inputLine.indexOf("VERSION:")+8);
+                accessionVersion = tmp.substring(0, tmp.indexOf("GI:")).trim();
+            }
             if(inputLine.indexOf("GI:") != -1 && gi.equals("") ) {
                 gi = inputLine.substring(inputLine.indexOf("GI:")+3);
             }
@@ -136,7 +141,7 @@ public class GenbankParser {
         
         in.close();
         
-        GenbankInfo info = new GenbankInfo(definition,accession, gi, organism, geneid, genesymbol, cdsstart, cdsstop, sequencetext);
+        GenbankInfo info = new GenbankInfo(genbank, definition,accession, accessionVersion,gi, organism, geneid, genesymbol, cdsstart, cdsstop, sequencetext);
         
         return info;
     }
