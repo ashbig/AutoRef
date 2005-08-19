@@ -22,11 +22,11 @@ public class PolymorphismFinderJob
         Hashtable orf_index =  null;
         ArrayList discrepancies_data = readInputData(input_file_name, error_messages);
         
-        System.out.println("finished read input file");
+      //  System.out.println("finished read input file");
         if ( discrepancies_data != null && discrepancies_data.size() > 1) 
         {
              orf_index =  readORFIndexInMemory();
-             System.out.println("finished read orf index  file "+orf_index.size());
+         //    System.out.println("finished read orf index  file "+orf_index.size());
        
              if (orf_index == null || orf_index.size() < 1)
              {
@@ -59,7 +59,6 @@ public class PolymorphismFinderJob
         {
             try
             {
-System.out.println("start processing discr "+(String) discrepancies_data.get(count));
                 //ORFID discrepancyid  sequence  database1 identity_ver_length identity_ver_%
                 // 0        1               2       3           4                   5
                 discr_data = Utils.splitString( (String) discrepancies_data.get(count), null);
@@ -69,28 +68,23 @@ System.out.println("start processing discr "+(String) discrepancies_data.get(cou
                  search_database = (String)discr_data.get(3);
                  identity_ver_length = (String)discr_data.get(4) ; 
                  identity_ver = (String)discr_data.get(5);
-System.out.println("start processing discr "+discr_data);
             
                 hits = findDiscrepancyHits( discr_sequence, search_database ,discrepancy_id);
-System.out.println("processing hits "+hits.size() );
                 if ( hits.size() > 0) 
                 {
                      if ( prev_orf_id == null || !prev_orf_id.equalsIgnoreCase( orf_id))
                         clone_sequence = getCloneSequence(orf_id, orf_index, error_messages);
-          System.out.println("get sequence "+orf_id);          
                      if ( clone_sequence != null && clone_sequence.length() > 1)
-            System.out.println("start to verify hits ");
                      hits = verifyHits(hits,  clone_sequence, identity_ver_length,identity_ver, search_database , error_messages);
-               System.out.println("verified hits "+hits.size());
                      for (int count_hit = 0; count_hit < hits.size(); count_hit++)
                      {
-                         System.out.println("write to data "+discrepancy_id +"\t"+(String)hits.get(count_hit));
+            //             System.out.println("write to data "+discrepancy_id +"\t"+(String)hits.get(count_hit));
                          discrepancy_data_to_write.add(discrepancy_id +"\t"+(String)hits.get(count_hit)+"\n");
                      }
                 }   
                 else
                 {
-                     System.out.println("write to data "+discrepancy_id +"\tNODATA");
+             //        System.out.println("write to data "+discrepancy_id +"\tNODATA");
        
                     discrepancy_data_to_write.add( discrepancy_id +"\tNODATA\n");
                 }
@@ -101,7 +95,7 @@ System.out.println("processing hits "+hits.size() );
                 error_messages.add("Cannot process discrepancy \t"+(String) discrepancies_data.get(count)+"\t"+e1.getMessage());
             }
         }
-         System.out.println("write to output ");
+      //   System.out.println("write to output ");
        
         writeDiscrepancyData(discrepancy_data_to_write,   output_file_name,error_messages);
                
@@ -171,12 +165,12 @@ System.out.println("processing hits "+hits.size() );
         DataInputStream dis = null;
         try
         {
- System.out.println("read index "+Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
+// System.out.println("read index "+Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
           
             File fn = new File(Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
             fis = new FileInputStream( fn);
             dis = new DataInputStream( fis );
-            System.out.println("read index "+Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
+   //         System.out.println("read index "+Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
             while ( true )
             {
                 id = dis.readInt();
@@ -294,7 +288,7 @@ System.out.println("got sequence hit sequesnce");
            }
            catch(Exception e)
            {
-               System.out.println(e.getMessage());
+           //    System.out.println(e.getMessage());
                throw new Exception("Cannot verify hit "+e.getMessage());
            }
        }
@@ -306,14 +300,14 @@ System.out.println("got sequence hit sequesnce");
      {
          FileWriter fr = null;
          String file_name = output_file_name;
-System.out.println("output file name "+output_file_name+" "+discrepancy_data.size() );
+//System.out.println("output file name "+output_file_name+" "+discrepancy_data.size() );
          try
          {
             fr =  new FileWriter(file_name, true);
             for (int count =0; count < discrepancy_data.size(); count++)
             {
                   fr.write( (String) discrepancy_data.get(count));
-System.out.println("output file name "+  (String) discrepancy_data.get(count));
+//System.out.println("output file name "+  (String) discrepancy_data.get(count));
             }
              
            
@@ -345,7 +339,7 @@ System.out.println("output file name "+  (String) discrepancy_data.get(count));
         if (coordinates[0]==0 || coordinates[1] ==0 || coordinates[0] == coordinates[1]) return null;
         try
         {
-			System.out.println("get clone seq "+ id);
+		//	System.out.println("get clone seq "+ id);
             // Create the byte array to hold the data
             byte[] bytes = new byte[(int)(coordinates[1] -  coordinates[0])];
             File f = new File(Utils.getSystemProperty("INPUT_ORF_DATA_FILENAME"));

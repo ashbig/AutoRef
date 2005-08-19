@@ -71,13 +71,15 @@
       database to search in:</font></strong></td>
     <td bgcolor="#b8c6ed">
  <select name="PL_DATABASE" id="PL_DATABASE"  MULTIPLE size=2>
- getPolymFinderBlastableDatabases
+
  <%String dbpath = null;String dbname = null;
-for (Enumeration e = BecProperties.getInstance().getPolymFinderBlastableDatabases().keys() ; e.hasMoreElements() ;)
+ Hashtable ft =  BecProperties.getInstance().getPolymFinderBlastableDatabases();     
+       
+for (Enumeration e =ft.keys() ; e.hasMoreElements() ;)
 {
 	dbname = (String) e.nextElement();
-	dbpath = (String)BecProperties.getInstance().getBlastableDatabases().get(dbname);
-	%> <OPTION VALUE=' <%= dbpath %> '> <%= dbname %>
+  	dbpath = (String)ft.get(dbname);
+  	%> <OPTION VALUE='<%=dbpath %>'> <%= dbname %>
 <%}%>
 </select> </td>
   </tr>

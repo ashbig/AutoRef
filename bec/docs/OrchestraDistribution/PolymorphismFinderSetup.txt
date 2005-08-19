@@ -1,0 +1,81 @@
+1. set up scheduled job to run PF Sender;
+2. set up scheduled job to transfer files (first set up automatic recognition, see below)
+
+
+
+
+
+
+
+
+1. set up nopassword connection to orchestra:
+ - on local machine generate private/public key pair
+        in cygwin ssn-keygen -t rsa
+     ->Enter file in which to save a key:-- enter file name
+     -> Enter passphrase: -- hit enter
+     -> Enter same passphrase again: -- enter
+
+- create .ssh directory in user account on orchestra:
+    ssh et15@orchestra.med.harvard.edu mkdir .ssh (asked for password, enter);
+    chmod 600 .ssh
+
+- copy public key into .ssh
+   scp /../key.pub  et15@orchestra.med.harvard.edu:.ssh/key_file_name
+
+-append key file contecst to authorized_keys file
+   on server, inside .ssh
+    cat key_file_name >> authorized_keys
+
+
+2. set up batch to copy files, batch will be executed as scheduled job 
+(-i key path in Unix annotation, file path in UNIX annotation)
+
+if drive not maped - ?
+                name of pf directory & file from ApplicationSettings
+***************************************************
+
+IF NOT EXIST c:\\bio\\polymorphismfinder\\pl_input_data.txt GOTO PROGRAM_EXIT
+
+--->>file_to_copy_name=c:\\bio\\polymorphismfinder\\pl_input_data.txt
+scp -i /../key_file_name  /c/../file_to_copy_name et15@orchestra.med.harvard.edu:.ssh/file_name
+scp -i /../key_file_name  /c/../index_file_to_copy_name et15@orchestra.med.harvard.edu:.ssh/file_name
+scp -i /../key_file_name  /c/../orf_file_to_copy_name et15@orchestra.med.harvard.edu:.ssh/file_name
+scp  /c/../file_to_copy_name 
+scp  /c/../index_file_to_copy_name 
+scp /c/../orf_file_to_copy_name 
+ 
+:PROGRAM_EXIT
+
+
+********************************************************
+
+
+-- run blast 
+orchestra location of blast exe         /usr/bin
+orchestra location of blast databases  /rodeo/databases/
+
+
+
+bsub    "/usr/bin/blastall -d /rodeo/databases/blast/est_human -p blastn -i ./polymorphismfinder/data/blast.in -o ./polymorphismfinder/data/blastn.out -F F -G 0 -E 0 -X 0 -q -3 -r 1 -g T  -W 0 -T F -K 100 -f 0 -b 5 -v 500  -IT"
+ 
+sub    "/usr/bin/blastall -d /rodeo/databases/blast/est_human -p blastn -i blast.in -o blastn.out -F F -G 0 -E 0 -X 0 -q -3 -r 1 -g T  -W 0 -T F -K 100 -f 0 -b 5 -v 500  -IT"
+
+bsub "/usr/bin/bl2seq  -p blastn -i blast.out  -o bl2seq.out     -j fastacmd_direct.out -e 10.0 -F F -G 0 -E 0 -X 0 -q -3 -r 1 -g T  -W 0 -T F "
+
+bsub "/usr/bin/fastacmd -d /rodeo/databases/blast/est_human -s CO574453.1 -o fastacmd_direct.out"
+
+
+
+setup
+
+user_account
+mkdir polymorphismfinder //parent for all
+cd polymorphismfinder | mkdir src ---- code directory
+cd .. 
+mkdir data --- location for datafiles transfered from / to hip server
+mkdir temp            --- for all temp files
+
+
+in polymorphismfinder : javac src/*.java
+
+perl ./polymorphismfinder/src/PF_JobDistributor.perl ./polymorphismfinder/data/pl_input_data.txt 40 ./polymorphismfinder/tmp/  ./polymorphismfinder/src/ModuleSettings.properties

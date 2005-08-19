@@ -212,7 +212,7 @@ String output_dir = null;
 
 if (args.length > 0 ) output_dir = args[0];
 else output_dir = "C:\\bio\\polymorphismfinder\\output_data";
-
+     
         ResultParser.parseResultFileAndSubmitInformation(output_dir);
         // TODO code application logic here
     }

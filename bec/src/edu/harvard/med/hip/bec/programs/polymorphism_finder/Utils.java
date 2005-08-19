@@ -66,7 +66,7 @@ public class Utils
         {
             PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
             pr.print( ">"+id);
-            pr.println(edu.harvard.med.hip.bec.bioutil.SequenceManipulation.convertToFasta(text));
+            pr.println(convertToFasta(text));
             pr.close();
         }catch (IOException e)
         {

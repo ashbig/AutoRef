@@ -48,6 +48,7 @@ public class PolymorphismFinderRunner extends ProcessRunner
         ArrayList   not_processed_ids= new ArrayList();
         if ( ! getPolymorphismFinderSpec()) return ;
         ArrayList blastable_dbs = Algorithms.splitString(m_spec.getParameterByName("PL_DATABASE"));
+        
         if ( blastable_dbs == null || blastable_dbs.size() < 1)
         {
             m_error_messages.add("No blastable DB set.");
@@ -63,7 +64,7 @@ public class PolymorphismFinderRunner extends ProcessRunner
                 sql_where = getWhereClause( (String)sql_groups_of_items.get(count) );
                 sql = getSequenceIds( sql_where, sequenceid_isolatetrackingid );
                 if ( sql != null && sql.length() > 0)
-                    discrepancy_descriptions = getDiscrepancyDescriptions(sql, blastable_dbs);
+                    discrepancy_descriptions = getDiscrepancyDescriptions(sql, blastable_dbs, BecProperties.getInstance().getProperty("PF_PATH_DB"));
    
                 
                 if ( discrepancy_descriptions != null && discrepancy_descriptions.size() > 0 ) 
@@ -369,7 +370,7 @@ Format for the job_order file:
      a lot of discrepancies can correspond to the same ORF, clone is irrelevant
 */
     private ArrayList getDiscrepancyDescriptions(String sql, 
-            ArrayList blastable_dbs)
+            ArrayList blastable_dbs, String pl_db_path)
      {
         ArrayList discrepancy_descriptions = new ArrayList();
         String discrepancy_sequence = null;
@@ -414,7 +415,7 @@ Format for the job_order file:
                 {
                     discr_description = new String[2];
                     discr_description[0]=""+rs.getInt("sequenceid");
-                    discr_description[1] = ""+rs.getInt("discrepancyid")+" " +discrepancy_sequence+" " +(String)blastable_dbs.get(count)+" "+ verification_parameters;
+                    discr_description[1] = ""+rs.getInt("discrepancyid")+" " +discrepancy_sequence+" "+ pl_db_path+(String)blastable_dbs.get(count)+" "+ verification_parameters;
                     discrepancy_descriptions.add(discr_description );
                 }
                

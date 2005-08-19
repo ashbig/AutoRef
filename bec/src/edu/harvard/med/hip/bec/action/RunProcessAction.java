@@ -160,15 +160,12 @@ public class RunProcessAction extends ResearcherAction
                     
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
                     int endread_spec_id = Integer.parseInt( (String) request.getParameter(Spec.END_READS_SPEC));
-                    int polymorphism_spec_id = Integer.parseInt( (String) request.getParameter(Spec.POLYMORPHISM_SPEC));
                     IsolateRankerRunner runner = new IsolateRankerRunner();
+                  //  runner.setContainerLabels(master_container_labels );
                     runner.setContainerIds(master_container_ids );
                     runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(bioeval_spec_id, Spec.FULL_SEQ_SPEC_INT));
                     runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(endread_spec_id, Spec.END_READS_SPEC_INT));
-                    if (polymorphism_spec_id != -1)
-                        runner.setPolymorphismSpec((PolymorphismSpec)Spec.getSpecById(polymorphism_spec_id, Spec.POLYMORPHISM_SPEC_INT));
                     runner.setUser(user);
-                  //  System.out.println(bioeval_spec_id+" "+endread_spec_id+" "+polymorphism_spec_id);
                     t = new Thread(runner);           t.start();
                     break;
                 }

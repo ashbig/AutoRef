@@ -71,12 +71,24 @@ public class Seq_SubmitSpecAction  extends ResearcherAction
                 String name=(String)requestNames.nextElement();
                 String value=(String)request.getParameter(name);
                 
+                String[] values = (String[])request.getParameterValues(name);
                 if (name.equalsIgnoreCase("SET_NAME"))
                 {
                     spec_name = value;
                 }
                 else
+                {
+                    if ( values.length > 1)
+                    {
+                        value="";
+                        for (int count = 0; count < values.length;count++)
+                        {
+                            value += values[count] +" ";
+                            
+                        }
+                    }
                     params.put( name.toUpperCase(), value);
+                }
                
             }
             

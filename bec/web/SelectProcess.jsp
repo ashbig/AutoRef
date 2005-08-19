@@ -168,7 +168,7 @@ else if (user.getUserGroup().equals("Administrator")) user_level = 3;
   </tr>
   <tr> 
     <td width="100%" height="25" bgcolor="#DCE8FC"> <font color="#000080">&nbsp; 
-      <input  disabled <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %> >
+      <input   <%if ( user_level  < 3) {%>disabled <%}%>  type="radio" name="forwardName" value=<%= Constants.PROCESS_RUNPOLYMORPHISM_FINDER %> >
       Run polymorphism finder (settings required)</font> </td>
   </tr>
   <tr> 

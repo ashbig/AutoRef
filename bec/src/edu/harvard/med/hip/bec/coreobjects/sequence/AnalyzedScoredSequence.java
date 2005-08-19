@@ -253,10 +253,10 @@ public class AnalyzedScoredSequence extends ScoredSequence
 	{
             rm = (RNAMutation)discrepancies.get(count);
             position = rm.getExpPosition();
+             if ( position > region_end ) break;
             if (  position >= region_start  &&  position <= region_end )
             {
                 dicr_in_region.add( rm );
-                if ( position > region_end ) break;
             }
         }
         return dicr_in_region;
