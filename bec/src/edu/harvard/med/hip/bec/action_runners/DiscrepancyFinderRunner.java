@@ -16,6 +16,7 @@ import edu.harvard.med.hip.bec.programs.needle.*;
 import edu.harvard.med.hip.bec.coreobjects.sequence.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
+import edu.harvard.med.hip.bec.coreobjects.oligo.*;
 import edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.modules.*;
 import edu.harvard.med.hip.bec.user.*;
@@ -36,6 +37,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
 {
     private int                 m_cutoff_score = DiscrepancyFinder.DISCREPANCY_QUALITY_CUTT_OFF;
     private Hashtable           m_cloning_strategies = null;
+    private Hashtable           m_eroligo_defined_parameters = null;//key containerid 
+  
     private DiscrepancyFinder       i_discrepancy_finder = null;//default:used by all functions
 
 
@@ -79,7 +82,12 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                         if (clone.getCloneSequenceId() > 0 )
                             processSequence( clone, pst_insert_process_object, conn,  process_id);
                         else
-                            processStretchCollection( clone,  conn);
+                        {
+                            int res = processStretchCollection( clone,  conn);
+                            if (res == 0 )
+                                processReads(clone, conn);
+                        }
+                       
                     }
                 }
             }
@@ -113,46 +121,211 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             i_discrepancy_finder.setMaxNumberOfDiscrepancies(30);
             i_discrepancy_finder.setInputType(true);
     }
-    private void            processStretchCollection(CloneDescription clone, Connection conn) throws Exception
+      
+      
+      // return 1 - OK, 0 - no stretch collection, -1 crash
+    private int            processStretchCollection(CloneDescription clone, Connection conn) 
     {
-         StretchCollection strcol = StretchCollection.getByIsolateTrackingId( clone.getIsolateTrackingId(), true);
-         if ( strcol == null ) return;
-         int[] cds_start_stop = new int[2];
-         BaseSequence  refsequence = prepareRefSequence(clone,  cds_start_stop);
-         i_discrepancy_finder.setRefSequenceCdsStart(  cds_start_stop[0]);
-         i_discrepancy_finder.setRefSequenceCdsStop(  cds_start_stop[1] );
-         AnalyzedScoredSequence contig_sequence = null;
-         Stretch stretch = null;
-         for (int contig_count =0; contig_count < strcol.getStretches().size(); contig_count++)
+        try
         {
-             stretch = (Stretch) strcol.getStretches().get(contig_count);
-             if ( stretch.getType() != Stretch.GAP_TYPE_CONTIG ) continue;
-             contig_sequence = stretch.getSequence();
-             if (contig_sequence.getStatus() != BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED) continue;
-             i_discrepancy_finder.setSequencePair(new SequencePair(contig_sequence ,  refsequence));
-             
-             i_discrepancy_finder.setCdsStart(0);
-             i_discrepancy_finder.setCdsStop(0);
-             i_discrepancy_finder.run();
-             if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
-                return ;
-             else
-             {
-                contig_sequence.insertMutations(conn);
-                if ( contig_sequence.getDiscrepancies() != null && contig_sequence.getDiscrepancies().size() > 0)
-                {
-                    stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,conn);
-                }
-                else
-                {
-                    stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES,conn);
-                }
-             }
-         }
-         conn.commit();
+             StretchCollection strcol = StretchCollection.getByIsolateTrackingId( clone.getIsolateTrackingId(), true);
+             if ( strcol == null ) return 0;
+             int[] cds_start_stop = new int[2];
+             BaseSequence  refsequence = prepareRefSequence(clone,  cds_start_stop);
+             i_discrepancy_finder.setRefSequenceCdsStart(  cds_start_stop[0]);
+             i_discrepancy_finder.setRefSequenceCdsStop(  cds_start_stop[1] );
+             AnalyzedScoredSequence contig_sequence = null;
+             Stretch stretch = null;
+             for (int contig_count =0; contig_count < strcol.getStretches().size(); contig_count++)
+            {
+                 stretch = (Stretch) strcol.getStretches().get(contig_count);
+                 if ( stretch.getType() != Stretch.GAP_TYPE_CONTIG ) continue;
+                 contig_sequence = stretch.getSequence();
+                 if (contig_sequence.getStatus() != BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED) continue;
+                 i_discrepancy_finder.setSequencePair(new SequencePair(contig_sequence ,  refsequence));
 
+                 i_discrepancy_finder.setCdsStart(0);
+                 i_discrepancy_finder.setCdsStop(0);
+                 i_discrepancy_finder.run();
+                 if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+                    return 1;
+                 else
+                 {
+                    contig_sequence.insertMutations(conn);
+                    if ( contig_sequence.getDiscrepancies() != null && contig_sequence.getDiscrepancies().size() > 0)
+                    {
+                        stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES,conn);
+                    }
+                    else
+                    {
+                        stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_NO_DISCREPANCIES,conn);
+                    }
+                 }
+             }
+            IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, clone.getIsolateTrackingId(), conn);
+                    
+           conn.commit();
+           return 1;
+        }
+        catch(Exception e)
+        {
+            DatabaseTransaction.rollback(conn);
+            m_error_messages.add(e.getMessage());
+            return -1;
+        }
     }
 
+    
+    //---------------------------------------------------------------
+    private void processReads(CloneDescription clone_description, Connection conn) 
+    {
+        try
+        {
+            int isolate_status = -1000;
+            ArrayList reads = Read.getReadByIsolateTrackingId(clone_description.getIsolateTrackingId());
+            if ( reads == null || reads.size() < 1) return;
+            int[] cds_start_stop = new int[2];
+            BaseSequence  refsequence = prepareRefSequence(clone_description,  cds_start_stop);
+            i_discrepancy_finder.setRefSequenceCdsStart(  cds_start_stop[0]);
+            i_discrepancy_finder.setRefSequenceCdsStop(  cds_start_stop[1] );
+            int[] oligo_depend_params =  getEROligoDependentParameters( clone_description);
+             for (int reads_count = 0; reads_count < reads.size(); reads_count ++)
+            {
+                Read read  = (Read) reads.get(reads_count);
+                  //not analyzed isolates
+                if (read.getStatus() == Read.STATUS_NOT_ANALIZED)
+                {
+         //check for read length
+                    if ( !isReadLong(read, oligo_depend_params, conn)) continue;
+                    runRead( read, refsequence, oligo_depend_params,  conn);
+                    if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH   
+                        || read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH)
+                    {
+                        isolate_status =IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH;
+                        IsolateTrackingEngine.updateStatus(isolate_status, clone_description.getIsolateTrackingId(), conn);
+                       
+                    }
+                }
+
+            }
+            if ( isolate_status != IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH)
+            {
+                 IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, clone_description.getIsolateTrackingId(), conn);
+            }      
+            conn.commit();
+        }
+        catch(Exception e)
+        {
+            DatabaseTransaction.rollback(conn);
+            m_error_messages.add(e.getMessage());
+        }
+      
+    }
+    
+     private boolean isReadLong(Read read, int[] oligo_depend_params, Connection conn) throws BecDatabaseException
+    {
+        // check for read length
+        if (read.getType() == Read.TYPE_ENDREAD_REVERSE_SHORT || read.getType() == Read.TYPE_ENDREAD_FORWARD_SHORT )
+        {
+            //read was defined as too short on load get out
+            return false;
+        }
+        if ( read.getType() == Read.TYPE_ENDREAD_FORWARD &&
+            (read.getTrimEnd() - read.getTrimStart()) < oligo_depend_params[0])
+        {
+            //update read type
+            read.setType(Read.TYPE_ENDREAD_FORWARD_SHORT);
+            read.updateType(conn);
+      //       System.out.println(read.getId() +" "+read.getType());
+            return false;
+        }
+        if ( read.getType() == Read.TYPE_ENDREAD_REVERSE && (read.getTrimEnd() - read.getTrimStart()) < oligo_depend_params[2])
+        {
+            //update read type
+            read.setType(Read.TYPE_ENDREAD_REVERSE_SHORT);
+            read.updateType(conn);
+      //      System.out.println(read.getId() +" "+read.getType());
+            return false;
+        }
+        return true;
+    }
+     
+      //function runs analysis of one read
+    private void  runRead( Read read, BaseSequence refsequence, int[] oligo_depend_params, Connection conn)
+            throws Exception
+    {
+        int cds_start = 0; int cds_stop = 0;
+    //    if (read.getScore() == Constants.SCORE_NOT_CALCULATED && 
+         if (   (read.getType() == Read.TYPE_ENDREAD_REVERSE || read.getType() == Read.TYPE_ENDREAD_FORWARD))
+        {
+               // analyzed only trimmed part of the read
+            //reasign sequence for only trimmed sequence
+             AnalyzedScoredSequence read_sequence =  read.getSequence();
+            //store values
+            String read_sequence_text=read_sequence.getText();
+            int[] read_scores = read.getScoresAsArray();
+            try
+            {
+                //reasign scores and sequencde for only trimmed scores
+                read_sequence.setText(read.getTrimmedSequence());
+                int[] trimmed_scores = read.getTrimmedScoresAsArray();
+                read_sequence.setScoresAsArray(trimmed_scores);
+            }
+            catch(Exception e)
+            {
+               //  e.printStackTrace();
+       //         System.out.println("Can not get trimmed sequence; readid " + read.getId());
+               throw new BecUtilException("Can not get trimmed sequence; readid " + read.getId());
+            }
+    //run read
+
+            i_discrepancy_finder.setSequencePair(new SequencePair(read.getSequence() ,  refsequence));
+            
+            //set compliment request
+            if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
+                i_discrepancy_finder.setIsRunCompliment( oligo_depend_params[1] != Oligo.ORIENTATION_SENSE );
+            else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
+                i_discrepancy_finder.setIsRunCompliment( oligo_depend_params[3] !=  Oligo.ORIENTATION_SENSE);
+            
+            i_discrepancy_finder.setCdsStart(0);
+            i_discrepancy_finder.setCdsStop(0);
+            i_discrepancy_finder.run();
+            
+            //set cds start && stop 
+            if ( (read.getType() == Read.TYPE_ENDREAD_FORWARD && ( oligo_depend_params[1] == Oligo.ORIENTATION_SENSE)
+            || (read.getType() == Read.TYPE_ENDREAD_REVERSE && (oligo_depend_params[3]  == Oligo.ORIENTATION_SENSE))))
+            {
+                cds_start = i_discrepancy_finder.getCdsStart()  + read.getTrimStart() ;
+                cds_stop = i_discrepancy_finder.getCdsStop() + read.getTrimStart() ;
+                Read.updateCdsStartStop(cds_start, cds_stop, read.getId(),conn);
+            }
+            else 
+            {
+                cds_start =  -i_discrepancy_finder.getCdsStart() + read.getTrimEnd()  ;
+                cds_stop =  - i_discrepancy_finder.getCdsStop() + read.getTrimEnd();
+                Read.updateCdsStartStop(cds_start, cds_stop, read.getId(),conn);
+  
+            }
+            Read.updateStatus(Read.STATUS_ANALIZED, read.getId(), conn);
+            if (read_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
+            {
+                if (read.getType() == Read.TYPE_ENDREAD_FORWARD)
+                {
+                    Read.updateType(Read.TYPE_ENDREAD_FORWARD_NO_MATCH, read.getId(), conn);
+                }
+                else if (read.getType() == Read.TYPE_ENDREAD_REVERSE)
+                {
+                    Read.updateType(Read.TYPE_ENDREAD_REVERSE_NO_MATCH, read.getId(), conn);
+                }
+                return;
+            }
+            else
+              // insert mutations
+                read.getSequence().insertMutations(conn);
+        }
+  }
+
+   //------------------------------------------
            
     private ArrayList           getSequenceDescriptions(String sql , ArrayList sequence_descriptions_processed, int mode)
     {
@@ -176,6 +349,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                 clone_description.setCloneSequenceId (rs.getInt("clonesequenceid"));
                 clone_description.setCloneSequenceType (rs.getInt("clonesequencetype"));
                 clone_description.setCloneSequenceAnalysisStatus (rs.getInt("clonesequencestatus"));
+                clone_description.setContainerId( rs.getInt("containerid"));
                 sequence_descriptions.add(clone_description);
                
             }
@@ -262,7 +436,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
 
     private void            processSequence(CloneDescription clone,
                             PreparedStatement pst_insert_process_object,
-                            Connection conn, int process_id) throws Exception
+                            Connection conn, int process_id) 
     {
         try
         {
@@ -285,6 +459,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             pst_insert_process_object.setInt(1,process_id);
             pst_insert_process_object.setInt(2, clonesequence.getId());
             DatabaseTransaction.executeUpdate(pst_insert_process_object);
+             IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, clone.getIsolateTrackingId(), conn);
+                    
             conn.commit();
         }
         catch(Exception e)
@@ -340,8 +516,41 @@ public class DiscrepancyFinderRunner extends ProcessRunner
 
     }
 
+//returns int[4] where 
+    // int[0] -  5pMinReadLength; int[1] - forwardReadSence
+    // int[2] -  3pMinReadLength; int[3] - reverseReadSence
+    
+                 
+    private  int[]            getEROligoDependentParameters(CloneDescription clone_description) throws Exception
+    {
+        int[] oligo_params = new  int[4];Oligo[] oligos = null;
+        int linker5_length = 0; int linker3_length = 0;
+        CloningStrategy cloning_strategy = getCloningStrategyForCloneSequence(clone_description);
+      
+        if ( m_eroligo_defined_parameters == null)
+        {
+            m_eroligo_defined_parameters = new Hashtable();
 
+        }
+        if ( !m_eroligo_defined_parameters.containsKey(new Integer(clone_description.getContainerId())) )
+        {
+             oligos = Container.findEndReadsOligos(clone_description.getContainerId());
+             linker5_length= cloning_strategy.getLinker5().getSequence().length();      
+             linker3_length= cloning_strategy.getLinker3().getSequence().length();      
+             oligo_params[0]= oligos[0].getLeaderLength() + linker5_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION;
+             oligo_params[1]= oligos[0].getOrientation() ;
+             oligo_params[2]= oligos[1].getLeaderLength() + linker3_length + Constants.NUMBER_OF_BASES_ADD_TO_LINKER_FORREAD_QUALITY_DEFINITION;
+             oligo_params[3]= oligos[1].getOrientation() ;
+             
+             m_eroligo_defined_parameters.put(new Integer(clone_description.getContainerId() ), oligo_params);
+        }
+        else
+        {
+            oligo_params = (int[])m_eroligo_defined_parameters.get( new Integer(clone_description.getContainerId() ));
+        }
+        return oligo_params ;
 
+    }
 
 
 
@@ -352,19 +561,21 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         {
             case  Constants.ITEM_TYPE_CLONEID :
             {
-                 return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
+                 return "select containerid, c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
-                 +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
-                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
+                 +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus "
+                 +" from sequencingconstruct c, assembledsequence a,isolatetracking i , sample s "
+                 +" where s.sampleid=i.sampleid and  c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and i.isolatetrackingid in (select isolatetrackingid from flexinfo where flexcloneid in ("+sql_items+"))"
                 ;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
             case  Constants.ITEM_TYPE_PLATE_LABELS :
             {
-                 return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
+                 return "select containerid, c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
-                 +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus from sequencingconstruct c, assembledsequence a,isolatetracking i "
-                 +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
+                 +" i.isolatetrackingid as isolatetrackingid, i.status as isolatestatus "
+                 +" from sequencingconstruct c, assembledsequence a,isolatetracking i , sample s "
+                 +" where s.sampleid=i.sampleid and c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and i.isolatetrackingid in (select isolatetrackingid from isolatetracking where sampleid in   "
                  +" (select sampleid from sample where containerid in "
                  +" (select containerid from  containerheader where label in ("+sql_items+"))))"
@@ -379,7 +590,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +"  and a.sequenceid in  ("+sql_items+")"
                 ;//  + " and a.analysisstatus in ("+sequence_analysis_status+")";
             }
-            case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
+          /*  case  Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
             {
                 return "select c.refsequenceid as refsequenceid,c.constructid as constructid,format,cloningstrategyid, "
                  +" sequenceid as clonesequenceid,sequencetype as clonesequencetype,analysisstatus as clonesequencestatus, "
@@ -387,7 +598,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  +" where c.constructid=i.constructid and i.isolatetrackingid=a.isolatetrackingid(+) "
                  +"  and i.isolatetrackingid (select isolatetrackingid from flexinfo where flexsequenceid in ("+sql_items+")))"
                  ;// + " and a.analysisstatus in ("+sequence_analysis_status+")";
-             }
+             }*/
         }
         return null;
     }
@@ -411,13 +622,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
        
-        runner.setInputData( Constants.ITEM_TYPE_BECSEQUENCE_ID, "61842 61846 61849 61850 ");
-    //    runner.setItems(item_ids.toUpperCase().trim());
-      //  runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
+        runner.setInputData( Constants.ITEM_TYPE_CLONEID, " ");
         runner.setUser(user);
-        //Thread t = new Thread(runner);
-       // t.start();
-       
         runner.run();
          
         System.exit(0);

@@ -267,6 +267,27 @@ public class Read
         String sql = "update readinfo set cdsstart="+ m_cdsstart +   ", cdsstop= "+m_cdsstop+" where readid="+m_id;
         DatabaseTransaction.executeUpdate(sql, conn);
     }
+     
+    public static void  updateScore(int score, int id, Connection conn) throws BecDatabaseException
+    {
+        String sql = "update readinfo set score="+ score +   " where readid="+id;
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
+   public static void updateStatus(int status, int id, Connection conn) throws BecDatabaseException
+    {
+        String sql = "update readinfo set status="+ status +   " where readid="+id;
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
+    public static void updateType(int type, int id ,Connection conn) throws BecDatabaseException
+    {
+        String sql = "update readinfo set readtype="+ type +   " where readid="+id;
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
+     public static  void updateCdsStartStop(int cdsstart, int cdsstop, int id,Connection conn) throws BecDatabaseException
+    {
+        String sql = "update readinfo set cdsstart="+ cdsstart +   ", cdsstop= "+cdsstop+" where readid="+id;
+        DatabaseTransaction.executeUpdate(sql, conn);
+    }
     public int         getId(){ return m_id  ;}
     public int         getIsolateTrackingId(){ return m_isolatetrackingid  ;} 
  

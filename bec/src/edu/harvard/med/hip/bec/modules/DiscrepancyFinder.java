@@ -33,26 +33,7 @@ public class DiscrepancyFinder
     //store input & output blast files: do not allow to change
     private  String INPUT = Constants.getTemporaryFilesPath();
     public  String OUTPUT = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("NEEDLE_OUTPUT_PATH") + java.io.File.separator;
-    /*
-    
-      {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-        {
-            INPUT = Constants.getTemporaryFilesPath();
-            OUTPUT = "d:\\output\\needleoutput\\";
-             if (ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
-            {
-                 OUTPUT = "d:\\output\\eval_needleoutput\\";
-            }
-        }
-        else
-        {
-            INPUT = Constants.getTemporaryFilesPath();
-            OUTPUT = "c:\\needleoutput\\";
-            }
-    }*
-     */
-    
+ 
     private SequencePair m_seqpair = null;
     private ArrayList    m_seqpairs = null;
     //one based; this parameters defined as start / stop of ref sequence,
