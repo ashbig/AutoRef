@@ -61,15 +61,7 @@ public class PolymorphismSpec extends Spec
          return getAllSpecsByTypeAndSubmitter(Spec.POLYMORPHISM_SPEC_INT, submitter_id);
      }
      
-     public String      getDBName(){ return  this.getParameterByName("PL_DATABASE"); }
-     public int         getNumberOfBases()throws Exception{ return  this.getParameterByNameInt("PL_BASES"); }
-     public String      getMatrixName()
-     { 
-         String matrix_name =  this.getParameterByName("PL_MATRIX");
-         if ( matrix_name == null ) return "BLOSUM62";
-         return matrix_name;
-     }
-   
+    
      //cleans up not neaded parameters submitted by html form
      protected void cleanup_parameters()
      {

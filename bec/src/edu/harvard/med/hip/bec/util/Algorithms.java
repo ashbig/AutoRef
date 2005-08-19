@@ -301,6 +301,54 @@ public class Algorithms
          }
     
     }
+    
+    
+    public static final int COMPARE_TYPE_RETURN_COMMON_MEMBERS = 0;
+    public static final int COMPARE_TYPE_RETURN_MEMBERS_FROM_ARRAY1_ONLY = 1;
+    public static final int COMPARE_TYPE_RETURN_MEMBERS_FROM_ARRAY2_ONLY = 2;
+    //acssepts two sorted lists
+    public static ArrayList  compareTwoLists( int mode, ArrayList ar_1,ArrayList ar_2)
+    {
+        ArrayList result = new ArrayList();
+        int count_1 = 0; int count_2 = 0;
+        while(count_1 < ar_1.size() && count_2 < ar_2.size()) 
+
+        {
+            int res = ((String)ar_1.get(count_1)).compareTo((String)ar_2.get(count_2));
+            if( res == 0)
+            {
+                if ( mode == COMPARE_TYPE_RETURN_MEMBERS_FROM_ARRAY1_ONLY )   result.add( ar_1.get(count_1));
+                count_1++; count_2++;
+            }
+            else if ( res < 0 )
+            {
+                if ( mode == COMPARE_TYPE_RETURN_MEMBERS_FROM_ARRAY1_ONLY )  result.add( ar_1.get(count_1));
+                count_1++;
+            }
+            else if ( res > 0 )
+            {
+                if ( mode == COMPARE_TYPE_RETURN_MEMBERS_FROM_ARRAY2_ONLY ) result.add( ar_2.get(count_2));
+                count_2++;
+            }
+      }
+
+      if ( mode == COMPARE_TYPE_RETURN_MEMBERS_FROM_ARRAY1_ONLY)
+        { 
+            for (int countn = count_1; countn < ar_1.size(); countn++)
+            {
+                result. add( ar_1.get(countn));
+            }
+        }
+         if ( mode == COMPARE_TYPE_RETURN_MEMBERS_FROM_ARRAY2_ONLY)
+        { 
+            for (int countn = count_2; countn < ar_2.size(); countn++)
+            {
+                result. add( ar_2.get(countn));
+            }
+        }
+        return result;
+    }
+    
     public static void main(String args[])
     {
        int position = 1;

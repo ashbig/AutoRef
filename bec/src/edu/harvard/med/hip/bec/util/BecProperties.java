@@ -4,8 +4,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.6 $
- * $Date: 2005-05-23 17:50:15 $
+ * $Revision: 1.7 $
+ * $Date: 2005-08-19 13:50:00 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.6 $ $Date: 2005-05-23 17:50:15 $
+ * @version    $Revision: 1.7 $ $Date: 2005-08-19 13:50:00 $
  */
 
 public class BecProperties
@@ -43,6 +43,7 @@ public class BecProperties
     private  ArrayList       m_Error_messages = null;
     private  int      m_isSettingsVerified = 0;
     private Hashtable  m_blastable_db = null;
+    private Hashtable  m_polymorffinder_blastable_db = null;
     private Hashtable  m_vector_libraries = null;
     private boolean     m_isDebuggingMode = false;
     private int          m_isWindowsOS = 0;
@@ -112,6 +113,9 @@ public class BecProperties
             value =m_properties.getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");//=/F/Sequences for BEC/files_to_transfer
              if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for original trace files directory is not set properly");
            
+            value =m_properties.getProperty("POLYORPHISM_FINDER_DATA_DIRECTORY");//=/F/Sequences for BEC/files_to_transfer
+             if ( value == null || !isFileExsist(value) )m_Error_messages.add("Path for polymorphism finder directory is not set properly");
+           
         
             value =m_properties.getProperty("IS_HIP_VERSION");//=/F/Sequences for BEC/files_to_transfer
             if ( value == null  )   m_Error_messages.add("HIP/External version not defined. Setting to work as HIP internal application.");
@@ -126,6 +130,7 @@ public class BecProperties
             
             m_blastable_db = new Hashtable();
             m_vector_libraries = new Hashtable();
+            m_polymorffinder_blastable_db = new Hashtable();
             String key = null;
            for (Enumeration e = m_properties.keys() ; e.hasMoreElements() ;)
            {
@@ -137,6 +142,11 @@ public class BecProperties
                 else if ( key.indexOf("BLASTABLE_DB_") != -1 && key.indexOf("_NAME") == -1)
                 {
                     m_blastable_db.put(m_properties.getProperty(key+"_NAME"), m_properties.getProperty(key));
+     
+                }
+                else if ( key.indexOf("PF_DB_") != -1 && key.indexOf("_NAME") == -1)
+                {
+                    m_polymorffinder_blastable_db.put(m_properties.getProperty( key+"_NAME"), m_properties.getProperty(key));
      
                 }
            }
@@ -245,14 +255,15 @@ public class BecProperties
      
     public          boolean         isSettingsVerified(){ return ( m_isSettingsVerified > 0 );}
     public           Hashtable  getBlastableDatabases(){ return m_blastable_db ;}
+    public           Hashtable  getPolymFinderBlastableDatabases(){ return m_polymorffinder_blastable_db;}
     public           Hashtable  getVectorLibraries(){ return m_vector_libraries ;}
     public           boolean    isInDebugMode(){ return  m_isDebuggingMode ;}
     public           boolean    isWindowsOS()
     {
         if (m_isWindowsOS == 0)
         {
-           String os = System.getProperty("os.name");
-           m_isWindowsOS = ( os.indexOf("Win") > -1) ? 1:-1;
+           String os = System.getProperty("os.name").toLowerCase();
+           m_isWindowsOS = ( os.indexOf("win") > -1) ? 1:-1;
         }
         return m_isWindowsOS == 1;
     }
@@ -270,14 +281,15 @@ public class BecProperties
     {
         try
         {
+            String dbname = null;String dbpath = null;
         BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
-             System.out.println("hip ver " +  BecProperties.getInstance().isInternalHipVersion());
-         System.out.println("hip ver " +  BecProperties.getInstance().isInternalHipVersion());
-     
-          System.out.println("hip ver " +  BecProperties.getInstance().isInternalHipVersion());
-      System.out.println("database " +  BecProperties.getInstance().isInDebugMode());
-      
+        Hashtable ft =  BecProperties.getInstance().getPolymFinderBlastableDatabases();     
+        for (Enumeration e = ft .keys() ; e.hasMoreElements() ;)
+{
+	 dbname = (String) e.nextElement();
+   	 dbpath = (String)ft.get(dbname);
+        }
          }catch(Exception e){}
        
     }         

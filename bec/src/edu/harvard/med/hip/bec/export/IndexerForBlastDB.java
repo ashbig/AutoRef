@@ -110,7 +110,7 @@ CCAAGAAGAAGAAG*/
         }
     }
     
-    public static void buildIndexForFASTAFile(String file_name, String index_file_name)
+    public static boolean buildIndexForFASTAFile(String file_name, String index_file_name)
     {
         BufferedReader  fin = null;
         FileOutputStream fout = null;  
@@ -146,6 +146,7 @@ CCAAGAAGAAGAAG*/
             end = current_pos -1;
             writeIndexData(id, start,end,dout);
             fin.close();dout.close();
+            return true;
         }
         catch (Exception e)
         {
@@ -153,6 +154,7 @@ CCAAGAAGAAGAAG*/
             try
             {fin.close();dout.close();} catch(Exception e1)
             {}
+            return false;
         }
     }
     

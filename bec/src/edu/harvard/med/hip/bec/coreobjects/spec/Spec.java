@@ -157,10 +157,7 @@ public abstract class Spec
                 rsl = t.executeQuery("select paramname,paramvalue from config_parameters where configid="+id);
                 while(rsl.next())
                 {
-                  //  n = rs1.getString("paramname");
-                  //  v = rs1.getInt("paramvalue");
-                  //  m_params.put(n,String.valueOf(v));
-                    params.put(rsl.getString("paramname"), String.valueOf(rsl.getInt("paramvalue") ));
+                      params.put(rsl.getString("paramname"), String.valueOf(rsl.getObject("paramvalue") ));
              
                 }
                 switch  (config_type)
