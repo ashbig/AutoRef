@@ -45,7 +45,6 @@ public class PlateImporter {
         for(int n=0; n<contents.size(); n++) {            
             List row = (List)contents.get(n);
             Sample currentSample = null;
-            
             for(int i=0; i<columns.size(); i++) {
                 String columnName = (String)columns.get(i);
                 String columnInfo = (String)row.get(i);
@@ -54,13 +53,14 @@ public class PlateImporter {
                     if(!currentLabel.equals(lastLabel)) {
                         c = new Container();
                         c.setContainerid(containerid);
-                        c.setType(Container.PLATE_96);
+                        c.setType(Container.COSTAR_RD);
                         c.setLocation(Location.FREEZER);
                         c.setLabel(columnInfo);
                         c.setOricontainerid(columnInfo);
+                        c.setStatus(Container.FILLED);
                         c.initiateSamples();
                         
-                        for(int j=0; j<c.getSize(); j++) {
+                        for(int j=0; j<Container.getCapacity(c.getType()); j++) {
                             Sample s = new Sample();
                             s.setSampleid(sampleid);
                             s.setType(Sample.EMPTY);

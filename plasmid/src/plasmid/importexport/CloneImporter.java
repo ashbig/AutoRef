@@ -104,8 +104,9 @@ public class CloneImporter {
             fmt.setMaximumIntegerDigits(8);
             fmt.setMinimumIntegerDigits(8);
             fmt.setGroupingUsed(false);
-            String sp = DefTableManager.getVocabulary("species", "genusspecies", "code", c.getDomain());
-            String tp = DefTableManager.getVocabulary("clonetype", "clonetype", "code", c.getType());            
+            DefTableManager man = new DefTableManager();
+            String sp = man.getVocabulary("species", "genusspecies", "code", c.getDomain(), manager.getConnection());
+            String tp = man.getVocabulary("clonetype", "clonetype", "code", c.getType(), manager.getConnection());            
             if(sp == null) {
                 throw new Exception("Cannot find code for species: "+c.getDomain());
             }

@@ -209,9 +209,7 @@ public class RefseqManager extends TableManager {
      * @return Return the reference sequence ID (primary key). Return 0 if no reference sequence found.
      * @throws Exception
      */
-    public static int findRefseq(String nametype, String namevalue) throws Exception {
-        DatabaseTransaction t = DatabaseTransaction.getInstance();
-        Connection conn = t.requestConnection();
+    public int findRefseq(String nametype, String namevalue) throws Exception {
         String sql = "select refid from refseqname where nametype=? and namevalue=?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, nametype);
@@ -223,7 +221,6 @@ public class RefseqManager extends TableManager {
         }
         DatabaseTransaction.closeResultSet(rs);
         DatabaseTransaction.closeStatement(stmt);
-        DatabaseTransaction.closeConnection(conn);
         
         return refseqid;
     }

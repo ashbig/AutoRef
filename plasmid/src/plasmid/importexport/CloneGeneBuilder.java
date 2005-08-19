@@ -112,7 +112,9 @@ public class CloneGeneBuilder {
     }
     
     public void buildDnainsertWithRefseq(Connection conn, int lastInsertid) throws Exception {
-        String sql = "select insertid from dnainsert where geneid is null and insertid>"+lastInsertid;
+        String sql = "select insertid from dnainsert where geneid is null";
+        if(lastInsertid > 0)
+            sql += " and insertid>"+lastInsertid;
         String sql2 = "select r.name, r.description"+
         " from dnainsert d, referencesequence r"+
         " where d.refseqid=r.refseqid"+
@@ -159,8 +161,9 @@ public class CloneGeneBuilder {
         " select distinct c.cloneid, s.accession"+
         " from clone c, dnainsert d, sequencerecord s"+
         " where c.cloneid=d.cloneid"+
-        " and d.geneid=s.geneid"+
-        " and c.cloneid>"+lastCloneid;
+        " and d.geneid=s.geneid";
+        if(lastCloneid>0)
+            sql += " and c.cloneid>"+lastCloneid;
         DatabaseTransaction.executeUpdate(sql, conn);
         
         sql = "select c.cloneid, n.namevalue"+
@@ -202,8 +205,9 @@ public class CloneGeneBuilder {
         " select distinct c.cloneid, s.gi"+
         " from clone c, dnainsert d, sequencerecord s"+
         " where c.cloneid=d.cloneid"+
-        " and d.geneid=s.geneid"+
-        " and c.cloneid>"+lastCloneid;
+        " and d.geneid=s.geneid";
+        if(lastCloneid>0)
+            sql += " and c.cloneid>"+lastCloneid;
         DatabaseTransaction.executeUpdate(sql, conn);
         
         sql = "select c.cloneid, n.namevalue"+
@@ -245,8 +249,9 @@ public class CloneGeneBuilder {
         " select distinct c.cloneid, s.symbol"+
         " from clone c, dnainsert d, genesymbol s"+
         " where c.cloneid=d.cloneid"+
-        " and d.geneid=s.geneid"+
-        " and c.cloneid>"+lastCloneid;
+        " and d.geneid=s.geneid";
+        if(lastCloneid>0)
+            sql += " and c.cloneid>"+lastCloneid;
         DatabaseTransaction.executeUpdate(sql, conn);
         
         sql = "select c.cloneid, r.name"+
@@ -287,8 +292,9 @@ public class CloneGeneBuilder {
         " select distinct c.cloneid, g.geneid"+
         " from clone c, dnainsert d, gene g"+
         " where c.cloneid=d.cloneid"+
-        " and d.geneid=g.geneid"+
-        " and c.cloneid>"+lastCloneid;
+        " and d.geneid=g.geneid";
+        if(lastCloneid>0)
+            sql += " and c.cloneid>"+lastCloneid;
         DatabaseTransaction.executeUpdate(sql, conn);
     }
     
@@ -301,8 +307,8 @@ public class CloneGeneBuilder {
     }
 
     public static void main(String args[]) {
-        int lastInsertid = 0;
-        int lastCloneid = 0;
+        int lastInsertid = 9057;
+        int lastCloneid = 9057;
         DatabaseTransaction t = null;
         Connection conn = null;
         CloneGeneBuilder builder = new CloneGeneBuilder();
@@ -310,15 +316,13 @@ public class CloneGeneBuilder {
         try {
             t = DatabaseTransaction.getInstance();
             conn = t.requestConnection();
-            System.out.println("Building DNAINSERT with genes");
+            /**System.out.println("Building DNAINSERT with genes");
             builder.buildDnainsertWithGene(conn, lastInsertid);
             builder.buildDnainsertWithRefseqSymbol(conn, lastInsertid);
             System.out.println("Building DNAINSERT with reference sequences");
             builder.buildDnainsertWithRefseq(conn, lastInsertid);
             DatabaseTransaction.commit(conn);
-            
-            //System.out.println("Truncating tables");
-            //builder.truncateTables(conn);
+            */
             System.out.println("Building CLONEGENBANK");
             builder.buildCloneGenbank(conn, lastCloneid);
             System.out.println("Building CLONELOCUS");

@@ -343,7 +343,7 @@ public class ContainerProcessManager {
                 printContainer(tubes);
                 printLineages(lineages);
                 
-                ProcessExecution execution = new ProcessExecution(0, ProcessExecution.COMPLETE, null, "test", "Tecan");
+                ProcessExecution execution = new ProcessExecution(0, ProcessExecution.COMPLETE, null, "test", "Tecan", "Test Protocol");
                 execution.setLineages(lineages);
                 execution.setInputObjects(containers);
                 execution.setOutputObjects(tubes);

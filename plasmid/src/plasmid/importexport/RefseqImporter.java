@@ -75,7 +75,8 @@ public class RefseqImporter {
                 if("refseqid".equalsIgnoreCase(columnName)) {
                     int seqid = 0;
                     try {
-                        seqid = RefseqManager.findRefseq(RefseqNameType.GI, columnInfo);
+                        RefseqManager man = new RefseqManager(manager.getConnection());
+                        seqid = man.findRefseq(RefseqNameType.GI, columnInfo);
                     } catch (Exception ex) {
                         throw new Exception("Error occured while trying to find matching reference sequence: "+columnInfo+" from database.");
                     }

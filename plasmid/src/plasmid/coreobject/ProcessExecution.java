@@ -23,6 +23,7 @@ public class ProcessExecution {
     private String date;
     private String processname;
     private String researchername;
+    private String protocolname;
     
     private List lineages;
     private List inputObjects;
@@ -34,12 +35,13 @@ public class ProcessExecution {
     public ProcessExecution() {
     }
     
-    public ProcessExecution(int executionid, String status, String date, String processname, String reseachername) {
+    public ProcessExecution(int executionid, String status, String date, String processname, String reseachername, String protocolname) {
         this.executionid = executionid;
         this.status = status;
         this.date = date;
         this.processname = processname;
         this.researchername = researchername;
+        this.protocolname = protocolname;
     }
     
     public int getExecutionid() {return executionid;}
@@ -47,12 +49,14 @@ public class ProcessExecution {
     public String getDate() {return date;}
     public String getProcessname() {return processname;}
     public String getResearchername() {return researchername;}
+    public String getProtocolname() {return protocolname;}
     
     public void setExecutionid(int id) {this.executionid = id;}
     public void setStatus(String s) {this.status = s;}
     public void setDate(String s) {this.date = s;}
     public void setProcessname(String s) {this.processname = s;}
     public void setResearchername(String s) {this.researchername = s;}
+    public void setProtocolname(String s) {this.protocolname = s;}
     
     public List getLineages() {return lineages;}
     public void setLineages(List l) {this.lineages = l;}

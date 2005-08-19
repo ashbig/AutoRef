@@ -98,7 +98,7 @@ public class Container {
     }
     
     public void initiateSamples() {
-        this.samples = new ArrayList(this.getSize());
+        this.samples = new ArrayList(Container.getCapacity(this.getType()));
     }
     
     public void addSample(Sample s) {

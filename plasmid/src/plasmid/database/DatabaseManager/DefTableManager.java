@@ -177,6 +177,31 @@ public class DefTableManager extends TableManager {
         
         return rt;
     }
+       
+    public String getVocabulary(String table, String columnKnown, String columnUnknown, String column, Connection conn) {
+        String sql = "select "+columnUnknown+" from "+table+" where "+columnKnown+"=?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String rt = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, column);
+            rs = DatabaseTransaction.executeQuery(stmt);
+            if(rs.next()) {
+                rt = rs.getString(1);
+            }
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Error occured while querying "+table);
+                System.out.println(ex);
+            }
+        } finally {
+            DatabaseTransaction.closeResultSet(rs);
+            DatabaseTransaction.closeStatement(stmt);
+        }
+        
+        return rt;
+    }
     
     public static void main(String args[]) {
         try {
@@ -185,6 +210,8 @@ public class DefTableManager extends TableManager {
             Connection conn = t.requestConnection();
             int id = manager.getMaxNumber("containerheader", "containerid");
             System.out.println(id);
+            String sp = DefTableManager.getVocabulary("species", "genusspecies", "code", "Pseudomonas aeruginosa");
+            System.out.println(sp);
             DatabaseTransaction.closeConnection(conn);
         } catch (Exception ex) {
             System.out.println(ex);
