@@ -397,7 +397,7 @@ public class ReportRunner extends ProcessRunner
       UIRead read = null;
       RefSequence refsequence = null; 
        ArrayList discrepancies =  null;boolean isItemsAnalized = true;
-       System.out.println(clone.getCloneId());
+      // System.out.println(clone.getCloneId());
       if ( clone.getRefSequenceId()>0)
       {
          refsequence = (RefSequence)refsequences.get(new Integer(clone.getRefSequenceId()));
