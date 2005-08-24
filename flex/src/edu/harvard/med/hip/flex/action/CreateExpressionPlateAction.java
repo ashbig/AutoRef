@@ -109,7 +109,17 @@ public class CreateExpressionPlateAction extends ResearcherAction {
         } else if("P".equals(species)) {
             labelPrefix = "PaxXG";
         } else if("M".equals(species) || "D".equals(species)) {
-            labelPrefix = "MmxXG";        
+            labelPrefix = "MmxXG";   
+        } else if("Q".equals(species)) {
+            labelPrefix = "BaxXG";
+        } else if("F".equals(species)) {
+            labelPrefix = "FtxXG";
+        } else if("V".equals(species)) {
+            labelPrefix = "VcxXG";
+        } else if("S".equals(species)) {
+            labelPrefix = "YpxXG";
+        } else if("I".equals(species)) {
+            labelPrefix = "YptXG";
         } else {
             errors.add("sourcePlate", new ActionError("error.plate.invalid.barcode", sourcePlate));
             saveErrors(request, errors);
