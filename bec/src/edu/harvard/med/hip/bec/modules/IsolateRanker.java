@@ -36,25 +36,11 @@ public class IsolateRanker
     private ArrayList        m_conontainer_ids = null;
     private EndReadsSpec      m_penalty_spec = null;
     private FullSeqSpec       m_cutoff_spec = null;
-    private PolymorphismSpec  m_polymorphism_spec = null;
-    private boolean           m_isRunPolymorphism = false;
-    
     private DiscrepancyFinder       i_discrepancy_finder = null;//default:used by all functions
-    private CloningStrategy     m_cloning_strategy = null;
-     private int                m_5p_min_read_length = 0;
-    private int                m_3p_min_read_length = 0;
-    
-    private int                  m_cutoff_score = 20;
-    
-    
+     
     private ArrayList           m_error_messages = null;
     private ArrayList           m_finished_constructs = null;
     
-    //collection of end reads primers that define whether read was from plus strand
-    //or on compliment
-    // needle can not convert sequence to compliment sequences
-    private boolean           m_forward_read_sence = true;
-    private boolean           m_reverse_read_sence = true;
     
     /** Creates a new instance of IsolateRanker */
     public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, ArrayList c)
@@ -65,8 +51,7 @@ public class IsolateRanker
         m_cutoff_spec = fs;
         m_error_messages = new ArrayList();
         m_finished_constructs = new ArrayList();
-        prepareDiscrepancyFinder();
-        
+         
     }
     
     public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, Construct c)
@@ -76,62 +61,18 @@ public class IsolateRanker
         m_cutoff_spec = fs;
          m_error_messages = new ArrayList();
         m_finished_constructs = new ArrayList();
-        prepareDiscrepancyFinder();
        
     }
     
-    private void prepareDiscrepancyFinder()
-    {
-         //prepare detectors
-            i_discrepancy_finder = new DiscrepancyFinder();
-            i_discrepancy_finder.setNeedleGapOpen(10.0);
-            i_discrepancy_finder.setNeedleGapExt(0.05);
-            i_discrepancy_finder.setQualityCutOff( m_cutoff_score );
-            i_discrepancy_finder.setIdentityCutoff(60.0);
-            i_discrepancy_finder.setMaxNumberOfDiscrepancies(30);
-            i_discrepancy_finder.setInputType(true);
-          
-    }
-    /** Creates a new instance of IsolateRanker */
-    public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, ArrayList c, PolymorphismSpec p)
-    {
-       
-            m_constructs = c;
-        m_penalty_spec = er;
-        m_cutoff_spec = fs;
-        m_polymorphism_spec = p;
-        if ( p != null) m_isRunPolymorphism = true;
-         m_error_messages = new ArrayList();
-        m_finished_constructs = new ArrayList();
-       
-    }
-    
-    public IsolateRanker(FullSeqSpec fs, EndReadsSpec er, Construct c, PolymorphismSpec p)
-    {
-        m_construct = c;
-        m_penalty_spec = er;
-        m_cutoff_spec = fs;
-        m_polymorphism_spec = p;
-        if ( p != null) m_isRunPolymorphism = true;
-         m_error_messages = new ArrayList();
-        m_finished_constructs = new ArrayList();
-       
-    }
+ 
     
     
      public ArrayList       getErrorMessages(){ return m_error_messages ;}
      public ArrayList       getProcessedConstructId(){ return   m_finished_constructs;}
-     public void           setForwardReadSence(boolean b){m_forward_read_sence = b;}
-     public  void           setReverseReadSence(boolean b)   {       m_reverse_read_sence = b;}
-     //public  void           setLinker5( BioLinker    v){       m_linker5 = v;}
-     //public  void           setLinker3( BioLinker   v){        m_linker3 = v;}
-      public  void           set5pMinReadLength(int    v){       m_5p_min_read_length = v;}
-     public  void           set3pMinReadLength(int    v){        m_3p_min_read_length = v;}
-      public void    setCloningStrategy(CloningStrategy  v)      {          m_cloning_strategy = v;          }
+  
      //main calling function : call action per construct
     public void run(Connection conn) throws BecDatabaseException//,BecUtilException, ParseException
     {
-        m_cutoff_score = m_cutoff_spec.getParameterByNameInt("FS_PHRED_CUT_OFF");
         if (m_constructs != null)
         {
             for (int count = 0; count < m_constructs.size(); count++)
@@ -148,14 +89,15 @@ public class IsolateRanker
     
     //main function tha execute all actions for construct
     // get all reads for all isolates
-    // run discrepancy finder per each read
-    // if set - run polymorphism
-    // calculate score per read
-    // calculate score per isolate
+     // calculate score per isolate
     // rank isolates
+    // no analysis, if at least one item not analyzed: all isolates for the given construct are not analyzed
+    
     public void  runConstruct( Construct construct, Connection conn)
        // throws BecUtilException, BecDatabaseException,ParseException
     {
+         String message = "";
+            
         try
         {
             ArrayList isolate_trackings = construct.getIsolateTrackings();
@@ -163,88 +105,61 @@ public class IsolateRanker
             ArrayList reads = null; ArrayList contigs = null;
             CloneSequence clonesequence = null;
             BaseSequence refsequence = null;
-            int items_to_analize = 0;
+            int type_of_item_to_analize = 0;
 
-              // this is for not known gerry sequences
-            if (construct.getRefSequence().getText().equals("NNNNN") ) return ;
             //prepare refsequence
-            BaseSequence construct_refseqence = construct.getRefSequenceForAnalysis(  m_cloning_strategy.getStartCodon(),
-                                           m_cloning_strategy.getFusionStopCodon(), 
-                                           m_cloning_strategy.getClosedStopCodon() );
-            
-            
-            
-            int cdsstart = m_cloning_strategy.getLinker5().getSequence().length() ;
-            int cdsstop =  m_cloning_strategy.getLinker5().getSequence().length() + construct_refseqence.getText().length() ;
-           //create refsequence for analysis
-            refsequence = new BaseSequence();
-            refsequence.setId( construct.getRefSeqId());
-            String linker5_seq =  m_cloning_strategy.getLinker5().getSequence();
-            String linker3_seq = m_cloning_strategy.getLinker3().getSequence();
-            refsequence.setText( linker5_seq.toLowerCase()+ construct_refseqence.getText().toUpperCase() + linker3_seq.toLowerCase() );
-            
+            int ref_sequence_length = RefSequence.getLengthById(construct.getRefSeqId());
+             //create refsequence for analysis
+            for (int count = 0; count < isolate_trackings.size(); count++)
+            {
+                 it = (IsolateTrackingEngine) isolate_trackings.get(count);
+                 message += it.getCloneId() +" ";
+            }
+           
             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
                 try
                 {
                     //we process only not yet analized isolates
                     it = (IsolateTrackingEngine) isolate_trackings.get(isolate_count);
-                    //get what kind of data we have : 0 - none; 1 - clone sequence; 2 - contigs; 3 - er
-                    items_to_analize = findWhatTypeOfDataAreAvailable(it);
-                    switch ( items_to_analize )
+                    if ( it.getCloneId() == 0 )
+                    {
+                        continue;
+                    }
+                    it.setRank(-1);
+                   //find if all clones in isolate have been analyzed
+                    
+                    type_of_item_to_analize = findWhatTypeOfDataAreAvailable(it);
+                    if ( type_of_item_to_analize < 0 )
+                    {
+                        for (int count = 0; count < isolate_trackings.size(); count++)
+                        {
+                            IsolateTrackingEngine.updateRankAndScore(-1, 0, it.getId(), conn);
+                        }
+                        conn.commit();
+                       m_error_messages.add("\nClone  "+ it.getCloneId() + " is not analized. Ranking cannot be run for all clones in the same construct (clone ids:"+message+")");
+                       return;
+                    }
+                    switch ( type_of_item_to_analize )
                     {
                         case 0:
                         {
                             it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_NO_READS);
                             break;
                         }
-                        case 1:
-                        {
-                            clonesequence = it.getCloneSequence();
-                         //   System.out.println("Get clone sequence for it "+it.getId());
-                            processSequence(clonesequence,refsequence,cdsstart,cdsstop,conn);
-                       //      System.out.println("processed clone sequence for it "+it.getId());
-                            if (clonesequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
-                            {
-                                it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
-                            }
-                            else
-                            {
-                                it.setStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
-                            }
-                            break;
-                        }
-                        case 2:
-                        {
-                            int res = processContigs(it.getContigs(),refsequence,cdsstart,cdsstop,conn);
-                            if ( res == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
-                            {
-                                it.setStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH);
-                            }
-                            else
-                            {
-                                it.setStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
-                            } 
-                            break;
-                        }
-                        case 3:
-                        {
-                            reads =  it.getEndReads();
-                            processReads(it,refsequence,cdsstart,cdsstop, conn);
-                            it.setStatusBasedOnReadStatus( IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED );
-                            break;
-                        }
+                      
                     }
+                    if ( it.getCloneId()== 119919)
+                    { System.out.println("119919");}
                      //check wether number of mutations exseedmax allowed
-                    if (it.getRank() == IsolateTrackingEngine.RANK_BLACK) it.setRank(-1);
-                    it.setBlackRank(m_cutoff_spec,m_penalty_spec, refsequence.getText().length(),items_to_analize);
+                     it.setBlackRank(m_cutoff_spec,m_penalty_spec, ref_sequence_length,type_of_item_to_analize);
                 }
                 catch(Exception e)
                 {
-                    m_error_messages.add("Error processing clone with isolatetrackingid "+ it.getId() + e.getMessage());
+                    m_error_messages.add("Error processing clone with clone id "+ it.getCloneId() + e.getMessage());
                 }
             }
-            construct.calculateRank( refsequence.getText().length() ,m_cutoff_spec);
+            construct.calculateRank( ref_sequence_length ,m_cutoff_spec);
             for (int isolate_count = 0; isolate_count < isolate_trackings.size(); isolate_count++)
             {
                 //update database
@@ -259,24 +174,83 @@ public class IsolateRanker
         }
         catch(Exception ex)
         {
-           //  ex.printStackTrace();
-         //   System.out.println(ex.getMessage());
-            m_error_messages.add("Error processing construct id "+ construct.getId()+ex.getMessage());
+             m_error_messages.add("Error processing construct id "+ construct.getId()+"\n Clone ids: "+message+ex.getMessage());
             DatabaseTransaction.rollback(conn);
         }
     }
     
     //*****************************************************
+    /* return values
+     *1 - analyzed clone sequence; -1 not analized clone sequence
+     * 2 - analized contig collection; -2 not analized constig collection
+     * 3 - analized ER; -3 not analized ER
+     * 0  - no data are available for isolate
+     */
     private int findWhatTypeOfDataAreAvailable(IsolateTrackingEngine it)throws Exception
     {
         int result = 0;
         try
         {
-        if ( it.getCloneSequence() != null) return 1;
-        ArrayList contigs = it.getContigs();
-        if (contigs != null && contigs.size() > 0) return 2;
-        if (it.getEndReads() != null && it.getEndReads().size() > 0 )return 3;
-        return 0;
+            // try to find clone sequence
+             CloneSequence cl = CloneSequence.getOneByIsolateTrackingId(it.getId(), null, null);
+             if ( cl != null)
+             {
+                 if ( cl.getCloneSequenceStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED)
+                 {
+                     return -1;
+                 }
+                 else
+                 {
+                     it.setCloneSequence(cl);
+                     return 1;
+                 }
+             }
+            
+        // get contigs
+            ArrayList contigs = it.getContigs();
+            Stretch contig = null;
+            //check all of tham analized
+            if ( contigs != null && contigs.size() > 0)
+            {  //check all of tham analized
+                for ( int contig_count = 0;  contig_count < contigs.size(); contig_count++)
+                {
+                    contig = (Stretch)contigs.get(contig_count);
+                    if ( contig.getAnalysisStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ASSEMBLED)
+                    {
+                        return -2;
+                    }
+                }
+                return 2;
+            }
+            
+            //finaly check for reads
+            ArrayList reads = Read.getReadByIsolateTrackingId( it.getId() );
+            Read read = null;
+            int return_value = 3;
+            if (reads != null && reads.size() > 0 )
+            {
+                it.setEndReads(reads);
+                for ( int read_count = 0; read_count < reads.size(); read_count++)
+                {
+                    read = (Read) reads.get(read_count);
+                    
+                    if ( read.getStatus() == Read.STATUS_NOT_ANALIZED
+                    && ( read.getType() == Read.TYPE_ENDREAD_FORWARD
+                    || read.getType() == Read.TYPE_ENDREAD_REVERSE))
+                    {
+                        return_value = -3;
+                    }
+                    if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH
+                    || read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH)
+                    {
+                        return 3;
+                    }
+                }
+                return return_value;
+                        
+             }
+           
+            return 0;
         }
         catch( Exception e)
         {
@@ -284,7 +258,10 @@ public class IsolateRanker
             throw new BecDatabaseException("Cannot get object to analyze for isolate "+ it.getId());
         }
     }
-                  
+             
+    
+    
+    /*
     //process isolate tracking based on reads
     private void processReads(IsolateTrackingEngine it,BaseSequence refsequence,
                     int cdststart, int cdsstop,
@@ -375,15 +352,11 @@ public class IsolateRanker
             read.updateCdsStartStop(conn);
             read.setStatus(Read.STATUS_ANALIZED);
             read.updateStatus(conn);
-            if (m_isRunPolymorphism)
-            {
-                 PolymorphismDetector pf = new PolymorphismDetector();
-                pf.setSpec(m_polymorphism_spec);
-                pf.setSequence( read.getSequence());
-                pf.run();
-            }
+       
+    
+  
             //reassign values read_sequence=read_sequence.getText();
-          
+      
             read_sequence.setText(read_sequence_text);
             read_sequence.setScoresAsArray(read_scores);
             
@@ -408,7 +381,7 @@ public class IsolateRanker
        // read.updateScore(conn);
     }
 
-    
+    /*
     private boolean isReadLong(Read read, Connection conn) throws BecDatabaseException
     {
         // check for read length
@@ -437,9 +410,9 @@ public class IsolateRanker
         return true;
     }
    
+    */
     
-    
-    
+    /*
     //function runs analysis of one read
     private void  processSequence( CloneSequence clonesequence, BaseSequence refsequence, 
             int cdststart, int cdsstop, Connection conn)
@@ -467,13 +440,7 @@ public class IsolateRanker
             else
             {
             // insert mutations
-                if (m_isRunPolymorphism)
-                {
-                     PolymorphismDetector pf = new PolymorphismDetector();
-                    pf.setSpec(m_polymorphism_spec);
-                    pf.setSequence( clonesequence);
-                    pf.run();
-                }
+              
                 clonesequence.setLinker5Start( i_discrepancy_finder.getCdsStart()   );
                 clonesequence.updateLinker5Start(clonesequence.getId(), clonesequence.getLinker5Start(), conn);
                 clonesequence.setLinker3Stop( i_discrepancy_finder.getCdsStop()  );
@@ -523,13 +490,7 @@ public class IsolateRanker
                     else
                     {
                     // insert mutations
-                        if (m_isRunPolymorphism)
-                        {
-                             PolymorphismDetector pf = new PolymorphismDetector();
-                            pf.setSpec(m_polymorphism_spec);
-                            pf.setSequence( contig_sequence);
-                            pf.run();
-                        }
+                
                         contig_sequence.insertMutations(conn);
                         if ( contig_sequence.getDiscrepancies() != null && contig_sequence.getDiscrepancies().size() > 0)
                         {
@@ -545,5 +506,5 @@ public class IsolateRanker
             }
             return -BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH;
     }
-
+*/
 }

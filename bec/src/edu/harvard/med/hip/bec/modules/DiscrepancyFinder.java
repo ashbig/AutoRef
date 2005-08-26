@@ -1013,7 +1013,7 @@ public class DiscrepancyFinder
              for(int dd=0;dd<m.size();dd++)
 	{
 	    Mutation mut = (Mutation)m.get(dd);
-	    System.out.println(mut.toStringSeparateType() );
+	//    System.out.println(mut.toStringSeparateType() );
 }
         
 

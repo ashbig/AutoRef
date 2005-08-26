@@ -62,14 +62,10 @@
     <forward    name="logout"       path="/Logout.do"/>
     <forward    name="home"         path="/overview.jsp"/>
     <forward    name="error"        path="/ProcessError.do"/>
-   <forward    name="register"     path="/CustomerRegistration.jsp"/>
+    <forward    name="register"     path="/CustomerRegistration.jsp"/>
     <forward    name="findRegistration" path="/FindRegistration.jsp"/>
- 
-
-    <forward    name="seqEnterParams" path="/Seq_Parameters.jsp"/>
     <forward    name="seqSelectProcess" path="/SelectProcess.jsp"/>
-    <forward    name="seqSequenceAnalysis" path="/Seq_FullSequenceAnalysisRequest.jsp"/>
-
+   
   </global-forwards>
   
 

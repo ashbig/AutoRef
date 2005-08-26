@@ -77,11 +77,19 @@ public  class BaseSequence
         m_type = tp;
     }
     
-    public static  String getSequenceInfo( int id, int info_type)throws BecDatabaseException
+    
+     public static  String getSequenceInfo( int id, int info_type)throws BecDatabaseException
     {
        
-        String sql = null; String text = null;
-        sql = "select infotext from sequenceinfo where sequenceid="+id+" and infotype = " + info_type +"  order by infoorder";
+        String sql =  "select infotext from sequenceinfo where sequenceid="+id+" and infotype = " + info_type +"  order by infoorder";
+        return getSequenceInfo(sql, info_type);
+        
+    }
+    
+    public static  String getSequenceInfo( String sql, int info_type)throws BecDatabaseException
+    {
+       
+       String text = null;
        
         DatabaseTransaction t = DatabaseTransaction.getInstance();
         ResultSet rs = null;

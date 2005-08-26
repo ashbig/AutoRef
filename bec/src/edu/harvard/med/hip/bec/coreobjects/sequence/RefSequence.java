@@ -553,6 +553,36 @@ public class RefSequence extends BaseSequence
         return getByRule(sql,isIncludePublicInfo);
     }
     
+    
+    public static int           getLengthById(int id)throws Exception
+    {
+        String sql = "select CDSSTART  ,CDSSTOP  from refsequence where sequenceid="+id;
+        DatabaseTransaction t = null;
+        CachedRowSet crs = null;
+       
+        
+        try
+        {
+            t = DatabaseTransaction.getInstance();
+            crs = t.executeQuery(sql);
+            if(crs.next())
+            {
+                return  crs.getInt("CDSSTOP")-crs.getInt("CDSSTART");
+            }
+            else throw new Exception ("Cannot get Reference sequence length by id :"+id);
+        } 
+        catch (Exception e)
+        {
+            throw new Exception ("Cannot get Reference sequence length by id :"+id);
+        } 
+        finally
+        {
+            DatabaseTransaction.closeResultSet(crs);
+        }
+  
+    }
+    //--------------------------------------
+    
     private static RefSequence getByRule(String sql, boolean isIncludePublicInfo)throws Exception
     {
         RefSequence seq = null;

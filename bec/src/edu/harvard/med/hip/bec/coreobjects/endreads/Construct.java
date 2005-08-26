@@ -36,13 +36,7 @@ public class Construct
     
     private int             m_cloning_strategy_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;	
     private CloningStrategy m_cloning_strategy = null;
-  //  private int             m_vector_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;	
-   // private BioVector       m_vector = null;
-  //  private int             m_linker3_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
-  //  private BioLinker       m_linker3 = null;
-  //  private BioLinker       m_linker5 = null;
-  //  private int             m_linker5_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;
-    
+     
     /** Creates a new instance of AgarTracking */
     public Construct()throws BecDatabaseException
     {
@@ -226,61 +220,9 @@ public class Construct
                              fusionStopCodon, closedStopCodon,
                              codingsequence, m_format);
          return m_refsequence_for_analysis;
-         /*
-         if ( !startCodon.equalsIgnoreCase("NONE"))
-         {
-             seq = startCodon + seq.substring(3);
-         }
-        // seq = seq.substring(3, seq.length()-3);
-         if (m_format == FORMAT_OPEN)
-         {
-             seq =  seq.substring( seq.length()-3 )+ fusionStopCodon;
-         }
-         else if (m_format == FORMAT_CLOSE && !closedStopCodon.equalsIgnoreCase("NONE"))
-         {
-              seq = seq.substring( seq.length()-3) + closedStopCodon;
-         }
-             
-         m_refsequence_for_analysis =  new BaseSequence(seq, BaseSequence.BASE_SEQUENCE );
-         return m_refsequence_for_analysis;
-          **/
+     
      }
-    /*
-    public void calculateRank()
-    {
-        //sort isolate tracking by score
-      
-        Collections.sort(m_isolates, new Comparator()
-        {
-            public int compare(Object o1, Object o2)
-            {
-                IsolateTrackingEngine is1 = (IsolateTrackingEngine) o1;
-                IsolateTrackingEngine is2 = (IsolateTrackingEngine) o2;
-                return -(   is1.getScore() - is2.getScore()  );
-            }
-            // Note: this comparator imposes orderings that are inconsistent with equals. 
-            public boolean equals(java.lang.Object obj)
-            {      return false;  }
-            // compare
-        } );
-        //assign rank
-        int rank = 1;
-        for (int count = 0; count < m_isolates.size(); count++)
-        {
-            IsolateTrackingEngine is = (IsolateTrackingEngine) m_isolates.get(count);
-            if (is.getRank() != IsolateTrackingEngine.RANK_BLACK && is.getRank() != IsolateTrackingEngine.RANK_NOT_APPLICABLE &&
-                is.getStatus() != IsolateTrackingEngine.PROCESS_STATUS_SUBMITTED_EMPTY)
-            {
-               is.setRank(rank++);
-               if ( is.getRank() == 1)
-               {
-                   m_current_index = is.getSampleId();
-               }
-            }
-            
-        }
-    }
-    */
+   
     
      public void calculateRank(int refsequence_length, FullSeqSpec cutoff_spec)
                 throws BecDatabaseException
@@ -448,15 +390,7 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
      {
          ArrayList constructs = new ArrayList();
         Hashtable constructs_hash = new Hashtable();
-        /*
-           String sql = "select const.constructid as constructid, refsequenceid,format,linker3id,"
-         +" linker5id,vectorid,iso.isolatetrackingid as isolatetrackingid,status, score, rank, sampleid "
-        +" from isolatetracking iso, sequencingconstruct const"
-        +"  where iso.constructid=const.constructid and iso.isolatetrackingid in "
-         +" (  select isolatetrackingid from isolatetracking where sampleid in "
-        +" (select sampleid from sample where containerid "
-        +" in ( "+plate_ids+" ) )) order by  const.constructid ";
-         **/
+       
           String sql = "select const.constructid as constructid, refsequenceid,format,cloningstrategyid,"
          +" iso.isolatetrackingid as isolatetrackingid,status, ASSEMBLY_STATUS,score, rank, sampleid "
         +" from isolatetracking iso, sequencingconstruct const"
@@ -548,6 +482,73 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
         }
     }
     
+     
+      public static ArrayList getConstructsFromPlates( ArrayList plate_ids)throws BecDatabaseException
+     {
+         ArrayList constructs = new ArrayList();
+       
+         String sql_plate_ids = Algorithms.convertStringArrayToString(plate_ids, ",");
+         return getConstructsFromPlates(sql_plate_ids);
+      }
+     public static ArrayList getConstructsFromPlates( String plate_ids)throws BecDatabaseException
+     {
+         ArrayList constructs = new ArrayList();
+       
+          String sql = "select const.constructid as constructid, flexcloneid as cloneid, "
+          +" refsequenceid,format,cloningstrategyid,"
+         +" iso.isolatetrackingid as isolatetrackingid,status, ASSEMBLY_STATUS,score, rank, sampleid "
+        +" from isolatetracking iso, sequencingconstruct const, flexinfo f "
+        +"  where iso.constructid=const.constructid and f.isolatetrackingid = iso.isolatetrackingid and iso.isolatetrackingid in "
+         +" (  select isolatetrackingid from isolatetracking where sampleid in "
+        +" (select sampleid from sample where containerid "
+        +" in ( "+plate_ids+" ) )) order by  const.constructid ";
+        RowSet rs = null;
+        int cur_construct_id = -1;
+        Construct cur_construct = null;
+        try
+        {
+            DatabaseTransaction t = DatabaseTransaction.getInstance();
+            rs = t.executeQuery(sql);
+            
+            while(rs.next())
+            {
+                //create isolate tracking 
+                IsolateTrackingEngine istr = new IsolateTrackingEngine();
+                istr.setRank(rs.getInt("rank") ) ;// results of the end read analysis
+                istr.setScore(rs.getInt("score") );// results of the end read analysis
+                istr.setStatus(rs.getInt("status") );
+                istr.setSampleId(rs.getInt("sampleid") );
+                istr.setId( rs.getInt("isolatetrackingid") );
+                istr.setAssemblyStatus( rs.getInt("ASSEMBLY_STATUS"));
+                istr.setConstructId( rs.getInt("constructid"));// identifies the agar; several (four) isolates will have the same id
+                istr.setCloneId( rs.getInt("cloneid"));
+                //check if construct exists already
+                if (cur_construct != null &&   istr.getConstructId() == cur_construct.getId() )
+                {
+                     cur_construct.addIsolateTracking(istr);
+                }    
+                else //creat new construct
+                {
+                    cur_construct = new Construct(istr.getConstructId(), -1, 
+                                                      rs.getInt("refsequenceid"), rs.getInt("format"), 
+                                                      rs.getInt("cloningstrategyid") ); 
+                
+                    cur_construct.addIsolateTracking(istr);
+                    constructs.add(cur_construct);
+                    cur_construct_id = istr.getConstructId();
+                }
+             
+            }
+            return constructs;
+        } catch (Exception sqlE)
+        {
+            throw new BecDatabaseException("Error occured while getting sample with id:\n"+sqlE+"\nSQL: "+sql);
+        } finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
+    }
+    
     //------------------------- private ----------------------  
      
      
@@ -560,7 +561,7 @@ S1 = (RS1 * RL1 + ExpectedScore * (CDSLenght - RL1)) / CDSLenght;
                             "aaaaaaactgtgtgtgtgggggttttcccccc", 0);
        // ArrayList master_container_ids = new ArrayList();
       //  master_container_ids.add(new Integer(16));  
-      //  ArrayList co =Construct.getConstructsFromPlates(master_container_ids,"0","0",1);
+        ArrayList co =Construct.getConstructsFromPlates("586");
         System.exit(0);
         }catch(Exception e){}
    }

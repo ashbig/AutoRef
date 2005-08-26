@@ -98,7 +98,7 @@ public class IsolateTrackingEngine
     private	int     m_flexinfo_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;//  isolate id
     private	int     m_sample_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET ;// resulting from the full sequencing
     private     int     m_assembly_status = ASSEMBLY_STATUS_NOT_RUN;
-       
+     private	int     m_clone_id = BecIDGenerator.BEC_OBJECT_ID_NOTSET;   
     private     FlexInfo    m_flexinfo = null;
     
     //?????????????//
@@ -123,7 +123,7 @@ public class IsolateTrackingEngine
       public String toString()
      {
          String result = "\nIsolatetracking: id "+   m_id+" constructid "+
-       m_construct_id +" status "+  m_status +" sampleid "+   m_sample_id ;
+       m_construct_id +" status "+  m_status +" sampleid "+   m_sample_id +" clone id "+ m_clone_id;
        if ( m_flexinfo != null ) result+=m_flexinfo.toString();
        return result;
       }
@@ -180,8 +180,11 @@ public class IsolateTrackingEngine
     public void         setAssemblyStatus(int v){ m_assembly_status = v;}
     public void     setCloneSequence(CloneSequence c){ m_clone_sequence =c ;}
     public void     setCloneSequences(ArrayList c){ m_clone_sequences=c ;}
-    
+   public void      setCloneId(int v){ m_clone_id = v;}
+   
+   
     public  int             getId(){ return m_id;}
+    public int              getCloneId(){ return m_clone_id;}
     public int              getFlexInfoId(){ return m_flexinfo_id ;}// sample id of the first sample of this isolate
     public int              getConstructId(){ return m_construct_id ;}// identifies the agar; several (four) isolates will have the same id
     public int              getStatus(){ return m_status ;}
@@ -500,7 +503,7 @@ public class IsolateTrackingEngine
     }
     
     
-    
+  /*  
     //function returns array of sequenceid for isolates whose status is in range
     // @paramin status[]- isolate status 
     // @paramin masterids[] - ids for master plates
@@ -546,7 +549,7 @@ public class IsolateTrackingEngine
         
     }
     
-    
+   */ 
     
      //function returns array of sequenceid for isolates whose status is in range
     // @paramin status[]- isolate status 
@@ -750,24 +753,7 @@ public class IsolateTrackingEngine
     
    
       //----------------------- private ------------------------------------------
-   /*
-    private void getEndReadFromDBs() throws BecDatabaseException
-    {
-        Read r1 = Read.getReadById(m_end_reads_id[0]);
-        Read r2 = Read.getReadById(m_end_reads_id[1]);
-        if (r1.getType() == Read.TYPE_ENDREAD_FORWARD)
-        {
-              m_forward_endread = r1;
-              m_reverse_endread = r2;
-        }
-        else 
-        {
-            m_forward_endread = r2;
-            m_reverse_endread = r1;
-        }
-    }
-    
-    */
+  
     
     
     private boolean isOverlap( ArrayList not_ambiquous_read , int refsequence_length) 
@@ -801,73 +787,7 @@ public class IsolateTrackingEngine
     }
     
     
-    /*
-    private boolean isRankBlack(ArrayList discrepancies_pairs,  FullSeqSpec cutoff_spec )
-                                throws BecDatabaseException
-    {
-          int discrepancy_number = 0; int cutoff ;
-          int penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
-          DiscrepancyDescription pair = null; int score = 0;
-          discrepancies_pairs = DiscrepancyDescription.sortByRNADiscrepancyByChangeTypeQuality(discrepancies_pairs);
-        for (int pair_count = 0; pair_count< discrepancies_pairs.size(); )
-        {
-            cutoff = FullSeqSpec.CUT_OFF_VALUE_NOT_FOUND;
-            penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
-            pair = (DiscrepancyDescription)discrepancies_pairs.get(pair_count);
-            // get cutof  numer for the current pair
-            cutoff = cutoff_spec.getDiscrepancyNumberByType( pair.getRNADiscrepancy().getQuality(), pair.getRNADiscrepancy().getChangeType());
-            if (cutoff == FullSeqSpec.CUT_OFF_VALUE_NOT_FOUND)//can be determine by AA only
-            {
-               cutoff =  cutoff_spec.getDiscrepancyNumberByType( pair.getAADiscrepancy().getQuality(), pair.getAADiscrepancy().getChangeType());
-            }
-            discrepancy_number = Mutation.getDiscrepancyNumberByParameters(discrepancies_pairs,
-                                            Mutation.RNA, 
-                                            pair.getRNADiscrepancy().getChangeType(), 
-                                            pair.getRNADiscrepancy().getQuality());
- 
-            //check if limit reached
-            if (cutoff < discrepancy_number)
-            {
-               return true;
-            }
-            else
-            {
-                pair_count += discrepancy_number;
-            }
-        }
-       
-        return false;
-    }
-    */
-    /*
-      private int getPenalty(   ArrayList discrepancies_pairs,
-                                EndReadsSpec spec)
-                                throws BecDatabaseException
-    {
-          int discrepancy_number = 0; int isolate_penalty = 0 ;
-          int penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
-         DiscrepancyPair pair = null; int score = 0;
-            discrepancies_pairs = DiscrepancyPair.sortByRNADiscrepancyByChangeTypeQuality(discrepancies_pairs);
-        for (int pair_count = 0; pair_count< discrepancies_pairs.size(); pair_count++)
-        {
-           penalty = EndReadsSpec.PENALTY_NOT_DEFINED;
-            pair = (DiscrepancyPair)discrepancies_pairs.get(pair_count);
-            penalty = spec.getPenalty(pair.getRNADiscrepancy().getQuality(), pair.getRNADiscrepancy().getChangeType());// by rna mutation
-          
-             //try to find penalty from aa discrepancy
-            if (penalty == EndReadsSpec.PENALTY_NOT_DEFINED)
-            {
-                penalty = spec.getPenalty(pair.getAADiscrepancy().getQuality(), pair.getAADiscrepancy().getChangeType());// by rna mutation
-            }
-            
-            isolate_penalty += penalty ;
-         }
-       
-        return -isolate_penalty;
-    }
-     *
-     *
-     **/
+   
     
     //get not amb read
     // get all reads that meet criteria without testing for amb 4/21/05
@@ -900,44 +820,7 @@ public class IsolateTrackingEngine
         }
     }
     
-   /*
-    private void     calculateScore() 
-    {
-        //get reads
-        int forward_score = 0;int reverse_score = 0;
-        if ( m_forward_endread != null )
-             forward_score = m_forward_endread.getScore();
-        if ( m_reverse_endread != null )
-             reverse_score = m_reverse_endread.getScore();
-        m_score = forward_score + reverse_score;
-              
-    }
-    **/
-    /*
-   private void     calculateScore() 
-   {
-       //collect mutation eliminating duplication of them
-        ArrayList rna_discrepancies = m_readsequence.getDiscrepanciesByType(Mutation.RNA);
-       
-        int score = -1; int dtype = -1; int dquality = -1; int penalty = 0;
-        Mutation disc = null;
-        for (int ind = 0; ind < rna_discrepancies.size();ind++)
-        {
-            disc = (Mutation)rna_discrepancies.get(ind);
-            penalty = spec.getPenalty(disc.getQuality(), disc.getChangeType());// by rna mutation
-            //try to find pair and get its penalty
-            if (penalty == 0)
-            {
-                disc = Mutation.getDiscrepancyPair(disc, Mutation.AA, m_readsequence.getDiscrepancies());
-                penalty = spec.getPenalty(disc.getQuality(), disc.getChangeType());// by rna mutation
-            }
-            score += penalty;
-        }
-        m_score = (int) score/ getTrimmedSequence().length();
-        return m_score;
-   }
-     **/
-    
+   
     
    private static ArrayList getIsolateTrackingEnginesByRule( String sql, String cs_analysis_status, String cq_type, int mode)
         throws BecDatabaseException
@@ -1014,15 +897,7 @@ public class IsolateTrackingEngine
     //it's calculates isolta score as well
     private void setBlackRankBasedOnCloneSequence(FullSeqSpec cutoff_spec, EndReadsSpec spec, int refsequence_length) throws BecDatabaseException
     {
-        /*
-       //check for ambiquouty condition
-       if (!BaseSequence.isPassAmbiquoutyTest(cutoff_spec,m_clone_sequence.getText() ))
-       {
-           m_rank = RANK_BLACK;
-           m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
-           return;
-       }
-       */
+      
         int sequence_penalty = 0;
         ArrayList discrepancy_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions( m_clone_sequence.getDiscrepancies());
      
@@ -1046,23 +921,31 @@ public class IsolateTrackingEngine
         //check for ambiquouty condition
         try
         {
-       ArrayList not_ambiquous_read = getReadPassedAmbiquoutyTest(cutoff_spec);
-       if ( not_ambiquous_read == null || not_ambiquous_read.size() == 0)
-       {
-           m_rank = RANK_BLACK;
-           m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
-           return;
-       }
-        ArrayList discrepancies_pairs = new ArrayList();
-         ArrayList discrepancies_descriptions = null;
-       //check wherther reads are overlap
+       
+             ArrayList discrepancies_pairs = new ArrayList();
+             ArrayList discrepancies_descriptions = null;
+             Read read = null; int overlap_length = 0; int isolate_penalty = 0;
+            //check if at least one read 'no_match
+            for (int read_count = 0; read_count < m_endreads.size() ; read_count++)
+            {
+                read = (Read) m_endreads.get(read_count);
+                if ( read.getType() == Read.TYPE_ENDREAD_FORWARD_NO_MATCH
+                || read.getType() == Read.TYPE_ENDREAD_REVERSE_NO_MATCH)
+                {
+                    m_rank = RANK_BLACK;
+                    m_status = PROCESS_STATUS_ER_ANALYZED_NO_MATCH;
+                    m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
+                    return;
+                }
+            }
+         //check wherther reads are overlap
        //case of one read or no overlap
-         Read read = null; int overlap_length = 0; int isolate_penalty = 0;
-       if ( not_ambiquous_read.size() == 1 || !isOverlap( not_ambiquous_read , refsequence_length) )
+         
+       if ( m_endreads.size() == 1 || !isOverlap( m_endreads , refsequence_length) )
        {
-           for (int read_count = 0; read_count < not_ambiquous_read.size(); read_count++)
+           for (int read_count = 0; read_count < m_endreads.size(); read_count++)
            {
-               read  = (Read)not_ambiquous_read.get(read_count);
+               read  = (Read)m_endreads.get(read_count);
                 isolate_penalty +=  read.getScore();
                 overlap_length += read.refsequenceCoveredLength();
                 discrepancies_descriptions = DiscrepancyDescription.assembleDiscrepancyDefinitions(
@@ -1120,19 +1003,7 @@ public class IsolateTrackingEngine
         //check for ambiquouty condition
         try
         {
-            /*
-            //check for ambiquouty condition
-            for (int contig_count = 0; contig_count < m_contigs.size(); contig_count ++)
-            {
-               if (!BaseSequence.isPassAmbiquoutyTest(cutoff_spec, ((Stretch) m_contigs.get(contig_count)).getSequence().getText() ))
-               {
-                   m_rank = RANK_BLACK;
-                   m_score = Constants.SCORE_NOT_CALCULATED_FOR_RANK_BLACK;
-                   return;
-               }
-            }
-
-*/
+            
             ArrayList discrepancies_pairs = new ArrayList();
             ArrayList discrepancies_descriptions = null;
        //check wherther reads are overlap

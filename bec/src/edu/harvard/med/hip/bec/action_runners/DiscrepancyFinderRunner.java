@@ -136,6 +136,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
              i_discrepancy_finder.setRefSequenceCdsStop(  cds_start_stop[1] );
              AnalyzedScoredSequence contig_sequence = null;
              Stretch stretch = null;
+             boolean istr_status_set = false;
              for (int contig_count =0; contig_count < strcol.getStretches().size(); contig_count++)
             {
                  stretch = (Stretch) strcol.getStretches().get(contig_count);
@@ -148,7 +149,12 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                  i_discrepancy_finder.setCdsStop(0);
                  i_discrepancy_finder.run();
                  if (contig_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH)
-                    return 1;
+                 {
+                     stretch.updateContigAnalysisStatus(stretch.getId(),BaseSequence.CLONE_SEQUENCE_STATUS_NOMATCH,conn);
+                     IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_CLONE_SEQUENCE_ANALYZED_NO_MATCH, clone.getIsolateTrackingId(), conn);
+                     istr_status_set = true;
+                 }
+                    
                  else
                  {
                     contig_sequence.insertMutations(conn);
@@ -162,7 +168,8 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                     }
                  }
              }
-            IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, clone.getIsolateTrackingId(), conn);
+            if (! istr_status_set)
+                IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, clone.getIsolateTrackingId(), conn);
                     
            conn.commit();
            return 1;
@@ -203,7 +210,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
                     {
                         isolate_status =IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED_NO_MATCH;
                         IsolateTrackingEngine.updateStatus(isolate_status, clone_description.getIsolateTrackingId(), conn);
-                       
+                      
                     }
                 }
 
@@ -622,7 +629,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
         ProcessRunner runner =  new DiscrepancyFinderRunner();
 
        
-        runner.setInputData( Constants.ITEM_TYPE_CLONEID, " ");
+        runner.setInputData( Constants.ITEM_TYPE_CLONEID, " 172710  ");
         runner.setUser(user);
         runner.run();
          

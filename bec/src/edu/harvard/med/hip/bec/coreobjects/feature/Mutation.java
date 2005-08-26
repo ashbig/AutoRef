@@ -525,58 +525,7 @@ public abstract class Mutation
 	}}
 	
         report.append("</table>");
-    /*
-    for (int count = 0; count < discrepancies.size(); count ++)
-	{
-	
-		if (count % 2 == 0)
-		{
-		  row_color = " bgColor='#e4e9f8'";
-		}
-		else
-		{
-			row_color =" bgColor='#b8c6ed'";
-		}
-	    mut = (Mutation)discrepancies.get(count);
-        if (mut.getType() == Mutation.RNA)
-		{
-
-			rm = (RNAMutation)discrepancies.get(count);
-			report.append("<tr><td  "+row_color +">" + rm.getNumber() +"</td>");
-                        report.append("<td "+ row_color+" > "+ rm.toHTMLString()+"</td>");
-  			if ( discrepancies.size() >= count )
-	   		{
-				mut= (Mutation) discrepancies.get(count+1);
-
-				if (mut.getType() == Mutation.AA)
-				{
-
-					am = (AAMutation)discrepancies.get(count+1);
-					count++;
-					report.append("<td "+ row_color +">"+ am.toHTMLString() +"</td>");
- 				}
- 				else
- 				{
-					report.append(" <td  "+ row_color +">&nbsp;</td> ");
-				}
-			}
-			report.append(" <td  align='center'"+ row_color +">"+ rm.getPolymorphismFlagAsString()+"</td>");  
-			report.append(" <td  align='center'"+ row_color +">"+ rm.getQualityAsString()+"</td>");  
-		    report.append("</tr> ");               
-		}
-	   else if (mut.getType() == Mutation.LINKER_3P || mut.getType() == Mutation.LINKER_5P)
-	   {
-	   	linker = (LinkerMutation) discrepancies.get(count);
-		report.append("<tr>");
-		report.append("<td  "+ row_color +">"+ linker.getNumber() +"</td> ");
-        report.append("<td  "+ row_color +">"+ linker.toHTMLString()+"</td>");   
-		report.append("<td  "+ row_color +">&nbsp;</td><td  "+ row_color +">&nbsp;</td> ");       
-		report.append("<td  align='center'"+ row_color +">"+ linker.getQualityAsString() +"</td>  ");  
-		report.append("</tr>");                
-	}}
-	
-        report.append("</table>");
-     **/
+    
         return report.toString();
     }
     
@@ -642,23 +591,25 @@ public abstract class Mutation
      
     public String toHTMLString()
     {
-        String res = "";
+        StringBuffer res = new StringBuffer();
         
-        res = "<tr><td>Discrepancy id: </td><td>"+m_id + "</td></tr>" +
-        "<tr><td>Position ("+ getDescriptionRefSequencePositionForReport()+")</td><td>"  + m_position + "</td></tr>" +
-        "<tr><td>Length</td><td>" +m_length + "</td></tr>" ;
+       // res = "<tr><td>Discrepancy id: </td><td>"+m_id + "</td></tr>" +
+       res.append( "<tr><td>Position (");
+       res.append( getDescriptionRefSequencePositionForReport()+")</td><td>");
+       res.append( m_position + "</td></tr>" );
+       res.append( "<tr><td>Length</td><td>" +m_length + "</td></tr>" );
         if ( m_exp_position > 0)
-            res += "<tr><td>Position (ExpSequence)</td><td>"  + m_exp_position + "</td></tr>" ;
+            res.append( "<tr><td>Position (ExpSequence)</td><td>"  + m_exp_position + "</td></tr>" );
         if (m_change_ori ==null)
-            res+="<tr><td>Ori Str.</td><td>&nbsp;</td></tr>";
+            res.append("<tr><td>Ori Str.</td><td>&nbsp;</td></tr>");
         else
-            res+="<tr><td>Ori Str.</td><td>"+m_change_ori +"</td></tr>" ;
+            res.append("<tr><td>Ori Str.</td><td>"+m_change_ori +"</td></tr>") ;
         if (m_change_mut ==null)
-            res+="<tr><td>Mutant Str.</td><td>&nbsp;</td></tr>";
+            res.append("<tr><td>Mutant Str.</td><td>&nbsp;</td></tr>");
         else
-            res+="<tr><td>Mutant Str.</td><td>" +m_change_mut + "</td></tr>" ;
-        res+="<tr><td>Type</td><td>" + getMutationTypeAsString() + "</td></tr>" ;
-        return res;
+            res.append("<tr><td>Mutant Str.</td><td>" +m_change_mut + "</td></tr>" );
+        res.append("<tr><td>Type</td><td>" + getMutationTypeAsString() + "</td></tr>" );
+        return res.toString();
     }
     
     public static String HTMLReport(ArrayList discrepancies, int discrepancy_type, boolean isSeparateByQuality)

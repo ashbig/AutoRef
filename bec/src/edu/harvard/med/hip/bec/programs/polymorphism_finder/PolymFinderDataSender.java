@@ -300,8 +300,8 @@ public class PolymFinderDataSender
           sysProps.verifyApplicationSettings();
           File flc =  null;
           String cygwin_pass = null;   
-          
-          try
+           PolymFinderDataSender.generateSequencingDataFiles(null);
+        /*  try
           {
               if ( args.length == 1)
             {
@@ -328,6 +328,7 @@ public class PolymFinderDataSender
               }catch(Exception e1){}
       
           }
+         **/
           System.exit(0);  
     }
     
