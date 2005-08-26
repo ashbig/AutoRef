@@ -89,16 +89,16 @@
     </init-param>   
     <init-param>
       <param-name>jdbcURL</param-name>
-      <param-value>jdbc:oracle:thin:@kotel:1532:flex</param-value>
+      <param-value>jdbc:oracle:thin:@kotel:1532:wall</param-value>
     </init-param>
 
     <init-param>
       <param-name>user</param-name>
-      <param-value>flex_production</param-value>
+      <param-value>flex_test</param-value>
     </init-param>
     <init-param>
         <param-name>password</param-name>
-        <param-value>3monkeys</param-value>
+        <param-value>flex</param-value>
     </init-param>
     <!-- for oracle database -->   
 
