@@ -134,7 +134,7 @@ function put5()
         <html:hidden property="colony"/>
     </logic:present>
     <logic:present name="pcr">
-        <th>PRC Result         
+        <th>PCR Result         
             <select name="pcrSelect" onchange="put()">
                 <option>NOT DONE
                 <option>PASS
@@ -144,7 +144,7 @@ function put5()
         <html:hidden property="pcr"/>
     </logic:present> 
     <logic:present name="florescence">
-        <th>Florescence Result
+        <th>Fluorescence Result
             <select name="floSelect"  onchange="put1()">
                 <option>NOT DONE
                 <option>PASS
@@ -177,7 +177,7 @@ function put5()
         <th>Final Status
             <select name="statusSelect" onchange="put5()" >
                 <option>IN PROCESS
-                <option>SUCESSFUL
+                <option>SUCCESSFUL
                 <option>FAIL
             </select>
         </th>  
@@ -340,17 +340,17 @@ function put5()
         <select name='<%="cloneStatus["+ i +"]" %>' >                 
             <logic:equal name="enterResultForm" property='<%="cloneStatus["+ i +"]" %>' value="IN PROCESS">
                 <option selected>IN PROCESS
-                <option>SUCESSFUL
+                <option>SUCCESSFUL
                 <option>FAIL
             </logic:equal>
-            <logic:equal name="enterResultForm" property='<%="cloneStatus["+ i +"]" %>' value="SUCESSFUL">
+            <logic:equal name="enterResultForm" property='<%="cloneStatus["+ i +"]" %>' value="SUCCESSFUL">
                 <option>IN PROCESS
-                <option selected>SUCESSFUL
+                <option selected>SUCCESSFUL
                 <option>FAIL
             </logic:equal>
             <logic:equal name="enterResultForm" property='<%="cloneStatus["+ i +"]" %>' value="FAIL">
                 <option>IN PROCESS
-                <option>SUCESSFUL
+                <option>SUCCESSFUL
                 <option selected>FAIL
             </logic:equal>
         </select>  

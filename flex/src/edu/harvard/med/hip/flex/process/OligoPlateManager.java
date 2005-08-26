@@ -532,7 +532,7 @@ public class OligoPlateManager {
     //			Test				//
     //******************************************************//
     public static void main(String [] args) throws Exception {
-      /**  Connection c = null;
+        Connection c = null;
         Project p = null;
         Workflow w = null;
         
@@ -553,7 +553,7 @@ public class OligoPlateManager {
             if(c != null)
                 DatabaseTransaction.closeConnection(c);
         }
-        */       
+       /**      
         String filepath = "D:\\tmp\\";
         File f = new File(filepath);
         try {
@@ -573,7 +573,7 @@ public class OligoPlateManager {
             m.reformatOligoFiles(new ArrayList(fs));
         } catch (Exception ex) {
            System.out.println(ex);
-        }
+        }*/
     } //main
     
     public class OligoThread extends java.lang.Thread {

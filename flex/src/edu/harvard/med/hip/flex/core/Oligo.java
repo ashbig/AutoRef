@@ -6,7 +6,7 @@ import edu.harvard.med.hip.flex.workflow.*;
 
 /**
  * This class represents an oligo object.
- * $Id: Oligo.java,v 1.13 2005-08-02 12:50:25 dzuo Exp $
+ * $Id: Oligo.java,v 1.14 2005-08-26 16:20:31 dzuo Exp $
  * @File:	Oligo.java
  * @Date:	4/30/01
  * @author:	Wendy Mar
@@ -153,7 +153,7 @@ public class Oligo {
         } else if(workflowid == Workflow.HIP_INGA) {
             tagSequence = INGA_5p + sequence;
         } else if(workflowid == Workflow.GATEWAY_WITH_EGEL || workflowid == Workflow.GATEWAY_WITH_INFUSION) {
-            if(projectId == Project.Yersinia_pseudotuberculosis) {
+            if(projectId == Project.Yersinia_pseudotuberculosis || projectId == Project.Bacillus_anthracis) {
                 tagSequence = GATEWAY_YP_5p + sequence;
             }
             tagSequence = INGA_5p + sequence;

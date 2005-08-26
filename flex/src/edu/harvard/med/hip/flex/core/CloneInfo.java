@@ -19,7 +19,7 @@ public class CloneInfo extends CDNASequence {
     public static final String SEQ_VERIFIED = "SEQUENCE VERIFIED";
     public static final String NOT_SEQ_VERIFIED = "NOT SEQUENCE VERIFIED";
     public static final String IN_PROCESS = "IN PROCESS";
-    public static final String SUCESSFUL = "SUCESSFUL";
+    public static final String SUCESSFUL = "SUCCESSFUL";
     public static final String FAIL = "FAIL";
     public static final String MASTER_CLONE = "Master";
     public static final String EXPRESSION_CLONE = "Expression";

@@ -59,7 +59,7 @@
         <td><html:checkbox property="colony"/>Colony</td>
     </tr>
     <tr>
-        <td><html:checkbox property="florescence"/>Florescence</td>
+        <td><html:checkbox property="florescence"/>Fluorescence</td>
         <td><html:checkbox property="protein"/>Protein Expression</td>
     </tr>
     <tr>
