@@ -51,6 +51,8 @@ public class OligoPlateManager {
     
     public OligoPlater getOligoPlater() {return plater;}
     
+    public OligoPlateManager() { }
+    
     /**
      * Constructor
      * Creates new OligoPlateManager
@@ -164,11 +166,11 @@ public class OligoPlateManager {
         if(project.getId() == Project.PSEUDOMONAS || project.getId() == Project.KINASE || project.getId() == Project.VC || project.getId() == Project.KINASE_MUT || project.getId() == Project.Bacillus_anthracis) {
             setIsOpenOnly(true);
             setIsSetOpenClose(true);
-        } else if(project.getId() == Project.YEAST 
-            || project.getId() == Project.YP 
-            || project.getId() == Project.FT
-            || workflow.getId() == Workflow.MGC_GATEWAY_CLOSED
-            || project.getId() == Project.Yersinia_pseudotuberculosis) {
+        } else if(project.getId() == Project.YEAST
+        || project.getId() == Project.YP
+        || project.getId() == Project.FT
+        || workflow.getId() == Workflow.MGC_GATEWAY_CLOSED
+        || project.getId() == Project.Yersinia_pseudotuberculosis) {
             setIsCloseOnly(true);
             setIsSetOpenClose(true);
         }
@@ -308,7 +310,7 @@ public class OligoPlateManager {
     throws FlexDatabaseException, FlexCoreException, IOException, Exception {
         ConstructGenerator cg = null;
         plater = null;
-       
+        
         try{
             cg = new ConstructGenerator(seqList,conn, project, workflow, protocol);
             
@@ -371,9 +373,84 @@ public class OligoPlateManager {
         String subject = "Oligo order for project - "+project.getName();
         String msgText = "The attached files are our oligo order.\n"+
         "Thank you!";
+        List sendList = null;
+        try {
+            sendList = reformatOligoFiles(fileList);
+            fileList.addAll(sendList);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
         Mailer.sendMessage(to, from, cc, subject, msgText, fileList);
     }
     
+    public List reformatOligoFiles(List files) throws Exception {
+        List output = new ArrayList();
+        List out5p = new ArrayList();
+        List out3f = new ArrayList();
+        List out3c = new ArrayList();
+        for(int i=0; i<files.size(); i++) {
+            File f = (File)files.get(i);
+            if(f.getName().indexOf(OligoPlater.oligoFivePrefix) > 0)
+                out5p.add(f);
+            if(f.getName().indexOf(OligoPlater.oligoClosePrefix) > 0) 
+                out3c.add(f);
+            if(f.getName().indexOf(OligoPlater.oligoFusionPrefix) > 0)
+                out3f.add(f);
+        }
+        
+        if(out5p.size()>0)
+            output.add(this.combineFiles(out5p));
+        if(out3f.size()>0)
+            output.add(this.combineFiles(out3f));
+        if(out3c.size()>0)
+            output.add(this.combineFiles(out3c));
+        
+        return output;
+    }
+    
+    public File combineFiles(List files) throws Exception {
+        String output = null;
+        FileWriter writer = null;
+        for(int i=0; i<files.size(); i++) {
+            File f = (File)files.get(i);
+            System.out.println(f.getPath());
+            if(i == 0) {
+                output = OligoPlater.filePath + f.getName()+"_combined.txt";
+                writer = new FileWriter(output);
+            }
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f.getPath())));
+            String line = null;
+            String currentLabel = null;
+            int lastPosition = 0;
+            while((line = in.readLine()) != null) {
+                StringTokenizer st = new StringTokenizer(line, "\t");
+                String label = st.nextToken();
+                String id = st.nextToken();
+                String seq = st.nextToken();
+                int position = Integer.parseInt(st.nextToken());
+                String s = Algorithms.convertWellFromInttoA8_12(position);
+                String positionX = s.substring(0, 1);
+                String positionY = s.substring(1);
+                lastPosition = position;
+   
+                if(currentLabel == null) {
+                    writer.write(label+"\t\t\tA\t01\t1\n");
+                    currentLabel = label;
+                }
+                writer.write(label+"\t"+id+"\t"+seq+"\t"+positionX+"\t"+positionY+"\t"+position+"\n");
+            }
+            in.close();
+            int lastpos = lastPosition+1;
+            String ss = Algorithms.convertWellFromInttoA8_12(lastpos);
+            String pX = ss.substring(0, 1);
+            String pY = ss.substring(1);
+            writer.write(currentLabel+"\t\t\t"+pX+"\t"+pY+"\t"+lastpos+"\n");
+        }
+        writer.close();
+        
+        return new File(output);
+    }
     
     public synchronized void orderOligo() {
         //        java.lang.Thread thread = new OligoThread();
@@ -455,7 +532,7 @@ public class OligoPlateManager {
     //			Test				//
     //******************************************************//
     public static void main(String [] args) throws Exception {
-        Connection c = null;
+      /**  Connection c = null;
         Project p = null;
         Workflow w = null;
         
@@ -476,7 +553,27 @@ public class OligoPlateManager {
             if(c != null)
                 DatabaseTransaction.closeConnection(c);
         }
-        
+        */       
+        String filepath = "D:\\tmp\\";
+        File f = new File(filepath);
+        try {
+            File[] files = f.listFiles();
+            
+            if(files == null) {
+                System.out.println("cannot file file.");
+            }
+            
+            List fs = new ArrayList();
+            for(int i=0; i<files.length; i++) {
+                File file = files[i];
+                fs.add(file);
+            }
+            
+            OligoPlateManager m = new OligoPlateManager();
+            m.reformatOligoFiles(new ArrayList(fs));
+        } catch (Exception ex) {
+           System.out.println(ex);
+        }
     } //main
     
     public class OligoThread extends java.lang.Thread {
