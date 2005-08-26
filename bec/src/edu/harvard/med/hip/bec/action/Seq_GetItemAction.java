@@ -365,21 +365,27 @@ public class Seq_GetItemAction extends ResearcherAction
               //  case Constants.CLONE_SEQUENCE_DEFINITION_INT :
                 case   Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT :
                 {
+                    ArrayList discrepancies = new ArrayList();
                     if ( id == -1)//display subset of discrepancies
                     {
-                        ArrayList discrepancies = new ArrayList();
                         String discr_ids = (String) request.getParameter("DISCRIDS");
                         discr_ids = Algorithms.replaceChar( discr_ids, '_', ',');
                         if ( discr_ids.charAt(discr_ids.length() - 1) == ',') discr_ids = discr_ids.substring(0, discr_ids.length() - 1);
                         discrepancies = Mutation.getByIds(discr_ids);
-                        request.setAttribute("discrepancies",discrepancies);
+                        //request.setAttribute("discrepancies",discrepancies);
                     }
                     else
                     {
                         AnalyzedScoredSequence sequence = new AnalyzedScoredSequence(id);
-                        request.setAttribute("sequence",sequence);
+                
+                        if ( sequence != null) 
+                            discrepancies = sequence.getDiscrepancies() ;
+                         request.setAttribute("sequence_id",String.valueOf( sequence.getId()));
+                       // request.setAttribute("sequence",sequence);
                     }
-                   // System.out.println("1L");
+                    //request.setAttribute("discrepancies",discrepancies);
+                    request.setAttribute("discrepancies",DiscrepancyDescription.assembleDiscrepancyDefinitions(discrepancies));
+     
                     return (mapping.findForward("display_discrepancyreport"));
                 }
                 case Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT:
@@ -542,7 +548,7 @@ public class Seq_GetItemAction extends ResearcherAction
                     request.setAttribute("container",oligo_container);
                     return (mapping.findForward("display_oligo_container"));
                 }
-             
+            
             }
             
         }

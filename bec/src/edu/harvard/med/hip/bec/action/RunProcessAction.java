@@ -154,15 +154,15 @@ public class RunProcessAction extends ResearcherAction
                         }
                     }
                     
-                    master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
+                  //  master_container_ids = Container.findContainerIdsFromLabel(master_container_labels);
                     request.setAttribute(Constants.JSP_TITLE,"Request for isolate ranker run" );
                     request.setAttribute(Constants.ADDITIONAL_JSP,"Processing plates "+ plate_names);
                     
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
                     int endread_spec_id = Integer.parseInt( (String) request.getParameter(Spec.END_READS_SPEC));
                     IsolateRankerRunner runner = new IsolateRankerRunner();
-                  //  runner.setContainerLabels(master_container_labels );
-                    runner.setContainerIds(master_container_ids );
+                    runner.setContainerLabels(master_container_labels );
+                   // runner.setContainerIds(master_container_ids );
                     runner.setCutoffValuesSpec( (FullSeqSpec)Spec.getSpecById(bioeval_spec_id, Spec.FULL_SEQ_SPEC_INT));
                     runner.setPenaltyValuesSpec( (EndReadsSpec)Spec.getSpecById(endread_spec_id, Spec.END_READS_SPEC_INT));
                     runner.setUser(user);

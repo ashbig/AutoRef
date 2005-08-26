@@ -17,8 +17,8 @@
  *
  *
  * The following information is used by CVS
- * $Revision: 1.2 $
- * $Date: 2005-05-23 17:47:09 $
+ * $Revision: 1.3 $
+ * $Date: 2005-08-26 17:47:43 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -60,7 +60,7 @@ import edu.harvard.med.hip.bec.user.*;
  *    be returned.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.2 $ $Date: 2005-05-23 17:47:09 $
+ * @version    $Revision: 1.3 $ $Date: 2005-08-26 17:47:43 $
  */
 public abstract class BecAction extends org.apache.struts.action.Action {
     
@@ -86,8 +86,7 @@ public abstract class BecAction extends org.apache.struts.action.Action {
     throws ServletException, IOException {
         ActionErrors errors = new ActionErrors();
         HttpSession session = request.getSession();
-        System.out.println("  \n\n\n    check application setting\n\n\n ");
-        if(isUserLoggedIn(session)) {
+         if(isUserLoggedIn(session)) {
             return becPerform(mapping,form,request,response);
         } else {
             
