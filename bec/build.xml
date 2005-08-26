@@ -33,7 +33,10 @@
     </copy>
     <mkdir dir="${deploy.home}/WEB-INF"/>
     <copy file="etc/web.xml" tofile="${deploy.home}/WEB-INF/web.xml"/>
-    <copy todir="${deploy.home}/WEB-INF">
+    <copy file="etc/ApplicationHostSettings.properties" tofile="${deploy.home}/WEB-INF/classes/config/ApplicationHostSettings.properties"/>
+        <copy file="etc/PolymorphismFinderSettings.properties" tofile="${deploy.home}/WEB-INF/classes/config/ModuleSettings.properties"/>
+
+    <copy todir="${deploy.home}/WEB-INF/">
         <fileset dir="etc" includes="*.tld"/>
     </copy>
     <copy file="etc/struts-config.xml" tofile="${deploy.home}/WEB-INF/struts-config.xml"/>
@@ -48,9 +51,7 @@
     <mkdir dir="${deploy.home}/WEB-INF/perl"/>
     <mkdir dir="${deploy.home}/WEB-INF/perl/UTIL"/>
     <mkdir dir="${javadoc.home}"/>
-    <copy todir="${deploy.home}/WEB-INF/perl">
-      <fileset dir="ApplicationCode/Perl"/>
-    </copy>
+    
 
   </target>
 
@@ -100,5 +101,6 @@
     <jar basedir="${deploy.home}" excludes="${dist.war}" jarfile="${dist.home}/${dist.war}"/>
   </target>
 
+  
 
 </project>
