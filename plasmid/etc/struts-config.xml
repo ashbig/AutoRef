@@ -68,6 +68,18 @@
     <form-bean      name="changeOrderStatusForm"
                     type="plasmid.form.ChangeOrderStatusForm"/>
                     
+    <form-bean      name="labelPlatesForm"
+                    type="plasmid.form.LabelPlatesForm"/>
+                    
+    <form-bean      name="printLabelsForm"
+                    type="plasmid.form.PrintLabelsForm"/>
+                    
+    <form-bean      name="uploadCultureResultsForm"
+                    type="plasmid.form.UploadCultureResultsForm"/>
+                    
+    <form-bean      name="generateWorklistForm"
+                    type="plasmid.form.GenerateWorklistForm"/>
+                    
  </form-beans>
 
   <!-- ========== Global Forward Definitions ============================== -->
@@ -158,6 +170,14 @@
               input="/GetVectorDetailAction">
       <forward  name="success"   path="/ViewVectorDetail.jsp"/>
     </action>
+     
+    <action    path="/LabelPlates"
+               type="plasmid.action.LabelPlatesAction"
+               name="labelPlatesForm"
+              scope="request"
+              input="/LabelPlates.jsp">
+      <forward  name="success"   path="/PrintLabels.jsp"/>
+    </action>
     
     <!-- Process a user logon -->
     <action    path="/Logon"
@@ -197,6 +217,13 @@
               input="/PrepareRegistration.do">
       <forward  name="success"   path="/HomeRegistration.jsp"/>
     </action>
+    
+    <action    path="/PrintLabels"
+               type="plasmid.action.PrintLabelsAction"
+               name="printLabelsForm"
+               scope="request">
+      <forward  name="success"   path="/PrintLabels.jsp"/>
+    </action>
       
     <action     path="/ProcessError"
                 type="edu.harvard.med.hip.flex.action.ProcessErrorAction">
@@ -227,6 +254,13 @@
       <forward  name="success_confirm"   path="/ConfirmRegistration.jsp"/>
       <forward  name="success"   path="/Login.jsp"/>
     </action>
+      
+    <action    path="/SelectProcess"
+               type="plasmid.action.SelectProcessAction"
+               name="generateWorklistForm"
+              input="/SelectProcess.jsp">
+      <forward  name="success"   path="/Login.jsp"/>
+    </action>
          
     <action    path="/SetDisplay"
                type="plasmid.action.SetDisplayAction"
@@ -234,6 +268,14 @@
               scope="request"
               input="/RefseqSearchContinue.jsp">
       <forward  name="success"   path="/DisplayResults.jsp"/>
+    </action>
+         
+    <action    path="/UploadCultureResults"
+               type="plasmid.action.UploadCultureResultsAction"
+               name="uploadCultureResultsForm"
+              scope="request"
+              input="/UploadCultureResults.jsp">
+      <forward  name="success"   path="/ConfirmCultureResults.jsp"/>
     </action>
 
     <action    path="/UpdateCart"

@@ -52,6 +52,7 @@
 
 <logic:notEqual name="displayPage" value="nofound">
 <p class="mainbodytexthead">List of search terms found</p>
+<p class="mainbodytexthead" align="right"><a target="_blank" href="TermDefinition.jsp">Explanation of Terms</a></p>
 <table width="100%" border="0">
   <tr>
     <td class="tableheader">&nbsp;</td>

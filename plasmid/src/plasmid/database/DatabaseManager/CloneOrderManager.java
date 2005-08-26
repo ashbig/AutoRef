@@ -157,7 +157,7 @@ public class CloneOrderManager extends TableManager {
             t = DatabaseTransaction.getInstance();
             rs = t.executeQuery(sql);
             if(rs.next()) {
-                String date = rs.getDate(2).toString();
+                String date = rs.getString(2);
                 String st = rs.getString(3);
                 String ponumber = rs.getString(4);
                 String shippingto = rs.getString(5);
@@ -171,18 +171,12 @@ public class CloneOrderManager extends TableManager {
                 double costforshipping = rs.getDouble(13);
                 double total = rs.getDouble(14);
                 int userid = rs.getInt(15);
-                String shippingdate = null;
-                java.sql.Date d = rs.getDate(16);
-                if(d != null)
-                    shippingdate = d.toString();
+                String shippingdate = rs.getString(16);
                 String whoshipped = rs.getString(17);
                 String shippingmethod = rs.getString(18);
                 String shippingaccount = rs.getString(19);
                 String trackingnumber = rs.getString(20);
-                String receiveconfirmationdate = null;
-                java.sql.Date d1 = rs.getDate(21);
-                if(d1 != null)
-                    receiveconfirmationdate = d1.toString();
+                String receiveconfirmationdate = rs.getString(21);
                 String whoconfirmed = rs.getString(22);
                 String whoreceivedconfirmation = rs.getString(23);
                 
@@ -245,7 +239,8 @@ public class CloneOrderManager extends TableManager {
             List orders = new ArrayList();
             while(rs.next()) {
                 int orderid = rs.getInt(1);
-                String date = rs.getDate(2).toString();
+                System.out.println("orderid: "+orderid);
+                String date = rs.getString(2);
                 String st = rs.getString(3);
                 String ponumber = rs.getString(4);
                 String shippingto = rs.getString(5);
@@ -261,22 +256,17 @@ public class CloneOrderManager extends TableManager {
                 int userid = rs.getInt(15);
                 String firstname = rs.getString(16);
                 String lastname = rs.getString(17);
-                String shippingdate = null;
-                java.sql.Date d = rs.getDate(18);
-                if(d != null)
-                    shippingdate = d.toString(); 
+                String shippingdate = rs.getString(18);
                 String whoshipped = rs.getString(19);
                 String shippingmethod = rs.getString(20);
                 String shippingaccount = rs.getString(21);
                 String trackingnumber = rs.getString(22);
-                String receiveconfirmationdate = null;
-                java.sql.Date d1 = rs.getDate(23);
-                if(d1 != null)
-                    receiveconfirmationdate = d1.toString();
+                String receiveconfirmationdate = rs.getString(23);
                 String whoconfirmed = rs.getString(24);
                 String whoreceivedconfirmation = rs.getString(25);
                 
                 CloneOrder order = new CloneOrder(orderid, date, st, ponumber,shippingto,billingto,shippingaddress,billingaddress, numofclones, numofcollection, costforclones, costforcollection,costforshipping, total, userid);
+               
                 order.setFirstname(firstname);
                 order.setLastname(lastname);
                 order.setShippingdate(shippingdate);
@@ -291,6 +281,7 @@ public class CloneOrderManager extends TableManager {
             }
             return orders;
         } catch (Exception ex) {
+            System.out.println(ex);
             handleError(ex, "Cannot query cloneorder.");
             return null;
         } finally {
@@ -344,5 +335,35 @@ public class CloneOrderManager extends TableManager {
         }
         
         return true;
+    }
+    
+    public static void main(String args[]) {
+        DatabaseTransaction t = null;
+        Connection conn = null;
+        
+        try {
+            t = DatabaseTransaction.getInstance();
+            conn = t.requestConnection();
+        } catch (Exception ex) {
+            if(Constants.DEBUG) {
+                System.out.println("Cannot get database connection.");
+                System.out.println(ex);
+            }
+        }
+        
+        User user = new User(3, null,null, null,null,null, null, null,null,null,null,null,null);
+        CloneOrderManager manager = new CloneOrderManager(conn);
+        List orders = manager.queryCloneOrders(user, null);
+        if(orders == null) {
+            System.out.println("error.");
+            System.exit(0);
+        }
+        
+        for(int i=0; i<orders.size(); i++) {
+            CloneOrder order = (CloneOrder)orders.get(i);
+            System.out.println(order.getBillingAddress());
+        }
+        
+        DatabaseTransaction.closeConnection(conn);
     }
 }

@@ -58,7 +58,7 @@
           order to facilitate construction of a C-terminal fusion protein. In 
           contrast, &quot;CLOSED&quot; cDNA ORFs have the natural stop codon of 
           the gene (the ORF is ATG to STOP).</p>
-        <p><span class="countrytext">PLEASE ALSO SEE OUR EXPLANATION OF TERMS 
+        <p><span class="countrytext">PLEASE ALSO SEE OUR <A HREF="TermDefinition.jsp">EXPLANATION OF TERMS</a> 
           PAGE.</span></p></td>
     </tr>
     <tr valign="top"> 
@@ -88,7 +88,7 @@
           to the reference sequence. You should perform a conceptual translation 
           of the actual sequence provided in order to check if the cDNA ORF is 
           appropriate for your experiments.</p>
-        <p><span class="countrytext">PLEASE ALSO SEE OUR EXPLANATION OF TERMS 
+        <p><span class="countrytext">PLEASE ALSO SEE OUR <A HREF="TermDefinition.jsp">EXPLANATION OF TERMS</a> 
           PAGE.</span></p></td>
     </tr>
     <tr valign="top"> 

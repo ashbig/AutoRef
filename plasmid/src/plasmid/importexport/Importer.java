@@ -19,12 +19,13 @@ import plasmid.database.*;
 public class Importer {
     //public static final String filepath = "G:\\plasmid\\HIP_PA\\";
     //public static final String filepath = "G:\\plasmid\\HIP_Human\\";
-    public static final String filepath = "G:\\plasmid\\Other\\";
+    //public static final String filepath = "G:\\plasmid\\Other\\";
     //public static final String filepath = "G:\\plasmid\\Yeast\\";
     //public static final String filepath = "G:\\plasmid\\Howley\\";
     //public static final String filepath = "G:\\plasmid\\Howley_05_7_20\\";
     //public static final String filepath = "G:\\plasmid\\NEEL_05_7_20\\";    
-    
+    public static final String filepath = "G:\\plasmid\\TRC_import\\";    
+   
     private List tables;
     private String error;
     
@@ -199,7 +200,7 @@ public class Importer {
                 }
                 if(table.getTableName().trim().equalsIgnoreCase(ImportTable.PLATE)) {
                     System.out.println("Importing PLATE");
-                    plateImp.importPlateAndSample(table);
+                    plateImp.importPlateAndSample(table, cimp.getIdmap());
                 }
             } catch (Exception ex) {
                 setError("Error occured during import.");

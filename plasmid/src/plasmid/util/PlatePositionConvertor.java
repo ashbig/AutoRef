@@ -6,6 +6,9 @@
 
 package plasmid.util;
 
+import java.util.*;
+import java.io.*;
+
 /**
  *
  * @author  DZuo
@@ -30,8 +33,6 @@ public class PlatePositionConvertor {
         row_value = row - a_value + 1;
         
         return (column - 1) * 8 +  row_value ;
-        
-        
     }
     
     //convert well nomenculature from A10 to int
@@ -57,5 +58,26 @@ public class PlatePositionConvertor {
             else
                 return "" +  rowname+column;
         }               
+    }
+    
+    public static void main (String args[]) {
+        String inputFile = "G:\\plasmid\\TRC\\plate.txt";
+        String outputFile = "G:\\plasmid\\TRC\\plateout.txt";
+        String line;
+        
+        try {
+            PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
+ 
+            BufferedReader in = new BufferedReader((new FileReader(inputFile)));
+            
+            while((line = in.readLine()) != null) {     
+                int position = PlatePositionConvertor.convertWellFromA8_12toInt(line);
+                output.println(line+"\t"+position);
+            }
+            in.close();
+            output.close();
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 }

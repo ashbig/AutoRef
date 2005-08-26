@@ -36,6 +36,7 @@
         DNA sequencing services, <a href="http://dnaseq.med.harvard.edu">click 
         here</a>.</span></p>
             </span> </p>
+      <p class="underbullet">Comments, suggestions and all other questions, please contact <a href="mailto:dongmei_zuo@hms.harvard.edu">PlasmID support</a>.</p>
 </td>
     <td width="39%"><img src="Biobank_small.jpg" width="311" height="466"></td>
   </tr>

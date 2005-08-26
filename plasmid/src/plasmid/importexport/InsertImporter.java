@@ -113,6 +113,9 @@ public class InsertImporter {
                 if("hasmutation".equalsIgnoreCase(columnName)) {
                     c.setHasmutation(columnInfo);
                 }
+                if("region".equalsIgnoreCase(columnName)) {
+                    c.setRegion(columnInfo);
+                }
                 if("refseqid".equalsIgnoreCase(columnName)) {
                     Integer refseqid = (Integer)refseqidmap.get(columnInfo);
                     

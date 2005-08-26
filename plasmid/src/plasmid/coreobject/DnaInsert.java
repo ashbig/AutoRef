@@ -27,6 +27,7 @@ public class DnaInsert {
     private String targetgenbank;
     private String hasdiscrepancy;
     private String hasmutation;
+    private String region;
     private int refseqid;
     private List properties;
     
@@ -49,7 +50,7 @@ public class DnaInsert {
         
     public DnaInsert(int insertid, int order, int size, String species, String format, String source, 
     int cloneid, String geneid, String name, String description, String targetseqid, String targetgenbank,
-    String hasdiscrepancy, String hasmutation, int refseqid) {
+    String hasdiscrepancy, String hasmutation, String region, int refseqid) {
         this.insertid=insertid;
         this.order=order;
         this.size=size;
@@ -64,6 +65,7 @@ public class DnaInsert {
         this.targetgenbank = targetgenbank;
         this.hasdiscrepancy = hasdiscrepancy;
         this.hasmutation = hasmutation;
+        this.region = region;
         this.refseqid = refseqid;
     }
     
@@ -84,6 +86,7 @@ public class DnaInsert {
     public int getRefseqid() {return refseqid;}
     public List getProperties() {return properties;}
     public String getSequence() {return sequence;}
+    public String getRegion() {return region;}
     
     public void setInsertid(int id) {this.insertid = id;}
     public void setOrder(int order) {this.order = order;}
@@ -102,6 +105,7 @@ public class DnaInsert {
     public void setRefseqid(int id) {this.refseqid = id;}
     public void setProperties(List s) {this.properties = s;}
     public void setSequence(String s) {this.sequence = s;}
+    public void setRegion(String s) {this.region = s;}
     
     public String getFastaSequence() {
         return Dnasequence.convertToFasta(sequence);
