@@ -87,7 +87,7 @@
     <tr >
        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Position</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Type</font></strong></th>
-        <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Id</font></strong></th>
+    <!--    <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Sample Id</font></strong></th> -->
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Clone Id</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Status</font></strong></th>
         <th bgcolor="#1145A6"><strong><font color="#FFFFFF">Refference Sequence</font></strong></th>
@@ -112,20 +112,19 @@
 
 		<td <%= row_color %>><%= sample.getPosition() %> </td>
 		<td <%= row_color %>> <%= sample.getSampleType()%></td>
-		<td <%= row_color %>> <%= sample.getSampleId()%></td>
-                <td <%= row_color %>>
+		<!--<td = row_color %>> = sample.getSampleId()%></td> -->
+                <td align='right' <%= row_color %>>
                         <% if (sample.getCloneId() != 0)
                         {%> <%= sample.getCloneId()%>
                        <%}else{%>&nbsp;<%}%>
                 </td>
 		<td <%= row_color %>> <%= IsolateTrackingEngine.getStatusAsString( sample.getCloneStatus () )%></td>
-		<td <%= row_color %>> 
+		<td <%= row_color %>  align='right' > 
 	<% if (sample.getRefSequenceId() == -1)
 	{%>
 	&nbsp;
 	<%}else{%>
 
-		<!--<a href="/BEC/Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>" > 
 		<%= sample.getRefSequenceId()%></a> -->
 		<a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','<%= sample.getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 		<%= sample.getRefSequenceId()%></a>
@@ -133,7 +132,7 @@
 	<%}%>	
 		</td>
 	    
-		<td <%= row_color %>> 
+		<td <%= row_color %>  align='right' > 
 		<% if ( sample.getSequenceId() != -1)
 		{%>
 <a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.CLONE_SEQUENCE_DEFINITION_REPORT_INT%>&amp;ID=<%= sample.getSequenceId()%>','<%= sample.getSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 

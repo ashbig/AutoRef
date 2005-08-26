@@ -58,26 +58,21 @@
 	<td width="25%" bgColor="#b8c6ed">  <b>Vector Name</b>  </td>
 	<td  bgColor="#b8c6ed"><%= vector.getName() %></td>
 </tr>
-<tr> 
+<!--<tr> 
 	<td  bgColor="#e4e9f8" ><b>Vector Id:</b></td>
-	 <td bgColor="#e4e9f8"><%= vector.getId() %></td>  
-	  </tr>
- 
-<tr> 
-
+	 <td bgColor="#e4e9f8">= vector.getId() %></td>  
+	  </tr>-->
 <tr> 
 	<td  bgColor="#b8c6ed" ><b>Vector Source:</b></td>
 	 <td bgColor="#b8c6ed"><%= vector.getSource() %></td>  
 	  </tr>
- 
-
 <tr> 
 	<td  bgColor="#e4e9f8" ><b>Vector Type:</b></td>
 	 <td bgColor="#e4e9f8"><%= vector.getTypeAsString() %></td>  
 	  </tr>
 
 <tr> 
-<td colspan=2>
+<td colspan=2 ALIGN='CENTER'>
 <p><b><P></P>Vector Features</b> </p> 
      
       <table width="85%" border="0" align="center">

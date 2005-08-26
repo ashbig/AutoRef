@@ -43,7 +43,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
   
   <TR> 
-    <TD width="35%" >Bec ID:</td>
+    <TD width="35%" >Sequence ID:</td>
     <td ><%= refsequence.getId()%></TD>
   </TR>
  
@@ -70,7 +70,11 @@
     <TD >GC Content:</td>
     <td><%= refsequence.getGCcontent()%></TD>
   </TR>
+  
+  
+  <TR> <TD colspan=2 >&nbsp;&nbsp;&nbsp;<strong>Literature Information:</strong></td> </TR>
   <% 
+  
   PublicInfoItem item = null;
   for (int count = 0; count< refsequence.getPublicInfo().size(); count++)
   {
@@ -80,7 +84,7 @@
      
     	<TD colspan=2 ><table width="90%">
 			<TR>
-			<TD width="35%"><%= item.getName()%></td>
+			<TD width="35%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= item.getName()%></td>
 			<TD><%= item.getValue()%></td>
 			</tr>
 		</table></TD>
@@ -91,7 +95,7 @@
     <TD >&nbsp;</TD> <TD >&nbsp;</TD>
   </TR>
   <TR> 
-    <TD >Sequence:</TD> <TD >&nbsp;</TD>
+    <TD ><strong>Sequence:</strong></TD> <TD >&nbsp;</TD>
   </TR>
   <TR>
     <TD COLSPAN=2> 

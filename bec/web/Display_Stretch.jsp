@@ -29,8 +29,7 @@
  <TR><TD width="35%" ><strong>Cds Start:</strong></td>    <td ><%= stretch.getCdsStart()%></TD>  </TR>
  <TR><TD width="35%" ><strong>Cds Stop:</strong></td>    <td ><%= stretch.getCdsStop()%></TD>  </TR>
 <TR><TD width="35%" ><strong>Stretch Collection Id:</strong></td>    <td >
-<!-- <A HREF="" onClick="window.open('/BEC/Seq_GetItem.do?forwardName=<%=Constants.STRETCH_COLLECTION_REPORT_INT%>&amp;ID=<%= stretch.getCollectionId()%>','<%= stretch.getCollectionId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;"> -->
-		 <%= stretch.getCollectionId() %>	<!-- </a> </td></tr> -->
+
 <%if ( stretch.getType() == Stretch.GAP_TYPE_CONTIG || stretch.getType() == Stretch.GAP_TYPE_LOW_QUALITY)
     {%>
 <TR>     <TD colspan=2 >&nbsp; </TD>  </TR>

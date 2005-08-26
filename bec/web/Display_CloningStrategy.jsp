@@ -95,9 +95,9 @@ else
 
 
 </tr>
-<tr> 
+<!--<tr> 
 	<td  bgColor="#e4e9f8" ><b>Linker Id:</b></td>
-	 <td bgColor="#e4e9f8" height="29"><%= linker5.getId() %></td>   </tr>
+	 <td bgColor="#e4e9f8" height="29">= linker5.getId() %></td>   </tr>-->
  <tr>
 	<td colspan=2 bgcolor="#1145A6" height="26"><strong><font color="#FFFFFF"> 3' Linker </font> </td>
 	
@@ -129,9 +129,9 @@ else
 	<td bgColor="#b8c6ed"> <%= linker3.getSequence() %></td>
 <%}%>
 </tr>
-<tr > 
+<!--<tr > 
 	<td  bgColor="#e4e9f8" ><b>Linker Id:</b></td>
-	 <td bgColor="#e4e9f8" height="29"><%= linker3.getId() %></td>   </tr>
+	 <td bgColor="#e4e9f8" height="29">= linker3.getId() %></td>   </tr> -->
 
  <TR><TD colspan=2>&nbsp;</TD></TR>
   <TR><TD colspan="2" bgcolor="#1145A6" height="26"><font color="#FFFFFF">
@@ -141,17 +141,14 @@ Vector Information </FONT></TD></TR>
 	<td width="25%" bgColor="#b8c6ed">  <b>Vector Name</b>  </td>
 	<td width="75%" bgColor="#b8c6ed"><%= vector.getName() %></td>
 </tr>
-<tr> 
+<!--<tr> 
 	<td  bgColor="#e4e9f8" ><b>Vector Id:</b></td>
-	 <td bgColor="#e4e9f8"><%= vector.getId() %></td>  
-</tr>
+	 <td bgColor="#e4e9f8">= vector.getId() %></td>  
+</tr>-->
  
 <tr> 
-
-<tr> 
 	<td  bgColor="#b8c6ed" ><b>Vector Source:</b></td>
-	 <td bgColor="#b8c6ed"><%= vector.getSource() %></td>  
-	  </tr>
+	 <td bgColor="#b8c6ed"><%= vector.getSource() %></td>  </tr>
  
 
 <tr> 

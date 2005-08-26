@@ -79,14 +79,15 @@
      <!--   = Mutation.toHTMLString(discrepancies ) %> -->
       
        <table border=1 cellpadding=0 cellspacing=0 width='90%' align=center><tr >
-      <th width='13%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Number</font></strong></th>
-      <th width='31%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Description</font></strong></th>
+      <th width='5%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Number</font></strong></th>
+      <th  bgcolor='#1145A6'><strong><font color='#FFFFFF'>Description</font></strong></th>
       <th width='25%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Protein Description</font></strong></th>
       <th width='17%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Polymorphism</font></strong></th>
        <th width='14%' bgcolor='#1145A6'><strong><font color='#FFFFFF'>Confidence</font></strong></th></tr>
 
 <%  String row_color = " bgColor='#e4e9f8'"; 
     ArrayList rna_discrepancies = null;
+    int printed_discr_number = 1;
     DiscrepancyDescription discr_definition = null;RNAMutation rm = null;Mutation mut =null;
     ArrayList discrepancy_definition = (ArrayList)request.getAttribute("discrepancies");
      if ( discrepancy_definition != null )
@@ -102,7 +103,7 @@
                 for (int rna_count = 0; rna_count < rna_discrepancies.size(); rna_count++)
                 {
                      rm = (RNAMutation)rna_discrepancies.get(rna_count);
-                     %>  <tr><td  <%= row_color %> > <%= rm.getNumber() + 1 %></td>
+                     %>  <tr><td  <%= row_color %> > <%= printed_discr_number++ %></td>
                          <td <%= row_color%> > <%= rm.toHTMLString()%> </td>
                         <%    if (rna_count== 0) {%>
                             <td  <%= row_color %> rowspan='<%= rna_discrepancies.size() %>' >  <%= ((AAMutation)discr_definition.getAADefinition()).toHTMLString() %></td><%}%>
@@ -122,7 +123,7 @@
 	   else 
            {
                mut = discr_definition.getRNADefinition();
-               %><tr><td  <%= row_color %> > <%= mut.getNumber() %> </td> 
+               %><tr><td  <%= row_color %> > <%= printed_discr_number++ %> </td> 
 	       <td  <%= row_color%> > <%= ((Mutation)discr_definition.getRNADefinition()).toHTMLString() %></td>  
                <td <%= row_color %> >&nbsp;</td><td  <%=  row_color %> > &nbsp;</td>        
 	       <td  align='center' <%= row_color%>> <%= mut.getQualityAsString() %></td>    </tr>     

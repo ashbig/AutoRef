@@ -43,9 +43,11 @@ public class Renamer
            // "c:\\comp_tigr-1.txt");
            // getNames("c:\\comp_tigr1.txt","c:\\all_tr.txt","c:\\not_processed.txt", "\n","c:\\processed.txt");
      //   transferFile("c:\\not_processed.txt");
-            String directory_name = "c:\\try\\";
-            String file_name_with_file_names="";
-            copyAllFilesIntoDirectory( directory_name, file_name_with_file_names);
+           // String directory_name = "c:\\try\\";
+            //String file_name_with_file_names="";
+            //copyAllFilesIntoDirectory( directory_name, file_name_with_file_names);
+           // r.getEMails("C:\\rent\\rent.txt","C:\\rent\\rent_out.txt");
+            r.sendEMail("C:\\rent\\rent_test.txt");
         }
         
         catch(Exception e)
@@ -54,6 +56,61 @@ public class Renamer
     }
     
     
+    public static void getEMails(String filename_in, String filename_out)
+    {
+        BufferedReader fin=null;BufferedWriter fout=null;
+        Hashtable ar_1 = new Hashtable();String line=null;
+          try
+        {
+            fin = new BufferedReader(new FileReader(filename_in));
+            fout = new BufferedWriter(new FileWriter(filename_out));
+            while ((line = fin.readLine()) != null)
+           {
+               if ( line.indexOf("mailto:") != -1)
+               {
+                   line = line.substring( line.indexOf("mailto:"));
+                   line = line.substring(7, line.indexOf("\""));
+                   ar_1.put(line, "L");
+                   
+                   
+               }
+               
+            }
+          for (Enumeration e = ar_1.keys() ; e.hasMoreElements() ;)
+           {
+                line = (String) e.nextElement();
+                fout.write(line+"\n");
+          }
+               
+            fout.flush();
+            fin.close();fout.close();
+          }
+          catch(Exception e){}
+        
+    }
+    
+    
+    public static void sendEMail(String filename_in)
+    {
+        String subject ="Looking for appartment to rent";
+        String msgText="Dear Realtor,\n\nI am looking for 3BR accommodations for lease for the period\nof my home renovation. I will need this apartment starting\nOctober 1/October 15 for six months.\n Desired location is Newton Corner, Brighton Oak Square.\nI realize that half year lease is not standard \nand I am willing to pay reasonable premium for this.\n\n\n\nSincerely,\nHelen Taycher";
+
+
+        String to = null;String ma="elena_taycher@hms.harvard.edu";
+         BufferedReader fin=null;
+          try
+        {
+            fin = new BufferedReader(new FileReader(filename_in));
+            while ((to = fin.readLine()) != null)
+           {
+                Mailer.sendMessage(to, ma, ma,  subject,     msgText);
+  
+            }
+        
+            fin.close();
+          }
+          catch(Exception e){}
+         }
     public static void deleteFileDirectories(String cloneids, String root)
     {
         ArrayList clone_ids = Algorithms.splitString(cloneids);

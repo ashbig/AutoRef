@@ -8,11 +8,7 @@
 <%@ page import="edu.harvard.med.hip.bec.coreobjects.spec.*" %>
 <html>
 
-<head>
-
-<title>linker</title>
-
-</head>
+<head><title>linker</title></head>
 
 <body >
 
@@ -21,14 +17,11 @@
 	<p><P>
 <br>
 <table border="0" cellpadding="0" cellspacing="0" width="74%" align=center>
-    <tr>
-        <td >
+    <tr><td >
     <font color="#008000" size="5"><b> Linker Information </font>
     <hr>
     
-    <p>
-    </td>
-    </tr>
+    <p> </td></tr>
 </table>
 
 <div align="center">
@@ -46,9 +39,11 @@
 <% 
     BioLinker linker = null;
     ArrayList linkers = (ArrayList) request.getAttribute("linkers");
+  
  for (int count = 0; count < linkers.size(); count++)
 {
     linker = (BioLinker)linkers.get(count); 
+   
 //force sequence wrap
  char[] linkerseq = linker.getSequence().toCharArray();
 StringBuffer linkerseq_formated = new StringBuffer();
@@ -61,7 +56,7 @@ if (count1 !=0 && count1 % 40 == 0 )linkerseq_formated.append("<BR>");
 %>
 
 <tr>
-	<td colspan=2 bgcolor="#1145A6" height="26"><strong><font color="#FFFFFF"> 5' Linker </font> </td>
+	<td colspan=2 bgcolor="#1145A6" height="26"><strong><font color="#FFFFFF"> Linker <%= linker.getId() %></font> </td>
 	
 </tr>
 <tr>
@@ -79,9 +74,9 @@ if (count1 !=0 && count1 % 40 == 0 )linkerseq_formated.append("<BR>");
 	<td bgColor="#e4e9f8"> <%= linker.getFrameStart() %></td>
 </tr>
 <%}%>
-<tr> 
+<!--<tr> 
 	<td  bgColor="#b8c6ed" ><b>Linker Id:</b></td>
-	 <td bgColor="#b8c6ed"><%= linker.getId() %></td>   </tr>
+	 <td bgColor="#b8c6ed">= linker.getId() %></td>   </tr>-->
  
 
 <tr><TD>&nbsp;</TD></TR>

@@ -91,6 +91,19 @@
  
  
 </TR>
+<tr> <TD width="35%" ><strong>Discrepancy Report:</strong></td>
+<td><%
+ if (clone_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ANALIZED_YES_DISCREPANCIES 
+   || clone_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_POLYMORPHISM_CLEARED 
+   || clone_sequence.getStatus() == BaseSequence.CLONE_SEQUENCE_STATUS_ANALYSIS_CONFIRMED)
+{
+
+%>		
+<input type=BUTTON value="Discrepancy Report"  onClick="window.open('<%=edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.ANALYZEDSEQUENCE_DISCREPANCY_REPORT_DEFINITION_INT%>&amp;ID=<%= clone_sequence.getId()%>','Discr<%= clone_sequence.getId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;">
+<%}
+else
+ {%>No Discrepancies<%}%>  </td>
+</tr>
   <TR><TD colspan=2 >&nbsp; </TD>  </TR>
   <TR> 
     <TD colspan =2 ><p><strong>Sequence:</strong></p>
