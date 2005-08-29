@@ -125,7 +125,6 @@
 	&nbsp;
 	<%}else{%>
 
-		<%= sample.getRefSequenceId()%></a> 
 		<a href="#" onCLick="window.open('<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>Seq_GetItem.do?forwardName=<%=Constants.REFSEQUENCE_DEFINITION_INT%>&amp;ID=<%= sample.getRefSequenceId()%>','<%= sample.getRefSequenceId()%>','width=500,height=400,menubar=no,location=no,scrollbars=yes,resizable=yes');return false;" > 
 		<%= sample.getRefSequenceId()%></a>
 		
