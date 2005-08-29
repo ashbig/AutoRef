@@ -10,6 +10,7 @@ import  edu.harvard.med.hip.bec.util.*;
 import  edu.harvard.med.hip.bec.database.*;
 import edu.harvard.med.hip.bec.bioutil.*;
 import java.sql.*;
+import java.util.*;
 
 /**
  *
@@ -112,8 +113,8 @@ public class RNAMutation extends Mutation {
         PreparedStatement pstmt = null;
         
         String sql = "INSERT INTO discrepancy  (DISCREPANCYID  ,POSITION ,LENGTH ,CHANGEORI ,CHANGEMUT "
- +",TYPE ,SEQUENCEID ,POLYMFLAG ,POLYMID ,POLMDATE,CODONORI ,CODONMUT ,UPSTREAM ,DOWNSTREAM "
- +",CODONPOS ,CHANGETYPE ,DISCRNUMBER ,DISCQUALITY ,DISCRPOSITION)   VALUES(?,?,?,?,?,?,?,?,?,sysdate, ?,?,?,?,?,?,?,?,?)" ;
+ +",TYPE ,SEQUENCEID ,POLYMFLAG ,POLYMID ,CODONORI ,CODONMUT ,UPSTREAM ,DOWNSTREAM "
+ +",CODONPOS ,CHANGETYPE ,DISCRNUMBER ,DISCQUALITY ,DISCRPOSITION)   VALUES(?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?)" ;
     
         try
         {
@@ -236,7 +237,7 @@ public class RNAMutation extends Mutation {
     }
      
     
-    
+  
      
  
     //------------------
