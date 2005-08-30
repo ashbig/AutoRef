@@ -14,7 +14,7 @@ import java.io.*;
     /** Creates a new instance of ExportSequenceDataForPolymorphismFinder */
 public class ExportSequenceDataForPolymorphismFinder
 {
-    public static final String urlString = "http://localhost:8080/BEC/ExportDataForPolymorphismFinder.do";
+    public static final String urlString = "http://localhost:8080/"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"/ExportDataForPolymorphismFinder.do";
 
     public static void main(String [] args)
     {
