@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0050)http://www.codoncode.com/support/faqs/phedpar.html -->
+<HTML><HEAD><TITLE>Phred Parameter File Problems</TITLE>
+
+<BODY>
+<H1>Phred Parameter File Problems</H1>
+      
+<P>While running Phred on .ab1 files you can face a common "<STRONG>unknown chemistry"</STRONG> 
+  problem. The error message will be like this:</P>
+      <P> 
+<PRE>  /Documents/test_sample_001.ab1: unable to match primer ID string: skipping chromatogram
+    unknown chemistry (DT3700POP5{BDv3}.mob) in chromat /Documents/test_sample_001.ab1
+    add a line of the form
+    "DT3700POP5{BDv3}.mob"    &lt;chemistry&gt;    &lt;dye type&gt;   &lt;machine type&gt;
+    to the file /phredpar.dat
+ 
+The error message will be raised if:
+1. Phred parameter file (phredpar.dat) does not contain information about chemistry of your trace files.
+2. Phred tries to read a file that is not a chromatogram file. For example, if your 
+   input folder contains text (.txt) files, you get an error message for each of these. 
+
+</PRE>
+<H2>What's going on?</H2>
+      <P>When Phred starts processing a file, Phred first tries to determine 
+      some things it needs to know about the chromatogram:</P>
+      <UL>
+        <LI>What chemistry (dye terminator or dye primer) was used? 
+        <LI>What dye type was used? (for example rhodamine or energy-transfer) 
+        <LI>What kind of DNA sequencer does this sequence come from? (for 
+        example ABI377, ABI3700, or MegaBACE) </LI></UL>
+      <P>Phred gets this information by first reading a short string in the 
+      input file, the "primer ID string", and then matching this primer ID 
+      string with entries in the "Phred parameter" file. The Phred parameter 
+      file has lines like this: <PRE>"DP6%25Ac{-21M13}"   primer      rhodamine         ABI_373_377
+"ET Terminators"     terminator  energy-transfer   MolDyn_MegaBACE
+</PRE>
+      <P>So, if Phred finds a primer ID string "DP6%25Ac{-21M13}", Phred now 
+      knoes that this was dye primer chemistry with rhodamine dyes, run on an 
+      ABI 373 or 377 sequencer. 
+      <P>Phred then adjust the base calling for the given machine, and uses a 
+      machine-and chemistry-specific lookup table for quality values. This 
+      allows Phred to come up with high accuracy for base calls and quality 
+      scores. 
+      <P>If Phred cannot find an entry for a given primer ID string in the Phred 
+      parameter file, Phred does not know what to do with a sequence, so it 
+      gives the error message shown above, and ignores the file. Typically, all 
+      your files will be done with the same chemistry, so you will get an error 
+      message for every file! But you can help Phred and fix this problem in 
+      less than five minutes, at described in the next section. 
+      
+
+      <H2>How to fix it</H2>
+      
+<P>All you need to do is add a line for the "primer ID string" to your Phred parameter 
+  file with any text editor. The Phred error mesage tells you what the line should 
+  look like, and where the Phred parameter file is. The location of Phred parameter 
+  file is given to you by the error message:</P>
+      
+<PRE>  to the file /usr/local/genome/lib/phredpar.dat<BR></PRE>
+
+</BODY></HTML>
