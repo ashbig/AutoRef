@@ -40,7 +40,8 @@ $total_count++;
 
         close(DAT);
         @discr_description_for_job = ();
-        system ("bsub \"java -cp ./polymorphismfinder/ src.PolymorphismFinderJob ./polymorphismfinder/src/ModuleSettings.properties $new_job_data\"");
+
+        system ("bsub -q shared_2h \"java -cp ./polymorphismfinder/ src.PolymorphismFinderJob ./polymorphismfinder/src/ModuleSettings.properties $new_job_data $random\"");
     }
     
     $discr_count++;

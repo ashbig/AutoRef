@@ -16,26 +16,24 @@ import java.io.*;
  */
 public class PolymorphismFinderJob
 {
-      public static void        run_job(String input_file_name)
+      public static void        run_job(String input_file_name, String random_mask_for_job)
     {
         ArrayList           error_messages = new ArrayList();
         Hashtable orf_index =  null;
         ArrayList discrepancies_data = readInputData(input_file_name, error_messages);
         
-      //  System.out.println("finished read input file");
-        if ( discrepancies_data != null && discrepancies_data.size() > 1) 
+       if ( discrepancies_data != null && discrepancies_data.size() > 1) 
         {
              orf_index =  readORFIndexInMemory();
-         //    System.out.println("finished read orf index  file "+orf_index.size());
-       
+          
              if (orf_index == null || orf_index.size() < 1)
              {
                 error_messages.add("Cannot read orf index in memory.");
              }
              else
-                 run_job( discrepancies_data, orf_index, error_messages);
+                 run_job( discrepancies_data, orf_index, error_messages, random_mask_for_job);
         }
-        output_error_messages(error_messages);
+        output_error_messages(error_messages, random_mask_for_job);
      }
 
       
@@ -43,7 +41,7 @@ public class PolymorphismFinderJob
           //-------------------------------------------------------------------------
  
     private static void        run_job(ArrayList discrepancies_data, 
-                    Hashtable orf_index, ArrayList error_messages)
+                    Hashtable orf_index, ArrayList error_messages, String random_mask_for_job)
     {
         ArrayList discr_data = null;
         ArrayList hits = null;
@@ -54,7 +52,7 @@ public class PolymorphismFinderJob
         String discr_sequence = null; String  search_database = null;
         String identity_ver_length = null ; String identity_ver = null;
 
-        String output_file_name = Utils.getSystemProperty("OUTPUT_DISCREPANCY_DATA_FILE_DIR")+File.separator+"output"+System.currentTimeMillis() +".txt";
+        String output_file_name = Utils.getSystemProperty("OUTPUT_DISCREPANCY_DATA_FILE_DIR")+File.separator+"output_"+random_mask_for_job +"_"+System.currentTimeMillis() +".txt";
         for ( int count = 0; count < discrepancies_data.size(); count ++)
         {
             try
@@ -68,25 +66,22 @@ public class PolymorphismFinderJob
                  search_database = (String)discr_data.get(3);
                  identity_ver_length = (String)discr_data.get(4) ; 
                  identity_ver = (String)discr_data.get(5);
-            
-                hits = findDiscrepancyHits( discr_sequence, search_database ,discrepancy_id);
+           
+                hits = findDiscrepancyHits( discr_sequence, search_database ,discrepancy_id, random_mask_for_job);
                 if ( hits.size() > 0) 
                 {
                      if ( prev_orf_id == null || !prev_orf_id.equalsIgnoreCase( orf_id))
                         clone_sequence = getCloneSequence(orf_id, orf_index, error_messages);
                      if ( clone_sequence != null && clone_sequence.length() > 1)
-                     hits = verifyHits(hits,  clone_sequence, identity_ver_length,identity_ver, search_database , error_messages);
+                     hits = verifyHits(hits,  clone_sequence, identity_ver_length,identity_ver, search_database , error_messages, random_mask_for_job);
                      for (int count_hit = 0; count_hit < hits.size(); count_hit++)
                      {
-            //             System.out.println("write to data "+discrepancy_id +"\t"+(String)hits.get(count_hit));
                          discrepancy_data_to_write.add(discrepancy_id +"\t"+(String)hits.get(count_hit)+"\n");
                      }
                 }   
                 else
                 {
-             //        System.out.println("write to data "+discrepancy_id +"\tNODATA");
-       
-                    discrepancy_data_to_write.add( discrepancy_id +"\tNODATA\n");
+                       discrepancy_data_to_write.add( discrepancy_id +"\tNODATA\n");
                 }
                 prev_orf_id = orf_id;
             }
@@ -95,7 +90,6 @@ public class PolymorphismFinderJob
                 error_messages.add("Cannot process discrepancy \t"+(String) discrepancies_data.get(count)+"\t"+e1.getMessage());
             }
         }
-      //   System.out.println("write to output ");
        
         writeDiscrepancyData(discrepancy_data_to_write,   output_file_name,error_messages);
                
@@ -105,11 +99,13 @@ public class PolymorphismFinderJob
 
 
 
-    private static void     output_error_messages(ArrayList error_messages)
+    private static void     output_error_messages(ArrayList error_messages, String random_mask_for_job)
     {
         BufferedWriter output = null;
-        String output_file_name = Utils.getSystemProperty("OUTPUT_DISCREPANCY_DATA_FILES_DIR")+File.separator+"error_messages"+System.currentTimeMillis() +".txt";
-       
+        if ( error_messages == null || error_messages.size() < 1) return;
+        String output_file_name = Utils.getSystemProperty("OUTPUT_DISCREPANCY_DATA_FILE_DIR")+File.separator+"error_"+random_mask_for_job + "_"+System.currentTimeMillis() +".txt";
+      
+     
          try
         {
 
@@ -165,12 +161,9 @@ public class PolymorphismFinderJob
         DataInputStream dis = null;
         try
         {
-// System.out.println("read index "+Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
-          
             File fn = new File(Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
             fis = new FileInputStream( fn);
             dis = new DataInputStream( fis );
-   //         System.out.println("read index "+Utils.getSystemProperty("INPUT_ORF_INDEX_FILENAME"));
             while ( true )
             {
                 id = dis.readInt();
@@ -190,18 +183,18 @@ public class PolymorphismFinderJob
      }
    
      private static ArrayList       findDiscrepancyHits( String discr_sequence, String search_database ,
-                    String id)throws Exception
+                    String id, String random_mask_for_job)throws Exception
     {
         ArrayList result = new ArrayList();
         
         //write query file
-        String queryFile_name = Utils.getSystemProperty("TEMP_DIRECTORY")+File.separator+"blast" +System.currentTimeMillis()+".in";
+        String queryFile_name = Utils.getSystemProperty("TEMP_DIRECTORY")+File.separator+"blast_" + random_mask_for_job + "_"+ System.currentTimeMillis()+".in";
         Utils.makeQueryFileInFASTAFormat(queryFile_name,discr_sequence, id);
        
         //select matrix
         String matrix = selectMatrix(discr_sequence.length());
 
-        String  output_file_name = Utils.getSystemProperty("TEMP_DIRECTORY") + File.separator +"blast_output" +System.currentTimeMillis()+".out";
+        String  output_file_name = Utils.getSystemProperty("TEMP_DIRECTORY") + File.separator +"blast_output"+random_mask_for_job+"_" +System.currentTimeMillis()+".out";
  
         String cmd = Utils.getSystemProperty("BLAST_PATH")+File.separator
         +Utils.getSystemProperty("BLAST_BLASTALL") +" -d "+ search_database +" -p blastn -i "+queryFile_name +" -e 10.0 -o "+output_file_name
@@ -227,7 +220,7 @@ public class PolymorphismFinderJob
      }
       private static ArrayList        verifyHits(ArrayList hits,  String orf_sequence,
                         String discr_identity_length, String discr_identity_persent ,
-                        String search_database, ArrayList error_messages)
+                        String search_database, ArrayList error_messages, String random_mask_for_job)
                         throws Exception
       {
           ArrayList result = new ArrayList();
@@ -241,7 +234,7 @@ public class PolymorphismFinderJob
               boolean isHitVerified = false;
               for (int count = 0; count < hits.size(); count++)
               {
-                  isHitVerified = verifyHit( search_database, orfFile_name,(String)hits.get(count),  discr_identity_length_int,  discr_identity_persent_int );
+                  isHitVerified = verifyHit( search_database, orfFile_name,(String)hits.get(count),  discr_identity_length_int,  discr_identity_persent_int,random_mask_for_job );
                   if ( isHitVerified) result.add(" GI "+hits.get(count));
               }
               //@@@@@@@@@@@@@@@@@@@@@@   delete ORF file
@@ -256,7 +249,7 @@ public class PolymorphismFinderJob
       }
 
       private static boolean   verifyHit(String search_database, String orfFile_name, String hit_data,
-                    int discr_identity_length, int discr_identity_persent )
+                    int discr_identity_length, int discr_identity_persent , String random_mask_for_job)
                     throws Exception
       {
 
@@ -268,11 +261,10 @@ public class PolymorphismFinderJob
 
            try
            {
-                hitFile_name =  Utils.getSystemProperty("TEMP_DIRECTORY")+File.separator + "Hit" +System.currentTimeMillis()+".in";
+                hitFile_name =  Utils.getSystemProperty("TEMP_DIRECTORY")+File.separator + "Hit" +random_mask_for_job+"_"+System.currentTimeMillis()+".in";
                 if ( !getHitSequence( search_database, hit_data, hitFile_name))
                     throw new Exception("Cannot verify blast hit "+hit_data +". Problem extracting hit sequence");
-System.out.println("got sequence hit sequesnce");             
-                output_file_name = Utils.getSystemProperty("TEMP_DIRECTORY") + File.separator +"verify_output" +System.currentTimeMillis()+".txt";
+                output_file_name = Utils.getSystemProperty("TEMP_DIRECTORY") + File.separator +"verify_output" +random_mask_for_job+"_"+System.currentTimeMillis()+".txt";
                 String cmd = Utils.getSystemProperty("BLAST_PATH")+File.separator
                 +Utils.getSystemProperty("BLAST_BLAST2SEQ") +"  -p blastn -i "+orfFile_name +" -e 10.0 -o "+output_file_name
                 +" -j "+ hitFile_name;
@@ -288,7 +280,7 @@ System.out.println("got sequence hit sequesnce");
            }
            catch(Exception e)
            {
-           //    System.out.println(e.getMessage());
+               System.out.println(e.getMessage());
                throw new Exception("Cannot verify hit "+e.getMessage());
            }
        }
@@ -300,14 +292,12 @@ System.out.println("got sequence hit sequesnce");
      {
          FileWriter fr = null;
          String file_name = output_file_name;
-//System.out.println("output file name "+output_file_name+" "+discrepancy_data.size() );
          try
          {
             fr =  new FileWriter(file_name, true);
             for (int count =0; count < discrepancy_data.size(); count++)
             {
                   fr.write( (String) discrepancy_data.get(count));
-//System.out.println("output file name "+  (String) discrepancy_data.get(count));
             }
              
            
@@ -339,7 +329,7 @@ System.out.println("got sequence hit sequesnce");
         if (coordinates[0]==0 || coordinates[1] ==0 || coordinates[0] == coordinates[1]) return null;
         try
         {
-		//	System.out.println("get clone seq "+ id);
+			System.out.println("get clone seq "+ id);
             // Create the byte array to hold the data
             byte[] bytes = new byte[(int)(coordinates[1] -  coordinates[0])];
             File f = new File(Utils.getSystemProperty("INPUT_ORF_DATA_FILENAME"));
@@ -371,27 +361,19 @@ System.out.println("got sequence hit sequesnce");
         // first argument(requered) path to input file
         // second arg - number of discrepancies in one job
 
-          String setting_file = null;
-        String input_file_name = null;
-      //  setting_file =       "C:\\BEC\\bec\\src\\edu\\harvard\\med\\hip\\bec\\programs\\polymorphism_finder\\ModuleSettings.properties";
+            if ( args.length < 3) return;
 
-     //   input_file_name="C:\\bio\\polymorphismfinder\\pl_input_data.txt";
-
-     // -----------  -- uncomment-------------------------
-             if ( args.length < 2) return;
-
-         setting_file = args[0];
-         input_file_name = args[1];
-
+        String setting_file = args[0];
+        String input_file_name = args[1];
+        String random_mask_for_job = args[2];
            try
         {
             Utils.getSystemProperties(setting_file);
         }
         catch(Exception e){System.out.println("Cannot load properties");}
-        System.out.println("finished properties index ");
-        PolymorphismFinderJob.run_job(input_file_name) ;
-     //   File lk = new File(input_file_name);
-      //  lk.delete();
+        PolymorphismFinderJob.run_job(input_file_name, random_mask_for_job) ;
+        File lk = new File(input_file_name);
+        lk.delete();
         System.exit(0);
     }
 
