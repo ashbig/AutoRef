@@ -15,7 +15,7 @@ import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.io.IOException;
+import java.io.*;
 import  edu.harvard.med.hip.bec.programs.polymorphism_finder.*;
 /**
  *
@@ -44,7 +44,17 @@ public class ExportDataForPolymorphismFinderAction extends Action {
     HttpServletResponse response)
     throws ServletException, IOException 
     {
-        PolymFinderDataSender.generateSequencingDataFiles(null);
+        String output_dir = null;
+        String param = request.getParameter("param");
+       
+        if (  param.equalsIgnoreCase("submit"))
+        {
+           PolymFinderDataSender.generateSequencingDataFiles(null);
+        }
+        else
+        {
+            ResultParser.parseResultFileAndSubmitInformation(output_dir);
+        }
         return (mapping.findForward("success"));
     }
 }

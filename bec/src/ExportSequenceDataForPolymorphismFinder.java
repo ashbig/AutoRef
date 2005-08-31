@@ -18,11 +18,16 @@ public class ExportSequenceDataForPolymorphismFinder
   
     public static void main(String [] args)
     {
-        try {
-           BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+        try 
+        {
+            String urlString = null;
+            BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
-              String urlString = "http://localhost:8080/"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"/ExportDataForPolymorphismFinder.do";
-
+            if ( args == null || args.length == 0 || args[0].equalsIgnoreCase("submit"))
+                 urlString = "http://localhost:8080/"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"/ExportDataForPolymorphismFinder.do?param=submit";
+            else if (args[0].equalsIgnoreCase("get"))
+                 urlString = "http://localhost:8080/"+ edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION")+"/ExportDataForPolymorphismFinder.do?param=get";
+  
             URL url = new URL(urlString);
             url.openStream();
         } catch (Exception ex) 
