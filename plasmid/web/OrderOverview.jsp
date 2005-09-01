@@ -87,7 +87,7 @@
         <tr class="tableinfo"> 
           <td>All others</td>
           <td>96-well plate of clones</td>
-          <td>1500$/clone</td>
+          <td>1500$/plate</td>
         </tr>
       </table></td>
   </tr>
