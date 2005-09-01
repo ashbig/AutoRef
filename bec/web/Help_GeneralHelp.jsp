@@ -12,6 +12,8 @@
 	margin-left:0in; margin-right:0in; margin-top:0in}
 -->
 </style>
+    <% String redirection = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") ; %>
+
 </head>
 <body>
 <jsp:include page="NavigatorBar_Administrator.jsp" />
@@ -226,61 +228,40 @@ User input information for the module - list of plates which trace files should 
   <p><a href="#back_lqr">Back</a>
 <p>&nbsp; 
 <h3><strong><a name="submit_trace_files">Trace Files Submission:</a></strong> </h3>
-<ul>
-  <li>Delete all files from HIPDRIVE\Sequences for BEC\files_to_transfer directory 
-    prior to upload. If you cannot find the directory on hip drive contact Hip 
-    System Administrator.</li>
-  <li>Load trace files into HIPDRIVE\Sequences for BEC\files_to_transfer directory. 
-  </li>
-  <li>Create mapping file of the following format: sequencing facility plate label 
-    <em>Tab</em> HIP plate label.</li>
-  <li>In ACE go to Trace Files -&gt; Create Renaming File. Select mapping file, 
-    sequencing facility name and type of reads. The 'Internal reads' option currently 
-    implemented only for HTMBC and primers designed by ACE. Click 'Submit' button. 
-    ACE writes 'renaming.txt' file into HIPDRIVE\Sequences for BEC\files_to_transfer 
-    directory, the same file is sent to user by e-mail. Renaming file contains 
-    one entry per each trace file in the format: original file name<em> Tab </em>ACE 
-    file name. Make sure that number of entries in 'renaming.txt' file is equal 
-    to the number of trace files. If 'renaming.txt' file is empty or number of 
-    the entries is less than expected one of the following problems occured: 
-    <ul>
-      <li>Plates indicated in mapping file have not been submitted into ACE (for end reads option only).</li>
-      <li>Trace files have not been named properly by sequencing facility. The 
-        following formats are accepted: 
-        <table width="80%" border="1" cellspacing="2" cellpadding="2">
-          <tr> 
-            <td width="34%"><div align="center"><strong>Sequencing facility name</strong></div></td>
-            <td width="50%"><div align="center"><strong>Trace file name format</strong></div></td>
-            <td width="16%"><div align="center"><strong>Example</strong></div></td>
-          </tr>
-          <tr> 
-            <td><strong>Broad </strong></td>
-            <td>Plate name 8 letters or digits; F/R for direction; well name </td>
-            <td>D248P100FA1.T0.scf</td>
-          </tr>
-          <tr> 
-            <td><strong>HTMBC</strong></td>
-            <td><p>IP#_JasonWell_orderNumber</p>
-              <p>_hipPlateName_HipWellName_F/R_number.ab1 </p></td>
-            <td>5412_A03_JLJK_ASA001213_A03_F_031.ab1</td>
-          </tr>
-          <tr> 
-            <td><strong>Agencort</strong></td>
-            <td>Hipplate_hipwell_F/R </td>
-            <td>PRG000548_A01_F.ab1</td>
-          </tr>
-        </table>
-      </li>
-      <li>Some of the files have not been named properly that will result in the 
-        number of records in renaming file less than number of trace files 
-in HIPDRIVE\Sequences for BEC\files_to_transfer directory.<br>
-      </li>
-    </ul>
-  </li>
-  <li>Upload trace files on server: Trace Files -&gt; Upload Trace Files. Select 
-    renaming.txt file created by ACE on the previous step. ACE will send user 
-    e-mail when finish transfer trace files. </li>
-</ul>
+      <ul>
+        <li>Delete all files from HIPDRIVE\Sequences for BEC\files_to_transfer 
+          directory prior to upload. If you cannot find the directory on hip drive 
+          contact Hip System Administrator.</li>
+        <li>Load trace files into HIPDRIVE\Sequences for BEC\files_to_transfer 
+          directory. </li>
+        <li>Create mapping file of the following format: sequencing facility plate 
+          label <em>Tab</em> HIP plate label.</li>
+        <li>In ACE go to Trace Files -&gt; Create Renaming File. Select mapping 
+          file, <a href="<%= redirection%>help_TraceFilesNamingFormats.jsp">trace 
+          files' naming format</a> and type of reads. The 'Internal reads' option 
+          currently implemented only for HTMBC and primers designed by ACE. Click 
+          'Submit' button. ACE writes 'renaming.txt' file into HIPDRIVE\Sequences 
+          for BEC\files_to_transfer directory, the same file is sent to user by 
+          e-mail. Renaming file contains one entry per each trace file in the 
+          format: original file name<em> Tab </em>ACE file name. Make sure that 
+          number of entries in 'renaming.txt' file is equal to the number of trace 
+          files. If 'renaming.txt' file is empty or number of the entries is less 
+          than expected one of the following problems occured: 
+          <ul>
+            <li>Plates indicated in mapping file have not been submitted into 
+              ACE (for end reads option only).</li>
+            <li>Trace files have not been named according to select format. </li>
+            <li>Some of the files have not been named properly that will result 
+              in the number of records in renaming file less than number of trace 
+              files in HIPDRIVE\Sequences for BEC\files_to_transfer directory. 
+              For example, some trace files for the plate have wrong position 
+              annotation. </li>
+          </ul>
+        </li>
+        <li>Upload trace files on server: Trace Files -&gt; Upload Trace Files. 
+          Select renaming.txt file created by ACE on the previous step. ACE will 
+          send user e-mail when finish transfer trace files. </li>
+      </ul>
 <p><a href="#back_submit_trace_files">Back</a> </p>
 <h3>General report </h3>
 <p>To get information available to ACE about clones user should run General report 
