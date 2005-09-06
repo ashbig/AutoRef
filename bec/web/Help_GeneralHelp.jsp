@@ -1,5 +1,7 @@
 <%@page contentType="text/html"%>
 <%@ page errorPage="ProcessError.do"%>
+
+<%@ page import="edu.harvard.med.hip.bec.*" %>
 <html>
 <head><title>JSP Page</title>
 <style>
@@ -16,7 +18,8 @@
 
 </head>
 <body>
-<jsp:include page="NavigatorBar_Administrator.jsp" />
+<% if ( request.getSession().getAttribute(Constants.USER_KEY) != null ){%>
+<jsp:include page="NavigatorBar_Administrator.jsp" /> <%}%>
 	<p><P>
 <p><P>
 <br>

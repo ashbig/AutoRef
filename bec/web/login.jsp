@@ -45,7 +45,7 @@
         <p> <map name="FPMap0">
         <area href="about_ace.html" shape="rect" coords="22, 5, 76, 22">
         <area href="installation.jsp" shape="rect" coords="83, 6, 171, 23">
-        <area href="CustomerRegistration.jsp" shape="rect" coords="179, 3, 273, 23">
+        <area href="Help_GeneralHelp.jsp" shape="rect" coords="179, 3, 273, 23">
         <area href="mailto:hip_informatics@hms.harvard.edu" shape="rect" coords="280, 2, 363, 23">
 		</map><img border="0" src="./jpg/bar_11.jpg" width="454" height="24" usemap="#FPMap0">
 		<a href="http://www.hms.harvard.edu"><img border="0" src="./jpg/bar_13.jpg" width="315" height="24"></a></p>
