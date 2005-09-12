@@ -97,8 +97,7 @@ case Constants.PROCESS_FIND_GAPS:
 {
 
 
-
-
+ 
 additional_jsp_buffer.append(" <script defer='defer' type='text/javascript'><!--");
 additional_jsp_buffer.append("\n function isTrimm(e,checked){	; var form = e.form;");
 additional_jsp_buffer.append("	 if(!checked) 	{");
@@ -113,6 +112,7 @@ additional_jsp_buffer.append("\n }  \n -->\n</Script>");
 additional_jsp_buffer.append("\n <tr><td>");
 additional_jsp_buffer.append("<table width='90%' border='0' cellspacing='2' cellpadding='2' aligh='center'>");
 additional_jsp_buffer.append("<tr> <td colspan='2'>&nbsp;<strong>For assembly process:</strong> </td> </tr>");
+
 additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Select what vectors to trim</td>");
 additional_jsp_buffer.append("<td><select NAME='isRunVectorTrimming' id='isRunVectorTrimming'>");
 
@@ -125,6 +125,11 @@ for (Enumeration e = BecProperties.getInstance().getVectorLibraries().keys() ; e
 }
 
 additional_jsp_buffer.append("</select></td> </tr>");
+additional_jsp_buffer.append("<tr> <td colspan='2'><strong>Low Quality Reads manipulation</strong></td> </tr>");
+
+additional_jsp_buffer.append("<tr> <td colspan='2'>"+line_padding+"<input type='checkbox' name='"+ PhredPhrap.LQREADS_USE_FOR_ASSEMBLY+"' value='1' checked >Exclude from assembly</td> </tr>");
+additional_jsp_buffer.append("<tr> <td colspan='2'>"+line_padding+"<input type='checkbox' name='"+ PhredPhrap.LQREADS_DELETE+"' value='0'  >Permanently delete from hard drive</td> </tr>");
+
 additional_jsp_buffer.append("<tr> <td colspan='2'><strong> <input type='checkbox' checked name='all' id='all' onClick='isTrimm(this, this.checked)'>");
 additional_jsp_buffer.append(" Perform quality trimming:</strong></td> </tr>");
  additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Phred score&nbsp;&nbsp; </td>");

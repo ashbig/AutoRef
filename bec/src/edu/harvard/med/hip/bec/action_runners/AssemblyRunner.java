@@ -60,6 +60,8 @@ public class AssemblyRunner extends ProcessRunner
         private int         m_quality_trimming_phd_score = 0;
         private int         m_quality_trimming_phd_first_base = 0;
         private int         m_quality_trimming_phd_last_base = 0;
+        private int         m_use_lqreads_for_assembly = 0;
+        private int         m_delete_lqreads = 0;
    
         public  void        setUser(User v){m_user=v;}
         public void         setResultType(String v){ m_result_type=v;}
@@ -68,8 +70,8 @@ public class AssemblyRunner extends ProcessRunner
         public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
         public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
         public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
-   
-   
+        public void         setIsDeleteLQReads(boolean v){ if ( v ) m_delete_lqreads = 1;}
+        public void         setIsUseLQReadsForAssembly(boolean v){ if ( v ) m_use_lqreads_for_assembly = 1;}
    
         public String       getTitle(){ return "Request for sequence assembler run.";}
 
@@ -94,16 +96,17 @@ public class AssemblyRunner extends ProcessRunner
             int count_of_clones = 0;
             try
             {
+            
                 // conncection to use for transactions
                 conn = DatabaseTransaction.getInstance().requestConnection();
                 int process_id = createProcessHistory(conn);
-                if (m_assembly_mode == FULL_SEQUENCE_ASSEMBLY) distributeInternalReads();
+               if (m_assembly_mode == FULL_SEQUENCE_ASSEMBLY) distributeInternalReads();
           //process only sequences  that are exspected
                 sql_groups_of_items =  prepareItemsListForSQL();
                for (int count = 0; count < sql_groups_of_items.size(); count++)
                {
                     
-                    expected_sequence_definition = getExspectedSequenceDescriptions(conn, m_result_type, (String)sql_groups_of_items.get(count) );
+                   expected_sequence_definition = getExspectedSequenceDescriptions(conn, m_result_type, (String)sql_groups_of_items.get(count) );
                     if (expected_sequence_definition.size() == 0 )      break; ;
                     for (int clone_count = 0; clone_count < expected_sequence_definition.size(); clone_count ++)
                     {
@@ -145,6 +148,7 @@ public class AssemblyRunner extends ProcessRunner
                                 base_refsequence.setText( linker5.getSequence() + base_refsequence.getText()+linker3.getSequence());
 
                             }
+                
                             processCloneAssembly(  clone_definition, isolate_status[0], isolate_status[1],
                                         process_id,  conn,  base_refsequence, cds_start,  cds_stop, process_clones);
     
@@ -317,10 +321,10 @@ public class AssemblyRunner extends ProcessRunner
             pp.setQualityTrimmingScore (m_quality_trimming_phd_score);
             pp.setQualityTrimmingLastBase(m_quality_trimming_phd_last_base);
             pp.setQualityTrimmingFirstBase (m_quality_trimming_phd_first_base);
-
-
+            pp.setIsUseLQReadsForAssembly(  m_use_lqreads_for_assembly );
+            pp.setIsDeleteLQReads( m_delete_lqreads);
    
-           
+            
             if (m_vector_file_name != null)pp.setVectorFileName(m_vector_file_name);
             String output_file_name =  sequence_definition.getCloneId()+ ".fasta.screen.ace.1";
             //delete quality and sequence files from end read processing
@@ -565,7 +569,6 @@ public class AssemblyRunner extends ProcessRunner
          Contig contig = new Contig();
          contig.setNumberOfReadsInContig(1);
          contig.setName("");   
-         System.out.println(scores);
          contig.setSequence(sequence );         contig.setScores(scores);
          clone_assembly.addContig(contig);
          
@@ -590,14 +593,15 @@ public static void main(String args[])
     {
             BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
-       
+        edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+
     
-         runner.setUser( AccessManager.getInstance().getUser("lena","htaycher"));
+         runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
         runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
          runner.setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
        //      runner.setItems("116384	");
       // runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID,"143905");  
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID,"357 28158");  
             runner.setVectorFileName("vector_empty.seq");
         runner.run();           
         /*

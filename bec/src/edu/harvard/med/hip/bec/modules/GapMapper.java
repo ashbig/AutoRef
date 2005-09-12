@@ -34,7 +34,9 @@ public class GapMapper
     private int         m_quality_trimming_phd_score = 0;
     private int         m_quality_trimming_phd_first_base = 0;
     private int         m_quality_trimming_phd_last_base = 0;
-      
+    private int         m_use_lqreads_for_assembly = 0;
+    private int         m_delete_lqreads = 0;
+       
    
     
    // private int                     m_min_contig_avg_score = 20;
@@ -50,14 +52,14 @@ public class GapMapper
     public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
     public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
     public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
+    public void         setIsDeleteLQReads(int v){ m_delete_lqreads = v;}
+    public void         setIsUseLQReadsForAssembly(int v){  m_use_lqreads_for_assembly = v;}
      
     
     public void                 setIsRunLQR(boolean v){m_isRunLQRFinderForContigs = v;}
     public ArrayList            getErrorMessages(){ return m_error_messages; }
     public StretchCollection    getStretchCollection(){ return   m_stretch_collection ;}
-   // public void                 setMinContigLength(int v){ m_min_contig_length = v;}
-   // public void                 setMinAvgContigScore(int v){  m_min_contig_avg_score = v;}
-    public void                 setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
+     public void                 setTrimmingSpec(SlidingWindowTrimmingSpec   v){    m_trimming_spec = v;}
   
     public void                 run()
     {
@@ -87,7 +89,9 @@ public class GapMapper
             pp.setQualityTrimmingScore (m_quality_trimming_phd_score);
             pp.setQualityTrimmingLastBase(m_quality_trimming_phd_last_base);
             pp.setQualityTrimmingFirstBase (m_quality_trimming_phd_first_base);
-
+            pp.setIsUseLQReadsForAssembly(  m_use_lqreads_for_assembly );
+            pp.setIsDeleteLQReads( m_delete_lqreads);
+   
                 //delete all .phd files from previous processing
             FileOperations.deleteAllFilesFormDirectory(clone_description.getReadFilePath() + File.separator +"phd_dir");
       

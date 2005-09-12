@@ -518,7 +518,9 @@ public class RunProcessAction extends ResearcherAction
                                 ((AssemblyRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
                                 ((AssemblyRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
                                ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
-   
+                                 ((AssemblyRunner)runner).setIsUseLQReadsForAssembly( request.getParameter(PhredPhrap.LQREADS_USE_FOR_ASSEMBLY) == null );
+                              ((AssemblyRunner)runner).setIsDeleteLQReads( request.getParameter(PhredPhrap.LQREADS_DELETE) == null );
+         
                              title = "Request for assembly from end reads.";
                              break;
                         }
@@ -582,9 +584,9 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                               ((AssemblyRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
                                 ((AssemblyRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
                                ((AssemblyRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
-   
-                 //      System.out.println((String)request.getParameter("vectors_file_name"));
-                            // ((AssemblyRunner)runner).setVectorFileNames((String)request.getParameter("vectors_file_name"));
+                                ((AssemblyRunner)runner).setIsUseLQReadsForAssembly( request.getParameter(PhredPhrap.LQREADS_USE_FOR_ASSEMBLY) == null );
+                              ((AssemblyRunner)runner).setIsDeleteLQReads( request.getParameter(PhredPhrap.LQREADS_DELETE) == null );
+                    //      System.out.println((String)request.getParameter("vectors_file_name"));
                              title = "Request for Clone sequence assembly";
                              break;
                         }
@@ -599,7 +601,6 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                         {
                              runner = new DiscrepancyFinderRunner();
                              ((DiscrepancyFinderRunner)runner).setDiscrepancyQualityCutOff(Integer.parseInt( (String)request.getParameter("FS_PHRED_CUT_OFF")));
-                     System.out.print((String)request.getParameter("FS_PHRED_CUT_OFF"));
                               title = "Request for Discrepancy Finder";
                               break;
                         }//run discrepancy finder
@@ -627,6 +628,9 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                                   ((GapMapperRunner)runner).setQualityTrimmingScore ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_SCORE)));
                                     ((GapMapperRunner)runner).setQualityTrimmingLastBase ( Integer.parseInt( (String) request.getParameter(PhredPhrap.QUALITY_TRIMMING_LAST_BASE)));
                                    ((GapMapperRunner)runner).setQualityTrimmingFirstBase ( Integer.parseInt( (String)request.getParameter(PhredPhrap.QUALITY_TRIMMING_FIRST_BASE)));
+                                 ((GapMapperRunner)runner).setIsUseLQReadsForAssembly( request.getParameter(PhredPhrap.LQREADS_USE_FOR_ASSEMBLY) == null );
+                              ((GapMapperRunner)runner).setIsDeleteLQReads( request.getParameter(PhredPhrap.LQREADS_DELETE) == null );
+           
                               }
                               
                               if ( forwardName == Constants.PROCESS_FIND_GAPS)

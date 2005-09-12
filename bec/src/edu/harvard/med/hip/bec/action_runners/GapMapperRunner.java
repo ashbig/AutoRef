@@ -34,16 +34,14 @@ import java.util.*;
     private int         m_quality_trimming_phd_score = 0;
     private int         m_quality_trimming_phd_first_base = 0;
     private int         m_quality_trimming_phd_last_base = 0;
-      
+     private int         m_use_lqreads_for_assembly = 0;
+     private int         m_delete_lqreads = 0;
+     
 
     // only for LQR report how many bases will be covered by end reads
     private int				m_number_of_bases_covered_by_forward_er = 300;
     private int				m_number_of_bases_covered_by_reverse_er = 300;
-   /* public static final int             STATUS_NO_READS_NEEDED = -1;
-    public static final int             STATUS_NO_READS_NEEDED_OUT_OF_RANGE_FOR_DEFINITION = -2;
-    public static final int             STATUS_NOT_DEFINED = 0;
-    public static final int             STATUS_YES_READS_NEEDED = 1;
-*/
+
     public void         setProcessType(int v){ m_process_type = v;}
     public void         setSpecId(int v){m_spec_id = v;}
     public void         setIsTryMode(boolean isTryMode){m_isTryMode=isTryMode;}
@@ -53,7 +51,10 @@ import java.util.*;
     public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
     public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
     public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
-      
+     public void         setIsDeleteLQReads(boolean v){ if ( v ) m_delete_lqreads = 1;}
+        public void         setIsUseLQReadsForAssembly(boolean v){ if ( v ) m_use_lqreads_for_assembly = 1;}
+   
+    
     public void         setNumberOfBasesCoveredByForwardER(int v){m_number_of_bases_covered_by_forward_er = v ;}
     public void         setNumberOfBasesCoveredByReverseER(int v){m_number_of_bases_covered_by_reverse_er = v;}
 
@@ -213,7 +214,9 @@ import java.util.*;
             mapper.setQualityTrimmingScore (m_quality_trimming_phd_score);
             mapper.setQualityTrimmingLastBase(m_quality_trimming_phd_last_base);
             mapper.setQualityTrimmingFirstBase (m_quality_trimming_phd_first_base);
-
+            mapper.setIsUseLQReadsForAssembly(  m_use_lqreads_for_assembly );
+            mapper.setIsDeleteLQReads( m_delete_lqreads);
+   
             mapper.setVectorFileName(m_vector_file_name );
        
             mapper.setTrimmingSpec( trimming_spec);

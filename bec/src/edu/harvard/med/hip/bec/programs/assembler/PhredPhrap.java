@@ -30,6 +30,8 @@ public class PhredPhrap
     public static final String       QUALITY_TRIMMING_SCORE ="QUALITY_TRIMMING_SCORE";
     public static final String       QUALITY_TRIMMING_FIRST_BASE = "QUALITY_TRIMMING_FIRST_BASE";
     public static final String       QUALITY_TRIMMING_LAST_BASE ="QUALITY_TRIMMING_LAST_BASE";
+      public static final String       LQREADS_USE_FOR_ASSEMBLY ="LQREADS_USE_FOR_ASSEMBLY";
+  public static final String       LQREADS_DELETE ="LQREADS_DELETE";
 
 
     private String      m_query = null;
@@ -47,36 +49,27 @@ public class PhredPhrap
     private int         m_quality_trimming_phd_score = 0;
     private int         m_quality_trimming_phd_first_base = 0;
     private int         m_quality_trimming_phd_last_base = 0;
-   /* 
-    {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-        {
-            m_vector_file_name =  VECTOR_LIBRARY_NAME;
-            m_phredphrap_path = "d:\\programs\\cygwin\\bin\\perl d:\\bio_programs\\phredphrap\\phredPhrap  ";
-        }
-        else
-        {
-            m_phredphrap_path = "perl c:\\programs_bio\\biolocal\\phredPhrap  ";
-             m_vector_file_name =  VECTOR_LIBRARY_NAME;    
-        }
-    }
-  
-  */
+    
+     private int         m_use_lqreads_for_assembly = 0;
+     private int         m_delete_lqreads = 0;
+    
+ 
     /** Creates a new instance of Needle */
     public PhredPhrap()    {    }
     public void         setVectorFileName(String s){ if ( s != null && s.trim().length()>1) m_vector_file_name =  s;}
     public String       getVectorFileName(){ return m_vector_file_name ;}
     public void         setQualityTrimmingScore (int v){ m_quality_trimming_phd_score = v;}
     public void         setQualityTrimmingLastBase (int v){ m_quality_trimming_phd_last_base = v;}
-   public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
+    public void         setQualityTrimmingFirstBase (int v){ m_quality_trimming_phd_first_base = v;}
+    public void         setIsDeleteLQReads(int v){ m_delete_lqreads = v;}
+    public void         setIsUseLQReadsForAssembly(int v){  m_use_lqreads_for_assembly = v;}
    
    
    
     public boolean run(String clone_path, String output_file_name)throws BecUtilException
     {
         String cmd = null;
-          
-        // for windows /c/file_name
+       // for windows /c/file_name
         //output_file_name = Algorithms.convertWindowsFileNameIntoUnix(output_file_name);
         if ( !(new File(clone_path)).exists())
         {
@@ -89,17 +82,10 @@ public class PhredPhrap
         if (m_vector_file_name != null && !m_vector_file_name.equals(""))
         {
             cmd += " --vectorfile " + m_vector_file_name;
-            /*if (ApplicationHostDeclaration.IS_BIGHEAD)
-            {
-                cmd +=  Algorithms.convertWindowsFileNameIntoUnix(m_vector_file_name);
-            }
-            else
-            {
-                cmd += m_vector_file_name;
-            }*/
-        
+            
         }
-        cmd += getQualityTrimmingParams();        
+        cmd += getQualityTrimmingParams();   
+        cmd += getLQReadsTreatmentParameter();
         System.out.println(cmd);
         try
         {
@@ -231,11 +217,24 @@ public class PhredPhrap
 
     private String getQualityTrimmingParams()
     {
-        String command = "";
-        if ( m_quality_trimming_phd_score > 0) command = " --trim_score "+ m_quality_trimming_phd_score ;
-        command += " --trim_first_base "+ m_quality_trimming_phd_first_base;
-        command += " --trim_last_base "+ m_quality_trimming_phd_last_base ;
-        return command;
+        StringBuffer command = new StringBuffer();
+        command.append( " --trim_score "+ m_quality_trimming_phd_score) ;
+        command.append(" --trim_first_base "+ m_quality_trimming_phd_first_base);
+        command.append(" --trim_last_base "+ m_quality_trimming_phd_last_base );
+        return command.toString();
+    }
+    
+    private String getLQReadsTreatmentParameter()
+    {
+         StringBuffer command = new StringBuffer();
+         command.append( " --lqr_is_use_lqr "+ m_use_lqreads_for_assembly) ;
+         command.append(" --lqr_is_delete_lqr "+ m_delete_lqreads);
+        
+         command.append(" --lqr_pass_score "+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_SCORE_PASS") );
+         command.append(" --lqr_first_base "+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_FIRST_BASE") );
+         command.append(" --lqr_last_base "+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_LAST_BASE") ) ;
+         command.append(" --lqr_min_length  "+edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("PHRED_QUALITYDEF_MIN_LENGTH"));
+         return command.toString();
     }
      //******************************************
     public static void main(String args[])
@@ -255,10 +254,9 @@ public class PhredPhrap
         try
         {
          PhredPhrap pp = new PhredPhrap();
-        String scores =  pp.getScoresFromPhdFile(queryFile,o);
+        pp.run( o,  o);
         
-            System.out.println(scores);
-       
+           
         }catch(Exception e){}
         System.exit(0);
     }
