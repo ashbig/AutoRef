@@ -9,22 +9,30 @@
   </tr>
   <tr><td width="48%">JSP_REDIRECTION </td><td width="52%"> /BEC/ </td></tr>
 <tr><td><tr><td>BLAST_EXE_COMMON_PATH</td>
-    <td>&nbsp;</td>
+    <td>path to NCBI blast executable</td>
   </tr>
 <tr><td>BLAST_DBASES_PATH</td>
-    <td>&nbsp;</td>
+    <td>path to user blastable databases. These databases are used for verification 
+      'No Match' samples'</td>
   </tr>
 <tr><td>TEMPORARY_FILES_FILE_PATH </td>
-    <td>&nbsp;</td>
+    <td>path to user /tmp/ directory. ACE writes a lot of files to this directory, 
+      so cron (scheduled task on Win OS) should be set-up to clean up /tmp/ directory.</td>
   </tr>
 <tr><td>NEEDLE_OUTPUT_TMP_PATH </td>
-    <td>&nbsp;</td>
+    <td>path to /output/tmp_assembly directory (see installation instractions). 
+      All needle files that ACE creats during verification that contig matches 
+      reference sequence. All files from this directory should be deleted by cron 
+      job set up for overnight run. </td>
   </tr>
 <tr><td>MOVE_TRACE_FILES_BASE_DIR </td>
     <td>&nbsp;</td>
   </tr>
 <tr><td>NEEDLE_OUTPUT_PATH</td>
-    <td>&nbsp;</td>
+    <td>path to /output/needle_output directory (see installation instractions). 
+      All needle files that ACE creats during contig analysis will be put in this 
+      directory. All .in files from this directory should be deleted by cron job 
+      set up for overnight run. </td>
   </tr>
 <tr><td>TRACE_FILES_OUTPUT_PATH_ROOT</td>
     <td>&nbsp;</td>
@@ -36,13 +44,13 @@
     <td>&nbsp;</td>
   </tr>
 <tr><td>PHREDPHAP_SCRIPT_PATH</td>
-    <td>&nbsp;</td>
+    <td>path to phredPhrap script</td>
   </tr>
 <tr><td>PERL_PATH</td>
-    <td>&nbsp;</td>
+    <td>path to perl executable</td>
   </tr>
 <tr><td>PHRED_EXE_PATH</td>
-    <td>&nbsp;</td>
+    <td>path to phred executable. For WIN users phred can be compiled under WIN.</td>
   </tr>
 <tr><td>BLAST_OUTPUT</td>
     <td>&nbsp;</td>
@@ -87,7 +95,7 @@
     <td>&nbsp;</td>
   </tr>
 <tr><td>IS_DEBUGING</td>
-    <td>&nbsp;</td>
+    <td>should be set up to 0(false) for all none-developer users.</td>
   </tr>
 <tr><td>PHRED_QUALITYDEF_SCORE_PASS</td>
     <td>&nbsp;</td>
@@ -102,7 +110,7 @@
     <td>&nbsp;</td>
   </tr>
 <tr><td>IS_HIP_VERSION</td>
-    <td>&nbsp;</td>
+    <td> should be set up to 0(false) for all none-HIP users.</td>
   </tr>
 <tr><td>POLYORPHISM_FINDER_DATA_DIRECTORY</td>
     <td>&nbsp;</td>

@@ -57,7 +57,7 @@
             <table width="90%" border="0">
               <tr> 
                 <td width="7%"><div align="center">*</div></td>
-                <td width="20%">temp</td>
+                <td width="20%">tmp</td>
                 <td  >store all temporary files created by ACE, the directory 
                   should be empted overnight</td>
               </tr>
@@ -125,10 +125,14 @@
             start of assembly (see ACE user guide).</li>
           <li>Get dump Oracle file from Hip that contains SQL schema for ACE database 
             and load it. </li>
+          <li>Set-up scheduled tasks / cron jobs to: (a) clean up <em>tmp</em> 
+            directory; (b) clean up all *.in files from <em>output/needle_output</em> 
+            directory; (c) clean up <em>output/tmp_assembly </em>directory; (d) 
+            Optional: rebuild user blastable databases if applicable.</li>
           <li> Get ACE package distribution .war file from Harvard Institute of 
             Proteomics and load it..</li>
-          <li>Change<a href="<%= redirection%>help_WebXMLChange.html" target="_blank"> web.xml</a> 
-            file to reflect location of ACE database schema.</li>
+          <li>Change<a href="<%= redirection%>help_WebXMLChange.html" target="_blank"> 
+            web.xml</a> file to reflect location of ACE database schema.</li>
           <li> Edit <a href="<%= redirection%>help_ACEConfigurationFile.html"  target="_blank">ACE 
             configuration file</a> to reflect server settings. Check wether all 
             server configuration settings were properly reflected in configuration 
