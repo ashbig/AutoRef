@@ -193,7 +193,7 @@ public class AssemblyRunner extends ProcessRunner
 +"\n quality trimming: first base: "+   m_quality_trimming_phd_first_base
 + "\n quality trimming: last base: "+       m_quality_trimming_phd_last_base 
 + "\n exclude low quality reads from assembly: " +   (m_use_lqreads_for_assembly == 1)
-+ "\n delete low quality reads fromn harddrive: "+       (m_delete_lqreads ==1)
++ "\n delete low quality reads fromn harddrive: "+       (m_delete_lqreads ==1);
                      Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "hip_informatics@hms.harvard.edu", getTitle(), message);
 
                 }catch(Exception e1){}
