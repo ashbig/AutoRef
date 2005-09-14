@@ -59,7 +59,7 @@ public class AssemblyRunner extends ProcessRunner
         private int         m_assembly_mode = END_READS_ASSEMBLY;
         private int         m_quality_trimming_phd_score = 0;
         private int         m_quality_trimming_phd_first_base = 0;
-        private int         m_quality_trimming_phd_last_base = 0;
+        private int         m_quality_trimming_phd_last_base = 1000;
         private int         m_use_lqreads_for_assembly = 0;
         private int         m_delete_lqreads = 0;
    
@@ -272,39 +272,49 @@ public class AssemblyRunner extends ProcessRunner
                                 clone_definition.getIsolateTrackingId(),  conn);
                 System.out.println("Assembly null. Clone "+clone_definition.getCloneId() +" "+clone_definition.getFlexSequenceId());
            }
-           else if( clone_assembly.getContigs().size() != 1  )// && m_assembly_mode == END_READS_ASSEMBLY )
-           {
-                IsolateTrackingEngine.updateStatus(isolate_status_fail, clone_definition.getIsolateTrackingId(),  conn );
-                IsolateTrackingEngine.updateAssemblyStatus(
-                                    IsolateTrackingEngine.ASSEMBLY_STATUS_N_CONTIGS,
-                                    clone_definition.getIsolateTrackingId(),  conn);
-           }
+         
            else
            {
-               //check coverage
-               Contig contig = (Contig) clone_assembly.getContigs().get(0);
-               int result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  refsequence);
-
-               if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_NO_MATCH)
+               clone_assembly.sortContigsByLength();
+               int result = -1000;
+               for ( int count = 0; count < clone_assembly.getContigs().size(); count++)
                {
-                   //check maybe contig is compliment
-                    contig.setSequence(SequenceManipulation.getComplimentCaseSencetive(contig.getSequence()));
-                    int[] complement_scores = SequenceManipulation.getScoresComplement( contig.getScores() );
-                    contig.setScores( Algorithms.convertArrayToString(complement_scores, " "));
-                    result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  refsequence);
+                   //check coverage
+                   Contig contig = (Contig) clone_assembly.getContigs().get(0);
+                   result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  refsequence);
+                   if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_NO_MATCH)
+                   {
+                       //check maybe contig is compliment
+                        contig.setSequence(SequenceManipulation.getComplimentCaseSencetive(contig.getSequence()));
+                        int[] complement_scores = SequenceManipulation.getScoresComplement( contig.getScores() );
+                        contig.setScores( Algorithms.convertArrayToString(complement_scores, " "));
+                        result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  refsequence);
 
+                   }
+                    if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS
+                    || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED
+                     || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED
+                      || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED )
+
+                    {
+                            clone_sequence_id = insertSequence(clone_definition, contig,   process_id,conn );
+                            if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
+                            IsolateTrackingEngine.updateStatus(isolate_status_pass,clone_definition.getIsolateTrackingId(),  conn );
+                            IsolateTrackingEngine.updateAssemblyStatus( IsolateTrackingEngine.ASSEMBLY_STATUS_PASS,clone_definition.getIsolateTrackingId(),  conn);
+                            conn.commit();
+                            return;
+                    }
+                    if ( clone_assembly.getContigs().size() != 1 && count == clone_assembly.getContigs().size()-1 )
+                    {
+                        IsolateTrackingEngine.updateStatus(isolate_status_fail, clone_definition.getIsolateTrackingId(),  conn );
+                        IsolateTrackingEngine.updateAssemblyStatus(
+                                    IsolateTrackingEngine.ASSEMBLY_STATUS_N_CONTIGS,
+                                    clone_definition.getIsolateTrackingId(),  conn);
+                    }
                }
-               if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_PASS
-                || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER5_NOT_COVERED
-                 || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_LINKER3_NOT_COVERED
-                  || result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_BOTH_LINKERS_NOT_COVERED )
-
-               {
-                        clone_sequence_id = insertSequence(clone_definition, contig,   process_id,conn );
-                        if ( clone_sequence_id != -1) process_clones.add( new Integer( clone_sequence_id ));
-                }
-             
-                 IsolateTrackingEngine.updateStatus(isolate_status_pass,clone_definition.getIsolateTrackingId(),  conn );
+               
+            
+                IsolateTrackingEngine.updateStatus(isolate_status_pass,clone_definition.getIsolateTrackingId(),  conn );
                 IsolateTrackingEngine.updateAssemblyStatus( result,clone_definition.getIsolateTrackingId(),  conn);
             }
             conn.commit();
@@ -345,7 +355,9 @@ public class AssemblyRunner extends ProcessRunner
             pp.run(trace_files_directory_path, output_file_name );
            //get phrdphrap output
             PhredPhrapParser pparser = new PhredPhrapParser();
-            clone_assembly = pparser.parse(trace_files_directory_path+File.separator +"contig_dir" + File.separator + output_file_name);
+            //clone_assembly = pparser.parse(trace_files_directory_path+File.separator +"contig_dir" + File.separator + output_file_name);
+            clone_assembly = pparser.parseAllData(trace_files_directory_path+File.separator +"contig_dir" + File.separator + output_file_name);
+            
             return clone_assembly;
          }
          catch(Exception e)
@@ -610,7 +622,7 @@ public static void main(String args[])
          runner.setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
        //      runner.setItems("116384	");
       // runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID,"357 28158");  
+            runner.setInputData(Constants.ITEM_TYPE_CLONEID,"2330");  
             runner.setVectorFileName("vector_empty.seq");
         runner.run();           
         /*
