@@ -75,4 +75,31 @@ public class CloneAssembly
                 return trace_files.length;
     }
     
+    public  void sortContigsByLength()
+    {
+        m_contigs = sortContigsByLength(m_contigs);
+    }
+    public static ArrayList sortContigsByLength(ArrayList contigs)
+    {
+          //sort array by containerid and position
+            Collections.sort(contigs, new Comparator() 
+            {
+                public int compare(Object o1, Object o2) 
+                {
+                    Contig cl1 = (Contig)o1;
+                    Contig cl2 = (Contig)o2;
+                    return cl2.getSequence().length() - cl1.getSequence().length();
+                 
+                }
+                /** Note: this comparator imposes orderings that are
+                 * inconsistent with equals. */
+                public boolean equals(java.lang.Object obj)
+                {      return false;  }
+                // compare
+            } );
+        
+        return contigs;
+    }
+    
+    
 }

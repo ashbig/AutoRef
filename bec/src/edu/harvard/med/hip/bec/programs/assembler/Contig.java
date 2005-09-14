@@ -348,7 +348,7 @@ public class Contig
          //sequence[current_base++];
              }
          }
-        
+        /*
          for ( base_count = 0; base_count < m_sequence.length(); base_count++)
          {
                 System.out.print(bases_array[0][base_count].getIndex()+" "+ bases_array[0][base_count].getBase() +" " + bases_array[0][base_count].getScore());
@@ -357,7 +357,7 @@ public class Contig
                 System.out.print( " "+bases_array[3][base_count] .getIndex()+" "+ bases_array[3][base_count].getBase() +" " + bases_array[3][base_count].getScore());
                  System.out.println("" );
          }
-          
+          */
 
          return bases_array;
     }
