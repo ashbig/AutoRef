@@ -281,6 +281,8 @@ public class AssemblyRunner extends ProcessRunner
                {
                    //check coverage
                    Contig contig = (Contig) clone_assembly.getContigs().get(0);
+                   contig.setSequence(  Algorithms.cleanChar(contig.getSequence(),'*'));
+                   
                    result = contig.checkForCoverage(clone_definition.getCloneId(), cds_start,  cds_stop,  refsequence);
                    if ( result == IsolateTrackingEngine.ASSEMBLY_STATUS_FAILED_NO_MATCH)
                    {

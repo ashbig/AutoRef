@@ -127,13 +127,13 @@ for (Enumeration e = BecProperties.getInstance().getVectorLibraries().keys() ; e
 additional_jsp_buffer.append("</select></td> </tr>");
 additional_jsp_buffer.append("<tr> <td colspan='2'><strong>Low Quality Reads manipulation</strong></td> </tr>");
 
-additional_jsp_buffer.append("<tr> <td colspan='2'>"+line_padding+"<input type='checkbox' name='"+ PhredPhrap.LQREADS_USE_FOR_ASSEMBLY+"' value='1' checked >Exclude from assembly</td> </tr>");
-additional_jsp_buffer.append("<tr> <td colspan='2'>"+line_padding+"<input type='checkbox' name='"+ PhredPhrap.LQREADS_DELETE+"' value='0'  >Permanently delete from hard drive</td> </tr>");
+additional_jsp_buffer.append("<tr> <td colspan='2'>"+line_padding+"<input type='checkbox' name='"+ PhredPhrap.LQREADS_USE_FOR_ASSEMBLY+"' value='1'  >Exclude from assembly</td> </tr>");
+additional_jsp_buffer.append("<tr> <td colspan='2'>"+line_padding+"<input type='checkbox' name='"+ PhredPhrap.LQREADS_DELETE+"' value='0' disabled >Permanently delete from hard drive</td> </tr>");
 
 additional_jsp_buffer.append("<tr> <td colspan='2'><strong> <input type='checkbox' checked name='all' id='all' onClick='isTrimm(this, this.checked)'>");
 additional_jsp_buffer.append(" Perform quality trimming:</strong></td> </tr>");
  additional_jsp_buffer.append(" <tr> <td>"+line_padding+"Phred score&nbsp;&nbsp; </td>");
- additional_jsp_buffer.append(" <td><input type = text value = 10 name='"+PhredPhrap.QUALITY_TRIMMING_SCORE+"' ></td> </tr>");
+ additional_jsp_buffer.append(" <td><input type = text value = 20 name='"+PhredPhrap.QUALITY_TRIMMING_SCORE+"' ></td> </tr>");
  additional_jsp_buffer.append(" <tr> <td>"+line_padding+"First base to include &nbsp;&nbsp; </td>");
 additional_jsp_buffer.append(" <td><input type = text value = 50 name='"+PhredPhrap.QUALITY_TRIMMING_FIRST_BASE+"' ></td>");
 additional_jsp_buffer.append(" </tr> <tr> <td>"+line_padding+"Last base to include</td> <td><input type = text value = 900 name='"+PhredPhrap.QUALITY_TRIMMING_LAST_BASE + "' ></td> </table>");
