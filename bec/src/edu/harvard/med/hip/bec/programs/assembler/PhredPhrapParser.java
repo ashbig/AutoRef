@@ -14,6 +14,7 @@ import org.apache.regexp.*;
 import edu.harvard.med.hip.bec.util.*;
 import edu.harvard.med.hip.bec.bioutil.*;
 import  edu.harvard.med.hip.bec.coreobjects.sequence.*;
+import  edu.harvard.med.hip.bec.file.*;
 /**
  *
  * @author  HTaycher
@@ -62,6 +63,8 @@ public class PhredPhrapParser
     
     public CloneAssembly    parseAllData(String phrap_output)throws Exception
     {
+        
+        if ( !FileOperations.isFileExists(phrap_output)) return null;
         String line = null;
         ReadInAssembly read = null;
         CloneAssembly clone_assembly = null;
@@ -78,10 +81,12 @@ public class PhredPhrapParser
             {
                 if (line.trim().equals("")) continue;
                //start assembly
-               if ( p_assembly_info.match(line) ) 
+               if ( p_assembly_info.match(line) ) //AS 1 2
                {
+                    if ( Integer.parseInt( p_assembly_info.getParen(0)) == 0) return null;
                     clone_assembly = new CloneAssembly();
                     clone_assembly.setNumOfReads( Integer.parseInt(p_assembly_info.getParen(1) ));
+      
                }
                //contig start
                else if ( p_contig_info.match(line) )
@@ -170,7 +175,8 @@ public class PhredPhrapParser
     
     public  CloneAssembly parse(String foutput_name) throws BecUtilException
     {
-        //System.out.println("a");
+         if ( !FileOperations.isFileExists(foutput_name)) return null;
+        
         String line = null;
         CloneAssembly clone_assembly = null;
         Contig contig = null;
