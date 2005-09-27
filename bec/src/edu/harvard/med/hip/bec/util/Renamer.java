@@ -43,11 +43,16 @@ public class Renamer
            // "c:\\comp_tigr-1.txt");
            // getNames("c:\\comp_tigr1.txt","c:\\all_tr.txt","c:\\not_processed.txt", "\n","c:\\processed.txt");
      //   transferFile("c:\\not_processed.txt");
-           // String directory_name = "c:\\try\\";
-            //String file_name_with_file_names="";
-            //copyAllFilesIntoDirectory( directory_name, file_name_with_file_names);
+           // String directory_name = "\\\\Bighead\\data\\new_tigr_trace_files_dump\\";
+           // String file_name_with_file_names="c:\\bio\\move_files_new_tigr.txt";
+           // copyAllFilesIntoDirectory( directory_name, file_name_with_file_names);
            // r.getEMails("C:\\rent\\rent.txt","C:\\rent\\rent_out.txt");
-            r.sendEMail("C:\\rent\\rent_test.txt");
+      
+            
+            
+            
+            
+            moveReverseReads_1("\\\\Bighead\\data\\new_tigr_trace_files_dump\\");
         }
         
         catch(Exception e)
@@ -93,7 +98,7 @@ public class Renamer
     public static void sendEMail(String filename_in)
     {
         String subject ="Looking for appartment to rent";
-        String msgText="Dear Realtor,\n\nI am looking for 3BR accommodations for lease for the period\nof my home renovation. I will need this apartment starting\nOctober 1/October 15 for six months.\n Desired location is Newton Corner, Brighton Oak Square.\nI realize that half year lease is not standard \nand I am willing to pay reasonable premium for this.\n\n\n\nSincerely,\nHelen Taycher";
+        String msgText="Dear Realtor,\n\nI am looking for 3BR accom modations for lease for the period\nof my home renovation. I will need this apartment starting\nOctober 1/October 15 for six months.\n Desired location is Newton Corner, Brighton Oak Square.\nI realize that half year lease is not standard \nand I am willing to pay reasonable premium for this.\n\n\n\nSincerely,\nHelen Taycher";
 
 
         String to = null;String ma="elena_taycher@hms.harvard.edu";
@@ -103,7 +108,7 @@ public class Renamer
             fin = new BufferedReader(new FileReader(filename_in));
             while ((to = fin.readLine()) != null)
            {
-                Mailer.sendMessage(to, ma, ma,  subject,     msgText);
+                Mailer.sendMessage(to, ma,   subject,     msgText);
   
             }
         
@@ -455,6 +460,44 @@ public class Renamer
         catch(Exception e)
         {}
     }
+    
+    
+    
+    public static void moveReverseReads_1( String root_base )
+    {
+        String dir_name = "\\\\Bighead\\data\\new_tigr_trace_files_root\\clone_samples\\";
+        String file_name = null;
+        File new_dir = new File(root_base);
+        String new_file_name = null;
+        File [] sourceFiles = new_dir.listFiles();
+        File sourceDir =  null;
+        try
+        {
+            for (int index = 0; index < sourceFiles.length;index++)
+            {
+                file_name = sourceFiles[index].getName();
+                if ( sourceFiles[index].getName().indexOf("_R0." ) != -1)
+                {
+                    //  sourceFiles[index].getName()plate_well_seq_cloneid_r0.abi
+                    ArrayList ar = Algorithms.splitString( sourceFiles[index].getName(), "_");
+                    new_file_name = dir_name + (String)ar.get(2)+File.separator+(String)ar.get(3)+File.separator+"chromat_dir\\"+sourceFiles[index].getName();
+                    try
+                    {
+                        FileOperations.moveFile(sourceFiles[index], new File( new_file_name), false, true) ;
+                     System.out.println(new_file_name);
+                    }catch(Exception n ){System.out.println(n.getMessage());}
+                   
+                }
+               
+            }
+        }
+        
+        catch(Exception e)
+        {}
+    }
+    
+    
+    
     public static void renamePseudomonas()
     {
         String dir = "F:\\pseudomonas_dump\\trace_dump";
@@ -551,7 +594,7 @@ public class Renamer
                 //platelabel_a01_r.ab1
                 direction = file_name.substring( tr_pale_name.length(),  tr_pale_name.length()+1);
                 well_name = file_name.substring( tr_pale_name.length()+1 ,file_name.indexOf("."));
-                well_name = Algorithms.convertWellFromInttoA8_12( Algorithms.convertWellFromA8_12toInt(well_name));
+                well_name = "";//Algorithms.convertWellFromInttoA8_12( Algorithms.convertWellFromA8_12toInt(well_name));
                 CloneItem item = getItem( org_platename,well_name);
                 file_name =  item.getPlateId() + "_"+well_name +"_" + item.getSequenceId()+"_"+item.getCloneId()+"_"+ direction + "0"+file_name.substring( file_name.indexOf("."), file_name.length());
                 dest_file = new File(org_dir+File.separator+"rename"+File.separator+file_name);
@@ -689,8 +732,8 @@ public class Renamer
     
     private  CloneItem  getItem(String wellid, String sequenceid, Connection conn)throws Exception
     {
-        String sql ="select flexsequenceid, position,flexcloneid as cloneid, flexsequencingplateid as plateid  from flexinfo f, isolatetracking i, sample s"
-        +" where flexsequenceid ="+sequenceid+" and position = "+Algorithms.convertWellFromA8_12toInt(wellid)+" and s.sampleid=i.sampleid and i.isolatetrackingid=f.isolatetrackingid ";
+        String sql =null;//"select flexsequenceid, position,flexcloneid as cloneid, flexsequencingplateid as plateid  from flexinfo f, isolatetracking i, sample s"
+      //  +" where flexsequenceid ="+sequenceid+" and position = "+Algorithms.convertWellFromA8_12toInt(wellid)+" and s.sampleid=i.sampleid and i.isolatetrackingid=f.isolatetrackingid ";
         CloneItem item = null;
         ResultSet rs = null;
         ArrayList items = new ArrayList();
@@ -718,10 +761,10 @@ public class Renamer
     
     private  CloneItem  getItem(String platelabel, String wellid)throws Exception
     {
-        int wellid_num = Algorithms.convertWellFromA8_12toInt(wellid);
-        String sql ="select flexsequenceid, flexcloneid as cloneid, flexsequencingplateid as plateid  from flexinfo f, isolatetracking i, sample s"
-        +" where  s.containerid = (select containerid from containerheader where label='" + platelabel + "')"
-        +" and position = "+Algorithms.convertWellFromA8_12toInt(wellid)+" and s.sampleid=i.sampleid and i.isolatetrackingid=f.isolatetrackingid ";
+        int wellid_num = 0;//Algorithms.convertWellFromA8_12toInt(wellid);
+        String sql = null;//"select flexsequenceid, flexcloneid as cloneid, flexsequencingplateid as plateid  from flexinfo f, isolatetracking i, sample s"
+       // +" where  s.containerid = (select containerid from containerheader where label='" + platelabel + "')"
+      //  +" and position = "+Algorithms.convertWellFromA8_12toInt(wellid)+" and s.sampleid=i.sampleid and i.isolatetrackingid=f.isolatetrackingid ";
         CloneItem item = null;
         ResultSet rs = null;
         ArrayList items = new ArrayList();
@@ -1017,9 +1060,9 @@ public class Renamer
                 try
                 {
                     filetype = sourceFiles[i].getName().substring(sourceFiles[i].getName().lastIndexOf('_'), sourceFiles[i].getName().length()-1);
-                    dest_file = new File(basename+File.separator + clone_discr.getConstructId() +"_" +Algorithms.convertWellFromInttoA8_12(clone_discr.getPosition())+"_" +clone_discr.getFLEXRefSequenceId()+"_" +clone_discr.getCloneId() + "_" +filetype);
+                    //dest_file = new File(basename+File.separator + clone_discr.getConstructId() +"_" +Algorithms.convertWellFromInttoA8_12(clone_discr.getPosition())+"_" +clone_discr.getFLEXRefSequenceId()+"_" +clone_discr.getCloneId() + "_" +filetype);
                     // FileOperations.copyFile(sourceFiles[i], dest_file, false);
-                    System.out.println( sourceFiles[i].getName()+" "+dest_file.getName());
+                    //System.out.println( sourceFiles[i].getName()+" "+dest_file.getName());
                 }catch(Exception e)
                 {}
             }

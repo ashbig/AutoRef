@@ -4,8 +4,8 @@
  *
  * 
  * The following information is used by CVS
- * $Revision: 1.7 $
- * $Date: 2005-08-19 13:50:00 $
+ * $Revision: 1.8 $
+ * $Date: 2005-09-27 18:58:08 $
  * $Author: Elena $
  *
  ******************************************************************************
@@ -24,7 +24,7 @@ import java.util.*;
  * Holds sytem level properties.
  *
  * @author     $Author: Elena $
- * @version    $Revision: 1.7 $ $Date: 2005-08-19 13:50:00 $
+ * @version    $Revision: 1.8 $ $Date: 2005-09-27 18:58:08 $
  */
 
 public class BecProperties
@@ -48,6 +48,7 @@ public class BecProperties
     private boolean     m_isDebuggingMode = false;
     private int          m_isWindowsOS = 0;
     private boolean     m_isHipInternalVersion = false;
+    private int         m_plate_naming_type = edu.harvard.med.hip.bec.sampletracking.objects.Container.PLATE_TYPE_96_A1_H12;
     /**
      * Protected constructor.
      *
@@ -153,6 +154,15 @@ public class BecProperties
            if ( !m_properties.getProperty("IS_DEBUGING").equalsIgnoreCase( "0" ))
                     m_isDebuggingMode = true;
             
+            value =m_properties.getProperty("PLATE_TYPE_WELL_NAMING");//=/F/Sequences for BEC/files_to_transfer
+            if ( value != null  ) 
+            {
+                int plate_naming = Integer.parseInt(value) ;
+                if (edu.harvard.med.hip.bec.sampletracking.objects.Container.isValidNamingPlateType(plate_naming))
+                    m_plate_naming_type = plate_naming;
+            }
+   
+            
      }
 
              
@@ -160,7 +170,8 @@ public class BecProperties
         if ( m_Error_messages.size() == 0 )m_isSettingsVerified = 1;
         else if (m_Error_messages.size() > 0 )m_isSettingsVerified = -1;
        
-        for (int i = 0; i < m_Error_messages.size() ; i++){ System.out.println((String)m_Error_messages.get(i));}
+        for (int i = 0; i < m_Error_messages.size() ; i++)
+        { System.out.println((String)m_Error_messages.get(i));}
         return m_isSettingsVerified;
     }
     
@@ -252,7 +263,7 @@ public class BecProperties
         return m_instance;
     } 
     
-     
+    public          int             getPlateTypePositionNaming(){ return m_plate_naming_type;} 
     public          boolean         isSettingsVerified(){ return ( m_isSettingsVerified > 0 );}
     public           Hashtable  getBlastableDatabases(){ return m_blastable_db ;}
     public           Hashtable  getPolymFinderBlastableDatabases(){ return m_polymorffinder_blastable_db;}

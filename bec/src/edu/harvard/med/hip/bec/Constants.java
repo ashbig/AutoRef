@@ -17,7 +17,8 @@ import edu.harvard.med.hip.utility.*;
  */
 public class Constants {
    
-    private static final String DILIM = "_";
+    
+     private static final String DILIM = "_";
       
     public static String       TAB_DELIMETER = "\t";//System.getProperty("line.separator") ;
    
@@ -71,13 +72,13 @@ public class Constants {
     public static final String SEQUENCE_KEY = "SEQUENCE";
   
      // key used to find the page number
-    public static final String PAGE_KEY="PAGE";
+ //   public static final String PAGE_KEY="PAGE";
     
    
     
     
     // key used to find the id of a plate
-    public static final String PLATE_ID_KEY = "PLATE_ID";
+  //  public static final String PLATE_ID_KEY = "PLATE_ID";
     
     // key used to find a container
     public static final String CONTAINER_KEY = "CONTAINER";
@@ -284,7 +285,6 @@ public class Constants {
     public static final int STRETCH_COLLECTION_REPORT_ALL_INT = 24;
     public static final int LQR_COLLECTION_REPORT_INT = 25;
   public static final int AVAILABLE_SPECIFICATION_INT = 26;
-    
     
     
     

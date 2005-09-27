@@ -9,7 +9,7 @@ import java.io.*;
 public class Algorithms
 {
     
-    /**
+        /**
 	 * This function takes the string and converts it into a reversed sequence.
 	 * @param seq  A String object
 	 * @return A String object
@@ -201,13 +201,15 @@ public class Algorithms
         }
         return res;
     }
-    
+ /*   
     //convert well nomenculature from A10 to int
     public static int convertWellFromA8_12toInt( String well) 
     {
         int position = -1;
         well = well.toLowerCase();
+
         int row = (int)well.charAt(0);
+
         int column = Integer.parseInt(well.substring(1));
         int a_value = (int) 'a';
         int first_char_value = 0;
@@ -219,9 +221,8 @@ public class Algorithms
      
         return (column - 1) * 8 +  row_value ;
         
-  
     }
-    
+    */
     public static int convertWellNumberIntoRowNumber(int position)
     {
         int row_number = position % 8 ;
@@ -234,6 +235,8 @@ public class Algorithms
         if ( position % 8 == 0 ) position --;
         return (int)Math.ceil(  position / 8)+1;
     }
+    
+    /*
      //convert well nomenculature from A10 to int
     public static String convertWellFromInttoA8_12( int well) 
     {
@@ -263,7 +266,7 @@ public class Algorithms
         
   
     }
-    
+    */
     
     public static String convertWindowsFileNameIntoUnix(String filename)
     {
@@ -351,19 +354,7 @@ public class Algorithms
     
     public static void main(String args[])
     {
-       int position = 1;
-       System.out.println(  position+" "+      convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
-        position = 96;
-       System.out.println(  position+" "+         convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
-         position = 27;
-       System.out.println(  position+" "+         convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
-  position = 55;
-       System.out.println(   position+" "+        convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
-  position = 16;
-       System.out.println(   position+" "+        convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
- position = 66;
-       System.out.println(   position+" "+        convertWellNumberIntoRowNumber( position)        +" "+ convertWellNumberIntoColNumber( position));
-
+      
        System.exit(0);
     }
     

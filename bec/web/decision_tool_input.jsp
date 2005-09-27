@@ -18,29 +18,33 @@
   <tr>
     <td width="50%" bgColor="#e4e9f8" ><div align="center"><font color="000080"><strong>&nbsp;&nbsp;&nbsp;Clone
         Storage Information: </strong></font></div></td>
-    <td width="50%" bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>&nbsp;
+    <td width="50%" bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Clone Raw Data Information
               </strong></font></div></td>
   </tr>
-  <tr>    <td >      Clone Id</td>    <td >&nbsp;    </td>  </tr>
+  <tr>    <td >  <input type="checkbox" checked name="l" value="1" disabled>     Clone Id</td> 
+   <td ><input type="checkbox"  name="is_forward_er_uploaded" value="1" >  Is forward end read uploaded? </td>  </tr>
 
   <tr>
     <td> <input type="checkbox" name="plate_label" value="1">      Plate Label</td>
-	 <td>&nbsp;  </td>
+	 <td><input type="checkbox"  name="is_reverse_er_uploaded" value="1" >  
+Is reverse end read uploaded? </td>
   </tr>
   <tr>
     <td> <input type="checkbox" name="sample_type" value="1">      Sample Type</td>
-    <td>&nbsp;</td>
+    <td><input type="checkbox"  name="is_ordered_internals_oligos" value="1" >
+ Number of ordered internal oligo</td>
   </tr>
   <tr>
     <td> <input type="checkbox" name="position" value="1">      Position</td>
-    <td>&nbsp;</td>
+    <td><input type="checkbox"  name="is_internal_traces" value="1" > 
+Number of submitted internal reads</td>
   </tr>
 
   <tr>
     <td bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Reference
         Sequence Information</strong></font></div></td>
     <td bgColor="#e4e9f8"><div align="center" ><font color="000080"><strong> Clone
-        Sequence Information</strong></font></div></td>
+        Assembly Information</strong></font></div></td>
   </tr>
   <tr>
     <td>      <input type="checkbox" name="ref_sequence_id" value="1">
@@ -102,12 +106,14 @@
   <tr>
     <td><input type="checkbox" name="ref_species_id" value="1">
           Species Specific ID</td>
-        <td>&nbsp;</td>
+        <td><input type="checkbox"  name="is_gaps_last_stretch_collection" value="1" >
+ Number of gaps in most recent assembly</td>
   </tr>
   <tr>
      <td><input type="checkbox" name="ref_ids" value="1">
           All Available Identifiers</td>
-     <td>&nbsp;</td>
+     <td><input type="checkbox"  name="is_lqd_last_assembly" value="1" > 
+Number of low quality discrepancies</td>
   </tr>
 </table>
 

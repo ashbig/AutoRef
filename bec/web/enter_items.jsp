@@ -8,7 +8,17 @@
 
   function validateForm(formElement)
    {
-        var str =  trim(formElement.items.value);
+   
+   for ( count = 0; count < formElement.item_type.length; count++)
+    {
+        if (formElement.item_type[count].checked==true     && formElement.item_type[count].value== <%= Constants.ITEM_TYPE_PROJECT_NAME %>)
+        {
+              formElement.items.value =formElement.project_name.value;
+               }
+    }
+
+    
+          var str =  trim(formElement.items.value);
         if (( formElement.items.value == null) || ( str == "" ) )
 	{
 		alert("Please submit items to process.");
@@ -40,6 +50,7 @@
 
  <%
 Object forwardName = null;
+int project_cell = -1;
 if ( request.getAttribute("forwardName") != null)
 {
         forwardName = request.getAttribute("forwardName") ;
@@ -88,7 +99,7 @@ case Constants.PROCESS_NOMATCH_REPORT:{ isPlateLabel = true; isPlateLabelChecked
 
 case Constants.PROCESS_RUN_PRIMER3 :{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isFLEXSequenceId = true; isACESequenceId = true;break;}
  case Constants.PROCESS_VIEW_INTERNAL_PRIMERS:{ isCloneId = true; isCloneIdChecked= true;break;}//{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true; isFLEXSequenceId = true; isACESequenceId = true;break;}
-case Constants.PROCESS_CREATE_REPORT:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true;  isACESequenceId = true;break;}
+case Constants.PROCESS_CREATE_REPORT:{ isPlateLabel = true; isPlateLabelChecked=true; isCloneId = true;  isFLEXSequenceId = true;isACESequenceId = true;break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_ER_RESEQUENCING  :{ isPlateLabel = true;isPlateLabelChecked=true; break;}
 case Constants.PROCESS_CREATE_ORDER_LIST_FOR_INTERNAL_RESEQUENCING  :{ isCloneId = true; isCloneIdChecked= true; break;}
 case Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY:  { isCloneId = true;isPlateLabel = true; isCloneIdChecked= true; break;}
@@ -134,16 +145,34 @@ cells[current_entity++] += ">Plate Labels</strong>";
 {
     cells[current_entity] = "<strong>  <input type='radio' name='item_type' value='"+Constants.ITEM_TYPE_FLEXSEQUENCE_ID+"'";
     if (isFLEXSequenceIdChecked) cells[current_entity] += "checked";
-    cells[current_entity++] += ">FLEX Sequence ID</strong>";
+    cells[current_entity++] += ">User Reference Sequence ID</strong>";
 
 }
-if ( isProjectList )
+
+String project_combo_text = null;
+if ( isProjectList && DatabaseToApplicationDataLoader.getProjectDefinitions() != null && DatabaseToApplicationDataLoader.getProjectDefinitions().size()>0)
  {
-    cells[current_entity] = "<strong>  <input disabled type='radio' name='item_type' value='"+Constants.ITEM_TYPE_PROJECT_NAME+"'";
+     project_cell=current_entity;
+    cells[current_entity] = "<strong>  <input  type='radio' name='item_type'  value='"+Constants.ITEM_TYPE_PROJECT_NAME+"'";
     if (isProjectListChecked) cells[current_entity] += "checked";
   cells[current_entity++] += ">Project Name</strong>";
 
+ project_combo_text = "<select name='project_name' >";
+String project_code = null;
+
+
+for ( Enumeration e = DatabaseToApplicationDataLoader.getProjectDefinitions().keys(); e.hasMoreElements() ;)
+        {
+            project_code = (String)  e.nextElement();
+            project_combo_text += "<option value = '"+project_code+"' >" + (String)DatabaseToApplicationDataLoader.getProjectDefinitions().get(project_code);
+                 }
+
+project_combo_text+="</select>";
+
 }   
+    
+
+
 
 %>
 
@@ -153,12 +182,15 @@ if ( isProjectList )
 <tr> 
 <td colspan=2 bgColor="#1145A6"> <font color="#FFFFFF"><strong>Select Items Type: </strong></font></td>
 </tr>
- <tr>  <td> <%=cells[0] %> </td><td>  <%=cells[2] %>  </td></tr>
-<tr> <td>  <%=cells[1] %>  </td><td>   <%=cells[3] %>   </td></tr>
-<% if ( !cells[4].equals("&nbsp;" )){%><tr> <td>  <%=cells[4] %>  </td><td>   <%=cells[5] %>   </td></tr><%}%> 
+ <tr>  <td width='40%'> <%=cells[0] %> <%if ( project_cell==0) {%> <%= project_combo_text %> <%}%></td>
+<td>  <%=cells[2] %>  <%if ( project_cell==2) {%> <%= project_combo_text %> <%}%></td></tr>
+<tr> <td>  <%=cells[1] %>  <%if ( project_cell==1) {%> <%= project_combo_text %> <%}%></td>
+<td>   <%=cells[3] %>   <%if ( project_cell==3) {%> <%= project_combo_text %> <%}%></td></tr>
+<% if ( !cells[4].equals("&nbsp;" )){%><tr> <td>  <%=cells[4] %> <%if ( project_cell==4) {%> <%= project_combo_text %> <%}%> </td>
+<td>   <%=cells[5] %>   <%if ( project_cell==5) {%> <%= project_combo_text %> <%}%></td></tr><%}%> 
 
 
-  <tr> 
+  <tr>
     <td bgColor="#1145A6" colspan=2> <font color="#FFFFFF"><strong>Enter All search Items</strong></font></td>
     
 </tr>

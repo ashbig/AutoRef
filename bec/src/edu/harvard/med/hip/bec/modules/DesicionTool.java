@@ -134,7 +134,7 @@ public class DesicionTool
                 ds.run();
                 ArrayList clone_data = ds.getCloneData();
        
-      System.out.println(clone_data.size());
+ //     System.out.println(clone_data.size());
         }
         catch(Exception e)
         {

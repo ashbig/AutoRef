@@ -45,7 +45,7 @@ public class BioLinker
     public static ArrayList getAllLinkers()throws BecDatabaseException
     {
        ArrayList linkers = new ArrayList();
-         String sql = "select linkerid, name, framestart,sequence from linker ";
+         String sql = "select linkerid, name, framestart,sequence from linker order by linkerid DESC";
         RowSet rs = null;
         
         try

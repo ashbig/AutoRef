@@ -84,8 +84,8 @@
   <tr> 
     <td bgColor="#e4e9f8"><div align="center"><font color="000080"><strong>Reference 
         Sequence Information</strong></font></div></td>
-    <td bgColor="#e4e9f8"><div align="center" ><font color="000080"><strong>ACE Clone 
-        Sequence Information</strong></font></div></td>
+    <td bgColor="#e4e9f8"><div align="center" ><font color="000080"><strong>Clone 
+        Assembly Information</strong></font></div></td>
   </tr>
   <tr> 
     <td>      <input type="checkbox" name="ref_sequence_id" value="1">      Sequence ID</td>
@@ -125,15 +125,12 @@
     <td>  <input type="checkbox" name="ref_gene_symbol" value="1">      Gene Symbol</td>
     <td>&nbsp;</td>
   </tr>
-  <tr> 
-    <td>
-      <input type="checkbox" name="ref_panum" value="1">      PA Number (for Pseudomonas project only)</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr> 
-    <td><input type="checkbox" name="ref_sga" value="1">      SGD Number (for Yeast project only)</td>
-    <td>&nbsp;</td>
-  </tr>
+    <tr>
+    <td><input type="checkbox" name="ref_species_id" value="1">
+          Species Specific ID</td><td>&nbsp;</td> </tr>
+  <tr>
+     <td><input type="checkbox" name="ref_ids" value="1">
+          All Available Identifiers</td> <td>&nbsp;</td></tr>
   
 </table>
 

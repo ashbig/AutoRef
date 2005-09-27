@@ -83,9 +83,9 @@ public class PhredPhrapParser
                //start assembly
                if ( p_assembly_info.match(line) ) //AS 1 2
                {
-                    if ( Integer.parseInt( p_assembly_info.getParen(0)) == 0) return null;
+                    if ( Integer.parseInt( p_assembly_info.getParen(1)) == 0) return null;
                     clone_assembly = new CloneAssembly();
-                    clone_assembly.setNumOfReads( Integer.parseInt(p_assembly_info.getParen(1) ));
+                    clone_assembly.setNumOfReads( Integer.parseInt(p_assembly_info.getParen(2) ));
       
                }
                //contig start
@@ -287,7 +287,7 @@ public class PhredPhrapParser
         try
         {
        
-            String  foutput_name = "F:\\trace_files_root\\clone_samples\\3337\\112576\\contig_dir\\refseqassembly3337.fasta.screen.ace.1";
+            String  foutput_name = "\\\\Bighead\\data\\trace_files_root\\clone_samples\\31875\\190984\\contig_dir\\190984.fasta.screen.ace.1";
             PhredPhrapParser pp= new PhredPhrapParser();
             CloneAssembly cl = pp.parseAllData( foutput_name); 
             ArrayList a = cl.getContigs();
