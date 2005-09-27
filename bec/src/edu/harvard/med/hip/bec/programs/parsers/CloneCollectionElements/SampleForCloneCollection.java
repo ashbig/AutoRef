@@ -39,7 +39,7 @@ public class SampleForCloneCollection
     public void        	setWellName  (String v )
     {
         m_position_name = v ;
-        m_position = Algorithms.convertWellFromA8_12toInt(m_position_name);
+        m_position = edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_alphanumeric_to_int(m_position_name);
     }
 
     public    boolean  verify( ArrayList error_messages)
