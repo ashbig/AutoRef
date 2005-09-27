@@ -247,7 +247,7 @@ import edu.harvard.med.hip.bec.sampletracking.objects.*;
             NamingFileEntry entry =new  NamingFileEntry(smp.getIsolateTrackingEngine().getFlexInfo().getFlexCloneId()
                         , orientation,
                         smp.getIsolateTrackingEngine().getFlexInfo().getFlexPlateId(),
-                       Algorithms.convertWellFromInttoA8_12( smp.getPosition()), 
+                       edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric( smp.getPosition()), 
                         smp.getIsolateTrackingEngine().getFlexInfo().getFlexSequenceId(),
                         0);
             return entry;

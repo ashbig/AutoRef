@@ -188,7 +188,7 @@ public class PrimerOrderRunner extends ProcessRunner
             if ( i_print_array_for_order_file[column_count]== DATA_TYPE_PLATE_LABEL  ){temp.append(plate_label + Constants.TAB_DELIMETER); continue;}
             if (   i_print_array_for_order_file[column_count]== DATA_TYPE_PRIMER_SEQUENCE ) {temp.append(oligo_sequence + Constants.TAB_DELIMETER); continue;}
             if (   i_print_array_for_order_file[column_count]==   DATA_TYPE_PRIMER_NAME  ){temp.append(oligosample_id + Constants.TAB_DELIMETER); continue;}
-            well_name = Algorithms.convertWellFromInttoA8_12(well );
+            well_name = edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(well );
             if (   i_print_array_for_order_file[column_count]== DATA_TYPE_PRIMER_COLUMN  ){temp.append(well_name.substring(0,1) + Constants.TAB_DELIMETER); continue;}
             if (   i_print_array_for_order_file[column_count]==  DATA_TYPE_PRIMER_ROW  ){temp.append(well_name.substring(1) + Constants.TAB_DELIMETER); continue;}
             temp.append( Constants.TAB_DELIMETER);
@@ -223,7 +223,7 @@ public class PrimerOrderRunner extends ProcessRunner
             if ( i_print_array_for_order_file[column_count]== DATA_TYPE_PLATE_LABEL  ){temp.append(plate_label + Constants.TAB_DELIMETER); continue;}
             if (   i_print_array_for_order_file[column_count]== DATA_TYPE_PRIMER_SEQUENCE ) {temp.append(m_empty_sequence + Constants.TAB_DELIMETER); continue;}
             if (   i_print_array_for_order_file[column_count]==   DATA_TYPE_PRIMER_NAME  ){temp.append(m_empty_sequence_name + Constants.TAB_DELIMETER); continue;}
-            well_name = Algorithms.convertWellFromInttoA8_12(well );
+            well_name = edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(well );
             if (   i_print_array_for_order_file[column_count]== DATA_TYPE_PRIMER_COLUMN  ){temp.append(well_name.substring(0,1) + Constants.TAB_DELIMETER); continue;}
             if (   i_print_array_for_order_file[column_count]==  DATA_TYPE_PRIMER_ROW  ){temp.append(well_name.substring(1) + Constants.TAB_DELIMETER); continue;}
             temp.append( Constants.TAB_DELIMETER);
@@ -406,7 +406,7 @@ public class PrimerOrderRunner extends ProcessRunner
                      oligosample_id = createOligoRecord( oligo.getId(), container.getId(), well_counter ,clone_description.getCloneId());
                 }
                  temp= oligosample_id +"\t"+ plate_label+"\t"+ (well_counter )
-                        +"\t"+Algorithms.convertWellFromInttoA8_12(well_counter )+
+                        +"\t"+edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(well_counter )+
                         "\t"+clone_description.getCloneId() +"\t"+oligo.getId()
                         +"\t"+oligo.getSequence() +"\t"+oligo.getTm() +"\t"+oligo.getSequence().length();
                 items_oligo.add(temp);

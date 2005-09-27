@@ -35,27 +35,6 @@ public class EndReadsWrapperRunner extends ProcessRunner
     //inputTraceDir specify the directory where the trace files get dumped from sequencer
     private static  String INPUT_BASE_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR") + java.io.File.separator;
 
-   /* {
-        if (ApplicationHostDeclaration.IS_BIGHEAD)
-        {
-             OUTPUT_BASE_ROOT = "d:/trace_files_root/";
-             INPUT_BASE_DIR = "d:/trace_files_dump/";
-             if (ApplicationHostDeclaration.IS_BIGHEAD_FOR_EXPRESSION_EVALUATION) 
-             {
-                  OUTPUT_BASE_ROOT = "d:/eval_trace_files_root/";
-                  INPUT_BASE_DIR = "d:/eval_trace_files_dump/";
-             }
-        }
-            
-        else
-        {
-          // OUTPUT_BASE_ROOT = "c:\\bio\\plate_analysis\\";
-            OUTPUT_BASE_ROOT = "f:\\trace_files_root\\";
-           INPUT_BASE_DIR = "C:\\bio\\plate_dump\\";
-        }
-    }
-  
-   */
     //errorDir specify  the  directory for trace files for controls are stored
     private static final String CONTROLS_DIR = "controls";
     //errorDir specify  the directory for  trace files with wrong name
@@ -179,7 +158,7 @@ public class EndReadsWrapperRunner extends ProcessRunner
                 else
                     continue;
                 entry =new  NamingFileEntry(clone_id  , orientation_str,
-                                plate_id,    Algorithms.convertWellFromInttoA8_12( position), 
+                                plate_id,    edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric( position), 
                                sequence_id,   0);
                // System.out.println(entry.toString());
                 res.add( entry.getNamingFileEntyInfo() );
@@ -232,10 +211,12 @@ public class EndReadsWrapperRunner extends ProcessRunner
                     if (! isSufficientQualityRead(read) )  
                     {
                         m_error_messages.add("Read " + read.getTraceFileName()+" was not submitted into ACE, because of read low quality");
+                        File ft = new File(read.getTraceFileName());
+                        ft.delete();
                         return;
                     }
            //   }
-              //read = (Read) reads.get(count);
+              //read = (Read) reads.get(count                                
               istr_info = IsolateTrackingEngine.findIdandStatusFromFlexInfo(read.getFLEXPlate(), read.getFLEXWellid());
               read.setIsolateTrackingId( istr_info[0]);
               //get reasult id

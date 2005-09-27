@@ -39,7 +39,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
     private int                 m_sequencing_facility = -1;
     private String              m_format_name = null;
     private TraceFileNameFormat m_format = null;
-    private boolean             isUseTraceFileNameFormat = true;
+   // private boolean             isUseTraceFileNameFormat = true;
     
     private String              OUTPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_INPUT_PATH_DIR");
     private String              INPUT_DIR = edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("TRACE_FILES_TRANCFER_INPUT_DIR");
@@ -214,10 +214,10 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 file_name = trace_files[i].getName();
                 try
                 {
-                    if ( isUseTraceFileNameFormat )
+                 //   if ( isUseTraceFileNameFormat )
                          br= new SequencingFacilityFileName(file_name, m_format,m_read_type.equals( Constants.READ_TYPE_ENDREAD_STR) );
-                    else
-                        br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
+                  //  else
+                    //    br= new SequencingFacilityFileName(file_name, m_sequencing_facility);
                 }
                 catch(Exception e)
                 {
@@ -451,7 +451,7 @@ public class TraceFileProcessingRunner extends ProcessRunner
                 entry.setPlateLabel(rs.getString("LABEL"));
                 entry.setWellNumber(rs.getInt("position"));
                 entry.setPlateId (rs.getInt("containerid") );
-                entry.setWellId (  Algorithms.convertWellFromInttoA8_12( entry.getWellNumber()));
+                entry.setWellId (  edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric( entry.getWellNumber()));
                 entry.setCloneID ( rs.getInt("flexcloneid") );
                 entry.setSequenceId ( rs.getInt("flexsequenceid") );
               //  createHipFileName( entry);

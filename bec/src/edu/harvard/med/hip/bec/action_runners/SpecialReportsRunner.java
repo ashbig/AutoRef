@@ -158,7 +158,7 @@ public class SpecialReportsRunner extends ProcessRunner
                        || read_description.getReadType() ==  Result.RESULT_TYPE_ENDREAD_FORWARD_FAIL)
              {
                 if( read_description.getReadId() < 1 )
-                    forward_reads.add(read_description.getPlateLabel()+"\t"+Algorithms.convertWellFromInttoA8_12(read_description.getPosition())+"\tF" );
+                    forward_reads.add(read_description.getPlateLabel()+"\t"+edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(read_description.getPosition())+"\tF" );
                 else
                 {
                     forward_expected_reads.add(read_description);
@@ -167,7 +167,7 @@ public class SpecialReportsRunner extends ProcessRunner
              else
              {
                 if( read_description.getReadId() < 1 )
-                    reverse_reads.add(read_description.getPlateLabel()+"\t"+Algorithms.convertWellFromInttoA8_12(read_description.getPosition())+"\tR" );
+                    reverse_reads.add(read_description.getPlateLabel()+"\t"+edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(read_description.getPosition())+"\tR" );
                 else
                 {
                     reverse_expected_reads.add(read_description );
@@ -459,7 +459,7 @@ public class SpecialReportsRunner extends ProcessRunner
                      }
                        
                     if ( isRepeatNeeded( read, Algorithms.getConvertStringToIntArray(scores_bf.toString()," ")) )
-                        result.add(read_description.getPlateLabel()+"\t"+Algorithms.convertWellFromInttoA8_12(read_description.getPosition())+"\tF" );
+                        result.add(read_description.getPlateLabel()+"\t"+edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_int_to_alphanumeric(read_description.getPosition())+"\tF" );
                 }
            }
             return result;

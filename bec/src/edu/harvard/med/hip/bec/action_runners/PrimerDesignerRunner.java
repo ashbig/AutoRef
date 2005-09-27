@@ -798,13 +798,13 @@ public class PrimerDesignerRunner extends ProcessRunner
       input = new PrimerDesignerRunner();
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
           
-           input.setInputData( Constants.ITEM_TYPE_CLONEID,"158625 ");
+           input.setInputData( Constants.ITEM_TYPE_CLONEID,"29951 134929 140264 ");
          //   input.setInputData( Constants.ITEM_TYPE_CLONEID,"145895");
             input.setUser(user);
-            input.setSpecId(105);
+            input.setSpecId(97);
             input.setIsTryMode(true);
             input.setTypeOfSequenceCoverage(PrimerDesignerRunner.COVERAGE_TYPE_GAP_LQR);
-            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_WITH_DISCREPANCY);
+            input.setIsLQRCoverageType(PrimerDesignerRunner.LQR_COVERAGE_TYPE_LQR_DISCREPANCY_REGIONS);
             input.setMinDistanceBetweenStretchesToBeCombined(50);
    
             input.run();
