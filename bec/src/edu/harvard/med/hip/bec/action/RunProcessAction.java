@@ -551,7 +551,7 @@ public class RunProcessAction extends ResearcherAction
                              if ( request.getParameter("first_well") != null)
                              {
                                 String fwell = request.getParameter("first_well");
-                                int  fposition = Algorithms.convertWellFromA8_12toInt(fwell);
+                                int  fposition = edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_alphanumeric_to_int(fwell);
                                 
                                ((PrimerOrderRunner)runner).setFirstWell( fposition );
                              }
@@ -559,7 +559,7 @@ public class RunProcessAction extends ResearcherAction
                              if ( request.getParameter("last_well") != null)
                              {
                                  String lwell = request.getParameter("last_well");
-                                 int  lposition = Algorithms.convertWellFromA8_12toInt(lwell);
+                                 int  lposition = edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_alphanumeric_to_int(lwell);
                                 ((PrimerOrderRunner)runner).setLastWell( lposition );
                              }
 if ( request.getParameter("primer_sequence") != null)((PrimerOrderRunner)runner).setPrimerSequenceColumn (Integer.parseInt(request.getParameter("primer_sequence") ));
@@ -659,7 +659,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                 
-                    runner.setInputData(items_type,items);
+                     runner.setInputData(items_type,items);
                     runner.setUser(user);
                     t = new Thread(runner);                    t.start();
                     request.setAttribute(Constants.JSP_TITLE,title);
@@ -735,8 +735,6 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     String  item_ids = (String) request.getParameter("items");
                     ProcessRunner runner = null;
                     runner = new ReportRunner();
-                   // runner.setItems(item_ids.toUpperCase().trim());
-                   // runner.setItemsType( Integer.parseInt(request.getParameter("item_type")));
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
                     runner.setInputData(items_type,items);
@@ -762,8 +760,8 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                         request.getParameter("ref_cds"), //     CDS
                         request.getParameter("ref_gi"), //      GI Number
                         request.getParameter("ref_gene_symbol"), //      Gene Symbol
-                        request.getParameter("ref_panum"), //      PA Number (for Pseudomonas project only)
-                        request.getParameter("ref_sga"), //      SGA Number (for Yeast project only)
+                        request.getParameter("ref_species_id"), //      PA Number (for Pseudomonas project only)
+                        request.getParameter("ref_ids"), //      SGA Number (for Yeast project only)
                         request.getParameter("rank") ,
                         request.getParameter("read_length"), //      end reads length
                         request.getParameter("score"),
@@ -783,6 +781,7 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                     DecisionToolRunner_New runner = new DecisionToolRunner_New();
                     String items = item_ids.toUpperCase().trim();
                     int items_type =  Integer.parseInt(request.getParameter("item_type"));
+                  
                    runner.setInputData(items_type,items);
                     runner.setUser(user);
                     int bioeval_spec_id = Integer.parseInt( (String) request.getParameter(Spec.FULL_SEQ_SPEC));
@@ -816,7 +815,13 @@ if ( request.getParameter("plate_name") != null)((PrimerOrderRunner)runner).setP
                         request.getParameter("clone_sequence_disc_det"), //Detailed Discrepancy Report </td>
                         request.getParameter("ref_3_linker" ),//   3' linker sequence</td>
                         request.getParameter("ref_species_id" ),//Species specific ID</td>
-                        request.getParameter("ref_ids" )//All available identifiers</td>
+                        request.getParameter("ref_ids" ),//All available identifiers</td>
+                        request.getParameter("is_forward_er_uploaded" ),
+                        request.getParameter("is_reverse_er_uploaded"),//	Reverse read uploaded
+                        request.getParameter("is_ordered_internals_oligos"),//	Number of ordered internal primers
+                        request.getParameter("is_internal_traces"),//	Number of internal trace files
+                        request.getParameter("is_gaps_last_stretch_collection"),//	Number of gaps in last stretch collection;
+                        request.getParameter("is_lqd_last_assembly")//	Number of lqr in last assembled clone sequence
                         );
                     
                     t = new Thread( runner);                    t.start();
