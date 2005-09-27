@@ -188,15 +188,18 @@ public class AssemblyRunner extends ProcessRunner
                     }
                     message =  getTitle()+  Constants.LINE_SEPARATOR +"Process finished.";
                     if ( m_items != null && m_items.length() > 0)
+                    {
+                        
+                        message+= Constants.LINE_SEPARATOR+"Assembly conditions: "
+                       +  Constants.LINE_SEPARATOR+" vector trimming: vector file name :"+m_vector_file_name 
+    + Constants.LINE_SEPARATOR+" quality trimming: score: "+ m_quality_trimming_phd_score 
+    + Constants.LINE_SEPARATOR+" quality trimming: first base: "+   m_quality_trimming_phd_first_base
+    +  Constants.LINE_SEPARATOR+" quality trimming: last base: "+       m_quality_trimming_phd_last_base 
+    +  Constants.LINE_SEPARATOR+" exclude low quality reads from assembly: " +   (m_use_lqreads_for_assembly == 1)
+    +  Constants.LINE_SEPARATOR+" delete low quality reads from hard drive: "+       (m_delete_lqreads ==1);
                         message +=  Constants.LINE_SEPARATOR + "Request item's ids:\n"+m_items;
-                    message+= Constants.LINE_SEPARATOR+"Assembly conditions: "
-                   +  Constants.LINE_SEPARATOR+" vector trimming: vector file name :"+m_vector_file_name 
-+ Constants.LINE_SEPARATOR+" quality trimming: score: "+ m_quality_trimming_phd_score 
-+ Constants.LINE_SEPARATOR+" quality trimming: first base: "+   m_quality_trimming_phd_first_base
-+  Constants.LINE_SEPARATOR+" quality trimming: last base: "+       m_quality_trimming_phd_last_base 
-+  Constants.LINE_SEPARATOR+" exclude low quality reads from assembly: " +   (m_use_lqreads_for_assembly == 1)
-+  Constants.LINE_SEPARATOR+" delete low quality reads from hard drive: "+       (m_delete_lqreads ==1);
-                     Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "hip_informatics@hms.harvard.edu", getTitle(), message);
+                    }
+                    Mailer.sendMessage      ( m_user.getUserEmail(), "hip_informatics@hms.harvard.edu",  "hip_informatics@hms.harvard.edu", getTitle(), message);
 
                 }catch(Exception e1){}
                 if ( conn != null) DatabaseTransaction.closeConnection(conn);

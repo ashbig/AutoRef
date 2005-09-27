@@ -54,8 +54,8 @@ public class ReportRunner extends ProcessRunner
 	private boolean    m_ref_cds= false; //     CDS
 	private boolean    m_ref_gi= false; //      GI Number
 	private boolean    m_ref_gene_symbol= false; //      Gene Symbol
-	private boolean    m_ref_panum= false; //      PA Number (for Pseudomonas project only)
-	private boolean    m_ref_sga= false; //      SGA Number (for Yeast project only)
+	private boolean    m_ref_species_id= false; //      PA Number (for Pseudomonas project only)
+	private boolean    m_ref_ids= false; //      SGA Number (for Yeast project only)
 	private boolean    m_rank = false;
         private boolean    m_score = false;
         private boolean    m_read_length = false;//length of end reads high quality strip
@@ -65,6 +65,7 @@ public class ReportRunner extends ProcessRunner
         private boolean    m_assembly_attempt_status = false; 
         private String      m_report_title = "";
    
+        private SpeciesIdHelper[] m_species_id_definitions = null;
 
         
     public String       getTitle()     { return "Request for report generator.";     }
@@ -89,8 +90,8 @@ public class ReportRunner extends ProcessRunner
                     Object ref_cds, //     CDS
                     Object ref_gi, //      GI Number
                     Object ref_gene_symbol, //      Gene Symbol
-                    Object ref_panum, //      PA Number (for Pseudomonas project only)
-                    Object ref_sga, //      SGA Number (for Yeast project only)
+                    Object ref_ids, //      PA Number (for Pseudomonas project only)
+                    Object ref_species_id, //      SGA Number (for Yeast project only)
                     Object rank ,//      Leave Sequence Info Empty for Empty Well
                     Object read_length,
                     Object score,
@@ -100,37 +101,44 @@ public class ReportRunner extends ProcessRunner
                     Object assembly_attempt_status
                  )
      {
-        if( clone_id!= null){ m_clone_id= true; m_report_title += "Clone ID\t";} //    Clone Id
-        if( plate_label != null) {m_plate_label= true;  m_report_title += "Plate Label\t";}// Plate Label
-        if( sample_id != null) {m_sample_id= true;  m_report_title += "Sample ID\t";}//      Sample Id
-        if( sample_type != null){ m_sample_type= true; m_report_title += "Sample Type\t";} //      Sample Type
-        if( position != null) {m_position= true;  m_report_title += "Position\t";}//      Sample Position
-        if ( score!= null) {m_score= true;  m_report_title += "Clone Score\t";}//
-        if ( rank!= null) {m_rank= true;  m_report_title += "Clone Rank\t";}//
-        if( dir_name != null) {m_dir_name = true;  m_report_title += "Clone Directory Name\t";}// Directory Name
-        if ( read_length != null) {m_read_length= true;  m_report_title += "End reads length: Forward/Reverse\t";}
+         StringBuffer report_title = new StringBuffer();
+        if( clone_id!= null){ m_clone_id= true; report_title.append( "Clone ID\t");} //    Clone Id
+        if( plate_label != null) {m_plate_label= true;  report_title.append(  "Plate Label\t");}// Plate Label
+        if( sample_id != null) {m_sample_id= true;  report_title .append(  "Sample ID\t");}//      Sample Id
+        if( sample_type != null){ m_sample_type= true; report_title.append(  "Sample Type\t");} //      Sample Type
+        if( position != null) {m_position= true;  report_title.append(  "Position\t");}//      Sample Position
+        if ( score!= null) {m_score= true;  report_title.append(  "Clone Score\t");}//
+        if ( rank!= null) {m_rank= true;  report_title.append(  "Clone Rank\t");}//
+        if( dir_name != null) {m_dir_name = true;  report_title .append(  "Clone Directory Name\t");}// Directory Name
+        if ( read_length != null) {m_read_length= true;  report_title.append(  "End reads length: Forward/Reverse\t");}
       
-        if( ref_sequence_id != null){ m_ref_sequence_id= true;  m_report_title += "REF: Bec ID\tREF: FLEX Id\t ";}//      Sequence ID
-        if( ref_cds_start != null) {m_ref_cds_start= true; m_report_title += "REF:CDS Start\t";} //      CDS Start
-        if( ref_cds_stop != null) {m_ref_cds_stop= true; m_report_title += "REF:CDS Stop\t";}//      CDS Stop
-        if( ref_cds_length != null){ m_ref_cds_length= true; m_report_title += "REF:CDS Length\t";}//      CDS Length
-        if( ref_gi != null) {m_ref_gi= true; m_report_title += "REF:GI\t";}//      GI Number
-        if( ref_gene_symbol != null){ m_ref_gene_symbol= true;m_report_title += "REF:Gene Symbol\t";} //      Gene Symbol
-        if( ref_panum != null) {m_ref_panum= true; m_report_title += "REF:PA Number\t";}//      PA Number (for Pseudomonas project only)
-        if( ref_sga != null) {m_ref_sga= true;m_report_title += "REF:SGA Number\t";} //      SGA Number (for Yeast project only)
-        if( ref_gc != null) {m_ref_gc= true; m_report_title += "REF:GC\t";}//     GC Content
-        if( ref_seq_text != null) {m_ref_seq_text= true; m_report_title += "REF:Text\t";}//      Sequence Text
-        if( ref_cds != null) {m_ref_cds= true; m_report_title += "REF:CDS \t";}//     CDS
+        if( ref_sequence_id != null){ m_ref_sequence_id= true;  report_title .append( "REF: Bec ID\tREF: FLEX Id\t ");}//      Sequence ID
+        if( ref_cds_start != null) {m_ref_cds_start= true; report_title.append(  "REF:CDS Start\t");} //      CDS Start
+        if( ref_cds_stop != null) {m_ref_cds_stop= true; report_title .append( "REF:CDS Stop\t");}//      CDS Stop
+        if( ref_cds_length != null){ m_ref_cds_length= true; report_title.append( "REF:CDS Length\t");}//      CDS Length
+        if( ref_gi != null) {m_ref_gi= true; report_title .append(  "REF:GI\t");}//      GI Number
+        if( ref_gene_symbol != null){ m_ref_gene_symbol= true;report_title .append(  "REF:Gene Symbol\t");} //      Gene Symbol
+        if( ref_species_id != null) 
+        {
+            m_ref_species_id = true;
+            m_species_id_definitions = SpeciesIdHelper.biuldSpeciesIdDefinitions();
+               report_title.append("REF: Species Specific ID Name"+ Constants.TAB_DELIMETER);
+             report_title.append("REF: Species Specific ID Value"+ Constants.TAB_DELIMETER);
+        }//      PA Number (for Pseudomonas project only)
+        if( ref_ids != null) {m_ref_ids= true;report_title .append(  "REF: All Sequence IDs\t");} //      SGA Number (for Yeast project only)
+        if( ref_gc != null) {m_ref_gc= true; report_title.append( "REF:GC\t");}//     GC Content
+        if( ref_seq_text != null) {m_ref_seq_text= true; report_title .append(  "REF:Text\t");}//      Sequence Text
+        if( ref_cds != null) {m_ref_cds= true; report_title .append(  "REF:CDS \t");}//     CDS
        
-        if ( assembly_attempt_status != null){ m_assembly_attempt_status = true; m_report_title += "Clone: Sequence Assembly Attempt Status\t";}
-        if( clone_seq_id != null){ m_clone_seq_id= true; m_report_title += "Clone:Sequence Id\tClone:Sequence Type\t";}//      Clone Sequence Id
-        if( clone_status != null) {m_clone_status = true;m_report_title += "Clone: Sequence Status\t";}//      Clone Sequence Analysis Status
-        if( clone_seq_cds_start != null){ m_clone_seq_cds_start= true;m_report_title += "Clone:Cds Start\t";}
-        if( clone_seq_cds_stop != null) {m_clone_seq_cds_stop= true;m_report_title += "Clone:Cds Stop\t";}
-        if( clone_seq_text != null) {m_clone_seq_text= true;m_report_title += "Clone:Sequence Text\t";}
-         if( clone_discr_high != null) {m_clone_discr_high= true;m_report_title += "Clone:Discrepancy High quality\t";} //    Discrepancies High Quality (separated by type)
-        if( clone_disc_low != null) {m_clone_disc_low= true; m_report_title += "Clone:Discrepancy Low Quality\t";}//   Discrepancies Low Quality (separated by type)
-        
+        if ( assembly_attempt_status != null){ m_assembly_attempt_status = true; report_title .append(  "Clone: Sequence Assembly Attempt Status\t");}
+        if( clone_seq_id != null){ m_clone_seq_id= true; report_title.append(  "Clone:Sequence Id\tClone:Sequence Type\t");}//      Clone Sequence Id
+        if( clone_status != null) {m_clone_status = true;report_title .append(  "Clone: Sequence Status\t");}//      Clone Sequence Analysis Status
+        if( clone_seq_cds_start != null){ m_clone_seq_cds_start= true;report_title .append( "Clone:Cds Start\t");}
+        if( clone_seq_cds_stop != null) {m_clone_seq_cds_stop= true;report_title .append(  "Clone:Cds Stop\t");}
+        if( clone_seq_text != null) {m_clone_seq_text= true;report_title .append( "Clone:Sequence Text\t");}
+         if( clone_discr_high != null) {m_clone_discr_high= true;report_title .append(  "Clone:Discrepancy High quality\t");} //    Discrepancies High Quality (separated by type)
+        if( clone_disc_low != null) {m_clone_disc_low= true; report_title .append(  "Clone:Discrepancy Low Quality\t");}//   Discrepancies Low Quality (separated by type)
+        m_report_title = report_title.toString();
      }
 
     public void run()
@@ -215,7 +223,7 @@ public class ReportRunner extends ProcessRunner
                  clone.setCloneSequenceCdsStart(rs.getInt("cloneseqcdsstart"));
                  clone.setCloneSequenceCdsStop(rs.getInt("clonesequencecdsstop"));
                  if ( m_dir_name )
-                    clone.setTraceFilesDirectory( getTraceFilesDirName( clone.getSampleId() ));
+                    clone.setTraceFilesDirectory( getTraceFilesDirName( clone ));
                  if (  current_clone_id != null)
                  {
                      processed_clone_ids.put(current_clone_id, current_clone_id );
@@ -247,7 +255,7 @@ public class ReportRunner extends ProcessRunner
  +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
 +"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
 +" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
-+" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
++" sequencingconstruct sc where rownum<1000 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
 +" and s.containerid in (select containerid from containerheader where label in ("
 +sql_items+")) order by s.containerid,position, a.submissiondate desc";
@@ -272,6 +280,17 @@ public class ReportRunner extends ProcessRunner
 +" sequencingconstruct sc where rownum<1000 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
 +" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
 +"  and a.SEQUENCEID in ("+sql_items+") order by s.containerid,position,  a.submissiondate desc";
+        }
+        else if (submission_type == Constants.ITEM_TYPE_FLEXSEQUENCE_ID)
+        {
+            sql="select assembly_status,FLEXSEQUENCEID,LABEL, POSITION,  SAMPLETYPE, s.SAMPLEID as SAMPLEID,flexcloneid  as CLONEID,"
+ +" i.STATUS as IsolateStatus,  a.SEQUENCEID as CLONESEQUENCEID, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS,  SEQUENCETYPE, "
++"sc.refsequenceid as refsequenceid,  i.CONSTRUCTID,  i.ISOLATETRACKINGID as ISOLATETRACKINGID, RANK, "
++" i.SCORE as SCORE   from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
++" sequencingconstruct sc where  rownum<1000 and f.isolatetrackingid=i.isolatetrackingid and i.sampleid=s.sampleid "
++" and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) =i.isolatetrackingid "
++"  and f.flexSEQUENCEID in ("+sql_items+") order by s.containerid,position,  a.submissiondate desc";
+
         }
    
         return sql;
@@ -311,12 +330,15 @@ public class ReportRunner extends ProcessRunner
         UICloneSample clone = null;
         UIRead read = null;
         StringBuffer isolatetrackingids = new StringBuffer();
+        int number_of_isolates = 0;
         for (int index = 0; index <clones.size();index++)
         {
             clone= (UICloneSample)clones.get(index);
             if ( !clone.getSampleType().equals("ISOLATE") ) continue;
             isolatetrackingids.append( clone.getIsolateTrackingId() +",");
+            number_of_isolates++;
         }
+        if ( number_of_isolates == 0) return reads;//no isolates
         
         if ( isolatetrackingids.charAt(isolatetrackingids.length() -1) == ',' )
             isolatetrackingids.setCharAt(isolatetrackingids.length() -1, ' ');
@@ -393,6 +415,8 @@ public class ReportRunner extends ProcessRunner
   private String writeClone(UICloneSample clone,Hashtable refsequences,Hashtable reads )
   {
       StringBuffer cloneinfo= new StringBuffer();
+      String species_specific_id_name = null;
+      String species_data = null;
       CloneSequence clone_sequence = null;
       UIRead read = null;
       RefSequence refsequence = null; 
@@ -460,10 +484,40 @@ public class ReportRunner extends ProcessRunner
         if( m_ref_cds_start){ cloneinfo.append( refsequence.getCdsStart()+"\t" );} //      CDS Start
         if( m_ref_cds_stop){ cloneinfo.append( refsequence.getCdsStop() +"\t");}//      CDS Stop
         if( m_ref_cds_length){ cloneinfo.append( ( refsequence.getCdsStop() - refsequence.getCdsStart())+"\t");}//      CDS Length
-        if( m_ref_gi){ cloneinfo.append(refsequence.getGi()+"\t");}//      GI Number
-        if(  m_ref_gene_symbol){ cloneinfo.append(refsequence.getGenesymbolString()+"\t");} //      Gene Symbol
-        if( m_ref_panum){ cloneinfo.append(refsequence.getPanumber()+"\t");}//      PA Number (for Pseudomonas project only)
-        if( m_ref_sga){ cloneinfo.append(refsequence.getPublicInfoParameter("SGD")+"\t");} //      SGA Number (for Yeast project only)
+        if( m_ref_gi){ cloneinfo.append(refsequence.getPublicInfoParameter(PublicInfoItem.GI)+"\t");}//      GI Number
+        if(  m_ref_gene_symbol){ cloneinfo.append(refsequence.getPublicInfoParameter(PublicInfoItem.GENE_SYMBOL)+"\t");} //      Gene Symbol
+        if( m_ref_species_id)
+        { 
+            for (int count = 0; count < m_species_id_definitions.length; count++)
+            {
+                 if (m_species_id_definitions[count] != null)
+                 { 
+                      species_specific_id_name = m_species_id_definitions[count].getIdName();
+                      if (refsequence.getPublicInfoParameter(species_specific_id_name) != null && 
+                        refsequence.getPublicInfoParameter(species_specific_id_name).trim().length() != 0)
+                      {
+                          species_data = species_specific_id_name+Constants.TAB_DELIMETER;
+                          species_data += refsequence.getPublicInfoParameter(species_specific_id_name) ;
+                      }
+                 }
+            }
+            if ( species_data == null)cloneinfo.append( Constants.TAB_DELIMETER);
+            else cloneinfo.append( species_data);
+             cloneinfo.append( Constants.TAB_DELIMETER);
+        }//    
+        if( m_ref_ids)
+        { 
+            
+            ArrayList param_names = new ArrayList();
+            param_names.add("GENE_SYMBOL"); param_names.add("GI");param_names.add(species_specific_id_name);
+            param_names = refsequence.getPublicInfoParametersNotIncludedInList(param_names);
+            for ( int cc = 0; cc < param_names.size(); cc++) 
+            {
+                cloneinfo.append( param_names.get(cc)+"|"); 
+            }
+             cloneinfo.append(Constants.TAB_DELIMETER);
+        
+        } //      SGA Number (for Yeast project only)
         if( m_ref_gc){ cloneinfo.append(refsequence.getGCcontent()+"\t");}//     GC Content
         if( m_ref_seq_text){ cloneinfo.append(refsequence.getText()+"\t");}//      Sequence Text
         if( m_ref_cds){ cloneinfo.append(refsequence.getCodingSequence()+"\t");}//     CDS
@@ -476,8 +530,8 @@ public class ReportRunner extends ProcessRunner
         if( m_ref_cds_length){  cloneinfo.append("\t");}//      CDS Length
         if( m_ref_gi){  cloneinfo.append("\t");}//      GI Number
         if(  m_ref_gene_symbol){  cloneinfo.append("\t");} //      Gene Symbol
-        if( m_ref_panum){ cloneinfo.append("\t");}//      PA Number (for Pseudomonas project only)
-        if( m_ref_sga){  cloneinfo.append("\t");} //      SGA Number (for Yeast project only)
+        if( m_ref_species_id){ cloneinfo.append("\t\t");}//      PA Number (for Pseudomonas project only)
+        if( m_ref_ids){  cloneinfo.append("\t");} //      SGA Number (for Yeast project only)
         if( m_ref_gc){  cloneinfo.append("\t");}//     GC Content
         if( m_ref_seq_text){  cloneinfo.append("\t");}//      Sequence Text
         if( m_ref_cds){  cloneinfo.append("\t");}//     CDS
@@ -546,30 +600,13 @@ public class ReportRunner extends ProcessRunner
              
   }
   
-    private String getTraceFilesDirName( int sampleId )
+    private String getTraceFilesDirName(UICloneSample clone )
     {
-         
-        ResultSet rs = null;
-        String sql ="select distinct LOCALPATH from filereference where filereferenceid in "
-        +" (select filereferenceid from resultfilereference where resultid in "
-        +" (select resultid from result where sampleid ="+sampleId+"))";
-        try
-        {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
-            
-            while(rs.next())
-            {
-                 return rs.getString("LOCALPATH");
-            }
-           
-            
-        }
-        catch(Exception e)
-        {
-            m_error_messages.add("Cannot get data for clone "+e.getMessage() +"\n"+sql);
-        }
-       return null;
+       if ( clone.getCloneId() < 1) return "";  
+       EndReadsWrapperRunner wr = new EndReadsWrapperRunner();
+       return  wr.getOuputBaseDir() + File.separator + clone.getFLEXRefSequenceId() +
+       File.separator + clone.getCloneId();
+       
     }
   
    
@@ -658,46 +695,45 @@ public class ReportRunner extends ProcessRunner
         {
                    BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
-      
+       edu.harvard.med.hip.bec.DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
+
              
             user = AccessManager.getInstance().getUser("htaycher123","htaycher");
             input = new ReportRunner();
-             input.setInputData(Constants.ITEM_TYPE_CLONEID,  "140174 140248 120016 120017 119607 120012 140362 140264 141446 141549 141212 141487 141581 141708 120029 135403 140367 140368 140369 140175 140176 172372 172734 172468 172646 172742 172746 172559 172654 172750 172567 172762 172575 172670 172678 172774 172778 172502 172591 172686 172694 172786 172511 172702 172793 172519 172615 172801 172718 ");
-
-             
+             input.setInputData(Constants.ITEM_TYPE_FLEXSEQUENCE_ID,  "123 123456 435 684592 439 9054 5478 1243 548 345	 ");
              
              
              
              
              input. setFields(
-	    "clone_id", //    Clone Id
-	    null,//dir_name, // Directory Name
-	    null,//sample_id, //      Sample Id
-	    "plate_label", //      Plate Label
-	    null,//sample_type, //      Sample Type
-	    "position", //      Sample Position
-	    null,//ref_sequence_id, //      Sequence ID
-	    "clone_seq_id", //      Clone Sequence Id
-	    null,//ref_cds_start, //      CDS Start
-	    null,//clone_status,//      Clone Sequence Analysis Status
-	    null,//ref_cds_stop, //      CDS Stop
-	    "clone_discr_high", //    Discrepancies High Quality (separated by type)
-	    null,//ref_cds_length, //      CDS Length
-	    "clone_disc_low", //   Discrepancies Low Quality (separated by type)
-	    null,//ref_gc, //     GC Content
-	    null,//ref_seq_text, //      Sequence Text
-	    null,//ref_cds, //     CDS
-	    null,//ref_gi, //      GI Number
-	    null,//ref_gene_symbol, //      Gene Symbol
-	    null,//ref_panum, //      PA Number (for Pseudomonas project only)
-	    null,//ref_sga, //      SGA Number (for Yeast project only)
-	    null,//rank ,//      Leave Sequence Info Empty for Empty Well
-	    null,//read_length,
-	    null,//score,
-	     null,//clone_seq_cds_start ,
-	    null,//clone_seq_cds_stop ,
-	    null,//clone_seq_text ,
-	    null//assembly_attempt_status
+                    " clone_id", //    Clone Id
+                    " dir_name", // Directory Name
+                    " sample_id", //      Sample Id
+                    " plate_label", //      Plate Label
+                    " sample_type", //      Sample Type
+                    " position", //      Sample Position
+                    " ref_sequence_id", //      Sequence ID
+                    " clone_seq_id", //      Clone Sequence Id
+                    " ref_cds_start", //      CDS Start
+                    " clone_status",//      Clone Sequence Analysis Status
+                    " ref_cds_stop", //      CDS Stop
+                    " clone_discr_high", //    Discrepancies High Quality (separated by type)
+                    " ref_cds_length", //      CDS Length
+                    " clone_disc_low", //   Discrepancies Low Quality (separated by type)
+                    " ref_gc", //     GC Content
+                  null, //  " ref_seq_text", //      Sequence Text
+                  null, //  " ref_cds", //     CDS
+                    " ref_gi", //      GI Number
+                    " ref_gene_symbol", //      Gene Symbol
+                    " ref_ids", //      PA Number (for Pseudomonas project only)
+                    " ref_species_id", //      SGA Number (for Yeast project only)
+                    " rank ",//      Leave Sequence Info Empty for Empty Well
+                    " read_length",
+                    " score",
+                     " clone_seq_cds_start ",
+                    " clone_seq_cds_stop ",
+                   null,// " clone_seq_text ",
+                    " assembly_attempt_status"
                  );
              
            input.run();

@@ -102,7 +102,19 @@ public abstract class ProcessRunner implements Runnable
               case Constants.ITEM_TYPE_FLEXSEQUENCE_ID :
               case Constants.ITEM_TYPE_ISOLATETRASCKING_ID :
              {
-                   item_increment = 100; break;
+                   item_increment = 90; break;
+              }
+              
+              case Constants.ITEM_TYPE_PROJECT_NAME:
+              {
+                  //update to plates
+                  // get all plate names and change m_item_type & m_items
+                  m_items = Container.getPlateLabelsForProject(m_items.trim());
+                  item_increment = 5; 
+                  m_items_type = Constants.ITEM_TYPE_PLATE_LABELS;
+                  if ( m_items == null || m_items.trim().length()==0)
+                      m_error_messages.add("No plates exist for the project");
+                  break;
               }
           }
               

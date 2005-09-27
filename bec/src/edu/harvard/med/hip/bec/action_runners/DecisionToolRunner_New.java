@@ -9,8 +9,10 @@ package edu.harvard.med.hip.bec.action_runners;
 
 
 import java.sql.*;
+import sun.jdbc.rowset.*;
 import java.io.*;
 
+import edu.harvard.med.hip.bec.sampletracking.objects.*;
 import edu.harvard.med.hip.bec.coreobjects.endreads.*;
 import edu.harvard.med.hip.bec.coreobjects.feature.*;
 import  edu.harvard.med.hip.bec.coreobjects.sequence.*;
@@ -69,8 +71,25 @@ private boolean 				 m_is_clone_sequence_disc_det = false; //Detailed Discrepanc
 private boolean 				 m_is_ref_3_linker = false;//   3' linker sequence</td>
 private boolean 				 m_is_ref_species_id = false;//Species specific ID</td>
 private boolean 				 m_is_ref_ids = false; //All available identifiers</td>
+private boolean 				 m_is_forward_er_uploaded = false;//Forward read uploaded
+private boolean 				 m_is_reverse_er_uploaded = false;//	Reverse read uploaded
+private boolean 				 m_is_ordered_internals_oligos = false;//	Number of ordered internal primers
+private boolean 				 m_is_internal_traces = false;//	Number of internal trace files
+private boolean 				 m_is_gaps_last_stretch_collection = false;//	Number of gaps in last stretch collection;
+private boolean 				 m_is_lqd_last_assembly = false;//	Number of lqr in last assembled clone sequence
 
-    public void                 setSpecId(int v){ m_spec_id = v;}
+  
+/*
+private PreparedStatement                       i_prst_get_isolatetrackingid_cloneid = null;
+private PreparedStatement                       i_prst_get_isolatetrackingid_plates = null;
+private PreparedStatement                       i_prst_get_clone_data = null;
+ *
+ **/
+//can run over 25 oligos per clone: query on clone basis
+private PreparedStatement                       i_prst_get_clone_oligo = null;
+private PreparedStatement                       i_prst_get_clone_read_result = null;
+
+public void                 setSpecId(int v){ m_spec_id = v;}
     public void                 setUserComment(String v){ m_user_comment = v;}
     public void                 setNumberOfOutputFiles(int v){ m_number_of_files= v;}
     public String               getTitle()    {return "Request for Decision tool run";    }
@@ -99,8 +118,14 @@ private boolean 				 m_is_ref_ids = false; //All available identifiers</td>
                         Object is_clone_sequence_disc_det, //Detailed Discrepancy Report </td>
                         Object is_ref_3_linker,//   3' linker sequence</td>
                         Object is_ref_species_id,//Species specific ID</td>
-                        Object is_ref_ids//All available identifiers</td>
-                        )
+                        Object is_ref_ids,//All available identifiers</td>
+                        Object is_forward_er_uploaded,
+                        Object is_reverse_er_uploaded ,//	Reverse read uploaded
+                        Object is_ordered_internals_oligos ,//	Number of ordered internal primers
+                        Object is_internal_traces ,//	Number of internal trace files
+                        Object is_gaps_last_stretch_collection ,//	Number of gaps in last stretch collection;
+                        Object is_lqd_last_assembly //	Number of lqr in last assembled clone sequence
+)
    {
           if(   is_plate_label != null ) { m_is_plate_label = true; }
         if(  is_sample_type != null ) { m_is_sample_type = true; }
@@ -112,9 +137,9 @@ private boolean 				 m_is_ref_ids = false; //All available identifiers</td>
         if(  is_ref_cds_length != null ) { m_is_ref_cds_length = true; }
         if(  is_ref_gene_symbol != null ) { m_is_ref_gene_symbol = true;  }
         if(  is_ref_gi != null ) { m_is_ref_gi = true;   }
+         if(  is_ref_species_id != null ){    m_is_ref_species_id = true;   }
         if(  is_ref_ids != null ) { m_is_ref_ids  = true;   }
-        if(  is_ref_species_id != null ){    m_is_ref_species_id = true;   }
-
+       
         if(  is_clone_seq_id != null ) { m_is_clone_seq_id = true; }
         if(  is_clone_sequence_assembly_status != null ) { m_is_clone_sequence_assembly_status = true;      }
         if(  is_clone_sequence_analysis_status != null ) { m_is_clone_sequence_analysis_status = true;  }
@@ -132,6 +157,12 @@ private boolean 				 m_is_ref_ids = false; //All available identifiers</td>
 
         if(  is_clone_sequence_text != null ) { m_is_clone_sequence_cds = true;     }
         if(  is_ref_seq_text != null ) { m_is_ref_seq_text = true;   }
+        if(  is_forward_er_uploaded != null ) { m_is_forward_er_uploaded = true;   }
+        if(  is_reverse_er_uploaded != null ) { m_is_reverse_er_uploaded  = true;   }//	Reverse read uploaded
+        if(  is_ordered_internals_oligos != null ) { m_is_ordered_internals_oligos =   true;   }//	Number of ordered internal primers
+        if(  is_internal_traces != null ) { m_is_internal_traces  = true;   }//	Number of internal trace files
+        if( is_gaps_last_stretch_collection  != null ) { m_is_gaps_last_stretch_collection  = true;   }//	Number of gaps in last stretch collection;
+        if( is_lqd_last_assembly   != null ) { m_is_lqd_last_assembly  = true;   }//	Number of lqr in last assembled clone sequence
 
     }
 
@@ -141,23 +172,11 @@ private boolean 				 m_is_ref_ids = false; //All available identifiers</td>
     {
         super();
         setGroupDefinitions();
-        biuldSpeciesIdDefinitions();
+        m_species_id_definitions = SpeciesIdHelper.biuldSpeciesIdDefinitions();
     }
 
-    private void      biuldSpeciesIdDefinitions  ()
-    {
-        int species = DatabaseToApplicationDataLoader.getSpecies().size();
-        m_species_id_definitions = new SpeciesIdHelper[species];
-        SpeciesDefinition sd = null;
-        for (Enumeration e = DatabaseToApplicationDataLoader.getSpecies().elements() ; e.hasMoreElements() ;)
-        {
-             sd = (SpeciesDefinition) e.nextElement();
-             if ( sd.getIdName() != null && sd.getIdName().trim().length() > 0)
-                m_species_id_definitions[sd.getCode()-1] = new SpeciesIdHelper(sd.getCode(), sd.getIdName());
-        }
-
-    }
-
+    
+    
     private  void setGroupDefinitions()
     {
         m_group_definitions = new GroupDefinition[GroupDefinition.GROUP_NUMBER];
@@ -195,6 +214,8 @@ group_definition = new GroupDefinition("Other: Need further analysis","DecisionT
 group_definition = new GroupDefinition("Manul Review High Quality Discrepancies","DecisionTool_Manula_Review_HQD", GroupDefinition.GROUP_TYPE_MANUAL_REVIEW_HQD);
         m_group_definitions[GroupDefinition.GROUP_TYPE_MANUAL_REVIEW_HQD] = group_definition;
 
+group_definition = new GroupDefinition("Not clone sample","DecisionTool_No_Clone", GroupDefinition.GROUP_TYPE_NOT_CLONE);
+        m_group_definitions[GroupDefinition.GROUP_TYPE_NOT_CLONE] = group_definition;
 
     }
 
@@ -203,21 +224,29 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
     public void run()
     {
         // ArrayList file_list = new ArrayList();
-        CloneDescription[] clones = new CloneDescription[100];
+        CloneDescription[] clones = new CloneDescription[40];
         String time_stamp = String.valueOf( System.currentTimeMillis() );
         String  summary_report_file_name =  Constants.getTemporaryFilesPath() +  "DecisionToolSummaryReport" + time_stamp +".txt";
         String  total_report_file_name =  Constants.getTemporaryFilesPath() +  "DecisionToolTotalReport" + time_stamp +".txt";
         ArrayList sql_groups_of_items = new ArrayList();
         ArrayList isolate_trackingid_list = new ArrayList();
         Hashtable linkers = null; Hashtable refsequences = null;
+        Hashtable clone_end_reads_submission_data = new Hashtable();
+        Connection conn = null;
         try
         {
            m_spec = (FullSeqSpec)Spec.getSpecById(m_spec_id);
            boolean isProcessAsMissense = ( m_spec.getParameterByName("FS_C_PASS_H") == null ) ;
        
+           conn = DatabaseTransaction.getInstance().requestConnection();
+           ((oracle.jdbc.driver.OracleConnection )conn).setDefaultRowPrefetch(10);
+           createPreparedStatements (conn);
+           
 //returns string array: 100 isolates in each
-           isolate_trackingid_list = getListOfIsolateTrackingId();
+           isolate_trackingid_list = getListOfIsolateTrackingId(conn);
 
+           if ( isolate_trackingid_list == null || isolate_trackingid_list.size() < 1)
+               return;
            EndReadsWrapperRunner erw = new EndReadsWrapperRunner();
            String trace_files_path = erw.getOuputBaseDir();
 
@@ -225,10 +254,11 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
            {
                //recet array
                for (int ii = 0; ii < clones.length; ii++){ clones[ii]= null;}
+               
                try
                {
-                   // get clone information for up to 100 clones, exception per block
-                   clones =  getCloneData( (String) isolate_trackingid_list.get(count), clones);
+                       // get clone information for up to 100 clones, exception per block
+                  clones =  getCloneData( (String) isolate_trackingid_list.get(count), clones, conn);
                     // collect information to print; exception per item
                   refsequences = getRefSequencesAndCloneSequencetText( clones  );
                   linkers = getLinkers( clones, linkers);
@@ -253,6 +283,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         }
         finally
         {
+            DatabaseTransaction.closeConnection(conn);
             sendEMails( getTitle() );
         }
 
@@ -260,6 +291,40 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
 
 
     //------------------------------------
+ 
+    private void createPreparedStatements(Connection conn)throws Exception
+    {
+        
+        String sql = null;
+     /*   sql = " select isolatetrackingid as item from flexinfo where flexcloneid in (?)";
+        i_prst_get_isolatetrackingid_cloneid = conn.prepareStatement( sql);
+        sql =  " select isolatetrackingid as item from isolatetracking where sampleid in "
+                         +" (select sampleid from sample where containerid in "
+                         +" (select containerid from containerheader where label in "
+                         +"(?)))";
+      //  i_prst_get_isolatetrackingid_plates = StatementFactory.getStatement(conn,sql,debug);
+
+     i_prst_get_isolatetrackingid_plates =conn.prepareStatement(sql);
+        sql = "select i.status as ISOLATESTATUS, assembly_status, i.CONSTRUCTID as CONSTRUCTID , cloningstrategyid, "
++" a.SEQUENCEID as CLONESEQUENCEID,  a.linker5start as clonesequence5start, a.linker3stop as clonesequence3stop, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS, "
++" FLEXSEQUENCEID,flexcloneid  as CLONEID,  POSITION,  SAMPLETYPE, LABEL, "
++"sc.refsequenceid as refsequenceid,    i.ISOLATETRACKINGID as ISOLATETRACKINGID "
++"  from flexinfo f,isolatetracking i, sample s, containerheader c,assembledsequence a ,"
++" sequencingconstruct sc where f.isolatetrackingid=i.isolatetrackingid and i.sampleid= "
++" s.sampleid  and sc.constructid(+)=i.constructid and   s.containerid=c.containerid and a.isolatetrackingid(+) "
++" =i.isolatetrackingid   and i.isolatetrackingid in (?) order by CLONEID, a.submissiondate desc";
+
+     i_prst_get_clone_data = conn.prepareStatement(sql);*/
+     sql = "select cloneid,oligoid from oligosample where cloneid =? order by cloneid";
+     i_prst_get_clone_oligo = conn.prepareStatement(sql);
+   
+     sql = "select resulttype,resultvalueid from result where sampleid in "
+   +" (select sampleid from isolatetracking where isolatetrackingid in "
+   +" (select isolatetrackingid from flexinfo where flexcloneid = ?))";
+ 
+     i_prst_get_clone_read_result =conn.prepareStatement(sql);
+    }
+
     private CloneDescription[]  analyzeClones(CloneDescription[] clones,
                                                 String trace_files_path,
                                                 FullSeqSpec spec,
@@ -290,6 +355,13 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
                                             Hashtable refsequences,
                                             Hashtable linkers) throws Exception
     {
+        if ( clone.getCloneId() == 0)
+        {
+            clone.setNextStepRecomendation("None");
+            clone.setRank( GroupDefinition.GROUP_TYPE_NOT_CLONE );
+            return;
+            
+        }
         //full sequence no discrepancies
         boolean is5end_finished = false;
         boolean is3end_finished = false;
@@ -331,7 +403,8 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         //define 'no trace files'
         String trace_dir =   trace_files_path +File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory
         //////*********************** for testing ***************************
-     //   trace_dir = "Z:\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
+        if ( BecProperties.getInstance().isInDebugMode())
+            trace_dir = "\\\\Bighead\\data\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
 
         int numberOfFilesStatus = CloneAssembly.isAssemblerRunNeeded(trace_dir, 0);
         if ( numberOfFilesStatus ==  CloneAssembly.ASSEMBLY_RUN_STATUS_NO_TRACE_FILES_AVAILABLE
@@ -730,7 +803,7 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
                                               refsequence_cds_length));
     }
     //-----------------------------------------------------------------------
-    private CloneDescription[] getCloneData(String sql_items, CloneDescription[] clones)throws Exception
+    private CloneDescription[] getCloneData(String sql_items, CloneDescription[] clones, Connection conn)throws Exception
     {
         String  sql="select i.status as ISOLATESTATUS, assembly_status, i.CONSTRUCTID as CONSTRUCTID , cloningstrategyid, "
 +" a.SEQUENCEID as CLONESEQUENCEID,  a.linker5start as clonesequence5start, a.linker3stop as clonesequence3stop, a.cdsstart as cloneseqcdsstart, a.cdsstop as clonesequencecdsstop, analysisSTATUS, "
@@ -748,13 +821,32 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         ResultSet rs = null;
         try
         {
-            DatabaseTransaction t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery(sql);
+            //DatabaseTransaction t = DatabaseTransaction.getInstance();
+            //rs = t.executeQuery(sql);
+            Statement stmt = conn.createStatement ();
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (1,Types.INTEGER);//ISOLATESTATUS, 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (2,Types.INTEGER);//assembly_status, 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (3,Types.INTEGER);//CONSTRUCTID , 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (4,Types.INTEGER);//cloningstrategyid, "
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (5,Types.INTEGER);//CLONESEQUENCEID,  
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (6,Types.INTEGER);//clonesequence5start, 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (7,Types.INTEGER);//clonesequence3stop, 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (8,Types.INTEGER);//cloneseqcdsstart,
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (9,Types.INTEGER);//clonesequencecdsstop, 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (10,Types.INTEGER);//analysisSTATUS, "
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (11,Types.INTEGER);// FLEXSEQUENCEID,
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (12,Types.INTEGER);// CLONEID, 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (13,Types.INTEGER);//POSITION,  
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (14,Types.VARCHAR) ;//SAMPLETYPE, 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (15,Types.VARCHAR);//LABEL, "
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (16,Types.INTEGER);//refsequenceid, 
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (17,Types.INTEGER);// ISOLATETRACKINGID
+            rs = stmt.executeQuery (sql);
 
             while(rs.next())
             {
                  clone = new CloneDescription();
-                 clone.setCloneId (rs.getInt("CLONEID"));
+                 clone.setCloneId (rs.getInt(12));
                  if (clone.getCloneId() > 0 )
                  {
                     current_clone_id = new Integer(clone.getCloneId());
@@ -766,27 +858,27 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
                  else
                      current_clone_id = null;
 
-                 clone.setCloneAssemblyStatus   (rs.getInt("assembly_status"));
-                 clone.setPlateName (rs.getString("LABEL"));
-                 clone.setPosition (rs.getInt("POSITION"));
-                 clone.setSampleType (rs.getString("SAMPLETYPE"));
+                 clone.setCloneAssemblyStatus   (rs.getInt(2));
+                 clone.setPlateName (rs.getString(15));
+                 clone.setPosition (rs.getInt(13));
+                 clone.setSampleType (rs.getString(14));
 
-                 clone.setCloneStatus (rs.getInt("ISOLATESTATUS"));
-                 clone.setCloningStrategyId (rs.getInt("cloningstrategyid"));
-                 clone.setCloneSequenceId (rs.getInt("CLONESEQUENCEID"));
-                 clone.setCloneSequenceAnalysisStatus (rs.getInt("analysisSTATUS"));
+                 clone.setCloneStatus (rs.getInt(1));
+                 clone.setCloningStrategyId (rs.getInt(4));
+                 clone.setCloneSequenceId (rs.getInt(5));
+                 clone.setCloneSequenceAnalysisStatus (rs.getInt(10));
               //   clone.setSequenceType (rs.getInt("SEQUENCETYPE"));
-                 clone.setConstructId (rs.getInt("CONSTRUCTID"));
-                 clone.setIsolateTrackingId (rs.getInt("ISOLATETRACKINGID"));
+                 clone.setConstructId (rs.getInt(3));
+                 clone.setIsolateTrackingId (rs.getInt(17));
                  //clone.setRank(rs.getInt("RANK"));
                 // clone.setSampleId(rs.getInt("SAMPLEID"));
                 // clone.setScore(rs.getInt("SCORE"));
-                 clone.setBecRefSequenceId(rs.getInt("REFSEQUENCEID"));
-                 clone.setFlexSequenceId(rs.getInt("FLEXSEQUENCEID"));
-                 clone.setCloneSequenceCdsStart(rs.getInt("cloneseqcdsstart"));
-                 clone.setCloneSequenceCdsStop(rs.getInt("clonesequencecdsstop"));
-                 clone.setCloneSequence5LinkerStart(rs.getInt("clonesequence5start"));
-                clone.setCloneSequence3LinkerStop (rs.getInt("clonesequence3stop"));
+                 clone.setBecRefSequenceId(rs.getInt(16));
+                 clone.setFlexSequenceId(rs.getInt(11));
+                 clone.setCloneSequenceCdsStart(rs.getInt(8));
+                 clone.setCloneSequenceCdsStop(rs.getInt(9));
+                 clone.setCloneSequence5LinkerStart(rs.getInt(6));
+                clone.setCloneSequence3LinkerStop (rs.getInt(7));
 
                  if (  current_clone_id != null)
                  {
@@ -798,10 +890,13 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         }
         catch(Exception e)
         {
-            m_error_messages.add("Cannot get data for clone "+clone.getCloneId ()+" "+e.getMessage() +"\n"+sql);
+            m_error_messages.add("Cannot get data for clone "+clone.getCloneId ()+" "+e.getMessage() +"\n");
             throw new Exception();
         }
-
+        finally
+        {
+            DatabaseTransaction.closeResultSet(rs);
+        }
 
     }
 
@@ -913,14 +1008,19 @@ group_definition = new GroupDefinition("Manul Review High Quality Discrepancies"
         StringBuffer cloneinfo= new StringBuffer();
        RefSequence refsequence = null;
        String cds = null; String species_specific_id_name = null;
+       
+       if ( clone.getCloneId() == 0 && clone.getBecRefSequenceId() < 1)return writeControlSampleItem(clone);
+       if ( clone.getCloneId() == 0 && clone.getBecRefSequenceId() >0 )
+           return writeEmptySampleItem(clone, refsequences, linkers);
+       if ( clone.getRank()== GroupDefinition.GROUP_TYPE_NO_MATCH )
+           return writeEmptySampleItem(clone, refsequences, linkers);
 //System.out.println("clones writing " + clone.getCloneId());
-try
-{
-      if ( clone.getBecRefSequenceId()>0)
-      {
-         refsequence = (RefSequence)refsequences.get(new Integer(clone.getBecRefSequenceId()));
-      }
-
+        try
+        {
+              if ( clone.getBecRefSequenceId()>0)
+              {
+                 refsequence = (RefSequence)refsequences.get(new Integer(clone.getBecRefSequenceId()));
+              }
 
         cloneinfo.append(clone.getCloneId() + Constants.TAB_DELIMETER);
         cloneinfo.append( m_group_definitions[clone.getRank()].getGroupName() + Constants.TAB_DELIMETER);
@@ -929,27 +1029,239 @@ try
         if(     m_is_sample_type ){ cloneinfo.append(clone.getSampleType  ()+ Constants.TAB_DELIMETER); }//          "Sample Type "
         if(     m_is_position ){ cloneinfo.append(clone.getPosition  ()+ Constants.TAB_DELIMETER); }//          "Well "
 
-    if (refsequence != null  )
+        if (refsequence != null  )    {      cloneinfo.append(  writeRefSequence( clone,  refsequence ));    }
+        else    {         cloneinfo.append(writeNullRefSequence("N/A" ));}
+
+        if(     m_is_clone_seq_id ){ cloneinfo.append(clone.getCloneSequenceId() + Constants.TAB_DELIMETER ); }//         "Clone Sequence Id "
+        if(     m_is_clone_sequence_assembly_status ){ cloneinfo.append(IsolateTrackingEngine.getAssemblyStatusAsString(clone.getCloneAssemblyStatus()) + Constants.TAB_DELIMETER ); }//          "Clone Sequence assembly attempt status "
+        if ( clone.getCloneSequenceId() > 0 )
+        {
+            if(     m_is_clone_sequence_analysis_status ){ cloneinfo.append(BaseSequence.getSequenceAnalyzedStatusAsString(clone.getCloneSequenceAnalysisStatus())+ Constants.TAB_DELIMETER ); }//          "Clone Sequence Analysis Status "
+            if(     m_is_clone_sequence_cds_start ){ cloneinfo.append(clone.getCloneSequenceCdsStart() + Constants.TAB_DELIMETER ); }//          "Cds Start "
+            if(     m_is_clone_sequence_cds_stop ){ cloneinfo.append(clone.getCloneSequenceCdsStop  () + Constants.TAB_DELIMETER ); }//          " Cds Stop "
+        }
+        else
+        {
+            if(     m_is_clone_sequence_analysis_status ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence Analysis Status "
+            if(     m_is_clone_sequence_cds_start ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          "Cds Start "
+            if(     m_is_clone_sequence_cds_stop ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          " Cds Stop "
+        }
+
+
+        int[][] discrepancy_count  = null;
+
+        if(  m_is_clone_sequence_disc_high || m_is_clone_sequence_disc_low )
+        {
+            discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(clone.getCloneDiscrepancies(),true,isProcessAsMissense);
+        }
+        if(  m_is_clone_sequence_disc_high )
+        {
+            cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_5P, true, false));
+            cloneinfo.append( Constants.TAB_DELIMETER );
+            cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_CDS, true, false));
+            cloneinfo.append( Constants.TAB_DELIMETER );
+            cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_3P, true, false));
+            cloneinfo.append(Constants.TAB_DELIMETER );
+        }
+        if(  m_is_clone_sequence_disc_low  )
+        {
+            cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_5P, false, false));
+            cloneinfo.append( Constants.TAB_DELIMETER );
+            cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_CDS, false, false));
+            cloneinfo.append( Constants.TAB_DELIMETER );
+            cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_3P, false, false));
+            cloneinfo.append(Constants.TAB_DELIMETER );
+        }
+
+        if(     m_is_clone_sequence_disc_det )
+        {
+            cds = (String)DiscrepancyDescription.detailedDiscrepancyreport( clone.getCloneDiscrepancies() , "type") ;
+            if ( cds == null) cds =  Constants.TAB_DELIMETER+ Constants.TAB_DELIMETER;
+            cloneinfo.append(cds    + Constants.TAB_DELIMETER );
+        }//           "Detailed Discrepancy Report "
+
+        BioLinker linker = null;
+        if ( m_is_ref_5_linker )
+        {
+            linker = ( BioLinker ) linkers.get( new Integer(clone.getCloningStrategyId()));
+            if(     linker != null )    {         cloneinfo.append(linker.getSequence()  + Constants.TAB_DELIMETER);    }//          "5' linker sequence "
+            else    {        cloneinfo.append(Constants.TAB_DELIMETER);    }
+        }
+        if ( m_is_ref_3_linker)
+        {
+            linker = ( BioLinker ) linkers.get( new Integer(-clone.getCloningStrategyId()));
+            if(     linker != null )    {         cloneinfo.append(linker.getSequence()  + Constants.TAB_DELIMETER);    }//          "5' linker sequence "
+            else    {        cloneinfo.append(Constants.TAB_DELIMETER);    }
+        }
+        if ( clone.getCloneSequenceId() > 0 &&     m_is_clone_sequence_cds )
+        {
+            cds = clone.getCloneSequenceText().substring( clone.getCloneSequenceCdsStart(), clone.getCloneSequenceCdsStop() );
+            cloneinfo.append(cds + Constants.TAB_DELIMETER );
+        }//          "Clone Sequence "
+        else  if ( clone.getCloneSequenceId() < 1 &&     m_is_clone_sequence_cds ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence "
+
+        if (refsequence != null  &&  m_is_ref_seq_cds )    { cloneinfo.append(refsequence.getCodingSequence()+ Constants.TAB_DELIMETER); }
+        else  if (refsequence == null  &&  m_is_ref_seq_cds )    { cloneinfo.append( Constants.TAB_DELIMETER); }//          "CDS "
+
+        if ( clone.getCloneSequenceId() > 0 &&     m_is_clone_sequence_text )  { cloneinfo.append(  clone.getCloneSequenceText() + Constants.TAB_DELIMETER ); }//          "Clone Sequence "
+        else  if ( clone.getCloneSequenceId() < 1 &&     m_is_clone_sequence_text ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence "
+
+        if (refsequence != null  && m_is_ref_seq_text ){ cloneinfo.append(refsequence.getText()+ Constants.TAB_DELIMETER); }//          "Sequence Text "
+        else  if (refsequence == null  &&  m_is_ref_seq_text )    { cloneinfo.append( Constants.TAB_DELIMETER); }//          "CDS "
+ // System.out.println("clones "+cloneinfo.toString());
+// new items  
+
+        if ( m_is_forward_er_uploaded || m_is_reverse_er_uploaded ) 
+            { cloneinfo.append(isEndReadsUploaded(clone, m_is_forward_er_uploaded, m_is_reverse_er_uploaded));}//Forward read uploaded
+        if ( m_is_ordered_internals_oligos ) {cloneinfo.append(getNumberOfOrderedInternalPrimers(clone) + Constants.TAB_DELIMETER); }//	Number of ordered internal primers
+        if ( m_is_internal_traces ) { cloneinfo.append(getNumberOfSubmittedInternalReads(clone) + Constants.TAB_DELIMETER);}//	Number of internal trace files
+        if ( m_is_gaps_last_stretch_collection ) { cloneinfo.append(getNumberOfGaps(clone) + Constants.TAB_DELIMETER);}//	Number of gaps in last stretch collection;
+        if ( m_is_lqd_last_assembly ) {cloneinfo.append(getNumberOfLQDiscrepancies(clone) + Constants.TAB_DELIMETER); }//	Number of lqr in last assembled clone sequence
+        return cloneinfo.toString();
+    }
+    catch(Exception e)
     {
-        if(     m_is_ref_sequence_id ){ cloneinfo.append(clone.getFlexSequenceId()+ Constants.TAB_DELIMETER); }//         "Sequence ID "
-        if(     m_is_ref_cds_start ){ cloneinfo.append(refsequence.getCdsStart()  + Constants.TAB_DELIMETER); }//          "CDS Start "
-        if(     m_is_ref_cds_stop ){ cloneinfo.append(refsequence.getCdsStop()+ Constants.TAB_DELIMETER); }//          "CDS Stop "
-        if(     m_is_ref_cds_length ){ cloneinfo.append( (refsequence.getCdsStop() - refsequence.getCdsStart())+ Constants.TAB_DELIMETER); }//          "CDS Length "
-        if(     m_is_ref_gene_symbol ){ cloneinfo.append( refsequence.getPublicInfoParameter("GENE_SYMBOL") + Constants.TAB_DELIMETER); }//          "Gene Symbol "
-        if(     m_is_ref_gi ){ cloneinfo.append(refsequence.getPublicInfoParameter("GI")+ Constants.TAB_DELIMETER); }//          "GI Number "
+        m_error_messages .add("Cannot print report for clone: "+clone.getCloneId());
+        return "";
+    }
+    }
+
+    
+     private String    writeEmptySampleItem( CloneDescription clone, Hashtable refsequences,
+                        Hashtable linkers)
+    {
+       StringBuffer cloneinfo= new StringBuffer();
+       RefSequence refsequence = null;
+       String cds = null; 
+       
+     
+        try
+        {
+              if ( clone.getBecRefSequenceId()>0)
+              {
+                 refsequence = (RefSequence)refsequences.get(new Integer(clone.getBecRefSequenceId()));
+              }
+            cloneinfo.append(clone.getCloneId() + Constants.TAB_DELIMETER);
+            cloneinfo.append( m_group_definitions[clone.getRank()].getGroupName() + Constants.TAB_DELIMETER);
+            cloneinfo.append(clone.getNextStepRecomendation() + Constants.TAB_DELIMETER);
+            if(    m_is_plate_label   ){ cloneinfo.append(clone.getPlateName  ()+ Constants.TAB_DELIMETER); }//   "Plate Label "
+            if(     m_is_sample_type ){ cloneinfo.append(clone.getSampleType  ()+ Constants.TAB_DELIMETER); }//          "Sample Type "
+            if(     m_is_position ){ cloneinfo.append(clone.getPosition  ()+ Constants.TAB_DELIMETER); }//          "Well "
+
+            if (refsequence != null  )    {     cloneinfo.append(   writeRefSequence( clone,  refsequence ));    }
+            else    {         cloneinfo.append(writeNullRefSequence("N/A" ));}
+
+            if(     m_is_clone_seq_id ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//         "Clone Sequence Id "
+            if(     m_is_clone_sequence_assembly_status ){cloneinfo.append( "N/A" + Constants.TAB_DELIMETER ); }//          "Clone Sequence assembly attempt status "
+
+            if(     m_is_clone_sequence_analysis_status ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence Analysis Status "
+            if(     m_is_clone_sequence_cds_start ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          "Cds Start "
+            if(     m_is_clone_sequence_cds_stop ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          " Cds Stop "
+
+
+            if(  m_is_clone_sequence_disc_high )
+            {
+                cloneinfo.append("N/A" +Constants.TAB_DELIMETER );
+                cloneinfo.append( "N/A" +Constants.TAB_DELIMETER );
+                cloneinfo.append( "N/A" +Constants.TAB_DELIMETER );
+            }
+            if(  m_is_clone_sequence_disc_low  )
+            {
+                cloneinfo.append( "N/A" +Constants.TAB_DELIMETER );
+                cloneinfo.append("N/A" +Constants.TAB_DELIMETER );
+                cloneinfo.append( "N/A" +Constants.TAB_DELIMETER );
+            }
+
+            if(     m_is_clone_sequence_disc_det )
+            { 
+                 cloneinfo.append("N/A" + Constants.TAB_DELIMETER );
+                  cloneinfo.append("N/A" + Constants.TAB_DELIMETER );
+                  cloneinfo.append("N/A" + Constants.TAB_DELIMETER );
+            }//           "Detailed Discrepancy Report "
+
+            BioLinker linker = null;
+            if ( m_is_ref_5_linker )
+            {
+                linker = ( BioLinker ) linkers.get( new Integer(clone.getCloningStrategyId()));
+                if(     linker != null )    {         cloneinfo.append(linker.getSequence()  + Constants.TAB_DELIMETER);    }//          "5' linker sequence "
+                else    {        cloneinfo.append(Constants.TAB_DELIMETER);    }
+            }
+            if ( m_is_ref_3_linker)
+            {
+                linker = ( BioLinker ) linkers.get( new Integer(-clone.getCloningStrategyId()));
+                if(     linker != null )    {         cloneinfo.append(linker.getSequence()  + Constants.TAB_DELIMETER);    }//          "5' linker sequence "
+                else    {        cloneinfo.append(Constants.TAB_DELIMETER);    }
+            }
+            if (    m_is_clone_sequence_cds ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence "
+
+            if (refsequence != null  &&  m_is_ref_seq_cds )    { cloneinfo.append(refsequence.getCodingSequence()+ Constants.TAB_DELIMETER); }
+            else  if (refsequence == null  &&  m_is_ref_seq_cds )    { cloneinfo.append( Constants.TAB_DELIMETER); }//          "CDS "
+
+            if (   m_is_clone_sequence_text ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence "
+
+            if (refsequence != null  && m_is_ref_seq_text ){ cloneinfo.append(refsequence.getText()+ Constants.TAB_DELIMETER); }//          "Sequence Text "
+            else  if (refsequence == null  &&  m_is_ref_seq_text )    { cloneinfo.append( Constants.TAB_DELIMETER); }//          "CDS "
+ 
+// new items  
+            if ( m_is_forward_er_uploaded || m_is_reverse_er_uploaded )   { cloneinfo.append("N/A" +Constants.TAB_DELIMETER);}//Forward read uploaded
+            if ( m_is_ordered_internals_oligos ) {cloneinfo.append("N/A"  + Constants.TAB_DELIMETER); }//	Number of ordered internal primers
+            if ( m_is_internal_traces ) { cloneinfo.append("N/A" + Constants.TAB_DELIMETER);}//	Number of internal trace files
+            if ( m_is_gaps_last_stretch_collection ) { cloneinfo.append("N/A" +Constants.TAB_DELIMETER);}//	Number of gaps in last stretch collection;
+            if ( m_is_lqd_last_assembly ) {cloneinfo.append("N/A" + Constants.TAB_DELIMETER); }//	Number of lqr in last assembled clone sequence
+            return cloneinfo.toString();
+        }
+        catch(Exception e)
+        {
+            m_error_messages .add("Cannot print report for clone: "+clone.getCloneId());
+            return "";
+        }
+    }
+
+   private String writeNullRefSequence(String entry)
+   {
+       StringBuffer ref_info = new StringBuffer();
+        if(     m_is_ref_sequence_id ){ ref_info.append(entry+Constants.TAB_DELIMETER ); }//         "Sequence ID "
+        if(     m_is_ref_cds_start ){ ref_info.append(entry+Constants.TAB_DELIMETER ); }//          "CDS Start "
+        if(     m_is_ref_cds_stop ){ ref_info.append(entry+Constants.TAB_DELIMETER ); }//          "CDS Stop "
+        if(     m_is_ref_cds_length ){ ref_info.append(entry+Constants.TAB_DELIMETER ); }//          "CDS Length "
+        if(     m_is_ref_gene_symbol ){ ref_info.append(entry+Constants.TAB_DELIMETER ); }//          "Gene Symbol "
+        if(     m_is_ref_gi ){ ref_info.append(entry+Constants.TAB_DELIMETER ); }//          "GI Number "
+        if(     m_is_ref_species_id ){ ref_info.append(entry+Constants.TAB_DELIMETER ); }//          "Species specific ID "
+          if(     m_is_ref_ids  ){ ref_info.append(entry+Constants.TAB_DELIMETER ); }//        "All available identifiers "
+      
+       return ref_info.toString();
+   }
+   
+   private String writeRefSequence(CloneDescription clone, RefSequence refsequence )
+   {
+       StringBuffer ref_info = new StringBuffer();
+       String species_specific_id_name = null;
+       String species_data = null;
+        if(     m_is_ref_sequence_id ){ ref_info.append(clone.getFlexSequenceId()+ Constants.TAB_DELIMETER); }//         "Sequence ID "
+        if(     m_is_ref_cds_start ){ ref_info.append(refsequence.getCdsStart()  + Constants.TAB_DELIMETER); }//          "CDS Start "
+        if(     m_is_ref_cds_stop ){ ref_info.append(refsequence.getCdsStop()+ Constants.TAB_DELIMETER); }//          "CDS Stop "
+        if(     m_is_ref_cds_length ){ ref_info.append( (refsequence.getCdsStop() - refsequence.getCdsStart())+ Constants.TAB_DELIMETER); }//          "CDS Length "
+        if(     m_is_ref_gene_symbol ){ ref_info.append( refsequence.getPublicInfoParameter("GENE_SYMBOL") + Constants.TAB_DELIMETER); }//          "Gene Symbol "
+        if(     m_is_ref_gi ){ ref_info.append(refsequence.getPublicInfoParameter("GI")+ Constants.TAB_DELIMETER); }//          "GI Number "
         if(     m_is_ref_species_id )
         {
              for (int count = 0; count < m_species_id_definitions.length; count++)
             {
                  if (m_species_id_definitions[count] != null)
                  { 
-                     species_specific_id_name = m_species_id_definitions[count].getIdName();
-                      cloneinfo.append(refsequence.getPublicInfoParameter(species_specific_id_name) + Constants.TAB_DELIMETER);
+                      species_specific_id_name = m_species_id_definitions[count].getIdName();
+                      if ( refsequence.getPublicInfoParameter(species_specific_id_name) != null &&
+                        refsequence.getPublicInfoParameter(species_specific_id_name).trim().length()>0)
+                      {
+                          species_data = species_specific_id_name+Constants.TAB_DELIMETER;
+                          species_data += refsequence.getPublicInfoParameter(species_specific_id_name) ;
+                      }
                  }
-
             }
-
-         }//          "Species specific ID "
+            if ( species_data == null)ref_info.append( Constants.TAB_DELIMETER);
+            else ref_info.append( species_data);
+            ref_info.append( Constants.TAB_DELIMETER);
+        }//          "Species specific ID "
         if(     m_is_ref_ids  )
         { 
             ArrayList param_names = new ArrayList();
@@ -957,118 +1269,78 @@ try
             param_names = refsequence.getPublicInfoParametersNotIncludedInList(param_names);
             for ( int cc = 0; cc < param_names.size(); cc++) 
             {
-                cloneinfo.append( param_names.get(cc)+"|"); 
+                ref_info.append( param_names.get(cc)+"|"); 
             }
-             cloneinfo.append(Constants.TAB_DELIMETER);
-             
-        }//        "All available identifiers "
-      
-    }
-    else
+             ref_info.append(Constants.TAB_DELIMETER);
+       }//        "All available identifiers "
+       return ref_info.toString();
+
+   }
+   
+   
+   
+   
+     private String    writeControlSampleItem( CloneDescription clone)
     {
-        if(     m_is_ref_sequence_id ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//         "Sequence ID "
-        if(     m_is_ref_cds_start ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "CDS Start "
-        if(     m_is_ref_cds_stop ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "CDS Stop "
-        if(     m_is_ref_cds_length ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "CDS Length "
-        if(     m_is_ref_gene_symbol ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "Gene Symbol "
-        if(     m_is_ref_gi ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "GI Number "
-        if(     m_is_ref_ids  ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//        "All available identifiers "
-        if(     m_is_ref_species_id ){ cloneinfo.append(Constants.TAB_DELIMETER ); }//          "Species specific ID "
-    }
+        StringBuffer cloneinfo= new StringBuffer();
+       
+        cloneinfo.append(clone.getCloneId() + Constants.TAB_DELIMETER);
+        cloneinfo.append( m_group_definitions[clone.getRank()].getGroupName() + Constants.TAB_DELIMETER);
+        cloneinfo.append(clone.getNextStepRecomendation() + Constants.TAB_DELIMETER);
+        if(    m_is_plate_label   ){ cloneinfo.append(clone.getPlateName  ()+ Constants.TAB_DELIMETER); }//   "Plate Label "
+        if(     m_is_sample_type ){ cloneinfo.append(clone.getSampleType  ()+ Constants.TAB_DELIMETER); }//          "Sample Type "
+        if(     m_is_position ){ cloneinfo.append(clone.getPosition  ()+ Constants.TAB_DELIMETER); }//          "Well "
+         cloneinfo.append(writeNullRefSequence("N/A" )); //          "Species specific ID "
+
+        if(     m_is_clone_seq_id ){ cloneinfo.append( "N/A"+Constants.TAB_DELIMETER ); }//         "Clone Sequence Id "
+        if(     m_is_clone_sequence_assembly_status ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          "Clone Sequence assembly attempt status "
+        if(     m_is_clone_sequence_analysis_status ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence Analysis Status "
+        if(     m_is_clone_sequence_cds_start ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          "Cds Start "
+        if(     m_is_clone_sequence_cds_stop ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          " Cds Stop "
+
+        if(  m_is_clone_sequence_disc_high )
+        {
+            cloneinfo.append( "N/A"+Constants.TAB_DELIMETER );
+            cloneinfo.append( "N/A"+Constants.TAB_DELIMETER );
+            cloneinfo.append("N/A"+Constants.TAB_DELIMETER );
+        }
+        if(  m_is_clone_sequence_disc_low  )
+        {
+            cloneinfo.append( "N/A"+ Constants.TAB_DELIMETER );
+            cloneinfo.append( "N/A"+ Constants.TAB_DELIMETER );
+            cloneinfo.append("N/A"+Constants.TAB_DELIMETER );
+        }
+
+        if(     m_is_clone_sequence_disc_det )
+        {
+            cloneinfo.append("N/A" + Constants.TAB_DELIMETER );
+          cloneinfo.append("N/A" + Constants.TAB_DELIMETER );
+          cloneinfo.append("N/A" + Constants.TAB_DELIMETER );
+        }
+        if ( m_is_ref_5_linker ){        cloneinfo.append("N/A"+  Constants.TAB_DELIMETER);    }
+        if ( m_is_ref_3_linker){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER);    }
+        if (   m_is_clone_sequence_cds ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence "
+        if ( m_is_ref_seq_cds )    { cloneinfo.append( "N/A"+Constants.TAB_DELIMETER); }//          "CDS "
+        if (  m_is_clone_sequence_text ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence "
+        if ( m_is_ref_seq_text )    { cloneinfo.append( "N/A"+Constants.TAB_DELIMETER); }//          "CDS "
 
 
-if(     m_is_clone_seq_id ){ cloneinfo.append(clone.getCloneSequenceId() + Constants.TAB_DELIMETER ); }//         "Clone Sequence Id "
-if(     m_is_clone_sequence_assembly_status ){ cloneinfo.append(IsolateTrackingEngine.getAssemblyStatusAsString(clone.getCloneAssemblyStatus()) + Constants.TAB_DELIMETER ); }//          "Clone Sequence assembly attempt status "
-if ( clone.getCloneSequenceId() > 0 )
-{
-    if(     m_is_clone_sequence_analysis_status ){ cloneinfo.append(BaseSequence.getSequenceAnalyzedStatusAsString(clone.getCloneSequenceAnalysisStatus())+ Constants.TAB_DELIMETER ); }//          "Clone Sequence Analysis Status "
-    if(     m_is_clone_sequence_cds_start ){ cloneinfo.append(clone.getCloneSequenceCdsStart() + Constants.TAB_DELIMETER ); }//          "Cds Start "
-    if(     m_is_clone_sequence_cds_stop ){ cloneinfo.append(clone.getCloneSequenceCdsStop  () + Constants.TAB_DELIMETER ); }//          " Cds Stop "
-
-}
-else
-{
-    if(     m_is_clone_sequence_analysis_status ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence Analysis Status "
-    if(     m_is_clone_sequence_cds_start ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          "Cds Start "
-    if(     m_is_clone_sequence_cds_stop ){ cloneinfo.append("N/A" + Constants.TAB_DELIMETER ); }//          " Cds Stop "
-
-}
-
-
-int[][] discrepancy_count  = null;
-
-if(  m_is_clone_sequence_disc_high || m_is_clone_sequence_disc_low )
-{
-    discrepancy_count  = DiscrepancyDescription.getDiscrepanciesSeparatedByType(clone.getCloneDiscrepancies(),true,isProcessAsMissense);
-}
-if(  m_is_clone_sequence_disc_high )
-{
-    cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_5P, true, false));
-    cloneinfo.append( Constants.TAB_DELIMETER );
-    cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_CDS, true, false));
-    cloneinfo.append( Constants.TAB_DELIMETER );
-    cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_3P, true, false));
-    cloneinfo.append(Constants.TAB_DELIMETER );
-}
-if(  m_is_clone_sequence_disc_low  )
-{
-    cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_5P, false, false));
-    cloneinfo.append( Constants.TAB_DELIMETER );
-    cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_CDS, false, false));
-    cloneinfo.append( Constants.TAB_DELIMETER );
-    cloneinfo.append( DiscrepancyDescription.discrepancySummaryReport( discrepancy_count,Mutation.REGION_LINKER_3P, false, false));
-    cloneinfo.append(Constants.TAB_DELIMETER );
-}
-
-if(     m_is_clone_sequence_disc_det )
-{
-    cds = (String)DiscrepancyDescription.detailedDiscrepancyreport( clone.getCloneDiscrepancies() , "type") ;
-    if ( cds == null) cds =  Constants.TAB_DELIMETER+ Constants.TAB_DELIMETER;
-    cloneinfo.append(cds    + Constants.TAB_DELIMETER );
-}//           "Detailed Discrepancy Report "
-
-BioLinker linker = null;
-if ( m_is_ref_5_linker )
-{
-    linker = ( BioLinker ) linkers.get( new Integer(clone.getCloningStrategyId()));
-    if(     linker != null )    {         cloneinfo.append(linker.getSequence()  + Constants.TAB_DELIMETER);    }//          "5' linker sequence "
-    else    {        cloneinfo.append(Constants.TAB_DELIMETER);    }
-}
-if ( m_is_ref_3_linker)
-{
-    linker = ( BioLinker ) linkers.get( new Integer(-clone.getCloningStrategyId()));
-    if(     linker != null )    {         cloneinfo.append(linker.getSequence()  + Constants.TAB_DELIMETER);    }//          "5' linker sequence "
-    else    {        cloneinfo.append(Constants.TAB_DELIMETER);    }
-}
-    if ( clone.getCloneSequenceId() > 0 &&     m_is_clone_sequence_cds )
-    {
-        cds = clone.getCloneSequenceText().substring( clone.getCloneSequenceCdsStart(), clone.getCloneSequenceCdsStop() );
-        cloneinfo.append(cds + Constants.TAB_DELIMETER );
-    }//          "Clone Sequence "
-    else  if ( clone.getCloneSequenceId() < 0 &&     m_is_clone_sequence_cds ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence "
-
-    if (refsequence != null  &&  m_is_ref_seq_cds )    { cloneinfo.append(refsequence.getCodingSequence()+ Constants.TAB_DELIMETER); }
-    else  if (refsequence == null  &&  m_is_ref_seq_cds )    { cloneinfo.append( Constants.TAB_DELIMETER); }//          "CDS "
-
-    if ( clone.getCloneSequenceId() > 0 &&     m_is_clone_sequence_text )  { cloneinfo.append(  clone.getCloneSequenceText() + Constants.TAB_DELIMETER ); }//          "Clone Sequence "
-    else  if ( clone.getCloneSequenceId() < 0 &&     m_is_clone_sequence_text ){ cloneinfo.append("N/A"+ Constants.TAB_DELIMETER ); }//          "Clone Sequence "
-
-    if (refsequence != null  && m_is_ref_seq_text ){ cloneinfo.append(refsequence.getText()+ Constants.TAB_DELIMETER); }//          "Sequence Text "
-    else  if (refsequence == null  &&  m_is_ref_seq_text )    { cloneinfo.append( Constants.TAB_DELIMETER); }//          "CDS "
- // System.out.println("clones "+cloneinfo.toString());
+        if ( m_is_forward_er_uploaded){ cloneinfo.append( "N/A"+Constants.TAB_DELIMETER); }
+        if ( m_is_reverse_er_uploaded ) { cloneinfo.append( "N/A"+Constants.TAB_DELIMETER); }//Forward read uploaded
+        if ( m_is_ordered_internals_oligos )  { cloneinfo.append( "N/A"+Constants.TAB_DELIMETER); }
+        if ( m_is_internal_traces )  { cloneinfo.append( "N/A"+Constants.TAB_DELIMETER); }
+        if ( m_is_gaps_last_stretch_collection )  { cloneinfo.append( "N/A"+Constants.TAB_DELIMETER); }
+        if ( m_is_lqd_last_assembly ) { cloneinfo.append( "N/A"+Constants.TAB_DELIMETER); }
         return cloneinfo.toString();
-}
-catch(Exception e)
-{
-    m_error_messages .add("Cannot print report for clone: "+clone.getCloneId());
-    return "";
-}
+
     }
 
-    private ArrayList getListOfIsolateTrackingId()throws BecDatabaseException
+    private ArrayList getListOfIsolateTrackingId(Connection conn)throws BecDatabaseException
     {
         String query =  null;
         String isolatetracking_ids = "";
+         ArrayList items =  prepareItemsListForSQL();
+                   
         try
         {
             switch (m_items_type)
@@ -1076,46 +1348,37 @@ catch(Exception e)
                 case Constants.ITEM_TYPE_CLONEID:
                 {
                      //get all plates
-                    ArrayList cloneids =  prepareItemsListForSQL();
-                    for (int clone_count = 0; clone_count < cloneids.size(); clone_count++)
+                    for (int clone_count = 0; clone_count < items.size(); clone_count++)
                     {
-
-                         query = " select isolatetrackingid as item from flexinfo where flexcloneid in "
-                           +"("+cloneids.get(clone_count)+")";
-                         isolatetracking_ids += getListOfItems( query);
+                       // i_prst_get_isolatetrackingid_cloneid.setString(1, (String)items.get(clone_count));
+                         query = " select isolatetrackingid as ITEM from flexinfo where flexcloneid in "
+                           +"("+items.get(clone_count)+")";
+                         isolatetracking_ids += getListOfItems( query, conn);
+                        //isolatetracking_ids += getListOfItems( i_prst_get_isolatetrackingid_cloneid , query);
                     }
                     break;
 
                 }
                 case Constants.ITEM_TYPE_PLATE_LABELS:
                 {
-                    //get all plates
-                    ArrayList plate_labels =  prepareItemsListForSQL();
-                    for (int plate_count = 0; plate_count < plate_labels.size(); plate_count++)
+                     for (int plate_count = 0; plate_count < items.size(); plate_count++)
                     {
 
-                         query = " select isolatetrackingid as item from isolatetracking where sampleid in "
+                         query = " select isolatetrackingid as ITEM from isolatetracking where sampleid in "
                          +" (select sampleid from sample where containerid in "
                          +" (select containerid from containerheader where label in "
-                         +"("+plate_labels.get(plate_count)+")))";
-                         isolatetracking_ids += getListOfItems( query);
+                         +"("+items.get(plate_count)+")))";
+                         isolatetracking_ids += getListOfItems( query, conn);
+ 
+                       //  i_prst_get_isolatetrackingid_plates.setString(1, (String)items.get(plate_count));
+                         //isolatetracking_ids += getListOfItems( i_prst_get_isolatetrackingid_plates, query);
                     }
                     break;
                 }
-                case Constants.ITEM_TYPE_PROJECT_NAME:
-                {
-                    //get all plates
-                   query = " select isolatetrackingid as item from isolatetracking where sampleid in "
-                         +" (select sampleid from sample where containerid in "
-                         +" (select containerid from containerheader where label like '" + m_items + "%'))";
-
-                         isolatetracking_ids += getListOfItems( query);
-
-                }
-                break;
+            
             }
             if ( isolatetracking_ids == null || isolatetracking_ids.trim().equals("")  )return null;
-            else    return prepareItemsListForSQL(Constants.ITEM_TYPE_CLONEID, isolatetracking_ids, 20);
+            else    return prepareItemsListForSQL(Constants.ITEM_TYPE_CLONEID, isolatetracking_ids,40);
 
         }
         catch(Exception e)
@@ -1126,24 +1389,33 @@ catch(Exception e)
 
 
 
-    private String getListOfItems(String query) throws Exception
+    private String getListOfItems( String sql, Connection conn)throws Exception//String query) throws Exception
     {
         DatabaseTransaction t = null;
-        String result = "";
+        StringBuffer result = new StringBuffer();
         ResultSet rs = null;
         try
         {
-            t = DatabaseTransaction.getInstance();
-            rs = t.executeQuery( query );
+            
+           Statement stmt = conn.createStatement ();
+            ((oracle.jdbc.driver.OracleStatement)stmt).defineColumnType (1, Types.INTEGER); 
+            rs = stmt.executeQuery (sql);
+
+ 
+          //  t = DatabaseTransaction.getInstance();
+          //   rs = t.executeQuery(sql);
+          //  rs = t.executeQuery( query );
             while(rs.next())
             {
-                result += rs.getInt( "ITEM" ) + " ";
+                //result.append( rs.getInt( "ITEM" ) + " ");
+                result.append( rs.getInt( 1 ) + " ");
             }
-            return result;
+           
+            return result.toString();
         }
         catch (Exception E)
         {
-            m_error_messages.add("Error occured while trying to get plate labels. "+E+"\nSQL: "+query);
+            m_error_messages.add("Error occured while trying to get plate labels. "+E+"\nSQL: ");
             throw new Exception();
         }
         finally
@@ -1301,53 +1573,212 @@ vii.	Total number of clones in this report*/
        SpeciesDefinition sd = null;
        StringBuffer title = new StringBuffer();
        title.append("Clone Id"+ Constants.TAB_DELIMETER +"Group"+ Constants.TAB_DELIMETER+" Next step"+ Constants.TAB_DELIMETER);
-if(   m_is_plate_label ) title.append("Plate Label" + Constants.TAB_DELIMETER);
-if(  m_is_sample_type  ) { title.append("Sample Type" + Constants.TAB_DELIMETER) ;}
-if(  m_is_position ) {title.append("Position" + Constants.TAB_DELIMETER);}
+        if(   m_is_plate_label ) title.append("Plate Label" + Constants.TAB_DELIMETER);
+        if(  m_is_sample_type  ) { title.append("Sample Type" + Constants.TAB_DELIMETER) ;}
+        if(  m_is_position ) {title.append("Position" + Constants.TAB_DELIMETER);}
 
-if(  m_is_ref_sequence_id) title.append("Ref Sequence ID" + Constants.TAB_DELIMETER);
-if(   m_is_ref_cds_start) title.append("Ref CDS Start" + Constants.TAB_DELIMETER);
-if(   m_is_ref_cds_stop ) title.append("Ref CDS Stop" + Constants.TAB_DELIMETER);
-if(   m_is_ref_cds_length ) title.append("Ref CDS Length" + Constants.TAB_DELIMETER);
-if(  m_is_ref_gene_symbol ) title.append("Gene Symbol" + Constants.TAB_DELIMETER);
-if(  m_is_ref_gi)title.append("GI Number" + Constants.TAB_DELIMETER);
+        if(  m_is_ref_sequence_id) title.append("Ref Sequence ID" + Constants.TAB_DELIMETER);
+        if(   m_is_ref_cds_start) title.append("Ref CDS Start" + Constants.TAB_DELIMETER);
+        if(   m_is_ref_cds_stop ) title.append("Ref CDS Stop" + Constants.TAB_DELIMETER);
+        if(   m_is_ref_cds_length ) title.append("Ref CDS Length" + Constants.TAB_DELIMETER);
+        if(  m_is_ref_gene_symbol ) title.append("Gene Symbol" + Constants.TAB_DELIMETER);
+        if(  m_is_ref_gi)title.append("GI Number" + Constants.TAB_DELIMETER);
 
-if(  m_is_ref_species_id  )
-{
-    for (int count = 0; count < m_species_id_definitions.length; count++)
-    {
-         if (m_species_id_definitions[count] == null || m_species_id_definitions[count].getCloneCount() == 0)
-             m_species_id_definitions[count] = null;
-         else title.append(m_species_id_definitions[count].getIdName() + Constants.TAB_DELIMETER);
+        if(  m_is_ref_species_id  )
+        {
+             title.append("REF: Species Specific ID Name"+ Constants.TAB_DELIMETER);
+             title.append("REF: Species Specific ID Value"+ Constants.TAB_DELIMETER);
+         }
+        if(  m_is_ref_ids) title.append("All other available IDs" + Constants.TAB_DELIMETER);
 
-    }
+        if(   m_is_clone_seq_id )title.append("Clone Sequence Id" + Constants.TAB_DELIMETER);
+        if(  m_is_clone_sequence_assembly_status )title.append("Assembly attempt status - clone sequence" + Constants.TAB_DELIMETER);
+        if(   m_is_clone_sequence_analysis_status )title.append("Analysis Status - clone sequence" + Constants.TAB_DELIMETER);
+        if(  m_is_clone_sequence_cds_start)title.append("Clone Cds Start" + Constants.TAB_DELIMETER);
+        if( m_is_clone_sequence_cds_stop )title.append("Clone Cds Stop" + Constants.TAB_DELIMETER);
+        if( m_is_clone_sequence_disc_high)title.append( "5' High Quality Discrepancies " + Constants.TAB_DELIMETER + "CDS High Quality Discrepancies " + Constants.TAB_DELIMETER + "3' High Quality Discrepancies " + Constants.TAB_DELIMETER);
+        if(   m_is_clone_sequence_disc_low)title.append("5' Low Quality Discrepancies " + Constants.TAB_DELIMETER + "CDS Low Quality Discrepancies " + Constants.TAB_DELIMETER + "3' Low Quality Discrepancies " + Constants.TAB_DELIMETER);
+        if(   m_is_clone_sequence_disc_det )title.append("Detailed 5' Discrepancy Report" + Constants.TAB_DELIMETER + "Detailed CDS Discrepancy Report" + Constants.TAB_DELIMETER +"Detailed 3' Discrepancy Report" + Constants.TAB_DELIMETER);
 
- }
-if(  m_is_ref_ids) title.append("All other available IDs" + Constants.TAB_DELIMETER);
+        if(  m_is_ref_5_linker)title.append("5' linker sequence" + Constants.TAB_DELIMETER);
+        if(   m_is_ref_3_linker)title.append("3' linker sequence" + Constants.TAB_DELIMETER);
 
-if(   m_is_clone_seq_id )title.append("Clone Sequence Id" + Constants.TAB_DELIMETER);
-if(  m_is_clone_sequence_assembly_status )title.append("Assembly attempt status - clone sequence" + Constants.TAB_DELIMETER);
-if(   m_is_clone_sequence_analysis_status )title.append("Analysis Status - clone sequence" + Constants.TAB_DELIMETER);
-if(  m_is_clone_sequence_cds_start)title.append("Clone Cds Start" + Constants.TAB_DELIMETER);
-if( m_is_clone_sequence_cds_stop )title.append("Clone Cds Stop" + Constants.TAB_DELIMETER);
-if( m_is_clone_sequence_disc_high)title.append( "5' High Quality Discrepancies " + Constants.TAB_DELIMETER + "CDS High Quality Discrepancies " + Constants.TAB_DELIMETER + "3' High Quality Discrepancies " + Constants.TAB_DELIMETER);
-if(   m_is_clone_sequence_disc_low)title.append("5' Low Quality Discrepancies " + Constants.TAB_DELIMETER + "CDS Low Quality Discrepancies " + Constants.TAB_DELIMETER + "3' Low Quality Discrepancies " + Constants.TAB_DELIMETER);
-if(   m_is_clone_sequence_disc_det )title.append("Detailed 5' Discrepancy Report" + Constants.TAB_DELIMETER + "Detailed CDS Discrepancy Report" + Constants.TAB_DELIMETER +"Detailed 3' Discrepancy Report" + Constants.TAB_DELIMETER);
+        if (  m_is_clone_sequence_cds )title.append("Clone Sequence Cds" + Constants.TAB_DELIMETER);
+        if( m_is_ref_seq_cds)title.append("CDS" + Constants.TAB_DELIMETER);
 
-if(  m_is_ref_5_linker)title.append("5' linker sequence" + Constants.TAB_DELIMETER);
-if(   m_is_ref_3_linker)title.append("3' linker sequence" + Constants.TAB_DELIMETER);
+        if(  m_is_clone_sequence_cds )title.append("Clone Sequence" + Constants.TAB_DELIMETER);
+        if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
 
-if (  m_is_clone_sequence_cds )title.append("Clone Sequence Cds" + Constants.TAB_DELIMETER);
-if( m_is_ref_seq_cds)title.append("CDS" + Constants.TAB_DELIMETER);
-
-if(  m_is_clone_sequence_cds )title.append("Clone Sequence" + Constants.TAB_DELIMETER);
-if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
+          //new fieldes      
+        if ( m_is_forward_er_uploaded ) title.append("Forward End Reas Upload" + Constants.TAB_DELIMETER);//Forward read uploaded
+        if ( m_is_reverse_er_uploaded )title.append("Reverse  End Reas Upload" + Constants.TAB_DELIMETER);//	Reverse read uploaded
+        if ( m_is_ordered_internals_oligos ) title.append("Number of Internal Oligos" + Constants.TAB_DELIMETER);//	Number of ordered internal primers
+        if ( m_is_internal_traces ) title.append("Number of Internal Traces" + Constants.TAB_DELIMETER);//	Number of internal trace files
+        if ( m_is_gaps_last_stretch_collection )title.append("Number of Gaps" + Constants.TAB_DELIMETER);//	Number of gaps in last stretch collection;
+        if ( m_is_lqd_last_assembly )title.append("Total Number of Low Quality Discrepancies" + Constants.TAB_DELIMETER);//	Number of lqr in last assembled clone sequence
 
        return title.toString();
     }
+  
+  
+   
+private  String isEndReadsUploaded(CloneDescription clone, boolean is_forward_er_uploaded, boolean is_reverse_er_uploaded)
+{
+    StringBuffer result = new StringBuffer();
+    String f_er_description = "Not ordered";
+    String r_er_description = "Not ordered";
+    int result_type = 0;
+    int result_value = 0;
+    //get results
+    if ( clone.getCloneId() == 0 ){ f_er_description="N/A";r_er_description="N/A";}
+    else
+    {
+ /*   String sql = "select resulttype,resultvalueid from result where sampleid in "
+   +" (select sampleid from isolatetracking where isolatetrackingid in "
+   +" (select isolatetrackingid from flexinfo where flexcloneid in ("+clone.getCloneId()+")))";*/
+     ResultSet crs = null;
+    try
+    {
+        i_prst_get_clone_read_result.setInt(1, clone.getCloneId());
+        crs = i_prst_get_clone_read_result.executeQuery();
+      //  DatabaseTransaction t = DatabaseTransaction.getInstance();
+      //  crs = t.executeQuery(sql);
+        while(crs.next())
+        {
+           result_type = crs.getInt("resulttype");
+           result_value = crs.getInt("resultvalueid");
+           switch ( result_type )
+           {
+               case  Result.RESULT_TYPE_ENDREAD_FORWARD:{ f_er_description = "Not uploaded";break;}
+               case  Result.RESULT_TYPE_ENDREAD_FORWARD_PASS :{ f_er_description = "Uploaded";break;}
+               case  Result.RESULT_TYPE_ENDREAD_FORWARD_FAIL: {f_er_description = "Failed";break;}
+               case  Result.RESULT_TYPE_ENDREAD_REVERSE : {r_er_description = "Not uploaded";break;}
+               case  Result.RESULT_TYPE_ENDREAD_REVERSE_FAIL  :{ r_er_description = "Failed"; break;}
+               case  Result.RESULT_TYPE_ENDREAD_REVERSE_PASS : {r_er_description = "Uploaded";break;}
+           }
+        }
+     } 
+    catch (Exception sqlE)
+    {
+         f_er_description = r_er_description = "Not defined";
+        m_error_messages.add("Cannot define upload status for end reads. Clone id: "+clone.getCloneId());
+     } 
+    finally
+    {
+       
+        DatabaseTransaction.closeResultSet(crs);
+    }
+    }
+    if (is_forward_er_uploaded) result.append(f_er_description);
+    result.append(Constants.TAB_DELIMETER);
+    if (is_reverse_er_uploaded)result.append(r_er_description);
+    result.append(Constants.TAB_DELIMETER);
+     return result.toString() ;
+    //Forward read uploaded
+}
+
+
+
+
+
+
+
+private  String getNumberOfOrderedInternalPrimers( CloneDescription clone)
+{
+    //	Number of ordered internal primers
+    int result = 0;
+    if ( clone.getCloneId() == 0 ) return "N/A";
+//    String sql = "select count(oligoid) from oligosample where cloneid = "+clone.getCloneId();
+    ResultSet rs = null;
+    try
+    {
+        i_prst_get_clone_oligo.setInt(1, clone.getCloneId());
+        //DatabaseTransaction t = DatabaseTransaction.getInstance();
+        //rs = t.executeQuery(sql);
+        rs = i_prst_get_clone_oligo.executeQuery();
+        while(rs.next())
+        {
+            result++;
+        }
+    }
+    catch(Exception e)
+    {
+        
+        m_error_messages.add("Cannot find number of internal oligos for clone "+clone.getCloneId());
+        return "Not defined";
+    }
+    finally{ DatabaseTransaction.closeResultSet(rs);}
+  
+    return String.valueOf( result );
+}
+
+
+
+
+private  String getNumberOfSubmittedInternalReads( CloneDescription clone)
+{
+    //	Number of internal trace files
+    int result = 0;
+    String file_name = null;
+    if ( clone.getCloneId() == 0 ) return "N/A" ; 
+    EndReadsWrapperRunner wr = new EndReadsWrapperRunner();
+    String clone_dir_name=   wr.getOuputBaseDir() + File.separator + clone.getFlexSequenceId() +
+                                        File.separator + clone.getCloneId();
+     if ( BecProperties.getInstance().isInDebugMode())
+            clone_dir_name = "\\\\Bighead\\data\\trace_files_root\\clone_samples" + File.separator +clone.getFlexSequenceId() + File.separator + clone.getCloneId(); //trace file directory"
+    File clone_traces_directory = new File(clone_dir_name +File.separator+ PhredWrapper.CHROMAT_DIR_NAME);
+    File[] trace_files = clone_traces_directory.listFiles();
+    if ( trace_files != null)
+    {
+        for ( int trace_count = 0; trace_count < trace_files.length; trace_count++)
+        {
+            file_name = trace_files[trace_count].getName();
+            if ( file_name.indexOf("_F0.") == -1 && file_name.indexOf("_R0.") == -1)
+                result++;
+        }
+    }
+     return String.valueOf(result) ;
+}
+private  String getNumberOfGaps( CloneDescription clone)
+{
+    //	Number of gaps in last stretch collection;
+    int result = 0;
+    if ( clone.getCloneId() == 0 ||  clone.getCloneSequenceId() > 0) return "N/A";
+   //try to get last stretch collection
+    try
+    {
+        StretchCollection col = (StretchCollection)StretchCollection.getByCloneId(clone.getCloneId(), false, true);
+        if ( col == null ) return "No stretch collection defined";
+        else
+        {
+            for (int gap_count = 0; gap_count < col.getStretches().size();gap_count++)
+            {
+                if ( ((Stretch)col.getStretches().get(gap_count)).getType()==Stretch.GAP_TYPE_GAP)
+                    result++;
+            }
+        }
+    }
+    catch(Exception e){ return "Cannot extract stretch collection";}
+     
+    return String.valueOf(result) ;
+}
+private  String getNumberOfLQDiscrepancies( CloneDescription clone)
+{
+    //	Number of lqr in last assembled clone sequence
+    int result = 0;
+    if ( clone.getCloneId() == 0 || clone.getCloneSequenceId() < 0) return "N/A";
+    DiscrepancyDescription discrepancy = null;
+    int[] discr_disctribution_by_quality = 
+            DiscrepancyDescription.getTotalNumberOfDiscrepanciesByQuality(clone.getCloneDiscrepancies() ); 
+    result = discr_disctribution_by_quality[1];
+    
+    return String.valueOf(result) ;
+}
+
+
 
   //---------------------------------------------------------------------
-  protected class SpeciesIdHelper
+ /* public class SpeciesIdHelper
   {
       private int               m_code = -1;
       private String            m_id_name = null;
@@ -1365,7 +1796,7 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
       public void           incrementCount(){ m_clone_count++;}
 
 
-  }
+  }*/
 
 
   protected   class  GroupDefinition
@@ -1381,11 +1812,11 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
         public static final int		GROUP_TYPE_OTHER = 7;//Need further analysis: Other","DecisionTool_NFA_Other");
      public static final int		GROUP_TYPE_NO_MATCH = 8;//Need further analysis: Other","DecisionTool_NFA_Other");
      public static final int		GROUP_TYPE_MANUAL_REVIEW_HQD = 9;//Need further analysis: Other","DecisionTool_NFA_Other");
+ public static final int		GROUP_TYPE_NOT_CLONE = 10;//
 
 
 
-
-        public static final int		GROUP_NUMBER = 10;
+        public static final int		GROUP_NUMBER = 11;
 
         private String i_group_name = null;
       private int    i_clone_count = 0;
@@ -1417,8 +1848,8 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
         User user  = null;
         try
         {
-
-            user = AccessManager.getInstance().getUser("tigr","tigr");
+System.out.println(System.currentTimeMillis());
+            user = AccessManager.getInstance().getUser("htaycher123","htaycher");
              BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
             sysProps.verifyApplicationSettings();
             DatabaseToApplicationDataLoader.loadDefinitionsFromDatabase();
@@ -1426,12 +1857,10 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
             runner = new DecisionToolRunner_New();
          //   runner.setInputData(Constants.ITEM_TYPE_CLONEID, "159321 159415 159237 159333 159423 159245 159435 159345 159349 159437 159441 159261 159353 159357 159445 159265 159269 159365 159273 159277 159369 159281 159285 159377 159289 159293 159385 159301 159397 159309 159401 159405 159317 159407 159411 172834 172842 172849 172857 172865 172869 172873 172881 172891 172893 172897 172926 172929 172940 172945 172949 172962 172966 172977 172981 172993 172997 173012 173013 173238 173249 173276 173419 173419 173437 173442 173470 173473 173477 173489 173607 173613 173619 173625 173630 173633 173642 173647 173649 173654 173662 173665 173669 173678 173682 173686 173689 ");
 
-      //runner.setInputData(Constants.ITEM_TYPE_CLONEID, "172259 141149 141150 172169 135152 119982 119983 141618 141619 141620 141630 141631 141632 172223 172224 172246 172247 172248 141117 141118 141119 141151 134468 134469 134472 134475 134476 134479 134480 140012 140013 140014 140042 140043 140044 135071 135142 135143 135144 172767 172768 172769 135150 135151 172624 172625 172626 135252 135253 135396 141686 141704 141744 172167 172168 172260 172226 172227 172228 172363 172362 172691 172693 141687 141705 ");
+     runner.setInputData(Constants.ITEM_TYPE_CLONEID, "134441 134449");
 
-      
-     runner.setInputData(Constants.ITEM_TYPE_CLONEID, "     134311 135637 135541 135625 	");
-
-      
+   // runner.setInputData(Constants.ITEM_TYPE_PROJECT_NAME, "A	 ");
+      //runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS, "ASE001213"); 
 
             runner.setUser(user);
             runner.setNumberOfOutputFiles(Constants.OUTPUT_TYPE_ONE_FILE);
@@ -1448,27 +1877,35 @@ if(   m_is_ref_seq_text)title.append("Sequence Text" + Constants.TAB_DELIMETER);
             "is_ref_cds_start",//    CDS Start</td>
             "is_clone_sequence_assembly_status",//    Clone Sequence assembly attempt status    </td>
             "is_ref_cds_stop",//    CDS Stop</td>
-            "is_clone_sequence_analysis_status",//Clone Sequence Analysis Status  </td>
+             "is_clone_sequence_analysis_status",//Clone Sequence Analysis Status  </td>
             "is_ref_cds_length",//    CDS Length</td>
             "is_clone_sequence_cds_start",//Cds Start</td>
-           null,// "is_ref_seq_text",//   Sequence Text</td>
-            "is_clone_sequence_cds_stop",// Cds Stop </td>
-            null,//"is_ref_seq_cds",//    CDS</td>
-           null,// "is_clone_sequence_text",//Clone Sequence  </td>
-           null,// "is_clone_sequence_cds",
-            "is_ref_gene_symbol",// Gene Symbol</td>
-            "is_clone_sequence_disc_high",// Discrepancies High Quality (separated by type)</td>
-            "is_ref_gi",//    GI Number</td>
+            null,//"is_ref_seq_text",//   Sequence Text</td>
+           "is_clone_sequence_cds_stop",// Cds Stop </td>
+           "is_ref_seq_cds",//    CDS</td>
+            null,//"is_clone_sequence_text",//Clone Sequence  </td>
+            null,//"is_clone_sequence_cds",
+           "is_ref_gene_symbol",// Gene Symbol</td>
+           "is_clone_sequence_disc_high",// Discrepancies High Quality (separated by type)</td>
+           "is_ref_gi",//    GI Number</td>
             "is_clone_sequence_disc_low",
-            "is_ref_5_linker",//5' linker sequence    </td>
-            "is_clone_sequence_disc_det", //Detailed Discrepancy Report </td>
-            "is_ref_3_linker",//   3' linker sequence</td>
-           "is_ref_species_id",//Species specific ID</td>
-            "is_ref_ids"//All available identifiers</td>
+             "is_ref_5_linker",//5' linker sequence    </td>
+             "is_clone_sequence_disc_det", //Detailed Discrepancy Report </td>
+             "is_ref_3_linker",//   3' linker sequence</td>
+            "is_ref_species_id",//Species specific ID</td>
+             "is_ref_ids",//All available identifiers</td>
+            "is_forward_er_uploaded",
+            "is_reverse_er_uploaded",//	Reverse read uploaded
+"is_ordered_internals_oligos",//	Number of ordered internal primers
+"is_internal_traces",//	Number of internal trace files
+"is_gaps_last_stretch_collection",//	Number of gaps in last stretch collection;
+"is_lqd_last_assembly"//	Number of lqr in last assembled clone sequence
+
 	);
 
 
              runner.run();
+             System.out.println(System.currentTimeMillis());
         }
         catch(Exception e){}
 
