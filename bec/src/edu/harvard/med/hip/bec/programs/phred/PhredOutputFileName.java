@@ -132,7 +132,8 @@ public class PhredOutputFileName
             {
                 
                 m_plateid_num = Integer.parseInt(m_plateid);
-                m_wellid_num = Algorithms.convertWellFromA8_12toInt(m_wellid);
+                m_wellid_num = edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_alphanumeric_to_int(m_wellid);//Algorithms.convertWellFromA8_12toInt(m_wellid);
+                if ( m_wellid_num < 0)throw new BecUtilException("Wrong read name "+m_filename);
                 m_sequenceid_num= Integer.parseInt(m_sequenceid);
                 m_cloneid_num = Integer.parseInt(m_cloneid);
             }
@@ -160,7 +161,7 @@ public class PhredOutputFileName
      public static void main(String args[])
     {
         try{
-        PhredOutputFileName p = new PhredOutputFileName("C:\\bio\\plate_analysis\\clone_samples\\1029\\114779\\chromat_dir\\7204_D11_1029_114779_I0.ab1",PhredOutputFileName.FORMAT_OURS);
+        PhredOutputFileName p = new PhredOutputFileName("C:\\bio\\plate_analysis\\clone_samples\\1029\\114779\\chromat_dir\\7204_D11_1029_114779_F0.ab1",PhredOutputFileName.FORMAT_OURS);
         System.out.println( p.isWriteFileFormat(PhredOutputFileName.FORMAT_OURS));
         }catch(Exception e){}
         System.exit(0);

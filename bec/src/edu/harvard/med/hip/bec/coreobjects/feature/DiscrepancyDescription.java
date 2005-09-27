@@ -175,7 +175,8 @@ public class DiscrepancyDescription
         }
       
     }
-    public boolean    isPolymorphism()
+    
+     public boolean    isPolymorphism()
     {
         switch (m_discrepancydefinition_type )
         {
@@ -383,12 +384,11 @@ public class DiscrepancyDescription
             }
             if (global_change_type != Mutation.TYPE_NOT_DEFINE)
             {
-               /* isIgnorIfPolymorphism = cutoff_spec.isIgnorPolymorphismByType(global_change_type);
+                isIgnorIfPolymorphism = cutoff_spec.isIgnorPolymorphismByType(global_change_type);
                 if ( isIgnorIfPolymorphism && discr_definition.isPolymorphism() )// need to check if discrepancy is polymorphism and continue if yes
                 {
                     continue;
                 }
-                */
                 if ( quality == Mutation.QUALITY_LOW)
                     total_discrepancy_numbers_pass_low_quality[-global_change_type ]++;
                 else
@@ -478,12 +478,12 @@ public class DiscrepancyDescription
             }
             if (global_change_type != Mutation.TYPE_NOT_DEFINE)
             {
-               /* isIgnorIfPolymorphism = cutoff_spec.isIgnorPolymorphismByType(global_change_type);
+                isIgnorIfPolymorphism = cutoff_spec.isIgnorPolymorphismByType(global_change_type);
                 if ( isIgnorIfPolymorphism && discr_definition.isPolymorphism() )// need to check if discrepancy is polymorphism and continue if yes
                 {
                     continue;
                 }
-                **/
+                
                 if ( quality == Mutation.QUALITY_LOW)
                     total_discrepancy_numbers_pass_low_quality[-global_change_type ]++;
                 else
@@ -703,6 +703,8 @@ public class DiscrepancyDescription
     
      public static int[]             getTotalNumberOfDiscrepanciesByQuality(ArrayList discrepancies)
     {
+        int result[] = new int[2];
+        if ( discrepancies == null ||  discrepancies.size() == 0 ) return result;
         DiscrepancyDescription dd = null;
         int high_dd_count = 0; int low_dd_count = 0; 
         for (int count = 0; count < discrepancies.size(); count++)
@@ -711,7 +713,7 @@ public class DiscrepancyDescription
             if ( dd.getQuality() == Mutation.QUALITY_LOW ) low_dd_count++ ;
             else high_dd_count++;
         }
-        int result[] = {high_dd_count, low_dd_count};
+        result[0] = high_dd_count; result[1] = low_dd_count;
         return result;
     }
      public static String discrepancySummaryReport(ArrayList discr_definitions,

@@ -54,7 +54,7 @@ public class SequencingFacilityFileName
      
        try
        {
-            m_well_number = Algorithms.convertWellFromA8_12toInt(m_well_name);
+            m_well_number = edu.harvard.med.hip.bec.sampletracking.objects.Container.convertPositionFrom_alphanumeric_to_int(m_well_name);
             if ( m_well_number < 0 ){m_isProperName=false; return;}
        }
        catch(Exception e)
@@ -136,7 +136,7 @@ public class SequencingFacilityFileName
            
      }
     /** Creates a new instance of BroadFileName */
-    public SequencingFacilityFileName(String file_name, int seq_facility_code)
+  /*  public SequencingFacilityFileName(String file_name, int seq_facility_code)
     {
          switch ( seq_facility_code)
          {
@@ -147,7 +147,7 @@ public class SequencingFacilityFileName
          }
    
     }
-    
+    */
     
    
     public String          getFileName (){ return m_file_name  ;}
@@ -185,7 +185,7 @@ public class SequencingFacilityFileName
     
    
         
-    
+    /*
     
     ///D248P100FA1.T0.scf
     // assumption : broad name 8 letters/digits followed by F/R followed by well names
@@ -306,10 +306,10 @@ public class SequencingFacilityFileName
         }
         else
             m_plate_name = tmp;*/
-        if (m_well_number != -1 &&    m_plate_name != null  )
-             m_isProperName = true;
+       // if (m_well_number != -1 &&    m_plate_name != null  )
+         //    m_isProperName = true;
        
-    }
+   // }
       
       
       public static void main(String args[])

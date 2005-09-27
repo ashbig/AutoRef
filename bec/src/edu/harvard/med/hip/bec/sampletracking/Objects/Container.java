@@ -1,5 +1,5 @@
 /**
- * $Id: Container.java,v 1.29 2005-03-29 19:33:28 Elena Exp $
+ * $Id: Container.java,v 1.30 2005-09-27 18:57:41 Elena Exp $
  *
  * File     	: Container.java
 
@@ -29,8 +29,19 @@ import edu.harvard.med.hip.bec.sampletracking.mapping.*;
  * Generic representation of all types of containers.
  */
 public class Container
-{   public static final String TYPE_SEQUENCING_CONTAINER = "SEQUENCING_CONTAINER";
+{   
+    public static final String TYPE_SEQUENCING_CONTAINER = "SEQUENCING_CONTAINER";
     public static final String TYPE_OLIGO_CONTAINER = "OLIGO_CONTAINER";
+    
+    
+    //container type
+    public static final int PLATE_TYPE_96_A1_H12 = 1;
+    public static final int PLATE_TYPE_96_A1_L8 = 2;
+    public static final int PLATE_TYPE_384_A1_P24 = 3;
+
+    
+  
+    
     
     public static final int CONTAINER_STATUS_FINISHED = 1;
     
@@ -1134,6 +1145,103 @@ public class Container
           else
               throw new Exception( (String)history.getHistory().get(0));
        }
+      
+      
+      
+      
+      //get all labels for the project by project code
+      
+      public static String getPlateLabelsForProject(String project_code)
+      {
+          StringBuffer result = new StringBuffer();
+          String sql = "Select label from containerheader where label like '"+project_code +"%'";
+          CachedRowSet crs = null;
+            try
+            {
+                DatabaseTransaction t = DatabaseTransaction.getInstance();
+                crs = t.executeQuery(sql);
+            
+                while(crs.next())
+                {
+                    result.append( crs.getString("LABEL") +" ");
+                }
+             } 
+            catch (Exception sqlE)
+            {
+             } 
+          finally
+            {
+                DatabaseTransaction.closeResultSet(crs);
+            }
+          return result.toString();
+      }
+      
+      //well conversion
+      
+    //------------------------   
+      //convert well nomenculature from A10 to int
+      //---------------------------------------
+      
+    public static final boolean isValidNamingPlateType(int v)
+    {
+        if ( v == PLATE_TYPE_96_A1_H12 || v==PLATE_TYPE_96_A1_L8  || v ==PLATE_TYPE_384_A1_P24 )
+            return true;
+        return false;
+    }
+    public static int convertPositionFrom_alphanumeric_to_int(String position)
+    {
+        switch ( BecProperties.getInstance().getPlateTypePositionNaming())
+        {
+            case  PLATE_TYPE_96_A1_H12 : return convertWellFrom_A1_H12_to_int(position);
+            case PLATE_TYPE_96_A1_L8 : return 0;
+            case PLATE_TYPE_384_A1_P24 : return 0;
+            default : return 0;
+        }
+
+    }
+   
+     public static String convertPositionFrom_int_to_alphanumeric(int position)
+    {
+        switch ( BecProperties.getInstance().getPlateTypePositionNaming())
+        {
+            case  PLATE_TYPE_96_A1_H12 : return convertWellFrom_int_to_A1_H12(position);
+            case PLATE_TYPE_96_A1_L8 : return "";
+            case PLATE_TYPE_384_A1_P24 : return "";
+            default : return "";
+        }
+
+    }
+     
+     public static String convertWellFrom_int_to_A1_H12( int position) 
+    {
+        if (position > 96 || position < 1 ) return "";
+        int column = (int) position / 8  +1 ;   
+       
+        int a_value = (int) 'A';
+        int row_value = position % 8;
+        char rowname = (char) (a_value + row_value - 1);
+        if (row_value == 0 ) { rowname='H'; column--;}
+        if (column < 10)
+            return ""+rowname+"0"+column;
+        else
+            return ""+rowname + column;
+     }
+    
+     public static int convertWellFrom_A1_H12_to_int(String well)
+    {
+        int a_value = (int) 'a';
+     
+        well = well.toLowerCase();
+        int row = (int)well.charAt(0);
+        if (row > (a_value + 7) || row < a_value) return -1;
+        int column = Integer.parseInt(well.substring(1));
+        int row_value =  row - a_value + 1;
+     
+        return (column - 1) * 8 +  row_value ;       
+  
+    }
+      
+      
     //**************************************************************//
     //				Test				//
     //**************************************************************//
@@ -1141,16 +1249,27 @@ public class Container
     // These test cases also include tests for Sample class.
     public static void main(String args[]) throws Exception
     {
-       ArrayList c  = null;Container container =null;
-       ArrayList b = new ArrayList();
        
-      
         try
         {
-            container = Container.findContainerDescriptionFromLabel("YGS000358-1");
-             container.restoreSampleIsolateNoFlexInfo();
-             System.out.println("L");
-             
+              BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
+            sysProps.verifyApplicationSettings();
+        
+         int position = 1;
+       System.out.println(  position+" "+      Container.convertPositionFrom_int_to_alphanumeric(position)    );
+        position = 96;
+       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
+         position = 8;
+       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
+           position = 89;
+       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
+        position = 52;
+       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
+        position = 64;
+       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
+       position = 41;
+       System.out.println(  position+" "+         Container.convertPositionFrom_int_to_alphanumeric( position) );
+       
         }
         catch(Exception e)
         {
