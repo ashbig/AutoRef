@@ -126,7 +126,10 @@ public class FlexGeneMonitor {
         /// make virtual PCR result for (Yeast project / phase I failed ORFs workflow) 
         // and (pseudomonas project/pseudomonas cloning workflow)
         // since they don't require and don't have PCR result records
-        if((projectid == 2 && workflowid == 11) || (projectid == 3 && workflowid == 4)){
+        // Adjust the PCR successful rate for workflow 36 (Gateway Workflow With E Gel) since
+        // it doesn't have any PCR result. -dzuo, 9/27/2005
+        if((projectid == 2 && workflowid == 11) || (projectid == 3 && workflowid == 4) ||
+        workflowid == 36){
             SuccessRate sr_init = (SuccessRate)(success_rate_by_step.lastElement());
             SuccessRate sr_pcr = (SuccessRate)(success_rate_by_step.elementAt(success_rate_by_step.size()-2));
             sr_pcr.setTotal_samples(sr_init.getTotal_samples());
