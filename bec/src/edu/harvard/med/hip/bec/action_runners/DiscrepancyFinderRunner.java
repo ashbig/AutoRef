@@ -466,7 +466,7 @@ public class DiscrepancyFinderRunner extends ProcessRunner
             pst_insert_process_object.setInt(1,process_id);
             pst_insert_process_object.setInt(2, clonesequence.getId());
             DatabaseTransaction.executeUpdate(pst_insert_process_object);
-             IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, clone.getIsolateTrackingId(), conn);
+        //     IsolateTrackingEngine.updateStatus(IsolateTrackingEngine.PROCESS_STATUS_ER_ANALYZED, clone.getIsolateTrackingId(), conn);
                     
             conn.commit();
         }
