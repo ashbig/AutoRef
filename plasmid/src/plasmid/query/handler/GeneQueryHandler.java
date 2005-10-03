@@ -187,6 +187,7 @@ public abstract class GeneQueryHandler {
             for(int i=0; i<clones.size(); i++) {
                 Clone c = (Clone)clones.get(i);
                 CloneInfo ci = new CloneInfo(term, c);
+                ci.setIsAddedToCart(false);
                 cloneinfos.add(ci);
             }
         }

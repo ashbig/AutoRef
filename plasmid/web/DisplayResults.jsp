@@ -1,5 +1,6 @@
 <%@ page language="java" %>
 <%@ page errorPage="ProcessError.do"%>
+<%@ page import="plasmid.Constants" %> 
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -112,16 +113,24 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
-    <td valign="center">
-            <html:form action="SetDisplay.do">
-            <html:hidden property="pagesize"/>
-            <html:hidden property="page"/>
-        <html:hidden property="species"/>
-        <html:hidden property="refseqType"/>
-            <input type="hidden" name="displayPage" value="indirect"/>
-            <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
+    <html:form action="SetDisplay.do">
+    <html:hidden property="pagesize"/>
+    <html:hidden property="page"/>
+    <html:hidden property="species"/>
+    <html:hidden property="refseqType"/>
+    <input type="hidden" name="displayPage" value="indirect"/>
+    <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
+    <logic:equal name="clone" property="isAddedToCart" value="true">
+        <td valign="center" bgcolor="blue">
             <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
-            </html:form>
+        </td>
+    </logic:equal>
+    <logic:notEqual name="clone" property="isAddedToCart" value="true">
+        <td valign="center">
+            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
+        </td>
+    </logic:notEqual>
+    </html:form>
     </td>
     </tr>
   </logic:iterate>
@@ -159,17 +168,25 @@
     </logic:iterate>
     </td>
     <td><bean:write name="clone" property="restriction"/></td>
-    <TD valign="center">
-            <html:form action="SetDisplay.do">
-            <html:hidden property="pagesize"/>
-            <html:hidden property="page"/>
-        <html:hidden property="species"/>
-        <html:hidden property="refseqType"/>
-            <input type="hidden" name="displayPage" value="direct"/>
-            <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
+
+    <html:form action="SetDisplay.do">
+    <html:hidden property="pagesize"/>
+    <html:hidden property="page"/>
+    <html:hidden property="species"/>
+    <html:hidden property="refseqType"/>
+    <input type="hidden" name="displayPage" value="direct"/>
+    <input type="hidden" name="cloneid" value="<bean:write name="clone" property="cloneid"/>"/>
+    <logic:equal name="clone" property="isAddedToCart" value="true">
+        <TD valign="center" bgcolor="blue">
             <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
-            </html:form>
-    </td>
+        </td>
+    </logic:equal>
+    <logic:notEqual name="clone" property="isAddedToCart" value="true">
+        <TD valign="center">
+            <input name="button" type="submit" class="itemtext" value="Add To Cart"/>
+        </td>
+    </logic:notEqual>
+    </html:form>
     </tr>
   </logic:iterate>
   </logic:equal>

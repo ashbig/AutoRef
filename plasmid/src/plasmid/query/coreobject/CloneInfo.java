@@ -18,6 +18,7 @@ public class CloneInfo extends Clone {
     protected String plate;
     protected String well;
     protected int position;
+    protected boolean isAddedToCart;
     
     public CloneInfo(int cloneid, String name, String type, String verified,
     String vermethod, String domain, String subdomain, String restriction, 
@@ -53,6 +54,7 @@ public class CloneInfo extends Clone {
     public String getPlate() {return plate;}
     public String getWell() {return well;}
     public int getPosition() {return position;}
+    public boolean getIsAddedToCart() {return isAddedToCart;}
     
     public void setTerm(String term) {this.term = term;}
     public void setQuantity(int i) {this.quantity = i;}
@@ -60,4 +62,5 @@ public class CloneInfo extends Clone {
     public void setWell(String s) {this.well = s;}
     public void setWell(String x, String y) {this.well = x+y;}
     public void setPosition(int i) {this.position = i;}
+    public void setIsAddedToCart(boolean b) {this.isAddedToCart = b;}
 }

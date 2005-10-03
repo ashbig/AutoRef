@@ -33,6 +33,18 @@ public class OrderProcessManager {
     public List getClones() {return clones;}
     public List getCollections() {return collections;}
     
+    public void setAddToCartStatus(List cloneList, int cloneid, boolean b) {
+        if(cloneList == null)
+            return;
+        
+        for(int i=0; i<cloneList.size(); i++) {
+            CloneInfo c = (CloneInfo)cloneList.get(i);
+            if(c.getCloneid() == cloneid) {
+                c.setIsAddedToCart(b);
+            }
+        }
+    }
+    
     public List checkDistribition(User user, List items) {
         if(items == null || items.size() == 0)
             return new ArrayList();

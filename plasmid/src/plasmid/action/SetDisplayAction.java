@@ -30,6 +30,7 @@ import plasmid.form.RefseqSearchForm;
 import plasmid.coreobject.*;
 import plasmid.util.*;
 import plasmid.query.handler.*;
+import plasmid.process.OrderProcessManager;
 
 /**
  *
@@ -82,6 +83,13 @@ public class SetDisplayAction extends Action {
         request.setAttribute("displayPage", displayPage);
         request.setAttribute("species", species);
         request.setAttribute("refseqType", refseqType);
+                
+        List clones = null;
+        if(displayPage.equals("indirect")) {
+            clones = (List)request.getSession().getAttribute("found");
+        } else {
+            clones = (List)request.getSession().getAttribute("directFounds");
+        }
         
         String button = ((RefseqSearchForm)form).getButton();
         if(button != null && button.equals("Add To Cart")) {
@@ -98,16 +106,13 @@ public class SetDisplayAction extends Action {
             }
             ShoppingCartItem item = new ShoppingCartItem(0, cloneid, 1, ShoppingCartItem.CLONE);
             ShoppingCartItem.addToCart(shoppingcart, item);
+            
+            OrderProcessManager m = new OrderProcessManager();
+            m.setAddToCartStatus(clones, Integer.parseInt(cloneid), true);
+            
             request.getSession().setAttribute(Constants.CART, shoppingcart);
             request.getSession().setAttribute(Constants.CART_STATUS, Constants.UPDATED);
             return (mapping.findForward("success"));
-        }
-        
-        List clones = null;
-        if(displayPage.equals("indirect")) {
-            clones = (List)request.getSession().getAttribute("found");
-        } else {
-            clones = (List)request.getSession().getAttribute("directFounds");
         }
         
         String sortby = ((RefseqSearchForm)form).getSortby();

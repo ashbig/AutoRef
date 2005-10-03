@@ -54,6 +54,7 @@ public class PlateImporter {
                         c = new Container();
                         c.setContainerid(containerid);
                         c.setType(Container.COSTAR_RD);
+                        c.setCapacity(Container.getCapacity(Container.COSTAR_RD));
                         c.setLocation(Location.FREEZER);
                         c.setLabel(columnInfo);
                         c.setOricontainerid(columnInfo);
