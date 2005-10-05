@@ -79,9 +79,7 @@ public class AssemblyRunner extends ProcessRunner
         public void run()
         {
       // The database connection used for the transaction
-           System.out.println("exclude "+         m_use_lqreads_for_assembly );
-        System.out.println("delete "+        m_delete_lqreads );
-   
+       
             Connection conn = null;
             ArrayList process_clones = new ArrayList();
             ArrayList sequences = new ArrayList();
@@ -396,7 +394,7 @@ public class AssemblyRunner extends ProcessRunner
                    
                  sql =  "select flexcloneid, flexsequenceid,  refsequenceid, iso.isolatetrackingid as isolatetrackingid , containerid, s.sampleid as sampleid"
 + " from isolatetracking iso,  sample s, sequencingconstruct  constr , flexinfo f "
-+" where constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
++" where  constr.constructid = iso.constructid and iso.sampleid=s.sampleid and f.isolatetrackingid=iso.isolatetrackingid "
 +" and f.flexcloneid in ("+sql_items +") order by containerid ,refsequenceid";
                 break;
              }
@@ -571,17 +569,19 @@ public class AssemblyRunner extends ProcessRunner
              if ( reads.size() > 1)return null;
              read = (Read)reads.get(0);
              //if read reverse get compliment
+             //get trimmed read
+             
              if ( read.getType() == Read.TYPE_ENDREAD_REVERSE)
              {
-                    sequence = SequenceManipulation.getCompliment(read.getSequence().getText()) ;
-                    int[] arr_scores = SequenceManipulation.getScoresComplement(read.getSequence().getScores());
+                    sequence = SequenceManipulation.getCompliment(read.getTrimmedSequence()) ;
+                    int[] arr_scores = SequenceManipulation.getScoresComplement(read.getTrimmedScores());
                     scores = Algorithms.convertArrayToString(arr_scores, " ");
    //System.out.println(Algorithms.convertArrayToString(arr_scores, " "));
              }
              else if ( read.getType() == Read.TYPE_ENDREAD_FORWARD)
              {
-                 sequence = read.getSequence().getText() ;
-                 scores = read.getSequence().getScores();
+                 sequence = read.getTrimmedSequence() ;
+                 scores = read.getTrimmedScores();
              }
              else return null;
          }
@@ -624,57 +624,13 @@ public static void main(String args[])
     
          runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
         runner.setResultType( String.valueOf(IsolateTrackingEngine.PROCESS_STATUS_ER_PHRED_RUN));
-         runner.setAssemblyMode(AssemblyRunner.FULL_SEQUENCE_ASSEMBLY);
+         runner.setAssemblyMode(AssemblyRunner.END_READS_ASSEMBLY);
        //      runner.setItems("116384	");
       // runner.setItemsType( Constants.ITEM_TYPE_CLONEID);
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID,"2330");  
+            runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS,"IGS002108-1");  
             runner.setVectorFileName("vector_empty.seq");
         runner.run();           
-        /*
-        CloneDescription clone_definition = new CloneDescription();
-        clone_definition.setIsolateTrackingId(10934);
-        clone_definition.setFlexCloneId(32955);
-        BaseSequence base_refsequence =  new BaseSequence("GTGGAACTCTTCAAAGAATTCACCTTCGAATCCGCCCATCGCCTGCCCCACGTCCCCGAAGGCCACAAATGCGGGCGCCTGCACGGCCACTCGTTCCGTGTCGCCATCCACATCGAAGGCGAGGTCGATCCGCATACCGGCTGGATCCGCGACTTCGCGGAAATCAAGGCGATCTTCAAGCCGATCTACGAGCAACTCGACCACAATTATCTGAACGATATTCCAGGCCTGGAAAACCCCACCAGCGAAAACCTCTGCCGCTGGATCTGGCAACAACTCAAGCCGCTGTTGCCGGAACTCTCCAAGGTCCGCGTCCACGAAACTTGCACCAGCGGTTGCGAATATCGGGGCGATTGA"
-     
         
-        
-        
-        , BaseSequence.BASE_SEQUENCE );
-        base_refsequence.setId(123);
-                                
-        CloneAssembly clone_assembly = runner.getAssemblyFromRead( clone_definition,  base_refsequence.getText().length());
-        Contig contig = (Contig) clone_assembly.getContigs().get(0);
-        
-        
-        
-        BioLinker linker3 = BioLinker.getLinkerById(32);
-        BioLinker linker5 = BioLinker.getLinkerById(31);
-                                 
-        int cds_start = linker5.getSequence().length();
-       int  cds_stop = linker5.getSequence().length() +  base_refsequence.getText().length();
-       
-        base_refsequence.setText( linker5.getSequence() + base_refsequence.getText()+linker3.getSequence());
-
-        int result = contig.checkForCoverage(clone_definition.getFlexCloneId(), cds_start,  cds_stop,  base_refsequence);
-        System.out.print(result);
-         
-      
-        String trace_files_directory_path =  "C:\\bio\\plate_analysis\\clone_samples\\12894\\43935\\"  ;
-        trace_files_directory_path = trace_files_directory_path.substring(0,trace_files_directory_path.lastIndexOf(File.separator));
-         //   trace_files_directory_path =   "c"+trace_files_directory_path;
-         PhredPhrap pp = new PhredPhrap();
-             String output_file_name =  "12.fasta.screen.ace.1";
-            //delete quality and sequence files from end read processing
-            runner.deleteTrimmedFiles(trace_files_directory_path);
-            
-             pp.run(trace_files_directory_path, output_file_name );
-
-            //get phrdphrap output
-            PhredPhrapParser pparser = new PhredPhrapParser();
-            String fn = trace_files_directory_path+File.separator +"contig_dir" + File.separator + output_file_name;
-             clone_assembly = pparser.parse(fn);
-
-         */
     }catch(Exception e){}
     System.exit(0);
 }
