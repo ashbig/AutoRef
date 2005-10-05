@@ -658,7 +658,7 @@ public class DiscrepancyFinder
         }
         else 
         {
-           //if amb case where creation of aa not requered - skip it
+           //if amb in clone sequence case where creation of aa not requered - skip it
           String[] codons_for_processing = {rna.getCodonOri(),rna.getCodonMut()};
           boolean isAmbiquousBase = RNAMutation.processForAmbiguity(rna.getSubjectStr(), rna.getQueryStr() , codons_for_processing); 
           if ( (isAmbiquousBase && !codons_for_processing[1].equalsIgnoreCase( rna.getCodonMut()))
@@ -667,14 +667,14 @@ public class DiscrepancyFinder
                 //check that no discrepancy is due to reference sequence ambiquty
                 // update all RNA discrepancies in codon to be refseq ambiguity
                 // so they will not be excluded from analysis
-                if ( SequenceManipulation.isValidDNASequence( rna.getCodonOri()) || isFrameshift) 
+                if ( SequenceManipulation.isValidDNASequenceFrameshiftIncluded( rna.getCodonOri()) ) 
                 {
                 
                     AAMutation aa = createAADiscrepancy( codons_for_processing[1], rna.getCodonOri(),  
                                                     q_allel, s_allel,
                                                     elements[discr_start_pointer].getSubjectIndex(),
                                                      quality ,   
-                                                     mutation_number,   
+                                                      mutation_number,   
                                                      exper_sequence_id
                                                      );
                     discrepancies.add( aa );

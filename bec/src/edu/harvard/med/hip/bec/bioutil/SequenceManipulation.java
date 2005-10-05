@@ -181,6 +181,26 @@ public class SequenceManipulation
        return true;
     }
     
+     public static boolean       isValidDNASequenceFrameshiftIncluded(String sequence)
+    {
+        char[] bases = sequence.toCharArray();
+        for( int count = 0; count < bases.length; count++)
+        {
+            switch(bases[count])
+            {
+                case 'a': case 'A':
+                case 't' : case  'u':  
+                case 'T': case 'U':   
+                case  'C':  case  'c' :   
+                case  'g' :    case  'G': 
+                case 'n':case 'N':
+                case '-':
+                { break;  }
+                default:{ return false;}
+            }
+        }
+       return true;
+    }
     
     
       public static String getSequenceTranslation(String seq)
