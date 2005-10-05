@@ -230,7 +230,7 @@ public class SpecialReportsRunner extends ProcessRunner
      
      private ArrayList     processCloneTraceFiles(String cloneid, String clone_directory,
                     int pass_score , int first_base ,int last_base ,
-                    int min_length) 
+                    int min_length) throws Exception
      {
          ArrayList print_items = new ArrayList();
          boolean isGoodQualityTraceFile = false;
@@ -241,6 +241,9 @@ public class SpecialReportsRunner extends ProcessRunner
          int trace_files_number = traceFiles.length; int phd_files_number = phdFiles.length;
          String trace_file_name_key = null; String phd_file_name_key = null;
          int compare_result = 0;
+         if ( phdFiles == null || phdFiles.length==0)throw new Exception ("No .phd files exist for the clone");
+         if ( traceFiles == null || traceFiles.length==0)throw new Exception ("No trace files exist for the clone");
+         
          for (; trace_files_count < trace_files_number; )
          {
              phd_file_name_key = phdFiles[phd_files_count].getName();
@@ -349,6 +352,7 @@ public class SpecialReportsRunner extends ProcessRunner
             {
                 refseqid = rs.getInt("flexsequenceid");
                 cloneid = rs.getInt("flexcloneid");
+                if ( cloneid < 1 || refseqid < 1) continue;
                 directory = directory_root +refseqid + File.separator + cloneid;
                 read_directories.put( String.valueOf(cloneid) , directory);
             }
@@ -802,10 +806,10 @@ public class SpecialReportsRunner extends ProcessRunner
               BecProperties sysProps =  BecProperties.getInstance( BecProperties.PATH);
         sysProps.verifyApplicationSettings();
       
-          SpecialReportsRunner runner = new SpecialReportsRunner();
+          ProcessRunner runner = new SpecialReportsRunner();
             runner.setUser( AccessManager.getInstance().getUser("htaycher123","htaycher"));
-            runner.setReportType(Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY);
-            runner.setInputData(Constants.ITEM_TYPE_CLONEID," 143490 4426   ");
+            ((SpecialReportsRunner)runner).setReportType(Constants.PROCESS_CREATE_REPORT_TRACEFILES_QUALITY);
+            runner.setInputData(Constants.ITEM_TYPE_PLATE_LABELS," IGS002109-1  ");
           runner.run();
              
          }catch(Exception e){}
