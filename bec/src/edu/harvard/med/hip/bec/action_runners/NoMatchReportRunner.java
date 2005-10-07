@@ -278,13 +278,22 @@ public class NoMatchReportRunner extends ProcessRunner
         if ( m_id_type != null && !m_id_type.equalsIgnoreCase("NONE")) title+="\t"+m_id_type;
         title +=    "\tConstructId\tSummary\tDetails\n";
         FileWriter in = null; 
+        UICloneSample clone = null;
         try
         {
             in =  new FileWriter(report_file_name, true);
              if (first_record == 0) in.write(title+"\n");        
             for (int clone_count =0; clone_count<clones.size(); clone_count++)
             {
-                  in.write( getCloneEntry( (UICloneSample)clones.get(clone_count) ,blast_clone_reports ));
+                clone = (UICloneSample)clones.get(clone_count);
+                try
+                {
+                  in.write( getCloneEntry( clone ,blast_clone_reports ));
+                }
+                catch(Exception ee)
+                {
+                    m_error_messages.add("Cannot write data for clone "+ clone.getCloneId());
+                }
             }
             in.flush();
             in.close();
