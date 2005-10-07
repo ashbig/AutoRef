@@ -81,6 +81,11 @@ public class StringConvertor {
         l.add("def");
         l.add("mnh");
         System.out.println(sc.convertFromListToString(l));
+        
+        String s = "abc\ndef\n gh   jk";
+        List lt = sc.convertFromStringToList(s, "\n \t");
+        System.out.println(lt);
+        
         System.exit(0);
     }
 }

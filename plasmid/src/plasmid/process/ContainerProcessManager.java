@@ -71,6 +71,18 @@ public class ContainerProcessManager {
         return notFound;
     }
     
+    public List checkEmptyContainers(List containers) {
+        List l = new ArrayList();
+        for(int i=0; i<containers.size(); i++) {
+            Container c = (Container)containers.get(i);
+            if(!Container.EMPTY.equals(c.getStatus())) {
+                l.add(c.getLabel());
+            }
+        }
+        
+        return l;
+    }
+    
     public List getLabels(int n, String seqname) {
         List labels = new ArrayList();
         
@@ -309,7 +321,7 @@ public class ContainerProcessManager {
                     newLabels.add("plate"+i);
                 }
                 
-                MappingCalculator calculator = StaticMappingCalculatorFactory.generateMappingCalculator(StaticMappingCalculatorFactory.DIRECT_MAPPING, containers, newLabels, destContainerType, Sample.WORKING_GLYCEROL);
+                MappingCalculator calculator = StaticMappingCalculatorFactory.generateMappingCalculator(StaticMappingCalculatorFactory.DIRECT_MAPPING, containers, newLabels, Sample.WORKING_GLYCEROL);
                 if(!calculator.isMappingValid()) {
                     System.out.println("Incompatible container types.");
                     System.exit(0);
@@ -317,7 +329,7 @@ public class ContainerProcessManager {
                 List worklist = calculator.calculateMapping();
                 WorklistGenerator generator = new WorklistGenerator(worklist);
                 generator.printFullWorklist(filepath+"full_worklist.txt");
-                generator.printWorklistForRobot(filepath+"worklist.txt");
+                generator.printWorklist(filepath+"worklist.txt");
                 generator.readWorklist(filepath+"full_worklist.txt");
                 
                 ContainerMapper mapper = new ContainerMapper(generator.getWorklist());

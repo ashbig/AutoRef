@@ -20,29 +20,31 @@ public class DirectMappingCalculator extends MappingCalculator {
     public DirectMappingCalculator() {
     }
     
-    public DirectMappingCalculator(List src, List dest, String type, String sType) {
-        super(src, dest, type, sType);
+    public DirectMappingCalculator(List src, List dest, String sType) {
+        super(src, dest, sType);
     }
     
     public List calculateMapping() {
         List mappingList = new ArrayList();
         
         for(int i=0; i<srcContainers.size(); i++) {
-            Container c = (Container)srcContainers.get(i);
-            String label = (String)destContainers.get(i);
-            List l = calculateMappingForOneContainer(c, label);
+            Container src = (Container)srcContainers.get(i);
+            Container dest = (Container)destContainers.get(i);
+            List l = calculateMappingForOneContainer(src, dest);
             mappingList.addAll(l);
         }
         
         return mappingList;
     }
     
-    public List calculateMappingForOneContainer(Container c, String label) {
+    public List calculateMappingForOneContainer(Container src, Container dest) {
         List l = new ArrayList();
-        for(int i=0; i<c.getSize(); i++) {
-            Sample s = c.getSample(i+1);
+        for(int i=0; i<src.getSize(); i++) {
+            Sample s = src.getSample(i+1);
+            s.setContainerType(src.getType());
             Sample sample = new Sample();
-            sample.setContainerlabel(label);
+            sample.setContainerlabel(dest.getLabel());
+            sample.setContainerType(dest.getType());
             sample.setCloneid(s.getCloneid());
             sample.setPositions(s.getPosition());
             sample.setStatus(s.getStatus());
@@ -58,20 +60,40 @@ public class DirectMappingCalculator extends MappingCalculator {
     }
     
     public boolean isMappingValid() {
-        if(srcContainers == null || destContainerType == null)
+        if(srcContainers == null || destContainers == null)
             return false;
         
         if(srcContainers.size() != destContainers.size())
             return false;
         
+        int srcCapacity = 0;
         for(int i=0; i<srcContainers.size(); i++) {
             Container c = (Container)srcContainers.get(i);
-            String type = c.getType();
-            if(!destContainerType.equals(type))
+            if(i == 0) {
+                srcCapacity = c.getCapacity();
+            }
+            
+            if(srcCapacity != c.getCapacity())
                 return false;
         }
         
+        int destCapacity = 0;
+        for(int i=0; i<destContainers.size(); i++) {
+            Container c = (Container)destContainers.get(i);
+            if(i == 0) {
+                destCapacity = c.getCapacity();
+            }
+            
+            if(destCapacity != c.getCapacity())
+                return false;
+        }
+        
+        if(srcCapacity == 0 || destCapacity == 0)
+            return false;
+        
+        if(srcCapacity != destCapacity)
+            return false;
+        
         return true;
-    }
-    
+    }    
 }

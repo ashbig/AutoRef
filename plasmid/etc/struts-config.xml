@@ -258,8 +258,10 @@
     <action    path="/SelectProcess"
                type="plasmid.action.SelectProcessAction"
                name="generateWorklistForm"
-              input="/SelectProcess.jsp">
-      <forward  name="success"   path="/Login.jsp"/>
+              input="/SelectProcess.jsp"
+              validate="false">
+      <forward  name="success"   path="/WorklistInput.jsp"/>
+      <forward  name="success_plating"   path="/PlatingInput.jsp"/>
     </action>
          
     <action    path="/SetDisplay"
@@ -316,6 +318,14 @@
               input="/ViewOrderHistory.do">
       <forward  name="success"   path="/OrderList.jsp"/>
       <forward  name="success_empty"   path="/OrderListEmpty.jsp"/>
+    </action>
+    
+    <action    path="/WorklistInput"
+               type="plasmid.action.WorklistInputAction"
+               name="generateWorklistForm"
+              input="/WorklistInput.jsp"
+              validate="true">
+      <forward  name="success"   path="/WorklistOutput.jsp"/>
     </action>
     
     <!-- The standard administrative actions available with Struts -->

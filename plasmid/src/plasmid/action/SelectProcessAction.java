@@ -25,6 +25,8 @@ import org.apache.struts.util.MessageResources;
 
 import plasmid.form.GenerateWorklistForm;
 import plasmid.database.DatabaseManager.ProcessManager;
+import plasmid.Constants;
+import plasmid.coreobject.Process;
 
 /**
  *
@@ -41,12 +43,21 @@ public class SelectProcessAction extends InternalUserAction{
         
         String processname = ((GenerateWorklistForm)form).getProcessname();
         List protocols = ProcessManager.getProtocols(processname);
-        
+        /**
         if(protocols == null) {
             errors.add(ActionErrors.GLOBAL_ERROR,
             new ActionError("error.general", "Invalid process."));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
+        }
+        */
+        
+        if(protocols != null) {
+            request.setAttribute(Constants.PROTOCOLS, protocols);
+        }
+        
+        if(Process.PLATING.equals(processname)) {
+            return mapping.findForward("success_plating");
         }
         
         return mapping.findForward("success");

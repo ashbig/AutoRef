@@ -7,6 +7,7 @@
 package plasmid;
 
 import plasmid.coreobject.User;
+import plasmid.util.FlexProperties;
 
 /**
  *
@@ -27,6 +28,9 @@ public class Constants {
     public static final String ACADEMIC = User.ACADEMIC;
     public static final String LABELS = "labels";
     public static final String PRINT_LABEL_MESSAGE = "PRINT_LABEL_MESSAGE";
+    public static final String PROTOCOLS = "Protocols";
+    
+    public static final String WORKLIST_FILE_PATH = FlexProperties.getInstance().getProperty("worklist");
     
     /** Creates a new instance of Constants */
     public Constants() {
