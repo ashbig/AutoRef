@@ -10,7 +10,7 @@
           <td height="15" class="lftsubtxt"><a href="LabelPlates.jsp" class="leftsubnavtext">Label Containers</a></td>
         </tr>
         <tr> 
-          <td height="15" class="lftsubtxt"><a href="#" class="leftsubnavtext">Generate Worklist</a></td>
+          <td height="15" class="lftsubtxt"><a href="SelectProcess.jsp" class="leftsubnavtext">Generate Worklist</a></td>
         </tr>
       </table></td>
   </tr>
