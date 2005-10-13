@@ -284,6 +284,12 @@ public class RearrayParamSetAction extends ResearcherAction {
         } else if("glycerol".equals(sampleType.trim())) {
             manager.setProtocolName(Protocol.REARRAY_GLYCEROL);
             manager.setSampleType(Sample.ISOLATE);
+        } else if("pcr".equals(sampleType.trim())) {
+            manager.setProtocolName(Protocol.REARRAY_PCR_PLATES);
+            manager.setSampleType(Sample.PCR);
+        } else if("transformation".equals(sampleType.trim())) {
+            manager.setProtocolName(Protocol.REARRAY_TRANSFORMATION_PLATES);
+            manager.setSampleType(Sample.TRANSFORMATION);
         } else {
             manager.setProtocolName(Protocol.REARRAY_OLIGO);
             manager.setSampleType(sampleType.trim());

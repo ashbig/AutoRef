@@ -67,6 +67,8 @@
             <td><select name="sampleType">
                 <option value="dna"/>DNA
                 <option value="glycerol"/>Glycerol
+                <option value="pcr"/>PCR
+                <option value="transformation"/>Transformation
                 </select>
             </td>
             </logic:notEqual>
