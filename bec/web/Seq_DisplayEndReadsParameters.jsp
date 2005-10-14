@@ -12,7 +12,6 @@
 
 <title>End Reads Parameters</title>
 <LINK REL=StyleSheet HREF="application_styles.css" TYPE="text/css" MEDIA=screen>
-<link href="application_styles.css" rel="stylesheet" type="text/css">
 <script language="JavaScript" src="<%= edu.harvard.med.hip.bec.util.BecProperties.getInstance().getProperty("JSP_REDIRECTION") %>scripts.js"></script>
 </head>
 
@@ -48,7 +47,7 @@
 
 
 <% ArrayList specs = (ArrayList)request.getAttribute("specs");
-String[] row_color = {"e4e9f8","b8c6ed"} ; int row_count = 0;
+String[] row_class = {"evenRowColoredFont","oddRowColoredFont"} ; int row_count = 0;
  if (specs.size()==0)
 {%>
 <p><b>No sets are available</b>
@@ -79,102 +78,100 @@ else if (specs.size() > 0 )
     <td colspan=2 ><p><b>Penalties for mutation in gene regions</b> </p> 
      
       <table width="85%" border="0" align="center">
-        <tr> 
-          <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base Confidence</font></strong></div></td>
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High </font></strong></div></td>
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low </font></strong></div></td>
+        <tr class='headerRow'> 
+          <td >Base Confidence</div></td>
+          <td >High </div></td>
+          <td >Low </div></td>
         </tr>
         
-        <tr> 
-          <td width="44%" bgColor="<%= row_color[row_count % 2] %>" ><strong><font color="#000080">Silent mutation</font></strong></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td width="44%" class='coloredFont'>Silent mutation</td>
       
-          <td width="16%" bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_S_H")%></div></td>
-          <td width="14%" bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_S_L")%></div></td>
+          <td width="16%" ><div align="center"><%= spec.getParameterByNameString("ER_S_H")%></div></td>
+          <td width="14%" ><div align="center"> <%= spec.getParameterByNameString("ER_S_L")%></div></td>
         </tr>
         <%if ( spec.getParameterByNameString("ER_C_H") == null || !((String)spec.getParameterByNameString("ER_C_H")).equalsIgnoreCase("not set") )
         {%>
-        <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Conservative substitution</font></strong></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_C_H")%></div></td>
-          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_C_L")%></div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>Conservative substitution</td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_C_H")%></div></td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_C_L")%></div></td>
         </tr>
-        <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Non-conservative    substitution</font></strong></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_NC_H")%></div></td>
-          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_NC_L")%></div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>Non-conservative    substitution</td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_NC_H")%></div></td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_NC_L")%></div></td>
         </tr>
         <%}
         else 
         {        %>
-           <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Missense    substitution</font></strong></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_MISS_H")%></div></td>
-          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_MISS_L")%></div></td>
+           <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>Missense    substitution</td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_MISS_H")%></div></td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_MISS_L")%></div></td>
         </tr>
         <%}%>
-        <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Frameshift</font></strong></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_FR_H")%></div></td>
-          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_FR_L")%></div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>Frameshift</td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_FR_H")%></div></td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_FR_L")%></div></td>
         </tr>
-        <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><font color="#000080"><strong>In-frame deletion</strong></font></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_IDEL_H")%></div></td>
-          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_IDEL_L")%></div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>In-frame deletion</td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_IDEL_H")%></div></td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_IDEL_L")%></div></td>
         </tr>
-        <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">In-frame insertion</font></strong></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_IINS_H")%></div></td>
-          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_IINS_L")%></div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>In-frame insertion</td>
+          <td ><div align="center"> <%= spec.getParameterByNameString("ER_IINS_H")%></div></td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_IINS_L")%></div></td>
         </tr>
-        <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Truncation</font></strong></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_TRANC_H")%>    </div></td>
-          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_TRANC_L")%></div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>Truncation</td>
+          <td ><div align="center"> <%= spec.getParameterByNameString("ER_TRANC_H")%>    </div></td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_TRANC_L")%></div></td>
         </tr>
-        <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">No translation( 
-            no ATG)</font></strong></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_NOTRANSLATION_H")%></div></td>
-          <td bgColor="<%= row_color[row_count++ % 2] %>"><div align="center"> <%= spec.getParameterByNameString("ER_NOTRANSLATION_L")%></div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>No translation(             no ATG)</td>
+          <td ><div align="center"> <%= spec.getParameterByNameString("ER_NOTRANSLATION_H")%></div></td>
+          <td ><div align="center"> <%= spec.getParameterByNameString("ER_NOTRANSLATION_L")%></div></td>
         </tr>
-        <tr> 
-          <td bgColor="<%= row_color[row_count % 2] %>"><strong><font color="#000080">Post-elongation           ( no stop codon)</font></strong></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_PLONG_H")%></div></td>
-          <td bgColor="<%= row_color[row_count % 2] %>"><div align="center"><%= spec.getParameterByNameString("ER_PLONG_L")%></div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>Post-elongation           ( no stop codon)</td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_PLONG_H")%></div></td>
+          <td ><div align="center"><%= spec.getParameterByNameString("ER_PLONG_L")%></div></td>
         </tr>
       </table></td>
   </tr>
-
+<% row_count = 0;%>
     </tr>
 	<tr><td colspan="2"> &nbsp;</td></tr> <td colspan=2 ><p><b>Penalties for mutation in linker region</b> </p> 
      
       <table width="85%" border="0" align="center">
-        <tr> 
-          <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base Confidence</font></strong></div></td>
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High </font></strong></div></td>
-          <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low </font></strong></div></td>
+        <tr  class='headerRow'> 
+          <td >Base Confidence</div></td>
+          <td >High </div></td>
+          <td >Low </div></td>
         </tr>
-        <tr> 
-          <td width="44%" bgColor="#e4e9f8" ><strong><font color="#000080">5' 
-            substitution </font></strong></td>
-          <td width="16%" bgColor="#e4e9f8"><div align="center">              <%= spec.getParameterByNameString("ER_5S_H")%>            </div></td>
-          <td width="14%" bgColor="#e4e9f8"><div align="center">              <%= spec.getParameterByNameString("ER_5S_L")%>            </div></td>
+        <tr class=<%= row_class[row_count % 2] %>> 
+          <td width="44%" class='coloredFont'>5'             substitution </td>
+          <td width="16%" ><div align="center">              <%= spec.getParameterByNameString("ER_5S_H")%>            </div></td>
+          <td width="14%" ><div align="center">              <%= spec.getParameterByNameString("ER_5S_L")%>            </div></td>
         </tr>
-        <tr> 
-          <td bgColor="#e4e9f8"><strong><font color="#000080">5' deletion/insertion</font></strong></td>
-          <td bgColor="#e4e9f8"><div align="center">              <%= spec.getParameterByNameString("ER_5DI_H")%>            </div></td>
-          <td bgColor="#e4e9f8"><div align="center">               <%= spec.getParameterByNameString("ER_5DI_L")%>            </div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>5' deletion/insertion</td>
+          <td ><div align="center">              <%= spec.getParameterByNameString("ER_5DI_H")%>            </div></td>
+          <td ><div align="center">               <%= spec.getParameterByNameString("ER_5DI_L")%>            </div></td>
         </tr>
-        <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">3' substitution</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center">               <%= spec.getParameterByNameString("ER_3S_H")%>            </div></td>
-          <td bgColor="#b8c6ed"><div align="center">              <%= spec.getParameterByNameString("ER_3S_L")%>            </div></td>
+        <tr class=<%= row_class[row_count % 2] %>> 
+          <td class='coloredFont'>3' substitution</td>
+          <td ><div align="center">               <%= spec.getParameterByNameString("ER_3S_H")%>            </div></td>
+          <td ><div align="center">              <%= spec.getParameterByNameString("ER_3S_L")%>            </div></td>
         </tr>
-        <tr> 
-          <td bgColor="#b8c6ed"><strong><font color="#000080">3' deletion/insertion</font></strong></td>
-          <td bgColor="#b8c6ed"><div align="center">           <%= spec.getParameterByNameString("ER_3DI_H")%>            </div></td>
-       	<td bgColor="#b8c6ed"><div align="center">               <%= spec.getParameterByNameString("ER_3DI_L")%>            </div></td>
+        <tr class=<%= row_class[row_count++ % 2] %>> 
+          <td class='coloredFont'>3' deletion/insertion</td>
+          <td ><div align="center">           <%= spec.getParameterByNameString("ER_3DI_H")%>            </div></td>
+       	<td ><div align="center">               <%= spec.getParameterByNameString("ER_3DI_L")%>            </div></td>
       </table></td>
   </tr>
 <tr><td colspan="2"> &nbsp;</td></tr>
@@ -184,83 +181,57 @@ else if (specs.size() > 0 )
 		Show </p>
       <p></p>
 	  <DIV ID="divShowHide" STYLE="  position:relative;  clip:rect(0px 120px 120px 0px); "> 
+	  <% row_count = 0;%>
         <table width="85%" border="0" align="center">
-          <tr> 
-            <td bgcolor="#1145A6"><div align="right"><strong><font color="#FFFFFF">Base 
-                Confidence </font></strong></div></td>
-            <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">High 
-                </font> </strong></div></td>
-            <td bgcolor="#1145A6"><div align="center"><strong><font color="#FFFFFF">Low 
-                </font></strong></div></td>
+          <tr  class='headerRow'> 
+            <td ><div align="right">Base                 Confidence </div></td>
+            <td ><div align="center">High</div></td>
+            <td ><div align="center">Low</div></td>
           </tr>
-          <tr> 
-            <td width="44%" bgcolor="#e4e9f8" ><strong><font color="#000080">Start 
-              codon substitution</font></strong></td>
-            <td width="16%" bgcolor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NSTART_PASS_H")%></div></td>
-            <td width="14%"bgcolor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NSTART_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[row_count % 2] %>> 
+            <td width="44%" class='coloredFont'>Start               codon substitution</td>
+            <td width="16%" ><div align="center"> <%= spec.getParameterByNameString("ER_NSTART_PASS_H")%></div></td>
+            <td width="14%"><div align="center"> <%= spec.getParameterByNameString("ER_NSTART_PASS_L")%>               </div></td>
           </tr>
-          <tr> 
-            <td bgColor="#e4e9f8"><b><strong><font color="#000080">Stop codon 
-              substitution</font></strong></b></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NSTOP_PASS_H")%> 
-              </div></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NSTOP_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[row_count % 2] %>> 
+            <td class='coloredFont'>Stop codon               substitution</b></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_NSTOP_PASS_H")%>               </div></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_NSTOP_PASS_L")%>               </div></td>
           </tr>
-          <tr> 
-            <td bgColor="#e4e9f8"><strong><font color="#000080">Substitution in 
-              CDS region </font></strong></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NCDS_PASS_H" )%> 
-              </div></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NCDS_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[row_count % 2] %>> 
+            <td class='coloredFont'>Substitution in               CDS region </td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_NCDS_PASS_H" )%>               </div></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_NCDS_PASS_L")%>               </div></td>
           </tr>
-          <tr> 
-            <td bgColor="#e4e9f8"><strong><font color="#000080">Frameshift Insertion</font></strong></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NFRAME_PASS_H")%> 
-              </div></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NFRAME_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[row_count % 2] %>> 
+            <td class='coloredFont'>Frameshift Insertion</font></strong></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_NFRAME_PASS_H")%>               </div></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_NFRAME_PASS_L")%>               </div></td>
           </tr>
-          <tr> 
-            <td bgColor="#e4e9f8"><strong><font color="#000080">Inframe Insertion</font></strong></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NINFRAME_PASS_H" )%> 
-              </div></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_NINFRAME_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[row_count % 2] %>> 
+            <td class='coloredFont'>Inframe Insertion</td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_NINFRAME_PASS_H" )%>               </div></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_NINFRAME_PASS_L")%>               </div></td>
           </tr>
-          <tr> 
-            <td bgColor="#b8c6ed"><strong><font color="#000080">Substitution in 
-              5' linker region</font></strong></td>
-            <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("ER_N5SUB_PASS_H")%> 
-              </div></td>
-            <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("ER_N5SUB_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[++row_count % 2] %>> 
+            <td class='coloredFont'>Substitution in               5' linker region</td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_N5SUB_PASS_H")%>               </div></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_N5SUB_PASS_L")%>               </div></td>
           </tr>
-          <tr> 
-            <td bgColor="#b8c6ed"><strong><font color="#000080">Insertion in 5' 
-              linker region </font></strong></td>
-            <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("ER_N5INS_PASS_H" )%> 
-              </div></td>
-            <td bgColor="#b8c6ed"><div align="center"> <%= spec.getParameterByNameString("ER_N5INS_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[row_count % 2] %>> 
+            <td class='coloredFont'>Insertion in 5'               linker region </td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_N5INS_PASS_H" )%>              </div></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_N5INS_PASS_L")%>               </div></td>
           </tr>
-          <tr> 
-            <td bgColor="#e4e9f8"><strong><font color="#000080">Substitution in 
-              3' linker region</font></strong></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_N3SUB_PASS_H")%> 
-              </div></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_N3SUB_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[++row_count % 2] %>> 
+            <td class='coloredFont'>Substitution in               3' linker region</td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_N3SUB_PASS_H")%>               </div></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_N3SUB_PASS_L")%>               </div></td>
           </tr>
-          <tr> 
-            <td bgColor="#e4e9f8"><strong><font color="#000080">Insertion in 3' 
-              linker region </font></strong></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_N3INS_PASS_H" )%> 
-              </div></td>
-            <td bgColor="#e4e9f8"><div align="center"> <%= spec.getParameterByNameString("ER_N3INS_PASS_L")%> 
-              </div></td>
+          <tr class=<%= row_class[row_count % 2] %>> 
+            <td class='coloredFont'>Insertion in 3'               linker region </td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_N3INS_PASS_H" )%>               </div></td>
+            <td ><div align="center"> <%= spec.getParameterByNameString("ER_N3INS_PASS_L")%>               </div></td>
           </tr>
         </table>
       </div>

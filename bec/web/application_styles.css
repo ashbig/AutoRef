@@ -11,11 +11,19 @@ table.nav {background: white}
 div.nav {margin: .3em .3em .3em .3em}
 
 /* styles for tables */
-tr.oddRow {background: #ffffff}
-tr.evenRow {background: #eeeeee}
-tr.headerRow {background: #999999}
-tr.navRow {background: #9bbad6}
-tr.highlightRow {background: #9bbad6}
+tr.headerRow {background: #1145A6; caption-side: center; color: white; font-weight: bold }
+navRow {background: #9bbad6}
+highlightRow {background: #9bbad6}
+
+
+td.coloredFont { color: "#000080"; font-weight: bold }
+
+tr.oddRow {background: #b8c6ed}
+tr.evenRow {background: #e4e9f8}
+tr.oddRowColoredFont {background: #b8c6ed;  color: #000080; font-weight: bold}
+tr.evenRowColoredFont {background: #e4e9f8;  color: #000080; font-weight: bold}
+
+tr.strong {font-weight: bold }
 
 
 borders_1  {"border:solid 2px magen"}

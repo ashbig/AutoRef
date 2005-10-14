@@ -46,7 +46,7 @@
   </center>
 </div>
 
-
+<hr>
 
 <% ArrayList sets = (ArrayList)request.getAttribute("specs");
  if (sets.size()==0)
@@ -57,99 +57,62 @@
 else 
    if (sets.size() > 0 )
   {
-%>
-<%
+      String[] row_class = {"evenRowColoredFont","oddRowColoredFont"} ; int row_count = 0;
     for (int count = 0; count < sets.size() ; count++)
     {
 	Primer3Spec spec = (Primer3Spec) sets.get(count);
  
 	%>
 <table border="0" cellpadding="0" cellspacing="0" width="84%" align=center>
-<tr>     <td colspan ="4"><hr></TD></TR>
-  <tr> 
-    <td colspan ="2"><b>Set Name</b>&nbsp;&nbsp<%= spec.getName() %> <P></P></td>
+<tr>     <td colspan ="2"><b>Set Name</b>&nbsp;&nbsp<%= spec.getName() %> <P></P></td>  </tr>
+<tr class='headerRow' height="48">     <td colspan="4" >Primer Design Parameters</td>  </tr>
+<tr class=<%= row_class[row_count++ % 2]%> > 
+    <td width="35%" >Primer       Length (bp)</td>
+    <td width="20%" >Min: <%= spec.getParameterByNameString("p_primer_min".toUpperCase()) %></td>
+    <td width="20%" >Optimal:      <%= spec.getParameterByNameString("p_primer_opt".toUpperCase())%></td>
+    <td width="25%" >Max:    <%= spec.getParameterByNameString("p_primer_max".toUpperCase())%></td>
   </tr>
-  <tr> 
-    <td colspan="4" height="48"  bgcolor="#1145A6"> <font color="white" size="4"> 
-      <b>Primer Design Parameters</b></font></td>
+<tr class=<%= row_class[row_count++ % 2]%> > 
+    <td >Primer       Tm (C)</td>
+    <td >Min: <%= spec.getParameterByNameString("p_primer_tm_min".toUpperCase())%></td>
+    <td >Optimal: <%= spec.getParameterByNameString("p_primer_tm_opt".toUpperCase())%></td>
+    <td >Max: <%= spec.getParameterByNameString("p_primer_tm_max".toUpperCase())%></td>
   </tr>
-  <tr> 
-    <td width="35%" valign="top" height="1" bgColor="#e4e9f8" > <font color="#000080"><b>Primer 
-      Length (bp)</b></font></td>
-    <td width="20%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_min".toUpperCase()) %></font></p></td>
-    <td width="20%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Optimal:</b> 
-        <%= spec.getParameterByNameString("p_primer_opt".toUpperCase())%></font></p></td>
-    <td width="25%" height="1" bgColor="#e4e9f8" > <p><font color="#000080"><b>Max:</b> 
-        <%= spec.getParameterByNameString("p_primer_max".toUpperCase())%></font></p></td>
+<tr class=<%= row_class[row_count++ % 2]%> > 
+    <td >Primer       %GC</td>
+    <td >Min: <%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></td>
+    <td >Optimal: <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></td>
+    <td >Max:  <%= spec.getParameterByNameString("p_primer_gc_max".toUpperCase())%></td>
   </tr>
-  <tr> 
-    <td width="35%" height="26" bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Primer 
-      Tm (°C)</b></font></td>
-    <td width="20%" height="26" bgcolor="#b8c6ed"> <p><font color="#000080"><b>Min: 
-        </b><%= spec.getParameterByNameString("p_primer_tm_min".toUpperCase())%></font></p></td>
-    <td width="20%" height="26"bgcolor="#b8c6ed"> <p><font color="#000080"><b>Optimal:</b> 
-        <%= spec.getParameterByNameString("p_primer_tm_opt".toUpperCase())%></font></p></td>
-    <td width="25%" height="26" bgcolor="#b8c6ed"> <p><font color="#000080"><b>Max:</b><%= spec.getParameterByNameString("p_primer_tm_max".toUpperCase())%></font></p></td>
+<tr  >     <td colspan="2" height="1">&nbsp </tr>
+
+<tr class='headerRow' height="44">     <td colspan="4" >Sequencing       Parameters</td>  </tr>
+<tr class=<%= row_class[row_count++ % 2]%> > 
+    <td colspan="2" >Distance       between 5p Universal Primer and START codon <font size="2">(For 
+      a left primer, primer start position is the position of the leftmost base)</font></td>
+    <td colspan="2" height="35" ><%= spec.getParameterByNameString("p_upstream_distance".toUpperCase()) %>         bases</td>
   </tr>
-  <tr> 
-    <td width="35%" height="1" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Primer 
-      %GC</b></font></td>
-    <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Min:</b><%= spec.getParameterByNameString("p_primer_gc_min".toUpperCase())%></p></td>
-    <td width="20%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Optimal:</b> 
-        <%= spec.getParameterByNameString("p_primer_gc_opt".toUpperCase())%></font></p></td>
-    <td width="25%" height="1" bgColor="#e4e9f8"  valign="top"> <p><font color="#000080"><b>Max:</b> 
-        <%= spec.getParameterByNameString("p_primer_gc_max".toUpperCase())%></font></p></td>
-  </tr>
-  <tr> 
-    <td colspan="2" height="1"><font color="#000080">&nbsp;</font></td>
-    <td colspan="2" height="1"></td>
-  </tr>
-  <tr> 
-    <td colspan="4" height="39"  bgcolor="#1145A6"><b><font size="4" color=white>Sequencing 
-      Parameters</font></b></td>
-  </tr>
-  <tr> 
-    <td colspan="2" height="44" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Distance 
-      between 5p Universal Primer and START codon</b>&nbsp;&nbsp;&nbsp; <font size="2"><b>(For 
-      a left primer, primer start position is the position of the leftmost base)</b></font></font></td>
-    <td colspan="2" height="44" bgColor="#e4e9f8" > <p>
-<font color="#000080"><b><%= spec.getParameterByNameString("p_upstream_distance".toUpperCase()) %> 
-        bases</p></td>
-  </tr>
-  <tr> 
-    <td colspan="2" height="44" bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Distance 
-      between 3p Universal Primer and STOP codon&nbsp;&nbsp; <font size="2">(For 
+<tr class=<%= row_class[row_count++ % 2]%> > 
+    <td colspan="2" height="35" >Distance 
+      between 3p Universal Primer and STOP codon <font size="2">(For 
       a right primer, primer start position is the position of the rightmost base)&nbsp;&nbsp;</font></b></font></td>
-    <td colspan="2" height="44" bgcolor="#b8c6ed"> <p>
-<font color="#000080"><b><%= spec.getParameterByNameString("p_downstream_distance".toUpperCase())%> 
-        bases</p></td>
+    <td colspan="2" ><%= spec.getParameterByNameString("p_downstream_distance".toUpperCase())%>         bases</td>
   </tr>
-  <tr> 
-    <td colspan="2" height="44" bgColor="#e4e9f8"  valign="top"><font color="#000080"><b>Estimated 
-      high quality read length (ERL)</b></font></td>
-    <td colspan="2" height="44" bgColor="#e4e9f8" > <p>
-<font color="#000080"><b><%= spec.getParameterByNameString("p_single_read_length".toUpperCase())%> 
-        bases</p></td>
+<tr class=<%= row_class[row_count++ % 2]%> > 
+    <td colspan="2" height="35" >Estimated       high quality read length (ERL)</td>
+    <td colspan="2"><%= spec.getParameterByNameString("p_single_read_length".toUpperCase())%>         bases</td>
   </tr>
-  <tr> 
-    <td colspan="2" height="3" bgcolor="#b8c6ed" valign="top"><font color="#000080"><b>Window 
-      size for testing primers</b></font></td>
-    <td colspan="2" height="3" bgcolor="#b8c6ed"> <p>
-<font color="#000080"><b><%= spec.getParameterByNameString("p_buffer_window_len".toUpperCase())%> 
-        bases</p></td>
+<tr class=<%= row_class[row_count++ % 2]%>> 
+    <td colspan="2" height="35" >Window       size for testing primers</td>
+    <td colspan="2"><%= spec.getParameterByNameString("p_buffer_window_len".toUpperCase())%>         bases</td>
   </tr>
-<tr> 
-    <td colspan="2"  width="100%" height="3" bgColor="#e4e9f8" valign="top"><font color="#000080"><b>
-Distance between sequencing primer and start of high quality read length</b></font></td>
-    <td  colspan="2"  height="3" bgColor="#e4e9f8"> <p> 
-<font color="#000080"><b><%= spec.getParameterByNameString("P_EST_SEQ".toUpperCase()) %> 
-        bases</p></td>
+<tr class=<%= row_class[row_count++ % 2]%>> 
+    <td colspan="2"  height="35">Distance between sequencing primer and start of high quality read length</td>
+    <td  colspan="2" ><%= spec.getParameterByNameString("P_EST_SEQ".toUpperCase()) %>         bases</p></td>
   </tr>
-  <tr> 
-    <td colspan="2" height="3" align="center" valign="top" bgColor="#e4e9f8" > 
-      <p align="left"><font color="#000080"><b>Number of strands to sequence</b></font></td>
-    <td colspan="2" height="3" align="center" valign="bottom" bgColor="#e4e9f8" > 
-     <font color="#000080">   <p><b>
+  <tr class=<%= row_class[row_count++ % 2]%>> 
+    <td colspan="2" height="35" >Number of strands to sequence</td>
+    <td colspan="2" >
       <% 
 
 	
@@ -161,17 +124,14 @@ else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equ
 {%>Both Strands (Both forward and reverse primers)      <%}
 else if ( spec.getParameterByNameString("p_number_of_strands".toUpperCase()).equals( String.valueOf(Primer3Wrapper.WALKING_TYPE_BOTH_STRAND_DOUBLE_COVERAGE) ))
 {%>Both Strands (Both forward and reverse primers, double coverage)      <%}%>
-  </p></b> 
-    </td>
+ </td>
   </tr>
-  <tr> 
-    <td colspan="4" height="3" align="center" valign="bottom"></td>
-  </tr>
+  <tr>     <td colspan="4" >&nbsp<HR></td>  </tr>
 </table>
 
 <%}}%>
 
-<HR>
+
 
 
 </body>
